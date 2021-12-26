@@ -5,9 +5,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "npm-run-all --parallel start:**",
-    "start:client": "npm run dev",
-    "start:server": "nodemon ./server/src/index.ts"
+    "start": "npm run dev"
   },
   "dependencies": {
     "nodemon": "^2.0.15",
