@@ -1,4 +1,4 @@
-openapi: '3.0.0'
+openapi: 3.0.0
 info:
   version: 1.0.0
   title: API docs
@@ -6,9 +6,15 @@ info:
   license:
     name: MIT
 servers:
-  - url: [address]
+  - url:
+      - address
 paths:
-  $ref: './path.yaml'
+  /user:
+    get:
+      summary: Returns user list
+      responses:
+        '400':
+          $ref: '#/components/responses/BadRequest'
 components:
   parameters: null
   schemas:
