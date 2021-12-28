@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "doc": "swagger-cli bundle ./openapi.yaml --outfile ./src/swagger.yaml --type yaml",
+    "doc": "swagger-cli bundle ./api/openapi.yaml --outfile ./api/src/swagger.yaml --type yaml",
     "prestart": "npm run doc",
     "start": "nodemon ./src/index.ts"
   },
