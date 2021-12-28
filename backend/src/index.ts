@@ -8,7 +8,7 @@ function makeServer(){
     const app = express();
     const port = 4242;
 
-    const swaggerSpec = YAML.load(path.join(__dirname, './swagger.yaml'));
+    const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
     app.listen(port, ()=>console.log(`Listening on port ${port}`));
     

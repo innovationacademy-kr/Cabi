@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "doc": "swagger-cli bundle ./openapi.yaml --outfile ./swagger.yaml --type yaml",
+    "doc": "swagger-cli bundle ./api/openapi.yaml --outfile ./api/swagger.yaml --type yaml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

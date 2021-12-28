@@ -1,0 +1,52 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: API docs
+  description: API 문서
+  license:
+    name: MIT
+servers:
+  - url: [address]
+paths:
+  $ref: './path.yaml'
+components:
+  parameters: null
+  schemas:
+    User:
+      type: object
+      required:
+        - _id
+        - name
+      properties:
+        _id:
+          type: number
+          description: id
+        name:
+          type: string
+          description: 유저 이름
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+  responses:
+    BadRequest:
+      description: 잘못된 요청
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            message: 잘못된 요청
+    InternalServerError:
+      description: 서버 에러
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            message: 서버 내부 오류
