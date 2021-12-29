@@ -12,15 +12,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "mariadb": "^2.5.5",
+    "nodemon": "^2.0.15",
     "swagger-cli": "^4.0.4",
     "swagger-ui-express": "^4.3.0",
-    "yamljs": "^0.3.0",
-    "mariadb": "^2.5.5",
-    "nodemon": "^2.0.15"
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.2",
     "@types/swagger-ui-express": "^4.1.3",
