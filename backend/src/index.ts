@@ -11,7 +11,7 @@ function makeServer(){
     const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
     app.listen(port, ()=>console.log(`Listening on port ${port}`));
-    getUserList();
+    // getUserList();
 }
 
 

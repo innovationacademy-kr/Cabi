@@ -15,6 +15,65 @@ paths:
       responses:
         '400':
           $ref: '#/components/responses/BadRequest'
+  /api/user:
+    post:
+      tags:
+        - 42cabinet_user
+      summary: 42cabinet user info
+      operationId: userInfo
+      description: response with 42cabinet_user information
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userInfo'
+        description: Inventory item to add
+  /api/lent:
+    post:
+      tags:
+        - lent
+      summary: lent a new cabinet
+      operationId: lentCabinet
+      description: lent a new cabinet
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lent'
+  /api/cabinet:
+    post:
+      tags:
+        - 42cabi_cabinet
+      summary: adds an cabinet item
+      operationId: cabinetInfo
+      description: response with cabinet infromation
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cabinet'
+        description: cabinet to add
 components:
   parameters: null
   schemas:
@@ -37,6 +96,100 @@ components:
           type: boolean
         message:
           type: string
+    Success:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+    userInfo:
+      type: object
+      required:
+        - user_id
+        - intra_id
+        - auth
+        - email
+        - phone
+      properties:
+        user_id:
+          type: integer
+          example: 12345
+        intra_id:
+          type: string
+          example: spark
+        auth:
+          type: boolean
+          example: true
+        email:
+          type: string
+          example: spark@student.42seoul.kr
+        phone:
+          type: string
+          example: 010-1234-5678
+    Lent:
+      type: object
+      required:
+        - cabinet_id
+      properties:
+        cabinet_id:
+          type: number
+          format: uuid
+          example: 12
+    cabinet:
+      type: object
+      required:
+        - cabinet_id
+        - cabinet_num
+        - location
+        - floor
+        - cluster
+        - section
+        - activation
+        - lent_id
+        - user_id
+        - lent_time
+        - expire_time
+        - extension
+      properties:
+        cabinet_id:
+          type: integer
+          example: 1
+        cabinet_num:
+          type: integer
+          example: 1
+        location:
+          type: string
+          example: serom
+        floor:
+          type: integer
+          example: 1
+        cluster:
+          type: integer
+          example: 1
+        section:
+          type: string
+          example: oasis
+        activation:
+          type: boolean
+          example: true
+        lent_id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        lent_time:
+          type: string
+          format: datetime
+          example: '2021-12-29-17:36'
+        expire_time:
+          type: string
+          format: datetime
+          example: '2021-12-29-17:36'
+        extention:
+          type: boolean
+          example: true
   responses:
     BadRequest:
       description: 잘못된 요청
@@ -56,3 +209,12 @@ components:
           example:
             success: false
             message: 서버 내부 오류
+    SuccessResponse:
+      description: 요청 성공
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Success'
+          example:
+            success: true
+            message: 요청 성공
