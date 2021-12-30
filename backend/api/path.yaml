@@ -66,3 +66,22 @@
             schema:
               $ref: './openapi.yaml#/components/schemas/cabinet'
         description: cabinet to add
+/api/return:
+    post:
+      tags:
+        - return
+      summary: return a cabinet
+      operationId: returnCabinet
+      description: return a cabinet
+      responses:
+        '200':
+          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+        '400':
+          $ref: './openapi.yaml#/components/responses/BadRequest'
+        '500':
+          $ref: './openapi.yaml#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './openapi.yaml#/components/schemas/return'

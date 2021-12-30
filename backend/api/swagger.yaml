@@ -6,8 +6,7 @@ info:
   license:
     name: MIT
 servers:
-  - url:
-      - address
+  - url: 'http://localhost:4242'
 paths:
   /user:
     get:
@@ -74,6 +73,25 @@ paths:
             schema:
               $ref: '#/components/schemas/cabinet'
         description: cabinet to add
+  /api/return:
+    post:
+      tags:
+        - return
+      summary: return a cabinet
+      operationId: returnCabinet
+      description: return a cabinet
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/return'
 components:
   parameters: null
   schemas:
@@ -190,6 +208,15 @@ components:
         extention:
           type: boolean
           example: true
+    return:
+      type: object
+      required:
+        - lent_id
+      properties:
+        lent_id:
+          type: number
+          format: uuid
+          example: 1
   responses:
     BadRequest:
       description: 잘못된 요청

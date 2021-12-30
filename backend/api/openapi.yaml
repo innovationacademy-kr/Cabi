@@ -126,6 +126,15 @@ components:
         extention:
           type: boolean
           example: True
+    return:
+      type: object
+      required:
+        - lent_id
+      properties:
+        lent_id:
+          type: number
+          format: uuid
+          example: 1
   responses:
     BadRequest:
       description: 잘못된 요청
