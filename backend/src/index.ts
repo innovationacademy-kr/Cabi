@@ -8,18 +8,28 @@ import {router} from './route'
 
 function makeServer(){
     const app = express();
-    const port = 4242;
+    const port = process.env.PORT || 4242;
 
-    const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
-    app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-    
+    const list:Array<string> = [
+        "http://3.38.166.176",
+        "http://cabi.42cadet.kr"
+    ]
+
     app.use(
         cors({
-            origin: "http://localhost:3000",
+            origin: function (origin, callback){
+                if (!origin || list.indexOf(origin) >= 0) {
+                    callback(null, true)
+                } else {
+                    callback(new Error("Not allowed by CORS"))
+                }
+            },
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
             credentials: true,
         })
     );
+    const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
+    app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
     app.use('/', router);
 
     app.listen(port, ()=>console.log(`Listening on port ${port}`));
