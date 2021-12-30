@@ -1,14 +1,7 @@
-/user:
-  get:
-    summary: Returns user list
-    responses:
-      '400':
-        $ref: './openapi.yaml#/components/responses/BadRequest'
-
 /api/user:
     post:
       tags:
-        - 42cabinet_user
+        - user
       summary: 42cabinet user info
       operationId: userInfo
       description: response with 42cabinet_user information
@@ -25,7 +18,6 @@
             schema:
               $ref: './openapi.yaml#/components/schemas/userInfo'
         description: Inventory item to add
-
 /api/lent:
     post:
       tags:
@@ -45,11 +37,10 @@
           application/json:
             schema:
               $ref: './openapi.yaml#/components/schemas/Lent'
-
 /api/cabinet:
     post:
       tags:
-        - 42cabi_cabinet
+        - cabinet
       summary: adds an cabinet item
       operationId: cabinetInfo
       description: response with cabinet infromation
