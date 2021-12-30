@@ -13,18 +13,6 @@ paths:
 components:
   parameters: null
   schemas:
-    User:
-      type: object
-      required:
-        - _id
-        - name
-      properties:
-        _id:
-          type: number
-          description: id
-        name:
-          type: string
-          description: 유저 이름
     Error:
       type: object
       properties:
