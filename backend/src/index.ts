@@ -11,8 +11,7 @@ function makeServer(){
     const port = 4242;
 
     const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
-    app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-    
+
     app.use(
         cors({
             origin: "http://localhost:3000",
@@ -20,11 +19,14 @@ function makeServer(){
             credentials: true,
         })
     );
+    app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
     app.use('/', router);
+    app.use(express.static(path.join(__dirname, '../public')));
+    app.use('/', function(req, res){
+        res.sendFile(path.join(__dirname, '../public/index.html'));
+    });
 
     app.listen(port, ()=>console.log(`Listening on port ${port}`));
     // getUserList();
 }
-
-
-makeServer();
