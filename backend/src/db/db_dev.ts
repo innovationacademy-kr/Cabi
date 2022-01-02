@@ -1,6 +1,6 @@
 const mysqlssh = require('mysql-ssh')
 import fs from 'fs';
-import {getUserList} from './query'
+import {getUser} from './query'
 
 export function connection(){
     console.log('start!');
@@ -15,7 +15,7 @@ export function connection(){
         database: '42cabi_DB'
     }).then((client:any)=>{
         console.log('connection!!');
-        getUserList(client);
+        getUser(client);
     }).catch((err:any)=>{
         console.log(err);
         throw err;

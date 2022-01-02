@@ -67,7 +67,6 @@ components:
         - cabinet_num
         - location
         - floor
-        - cluster
         - section
         - activation
         - lent_id
@@ -86,9 +85,6 @@ components:
           type: string
           example: "serom"
         floor:
-          type: integer
-          example: 1
-        cluster:
           type: integer
           example: 1
         section:
@@ -111,7 +107,7 @@ components:
           type: string
           format: datetime
           example: "2021-12-29-17:36"
-        extention:
+        extension:
           type: boolean
           example: True
     return:

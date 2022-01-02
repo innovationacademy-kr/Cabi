@@ -6,6 +6,24 @@ type userInfo = {
     phone: string
 }
 
+type cabinetInfo = {
+    cabinet_id: number,
+    cabinet_num: number,
+    location: string,
+    floor: number,
+    section: string,
+    activation: boolean,
+    lent_id: number,
+    user_id: number,
+    lent_time: Date,
+    expire_time: Date,
+    extension: boolean
+}
+
+type lentData = {
+    cabinet_id: number
+}
+
 export let user:userInfo = {
     user_id: 1,
     intra_id: "spark",
