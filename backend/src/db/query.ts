@@ -41,6 +41,11 @@ export function getUser(client:any){
 }
 //cabinet 정보 가져오기 - 렌트 페이지
 export function getCabinetList(client:any){
+    client.query(client.query(`SELECT * FROM cabinet c LEFT OUTER JOIN lent l ON l.lent_cabinet_id = c.cabinet_id;`);
+    // 첫번째 join 저장하기
+    client.query(`SELECT u.intra_id FROM lent l inner JOIN user u ON u.user_id = l.lent_user_id;`), function(err:any, res:any, field:any) {
+        
+    });
 }
 //lent 값 생성
 export function postLent(client:any){
