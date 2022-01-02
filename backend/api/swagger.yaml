@@ -8,16 +8,10 @@ info:
 servers:
   - url: 'http://localhost:4242'
 paths:
-  /user:
-    get:
-      summary: Returns user list
-      responses:
-        '400':
-          $ref: '#/components/responses/BadRequest'
   /api/user:
     post:
       tags:
-        - 42cabinet_user
+        - user
       summary: 42cabinet user info
       operationId: userInfo
       description: response with 42cabinet_user information
@@ -56,7 +50,7 @@ paths:
   /api/cabinet:
     post:
       tags:
-        - 42cabi_cabinet
+        - cabinet
       summary: adds an cabinet item
       operationId: cabinetInfo
       description: response with cabinet infromation
@@ -95,18 +89,6 @@ paths:
 components:
   parameters: null
   schemas:
-    User:
-      type: object
-      required:
-        - _id
-        - name
-      properties:
-        _id:
-          type: number
-          description: id
-        name:
-          type: string
-          description: 유저 이름
     Error:
       type: object
       properties:
