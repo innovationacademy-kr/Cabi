@@ -7,7 +7,11 @@ export function checkUser(client:any){
 }
 //사용자가 없는 경우, user 값 생성
 export function addUser(client:any){
-    
+    const cmd = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
+    client.query(cmd, (err:any, res:any, field:any)=>{
+        if (err) throw err;
+        console.log(res);
+    });
 }
 //본인 정보 및 렌트 정보 - 리턴 페이지
 export function getUser(client:any){
@@ -16,7 +20,6 @@ export function getUser(client:any){
         console.log(res);
         console.log(typeof res);
         // console.log(res.length);
-        mysqlssh.close();
     });
 }
 //cabinet 정보 가져오기 - 렌트 페이지
