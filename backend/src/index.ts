@@ -3,7 +3,7 @@ import path from 'path';
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
 import cors from 'cors'
-import {connection} from './db/db_dep'
+import {connection} from './db/db_dev'
 import {router} from './route'
 
 function makeServer(){
@@ -19,6 +19,7 @@ function makeServer(){
             credentials: true,
         })
     );
+
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
     app.use('/', router);
@@ -26,7 +27,9 @@ function makeServer(){
     app.use('/', function(req, res){
         res.sendFile(path.join(__dirname, '../public/index.html'));
     });
+    
+    connection();
 
     app.listen(port, ()=>console.log(`Listening on port ${port}`));
-    // connection();
 }
+makeServer();

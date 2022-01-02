@@ -16,6 +16,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "mariadb": "^2.5.5",
+    "mysql-ssh": "^1.0.6",
     "nodemon": "^2.0.15",
     "swagger-cli": "^4.0.4",
     "swagger-ui-express": "^4.3.0",
