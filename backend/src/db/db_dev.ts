@@ -7,7 +7,7 @@ export function connection(){
     mysqlssh.connect({
         host: 'cabi.42cadet.kr',
         user: 'ec2-user',
-        privateKey: fs.readFileSync('/Users/yoonhyeonji/Desktop/42Seoul/42cabi/swlabs-cadet.pem')
+        privateKey: fs.readFileSync('../key/swlabs-cadet.pem')
     },{
         host: '127.0.0.1',
         user: 'root',
