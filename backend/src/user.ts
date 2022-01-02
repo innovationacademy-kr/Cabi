@@ -22,8 +22,6 @@ type lentInfo = {
     lent_id: number,
     lent_cabinet_id: number,
     lent_user_id: number,
-    lent_time: Date,
-    expire_time: Date,
     extension: boolean
 }
 
@@ -35,4 +33,9 @@ export let user:userInfo = {
     email: "spark@student.42seoul.kr",
     phone: "01012344567"
 }
-export let lent:lentInfo;
+export let lent:lentInfo = {
+    lent_id: 1,
+    lent_cabinet_id: 2,
+    lent_user_id: 2,
+    extension: true
+}
