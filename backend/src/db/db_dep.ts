@@ -1,5 +1,5 @@
 import mariadb from 'mariadb';
-import {getUserList} from './query'
+import {getUser} from './query'
 
 const con = mariadb.createPool({
 	host: 'localhost',
@@ -11,7 +11,7 @@ export async function connection() {
     // console.log("trying...");
     try{
         pool = await con.getConnection()
-        getUserList(pool);
+        getUser(pool);
     }catch(err){
         throw err;
     }finally{
