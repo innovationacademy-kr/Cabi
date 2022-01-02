@@ -3,7 +3,7 @@ import path from 'path';
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
 import cors from 'cors'
-import {getUserList} from './app'
+import {connection} from './db/db_dep'
 import {router} from './route'
 
 function makeServer(){
@@ -28,5 +28,5 @@ function makeServer(){
     });
 
     app.listen(port, ()=>console.log(`Listening on port ${port}`));
-    // getUserList();
+    // connection();
 }
