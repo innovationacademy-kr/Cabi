@@ -27,6 +27,15 @@ export function getUser(client:any){
         if (err) throw err;
         console.log(res);
         console.log(typeof res);
+        if (res.length !== 0) // lent page
+        {
+            lent_id = res[0].lent_id,
+            lent_cabinet_id = res[0].lent_cabinet_id,
+            lent_user_id = res[0].lent_user_id,
+            lent_time = res[0].lent_time,
+            expire_time = res[0].expire_time,
+            extension = res[0].extension,
+        }
         // console.log(res.length);
     });
 }
