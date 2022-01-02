@@ -5,7 +5,6 @@ type userInfo = {
     email: string,
     phone: string
 }
-
 type cabinetInfo = {
     cabinet_id: number,
     cabinet_num: number,
@@ -19,15 +18,21 @@ type cabinetInfo = {
     expire_time: Date,
     extension: boolean
 }
-
-type lentData = {
-    cabinet_id: number
+type lentInfo = {
+    lent_id: number,
+    lent_cabinet_id: number,
+    lent_user_id: number,
+    lent_time: Date,
+    expire_time: Date,
+    extension: boolean
 }
 
+//variables
 export let user:userInfo = {
-    user_id: 1,
+    user_id: 39393,
     intra_id: "spark",
     auth: 1,
     email: "spark@student.42seoul.kr",
     phone: "01012344567"
 }
+export let lent:lentInfo;
