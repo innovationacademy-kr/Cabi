@@ -10,8 +10,7 @@ function makeServer(){
     const port = process.env.PORT || 4242;
 
     const list:Array<string> = [
-        "http://3.38.166.176",
-        "http://cabi.42cadet.kr"
+        "https://cabi.42cadet.kr"
     ]
     app.use(
         cors({
