@@ -41,3 +41,12 @@ export let lent:lentInfo = {
     lent_user_id: 2,
     extension: true
 }
+
+export let lentForPost:lentInfo = {
+  lent_id: 2,
+  lent_cabinet_id: 42,
+  lent_user_id: 1, 
+  lent_time: "date",
+  expire_time: "date", 
+  extension: true
+}
