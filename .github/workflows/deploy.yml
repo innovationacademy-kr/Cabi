@@ -7,7 +7,6 @@ jobs:
     name: deploy
     runs-on: ubuntu-latest
     steps:
-    - run: pwd
     - name: update & deploy
       uses: appleboy/ssh-action@master
       with:
@@ -16,4 +15,6 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
+          pwd
           ./deploy.sh
+        
