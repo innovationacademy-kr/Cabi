@@ -9,6 +9,7 @@ jobs:
     steps:
     - name: update & deploy
       uses: appleboy/ssh-action@master
+      run: pwd
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -16,4 +17,3 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           ./deploy.sh
-          
