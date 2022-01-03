@@ -7,9 +7,9 @@ jobs:
     name: deploy
     runs-on: ubuntu-latest
     steps:
+    - run: pwd
     - name: update & deploy
       uses: appleboy/ssh-action@master
-      run: pwd
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
