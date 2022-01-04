@@ -11,7 +11,7 @@ function App() {
           <Route path='/return'>Return</Route>
           <Route>Main</Route>
         </Switch>
-      </BrowserRouter>	    
+      </BrowserRouter>
     </div>
   )
 }
