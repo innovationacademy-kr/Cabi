@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "bootstrap-icons": "^1.7.2",
     "gulp": "^4.0.2",
     "nodemon": "^2.0.15",
     "react": "^17.0.2",
