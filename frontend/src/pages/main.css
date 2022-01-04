@@ -8,7 +8,7 @@ Body{
 
 #loginBtn{
     color: white;
-    border: white 5px solid;
+    border: white 3px solid;
     border-radius: 15px;
 }
 
@@ -20,14 +20,7 @@ Body{
     height: 100vh;
 }
 
-.container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 #logo > img {
-    height: 60vh;
+    height: 40vh;
     object-fit: scale-down;
 }

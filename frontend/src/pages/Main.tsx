@@ -13,14 +13,12 @@ export default function Main(){
 
     return (
         <div className="container">
-            <div className="col">
-                <div className="row" id='logo'>
-                    <img src="../img/logo.png" alt="logo" />
-                </div>
-                <div className="row d-grid gap-2 col-3 mx-auto">
-                    <div className="btn btn-lg" id="loginBtn" onClick={handleClick}>
-                        L O G I N
-                    </div>
+            <div className="row p-5" id='logo'>
+                <img src="../img/logo.png" alt="logo" />
+            </div>
+            <div className="row d-grid gap-2 col-6 mx-auto">
+                <div className="btn btn-lg" id="loginBtn" onClick={handleClick}>
+                    L O G I N
                 </div>
             </div>
         </div>
