@@ -1,16 +1,33 @@
-#loginBtn{
-    border-radius: 20px;
-    box-shadow:  1px 1px 5px #bebebe,
-                 -1px -1px 5px #ffffff;
-}
-#loginBtn:hover{
-    box-shadow: inset 1px 1px 5px #bebebe,
-                inset -1px -1px 5px #ffffff;
-}
 Body{
     width: 100vw;
     height: 100vh;
-    background: #a8c0ff; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #a8c0ff, #3f2b96); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #a8c0ff, #3f2b96); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #39337d;
+    background: -webkit-linear-gradient(to bottom, #9e39969a, #39337d);
+    background: linear-gradient(to bottom, #9e39969a, #39337d);
+}
+
+#loginBtn{
+    color: white;
+    border: white 5px solid;
+    border-radius: 15px;
+}
+
+#loginBtn:hover{
+    background-color: #d8d4d44b;
+}
+
+#root .App{
+    height: 100vh;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo > img {
+    height: 60vh;
+    object-fit: scale-down;
 }
