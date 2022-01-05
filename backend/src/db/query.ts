@@ -1,5 +1,5 @@
 const mysqlssh = require('mysql-ssh')
-import {user, lent, lentForPost} from '../user'
+import {user, lent, lentForPost, cabinet} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
@@ -23,7 +23,7 @@ export function addUser(client:any){
     });
 }
 //본인 정보 및 렌트 정보 - 리턴 페이지
-export function getUser(client:any){
+export function getUser(client:any){    
     client.query(`select * from lent where lent_user_id=${user.user_id}`, function(err:any, res:any, field:any){
         if (err) throw err;
         console.log(res);
@@ -42,11 +42,37 @@ export function getUser(client:any){
 }
 //cabinet 정보 가져오기 - 렌트 페이지
 export function getCabinetList(client:any){
-    client.query(client.query(`SELECT * FROM cabinet c LEFT OUTER JOIN lent l ON l.lent_cabinet_id = c.cabinet_id;`));
+    client.query(`SELECT * FROM cabinet order by location, floor, section, cabinet_num`, (err:any, res:any, field:any)=>{
+        if (err) throw err;
+        let i = -1;
+        while (res[++i]){
+            cabinet.push({
+                cabinet_id: res[i].cabinet_id,
+                cabinet_num: res[i].cabinet_num,
+                location: res[i].location,
+                floor: res[i].floor,
+                section: res[i].section,
+                activation: res[i].activation,
+            });
+            console.log(cabinet[i]);
+        }
+    });
+
+    // client.query(client.query(`SELECT * FROM cabinet c LEFT OUTER JOIN lent l ON l.lent_cabinet_id = c.cabinet_id;`));
     // 첫번째 join 저장하기
-    client.query(`SELECT u.intra_id FROM lent l inner JOIN user u ON u.user_id = l.lent_user_id;`), function(err:any, res:any, field:any) {
-    };
+    // client.query(`SELECT u.intra_id FROM lent l inner JOIN user u ON u.user_id = l.lent_user_id;`), function(err:any, res:any, field:any) {
+    // };
 }
+//lent & user
+export function getLentUser(client:any){
+    const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
+    client.query(content, (err:any, res:any, field:any)=>{
+        if (err) throw err;
+        console.log(res);
+    });
+}
+//location count
+
 //lent 값 생성
 export function postLent(client:any){
     client.query(`INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lentForPost.lent_cabinet_id}, ${lentForPost.lent_user_id}, now(), now(), ${lentForPost.extension})`, function(err:any, res:any, field:any){
