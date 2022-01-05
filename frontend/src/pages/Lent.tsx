@@ -1,13 +1,10 @@
-import axios from 'axios'
+// import axios from 'axios'
 import Menu from '../component/Menu' 
-// import './return.css'
-// import './main.css'
-
+import './lent.css'
 
 export default function Lent(){
     return (
-        
-        <div className="container h-100 p-0 m-0 border col-12">
+        <div className="container">
             <div className="row-2">
                 <Menu></Menu>
             </div>
@@ -20,12 +17,11 @@ export default function Lent(){
                     </div>
                 </nav>
                 <div className="tab-content" id="nav-tabContent">
-                  <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                      ...</div>
-                  <div className="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
-                  <div className="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                  <div className="tab-pane active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">hello!!</div>
+                  <div className="tab-pane" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+                  <div className="tab-pane" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
                 </div>
             </div>
         </div>
-    )
+    );
 }

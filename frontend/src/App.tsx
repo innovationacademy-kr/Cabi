@@ -5,16 +5,16 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
+    <BrowserRouter>
+      <div className="App">
         <Switch>
           <Route exact path='/'><Main></Main></Route>
           <Route path='/lent'><Lent></Lent></Route>
           <Route path='/return'><Return></Return></Route>
           <Route><Main></Main></Route>
         </Switch>
-      </BrowserRouter>
-    </div>
+      </div>
+    </BrowserRouter>
   )
 }
 

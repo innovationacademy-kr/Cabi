@@ -1,5 +1,5 @@
 const mysqlssh = require('mysql-ssh')
-import {user, lent, lentForPost, cabinet} from '../user'
+import {user, lent, lentForPost, cabinet, locationInfo} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
@@ -54,7 +54,7 @@ export function getCabinetList(client:any){
                 section: res[i].section,
                 activation: res[i].activation,
             });
-            console.log(cabinet[i]);
+            console.log(res[i]);
         }
     });
 
@@ -72,18 +72,33 @@ export function getLentUser(client:any){
     });
 }
 //location info
-export function locationInfo(client:any):Array<string>{
-    const content = `select distinct cabinet.location from cabinet`;
-    let loc:Array<string> = [];
+export function locationInfo(client:any):Array<locationInfo>{
+    const content:string = `select distinct cabinet.location, count(distinct cabinet.floor) as floor from cabinet order by cabinet.floor`;
+    let locationList:Array<locationInfo> = [];
 
     client.query(content, (err:any, res:any, field:any)=>{
         if (err) throw err;
+        console.log(res);
+        // console.log(`location = ${res[0].location}`);
+        //location
         let i = -1;
         while (res[++i]){
-            loc.push(res[i]);
+            //floor
+            const cont:any = res[i];
+            const qu:string = `select c.* from cabinet c where c.location="${res[i].location}" order by c.floor, c.section`;
+            client.query(qu, (err:any, resp:any, field:any)=>{
+                if (err) throw err;
+                console.log(cont);
+                locationList.push({
+                    location: cont.location,
+                    floor: cont.floor,
+                    cabinet: resp,
+                });
+                // console.log(resp);
+            });
         }
     });
-    return loc;
+   return locationList;
 }
 //lent 값 생성
 export function postLent(client:any){

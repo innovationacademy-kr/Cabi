@@ -25,6 +25,14 @@ type lentInfo = {
     intra_id?: string
 }
 
+//one location - ex) 새롬
+export type locationInfo = {
+    location: string,
+    floor: number,
+    section?: Array<number>,
+    cabinet: Array<cabinetInfo>
+}
+
 //variables
 export let user:userInfo = {
     user_id: 39393,
