@@ -71,8 +71,20 @@ export function getLentUser(client:any){
         console.log(res);
     });
 }
-//location count
+//location info
+export function locationInfo(client:any):Array<string>{
+    const content = `select distinct cabinet.location from cabinet`;
+    let loc:Array<string> = [];
 
+    client.query(content, (err:any, res:any, field:any)=>{
+        if (err) throw err;
+        let i = -1;
+        while (res[++i]){
+            loc.push(res[i]);
+        }
+    });
+    return loc;
+}
 //lent 값 생성
 export function postLent(client:any){
     client.query(`INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lentForPost.lent_cabinet_id}, ${lentForPost.lent_user_id}, now(), now(), ${lentForPost.extension})`, function(err:any, res:any, field:any){
