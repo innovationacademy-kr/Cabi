@@ -7,22 +7,30 @@ Body{
     background: linear-gradient(to bottom, #9e39969a, #39337d);
     margin: 3%;
     padding: 1%;
-
     /* justify-content: center; */
     /* position: absolute; */
     /* left: 50%;
     top: 50%; */
+    font-family: 'EliceDigitalBaeum_Regular';
 
 }
+
 
 #container{
     padding: 10px 10px 10px 10px;
     background: white;
-    border-radius: 10px;
+    border-radius: 15px;
     opacity: 0.8;
     /* border: solid; */
     /* justify-content: center; */
     /* margin: auto; */
+}
+
+@font-face {
+    font-family: 'EliceDigitalBaeum_Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/EliceDigitalBaeum_Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
 #loginBtn{

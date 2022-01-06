@@ -1,5 +1,6 @@
 import axios from 'axios'
 // import './return.css'
+import Menu from '../component/Menu'
 import './main.css'
 import ReturnModal from '../modal/ReturnModal'
 
@@ -7,7 +8,7 @@ export default function Return(){
     return (
         <div className="container" id="container">
             <div className="row-3">
-                메뉴
+            <Menu></Menu>
             </div>
             <div className="row-3 border">
                 대여상태

@@ -1,6 +1,16 @@
-.container{
+/* .container{
     height: 100%;
     width: 100%;
     min-width: 540px;
     max-width: 100%;
+} */
+
+#location{
+    text-align: center;
+}
+#locationMenu{
+    text-align: center;
+    min-width: 10px;
+    right:40%;
+    left: 40%;
 }

@@ -1,12 +1,15 @@
 // import axios from 'axios'
 import Menu from '../component/Menu' 
+import Location from '../component/Location' 
 import './lent.css'
+import './main.css'
 
 export default function Lent(){
     return (
-        <div className="container">
+        <div className="container" id ="container">
             <div className="row-2">
                 <Menu></Menu>
+                <Location></Location>
             </div>
             <div className="row border my-2 mx-2">
                 <nav>
