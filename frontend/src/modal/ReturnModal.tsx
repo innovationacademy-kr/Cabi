@@ -7,6 +7,8 @@ export default function ReturnModal(){
     alert("반납완료?!")
     // 사실, 여기 함수를 이용하여 반납완료 시, 반납성공 한번 띄워주고는
     // 바로 lent 페이지로 날려주고 싶스므니다. 더 찾아보겟스므니다.
+    window.location.href="/lent"
+    // 날릴까봐 커밋해뜨니, 바로 찾아브럿습니다. 이럴 거면 다 만들어놓고 올릴껄...
 }
     return (
       <div className="modal" id="returnmodal" tabIndex={-1}>
