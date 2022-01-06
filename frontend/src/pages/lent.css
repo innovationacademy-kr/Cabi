@@ -1,6 +1,9 @@
-.container{
-    height: 100%;
-    width: 100%;
-    min-width: 540px;
-    max-width: 100%;
+#lentBtn{
+    color: white;
+    border: white 3px solid;
+    border-radius: 15px;
+}
+
+#lentBtn:hover{
+    background-color: #d8d4d44b;
 }

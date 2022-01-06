@@ -1,14 +1,12 @@
 
 Body{
-    /* width: 100vw; */
-    /* height: 100vh; */
     background: #39337d;
     background: -webkit-linear-gradient(to bottom, #9e39969a, #39337d);
     background: linear-gradient(to bottom, #9e39969a, #39337d);
-    margin: 3%;
-    padding: 1%;
-
-    /* justify-content: center; */
+    padding: 3%;
+    min-width: 540px;
+    max-width: 100vw;
+    justify-content: center;
     /* position: absolute; */
     /* left: 50%;
     top: 50%; */
@@ -16,18 +14,17 @@ Body{
 }
 
 #container{
+    height: 100%;
+    width: 100%;
     padding: 10px 10px 10px 10px;
-    background: white;
+    background: #f2f2f256;
     border-radius: 10px;
-    /* border: solid; */
-    /* justify-content: center; */
-    /* margin: auto; */
+    justify-content: center;
 }
 
 #loginBtn{
-    color: wheat;
-    border: wheat 3px solid;
-    background: black;
+    color: white;
+    border: white 3px solid;
     border-radius: 15px;
 }
 
@@ -36,7 +33,7 @@ Body{
 }
 
 #root .App{
-    /* width: 100vw; */
+    width: 100vw;
     height: 100vh;
 }
 
