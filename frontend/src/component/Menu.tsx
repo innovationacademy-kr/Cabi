@@ -8,8 +8,8 @@ export default function Menu(){
           <i className="h2 bi bi-list"></i>
         </button>
         <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a className="dropdown-item" href="#">내 정보</a>
-          <a className="dropdown-item" href="#">설정</a>
+          <a className="dropdown-item" href="#">내 사물함 / 전체 사물함</a>
+          <a className="dropdown-item" href="#">대여 로그</a>
           <a className="dropdown-item" href="#">로그아웃</a>
         </div>
       </div>

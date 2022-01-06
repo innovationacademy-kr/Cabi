@@ -1,6 +1,7 @@
 
 Body{
-    background: #39337d;
+    /* background: #f9f9f9; */
+    background: #9e39969a;
     background: -webkit-linear-gradient(to bottom, #9e39969a, #39337d);
     background: linear-gradient(to bottom, #9e39969a, #39337d);
     padding: 3%;
@@ -9,7 +10,6 @@ Body{
     /* left: 50%;
     top: 50%; */
     font-family: 'EliceDigitalBaeum_Regular';
-
 }
 
 #container{
