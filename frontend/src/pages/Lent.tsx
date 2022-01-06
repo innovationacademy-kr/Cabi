@@ -7,10 +7,14 @@ import './main.css'
 
 export default function Lent(){
     return (
-        <div className="container" id="container">
-            <div className="row-2">
+        <div className="container col" id="container">
+            <div className="row align-items-center">
+              <div className="col-2">
                 <Menu></Menu>
+              </div>
+              <div className="col">
                 <Location></Location>
+              </div>
             </div>
             <div className="row border my-2 mx-2">
                 <nav>

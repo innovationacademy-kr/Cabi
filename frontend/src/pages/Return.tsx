@@ -12,19 +12,19 @@ export default function Return(){
                 </div>
                 <div className="card row-2 p-5 m-5">
                     <div className="card-body p-5 m-5">
-                      <h1 className="card-title text-center">serom 2F 42</h1>
-                      <h3 className="card-subtitle mb-2 text-muted text-center">~ 2022-01-16</h3>
-                    </div>
-                </div>
-                <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-                    <div className="btn btn-lg disabled"  id="loginBtn">
-                        연장하기
+                      <div className="card-title text-center display-5">serom 2F 42</div>
+                      <div className="card-subtitle mb-2 text-muted text-center">~ 2022-01-16</div>
                     </div>
                 </div>
                 <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
                     <div className="btn btn-lg" id="loginBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
                         반납하기
                         </div>
+                </div>
+                <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
+                    <div className="btn btn-lg disabled"  id="loginBtn">
+                        연장하기
+                    </div>
                 </div>
                 <ReturnModal></ReturnModal>
             </div>
