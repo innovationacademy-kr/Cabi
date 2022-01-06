@@ -27,10 +27,10 @@ type lentInfo = {
 
 //one location - ex) 새롬
 export type locationInfo = {
-    location: string,
-    floor: number,
-    section?: Array<number>,
-    cabinet: Array<cabinetInfo>
+    location: Array<string>,
+    floor: Array<Array<number>>,
+    section?: Array<Array<Array<string>>>,
+    cabinet?: Array<cabinetInfo>
 }
 
 //variables

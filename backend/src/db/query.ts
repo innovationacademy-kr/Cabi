@@ -88,12 +88,13 @@ export function locationInfo(client:any):Array<locationInfo>{
             const qu:string = `select c.* from cabinet c where c.location="${res[i].location}" order by c.floor, c.section`;
             client.query(qu, (err:any, resp:any, field:any)=>{
                 if (err) throw err;
+                console.log(cont);
                 locationList.push({
                     location: cont.location,
                     floor: cont.floor,
                     cabinet: resp,
                 });
-                console.log(resp);
+                // console.log(resp);
             });
         }
     });
