@@ -57,11 +57,6 @@ export function getCabinetList(client:any){
             console.log(res[i]);
         }
     });
-
-    // client.query(client.query(`SELECT * FROM cabinet c LEFT OUTER JOIN lent l ON l.lent_cabinet_id = c.cabinet_id;`));
-    // 첫번째 join 저장하기
-    // client.query(`SELECT u.intra_id FROM lent l inner JOIN user u ON u.user_id = l.lent_user_id;`), function(err:any, res:any, field:any) {
-    // };
 }
 //lent & user
 export function getLentUser(client:any){
@@ -72,33 +67,51 @@ export function getLentUser(client:any){
     });
 }
 //location info
-export function locationInfo(client:any):Array<locationInfo>{
-    const content:string = `select distinct cabinet.location, count(distinct cabinet.floor) as floor from cabinet order by cabinet.floor`;
-    let locationList:Array<locationInfo> = [];
+export function locationInfo(client:any):Array<string>{
+    const content:string = `select distinct cabinet.location from cabinet`;
+    let locationList:Array<string> = [];
 
     client.query(content, (err:any, res:any, field:any)=>{
         if (err) throw err;
-        console.log(res);
-        // console.log(`location = ${res[0].location}`);
-        //location
         let i = -1;
         while (res[++i]){
-            //floor
-            const cont:any = res[i];
-            const qu:string = `select c.* from cabinet c where c.location="${res[i].location}" order by c.floor, c.section`;
-            client.query(qu, (err:any, resp:any, field:any)=>{
-                if (err) throw err;
-                console.log(cont);
-                locationList.push({
-                    location: cont.location,
-                    floor: cont.floor,
-                    cabinet: resp,
-                });
-                // console.log(resp);
-            });
+            locationList.push(res[i].location);
+            floorInfo(client, res[i].location);
         }
+        // console.log(locationList);
     });
-   return locationList;
+    return locationList;
+}
+//floor info with exact location
+export function floorInfo(client:any, location:string):Array<number>{
+    const content:string = `select distinct cabinet.floor from cabinet where location='${location}' order by floor`;
+    let floorList:Array<number> = [];
+
+    client.query(content, (err:any, res:any, field:any)=>{
+        if (err) throw err;
+        let i = -1;
+        while (res[++i]){
+            floorList.push(res[i].floor);
+            sectionInfo(client, location, res[i].floor);
+        }
+        console.log(floorList);
+    });
+    return floorList;
+}
+//section info with exact floor
+export function sectionInfo(client:any, location:string, floor:number):Array<string>{
+    const content:string = `select distinct cabinet.section from cabinet where location='${location}' and floor=${floor} order by section`;
+    let sectionList:Array<string> = [];
+
+    client.query(content, (err:any, res:any, field:any)=>{
+        if (err) throw err;
+        let i = -1;
+        while (res[++i]){
+            sectionList.push(res[i].section);
+        }
+        console.log(sectionList);
+    });
+    return sectionList;
 }
 //lent 값 생성
 export function postLent(client:any){
