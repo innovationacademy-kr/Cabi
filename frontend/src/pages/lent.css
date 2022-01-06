@@ -14,3 +14,13 @@
     right:40%;
     left: 40%;
 }
+
+#lentBtn{
+    color: white;
+    border: white 3px solid;
+    border-radius: 15px;
+}
+
+#lentBtn:hover{
+    background-color: #d8d4d44b;
+}

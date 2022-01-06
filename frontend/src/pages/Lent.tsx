@@ -1,12 +1,13 @@
 // import axios from 'axios'
-import Menu from '../component/Menu' 
 import Location from '../component/Location' 
+import Menu from '../component/Menu'
+import LentModal from '../modal/LentModal'
 import './lent.css'
 import './main.css'
 
 export default function Lent(){
     return (
-        <div className="container" id ="container">
+        <div className="container" id="container">
             <div className="row-2">
                 <Menu></Menu>
                 <Location></Location>
@@ -20,11 +21,21 @@ export default function Lent(){
                     </div>
                 </nav>
                 <div className="tab-content" id="nav-tabContent">
-                  <div className="tab-pane active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">hello!!</div>
-                  <div className="tab-pane" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
-                  <div className="tab-pane" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                  <div className="tab-pane active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    hello!!
+                  </div>
+                  <div className="tab-pane" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    ...
+                  </div>
+                  <div className="tab-pane" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                    ...
+                  </div>
                 </div>
             </div>
+            <div className="btn btn-lg" id="lentBtn" data-bs-toggle="modal" data-bs-target="#lentmodal">
+              대여하기
+            </div>
+            <LentModal></LentModal>
         </div>
     );
 }
