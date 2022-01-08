@@ -3,6 +3,8 @@ Body{
     background: #39337d;
     background: -webkit-linear-gradient(to bottom, #9e39969a, #39337d);
     background: linear-gradient(to bottom, #9e39969a, #39337d);
+    /* background: white; */
+
     padding: 3%;
     justify-content: center;
     /* position: absolute; */
