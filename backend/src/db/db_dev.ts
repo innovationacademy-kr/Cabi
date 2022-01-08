@@ -1,7 +1,9 @@
 const mysqlssh = require('mysql-ssh')
 import fs from 'fs';
+import { cabinet } from '../user';
 import {getUser, addUser, checkUser, postReturn, postLent, getCabinetList, getLentUser, locationInfo} from './query'
 
+let cabinet_list:Array<string>;
 export function connection(){
     console.log('start!');
     mysqlssh.connect({
@@ -23,7 +25,7 @@ export function connection(){
         // postLent(client);
         // getCabinetList(client);
         // getLentUser(client);
-        locationInfo(client);
+        cabinet_list = locationInfo(client);
     }).catch((err:any)=>{
         console.log(err);
         throw err;

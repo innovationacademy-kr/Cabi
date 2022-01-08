@@ -41,8 +41,9 @@ export function getUser(client:any){
     });
 }
 //cabinet 정보 가져오기 - 렌트 페이지
-export function getCabinetList(client:any){
-    client.query(`SELECT * FROM cabinet order by location, floor, section, cabinet_num`, (err:any, res:any, field:any)=>{
+export function getCabinetList(client:any, location:string, floor:number, section:string){
+    client.query(`SELECT * FROM cabinet c where c.location="${location}" and c.floor=${floor} and c.section="${section}" order by cabinet_num`, 
+    (err:any, res:any, field:any)=>{
         if (err) throw err;
         let i = -1;
         while (res[++i]){
@@ -54,7 +55,7 @@ export function getCabinetList(client:any){
                 section: res[i].section,
                 activation: res[i].activation,
             });
-            console.log(res[i]);
+            // console.log(res[i]);
         }
     });
 }
@@ -94,7 +95,7 @@ export function floorInfo(client:any, location:string):Array<number>{
             floorList.push(res[i].floor);
             sectionInfo(client, location, res[i].floor);
         }
-        console.log(floorList);
+        // console.log(floorList);
     });
     return floorList;
 }
@@ -108,8 +109,9 @@ export function sectionInfo(client:any, location:string, floor:number):Array<str
         let i = -1;
         while (res[++i]){
             sectionList.push(res[i].section);
+            getCabinetList(client, location, floor, res[i].section);
         }
-        console.log(sectionList);
+        // console.log(sectionList);
     });
     return sectionList;
 }

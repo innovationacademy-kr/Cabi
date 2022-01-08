@@ -7,18 +7,21 @@
 
 #location{
     text-align: center;
-    right:10%;
+    left: 50%;
 }
 
 #locationMenu{
     text-align: center;
-    min-width: 10px;
-    right:40%;
-    left: 40%;
+    overflow: visible;
+    left: 30%;
+    min-width: 30px;
+    right:30%;
 }
+
 #locationfont{
-    color: gray;
+    color: gray
 }
+
 #lentBtn{
     color: white;
     border: white 3px solid;
@@ -27,4 +30,11 @@
 
 #lentBtn:hover{
     background-color: #d8d4d44b;
+}
+#nav-tab{
+    color: #7a31a79a;
+}
+#nav-tab.active{
+    color: white;
+    background-color: #7a31a79a;
 }

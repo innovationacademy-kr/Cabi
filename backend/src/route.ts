@@ -1,4 +1,5 @@
 import express from 'express';
+import { connect } from 'http2';
 const passport = require('passport');
 import authCheck from './middleware/auth';
 
@@ -9,6 +10,11 @@ router.post('/', authCheck, function(req:any, res:any, next){
     console.log('user', req.user);
     res.json({ test: req.user });
 });
+router.post('/lent', function(req:any, res:any){
+    console.log(req);
+    res.json({cabinet_id: req.cabinet_id});
+});
+
 router.get(
     "/auth/login/callback",
     passport.authenticate("42", {

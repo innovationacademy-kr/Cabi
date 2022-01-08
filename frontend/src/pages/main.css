@@ -1,9 +1,9 @@
 
 Body{
-    /* background: #f9f9f9; */
-    background: #9e39969a;
-    background: -webkit-linear-gradient(to bottom, #9e39969a, #39337d);
-    background: linear-gradient(to bottom, #9e39969a, #39337d);
+    /* background: #878787;
+    background: #dfdfdfec; */
+    background: -webkit-linear-gradient(to bottom, #7a31a79a, #39337d);
+    background: linear-gradient(to bottom, #7a31a79a, #39337d);
     padding: 3%;
     justify-content: center;
     /* position: absolute; */
@@ -13,15 +13,16 @@ Body{
 }
 
 #container{
-    height: 100%;
-    width: 100%;
+    height: 90%;
+    margin-top: 10px;
     padding: 10px 10px 10px 10px;
-    background: #f2f2f256;
+    background: #ffffffec;
     border-radius: 10px;
     justify-content: center;
+    background-size: 30px 100px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
 }
-
-
 
 @font-face {
     font-family: 'EliceDigitalBaeum_Regular';
@@ -36,6 +37,12 @@ Body{
     border-radius: 15px;
 }
 
+#colorBtn{
+    color: #7a31a79a;
+    border: #7a31a79a 3px solid;
+    border-radius: 15px;
+}
+
 #loginBtn:hover{
     background-color: #d8d4d44b;
 }
@@ -47,4 +54,10 @@ Body{
 #logo > img {
     height: 40vh;
     object-fit: scale-down;
+}
+
+#dropdownMenu{
+    text-align: center;
+    min-width: 20px;
+    right:0%;
 }
