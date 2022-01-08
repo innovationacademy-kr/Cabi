@@ -1,11 +1,12 @@
+import {useEffect, useState} from 'react'
 import axios from 'axios'
-import Location from '../component/Location' 
+import Location from '../component/Location'
 import Menu from '../component/Menu'
 import LentModal from '../modal/LentModal'
 import './lent.css'
 import './main.css'
 import CabinetBox from '../component/CabinetBox'
-import {useState, useEffect} from 'react'
+
 export type cabinetInfo = {
   cabinet_id: number,
   cabinet_num: number,
@@ -67,7 +68,7 @@ export default function Lent(){
       for (let i = 0; i < info.floor[l_idx].length; i++){
         let floor_name = info.floor[l_idx][i];
         list.push(
-          <button className={`nav-link border px-4${i ? '' :' active'}`} id={`nav-${floor_name}-tab`} key={`nav-${floor_name}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor_name}`} type="button" role="tab" aria-controls={`nav-${floor_name}`} aria-selected={i ? 'false' : 'true'}>
+          <button className={`nav-link border px-4${i ? '' :' active'}`} id={`nav-tab`} key={`nav-${floor_name}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor_name}`} type="button" role="tab" aria-controls={`nav-${floor_name}`} aria-selected={i ? 'false' : 'true'}>
             {floor_name}
           </button>
         );
@@ -130,6 +131,26 @@ export default function Lent(){
             </div>
             <div className="row my-2 mx-2">
                 <nav>
+                {/* <div className="nav nav-tabs" id="nav-tab" role="tablist">
+                      <button className="nav-link active px-5" id="nav-tab" data-bs-toggle="tab" 
+                      data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">3</button>
+                      <button className="nav-link px-5" id="nav-tab" data-bs-toggle="tab" 
+                      data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">4</button>
+                      <button className="nav-link px-5" id="nav-tab" data-bs-toggle="tab" 
+                      data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">5</button>
+                    </div>
+                </nav>
+                <div className="card tab-content" id="nav-tabContent">
+                  <div className="tab-pane active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    dfdsfastrewrtfdgdfgdfg
+                  </div>
+                  <div className="tab-pane" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    ...
+                  </div>
+                  <div className="tab-pane" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                    ...
+                  </div>
+                </div> */}
                   <div className="nav nav-tabs" id="nav-tab" role="tablist">{navTabs()}</div>
                 </nav>
                 <div className="tab-content" id="nav-tabContent">{navContent()}</div>
