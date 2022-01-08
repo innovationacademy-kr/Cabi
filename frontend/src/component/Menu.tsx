@@ -1,9 +1,9 @@
 // import axios from 'axios'
-// import './main.css'
+import './menu.css'
 
 export default function Menu(){
   return (
-      <div className="dropdown text-right">
+      <div className="dropdown text-right" id="menu">
         <button className="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i className="h2 bi bi-list"></i>
         </button>

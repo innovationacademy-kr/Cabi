@@ -9,7 +9,7 @@ export default function LentModal(){
   }
 
   return (
-    <div className="modal modal-center" id="lentmodal" tabIndex={-1}>
+    <div className="modal" id="lentmodal" tabIndex={-1}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
