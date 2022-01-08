@@ -41,10 +41,10 @@ function makeServer(){
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
     app.use('/', router);
-    app.use(express.static(path.join(__dirname, '../public')));
-    app.use('/', function(req, res){
-        res.sendFile(path.join(__dirname, '../public/index.html'));
-    });
+    // app.use(express.static(path.join(__dirname, '../public')));
+    // app.use('/', function(req, res){
+    //     res.sendFile(path.join(__dirname, '../public/index.html'));
+    // });
     
     connection();
 
