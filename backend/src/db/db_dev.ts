@@ -23,6 +23,7 @@ export function connection(){
         // postLent(client);
         // getCabinetList(client);
         // getLentUser(client);
+        getLentUser(client);
         locationInfo(client);
     }).catch((err:any)=>{
         console.log(err);

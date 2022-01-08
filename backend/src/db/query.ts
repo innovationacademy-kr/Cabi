@@ -1,5 +1,5 @@
 const mysqlssh = require('mysql-ssh')
-import {user, lent, lentForPost, cabinet, locationInfo} from '../user'
+import {user, lent, lentForPost, locationInfo, allInfo, cabinetInfo, cabinet, cabinetLent} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
@@ -13,7 +13,6 @@ export function checkUser(client:any){
             getUser(client);
     })
 }
-
 //사용자가 없는 경우, user 값 생성
 export function addUser(client:any){
     const cmd = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
@@ -42,11 +41,12 @@ export function getUser(client:any){
 }
 //cabinet 정보 가져오기 - 렌트 페이지
 export function getCabinetList(client:any){
+    let info:Array<cabinetInfo> = [];
     client.query(`SELECT * FROM cabinet order by location, floor, section, cabinet_num`, (err:any, res:any, field:any)=>{
         if (err) throw err;
         let i = -1;
         while (res[++i]){
-            cabinet.push({
+            info.push({
                 cabinet_id: res[i].cabinet_id,
                 cabinet_num: res[i].cabinet_num,
                 location: res[i].location,
@@ -54,64 +54,95 @@ export function getCabinetList(client:any){
                 section: res[i].section,
                 activation: res[i].activation,
             });
-            console.log(res[i]);
+            // console.log(res[i]);
         }
     });
 }
 //lent & user
 export function getLentUser(client:any){
     const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
+    console.log('getLentUser');
     client.query(content, (err:any, res:any, field:any)=>{
         if (err) throw err;
         console.log(res);
+        for (let i = 0; i < res.length; i++){
+            cabinetLent.push(res[i]);
+        }
     });
 }
 //location info
-export function locationInfo(client:any):Array<string>{
+export function locationInfo(client:any){
     const content:string = `select distinct cabinet.location from cabinet`;
-    let locationList:Array<string> = [];
+    // let locationList:Array<string> = [];
+    // let location:locationInfo;
 
+    // console.log('location info');
     client.query(content, (err:any, res:any, field:any)=>{
         if (err) throw err;
         let i = -1;
         while (res[++i]){
-            locationList.push(res[i].location);
+            allInfo.location?.push(res[i].location);
+            // info.floor?.push(floorInfo(client, res[i].location));
             floorInfo(client, res[i].location);
         }
-        // console.log(locationList);
+        // console.log(info);
     });
-    return locationList;
 }
 //floor info with exact location
 export function floorInfo(client:any, location:string):Array<number>{
     const content:string = `select distinct cabinet.floor from cabinet where location='${location}' order by floor`;
     let floorList:Array<number> = [];
+    let list:Array<Array<string>> = [];
+    let cabinetList:Array<Array<Array<cabinetInfo>>> = [];
 
+    // console.log('floor info');
     client.query(content, (err:any, res:any, field:any)=>{
         if (err) throw err;
         let i = -1;
         while (res[++i]){
             floorList.push(res[i].floor);
-            sectionInfo(client, location, res[i].floor);
+            list.push(sectionInfo(client, location, res[i].floor, cabinetList));
         }
-        console.log(floorList);
+        allInfo.floor?.push(floorList);
+        allInfo.section?.push(list);
+        allInfo.cabinet?.push(cabinetList);
+        // console.log(floorList);
     });
     return floorList;
 }
 //section info with exact floor
-export function sectionInfo(client:any, location:string, floor:number):Array<string>{
+export function sectionInfo(client:any, location:string, floor:number, list:any):Array<string>{
     const content:string = `select distinct cabinet.section from cabinet where location='${location}' and floor=${floor} order by section`;
     let sectionList:Array<string> = [];
+    let cabinetList:Array<Array<cabinetInfo>> = [];
 
+    // console.log('section info');
     client.query(content, (err:any, res:any, field:any)=>{
         if (err) throw err;
         let i = -1;
         while (res[++i]){
             sectionList.push(res[i].section);
+            cabinetList.push(getCabinetInfo(client, location, floor, res[i].section));
         }
-        console.log(sectionList);
+        // console.log(sectionList);
+        list.push(cabinetList);
     });
     return sectionList;
+}
+export function getCabinetInfo(client:any, location:string, floor:number, section:string):Array<cabinetInfo>{
+    const content:string = `select * from cabinet where location='${location}' and floor=${floor} and section='${section}' order by cabinet_num`;
+    let cabinetList:Array<cabinetInfo> = [];
+
+    // console.log('cabinet info');
+    client.query(content, (err:any, res:any, field:any)=>{
+        if (err) throw err;
+        let i = -1;
+        while (res[++i]){
+            cabinetList.push(res[i]);
+        }
+        // console.log(cabinetList);
+    });
+    return cabinetList;
 }
 //lent 값 생성
 export function postLent(client:any){
@@ -146,4 +177,3 @@ export function postReturn(client:any){
         client.query(`delete from lent where lent_cabinet_id=${lent_id}`)
     });
 }
-

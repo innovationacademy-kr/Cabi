@@ -1,6 +1,7 @@
 import express from 'express';
 const passport = require('passport');
 import authCheck from './middleware/auth';
+import {allInfo, cabinetLent} from './user'
 
 export const router = express.Router();
 
@@ -23,3 +24,9 @@ router.get(
     //     res.redirect('http://localhost:3000/game/lobby');
     // }
 );
+router.post("/api/cabinet", (req:any, res:any, next:any)=>{
+    res.send(allInfo);
+})
+router.post("/api/lent_info", (req:any, res:any)=>{
+    res.send(cabinetLent);
+})

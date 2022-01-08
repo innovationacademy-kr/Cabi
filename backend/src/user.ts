@@ -27,11 +27,17 @@ type lentInfo = {
 
 //one location - ex) 새롬
 export type locationInfo = {
-    location: Array<string>,
-    floor: Array<Array<number>>,
+    location?: Array<string>,
+    floor?: Array<Array<number>>,
     section?: Array<Array<Array<string>>>,
-    cabinet?: Array<cabinetInfo>
+    cabinet?: Array<Array<Array<Array<cabinetInfo>>>>
 }
+export let allInfo:locationInfo = {
+    location: [],
+    floor: [],
+    section: [],
+    cabinet: []
+};
 
 //variables
 export let user:userInfo = {
@@ -47,6 +53,7 @@ export let lent:lentInfo = {
     lent_user_id: 2,
     extension: true
 }
+export let cabinetLent:Array<lentInfo> = [];
 export let lentForPost:lentInfo = {
   lent_id: 2,
   lent_cabinet_id: 42,
