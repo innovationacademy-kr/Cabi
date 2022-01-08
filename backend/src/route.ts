@@ -1,7 +1,7 @@
 import express from 'express';
 const passport = require('passport');
 import authCheck from './middleware/auth';
-import {allInfo, cabinetLent} from './user'
+import {cabinetList, cabinetLent} from './user'
 
 export const router = express.Router();
 
@@ -25,14 +25,12 @@ router.get(
     // }
 );
 router.post("/api/cabinet", (req:any, res:any, next:any)=>{
-    const getaAllInfo = allInfo;
-    if (!allInfo)
+    if (!cabinetList)
         res.status(400).json({error: "no user"});
     else
-        res.send(allInfo);
+        res.send(cabinetList);
 })
 router.post("/api/lent_info", (req:any, res:any)=>{
-    const getCabientLent = cabinetLent;
     if (!cabinetLent)
         res.status(400).json({error: "no cabinet"});
     else

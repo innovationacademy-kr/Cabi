@@ -1,5 +1,5 @@
 const mysqlssh = require('mysql-ssh')
-import {user, lent, lentForPost, locationInfo, allInfo, cabinetInfo, cabinetLent} from '../user'
+import {user, lent, cabinetListInfo, cabinetList, cabinetInfo, cabinetLent} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
@@ -39,25 +39,7 @@ export function getUser(client:any){
         // console.log(res.length);
     });
 }
-//cabinet 정보 가져오기 - 렌트 페이지
-export function getCabinetList(client:any){
-    let info:Array<cabinetInfo> = [];
-    client.query(`SELECT * FROM cabinet order by location, floor, section, cabinet_num`, (err:any, res:any, field:any)=>{
-        if (err) throw err;
-        let i = -1;
-        while (res[++i]){
-            info.push({
-                cabinet_id: res[i].cabinet_id,
-                cabinet_num: res[i].cabinet_num,
-                location: res[i].location,
-                floor: res[i].floor,
-                section: res[i].section,
-                activation: res[i].activation,
-            });
-            // console.log(res[i]);
-        }
-    });
-}
+
 //lent & user
 export function getLentUser(client:any){
     const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
@@ -81,7 +63,7 @@ export function locationInfo(client:any){
         if (err) throw err;
         let i = -1;
         while (res[++i]){
-            allInfo.location?.push(res[i].location);
+            cabinetList.location?.push(res[i].location);
             // info.floor?.push(floorInfo(client, res[i].location));
             floorInfo(client, res[i].location);
         }
@@ -93,7 +75,7 @@ export function floorInfo(client:any, location:string):Array<number>{
     const content:string = `select distinct cabinet.floor from cabinet where location='${location}' order by floor`;
     let floorList:Array<number> = [];
     let list:Array<Array<string>> = [];
-    let cabinetList:Array<Array<Array<cabinetInfo>>> = [];
+    let tmpCabinetList:Array<Array<Array<cabinetInfo>>> = [];
 
     // console.log('floor info');
     client.query(content, (err:any, res:any, field:any)=>{
@@ -101,11 +83,11 @@ export function floorInfo(client:any, location:string):Array<number>{
         let i = -1;
         while (res[++i]){
             floorList.push(res[i].floor);
-            list.push(sectionInfo(client, location, res[i].floor, cabinetList));
+            list.push(sectionInfo(client, location, res[i].floor, tmpCabinetList));
         }
-        allInfo.floor?.push(floorList);
-        allInfo.section?.push(list);
-        allInfo.cabinet?.push(cabinetList);
+        cabinetList.floor?.push(floorList);
+        cabinetList.section?.push(list);
+        cabinetList.cabinet?.push(tmpCabinetList);
         // console.log(floorList);
     });
     return floorList;
@@ -146,14 +128,14 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 }
 //lent 값 생성
 export function postLent(client:any){
-    client.query(`INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lentForPost.lent_cabinet_id}, ${lentForPost.lent_user_id}, now(), now(), ${lentForPost.extension})`, function(err:any, res:any, field:any){
+    client.query(`INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lent.lent_cabinet_id}, ${lent.lent_user_id}, now(), now(), ${lent.extension})`, function(err:any, res:any, field:any){
         if (err) throw err;
         console.log(res);
         console.log(typeof res);
         // console.log(res.length);
         // mysqlssh.close();
       });
-      client.query(`update cabinet set activation = false where cabinet_id=${lentForPost.lent_cabinet_id}`, function(err:any, res:any, field:any){
+      client.query(`update cabinet set activation = false where cabinet_id=${lent.lent_cabinet_id}`, function(err:any, res:any, field:any){
         if (err) throw err;
         console.log(res);
         console.log(typeof res);
