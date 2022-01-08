@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
-import Location from '../component/Location' 
+import Location from '../component/Location'
 import Menu from '../component/Menu'
 import LentModal from '../modal/LentModal'
 import './lent.css'
@@ -20,7 +20,6 @@ export type locationInfo = {
   location?: Array<string>,
   floor?: Array<Array<number>>,
   section?: Array<Array<Array<string>>>,
-  // cabinet?: Array<cabinetInfo>
   cabinet?: Array<Array<Array<Array<cabinetInfo>>>>
 }
 type lentInfo = {
@@ -53,7 +52,7 @@ export default function Lent(){
       const dev_url = "http://localhost:4242/api/lent_info"
       axios.post(dev_url).then((res:any)=>{
         setLent(res.data);
-      }).catch((err)=>{console});
+      }).catch((err)=>{console.log(err.message)});
     }
     const handleClick = () => {
       const dev_url = "http://localhost:4242/api/cabinet"
@@ -108,7 +107,7 @@ export default function Lent(){
     }
     const cabinetBlock = (f_idx:number, s_idx:number) => {
       if (!info || !info.cabinet)
-        return [];  
+        return [];
       let list = [];
       const cab:Array<cabinetInfo> = info.cabinet[l_idx][f_idx][s_idx];
       for (let i = 0; i < cab.length; i++){

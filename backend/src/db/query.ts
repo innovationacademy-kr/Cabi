@@ -1,5 +1,5 @@
 const mysqlssh = require('mysql-ssh')
-import {user, lent, lentForPost, locationInfo, allInfo, cabinetInfo, cabinet, cabinetLent} from '../user'
+import {user, lent, lentForPost, locationInfo, allInfo, cabinetInfo, cabinetLent} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
@@ -22,7 +22,7 @@ export function addUser(client:any){
     });
 }
 //본인 정보 및 렌트 정보 - 리턴 페이지
-export function getUser(client:any){    
+export function getUser(client:any){
     client.query(`select * from lent where lent_user_id=${user.user_id}`, function(err:any, res:any, field:any){
         if (err) throw err;
         console.log(res);

@@ -54,12 +54,12 @@ export let lent:lentInfo = {
     extension: true
 }
 export let cabinetLent:Array<lentInfo> = [];
+
 export let lentForPost:lentInfo = {
   lent_id: 2,
   lent_cabinet_id: 42,
-  lent_user_id: 1, 
+  lent_user_id: 1,
   lent_time: "date",
-  expire_time: "date", 
+  expire_time: "date",
   extension: true
 }
-export let cabinet:Array<cabinetInfo> = [];

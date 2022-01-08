@@ -25,8 +25,16 @@ router.get(
     // }
 );
 router.post("/api/cabinet", (req:any, res:any, next:any)=>{
-    res.send(allInfo);
+    const getaAllInfo = allInfo;
+    if (!allInfo)
+        res.status(400).json({error: "no user"});
+    else
+        res.send(allInfo);
 })
 router.post("/api/lent_info", (req:any, res:any)=>{
-    res.send(cabinetLent);
+    const getCabientLent = cabinetLent;
+    if (!cabinetLent)
+        res.status(400).json({error: "no cabinet"});
+    else
+        res.send(cabinetLent);
 })
