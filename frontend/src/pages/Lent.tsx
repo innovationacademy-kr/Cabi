@@ -77,6 +77,42 @@ export default function Lent(){
       }
       return list;
     }
+    // const navContent = () => {
+    //   let list = [];
+    //   if (!info || !info.floor || info.floor.length <= l_idx)
+    //     return [];
+    //   for (let i = 0; i < info.floor[l_idx].length; i++){
+    //     let floor_name = info.floor[l_idx][i];
+    //     list.push(
+    //       <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
+    //         {navSection(i)}
+    //       </div>
+    //     );
+    //   }
+    //   return list;
+    // }
+
+    // const navSection = (idx:number) => {
+    //   let list = [];
+    //   if (!info || !info.section || info.section[l_idx].length <= idx)
+    //     return [];
+    //   // console.log(info.section[l_idx][idx].length);
+    //   for (let i = 0; i < info.section[l_idx][idx].length; i++){
+    //     list.push(
+    //       <div key={`nav_section_${info.section[l_idx][idx][i]}`}>
+    //         <label className="m-3" key={`label_${info.section[l_idx][idx][i]}`}>{info.section[l_idx][idx][i]}</label>
+    //         <div className="row mx-1" key={`block_${info.section[l_idx][idx][i]}`}>
+    //           {cabinetBlock(idx, i)}
+    //         </div>
+    //       </div>
+    //     );
+    //   }
+    //   return list;
+    // }
+
+
+    // 상단의 두 컴포넌트 코드가 carousel 적용시도 전 코드입니다! 이하 코드는 적용 중 코드!
+
     const navContent = () => {
       let list = [];
       if (!info || !info.floor || info.floor.length <= l_idx)
@@ -84,14 +120,29 @@ export default function Lent(){
       for (let i = 0; i < info.floor[l_idx].length; i++){
         let floor_name = info.floor[l_idx][i];
         list.push(
-          <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} 
-          key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
-            {navSection(i)}
+          // <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
+          //   {navSection(i)}
+          // </div>
+          <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
+            <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+              <div className="carousel-inner" key={`nav-inner${floor_name}`}>
+                {navSection(i)}
+              </div>
+              <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span className="carousel-control-prev-icon" id="carouselBtn" aria-hidden="true"></span>
+                <span className="visually-hidden">Previous</span>
+              </button>
+              <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span className="carousel-control-next-icon" id="carouselBtn" aria-hidden="true"></span>
+                <span className="visually-hidden">Next</span>
+              </button>
+            </div>
           </div>
         );
       }
       return list;
     }
+
     const navSection = (idx:number) => {
       let list = [];
       if (!info || !info.section || info.section[l_idx].length <= idx)
@@ -99,16 +150,24 @@ export default function Lent(){
       // console.log(info.section[l_idx][idx].length);
       for (let i = 0; i < info.section[l_idx][idx].length; i++){
         list.push(
-          <div key={`nav_section_${info.section[l_idx][idx][i]}`}>
-            <label className="m-3" key={`label_${info.section[l_idx][idx][i]}`}>{info.section[l_idx][idx][i]}</label>
-            <div className="row mx-1" key={`block_${info.section[l_idx][idx][i]}`}>
-              {cabinetBlock(idx, i)}
-            </div>
+          // <div key={`nav_section_${info.section[l_idx][idx][i]}`}>
+          //   <label className="m-3" key={`label_${info.section[l_idx][idx][i]}`}>{info.section[l_idx][idx][i]}</label>
+          //   <div className="row mx-1" key={`block_${info.section[l_idx][idx][i]}`}>
+          //     {cabinetBlock(idx, i)}
+          //   </div>
+          // </div>
+          <div className={`carousel-item${i ? '' : ' active'}`}>
+            {cabinetBlock(idx, i)}
           </div>
+
         );
       }
       return list;
     }
+
+
+    // 여기까지가 carousel 적용시도 중 코드입니다!
+
     const cabinetBlock = (f_idx:number, s_idx:number) => {
       if (!info || !info.cabinet)
         return [];
@@ -117,11 +176,12 @@ export default function Lent(){
       for (let i = 0; i < cab.length; i++){
         const id= lent.find((l)=>l.lent_cabinet_id === cab[i].cabinet_id);
         list.push(
-          <CabinetBox key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_num} intra_id={id ? id.intra_id : ""}></CabinetBox>
+          <CabinetBox className="d-block w-100" key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_num} intra_id={id ? id.intra_id : ""}></CabinetBox>
         );
       }
       return list;
     }
+
     return (
         <div className="container col" id="container">
             <div className="row align-items-center">
@@ -132,10 +192,11 @@ export default function Lent(){
                 <Menu></Menu>
               </div>
             </div>
-            <div className="row my-2 mx-2">
+            <div className="row my-2 mx-2" >
                 <nav>
                   <div className="nav nav-tabs" id="nav-tab" role="tablist">{navTabs()}</div>
                 </nav>
+
                 <div className="tab-content" id="nav-tabContent">{navContent()}</div>
             </div>
         </div>

@@ -31,10 +31,14 @@
 #lentBtn:hover{
     background-color: #d8d4d44b;
 }
-.nav-tabs .nav-link{
+#nav-tab{
     color: #7a31a79a;
 }
-.nav-tabs .nav-link.active{
+#nav-tab.active{
     color: white;
     background-color: #7a31a79a;
+}
+
+#carouselBtn{
+    color: #7a31a79a;
 }
