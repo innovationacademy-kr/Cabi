@@ -78,10 +78,6 @@ export default function Lent(){
       }
       return list;
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> dad893b4d214f29b1715adb3c1f9d2630ab76d73
     const navContent = () => {
       let list = [];
       if (!info || !info.floor || info.floor.length <= l_idx)

@@ -25,8 +25,10 @@ export default function Carousel(props:any){
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       list.push(
         <div className={`carousel-item${i ? '' : ' active'}`} key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >
-          <label className="m-3" key={`label_${props.info.section[props.l_idx][idx][i]}`}>{props.info.section[props.l_idx][idx][i]}</label>
+          <div className="m-3 sectionName"  key={`label_${props.info.section[props.l_idx][idx][i]}`}>{props.info.section[props.l_idx][idx][i]}</div>
+          <div id="cabinetGrid">
           {cabinetBlock(idx, i)}
+          </div>
         </div>
       );
     }

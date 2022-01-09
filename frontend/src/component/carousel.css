@@ -1,41 +1,11 @@
 
-/* .container{
-    height: 100%;
-    width: 100%;
-    min-width: 540px;
-    max-width: 100%;
-} */
-
-#location{
+.sectionName{
     text-align: center;
-    left: 50%;
 }
 
-#locationMenu{
-    text-align: center;
-    overflow: visible;
-    left: 30%;
-    min-width: 30px;
-    right:30%;
-}
+#cabinetGrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 5em; 
 
-#locationfont{
-    color: gray
-}
-
-#lentBtn{
-    color: white;
-    border: white 3px solid;
-    border-radius: 15px;
-}
-
-#lentBtn:hover{
-    background-color: #d8d4d44b;
-}
-.nav-tabs .nav-link{
-    color: #7a31a79a;
-}
-.nav-tabs .nav-link.active{
-    color: white;
-    background-color: #7a31a79a;
 }
