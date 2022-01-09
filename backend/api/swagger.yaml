@@ -86,6 +86,63 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/return'
+  /api/lentInfo:
+    post:
+      tags:
+        - lentInfo
+      summary: get all lentInfo
+      operationId: get all lentInfo
+      description: get all lentInfo
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/lentInfo'
+  /auth/login:
+    get:
+      tags:
+        - OauthLogin
+      summary: OauthLogin api
+      operationId: OauthLogin api
+      description: OauthLogin api
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OauthLogin'
+  /auth/logout:
+    get:
+      tags:
+        - OauthLogout
+      summary: OauthLogout api
+      operationId: OauthLogout api
+      description: OauthLogout api
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OauthLogout'
 components:
   parameters: null
   schemas:
@@ -186,6 +243,42 @@ components:
         extension:
           type: boolean
           example: true
+    lentInfo:
+      type: object
+      required:
+        - lent_id
+        - lent_cabinet_id
+        - lent_user_id
+        - lent_time
+        - expired_time
+        - extension
+      properties:
+        lent_id:
+          type: integer
+          example: 1
+        lent_cabinet_id:
+          type: integer
+          example: 95
+        lent_user_id:
+          type: integer
+          example: 10
+        lent_time:
+          type: string
+          example: '2021-12-29-17:36'
+        expired_time:
+          type: string
+          example: '2022-01-29-17:36'
+        extension:
+          type: integer
+          example: 1
+    OauthLogin:
+      type: null
+      required: null
+      properties: null
+    OauthLogout:
+      type: null
+      required: null
+      properties: null
     return:
       type: object
       required:

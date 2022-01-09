@@ -13,6 +13,7 @@ export function checkUser(client:any){
 			getUser(client);
 	})
 }
+
 //사용자가 없는 경우, user 값 생성
 export function addUser(client:any){
 	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;

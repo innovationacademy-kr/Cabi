@@ -9,7 +9,7 @@ export const router = express.Router();
 
 router.get('/auth/login', passport.authenticate('42'));
 router.post('/', authCheck, function(req:any, res:any, next){
-    console.log('user', req.user);
+    // console.log(req.user);
     res.json({ test: req.user });
 });
 router.post('/lent', function(req:any, res:any){
@@ -44,6 +44,7 @@ router.get(
         }
     }
 );
+
 router.post("/api/cabinet", (req:any, res:any, next:any)=>{
     if (!cabinetList)
         res.status(400).json({error: "no user"});
