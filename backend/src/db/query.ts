@@ -4,7 +4,7 @@ import {user, lent, cabinetListInfo, cabinetList, cabinetInfo, cabinetLent} from
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
 	const content:string = `select * from user where user_id = ${user.user_id}`;
-	client.query(content, (err:any, res:any, field:any)=>{
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		if (!res.length)
@@ -16,7 +16,7 @@ export function checkUser(client:any){
 //사용자가 없는 경우, user 값 생성
 export function addUser(client:any){
 	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
-	client.query(content, (err:any, res:any, field:any)=>{
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 	});
@@ -24,7 +24,7 @@ export function addUser(client:any){
 //본인 정보 및 렌트 정보 - 리턴 페이지
 export function getUser(client:any){
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
-	client.query(content, (err:any, res:any, field:any)=>{
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		console.log(typeof res);
@@ -43,7 +43,7 @@ export function getUser(client:any){
 export function getLentUser(client:any){
 	const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
 	console.log('getLentUser');
-	client.query(content, (err:any, res:any, field:any)=>{
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		for (let i = 0; i < res.length; i++){
@@ -54,9 +54,9 @@ export function getLentUser(client:any){
 //location info
 export function locationInfo(client:any){
 	const content:string = `select distinct cabinet.location from cabinet`;
-	
+
 	// console.log('location info');
-	client.query(content, (err:any, res:any, field:any)=>{
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
@@ -74,7 +74,7 @@ export function floorInfo(client:any, location:string):Array<number>{
 	let tmpCabinetList:Array<Array<Array<cabinetInfo>>> = [];
 
 	// console.log('floor info');
-	client.query(content, (err:any, res:any, field:any)=>{
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
@@ -95,7 +95,7 @@ export function sectionInfo(client:any, location:string, floor:number, list:any)
 	let cabinetList:Array<Array<cabinetInfo>> = [];
 
 	// console.log('section info');
-	client.query(content, (err:any, res:any, field:any)=>{
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
@@ -112,7 +112,7 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 	let cabinetList:Array<cabinetInfo> = [];
 
 	// console.log('cabinet info');
-	client.query(content, (err:any, res:any, field:any)=>{
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
@@ -123,17 +123,18 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 	return cabinetList;
 }
 //lent 값 생성
-export function postLent(client:any){
-	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lent.lent_cabinet_id}, ${lent.lent_user_id}, now(), ADDDATE(now(), 30), ${lent.extension})`;
-	client.query(postLent, (err:any, res:any, field:any)=>{
+export function createLent(client:any, cabinet_id:number){
+	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
+	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 	  });
 }
 
 //lent_log 값 생성 후 lent 값 삭제 (skim update)
-export function postReturn(client:any){
-	client.query(`select * from lent where lent_cabinet_id=${lent.lent_cabinet_id}`, function(err:any, res:any, field:any) {
+export function createLentLog(client:any){
+	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
+	client.query(content, (err:any, res:any) => {
 		if (err) throw err;
 		if (res[0] === undefined)
 			return ;
@@ -141,9 +142,14 @@ export function postReturn(client:any){
 		const user_id = res[0].lent_user_id;
 		const cabinet_id = res[0].lent_cabinet_id;
 		const lent_time = res[0].lent_time;
-		client.query(`insert into lent_log (log_user_id, log_cabinet_id, lent_time, return_time) values
-		(${user_id}, ${cabinet_id}, '${lent_time}', now())`);
+		client.query(`insert into lent_log (log_user_id, log_cabinet_id, lent_time, return_time) values (${user_id}, ${cabinet_id}, '${lent_time}', now())`);
 		client.query(`delete from lent where lent_cabinet_id=${lent_id}`)
+		lent.lent_id = 0;
+		lent.lent_cabinet_id = 0;
+		lent.lent_user_id = 0;
+		lent.lent_time = '';
+		lent.expire_time = '';
+		lent.extension = false;
 	});
 }
 
