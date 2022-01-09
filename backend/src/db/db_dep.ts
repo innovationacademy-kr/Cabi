@@ -1,17 +1,28 @@
 import mariadb from 'mariadb';
-import {getUser} from './query'
 
 const con = mariadb.createPool({
 	host: 'localhost',
 	user: 'root'
 });
 
-export async function connection() {
-    let pool, row;
-    // console.log("trying...");
+export async function connection(queryFunction:any) {
+    let pool;
     try{
         pool = await con.getConnection()
-        getUser(pool);
+        queryFunction(pool);
+    }catch(err){
+        throw err;
+    }finally{
+        if (pool) pool.end();
+        return ;
+    }
+}
+
+export async function connectionForLent(queryFunction:any, cabinet_id:number) {
+    let pool;
+    try{
+        pool = await con.getConnection()
+        queryFunction(pool, cabinet_id);
     }catch(err){
         throw err;
     }finally{

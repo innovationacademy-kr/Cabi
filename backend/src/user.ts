@@ -1,9 +1,11 @@
 export type userInfo = {
     user_id: number,
     intra_id: string,
-    auth: number,
+    auth?: number,
     email: string,
-    phone: string
+    phone?: string,
+    access: string,
+    refresh: string
 }
 
 export type lentInfo = {
@@ -36,18 +38,18 @@ export type cabinetListInfo = {
 
 //variables
 export let user:userInfo = {
-    user_id: 39393,
-    intra_id: "spark",
-    auth: 1,
-    email: "spark@student.42seoul.kr",
-    phone: "01012344567"
+    user_id: 0,
+    intra_id: '',
+    email: '',
+    access: '',
+    refresh: ''
 }
 
 export let lent:lentInfo = {
-    lent_id: 1,
-    lent_cabinet_id: 2,
-    lent_user_id: 2,
-    extension: true
+    lent_id: -1,
+    lent_cabinet_id: -1,
+    lent_user_id: -1,
+    extension: false
 }
 
 export let cabinetLent:Array<lentInfo> = [];

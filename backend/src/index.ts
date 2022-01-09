@@ -11,6 +11,8 @@ import passportConfig from './middleware/passport';
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 
+import {locationInfo} from './db/query'
+
 function makeServer(){
     const app = express();
     const port = 4242;
@@ -41,12 +43,7 @@ function makeServer(){
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
     app.use('/', router);
-    // app.use(express.static(path.join(__dirname, '../public')));
-    // app.use('/', function(req, res){
-    //     res.sendFile(path.join(__dirname, '../public/index.html'));
-    // });
-    
-    connection();
+    connection(locationInfo);
 
     app.listen(port, ()=>console.log(`Listening on port ${port}`));
 }
