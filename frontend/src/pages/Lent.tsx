@@ -1,4 +1,3 @@
-import {useEffect, useState} from 'react'
 import axios from 'axios'
 import Location from '../component/Location'
 import Menu from '../component/Menu'
@@ -6,6 +5,7 @@ import LentModal from '../modal/LentModal'
 import './lent.css'
 import './main.css'
 import CabinetBox from '../component/CabinetBox'
+import {useState, useEffect} from 'react'
 import Carousel from '../component/Carousel'
 
 export type cabinetInfo = {
@@ -78,6 +78,10 @@ export default function Lent(){
       }
       return list;
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> dad893b4d214f29b1715adb3c1f9d2630ab76d73
     const navContent = () => {
       let list = [];
       if (!info || !info.floor || info.floor.length <= l_idx)
