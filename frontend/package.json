@@ -15,7 +15,8 @@
     "react-dom": "^17.0.2",
     "ts-node": "^10.4.0",
     "bootstrap-icons": "^1.7.2",
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "vite": "^2.7.2"
   },
   "devDependencies": {
     "@types/react": "^17.0.33",

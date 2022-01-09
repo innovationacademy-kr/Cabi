@@ -2,7 +2,9 @@ import mariadb from 'mariadb';
 
 const con = mariadb.createPool({
 	host: 'localhost',
-	user: 'root'
+	user: 'root',
+	database: '42cabi_DB',
+    	dateStrings: true
 });
 
 export async function connection(queryFunction:any) {

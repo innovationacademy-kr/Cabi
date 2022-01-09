@@ -1,5 +1,4 @@
 // import axios from 'axios'
-import './menu.css'
 
 export default function Menu(){
   return (

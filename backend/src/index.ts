@@ -3,7 +3,7 @@ import path from 'path'
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
 
-import {connection} from './db/db_dev'
+import {connection} from './db/db_dep'
 import {router} from './route'
 
 import passport from 'passport'

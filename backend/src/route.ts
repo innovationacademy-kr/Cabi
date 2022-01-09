@@ -28,16 +28,16 @@ router.get(
         // successMessage: "LOGIN SUCCESS!",
         // successRedirect: "https://cabi.42cadet.kr/lent",
         failureMessage: "LOGIN FAILED :(",
-        failureRedirect: "https://cabi.42cadet.kr",
+        failureRedirect: "http//localhost:4242",
     }),
     function(req:any, res:any){
         //lent 있는 경우, 순서 확인
         try{
             connection(checkUser);
             if (lent.lent_id !== -1){
-                res.redirect('https://cabi.42cadet.kr/return');            
+                res.redirect('http://localhost:4242/return');            
             }else{
-                res.redirect('https://cabi.42cadet.kr/lent');
+                res.redirect('http://localhost:4242/lent');
             }
         }catch(err){
             console.log(err);
