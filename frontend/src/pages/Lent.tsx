@@ -1,11 +1,12 @@
 import axios from 'axios'
-import Location from '../component/Location' 
+import Location from '../component/Location'
 import Menu from '../component/Menu'
 import LentModal from '../modal/LentModal'
 import './lent.css'
 import './main.css'
 import CabinetBox from '../component/CabinetBox'
 import {useState, useEffect} from 'react'
+import Carousel from '../component/Carousel'
 
 export type cabinetInfo = {
   cabinet_id: number,
@@ -31,7 +32,6 @@ type lentInfo = {
   extension: boolean,
   intra_id?: string
 }
-
 
 export default function Lent(){
     const [l_idx, setLidx] = useState<number>(0);
@@ -75,41 +75,6 @@ export default function Lent(){
       }
       return list;
     }
-    // const navContent = () => {
-    //   let list = [];
-    //   if (!info || !info.floor || info.floor.length <= l_idx)
-    //     return [];
-    //   for (let i = 0; i < info.floor[l_idx].length; i++){
-    //     let floor_name = info.floor[l_idx][i];
-    //     list.push(
-    //       <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
-    //         {navSection(i)}
-    //       </div>
-    //     );
-    //   }
-    //   return list;
-    // }
-
-    // const navSection = (idx:number) => {
-    //   let list = [];
-    //   if (!info || !info.section || info.section[l_idx].length <= idx)
-    //     return [];
-    //   // console.log(info.section[l_idx][idx].length);
-    //   for (let i = 0; i < info.section[l_idx][idx].length; i++){
-    //     list.push(
-    //       <div key={`nav_section_${info.section[l_idx][idx][i]}`}>
-    //         <label className="m-3" key={`label_${info.section[l_idx][idx][i]}`}>{info.section[l_idx][idx][i]}</label>
-    //         <div className="row mx-1" key={`block_${info.section[l_idx][idx][i]}`}>
-    //           {cabinetBlock(idx, i)}
-    //         </div>
-    //       </div>
-    //     );
-    //   }
-    //   return list;
-    // }
-
-
-    // 상단의 두 컴포넌트 코드가 carousel 적용시도 전 코드입니다! 이하 코드는 적용 중 코드!
 
     const navContent = () => {
       let list = [];
@@ -118,67 +83,7 @@ export default function Lent(){
       for (let i = 0; i < info.floor[l_idx].length; i++){
         let floor_name = info.floor[l_idx][i];
         list.push(
-          // <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
-          //   {navSection(i)}
-          // </div>
-          <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
-            <div id={`carousel_${l_idx}_${floor_name}`} className="carousel slide" data-bs-ride="carousel">
-              <div className="carousel-inner" key={`nav-inner${floor_name}`}>
-                {navSection(i)}
-              </div>
-              <button className="carousel-control-prev" type="button" data-bs-target={`#carousel_${l_idx}_${floor_name}`} data-bs-slide="prev">
-                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Previous</span>
-              </button>
-              <button className="carousel-control-next" type="button" data-bs-target={`#carousel_${l_idx}_${floor_name}`} data-bs-slide="next">
-                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                <span className="visually-hidden">Next</span>
-              </button>
-            </div>
-          </div>
-        );
-      }
-      return list;
-    }
-
-    const navSection = (idx:number) => {
-      let list = [];
-      if (!info || !info.section || info.section[l_idx].length <= idx)
-        return [];
-      // console.log(info.section[l_idx][idx].length);
-      for (let i = 0; i < info.section[l_idx][idx].length; i++){
-        list.push(
-          // <div key={`nav_section_${info.section[l_idx][idx][i]}`}>
-          //   <label className="m-3" key={`label_${info.section[l_idx][idx][i]}`}>{info.section[l_idx][idx][i]}</label>
-          //   <div className="row mx-1" key={`block_${info.section[l_idx][idx][i]}`}>
-          //     {cabinetBlock(idx, i)}
-          //   </div>
-          // </div>
-
-          // <div key={`nav_section_${info.section[l_idx][idx][i]}`}>
-          <div className={`carousel-item${i ? '' : ' active'}`} key={`carousel-item_${info.section[l_idx][idx][i]}`} >
-            <label className="m-3" key={`label_${info.section[l_idx][idx][i]}`}>{info.section[l_idx][idx][i]}</label>
-            {cabinetBlock(idx, i)}
-          </div>
-          // </div>
-
-        );
-      }
-      return list;
-    }
-
-
-    // 여기까지가 carousel 적용시도 중 코드입니다!
-
-    const cabinetBlock = (f_idx:number, s_idx:number) => {
-      if (!info || !info.cabinet)
-        return [];
-      let list = [];
-      const cab:Array<cabinetInfo> = info.cabinet[l_idx][f_idx][s_idx];
-      for (let i = 0; i < cab.length; i++){
-        const id= lent.find((l)=>l.lent_cabinet_id === cab[i].cabinet_id);
-        list.push(
-          <CabinetBox className="d-block w-100" key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_num} intra_id={id ? id.intra_id : ""}></CabinetBox>
+          <Carousel info={`${info}`} location_idx={`${l_idx}`} floor_name={`${floor_name}`}></Carousel>
         );
       }
       return list;
