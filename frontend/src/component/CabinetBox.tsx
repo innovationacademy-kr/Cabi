@@ -1,4 +1,3 @@
-import LentModal from '../modal/LentModal'
 
 export default function CabinetBox(props:any){
     return (
@@ -7,7 +6,6 @@ export default function CabinetBox(props:any){
                 <div>{props.cabinet_id}</div>
                 <div>{props.intra_id}</div>
             </div>
-            <LentModal></LentModal>
         </div>
     );
 }

@@ -1,3 +1,4 @@
+
 /* .container{
     height: 100%;
     width: 100%;
@@ -31,22 +32,10 @@
 #lentBtn:hover{
     background-color: #d8d4d44b;
 }
-#nav-tab{
+.nav-tabs .nav-link{
+    color: #7a31a79a;
+}
+.nav-tabs .nav-link.active{
     color: white;
-    background-color: #6667AB;
-}
-#nav-tab.active{
-    color: #6667AB;
-    background-color: white;
-}
-
-#carouselBtn{
-    color: #6667AB;
-}
-
-#nav-tabContent{
-    height: 70vh;
-    margin-right: 5%;
-    background-color: white;
-    border-radius: 0.5em;
+    background-color: #7a31a79a;
 }
