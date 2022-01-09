@@ -3,6 +3,7 @@ import {user, lent, cabinetListInfo, cabinetList, cabinetInfo, cabinetLent} from
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
+    
 	client.query(`select * from user where user_id = ${user.user_id}`, function(err:any, res:any, field:any)
 	{
 		if (err) throw err;
@@ -126,7 +127,7 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 	return cabinetList;
 }
 //lent 값 생성
-export function postLent(client:any){
+export function createLent(client:any){
 	client.query(`INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lent.lent_cabinet_id}, ${lent.lent_user_id}, now(), now(), ${lent.extension})`, function(err:any, res:any, field:any){
 		if (err) throw err;
 		console.log(res);
@@ -134,13 +135,7 @@ export function postLent(client:any){
 		// console.log(res.length);
 		// mysqlssh.close();
 	  });
-	  client.query(`update cabinet set activation = false where cabinet_id=${lent.lent_cabinet_id}`, function(err:any, res:any, field:any){
-		if (err) throw err;
-		console.log(res);
-		console.log(typeof res);
-		// console.log(res.length);
-		// mysqlssh.close();
-	  });
+
 }
 
 //lent_log 값 생성 후 lent 값 삭제 (skim update)
