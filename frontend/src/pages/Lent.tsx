@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Location from '../component/Location' 
 import Menu from '../component/Menu'
-// import LentModal from '../modal/LentModal'
+import LentModal from '../modal/LentModal'
 import './lent.css'
 import './main.css'
 import CabinetBox from '../component/CabinetBox'
@@ -122,15 +122,15 @@ export default function Lent(){
           //   {navSection(i)}
           // </div>
           <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
-            <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+            <div id={`carousel_${l_idx}_${floor_name}`} className="carousel slide" data-bs-ride="carousel">
               <div className="carousel-inner" key={`nav-inner${floor_name}`}>
                 {navSection(i)}
               </div>
-              <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+              <button className="carousel-control-prev" type="button" data-bs-target={`#carousel_${l_idx}_${floor_name}`} data-bs-slide="prev">
                 <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span className="visually-hidden">Previous</span>
               </button>
-              <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+              <button className="carousel-control-next" type="button" data-bs-target={`#carousel_${l_idx}_${floor_name}`} data-bs-slide="next">
                 <span className="carousel-control-next-icon" aria-hidden="true"></span>
                 <span className="visually-hidden">Next</span>
               </button>
@@ -154,9 +154,13 @@ export default function Lent(){
           //     {cabinetBlock(idx, i)}
           //   </div>
           // </div>
-          <div className={`carousel-item${i ? '' : ' active'}`}>
+
+          // <div key={`nav_section_${info.section[l_idx][idx][i]}`}>
+          <div className={`carousel-item${i ? '' : ' active'}`} key={`carousel-item_${info.section[l_idx][idx][i]}`} >
+            <label className="m-3" key={`label_${info.section[l_idx][idx][i]}`}>{info.section[l_idx][idx][i]}</label>
             {cabinetBlock(idx, i)}
           </div>
+          // </div>
 
         );
       }
@@ -194,9 +198,9 @@ export default function Lent(){
                 <nav>
                   <div className="nav nav-tabs" id="nav-tab" role="tablist">{navTabs()}</div>
                 </nav>
-
                 <div className="tab-content" id="nav-tabContent">{navContent()}</div>
             </div>
+            <LentModal></LentModal>
         </div>
     );
 }
