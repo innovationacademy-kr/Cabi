@@ -3,9 +3,8 @@ import {user, lent, cabinetListInfo, cabinetList, cabinetInfo, cabinetLent} from
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
-    
-	client.query(`select * from user where user_id = ${user.user_id}`, function(err:any, res:any, field:any)
-	{
+	const content:string = `select * from user where user_id = ${user.user_id}`;
+	client.query(content, (err:any, res:any, field:any)=>{
 		if (err) throw err;
 		console.log(res);
 		if (!res.length)
@@ -16,20 +15,20 @@ export function checkUser(client:any){
 }
 //사용자가 없는 경우, user 값 생성
 export function addUser(client:any){
-	const cmd = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
-	client.query(cmd, (err:any, res:any, field:any)=>{
+	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
+	client.query(content, (err:any, res:any, field:any)=>{
 		if (err) throw err;
 		console.log(res);
 	});
 }
 //본인 정보 및 렌트 정보 - 리턴 페이지
 export function getUser(client:any){
-	client.query(`select * from lent where lent_user_id=${user.user_id}`, function(err:any, res:any, field:any){
+	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
+	client.query(content, (err:any, res:any, field:any)=>{
 		if (err) throw err;
 		console.log(res);
 		console.log(typeof res);
-		if (res.length !== 0) // lent page
-		{
+		if (res.length !== 0){ // lent page
 			lent.lent_id = res[0].lent_id;
 			lent.lent_cabinet_id = res[0].lent_cabinet_id;
 			lent.lent_user_id = res[0].lent_user_id;
@@ -55,16 +54,13 @@ export function getLentUser(client:any){
 //location info
 export function locationInfo(client:any){
 	const content:string = `select distinct cabinet.location from cabinet`;
-	// let locationList:Array<string> = [];
-	// let location:locationInfo;
-
+	
 	// console.log('location info');
 	client.query(content, (err:any, res:any, field:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
 			cabinetList.location?.push(res[i].location);
-			// info.floor?.push(floorInfo(client, res[i].location));
 			floorInfo(client, res[i].location);
 		}
 		// console.log(info);
@@ -112,7 +108,7 @@ export function sectionInfo(client:any, location:string, floor:number, list:any)
 	return sectionList;
 }
 export function getCabinetInfo(client:any, location:string, floor:number, section:string):Array<cabinetInfo>{
-	const content:string = `select * from cabinet where location='${location}' and floor=${floor} and section='${section}' order by cabinet_num`;
+	const content:string = `select * from cabinet where location='${location}' and floor=${floor} and section='${section}' and activation=1 order by cabinet_num`;
 	let cabinetList:Array<cabinetInfo> = [];
 
 	// console.log('cabinet info');
@@ -127,15 +123,12 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 	return cabinetList;
 }
 //lent 값 생성
-export function createLent(client:any){
-	client.query(`INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lent.lent_cabinet_id}, ${lent.lent_user_id}, now(), now(), ${lent.extension})`, function(err:any, res:any, field:any){
+export function postLent(client:any){
+	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lent.lent_cabinet_id}, ${lent.lent_user_id}, now(), ADDDATE(now(), 30), ${lent.extension})`;
+	client.query(postLent, (err:any, res:any, field:any)=>{
 		if (err) throw err;
 		console.log(res);
-		console.log(typeof res);
-		// console.log(res.length);
-		// mysqlssh.close();
 	  });
-
 }
 
 //lent_log 값 생성 후 lent 값 삭제 (skim update)

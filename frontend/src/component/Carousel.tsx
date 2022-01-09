@@ -25,8 +25,10 @@ export default function Carousel(props:any){
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       list.push(
         <div className={`carousel-item${i ? '' : ' active'}`} key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >
-          <label className="m-3" key={`label_${props.info.section[props.l_idx][idx][i]}`}>{props.info.section[props.l_idx][idx][i]}</label>
+          <div className="m-3 sectionName"  key={`label_${props.info.section[props.l_idx][idx][i]}`}>{props.info.section[props.l_idx][idx][i]}</div>
+          <div id="cabinetGrid">
           {cabinetBlock(idx, i)}
+          </div>
         </div>
       );
     }
@@ -35,7 +37,7 @@ export default function Carousel(props:any){
 
   return (
     <div className={`tab-pane${props.outer_i ? '' : ' active'}`} id={`nav-${props.floor_name}`} key={`nav-${props.floor_name}`} role="tabpanel" aria-labelledby={`nav-${props.floor_name}-tab`}>
-      <div id={`carousel_${props.l_idx}_${props.floor_name}`} className="carousel slide" data-bs-ride="carousel">
+      <div id={`carousel_${props.l_idx}_${props.floor_name}`} className="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
         <div className="carousel-inner" key={`nav-inner${props.floor_name}`}>
           {navSection(props.outer_i)}
         </div>
