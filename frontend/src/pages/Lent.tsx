@@ -69,8 +69,8 @@ export default function Lent(){
       for (let i = 0; i < info.floor[l_idx].length; i++){
         let floor_name = info.floor[l_idx][i];
         list.push(
-          <button className={`nav-link border border-bottom-0 px-4${i ? '' :' active'}`} 
-          id={`nav-tab`} key={`nav-${floor_name}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor_name}`} 
+          <button className={`nav-link border border-bottom-0 px-4${i ? '' :' active'}`}
+          id={`nav-tab`} key={`nav-${floor_name}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor_name}`}
           type="button" role="tab" aria-controls={`nav-${floor_name}`} aria-selected={i ? 'false' : 'true'}>
             {floor_name}
           </button>
@@ -106,9 +106,8 @@ export default function Lent(){
                   <div className="nav nav-tabs border-bottom-0" id="nav-tabs" role="tablist">{navTabs()}</div>
                 </nav>
                 <div className="tab-content" id="nav-tabContent">{navContent()}</div>
-                {/* </div> */}
+                <LentModal></LentModal>
             </div>
-            <LentModal></LentModal>
         </div>
     );
 }
