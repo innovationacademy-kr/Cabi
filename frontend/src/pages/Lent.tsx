@@ -56,7 +56,7 @@ export default function Lent(){
       }).catch((err)=>{console.log(err)});
     }
     const handleClick = () => {
-      const dev_url = "https://cabi.42cadet.kr/api/cabinet"
+      const dev_url = "http://cabi.42cadet.kr/api/cabinet"
       axios.post(dev_url).then((res:any)=>{
         setInfo(res.data);
       }).catch((err)=>{console.log(err)});

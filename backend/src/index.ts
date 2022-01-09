@@ -19,6 +19,12 @@ function makeServer(){
 
     const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+    
+    app.use(express.static(path.join(__dirname, '../public')));
+    app.use('/', function(req, res){
+        res.sendFile(path.join(__dirname, '../public/index.html'));
+    });
+    app.listen(port, ()=>console.log(`Listening on port ${port}`));
 
     app.use(
         cookieSession({
@@ -38,10 +44,5 @@ function makeServer(){
     app.use('/', router);
     connection(locationInfo);
 
-    app.use(express.static(path.join(__dirname, '../public')));
-    app.use('/', function(req, res){
-        res.sendFile(path.join(__dirname, '../public/index.html'));
-    });
-    app.listen(port, ()=>console.log(`Listening on port ${port}`));
 }
 makeServer();
