@@ -123,7 +123,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/auth/login'
+              $ref: '#/components/schemas/OauthLogin'
   /auth/logout:
     get:
       tags:
@@ -142,7 +142,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/auth/logout'
+              $ref: '#/components/schemas/OauthLogout'
 components:
   parameters: null
   schemas:

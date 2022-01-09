@@ -124,24 +124,18 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 	return cabinetList;
 }
 //lent 값 생성
-export function createLent(client:any, cabinet_id:number){
-	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
+export function createLent(client:any, lent_cabinet_id:number){
+	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lent_cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
 	client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 	  });
 }
 
-<<<<<<< HEAD
-//lent_log 값 생성 후 lent 값 삭제
-export function postReturn(client:any){
-	client.query(`select * from lent where lent_cabinet_id=${lent.lent_cabinet_id}`, function(err:any, res:any, field:any) {
-=======
 //lent_log 값 생성 후 lent 값 삭제 (skim update)
 export function createLentLog(client:any){
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
 	client.query(content, (err:any, res:any) => {
->>>>>>> 65a070e84482c714b529b001636d1e348014b34b
 		if (err) throw err;
 		if (res[0] === undefined)
 			return ;

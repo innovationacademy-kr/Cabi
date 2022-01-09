@@ -24,8 +24,8 @@ export function connection(){
         // postReturn(client);
         // createLent(client);
         // getLentUser(client);
-        // getLentUser(client);
-        // locationInfo(client);
+        getLentUser(client);
+        locationInfo(client);
     }).catch((err:any)=>{
         console.log(err);
         throw err;
