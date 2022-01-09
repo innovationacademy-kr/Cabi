@@ -83,7 +83,7 @@ export default function Lent(){
       for (let i = 0; i < info.floor[l_idx].length; i++){
         let floor_name = info.floor[l_idx][i];
         list.push(
-          <Carousel info={`${info}`} location_idx={`${l_idx}`} floor_name={`${floor_name}`}></Carousel>
+          <Carousel info={`${info}`} location_idx={`${l_idx}`} outer_i={`${i}`} outer_lent={`${lent}`} floor_name={`${floor_name}`}></Carousel>
         );
       }
       return list;

@@ -1,4 +1,30 @@
-import LentModal from '../modal/LentModal'
+import CabinetBox from './CabinetBox'
+import './carousel.css'
+
+export type cabinetInfo = {
+  cabinet_id: number,
+  cabinet_num: number,
+  location: string,
+  floor: number,
+  section: string,
+  activation: boolean,
+}
+//one location - ex) 새롬
+export type locationInfo = {
+  location?: Array<string>,
+  floor?: Array<Array<number>>,
+  section?: Array<Array<Array<string>>>,
+  cabinet?: Array<Array<Array<Array<cabinetInfo>>>>
+}
+type lentInfo = {
+  lent_id: number,
+  lent_cabinet_id: number,
+  lent_user_id: number,
+  lent_time?: string,
+  expire_time?: string,
+  extension: boolean,
+  intra_id?: string
+}
 
 export default function Carousel(props:any){
   const navSection = (idx:number) => {
@@ -23,7 +49,7 @@ export default function Carousel(props:any){
     let list = [];
     const cab:Array<cabinetInfo> = props.info.cabinet[props.l_idx][f_idx][s_idx];
     for (let i = 0; i < cab.length; i++){
-      const id= lent.find((l)=>l.lent_cabinet_id === cab[i].cabinet_id);
+      const id= props.outer_lent.find((l:any)=>l.lent_cabinet_id === cab[i].cabinet_id);
       list.push(
         <CabinetBox className="d-block w-100" key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_num} intra_id={id ? id.intra_id : ""}></CabinetBox>
       );
@@ -32,10 +58,10 @@ export default function Carousel(props:any){
   }
 
   return (
-      <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${props.floor_name}`} key={`nav-${props.floor_name}`} role="tabpanel" aria-labelledby={`nav-${props.floor_name}-tab`}>
+      <div className={`tab-pane${props.outer_i ? '' : ' active'}`} id={`nav-${props.floor_name}`} key={`nav-${props.floor_name}`} role="tabpanel" aria-labelledby={`nav-${props.floor_name}-tab`}>
       <div id={`carousel_${props.props.l_idx}_${props.floor_name}`} className="carousel slide" data-bs-ride="carousel">
         <div className="carousel-inner" key={`nav-inner${props.floor_name}`}>
-          {navSection(i)}
+          {navSection(props.outer_i)}
         </div>
         <button className="carousel-control-prev" type="button" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide="prev">
           <span className="carousel-control-prev-icon" aria-hidden="true"></span>
