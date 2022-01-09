@@ -76,3 +76,60 @@
           application/json:
             schema:
               $ref: './openapi.yaml#/components/schemas/return'
+/api/lentInfo:
+    post:
+      tags:
+        - lentInfo
+      summary: get all lentInfo
+      operationId: get all lentInfo
+      description: get all lentInfo
+      responses:
+        '200':
+          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+        '400':
+          $ref: './openapi.yaml#/components/responses/BadRequest'
+        '500':
+          $ref: './openapi.yaml#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './openapi.yaml#/components/schemas/lentInfo'
+/api/OauthLogin:
+    get:
+      tags:
+        - OauthLogin
+      summary: OauthLogin api
+      operationId: OauthLogin api
+      description: OauthLogin api
+      responses:
+        '200':
+          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+        '400':
+          $ref: './openapi.yaml#/components/responses/BadRequest'
+        '500':
+          $ref: './openapi.yaml#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './openapi.yaml#/components/schemas/OauthLogin'
+/api/OauthLogout:
+    get:
+      tags:
+        - OauthLogout
+      summary: OauthLogout api
+      operationId: OauthLogout api
+      description: OauthLogout api
+      responses:
+        '200':
+          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+        '400':
+          $ref: './openapi.yaml#/components/responses/BadRequest'
+        '500':
+          $ref: './openapi.yaml#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './openapi.yaml#/components/schemas/OauthLogout'

@@ -16,15 +16,15 @@ export function connection(){
         database: '42cabi_DB',
         dateStrings: 'date'
     }).then((client:any)=>{
-        console.log(client);
+        // console.log(client);
         // getUser(client);
         // addUser(client);
         // checkUser(client);
         // postReturn(client);
         // createLent(client);
         // getLentUser(client);
-        getLentUser(client);
-        locationInfo(client);
+        // getLentUser(client);
+        // locationInfo(client);
     }).catch((err:any)=>{
         console.log(err);
         throw err;

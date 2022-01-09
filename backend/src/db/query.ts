@@ -13,6 +13,7 @@ export function checkUser(client:any){
 			getUser(client);
 	})
 }
+
 //사용자가 없는 경우, user 값 생성
 export function addUser(client:any){
 	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
@@ -123,15 +124,15 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 	return cabinetList;
 }
 //lent 값 생성
-export function postLent(client:any){
-	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${lent.lent_cabinet_id}, ${lent.lent_user_id}, now(), ADDDATE(now(), 30), ${lent.extension})`;
+export function postLent(client:any, lent_cabinet_id:number){
+	const content:string = `INSERT INTO lent (${lent_cabinet_id}, lent_user_id, lent_time, expire_time, extension) VALUES (${lent.lent_cabinet_id}, ${lent.lent_user_id}, now(), ADDDATE(now(), 30), ${lent.extension})`;
 	client.query(postLent, (err:any, res:any, field:any)=>{
 		if (err) throw err;
 		console.log(res);
 	  });
 }
 
-//lent_log 값 생성 후 lent 값 삭제 (skim update)
+//lent_log 값 생성 후 lent 값 삭제
 export function postReturn(client:any){
 	client.query(`select * from lent where lent_cabinet_id=${lent.lent_cabinet_id}`, function(err:any, res:any, field:any) {
 		if (err) throw err;

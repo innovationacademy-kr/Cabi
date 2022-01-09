@@ -110,6 +110,42 @@ components:
         extension:
           type: boolean
           example: True
+    lentInfo:
+      type: object
+      required:
+        - lent_id
+        - lent_cabinet_id
+        - lent_user_id
+        - lent_time
+        - expired_time
+        - extension
+      properties:
+        lent_id:
+          type: integer
+          example: 1
+        lent_cabinet_id:
+          type: integer
+          example: 95
+        lent_user_id:
+          type: integer
+          example: 10
+        lent_time:
+          type: string
+          example: "2021-12-29-17:36"
+        expired_time:
+          type: string
+          example: "2022-01-29-17:36"
+        extension:
+          type: integer
+          example: 1
+    OauthLogin:
+      type:
+      required:
+      properties:
+    OauthLogout:
+      type:
+      required:
+      properties:
     return:
       type: object
       required:
