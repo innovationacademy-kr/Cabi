@@ -105,3 +105,6 @@ dist
 
 # Key file
 *.pem
+
+# DS_store
+.DS_Store
