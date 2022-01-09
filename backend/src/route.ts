@@ -3,7 +3,6 @@ import { connect } from 'http2';
 const passport = require('passport');
 import authCheck from './middleware/auth';
 import {cabinetList, cabinetLent} from './user'
-import {getUser, addUser, checkUser, postReturn, getLentUser, locationInfo} from './db/query'
 
 export const router = express.Router();
 

@@ -95,7 +95,7 @@
           application/json:
             schema:
               $ref: './openapi.yaml#/components/schemas/lentInfo'
-/api/OauthLogin:
+/auth/login:
     get:
       tags:
         - OauthLogin
@@ -114,7 +114,7 @@
           application/json:
             schema:
               $ref: './openapi.yaml#/components/schemas/OauthLogin'
-/api/OauthLogout:
+/auth/logout:
     get:
       tags:
         - OauthLogout

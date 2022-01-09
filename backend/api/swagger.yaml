@@ -105,7 +105,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/lentInfo'
-  /api/OauthLogin:
+  /auth/login:
     get:
       tags:
         - OauthLogin
@@ -123,8 +123,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OauthLogin'
-  /api/OauthLogout:
+              $ref: '#/components/schemas/auth/login'
+  /auth/logout:
     get:
       tags:
         - OauthLogout
@@ -142,7 +142,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OauthLogout'
+              $ref: '#/components/schemas/auth/logout'
 components:
   parameters: null
   schemas:
