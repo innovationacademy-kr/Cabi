@@ -61,6 +61,7 @@ export default function Lent(){
         setInfo(res.data);
       }).catch((err)=>{console.log(err)});
     }
+
     const navTabs = () => {
       let list = [];
       if (!info || !info.floor || info.floor.length <= l_idx)
@@ -68,7 +69,7 @@ export default function Lent(){
       for (let i = 0; i < info.floor[l_idx].length; i++){
         let floor_name = info.floor[l_idx][i];
         list.push(
-          <button className={`nav-link border px-4${i ? '' :' active'}`} 
+          <button className={`nav-link border border-bottom-0 px-4${i ? '' :' active'}`} 
           id={`nav-tab`} key={`nav-${floor_name}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor_name}`} 
           type="button" role="tab" aria-controls={`nav-${floor_name}`} aria-selected={i ? 'false' : 'true'}>
             {floor_name}
@@ -112,7 +113,6 @@ export default function Lent(){
 
 
     // 상단의 두 컴포넌트 코드가 carousel 적용시도 전 코드입니다! 이하 코드는 적용 중 코드!
-
     const navContent = () => {
       let list = [];
       if (!info || !info.floor || info.floor.length <= l_idx)
@@ -123,17 +123,19 @@ export default function Lent(){
           // <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
           //   {navSection(i)}
           // </div>
-          <div className={`tab-pane${i ? '' : ' active'}`} id={`nav-${floor_name}`} key={`nav-${floor_name}`} role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
-            <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+          <div className={`tab-pane${i ? '' : ' active'}`} 
+          id={`nav-${floor_name}`} key={`nav-${floor_name}`} 
+          role="tabpanel" aria-labelledby={`nav-${floor_name}-tab`}>
+            <div id={`carousel${l_idx}_${floor_name}`} className="carousel slide" data-bs-ride="carousel">
               <div className="carousel-inner" key={`nav-inner${floor_name}`}>
                 {navSection(i)}
               </div>
-              <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                <span className="carousel-control-prev-icon" id="carouselBtn" aria-hidden="true"></span>
+              <button className="carousel-control-prev" type="button" data-bs-target={`#carousel${l_idx}_${floor_name}`} data-bs-slide="prev">
+                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span className="visually-hidden">Previous</span>
               </button>
-              <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span className="carousel-control-next-icon" id="carouselBtn" aria-hidden="true"></span>
+              <button className="carousel-control-next" type="button" data-bs-target={`#carousel${l_idx}_${floor_name}`} data-bs-slide="next">
+                <span className="carousel-control-next-icon" aria-hidden="true"></span>
                 <span className="visually-hidden">Next</span>
               </button>
             </div>
@@ -165,9 +167,7 @@ export default function Lent(){
       return list;
     }
 
-
     // 여기까지가 carousel 적용시도 중 코드입니다!
-
     const cabinetBlock = (f_idx:number, s_idx:number) => {
       if (!info || !info.cabinet)
         return [];
@@ -194,10 +194,11 @@ export default function Lent(){
             </div>
             <div className="row my-2 mx-2" >
                 <nav>
-                  <div className="nav nav-tabs" id="nav-tab" role="tablist">{navTabs()}</div>
+                  <div className="nav nav-tabs border-bottom-0" id="nav-tabs" role="tablist">{navTabs()}</div>
                 </nav>
-
+            {/* <div className="card"> */}
                 <div className="tab-content" id="nav-tabContent">{navContent()}</div>
+                {/* </div> */}
             </div>
         </div>
     );

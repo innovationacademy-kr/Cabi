@@ -32,13 +32,20 @@
     background-color: #d8d4d44b;
 }
 #nav-tab{
-    color: #7a31a79a;
+    color: white;
+    background-color: #6667AB;
 }
 #nav-tab.active{
-    color: white;
-    background-color: #7a31a79a;
+    color: #6667AB;
+    background-color: white;
 }
 
 #carouselBtn{
-    color: #7a31a79a;
+    color: #6667AB;
+}
+
+#nav-tabContent{
+    height: 70vh;
+    margin-right: 5%;
+    background-color: #6667AB;
 }

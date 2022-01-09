@@ -2,8 +2,8 @@
 Body{
     /* background: #878787;
     background: #dfdfdfec; */
-    background: -webkit-linear-gradient(to bottom, #7a31a79a, #39337d);
-    background: linear-gradient(to bottom, #7a31a79a, #39337d);
+    background: -webkit-linear-gradient(to bottom, #6667AB, #6c337d);
+    background: linear-gradient(to bottom, #6667AB, #6c337d);
     padding: 3%;
     justify-content: center;
     /* position: absolute; */
@@ -38,8 +38,8 @@ Body{
 }
 
 #colorBtn{
-    color: #7a31a79a;
-    border: #7a31a79a 3px solid;
+    color: #6667AB;
+    border: #6667AB 3px solid;
     border-radius: 15px;
 }
 
