@@ -1,18 +1,19 @@
 import express from 'express';
-const passport = require('passport');
+//const passport = require('passport');
+import passport from 'passport';
 import authCheck from './middleware/auth';
 import {cabinetList, cabinetLent, lent} from './user'
-import {checkUser, createLentLog, createLent, getCabinetInfo} from './db/query'
-import {connection, connectionForLent} from './db/db_dev'
+import {checkUser, createLentLog, createLent } from './db/query'
+import {connection, connectionForLent} from './db/db_dep'
 
 export const router = express.Router();
 
 router.get('/auth/login', passport.authenticate('42'));
-router.post('/', authCheck, function(req:any, res:any, next){
+router.post('/', authCheck, function(req:any, res:any){
     // console.log(req.user);
     res.json({ test: req.user });
 });
-router.post('/lent', function(req:any, res:any){
+router.post('/api/lent', function(req:any, res:any){
     try{
         connectionForLent(createLent, req.body.cabinet_id);
         res.send({cabinet_id: req.cabinet_id});
@@ -26,18 +27,18 @@ router.get(
     "/auth/login/callback",
     passport.authenticate("42", {
         // successMessage: "LOGIN SUCCESS!",
-        // successRedirect: "http://localhost:3000/lent",
+        // successRedirect: "https://cabi.42cadet.kr/lent",
         failureMessage: "LOGIN FAILED :(",
-        failureRedirect: "http://localhost:3000",
+        failureRedirect: "https://cabi.42cadet.kr/",
     }),
-    function(req, res){
+    function(req:any, res:any){
         //lent 있는 경우, 순서 확인
         try{
             connection(checkUser);
             if (lent.lent_id !== -1){
-                res.redirect('http://localhost:3000/return');            
+                res.redirect('https://cabi.42cadet.kr/return');            
             }else{
-                res.redirect('http://localhost:3000/lent');
+                res.redirect('https://cabi.42cadet.kr/lent');
             }
         }catch(err){
             console.log(err);

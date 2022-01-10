@@ -4,7 +4,6 @@ import Menu from '../component/Menu'
 import LentModal from '../modal/LentModal'
 import './lent.css'
 import './main.css'
-import CabinetBox from '../component/CabinetBox'
 import {useState, useEffect} from 'react'
 import Carousel from '../component/Carousel'
 
@@ -50,14 +49,14 @@ export default function Lent(){
     }, [l_idx, info]);
 
     const handleLent = () => {
-      const dev_url = "http://localhost:4242/api/lent_info"
-      axios.post(dev_url).then((res:any)=>{
+      const dep_url = "/api/lent_info"
+      axios.post(dep_url).then((res:any)=>{
         setLent(res.data);
       }).catch((err)=>{console.log(err)});
     }
     const handleClick = () => {
-      const dev_url = "http://localhost:4242/api/cabinet"
-      axios.post(dev_url).then((res:any)=>{
+      const dep_url = "api/cabinet"
+      axios.post(dep_url).then((res:any)=>{
         setInfo(res.data);
       }).catch((err)=>{console.log(err)});
     }

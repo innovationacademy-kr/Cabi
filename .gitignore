@@ -103,7 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
-#key file
+# Key file
 *.pem
 
+# DS_store
 .DS_Store

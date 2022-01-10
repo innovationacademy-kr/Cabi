@@ -1,5 +1,5 @@
-// import axios from 'axios'
 import './menu.css'
+import {Link} from 'react-router-dom'
 
 export default function Menu(){
   return (
@@ -8,7 +8,7 @@ export default function Menu(){
           <i className="h2 bi bi-list"></i>
         </button>
         <div className="dropdown-menu start-50" id="dropdownMenu" aria-labelledby="dropdownMenuButton">
-          <a className="dropdown-item" href="#">내 사물함 / 전체 사물함</a>
+          <Link className="dropdown-item" to="/lent">내 사물함 / 전체 사물함</Link>
           <a className="dropdown-item" href="#">대여 로그</a>
           <a className="dropdown-item" href="#">로그아웃</a>
         </div>
