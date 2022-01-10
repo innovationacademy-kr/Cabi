@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "npm run dev"
+    "start": "npm run build && cp -r ./dist/* ../backend/public/"
   },
   "dependencies": {
     "axios": "^0.24.0",
