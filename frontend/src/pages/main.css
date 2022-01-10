@@ -1,0 +1,63 @@
+
+Body{
+    /* background: #878787;
+    background: #dfdfdfec; */
+    background: -webkit-linear-gradient(to bottom, #6667AB, #6c337d);
+    background: linear-gradient(to bottom, #6667AB, #6c337d);
+    padding: 3%;
+    justify-content: center;
+    /* position: absolute; */
+    /* left: 50%;
+    top: 50%; */
+    font-family: 'EliceDigitalBaeum_Regular';
+}
+
+#container{
+    height: 90%;
+    margin-top: 10px;
+    padding: 10px 10px 10px 10px;
+    background: #ffffffec;
+    border-radius: 10px;
+    justify-content: center;
+    background-size: 30px 100px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+@font-face {
+    font-family: 'EliceDigitalBaeum_Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/EliceDigitalBaeum_Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#loginBtn{
+    color: white;
+    border: white 3px solid;
+    border-radius: 15px;
+}
+
+#colorBtn{
+    color: #6667AB;
+    border: #6667AB 3px solid;
+    border-radius: 15px;
+}
+
+#loginBtn:hover{
+    background-color: #d8d4d44b;
+}
+
+#root .App{
+    height: 100vh;
+}
+
+#logo > img {
+    height: 40vh;
+    object-fit: scale-down;
+}
+
+#dropdownMenu{
+    text-align: center;
+    min-width: 20px;
+    right:0%;
+}

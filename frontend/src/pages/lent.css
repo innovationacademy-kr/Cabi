@@ -1,0 +1,52 @@
+/* .container{
+    height: 100%;
+    width: 100%;
+    min-width: 540px;
+    max-width: 100%;
+} */
+
+#location{
+    text-align: center;
+    left: 50%;
+}
+
+#locationMenu{
+    text-align: center;
+    overflow: visible;
+    left: 30%;
+    min-width: 30px;
+    right:30%;
+}
+
+#locationfont{
+    color: gray
+}
+
+#lentBtn{
+    color: white;
+    border: white 3px solid;
+    border-radius: 15px;
+}
+
+#lentBtn:hover{
+    background-color: #d8d4d44b;
+}
+#nav-tab{
+    color: white;
+    background-color: #6667AB;
+}
+#nav-tab.active{
+    color: #6667AB;
+    background-color: white;
+}
+
+#carouselBtn{
+    color: #6667AB;
+}
+
+#nav-tabContent{
+    height: 70vh;
+    margin-right: 5%;
+    background-color: white;
+    border-radius: 0.5em;
+}

@@ -1,19 +1,20 @@
-import { useState } from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Main from './pages/Main'
+import Return from './pages/Return'
+import Lent from './pages/Lent'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
+    <BrowserRouter>
+      <div className="App">
         <Switch>
           <Route exact path='/'><Main></Main></Route>
-          <Route path='/lent'>Lent</Route>
-          <Route path='/return'>Return</Route>
-          <Route>Main</Route>
+          <Route path='/lent'><Lent></Lent></Route>
+          <Route path='/return'><Return></Return></Route>
+          <Route><Main></Main></Route>
         </Switch>
-      </BrowserRouter>	    
-    </div>
+      </div>
+    </BrowserRouter>
   )
 }
 
