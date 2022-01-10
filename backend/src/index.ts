@@ -21,10 +21,9 @@ function makeServer(){
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
     
     app.use(express.static(path.join(__dirname, '../public')));
-    app.use('/', function(req, res){
-        res.sendFile(path.join(__dirname, '../public/index.html'));
-    });
-    app.listen(port, ()=>console.log(`Listening on port ${port}`));
+ //   app.use('/', function(req, res){
+   //     res.sendFile(path.join(__dirname, '../public/index.html'));
+   // });
 
     app.use(
         cookieSession({
@@ -35,7 +34,6 @@ function makeServer(){
     app.use(express.json());
     app.use(express.urlencoded({extended: false}));
     app.use(cookieParser());
-    app.use(express.static(path.join(__dirname, "public")));
 
     app.use(passport.initialize());
     app.use(passport.session());
@@ -43,5 +41,7 @@ function makeServer(){
 
     app.use('/', router);
     connection(locationInfo);
+
+    app.listen(port, ()=>console.log(`Listening on port ${port}`));
 }
 makeServer();
