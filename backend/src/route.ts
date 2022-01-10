@@ -1,5 +1,6 @@
 import express from 'express';
-const passport = require('passport');
+//const passport = require('passport');
+import passport from 'passport';
 import authCheck from './middleware/auth';
 import {cabinetList, cabinetLent, lent} from './user'
 import {checkUser, createLentLog, createLent } from './db/query'
@@ -12,7 +13,7 @@ router.post('/', authCheck, function(req:any, res:any){
     // console.log(req.user);
     res.json({ test: req.user });
 });
-router.post('/lent', function(req:any, res:any){
+router.post('/api/lent', function(req:any, res:any){
     try{
         connectionForLent(createLent, req.body.cabinet_id);
         res.send({cabinet_id: req.cabinet_id});

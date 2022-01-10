@@ -11,7 +11,7 @@ function App() {
           <Route exact path='/'><Main></Main></Route>
           <Route path='/lent'><Lent></Lent></Route>
           <Route path='/return'><Return></Return></Route>
-          <Route><Main></Main></Route>
+          // <Route><Main></Main></Route> 
         </Switch>
       </div>
     </BrowserRouter>
