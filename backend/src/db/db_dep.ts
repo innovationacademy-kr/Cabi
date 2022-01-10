@@ -14,17 +14,17 @@ export async function connection(queryFunction:Function) {
     console.log('connected_1!');
     try{
         pool = await con.getConnection();
-	pool.query('USE 42cabi_DB');
-	console.log('connected_2!');
-	queryFunction(pool);
+	    pool.query('USE 42cabi_DB');
+	    console.log('connected_2!');
+	    queryFunction(pool);
     }catch(err){
-	console.log('error !');
+	    console.log('error !');
         throw err;
     }finally{
         if (pool) pool.end();
-	console.log(user);
-	console.log(cabinetList);
-	console.log('end of connection!');
+	    console.log(user);
+	    console.log(cabinetList);
+	    console.log('end of connection!');
         return ;
     }
 }

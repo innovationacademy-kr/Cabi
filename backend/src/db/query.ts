@@ -3,20 +3,20 @@ import {user, lent, cabinetList, cabinetInfo, cabinetLent} from '../user'
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:any){
 	const content:string = `select * from user where user_id = ${user.user_id}`;
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		if (!res.length)
 			addUser(client);
 		else
 			getUser(client);
-	})
+	});
 }
 
 //사용자가 없는 경우, user 값 생성
 export function addUser(client:any){
 	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 	});
@@ -24,7 +24,7 @@ export function addUser(client:any){
 //본인 정보 및 렌트 정보 - 리턴 페이지
 export function getUser(client:any){
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		console.log(typeof res);
@@ -43,7 +43,7 @@ export function getUser(client:any){
 export function getLentUser(client:any){
 	const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
 	console.log('getLentUser');
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		for (let i = 0; i < res.length; i++){
@@ -56,7 +56,7 @@ export function locationInfo(client:any){
 	const content:string = `select distinct cabinet.location from cabinet`;
 
 	// console.log('location info');
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
@@ -74,7 +74,7 @@ export function floorInfo(client:any, location:string):Array<number>{
 	let tmpCabinetList:Array<Array<Array<cabinetInfo>>> = [];
 
 	// console.log('floor info');
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
@@ -95,7 +95,7 @@ export function sectionInfo(client:any, location:string, floor:number, list:any)
 	let cabinetList:Array<Array<cabinetInfo>> = [];
 
 	// console.log('section info');
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
@@ -111,7 +111,7 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 	const content:string = `select * from cabinet where location='${location}' and floor=${floor} and section='${section}' and activation=1 order by cabinet_num`;
 	let cabinetList:Array<cabinetInfo> = [];
 
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		while (res[++i]){
@@ -124,7 +124,7 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 //lent 값 생성
 export function createLent(client:any, cabinet_id:number){
 	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 	  });
@@ -133,7 +133,7 @@ export function createLent(client:any, cabinet_id:number){
 //lent_log 값 생성 후 lent 값 삭제 (skim update)
 export function createLentLog(client:any){
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
-	client.query(content, (err:any, res:any)=>{
+	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		if (res[0] === undefined)
 			return ;
@@ -151,4 +151,3 @@ export function createLentLog(client:any){
 		lent.extension = false;
 	});
 }
-
