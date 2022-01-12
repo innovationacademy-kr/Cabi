@@ -1,5 +1,4 @@
 import express from 'express';
-//const passport = require('passport');
 import passport from 'passport';
 import authCheck from './middleware/auth';
 import {cabinetList, cabinetLent, lent} from './user'
