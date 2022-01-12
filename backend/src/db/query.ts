@@ -59,10 +59,47 @@ export function locationInfo(client:any){
 	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
-		while (res[++i]){
-			cabinetList.location?.push(res[i].location);
-			floorInfo(client, res[i].location);
-		}
+
+		// while (res[++i]){
+		// 	cabinetList.location?.push(res[i].location);
+		// 	// floorInfo(client, res[i].location);
+		// }
+		
+		// i = -1;
+		// while (res[++i]){
+		// 	floorInfo(client, res[i].location);
+		// }
+		
+		res.forEach((element:any) => {
+			cabinetList.location?.push(element.location);
+		});
+		cabinetList.location?.forEach((element:any) => {
+			floorInfo(client, element.locatino);
+		})
+
+		// const promises = res.map(async (data) => {
+		// 	return (
+
+		// 	)
+		// })
+
+
+
+		// const loop = async (list) => {
+		// 	console.log("시작")
+		// 	const promises = list.map(async data => {
+		// 	  return await delay()
+		// 		.then(() => data)
+		// 	})
+			
+		// 	const results = await Promise.all(promises)
+		// 	results.forEach(data => console.log(data))
+		// 	console.log("끝")
+		//   }
+
+
+
+
 		// console.log(info);
 	});
 }
@@ -77,10 +114,18 @@ export function floorInfo(client:any, location:string):Array<number>{
 	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
-		while (res[++i]){
-			floorList.push(res[i].floor);
-			list.push(sectionInfo(client, location, res[i].floor, tmpCabinetList));
-		}
+		// while (res[++i]){
+		// 	floorList.push(res[i].floor);
+		// 	list.push(sectionInfo(client, location, res[i].floor, tmpCabinetList));
+		// }
+
+		res.forEach((element:any) => {
+			floorList.push(element.floor);
+		});
+		floorList.forEach((element:any) => {
+			list.push(sectionInfo(client, location, element.floor, tmpCabinetList));
+		})
+
 		cabinetList.floor?.push(floorList);
 		cabinetList.section?.push(list);
 		cabinetList.cabinet?.push(tmpCabinetList);
@@ -97,11 +142,21 @@ export function sectionInfo(client:any, location:string, floor:number, list:any)
 	// console.log('section info');
 	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
-		let i = -1;
-		while (res[++i]){
-			sectionList.push(res[i].section);
-			cabinetList.push(getCabinetInfo(client, location, floor, res[i].section));
-		}
+		// let i = -1;
+		// while (res[++i]){
+		// 	sectionList.push(res[i].section);
+		// 	cabinetList.push(getCabinetInfo(client, location, floor, res[i].section));
+		// }
+
+		res.forEach((element:any) => {
+			sectionList.push(element.section);
+		});
+		sectionList.forEach((element:any) => {
+			cabinetList.push(getCabinetInfo(client, location, floor, element.section));
+		})
+
+
+
 		// console.log(sectionList);
 		list.push(cabinetList);
 	});
@@ -114,9 +169,12 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 	client.query(content).then((err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
-		while (res[++i]){
-			cabinetList.push(res[i]);
-		}
+		// while (res[++i]){
+		// 	cabinetList.push(res[i]);
+		// }
+		res.forEach((element:any) => {
+			cabinetList.push(element);
+		})
 		// console.log(cabinetList);
 	});
 	return cabinetList;
