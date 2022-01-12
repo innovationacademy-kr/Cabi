@@ -111,7 +111,7 @@ export function floorInfo(client:any, location:string):Array<number>{
 	let tmpCabinetList:Array<Array<Array<cabinetInfo>>> = [];
 
 	// console.log('floor info');
-	client.query(content).then((err:any, res:any)=>{
+	client.query(content).then(async (err:any, res:any)=>{
 		if (err) throw err;
 		let i = -1;
 		// while (res[++i]){
@@ -125,10 +125,10 @@ export function floorInfo(client:any, location:string):Array<number>{
 		floorList.forEach((element:any) => {
 			list.push(sectionInfo(client, location, element.floor, tmpCabinetList));
 		})
+		await cabinetList.floor?.push(floorList);
+		await cabinetList.section?.push(list);
+		await cabinetList.cabinet?.push(tmpCabinetList);
 
-		cabinetList.floor?.push(floorList);
-		cabinetList.section?.push(list);
-		cabinetList.cabinet?.push(tmpCabinetList);
 		// console.log(floorList);
 	});
 	return floorList;
@@ -140,7 +140,7 @@ export function sectionInfo(client:any, location:string, floor:number, list:any)
 	let cabinetList:Array<Array<cabinetInfo>> = [];
 
 	// console.log('section info');
-	client.query(content).then((err:any, res:any)=>{
+	client.query(content).then(async (err:any, res:any)=>{
 		if (err) throw err;
 		// let i = -1;
 		// while (res[++i]){
@@ -158,7 +158,7 @@ export function sectionInfo(client:any, location:string, floor:number, list:any)
 
 
 		// console.log(sectionList);
-		list.push(cabinetList);
+		await list.push(cabinetList);
 	});
 	return sectionList;
 }
