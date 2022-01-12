@@ -12,7 +12,7 @@ export default function ReturnModal(){
 }
     return (
       <div className="modal" id="returnmodal" tabIndex={-1}>
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">이용 중인 사물함을 반납합니다.</h5>
