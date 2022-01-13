@@ -1,11 +1,12 @@
-export default function LentModal(){
+import axios from 'axios';
+
+export default function LentModal(props:any){
 
   const handleClick = () => {
-    alert("대여완료?!")
-    // 사실, 여기 함수를 이용하여 대여완료 시, 대여성공 한번 띄워주고는
-    // 바로 return 페이지로 날려주고 싶스므니다. 더 찾아보겟스므니다.
-    window.location.href="/return"
-    // 날릴까봐 커밋해뜨니, 바로 찾아브럿습니다. 이럴 거면 다 만들어놓고 올릴껄...
+    const dep_url = "api/lent"
+    axios.post(dep_url, {cabinet_id : props.target}).then((res:any)=>{
+      window.location.href="/return"
+    }).catch((err)=>{console.log(err)});
   }
 
   return (
