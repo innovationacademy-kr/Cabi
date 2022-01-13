@@ -1,0 +1,5 @@
+.btn:focus, .btn:active:focus{
+	outline: 0px;
+	outline-offset: 0px;
+}
+

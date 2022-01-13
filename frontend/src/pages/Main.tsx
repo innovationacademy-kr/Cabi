@@ -1,4 +1,3 @@
-import {Link} from 'react-router-dom'
 import './main.css'
 
 export default function Main(){
@@ -10,8 +9,8 @@ export default function Main(){
                 <img src="../img/logo.png" alt="logo" />
             </div>
             <div className="row d-grid gap-2 col-6 mx-auto">
-	        <Link className="btn btn-lg" id="loginBtn" to={dep_url}>L O G I N</Link>                
-            </div>
+	        <a className="btn btn-lg" id="loginBtn" href={dep_url}>L O G I N</a>
+	    </div>
         </div>
     );
 }

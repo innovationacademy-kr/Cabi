@@ -1,30 +1,30 @@
 import {user, lent, cabinetList, cabinetInfo, cabinetLent} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
-export function checkUser(client:any){
+export async function checkUser(client:any){
 	const content:string = `select * from user where user_id = ${user.user_id}`;
-	client.query(content).then((err:any, res:any)=>{
+	await client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		if (!res.length)
 			addUser(client);
 		else
 			getUser(client);
-	});
+	})
 }
 
 //사용자가 없는 경우, user 값 생성
-export function addUser(client:any){
+export async function addUser(client:any){
 	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
-	client.query(content).then((err:any, res:any)=>{
+	await client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 	});
 }
 //본인 정보 및 렌트 정보 - 리턴 페이지
-export function getUser(client:any){
+export async function getUser(client:any){
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
-	client.query(content).then((err:any, res:any)=>{
+	await client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		console.log(typeof res);
@@ -40,10 +40,10 @@ export function getUser(client:any){
 	});
 }
 //lent & user
-export function getLentUser(client:any){
+export async function getLentUser(client:any){
 	const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
 	console.log('getLentUser');
-	client.query(content).then((err:any, res:any)=>{
+	await client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 		for (let i = 0; i < res.length; i++){
@@ -52,72 +52,96 @@ export function getLentUser(client:any){
 	});
 }
 //location info
-export function locationInfo(client:any){
+export async function locationInfo(client:any){
 	const content:string = `select distinct cabinet.location from cabinet`;
 
-	// console.log('location info');
-	const result = client.query(content);
-	result.forEach(async (element:any)=>{
-		cabinetList.location?.push(result.location);
-		floorInfo(client, result.location);
+	console.log('location info');
+	console.log(client);
+	await client.query(content, (err:any, res:any)=>{
+		console.log('result~');
+		if (err) throw err;
+		let i = -1;
+		while (res[++i]){
+			cabinetList.location?.push(res[i].location);
+			floorInfo(client, res[i].location);
+		}
+		console.log(res);
 	});
 }
 //floor info with exact location
-export function floorInfo(client:any, location:string):Array<number>{
+export async function floorInfo(client:any, location:string):Promise<Array<number>>{
 	const content:string = `select distinct cabinet.floor from cabinet where location='${location}' order by floor`;
 	let floorList:Array<number> = [];
 	let list:Array<Array<string>> = [];
 	let tmpCabinetList:Array<Array<Array<cabinetInfo>>> = [];
 
 	// console.log('floor info');
-	const result = client.query(content);
-	result.forEach(async (element:any)=>{	 
-		floorList.push(result.floor);
-	 	list.push(sectionInfo(client, location, element.floor, tmpCabinetList));
+	await client.query(content, (err:any, res:any)=>{
+		if (err) throw err;
+		let i = -1;
+		while (res[++i]){
+			floorList.push(res[i].floor);
+			// list.push(sectionInfo(client, location, res[i].floor, tmpCabinetList));
+			sectionInfo(client, location, res[i].floor, tmpCabinetList).then((value)=> {
+				list.push(value);
+			});
+		}
+		cabinetList.floor?.push(floorList);
+		cabinetList.section?.push(list);
+		cabinetList.cabinet?.push(tmpCabinetList);
+		// console.log(floorList);
 	});
-	cabinetList.floor?.push(floorList);
-	cabinetList.section?.push(list);
-	cabinetList.cabinet?.push(tmpCabinetList);
-	return floorList;
+	return Promise.resolve(floorList);
 }
 //section info with exact floor
-export function sectionInfo(client:any, location:string, floor:number, list:any):Array<string>{
+export async function sectionInfo(client:any, location:string, floor:number, list:any):Promise<Array<string>>{
 	const content:string = `select distinct cabinet.section from cabinet where location='${location}' and floor=${floor} order by section`;
 	let sectionList:Array<string> = [];
 	let cabinetList:Array<Array<cabinetInfo>> = [];
 
 	// console.log('section info');
-	const result = client.query(content);
-	result.forEach(async (element:any)=>{
-	 	sectionList.push(result.section);
-	 	cabinetList.push(getCabinetInfo(client, location, floor, result.section));
-	})	
-	list.push(cabinetList);
-	return sectionList;
+	await client.query(content, (err:any, res:any)=>{
+		if (err) throw err;
+		let i = -1;
+		while (res[++i]){
+			sectionList.push(res[i].section);
+			// cabinetList.push(getCabinetInfo(client, location, floor, res[i].section));
+			getCabinetInfo(client, location, floor, res[i].section).then((value)=> {
+				cabinetList.push(value);
+			});
+		}
+		// console.log(sectionList);
+		list.push(cabinetList);
+	});
+	return Promise.resolve(sectionList);
 }
-export function getCabinetInfo(client:any, location:string, floor:number, section:string):Array<cabinetInfo>{
+export async function getCabinetInfo(client:any, location:string, floor:number, section:string):Promise<Array<cabinetInfo>>{
 	const content:string = `select * from cabinet where location='${location}' and floor=${floor} and section='${section}' and activation=1 order by cabinet_num`;
 	let cabinetList:Array<cabinetInfo> = [];
 
-	const result = client.query(content);
-	result.forEach((element:any)=>{
-		cabinetList.push(element);
-	});	
+	await client.query(content, (err:any, res:any)=>{
+		if (err) throw err;
+		let i = -1;
+		while (res[++i]){
+			cabinetList.push(res[i]);
+		}
+		// console.log(cabinetList);
+	});
 	return cabinetList;
 }
 //lent 값 생성
-export function createLent(client:any, cabinet_id:number){
+export async function createLent(client:any, cabinet_id:number){
 	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
-	client.query(content).then((err:any, res:any)=>{
+	await client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		console.log(res);
 	  });
 }
 
 //lent_log 값 생성 후 lent 값 삭제 (skim update)
-export function createLentLog(client:any){
+export async function createLentLog(client:any){
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
-	client.query(content).then((err:any, res:any)=>{
+	await client.query(content, (err:any, res:any)=>{
 		if (err) throw err;
 		if (res[0] === undefined)
 			return ;
@@ -135,3 +159,4 @@ export function createLentLog(client:any){
 		lent.extension = false;
 	});
 }
+
