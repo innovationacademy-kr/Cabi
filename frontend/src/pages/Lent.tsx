@@ -37,6 +37,7 @@ export default function Lent(){
     const [l_idx, setLidx] = useState<number>(0);
     const [info, setInfo] = useState<locationInfo>({});
     const [lent, setLent] = useState<Array<lentInfo>>([]);
+    const [target, setTarget] = useState<number>(-1);
 
     useEffect(()=>{
       if (!info.location){
@@ -85,7 +86,7 @@ export default function Lent(){
       for (let i = 0; i < info.floor[l_idx].length; i++){
         let floor_name = info.floor[l_idx][i];
         list.push(
-          <Carousel info={info} l_idx={l_idx} outer_i={i} outer_lent={lent} floor_name={floor_name}></Carousel>
+          <Carousel setTarget={setTarget} info={info} l_idx={l_idx} outer_i={i} outer_lent={lent} floor_name={floor_name}></Carousel>
         );
       }
       return list;
