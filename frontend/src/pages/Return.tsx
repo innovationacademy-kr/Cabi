@@ -1,4 +1,3 @@
-import axios from 'axios'
 import './return.css'
 import './main.css'
 import Menu from '../component/Menu'
