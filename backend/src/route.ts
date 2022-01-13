@@ -1,5 +1,5 @@
 import express from 'express';
-const passport = require('passport');
+import passport from 'passport';
 import authCheck from './middleware/auth';
 import {cabinetList, cabinetLent, lent} from './user'
 import {checkUser, createLentLog, createLent, getCabinetInfo} from './db/query'
@@ -12,6 +12,7 @@ router.post('/', authCheck, function(req:any, res:any, next){
     // console.log(req.user);
     res.json({ test: req.user });
 });
+
 router.post('/lent', function(req:any, res:any){
     try{
         connectionForLent(createLent, req.body.cabinet_id);
@@ -30,7 +31,7 @@ router.get(
         failureMessage: "LOGIN FAILED :(",
         failureRedirect: "http://localhost:3000",
     }),
-    function(req, res){
+    function(req:any, res:any){
         //lent 있는 경우, 순서 확인
         try{
             connection(checkUser);

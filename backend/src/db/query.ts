@@ -118,7 +118,6 @@ export function getCabinetInfo(client:any, location:string, floor:number, sectio
 		while (res[++i]){
 			cabinetList.push(res[i]);
 		}
-		// console.log(cabinetList);
 	});
 	return cabinetList;
 }
@@ -131,25 +130,20 @@ export function createLent(client:any, cabinet_id:number){
 	  });
 }
 
-//lent_log 값 생성 후 lent 값 삭제 (skim update)
+//lent_log 값 생성 후 lent 값 삭제
 export function createLentLog(client:any){
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
-	client.query(content, (err:any, res:any)=>{
-		if (err) throw err;
-		if (res[0] === undefined)
+	const res = client.query(content);
+	if (res[0] === undefined)
 			return ;
-		const lent_id = res[0].lent_id;
-		const user_id = res[0].lent_user_id;
-		const cabinet_id = res[0].lent_cabinet_id;
-		const lent_time = res[0].lent_time;
-		client.query(`insert into lent_log (log_user_id, log_cabinet_id, lent_time, return_time) values (${user_id}, ${cabinet_id}, '${lent_time}', now())`);
-		client.query(`delete from lent where lent_cabinet_id=${lent_id}`)
-		lent.lent_id = -1;
-		lent.lent_cabinet_id = -1;
-		lent.lent_user_id = -1;
-		lent.lent_time = '';
-		lent.expire_time = '';
-		lent.extension = false;
-	});
+	client.query(`insert into lent_log 
+	(log_user_id, log_cabinet_id, lent_time, return_time) values 
+	(${res[0].user_id}, ${res[0].cabinet_id}, '${res[0].lent_time}', now())`);
+	client.query(`delete from lent where lent_cabinet_id=${user.user_id}`)
+	lent.lent_id = -1;
+	lent.lent_cabinet_id = -1;
+	lent.lent_user_id = -1;
+	lent.lent_time = '';
+	lent.expire_time = '';
+	lent.extension = false;
 }
-
