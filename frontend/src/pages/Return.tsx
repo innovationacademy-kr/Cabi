@@ -19,7 +19,7 @@ export default function Return(){
                 <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
                     <div className="btn btn-lg" id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
                         반납하기
-                        </div>
+                    </div>
                 </div>
                 <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
                     <div className="btn btn-lg disabled" id="colorBtn">
