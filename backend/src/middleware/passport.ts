@@ -1,8 +1,7 @@
 import dotenv from 'dotenv'
-dotenv.config();
+dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'});
 import passport from 'passport'
 import {user} from '../user'
-import {connectionForCabinet} from '../db/db_dep'
 
 const Strategy = require('passport-42')
 const env = process.env;
@@ -45,5 +44,6 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
 }
 
 export default function passportUse(){
+		console.log(FortyTwoOpt);
     passport.use(new Strategy(FortyTwoOpt, FortyTwoVerify));
 }

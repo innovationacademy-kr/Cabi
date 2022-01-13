@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import './lentModal.css';
 export default function LentModal(props:any){
 
   const handleClick = () => {
