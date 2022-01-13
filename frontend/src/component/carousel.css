@@ -1,3 +1,29 @@
+.carousel-indicators [data-bs-target]{
+    background-color: #6667AB;
+    width: 30px;
+    height: 3px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.carousel-indicators .active {
+    background-color: #6c337d;
+    width: 30px;
+    height: 3px;
+    margin-right: 10px;
+    margin-left: 10px;
+    /* opacity: 0; */
+    /* opacity: .5; */
+    transition: opacity 1.2s ease;
+}
+
+.indicator{
+    margin-left: 10px;
+    background-color: cornflowerblue;
+    border-radius: 2px !important;
+    width: 25%;
+}
+
 
 .sectionName{
     text-align: center;
