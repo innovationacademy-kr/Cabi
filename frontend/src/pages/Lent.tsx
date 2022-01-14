@@ -99,7 +99,7 @@ export default function Lent(){
                 <Location></Location>
               </div>
               <div className="col">
-                <Menu></Menu>
+              <Menu url="/return"></Menu>
               </div>
             </div>
             <div className="row my-2 mx-2" >

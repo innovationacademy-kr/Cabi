@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
-dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'});
+// dotenv.config({path:'./.env.local'});
+dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
 import passport from 'passport'
 import {user} from '../user'
 
@@ -32,7 +33,7 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
         refresh: refreshToken,
     };
     // console.log(user);
-    //console.log(profile);
+    // console.log(profile);
     console.log(`accessToken : ${accessToken}`);
     console.log(`refreshToken: ${refreshToken}`);
     user.user_id = profile.id;
@@ -44,6 +45,5 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
 }
 
 export default function passportUse(){
-		console.log(FortyTwoOpt);
     passport.use(new Strategy(FortyTwoOpt, FortyTwoVerify));
 }

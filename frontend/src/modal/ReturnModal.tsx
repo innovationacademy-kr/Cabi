@@ -24,7 +24,7 @@ export default function ReturnModal(){
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" className="btn btn-primary" onClick={handleClick} >반납</button>
+            <button type="button" className="btn btn-primary" id="btn-primary" onClick={handleClick} >반납</button>
           </div>
         </div>
       </div>
