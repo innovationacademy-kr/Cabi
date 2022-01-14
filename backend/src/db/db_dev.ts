@@ -1,5 +1,5 @@
 import mariadb from 'mariadb'
-import {user, cabinetList, cabinetInfo} from '../user';
+import {user, cabinetList, cabinetInfo, cabinetLent} from '../user';
 
 const con = mariadb.createPool({
 	host: 'localhost',
@@ -10,39 +10,16 @@ const con = mariadb.createPool({
 });
 
 export async function connection(queryFunction:Function) {
-    let pool;
-    console.log('connected_1!');
+    let pool:mariadb.PoolConnection;
     try{
-        pool = con.getConnection();
-	console.log('connected_2!');
-	await queryFunction(pool);
+        pool = await con.getConnection();
+		await queryFunction(pool);
+		if (pool) pool.end();
     }catch(err){
-	    console.log('error !');
+	    console.log(err);
         throw err;
-    }finally{
-        setTimeout((pool:any)=>{
-		if (pool) 
-			pool.end();
-	    	console.log(user);
-	   	console.log(cabinetList);
-	   	console.log('end of connection!');
-	}, 10);
-        return ;
     }
 }
-
-//export function connection(queryFunction:Function) {
-//    let pool;
-//        con.getConnection().then((pool:any) => {
-//            queryFunction(pool, ()=>{
-//                console.log('connection');
-//                pool.end();
-//            });
-//        }).catch((err)=>{
-//            console.log('error !');
-//        throw err;
-//    });
-//}
 
 export async function connectionForCabinet(){
 	if (cabinetList.location?.length)
@@ -91,27 +68,19 @@ export async function connectionForCabinet(){
     });
 		if (pool) pool.release();
   }catch(err){
-		console.log('error !');
+	console.log(err);
     throw err;
-  }finally{
-		//if (pool) pool.release();
-		//console.log(user);
-		//console.log(cabinetList);
-		//console.log('end of connection!');
-		return ;
   }
 }
 
-
-export async function connectionForLent(queryFunction:any, cabinet_id:number) {
+export async function connectionForLent(queryFunction:any, cabinet_id:number){
     let pool;
     try{
         pool = await con.getConnection()
-        queryFunction(pool, cabinet_id);
-    }catch(err){
+		await queryFunction(pool, cabinet_id);
+		if (pool) pool.end();
+	}catch(err){
+		console.log(err);
         throw err;
-    }finally{
-        if (pool) pool.end();
-        return ;
     }
 }
