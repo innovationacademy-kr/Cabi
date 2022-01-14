@@ -1,6 +1,7 @@
 export default function CabinetBox(props:any){
     const clickHandler = () => {
         props.setTarget(props.cabinet_id);
+        props.setCabiNum(props.cabinet_num);
     }
     return (
         <div className={`border text-center${props.intra_id !== "" ? ' bg-secondary' : ''}`}  data-bs-toggle={props.intra_id !== '' ? '':'modal'} data-bs-target="#lentmodal" onClick={clickHandler}>
