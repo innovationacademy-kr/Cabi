@@ -1,4 +1,3 @@
-// import axios from 'axios'
 import '../pages/lent.css'
 
 export default function Location(){
