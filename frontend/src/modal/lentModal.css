@@ -3,3 +3,15 @@
     background-color: #6667AB;
     border-color: #6667AB;
 }
+
+.modal-body{
+    font-size: larger;
+    font-weight: bolder;
+    justify-content: center;
+    text-align: center;
+    padding: 5px;
+}
+
+p{
+    margin: 15px 0 10px;
+}
