@@ -27,18 +27,18 @@ router.get(
     "/auth/login/callback",
     passport.authenticate("42", {
         // successMessage: "LOGIN SUCCESS!",
-        // successRedirect: "http://localhost:3000/lent",
+        // successRedirect: "/lent",
         failureMessage: "LOGIN FAILED :(",
-        failureRedirect: "http://localhost:3000",
+        failureRedirect: "/",
     }),
     function(req:any, res:any){
         //lent 있는 경우, 순서 확인
         try{
             connection(checkUser);
             if (lent.lent_id !== -1){
-                res.redirect('http://localhost:3000/return');            
+                res.redirect('/return');            
             }else{
-                res.redirect('http://localhost:3000/lent');
+                res.redirect('/lent');
             }
         }catch(err){
             console.log(err);

@@ -6,8 +6,8 @@ import cors from 'cors'
 import {connectionForCabinet} from './db/db_dev'
 import {router} from './route'
 import dotenv from 'dotenv'
-// dotenv.config({path:'/home/ec2-user/git/dev/backend/.env'});
-dotenv.config({path:'./.env.local'})
+dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
+//dotenv.config({path:'./.env.local'})
 
 import passport from 'passport'
 import passportConfig from './middleware/passport';
