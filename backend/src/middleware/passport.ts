@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
-dotenv.config();
+dotenv.config({path:'./.env.local'});
+// dotenv.config({path:'/home/ec2-user/git/dev/backend/.env'});
 import passport from 'passport'
 import {user} from '../user'
 

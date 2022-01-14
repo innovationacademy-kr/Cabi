@@ -5,28 +5,34 @@ import YAML from 'yamljs'
 import cors from 'cors'
 import {connectionForCabinet} from './db/db_dev'
 import {router} from './route'
+import dotenv from 'dotenv'
+// dotenv.config({path:'/home/ec2-user/git/dev/backend/.env'});
+dotenv.config({path:'./.env.local'})
 
 import passport from 'passport'
 import passportConfig from './middleware/passport';
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
-import {locationInfo} from './db/query';
 
 function makeServer(){
     const app = express();
-    const port = 4242;
+    const port = process.env.PORT || 4242;
 
-    app.use(
-        cors({
-            origin: "http://localhost:3000",
-            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-            credentials: true,
-        })
-    );
+    if (port !== '2424'){
+        app.use(
+            cors({
+                origin: "http://localhost:3000",
+                methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+                credentials: true,
+            })
+        );
+    }
+
     const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
         
-    app.use(express.static(path.join(__dirname, "../public")));
+    if (port === '2424')
+        app.use(express.static(path.join(__dirname, "../public")));
 
     app.use(
         cookieSession({
@@ -45,9 +51,12 @@ function makeServer(){
 
     app.use('/', router);
     connectionForCabinet();
-    app.use('/', function(req, res){
-       res.sendFile(path.join(__dirname, '../public/index.html'));
-    });
+    
+    if (port === '2424'){
+        app.use('/', function(req, res){
+            res.sendFile(path.join(__dirname, '../public/index.html'));
+         });
+    }
 
     app.listen(port, ()=>console.log(`Listening on port ${port}`));
 }
