@@ -8,8 +8,8 @@ export default function Location(){
            새롬관
           </button>
           <div className="dropdown-menu" id="locationMenu" aria-labelledby="dropdownMenuButton">
-            <a className="dropdown-item" href="#">서초</a>
-            <a className="dropdown-item" href="#">paris</a>
+            {/* <a className="dropdown-item" href="#">서초</a>
+            <a className="dropdown-item" href="#">paris</a> */}
           </div>
         </div>
 	  
