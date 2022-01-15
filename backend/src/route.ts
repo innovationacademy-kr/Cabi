@@ -1,8 +1,8 @@
 import express from 'express';
 import passport from 'passport';
 import authCheck from './middleware/auth';
-import {cabinetList, cabinetLent, lent} from './user'
-import {checkUser, createLentLog, createLent } from './db/query'
+import {cabinetList, cabinetLent, lent, user} from './user'
+import {checkUser, createLentLog, createLent, getLentUser } from './db/query'
 import {connection, connectionForLent} from './db/db_dep'
 
 export const router = express.Router();
@@ -11,15 +11,6 @@ router.get('/auth/login', passport.authenticate('42'));
 router.post('/', authCheck, function(req:any, res:any){
     // console.log(req.user);
     res.json({ test: req.user });
-});
-router.post('/api/lent', function(req:any, res:any){
-    try{
-        connectionForLent(createLent, req.body.cabinet_id);
-        res.send({cabinet_id: req.cabinet_id});
-    }catch(err){
-        console.log(err);
-        res.status(400).send({cabinet_id: req.cabinet_id});
-    }
 });
 
 router.get(
@@ -47,17 +38,40 @@ router.get(
     }
 );
 
+router.get('/auth/logout', function(req:any, res:any){
+    user.user_id = 0,
+    user.intra_id = '',
+    user.email = '',
+    user.access = '',
+    user.refresh = ''
+    res.redirect('/');
+});
+
 router.post("/api/cabinet", (req:any, res:any, next:any)=>{
     if (!cabinetList)
         res.status(400).json({error: "no user"});
     else
         res.send(cabinetList);
 })
-router.post("/api/lent_info", (req:any, res:any)=>{
-    if (!cabinetLent)
-        res.status(400).json({error: "no cabinet"});
-    else
+router.post("/api/lent_info", async (req:any, res:any)=>{
+    try{
+        await connection(getLentUser);
+        console.log(cabinetLent);
         res.send(cabinetLent);
+    }catch(err:any){
+        console.log(err);
+        res.status(400).json({error: "no cabinet"});
+        throw err;
+    };
+})
+router.post('/api/lent', function(req:any, res:any){
+    try{
+        connectionForLent(createLent, req.body.cabinet_id);
+        res.send({cabinet_id: req.cabinet_id});
+    }catch(err){
+        console.log(err);
+        res.status(400).send({cabinet_id: req.cabinet_id});
+    }
 })
 router.post("/api/return", (req:any, res:any)=>{
     try{

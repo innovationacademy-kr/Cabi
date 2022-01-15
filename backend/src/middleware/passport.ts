@@ -1,8 +1,8 @@
 import dotenv from 'dotenv'
-dotenv.config();
+// dotenv.config({path:'./.env.local'});
+dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
 import passport from 'passport'
 import {user} from '../user'
-import {connectionForCabinet} from '../db/db_dep'
 
 const Strategy = require('passport-42')
 const env = process.env;
@@ -33,7 +33,7 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
         refresh: refreshToken,
     };
     // console.log(user);
-    //console.log(profile);
+    // console.log(profile);
     console.log(`accessToken : ${accessToken}`);
     console.log(`refreshToken: ${refreshToken}`);
     user.user_id = profile.id;

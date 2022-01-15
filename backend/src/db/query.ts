@@ -1,31 +1,37 @@
+import mariadb from 'mariadb'
 import {user, lent, cabinetList, cabinetInfo, cabinetLent} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
-export function checkUser(client:any){
+export function checkUser(client:mariadb.PoolConnection){
 	const content:string = `select * from user where user_id = ${user.user_id}`;
-	client.query(content).then((err:any, res:any)=>{
-		if (err) throw err;
+	client.query(content).then((res:any)=>{
 		console.log(res);
 		if (!res.length)
 			addUser(client);
 		else
 			getUser(client);
+	}).catch((err:any)=>{
+		console.log(err);
+		throw err;
 	});
 }
 
 //사용자가 없는 경우, user 값 생성
-export function addUser(client:any){
+export function addUser(client:mariadb.PoolConnection){
+	console.log('addUser');
 	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
-	client.query(content).then((err:any, res:any)=>{
-		if (err) throw err;
+	client.query(content).then((res:any)=>{
 		console.log(res);
+	}).catch((err:any)=>{
+		console.log(err);
+		throw err;
 	});
 }
 //본인 정보 및 렌트 정보 - 리턴 페이지
-export function getUser(client:any){
+export function getUser(client:mariadb.PoolConnection){
+	console.log('getUser')
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
-	client.query(content).then((err:any, res:any)=>{
-		if (err) throw err;
+	client.query(content).then((res:any)=>{
 		console.log(res);
 		console.log(typeof res);
 		if (res.length !== 0){ // lent page
@@ -37,40 +43,44 @@ export function getUser(client:any){
 			lent.extension = res[0].extension;
 		}
 		// console.log(res.length);
+	}).catch((err:any)=>{
+		console.log(err);
+		throw err;
 	});
 }
 //lent & user
-export function getLentUser(client:any){
+export function getLentUser(client:mariadb.PoolConnection){
 	const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
 	console.log('getLentUser');
-	client.query(content).then((err:any, res:any)=>{
-		if (err) throw err;
-		console.log(res);
+	client.query(content).then((res:any)=>{
 		for (let i = 0; i < res.length; i++){
 			cabinetLent.push(res[i]);
 		}
+	}).catch((err:any)=>{
+		console.log(err);
+		throw err;
 	});
 }
 //location info
-export function locationInfo(client:any){
+export function locationInfo(client:mariadb.PoolConnection){
 	const content:string = `select distinct cabinet.location from cabinet`;
 
 	// console.log('location info');
-	const result = client.query(content);
+	const result:any = client.query(content);
 	result.forEach(async (element:any)=>{
 		cabinetList.location?.push(result.location);
 		floorInfo(client, result.location);
 	});
 }
 //floor info with exact location
-export function floorInfo(client:any, location:string):Array<number>{
+export function floorInfo(client:mariadb.PoolConnection, location:string):Array<number>{
 	const content:string = `select distinct cabinet.floor from cabinet where location='${location}' order by floor`;
 	let floorList:Array<number> = [];
 	let list:Array<Array<string>> = [];
 	let tmpCabinetList:Array<Array<Array<cabinetInfo>>> = [];
 
 	// console.log('floor info');
-	const result = client.query(content);
+	const result:any = client.query(content);
 	result.forEach(async (element:any)=>{	 
 		floorList.push(result.floor);
 	 	list.push(sectionInfo(client, location, element.floor, tmpCabinetList));
@@ -81,13 +91,13 @@ export function floorInfo(client:any, location:string):Array<number>{
 	return floorList;
 }
 //section info with exact floor
-export function sectionInfo(client:any, location:string, floor:number, list:any):Array<string>{
+export function sectionInfo(client:mariadb.PoolConnection, location:string, floor:number, list:any):Array<string>{
 	const content:string = `select distinct cabinet.section from cabinet where location='${location}' and floor=${floor} order by section`;
 	let sectionList:Array<string> = [];
 	let cabinetList:Array<Array<cabinetInfo>> = [];
 
 	// console.log('section info');
-	const result = client.query(content);
+	const result:any = client.query(content);
 	result.forEach(async (element:any)=>{
 	 	sectionList.push(result.section);
 	 	cabinetList.push(getCabinetInfo(client, location, floor, result.section));
@@ -95,30 +105,31 @@ export function sectionInfo(client:any, location:string, floor:number, list:any)
 	list.push(cabinetList);
 	return sectionList;
 }
-export function getCabinetInfo(client:any, location:string, floor:number, section:string):Array<cabinetInfo>{
+export function getCabinetInfo(client:mariadb.PoolConnection, location:string, floor:number, section:string):Array<cabinetInfo>{
 	const content:string = `select * from cabinet where location='${location}' and floor=${floor} and section='${section}' and activation=1 order by cabinet_num`;
 	let cabinetList:Array<cabinetInfo> = [];
 
-	const result = client.query(content);
+	const result:any = client.query(content);
 	result.forEach((element:any)=>{
 		cabinetList.push(element);
 	});	
 	return cabinetList;
 }
 //lent 값 생성
-export function createLent(client:any, cabinet_id:number){
+export function createLent(client:mariadb.PoolConnection, cabinet_id:number){
 	const content:string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
-	client.query(content).then((err:any, res:any)=>{
-		if (err) throw err;
+	client.query(content).then((res:any)=>{
 		console.log(res);
+	  }).catch((err:any)=>{
+		  console.log(err);
+		  throw err;
 	  });
 }
 
 //lent_log 값 생성 후 lent 값 삭제 (skim update)
-export function createLentLog(client:any){
+export function createLentLog(client:mariadb.PoolConnection){
 	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
-	client.query(content).then((err:any, res:any)=>{
-		if (err) throw err;
+	client.query(content).then((res:any)=>{
 		if (res[0] === undefined)
 			return ;
 		const lent_id = res[0].lent_id;
@@ -133,5 +144,8 @@ export function createLentLog(client:any){
 		lent.lent_time = '';
 		lent.expire_time = '';
 		lent.extension = false;
+	}).catch((err:any)=>{
+		console.log(err);
+		throw err;
 	});
 }

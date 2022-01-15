@@ -11,7 +11,7 @@ export default function Carousel(props:any){
     for (let i = 0; i < cab.length; i++){
       const id= props.outer_lent.find((l:any)=>l.lent_cabinet_id === cab[i].cabinet_id);
       list.push(
-        <CabinetBox className="d-block w-100" key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_num} intra_id={id ? id.intra_id : ""}></CabinetBox>
+        <CabinetBox className="d-block w-100" key={`cab_box_${cab[i].cabinet_id}`} cabinet_num={cab[i].cabinet_num} setTarget={props.setTarget} setCabiNum={props.setCabiNum} intra_id={id ? id.intra_id : ""}></CabinetBox>
       );
     }
     return list;

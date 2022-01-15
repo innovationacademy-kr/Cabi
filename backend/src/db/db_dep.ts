@@ -10,15 +10,15 @@ const con = mariadb.createPool({
 });
 
 export async function connection(queryFunction:Function) {
-	let pool;
-	try{
-		pool = await con.getConnection();
+	let pool:mariadb.PoolConnection;
+    try{
+        pool = await con.getConnection();
 		await queryFunction(pool);
 		if (pool) pool.end();
-	}catch(err){
-		console.log('error !');
-		throw err;
-	};
+    }catch(err){
+	    console.log(err);
+        throw err;
+    }
 }
 
 export async function connectionForCabinet(){
@@ -68,7 +68,7 @@ export async function connectionForCabinet(){
 	});
 		if (pool) pool.release();
   }catch(err){
-		console.log('error !');
+	console.log(err);
 	throw err;
   };
 }
