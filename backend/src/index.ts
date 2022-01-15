@@ -10,6 +10,8 @@ import passport from 'passport'
 import passportConfig from './middleware/passport';
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
+import dotenv from 'dotenv'
+dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'});
 
 function makeServer(){
     const app = express();
