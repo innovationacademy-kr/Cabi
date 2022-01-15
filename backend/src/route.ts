@@ -64,6 +64,7 @@ router.post("/api/lent_info", async (req:any, res:any)=>{
 
 })
 router.post('/api/lent', function(req:any, res:any){
+    console.log(req.body);
     try{
         connectionForLent(createLent, req.body.cabinet_id);
         res.send({cabinet_id: req.cabinet_id});
