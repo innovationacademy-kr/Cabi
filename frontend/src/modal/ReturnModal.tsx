@@ -1,12 +1,12 @@
 import axios from 'axios'
 import './returnModal.css'
-export default function ReturnModal(){
+export default function ReturnModal(props:any){
   const handleClick = () => {
     const dev_url = 'http://localhost:4242/api/return';
     const dep_url = '/api/return';
-    axios.post(dep_url).then((res:any)=>{
+    axios.post(dep_url, {lent_id: props.lentCabinet.lent_id}).then((res:any)=>{
       alert('반납되었습니다');
-      window.location.href="/lent"
+      window.location.href="/lent";
     }).catch(()=>{
       alert('다시 시도해주세요!');
     })
@@ -24,7 +24,7 @@ export default function ReturnModal(){
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" className="btn btn-primary" onClick={handleClick} >반납</button>
+            <button type="button" className="btn btn-primary" id="btn-primary" onClick={handleClick} >반납</button>
           </div>
         </div>
       </div>

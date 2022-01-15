@@ -32,7 +32,7 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
         refresh: refreshToken,
     };
     // console.log(user);
-    //console.log(profile);
+    // console.log(profile);
     console.log(`accessToken : ${accessToken}`);
     console.log(`refreshToken: ${refreshToken}`);
     user.user_id = profile.id;
@@ -44,6 +44,5 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
 }
 
 export default function passportUse(){
-		console.log(FortyTwoOpt);
     passport.use(new Strategy(FortyTwoOpt, FortyTwoVerify));
 }

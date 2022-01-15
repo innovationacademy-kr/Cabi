@@ -55,9 +55,3 @@ Body{
     height: 40vh;
     object-fit: scale-down;
 }
-
-#dropdownMenu{
-    text-align: center;
-    min-width: 20px;
-    right:0%;
-}
