@@ -23,7 +23,7 @@ export default function LentModal(props:any){
           </div>
           <div className="modal-footer justify-content-center">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" className="btn btn-primary" onClick={handleClick}>대여</button>
+            <button type="button" className="btn btn-primary" id="btn-primary" onClick={handleClick}>대여</button>
           </div>
         </div>
       </div>

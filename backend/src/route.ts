@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import authCheck from './middleware/auth';
-import {cabinetList, cabinetLent, lent} from './user'
+import {cabinetList, cabinetLent, lent, user} from './user'
 import {checkUser, createLentLog, createLent, getLentUser} from './db/query'
 import {connection, connectionForLent} from './db/db_dev'
 
@@ -35,6 +35,14 @@ router.get(
         }
     }
 );
+router.get('/auth/logout', function(req:any, res:any){
+    user.user_id = 0,
+    user.intra_id = '',
+    user.email = '',
+    user.access = '',
+    user.refresh = ''
+    res.redirect('/');
+});
 
 router.post("/api/cabinet", (req:any, res:any, next:any)=>{
     if (!cabinetList)

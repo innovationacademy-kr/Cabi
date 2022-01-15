@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
-//dotenv.config({path:'./.env.local'});
-dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
+dotenv.config({path:'./.env.local'});
+// dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
 import passport from 'passport'
 import {user} from '../user'
 

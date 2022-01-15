@@ -4,10 +4,11 @@ import Menu from '../component/Menu'
 import ReturnModal from '../modal/ReturnModal'
 
 export default function Return(){
+
   return (
     <div className="container" id='container'>
       <div className="row-2">
-      <Menu></Menu>
+      <Menu url="/lent"></Menu>
       </div>
       <div className="card row-2 p-5 m-5">
         <div className="card-body p-5 my-5">
@@ -27,5 +28,5 @@ export default function Return(){
       </div>
       <ReturnModal></ReturnModal>
     </div>
-  )
+  );
 }
