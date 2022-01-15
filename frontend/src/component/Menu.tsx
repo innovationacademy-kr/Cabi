@@ -22,7 +22,7 @@ export default function Menu(props:any){
         <div className="dropdown-menu start-50" id={dropdown()} aria-labelledby="dropdownMenuButton">
           <a className="dropdown-item" href={props.url}>{cabinetPage()}</a>
           <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#menualmodal">이용안내</a>
-          <a className="dropdown-item" href="#">대여 로그</a>
+          {/* <a className="dropdown-item" href="#">대여 로그</a> */}
           <a className="dropdown-item" href={logout}>로그아웃</a>
         </div>
         <MenualModal></MenualModal>
