@@ -1,3 +1,8 @@
+.btn:focus, .btn:active:focus{
+	outline: 0px;
+	outline-offset: 0px;
+}
+
 #dropdownMenuReturn {
     text-align: center;
     min-width: 11rem;
