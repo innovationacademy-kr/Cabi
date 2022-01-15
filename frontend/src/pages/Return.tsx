@@ -25,7 +25,7 @@ export default function Return(){
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
 
   const callReturn = () => {
-    axios.post(dev_url, {user_id : 1}).then((res:any)=>{
+    axios.post(local_url, {user_id : 1}).then((res:any)=>{
       console.log(res.data);
       setLentCabinet(res.data.lentCabinet);
     }).catch((err)=>{console.log(err)});

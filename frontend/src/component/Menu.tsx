@@ -1,9 +1,10 @@
-// import axios from 'axios'
+import axios from 'axios'
 import './menu.css'
 import MenualModal from '../modal/MenualModal'
 
 export default function Menu(props:any){
-  const logout = '/auth/logout';
+  const logout = 'http://localhost:4242/auth/logout';
+  
   const cabinetPage = () =>{
     if (props.url === '/return')
       return '내 사물함';
@@ -23,7 +24,7 @@ export default function Menu(props:any){
           <a className="dropdown-item" href={props.url}>{cabinetPage()}</a>
           <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#menualmodal">이용안내</a>
           {/* <a className="dropdown-item" href="#">대여 로그</a> */}
-          <a className="dropdown-item" href={logout}>로그아웃</a>
+          <a className="dropdown-item" onClick={()=>{axios.post(logout)}}>로그아웃</a>
         </div>
         <MenualModal></MenualModal>
       </div>

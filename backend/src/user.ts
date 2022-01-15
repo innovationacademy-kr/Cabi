@@ -51,13 +51,14 @@ export type cabinetListInfo = {
 }
 
 //variables
-export let user:userInfo = {
+export let userList:Array<userInfo> = [];
+export let user:userInfo={
     user_id: 1,
     intra_id: '',
     email: '',
     access: '',
     refresh: ''
-}
+};
 
 export let lent:lentInfo = {
     lent_id: -1,

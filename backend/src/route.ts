@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import authCheck from './middleware/auth';
-import {cabinetList, cabinetLent, lent, user, lentCabinet} from './user'
+import {cabinetList, cabinetLent, lent, user, userList, lentCabinet} from './user'
 import {checkUser, createLentLog, createLent, getLentUser, getUser} from './db/query'
 import {connection, connectionForLent} from './db/db_dev'
 
@@ -19,29 +19,36 @@ router.get(
         // successMessage: "LOGIN SUCCESS!",
         // successRedirect: "/lent",
         failureMessage: "LOGIN FAILED :(",
-        failureRedirect: "/",
+        failureRedirect: "http://localhost:3000",
     }),
     function(req:any, res:any){
         //lent 있는 경우, 순서 확인
         try{
             connection(checkUser);
             if (lent.lent_id !== -1){
-                res.redirect('/return');
+                res.redirect('http://localhost:3000/return');
             }else{
-                res.redirect('/lent');
+                res.redirect('http://localhost:3000/lent');
             }
         }catch(err){
             console.log(err);
         }
     }
 );
-router.get('/auth/logout', function(req:any, res:any){
+router.post('/auth/logout', function(req:any, res:any){
     user.user_id = 0,
     user.intra_id = '',
     user.email = '',
     user.access = '',
     user.refresh = ''
-    res.redirect('/');
+    // console.log(res.header.cookie);
+    console.log(req.header);
+    console.log(req.session);
+    // const idx = userList.findIndex((user)=>user.access === res.cookie.access)
+    // if (idx !== -1){
+    //     userList.splice(idx, 1);
+    // }
+    res.redirect('http://localhost:3000/');
 });
 
 router.post("/api/cabinet", (req:any, res:any, next:any)=>{
