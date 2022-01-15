@@ -13,7 +13,7 @@ export default function Menu(props:any){
     if (props.url === '/lent')
       return 'dropdownMenuReturn';
     return 'dropdownMenuLent';
-  };
+  }; 
   return (
       <div className="dropdown text-right" id="menu">
         <button className="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
