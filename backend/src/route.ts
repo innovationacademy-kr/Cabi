@@ -1,9 +1,9 @@
 import express from 'express';
 import passport from 'passport';
 import authCheck from './middleware/auth';
-import {cabinetList, cabinetLent, lent, user} from './user'
-import {checkUser, createLentLog, createLent, getLentUser } from './db/query'
-import {connection, connectionForLent} from './db/db_dep'
+import {cabinetList, cabinetLent, lent, user, lentCabinet} from './user'
+import {checkUser, createLentLog, createLent, getLentUser, getUser} from './db/query'
+import {connection, connectionForLent} from './db/db'
 
 export const router = express.Router();
 
@@ -28,7 +28,7 @@ router.get(
 	    console.log('check_user');
             connection(checkUser);
             if (lent.lent_id !== -1){
-                res.redirect('http://cabi.42cadet.kr/return');            
+                res.redirect('http://cabi.42cadet.kr/return');
             }else{
                 res.redirect('http://cabi.42cadet.kr/lent');
             }
@@ -73,9 +73,20 @@ router.post('/api/lent', function(req:any, res:any){
         res.status(400).send({cabinet_id: req.cabinet_id});
     }
 })
+
+router.post("/api/return_info", async (req:any, res:any)=>{
+	user.user_id = req.body.user_id;
+	connection(getUser).then(()=> {
+		console.log(lentCabinet);
+		res.send({lentCabinet : lentCabinet});
+	});
+})
+
 router.post("/api/return", (req:any, res:any)=>{
+    lentCabinet.lent_id = req.body.lent_id;
     try{
         connection(createLentLog);
+        res.send();
     }catch(err){
         console.log(err);
         res.status(400).json({error: err});

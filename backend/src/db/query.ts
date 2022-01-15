@@ -30,17 +30,22 @@ export function addUser(client:mariadb.PoolConnection){
 //본인 정보 및 렌트 정보 - 리턴 페이지
 export function getUser(client:mariadb.PoolConnection){
 	console.log('getUser')
-	const content:string = `select * from lent where lent_user_id=${user.user_id}`;
+	const content:string = `select * from lent l join cabinet c on l.lent_cabinet_id=c.cabinet_id where l.lent_user_id=${user.user_id}`;
 	client.query(content).then((res:any)=>{
 		console.log(res);
 		console.log(typeof res);
 		if (res.length !== 0){ // lent page
-			lent.lent_id = res[0].lent_id;
-			lent.lent_cabinet_id = res[0].lent_cabinet_id;
-			lent.lent_user_id = res[0].lent_user_id;
-			lent.lent_time = res[0].lent_time;
-			lent.expire_time = res[0].expire_time;
-			lent.extension = res[0].extension;
+			lentCabinet.lent_id = res[0].lent_id;
+			lentCabinet.lent_cabinet_id = res[0].lent_cabinet_id;
+			lentCabinet.lent_user_id = res[0].lent_user_id;
+			lentCabinet.lent_time = res[0].lent_time;
+			lentCabinet.expire_time = res[0].expire_time;
+			lentCabinet.extension = res[0].extension;
+			lentCabinet.cabinet_num = res[0].cabinet_num;
+			lentCabinet.location = res[0].location;
+			lentCabinet.floor = res[0].floor;
+			lentCabinet.section = res[0].section;
+			lentCabinet.activation = res[0].activation;
 		}
 		// console.log(res.length);
 	}).catch((err:any)=>{
@@ -81,7 +86,7 @@ export function floorInfo(client:mariadb.PoolConnection, location:string):Array<
 
 	// console.log('floor info');
 	const result:any = client.query(content);
-	result.forEach(async (element:any)=>{	 
+	result.forEach(async (element:any)=>{
 		floorList.push(result.floor);
 	 	list.push(sectionInfo(client, location, element.floor, tmpCabinetList));
 	});
@@ -101,7 +106,7 @@ export function sectionInfo(client:mariadb.PoolConnection, location:string, floo
 	result.forEach(async (element:any)=>{
 	 	sectionList.push(result.section);
 	 	cabinetList.push(getCabinetInfo(client, location, floor, result.section));
-	})	
+	})
 	list.push(cabinetList);
 	return sectionList;
 }
@@ -112,7 +117,7 @@ export function getCabinetInfo(client:mariadb.PoolConnection, location:string, f
 	const result:any = client.query(content);
 	result.forEach((element:any)=>{
 		cabinetList.push(element);
-	});	
+	});
 	return cabinetList;
 }
 //lent 값 생성

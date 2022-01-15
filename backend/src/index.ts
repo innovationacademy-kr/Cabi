@@ -3,7 +3,7 @@ import path from 'path'
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
 
-import {connectionForCabinet} from './db/db_dep'
+import {connectionForCabinet} from './db/db'
 import {router} from './route'
 
 import passport from 'passport'
@@ -17,7 +17,7 @@ function makeServer(){
 
     const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-    
+
     app.use(express.static(path.join(__dirname, '../public')));
     app.use(
         cookieSession({
