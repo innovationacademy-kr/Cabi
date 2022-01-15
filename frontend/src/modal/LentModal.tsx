@@ -4,8 +4,9 @@ import './lentModal.css';
 export default function LentModal(props:any){
 
   const handleClick = () => {
-    const dep_url = "api/lent"
-    axios.post(dep_url, {cabinet_id : props.target}).then((res:any)=>{
+    const local_url = "http://localhost:4242/api/lent"
+    const dev_url = "api/lent"
+    axios.post(dev_url, {cabinet_id : props.target}).then((res:any)=>{
       window.location.href="/return"
     }).catch((err)=>{console.log(err)});
   }
