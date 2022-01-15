@@ -22,7 +22,7 @@ export default function Menu(props:any){
         <div className="dropdown-menu start-50" id={dropdown()} aria-labelledby="dropdownMenuButton">
           <Link className="dropdown-item" to={props.url}>{cabinetPage()}</Link>
           {/* <a className="dropdown-item" href="#">대여 로그</a> */}
-          <a className="dropdown-item" href="#">로그아웃</a>
+          <a className="dropdown-item" href={logout}>로그아웃</a>
         </div>
       </div>
   )
