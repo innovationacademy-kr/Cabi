@@ -1,5 +1,5 @@
 import mariadb from 'mariadb'
-import {user, lent, cabinetList, cabinetInfo, cabinetLent} from '../user'
+import {user, lent, cabinetList, cabinetInfo, cabinetLent, lentCabinet} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
 export function checkUser(client:mariadb.PoolConnection){

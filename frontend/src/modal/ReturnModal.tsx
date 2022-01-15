@@ -1,6 +1,6 @@
 import axios from 'axios'
 import './returnModal.css'
-export default function ReturnModal(){
+export default function ReturnModal(props:any){
   const handleClick = () => {
     const dev_url = 'http://localhost:4242/api/return';
     const dep_url = '/api/return';
