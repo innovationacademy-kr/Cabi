@@ -41,6 +41,12 @@ export default function Lent(){
   const [cabiNum, setCabiNum] = useState<number>(-1);
 
   useEffect(()=>{
+    axios.post('http://localhost:4242/api/check').then((res:any)=>{
+      console.log(res);
+    }).catch((err:any)=>{
+      console.log(err);
+      window.location.href = 'http://localhost:3000/';
+    });
     if (!info.location){
       console.log('info');
       handleClick();
@@ -54,14 +60,14 @@ export default function Lent(){
   const handleLent = () => {
     const local_url = "http://localhost:4242/api/lent_info"
     const dev_url = "/api/lent_info"
-    axios.post(dev_url).then((res:any)=>{
+    axios.post(local_url).then((res:any)=>{
       setLent(res.data);
     }).catch((err)=>{console.log(err)});
   }
   const handleClick = () => {
     const local_url = "http://localhost:4242/api/cabinet"
     const dev_url = "/api/cabinet"
-    axios.post(dev_url).then((res:any)=>{
+    axios.post(local_url).then((res:any)=>{
       setInfo(res.data);
     }).catch((err)=>{console.log(err)});
   }

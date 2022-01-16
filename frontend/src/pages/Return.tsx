@@ -25,7 +25,7 @@ export default function Return(){
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
 
   const callReturn = () => {
-    axios.post(dev_url, {user_id : 1}).then((res:any)=>{
+    axios.post(local_url, {user_id : 1}).then((res:any)=>{
       console.log(res.data);
       setLentCabinet(res.data.lentCabinet);
     }).catch((err)=>{console.log(err)});
@@ -33,6 +33,10 @@ export default function Return(){
 
   // callReturn();
   useEffect(()=>{
+    axios.post('http://localhost:4242/api/check').catch((err:any)=>{
+      console.log(err);
+      window.location.href = 'http://localhost:3000/';
+    });
     console.log(lentCabinet?.lent_id);
     if (lentCabinet?.lent_id === -1 || lentCabinet?.lent_id === undefined)
       callReturn();

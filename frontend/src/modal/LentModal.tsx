@@ -6,7 +6,7 @@ export default function LentModal(props:any){
   const handleClick = () => {
     const local_url = "http://localhost:4242/api/lent"
     const dev_url = "api/lent"
-    axios.post(dev_url, {cabinet_id : props.target}).then((res:any)=>{
+    axios.post(local_url, {cabinet_id : props.target}).then((res:any)=>{
       window.location.href="/return"
     }).catch((err)=>{console.log(err)});
   }
