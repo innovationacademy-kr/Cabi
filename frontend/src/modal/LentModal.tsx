@@ -1,13 +1,18 @@
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import './lentModal.css';
 
 export default function LentModal(props:any){
 
+  const history = useHistory();
+
   const handleClick = () => {
     const local_url = "http://localhost:4242/api/lent"
     const dev_url = "api/lent"
-    axios.post(local_url, {cabinet_id : props.target}).then((res:any)=>{
-      window.location.href="/return"
+    axios.post(local_url, {cabinet_id : props.cabiNum}).then((res:any)=>{
+      if (res.status === 200){
+        history.push("/return");
+      }
     }).catch((err)=>{console.log(err)});
   }
 
@@ -24,7 +29,7 @@ export default function LentModal(props:any){
           </div>
           <div className="modal-footer justify-content-center">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" className="btn btn-primary" id="btn-primary" onClick={handleClick}>대여</button>
+            <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" onClick={handleClick}>대여</button>
           </div>
         </div>
       </div>

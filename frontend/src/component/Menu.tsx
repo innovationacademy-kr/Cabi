@@ -7,8 +7,7 @@ export default function Menu(props:any){
   
   const handleClick = () => {
     axios.post(logout).then((res)=>{
-      console.log(res);
-      window.location.href = 'http://localhost:3000/';
+      window.location.href = 'http://localhost:4242/';
     }).catch(err=>console.log(err))
   }
   const cabinetPage = () =>{
