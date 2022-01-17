@@ -19,7 +19,7 @@ router.get(
         // successMessage: "LOGIN SUCCESS!",
         // successRedirect: "/lent",
         failureMessage: "LOGIN FAILED :(",
-        failureRedirect: "http://localhost:3000",
+        failureRedirect: "http://localhost:4242",
     }),
     function(req:any, res:any){
         //lent 있는 경우, 순서 확인
@@ -28,9 +28,9 @@ router.get(
             // console.log(req.session.passport.user);
             connection(checkUser);
             if (lent.lent_id !== -1){
-                res.redirect('http://localhost:3000/return');
+                res.redirect('http://localhost:4242/return');
             }else{
-                res.redirect('http://localhost:3000/lent');
+                res.redirect('http://localhost:4242/lent');
             }
         }catch(err){
             console.log(err);
@@ -78,7 +78,7 @@ router.post("/api/lent_info", async (req:any, res:any)=>{
     };
 })
 router.post('/api/lent', (req:any, res:any)=>{
-    console.log(req.body);
+    // console.log(req.body);
     try{
         connectionForLent(createLent, req.body.cabinet_id);
         res.send({cabinet_id: req.cabinet_id});
@@ -90,17 +90,28 @@ router.post('/api/lent', (req:any, res:any)=>{
 
 router.post("/api/return_info", async (req:any, res:any)=>{
 	user.user_id = req.body.user_id;
-	connection(getUser).then(()=> {
-		console.log(lentCabinet);
-		res.send({lentCabinet : lentCabinet});
+    try{
+    connection(getUser).then((resp:any)=> {
+        if (resp === 1){
+		    res.send({lentCabinet : lentCabinet});
+        }
 	});
+    }catch(err){
+        console.log(err);
+        res.status(400).json({error: err});
+    }
 })
+
 
 router.post("/api/return", (req:any, res:any)=>{
     lentCabinet.lent_id = req.body.lent_id;
     try{
-        connection(createLentLog);
-        res.send();
+        connection(createLentLog).then((resp:any) => {
+            console.log(resp);
+            if (resp === 1){
+                res.sendStatus(200);
+            }
+        });
     }catch(err){
         console.log(err);
         res.status(400).json({error: err});
@@ -115,6 +126,6 @@ router.post("/api/check", (req:any, res:any)=>{
     //     res.status(400).send({result: 'failed'});
     // }else{
         console.log('success');
-        res.send({result: 'success'});
+        res.sendStatus(200);
     // }
 });

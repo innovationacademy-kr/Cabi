@@ -9,14 +9,15 @@ const con = mariadb.createPool({
 	dateStrings: true
 });
 
-export async function connection(queryFunction:Function) {
-    let pool:mariadb.PoolConnection;
+export async function connection(queryFunction:Function):Promise<number> {
+	let pool:mariadb.PoolConnection;
     try{
         pool = await con.getConnection();
 		await queryFunction(pool);
 		if (pool) pool.end();
+		return 1;
     }catch(err){
-	    console.log(err);
+		console.log(err);
         throw err;
     }
 }
