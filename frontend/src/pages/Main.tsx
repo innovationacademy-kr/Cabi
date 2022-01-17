@@ -11,7 +11,7 @@ export default function Main(){
         <img src="../img/logo.png" alt="logo" />
       </div>
       <div className="row d-grid gap-2 col-6 mx-auto">
-        <a className="btn btn-lg" id="loginBtn" href={local_url}>L O G I N</a>
+        <a className="btn btn-lg" id="loginBtn" href={dev_url}>L O G I N</a>
       </div>
     </div>
   );

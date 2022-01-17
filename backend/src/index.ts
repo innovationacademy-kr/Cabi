@@ -21,7 +21,7 @@ function makeServer(){
     const app = express();
     const port = process.env.PORT || 4242;
 
-    if (port !== '4242'){
+    if (port === '4242'){
         app.use(
             cors({
                 origin: "http://localhost:3000",
@@ -34,7 +34,7 @@ function makeServer(){
     const swaggerSpec = YAML.load(path.join(__dirname, '../api/swagger.yaml'));
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
         
-    if (port === '4242')
+    if (port === '2424')
         app.use(express.static(path.join(__dirname, "../public")));
 
     app.use(
@@ -60,7 +60,7 @@ function makeServer(){
     app.use('/', router);
     connectionForCabinet();
     
-    if (port === '4242'){
+    if (port === '2424'){
         app.use('/', function(req, res){
             res.sendFile(path.join(__dirname, '../public/index.html'));
          });

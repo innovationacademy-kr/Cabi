@@ -19,18 +19,20 @@ router.get(
         // successMessage: "LOGIN SUCCESS!",
         // successRedirect: "/lent",
         failureMessage: "LOGIN FAILED :(",
-        failureRedirect: "http://localhost:4242",
+        failureRedirect: "/",
     }),
     function(req:any, res:any){
         //lent 있는 경우, 순서 확인
         try{
-            // console.log(req.cookies);
-            // console.log(req.session.passport.user);
-            connection(checkUser);
+            console.log(req.cookies);
+            console.log(req.session.passport.user);
+						
+						res.cookie('access', req.session.passport.user, {httpOnly: true});
+						connection(checkUser);
             if (lent.lent_id !== -1){
-                res.redirect('http://localhost:4242/return');
+                res.redirect('/return');
             }else{
-                res.redirect('http://localhost:4242/lent');
+                res.redirect('/lent');
             }
         }catch(err){
             console.log(err);
@@ -78,7 +80,9 @@ router.post("/api/lent_info", async (req:any, res:any)=>{
     };
 })
 router.post('/api/lent', (req:any, res:any)=>{
-    // console.log(req.body);
+		console.log('api lent!!!!!!!!!!!!!');
+    console.log(req.session);
+		console.log(req.cookies);
     try{
         connectionForLent(createLent, req.body.cabinet_id);
         res.send({cabinet_id: req.cabinet_id});
@@ -119,8 +123,10 @@ router.post("/api/return", (req:any, res:any)=>{
 })
 
 router.post("/api/check", (req:any, res:any)=>{
-    console.log(req.session);
-    
+    console.log('api check!!!');
+		console.log(req.session);
+    console.log(req.cookie);
+		console.log(req.cookies);
     // if (!req.session || !req.session.passport || !req.session.passport.user){
     //     console.log('fail');
     //     res.status(400).send({result: 'failed'});
