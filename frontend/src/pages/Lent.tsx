@@ -7,6 +7,7 @@ import './main.css'
 import CabinetBox from '../component/CabinetBox'
 import {useState, useEffect} from 'react'
 import Carousel from '../component/Carousel'
+import {useHistory} from 'react-router-dom'
 
 export type cabinetInfo = {
   cabinet_id: number,
@@ -40,17 +41,9 @@ export default function Lent(){
   const [target, setTarget] = useState<number>(-1);
   const [cabiNum, setCabiNum] = useState<number>(-1);
 
+	const history = useHistory();
   useEffect(()=>{
     apiCheck();
-  }, [l_idx, info]);
-
-  const apiCheck = async () => {
-    await axios.post('/api/check').then((res:any)=>{
-      console.log(res);
-    }).catch((err:any)=>{
-      console.log(err);
-      window.location.href = '/';
-    });
     if (!info.location){
       console.log('info');
       handleClick();
@@ -59,19 +52,26 @@ export default function Lent(){
       console.log('lent');
       handleLent();
     }
+  }, [l_idx, info]);
+
+  const apiCheck = async () => {
+    await axios.post('/api/check').then((res:any)=>{
+      console.log(res);
+    }).catch((err:any)=>{
+      console.log(err);
+			history.push('/');
+		});
   }
 
   const handleLent = () => {
-    const local_url = "http://localhost:2424/api/lent_info"
-    const dev_url = "/api/lent_info"
-    axios.post(dev_url).then((res:any)=>{
+    const url = "/api/lent_info"
+    axios.post(url).then((res:any)=>{
       setLent(res.data);
     }).catch((err)=>{console.log(err)});
   }
   const handleClick = () => {
-    const local_url = "http://localhost:2424/api/cabinet"
-    const dev_url = "/api/cabinet"
-    axios.post(dev_url).then((res:any)=>{
+    const url = "/api/cabinet"
+    axios.post(url).then((res:any)=>{
       setInfo(res.data);
     }).catch((err)=>{console.log(err)});
   }

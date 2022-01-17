@@ -3,13 +3,11 @@ import { useHistory } from 'react-router-dom';
 import './lentModal.css';
 
 export default function LentModal(props:any){
-
   const history = useHistory();
 
   const handleClick = () => {
-    const local_url = "http://localhost:2424/api/lent"
-    const dev_url = "api/lent"
-    axios.post(dev_url, {cabinet_id : props.cabiNum}).then((res:any)=>{
+    const url = "api/lent"
+    axios.post(url, {cabinet_id : props.cabiNum}).then((res:any)=>{
       if (res.status === 200){
         history.push("/return");
       }

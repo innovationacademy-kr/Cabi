@@ -6,9 +6,8 @@ export default function ReturnModal(props:any){
   const history = useHistory();
 
   const handleClick = async () => {
-    const local_url = 'http://localhost:2424/api/return';
-		const dep_url = '/api/return';
-    await axios.post(dep_url, {lent_id: props.lentCabinet.lent_id}).then((res:any)=>{
+		const url = '/api/return';
+    await axios.post(url, {lent_id: props.lentCabinet.lent_id}).then((res:any)=>{
       if (res.status === 200){
         alert('반납되었습니다');
         history.push("/lent");

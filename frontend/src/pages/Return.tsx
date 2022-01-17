@@ -3,8 +3,8 @@ import './main.css'
 import Menu from '../component/Menu'
 import ReturnModal from '../modal/ReturnModal'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
 export type lentCabinetInfo = {
   lent_id: number,
@@ -21,17 +21,26 @@ export type lentCabinetInfo = {
 }
 
 export default function Return() {
-  const local_url = "http://localhost:2424/api/return_info"
-  const dep_url = "/api/return_info"
-  const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
-  
+  const url = "/api/return_info"
+	const history = useHistory();
+  const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>()  
+
   useEffect(() => {
-    callReturn();
+	  apiCheck();  
+		callReturn();
   }, []);
-  
+
+  const apiCheck = async () => {
+    await axios.post('/api/check').then((res:any)=>{
+      console.log(res);
+    }).catch((err:any)=>{
+      console.log(err);
+			history.push('/');
+		});
+  }
   // callReturn();
   const callReturn = async () => {
-    await axios.post(dep_url, { user_id: 1 }).then((res: any) => {
+    await axios.post(url, { user_id: 1 }).then((res: any) => {
       console.log(res);
       if (res.status === 200){
         setLentCabinet(res.data.lentCabinet);
