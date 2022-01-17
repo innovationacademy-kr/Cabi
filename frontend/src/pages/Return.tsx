@@ -21,7 +21,7 @@ export type lentCabinetInfo = {
 }
 
 export default function Return() {
-  const local_url = "http://localhost:4242/api/return_info"
+  const local_url = "http://localhost:2424/api/return_info"
   const dep_url = "/api/return_info"
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   
@@ -31,7 +31,7 @@ export default function Return() {
   
   // callReturn();
   const callReturn = async () => {
-    await axios.post(local_url, { user_id: 1 }).then((res: any) => {
+    await axios.post(dep_url, { user_id: 1 }).then((res: any) => {
       console.log(res);
       if (res.status === 200){
         setLentCabinet(res.data.lentCabinet);

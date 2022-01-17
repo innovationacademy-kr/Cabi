@@ -2,7 +2,7 @@ import axios from 'axios'
 import './main.css'
 
 export default function Main(){
-  const local_url = 'http://localhost:4242/auth/login';
+  const local_url = 'http://localhost:2424/auth/login';
   const dev_url = '/auth/login';
 
   return (

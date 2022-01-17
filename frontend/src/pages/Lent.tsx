@@ -62,14 +62,14 @@ export default function Lent(){
   }
 
   const handleLent = () => {
-    const local_url = "http://localhost:4242/api/lent_info"
+    const local_url = "http://localhost:2424/api/lent_info"
     const dev_url = "/api/lent_info"
     axios.post(dev_url).then((res:any)=>{
       setLent(res.data);
     }).catch((err)=>{console.log(err)});
   }
   const handleClick = () => {
-    const local_url = "http://localhost:4242/api/cabinet"
+    const local_url = "http://localhost:2424/api/cabinet"
     const dev_url = "/api/cabinet"
     axios.post(dev_url).then((res:any)=>{
       setInfo(res.data);

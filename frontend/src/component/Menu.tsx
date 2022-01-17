@@ -3,11 +3,11 @@ import './menu.css'
 import MenualModal from '../modal/MenualModal'
 
 export default function Menu(props:any){
-  const logout = 'http://localhost:4242/auth/logout';
+  const logout = 'http://localhost:2424/auth/logout';
   
   const handleClick = () => {
     axios.post(logout).then((res)=>{
-      window.location.href = 'http://localhost:4242/';
+      window.location.href = 'http://localhost:2424';
     }).catch(err=>console.log(err))
   }
   const cabinetPage = () =>{
