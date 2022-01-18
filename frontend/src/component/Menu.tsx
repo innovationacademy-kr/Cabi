@@ -1,13 +1,15 @@
 import axios from 'axios'
 import './menu.css'
 import MenualModal from '../modal/MenualModal'
+import {useHistory} from 'react-router-dom'
 
 export default function Menu(props:any){
-  const logout = 'http://localhost:4242/auth/logout';
+  const url = '/auth/logout';
   
+	const history = useHistory();
   const handleClick = () => {
-    axios.post(logout).then((res)=>{
-      window.location.href = 'http://localhost:4242/';
+    axios.post(url).then((res)=>{
+			history.push('/');
     }).catch(err=>console.log(err))
   }
   const cabinetPage = () =>{

@@ -1,9 +1,18 @@
 import axios from 'axios'
 import './main.css'
 
+export type userInfo = {
+  user_id: number,
+  intra_id: string,
+  auth?: boolean,
+  email: string,
+  phone?: string,
+  access: string,
+  refresh: string
+}
+
 export default function Main(){
-  const local_url = 'http://localhost:4242/auth/login';
-  const dev_url = '/auth/login';
+  const url = '/auth/login';
 
   return (
     <div className="container">
@@ -11,7 +20,7 @@ export default function Main(){
         <img src="../img/logo.png" alt="logo" />
       </div>
       <div className="row d-grid gap-2 col-6 mx-auto">
-        <a className="btn btn-lg" id="loginBtn" href={local_url}>L O G I N</a>
+        <a className="btn btn-lg" id="loginBtn" href={url}>L O G I N</a>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 export type userInfo = {
     user_id: number,
     intra_id: string,
-    auth?: number,
+    auth?: boolean,
     email: string,
     phone?: string,
     access: string,

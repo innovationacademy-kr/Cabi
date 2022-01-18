@@ -19,7 +19,7 @@ export function checkUser(client:mariadb.PoolConnection){
 //사용자가 없는 경우, user 값 생성
 export function addUser(client:mariadb.PoolConnection){
 	console.log('addUser');
-	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', '${user.auth}', '${user.email}', '${user.phone}')`;
+	const content:string = `insert into user value('${user.user_id}', '${user.intra_id}', ${user.auth}, '${user.email}', '${user.phone}')`;
 	client.query(content).then((res:any)=>{
 		console.log(res);
 	}).catch((err:any)=>{
@@ -30,7 +30,7 @@ export function addUser(client:mariadb.PoolConnection){
 //본인 정보 및 렌트 정보 - 리턴 페이지
 export async function getUser(client:mariadb.PoolConnection){
 	console.log('getUser')
-	const content:string = `select * from lent l join cabinet c on l.lent_cabinet_id=c.cabinet_id where l.lent_user_id=${user.user_id}`;
+	const content:string = `select * from lent l join cabinet c on l.lent_cabinet_id=c.cabinet_id where l.lent_user_id='${user.user_id}'`;
 	await client.query(content).then((res:any)=>{
 		if (res.length !== 0){ // lent page
 			lentCabinet.lent_id = res[0].lent_id;
@@ -64,10 +64,13 @@ export async function getUser(client:mariadb.PoolConnection){
 	});
 }
 //lent & user
-export function getLentUser(client:mariadb.PoolConnection){
+export async function getLentUser(client:mariadb.PoolConnection){
 	const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
 	console.log('getLentUser');
-	client.query(content).then((res:any)=>{
+	await client.query(content).then((res:any)=>{
+		console.log('res.length');
+		cabinetLent.splice(0, cabinetLent.length);
+		console.log(res.length);
 		for (let i = 0; i < res.length; i++){
 			cabinetLent.push(res[i]);
 		}
@@ -151,8 +154,6 @@ export async function createLentLog(client:mariadb.PoolConnection){
 		const user_id = res[0].lent_user_id;
 		const cabinet_id = res[0].lent_cabinet_id;
 		const lent_time = res[0].lent_time;
-		console.log('res 출력');
-		console.log(res[0]);
 		client.query(`insert into lent_log (log_user_id, log_cabinet_id, lent_time, return_time) values (${user_id}, ${cabinet_id}, '${lent_time}', now())`);
 		client.query(`delete from lent where lent_cabinet_id=${cabinet_id}`)
 		lent.lent_id = -1;
