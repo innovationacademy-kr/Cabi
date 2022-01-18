@@ -23,7 +23,8 @@ export default function LentModal(props:any){
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div className="modal-body">
-            <p >  선택하신    [ {props.cabiNum} ]   번 사물함을 대여하시겠습니까?</p>
+            <p> 선택하신 [ {props.cabiNum} ] 번 사물함을 <br></br>
+              대여하시겠습니까?</p>
           </div>
           <div className="modal-footer justify-content-center">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>

@@ -56,7 +56,7 @@ export default function Return() {
         <Menu url="/lent"></Menu>
       </div>
       <div className="card row-2 p-5 m-5">
-        <div className="card-body p-5 my-5">
+        <div className="card-body my-5" id="card-body">
           <React.Fragment>
             {
               lentCabinet?.lent_id === -1 ? <div className="card-subtitle mb-2 text-muted text-center">현재 대여중인 사물함이 없습니다.</div> :

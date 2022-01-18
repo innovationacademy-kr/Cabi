@@ -1,5 +1,5 @@
 .modal-body{
-  font-size: larger;
+  font-size: large;
   font-weight: bolder;
   justify-content: center;
   padding: 5px;
@@ -8,7 +8,7 @@
 p{
   margin: 15px 0 10px;
   white-space: pre-wrap;
-  font-size: larger;
+  font-size: large;
   font-weight: bolder;
   padding: 5px;
   text-align: left;

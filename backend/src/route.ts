@@ -22,16 +22,14 @@ router.get(
         failureRedirect: "/",
     }),
     function(req:any, res:any){
-        //lent 있는 경우, 순서 확인
         try{
-            //console.log(req.cookies);
-            //console.log(req.session.passport.user);
-			connection(checkUser);
-            if (lent.lent_id !== -1){
-                res.redirect('/return');
-            }else{
-                res.redirect('/lent');
-            }
+            connection(checkUser).then((resp:any)=>{
+                if (lentCabinet.lent_id !== -1){
+                    res.redirect('/return');
+                }else{
+                    res.redirect('/lent');
+                }
+            });
         }catch(err){
             console.log(err);
         }
@@ -56,10 +54,8 @@ router.post("/api/cabinet", (req:any, res:any)=>{
 router.post("/api/lent_info", async (req:any, res:any)=>{
     try{
         connection(getLentUser).then((resp:any)=>{
-            if (resp === 1){
-                const isLent = cabinetLent.findIndex((cabinet)=>(cabinet.lent_user_id == user.user_id));
-                res.send({cabinetLent: cabinetLent, isLent:isLent});
-            }
+            const isLent = cabinetLent.findIndex((cabinet)=>(cabinet.lent_user_id == user.user_id));
+            res.send({cabinetLent: cabinetLent, isLent:isLent});
         });
     }catch(err:any){
         console.log(err);
@@ -71,7 +67,7 @@ router.post("/api/lent_info", async (req:any, res:any)=>{
 router.post('/api/lent', (req:any, res:any)=>{
     try{
         connection(getUser).then((resp:any)=> {
-        if (resp === 1 && lentCabinet.lent_id === -1){
+        if (lentCabinet.lent_id === -1){
             connectionForLent(createLent, req.body.cabinet_id);
             res.send({cabinet_id: req.cabinet_id});
         }
@@ -89,9 +85,7 @@ router.post("/api/return_info", async (req:any, res:any)=>{
 	// user.user_id = req.body.user_id;
     try{
         connection(getUser).then((resp:any)=> {
-        if (resp === 1){
 		    res.send({lentCabinet : lentCabinet});
-        }
 	});
     }catch(err){
         console.log(err);
@@ -103,9 +97,7 @@ router.post("/api/return", (req:any, res:any)=>{
     // lentCabinet.lent_id = req.body.lent_id;
     try{
         connection(createLentLog).then((resp:any) => {
-            if (resp === 1){
-                res.sendStatus(200);
-            }
+            res.sendStatus(200);
         });
     }catch(err){
         console.log(err);

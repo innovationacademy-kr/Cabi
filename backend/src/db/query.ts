@@ -2,14 +2,14 @@ import mariadb from 'mariadb'
 import {user, lent, lentCabinet, cabinetList, cabinetInfo, cabinetLent} from '../user'
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
-export function checkUser(client:mariadb.PoolConnection){
+export async function checkUser(client:mariadb.PoolConnection){
 	const content:string = `select * from user where user_id = ${user.user_id}`;
-	client.query(content).then((res:any)=>{
+	await client.query(content).then(async (res:any)=>{
 		console.log(res);
 		if (!res.length)
-			addUser(client);
+			await addUser(client);
 		else
-			getUser(client);
+			await getUser(client);
 	}).catch((err:any)=>{
 		console.log(err);
 		throw err;
@@ -58,6 +58,8 @@ export async function getUser(client:mariadb.PoolConnection){
 			lentCabinet.section = '',
 			lentCabinet.activation = false
 		}
+		console.log('lentCabinet.lent_id');
+		console.log(lentCabinet.lent_id);
 	}).catch((err:any)=>{
 		console.log(err);
 		throw err;
@@ -156,12 +158,17 @@ export async function createLentLog(client:mariadb.PoolConnection){
 		const lent_time = res[0].lent_time;
 		client.query(`insert into lent_log (log_user_id, log_cabinet_id, lent_time, return_time) values (${user_id}, ${cabinet_id}, '${lent_time}', now())`);
 		client.query(`delete from lent where lent_cabinet_id=${cabinet_id}`)
-		lent.lent_id = -1;
-		lent.lent_cabinet_id = -1;
-		lent.lent_user_id = -1;
-		lent.lent_time = '';
-		lent.expire_time = '';
-		lent.extension = false;
+		lentCabinet.lent_id = -1;
+		lentCabinet.lent_cabinet_id = -1;
+		lentCabinet.lent_user_id = -1;
+		lentCabinet.lent_time = '';
+		lentCabinet.expire_time = '';
+		lentCabinet.extension = false;
+		lentCabinet.cabinet_num = -1;
+		lentCabinet.location = '';
+		lentCabinet.floor = -1;
+		lentCabinet.section = '';
+		lentCabinet.activation = false;
 	}).catch((err:any)=>{
 		console.log(err);
 		throw err;
