@@ -107,13 +107,14 @@ router.post("/api/return", (req:any, res:any)=>{
 
 router.post("/api/check", (req:any, res:any)=>{
     console.log('api check!!!');
-		//console.log(req.session);
-		//console.log(req.cookies);
+		console.log(req.session);
+		console.log(req.cookies);
     if (!req.session || !req.session.passport || !req.session.passport.user){
 			console.log('fail');
 			res.status(400).send({result: 'failed'});
 		}else{
 			console.log('success');
-            res.send(user);
+            const idx = userList.findIndex((user)=>user.access === req.session.accessToken)
+            res.send(userList[idx]);
     }
 });

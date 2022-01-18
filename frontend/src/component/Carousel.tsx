@@ -9,9 +9,15 @@ export default function Carousel(props:any){
     let list = [];
     const cab:Array<cabinetInfo> = props.info.cabinet[props.l_idx][f_idx][s_idx];
     for (let i = 0; i < cab.length; i++){
-      const id= props.outer_lent.find((l:any)=>l.lent_cabinet_id === cab[i].cabinet_id);
+      var id = props.outer_lent.findIndex((l:any)=>l.lent_cabinet_id === cab[i].cabinet_id);
+      // if (id !== -1)
+      // {
+      //   console.log('props.outer_lent');
+      //   console.log(props.outer_lent[id].lent_cabinet_id);
+      //   console.log(cab[i].cabinet_id);
+      // }
       list.push(
-        <CabinetBox className="d-block w-100" key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_id} cabinet_num={cab[i].cabinet_num} setTarget={props.setTarget} setCabiNum={props.setCabiNum} intra_id={id ? id.intra_id : ""}></CabinetBox>
+        <CabinetBox className="d-block w-100" setTarget={props.setTarget} setCabiNum={props.setCabiNum} key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_id} cabinet_num={cab[i].cabinet_num}  intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}></CabinetBox>
       );
     }
     return list;

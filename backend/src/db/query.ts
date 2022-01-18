@@ -70,8 +70,8 @@ export async function getLentUser(client:mariadb.PoolConnection){
 	const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
 	console.log('getLentUser');
 	await client.query(content).then((res:any)=>{
-		console.log('res.length');
 		cabinetLent.splice(0, cabinetLent.length);
+		console.log('res.length');
 		console.log(res.length);
 		for (let i = 0; i < res.length; i++){
 			cabinetLent.push(res[i]);

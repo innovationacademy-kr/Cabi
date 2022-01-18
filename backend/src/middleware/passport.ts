@@ -39,6 +39,8 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
     if (idx !== -1){
         userList.splice(idx, 1);
     }
+    console.log('profile');
+    console.log(profile);
     user.user_id = profile.id;
     user.intra_id = profile.username;
     user.email = profile.emails[0].value;
@@ -46,7 +48,15 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
     user.access = accessToken;
     user.refresh = refreshToken;
     user.phone = "";
-    userList.push(user);
+    userList.push({
+        user_id: profile.id,
+        intra_id: profile.username,
+        email: profile.emails[0].value,
+        auth: false,
+        access: accessToken,
+        refresh: refreshToken,
+        phone: ""
+    });
     console.log(`length = ${userList.length}`);
     return cb(null, userInfo);
 }
