@@ -1,10 +1,12 @@
 import '../pages/lent.css'
 
 export default function Location(props:any){
-
-  const handleInfo = () => {
-    
+  const handleInfo = (loc:string) => {
+    props.setPresintInfo(loc);
   }
+  let location:Array<string> = props.info.location;
+  console.log(location);
+
   return (
     <div className="dropdown" id="location">
       <button className="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -12,11 +14,9 @@ export default function Location(props:any){
         {props.presentInfo}
       </button>
       <div className="dropdown-menu" id="locationMenu" aria-labelledby="dropdownMenuButton">
-        {props.info.location.map((loc:string)=>{
-          <a className="dropdown-item">{loc}</a>
+        {location?.map((loc:string)=>{
+          return <a className="dropdown-item" onClick={()=>handleInfo(loc)}>{loc}</a>
         })}
-        {/* <a className="dropdown-item" href="#">새롬관</a> */}
-        {/* <a className="dropdown-item" href="#">paris</a> */}
       </div>
     </div>
 	
