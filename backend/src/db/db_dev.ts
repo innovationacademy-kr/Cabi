@@ -1,5 +1,5 @@
 import mariadb from 'mariadb'
-import {user, cabinetList, cabinetInfo, cabinetLent} from '../user';
+import {cabinetList, cabinetInfo, lentCabinetInfo} from '../user';
 
 const con = mariadb.createPool({
 	host: 'localhost',
@@ -9,13 +9,13 @@ const con = mariadb.createPool({
 	dateStrings: true
 });
 
-export async function connection(queryFunction:Function){
+export async function connectionlentList(queryFunction:Function, accessToken?:any):Promise<lentCabinetInfo[]>{
 	let pool:mariadb.PoolConnection;
     try{
         pool = await con.getConnection();
-		await queryFunction(pool);
+		let result = await queryFunction(pool, accessToken);
 		if (pool) pool.end();
-		return 1;
+		return result;
     }catch(err){
 		console.log(err);
         throw err;
@@ -74,11 +74,11 @@ export async function connectionForCabinet(){
   }
 }
 
-export async function connectionForLent(queryFunction:any, cabinet_id:number){
+export async function connectionForLent(queryFunction:any, cabinet_id:number, user:any){
     let pool;
     try{
         pool = await con.getConnection()
-		await queryFunction(pool, cabinet_id);
+		await queryFunction(pool, cabinet_id, user);
 		if (pool) pool.end();
 	}catch(err){
 		console.log(err);

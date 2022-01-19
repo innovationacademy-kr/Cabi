@@ -18,6 +18,7 @@ export type lentInfo = {
     intra_id?: string
 }
 
+//lent 된 Cabinet 하나의 Info
 export type lentCabinetInfo = {
     lent_id: number,
     lent_cabinet_id: number,
@@ -52,37 +53,6 @@ export type cabinetListInfo = {
 
 //variables
 export let userList:Array<userInfo> = [];
-export let user:userInfo={
-    user_id: 1,
-    intra_id: '',
-    email: '',
-    access: '',
-    refresh: ''
-};
-
-export let lent:lentInfo = {
-    lent_id: -1,
-    lent_cabinet_id: -1,
-    lent_user_id: -1,
-    extension: false
-}
-
-export let lentCabinet:lentCabinetInfo = {
-    lent_id: -1,
-    lent_cabinet_id: -1,
-    lent_user_id: -1,
-    lent_time: '',
-    expire_time: '',
-    extension: false,
-    cabinet_num: -1,
-    location: '',
-    floor: -1,
-    section: '',
-    activation: false
-}
-
-
-export let cabinetLent:Array<lentInfo> = [];
 
 export let cabinetList:cabinetListInfo = {
     location: [],

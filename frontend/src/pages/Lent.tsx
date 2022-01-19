@@ -67,7 +67,7 @@ export default function Lent(){
   const handleLent = () => {
     const url = "/api/lent_info"
     axios.post(url).then((res:any)=>{
-      setLent(res.data.cabinetLent);
+      setLent(res.data.lentInfo);
       console.log('lent');
       console.log(lent);
       setisLent(res.data.isLent);

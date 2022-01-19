@@ -2,8 +2,8 @@ import dotenv from 'dotenv'
 dotenv.config();
 // dotenv.config({path:'./.env.local'});
 // dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
-import passport, { use } from 'passport'
-import {user, userList} from '../user'
+import passport from 'passport'
+import {userList} from '../user'
 
 const Strategy = require('passport-42')
 const env = process.env;
@@ -35,19 +35,10 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
     };
     // console.log(`accessToken : ${accessToken}`);
     // console.log(`refreshToken: ${refreshToken}`);
-    const idx = userList.findIndex((user)=>user.access === accessToken || user.user_id === profile.username)
+    const idx = userList.findIndex((user)=>user.access === accessToken || user.user_id === profile.userid)
     if (idx !== -1){
         userList.splice(idx, 1);
     }
-    console.log('profile');
-    console.log(profile);
-    user.user_id = profile.id;
-    user.intra_id = profile.username;
-    user.email = profile.emails[0].value;
-    user.auth = false;
-    user.access = accessToken;
-    user.refresh = refreshToken;
-    user.phone = "";
     userList.push({
         user_id: profile.id,
         intra_id: profile.username,
@@ -58,6 +49,7 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
         phone: ""
     });
     console.log(`length = ${userList.length}`);
+    console.log(userList);
     return cb(null, userInfo);
 }
 

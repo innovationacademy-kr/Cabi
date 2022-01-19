@@ -45,7 +45,7 @@ export default function Return() {
     await axios.post(url, { user: user?.user_id }).then((res: any) => {
       console.log(res);
       if (res.status === 200){
-        setLentCabinet(res.data.lentCabinet);
+        setLentCabinet(res.data);
       }
     }).catch((err) => { console.log(err) });
   }
@@ -61,7 +61,7 @@ export default function Return() {
             {
               lentCabinet?.lent_id === -1 ? <div className="card-subtitle mb-2 text-muted text-center">현재 대여중인 사물함이 없습니다.</div> :
                 <div>
-                  <div className="card-title text-center display-5">{lentCabinet?.location} {lentCabinet?.floor}F {lentCabinet?.lent_cabinet_id}</div>
+                  <div className="card-title text-center display-5">{lentCabinet?.location} {lentCabinet?.floor}F {lentCabinet?.cabinet_num}</div>
                   <div className="card-subtitle mb-2 text-muted text-center">~ {lentCabinet?.expire_time}</div>
                 </div>
             }

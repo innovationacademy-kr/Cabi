@@ -2,17 +2,17 @@ import axios from 'axios'
 import './returnModal.css'
 import { useHistory } from 'react-router-dom';
 
-export default function ReturnModal(props:any){
+export default function ReturnModal(props: any) {
   const history = useHistory();
 
   const handleClick = async () => {
-		const url = '/api/return';
-    await axios.post(url, {lent_id: props.lentCabinet.lent_id}).then((res:any)=>{
-      if (res.status === 200){
+    const url = '/api/return';
+    await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then((res: any) => {
+      if (res.status === 200) {
         alert('반납되었습니다');
         history.push("/lent");
       }
-    }).catch((err:any)=>{
+    }).catch((err: any) => {
       console.log(err);
       alert('다시 시도해주세요!');
     })

@@ -7,7 +7,7 @@ export default function LentModal(props:any){
 
   const handleClick = () => {
     const url = "api/lent"
-    axios.post(url, {cabinet_id : props.cabiNum}).then((res:any)=>{
+    axios.post(url, {cabinet_id : props.target}).then((res:any)=>{
       if (res.status === 200){
         history.push("/return");
       }

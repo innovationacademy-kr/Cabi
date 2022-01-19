@@ -1,120 +1,146 @@
 import express from 'express';
 import passport from 'passport';
 import authCheck from './middleware/auth';
-import {cabinetList, cabinetLent, lent, user, userList, lentCabinet} from './user'
-import {checkUser, createLentLog, createLent, getLentUser, getUser} from './db/query'
-import {connection, connectionForLent} from './db/db_dev'
-import { createBrotliCompress } from 'zlib';
+import { cabinetList, userList } from './user'
+import { checkUser, createLentLog, createLent, getLentUser, getUser } from './db/query'
 
 export const router = express.Router();
 
 router.get('/auth/login', passport.authenticate('42'));
-router.post('/', authCheck, function(req:any, res:any){
+router.post('/', authCheck, function (req: any, res: any) {
     res.json({ test: req.user });
 });
 
 router.get(
     "/auth/login/callback",
     passport.authenticate("42", {
-        // successMessage: "LOGIN SUCCESS!",
-        // successRedirect: "/lent",
         failureMessage: "LOGIN FAILED :(",
         failureRedirect: "/",
     }),
-    function(req:any, res:any){
-        try{
-            connection(checkUser).then((resp:any)=>{
-                if (lentCabinet.lent_id !== -1){
+    async function (req: any, res: any) {
+        const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        if (idx === -1){
+            res.status(400).send({ error: "Permission Denied" });
+            return;
+        }
+        try {
+            await checkUser(req.session.passport.user.access).then((resp: any) => {
+                console.log('resp');
+                console.log(resp);
+                if (!resp) {
+                    res.status(400).send({ error: "Permission Denied" });
+                    return;
+                }
+                if (resp.lent_id !== -1) {
                     res.redirect('/return');
-                }else{
+                } else {
                     res.redirect('/lent');
                 }
             });
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }
 );
 
-router.post('/auth/logout', (req:any, res:any)=>{
-    // console.log(req.session);
-    // console.log(req.cookies);
+router.post('/auth/logout', (req: any, res: any) => {
+    const idx = userList.findIndex((user) => user.user_id === req.session.passport.user.userid)
+    if (idx !== -1) {
+        userList.splice(idx, 1);
+    }
+    else {
+        res.status(400).send({ error: "Permission Denied" });
+        return;
+    }
     req.logout();
-		req.session = null;
-    res.send({result: 'success'});
+    req.session = null;
+    res.send({ result: 'success' });
 });
 
-router.post("/api/cabinet", (req:any, res:any)=>{
-    if (!cabinetList)
-        res.status(400).json({error: "no user"});
-    else
+router.post("/api/cabinet", (req: any, res: any) => {
+    if (!cabinetList){
+        res.status(400).send({ error: "no cabinet information" });
+    }
+    else {
         res.send(cabinetList);
+    }
 })
 
-router.post("/api/lent_info", async (req:any, res:any)=>{
-    try{
-        connection(getLentUser).then((resp:any)=>{
-            const isLent = cabinetLent.findIndex((cabinet)=>(cabinet.lent_user_id == user.user_id));
-            res.send({cabinetLent: cabinetLent, isLent:isLent});
+router.post("/api/lent_info", async (req: any, res: any) => {
+    try {
+        console.log('req.session.passport.user');
+        console.log(req.session.passport.user);
+        const user_id = req.session.passport.user.userid;
+        const idx = userList.findIndex((user) => user.user_id === user_id)
+        if (idx === -1){
+            res.status(400).send({ error: "Permission Denied" });
+            return;
+        }
+        getLentUser().then((resp: any) => {
+            const isLent = resp.lentInfo.findIndex((cabinet: any) => (cabinet.lent_user_id == user_id));
+            res.send({ lentInfo: resp.lentInfo, isLent: isLent });
         });
-    }catch(err:any){
+    } catch (err: any) {
         console.log(err);
         res.status(400);
         throw err;
     };
 })
 
-router.post('/api/lent', (req:any, res:any)=>{
-    try{
-        connection(getUser).then((resp:any)=> {
-        if (lentCabinet.lent_id === -1){
-            connectionForLent(createLent, req.body.cabinet_id);
-            res.send({cabinet_id: req.cabinet_id});
-        }
-        else{
-            res.send({cabinet_id: -1});
-        }
-    });
-    }catch(err){
+router.post('/api/lent', (req: any, res: any) => {
+    try {
+        const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        getUser(userList[idx]).then((resp: any) => {
+            if (resp.lent_id === -1) {
+                createLent(req.body.cabinet_id, req.session.passport.user);
+                res.send({ cabinet_id: req.cabinet_id });
+            }
+            else {
+                res.send({ cabinet_id: -1 });
+            }
+        });
+    } catch (err) {
         console.log(err);
-        res.status(400).send({cabinet_id: req.cabinet_id});
+        res.status(400).send({ cabinet_id: req.cabinet_id });
     }
 })
 
-router.post("/api/return_info", async (req:any, res:any)=>{
-	// user.user_id = req.body.user_id;
-    try{
-        connection(getUser).then((resp:any)=> {
-		    res.send({lentCabinet : lentCabinet});
-	});
-    }catch(err){
+router.post("/api/return_info", async (req: any, res: any) => {
+    try {
+        const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        getUser(userList[idx]).then((resp: any) => {
+            console.log('resp');
+            console.log(resp);
+            res.send(resp);
+        });
+    } catch (err) {
         console.log(err);
-        res.status(400).json({error: err});
+        res.status(400).json({ error: err });
     }
 })
 
-router.post("/api/return", (req:any, res:any)=>{
-    // lentCabinet.lent_id = req.body.lent_id;
-    try{
-        connection(createLentLog).then((resp:any) => {
+router.post("/api/return", (req: any, res: any) => {
+    try {
+        createLentLog(req.session.passport.user).then((resp: any) => {
             res.sendStatus(200);
         });
-    }catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(400).json({error: err});
+        res.status(400).json({ error: err });
     }
 })
 
-router.post("/api/check", (req:any, res:any)=>{
+router.post("/api/check", (req: any, res: any) => {
     console.log('api check!!!');
-		console.log(req.session);
-		console.log(req.cookies);
-    if (!req.session || !req.session.passport || !req.session.passport.user){
-			console.log('fail');
-			res.status(400).send({result: 'failed'});
-		}else{
-			console.log('success');
-            const idx = userList.findIndex((user)=>user.access === req.session.accessToken)
-            res.send(userList[idx]);
+    // console.log(req.session);
+    // console.log(req.cookies);
+    if (!req.session || !req.session.passport || !req.session.passport.user) {
+        console.log('fail');
+        res.status(400).send({ result: 'failed' });
+    } else {
+        console.log('success');
+        console.log(req.session.passport.user.access);
+        const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        res.send(userList[idx]);
     }
 });
