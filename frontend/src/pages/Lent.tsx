@@ -113,7 +113,7 @@ export default function Lent(){
     <div className="container col" id="container">
       <div className="row align-items-center">
         <div className="col-6">
-          <Location></Location>
+          <Location info={info}></Location>
         </div>
         <div className="col">
           <Menu url="/return"></Menu>

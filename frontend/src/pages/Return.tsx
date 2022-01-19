@@ -78,7 +78,7 @@ export default function Return() {
             </div>
           </div>
           <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-            <div className="btn btn-lg hidden" id="colorBtn">
+            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': 'disabled'}`} id="colorBtn">
               연장하기
             </div>
           </div>
