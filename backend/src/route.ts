@@ -69,8 +69,8 @@ router.post("/api/cabinet", (req: any, res: any) => {
 router.post("/api/lent_info", async (req: any, res: any) => {
     try {
         console.log('req.session.passport.user');
-        console.log(req.session.passport.user);
-        const user_id = req.session.passport.user.userid;
+        console.log(req.session?.passport?.user);
+        const user_id = req.session?.passport?.user?.userid;
         const idx = userList.findIndex((user) => user.user_id === user_id)
         if (idx === -1){
             res.status(400).send({ error: "Permission Denied" });

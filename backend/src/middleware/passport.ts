@@ -27,7 +27,6 @@ const FortyTwoOpt = {
 const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any, cb:any) =>{
     const userInfo = {
         username: profile.username,
-        displayname: profile.displayName,
         email: profile.emails[0].value,
         userid: profile.id,
         access: accessToken,

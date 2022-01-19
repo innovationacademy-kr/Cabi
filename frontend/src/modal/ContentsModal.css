@@ -1,5 +1,5 @@
-#lentmodal{
-    z-index: 1060;
+#contentsmodal{
+    z-index: 2000;
 }
 .modal-body{
     font-size: large;

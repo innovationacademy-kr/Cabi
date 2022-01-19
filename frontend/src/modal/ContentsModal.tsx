@@ -1,10 +1,16 @@
-import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import './lentModal.css';
-export default function ContentsModal(props:any){
+import './ContentsModal.css';
 
+export default function ContentsModal(props:any){
+  const history = useHistory();
+
+  const handleRedirect = () => {
+    if (props.path && props.path !== ''){
+      history.push(props.path);
+    }
+  }
   return (
-    <div className="modal" id="lentmodal" tabIndex={-1}>
+    <div className="modal" id="contentsmodal" tabIndex={-1}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
@@ -15,7 +21,7 @@ export default function ContentsModal(props:any){
             <p > {props.contents}</p>
           </div>
           <div className="modal-footer justify-content-center">
-            <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" >확인</button>
+            <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" onClick={handleRedirect}>확인</button>
           </div>
         </div>
       </div>

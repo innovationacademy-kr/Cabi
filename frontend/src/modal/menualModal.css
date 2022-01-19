@@ -1,3 +1,6 @@
+#menualmodal{
+  z-index: 1060;
+}
 .modal-body{
   font-size: large;
   font-weight: bolder;
