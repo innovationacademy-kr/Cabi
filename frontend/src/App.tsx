@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Switch>
-          <Route exact path='/'><Main></Main></Route>
+          <Route exact path='/' component={Main}><Main></Main></Route>
           <Route path='/lent'><Lent></Lent></Route>
           <Route path='/return'><Return></Return></Route>
           <Route><Main></Main></Route>

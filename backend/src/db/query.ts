@@ -1,5 +1,5 @@
 import mariadb from 'mariadb'
-import { userList, lentInfo, cabinetList, cabinetInfo, lentCabinetInfo } from '../user'
+import { userList, lentInfo, lentCabinetInfo } from '../user'
 
 const con = mariadb.createPool({
 	host: 'localhost',
@@ -10,19 +10,16 @@ const con = mariadb.createPool({
 });
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
-export async function checkUser(accessToken: any) {
+export async function checkUser(user: any) {
 	let pool: mariadb.PoolConnection;
 	let lentCabinet: lentCabinetInfo;
-	const idx = userList.findIndex((user) => user.access === accessToken)
-	if (idx === -1)
-		return undefined;
-	const content: string = `select * from user where user_id = ${userList[idx].user_id}`;
+	const content: string = `select * from user where user_id = ${user.user_id}`;
 	try {
 		pool = await con.getConnection();
 		lentCabinet = await pool.query(content).then(async (res: any) => {
 			console.log(res);
 			if (!res.length) {
-				addUser(idx);
+				addUser(user);
 				return ({
 					lent_id: -1,
 					lent_cabinet_id: -1,
@@ -38,7 +35,7 @@ export async function checkUser(accessToken: any) {
 				});
 			}
 			else {
-				lentCabinet = await getUser(userList[idx]);
+				lentCabinet = await getUser(user);
 
 			}
 			return lentCabinet;
@@ -53,10 +50,10 @@ export async function checkUser(accessToken: any) {
 }
 
 //사용자가 없는 경우, user 값 생성
-export async function addUser(idx: number) {
+export async function addUser(user: any) {
 	let pool: mariadb.PoolConnection;
 	console.log('addUser');
-	const content: string = `insert into user value('${userList[idx].user_id}', '${userList[idx].intra_id}', ${userList[idx].auth}, '${userList[idx].email}', '${userList[idx].phone}')`;
+	const content: string = `insert into user value('${user.user_id}', '${user.intra_id}', ${user.auth}, '${user.email}', '${user.phone}')`;
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 		console.log(res);
@@ -145,7 +142,7 @@ export async function createLent(cabinet_id: number, user: any) {
 	let pool: mariadb.PoolConnection;
 	console.log('user');
 	console.log(user);
-	const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.userid}, now(), ADDDATE(now(), 30), 0)`;
+	const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 		console.log(res);
@@ -160,17 +157,13 @@ export async function createLent(cabinet_id: number, user: any) {
 export async function createLentLog(user: any) {
 	let pool: mariadb.PoolConnection;
 	console.log(user);
-	const content: string = `select * from lent where lent_user_id=${user.userid}`;
+	const content: string = `select * from lent where lent_user_id=${user.user_id}`;
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 		if (res[0] === undefined)
 			return;
-		const lent_id = res[0].lent_id;
-		const user_id = res[0].lent_user_id;
-		const cabinet_id = res[0].lent_cabinet_id;
-		const lent_time = res[0].lent_time;
-		pool.query(`insert into lent_log (log_user_id, log_cabinet_id, lent_time, return_time) values (${user_id}, ${cabinet_id}, '${lent_time}', now())`);
-		pool.query(`delete from lent where lent_cabinet_id=${cabinet_id}`)
+		pool.query(`insert into lent_log (log_user_id, log_cabinet_id, lent_time, return_time) values (${res[0].lent_user_id}, ${res[0].lent_cabinet_id}, '${res[0].lent_time}', now())`);
+		pool.query(`delete from lent where lent_cabinet_id=${res[0].lent_cabinet_id}`)
 	}).catch((err: any) => {
 		console.log(err);
 		throw err;

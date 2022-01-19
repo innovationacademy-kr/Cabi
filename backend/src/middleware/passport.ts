@@ -26,16 +26,15 @@ const FortyTwoOpt = {
 
 const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any, cb:any) =>{
     const userInfo = {
-        username: profile.username,
-        displayname: profile.displayName,
+        user_id: profile.id,
+        intra_id: profile.username,
         email: profile.emails[0].value,
-        userid: profile.id,
         access: accessToken,
         refresh: refreshToken,
     };
     // console.log(`accessToken : ${accessToken}`);
     // console.log(`refreshToken: ${refreshToken}`);
-    const idx = userList.findIndex((user)=>user.access === accessToken || user.user_id === profile.userid)
+    const idx = userList.findIndex((user)=>user.user_id === profile.id)
     if (idx !== -1){
         userList.splice(idx, 1);
     }

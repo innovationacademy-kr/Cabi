@@ -19,12 +19,12 @@ router.get(
     }),
     async function (req: any, res: any) {
         const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
-        if (idx === -1){
+        if (idx === -1) {
             res.status(400).send({ error: "Permission Denied" });
             return;
         }
         try {
-            await checkUser(req.session.passport.user.access).then((resp: any) => {
+            await checkUser(req.session.passport.user).then((resp: any) => {
                 console.log('resp');
                 console.log(resp);
                 if (!resp) {
@@ -44,7 +44,7 @@ router.get(
 );
 
 router.post('/auth/logout', (req: any, res: any) => {
-    const idx = userList.findIndex((user) => user.user_id === req.session.passport.user.userid)
+    const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
     if (idx !== -1) {
         userList.splice(idx, 1);
     }
@@ -55,10 +55,12 @@ router.post('/auth/logout', (req: any, res: any) => {
     req.logout();
     req.session = null;
     res.send({ result: 'success' });
+    console.log('userList');
+    console.log(userList);
 });
 
 router.post("/api/cabinet", (req: any, res: any) => {
-    if (!cabinetList){
+    if (!cabinetList) {
         res.status(400).send({ error: "no cabinet information" });
     }
     else {
@@ -68,16 +70,13 @@ router.post("/api/cabinet", (req: any, res: any) => {
 
 router.post("/api/lent_info", async (req: any, res: any) => {
     try {
-        console.log('req.session.passport.user');
-        console.log(req.session.passport.user);
-        const user_id = req.session.passport.user.userid;
-        const idx = userList.findIndex((user) => user.user_id === user_id)
-        if (idx === -1){
+        const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        if (idx === -1) {
             res.status(400).send({ error: "Permission Denied" });
             return;
         }
         getLentUser().then((resp: any) => {
-            const isLent = resp.lentInfo.findIndex((cabinet: any) => (cabinet.lent_user_id == user_id));
+            const isLent = resp.lentInfo.findIndex((cabinet: any) => (cabinet.lent_user_id == req.session.passport.user.user_id));
             res.send({ lentInfo: resp.lentInfo, isLent: isLent });
         });
     } catch (err: any) {
@@ -90,6 +89,10 @@ router.post("/api/lent_info", async (req: any, res: any) => {
 router.post('/api/lent', (req: any, res: any) => {
     try {
         const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        if (idx === -1) {
+            res.status(400).send({ error: "Permission Denied" });
+            return;
+        }
         getUser(userList[idx]).then((resp: any) => {
             if (resp.lent_id === -1) {
                 createLent(req.body.cabinet_id, req.session.passport.user);
@@ -108,9 +111,11 @@ router.post('/api/lent', (req: any, res: any) => {
 router.post("/api/return_info", async (req: any, res: any) => {
     try {
         const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        if (idx === -1) {
+            res.status(400).send({ error: "Permission Denied" });
+            return;
+        }
         getUser(userList[idx]).then((resp: any) => {
-            console.log('resp');
-            console.log(resp);
             res.send(resp);
         });
     } catch (err) {
@@ -121,7 +126,12 @@ router.post("/api/return_info", async (req: any, res: any) => {
 
 router.post("/api/return", (req: any, res: any) => {
     try {
-        createLentLog(req.session.passport.user).then((resp: any) => {
+        const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        if (idx === -1) {
+            res.status(400).send({ error: "Permission Denied" });
+            return;
+        }
+        createLentLog(userList[idx]).then((resp: any) => {
             res.sendStatus(200);
         });
     } catch (err) {
@@ -132,8 +142,6 @@ router.post("/api/return", (req: any, res: any) => {
 
 router.post("/api/check", (req: any, res: any) => {
     console.log('api check!!!');
-    // console.log(req.session);
-    // console.log(req.cookies);
     if (!req.session || !req.session.passport || !req.session.passport.user) {
         console.log('fail');
         res.status(400).send({ result: 'failed' });
@@ -141,6 +149,10 @@ router.post("/api/check", (req: any, res: any) => {
         console.log('success');
         console.log(req.session.passport.user.access);
         const idx = userList.findIndex((user) => user.access === req.session.passport.user.access)
+        if (idx === -1) {
+            res.status(400).send({ error: "Permission Denied" });
+            return;
+        }
         res.send(userList[idx]);
     }
 });
