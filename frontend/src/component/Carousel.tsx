@@ -17,7 +17,7 @@ export default function Carousel(props:any){
       //   console.log(cab[i].cabinet_id);
       // }
       list.push(
-        <CabinetBox className="d-block w-100" setTarget={props.setTarget} setCabiNum={props.setCabiNum} key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_id} cabinet_num={cab[i].cabinet_num}  intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}></CabinetBox>
+        <CabinetBox className="d-block w-100" setTarget={props.setTarget} setCabiNum={props.setCabiNum} key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_id} cabinet_num={cab[i].cabinet_num}  intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""} isLent={props.isLent}></CabinetBox>
       );
     }
     return list;

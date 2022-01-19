@@ -6,6 +6,7 @@ import axios from 'axios'
 import { userInfo } from './Main'
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import ContentsModal from '../modal/ContentsModal'
 
 export type lentCabinetInfo = {
   lent_id: number,
@@ -26,11 +27,13 @@ export default function Return() {
 	const history = useHistory();
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>()  
   const [user, serUser] = useState<userInfo>();
+  const [content, setContent] = useState<string>('');
+  const [path, setPath] = useState<string>('');
 
   useEffect(() => {
 	  apiCheck();
 		callReturn();
-  }, []);
+  }, [content, path]);
 
   const apiCheck = async () => {
     await axios.post('/api/check').then((res:any)=>{
@@ -68,24 +71,20 @@ export default function Return() {
           </React.Fragment>
         </div>
       </div>
-      <React.Fragment>
-        {
-          lentCabinet?.lent_id === -1 ? <div></div> :
-            <div>
-              <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-                <div className="btn btn-lg" id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
-                  반납하기
-                </div>
-              </div>
-              <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-                <div className="btn btn-lg disabled" id="colorBtn">
-                  연장하기
-                </div>
-              </div>
+        <div>
+          <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
+            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
+              반납하기
             </div>
-        }
-      </React.Fragment>
-      <ReturnModal lentCabinet={lentCabinet}></ReturnModal>
+          </div>
+          <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
+            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': 'disabled'}`} id="colorBtn">
+              연장하기
+            </div>
+          </div>
+        </div>
+      <ReturnModal lentCabinet={lentCabinet} setContent={setContent} setPath={setPath}></ReturnModal>
+      <ContentsModal contents={content} path={path}></ContentsModal>
     </div>
   )
 }

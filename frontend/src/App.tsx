@@ -8,10 +8,10 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Switch>
-          <Route exact path='/' component={Main}><Main></Main></Route>
-          <Route path='/lent'><Lent></Lent></Route>
-          <Route path='/return'><Return></Return></Route>
-          <Route><Main></Main></Route>
+          <Route exact path='/' component={Main}></Route>
+          <Route path='/lent' component={Lent}></Route>
+          <Route path='/return' component={Return}></Route>
+          <Route component={Main}></Route>
         </Switch>
       </div>
     </BrowserRouter>

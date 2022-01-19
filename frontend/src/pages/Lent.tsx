@@ -103,7 +103,7 @@ export default function Lent(){
     for (let i = 0; i < info.floor[l_idx].length; i++){
       let floor_name = info.floor[l_idx][i];
       list.push(
-        <Carousel setTarget={setTarget} setCabiNum={setCabiNum} info={info} l_idx={l_idx} outer_i={i} outer_lent={lent} floor_name={floor_name}></Carousel>
+        <Carousel setTarget={setTarget} setCabiNum={setCabiNum} info={info} l_idx={l_idx} outer_i={i} outer_lent={lent} floor_name={floor_name} isLent={isLent}></Carousel>
       );
     }
     return list;
@@ -124,14 +124,9 @@ export default function Lent(){
             <div className="nav nav-tabs border-bottom-0" id="nav-tabs" role="tablist">{navTabs()}</div>
           </nav>
           <div className="tab-content" id="nav-tabContent">{navContent()}</div>
-          <React.Fragment>
-            { isLent === -1 ? 
-          <LentModal target={target} cabiNum={cabiNum}></LentModal> :
+          <LentModal target={target} cabiNum={cabiNum}></LentModal>
           <ContentsModal contents="이미 대여중인 사물함이 있어요 :)"/>
-            }
-          </React.Fragment>
       </div>
     </div>
   );
 }
-
