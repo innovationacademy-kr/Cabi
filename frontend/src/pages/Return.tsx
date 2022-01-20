@@ -3,7 +3,10 @@ import './main.css'
 import Menu from '../component/Menu'
 import ReturnModal from '../modal/ReturnModal'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { userInfo } from './Main'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import ContentsModal from '../modal/ContentsModal'
 
 export type lentCabinetInfo = {
   lent_id: number,
@@ -19,47 +22,68 @@ export type lentCabinetInfo = {
   activation: boolean
 }
 
-export default function Return(){
-  const local_url = "http://localhost:4242/api/return_info"
-  const dep_url = "/api/return_info"
-  const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
+export default function Return() {
+  const url = "/api/return_info"
+	const history = useHistory();
+  const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>()  
+  const [user, serUser] = useState<userInfo>();
+  const [content, setContent] = useState<string>('');
+  const [path, setPath] = useState<string>('');
 
-  const callReturn = () => {
-    axios.post(dep_url, {user_id : 1}).then((res:any)=>{
-      console.log(res.data);
-      setLentCabinet(res.data.lentCabinet);
-    }).catch((err)=>{console.log(err)});
+  useEffect(() => {
+	  apiCheck();
+		callReturn();
+  }, [content, path]);
+
+  const apiCheck = async () => {
+    await axios.post('/api/check').then((res:any)=>{
+      serUser(res.data.user);
+    }).catch((err:any)=>{
+      console.log(err);
+			history.push('/');
+		});
   }
-
-  // callReturn();
-  useEffect(()=>{
-    console.log(lentCabinet?.lent_id);
-    if (lentCabinet?.lent_id === -1 || lentCabinet?.lent_id === undefined)
-      callReturn();
-  }, [lentCabinet]);
+  const callReturn = async () => {
+    await axios.post(url, { user: user?.user_id }).then((res: any) => {
+      console.log(res);
+      if (res.status === 200){
+        setLentCabinet(res.data);
+      }
+    }).catch((err) => { console.log(err) });
+  }
 
   return (
     <div className="container" id='container'>
       <div className="row-2">
-      <Menu url="/lent"></Menu>
+        <Menu url="/lent"></Menu>
       </div>
       <div className="card row-2 p-5 m-5">
-        <div className="card-body p-5 my-5">
-          <div className="card-title text-center display-5">{lentCabinet?.location} {lentCabinet?.floor}F {lentCabinet?.lent_cabinet_id}</div>
-          <div className="card-subtitle mb-2 text-muted text-center">~ {lentCabinet?.expire_time}</div>
+        <div className="card-body my-5" id="card-body">
+          <React.Fragment>
+            {
+              lentCabinet?.lent_id === -1 ? <div className="card-subtitle mb-2 text-muted text-center">현재 대여중인 사물함이 없습니다.</div> :
+                <div>
+                  <div className="card-title text-center display-5">{lentCabinet?.location} {lentCabinet?.floor}F {lentCabinet?.cabinet_num}</div>
+                  <div className="card-subtitle mb-2 text-muted text-center">~ {lentCabinet?.expire_time}</div>
+                </div>
+            }
+          </React.Fragment>
         </div>
       </div>
-      <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-        <div className="btn btn-lg" id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
-          반납하기
+        <div>
+          <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
+            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
+              반납하기
+            </div>
+          </div>
+          <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
+            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': 'disabled'}`} id="colorBtn">
+              연장하기
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-        <div className="btn btn-lg disabled" id="colorBtn">
-          연장하기
-        </div>
-      </div>
-      <ReturnModal lentCabinet={lentCabinet}></ReturnModal>
+      <ReturnModal lentCabinet={lentCabinet} setContent={setContent} setPath={setPath}></ReturnModal>
+      <ContentsModal contents={content} path={path}></ContentsModal>
     </div>
   )
 }

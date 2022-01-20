@@ -1,14 +1,23 @@
 import axios from 'axios'
 import './returnModal.css'
-export default function ReturnModal(props:any){
-  const handleClick = () => {
-    const dev_url = 'http://localhost:4242/api/return';
-    const dep_url = '/api/return';
-    axios.post(dep_url, {lent_id: props.lentCabinet.lent_id}).then((res:any)=>{
-      alert('반납되었습니다');
-      window.location.href="/lent";
-    }).catch(()=>{
-      alert('다시 시도해주세요!');
+import {useState} from 'react'
+import { useHistory } from 'react-router-dom'
+import ContentsModal from './ContentsModal'
+
+export default function ReturnModal(props: any) {
+  const history = useHistory();
+
+  const handleClick = async () => {
+    const url = '/api/return';
+    await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then((res: any) => {
+      if (res.status === 200) {
+        props.setContent('반납되었습니다');
+        props.setPath('/lent');
+      }
+    }).catch((err: any) => {
+      console.log(err);
+      props.setContent('다시 시도해주세요!');
+      props.setPath('');
     })
   }
   return (
@@ -24,7 +33,7 @@ export default function ReturnModal(props:any){
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" className="btn btn-primary" id="btn-primary" onClick={handleClick} >반납</button>
+            <button type="button" className="btn btn-primary" id="btn-primary" data-bs-toggle="modal" data-bs-target="#contentsmodal" data-bs-dismiss="modal" onClick={handleClick} >반납</button>
           </div>
         </div>
       </div>

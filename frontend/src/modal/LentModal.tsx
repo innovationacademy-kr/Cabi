@@ -1,11 +1,22 @@
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import './lentModal.css';
+
 export default function LentModal(props:any){
+  const history = useHistory();
 
   const handleClick = () => {
-    const dep_url = "api/lent"
-    axios.post(dep_url, {cabinet_id : props.target}).then((res:any)=>{
-      window.location.href="/return"
+    const url = "/api/lent"
+    axios.post(url, {cabinet_id : props.target}).then((res:any)=>{
+      console.log('res.data');
+      console.log(res.data);
+      if(res.data.cabinet_id && res.data.cabinet_id === -2){
+        alert('이미 대여중인 사물함입니다!');
+        return ;
+      }
+      if (res.status === 200){
+        history.push("/return");
+      }
     }).catch((err)=>{console.log(err)});
   }
 
@@ -18,11 +29,12 @@ export default function LentModal(props:any){
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div className="modal-body">
-            <p >  선택하신    [ {props.cabiNum} ]   번 사물함을 대여하시겠습니까?</p>
+            <p> 선택하신 [ {props.cabiNum} ] 번 사물함을 <br></br>
+              대여하시겠습니까?</p>
           </div>
           <div className="modal-footer justify-content-center">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" className="btn btn-primary" id="btn-primary" onClick={handleClick}>대여</button>
+            <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" onClick={handleClick}>대여</button>
           </div>
         </div>
       </div>

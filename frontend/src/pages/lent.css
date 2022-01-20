@@ -34,6 +34,8 @@
 #nav-tab{
     color: white;
     background-color: #6667AB;
+    padding-right: 2rem!important;
+    padding-left: 2rem!important;
 }
 #nav-tab.active{
     color: #6667AB;
@@ -48,5 +50,5 @@
     height: 70vh;
     margin-right: 5%;
     background-color: white;
-    border-radius: 0.5em;
+    border-radius: 1em;
 }

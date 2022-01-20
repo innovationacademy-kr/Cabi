@@ -1,3 +1,16 @@
-#cabinetId{
+#cabinet_num{
     font-weight: bolder;
+    font-size: larger;
+    text-align: center;
+    padding: 7px;
+}
+
+#intra_id{
+    font-size: smaller;
+    text-align: center;
+    padding: 5px;
+    color: rgb(70, 70, 70);
+}
+.lentCabinet{
+    background: rgba(123, 108, 141, 0.349)
 }
