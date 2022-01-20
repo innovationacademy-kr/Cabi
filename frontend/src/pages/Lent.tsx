@@ -43,7 +43,7 @@ export default function Lent(){
   const [cabiNum, setCabiNum] = useState<number>(-1);
   const [user, setUser] = useState<userInfo>();
   const [isLent, setisLent] = useState<number>(0);
-  const [presentInfo, setPresentInfo] = useState<string>('새롬관');
+  // const [presentInfo, setPresentInfo] = useState<string>('새롬관');
 
   const history = useHistory();
   useEffect(()=>{
@@ -112,7 +112,7 @@ export default function Lent(){
     <div className="container col" id="container">
       <div className="row align-items-center">
         <div className="col-6">
-          <Location info={info} presentInfo={presentInfo} setPresentInfo={setPresentInfo}></Location>
+          <Location info={info} l_idx={l_idx} setLidx={setLidx}></Location>
         </div>
         <div className="col">
           <Menu url="/return"></Menu>

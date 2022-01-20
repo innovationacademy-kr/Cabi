@@ -43,7 +43,6 @@ export default function Return() {
 			history.push('/');
 		});
   }
-  // callReturn();
   const callReturn = async () => {
     await axios.post(url, { user: user?.user_id }).then((res: any) => {
       console.log(res);
