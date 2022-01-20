@@ -9,7 +9,6 @@ const Strategy = require('passport-42')
 const env = process.env;
 
 passport.serializeUser(function(user:any, done:any){
-    console.log('Serialize User', user);
     return done(null, user);
 });
 passport.deserializeUser(function(user:any, done:any){

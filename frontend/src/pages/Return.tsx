@@ -31,8 +31,9 @@ export default function Return() {
   const [path, setPath] = useState<string>('');
 
   useEffect(() => {
-	  apiCheck();
-		callReturn();
+	  apiCheck().then(async (res:any)=>{
+      await callReturn();
+    });
   }, [content, path]);
 
   const apiCheck = async () => {
@@ -45,7 +46,6 @@ export default function Return() {
   }
   const callReturn = async () => {
     await axios.post(url, { user: user?.user_id }).then((res: any) => {
-      console.log(res);
       if (res.status === 200){
         setLentCabinet(res.data);
       }

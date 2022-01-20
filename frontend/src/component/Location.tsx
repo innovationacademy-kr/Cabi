@@ -5,8 +5,6 @@ export default function Location(props:any){
     props.setLidx(loc);
   }
   let location:Array<string> = props.info.location;
-  console.log(location);
-
   return (
     <div className="dropdown" id="location">
       <button className="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

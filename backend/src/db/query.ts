@@ -17,7 +17,6 @@ export async function checkUser(user: any) {
 	try {
 		pool = await con.getConnection();
 		lentCabinet = await pool.query(content).then(async (res: any) => {
-			console.log(res);
 			if (!res.length) {
 				addUser(user);
 				return ({

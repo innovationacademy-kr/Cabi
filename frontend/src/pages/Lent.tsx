@@ -49,10 +49,8 @@ export default function Lent(){
   useEffect(()=>{
     apiCheck();
     if (!info.location){
-      console.log('info');
       handleClick();
     }
-    console.log('lent');
     handleLent();
   }, [l_idx, info]);
 
