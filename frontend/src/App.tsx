@@ -1,6 +1,7 @@
 import Main from './pages/Main'
 import Return from './pages/Return'
 import Lent from './pages/Lent'
+import Footer from './component/Footer'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
           <Route path='/return' component={Return}></Route>
           <Route component={Main}></Route>
         </Switch>
+        <Footer/>
       </div>
     </BrowserRouter>
   )

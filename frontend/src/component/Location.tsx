@@ -2,7 +2,6 @@ import '../pages/lent.css'
 
 export default function Location(props:any){
   const handleInfo = (loc:number) => {
-    // props.setPresentInfo(loc);
     props.setLidx(loc);
   }
   let location:Array<string> = props.info.location;
@@ -20,6 +19,5 @@ export default function Location(props:any){
         })}
       </div>
     </div>
-	
   )
 }
