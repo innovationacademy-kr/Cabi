@@ -1,5 +1,5 @@
 import express from 'express'
-import path from 'path';
+import path from 'path'
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
 import cors from 'cors'

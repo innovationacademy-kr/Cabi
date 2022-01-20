@@ -1,4 +1,3 @@
-import axios from 'axios'
 import './main.css'
 
 export type userInfo = {

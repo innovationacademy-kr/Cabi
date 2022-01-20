@@ -63,6 +63,7 @@ router.post("/api/cabinet", (req: any, res: any) => {
         res.send(cabinetList);
     }
 })
+<<<<<<< HEAD
 
 router.post("/api/lent_info", async (req: any, res: any) => {
     try {

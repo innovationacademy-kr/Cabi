@@ -18,7 +18,6 @@ export type cabinetInfo = {
   section: string,
   activation: boolean,
 }
-//one location - ex) 새롬
 export type locationInfo = {
   location?: Array<string>,
   floor?: Array<Array<number>>,
