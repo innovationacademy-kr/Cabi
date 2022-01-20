@@ -18,7 +18,6 @@ export type lentInfo = {
     intra_id?: string
 }
 
-//lent 된 Cabinet 하나의 Info
 export type lentCabinetInfo = {
     lent_id: number,
     lent_cabinet_id: number,
@@ -33,7 +32,6 @@ export type lentCabinetInfo = {
     activation: boolean
 }
 
-//cabinet & lent table
 export type cabinetInfo = {
     cabinet_id: number,
     cabinet_num: number,
@@ -43,7 +41,6 @@ export type cabinetInfo = {
     activation: boolean,
 }
 
-//one location - ex) 새롬
 export type cabinetListInfo = {
     location?: Array<string>,
     floor?: Array<Array<number>>,

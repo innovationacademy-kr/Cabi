@@ -1,7 +1,8 @@
 import dotenv from 'dotenv'
-dotenv.config();
+//dotenv.config();
 // dotenv.config({path:'./.env.local'});
-// dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
+dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
+
 import passport from 'passport'
 import {userList} from '../user'
 
@@ -9,7 +10,6 @@ const Strategy = require('passport-42')
 const env = process.env;
 
 passport.serializeUser(function(user:any, done:any){
-    console.log('Serialize User', user);
     return done(null, user);
 });
 passport.deserializeUser(function(user:any, done:any){
