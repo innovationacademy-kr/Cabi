@@ -6,7 +6,7 @@ import cors from 'cors'
 import {connectionForCabinet} from './db/db'
 import {router} from './route'
 import dotenv from 'dotenv'
-dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});
+dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'});
 //dotenv.config({path:'./.env.local'})
 //dotenv.config();
 
