@@ -1,6 +1,7 @@
 import Main from './pages/Main'
 import Return from './pages/Return'
 import Lent from './pages/Lent'
+import Footer from './component/Footer'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 function App() {
@@ -8,11 +9,12 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Switch>
-          <Route exact path='/'><Main></Main></Route>
-          <Route path='/lent'><Lent></Lent></Route>
-          <Route path='/return'><Return></Return></Route>
-          <Route><Main></Main></Route>
+          <Route exact path='/' component={Main}></Route>
+          <Route path='/lent' component={Lent}></Route>
+          <Route path='/return' component={Return}></Route>
+          <Route component={Main}></Route>
         </Switch>
+        <Footer/>
       </div>
     </BrowserRouter>
   )

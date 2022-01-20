@@ -1,7 +1,7 @@
 export type userInfo = {
     user_id: number,
     intra_id: string,
-    auth?: number,
+    auth?: boolean,
     email: string,
     phone?: string,
     access: string,
@@ -32,7 +32,6 @@ export type lentCabinetInfo = {
     activation: boolean
 }
 
-//cabinet & lent table
 export type cabinetInfo = {
     cabinet_id: number,
     cabinet_num: number,
@@ -42,7 +41,6 @@ export type cabinetInfo = {
     activation: boolean,
 }
 
-//one location - ex) 새롬
 export type cabinetListInfo = {
     location?: Array<string>,
     floor?: Array<Array<number>>,
@@ -51,36 +49,7 @@ export type cabinetListInfo = {
 }
 
 //variables
-export let user:userInfo = {
-    user_id: 0,
-    intra_id: '',
-    email: '',
-    access: '',
-    refresh: ''
-}
-
-export let lent:lentInfo = {
-    lent_id: -1,
-    lent_cabinet_id: -1,
-    lent_user_id: -1,
-    extension: false
-}
-
-export let lentCabinet:lentCabinetInfo = {
-    lent_id: -1,
-    lent_cabinet_id: -1,
-    lent_user_id: -1,
-    lent_time: '',
-    expire_time: '',
-    extension: false,
-    cabinet_num: -1,
-    location: '',
-    floor: -1,
-    section: '',
-    activation: false
-}
-
-export let cabinetLent:Array<lentInfo> = [];
+export let userList:Array<userInfo> = [];
 
 export let cabinetList:cabinetListInfo = {
     location: [],

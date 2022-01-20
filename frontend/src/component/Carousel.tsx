@@ -9,9 +9,9 @@ export default function Carousel(props:any){
     let list = [];
     const cab:Array<cabinetInfo> = props.info.cabinet[props.l_idx][f_idx][s_idx];
     for (let i = 0; i < cab.length; i++){
-      const id= props.outer_lent.find((l:any)=>l.lent_cabinet_id === cab[i].cabinet_id);
+      var id = props.outer_lent.findIndex((l:any)=>l.lent_cabinet_id === cab[i].cabinet_id);
       list.push(
-        <CabinetBox className="d-block w-100" key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_id} cabinet_num={cab[i].cabinet_num} setTarget={props.setTarget} setCabiNum={props.setCabiNum} intra_id={id ? id.intra_id : ""}></CabinetBox>
+        <CabinetBox className="d-block w-100" setTarget={props.setTarget} setCabiNum={props.setCabiNum} key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_id} cabinet_num={cab[i].cabinet_num}  intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""} isLent={props.isLent}></CabinetBox>
       );
     }
     return list;
@@ -21,7 +21,6 @@ export default function Carousel(props:any){
     let list = [];
     if (!props.info || !props.info.section || props.info.section[props.l_idx].length <= idx)
       return [];
-    // console.log(props.info.section[props.l_idx][idx].length);
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       if (list.length === 0)
         list.push(
@@ -40,7 +39,6 @@ export default function Carousel(props:any){
     let list = [];
     if (!props.info || !props.info.section || props.info.section[props.l_idx].length <= idx)
       return [];
-    console.log(props.info.section[props.l_idx][idx].length);
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       list.push(
         <div className={`carousel-item carousel-item${i ? '' : ' active'}`} key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >

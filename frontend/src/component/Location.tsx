@@ -1,18 +1,22 @@
-// import axios from 'axios'
 import '../pages/lent.css'
 
-export default function Location(){
-    return (
-        <div className="dropdown" id="location">
-          <button className="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		         <i className="bi bi-caret-down-fill"></i>
-           새롬관
-          </button>
-          <div className="dropdown-menu" id="locationMenu" aria-labelledby="dropdownMenuButton">
-            {/* <a className="dropdown-item" href="#">서초</a>
-            <a className="dropdown-item" href="#">paris</a> */}
-          </div>
-        </div>
-	  
-    )
+export default function Location(props:any){
+  const handleInfo = (loc:number) => {
+    props.setLidx(loc);
+  }
+  let location:Array<string> = props.info.location;
+
+  return (
+    <div className="dropdown" id="location">
+      <button className="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	      <i className="bi bi-caret-down-fill"></i>
+        {location ? location[props.l_idx]: ''}
+      </button>
+      <div className="dropdown-menu" id="locationMenu" aria-labelledby="dropdownMenuButton">
+        {location?.map((loc:string, idx:number)=>{
+          return <a className="dropdown-item" onClick={()=>handleInfo(idx)}>{loc}</a>
+        })}
+      </div>
+    </div>
+  )
 }

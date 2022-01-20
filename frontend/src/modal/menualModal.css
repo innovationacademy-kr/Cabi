@@ -1,0 +1,32 @@
+#menualmodal{
+  z-index: 1060;
+}
+.modal-body{
+  font-size: large;
+  font-weight: bolder;
+  justify-content: center;
+  padding: 5px;
+}
+
+.modal-content {
+  border-radius: 13px;
+}
+
+p{
+  margin: 15px 0 10px;
+  white-space: pre-wrap;
+  font-size: large;
+  font-weight: bolder;
+  padding: 5px;
+  text-align: left;
+}
+
+.menual-body{
+  overflow: scroll;
+  height: 80vh;
+}
+
+/* pre{
+  white-space: pre-wrap;
+} */
+
