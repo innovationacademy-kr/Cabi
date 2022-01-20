@@ -48,6 +48,7 @@
 .carousel-item{
     padding-left: 35px;
     padding-right: 35px;
+    height: 68vh;
 }
 
 #cabinetGrid{
