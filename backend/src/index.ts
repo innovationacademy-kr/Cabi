@@ -3,7 +3,7 @@ import path from 'path';
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
 import cors from 'cors'
-import {connectionForCabinet} from './db/db_dev'
+import {connectionForCabinet} from './db/db'
 import {router} from './route'
 import dotenv from 'dotenv'
 // dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'});

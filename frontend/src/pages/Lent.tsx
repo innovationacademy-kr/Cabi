@@ -43,7 +43,6 @@ export default function Lent(){
   const [cabiNum, setCabiNum] = useState<number>(-1);
   const [user, setUser] = useState<userInfo>();
   const [isLent, setisLent] = useState<number>(0);
-  // const [presentInfo, setPresentInfo] = useState<string>('새롬관');
 
   const history = useHistory();
   useEffect(()=>{
