@@ -2,7 +2,7 @@ import '../pages/lent.css'
 
 export default function Location(props:any){
   const handleInfo = (loc:string) => {
-    props.setPresintInfo(loc);
+    props.setPresentInfo(loc);
   }
   let location:Array<string> = props.info.location;
   console.log(location);
