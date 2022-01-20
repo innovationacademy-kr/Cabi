@@ -75,7 +75,7 @@
     /* bottom: auto; */
 }
 
-.carousel-control-next .carousel-control-next:hover {
+.carousel-control-next {
     width: 70px;
     height: 70vh;
     position: absolute;
