@@ -13,7 +13,6 @@ passport.serializeUser(function(user:any, done:any){
     return done(null, user);
 });
 passport.deserializeUser(function(user:any, done:any){
-    console.log("deserializeUser!");
     done(null, user);
 });
 
@@ -32,8 +31,6 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
         access: accessToken,
         refresh: refreshToken,
     };
-    // console.log(`accessToken : ${accessToken}`);
-    // console.log(`refreshToken: ${refreshToken}`);
     const idx = userList.findIndex((user)=>user.user_id === profile.id)
     if (idx !== -1){
         userList.splice(idx, 1);
@@ -47,8 +44,6 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
         refresh: refreshToken,
         phone: ""
     });
-    console.log(`length = ${userList.length}`);
-    console.log(userList);
     return cb(null, userInfo);
 }
 

@@ -21,7 +21,6 @@ export default function Carousel(props:any){
     let list = [];
     if (!props.info || !props.info.section || props.info.section[props.l_idx].length <= idx)
       return [];
-    // console.log(props.info.section[props.l_idx][idx].length);
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       if (list.length === 0)
         list.push(
@@ -40,7 +39,6 @@ export default function Carousel(props:any){
     let list = [];
     if (!props.info || !props.info.section || props.info.section[props.l_idx].length <= idx)
       return [];
-    console.log(props.info.section[props.l_idx][idx].length);
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       list.push(
         <div className={`carousel-item carousel-item${i ? '' : ' active'}`} key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >
