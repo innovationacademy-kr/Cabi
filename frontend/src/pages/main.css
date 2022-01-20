@@ -17,11 +17,9 @@ Body{
     margin-top: 10px;
     padding: 10px 10px 10px 10px;
     background: #ffffffec;
-    border-radius: 10px;
+    border-radius: 1em;
     justify-content: center;
     background-size: 30px 100px;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
 }
 
 @font-face {

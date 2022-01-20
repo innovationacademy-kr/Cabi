@@ -52,8 +52,7 @@ export async function checkUser(user: any) {
 //사용자가 없는 경우, user 값 생성
 export async function addUser(user: any) {
 	let pool: mariadb.PoolConnection;
-	console.log('addUser');
-	const content: string = `insert into user value('${user.user_id}', '${user.intra_id}', ${user.auth}, '${user.email}', '${user.phone}')`;
+	const content: string = `insert into user value('${user.user_id}', '${user.intra_id}', 0, '${user.email}', "")`;
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 		console.log(res);
@@ -63,9 +62,9 @@ export async function addUser(user: any) {
 	});
 	if (pool) pool.end();
 }
+
 //본인 정보 및 렌트 정보 - 리턴 페이지
 export async function getUser(user: any): Promise<lentCabinetInfo> {
-	console.log('getUser')
 	let pool: mariadb.PoolConnection;
 	const content: string = `select * from lent l join cabinet c on l.lent_cabinet_id=c.cabinet_id where l.lent_user_id='${user.user_id}'`;
 	let lentCabinet: lentCabinetInfo;
@@ -113,12 +112,9 @@ export async function getUser(user: any): Promise<lentCabinetInfo> {
 export async function getLentUser() {
 	let pool: mariadb.PoolConnection;
 	const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
-	console.log('getLentUser');
 	let lentInfo: Array<lentInfo> = [];
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
-		console.log('res.length');
-		console.log(res.length);
 		for (let i = 0; i < res.length; i++) {
 			lentInfo.push({
 				lent_id: res[i].lent_id,
@@ -138,25 +134,23 @@ export async function getLentUser() {
 	return { lentInfo: lentInfo };
 }
 //lent 값 생성
-export async function createLent(cabinet_id: number, user: any) {
+export async function createLent(cabinet_id: number, user: any){
 	let pool: mariadb.PoolConnection;
-	console.log('user');
-	console.log(user);
 	const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
+	let errResult = 0;
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
-		console.log(res);
 	}).catch((err: any) => {
-		console.log(err);
-		throw err;
+		if (err.errno === 1062)
+			errResult = -1;
 	});
 	if (pool) pool.end();
+	return ({errno: errResult});
 }
 
 //lent_log 값 생성 후 lent 값 삭제
 export async function createLentLog(user: any) {
 	let pool: mariadb.PoolConnection;
-	console.log(user);
 	const content: string = `select * from lent where lent_user_id=${user.user_id}`;
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {

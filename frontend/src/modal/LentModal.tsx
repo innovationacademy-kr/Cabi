@@ -6,8 +6,14 @@ export default function LentModal(props:any){
   const history = useHistory();
 
   const handleClick = () => {
-    const url = "api/lent"
+    const url = "/api/lent"
     axios.post(url, {cabinet_id : props.target}).then((res:any)=>{
+      console.log('res.data');
+      console.log(res.data);
+      if(res.data.cabinet_id && res.data.cabinet_id === -2){
+        alert('이미 대여중인 사물함입니다!');
+        return ;
+      }
       if (res.status === 200){
         history.push("/return");
       }

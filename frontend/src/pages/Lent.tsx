@@ -69,8 +69,6 @@ export default function Lent(){
     const url = "/api/lent_info"
     axios.post(url).then((res:any)=>{
       setLent(res.data.lentInfo);
-      console.log('lent');
-      console.log(lent);
       setisLent(res.data.isLent);
     }).catch((err)=>{console.log(err)});
   }
@@ -91,7 +89,7 @@ export default function Lent(){
         <button className={`nav-link border border-bottom-0 px-4${i ? '' :' active'}`}
         id={`nav-tab`} key={`nav-${floor_name}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor_name}`}
         type="button" role="tab" aria-controls={`nav-${floor_name}`} aria-selected={i ? 'false' : 'true'}>
-          {floor_name}
+          {floor_name}F
         </button>
       );
     }
