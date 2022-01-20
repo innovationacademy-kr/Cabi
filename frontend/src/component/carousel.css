@@ -48,6 +48,7 @@
 .carousel-item{
     padding-left: 35px;
     padding-right: 35px;
+    height: 68vh;
 }
 
 #cabinetGrid{
@@ -75,7 +76,7 @@
     /* bottom: auto; */
 }
 
-.carousel-control-next .carousel-control-next:hover {
+.carousel-control-next {
     width: 70px;
     height: 70vh;
     position: absolute;

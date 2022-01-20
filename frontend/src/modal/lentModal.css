@@ -9,6 +9,10 @@
     padding: 5px;
 }
 
+.modal-content {
+    border-radius: 13px;
+}
+
 .modal-header{
     padding: 10px;
     border-bottom: 0px ;

@@ -11,3 +11,7 @@
     background-color: #5657a5;
     border-color: #5657a5;
 }
+
+.modal-content {
+    border-radius: 13px;
+}
