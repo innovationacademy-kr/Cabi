@@ -53,7 +53,7 @@ export async function checkUser(user: any) {
 export async function addUser(user: any) {
 	let pool: mariadb.PoolConnection;
 	console.log('addUser');
-	const content: string = `insert into user value('${user.user_id}', '${user.intra_id}', ${user.auth}, '${user.email}', '${user.phone}')`;
+		const content: string = `insert into user value('${user.user_id}', '${user.intra_id}', 0, '${user.email}', "")`;
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 		console.log(res);

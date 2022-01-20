@@ -91,7 +91,7 @@ export default function Lent(){
         <button className={`nav-link border border-bottom-0 px-4${i ? '' :' active'}`}
         id={`nav-tab`} key={`nav-${floor_name}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor_name}`}
         type="button" role="tab" aria-controls={`nav-${floor_name}`} aria-selected={i ? 'false' : 'true'}>
-          {floor_name}
+          {floor_name}F
         </button>
       );
     }
