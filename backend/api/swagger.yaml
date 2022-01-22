@@ -67,16 +67,16 @@ paths:
       summary: get all lentInfo
       responses:
         '200':
-          $ref: '#/components/responses/SuccessResponse'
+          content:
+            application/json:
+              schema:
+                - $ref: '#/components/schemas/lentInfo'
+                - $ref: '#/components/schemas/isLent'
+                - $ref: '#/components/responses/SuccessResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
-        content:
-          application/json:
-            schema:
-              - $ref: '#/components/schemas/lentInfo'
-              - $ref: '#/components/schemas/isLent'
   /api/lent:
     post:
       tags:

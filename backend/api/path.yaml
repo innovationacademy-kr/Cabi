@@ -40,16 +40,16 @@
         - total cabinet
       summary: total cabinet info
       responses:
+        content:
+          application/json:
+            schema:
+              $ref: './openapi.yaml#/components/schemas/cabinetList'
         '200':
           $ref: './openapi.yaml#/components/responses/SuccessResponse'
         '400':
           $ref: './openapi.yaml#/components/responses/BadRequest'
         '500':
           $ref: './openapi.yaml#/components/responses/InternalServerError'
-        content:
-          application/json:
-            schema:
-              $ref: './openapi.yaml#/components/schemas/cabinetList'
 /api/lent_info:
     post:
       tags:
