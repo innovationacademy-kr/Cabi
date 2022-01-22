@@ -1,10 +1,5 @@
 #menualmodal{
   z-index: 1060;
-}
-.modal-body{
-  font-size: large;
-  font-weight: bolder;
-  justify-content: center;
   padding: 5px;
 }
 
@@ -13,12 +8,11 @@
 }
 
 p{
-  margin: 15px 0 10px;
-  white-space: pre-wrap;
-  font-size: large;
-  font-weight: bolder;
-  padding: 5px;
-  text-align: left;
+  margin: 5px!important;
+  white-space: pre-wrap!important;
+  font-size: medium!important;
+  padding: 10px!important;
+  text-align: left!important;
 }
 
 .menual-body{
@@ -26,7 +20,14 @@ p{
   height: 80vh;
 }
 
-/* pre{
-  white-space: pre-wrap;
-} */
+#btn-primary{
+  color: #fff;
+  background-color: #6667AB;
+  border-color: #6667AB;
+}
 
+#btn-primary:hover{
+  color: #fff;
+  background-color: #5657a5;
+  border-color: #5657a5;
+}

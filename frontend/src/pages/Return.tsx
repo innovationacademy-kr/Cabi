@@ -31,8 +31,8 @@ export default function Return() {
   const [path, setPath] = useState<string>('');
 
   useEffect(() => {
-	  apiCheck().then(async (res:any)=>{
-      await callReturn();
+	  apiCheck().then(()=>{
+      callReturn();
     });
   }, [content, path]);
 
