@@ -30,7 +30,7 @@ export default function Return() {
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   
   useEffect(() => {
-	  apiCheck().then(()=>{
+	  apiCheck().then(() => {
       callReturn();
     });
   }, [content, path]);
@@ -38,7 +38,7 @@ export default function Return() {
   const apiCheck = async () => {
     await axios.post("/api/check").then((res:any)=>{
       serUser(res.data.user);
-    }).catch((err:any)=>{
+    }).catch((err:any) => {
       console.log(err);
 			history.push('/');
 		});

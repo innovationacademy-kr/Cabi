@@ -17,7 +17,7 @@ export default function LentModal(props:any){
       if (res.status === 200){
         history.push("/return");
       }
-    }).catch((err)=>{console.log(err)});
+    }).catch((err) => {console.log(err)});
   }
 
   return (

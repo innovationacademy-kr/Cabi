@@ -10,7 +10,7 @@ export default function Menu(props:any){
   const handleClick = () => {
     axios.post(url).then((res)=>{
 			history.push("/");
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err))
   }
   const cabinetPage = () => {
     if (props.url === "/return"){
