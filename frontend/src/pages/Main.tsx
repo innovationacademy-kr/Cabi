@@ -1,4 +1,3 @@
-import axios from 'axios'
 import './main.css'
 
 export type userInfo = {
@@ -12,11 +11,11 @@ export type userInfo = {
 }
 
 export default function Main(){
-  const url = '/auth/login';
+  const url = "/auth/login";
 
   return (
     <div className="container">
-      <div className="row p-5" id='logo'>
+      <div className="row p-5" id="logo">
         <img src="../img/logo.png" alt="logo" />
       </div>
       <div className="row d-grid gap-2 col-6 mx-auto">

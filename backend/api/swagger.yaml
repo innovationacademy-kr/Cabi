@@ -6,15 +6,13 @@ info:
   license:
     name: MIT
 servers:
-  - url: 'http://localhost:4242'
+  - url: 'http://cabi.dev.42cadet.kr'
 paths:
-  /api/user:
+  /auth/login:
     post:
       tags:
-        - user
-      summary: 42cabinet user info
-      operationId: userInfo
-      description: response with 42cabinet_user information
+        - login
+      description: 42 intra login
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -22,19 +20,68 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
-      requestBody:
+  /auth/login/callback:
+    post:
+      tags:
+        - 42 intra login callback
+      description: 42 intra logout
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /auth/logout:
+    post:
+      tags:
+        - logout
+      description: 42 intra logout
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/cabinet:
+    post:
+      tags:
+        - total cabinet
+      summary: total cabinet info
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/userInfo'
-        description: Inventory item to add
+              $ref: '#/components/schemas/cabinetList'
+  /api/lent_info:
+    post:
+      tags:
+        - lent_info
+      summary: get all lentInfo
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                - $ref: '#/components/schemas/lentInfo'
+                - $ref: '#/components/schemas/isLent'
+                - $ref: '#/components/responses/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /api/lent:
     post:
       tags:
         - lent
-      summary: lent a new cabinet
-      operationId: lentCabinet
-      description: lent a new cabinet
+      summary: lent event
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -46,14 +93,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Lent'
-  /api/cabinet:
+              type: object
+              required:
+                - cabinet_id
+              properties:
+                lent_id:
+                  type: integer
+                  example: 1
+  /api/return_info:
     post:
       tags:
-        - cabinet
-      summary: adds an cabinet item
-      operationId: cabinetInfo
-      description: response with cabinet infromation
+        - return_info
+      summary: get lend cabinet info
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -61,19 +112,15 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
-      requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/cabinet'
-        description: cabinet to add
+              $ref: '#/components/schemas/lentCabinet'
   /api/return:
     post:
       tags:
         - return
-      summary: return a cabinet
-      operationId: returnCabinet
-      description: return a cabinet
+      summary: return event
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -85,14 +132,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/return'
-  /api/lentInfo:
+              type: object
+              required:
+                - lent_id
+              properties:
+                lent_id:
+                  type: integer
+                  example: 1
+  /api/check:
     post:
       tags:
-        - lentInfo
-      summary: get all lentInfo
-      operationId: get all lentInfo
-      description: get all lentInfo
+        - check user
+      summary: check user
       responses:
         '200':
           $ref: '#/components/responses/SuccessResponse'
@@ -100,49 +151,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
-      requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/lentInfo'
-  /auth/login:
-    get:
-      tags:
-        - OauthLogin
-      summary: OauthLogin api
-      operationId: OauthLogin api
-      description: OauthLogin api
-      responses:
-        '200':
-          $ref: '#/components/responses/SuccessResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OauthLogin'
-  /auth/logout:
-    get:
-      tags:
-        - OauthLogout
-      summary: OauthLogout api
-      operationId: OauthLogout api
-      description: OauthLogout api
-      responses:
-        '200':
-          $ref: '#/components/responses/SuccessResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/OauthLogout'
+              $ref: '#/components/schemas/userInfo'
 components:
   parameters: null
   schemas:
@@ -160,57 +172,95 @@ components:
           type: boolean
         message:
           type: string
-    userInfo:
+    cabinetList:
       type: object
       required:
-        - user_id
-        - intra_id
-        - auth
-        - email
-        - phone
+        - location
+        - floor
+        - section
+        - cabinet
       properties:
-        user_id:
+        location:
+          type: Array<string>
+          example:
+            - serom
+            - maru
+        floor:
+          type: Array<Array<integer>>
+        section:
+          type: Array<Array<Array<string>>>
+        cabinet:
+          type: Array<Array<Array<Array<cabinetInfo>>>>
+    lentInfo:
+      type: object
+      required:
+        - lent_id
+        - lent_cabinet_id
+        - lent_user_id
+        - lent_time
+        - expire_time
+        - extension
+        - intra_id
+      properties:
+        lent_id:
           type: integer
-          example: 12345
-        intra_id:
+          example: 1
+        lent_cabinet_id:
+          type: integer
+          example: 1
+        lent_user_id:
+          type: integer
+          example: 1
+        lent_time:
           type: string
-          example: spark
-        auth:
+          example: '2022-01-22'
+        expite_time:
+          type: string
+          example: '2022-02-22'
+        extension:
           type: boolean
           example: true
-        email:
+        intra_id:
           type: string
-          example: spark@student.42seoul.kr
-        phone:
-          type: string
-          example: 010-1234-5678
-    Lent:
+          example: skim
+    isLent:
       type: object
       required:
-        - cabinet_id
+        - isLent
       properties:
-        cabinet_id:
-          type: number
-          format: uuid
-          example: 12
-    cabinet:
+        isLent:
+          type: integer
+          exmaple: 1
+    lentCabinet:
       type: object
       required:
-        - cabinet_id
+        - lent_id
+        - lent_cabinet_id
+        - lent_user_id
+        - expire_time
+        - extension
         - cabinet_num
         - location
         - floor
         - section
         - activation
-        - lent_id
-        - user_id
-        - lent_time
-        - expire_time
-        - extension
       properties:
-        cabinet_id:
+        lent_id:
           type: integer
           example: 1
+        lent_cabinet_id:
+          type: integer
+          example: 1
+        lent_user_id:
+          type: integer
+          example: 1
+        expire_time:
+          type: string
+          format: datetime
+          example: '2021-12-29'
+        extension:
+          type: boolean
+          example: true
         cabinet_num:
           type: integer
           example: 1
@@ -226,68 +276,38 @@ components:
         activation:
           type: boolean
           example: true
-        lent_id:
-          type: integer
-          example: 1
+    userInfo:
+      type: object
+      required:
+        - user_id
+        - intra_id
+        - auth
+        - email
+        - phone
+        - access
+        - refresh
+      properties:
         user_id:
           type: integer
           example: 1
-        lent_time:
+        intra_id:
           type: string
-          format: datetime
-          example: '2021-12-29-17:36'
-        expire_time:
-          type: string
-          format: datetime
-          example: '2021-12-29-17:36'
-        extension:
+          example: skim
+        auth:
           type: boolean
           example: true
-    lentInfo:
-      type: object
-      required:
-        - lent_id
-        - lent_cabinet_id
-        - lent_user_id
-        - lent_time
-        - expired_time
-        - extension
-      properties:
-        lent_id:
-          type: integer
-          example: 1
-        lent_cabinet_id:
-          type: integer
-          example: 95
-        lent_user_id:
-          type: integer
-          example: 10
-        lent_time:
+        email:
           type: string
-          example: '2021-12-29-17:36'
-        expired_time:
+          example: skim@student.42seoul.kr
+        phone:
           type: string
-          example: '2022-01-29-17:36'
-        extension:
-          type: integer
-          example: 1
-    OauthLogin:
-      type: null
-      required: null
-      properties: null
-    OauthLogout:
-      type: null
-      required: null
-      properties: null
-    return:
-      type: object
-      required:
-        - lent_id
-      properties:
-        lent_id:
-          type: number
-          format: uuid
-          example: 1
+          example: 010-0000-0000
+        access:
+          type: string
+          example: 1389fdsjklfsjkl
+        refresh:
+          type: string
+          example: 2fjlksdflk02309
   responses:
     BadRequest:
       description: 잘못된 요청

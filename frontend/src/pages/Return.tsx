@@ -1,12 +1,12 @@
-import './return.css'
-import './main.css'
+import axios from 'axios'
+import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { userInfo } from './Main'
 import Menu from '../component/Menu'
 import ReturnModal from '../modal/ReturnModal'
-import axios from 'axios'
-import { userInfo } from './Main'
-import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 import ContentsModal from '../modal/ContentsModal'
+import './main.css'
+import './return.css'
 
 export type lentCabinetInfo = {
   lent_id: number,
@@ -23,13 +23,12 @@ export type lentCabinetInfo = {
 }
 
 export default function Return() {
-  const url = "/api/return_info"
-	const history = useHistory();
-  const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>()  
+  const history = useHistory();
   const [user, serUser] = useState<userInfo>();
-  const [content, setContent] = useState<string>('');
   const [path, setPath] = useState<string>('');
-
+  const [content, setContent] = useState<string>('');
+  const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
+  
   useEffect(() => {
 	  apiCheck().then(()=>{
       callReturn();
@@ -37,7 +36,7 @@ export default function Return() {
   }, [content, path]);
 
   const apiCheck = async () => {
-    await axios.post('/api/check').then((res:any)=>{
+    await axios.post("/api/check").then((res:any)=>{
       serUser(res.data.user);
     }).catch((err:any)=>{
       console.log(err);
@@ -45,7 +44,7 @@ export default function Return() {
 		});
   }
   const callReturn = async () => {
-    await axios.post(url, { user: user?.user_id }).then((res: any) => {
+    await axios.post("/api/return_info", { user: user?.user_id }).then((res: any) => {
       if (res.status === 200){
         setLentCabinet(res.data);
       }
@@ -70,18 +69,18 @@ export default function Return() {
           </React.Fragment>
         </div>
       </div>
-        <div>
-          <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
-              반납하기
-            </div>
-          </div>
-          <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': 'disabled'}`} id="colorBtn">
-              연장하기
-            </div>
+      <div>
+        <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
+          <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
+            반납하기
           </div>
         </div>
+        <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
+          <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': 'disabled'}`} id="colorBtn">
+            연장하기
+          </div>
+        </div>
+      </div>
       <ReturnModal lentCabinet={lentCabinet} setContent={setContent} setPath={setPath}></ReturnModal>
       <ContentsModal contents={content} path={path}></ContentsModal>
     </div>

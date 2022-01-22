@@ -1,23 +1,19 @@
 import axios from 'axios'
 import './returnModal.css'
-import {useState} from 'react'
-import { useHistory } from 'react-router-dom'
-import ContentsModal from './ContentsModal'
 
 export default function ReturnModal(props: any) {
-  const history = useHistory();
-
   const handleClick = async () => {
-    const url = '/api/return';
+    const url = "/api/return";
+
     await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then((res: any) => {
       if (res.status === 200) {
-        props.setContent('반납되었습니다');
-        props.setPath('/lent');
+        props.setContent("반납되었습니다");
+        props.setPath("/lent");
       }
     }).catch((err: any) => {
       console.log(err);
-      props.setContent('다시 시도해주세요!');
-      props.setPath('');
+      props.setContent("다시 시도해주세요!");
+      props.setPath("");
     })
   }
   return (
@@ -40,5 +36,3 @@ export default function ReturnModal(props: any) {
     </div>
   )
 }
-
-
