@@ -56,7 +56,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
-      requestBody:
         content:
           application/json:
             schema:
@@ -90,14 +89,15 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
-        requestBody:
+      requestBody:
+        content:
           application/json:
             schema:
               type: object
               required:
                 - cabinet_id
               properties:
-                cabinet_id:
+                lent_id:
                   type: integer
                   example: 1
   /api/return_info:
@@ -140,7 +140,7 @@ paths:
                   type: integer
                   example: 1
   /api/check:
-    get:
+    post:
       tags:
         - check user
       summary: check user
@@ -187,24 +187,10 @@ components:
             - maru
         floor:
           type: Array<Array<integer>>
-          example:
-            - - 2
-              - 4
-              - 5
-            - - 1
         section:
           type: Array<Array<Array<string>>>
-          example:
-            - - - oasis
-                - c2
-              - - c1
-                - c2
         cabinet:
           type: Array<Array<Array<Array<cabinetInfo>>>>
-          example:
-            - - - - 'serom, 2f, oasis cabinetList'
-                - - 'serom 2f, c2 cabinetList'
-              - - - serom 4f c1 cabinetList
     lentInfo:
       type: object
       required:

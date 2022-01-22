@@ -46,7 +46,6 @@
           $ref: './openapi.yaml#/components/responses/BadRequest'
         '500':
           $ref: './openapi.yaml#/components/responses/InternalServerError'
-      requestBody:
         content:
           application/json:
             schema:
@@ -80,14 +79,15 @@
           $ref: './openapi.yaml#/components/responses/BadRequest'
         '500':
           $ref: './openapi.yaml#/components/responses/InternalServerError'
-        requestBody:
+      requestBody:
+        content:
           application/json:
             schema:
               type: object
               required:
                 - cabinet_id
               properties:
-                cabinet_id:
+                lent_id:
                   type: integer
                   example: 1
 /api/return_info:
@@ -130,7 +130,7 @@
                   type: integer
                   example: 1
 /api/check:
-    get:
+    post:
       tags:
         - check user
       summary: check user

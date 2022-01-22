@@ -40,13 +40,13 @@ components:
           example: ['serom', 'maru']
         floor:
           type: Array<Array<integer>>
-          example: [[2, 4, 5], [1]]
+          # example: [[2, 4, 5], [1]]
         section:
           type: Array<Array<Array<string>>>
-          example: [[['oasis', 'c2'],['c1', 'c2']]]
+          # example: [[['oasis', 'c2'],['c1', 'c2']]]
         cabinet:
           type: Array<Array<Array<Array<cabinetInfo>>>>
-          example: [[[['serom, 2f, oasis cabinetList'], ['serom 2f, c2 cabinetList']], [[serom 4f c1 cabinetList]]]]
+          # example: [[[['serom, 2f, oasis cabinetList'], ['serom 2f, c2 cabinetList']], [[serom 4f c1 cabinetList]]]]
     lentInfo:
       type: object
       required:
