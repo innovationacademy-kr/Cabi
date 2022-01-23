@@ -30,6 +30,7 @@ footer > * , footer > * > *{
 }
 
 .textContainer{
+    font-size: x-small;
     position: absolute;
     bottom: 0;
     display: flexbox;
