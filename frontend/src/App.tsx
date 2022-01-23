@@ -8,17 +8,13 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <div id="wrap">
-          <section>
             <Switch>
               <Route exact path='/' component={Main}></Route>
               <Route path='/lent' component={Lent}></Route>
               <Route path='/return' component={Return}></Route>
               <Route component={Main}></Route>
             </Switch>
-          </section>
           <Footer />
-        </div>
       </div>
     </BrowserRouter>
   )
