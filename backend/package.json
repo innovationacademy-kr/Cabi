@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^6.16.1",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
     "cors": "^2.8.5",
@@ -19,10 +20,11 @@
     "express": "^4.17.2",
     "express-session": "^1.17.2",
     "mariadb": "^2.5.5",
+    "mysql": "^2.18.1",
+    "mysql-ssh": "^1.0.6",
     "nodemon": "^2.0.15",
     "swagger-cli": "^4.0.4",
     "swagger-ui-express": "^4.3.0",
-    "ts-node": "^10.4.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
@@ -38,6 +40,7 @@
     "@types/yamljs": "^0.2.31",
     "passport": "^0.5.2",
     "passport-42": "^1.2.6",
+    "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
   }
 }

@@ -1,11 +1,11 @@
 import '../pages/lent.css'
 
 export default function Location(props:any){
+  let location:Array<string> = props.info.location;
+  
   const handleInfo = (loc:number) => {
     props.setLidx(loc);
   }
-  let location:Array<string> = props.info.location;
-
   return (
     <div className="dropdown" id="location">
       <button className="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

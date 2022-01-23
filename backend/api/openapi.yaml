@@ -6,7 +6,7 @@ info:
   license:
     name: MIT
 servers:
-  - url: 'https://cabi.42cadet.kr'
+  - url: https://cabi.42cadet.kr
 paths:
   $ref: './path.yaml'
 
@@ -27,57 +27,96 @@ components:
           type: boolean
         message:
           type: string
-    userInfo:
+    cabinetList:
       type: object
       required:
-        - user_id
-        - intra_id
-        - auth
-        - email
-        - phone
+        - location
+        - floor
+        - section
+        - cabinet
       properties:
-        user_id:
+        location:
+          type: Array<string>
+          example: ['serom', 'maru']
+        floor:
+          type: Array<Array<integer>>
+          # example: [[2, 4, 5], [1]]
+        section:
+          type: Array<Array<Array<string>>>
+          # example: [[['oasis', 'c2'],['c1', 'c2']]]
+        cabinet:
+          type: Array<Array<Array<Array<cabinetInfo>>>>
+          # example: [[[['serom, 2f, oasis cabinetList'], ['serom 2f, c2 cabinetList']], [[serom 4f c1 cabinetList]]]]
+    lentInfo:
+      type: object
+      required:
+        - lent_id
+        - lent_cabinet_id
+        - lent_user_id
+        - lent_time
+        - expire_time
+        - extension
+        - intra_id
+      properties:
+        lent_id:
           type: integer
-          example: 12345
-        intra_id:
+          example: 1
+        lent_cabinet_id:
+          type: integer
+          example: 1
+        lent_user_id:
+          type: integer
+          example: 1
+        lent_time:
           type: string
-          example: spark
-        auth:
+          example: "2022-01-22"
+        expite_time:
+          type: string
+          example: "2022-02-22"
+        extension:
           type: boolean
           example: True
-        email:
+        intra_id:
           type: string
-          example: spark@student.42seoul.kr
-        phone:
-          type: string
-          example: 010-1234-5678
-    Lent:
+          example: 'skim'
+    isLent:
       type: object
       required:
-        - cabinet_id
+        - isLent
       properties:
-        cabinet_id:
-          type: number
-          format: uuid
-          example: 12
-    cabinet:
+        isLent:
+          type: integer
+          exmaple: 1
+    lentCabinet:
       type: object
       required:
-        - cabinet_id
+        - lent_id
+        - lent_cabinet_id
+        - lent_user_id
+        - expire_time
+        - extension
         - cabinet_num
         - location
         - floor
         - section
         - activation
-        - lent_id
-        - user_id
-        - lent_time
-        - expire_time
-        - extension
       properties:
-        cabinet_id:
+        lent_id:
           type: integer
           example: 1
+        lent_cabinet_id:
+          type: integer
+          example: 1
+        lent_user_id:
+          type: integer
+          example: 1
+        expire_time:
+          type: string
+          format: datetime
+          example: "2021-12-29"
+        extension:
+          type: boolean
+          example: True
         cabinet_num:
           type: integer
           example: 1
@@ -93,68 +132,39 @@ components:
         activation:
           type: boolean
           example: True
-        lent_id:
-          type: integer
-          example: 1
+    userInfo:
+      type: object
+      required:
+        - user_id
+        - intra_id
+        - auth
+        - email
+        - phone
+        - access
+        - refresh
+      properties:
         user_id:
           type: integer
           example: 1
-        lent_time:
+        intra_id:
           type: string
-          format: datetime
-          example: "2021-12-29-17:36"
-        expire_time:
-          type: string
-          format: datetime
-          example: "2021-12-29-17:36"
-        extension:
+          example: 'skim'
+        auth:
           type: boolean
           example: True
-    lentInfo:
-      type: object
-      required:
-        - lent_id
-        - lent_cabinet_id
-        - lent_user_id
-        - lent_time
-        - expired_time
-        - extension
-      properties:
-        lent_id:
-          type: integer
-          example: 1
-        lent_cabinet_id:
-          type: integer
-          example: 95
-        lent_user_id:
-          type: integer
-          example: 10
-        lent_time:
+        email:
           type: string
-          example: "2021-12-29-17:36"
-        expired_time:
+          example: "skim@student.42seoul.kr"
+        phone:
           type: string
-          example: "2022-01-29-17:36"
-        extension:
-          type: integer
-          example: 1
-    OauthLogin:
-      type:
-      required:
-      properties:
-    OauthLogout:
-      type:
-      required:
-      properties:
-    return:
-      type: object
-      required:
-        - lent_id
-      properties:
-        lent_id:
-          type: number
-          format: uuid
-          example: 1
+          example: "010-0000-0000"
+        access:
+          type: string
+          example: '1389fdsjklfsjkl'
+        refresh:
+          type: string
+          example: '2fjlksdflk02309'
+
   responses:
     BadRequest:
       description: 잘못된 요청

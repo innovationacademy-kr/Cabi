@@ -1,12 +1,12 @@
 import CabinetBox from './CabinetBox'
-import './carousel.css'
 import { cabinetInfo } from '../pages/Lent'
+import './carousel.css'
 
 export default function Carousel(props:any){
   const cabinetBlock = (f_idx:number, s_idx:number) => {
+    let list :Array<JSX.Element> = [];
     if (!props.info || !props.info.cabinet)
       return [];
-    let list = [];
     const cab:Array<cabinetInfo> = props.info.cabinet[props.l_idx][f_idx][s_idx];
     for (let i = 0; i < cab.length; i++){
       var id = props.outer_lent.findIndex((l:any)=>l.lent_cabinet_id === cab[i].cabinet_id);
@@ -16,36 +16,32 @@ export default function Carousel(props:any){
     }
     return list;
   }
-
   const navIndicator = (idx:number) => {
-    let list = [];
+    let list :Array<JSX.Element> = [];
     if (!props.info || !props.info.section || props.info.section[props.l_idx].length <= idx)
-      return [];
+      return [];  
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
-      if (list.length === 0)
+      if (list.length === 0) {
         list.push(
           <button className="indicator active" type="button" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={`${i}`} aria-current="true" aria-label={`Slide ${i + 1}`}></button>
         );
-      else
+      } else {
         list.push(
           <button className="indicator" type="button" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={`${i}`} aria-current="true" aria-label={`Slide ${i + 1}`}></button>
         );
-
+      }
     }
     return list;
   }
-
   const navSection = (idx:number) => {
-    let list = [];
+    let list :Array<JSX.Element> = [];
     if (!props.info || !props.info.section || props.info.section[props.l_idx].length <= idx)
       return [];
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       list.push(
-        <div className={`carousel-item carousel-item${i ? '' : ' active'}`} key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >
+        <div className={`carousel-item carousel-item${i ? "" : " active"}`} key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >
           <div className="m-3 sectionName"  key={`label_${props.info.section[props.l_idx][idx][i]}`}>{props.info.section[props.l_idx][idx][i]}</div>
-          <div id="cabinetGrid">
-          {cabinetBlock(idx, i)}
-          </div>
+          <div id="cabinetGrid">{cabinetBlock(idx, i)}</div>
         </div>
       );
     }
@@ -53,7 +49,7 @@ export default function Carousel(props:any){
   }
 
   return (
-    <div className={`tab-pane${props.outer_i ? '' : ' active'}`} id={`nav-${props.floor_name}`} key={`nav-${props.floor_name}`} role="tabpanel" aria-labelledby={`nav-${props.floor_name}-tab`}>
+    <div className={`tab-pane${props.outer_i ? "" : " active"}`} id={`nav-${props.floor_name}`} key={`nav-${props.floor_name}`} role="tabpanel" aria-labelledby={`nav-${props.floor_name}-tab`}>
       <div id={`carousel_${props.l_idx}_${props.floor_name}`} className="carousel slide" data-bs-touch="true" data-bs-ride="carousel" data-bs-interval="false">
         <div className="carousel-indicators">
           {navIndicator(props.outer_i)}
