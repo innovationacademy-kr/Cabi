@@ -16,7 +16,6 @@ footer > * , footer > * > *{
   margin: 0;
 }
 
-
 .wholeContainer{
     width: 100vw;
     position: absolute;
@@ -80,6 +79,9 @@ div{
     font-weight: bolder;
 }
 
+footer a:visited {
+    color: rgba(220, 220, 220, 0.413);
+  }
 a{
     color: rgba(220, 220, 220, 0.413);
 }
@@ -94,6 +96,3 @@ a{
     z-index: 1;
     width: 4em;
 }
-footer a:visited {
-	color: rgba(220, 220, 220, 0.413);
-  }
