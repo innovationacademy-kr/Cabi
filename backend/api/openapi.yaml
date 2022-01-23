@@ -6,7 +6,7 @@ info:
   license:
     name: MIT
 servers:
-  - url: http://cabi.dev.42cadet.kr
+  - url: https://cabi.dev.42cadet.kr
 paths:
   $ref: './path.yaml'
 
