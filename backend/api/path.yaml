@@ -61,7 +61,7 @@
           content:
             application/json:
               schema:
-                anyOf:
+                allOf:
                  - $ref: './openapi.yaml#/components/schemas/lentInfo'
                  - $ref: './openapi.yaml#/components/schemas/isLent'
         '400':
