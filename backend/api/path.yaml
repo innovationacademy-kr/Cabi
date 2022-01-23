@@ -1,8 +1,8 @@
 /auth/login:
     post:
       tags:
-        - login
-      description: 42 intra login
+        - /auth/login
+      summary: (intra 로그인에 대한 요청입니다.)
       responses:
         '200':
           $ref: './openapi.yaml#/components/responses/SuccessResponse'
@@ -13,8 +13,8 @@
 /auth/login/callback:
     post:
       tags:
-        - 42 intra login callback
-      description: 42 intra logout
+        - /auth/login/callback
+      summary: (intra 로그인 시도 후 처리에 대한 요청입니다.)
       responses:
         '200':
           $ref: './openapi.yaml#/components/responses/SuccessResponse'
@@ -25,8 +25,8 @@
 /auth/logout:
     post:
       tags:
-        - logout
-      description: 42 intra logout
+        - /auth/logout
+      summary: (intra 로그아웃에 대한 요청입니다.)
       responses:
         '200':
           $ref: './openapi.yaml#/components/responses/SuccessResponse'
@@ -37,15 +37,15 @@
 /api/cabinet:
     post:
       tags:
-        - total cabinet
-      summary: total cabinet info
+        - /api/cabinet
+      summary: (전체 사물함에 대한 정보입니다.)
       responses:
-        content:
-          application/json:
-            schema:
-              $ref: './openapi.yaml#/components/schemas/cabinetList'
         '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './openapi.yaml#/components/schemas/cabinetList'
         '400':
           $ref: './openapi.yaml#/components/responses/BadRequest'
         '500':
@@ -53,64 +53,64 @@
 /api/lent_info:
     post:
       tags:
-        - lent_info
-      summary: get all lentInfo
+        - /api/lent_info
+      summary: (현재 모든 대여자들의 정보입니다.)
       responses:
         '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                 - $ref: './openapi.yaml#/components/schemas/lentInfo'
+                 - $ref: './openapi.yaml#/components/schemas/isLent'
         '400':
           $ref: './openapi.yaml#/components/responses/BadRequest'
         '500':
           $ref: './openapi.yaml#/components/responses/InternalServerError'
-        content:
-          application/json:
-            schema:
-              - $ref: './openapi.yaml#/components/schemas/lentInfo'
-              - $ref: './openapi.yaml#/components/schemas/isLent'
 /api/lent:
     post:
       tags:
-        - lent
-      summary: lent event
+        - /api/lent
+      summary: (특정 사물함을 빌릴 때 요청됩니다.)
       responses:
         '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - cabinet_id
+                properties:
+                  lent_id:
+                    type: integer
+                    example: 1
         '400':
           $ref: './openapi.yaml#/components/responses/BadRequest'
         '500':
           $ref: './openapi.yaml#/components/responses/InternalServerError'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - cabinet_id
-              properties:
-                lent_id:
-                  type: integer
-                  example: 1
 /api/return_info:
     post:
       tags:
-        - return_info
-      summary: get lend cabinet info
+        - /api/return_info
+      summary: (특정 사용자가 현재 대여하고 있는 사물함의 정보입니다.)
       responses:
         '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './openapi.yaml#/components/schemas/lentCabinet'
         '400':
           $ref: './openapi.yaml#/components/responses/BadRequest'
         '500':
           $ref: './openapi.yaml#/components/responses/InternalServerError'
-        content:
-          application/json:
-            schema:
-              $ref: './openapi.yaml#/components/schemas/lentCabinet'
 /api/return:
     post:
       tags:
-        - return
-      summary: return event
+        - /api/return
+      summary: (특정 사물함을 반납 할 때 요청됩니다.)
       responses:
         '200':
           $ref: './openapi.yaml#/components/responses/SuccessResponse'
@@ -132,16 +132,16 @@
 /api/check:
     post:
       tags:
-        - check user
-      summary: check user
+        - /api/check
+      summary: (적절한 유저가 페이지를 접근하는지에 대한 정보입니다.)
       responses:
         '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: './openapi.yaml#/components/schemas/userInfo'
         '400':
           $ref: './openapi.yaml#/components/responses/BadRequest'
         '500':
           $ref: './openapi.yaml#/components/responses/InternalServerError'
-        content:
-          application/json:
-            schema:
-              $ref: './openapi.yaml#/components/schemas/userInfo'
