@@ -18,10 +18,11 @@ router.get(
     }),
     async (req: any, res: any) => {
         const idx = userList.findIndex((user) => user.access === req.session.passport.user.access);
-        if (idx === -1) {
-            res.status(400).send({ error: 'Permission Denied' });
-            return;
-        }
+				
+				if (idx === -1) {
+						res.status(400).send({ error: 'Permission Denied' });
+						return;
+				}
         try {
             await checkUser(req.session.passport.user).then((resp: any) => {
                 if (!resp) {

@@ -5,10 +5,12 @@ Body{
     padding: 3%;
     justify-content: center;
     font-family: 'EliceDigitalBaeum_Regular';
+    height: 100vh;
+    margin: 0;
 }
 
 #container{
-    height: 90%;
+    height: 95%;
     margin-top: 10px;
     padding: 10px 10px 10px 10px;
     background: #ffffffec;
@@ -42,8 +44,14 @@ Body{
     background-color: #d8d4d44b;
 }
 
-#root .App{
-    height: 100vh;
+#root {
+    height: 100%;
+    margin: 0;
+}
+
+.App {
+    height: 100%;
+    margin: 0;
 }
 
 #logo > img {
