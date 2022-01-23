@@ -36,8 +36,7 @@ router.get(
             });
         } catch (err) {
             console.log(err);
-            res.status(400);
-            throw err;
+            res.status(400).json({ error: err });
         }
     }
 );
@@ -73,8 +72,7 @@ router.post('/api/lent_info', async (req: any, res: any) => {
         });
     } catch (err: any) {
         console.log(err);
-        res.status(400);
-        throw err;
+        res.status(400).json({ error: err });
     };
 });
 router.post('/api/lent', async (req: any, res: any) => {
@@ -101,8 +99,7 @@ router.post('/api/lent', async (req: any, res: any) => {
         });
     } catch (err) {
         console.log(err);
-        res.status(400).send({ cabinet_id: req.cabinet_id });
-        throw err;
+        res.status(400).json({ cabinet_id: req.cabinet_id , error: err });
     }
 });
 router.post('/api/return_info', async (req: any, res: any) => {
@@ -118,7 +115,6 @@ router.post('/api/return_info', async (req: any, res: any) => {
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: err });
-        throw err;
     }
 });
 router.post('/api/return', (req: any, res: any) => {
@@ -134,7 +130,6 @@ router.post('/api/return', (req: any, res: any) => {
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: err });
-        throw err;
     }
 });
 router.post('/api/check', (req: any, res: any) => {
