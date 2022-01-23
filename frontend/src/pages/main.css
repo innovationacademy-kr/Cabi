@@ -1,14 +1,9 @@
 
 Body{
-    /* background: #878787;
-    background: #dfdfdfec; */
     background: -webkit-linear-gradient(to bottom, #6667AB, #6c337d);
     background: linear-gradient(to bottom, #6667AB, #6c337d);
     padding: 3%;
     justify-content: center;
-    /* position: absolute; */
-    /* left: 50%;
-    top: 50%; */
     font-family: 'EliceDigitalBaeum_Regular';
 }
 
@@ -20,6 +15,7 @@ Body{
     border-radius: 1em;
     justify-content: center;
     background-size: 30px 100px;
+	min-height: 80vh;
 }
 
 @font-face {
