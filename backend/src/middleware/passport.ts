@@ -1,19 +1,19 @@
-import dotenv from 'dotenv'
-//dotenv.config();
-// dotenv.config({path:'./.env.local'});
-dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'});
-
 import passport from 'passport'
 import {userList} from '../user'
 
-const Strategy = require('passport-42')
+import dotenv from 'dotenv'
+dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
+// dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+// dotenv.config(); //local
+
 const env = process.env;
+const Strategy = require('passport-42')
 
 passport.serializeUser(function(user:any, done:any){
     return done(null, user);
 });
 passport.deserializeUser(function(user:any, done:any){
-    done(null, user);
+    return done(null, user);
 });
 
 const FortyTwoOpt = {
@@ -23,7 +23,7 @@ const FortyTwoOpt = {
     passReqToCallback: true,
 };
 
-const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any, cb:any) =>{
+const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any, cb:any)=>{
     const userInfo = {
         user_id: profile.id,
         intra_id: profile.username,
@@ -45,8 +45,8 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
         phone: ""
     });
     return cb(null, userInfo);
-}
+};
 
 export default function passportUse(){
     passport.use(new Strategy(FortyTwoOpt, FortyTwoVerify));
-}
+};

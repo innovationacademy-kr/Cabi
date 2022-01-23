@@ -1,5 +1,5 @@
 import mariadb from 'mariadb'
-import { userList, lentInfo, lentCabinetInfo } from '../user'
+import { lentInfo, lentCabinetInfo } from '../user'
 
 const con = mariadb.createPool({
 	host: 'localhost',
@@ -14,13 +14,13 @@ export async function checkUser(user: any) {
 	let pool: mariadb.PoolConnection;
 	let lentCabinet: lentCabinetInfo;
 	const content: string = `select * from user where user_id = ${user.user_id}`;
+
 	try {
 		pool = await con.getConnection();
 		lentCabinet = await pool.query(content).then(async (res: any) => {
-			console.log(res);
 			if (!res.length) {
 				addUser(user);
-				return ({
+				return {
 					lent_id: -1,
 					lent_cabinet_id: -1,
 					lent_user_id: -1,
@@ -32,27 +32,24 @@ export async function checkUser(user: any) {
 					floor: -1,
 					section: '',
 					activation: false
-				});
+				};
+			} else {
+				return await getUser(user);
 			}
-			else {
-				lentCabinet = await getUser(user);
-
-			}
-			return lentCabinet;
-		})
-	}
-	catch (err) {
+		});
+	} catch (err: any) {
 		console.log(err);
 		throw err;
 	}
 	if (pool) pool.end();
 	return lentCabinet;
-}
+};
 
 //사용자가 없는 경우, user 값 생성
 export async function addUser(user: any) {
 	let pool: mariadb.PoolConnection;
 	const content: string = `insert into user value('${user.user_id}', '${user.intra_id}', 0, '${user.email}', "")`;
+	
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 		console.log(res);
@@ -61,17 +58,18 @@ export async function addUser(user: any) {
 		throw err;
 	});
 	if (pool) pool.end();
-}
+};
 
 //본인 정보 및 렌트 정보 - 리턴 페이지
 export async function getUser(user: any): Promise<lentCabinetInfo> {
 	let pool: mariadb.PoolConnection;
-	const content: string = `select * from lent l join cabinet c on l.lent_cabinet_id=c.cabinet_id where l.lent_user_id='${user.user_id}'`;
 	let lentCabinet: lentCabinetInfo;
+	const content: string = `select * from lent l join cabinet c on l.lent_cabinet_id=c.cabinet_id where l.lent_user_id='${user.user_id}'`;
+
 	pool = await con.getConnection();
 	lentCabinet = await pool.query(content).then((res: any) => {
 		if (res.length !== 0) { // lent page
-			lentCabinet = ({
+			return {
 				lent_id: res[0].lent_id,
 				lent_cabinet_id: res[0].lent_cabinet_id,
 				lent_user_id: res[0].lent_user_id,
@@ -83,10 +81,9 @@ export async function getUser(user: any): Promise<lentCabinetInfo> {
 				floor: res[0].floor,
 				section: res[0].section,
 				activation: res[0].activation,
-			})
-		}
-		else {
-			lentCabinet = ({
+			};
+		} else {
+			return {
 				lent_id: -1,
 				lent_cabinet_id: -1,
 				lent_user_id: -1,
@@ -98,21 +95,22 @@ export async function getUser(user: any): Promise<lentCabinetInfo> {
 				floor: -1,
 				section: '',
 				activation: false
-			})
+			};
 		}
-		return (lentCabinet);
 	}).catch((err: any) => {
 		console.log(err);
 		throw err;
 	});
 	if (pool) pool.end();
-	return (lentCabinet);
-}
+	return lentCabinet;
+};
+
 //lent & user
 export async function getLentUser() {
 	let pool: mariadb.PoolConnection;
-	const content = `select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id`;
 	let lentInfo: Array<lentInfo> = [];
+	const content = 'select u.intra_id, l.* from user u right join lent l on l.lent_user_id=u.user_id';
+
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 		for (let i = 0; i < res.length; i++) {
@@ -132,12 +130,14 @@ export async function getLentUser() {
 	});
 	if (pool) pool.end();
 	return { lentInfo: lentInfo };
-}
+};
+
 //lent 값 생성
-export async function createLent(cabinet_id: number, user: any){
+export async function createLent(cabinet_id: number, user: any) {
+	let errResult = 0;
 	let pool: mariadb.PoolConnection;
 	const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
-	let errResult = 0;
+	
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 	}).catch((err: any) => {
@@ -145,22 +145,23 @@ export async function createLent(cabinet_id: number, user: any){
 			errResult = -1;
 	});
 	if (pool) pool.end();
-	return ({errno: errResult});
-}
+	return { errno: errResult };
+};
 
 //lent_log 값 생성 후 lent 값 삭제
 export async function createLentLog(user: any) {
 	let pool: mariadb.PoolConnection;
 	const content: string = `select * from lent where lent_user_id=${user.user_id}`;
+	
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
 		if (res[0] === undefined)
 			return;
 		pool.query(`insert into lent_log (log_user_id, log_cabinet_id, lent_time, return_time) values (${res[0].lent_user_id}, ${res[0].lent_cabinet_id}, '${res[0].lent_time}', now())`);
-		pool.query(`delete from lent where lent_cabinet_id=${res[0].lent_cabinet_id}`)
+		pool.query(`delete from lent where lent_cabinet_id=${res[0].lent_cabinet_id}`);
 	}).catch((err: any) => {
 		console.log(err);
 		throw err;
 	});
 	if (pool) pool.end();
-}
+};
