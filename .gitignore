@@ -109,6 +109,6 @@ dist
 # DS_store
 .DS_Store
 
-# public
-./backend/public/assets/*
-./backend/public/index.html
+# views
+backend/views/assets/*
+backend/views/index.html
