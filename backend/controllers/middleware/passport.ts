@@ -1,5 +1,5 @@
 import passport from 'passport'
-import {userList} from '../user'
+import {userList} from '../../models/user'
 
 import dotenv from 'dotenv'
 dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
