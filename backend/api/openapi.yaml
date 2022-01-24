@@ -1,0 +1,195 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: API docs
+  description: API 문서
+  license:
+    name: MIT
+servers:
+  - url: https://cabi.dev.42cadet.kr
+paths:
+  $ref: './path.yaml'
+
+components:
+  parameters: null
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+    Success:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+    cabinetList:
+      type: object
+      required:
+        - location
+        - floor
+        - section
+        - cabinet
+      properties:
+        location:
+          type: Array<string>
+          example: ['serom', 'maru']
+        floor:
+          type: Array<Array<integer>>
+          # example: [[2, 4, 5], [1]]
+        section:
+          type: Array<Array<Array<string>>>
+          # example: [[['oasis', 'c2'],['c1', 'c2']]]
+        cabinet:
+          type: Array<Array<Array<Array<cabinetInfo>>>>
+          # example: [[[['serom, 2f, oasis cabinetList'], ['serom 2f, c2 cabinetList']], [[serom 4f c1 cabinetList]]]]
+    lentInfo:
+      type: object
+      required:
+        - lent_id
+        - lent_cabinet_id
+        - lent_user_id
+        - lent_time
+        - expire_time
+        - extension
+        - intra_id
+      properties:
+        lent_id:
+          type: integer
+          example: 1
+        lent_cabinet_id:
+          type: integer
+          example: 1
+        lent_user_id:
+          type: integer
+          example: 1
+        lent_time:
+          type: string
+          example: "2022-01-22"
+        expite_time:
+          type: string
+          example: "2022-02-22"
+        extension:
+          type: boolean
+          example: True
+        intra_id:
+          type: string
+          example: 'skim'
+    isLent:
+      type: object
+      required:
+        - isLent
+      properties:
+        isLent:
+          type: integer
+          exmaple: 1
+    lentCabinet:
+      type: object
+      required:
+        - lent_id
+        - lent_cabinet_id
+        - lent_user_id
+        - expire_time
+        - extension
+        - cabinet_num
+        - location
+        - floor
+        - section
+        - activation
+      properties:
+        lent_id:
+          type: integer
+          example: 1
+        lent_cabinet_id:
+          type: integer
+          example: 1
+        lent_user_id:
+          type: integer
+          example: 1
+        expire_time:
+          type: string
+          format: datetime
+          example: "2021-12-29"
+        extension:
+          type: boolean
+          example: True
+        cabinet_num:
+          type: integer
+          example: 1
+        location:
+          type: string
+          example: "serom"
+        floor:
+          type: integer
+          example: 1
+        section:
+          type: string
+          example: "oasis"
+        activation:
+          type: boolean
+          example: True
+    userInfo:
+      type: object
+      required:
+        - user_id
+        - intra_id
+        - auth
+        - email
+        - phone
+        - access
+        - refresh
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        intra_id:
+          type: string
+          example: 'skim'
+        auth:
+          type: boolean
+          example: True
+        email:
+          type: string
+          example: "skim@student.42seoul.kr"
+        phone:
+          type: string
+          example: "010-0000-0000"
+        access:
+          type: string
+          example: '1389fdsjklfsjkl'
+        refresh:
+          type: string
+          example: '2fjlksdflk02309'
+
+  responses:
+    BadRequest:
+      description: 잘못된 요청
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            message: 잘못된 요청
+    InternalServerError:
+      description: 서버 에러
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            message: 서버 내부 오류
+    SuccessResponse:
+      description: 요청 성공
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Success'
+          example:
+            success: true
+            message: 요청 성공
