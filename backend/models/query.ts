@@ -1,5 +1,5 @@
 import mariadb from 'mariadb'
-import { lentInfo, lentCabinetInfo } from '../user'
+import { lentInfo, lentCabinetInfo } from './user'
 
 const con = mariadb.createPool({
 	host: 'localhost',

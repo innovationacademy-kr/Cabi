@@ -1,5 +1,5 @@
 import mariadb from 'mariadb'
-import { cabinetList, cabinetInfo, lentCabinetInfo } from '../user';
+import { cabinetList, cabinetInfo, lentCabinetInfo } from './user';
 
 const con = mariadb.createPool({
 	host: 'localhost',
