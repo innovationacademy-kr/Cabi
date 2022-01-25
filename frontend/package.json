@@ -5,8 +5,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prestart": "rm -f ../backend/public/assets/*",
-    "start": "npm run build && cp -r dist/* ../backend/public/"
+    "prestart": "rm -f ../backend/views/assets/*",
+    "start": "npm run build && cp -r dist/* ../backend/views/"
   },
   "dependencies": {
     "axios": "^0.24.0",
