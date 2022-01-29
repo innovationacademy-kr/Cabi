@@ -1,7 +1,7 @@
 <!-- LOGO -->
 <h1 align='center'> 42서울 카뎃을 위한 사물함 대여 서비스 </h1>
 <br />
-<img align="right" src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3a3b84d9-30c1-4749-b815-363c01bd866b%2Fread_me.gif?table=block&spaceId=1dc14d02-9fef-47d5-828a-c667c7d13337&id=ac3fe35e-1d89-492b-b014-e7b580b60c61&userId=c35a0a1a-c458-4454-a8ac-47aecc0173e3&cache=v2" width="440" height="750">
+<img align="right" src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3a3b84d9-30c1-4749-b815-363c01bd866b%2Fread_me.gif?table=block&spaceId=1dc14d02-9fef-47d5-828a-c667c7d13337&id=ac3fe35e-1d89-492b-b014-e7b580b60c61&userId=c35a0a1a-c458-4454-a8ac-47aecc0173e3&cache=v2" width="400" height="750">
 
 <h1>
 <p align="center">
