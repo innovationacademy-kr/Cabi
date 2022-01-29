@@ -13,4 +13,3 @@
   "include": ["controllers/**/*"],
   "exclude": ["node_modules"]
 }
-
