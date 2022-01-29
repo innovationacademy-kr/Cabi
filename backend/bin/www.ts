@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import dotenv from 'dotenv'
-// dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
-dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
+// dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
 // dotenv.config(); //local
 
 import debug from 'debug'
@@ -10,7 +10,7 @@ debug("backend:server")
 import http from 'http'
 import { app } from '../app'
 
-var port = normalizePort(process.env.PORT || "2424");
+var port = normalizePort(process.env.PORT || "4242");
 app.set("port", port);
 
 var server = http.createServer(app);
