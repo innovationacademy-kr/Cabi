@@ -3,8 +3,8 @@
 <p align="center">
 <img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" alt="Logo" height="300">
 <br />
-
-<img align="right" src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3a3b84d9-30c1-4749-b815-363c01bd866b%2Fread_me.gif?table=block&spaceId=1dc14d02-9fef-47d5-828a-c667c7d13337&id=ac3fe35e-1d89-492b-b014-e7b580b60c61&userId=c35a0a1a-c458-4454-a8ac-47aecc0173e3&cache=v2" width="300" height="530">
+<br />
+<img align="left" src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F3a3b84d9-30c1-4749-b815-363c01bd866b%2Fread_me.gif?table=block&spaceId=1dc14d02-9fef-47d5-828a-c667c7d13337&id=ac3fe35e-1d89-492b-b014-e7b580b60c61&userId=c35a0a1a-c458-4454-a8ac-47aecc0173e3&cache=v2" width="300" height="530">
 
 <br />
 <br />
@@ -19,12 +19,15 @@
 #### -  [Technical Stack](#technical-stack)
 #### -  [회고록](#note)  
 #### -  [Thanks to](#thanks-to)
-<br/>
-<br/>
-<br/>
-
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+  
 ***
-
+<br />
 ## 👨‍👩‍👧‍👧 CCABI
 
 | ```hyoon``` 윤현지 | ```hyospark``` 박효성 | ```skim``` 김수빈 | ```spark``` 박성현 |
@@ -80,9 +83,10 @@
 ## 🧑‍💻 Technical Stack
 
 <div align=center> 
-  <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
-  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"> 
   <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white"> 
+  <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">
+  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"> 
+  <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
   <img src="https://img.shields.io/badge/tsnode-3178C6?style=for-the-badge&logo=ts-node&logoColor=white"> 
   <br/>
   <img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=Bootstrap&logoColor=white"> 
