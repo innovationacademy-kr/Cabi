@@ -7,6 +7,7 @@ export default function ReturnModal(props: any) {
 
     await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then((res: any) => {
       if (res.status === 200) {
+        localStorage.clear();
         props.setContent("반납되었습니다");
         props.setPath("/lent");
       }
