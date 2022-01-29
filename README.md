@@ -15,8 +15,8 @@
 ## 📇 List
 
 #### ✧   [Cabi URL](https://cabi.42cadet.kr/)
-#### ✧   [까비들](#-CCABI)
-#### ✧   Directory - [프로젝트 구조도](#-Directory)
+#### ✧   [CCABI: 까비팀](#-CCABI)
+#### ✧    [Directory](#-Directory)
 #### ✧   [Project Docs](#-Project-Docs)
 #### ✧   [Technical Stack](#-Technical-Stack)
 #### ✧   [회고록](#-NOTE)  
