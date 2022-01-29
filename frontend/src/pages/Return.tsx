@@ -28,6 +28,7 @@ export default function Return() {
   const [user, serUser] = useState<userInfo>();
   const [path, setPath] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [cabinetPassword, setCabinetPassword] = useState<string>('');
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   
   useEffect(() => {
@@ -67,6 +68,12 @@ export default function Return() {
                   <div className="card-subtitle mb-2 text-muted text-center">~ {lentCabinet?.expire_time}</div>
                 </div>
             }
+            {
+              localStorage.getItem('cabinetPassword') ?
+                <div>
+                  <div className="text-center" id="passwordtext">[ {localStorage.getItem('cabinetPassword')} ]</div>
+                </div> : <div className="text-center" id="passwordtext"> &lt; 비밀스러운 메모장 &gt; </div>
+            }
           </React.Fragment>
         </div>
       </div>
@@ -77,8 +84,8 @@ export default function Return() {
           </div>
         </div>
         <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-          <div className={`btn btn-lg`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#passwordmodal">
-            비밀번호 기록해두기
+          <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden': ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#passwordmodal">
+            비밀번호 메모장
           </div>
         </div>
         <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
@@ -88,7 +95,7 @@ export default function Return() {
         </div>
       </div>
       <ReturnModal lentCabinet={lentCabinet} setContent={setContent} setPath={setPath}></ReturnModal>
-      <PasswordModal></PasswordModal>
+      <PasswordModal cabinetPassword={cabinetPassword} setCabinetPassword={setCabinetPassword}></PasswordModal>
       <ContentsModal contents={content} path={path}></ContentsModal>
     </div>
   )
