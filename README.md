@@ -15,12 +15,12 @@
 ## 📇 List
 
 #### ✧   [Cabi URL](https://cabi.42cadet.kr/)
-#### ✧   [까비들]( #👨%E2%80%8D👩%E2%80%8D👧%E2%80%8D👧%20CCABI)
-#### ✧   Directory - [프로젝트 구조도](#📁%20Directory)
-#### ✧   [Project Docs](#%20🐈%20Project%20Docs)
-#### ✧   [Technical Stack](#🧑%E2%80%8D💻%20Technical%20Stack)
-#### ✧   [회고록](#🗒%EF%B8%8F%20NOTE)  
-#### ✧   [Thanks to](#✨%20Thanks%20to)
+#### ✧   [까비들](#-CCABI)
+#### ✧   Directory - [프로젝트 구조도](#-Directory)
+#### ✧   [Project Docs](#-Project-Docs)
+#### ✧   [Technical Stack](#-Technical-Stack)
+#### ✧   [회고록](#-NOTE)  
+#### ✧   [Thanks to](#-Thanks-to)
 <br />
 <br />
 <br />
