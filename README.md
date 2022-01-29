@@ -17,7 +17,7 @@
 #### ✧   [Cabi URL](https://cabi.42cadet.kr/)
 #### ✧   [까비들]( #👨%E2%80%8D👩%E2%80%8D👧%E2%80%8D👧%20CCABI)
 #### ✧   Directory - [프로젝트 구조도](#📁%20Directory)
-#### ✧   [Git Convention](#🐈%20Git%20Convention)
+#### ✧   [Project Docs](#%20🐈%20Project%20Docs)
 #### ✧   [Technical Stack](#🧑%E2%80%8D💻%20Technical%20Stack)
 #### ✧   [회고록](#🗒%EF%B8%8F%20NOTE)  
 #### ✧   [Thanks to](#✨%20Thanks%20to)
@@ -78,7 +78,12 @@
 └── .env
 ```
 
-## 🐈 Git Convention
+## 🐈 Project Docs
+
+[Wiki](https://github.com/innovationacademy-kr/42cabi/wiki)    
+[이용안내서](https://www.notion.so/hyunja/42cabi-5fc66d1a6b0a4c48862b2e66e7cf1397)    
+
+<br/>
 
 ## 🧑‍💻 Technical Stack
 
@@ -94,11 +99,16 @@
   <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=Amazon AWS&logoColor=white"> 
 </div>
 
+<br/>
+
 ## 🗒️ NOTE
+
+<br/>
 
 ### 42cabi를 만들어 가면서 본인이 맡은 기능과 어려웠던 부분, 극복해나가는 과정에 대해 알려주세요!
 [회고록](https://www.notion.so/hyunja/247ee4f6b0414c2ab9c01e09e2541675)
 
+<br/>
 
 ## ✨ Thanks to
 <img src="https://avatars.githubusercontent.com/u/718691?v=4" width="40" height="40"> [허광남 멘토님](https://github.com/kenu)
