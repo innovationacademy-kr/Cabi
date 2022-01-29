@@ -15,6 +15,7 @@
 #### -  [Git Convention](#git-convention)
 #### -  [Technical Stack](#technical-stack)
 #### -  [회고록](#note)  
+#### -  [Thanks to](#thanks-to)
 <br/>
 <br/>
 <br/>
@@ -90,3 +91,10 @@
 
 ### 42cabi를 만들어 가면서 본인이 맡은 기능과 어려웠던 부분, 극복해나가는 과정에 대해 알려주세요!
 [회고록](https://www.notion.so/hyunja/247ee4f6b0414c2ab9c01e09e2541675)
+
+
+## ✨ Thanks to
+<img src="https://avatars.githubusercontent.com/u/718691?v=4" width="40" height="40"> [허광남 멘토님](https://github.com/kenu)
+<br />
+<img src="https://avatars.githubusercontent.com/u/53462987?s=200&v=4" width="40" height="40"> [이노베이션 아카데미](https://github.com/innovationacademy-kr)
+<br />
