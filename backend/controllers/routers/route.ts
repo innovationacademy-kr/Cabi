@@ -1,6 +1,6 @@
 import passport from 'passport'
 import authCheck from '../middleware/auth'
-import { userList } from '../../models/user'
+import { userList, userInfo } from '../../models/user'
 import { checkUser } from '../../models/query'
 import { userRouter } from './user'
 
@@ -17,7 +17,7 @@ router.get(
         failureRedirect: '/',
     }),
     async (req: any, res: any) => {
-        const idx = userList.findIndex((user) => user.access === req.session.passport.user.access);
+        const idx = userList.findIndex((user: userInfo) => user.access === req.session.passport.user.access);
 				
 		if (idx === -1) {
 			res.status(400).send({ error: 'Permission Denied' });
@@ -42,7 +42,7 @@ router.get(
     }
 );
 router.post('/auth/logout', (req: any, res: any) => {
-    const idx = userList.findIndex((user) => user.access === req.session.passport.user.access);
+    const idx = userList.findIndex((user: userInfo) => user.access === req.session.passport.user.access);
     if (idx !== -1) {
         userList.splice(idx, 1);
     } else {
