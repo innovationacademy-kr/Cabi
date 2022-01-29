@@ -80,8 +80,8 @@
 
 ## 🐈 Project Docs
 
-[Wiki](https://github.com/innovationacademy-kr/42cabi/wiki)    
-[이용안내서](https://www.notion.so/hyunja/42cabi-5fc66d1a6b0a4c48862b2e66e7cf1397)    
+* [Wiki](https://github.com/innovationacademy-kr/42cabi/wiki)    
+* [이용안내서](https://www.notion.so/hyunja/42cabi-5fc66d1a6b0a4c48862b2e66e7cf1397)    
 
 <br/>
 
