@@ -85,3 +85,4 @@ export async function connectionForLent(queryFunction: any, cabinet_id: number, 
 		throw err;
 	}
 }
+
