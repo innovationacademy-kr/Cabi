@@ -9,19 +9,6 @@ const con = mariadb.createPool({
 	dateStrings: true
 });
 
-export async function connectionlentList(queryFunction: Function, accessToken: any): Promise<lentCabinetInfo[]> {
-	let pool: mariadb.PoolConnection;
-	try {
-		pool = await con.getConnection();
-		const result = await queryFunction(pool, accessToken);
-		if (pool) pool.end();
-		return result;
-	} catch (err) {
-		console.log(err);
-		throw err;
-	}
-}
-
 export async function connectionForCabinet() {
 	if (cabinetList.location?.length)
 		return;
@@ -67,18 +54,6 @@ export async function connectionForCabinet() {
 			cabinetList.section?.push(list);
 			cabinetList.cabinet?.push(tmpCabinetList);
 		});
-		if (pool) pool.end();
-	} catch (err) {
-		console.log(err);
-		throw err;
-	}
-}
-
-export async function connectionForLent(queryFunction: any, cabinet_id: number, user: any) {
-	let pool: mariadb.PoolConnection;
-	try {
-		pool = await con.getConnection()
-		await queryFunction(pool, cabinet_id, user);
 		if (pool) pool.end();
 	} catch (err) {
 		console.log(err);
