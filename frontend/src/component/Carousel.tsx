@@ -11,7 +11,7 @@ export default function Carousel(props:any){
     for (let i = 0; i < cab.length; i++){
       var id = props.outer_lent.findIndex((l:any)=>l.lent_cabinet_id === cab[i].cabinet_id);
       list.push(
-        <CabinetBox className="d-block w-100" setTarget={props.setTarget} setCabiNum={props.setCabiNum} key={`cab_box_${cab[i].cabinet_id}`} cabinet_id={cab[i].cabinet_id} cabinet_num={cab[i].cabinet_num}  intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""} isLent={props.isLent}></CabinetBox>
+        <CabinetBox className="d-block w-100" setTarget={props.setTarget} setCabiNum={props.setCabiNum} key={`cab_box_${cab[i].cabinet_id}`} user={props.user} cabinet_id={cab[i].cabinet_id} cabinet_num={cab[i].cabinet_num}  intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""} isLent={props.isLent}></CabinetBox>
       );
     }
     return list;

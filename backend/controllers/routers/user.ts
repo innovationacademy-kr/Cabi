@@ -88,8 +88,7 @@ userRouter.post('/api/return', (req: any, res: any) => {
         throw err;
     }
 });
-userRouter.post('/api/check', (req: any, res: any) => {
-    console.log('api check');
+userRouter.post('/api/check', async (req: any, res: any) => {
     if (!req.session || !req.session.passport || !req.session.passport.user) {
         res.status(400).send({ error: 'Permission Denied' });
     } else {
@@ -98,6 +97,7 @@ userRouter.post('/api/check', (req: any, res: any) => {
             res.status(400).send({ error: 'Permission Denied' });
             return;
         }
-        res.send(userList[idx]);
+        else
+            await res.send({user: userList[idx]});
     }
 });

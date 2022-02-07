@@ -99,7 +99,7 @@ export default function Lent(){
     }
     info.floor[l_idx].forEach((floor: number, idx: number) => {
       list.push(
-        <Carousel setTarget={setTarget} setCabiNum={setCabiNum} info={info} l_idx={l_idx} outer_i={idx} outer_lent={lent} floor_name={floor} isLent={isLent}></Carousel>
+        <Carousel setTarget={setTarget} setCabiNum={setCabiNum} info={info} user={user?.intra_id} l_idx={l_idx} outer_i={idx} outer_lent={lent} floor_name={floor} isLent={isLent}></Carousel>
       );
     })
     return list;
