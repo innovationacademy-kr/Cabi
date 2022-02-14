@@ -2,8 +2,8 @@
 
 import dotenv from 'dotenv'
 // dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
-// dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
-dotenv.config(); //local
+dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+//dotenv.config(); //local
 
 import debug from 'debug'
 debug("backend:server")
