@@ -165,3 +165,10 @@ export async function createLentLog(user: any) {
 	});
 	if (pool) pool.end();
 };
+
+export async function activateExtension(user: any) {
+	let pool: mariadb.PoolConnection;
+	const content: string = `select * from user where user_id=${user.user_id}`;
+	
+	pool = await con.getConnection();
+}

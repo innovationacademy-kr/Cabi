@@ -24,12 +24,14 @@ export default function LentModal(props:any){
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title"></h5>
+            <h5 className="modal-title">
+              <p >[ {props.cabiNum} ] 번 사물함을 선택하셨어요.</p>
+            </h5>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div className="modal-body">
-            <p> 선택하신 [ {props.cabiNum} ] 번 사물함을 <br></br>
-              대여하시겠습니까?</p>
+            <p className="alretMessage"> 42캐비넷은 귀중한 물건을 지켜드릴 수 없답니다. <br></br>이용 중 귀중품 유실에 책임지지 않으니, 조심하세요! </p>
+            <p className="agreeMessage"> 괜찮아요. 대여할께요! <input type="checkbox" id="check"></input></p>
           </div>
           <div className="modal-footer justify-content-center">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>

@@ -101,3 +101,17 @@ userRouter.post('/api/check', async (req: any, res: any) => {
             await res.send({user: userList[idx]});
     }
 });
+userRouter.post('/api/extension', async (req: any, res: any) => {
+    try {
+        const idx = userList.findIndex((user: userInfo) => user.access === req.session.passport.user.access);
+        if (idx === -1) {
+            res.status(400).send({ error: 'Permission Denied' });
+            return;
+        }
+        
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err });
+        throw err;
+    } 
+});
