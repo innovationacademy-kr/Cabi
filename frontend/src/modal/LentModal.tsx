@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './lentModal.css';
 
 export default function LentModal(props:any){
   const history = useHistory();
+  const [state, setState] = useState<boolean>(false);
 
   const handleClick = () => {
     const url = "/api/lent"
@@ -31,15 +33,14 @@ export default function LentModal(props:any){
           </div>
           <div className="modal-body">
             <p className="alretMessage"> 42캐비넷은 귀중한 물건을 지켜드릴 수 없답니다. <br></br>이용 중 귀중품 유실에 책임지지 않으니, 조심하세요! </p>
-            <p className="agreeMessage"> 괜찮아요. 대여할께요! <input type="checkbox" id="check"></input></p>
+            <p className="agreeMessage"> 괜찮아요. 대여할께요! <input type="checkbox" id="check" onClick={()=>setState(!state)}></input></p>
           </div>
           <div className="modal-footer justify-content-center">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" onClick={handleClick}>대여</button>
+            <button type="button" className={`btn btn-primary ${state ? '':'disabled'}`} id="btn-primary" data-bs-dismiss="modal" onClick={handleClick}>대여</button>
           </div>
         </div>
       </div>
     </div>
   )
 }
-

@@ -1,6 +1,6 @@
 import express from 'express'
 import { cabinetList, userList, userInfo } from '../../models/user'
-import { createLentLog, createLent, getLentUser, getUser } from '../../models/query'
+import { createLentLog, createLent, getLentUser, getUser, activateExtension } from '../../models/query'
 
 export const userRouter = express.Router();
 
@@ -108,7 +108,9 @@ userRouter.post('/api/extension', async (req: any, res: any) => {
             res.status(400).send({ error: 'Permission Denied' });
             return;
         }
-        
+        activateExtension(userList[idx]).then((resp:any)=>{
+            res.sendStatus(200);
+        });
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: err });

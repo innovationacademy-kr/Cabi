@@ -44,36 +44,20 @@
     /* color: #6c337d */
     color: rgb(41, 40, 40);
 }
-
-input[type="checkbox"] + label {
-	display: inline-block;
-	width: 20px;
-	height: 20px;
-	border: 2px solid #bf4bd6;
-	cursor: pointer;
-}
-
-input[id="check"]:checked + label {
-    background-color: #f00606;
-}
-
 .modal-header{
     padding: 10px;
     border-bottom: 0px ;
     min-height: 16.42857143px;
 }
-
 p{
     margin: 15px 0 10px;
     text-align: center;
 }
-
 #btn-primary{
     color: #fff;
     background-color: #6667AB;
     border-color: #6667AB;
 }
-
 #btn-primary:hover{
     color: #fff;
     background-color: #5657a5;
