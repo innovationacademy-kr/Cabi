@@ -165,6 +165,7 @@ export async function createLentLog(user: any) {
 	});
 	if (pool) pool.end();
 };
+<<<<<<< HEAD
 
 export async function activateExtension(user: any) {
 	let pool: mariadb.PoolConnection;
@@ -172,3 +173,5 @@ export async function activateExtension(user: any) {
 	
 	pool = await con.getConnection();
 }
+=======
+>>>>>>> 4075daf2cc7cc59320b94d35a14f7ec188ba6c4f
