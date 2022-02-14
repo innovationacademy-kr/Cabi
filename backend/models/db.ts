@@ -30,7 +30,7 @@ export async function connectionForCabinet() {
 			result2.forEach(async (element2: any) => {
 				let sectionList: Array<string> = [];
 				let cabinetList: Array<Array<cabinetInfo>> = [];
-				const content3: string = `select distinct cabinet.section from cabinet where location='${element1.location}' and floor=${element2.floor} order by section`;
+				const content3: string = `select distinct cabinet.section from cabinet where location='${element1.location}' and floor=${element2.floor}`;
 				
 				floorList.push(element2.floor);
 				//section info with exact floor
