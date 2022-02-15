@@ -1,0 +1,50 @@
+.seromSecondFloor{
+    height: 30em;
+    justify-content: center;
+    border: 1px solid;
+    display: grid;
+    margin-left: 1.6em;
+    margin-right: 1.6em;
+    margin-top: 1em;
+    grid-template-rows: 1fr 1fr 2fr 1.5fr 1fr 1fr 1fr 1.5fr;
+    grid-auto-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+        "eocs eocs blank1 blank1 blank1"
+        "blank2 blank2 blank2 blank2 blank2"
+        "oasis oasis oasis blank3 blank3"
+        "ev blank4 blank4 blank3 blank3"
+        "blank5 blank4 blank4 blank3 blank3"
+        "terrace blank4 blank4 oa oa"
+        "terrace blank4 blank4 blank6 blank6"        
+        "terrace blank4 blank4 eocf eocf"
+    ;
+}
+.blank, .oa, .eoc1, .eoc2, .oasis, .terrace, .ev{
+    border: 1px solid black;
+    text-align: center;
+    align-items: center;
+    padding: 1px;
+}
+.oa{
+    grid-area: oa;
+}
+.ev{
+    grid-area: ev;
+    background-color: silver;
+}
+.eoc1{
+    grid-area: eocf;
+}
+.eoc2{
+    grid-area: eocs;
+}
+.oasis{
+    grid-area: oasis;
+}
+.terrace{
+    grid-area: terrace;
+}
+.blank{
+    border: none;
+    grid-area: blank1, blank2, blank3, blank4, blank5, blank6;
+}
