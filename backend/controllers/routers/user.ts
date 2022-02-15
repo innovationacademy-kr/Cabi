@@ -1,6 +1,6 @@
 import express from 'express'
 import { cabinetList, userList, userInfo } from '../../models/user'
-import { createLentLog, createLent, getLentUser, getUser } from '../../models/query'
+import { createLentLog, createLent, getLentUser, getUser, activateExtension } from '../../models/query'
 
 export const userRouter = express.Router();
 
@@ -100,4 +100,20 @@ userRouter.post('/api/check', async (req: any, res: any) => {
         else
             await res.send({user: userList[idx]});
     }
+});
+userRouter.post('/api/extension', async (req: any, res: any) => {
+    try {
+        const idx = userList.findIndex((user: userInfo) => user.access === req.session.passport.user.access);
+        if (idx === -1) {
+            res.status(400).send({ error: 'Permission Denied' });
+            return;
+        }
+        activateExtension(userList[idx]).then((resp:any)=>{
+            res.sendStatus(200);
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err });
+        throw err;
+    } 
 });
