@@ -51,16 +51,16 @@ export default function Return() {
     await axios.post("/api/return_info").then((res: any) => {
       if (res.status === 200) {
         setLentCabinet(res.data);
-        console.log(res.data);
         setExtension(res.data.lent_id === -1 ? 'hidden' : res.data.extension > 0 ? 'disabled' : '')
       }
     }).catch((err) => { console.log(err) });
   }
   const handleExtension = async () => {
-    console.log('clicked!');
     await axios.post("/api/extension").then((res:any)=>{
       if (res.status === 200){
         setContent('연장되었습니다!!');
+      }else{
+        setContent('다시 시도해주세요..');
       }
     }).catch((err)=>{console.log(err)});
   }

@@ -175,7 +175,6 @@ export async function activateExtension(user: any) {
 		if (res[0] === undefined){
 			return ;
 		}
-		// console.log(res[0]);
 		const content2: string = `update lent set extension=${res[0].extension + 1}, expire_time=ADDDATE(now(), 7) where lent_user_id=${user.user_id}`;
 		pool.query(content2);
 	}).catch((err:any)=>{
