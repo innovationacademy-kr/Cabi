@@ -61,6 +61,9 @@ export default function Lent(){
 			history.push("/");
 		});
   };
+  const handleHome = () => {
+    history.go(0);
+  }
   const handleLent = () => {
     const url = "/api/lent_info"
     axios.post(url).then((res:any) => {
@@ -108,7 +111,8 @@ export default function Lent(){
   return (
     <div className="container col" id="container">
       <div className="row align-items-center">
-        <div className="col-6">
+        <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30"/></div></div>
+        <div className="col">
           <Location info={info} l_idx={l_idx} setLidx={setLidx}></Location>
         </div>
         <div className="col">

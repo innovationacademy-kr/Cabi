@@ -27,13 +27,13 @@ export default function LentModal(props:any){
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
-              <p >[ {props.cabiNum} ] 번 사물함을 선택하셨어요.</p>
+              [ {props.cabiNum} ] 번 사물함을 대여합니다.
             </h5>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div className="modal-body">
-            <p className="alretMessage"> 42캐비넷은 귀중한 물건을 지켜드릴 수 없답니다. <br></br>이용 중 귀중품 유실에 책임지지 않으니, 조심하세요! </p>
-            <p className="agreeMessage"> 괜찮아요. 대여할께요! <input type="checkbox" id="check" onClick={()=>setState(!state)}></input></p>
+            <p className="alretMessage"> 대여기간은 +7일입니다.<br></br> 이용 중 귀중품 분실에 책임지지 않습니다.</p>
+            <p className="agreeMessage"> 알겠습니다. 대여할께요! <input type="checkbox" id="check" onClick={()=>setState(!state)}></input></p>
           </div>
           <div className="modal-footer justify-content-center">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
