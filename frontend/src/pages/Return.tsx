@@ -6,6 +6,7 @@ import Menu from '../component/Menu'
 import ReturnModal from '../modal/ReturnModal'
 import PasswordModal from '../modal/PasswordModal'
 import ContentsModal from '../modal/ContentsModal'
+import ExtensionModal from '../modal/ExtensionModal'
 import './main.css'
 import './return.css'
 
@@ -15,7 +16,7 @@ export type lentCabinetInfo = {
   lent_user_id: number,
   lent_time: string,
   expire_time: string,
-  extension: boolean,
+  extension: number,
   cabinet_num: number,
   location: string,
   floor: number,
@@ -30,12 +31,13 @@ export default function Return() {
   const [content, setContent] = useState<string>('');
   const [cabinetPassword, setCabinetPassword] = useState<string>('');
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
+  const [extension, setExtension] = useState<string>(lentCabinet?.lent_id === -1 ? 'hidden' : lentCabinet && lentCabinet.extension > 0 ? 'disabled' : '');
 
   useEffect(() => {
     apiCheck().then(() => {
       callReturn();
     });
-  }, [content, path]);
+  }, [content, path, extension]);
 
   const apiCheck = async () => {
     await axios.post("/api/check").then((res: any) => {
@@ -49,6 +51,7 @@ export default function Return() {
     await axios.post("/api/return_info").then((res: any) => {
       if (res.status === 200) {
         setLentCabinet(res.data);
+        setExtension(res.data.lent_id === -1 ? 'hidden' : res.data.extension > 0 ? 'disabled' : '');
       }
     }).catch((err) => { console.log(err) });
   }
@@ -98,7 +101,7 @@ export default function Return() {
             </div>
           </div>
           <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden' : 'disabled'}`} id="colorBtn">
+            <div className={`btn btn-lg ${extension}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#extensionmodal">
               연장하기
             </div>
           </div>
@@ -106,6 +109,7 @@ export default function Return() {
         <ReturnModal lentCabinet={lentCabinet} setContent={setContent} setPath={setPath}></ReturnModal>
         <PasswordModal cabinetPassword={cabinetPassword} setCabinetPassword={setCabinetPassword}></PasswordModal>
         <ContentsModal contents={content} path={path}></ContentsModal>
+        <ExtensionModal setContent={setContent}></ExtensionModal>
       </div>
   )
 }
