@@ -10,5 +10,14 @@
     padding: 0;
     padding-top: 1em;
     --bs-text-opacity: 1;
-    color: #6667ab2e!important;
+    color: #6667ab2e;
+}
+
+.event {
+    background: url(https://www.icegif.com/wp-content/uploads/celebrate-icegif-11.gif);
+    object-fit: cover;
+}
+
+.event > .card-body > div, .event > .card-body > div > div {
+    color : white !important;
 }
