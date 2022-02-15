@@ -52,13 +52,21 @@ export default function Return() {
       }
     }).catch((err) => { console.log(err) });
   }
-
+  const handleHome = () => {
+    history.push("/lent");
+  }
 
   return (
       <div className="container" id='container'>
-        <div className="row-2">
+        <div className="row align-items-center">
+        <div className="col">
+          <div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30" />
+          </div>
+        </div>
+        <div className="col">
           <Menu url="/lent"></Menu>
         </div>
+      </div>
         <div className={`card row-2 p-5 m-5 ${typeof(lentCabinet?.lent_id) === "number" && lentCabinet?.lent_id % 42 === 0 ? "event" : ""}`}>
           <div className="card-body my-5" id="card-body">
             <React.Fragment>
