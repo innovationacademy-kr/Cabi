@@ -5,14 +5,14 @@
 
 #dropdownMenuReturn {
     text-align: center;
-    min-width: 11rem;
-    right: 0%;
-    left: 70%!important;
+    max-width: 2rem;
+	right: 0%;
+    left: auto;
 }
 
 #dropdownMenuLent {
     text-align: center;
     min-width: 2rem;
-    left: 50%;
 	right: 0%;
 }
+
