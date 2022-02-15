@@ -19,6 +19,8 @@ export default function Carousel(props:any){
     return list;
   }
   const mapIndicator = () => {
+    console.log("floor_name = ", props.floor_name);
+    console.log("f_idx = ", props.outer_i);
     return (
       <button className="indicator active" type="button" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"></button>
     )
@@ -41,7 +43,7 @@ export default function Carousel(props:any){
         <div className="m-3 sectionName" key="label_map">MAP</div>
         <div className="mt-5 py-3">
         {
-          props.floor_name === 2 ? <SeromSecondFloor info={props.info} l_idx={props.l_idx} floor_name={props.floor_name}/> : <SeromFloor info={props.info} l_idx={props.l_idx} floor_name={props.floor_name}/>
+          props.floor_name === 2 ? <SeromSecondFloor info={props.info} l_idx={props.l_idx} f_idx={props.outer_i} floor_name={props.floor_name}/> : <SeromFloor info={props.info} l_idx={props.l_idx} f_idx={props.outer_i} floor_name={props.floor_name}/>
         }
         </div>
       </div>
