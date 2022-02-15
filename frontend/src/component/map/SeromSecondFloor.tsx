@@ -2,10 +2,7 @@ import "./seromSecondFloor.css"
 
 export function SeromSecondFloor(props:any){
     const findIdx = (name:string) => {
-        // props.info?.section[props.l_idx][props.f_idx].map((section:string)=>{if (section != "C1 - OA") console.log(typeof section, section)});
-        // console.log(props.info?.section[props.l_idx][props.f_idx].findIndex((section:any)=>{section === name}));
-        // return 3;
-        return props.info?.section[props.l_idx][props.f_idx].findIndex((section:any)=>{section === name}) + 1;
+        return props.info?.section[props.l_idx][props.f_idx].findIndex((section:string)=>section === name) + 1;
     }
     return (
         <div className="seromSecondFloor">

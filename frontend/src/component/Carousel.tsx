@@ -19,8 +19,6 @@ export default function Carousel(props:any){
     return list;
   }
   const mapIndicator = () => {
-    console.log("floor_name = ", props.floor_name);
-    console.log("f_idx = ", props.outer_i);
     return (
       <button className="indicator active" type="button" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"></button>
     )
