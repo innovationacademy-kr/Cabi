@@ -8,6 +8,7 @@ import PasswordModal from '../modal/PasswordModal'
 import ContentsModal from '../modal/ContentsModal'
 import './main.css'
 import './return.css'
+import ExtensionModal from '../modal/ExtensionModal'
 
 export type lentCabinetInfo = {
   lent_id: number,
@@ -55,15 +56,15 @@ export default function Return() {
       }
     }).catch((err) => { console.log(err) });
   }
-  const handleExtension = async () => {
-    await axios.post("/api/extension").then((res:any)=>{
-      if (res.status === 200){
-        setContent('연장되었습니다!!');
-      }else{
-        setContent('다시 시도해주세요..');
-      }
-    }).catch((err)=>{console.log(err)});
-  }
+  // const handleExtension = async () => {
+  //   await axios.post("/api/extension").then((res:any)=>{
+  //     if (res.status === 200){
+  //       setContent('연장되었습니다!!');
+  //     }else{
+  //       setContent('다시 시도해주세요..');
+  //     }
+  //   }).catch((err)=>{console.log(err)});
+  // }
 
   return (
       <div className="container" id='container'>
@@ -101,7 +102,7 @@ export default function Return() {
             </div>
           </div>
           <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-            <div className={`btn btn-lg ${extension}`} id="colorBtn" onClick={handleExtension} data-bs-toggle="modal" data-bs-target="#contentsmodal">
+            <div className={`btn btn-lg ${extension}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#extensionmodal">
               연장하기
             </div>
           </div>
@@ -109,6 +110,7 @@ export default function Return() {
         <ReturnModal lentCabinet={lentCabinet} setContent={setContent} setPath={setPath}></ReturnModal>
         <PasswordModal cabinetPassword={cabinetPassword} setCabinetPassword={setCabinetPassword}></PasswordModal>
         <ContentsModal contents={content} path={path}></ContentsModal>
+        <ExtensionModal setContent={setContent}></ExtensionModal>
       </div>
   )
 }
