@@ -1,10 +1,7 @@
 import axios from 'axios'
-import { useHistory } from "react-router-dom"
 import "./extensionModal.css"
 
 export default function ExtensionModal(props: any) {
-	const history = useHistory();
-
 	const handleSubmit = async () => {
     await axios.post("/api/extension").then((res:any)=>{
       if (res.status === 200){
