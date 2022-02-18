@@ -1,6 +1,6 @@
 .seromFloor{
+    overflow: scroll;
     height: 30em;
-    justify-content: center;
     border: 1px solid;
     display: grid;
     margin-left: 1.6em;
@@ -19,10 +19,12 @@
         "blank5 blank4 blank4 eocf eocf"
     ;
 }
-.blank, .oa, .eoc1, .eoc2, .oasis, .ev{
-    border: 1px solid black;
+.oa, .eoc1, .eoc2, .oasis, .ev{
+    /* border: 1px solid; */
     text-align: center;
+    justify-content: center;
     align-items: center;
+    background-color: #6667ab90;
     padding: 2px;
 }
 .oa{

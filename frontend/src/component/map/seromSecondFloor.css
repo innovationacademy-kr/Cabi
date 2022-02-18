@@ -1,6 +1,6 @@
 .seromSecondFloor{
+    overflow: scroll;
     height: 30em;
-    justify-content: center;
     border: 1px solid;
     display: grid;
     margin-left: 1.6em;
@@ -19,10 +19,11 @@
         "terrace blank4 blank4 eocf eocf"
     ;
 }
-.blank, .oa, .eoc1, .eoc2, .oasis, .terrace, .ev{
-    border: 1px solid black;
+.oa, .eoc1, .eoc2, .oasis, .terrace, .ev{
+    /* border: 1px solid black; */
+    background-color: #6667ab90;
     text-align: center;
-    align-items: center;
+    justify-content: center;
     padding: 1px;
 }
 .oa{
