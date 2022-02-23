@@ -1,8 +1,7 @@
 
 Body{
-    /* background: -webkit-linear-gradient(to bottom, #6667AB, #6c337d);
-    background: linear-gradient(to bottom, #6667AB, #6c337d); */
-    background: #6d8f3d;
+    background: -webkit-linear-gradient(to bottom, #6667AB, #6c337d);
+    background: linear-gradient(to bottom, #6667AB, #6c337d);
     padding: 3%;
     justify-content: center;
     font-family: 'EliceDigitalBaeum_Regular';
