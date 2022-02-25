@@ -11,7 +11,7 @@ debug("backend:server")
 import http from 'http'
 import { app } from '../app'
 
-var port = normalizePort(process.env.PORT || "2424");
+var port = normalizePort(process.env.PORT || "4242");
 app.set("port", port);
 
 var server = http.createServer(app);

@@ -2,7 +2,7 @@
   "name": "api_server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./bin/www.ts",
   "scripts": {
     "doc": "swagger-cli bundle ./api/openapi.yaml --outfile ./api/swagger.yaml --type yaml",
     "prestart": "npm run doc",
