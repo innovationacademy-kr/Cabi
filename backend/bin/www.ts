@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import dotenv from 'dotenv'
-// dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
-if (process.env.USER === 'ec2-user')
-    dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
-else
-    dotenv.config(); //local
+dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
+// if (process.env.USER === 'ec2-user')
+//     dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+// else
+//     dotenv.config(); //local
 import debug from 'debug'
 debug("backend:server")
 import http from 'http'
