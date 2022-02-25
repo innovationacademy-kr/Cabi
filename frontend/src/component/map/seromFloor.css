@@ -19,6 +19,14 @@
         "blank5 blank4 blank4 eocf eocf"
     ;
 }
+
+.nameTag{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .oa, .eoc1, .eoc2, .oasis, .ev{
     /* border: 1px solid; */
     text-align: center;

@@ -3,6 +3,7 @@
     height: 30em;
     border: 1px solid;
     display: grid;
+    justify-self:center;
     margin-left: 1.6em;
     margin-right: 1.6em;
     margin-top: 1em;
@@ -19,12 +20,21 @@
         "terrace blank4 blank4 eocf eocf"
     ;
 }
+
+.nameTag{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .oa, .eoc1, .eoc2, .oasis, .terrace, .ev{
     /* border: 1px solid black; */
     background-color: #6667ab90;
     text-align: center;
     justify-content: center;
     padding: 1px;
+    position: relative;
 }
 .oa{
     grid-area: oa;
