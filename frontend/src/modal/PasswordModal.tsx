@@ -7,7 +7,6 @@ export default function PasswordModal(props: any) {
   const onChange = (e: any) => {
     localStorage.setItem('cabinetPassword', e.target.value);
     setCabinetPassword(e.target.value);
-    console.log(e.target.value);
   };
 
   return (

@@ -136,7 +136,7 @@ export async function getLentUser() {
 export async function createLent(cabinet_id: number, user: any) {
 	let errResult = 0;
 	let pool: mariadb.PoolConnection;
-	const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
+	const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 7), 0)`;
 	
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
@@ -165,3 +165,21 @@ export async function createLentLog(user: any) {
 	});
 	if (pool) pool.end();
 };
+
+export async function activateExtension(user: any) {
+	let pool: mariadb.PoolConnection;
+	const content: string = `select * from lent where lent_user_id=${user.user_id}`;
+	
+	pool = await con.getConnection();
+	await pool.query(content).then((res:any)=>{
+		if (res[0] === undefined){
+			return ;
+		}
+		const content2: string = `update lent set extension=${res[0].extension + 1}, expire_time=ADDDATE(now(), 7) where lent_user_id=${user.user_id}`;
+		pool.query(content2);
+	}).catch((err:any)=>{
+		console.log(err);
+		throw err;
+	});
+	if (pool) pool.end();
+}

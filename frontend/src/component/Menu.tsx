@@ -31,7 +31,7 @@ export default function Menu(props:any){
         <button className="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i className="h2 bi bi-list"></i>
         </button>
-        <div className="dropdown-menu start-50" id={dropdown()} aria-labelledby="dropdownMenuButton">
+        <div className="dropdown-menu" id={dropdown()} aria-labelledby="dropdownMenuButton">
           <a className="dropdown-item" href={props.url}>{cabinetPage()}</a>
           <a className="dropdown-item" data-bs-toggle="modal" data-bs-target="#menualmodal">이용안내</a>
           <a className="dropdown-item" href="https://42born2code.slack.com/archives/C02V6GE8LD7" target="_blank">슬랙문의</a>

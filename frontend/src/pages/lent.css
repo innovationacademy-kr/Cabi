@@ -1,6 +1,5 @@
 #location{
     text-align: center;
-    left: 50%;
 }
 
 #locationMenu{
@@ -8,7 +7,6 @@
     overflow: visible;
     left: 30%;
     min-width: 30px;
-    right:30%;
 }
 
 #locationfont{

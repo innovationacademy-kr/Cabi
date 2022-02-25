@@ -4,7 +4,7 @@ export default function MenualModal() {
 
   return (
     <div className="modal" id="menualmodal" tabIndex={-1}>
-      <div className="modal-dialog">
+      <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
             <h4 className="modal-title align-middle px-10">🗄 42cabi 이용 안내서</h4>

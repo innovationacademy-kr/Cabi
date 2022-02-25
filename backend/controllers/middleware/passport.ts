@@ -2,9 +2,13 @@ import passport from 'passport'
 import {userList} from '../../models/user'
 
 import dotenv from 'dotenv'
-dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
-// dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
-// dotenv.config(); //local
+
+// dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
+if (process.env.USER === 'ec2-user')
+    dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+else
+    dotenv.config(); //local
+
 
 const env = process.env;
 const Strategy = require('passport-42')
