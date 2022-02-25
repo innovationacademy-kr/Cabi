@@ -12,13 +12,13 @@ export function SeromFloor(props:any){
         <div className="seromFloor">
             <div className="blank"></div>
             <div className="oa" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={findIdx(`Cluster ${cluster1} - OA`)}>
-                <div className="nameTag">OA</div>
+                <div className="nameTag">{`Cluster ${cluster1} - OA`}</div>
             </div>
             <div className="eoc1" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={findIdx(`End of Cluster ${cluster1}`)}>
-                <div className="nameTag">End of Cluster1</div>
+                <div className="nameTag">{`End of Cluster ${cluster1}`}</div>
             </div>
             <div className="eoc2" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={findIdx(`End of Cluster ${cluster2}`)}>
-                <div className="nameTag">End of Cluster2</div>
+                <div className="nameTag">{`End of Cluster ${cluster2}`}</div>
             </div>
             <div className="oasis" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={findIdx("Oasis")}>
                 <div className="nameTag">Oasis</div>
