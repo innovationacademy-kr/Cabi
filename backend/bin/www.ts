@@ -14,7 +14,7 @@ if (process.env.USER === 'ec2-user') {
 else
     dotenv.config(); //local
 
-var port = normalizePort(process.env.PORT || "2424");
+var port = normalizePort(process.env.PORT || "4242");
 app.set("port", port);
 
 var server = http.createServer(app);

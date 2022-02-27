@@ -9,12 +9,12 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <section>
-        <Switch>
-          <Route exact path='/' component={Main}></Route>
-          <Route path='/lent' component={Lent}></Route>
-          <Route path='/return' component={Return}></Route>
-          <Route component={Main}></Route>
-        </Switch>
+          <Switch>
+            <Route exact path='/' component={Main}></Route>
+            <Route path='/lent' component={Lent}></Route>
+            <Route path='/return' component={Return}></Route>
+            <Route component={Main}></Route>
+          </Switch>
         </section>
         <Footer/>
       </div>

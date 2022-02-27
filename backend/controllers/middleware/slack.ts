@@ -78,7 +78,7 @@ export async function sendLentMsg(intra_id: string, expire_time: string) {
 
 export default async function slack() {
     await slackUser();
-    const result = schedule.scheduleJob('0 * * * * *', function () {
+    const result = schedule.scheduleJob('0 9 * * *', function () {
         sendReturnMsg();
     });
 }
