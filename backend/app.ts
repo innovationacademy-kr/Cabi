@@ -9,13 +9,19 @@ import expressSession from 'express-session'
 import { router } from './controllers/routers/route'
 import { connectionForCabinet } from './models/db'
 import passportConfig from './controllers/middleware/passport'
+import slack from './controllers/middleware/slack'
 
 import dotenv from 'dotenv'
-// dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
-if (process.env.USER === 'ec2-user')
-    dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+
+const env = process.env;
+if (process.env.USER === 'ec2-user'){
+	if (env.PORT == '4242')
+        dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
+    else
+        dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+}
 else
-    dotenv.config(); //local
+	dotenv.config(); //local
 
 const Sentry = require("@sentry/node");
 // or use es6 import statements
@@ -37,7 +43,6 @@ const swaggerSpec = YAML.load(path.join(__dirname, './api/swagger.yaml'));
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.use(express.static(path.join(__dirname, './views')));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -52,7 +57,7 @@ app.use(passport.session());
 passportConfig();
 
 app.use('/', router);
-
+slack();
 connectionForCabinet();
 
 app.use('/', function (req, res) {

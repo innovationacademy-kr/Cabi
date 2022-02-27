@@ -1,5 +1,7 @@
 import mariadb from 'mariadb'
 import { lentInfo, lentCabinetInfo } from './user'
+import { sendLentMsg } from '../controllers/middleware/slack'
+
 
 const con = mariadb.createPool({
 	host: 'localhost',
@@ -137,9 +139,14 @@ export async function createLent(cabinet_id: number, user: any) {
 	let errResult = 0;
 	let pool: mariadb.PoolConnection;
 	const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 7), 0)`;
-	
 	pool = await con.getConnection();
 	await pool.query(content).then((res: any) => {
+		if (res){
+			let date = new Date();
+			date.setDate(date.getDate() + 8);
+			let day = date.toISOString().replace(/T.+/, '');
+			sendLentMsg(user.intra_id, day);
+		}
 	}).catch((err: any) => {
 		if (err.errno === 1062)
 			errResult = -1;
@@ -182,4 +189,23 @@ export async function activateExtension(user: any) {
 		throw err;
 	});
 	if (pool) pool.end();
+}
+//슬랙 메세지 발송을 위한 반납 전날 유저 정보 조회
+export async function slackReturnUser(day:string) {
+	let pool: mariadb.PoolConnection;
+	let intraList: Array<string> = [];
+	const content: string = `select intra_id from user inner join lent on lent.lent_user_id = user.user_id where expire_time='${day}'`;
+	pool = await con.getConnection();
+	await pool.query(content).then((res:any)=>{
+		if (res){
+			for (let i = 0; i < res.length; i++) {
+				intraList.push(res[i].intra_id);
+			}
+		}
+	}).catch((err:any)=>{
+		console.log(err);
+		throw err;
+	});
+	if (pool) pool.end();
+	return (intraList);
 }
