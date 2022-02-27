@@ -59,8 +59,6 @@ const slackUser = async () => {
 export async function sendLentMsg(intra_id: string, expire_time: string) {
     const message = `🗄 캐비닛 알림 🗄\n대여하신 캐비닛의 반납일은 ${expire_time}일 입니다. 반납일 내 반납부탁드립니다.\n캐비닛 대여 서비스 바로가기  ➡️  https://cabi.42cadet.kr`;
     try {
-        console.log(intra_id);
-        console.log(slackUserList);
         const idx = slackUserList.findIndex((user: slackUser) => user.name == intra_id);
         if (idx === -1)
             return ;
@@ -78,7 +76,7 @@ export async function sendLentMsg(intra_id: string, expire_time: string) {
 
 export default async function slack() {
     await slackUser();
-    const result = schedule.scheduleJob('0 9 * * *', function () {
+    const result = schedule.scheduleJob('0 0 0 * * *', function () {
         sendReturnMsg();
     });
 }
