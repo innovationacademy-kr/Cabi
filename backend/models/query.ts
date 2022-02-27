@@ -143,7 +143,7 @@ export async function createLent(cabinet_id: number, user: any) {
 	await pool.query(content).then((res: any) => {
 		if (res){
 			let date = new Date();
-			date.setDate(date.getDate() + 8);
+			date.setDate(date.getDate() + 7);
 			let day = date.toISOString().replace(/T.+/, '');
 			sendLentMsg(user.intra_id, day);
 		}
