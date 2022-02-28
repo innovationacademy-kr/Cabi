@@ -4,7 +4,7 @@
 <img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" alt="Logo" height="300">
 <br />
 <br />
-<img align="left" margin="110 100" src="https://github.com/innovationacademy-kr/42cabi/blob/61ed55913b772bc4960e862f6f70f11d43d62694/readme/ezgif.com-gif-maker.mov" width="300" height="530">
+<img align="left" margin="110 100" src="https://github.com/innovationacademy-kr/42cabi/blob/main/readme/play.gif" width="300" height="530">
   
 
 <br />
