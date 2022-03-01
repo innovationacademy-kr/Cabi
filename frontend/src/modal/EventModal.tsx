@@ -31,7 +31,7 @@ export default function EventModal(props:any){
                     </div>
                     <div className="modal-footer justify-content-center">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={dismiss}>알겠어요!</button>
-                        <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" onClick={dismissAndPrevent}>42.. 아니 24시간 동안 알겠어요!</button>
+                        <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" onClick={dismissAndPrevent}>한동안 안 알려줘도 돼요!</button>
                     </div>
                 </div>
             </div>
