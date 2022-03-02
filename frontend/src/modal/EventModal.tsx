@@ -30,8 +30,8 @@ export default function EventModal(props:any){
                         <p className="eventMessage">- 자세한 이벤트 사항은 42Slack의 <a className="link" href="https://42born2code.slack.com/archives/C02V6GE8LD7" target="_blank">cabinet 채널</a>을 참고해주세요!<br/></p>
                     </div>
                     <div className="modal-footer justify-content-center">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={dismiss}>알겠어요!</button>
-                        <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" onClick={dismissAndPrevent}>한동안 안 알려줘도 돼요!</button>
+                        {/* <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={dismiss}>알겠어요!</button> */}
+                        <button type="button" className="btn btn-primary" id="btn-primary" data-bs-dismiss="modal" onClick={dismissAndPrevent}>알겠어요. 한동안 안 알려줘도 돼요!</button>
                     </div>
                 </div>
             </div>
