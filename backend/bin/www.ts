@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import dotenv from 'dotenv'
+
 import debug from 'debug'
 debug("backend:server")
 import http from 'http'
