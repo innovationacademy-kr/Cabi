@@ -20,17 +20,22 @@ export default function CabinetBox(props:any){
   let clickEvent = clickHandler;
   let toggleName = props.intra_id !== "" ? "" : "modal";
   let targetName = props.isLent === -1 ? "#lentmodal" : "#contentsmodal";
-  let vanilaClassName = `border justify-content-center${props.intra_id !== "" ? " lentCabinet" : ""}`;
-  if (props.intra_id === props.user){
+  let vanilaClassName = "border justify-content-center";
 
-    if (isExpired)
-      vanilaClassName = `border justify-content-center expiredLentCabinet`;
-    else
-      vanilaClassName = `border justify-content-center myLentCabinet`;
+  if (props.intra_id === props.user){
     toggleName = "modal";
     targetName = "";
     clickEvent = clickMyCabinet;
   }
+
+  if (isExpired){
+    vanilaClassName += " expiredLentCabinet";
+  }else if (props.intra_id === props.user){
+    vanilaClassName += " myLentCabinet";
+  }else if (props.intra_id !== ""){
+    vanilaClassName += " lentCabinet";
+  }
+
   return (
     <div className={vanilaClassName} data-bs-toggle={toggleName} data-bs-target={targetName} onClick={clickEvent}>
       <div id="cabinet_num">{props.cabinet_num}</div>
