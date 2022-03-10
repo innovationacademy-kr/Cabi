@@ -7,10 +7,8 @@ import http from 'http'
 import { app } from '../app'
 
 const env = process.env;
-if (env.USER === 'ec2-user' && env.PORT === '4242'){
-		dotenv.config({ path: '/home/ec2-user/git/42cabi/backend/.env' }); //dep
-}else if (env.USER === 'ec2-user') {
-		dotenv.config({ path: '/home/ec2-user/git/42cabi-dev/backend/.env' }); //dev
+if (env.USER === 'ec2-user'){
+		dotenv.config({ path: env.PWD + '/.env' }); //dep
 }else{
     dotenv.config(); //local
 }
