@@ -14,7 +14,7 @@
 }
 
 .event {
-    background: url(https://www.icegif.com/wp-content/uploads/celebrate-icegif-11.gif);
+    background: url("./../img/event.gif");
     object-fit: cover;
 }
 
