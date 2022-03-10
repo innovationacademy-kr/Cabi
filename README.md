@@ -34,7 +34,7 @@
 | :-: | :-: | :-: | :-: |
 | <img src="readme/hyoon.png" width="250"> | <img src="readme/hyospark.png" width="250"> | <img src="readme/skim.png" width="250"> | <img src="readme/spark.png" width="250"> |
 | [@hyoon](https://github.com/kamg2218) | [@hyospark](https://github.com/kyoshong) | [@skim](https://github.com/subin195-09) | [@spark](https://github.com/Hyunja27) |
-| 좋은 팀원 덕에 즐거웠던 프로젝트..💜 함께 지세운 아름다운 밤들 ✨ | 앗! 최고의 동료(이)가 나타났다! 개발이 4배 재밌어졌다...! | 열정적인 개발자들!! 너무 즐거웠고 앞으로 더욱 기대 되는 팀 👍 | 개발이 이렇게 재밌었다니!? 더 멋진 동료가 되고 싶어졌어요✨ |
+| 좋은 팀원 덕에 즐거웠던 프로젝트..💜 함께 지새운 아름다운 밤들 ✨ | 앗! 최고의 동료(이)가 나타났다! 개발이 4배 재밌어졌다...! | 열정적인 개발자들!! 너무 즐거웠고 앞으로 더욱 기대 되는 팀 👍 | 개발이 이렇게 재밌었다니!? 더 멋진 동료가 되고 싶어졌어요✨ |
 <br/>
 
 ## 📁 Directory
