@@ -2,6 +2,7 @@ import passport from 'passport'
 import {userList} from '../../models/user'
 
 import dotenv from 'dotenv'
+
 const env = process.env;
 if (process.env.USER === 'ec2-user'){
 	if (env.PORT == '4242')
@@ -11,6 +12,7 @@ if (process.env.USER === 'ec2-user'){
 }
 else
 	dotenv.config(); //local
+
 
 const Strategy = require('passport-42')
 

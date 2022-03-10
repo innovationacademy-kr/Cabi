@@ -23,6 +23,7 @@ if (process.env.USER === 'ec2-user'){
 else
 	dotenv.config(); //local
 
+
 const Sentry = require("@sentry/node");
 // or use es6 import statements
 // import * as Sentry from '@sentry/node';
