@@ -14,15 +14,13 @@ import slack from './controllers/middleware/slack'
 import dotenv from 'dotenv'
 
 const env = process.env;
-if (process.env.USER === 'ec2-user'){
-	if (env.PORT == '4242')
-        dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
-    else
-        dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
-}
-else
+if (env.USER === 'ec2-user' && env.PORT == '4242'){
+	dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
+} else if (env.USER === 'ec2-user'){
+	dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+} else{
 	dotenv.config(); //local
-
+}
 
 const Sentry = require("@sentry/node");
 // or use es6 import statements

@@ -5,17 +5,17 @@ import debug from 'debug'
 debug("backend:server")
 import http from 'http'
 import { app } from '../app'
-const env = process.env;
-if (process.env.USER === 'ec2-user') {
-    if (env.PORT == '4242')
-        dotenv.config({ path: '/home/ec2-user/git/42cabi/backend/.env' }); //dep
-    else
-        dotenv.config({ path: '/home/ec2-user/git/42cabi-dev/backend/.env' }); //dev
-}
-else
-    dotenv.config(); //local
 
-var port = normalizePort(process.env.PORT || "4242");
+const env = process.env;
+if (env.USER === 'ec2-user' && env.PORT == '4242'){
+	dotenv.config({ path: '/home/ec2-user/git/42cabi/backend/.env' }); //dep
+} else if (env.USER === 'ec2-user') {
+	dotenv.config({ path: '/home/ec2-user/git/42cabi-dev/backend/.env' }); //dev
+} else {
+	dotenv.config(); //local
+}
+
+var port = normalizePort(env.PORT || "4242");
 app.set("port", port);
 
 var server = http.createServer(app);
