@@ -46,6 +46,11 @@ export type cabinetListInfo = {
     section?: Array<Array<Array<string>>>,
     cabinet?: Array<Array<Array<Array<cabinetInfo>>>>
 }
+//slack user
+export type slackUser = {
+    id: string,
+    name: string
+}
 
 //variables
 //users logged in
@@ -57,3 +62,5 @@ export let cabinetList:cabinetListInfo = {
     section: [],
     cabinet: []
 };
+//slack user info list
+export let slackUserList:Array<slackUser> = [];
