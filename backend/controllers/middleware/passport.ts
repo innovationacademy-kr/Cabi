@@ -5,10 +5,10 @@ import dotenv from 'dotenv'
 
 const env = process.env;
 if (process.env.USER === 'ec2-user'){
-	if (env.PORT == '4242')
+	//if (env.PORT === '4242')
         dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
-    else
-        dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
+  //  else
+    //    dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
 }
 else
 	dotenv.config(); //local
