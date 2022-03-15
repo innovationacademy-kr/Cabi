@@ -1,7 +1,10 @@
 <!-- LOGO -->
-<h1> 42Seoul 공식 사물함 대여 서비스 </h1>
+<h1> 42Seoul 공식 사물함 대여 서비스
+</h1>
+<br />
+<br />
 <p align="center">
-<img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" alt="Logo" height="300">
+<img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" alt="Logo" height="370">
 <br />
 <br />
 <img align="right" margin="110 100" src="https://github.com/innovationacademy-kr/42cabi/blob/main/readme/play.gif" width="300" height="530">
