@@ -87,7 +87,7 @@ export default function Lent(){
     }
     info.floor[l_idx].forEach((floor: number, idx: number) => {
       list.push(
-        <button className={`nav-link border border-bottom-0 px-4${idx ? "" : " active"}`}
+        <button className={`nav-link px-4${idx ? "" : " active"}`}
           id={`nav-tab`} key={`nav-${floor}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor}`}
           type="button" role="tab" aria-controls={`nav-${floor}`} aria-selected={idx ? "false" : "true"}>
           {floor}F
@@ -104,7 +104,7 @@ export default function Lent(){
     }
     info.floor[l_idx].forEach((floor: number, idx: number) => {
       list.push(
-        <Carousel setTarget={setTarget} setCabiNum={setCabiNum} info={info} user={user?.intra_id} l_idx={l_idx} outer_i={idx} outer_lent={lent} floor_name={floor} isLent={isLent}></Carousel>
+        <Carousel setTarget={setTarget} setCabiNum={setCabiNum} info={info} user={user?.intra_id} l_idx={l_idx} outer_i={idx} outer_lent={lent} floor_name={floor} isLent={isLent} lent={lent}></Carousel>
       );
     })
     return list;

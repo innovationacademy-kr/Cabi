@@ -27,6 +27,8 @@
     background-color: #6667AB;
     padding-right: 2rem!important;
     padding-left: 2rem!important;
+    border-bottom: none;
+    border-radius: 5px 5px 0px 0px;
 }
 #nav-tab.active{
     color: #6667AB;
