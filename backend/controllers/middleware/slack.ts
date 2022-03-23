@@ -5,14 +5,14 @@ import dotenv from 'dotenv'
 import { slackUserList, slackUser } from '../../models/user';
 
 const env = process.env;
-if (process.env.USER === 'ec2-user') {
-    if (env.PORT == '4242')
-        dotenv.config({ path: '/home/ec2-user/git/42cabi/backend/.env' }); //dep
-    else
-        dotenv.config({ path: '/home/ec2-user/git/42cabi-dev/backend/.env' }); //dev
-}
-else
+if (env.USER === 'ec2-user' && env.PORT === '4242'){
+	dotenv.config({ path: '/home/ec2-user/git/42cabi/backend/.env' }); //dep
+} else if (env.USER === 'ec2-user') {
+	dotenv.config({ path: '/home/ec2-user/git/42cabi-dev/backend/.env' }); //dev
+} else{
     dotenv.config(); //local
+}
+
 const slackBot = new WebClient(env.SLACK_TOKEN);
 
 //반납일 전날 슬랙 메세지 발송
