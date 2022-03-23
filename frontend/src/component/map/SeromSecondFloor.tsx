@@ -44,7 +44,7 @@ export function SeromSecondFloor(props: any) {
 			</div>
 			<div className="oasis" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={findIdx("Oasis")}>
 				<div className="nameTag">
-					<div>Oasis</div>
+					<div>🏝  Oasis</div>
 					<div className="text-muted">{countLentCabinet("Oasis") + " / " + countCabinet("Oasis")}</div>
 				</div>
 			</div>
