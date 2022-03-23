@@ -2,15 +2,13 @@ import passport from 'passport'
 import {userList} from '../../models/user'
 
 import dotenv from 'dotenv'
+
 const env = process.env;
-if (process.env.USER === 'ec2-user'){
-	if (env.PORT == '4242')
-        dotenv.config({path:'/home/ec2-user/git/42cabi/backend/.env'}); //dep
-    else
-        dotenv.config({path:'/home/ec2-user/git/42cabi-dev/backend/.env'}); //dev
-}
-else
+if (env.USER === 'ec2-user'){
+	dotenv.config({path: env.PWD + '/.env'}); //dep
+} else {
 	dotenv.config(); //local
+}
 
 const Strategy = require('passport-42')
 
