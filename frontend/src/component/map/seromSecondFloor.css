@@ -23,19 +23,16 @@
 }
 
 .nameTag{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: auto;
+    flex-direction: column;
 }
 
 .oa, .eoc1, .eoc2, .oasis, .terrace, .ev{
-    /* border: 1px solid black; */
     background-color: #6667ab90;
     text-align: center;
     justify-content: center;
     padding: 1px;
-    position: relative;
+    border-radius: 5px;
 }
 .oa{
     grid-area: oa;

@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 const env = process.env;
 if (env.USER === 'ec2-user'){
 	dotenv.config({path: env.PWD + '/.env'}); //dep
-}else{
+} else {
 	dotenv.config(); //local
 }
 

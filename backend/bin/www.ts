@@ -8,9 +8,9 @@ import { app } from '../app'
 
 const env = process.env;
 if (env.USER === 'ec2-user'){
-		dotenv.config({ path: env.PWD + '/.env' }); //dep
-}else{
-    dotenv.config(); //local
+	dotenv.config({ path: env.PWD + '/.env' }); //dep
+} else {
+	dotenv.config(); //local
 }
 
 var port = normalizePort(env.PORT || "4242");
