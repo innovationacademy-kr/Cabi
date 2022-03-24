@@ -14,13 +14,13 @@
 
 ## 📇 List
 
-### ✧   [Cabi URL](https://cabi.42cadet.kr/)
-### ✧   [CCABI: 까비팀](#-CCABI)
-### ✧    [Directory](#-Directory)
-### ✧   [Project Docs](#-Project-Docs)
+### ✧   [Cabi 서비스로 Go!](https://cabi.42cadet.kr/)
+### ✧   [CCABI 는 누가 만들었나요?](#-CCABI)
+### ✧   [Directory 구조도](#-Directory)
+### ✧   [Project Docs 바로가기](#-Project-Docs)
 ### ✧   [Technical Stack](#-Technical-Stack)
-### ✧   [회고록](#-회고록)  
-### ✧   [Thanks to](#-Thanks-to)
+### ✧   [회고록 (작성중)](#-회고록)  
+### ✧   [Thanks to...](#-Thanks-to)
 <br />
 <br />
 <br />
