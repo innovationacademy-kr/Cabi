@@ -45,6 +45,10 @@
     font-weight: bolder;
 }
 
+.mapWrapper{
+    height: 100%;
+}
+
 .carousel-item{
     padding-left: 35px;
     padding-right: 35px;

@@ -40,7 +40,7 @@ export default function Carousel(props:any){
     return (
       <div className="carousel-item carousel-item active" key="carousel-item_map">
         <div className="m-3 sectionName" key="label_map">MAP</div>
-        <div className="mt-5 py-3">
+        <div className="mapWrapper mt-5 py-3">
         <React.Fragment>{
           props.floor_name === 2 ?
             <SeromSecondFloor info={props.info} l_idx={props.l_idx} f_idx={props.outer_i} floor_name={props.floor_name} lent={props.lent}/>
