@@ -81,7 +81,9 @@
 }
 
 .carousel-control-next {
-    width: 70px;
+    width: 3em;
+    max-width: 70px;
+    min-width: 40px;
     height: 70vh;
     position: absolute;
     right : -8px;
@@ -92,7 +94,9 @@
 }
 
 .carousel-control-prev {
-    width: 70px;
+    width: 3em;
+    max-width: 70px;
+    min-width: 40px;
     height: 70vh;
     position: absolute;
     left : -8px;
