@@ -13,7 +13,7 @@ userRouter.post('/api/cabinet', (req: any, res: any) => {
 });
 userRouter.post('/api/lent_info', async (req: any, res: any) => {
     try {
-        const idx = userList.findIndex((user: userInfo) => user.access === req.session.passport.user.access);
+        const idx = userList.findIndex((user: userInfo) => user.access === req.session.passport?.user?.access);
         if (idx === -1) {
             res.status(400).send({ error: 'Permission Denied' });
             return;
