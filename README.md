@@ -1,26 +1,26 @@
 <!-- LOGO -->
-<h1 align='center'> 42Seoul 사물함 대여 서비스 </h1>
+<h1> 42Seoul 공식 사물함 대여 서비스
+</h1>
+<br />
+<br />
 <p align="center">
-<img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" alt="Logo" height="300">
+<img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" alt="Logo" height="370">
 <br />
 <br />
-<img align="left" margin="110 100" src="https://github.com/innovationacademy-kr/42cabi/blob/main/readme/play.gif" width="300" height="530">
+<img align="right" margin="110 100" src="https://github.com/innovationacademy-kr/42cabi/blob/main/readme/play.gif" width="300" height="530">
   
 
 <br />
-<br />
-  
-
 
 ## 📇 List
 
-#### ✧   [Cabi URL](https://cabi.42cadet.kr/)
-#### ✧   [CCABI: 까비팀](#-CCABI)
-#### ✧    [Directory](#-Directory)
-#### ✧   [Project Docs](#-Project-Docs)
-#### ✧   [Technical Stack](#-Technical-Stack)
-#### ✧   [회고록](#-회고록)  
-#### ✧   [Thanks to](#-Thanks-to)
+### ✧   [Cabi URL](https://cabi.42cadet.kr/)
+### ✧   [CCABI: 까비팀](#-CCABI)
+### ✧    [Directory](#-Directory)
+### ✧   [Project Docs](#-Project-Docs)
+### ✧   [Technical Stack](#-Technical-Stack)
+### ✧   [회고록](#-회고록)  
+### ✧   [Thanks to](#-Thanks-to)
 <br />
 <br />
 <br />
@@ -34,7 +34,7 @@
 | :-: | :-: | :-: | :-: |
 | <img src="readme/hyoon.png" width="250"> | <img src="readme/hyospark.png" width="250"> | <img src="readme/skim.png" width="250"> | <img src="readme/spark.png" width="250"> |
 | [@hyoon](https://github.com/kamg2218) | [@hyospark](https://github.com/kyoshong) | [@skim](https://github.com/subin195-09) | [@spark](https://github.com/Hyunja27) |
-| 좋은 팀원 덕에 즐거웠던 프로젝트..💜 ************* | 앗! 최고의 동료(이)가 나타났다! 개발이 4배 재밌어졌다...! | 열정적인 개발자들!! 너무 즐거웠고 앞으로 더욱 기대 되는 팀 👍 | 개발이 이렇게 재밌었다니!? 더 멋진 동료가 되고 싶어졌어요✨ |
+| 좋은 팀원 덕에 즐거웠던 프로젝트..💜 함께 지새운 아름다운 밤들 ✨ | 앗! 최고의 동료(이)가 나타났다! 개발이 4배 재밌어졌다...! | 열정적인 개발자들!! 너무 즐거웠고 앞으로 더욱 기대 되는 팀 👍 | 개발 더 잘하고 싶다.. 더 멋진 동료가 되고 싶어져버렸다구 ✨ |
 <br/>
 
 ## 📁 Directory
