@@ -21,7 +21,7 @@ export default function Carousel(props:any){
   }
   const mapButton = () => {
     return (
-      <span data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"><i className="bi bi-map"></i></span>
+      <span data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"> 🗺</span>
     )
   }
   const mapIndicator = () => {
