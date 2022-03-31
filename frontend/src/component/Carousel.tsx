@@ -19,6 +19,11 @@ export default function Carousel(props:any){
     }
     return list;
   }
+  const mapButton = () => {
+    return (
+      <span data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"><i className="bi bi-map"></i></span>
+    )
+  }
   const mapIndicator = () => {
     return (
       <button className="indicator active" type="button" data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"></button>
@@ -58,7 +63,7 @@ export default function Carousel(props:any){
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       list.push(
         <div className="carousel-item carousel-item" key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >
-          <div className="m-3 sectionName"  key={`label_${props.info.section[props.l_idx][idx][i]}`}>{props.info.section[props.l_idx][idx][i]}</div>
+          <div className="m-3 sectionName"  key={`label_${props.info.section[props.l_idx][idx][i]}`}>{props.info.section[props.l_idx][idx][i]} {mapButton()}</div>
           <div id="cabinetGrid">{cabinetBlock(idx, i)}</div>
         </div>
       );
