@@ -11,6 +11,13 @@ export default function CabinetBox(props:any){
   if (props.isLent && props.expire_time){
     isExpired = new Date(props.expire_time) < new Date();
   }
+  if (isExpired){
+    vanilaClassName += " expiredLentCabinet";
+  }else if (props.intra_id === props.user){
+    vanilaClassName += " myLentCabinet";
+  }else if (props.intra_id !== ""){
+    vanilaClassName += " lentCabinet";
+  }
 
   const clickHandler = () => {
     if (props.intra_id === props.user){
