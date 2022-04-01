@@ -70,7 +70,7 @@ export default function Return() {
           <Menu url="/lent"></Menu>
         </div>
       </div>
-        <div className={`card row-2 p-5 m-5 ${typeof(lentCabinet?.lent_id) === "number" && lentCabinet?.lent_id % 42 === 0 ? "event" : ""}`}>
+        <div className={`card row-2 p-5 m-5 ${typeof(lentCabinet?.lent_id) === "number" && lentCabinet?.lent_id % 42 === 0 && lentCabinet?.lent_id < 1177 ? "event" : ""}`}>
           <div className="card-body my-5" id="card-body">
             <React.Fragment>
               {
