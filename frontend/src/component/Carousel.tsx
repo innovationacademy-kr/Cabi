@@ -4,7 +4,7 @@ import './carousel.css'
 import React from 'react'
 import { SeromSecondFloor } from './map/SeromSecondFloor';
 import { SeromFloor } from './map/SeromFloor';
-import streetMap from "../../img/street-map.png";
+// import streetMap from "../../img/street-map.png";
 
 export default function Carousel(props:any){
   const cabinetBlock = (f_idx:number, s_idx:number) => {
