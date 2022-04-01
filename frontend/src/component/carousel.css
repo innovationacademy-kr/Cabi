@@ -62,6 +62,7 @@
     height: 60vh;
     overflow: scroll;
     margin-top: 50px;
+    padding-bottom: 10%;
 }
 
 .carousel-control-prev-icon {
