@@ -4,6 +4,7 @@ import './carousel.css'
 import React from 'react'
 import { SeromSecondFloor } from './map/SeromSecondFloor';
 import { SeromFloor } from './map/SeromFloor';
+import streetMap from "../../img/street-map.png";
 
 export default function Carousel(props:any){
   const cabinetBlock = (f_idx:number, s_idx:number) => {
@@ -22,7 +23,7 @@ export default function Carousel(props:any){
   const mapButton = () => {
     return (
       // <span data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"> 🗺</span>
-      <span data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"> <i className="bi bi-map-fill"></i></span>
+      <span data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0"><img src={streetMap} alt="map"/></span>
     )
   }
   const mapIndicator = () => {
