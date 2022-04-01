@@ -115,3 +115,8 @@
     transition-duration: 1s;
     opacity: .7;
 }
+
+.mapImg{
+    width: 1.5em;
+    height: 1.5em;
+}
