@@ -22,7 +22,7 @@ export default function Carousel(props:any){
   const mapButton = () => {
     return (
       <span data-bs-target={`#carousel_${props.l_idx}_${props.floor_name}`} data-bs-slide-to={0} aria-current="true" aria-label="Slide 0">
-        <img className="mapImg" src="../../img/street-map.png" alt="map"/>
+        <img className="mapImg" src="../../img/greenMap.png" alt="map"/>
       </span>
     )
   }
