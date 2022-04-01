@@ -62,7 +62,7 @@ export default function Carousel(props:any){
     list.push(mapSection());
     for (let i = 0; i < props.info.section[props.l_idx][idx].length; i++){
       list.push(
-        <div className="carousel-item carousel-item" key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >
+        <div className="carousel-item" key={`carousel-item_${props.info.section[props.l_idx][idx][i]}`} >
           <div className="m-3 sectionName"  key={`label_${props.info.section[props.l_idx][idx][i]}`}>{props.info.section[props.l_idx][idx][i]} {mapButton()}</div>
           <div id="cabinetGrid">{cabinetBlock(idx, i)}</div>
         </div>
