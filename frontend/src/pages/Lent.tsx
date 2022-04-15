@@ -111,7 +111,7 @@ export default function Lent(){
 	const eventModal = () => {
 		if (new Date() > new Date(2022, 3, 18, 10, 0, 0)){
 			return null;
-		}else if (localStorage.getItem("returnEventShown"){
+		}else if (localStorage.getItem("returnEventShown")){
       return null;
     }
 		return <EventModal/>
