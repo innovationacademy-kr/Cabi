@@ -34,20 +34,16 @@ export default function Return() {
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   const [extension, setExtension] = useState<string>(lentCabinet?.lent_id === -1 ? 'hidden' : lentCabinet && lentCabinet.extension > 0 ? 'disabled' : '');
   const [isExpired, setisExpired] = useState<boolean>(false);
-  //const [returnTarget, setReturnTarget] = useState<string>("#returnmodal");
-  const [returnTarget, setReturnTarget] = useState<string>("#returnEventModal");
-
-  console.log(lentCabinet?.expire_time);
-  
   
   useEffect(() => {
+    // console.log(lentCabinet?.expire_time);
     apiCheck().then(() => {
       callReturn();
     });
     if (lentCabinet && new Date(lentCabinet.expire_time) < new Date()){
       setisExpired(true);
     }
-  }, [content, path, extension, returnTarget]);
+  }, [content, path, extension]);
 
   const apiCheck = async () => {
     await axios.post("/api/check").then((res: any) => {
@@ -67,20 +63,6 @@ export default function Return() {
   }
   const handleHome = () => {
     history.push("/lent");
-  }
-  const handleReturn = () => {
-    let result:number = 0;
-    const second:number = new Date().getSeconds();
-
-    //if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
-    //  return ;
-    //}
-    //if (user && lentCabinet){
-    //  result = user.user_id + lentCabinet.lent_cabinet_id + second;
-    //}
-    //if (result && result % 42 === 11){
-      setReturnTarget("#returnEventModal");
-    //}
   }
 
   return (
@@ -115,7 +97,7 @@ export default function Return() {
         </div>
         <div>
           <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden' : ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target={returnTarget} onClick={handleReturn}>
+            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden' : ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
               반납하기
             </div>
           </div>
