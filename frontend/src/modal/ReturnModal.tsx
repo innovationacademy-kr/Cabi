@@ -9,10 +9,10 @@ export default function ReturnModal(props: any) {
   
     await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then((res: any) => {
       if (res.status === 200) {
+        handleReturn();
         localStorage.clear();
         props.setContent("반납되었습니다");
         props.setPath("/lent");
-        handleReturn();
       }
     }).catch((err: any) => {
       console.log(err);
@@ -31,7 +31,7 @@ export default function ReturnModal(props: any) {
     //  result = user.user_id + lentCabinet.lent_cabinet_id + second;
     //}
     //if (result && result % 42 === 11){
-      setReturnTarget("#returnEventModal");
+      setReturnTarget("#returneventmodal");
     //}
   }
 
