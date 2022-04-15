@@ -7,6 +7,7 @@ import Carousel from '../component/Carousel'
 import Location from '../component/Location'
 import LentModal from '../modal/LentModal'
 import ContentsModal from '../modal/ContentsModal'
+import EventModal from '../modal/EventModal'
 import './lent.css'
 import './main.css'
 
@@ -110,6 +111,7 @@ export default function Lent(){
 
   return (
     <div className="container col" id="container">
+      {localStorage.getItem('eventshown') ? null : <EventModal/>}
       <div className="row align-items-center">
         <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30"/></div></div>
         <div className="col">
