@@ -4,12 +4,12 @@ import './returnModal.css'
 
 export default function ReturnModal(props: any) {
   const [returnTarget, setReturnTarget] = useState<string>("#contentsmodal");
+  
   const handleClick = async () => {
     const url = "/api/return";
-  
-    await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then((res: any) => {
+    await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then(async (res: any) => {
       if (res.status === 200) {
-        handleReturn();
+        await handleReturn();
         localStorage.clear();
         props.setContent("반납되었습니다");
         props.setPath("/lent");
@@ -20,7 +20,7 @@ export default function ReturnModal(props: any) {
       props.setPath("");
     })
   }
-  const handleReturn = () => {
+  const handleReturn = async () => {
     // let result:number = 0;
     // const second:number = new Date().getSeconds();
 
@@ -48,7 +48,7 @@ export default function ReturnModal(props: any) {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            <button type="button" className="btn btn-primary" id="btn-primary" data-bs-toggle="modal" data-bs-target={returnTarget} data-bs-dismiss="modal" onClick={handleClick} >반납</button>
+            <button type="button" className="btn btn-primary" id="btn-primary" data-bs-toggle="modal" data-bs-target={returnTarget} data-bs-dismiss="modal" onClick={handleClick}>반납</button>
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@ export default function ReturnEventModal() {
   const history = useHistory();
   const handleClick = () => { history.push("/lent"); }
   return (
-    <div className="modal" id="returnEventModal">
+    <div className="modal" id="returneventmodal">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
