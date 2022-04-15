@@ -32,6 +32,12 @@ export default function Return() {
   const [cabinetPassword, setCabinetPassword] = useState<string>('');
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   const [extension, setExtension] = useState<string>(lentCabinet?.lent_id === -1 ? 'hidden' : lentCabinet && lentCabinet.extension > 0 ? 'disabled' : '');
+  const [isExpired, setisExpired] = useState<boolean>(true);
+
+  console.log(lentCabinet?.expire_time);
+  
+  if (lentCabinet && new Date(lentCabinet.expire_time) < new Date())
+    setisExpired(true);
 
   useEffect(() => {
     apiCheck().then(() => {
@@ -70,7 +76,7 @@ export default function Return() {
           <Menu url="/lent"></Menu>
         </div>
       </div>
-        <div className={`card row-2 p-5 m-5 ${typeof(lentCabinet?.lent_id) === "number" && lentCabinet?.lent_id % 42 === 0 && lentCabinet?.lent_id < 1177 ? "event" : ""}`}>
+        <div className={`card row-2 p-5 m-5 ${typeof(lentCabinet?.lent_id) === "number" && lentCabinet?.lent_id % 42 === 0 && lentCabinet?.lent_id < 1177 ? "event" : ""} ${typeof(lentCabinet?.lent_id) === "number" && isExpired == true ? "expiredView" : ""} `}>
           <div className="card-body my-5" id="card-body">
             <React.Fragment>
               {
@@ -100,8 +106,8 @@ export default function Return() {
               비밀번호 메모장
             </div>
           </div>
-          <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-            <div className={`btn btn-lg ${extension}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#extensionmodal">
+          <div className={`row-2 d-grid gap-2 col-6 mx-auto m-5`}>
+            <div className={`btn btn-lg ${extension} ${isExpired ? 'disabled' : ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#extensionmodal" >
               연장하기
             </div>
           </div>
