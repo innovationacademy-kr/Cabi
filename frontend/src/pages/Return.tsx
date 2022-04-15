@@ -9,6 +9,7 @@ import ContentsModal from '../modal/ContentsModal'
 import ExtensionModal from '../modal/ExtensionModal'
 import './main.css'
 import './return.css'
+import ReturnEventModal from '../modal/ReturnEventModal'
 
 export type lentCabinetInfo = {
   lent_id: number,
@@ -33,17 +34,19 @@ export default function Return() {
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   const [extension, setExtension] = useState<string>(lentCabinet?.lent_id === -1 ? 'hidden' : lentCabinet && lentCabinet.extension > 0 ? 'disabled' : '');
   const [isExpired, setisExpired] = useState<boolean>(true);
+  const [returnTarget, setReturnTarget] = useState<string>("#returnmodal");
 
   console.log(lentCabinet?.expire_time);
   
-  if (lentCabinet && new Date(lentCabinet.expire_time) < new Date())
-    setisExpired(true);
-
+  
   useEffect(() => {
     apiCheck().then(() => {
       callReturn();
     });
-  }, [content, path, extension]);
+    if (lentCabinet && new Date(lentCabinet.expire_time) < new Date()){
+      setisExpired(true);
+    }
+  }, [content, path, extension, returnTarget]);
 
   const apiCheck = async () => {
     await axios.post("/api/check").then((res: any) => {
@@ -63,6 +66,20 @@ export default function Return() {
   }
   const handleHome = () => {
     history.push("/lent");
+  }
+  const handleReturn = () => {
+    let result:number = 0;
+    const second:number = new Date().getSeconds();
+
+    if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
+      return ;
+    }
+    if (user && lentCabinet){
+      result = user.user_id + lentCabinet.lent_cabinet_id + second;
+    }
+    if (result && result % 42 === 11){
+      setReturnTarget("#returnEventModal");
+    }
   }
 
   return (
@@ -97,7 +114,7 @@ export default function Return() {
         </div>
         <div>
           <div className="row-2 d-grid gap-2 col-6 mx-auto m-5">
-            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden' : ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target="#returnmodal">
+            <div className={`btn btn-lg ${lentCabinet?.lent_id === -1 ? 'hidden' : ''}`} id="colorBtn" data-bs-toggle="modal" data-bs-target={returnTarget} onClick={handleReturn}>
               반납하기
             </div>
           </div>
@@ -116,6 +133,7 @@ export default function Return() {
         <PasswordModal cabinetPassword={cabinetPassword} setCabinetPassword={setCabinetPassword}></PasswordModal>
         <ContentsModal contents={content} path={path}></ContentsModal>
         <ExtensionModal setContent={setContent}></ExtensionModal>
+        <ReturnEventModal></ReturnEventModal>
       </div>
   )
 }

@@ -1,8 +1,8 @@
 import "./returnEventModal.css";
 
-export default function ReturnEventModal(props: any) {
+export default function ReturnEventModal() {
   return (
-    <div className="modal">
+    <div className="modal" id="returnEventModal">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">

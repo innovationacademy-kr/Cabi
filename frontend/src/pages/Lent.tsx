@@ -111,7 +111,9 @@ export default function Lent(){
 
   return (
     <div className="container col" id="container">
-      {localStorage.getItem('eventshown') ? null : <EventModal/>}
+      { new Date() > new Date(2022, 3, 18, 10, 0, 0) &&
+        localStorage.getItem('eventshown') ? null : <EventModal/>
+      }
       <div className="row align-items-center">
         <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30"/></div></div>
         <div className="col">
