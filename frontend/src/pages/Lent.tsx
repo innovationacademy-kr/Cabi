@@ -7,6 +7,7 @@ import Carousel from '../component/Carousel'
 import Location from '../component/Location'
 import LentModal from '../modal/LentModal'
 import ContentsModal from '../modal/ContentsModal'
+import EventModal from '../modal/EventModal'
 import './lent.css'
 import './main.css'
 
@@ -107,9 +108,20 @@ export default function Lent(){
     })
     return list;
   };
+	const eventModal = () => {
+		if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
+			return null;
+		}else if (localStorage.getItem("returnEventShown")){
+      return null;
+    }
+		return <EventModal/>
+	}
 
   return (
     <div className="container col" id="container">
+      {
+				eventModal()
+      }
       <div className="row align-items-center">
         <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30"/></div></div>
         <div className="col">

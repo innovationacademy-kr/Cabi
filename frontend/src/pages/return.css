@@ -21,3 +21,8 @@
 .event > .card-body > div, .event > .card-body > div > div {
     color : white !important;
 }
+
+.expiredView {
+    border: solid 10px red;
+    object-fit: cover;
+}
