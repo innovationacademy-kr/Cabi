@@ -1,6 +1,9 @@
+import {useHistory} from 'react-router-dom'
 import "./returnEventModal.css";
 
 export default function ReturnEventModal() {
+  const history = useHistory();
+  const handleClick = () => { history.push("/lent"); }
   return (
     <div className="modal" id="returnEventModal">
       <div className="modal-dialog modal-dialog-centered">
@@ -12,7 +15,8 @@ export default function ReturnEventModal() {
             </h5>
           </div>
           <div className="modal-body">
-            <div className="returnEvent">
+            <div>
+              <div className="returnEvent border"></div>
               <div>축하합니다🎉 🎉 🎉 🎉 🎉 🎉 </div>
               <div>당신은 시크릿 사물함의 주인공입니다!</div>
               <div>#42seoul_club_cabinet</div>
@@ -20,7 +24,7 @@ export default function ReturnEventModal() {
             </div>
           </div>
           <div className="modal-footer justify-content-center">
-            <button type="button" className="btn btn-primary" data-bs-dismiss="modal">확인</button>
+            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleClick}>확인</button>
           </div>
         </div>
       </div>

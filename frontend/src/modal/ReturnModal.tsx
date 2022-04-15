@@ -6,12 +6,13 @@ export default function ReturnModal(props: any) {
   const [returnTarget, setReturnTarget] = useState<string>("#contentsmodal");
   const handleClick = async () => {
     const url = "/api/return";
-
+  
     await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then((res: any) => {
       if (res.status === 200) {
         localStorage.clear();
-        //props.setContent("반납되었습니다");
-        //props.setPath("/lent");
+        props.setContent("반납되었습니다");
+        props.setPath("/lent");
+        handleReturn();
       }
     }).catch((err: any) => {
       console.log(err);
@@ -20,8 +21,8 @@ export default function ReturnModal(props: any) {
     })
   }
   const handleReturn = () => {
-    let result:number = 0;
-    const second:number = new Date().getSeconds();
+    // let result:number = 0;
+    // const second:number = new Date().getSeconds();
 
     //if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
     //  return ;
