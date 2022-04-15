@@ -112,7 +112,7 @@ export default function Return() {
           </div>
         </div>
       </div>
-      <ReturnModal lentCabinet={lentCabinet} setContent={setContent} setPath={setPath}></ReturnModal>
+      <ReturnModal user={user} lentCabinet={lentCabinet} setContent={setContent} setPath={setPath}></ReturnModal>
       <PasswordModal cabinetPassword={cabinetPassword} setCabinetPassword={setCabinetPassword}></PasswordModal>
       <ContentsModal contents={content} path={path}></ContentsModal>
       <ExtensionModal setContent={setContent}></ExtensionModal>

@@ -10,8 +10,8 @@ export default function ReturnModal(props: any) {
     //if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
     //  return ;
     //}
-    if (user && lentCabinet){
-      result = user.user_id + lentCabinet.lent_cabinet_id + second;
+    if (props.user && props.lentCabinet){
+      result = props.user.user_id + props.lentCabinet.lent_cabinet_id + second;
     }
     if (result && result % 42 === 11){
      //setReturnTarget("#returneventmodal");
@@ -36,21 +36,6 @@ export default function ReturnModal(props: any) {
       props.setPath("");
     })
   }
-  // const handleReturn = () => {
-  //   // let result:number = 0;
-  //   // const second:number = new Date().getSeconds();
-
-  //   //if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
-  //   //  return ;
-  //   //}
-  //   //if (user && lentCabinet){
-  //   //  result = user.user_id + lentCabinet.lent_cabinet_id + second;
-  //   //}
-  //   //if (result && result % 42 === 11){
-  //     setReturnTarget("#returneventmodal");
-  //     return true;
-  //   //}
-  // }
 
   return (
     <div className="modal" id="returnmodal" tabIndex={-1}>
