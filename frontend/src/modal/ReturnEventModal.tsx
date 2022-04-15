@@ -1,3 +1,5 @@
+import "./returnEventModal.css";
+
 export default function ReturnEventModal(props: any) {
   return (
     <div className="modal">
@@ -9,7 +11,7 @@ export default function ReturnEventModal(props: any) {
               <br />시크릿 사물함을 반납해라!
             </h5>
           </div>
-          <div className="modal-body">
+          <div className="modal-body returnEvent">
             <div>
               <div>축하합니다🎉 🎉 🎉 🎉 🎉 🎉 </div>
               <div>당신은 시크릿 사물함의 주인공입니다!</div>
