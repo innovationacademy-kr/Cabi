@@ -6,21 +6,21 @@ export default function ReturnModal(props: any) {
   const handleReturn = () => {
 		let result:number = 0;
     const second:number = new Date().getSeconds();
+    const key:number = process.env.KEY ? parseInt(process.env.KEY) : 42;
+    const quote:number = process.env.QUOTE ? parseInt(process.env.QUOTE) : 42;
 
-    //if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
+    // if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
     //  return ;
-    //}
+    // }
     if (props.user && props.lentCabinet){
       result = props.user.user_id + props.lentCabinet.lent_cabinet_id + second;
     }
-    if (result && result % 42 === 11){
-     //setReturnTarget("#returneventmodal");
-			return true;
-    }else {
-			return false;	
-		}
+    if (result && result % key === quote){
+      return true;
+    }
+    return false;
   }
-  const [returnTarget, setReturnTarget] = useState<string>(handleReturn() ? "#returneventmodal" : "#contentsmodal");
+  const returnTarget:string = handleReturn() ? "#returneventmodal" : "#contentsmodal";
   
   const handleClick = async () => {
     const url = "/api/return";

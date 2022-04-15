@@ -112,7 +112,7 @@ export default function Lent(){
   return (
     <div className="container col" id="container">
       { 
-				//new Date() > new Date(2022, 3, 18, 10, 0, 0) &&
+				new Date() > new Date(2022, 3, 18, 10, 0, 0) &&
         localStorage.getItem('returnEventShown') ? null : <EventModal/>
       }
       <div className="row align-items-center">

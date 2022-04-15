@@ -54,8 +54,6 @@ export default function Return() {
     await axios.post("/api/return_info").then((res: any) => {
       if (res.status === 200) {
         setLentCabinet(res.data);
-        // if (lentCabinet)
-          // setisExpired(new Date(lentCabinet.expire_time) < new Date());
         setisExpired(res.data && new Date(res.data.expire_time) < new Date());
         setExtension(res.data.lent_id === -1 ? 'hidden' : res.data.extension > 0 ? 'disabled' : '');
       }
