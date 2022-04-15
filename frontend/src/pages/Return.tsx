@@ -27,27 +27,24 @@ export type lentCabinetInfo = {
 
 export default function Return() {
   const history = useHistory();
-  const [user, serUser] = useState<userInfo>();
+  const [user, setUser] = useState<userInfo>();
   const [path, setPath] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [cabinetPassword, setCabinetPassword] = useState<string>('');
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   const [extension, setExtension] = useState<string>(lentCabinet?.lent_id === -1 ? 'hidden' : lentCabinet && lentCabinet.extension > 0 ? 'disabled' : '');
   const [isExpired, setisExpired] = useState<boolean>(false);
-  
+
   useEffect(() => {
     // console.log(lentCabinet?.expire_time);
     apiCheck().then(() => {
       callReturn();
     });
-    if (lentCabinet && new Date(lentCabinet.expire_time) < new Date()){
-      setisExpired(true);
-    }
   }, [content, path, extension]);
 
   const apiCheck = async () => {
     await axios.post("/api/check").then((res: any) => {
-      serUser(res.data.user);
+      setUser(res.data.user);
     }).catch((err: any) => {
       console.log(err);
       history.push('/');
@@ -57,6 +54,9 @@ export default function Return() {
     await axios.post("/api/return_info").then((res: any) => {
       if (res.status === 200) {
         setLentCabinet(res.data);
+        // if (lentCabinet)
+          // setisExpired(new Date(lentCabinet.expire_time) < new Date());
+        setisExpired(res.data && new Date(res.data.expire_time) < new Date());
         setExtension(res.data.lent_id === -1 ? 'hidden' : res.data.extension > 0 ? 'disabled' : '');
       }
     }).catch((err) => { console.log(err) });
@@ -64,6 +64,13 @@ export default function Return() {
   const handleHome = () => {
     history.push("/lent");
   }
+
+  if (lentCabinet) {
+    console.log(new Date(lentCabinet.expire_time));
+    console.log(new Date());
+    console.log(new Date(lentCabinet.expire_time) < new Date());
+  }
+  console.log(isExpired);
 
   return (
       <div className="container" id='container'>
