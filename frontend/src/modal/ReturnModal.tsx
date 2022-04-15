@@ -4,19 +4,21 @@ import './returnModal.css'
 
 export default function ReturnModal(props: any) {
   const handleReturn = () => {
-    // let result:number = 0;
-    // const second:number = new Date().getSeconds();
+		let result:number = 0;
+    const second:number = new Date().getSeconds();
 
     //if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
     //  return ;
     //}
-    //if (user && lentCabinet){
-    //  result = user.user_id + lentCabinet.lent_cabinet_id + second;
-    //}
-    //if (result && result % 42 === 11){
-    // setReturnTarget("#returneventmodal");
-    return true;
-    //}
+    if (user && lentCabinet){
+      result = user.user_id + lentCabinet.lent_cabinet_id + second;
+    }
+    if (result && result % 42 === 11){
+     //setReturnTarget("#returneventmodal");
+			return true;
+    }else {
+			return false;	
+		}
   }
   const [returnTarget, setReturnTarget] = useState<string>(handleReturn() ? "#returneventmodal" : "#contentsmodal");
   

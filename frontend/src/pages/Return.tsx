@@ -65,13 +65,6 @@ export default function Return() {
     history.push("/lent");
   }
 
-  if (lentCabinet) {
-    console.log(new Date(lentCabinet.expire_time));
-    console.log(new Date());
-    console.log(new Date(lentCabinet.expire_time) < new Date());
-  }
-  console.log(isExpired);
-
   return (
     <div className="container" id='container'>
       <div className="row align-items-center">
