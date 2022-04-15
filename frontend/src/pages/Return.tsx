@@ -34,7 +34,8 @@ export default function Return() {
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   const [extension, setExtension] = useState<string>(lentCabinet?.lent_id === -1 ? 'hidden' : lentCabinet && lentCabinet.extension > 0 ? 'disabled' : '');
   const [isExpired, setisExpired] = useState<boolean>(false);
-  const [returnTarget, setReturnTarget] = useState<string>("#returnmodal");
+  //const [returnTarget, setReturnTarget] = useState<string>("#returnmodal");
+  const [returnTarget, setReturnTarget] = useState<string>("#returnEventModal");
 
   console.log(lentCabinet?.expire_time);
   
@@ -71,15 +72,15 @@ export default function Return() {
     let result:number = 0;
     const second:number = new Date().getSeconds();
 
-    if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
-      return ;
-    }
-    if (user && lentCabinet){
-      result = user.user_id + lentCabinet.lent_cabinet_id + second;
-    }
-    if (result && result % 42 === 11){
+    //if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
+    //  return ;
+    //}
+    //if (user && lentCabinet){
+    //  result = user.user_id + lentCabinet.lent_cabinet_id + second;
+    //}
+    //if (result && result % 42 === 11){
       setReturnTarget("#returnEventModal");
-    }
+    //}
   }
 
   return (

@@ -10,7 +10,7 @@ export default function EventModal(props:any){
 
     const dismissAndPrevent = () =>{
         setShow(false);
-        localStorage.setItem('eventshown',"ok");
+        localStorage.setItem('returnEventShown',"ok");
     }
 
     return(

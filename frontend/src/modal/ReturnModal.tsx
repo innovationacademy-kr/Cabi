@@ -9,7 +9,7 @@ export default function ReturnModal(props: any) {
       if (res.status === 200) {
         localStorage.clear();
         props.setContent("반납되었습니다");
-        props.setPath("/lent");
+        //props.setPath("/lent");
       }
     }).catch((err: any) => {
       console.log(err);
