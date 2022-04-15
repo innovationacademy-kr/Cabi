@@ -3,24 +3,7 @@ import { useState } from 'react';
 import './returnModal.css'
 
 export default function ReturnModal(props: any) {
-  const [returnTarget, setReturnTarget] = useState<string>("#contentsmodal");
-  
-  const handleClick = async () => {
-    const url = "/api/return";
-    await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then(async (res: any) => {
-      if (res.status === 200) {
-        await handleReturn();
-        localStorage.clear();
-        props.setContent("반납되었습니다");
-        props.setPath("/lent");
-      }
-    }).catch((err: any) => {
-      console.log(err);
-      props.setContent("다시 시도해주세요!");
-      props.setPath("");
-    })
-  }
-  const handleReturn = async () => {
+  const handleReturn = () => {
     // let result:number = 0;
     // const second:number = new Date().getSeconds();
 
@@ -31,9 +14,41 @@ export default function ReturnModal(props: any) {
     //  result = user.user_id + lentCabinet.lent_cabinet_id + second;
     //}
     //if (result && result % 42 === 11){
-      setReturnTarget("#returneventmodal");
+    // setReturnTarget("#returneventmodal");
+    return true;
     //}
   }
+  const [returnTarget, setReturnTarget] = useState<string>(handleReturn() ? "#returneventmodal" : "#contentsmodal");
+  
+  const handleClick = async () => {
+    const url = "/api/return";
+    await axios.post(url, { lent_id: props.lentCabinet.lent_id }).then((res: any) => {
+      if (res.status === 200) {
+        localStorage.clear();
+        props.setContent("반납되었습니다");
+        props.setPath("/lent");
+      }
+    }).catch((err: any) => {
+      console.log(err);
+      props.setContent("다시 시도해주세요!");
+      props.setPath("");
+    })
+  }
+  // const handleReturn = () => {
+  //   // let result:number = 0;
+  //   // const second:number = new Date().getSeconds();
+
+  //   //if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
+  //   //  return ;
+  //   //}
+  //   //if (user && lentCabinet){
+  //   //  result = user.user_id + lentCabinet.lent_cabinet_id + second;
+  //   //}
+  //   //if (result && result % 42 === 11){
+  //     setReturnTarget("#returneventmodal");
+  //     return true;
+  //   //}
+  // }
 
   return (
     <div className="modal" id="returnmodal" tabIndex={-1}>
