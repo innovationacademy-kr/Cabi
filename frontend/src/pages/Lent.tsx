@@ -109,11 +109,12 @@ export default function Lent(){
     return list;
   };
 
+	console.log(localStorage.getItem("returnEventShown"));
   return (
     <div className="container col" id="container">
       { 
-				new Date() > new Date(2022, 3, 18, 10, 0, 0) &&
-        localStorage.getItem('returnEventShown') ? null : <EventModal/>
+				//new Date() > new Date(2022, 3, 18, 10, 0, 0) &&
+        //localStorage.getItem("returnEventShown") ? null : <EventModal/>
       }
       <div className="row align-items-center">
         <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30"/></div></div>
