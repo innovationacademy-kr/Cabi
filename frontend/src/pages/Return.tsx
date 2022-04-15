@@ -33,7 +33,7 @@ export default function Return() {
   const [cabinetPassword, setCabinetPassword] = useState<string>('');
   const [lentCabinet, setLentCabinet] = useState<lentCabinetInfo>();
   const [extension, setExtension] = useState<string>(lentCabinet?.lent_id === -1 ? 'hidden' : lentCabinet && lentCabinet.extension > 0 ? 'disabled' : '');
-  const [isExpired, setisExpired] = useState<boolean>(true);
+  const [isExpired, setisExpired] = useState<boolean>(false);
   const [returnTarget, setReturnTarget] = useState<string>("#returnmodal");
 
   console.log(lentCabinet?.expire_time);
