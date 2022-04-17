@@ -21,7 +21,7 @@ export default function ReturnEventModal() {
             <div>~채널에 인증해주세요~</div>
           </div>
           <div className="modal-footer justify-content-center">
-            <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleClick}>확인</button>
+            <button type="button" className="btn btn-primary returnEventBtn" data-bs-dismiss="modal" onClick={handleClick}>확인</button>
           </div>
         </div>
       </div>
