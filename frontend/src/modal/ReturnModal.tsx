@@ -10,7 +10,7 @@ export default function ReturnModal(props: any) {
     const quote:number = import.meta.env.VITE_QUOTE ? parseInt(import.meta.env.VITE_QUOTE) : 42;
 
     if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
-			return false;
+      return false;
     }
     if (props.user && props.lentCabinet){
       result = props.user.user_id + props.lentCabinet.lent_cabinet_id + second;
