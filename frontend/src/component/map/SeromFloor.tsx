@@ -1,27 +1,27 @@
 import "./seromFloor.css"
-import {lentInfo, cabinetInfo} from '../../pages/Lent'
+import { lentInfo, cabinetInfo } from '../../pages/Lent'
 
-export function SeromFloor(props:any){
-    const cluster1:number = props.f_idx === 1 ? 3 : 5;
-    const cluster2:number = props.f_idx === 1 ? 4 : 6;
+export function SeromFloor(props: any) {
+    const cluster1: number = props.f_idx === 1 ? 3 : 5;
+    const cluster2: number = props.f_idx === 1 ? 4 : 6;
 
-    const findIdx = (name:string) => {
-        return props.info?.section[props.l_idx][props.f_idx].findIndex((section:string)=>section === name) + 1;
+    const findIdx = (name: string) => {
+        return props.info?.section[props.l_idx][props.f_idx].findIndex((section: string) => section === name) + 1;
     }
-    const countCabinet = (name: string):number => {
-		return props.info?.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1].length;
-	}
-	const countLentCabinet = (name: string):number => {
+    const countCabinet = (name: string): number => {
+        return props.info?.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1].length;
+    }
+    const countLentCabinet = (name: string): number => {
         let count = 0;
-		props.lent?.forEach((cabi:lentInfo)=>{
-			if (props.info){
-				props.info.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1].forEach((cabinet:cabinetInfo)=>{
-					if (cabinet.cabinet_id === cabi.lent_cabinet_id){
-						count++;
-					}
-				});
-			}
-		});
+        props.lent?.forEach((cabi: lentInfo) => {
+            if (props.info) {
+                props.info.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1].forEach((cabinet: cabinetInfo) => {
+                    if (cabinet.cabinet_id === cabi.lent_cabinet_id) {
+                        count++;
+                    }
+                });
+            }
+        });
         return count;
     }
     return (

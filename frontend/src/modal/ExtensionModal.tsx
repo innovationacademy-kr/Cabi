@@ -3,13 +3,13 @@ import "./extensionModal.css"
 
 export default function ExtensionModal(props: any) {
 	const handleSubmit = async () => {
-    await axios.post("/api/extension").then((res:any)=>{
-      if (res.status === 200){
-        props.setContent('연장되었습니다!!');
-      }else{
-        props.setContent('다시 시도해주세요..');
-      }
-    }).catch((err)=>{console.log(err)});		
+		await axios.post("/api/extension").then((res: any) => {
+			if (res.status === 200) {
+				props.setContent('연장되었습니다!!');
+			} else {
+				props.setContent('다시 시도해주세요..');
+			}
+		}).catch((err) => { console.log(err) });
 	}
 
 	return (

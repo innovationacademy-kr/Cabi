@@ -1,6 +1,6 @@
 import axios from 'axios'
-import React, {useState, useEffect} from 'react'
-import {useHistory} from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { userInfo } from './Main'
 import Menu from '../component/Menu'
 import Carousel from '../component/Carousel'
@@ -35,7 +35,7 @@ export type lentInfo = {
   intra_id?: string
 }
 
-export default function Lent(){
+export default function Lent() {
   const history = useHistory();
   const [user, setUser] = useState<userInfo>();
   const [l_idx, setLidx] = useState<number>(0);
@@ -45,43 +45,48 @@ export default function Lent(){
   const [info, setInfo] = useState<locationInfo>({});
   const [lent, setLent] = useState<Array<lentInfo>>([]);
 
-  useEffect(()=>{
-    apiCheck();
-    if (!info.location){
+  useEffect(() => {
+    apiCheck(); // 적절한 유저가 페이지를 접근하는지에 대한 정보
+    if (!info.location) {
       handleClick();
     }
     handleLent();
-  }, [l_idx, info]);
+  }, [l_idx, info]);  // l_idx나 info가 바뀔 때마다 호출됨
 
   const apiCheck = async () => {
-    const url = "/api/check"
-    await axios.post(url).then((res:any) => {
-      setUser(res.data.user);
-    }).catch((err:any) => {
-      console.log(err);
-			history.push("/");
-		});
+    const url = "/api/check"  // 적절한 유저가 페이지를 접근하는지에 대한 정보
+    await axios.post(url)
+      .then((res: any) => {
+        setUser(res.data.user);
+      }).catch((err: any) => {
+        console.log(err);
+        history.push("/");  // 에러 발생시 메인화면으로 돌아감
+      });
   };
+
   const handleHome = () => {
     history.go(0);
   }
+
   const handleLent = () => {
-    const url = "/api/lent_info"
-    axios.post(url).then((res:any) => {
+    const url = "/api/lent_info"  // 현재 모든 대여자들의 정보
+    axios.post(url).then((res: any) => {
       setLent(res.data.lentInfo);
       setisLent(res.data.isLent);
-    }).catch((err) => {console.log(err)});
+    }).catch((err) => { console.log(err) });
   };
+
   const handleClick = () => {
-    const url = "/api/cabinet"
-    axios.post(url).then((res:any) => {
-      setInfo(res.data);
-    }).catch((err) => {console.log(err)});
+    const url = "/api/cabinet"  // 전체 사물함에 대한 정보
+    axios.post(url).then((res: any) => {
+      setInfo(res.data);  // locationInfo 가져옴
+    }).catch((err) => { console.log(err) });
   };
+
   const navTabs = () => {
-    let list :Array<JSX.Element> = [];
-    
-    if (!info || !info.floor || info.floor.length <= l_idx){
+    let list: Array<JSX.Element> = [];
+
+    if (!info || !info.floor || info.floor.length <= l_idx) {
       return list;
     }
     info.floor[l_idx].forEach((floor: number, idx: number) => {
@@ -89,16 +94,17 @@ export default function Lent(){
         <button className={`nav-link px-4${idx ? "" : " active"}`}
           id={`nav-tab`} key={`nav-${floor}-tab`} data-bs-toggle="tab" data-bs-target={`#nav-${floor}`}
           type="button" role="tab" aria-controls={`nav-${floor}`} aria-selected={idx ? "false" : "true"}>
-          {floor}F
+          {floor}
         </button>
       )
     });
     return list;
   };
-  const navContent = () => {
-    let list :Array<JSX.Element> = [];
 
-    if (!info || !info.floor || info.floor.length <= l_idx){
+  const navContent = () => {
+    let list: Array<JSX.Element> = [];
+
+    if (!info || !info.floor || info.floor.length <= l_idx) {
       return list;
     }
     info.floor[l_idx].forEach((floor: number, idx: number) => {
@@ -111,12 +117,12 @@ export default function Lent(){
 
   return (
     <div className="container col" id="container">
-      { 
-				new Date() > new Date(2022, 3, 18, 10, 0, 0) &&
-        localStorage.getItem('returnEventShown') ? null : <EventModal/>
+      {
+        new Date() > new Date(2022, 3, 18, 10, 0, 0) &&
+          localStorage.getItem('returnEventShown') ? null : <EventModal />  // returnEventShown -> EventModal.tsx
       }
       <div className="row align-items-center">
-        <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30"/></div></div>
+        <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30" /></div></div>
         <div className="col">
           <Location info={info} l_idx={l_idx} setLidx={setLidx}></Location>
         </div>
@@ -125,17 +131,17 @@ export default function Lent(){
         </div>
       </div>
       <div className="row my-2 mx-2" >
-          <nav>
-            <div className="nav nav-tabs border-bottom-0" id="nav-tabs" role="tablist">
-              <React.Fragment>{navTabs()}</React.Fragment>
-            </div>
-          </nav>
-          <div className="tab-content" id="nav-tabContent">
-            <React.Fragment>{navContent()}</React.Fragment>
+        <nav>
+          <div className="nav nav-tabs border-bottom-0" id="nav-tabs" role="tablist">
+            <React.Fragment>{navTabs()}</React.Fragment>
           </div>
+        </nav>
+        <div className="tab-content" id="nav-tabContent">
+          <React.Fragment>{navContent()}</React.Fragment>
+        </div>
       </div>
       <LentModal target={target} cabiNum={cabiNum}></LentModal>
-      <ContentsModal contents="이미 대여중인 사물함이 있어요 :)"/>
+      <ContentsModal contents="이미 대여중인 사물함이 있어요 :)" />
     </div>
   );
 }

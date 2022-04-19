@@ -1,4 +1,4 @@
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import "./returnEventModal.css";
 
 export default function ReturnEventModal() {

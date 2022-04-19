@@ -16,7 +16,7 @@ function App() {
             <Route component={Main}></Route>
           </Switch>
         </section>
-        <Footer/>
+        <Footer />
       </div>
     </BrowserRouter>
   )

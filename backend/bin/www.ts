@@ -7,10 +7,10 @@ import http from 'http'
 import { app } from '../app'
 
 const env = process.env;
-if (env.USER === 'ec2-user'){
-	dotenv.config({ path: env.PWD + '/.env' }); //dep
+if (env.USER === 'ec2-user') {
+    dotenv.config({ path: env.PWD + '/.env' }); //dep
 } else {
-	dotenv.config(); //local
+    dotenv.config(); //local
 }
 
 var port = normalizePort(env.PORT || "4242");
@@ -22,7 +22,7 @@ server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
 
-function normalizePort(val :any) {
+function normalizePort(val: any) {
     var port = parseInt(val, 10);
 
     if (isNaN(port)) {
@@ -34,7 +34,7 @@ function normalizePort(val :any) {
     return false;
 }
 
-function onError(error :any) {
+function onError(error: any) {
     if (error.syscall !== "listen") {
         throw error;
     }

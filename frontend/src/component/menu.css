@@ -1,18 +1,19 @@
-.btn:focus, .btn:active:focus{
-	outline: 0px;
-	outline-offset: 0px;
+.btn:focus,
+.btn:active:focus {
+  outline: 0px;
+  outline-offset: 0px;
 }
 
 #dropdownMenuReturn {
-    text-align: center;
-    max-width: 2rem;
-	right: 0%;
-    left: auto;
+  text-align: center;
+  max-width: 2rem;
+  right: 0%;
+  left: auto;
 }
 
 #dropdownMenuLent {
-    text-align: center;
-    max-width: 2rem;
-	right: 0%;
-    left: auto !important;
+  text-align: center;
+  max-width: 2rem;
+  right: 0%;
+  left: auto !important;
 }

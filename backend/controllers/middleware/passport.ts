@@ -1,21 +1,21 @@
 import passport from 'passport'
-import {userList} from '../../models/user'
+import { userList } from '../../models/user'
 
 import dotenv from 'dotenv'
 
 const env = process.env;
-if (env.USER === 'ec2-user'){
-	dotenv.config({path: env.PWD + '/.env'}); //dep
+if (env.USER === 'ec2-user') {
+    dotenv.config({ path: env.PWD + '/.env' }); //dep
 } else {
-	dotenv.config(); //local
+    dotenv.config(); //local
 }
 
 const Strategy = require('passport-42')
 
-passport.serializeUser(function(user:any, done:any){
+passport.serializeUser(function (user: any, done: any) {
     return done(null, user);
 });
-passport.deserializeUser(function(user:any, done:any){
+passport.deserializeUser(function (user: any, done: any) {
     return done(null, user);
 });
 
@@ -26,7 +26,7 @@ const FortyTwoOpt = {
     passReqToCallback: true,
 };
 
-const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any, cb:any)=>{
+const FortyTwoVerify = (req: any, accessToken: any, refreshToken: any, profile: any, cb: any) => {
     const userInfo = {
         user_id: profile.id,
         intra_id: profile.username,
@@ -34,8 +34,8 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
         access: accessToken,
         refresh: refreshToken,
     };
-    const idx = userList.findIndex((user)=>user.user_id === profile.id)
-    if (idx !== -1){
+    const idx = userList.findIndex((user) => user.user_id === profile.id)
+    if (idx !== -1) {
         userList.splice(idx, 1);
     }
     userList.push({
@@ -50,6 +50,6 @@ const FortyTwoVerify = (req:any, accessToken:any, refreshToken:any, profile:any,
     return cb(null, userInfo);
 };
 
-export default function passportUse(){
+export default function passportUse() {
     passport.use(new Strategy(FortyTwoOpt, FortyTwoVerify));
 };

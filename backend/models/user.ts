@@ -54,13 +54,13 @@ export type slackUser = {
 
 //variables
 //users logged in
-export let userList:Array<userInfo> = [];
+export let userList: Array<userInfo> = [];
 //all cabinet for rent
-export let cabinetList:cabinetListInfo = {
+export let cabinetList: cabinetListInfo = {
     location: [],
     floor: [],
     section: [],
     cabinet: []
 };
 //slack user info list
-export let slackUserList:Array<slackUser> = [];
+export let slackUserList: Array<slackUser> = [];

@@ -1,5 +1,5 @@
 import mariadb from 'mariadb'
-import { cabinetList, cabinetInfo, lentCabinetInfo } from './user';
+import { cabinetList, cabinetInfo } from './user';
 
 const con = mariadb.createPool({
 	host: 'localhost',
@@ -31,14 +31,14 @@ export async function connectionForCabinet() {
 				let sectionList: Array<string> = [];
 				let cabinetList: Array<Array<cabinetInfo>> = [];
 				const content3: string = `select distinct cabinet.section from cabinet where location='${element1.location}' and floor=${element2.floor}`;
-				
+
 				floorList.push(element2.floor);
 				//section info with exact floor
 				const result3 = await pool.query(content3)
-				result3.forEach(async (element3: any) => {					
+				result3.forEach(async (element3: any) => {
 					let lastList: Array<cabinetInfo> = [];
 					const content4: string = `select * from cabinet where location='${element1.location}' and floor=${element2.floor} and section='${element3.section}' and activation=1 order by cabinet_num`;
-					
+
 					sectionList.push(element3.section);
 					//cabinet info with exact section
 					const result4 = await pool.query(content4);

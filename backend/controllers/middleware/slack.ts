@@ -5,10 +5,10 @@ import dotenv from 'dotenv'
 import { slackUserList, slackUser } from '../../models/user';
 
 const env = process.env;
-if (env.USER === 'ec2-user'){
-	dotenv.config({path: env.PWD + '/.env'}); //dep
+if (env.USER === 'ec2-user') {
+    dotenv.config({ path: env.PWD + '/.env' }); //dep
 } else {
-	dotenv.config(); //local
+    dotenv.config(); //local
 }
 const slackBot = new WebClient(env.SLACK_TOKEN);
 
@@ -91,7 +91,7 @@ export async function sendReturnMsg(intra_id: string) {
     try {
         const idx = slackUserList.findIndex((user: slackUser) => user.name == intra_id);
         if (idx === -1)
-            return ;
+            return;
         await slackBot.chat.postMessage(
             {
                 text: message,
@@ -102,7 +102,7 @@ export async function sendReturnMsg(intra_id: string) {
         console.log(error);
         throw error;
     }
-    
+
 }
 //대여 시 메세지 발송
 export async function sendLentMsg(intra_id: string, expire_time: string) {
@@ -110,7 +110,7 @@ export async function sendLentMsg(intra_id: string, expire_time: string) {
     try {
         const idx = slackUserList.findIndex((user: slackUser) => user.name == intra_id);
         if (idx === -1)
-            return ;
+            return;
         await slackBot.chat.postMessage(
             {
                 text: message,

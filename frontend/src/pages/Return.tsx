@@ -51,7 +51,7 @@ export default function Return() {
     });
   }
   const callReturn = async () => {
-    await axios.post("/api/return_info").then((res: any) => {
+    await axios.post("/api/return_info").then((res: any) => { // 특정 사용자가 현재 대여하고 있는 사물함의 정보
       if (res.status === 200) {
         setLentCabinet(res.data);
         setisExpired(res.data && new Date(res.data.expire_time) < new Date());
@@ -65,6 +65,7 @@ export default function Return() {
 
   return (
     <div className="container" id='container'>
+      {/* 상단바 */}
       <div className="row align-items-center">
         <div className="col">
           <div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30" />
@@ -74,21 +75,21 @@ export default function Return() {
           <Menu url="/lent"></Menu>
         </div>
       </div>
+      {/* 새롬관 2F 148 ~2022-03-07 메모장 */}
       <div className={`card row-2 p-5 m-5 ${typeof (lentCabinet?.lent_id) === "number" && lentCabinet?.lent_id % 42 === 0 && lentCabinet?.lent_id < 1177 ? "event" : ""} ${typeof (lentCabinet?.lent_id) === "number" && isExpired == true ? "expiredView" : ""} `}>
         <div className="card-body my-5" id="card-body">
           <React.Fragment>
             {
               lentCabinet?.lent_id === -1 ? <div className={`card-subtitle mb-2 text-muted text-center`}>현재 대여중인 사물함이 없습니다.</div> :
                 <div>
-                  <div className="card-title text-center display-5">{lentCabinet?.location} {lentCabinet?.floor}F {lentCabinet?.cabinet_num}</div>
+                  <div className="card-title text-center display-5">{lentCabinet?.location} {lentCabinet?.floor} {lentCabinet?.cabinet_num}</div>
                   <div className="card-subtitle mb-2 text-muted text-center">~ {lentCabinet?.expire_time}</div>
                 </div>
             }
             {
               localStorage.getItem('cabinetPassword') ?
-                <div>
-                  <div className="text-center" id="passwordtext">[ {localStorage.getItem('cabinetPassword')} ]</div>
-                </div> : <div className="text-center" id="passwordtext"> &lt; 비밀스러운 메모장 &gt; </div>
+                <div className="text-center" id="passwordtext">[ {localStorage.getItem('cabinetPassword')} ]</div> :
+                <div className="text-center" id="passwordtext"> &lt; 비밀스러운 메모장 &gt; </div>
             }
           </React.Fragment>
         </div>

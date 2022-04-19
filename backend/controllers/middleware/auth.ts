@@ -1,9 +1,9 @@
-export default function authCheck(req:any, res:any, next:any){
-    if (req.user){
+export default function authCheck(req: any, res: any, next: any) {
+    if (req.user) {
         console.log("success auth");
         next();
     }
-    else{
+    else {
         console.log("failed to auth");
         res.status(401).json({
             authenticated: false,
