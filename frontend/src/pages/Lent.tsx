@@ -114,12 +114,19 @@ export default function Lent() {
     })
     return list;
   };
+  const eventModal = () => {
+    if (new Date() < new Date(2022, 3, 18, 10, 0, 0)) {
+      return null;
+    } else if (localStorage.getItem("returnEventShown")) {
+      return null;
+    }
+    return <EventModal />
+  }
 
   return (
     <div className="container col" id="container">
       {
-        new Date() > new Date(2022, 3, 18, 10, 0, 0) &&
-          localStorage.getItem('returnEventShown') ? null : <EventModal />  // returnEventShown -> EventModal.tsx
+        eventModal()
       }
       <div className="row align-items-center">
         <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30" /></div></div>
