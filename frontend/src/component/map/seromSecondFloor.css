@@ -38,25 +38,32 @@
   padding: 1px;
   border-radius: 5px;
 }
+
 .oa {
   grid-area: oa;
 }
+
 .ev {
   grid-area: ev;
   background-color: silver;
 }
+
 .eoc1 {
   grid-area: eocf;
 }
+
 .eoc2 {
   grid-area: eocs;
 }
+
 .oasis {
   grid-area: oasis;
 }
+
 .terrace {
   grid-area: terrace;
 }
+
 .blank {
   border: none;
   grid-area: blank1, blank2, blank3, blank4, blank5, blank6;

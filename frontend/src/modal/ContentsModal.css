@@ -1,6 +1,7 @@
 #contentsmodal {
   z-index: 2000;
 }
+
 .modal-body {
   font-size: large;
   font-weight: bolder;
@@ -35,6 +36,7 @@ p {
   background-color: #5657a5;
   border-color: #5657a5;
 }
+
 .modal-footer {
   margin-top: 0px;
   padding: 10px 10px 10px;

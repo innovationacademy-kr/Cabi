@@ -1,5 +1,5 @@
-import { useHistory } from 'react-router-dom';
-import './cabinetBox.css'
+import { useHistory } from "react-router-dom";
+import "./cabinetBox.css";
 
 export default function CabinetBox(props: any) {
   const history = useHistory();
@@ -23,15 +23,20 @@ export default function CabinetBox(props: any) {
     if (props.intra_id === props.user) {
       toggleName = "modal";
       targetName = "";
-      history.push('/return');
+      history.push("/return");
       return;
     }
     props.setTarget(props.cabinet_id);
     props.setCabiNum(props.cabinet_num);
-  }
+  };
 
   return (
-    <div className={vanilaClassName} data-bs-toggle={toggleName} data-bs-target={targetName} onClick={clickHandler}>
+    <div
+      className={vanilaClassName}
+      data-bs-toggle={toggleName}
+      data-bs-target={targetName}
+      onClick={clickHandler}
+    >
       <div id="cabinet_num">{props.cabinet_num}</div>
       <div id="intra_id">{props.intra_id}</div>
     </div>

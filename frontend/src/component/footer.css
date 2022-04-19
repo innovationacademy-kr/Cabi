@@ -7,6 +7,7 @@ footer {
   margin: 0;
   position: fixed;
 }
+
 footer a {
   display: inline-block;
   margin: 0 20px 10px 20px;
@@ -83,6 +84,7 @@ div {
 footer a:visited {
   color: rgba(220, 220, 220, 0.413);
 }
+
 a {
   color: rgba(220, 220, 220, 0.413);
 }

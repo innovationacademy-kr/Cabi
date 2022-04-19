@@ -1,6 +1,7 @@
 #lentmodal {
   z-index: 1060;
 }
+
 .modal-body {
   font-size: large;
   font-weight: bolder;
@@ -44,25 +45,30 @@
   /* color: #6c337d */
   color: rgb(41, 40, 40);
 }
+
 .modal-header {
   padding: 10px;
   border-bottom: 0px;
   min-height: 16.42857143px;
 }
+
 p {
   margin: 15px 0 10px;
   text-align: center;
 }
+
 #btn-primary {
   color: #fff;
   background-color: #6667ab;
   border-color: #6667ab;
 }
+
 #btn-primary:hover {
   color: #fff;
   background-color: #5657a5;
   border-color: #5657a5;
 }
+
 .modal-footer {
   margin-top: 0px;
   padding: 10px 10px 10px;

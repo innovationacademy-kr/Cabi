@@ -2,6 +2,7 @@
   z-index: 1060;
   display: block;
 }
+
 .modal-body {
   font-size: large;
   font-weight: bolder;
@@ -41,11 +42,13 @@
   color: rgb(41, 40, 40);
   text-align: left;
 }
+
 .modal-header {
   padding: 10px;
   border-bottom: 0px;
   min-height: 16.42857143px;
 }
+
 p {
   margin: 15px 0 10px;
   text-align: center;

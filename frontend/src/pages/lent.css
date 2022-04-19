@@ -22,6 +22,7 @@
 #lentBtn:hover {
   background-color: #d8d4d44b;
 }
+
 #nav-tab {
   color: white;
   background-color: #6667ab;
@@ -30,6 +31,7 @@
   border-bottom: none;
   border-radius: 5px 5px 0px 0px;
 }
+
 #nav-tab.active {
   color: #6667ab;
   background-color: white;

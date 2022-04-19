@@ -1,8 +1,8 @@
-import Lent from './pages/Lent'
-import Main from './pages/Main'
-import Return from './pages/Return'
-import Footer from './component/Footer'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import Lent from "./pages/Lent";
+import Main from "./pages/Main";
+import Return from "./pages/Return";
+import Footer from "./component/Footer";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 function App() {
   return (
@@ -10,16 +10,16 @@ function App() {
       <div className="App">
         <section>
           <Switch>
-            <Route exact path='/' component={Main}></Route>
-            <Route path='/lent' component={Lent}></Route>
-            <Route path='/return' component={Return}></Route>
+            <Route exact path="/" component={Main}></Route>
+            <Route path="/lent" component={Lent}></Route>
+            <Route path="/return" component={Return}></Route>
             <Route component={Main}></Route>
           </Switch>
         </section>
         <Footer />
       </div>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
