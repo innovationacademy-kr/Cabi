@@ -18,8 +18,8 @@
   object-fit: cover;
 }
 
-.event>.card-body>div,
-.event>.card-body>div>div {
+.event > .card-body > div,
+.event > .card-body > div > div {
   color: white !important;
 }
 
