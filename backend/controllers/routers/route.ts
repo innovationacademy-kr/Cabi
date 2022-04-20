@@ -38,7 +38,7 @@ router.get(
         } catch (err) {
             //console.log(err);
             //res.status(400).json({ error: err });
-            res.status(400).json({error: err}).redirect('/');
+            res.status(400).send({error: err});
         }
     }
 );
