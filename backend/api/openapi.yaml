@@ -1,4 +1,4 @@
-openapi: '3.0.0'
+openapi: "3.0.0"
 info:
   version: 1.0.0
   title: API docs
@@ -8,7 +8,7 @@ info:
 servers:
   - url: https://cabi.42cadet.kr
 paths:
-  $ref: './path.yaml'
+  $ref: "./path.yaml"
 
 components:
   parameters: null
@@ -37,7 +37,7 @@ components:
       properties:
         location:
           type: Array<string>
-          example: ['serom', 'maru']
+          example: ["serom", "maru"]
         floor:
           type: Array<Array<integer>>
           # example: [[2, 4, 5], [1]]
@@ -78,7 +78,7 @@ components:
           example: True
         intra_id:
           type: string
-          example: 'skim'
+          example: "skim"
     isLent:
       type: object
       required:
@@ -148,7 +148,7 @@ components:
           example: 1
         intra_id:
           type: string
-          example: 'skim'
+          example: "skim"
         auth:
           type: boolean
           example: True
@@ -160,10 +160,10 @@ components:
           example: "010-0000-0000"
         access:
           type: string
-          example: '1389fdsjklfsjkl'
+          example: "1389fdsjklfsjkl"
         refresh:
           type: string
-          example: '2fjlksdflk02309'
+          example: "2fjlksdflk02309"
 
   responses:
     BadRequest:
@@ -171,7 +171,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             success: false
             message: 잘못된 요청
@@ -180,7 +180,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             success: false
             message: 서버 내부 오류
@@ -189,7 +189,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Success'
+            $ref: "#/components/schemas/Success"
           example:
             success: true
             message: 요청 성공
