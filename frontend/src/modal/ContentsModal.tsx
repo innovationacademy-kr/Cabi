@@ -1,12 +1,12 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./ContentsModal.css";
 
 export default function ContentsModal(props: any) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleRedirect = () => {
     if (props.path && props.path !== "") {
-      history.push(props.path);
+      navigate(props.path);
     }
   };
   return (

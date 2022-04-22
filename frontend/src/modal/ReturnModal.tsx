@@ -3,30 +3,35 @@ import { useState } from "react";
 import "./returnModal.css";
 
 export default function ReturnModal(props: any) {
-  const handleReturn = () => {
-    let result: number = 0;
-    const second: number = new Date().getSeconds();
-    const key: number = import.meta.env.VITE_KEY
-      ? parseInt(import.meta.env.VITE_KEY)
-      : 42;
-    const quote: number = import.meta.env.VITE_QUOTE
-      ? parseInt(import.meta.env.VITE_QUOTE)
-      : 42;
 
-    if (new Date() < new Date(2022, 3, 18, 10, 0, 0)) {
-      return false;
-    }
-    if (props.user && props.lentCabinet) {
-      result = props.user.user_id + props.lentCabinet.lent_cabinet_id + second;
-    }
-    if (result && result % key === quote) {
-      return true;
-    }
-    return false;
-  };
-  const returnTarget: string = handleReturn()
-    ? "#returneventmodal"
-    : "#contentsmodal";
+  // 리턴 모달에 이벤트를 띄울 시, 하단의 함수를 사용하여 returnTarget의 값을 바꾸어 사용했어요.
+  // 현재 리턴모달 측 변경하는 이벤트를 사용하지 않으므로, returnTarget의 값은 기본값인 contentsmodal 이 됩니다. 
+
+  // const handleReturn = () => {
+  //   let result: number = 0;
+  //   const second: number = new Date().getSeconds();
+  //   const key: number = import.meta.env.VITE_KEY
+  //     ? parseInt(import.meta.env.VITE_KEY)
+  //     : 42;
+  //   const quote: number = import.meta.env.VITE_QUOTE
+  //     ? parseInt(import.meta.env.VITE_QUOTE)
+  //     : 42;
+
+  //   if (new Date() < new Date(2022, 3, 18, 10, 0, 0)) {
+  //     return false;
+  //   }
+  //   if (props.user && props.lentCabinet) {
+  //     result = props.user.user_id + props.lentCabinet.lent_cabinet_id + second;
+  //   }
+  //   if (result && result % key === quote) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
+  // const returnTarget: string = handleReturn()
+  //   ? "#returneventmodal"
+  //   : "#contentsmodal";
+  const returnTarget: string = "#contentsmodal";
 
   const handleClick = async () => {
     const url = "/api/return";
