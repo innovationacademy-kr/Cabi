@@ -1,9 +1,10 @@
 .returnEvent {
   background: url("../img/funnyEvent.gif");
   object-fit: cover;
-	color: white;
+  color: white;
 }
+
 .returnEventBtn {
-	background: transparent;
-	border: 2px solid white;
+  background: transparent;
+  border: 2px solid white;
 }

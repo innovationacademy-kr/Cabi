@@ -1,147 +1,147 @@
 /auth/login:
-    post:
-      tags:
-        - /auth/login
-      summary: (intra 로그인에 대한 요청입니다.)
-      responses:
-        '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
+  post:
+    tags:
+      - /auth/login
+    summary: (intra 로그인에 대한 요청입니다.)
+    responses:
+      "200":
+        $ref: "./openapi.yaml#/components/responses/SuccessResponse"
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"
 /auth/login/callback:
-    post:
-      tags:
-        - /auth/login/callback
-      summary: (intra 로그인 시도 후 처리에 대한 요청입니다.)
-      responses:
-        '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
+  post:
+    tags:
+      - /auth/login/callback
+    summary: (intra 로그인 시도 후 처리에 대한 요청입니다.)
+    responses:
+      "200":
+        $ref: "./openapi.yaml#/components/responses/SuccessResponse"
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"
 /auth/logout:
-    post:
-      tags:
-        - /auth/logout
-      summary: (intra 로그아웃에 대한 요청입니다.)
-      responses:
-        '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
+  post:
+    tags:
+      - /auth/logout
+    summary: (intra 로그아웃에 대한 요청입니다.)
+    responses:
+      "200":
+        $ref: "./openapi.yaml#/components/responses/SuccessResponse"
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"
 /api/cabinet:
-    post:
-      tags:
-        - /api/cabinet
-      summary: (전체 사물함에 대한 정보입니다.)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './openapi.yaml#/components/schemas/cabinetList'
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
+  post:
+    tags:
+      - /api/cabinet
+    summary: (전체 사물함에 대한 정보입니다.)
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "./openapi.yaml#/components/schemas/cabinetList"
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"
 /api/lent_info:
-    post:
-      tags:
-        - /api/lent_info
-      summary: (현재 모든 대여자들의 정보입니다.)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                allOf:
-                 - $ref: './openapi.yaml#/components/schemas/lentInfo'
-                 - $ref: './openapi.yaml#/components/schemas/isLent'
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
+  post:
+    tags:
+      - /api/lent_info
+    summary: (현재 모든 대여자들의 정보입니다.)
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "./openapi.yaml#/components/schemas/lentInfo"
+                - $ref: "./openapi.yaml#/components/schemas/isLent"
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"
 /api/lent:
-    post:
-      tags:
-        - /api/lent
-      summary: (특정 사물함을 빌릴 때 요청됩니다.)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - cabinet_id
-                properties:
-                  lent_id:
-                    type: integer
-                    example: 1
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
-/api/return_info:
-    post:
-      tags:
-        - /api/return_info
-      summary: (특정 사용자가 현재 대여하고 있는 사물함의 정보입니다.)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './openapi.yaml#/components/schemas/lentCabinet'
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
-/api/return:
-    post:
-      tags:
-        - /api/return
-      summary: (특정 사물함을 반납 할 때 요청됩니다.)
-      responses:
-        '200':
-          $ref: './openapi.yaml#/components/responses/SuccessResponse'
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
-      requestBody:
+  post:
+    tags:
+      - /api/lent
+    summary: (특정 사물함을 빌릴 때 요청됩니다.)
+    responses:
+      "200":
+        description: OK
         content:
           application/json:
             schema:
               type: object
               required:
-                - lent_id
+                - cabinet_id
               properties:
                 lent_id:
                   type: integer
                   example: 1
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"
+/api/return_info:
+  post:
+    tags:
+      - /api/return_info
+    summary: (특정 사용자가 현재 대여하고 있는 사물함의 정보입니다.)
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "./openapi.yaml#/components/schemas/lentCabinet"
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"
+/api/return:
+  post:
+    tags:
+      - /api/return
+    summary: (특정 사물함을 반납 할 때 요청됩니다.)
+    responses:
+      "200":
+        $ref: "./openapi.yaml#/components/responses/SuccessResponse"
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - lent_id
+            properties:
+              lent_id:
+                type: integer
+                example: 1
 /api/check:
-    post:
-      tags:
-        - /api/check
-      summary: (적절한 유저가 페이지를 접근하는지에 대한 정보입니다.)
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: './openapi.yaml#/components/schemas/userInfo'
-        '400':
-          $ref: './openapi.yaml#/components/responses/BadRequest'
-        '500':
-          $ref: './openapi.yaml#/components/responses/InternalServerError'
+  post:
+    tags:
+      - /api/check
+    summary: (적절한 유저가 페이지를 접근하는지에 대한 정보입니다.)
+    responses:
+      "200":
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "./openapi.yaml#/components/schemas/userInfo"
+      "400":
+        $ref: "./openapi.yaml#/components/responses/BadRequest"
+      "500":
+        $ref: "./openapi.yaml#/components/responses/InternalServerError"

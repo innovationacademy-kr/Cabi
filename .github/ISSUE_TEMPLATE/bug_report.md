@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Bug Report를 위한 템플릿
-title: ''
-labels: ''
-assignees: ''
-
+title: ""
+labels: ""
+assignees: ""
 ---
 
 ## 버그사항이 담긴 제목

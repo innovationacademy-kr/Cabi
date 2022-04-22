@@ -1,17 +1,19 @@
-#returnmodal{
-    z-index: 1060;
+#returnmodal {
+  z-index: 1060;
 }
-#btn-primary{
-    color: #fff;
-    background-color: #6667AB;
-    border-color: #6667AB;
+
+#btn-primary {
+  color: #fff;
+  background-color: #6667ab;
+  border-color: #6667ab;
 }
-#btn-primary:hover{
-    color: #fff;
-    background-color: #5657a5;
-    border-color: #5657a5;
+
+#btn-primary:hover {
+  color: #fff;
+  background-color: #5657a5;
+  border-color: #5657a5;
 }
 
 .modal-content {
-    border-radius: 13px;
+  border-radius: 13px;
 }

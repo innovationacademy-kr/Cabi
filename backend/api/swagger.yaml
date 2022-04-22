@@ -6,7 +6,7 @@ info:
   license:
     name: MIT
 servers:
-  - url: 'https://cabi.42cadet.kr'
+  - url: "https://cabi.42cadet.kr"
 paths:
   /auth/login:
     post:
@@ -14,77 +14,77 @@ paths:
         - /auth/login
       summary: (intra 로그인에 대한 요청입니다.)
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "200":
+          $ref: "#/components/responses/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /auth/login/callback:
     post:
       tags:
         - /auth/login/callback
       summary: (intra 로그인 시도 후 처리에 대한 요청입니다.)
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "200":
+          $ref: "#/components/responses/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /auth/logout:
     post:
       tags:
         - /auth/logout
       summary: (intra 로그아웃에 대한 요청입니다.)
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "200":
+          $ref: "#/components/responses/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /api/cabinet:
     post:
       tags:
         - /api/cabinet
       summary: (전체 사물함에 대한 정보입니다.)
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/cabinetList'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/cabinetList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /api/lent_info:
     post:
       tags:
         - /api/lent_info
       summary: (현재 모든 대여자들의 정보입니다.)
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/lentInfo'
-                  - $ref: '#/components/schemas/isLent'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                  - $ref: "#/components/schemas/lentInfo"
+                  - $ref: "#/components/schemas/isLent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /api/lent:
     post:
       tags:
         - /api/lent
       summary: (특정 사물함을 빌릴 때 요청됩니다.)
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
@@ -96,38 +96,38 @@ paths:
                   lent_id:
                     type: integer
                     example: 1
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /api/return_info:
     post:
       tags:
         - /api/return_info
       summary: (특정 사용자가 현재 대여하고 있는 사물함의 정보입니다.)
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/lentCabinet'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/lentCabinet"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   /api/return:
     post:
       tags:
         - /api/return
       summary: (특정 사물함을 반납 할 때 요청됩니다.)
       responses:
-        '200':
-          $ref: '#/components/responses/SuccessResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "200":
+          $ref: "#/components/responses/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       requestBody:
         content:
           application/json:
@@ -145,16 +145,16 @@ paths:
         - /api/check
       summary: (적절한 유저가 페이지를 접근하는지에 대한 정보입니다.)
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/userInfo'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/userInfo"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 components:
   parameters: null
   schemas:
@@ -213,10 +213,10 @@ components:
           example: 1
         lent_time:
           type: string
-          example: '2022-01-22'
+          example: "2022-01-22"
         expite_time:
           type: string
-          example: '2022-02-22'
+          example: "2022-02-22"
         extension:
           type: boolean
           example: true
@@ -257,7 +257,7 @@ components:
         expire_time:
           type: string
           format: datetime
-          example: '2021-12-29'
+          example: "2021-12-29"
         extension:
           type: boolean
           example: true
@@ -314,7 +314,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             success: false
             message: 잘못된 요청
@@ -323,7 +323,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             success: false
             message: 서버 내부 오류
@@ -332,7 +332,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Success'
+            $ref: "#/components/schemas/Success"
           example:
             success: true
             message: 요청 성공

@@ -1,24 +1,25 @@
-#cabinet_num{
-    font-weight: bolder;
-    font-size: larger;
-    text-align: center;
-    padding: 7px;
+#cabinet_num {
+  font-weight: bolder;
+  font-size: larger;
+  text-align: center;
+  padding: 7px;
 }
 
-#intra_id{
-    font-size: smaller;
-    text-align: center;
-    padding: 5px;
-    color: #464646a6;
-}
-.lentCabinet{
-    background: rgba(128, 117, 140, 0.249)
-}
-.myLentCabinet{
-    background: #7566abaf
+#intra_id {
+  font-size: smaller;
+  text-align: center;
+  padding: 5px;
+  color: #464646a6;
 }
 
-.expiredLentCabinet{
-    background: #b90e7aaf
+.lentCabinet {
+  background: rgba(128, 117, 140, 0.249);
 }
 
+.myLentCabinet {
+  background: #7566abaf;
+}
+
+.expiredLentCabinet {
+  background: #b90e7aaf;
+}

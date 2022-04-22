@@ -108,20 +108,11 @@ export default function Lent(){
     })
     return list;
   };
-	const eventModal = () => {
-		if (new Date() < new Date(2022, 3, 18, 10, 0, 0)){
-			return null;
-		}else if (localStorage.getItem("returnEventShown")){
-      return null;
-    }
-		return <EventModal/>
-	}
 
   return (
     <div className="container col" id="container">
-      {
-				eventModal()
-      }
+      {/* 이벤트 모달 사용 시 하단 코드활성화 */}
+      {/* {localStorage.getItem('eventshown') ? null : <EventModal/>} */}
       <div className="row align-items-center">
         <div className="col"><div className="px-4"><img src="../img/cabinet.ico" onClick={handleHome} width="30"/></div></div>
         <div className="col">

@@ -8,19 +8,26 @@
 <br />
 <br />
 <img align="right" margin="110 100" src="https://github.com/innovationacademy-kr/42cabi/blob/main/readme/play.gif" width="300" height="530">
-  
+
 
 <br />
 
 ## 📇 List
 
-### ✧   [Cabi 서비스로 Go!](https://cabi.42cadet.kr/)
-### ✧   [CCABI 는 누가 만들었나요?](#-CCABI)
-### ✧   [Directory 구조도](#-Directory)
-### ✧   [Project Docs 바로가기](#-Project-Docs)
-### ✧   [Technical Stack](#-Technical-Stack)
-### ✧   [회고록 (작성중)](#-회고록)  
-### ✧   [Thanks to...](#-Thanks-to)
+### ✧ [Cabi 서비스로 Go!](https://cabi.42cadet.kr/)
+
+### ✧ [CCABI 는 누가 만들었나요?](#-CCABI)
+
+### ✧ [Directory 구조도](#-Directory)
+
+### ✧ [Project Docs 바로가기](#-Project-Docs)
+
+### ✧ [Technical Stack](#-Technical-Stack)
+
+### ✧ [회고록 (작성중)](#-회고록)
+
+### ✧ [Thanks to...](#-Thanks-to)
+
 <br />
 <br />
 <br />
@@ -40,6 +47,7 @@
 ## 📁 Directory
 
 ### frontend
+
 ```
 ├── index.html
 ├── src
@@ -52,6 +60,7 @@
 ```
 
 ### backend
+
 ```
 ├── app.ts
 ├── bin
@@ -80,8 +89,8 @@
 
 ## 🐈 Project Docs
 
-* [Wiki](https://github.com/innovationacademy-kr/42cabi/wiki)    
-* [이용안내서](https://www.notion.so/hyunja/42cabi-5fc66d1a6b0a4c48862b2e66e7cf1397)    
+- [Wiki](https://github.com/innovationacademy-kr/42cabi/wiki)
+- [이용안내서](https://www.notion.so/hyunja/42cabi-5fc66d1a6b0a4c48862b2e66e7cf1397)
 
 <br/>
 
@@ -107,10 +116,10 @@
 
 #### 42cabi 회고록
 
-
 <br/>
 
 ## ✨ Thanks to
+
 <img src="https://avatars.githubusercontent.com/u/718691?v=4" width="40" height="40"> [허광남 멘토님](https://github.com/kenu)
 <br />
 <img src="https://avatars.githubusercontent.com/u/53462987?s=200&v=4" width="40" height="40"> [이노베이션 아카데미](https://github.com/innovationacademy-kr)
