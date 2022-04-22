@@ -13,7 +13,7 @@ function App() {
             <Route path="/" element={<Main />}></Route>
             <Route path="/lent" element={<Lent />}></Route>
             <Route path="/return" element={<Return />}></Route>
-            <Route element={<Main />}></Route>
+            <Route path="/*" element={<Main />}></Route>
           </Routes>
         </section>
         <Footer />
