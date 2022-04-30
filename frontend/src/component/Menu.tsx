@@ -1,17 +1,17 @@
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MenualModal from "../modal/MenualModal";
 import "./menu.css";
 
 export default function Menu(props: any) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const url = "/auth/logout";
 
   const handleClick = () => {
     axios
       .post(url)
       .then((res) => {
-        history.push("/");
+        navigate("/");
       })
       .catch((err) => console.log(err));
   };
