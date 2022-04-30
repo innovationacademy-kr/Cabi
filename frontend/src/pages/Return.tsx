@@ -71,7 +71,7 @@ export default function Return() {
 						date.setDate(date.getDate() + 1);
 						setisExpired(date < new Date());
 					} else {
-						setisExired(false);
+						setisExpired(false);
 					}
           setExtension(
             res.data.lent_id === -1
