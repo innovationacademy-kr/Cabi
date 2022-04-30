@@ -69,6 +69,7 @@ export default function Return() {
 					if (res.data){
 						const date:Date = new Date(res.data.expire_time);
 						date.setDate(date.getDate() + 1);
+            date.setHours(0, 0, 0);
 						setisExpired(date < new Date());
 					} else {
 						setisExpired(false);
