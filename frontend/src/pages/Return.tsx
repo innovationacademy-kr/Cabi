@@ -66,7 +66,13 @@ export default function Return() {
         // 특정 사용자가 현재 대여하고 있는 사물함의 정보
         if (res.status === 200) {
           setLentCabinet(res.data);
-          setisExpired(res.data && new Date(res.data.expire_time) < new Date());
+					if (res.data){
+						const date:Date = new Date(res.data.expire_time);
+						date.setDate(date.getDate() + 1);
+						setisExpired(date < new Date());
+					} else {
+						setisExpired(false);
+					}
           setExtension(
             res.data.lent_id === -1
               ? "hidden"
