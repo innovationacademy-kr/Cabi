@@ -170,3 +170,50 @@ userRouter.post("/api/extension", async (req: any, res: any) => {
     throw err;
   }
 });
+
+
+userRouter.post("/api/event/list", async (req: any, res: any) => {
+  try {
+    if (!req.session || !req.session.passport || !req.session.passport.user) {
+      res.status(400).send({ error: "Permission Denied" });
+      return;
+    }
+    const idx = userList.findIndex(
+      (user: userInfo) => user.access === req.session.passport.user.access
+    );
+    if (idx === -1) {
+      res.status(400).send({ error: "Permission Denied" });
+      return;
+    }
+
+    // 1) 당첨자가 아니라면 => 빈 배열
+    // 2) 당첨자라면 => 당첨자의 이벤트
+    // 2 - 2) 나의 깐부가 있다면 => 깐부의 이벤트
+
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ error: e });
+  }
+});
+
+userRouter.post("/api/event/lent", async (req: any, res: any) => {
+  try {
+    if (!req.session || !req.session.passport || !req.session.passport.user) {
+      res.status(400).send({ error: "Permission Denied" });
+      return;
+    }
+    const idx = userList.findIndex(
+      (user: userInfo) => user.access === req.session.passport.user.access
+    );
+    if (idx === -1) {
+      res.status(400).send({ error: "Permission Denied" });
+      return;
+    }
+
+    // 이벤트 당첨 조건 충족시 => event 테이블 조회 후 당첨자 정보 반환
+
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ error: e });
+  }
+});

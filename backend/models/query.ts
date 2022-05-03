@@ -260,3 +260,11 @@ export async function slackReturnUser(day: string) {
   if (pool) pool.end();
   return intraList;
 }
+
+// event 정보 조회
+export async function getEventInfo() {
+}
+
+// event 정보 추가
+export async function insertEventInfo(intra_id:string) {
+}
