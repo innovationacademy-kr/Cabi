@@ -128,7 +128,7 @@ export default function Return() {
             ) : (
               <div>
                 <div className="card-title text-center display-5">
-                  {lentCabinet?.location} {lentCabinet?.floor}{" "}
+                  {lentCabinet?.location} {lentCabinet?.floor}{"F "}
                   {lentCabinet?.cabinet_num}
                 </div>
                 <div className="card-subtitle mb-2 text-muted text-center">
