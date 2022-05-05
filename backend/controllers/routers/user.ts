@@ -210,8 +210,7 @@ userRouter.post("/api/event/lent", async (req: any, res: any) => {
       return;
     }
 
-    // 이벤트 당첨 조건 충족시 => event 테이블 조회 후 당첨자 정보 반환
-
+  // 이벤트 당첨 조건 충족시 => event 테이블 조회 후 당첨자 정보 반환
   } catch (e) {
     console.log(e);
     res.status(400).json({ error: e });

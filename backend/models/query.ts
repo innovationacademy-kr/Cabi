@@ -1,6 +1,7 @@
 import mariadb from "mariadb";
 import { lentInfo, lentCabinetInfo, userInfo } from "./user";
 import { sendLentMsg, sendReturnMsg } from "../controllers/middleware/slack";
+import { eventInfo } from "./user";
 
 const con = mariadb.createPool({
   host: "localhost",
@@ -262,9 +263,55 @@ export async function slackReturnUser(day: string) {
 }
 
 // event 정보 조회
-export async function getEventInfo() {
+export async function getEventInfo(intra_id: string) {
+  let pool: mariadb.PoolConnection;
+  let eventInfo: Array<eventInfo> = [];
+  const selectContent: string = `select b.* from (select * from event where intra_id="${intra_id}") as a, event as b where b.event_id = a.event_id or b.event_id = a.event_id + if(a.event_id % 2 = 0, - 1, + 1)`;
+
+  pool = await con.getConnection();
+  await pool
+    .query(selectContent)
+    .then((res: any) => {
+    })
+    .catch((err: any) => {
+      console.log(err);
+      throw err;
+    });
+  if (pool) pool.end();
+  return ({eventInfo: eventInfo});
 }
 
 // event 정보 추가
 export async function insertEventInfo(intra_id:string) {
+  let pool: mariadb.PoolConnection;
+  const checkContent: string = `select count(*) as count from event where intra_id="${intra_id}")`;
+  const insertContent: string = `update event as a, (select * from event where isEvent=false limit 1) as b set a.isEvent=true, a.intra_id="${intra_id}" where a.event_id = b.event_id`;
+
+  pool = await con.getConnection();
+  await pool
+  .query(checkContent)
+  .then(async(res:any) => {
+    if (res[0].count === 0)
+    {
+      await pool
+        .query(insertContent)
+        .then((result:any) => {
+          console.log(result);
+        })
+        .catch((err:any) => {
+          console.log(err);
+          throw err;
+        });
+    }
+    else {
+      console.log(`${intra_id} : 이미 이벤트 정보가 있습니다.`);
+    }
+  })
+  .catch((err: any) => {
+    console.log(err);
+    throw err;
+  })
+
+  if (pool) pool.end();
+  return ({ errno: 0 });
 }
