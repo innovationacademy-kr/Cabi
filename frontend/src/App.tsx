@@ -2,19 +2,19 @@ import Lent from "./pages/Lent";
 import Main from "./pages/Main";
 import Return from "./pages/Return";
 import Footer from "./component/Footer";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
         <section>
-          <Switch>
-            <Route exact path="/" component={Main}></Route>
-            <Route path="/lent" component={Lent}></Route>
-            <Route path="/return" component={Return}></Route>
-            <Route component={Main}></Route>
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Main />}></Route>
+            <Route path="/lent" element={<Lent />}></Route>
+            <Route path="/return" element={<Return />}></Route>
+            <Route path="/*" element={<Main />}></Route>
+          </Routes>
         </section>
         <Footer />
       </div>

@@ -1,10 +1,10 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./returnEventModal.css";
 
 export default function ReturnEventModal() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleClick = () => {
-    history.push("/lent");
+    navigate("/lent");
   };
   return (
     <div className="modal" id="returneventmodal">

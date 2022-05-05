@@ -1,8 +1,8 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./cabinetBox.css";
 
 export default function CabinetBox(props: any) {
-  const history = useHistory();
+  const navigate = useNavigate();
   let isExpired: boolean = false;
   let toggleName = props.intra_id !== "" ? "" : "modal";
   let targetName = props.isLent === -1 ? "#lentmodal" : "#contentsmodal";
@@ -23,7 +23,7 @@ export default function CabinetBox(props: any) {
     if (props.intra_id === props.user) {
       toggleName = "modal";
       targetName = "";
-      history.push("/return");
+      navigate("/return");
       return;
     }
     props.setTarget(props.cabinet_id);

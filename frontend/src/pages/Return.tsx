@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { userInfo } from "./Main";
 import Menu from "../component/Menu";
@@ -26,7 +26,7 @@ export type lentCabinetInfo = {
 };
 
 export default function Return() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [user, setUser] = useState<userInfo>();
   const [path, setPath] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -42,7 +42,6 @@ export default function Return() {
   const [isExpired, setisExpired] = useState<boolean>(false);
 
   useEffect(() => {
-    // console.log(lentCabinet?.expire_time);
     apiCheck().then(() => {
       callReturn();
     });
@@ -56,7 +55,7 @@ export default function Return() {
       })
       .catch((err: any) => {
         console.log(err);
-        history.push("/");
+        navigate("/");
       });
   };
   const callReturn = async () => {
@@ -66,11 +65,13 @@ export default function Return() {
         // 특정 사용자가 현재 대여하고 있는 사물함의 정보
         if (res.status === 200) {
           setLentCabinet(res.data);
+					//console.log(res.data);
 					if (res.data){
 						const date:Date = new Date(res.data.expire_time);
 						date.setDate(date.getDate() + 1);
-            date.setHours(0, 0, 0);
-						setisExpired(date < new Date());
+						date.setHours(0, 0, 0);
+						//console.log(date);
+						setisExpired(res.data && date < new Date());
 					} else {
 						setisExpired(false);
 					}
@@ -88,7 +89,7 @@ export default function Return() {
       });
   };
   const handleHome = () => {
-    history.push("/lent");
+    navigate("/lent");
   };
 
   return (
