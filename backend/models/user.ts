@@ -67,7 +67,6 @@ export let slackUserList: Array<slackUser> = [];
 
 
 // eventInfo
-
 export type eventInfo = {
   event_id: number,
   event_name: string,
