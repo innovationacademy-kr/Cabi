@@ -1,16 +1,13 @@
+import express from "express";
 import passport from "passport";
-import authCheck from "../middleware/authMiddleware";
 import { userList, userInfo, lentCabinetInfo } from "../../models/userModel";
 import { checkUser } from "../../models/queryModel";
-import { userRouter } from "./userRouter";
 
-export const router = userRouter;
+export const authRouter = express.Router();
 
-router.get("/auth/login", passport.authenticate("42")); // intra 로그인
-router.post("/", authCheck, (req: any, res: any) => {
-  res.json({ test: req.user });
-});
-router.get(
+authRouter.get("/auth/login", passport.authenticate("42")); // intra 로그인
+
+authRouter.get(
   "/auth/login/callback", // intra 로그인 시도 후 처리
   passport.authenticate("42", {
     failureMessage: "LOGIN FAILED :(",
@@ -47,7 +44,7 @@ router.get(
     }
   }
 );
-router.post("/auth/logout", (req: any, res: any) => {
+authRouter.post("/auth/logout", (req: any, res: any) => {
   const idx = userList.findIndex(
     (user: userInfo) => user.access === req.session.passport.user.access
   );

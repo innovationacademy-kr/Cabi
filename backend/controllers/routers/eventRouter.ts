@@ -1,12 +1,16 @@
+import express from "express";
 import { userList, userInfo } from "../../models/userModel";
-import { userRouter } from "./userRouter";
 import {
   getEventInfo,
   insertEventInfo,
   updateEventInfo,
 } from "../../models/eventModel";
 
-userRouter.get("/api/event/list", async (req: any, res: any) => {
+
+export const eventRouter = express.Router();
+
+eventRouter.get("/list", async (req: any, res: any) => {
+	console.log("/list");
 	try {
 	  if (!req.session || !req.session.passport || !req.session.passport.user) {
 		res.status(400).send({ error: "Permission Denied" });
@@ -19,7 +23,6 @@ userRouter.get("/api/event/list", async (req: any, res: any) => {
 		res.status(400).send({ error: "Permission Denied" });
 		return;
 	  }
-  
 	  getEventInfo(userList[idx].intra_id).then((resp: any) => {
 		res.send(resp);
 	  });
@@ -30,7 +33,9 @@ userRouter.get("/api/event/list", async (req: any, res: any) => {
 	}
   });
   
-  userRouter.post("/api/event/lent", async (req: any, res: any) => {
+eventRouter.post("/lent", async (req: any, res: any) => {
+	console.log("/lent");
+
 	try {
 	  if (!req.session || !req.session.passport || !req.session.passport.user) {
 		res.status(400).send({ error: "Permission Denied" });
@@ -56,7 +61,9 @@ userRouter.get("/api/event/list", async (req: any, res: any) => {
 	}
   });
   
-  userRouter.post("/api/event/return", async (req: any, res: any) => {
+eventRouter.post("/return", async (req: any, res: any) => {
+	console.log("/return");
+
 	try {
 	  if (!req.session || !req.session.passport || !req.session.passport.user) {
 		res.status(400).send({ error: "Permission Denied" });

@@ -25,7 +25,7 @@ export default function Event() {
 	}
 
 	const handleReturn = (e: any) => {
-		axios.post('api/event/return').then((res) => {
+		axios.post('/api/event/return').then((res) => {
 			console.log(res.data);
 		});
 	}

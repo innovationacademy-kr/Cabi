@@ -36,7 +36,7 @@ export async function insertEventInfo(intra_id:string) {
   }
   
   // event 정보 update
-  export async function updateEventInfo(intra_id:string) {
+export async function updateEventInfo(intra_id:string) {
 	let pool: mariadb.PoolConnection;
 	const checkContent: string = `select count(*) as count from event where intra_id="${intra_id}"`;
 	const updateContent: string = `update 42cabi_DB.event set intra_id = NULL, isEvent=false where intra_id="${intra_id}"`;
@@ -73,7 +73,7 @@ export async function getEventInfo(intra_id: string) {
 	let pool: mariadb.PoolConnection;
 	let eventInfo: Array<eventInfo> = [];
 	const selectContent: string = `select b.* from (select * from event where intra_id="${intra_id}") as a, event as b where b.event_id = a.event_id or b.event_id = a.event_id + if(a.event_id % 2 = 0, - 1, + 1)`;
-  
+	console.log("getEventInfo ");
 	pool = await con.getConnection();
 	await pool
 	  .query(selectContent)
@@ -86,5 +86,4 @@ export async function getEventInfo(intra_id: string) {
 	  });
 	if (pool) pool.end();
 	return ({eventInfo: eventInfo});
-  }
-  
+}

@@ -8,10 +8,10 @@ import {
   activateExtension,
 } from "../../models/queryModel";
 
-export const userRouter = express.Router();
+export const apiRouter = express.Router();
 
 // 전체 사물함에 대한 정보
-userRouter.post("/api/cabinet", (req: any, res: any) => {
+apiRouter.post("/cabinet", (req: any, res: any) => {
   if (!cabinetList) {
     res.status(400).send({ error: "no cabinet information" });
   } else {
@@ -20,7 +20,7 @@ userRouter.post("/api/cabinet", (req: any, res: any) => {
 });
 
 // 현재 모든 대여자들의 정보
-userRouter.post("/api/lent_info", async (req: any, res: any) => {
+apiRouter.post("/lent_info", async (req: any, res: any) => {
   try {
     if (!req.session || !req.session.passport || !req.session.passport.user) {
       res.status(400).send({ error: "Permission Denied" });
@@ -48,7 +48,7 @@ userRouter.post("/api/lent_info", async (req: any, res: any) => {
 });
 
 // 특정 사물함을 빌릴 때 요청
-userRouter.post("/api/lent", async (req: any, res: any) => {
+apiRouter.post("/lent", async (req: any, res: any) => {
   let errno: number;
   try {
     if (!req.session || !req.session.passport || !req.session.passport.user) {
@@ -86,7 +86,7 @@ userRouter.post("/api/lent", async (req: any, res: any) => {
 });
 
 // 특정 사용자가 현재 대여하고 있는 사물함의 정보
-userRouter.post("/api/return_info", async (req: any, res: any) => {
+apiRouter.post("/return_info", async (req: any, res: any) => {
   try {
     if (!req.session || !req.session.passport || !req.session.passport.user) {
       res.status(400).send({ error: "Permission Denied" });
@@ -110,7 +110,7 @@ userRouter.post("/api/return_info", async (req: any, res: any) => {
 });
 
 // 특정 사물함을 반납할 때 요청
-userRouter.post("/api/return", (req: any, res: any) => {
+apiRouter.post("/return", (req: any, res: any) => {
   try {
     if (!req.session || !req.session.passport || !req.session.passport.user) {
       res.status(400).send({ error: "Permission Denied" });
@@ -134,7 +134,7 @@ userRouter.post("/api/return", (req: any, res: any) => {
 });
 
 // 적절한 유저가 페이지를 접근하는지에 대한 정보
-userRouter.post("/api/check", async (req: any, res: any) => {
+apiRouter.post("/check", async (req: any, res: any) => {
   if (!req.session || !req.session.passport || !req.session.passport.user) {
     res.status(400).send({ error: "Permission Denied" });
   } else {
@@ -148,7 +148,7 @@ userRouter.post("/api/check", async (req: any, res: any) => {
   }
 });
 
-userRouter.post("/api/extension", async (req: any, res: any) => {
+apiRouter.post("/extension", async (req: any, res: any) => {
   try {
     if (!req.session || !req.session.passport || !req.session.passport.user) {
       res.status(400).send({ error: "Permission Denied" });
