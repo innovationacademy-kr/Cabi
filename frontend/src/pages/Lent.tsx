@@ -109,7 +109,7 @@ export default function Lent() {
 
   const handleEvent = () => {
     const url = "/api/event/list"
-    axios.post(url).then((res:any) => {
+    axios.get(url).then((res:any) => {
       setEvent(res.data.eventInfo);
     }).catch((err) => {console.log(err)});
   };
