@@ -1,29 +1,39 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { userInfo } from "./Main";
-import Menu from "../component/Menu";
-import Carousel from "../component/Carousel";
-import Location from "../component/Location";
-import LentModal from "../modal/LentModal";
-import ContentsModal from "../modal/ContentsModal";
-import EventModal from "../modal/EventModal";
-import "./lent.css";
-import "./main.css";
+
+import axios from 'axios'
+import React, {useState, useEffect} from 'react'
+import { useHistory } from 'react-router-dom'
+import { userInfo } from './Main'
+import Menu from '../component/Menu'
+import Carousel from '../component/Carousel'
+import Location from '../component/Location'
+import LentModal from '../modal/LentModal'
+import ContentsModal from '../modal/ContentsModal'
+import EventModal from '../modal/EventModal'
+import './lent.css'
+import './main.css'
+
+
+export type eventInfo = {
+  event_id: number,
+  event_name: string,
+  intra_id: string,
+  isEvent: boolean
+};
 
 export type cabinetInfo = {
-  cabinet_id: number;
-  cabinet_num: number;
-  location: string;
-  floor: number;
-  section: string;
-  activation: boolean;
+  cabinet_id: number,
+  cabinet_num: number,
+  location: string,
+  floor: number,
+  section: string,
+  activation: boolean,
 };
+
 export type locationInfo = {
-  location?: Array<string>;
-  floor?: Array<Array<number>>;
-  section?: Array<Array<Array<string>>>;
-  cabinet?: Array<Array<Array<Array<cabinetInfo>>>>;
+  location?: Array<string>,
+  floor?: Array<Array<number>>,
+  section?: Array<Array<Array<string>>>,
+  cabinet?: Array<Array<Array<Array<cabinetInfo>>>>
 };
 export type lentInfo = {
   lent_id: number;
@@ -43,6 +53,7 @@ export default function Lent() {
   const [target, setTarget] = useState<number>(-1);
   const [cabiNum, setCabiNum] = useState<number>(-1);
   const [info, setInfo] = useState<locationInfo>({});
+  const [event, setEvent] = useState<Array<eventInfo>>([]);
   const [lent, setLent] = useState<Array<lentInfo>>([]);
 
   useEffect(() => {
@@ -51,7 +62,8 @@ export default function Lent() {
       handleClick();
     }
     handleLent();
-  }, [l_idx, info]);
+    handleEvent();
+  }, [l_idx, info, event]);
 
   const apiCheck = async () => {
     const url = "/api/check";
@@ -65,9 +77,11 @@ export default function Lent() {
         history.push("/");
       });
   };
+
   const handleHome = () => {
     history.go(0);
-  };
+  }
+
   const handleLent = () => {
     const url = "/api/lent_info";
     axios
@@ -80,6 +94,7 @@ export default function Lent() {
         console.log(err);
       });
   };
+
   const handleClick = () => {
     const url = "/api/cabinet";
     axios
@@ -91,6 +106,23 @@ export default function Lent() {
         console.log(err);
       });
   };
+
+  const handleEvent = () => {
+    const url = "/api/event/list"
+    axios.post(url).then((res:any) => {
+      setEvent(res.data.eventInfo);
+    }).catch((err) => {console.log(err)});
+  };
+
+  const checkEventWinner = (intra:string): null | eventInfo => {
+    event.forEach((aEvent:eventInfo) => {
+      if (aEvent.intra_id === intra) {
+        return aEvent;
+      }
+    })
+    return null;
+  };
+
   const navTabs = () => {
     let list: Array<JSX.Element> = [];
 
