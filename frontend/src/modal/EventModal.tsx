@@ -10,7 +10,7 @@ export default function EventModal(props: any) {
 
   const dismissAndPrevent = () => {
     setShow(false);
-    localStorage.setItem("returnEventShown", "ok");
+    localStorage.setItem("eventShown", "ok");
   };
 
   return (
@@ -19,24 +19,28 @@ export default function EventModal(props: any) {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
-              🎉 다시 돌아온 42Cabinet 이벤트 🎉
+              🎉 또 다시 돌아온 42 Cabi 5월 이벤트! 🎉
               <br />
-              시크릿 사물함을 반납해라!
+              나의 깐부를 찾아라!!
             </h5>
           </div>
           <div className="modal-body">
-            <p className="eventMessage"> ☼ 이벤트 기간 ⇒ 4/18 ~ 소진 시 ❗️ </p>
-            <p className="eventMessage"> ☼ 당첨 인원 ⇒ 5명 (1명 당 5월렛) </p>
+            <p className="eventMessage"> ☼ 이벤트 기간 ⇒ 5/11 ~ 소진 시 ❗️ </p>
             <p className="eventMessage">
               {" "}
-              ☼ 반납 시 특별한 팝업이 뜬다면 <br />
-              &ensp; 그대는 시크릿 사물함의 주인 🥂{" "}
+              ☼ 당첨 인원 ⇒ 5팀 (총 10명, 인당 10월렛💰){" "}
             </p>
             <p className="eventMessage">
               {" "}
-              ☼ 특이사항 ⇒ 이벤트 기간 중, 대여기간 & 연장기간은 7일로 조정돼요.
+              ☼ 사물함 목록에서 당신의 사물함에 사진이 뜬다면..? <br />
+              &ensp; 사진과 꼭 맞는 깐부🫂를 찾아주세요!! <br />
+              &ensp; (깐부끼리는 서로 볼 수 있다던데..?)
+            </p>
+            <p className="eventMessage">
+              {" "}
+              ☼ 이번 이벤트는 깐부를 직접 만나서 오프라인 인증샷을 찍어주세요!
               <br />
-              &ensp; (이벤트종료 후 대여일은 30일로 조정될 예정입니다.)
+              &ensp; 인증샷📸을 슬랙 cabinet 채널에 올리시면 선착순으로 당첨!!
               <br />
             </p>
             <p className="eventMessage">
