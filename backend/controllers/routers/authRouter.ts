@@ -1,8 +1,8 @@
 import passport from "passport";
-import authCheck from "../middleware/auth";
-import { userList, userInfo, lentCabinetInfo } from "../../models/user";
-import { checkUser } from "../../models/query";
-import { userRouter } from "./user";
+import authCheck from "../middleware/authMiddleware";
+import { userList, userInfo, lentCabinetInfo } from "../../models/userModel";
+import { checkUser } from "../../models/queryModel";
+import { userRouter } from "./userRouter";
 
 export const router = userRouter;
 
