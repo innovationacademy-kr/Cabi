@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 import React, {useState, useEffect} from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { userInfo } from './Main'
 import Menu from '../component/Menu'
 import Carousel from '../component/Carousel'
@@ -46,7 +46,7 @@ export type lentInfo = {
 };
 
 export default function Lent() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [user, setUser] = useState<userInfo>();
   const [l_idx, setLidx] = useState<number>(0);
   const [isLent, setisLent] = useState<number>(0);
@@ -74,12 +74,12 @@ export default function Lent() {
       })
       .catch((err: any) => {
         console.log(err);
-        history.push("/");
+        navigate("/");
       });
   };
 
   const handleHome = () => {
-    history.go(0);
+    navigate(0);
   }
 
   const handleLent = () => {
@@ -167,6 +167,7 @@ export default function Lent() {
           floor_name={floor}
           isLent={isLent}
           lent={lent}
+          checkEvent={checkEventWinner}
         ></Carousel>
       );
     });

@@ -12,6 +12,10 @@
   color: #464646a6;
 }
 
+#cabinet_image{
+  width: 100;
+}
+
 .lentCabinet {
   background: rgba(128, 117, 140, 0.249);
 }

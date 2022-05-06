@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { userInfo } from "./Main";
 import Menu from "../component/Menu";
@@ -33,7 +33,7 @@ export type lentCabinetInfo = {
 };
 
 export default function Return() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [user, setUser] = useState<userInfo>();
   const [path, setPath] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -63,7 +63,7 @@ export default function Return() {
       })
       .catch((err: any) => {
         console.log(err);
-        history.push("/");
+        navigate("/");
       });
   };
   const callReturn = async () => {
@@ -95,7 +95,7 @@ export default function Return() {
       });
   };
   const handleHome = () => {
-    history.push("/lent");
+    navigate("/lent");
   };
   return (
     <div className="container" id="container">
