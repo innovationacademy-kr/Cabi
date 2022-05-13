@@ -24,6 +24,16 @@ export default function LentModal(props: any) {
       .catch((err) => {
         console.log(err);
       });
+
+      // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 lent 했음을 알려주는 함수입니다.
+      handleEventLent();
+  };
+
+  const handleEventLent = () => {
+    const url = "/api/event/lent"
+    axios.post(url)
+			.then(res => {})
+      .catch(err => {console.log(err)});
   };
 
   return (
@@ -44,7 +54,7 @@ export default function LentModal(props: any) {
           <div className="modal-body">
             <p className="alretMessage">
               {" "}
-              대여기간은 +7일입니다.<br></br> 이용 중 귀중품 분실에 책임지지
+              대여기간은 +30일 입니다.<br></br> 이용 중 귀중품 분실에 책임지지
               않습니다.
             </p>
             <p className="agreeMessage">
