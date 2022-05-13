@@ -78,12 +78,7 @@ export default function Lent() {
 
   const handleHome = () => {
     navigate(0);
-<<<<<<< HEAD
-  }
-
-=======
   };
->>>>>>> dev
   const handleLent = () => {
     const url = "/api/lent_info";
     axios
@@ -107,7 +102,6 @@ export default function Lent() {
       .catch((err) => {
         console.log(err);
       });
-<<<<<<< HEAD
   };
 
   const handleEvent = () => {
@@ -115,8 +109,6 @@ export default function Lent() {
     axios.get(url).then((res:any) => {
       setEvent(res.data.eventInfo);
     }).catch((err) => {console.log(err)});
-=======
->>>>>>> dev
   };
 
   const checkEventWinner = (intra:string): null | eventInfo => {
@@ -178,10 +170,7 @@ export default function Lent() {
           floor_name={floor}
           isLent={isLent}
           lent={lent}
-<<<<<<< HEAD
           checkEvent={checkEventWinner}
-=======
->>>>>>> dev
         ></Carousel>
       );
     });
