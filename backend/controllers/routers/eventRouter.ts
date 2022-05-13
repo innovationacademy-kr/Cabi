@@ -10,7 +10,6 @@ import {
 export const eventRouter = express.Router();
 
 eventRouter.get("/list", async (req: any, res: any) => {
-	console.log("/list");
 	try {
 		if (!req.session || !req.session.passport || !req.session.passport.user) {
 			res.status(400).send({ error: "Permission Denied" });
@@ -34,8 +33,6 @@ eventRouter.get("/list", async (req: any, res: any) => {
 });
 
 eventRouter.post("/lent", async (req: any, res: any) => {
-	console.log("/lent");
-
 	try {
 		if (!req.session || !req.session.passport || !req.session.passport.user) {
 			res.status(400).send({ error: "Permission Denied" });
@@ -48,9 +45,7 @@ eventRouter.post("/lent", async (req: any, res: any) => {
 			res.status(400).send({ error: "Permission Denied" });
 			return;
 		}
-		if (new Date(2022, 4, 16, 9, 0, 0, 0) > new Date()){
-			console.log(new Date(2022, 4, 16, 9, 0, 0, 0));
-			console.log(new Date());
+		if (new Date(2022, 4, 16, 18, 0, 0) > new Date()){
 			return res.sendStatus(200);
 		}
 		// 특정 조건 추가할 것
@@ -63,14 +58,12 @@ eventRouter.post("/lent", async (req: any, res: any) => {
 		res.sendStatus(200);
 		// 이벤트 당첨 조건 충족시 => event 테이블 조회 후 당첨자 정보 반환
 	} catch (e) {
-		console.log(e);`
+		console.log(e);
 		res.status(400).json({ error: e });
 	}
 });
 
 eventRouter.post("/return", async (req: any, res: any) => {
-	console.log("/return");
-
 	try {
 		if (!req.session || !req.session.passport || !req.session.passport.user) {
 			res.status(400).send({ error: "Permission Denied" });

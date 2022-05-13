@@ -25,7 +25,7 @@ export default function EventModal(props: any) {
             </h5>
           </div>
           <div className="modal-body">
-            <p className="eventMessage"> ☼ 이벤트 기간 ⇒ 5/11 ~ 소진 시 ❗️ </p>
+            <p className="eventMessage"> ☼ 이벤트 기간 ⇒ 5/16 ~ 소진 시 ❗️ </p>
             <p className="eventMessage">
               {" "}
               ☼ 당첨 인원 ⇒ 5팀 (총 10명, 인당 10월렛💰){" "}

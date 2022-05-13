@@ -23,7 +23,7 @@ export async function insertEventInfo(intra_id:string) {
 		  });
 	  }
 	  else {
-		console.log(`${intra_id} : 이미 이벤트 정보가 있습니다.`);
+			console.log(`${intra_id} : 이미 이벤트 정보가 있습니다.`);
 	  }
 	})
 	.catch((err: any) => {
@@ -51,12 +51,9 @@ export async function updateEventInfo(intra_id:string) {
 		  .query(updateContent)
 		  .then((result:any) => {})
 		  .catch((err:any) => {
-			console.log(err);
+				console.log(err);
 			throw err;
 		  });
-	  }
-	  else {
-		console.log(`${intra_id} : 이벤트 대상자가 아닙니다.`);
 	  }
 	})
 	.catch((err: any) => {
@@ -73,7 +70,6 @@ export async function getEventInfo(intra_id: string) {
 	let pool: mariadb.PoolConnection;
 	let eventInfo: Array<eventInfo> = [];
 	const selectContent: string = `select b.* from (select * from event where intra_id="${intra_id}") as a, event as b where b.event_id = a.event_id or b.event_id = a.event_id + if(a.event_id % 2 = 0, - 1, + 1)`;
-	console.log("getEventInfo ");
 	pool = await con.getConnection();
 	await pool
 	  .query(selectContent)
