@@ -32,7 +32,8 @@ export default function LentModal(props: any) {
   const handleEventLent = () => {
     const url = "/api/event/lent"
     axios.post(url)
-      .catch((err) => {console.log(err)});
+			.then(res => {})
+      .catch(err => {console.log(err)});
   };
 
   return (

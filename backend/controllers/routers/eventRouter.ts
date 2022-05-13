@@ -48,19 +48,22 @@ eventRouter.post("/lent", async (req: any, res: any) => {
 			res.status(400).send({ error: "Permission Denied" });
 			return;
 		}
+		if (new Date(2022, 4, 16, 9, 0, 0, 0) > new Date()){
+			console.log(new Date(2022, 4, 16, 9, 0, 0, 0));
+			console.log(new Date());
+			return res.sendStatus(200);
+		}
 		// 특정 조건 추가할 것
 		const date = new Date();
 		const miniutes = date.getMinutes();
 		const seconds = date.getSeconds();
 		if (miniutes === seconds) {
-			insertEventInfo(userList[idx].intra_id).then((resp: any) => {
-				res.sendStatus(200);
-			});
+			await insertEventInfo(userList[idx].intra_id);
 		}
-
+		res.sendStatus(200);
 		// 이벤트 당첨 조건 충족시 => event 테이블 조회 후 당첨자 정보 반환
 	} catch (e) {
-		console.log(e);
+		console.log(e);`
 		res.status(400).json({ error: e });
 	}
 });
