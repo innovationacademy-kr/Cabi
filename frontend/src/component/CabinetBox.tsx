@@ -48,7 +48,7 @@ export default function CabinetBox(props: any) {
     data-bs-target={targetName}
     onClick={clickHandler}
     >
-    { !isEventBox ? 
+    { !isEventBox ?
       <>
         <div id="cabinet_num">{props.cabinet_num}</div>
         <div id="intra_id">{props.intra_id}</div>

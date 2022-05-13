@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import axios from 'axios'
 import React, {useState, useEffect} from 'react'
@@ -11,6 +12,20 @@ import ContentsModal from '../modal/ContentsModal'
 import EventModal from '../modal/EventModal'
 import './lent.css'
 import './main.css'
+=======
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { userInfo } from "./Main";
+import Menu from "../component/Menu";
+import Carousel from "../component/Carousel";
+import Location from "../component/Location";
+import LentModal from "../modal/LentModal";
+import ContentsModal from "../modal/ContentsModal";
+import EventModal from "../modal/EventModal";
+import "./lent.css";
+import "./main.css";
+>>>>>>> dev
 
 
 export type eventInfo = {
@@ -21,6 +36,7 @@ export type eventInfo = {
 };
 
 export type cabinetInfo = {
+<<<<<<< HEAD
   cabinet_id: number,
   cabinet_num: number,
   location: string,
@@ -34,6 +50,20 @@ export type locationInfo = {
   floor?: Array<Array<number>>,
   section?: Array<Array<Array<string>>>,
   cabinet?: Array<Array<Array<Array<cabinetInfo>>>>
+=======
+  cabinet_id: number;
+  cabinet_num: number;
+  location: string;
+  floor: number;
+  section: string;
+  activation: boolean;
+};
+export type locationInfo = {
+  location?: Array<string>;
+  floor?: Array<Array<number>>;
+  section?: Array<Array<Array<string>>>;
+  cabinet?: Array<Array<Array<Array<cabinetInfo>>>>;
+>>>>>>> dev
 };
 export type lentInfo = {
   lent_id: number;
@@ -80,8 +110,12 @@ export default function Lent() {
 
   const handleHome = () => {
     navigate(0);
+<<<<<<< HEAD
   }
 
+=======
+  };
+>>>>>>> dev
   const handleLent = () => {
     const url = "/api/lent_info";
     axios
@@ -105,6 +139,7 @@ export default function Lent() {
       .catch((err) => {
         console.log(err);
       });
+<<<<<<< HEAD
   };
 
   const handleEvent = () => {
@@ -112,6 +147,8 @@ export default function Lent() {
     axios.get(url).then((res:any) => {
       setEvent(res.data.eventInfo);
     }).catch((err) => {console.log(err)});
+=======
+>>>>>>> dev
   };
 
   const checkEventWinner = (intra:string): null | eventInfo => {
@@ -173,7 +210,10 @@ export default function Lent() {
           floor_name={floor}
           isLent={isLent}
           lent={lent}
+<<<<<<< HEAD
           checkEvent={checkEventWinner}
+=======
+>>>>>>> dev
         ></Carousel>
       );
     });

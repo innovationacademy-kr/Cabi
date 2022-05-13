@@ -11,11 +11,10 @@ function App() {
       <div className="App">
         <section>
           <Routes>
-            <Route path="/" element={<Main/>}></Route>
-            <Route path="/lent" element={<Lent/>}></Route>
-            <Route path="/return" element={<Return/>}></Route>
-            <Route path="/event" element={<Event/>}></Route>
-            <Route element={<Main/>}></Route>
+            <Route path="/" element={<Main />}></Route>
+            <Route path="/lent" element={<Lent />}></Route>
+            <Route path="/return" element={<Return />}></Route>
+            <Route path="/*" element={<Main />}></Route>
           </Routes>
         </section>
         <Footer />

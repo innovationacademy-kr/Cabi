@@ -49,7 +49,6 @@ export default function Return() {
   const [isExpired, setisExpired] = useState<boolean>(false);
 
   useEffect(() => {
-    // console.log(lentCabinet?.expire_time);
     apiCheck().then(() => {
       callReturn();
     });
@@ -73,11 +72,21 @@ export default function Return() {
         // 특정 사용자가 현재 대여하고 있는 사물함의 정보
         if (res.status === 200) {
           setLentCabinet(res.data);
+<<<<<<< HEAD
 					if (res.data){
 						const date:Date = new Date(res.data.expire_time);
 						date.setDate(date.getDate() + 1);
             date.setHours(0, 0, 0);
 						setisExpired(date < new Date());
+=======
+					//console.log(res.data);
+					if (res.data){
+						const date:Date = new Date(res.data.expire_time);
+						date.setDate(date.getDate() + 1);
+						date.setHours(0, 0, 0);
+						//console.log(date);
+						setisExpired(res.data && date < new Date());
+>>>>>>> dev
 					} else {
 						setisExpired(false);
 					}
