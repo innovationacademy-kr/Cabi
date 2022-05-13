@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { eventInfo } from "../pages/Event";
 import "./cabinetBox.css";
 import ReturnEventImage from "./EventImage";
+
+export type eventInfo = {
+	event_id: number,
+	event_name: string,
+	intra_id: string,
+	isEvent: boolean
+};
 
 export default function CabinetBox(props: any) {
   const navigate = useNavigate();

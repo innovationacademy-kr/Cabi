@@ -6,14 +6,14 @@ export function SeromFloor(props: any) {
   const cluster2: number = props.f_idx === 1 ? 4 : 6;
 
   const findIdx = (name: string) => {
-    console.log(props.info?.section[props.l_idx][props.f_idx].findIndex(
+    const idx = props.info?.section[props.l_idx][props.f_idx].findIndex(
       (section: string) => section === name
-    ) + 1);
-    return (
-      props.info?.section[props.l_idx][props.f_idx].findIndex(
-        (section: string) => section === name
-      ) + 1
     );
+    if (idx === -1) {
+      return 1;
+    } else {
+      return idx + 1;
+    }
   };
   const countCabinet = (name: string): number => {
     return props.info?.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1]
