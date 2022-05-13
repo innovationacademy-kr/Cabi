@@ -113,12 +113,6 @@ export default function Return() {
       {/* 새롬관 2F 148 ~2022-03-07 메모장 */}
       <div
         className={`card row-2 p-5 m-5 ${
-          typeof lentCabinet?.lent_id === "number" &&
-          lentCabinet?.lent_id % 42 === 0 &&
-          lentCabinet?.lent_id < 1177
-            ? "event"
-            : ""
-        } ${
           typeof lentCabinet?.lent_id === "number" && isExpired == true
             ? "expiredView"
             : ""

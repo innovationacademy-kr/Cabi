@@ -148,7 +148,7 @@ export async function getLentUser() {
 export async function createLent(cabinet_id: number, user: userInfo) {
   let errResult = 0;
   let pool: mariadb.PoolConnection;
-  const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 7), 0)`;
+  const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
   pool = await con.getConnection();
   await pool
     .query(content)
