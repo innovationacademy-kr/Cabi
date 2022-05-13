@@ -12,6 +12,15 @@
   color: #464646a6;
 }
 
+#cabinet_image, #cabinet_image > img {
+  width: 100%;
+  height: 100%;
+}
+
+#cabinet_image > img {
+  object-fit: cover;
+}
+
 .lentCabinet {
   background: rgba(128, 117, 140, 0.249);
 }
