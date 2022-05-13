@@ -1,3 +1,7 @@
 #extensionBody {
   opacity: 0.5;
 }
+
+.redText{
+  color: tomato;
+}
