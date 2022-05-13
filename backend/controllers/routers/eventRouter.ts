@@ -52,8 +52,6 @@ eventRouter.post("/lent", async (req: any, res: any) => {
 		const date = new Date();
 		const miniutes = date.getMinutes();
 		const seconds = date.getSeconds();
-		console.log(miniutes);
-		console.log(seconds);
 		if (miniutes === seconds) {
 			insertEventInfo(userList[idx].intra_id).then((resp: any) => {
 				res.sendStatus(200);
