@@ -1,8 +1,8 @@
 import mariadb from "mariadb";
-import { lentInfo, lentCabinetInfo, userInfo } from "./user";
-import { sendLentMsg, sendReturnMsg } from "../controllers/middleware/slack";
+import { lentInfo, lentCabinetInfo, userInfo } from "./userModel";
+import { sendLentMsg, sendReturnMsg } from "../controllers/middleware/slackMiddleware";
 
-const con = mariadb.createPool({
+export const con = mariadb.createPool({
   host: "localhost",
   user: "root",
   password: "",
@@ -148,7 +148,7 @@ export async function getLentUser() {
 export async function createLent(cabinet_id: number, user: userInfo) {
   let errResult = 0;
   let pool: mariadb.PoolConnection;
-  const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 7), 0)`;
+  const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
   pool = await con.getConnection();
   await pool
     .query(content)
@@ -213,50 +213,4 @@ export async function activateExtension(user: any) {
       throw err;
     });
   if (pool) pool.end();
-}
-
-//슬랙 연체 메세지 발송을 위한 연체 유저 정보 조회
-export async function slackOverdueUser(day: string) {
-  let pool: mariadb.PoolConnection;
-  let intraList: Array<string> = [];
-  const content: string = `SELECT intra_id FROM user INNER JOIN lent ON lent.lent_user_id = user.user_id WHERE expire_time='${day}'`;
-  pool = await con.getConnection();
-  await pool
-    .query(content)
-    .then((res: any) => {
-      if (res) {
-        for (let i = 0; i < res.length; i++) {
-          intraList.push(res[i].intra_id);
-        }
-      }
-    })
-    .catch((err: any) => {
-      console.log(err);
-      throw err;
-    });
-  if (pool) pool.end();
-  return intraList;
-}
-
-//슬랙 메세지 발송을 위한 반납 전날 유저 정보 조회
-export async function slackReturnUser(day: string) {
-  let pool: mariadb.PoolConnection;
-  let intraList: Array<string> = [];
-  const content: string = `SELECT intra_id FROM user INNER JOIN lent ON lent.lent_user_id = user.user_id WHERE expire_time='${day}'`;
-  pool = await con.getConnection();
-  await pool
-    .query(content)
-    .then((res: any) => {
-      if (res) {
-        for (let i = 0; i < res.length; i++) {
-          intraList.push(res[i].intra_id);
-        }
-      }
-    })
-    .catch((err: any) => {
-      console.log(err);
-      throw err;
-    });
-  if (pool) pool.end();
-  return intraList;
 }

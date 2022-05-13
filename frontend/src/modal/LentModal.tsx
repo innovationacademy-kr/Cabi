@@ -24,6 +24,15 @@ export default function LentModal(props: any) {
       .catch((err) => {
         console.log(err);
       });
+
+      // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 lent 했음을 알려주는 함수입니다.
+      handleEventLent();
+  };
+
+  const handleEventLent = () => {
+    const url = "/api/event/lent"
+    axios.post(url)
+      .catch((err) => {console.log(err)});
   };
 
   return (

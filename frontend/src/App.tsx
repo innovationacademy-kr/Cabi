@@ -1,6 +1,7 @@
 import Lent from "./pages/Lent";
 import Main from "./pages/Main";
 import Return from "./pages/Return";
+import Event from "./pages/Event";
 import Footer from "./component/Footer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
