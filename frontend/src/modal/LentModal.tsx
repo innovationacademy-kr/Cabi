@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./lentModal.css";
 
 export default function LentModal(props: any) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, setState] = useState<boolean>(false);
 
   const handleClick = () => {
@@ -18,7 +18,7 @@ export default function LentModal(props: any) {
           return;
         }
         if (res.status === 200) {
-          history.push("/return");
+          navigate("/return");
         }
       })
       .catch((err) => {
