@@ -3,11 +3,14 @@ import { lentInfo, cabinetInfo } from "../../pages/Lent";
 
 export function SeromSecondFloor(props: any) {
   const findIdx = (name: string) => {
-    return (
-      props.info?.section[props.l_idx][props.f_idx].findIndex(
-        (section: string) => section === name
-      ) + 1
+    const idx = props.info?.section[props.l_idx][props.f_idx].findIndex(
+      (section: string) => section === name
     );
+    if (idx === -1) {
+      return 1;
+    } else {
+      return idx + 1;
+    }
   };
   const countCabinet = (name: string): number => {
     return props.info?.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1]
