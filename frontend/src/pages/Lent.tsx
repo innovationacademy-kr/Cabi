@@ -11,6 +11,14 @@ import EventModal from "../modal/EventModal";
 import "./lent.css";
 import "./main.css";
 
+
+export type eventInfo = {
+  event_id: number,
+  event_name: string,
+  intra_id: string,
+  isEvent: boolean
+};
+
 export type cabinetInfo = {
   cabinet_id: number;
   cabinet_num: number;
@@ -43,6 +51,7 @@ export default function Lent() {
   const [target, setTarget] = useState<number>(-1);
   const [cabiNum, setCabiNum] = useState<number>(-1);
   const [info, setInfo] = useState<locationInfo>({});
+  const [event, setEvent] = useState<Array<eventInfo>>([]);
   const [lent, setLent] = useState<Array<lentInfo>>([]);
 
   useEffect(() => {
@@ -51,7 +60,8 @@ export default function Lent() {
       handleClick();
     }
     handleLent();
-  }, [l_idx, info]);
+    handleEvent();
+  }, []);
 
   const apiCheck = async () => {
     const url = "/api/check";
@@ -65,6 +75,7 @@ export default function Lent() {
         navigate("/");
       });
   };
+
   const handleHome = () => {
     navigate(0);
   };
@@ -80,6 +91,7 @@ export default function Lent() {
         console.log(err);
       });
   };
+
   const handleClick = () => {
     const url = "/api/cabinet";
     axios
@@ -91,6 +103,28 @@ export default function Lent() {
         console.log(err);
       });
   };
+
+  const handleEvent = () => {
+    const url = "/api/event/list"
+    axios.get(url).then((res:any) => {
+      setEvent(res.data.eventInfo);
+    }).catch((err) => {console.log(err)});
+  };
+
+  const checkEventWinner = (intra:string): null | eventInfo => {
+    let result = null;
+
+    if (intra === "") {
+      return result;
+    }
+    event.forEach((aEvent:eventInfo) => {
+      if (aEvent.intra_id === intra) {
+        return result = aEvent;
+      }
+    })
+    return result;
+  };
+
   const navTabs = () => {
     let list: Array<JSX.Element> = [];
 
@@ -135,6 +169,7 @@ export default function Lent() {
           floor_name={floor}
           isLent={isLent}
           lent={lent}
+          checkEvent={checkEventWinner}
         ></Carousel>
       );
     });
@@ -144,7 +179,7 @@ export default function Lent() {
   return (
     <div className="container col" id="container">
       {/* 이벤트 모달 사용 시 하단 코드활성화 */}
-      {/* {localStorage.getItem('eventshown') ? null : <EventModal/>} */}
+      {localStorage.getItem("eventShown") ? null : <EventModal />}
       <div className="row align-items-center">
         <div className="col">
           <div className="px-4">

@@ -34,7 +34,7 @@ export default function ExtensionModal(props: any) {
             <p>사물함을 연장하시겠습니까?</p>
             <div id="extensionBody">연장은 최초 1회만 가능하고,</div>
             <div id="extensionBody">
-              현재 날짜로부터 사용 기간이 7일 연장됩니다.
+              <span className="redText"> 현재 날짜로부터 </span>사용 기간이 7일 연장됩니다.
             </div>
           </div>
           <div className="modal-footer justify-content-center">

@@ -11,6 +11,13 @@ import "./main.css";
 import "./return.css";
 import ReturnEventModal from "../modal/ReturnEventModal";
 
+export type eventInfo = {
+  event_id: number,
+  event_name: string,
+  intra_id: string,
+  isEvent: boolean
+};
+
 export type lentCabinetInfo = {
   lent_id: number;
   lent_cabinet_id: number;
@@ -65,13 +72,11 @@ export default function Return() {
         // 특정 사용자가 현재 대여하고 있는 사물함의 정보
         if (res.status === 200) {
           setLentCabinet(res.data);
-					//console.log(res.data);
 					if (res.data){
 						const date:Date = new Date(res.data.expire_time);
 						date.setDate(date.getDate() + 1);
-						date.setHours(0, 0, 0);
-						//console.log(date);
-						setisExpired(res.data && date < new Date());
+            date.setHours(0, 0, 0);
+						setisExpired(date < new Date());
 					} else {
 						setisExpired(false);
 					}
@@ -91,7 +96,6 @@ export default function Return() {
   const handleHome = () => {
     navigate("/lent");
   };
-
   return (
     <div className="container" id="container">
       {/* 상단바 */}
@@ -108,12 +112,6 @@ export default function Return() {
       {/* 새롬관 2F 148 ~2022-03-07 메모장 */}
       <div
         className={`card row-2 p-5 m-5 ${
-          typeof lentCabinet?.lent_id === "number" &&
-          lentCabinet?.lent_id % 42 === 0 &&
-          lentCabinet?.lent_id < 1177
-            ? "event"
-            : ""
-        } ${
           typeof lentCabinet?.lent_id === "number" && isExpired == true
             ? "expiredView"
             : ""
@@ -128,7 +126,7 @@ export default function Return() {
             ) : (
               <div>
                 <div className="card-title text-center display-5">
-                  {lentCabinet?.location} {lentCabinet?.floor}{" "}
+                  {lentCabinet?.location} {lentCabinet?.floor}{"F "}
                   {lentCabinet?.cabinet_num}
                 </div>
                 <div className="card-subtitle mb-2 text-muted text-center">

@@ -33,6 +33,12 @@ export default function ReturnModal(props: any) {
   //   : "#contentsmodal";
   const returnTarget: string = "#contentsmodal";
 
+  const handleEventReturn = () => {
+    const url = "/api/event/return"
+    axios.post(url)
+      .catch((err) => {console.log(err)});
+  };
+
   const handleClick = async () => {
     const url = "/api/return";
     await axios
@@ -49,6 +55,10 @@ export default function ReturnModal(props: any) {
         props.setContent("다시 시도해주세요!");
         props.setPath("");
       });
+
+      // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 return 했음을 알려주는 함수입니다.
+      handleEventReturn();
+
   };
 
   return (

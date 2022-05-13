@@ -6,10 +6,13 @@ import swaggerUI from "swagger-ui-express";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
 
-import { router } from "./controllers/routers/route";
-import { connectionForCabinet } from "./models/db";
-import passportConfig from "./controllers/middleware/passport";
-import slack from "./controllers/middleware/slack";
+import { apiRouter } from "./controllers/routers/apiRouter";
+import { authRouter } from "./controllers/routers/authRouter";
+import { eventRouter } from "./controllers/routers/eventRouter";
+
+import { connectionForCabinet } from "./models/dbModel";
+import passportConfig from "./controllers/middleware/passportMiddleware";
+import slack from "./controllers/middleware/slackMiddleware";
 
 import dotenv from "dotenv";
 
@@ -56,7 +59,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 passportConfig();
 
-app.use("/", router);
+app.use("/api/event", eventRouter);
+app.use("/api", apiRouter);
+app.use("/", authRouter);
 slack();
 connectionForCabinet();
 
