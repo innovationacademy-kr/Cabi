@@ -63,7 +63,7 @@ export default function Lent() {
     }
     handleLent();
     handleEvent();
-  }, [l_idx, info, event]);
+  }, []);
 
   const apiCheck = async () => {
     const url = "/api/check";
@@ -115,12 +115,18 @@ export default function Lent() {
   };
 
   const checkEventWinner = (intra:string): null | eventInfo => {
+    let result = null;
+
+    if (intra === "") {
+      return result;
+    }
+    console.log(intra);
     event.forEach((aEvent:eventInfo) => {
       if (aEvent.intra_id === intra) {
-        return aEvent;
+        return result = aEvent;
       }
     })
-    return null;
+    return result;
   };
 
   const navTabs = () => {

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { eventInfo } from "../pages/Event";
 import "./cabinetBox.css";
-import returnEventImage from "../../img/eventImage/EventImage"
+import ReturnEventImage from "./EventImage";
 
 export default function CabinetBox(props: any) {
   const navigate = useNavigate();
@@ -11,7 +11,6 @@ export default function CabinetBox(props: any) {
   let vanilaClassName: string = "border justify-content-center";
 
   let isEventBox: null | eventInfo = props.checkEvent(props.intra_id);
-
 
   if (props.isLent && props.expire_time) {
     isExpired = new Date(props.expire_time) < new Date();
@@ -39,7 +38,7 @@ export default function CabinetBox(props: any) {
     if (!isEventBox) {
       return <></>;
     }
-    return <img src={returnEventImage(isEventBox.event_name)}></img>;
+    return <img src={ReturnEventImage(isEventBox.event_name)} alt='..'></img>;
   };
 
   return (
@@ -55,9 +54,7 @@ export default function CabinetBox(props: any) {
         <div id="intra_id">{props.intra_id}</div>
       </>
     : <>
-        <div id="cabinet_image">
-          {checkEventImage}
-        </div>
+        <div id="cabinet_image">{checkEventImage()}</div>
       </>
     }
     </div>
