@@ -45,7 +45,7 @@ eventRouter.post("/lent", async (req: any, res: any) => {
 			res.status(400).send({ error: "Permission Denied" });
 			return;
 		}
-		if (new Date(2022, 4, 16, 18, 0, 0) > new Date()){
+		if (new Date(2022, 4, 16, 9, 0, 0) > new Date()){
 			return res.sendStatus(200);
 		}
 		// 특정 조건 추가할 것
