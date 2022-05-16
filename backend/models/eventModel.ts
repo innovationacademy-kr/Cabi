@@ -22,9 +22,9 @@ export async function insertEventInfo(intra_id:string) {
 			throw err;
 		  });
 	  }
-	  else {
-			console.log(`${intra_id} : 이미 이벤트 정보가 있습니다.`);
-	  }
+	  //else {
+		//	console.log(`${intra_id} : 이미 이벤트 정보가 있습니다.`);
+	  //}
 	})
 	.catch((err: any) => {
 	  console.log(err);
