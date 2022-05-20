@@ -50,9 +50,9 @@ eventRouter.post("/lent", async (req: any, res: any) => {
 		}
 		// 특정 조건 추가할 것
 		const date = new Date();
+		const hour = date.getHours();
 		const miniutes = date.getMinutes();
-		const seconds = date.getSeconds();
-		if (miniutes === seconds) {
+		if (hour === miniutes) {
 			await insertEventInfo(userList[idx].intra_id);
 		}
 		res.sendStatus(200);
