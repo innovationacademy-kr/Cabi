@@ -11,7 +11,6 @@ import EventModal from "../modal/EventModal";
 import "./lent.css";
 import "./main.css";
 
-
 export type eventInfo = {
   event_id: number,
   event_name: string,
