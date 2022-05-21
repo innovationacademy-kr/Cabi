@@ -80,14 +80,11 @@ export default function Return() {
             nowDate.setDate(nowDate.getDate() + 7);
             date.setDate(date.getDate() + 1);
             date.setHours(0, 0, 0);
-            if (date > nowDate){
-              res.data.extension = 1;
-            }
-            if (res.data.lent_id === - 1) {
-              extention = "hidden";
-            }
-            else if (res.data.extension > 0) {
+            if ((date > nowDate) || (res.data.extension > 0)){
               extention = "disabled";
+            }
+            else if (res.data.lent_id === - 1) {
+              extention = "hidden";
             }
           }
           setExtension(extention);
