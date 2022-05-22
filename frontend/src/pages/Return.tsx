@@ -10,6 +10,7 @@ import ExtensionModal from "../modal/ExtensionModal";
 import "./main.css";
 import "./return.css";
 import ReturnEventModal from "../modal/ReturnEventModal";
+import { getJSDocDeprecatedTag } from "typescript";
 
 export type eventInfo = {
   event_id: number,
@@ -72,9 +73,24 @@ export default function Return() {
         // 특정 사용자가 현재 대여하고 있는 사물함의 정보
         if (res.status === 200) {
           setLentCabinet(res.data);
+          let extention = "";
+          if (res.data) {
+            const date:Date = new Date(res.data.expire_time);
+            const nowDate:Date = new Date();
+            nowDate.setDate(nowDate.getDate() + 7);
+            date.setDate(date.getDate() + 1);
+            date.setHours(0, 0, 0);
+            if ((date > nowDate) || (res.data.extension > 0)){
+              extention = "disabled";
+            }
+            else if (res.data.lent_id === - 1) {
+              extention = "hidden";
+            }
+          }
+          setExtension(extention);
 					//console.log(res.data);
 					if (res.data){
-						const date:Date = new Date(res.data.expire_time);
+            const date:Date = new Date(res.data.expire_time);
 						date.setDate(date.getDate() + 1);
 						date.setHours(0, 0, 0);
 						//console.log(date);
@@ -82,13 +98,6 @@ export default function Return() {
 					} else {
 						setisExpired(false);
 					}
-          setExtension(
-            res.data.lent_id === -1
-              ? "hidden"
-              : res.data.extension > 0
-              ? "disabled"
-              : ""
-          );
         }
       })
       .catch((err) => {
