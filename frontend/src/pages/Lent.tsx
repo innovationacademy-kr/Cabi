@@ -5,6 +5,7 @@ import { userInfo } from "./Main";
 import Menu from "../component/Menu";
 import Carousel from "../component/Carousel";
 import Location from "../component/Location";
+import Question from "../component/Question";
 import LentModal from "../modal/LentModal";
 import ContentsModal from "../modal/ContentsModal";
 import EventModal from "../modal/EventModal";
@@ -207,8 +208,12 @@ export default function Lent() {
           <React.Fragment>{navContent()}</React.Fragment>
         </div>
       </div>
+      <div className="text-right">
+      <Question></Question>
+      </div>
       <LentModal target={target} cabiNum={cabiNum}></LentModal>
       <ContentsModal contents="이미 대여중인 사물함이 있어요 :)" />
+
     </div>
   );
 }
