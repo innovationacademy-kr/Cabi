@@ -21,7 +21,7 @@ const ReturnEventImage = (name: string) => {
 			return goblin;
 		case "gongyou":
 			return gongyou;
-		case "logo_purple":
+		case "42cabi":
 			return logo_purple;
 		case "ohilnam":
 			return ohilnam;
