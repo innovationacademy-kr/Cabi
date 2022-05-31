@@ -10,7 +10,6 @@ import ExtensionModal from "../modal/ExtensionModal";
 import "./main.css";
 import "./return.css";
 import ReturnEventModal from "../modal/ReturnEventModal";
-import { getJSDocDeprecatedTag } from "typescript";
 
 export type eventInfo = {
   event_id: number,
