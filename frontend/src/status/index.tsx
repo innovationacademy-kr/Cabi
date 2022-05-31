@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import cabinet from "./cabinet";
-import lent from "./lent";
+import cabinet from "./cabinetReducer";
+import lent from "./lentReducer";
 
 const rootReducer = combineReducers({
   cabinet,
