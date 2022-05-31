@@ -1,46 +1,17 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { userInfo } from "./Main";
 import Menu from "../component/Menu";
 import Carousel from "../component/Carousel";
 import Location from "../component/Location";
 import LentModal from "../modal/LentModal";
 import ContentsModal from "../modal/ContentsModal";
 import EventModal from "../modal/EventModal";
+import { userInfo } from "../types/userTypes";
+import { locationInfo, lentInfo } from "../types/cabinetTypes";
+import { eventInfo } from "../event/EventType";
 import "./lent.css";
 import "./main.css";
-
-export type eventInfo = {
-  event_id: number,
-  event_name: string,
-  intra_id: string,
-  isEvent: boolean
-};
-
-export type cabinetInfo = {
-  cabinet_id: number;
-  cabinet_num: number;
-  location: string;
-  floor: number;
-  section: string;
-  activation: boolean;
-};
-export type locationInfo = {
-  location?: Array<string>;
-  floor?: Array<Array<number>>;
-  section?: Array<Array<Array<string>>>;
-  cabinet?: Array<Array<Array<Array<cabinetInfo>>>>;
-};
-export type lentInfo = {
-  lent_id: number;
-  lent_cabinet_id: number;
-  lent_user_id: number;
-  lent_time?: string;
-  expire_time?: string;
-  extension: boolean;
-  intra_id?: string;
-};
 
 export default function Lent() {
   const navigate = useNavigate();

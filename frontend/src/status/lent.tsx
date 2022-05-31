@@ -1,4 +1,4 @@
-import { lentInfo } from "../pages/Lent";
+import { lentInfo } from "../types/cabinetTypes";
 
 const LENTSTORE_ALL = "lentStore/all";
 const INITIALIZE = "lentStore/initialize";

@@ -1,4 +1,4 @@
-import { locationInfo } from "../pages/Lent";
+import { locationInfo } from "../types/cabinetTypes";
 
 const CABINET_ALL = "cabinet/all";
 const INITIALIZE = "cabinet/initialize";

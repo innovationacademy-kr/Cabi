@@ -1,9 +1,9 @@
-import CabinetBox from "./CabinetBox";
-import { cabinetInfo } from "../pages/Lent";
-import "./carousel.css";
 import React from "react";
+import CabinetBox from "./CabinetBox";
+import { cabinetInfo } from "../types/cabinetTypes";
 import { SeromSecondFloor } from "./map/SeromSecondFloor";
 import { SeromFloor } from "./map/SeromFloor";
+import "./carousel.css";
 
 export default function Carousel(props: any) {
   const cabinetBlock = (f_idx: number, s_idx: number) => {
