@@ -10,19 +10,25 @@ import EventModal from "../modal/EventModal";
 import { userInfo } from "../types/userTypes";
 import { locationInfo, lentInfo } from "../types/cabinetTypes";
 import { eventInfo } from "../event/EventType";
+import { useDispatch, useSelector } from "react-redux";
 import "./lent.css";
 import "./main.css";
+import { cabinetAll } from "../status/cabinetReducer";
+import { lentAll } from "../status/lentReducer";
+import { RootState } from "../status";
+import { userAll } from "../status/userReducer";
 
 export default function Lent() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<userInfo>();
   const [l_idx, setLidx] = useState<number>(0);
   const [isLent, setisLent] = useState<number>(0);
   const [target, setTarget] = useState<number>(-1);
   const [cabiNum, setCabiNum] = useState<number>(-1);
-  const [info, setInfo] = useState<locationInfo>({});
   const [event, setEvent] = useState<Array<eventInfo>>([]);
-  const [lent, setLent] = useState<Array<lentInfo>>([]);
+  const info = useSelector((state :RootState) => state.cabinetReducer);
+  const lent = useSelector((state :RootState) => state.lentReducer);
+  const user = useSelector((state :RootState) => state.userReducer);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     apiCheck();
@@ -38,7 +44,7 @@ export default function Lent() {
     await axios
       .post(url)
       .then((res: any) => {
-        setUser(res.data.user);
+        dispatch(userAll(res.data.user));
       })
       .catch((err: any) => {
         console.log(err);
@@ -54,7 +60,7 @@ export default function Lent() {
     axios
       .post(url)
       .then((res: any) => {
-        setLent(res.data.lentInfo);
+        dispatch(lentAll(res.data.lentInfo));
         setisLent(res.data.isLent);
       })
       .catch((err) => {
@@ -67,7 +73,7 @@ export default function Lent() {
     axios
       .post(url)
       .then((res: any) => {
-        setInfo(res.data);
+        dispatch(cabinetAll(res.data));
       })
       .catch((err) => {
         console.log(err);

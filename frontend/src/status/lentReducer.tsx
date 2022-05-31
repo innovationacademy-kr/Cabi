@@ -1,27 +1,27 @@
 import { lentInfo } from "../types/cabinetTypes";
 
-const LENTSTORE_ALL = "lentStore/all";
-const INITIALIZE = "lentStore/initialize";
+const LENT_ALL = "lent/all";
+const INITIALIZE = "lent/initialize";
 
-export const lentStoreAll = (data: lentInfo) => ({
-  type: LENTSTORE_ALL,
+export const lentAll = (data: lentInfo[] ) => ({
+  type: LENT_ALL,
   payload: data,
 });
 export const lentInfoInitialize = () => ({
   type: INITIALIZE,
-  payload: {},
+  payload: [],
 });
 
-const initialState = {};
+const initialState: lentInfo[] = [];
 
 type actionType = {
   type: string;
-  payload: lentInfo;
+  payload: lentInfo[];
 };
 
 const lentStore = (state = initialState, action: actionType) => {
   switch (action.type) {
-    case LENTSTORE_ALL:
+    case LENT_ALL:
       return action.payload;
     case INITIALIZE:
       return initialState;

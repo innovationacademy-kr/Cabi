@@ -1,10 +1,12 @@
 import { combineReducers } from "redux";
-import cabinet from "./cabinetReducer";
-import lent from "./lentReducer";
+import cabinetReducer from "./cabinetReducer";
+import lentReducer from "./lentReducer";
+import userReducer from "./userReducer";
 
 const rootReducer = combineReducers({
-  cabinet,
-  lent,
+  cabinetReducer,
+  lentReducer,
+  userReducer
 });
 export type RootState = ReturnType<typeof rootReducer>;
 
