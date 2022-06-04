@@ -20,7 +20,7 @@ export interface lent {
   lent_user_id: number;
   lent_time?: string;
   expire_time?: string;
-  extension: boolean;
+  extension: number;
 }
 
 export interface lentCabinetInfo extends lent {
