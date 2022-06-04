@@ -1,11 +1,11 @@
-export type locationInfo = {
+export interface locationInfo {
   location?: Array<string>;
   floor?: Array<Array<number>>;
   section?: Array<Array<Array<string>>>;
   cabinet?: Array<Array<Array<Array<cabinetInfo>>>>;
 };
 
-export type cabinetInfo = {
+export interface cabinetInfo {
   cabinet_id: number;
   cabinet_num: number;
   location: string;
@@ -14,13 +14,16 @@ export type cabinetInfo = {
   activation: boolean;
 };
 
-export type lentCabinetInfo = {
+export interface lent {
   lent_id: number;
   lent_cabinet_id: number;
   lent_user_id: number;
-  lent_time: string;
-  expire_time: string;
-  extension: number;
+  lent_time?: string;
+  expire_time?: string;
+  extension: boolean;
+}
+
+export interface lentCabinetInfo extends lent {
   cabinet_num: number;
   location: string;
   floor: number;
@@ -28,12 +31,6 @@ export type lentCabinetInfo = {
   activation: boolean;
 };
 
-export type lentInfo = {
-  lent_id: number;
-  lent_cabinet_id: number;
-  lent_user_id: number;
-  lent_time?: string;
-  expire_time?: string;
-  extension: boolean;
+export interface lentInfo extends lent {
   intra_id?: string;
 };

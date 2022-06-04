@@ -7,16 +7,14 @@ import Location from "../component/Location";
 import LentModal from "../modal/LentModal";
 import ContentsModal from "../modal/ContentsModal";
 import EventModal from "../modal/EventModal";
-import { userInfo } from "../types/userTypes";
-import { locationInfo, lentInfo } from "../types/cabinetTypes";
 import { eventInfo } from "../event/EventType";
 import { useDispatch, useSelector } from "react-redux";
-import "./lent.css";
-import "./main.css";
 import { cabinetAll } from "../status/cabinetReducer";
 import { lentAll } from "../status/lentReducer";
 import { RootState } from "../status";
 import { userAll } from "../status/userReducer";
+import "./lent.css";
+import "./main.css";
 
 export default function Lent() {
   const navigate = useNavigate();
@@ -63,7 +61,7 @@ export default function Lent() {
         dispatch(lentAll(res.data.lentInfo));
         setisLent(res.data.isLent);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
       });
   };
@@ -75,7 +73,7 @@ export default function Lent() {
       .then((res: any) => {
         dispatch(cabinetAll(res.data));
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
       });
   };
@@ -84,7 +82,7 @@ export default function Lent() {
     const url = "/api/event/list"
     axios.get(url).then((res:any) => {
       setEvent(res.data.eventInfo);
-    }).catch((err) => {console.log(err)});
+    }).catch((err: any) => {console.log(err)});
   };
 
   const checkEventWinner = (intra:string): null | eventInfo => {
