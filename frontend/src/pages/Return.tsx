@@ -1,37 +1,16 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { userInfo } from "./Main";
 import Menu from "../component/Menu";
 import ReturnModal from "../modal/ReturnModal";
 import PasswordModal from "../modal/PasswordModal";
 import ContentsModal from "../modal/ContentsModal";
 import ExtensionModal from "../modal/ExtensionModal";
+import ReturnEventModal from "../modal/ReturnEventModal";
+import { userInfo } from "../types/userTypes";
+import { lentCabinetInfo } from "../types/cabinetTypes";
 import "./main.css";
 import "./return.css";
-import ReturnEventModal from "../modal/ReturnEventModal";
-import { getJSDocDeprecatedTag } from "typescript";
-
-export type eventInfo = {
-  event_id: number,
-  event_name: string,
-  intra_id: string,
-  isEvent: boolean
-};
-
-export type lentCabinetInfo = {
-  lent_id: number;
-  lent_cabinet_id: number;
-  lent_user_id: number;
-  lent_time: string;
-  expire_time: string;
-  extension: number;
-  cabinet_num: number;
-  location: string;
-  floor: number;
-  section: string;
-  activation: boolean;
-};
 
 export default function Return() {
   const navigate = useNavigate();
@@ -88,11 +67,13 @@ export default function Return() {
             }
           }
           setExtension(extention);
+					//console.log(res.data);
 					if (res.data){
             const date:Date = new Date(res.data.expire_time);
 						date.setDate(date.getDate() + 1);
-            date.setHours(0, 0, 0);
-						setisExpired(date < new Date());
+						date.setHours(0, 0, 0);
+						//console.log(date);
+						setisExpired(res.data && date < new Date());
 					} else {
 						setisExpired(false);
 					}

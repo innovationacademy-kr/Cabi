@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { userInfo } from "./Main";
 import Menu from "../component/Menu";
 import Carousel from "../component/Carousel";
 import Location from "../component/Location";
@@ -9,51 +8,26 @@ import Question from "../component/Question";
 import LentModal from "../modal/LentModal";
 import ContentsModal from "../modal/ContentsModal";
 import EventModal from "../modal/EventModal";
+import { eventInfo } from "../event/EventType";
+import { useDispatch, useSelector } from "react-redux";
+import { cabinetAll } from "../status/cabinetReducer";
+import { lentAll } from "../status/lentReducer";
+import { RootState } from "../status";
+import { userAll } from "../status/userReducer";
 import "./lent.css";
 import "./main.css";
 
-
-export type eventInfo = {
-  event_id: number,
-  event_name: string,
-  intra_id: string,
-  isEvent: boolean
-};
-
-export type cabinetInfo = {
-  cabinet_id: number;
-  cabinet_num: number;
-  location: string;
-  floor: number;
-  section: string;
-  activation: boolean;
-};
-export type locationInfo = {
-  location?: Array<string>;
-  floor?: Array<Array<number>>;
-  section?: Array<Array<Array<string>>>;
-  cabinet?: Array<Array<Array<Array<cabinetInfo>>>>;
-};
-export type lentInfo = {
-  lent_id: number;
-  lent_cabinet_id: number;
-  lent_user_id: number;
-  lent_time?: string;
-  expire_time?: string;
-  extension: boolean;
-  intra_id?: string;
-};
-
 export default function Lent() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<userInfo>();
   const [l_idx, setLidx] = useState<number>(0);
   const [isLent, setisLent] = useState<number>(0);
   const [target, setTarget] = useState<number>(-1);
   const [cabiNum, setCabiNum] = useState<number>(-1);
-  const [info, setInfo] = useState<locationInfo>({});
   const [event, setEvent] = useState<Array<eventInfo>>([]);
-  const [lent, setLent] = useState<Array<lentInfo>>([]);
+  const info = useSelector((state :RootState) => state.cabinetReducer);
+  const lent = useSelector((state :RootState) => state.lentReducer);
+  const user = useSelector((state :RootState) => state.userReducer);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     apiCheck();
@@ -69,7 +43,7 @@ export default function Lent() {
     await axios
       .post(url)
       .then((res: any) => {
-        setUser(res.data.user);
+        dispatch(userAll(res.data.user));
       })
       .catch((err: any) => {
         console.log(err);
@@ -85,10 +59,10 @@ export default function Lent() {
     axios
       .post(url)
       .then((res: any) => {
-        setLent(res.data.lentInfo);
+        dispatch(lentAll(res.data.lentInfo));
         setisLent(res.data.isLent);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
       });
   };
@@ -98,9 +72,9 @@ export default function Lent() {
     axios
       .post(url)
       .then((res: any) => {
-        setInfo(res.data);
+        dispatch(cabinetAll(res.data));
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err);
       });
   };
@@ -109,7 +83,7 @@ export default function Lent() {
     const url = "/api/event/list"
     axios.get(url).then((res:any) => {
       setEvent(res.data.eventInfo);
-    }).catch((err) => {console.log(err)});
+    }).catch((err: any) => {console.log(err)});
   };
 
   const checkEventWinner = (intra:string): null | eventInfo => {

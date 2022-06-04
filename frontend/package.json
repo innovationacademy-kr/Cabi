@@ -9,12 +9,14 @@
     "start": "npm run build && cp -r dist/* ../backend/views/"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.2",
     "axios": "^0.24.0",
     "bootstrap-icons": "^1.7.2",
     "gulp": "^4.0.2",
     "nodemon": "^2.0.15",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-redux": "^8.0.2",
     "react-router": "^6.3.0",
     "ts-node": "^10.4.0"
   },

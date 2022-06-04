@@ -1,5 +1,5 @@
 import "./EventModal.css";
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function EventModal(props: any) {
   const [show, setShow] = useState(true);

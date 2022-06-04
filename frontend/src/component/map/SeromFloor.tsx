@@ -1,5 +1,5 @@
 import "./seromFloor.css";
-import { lentInfo, cabinetInfo } from "../../pages/Lent";
+import { lentInfo, cabinetInfo } from "../../types/cabinetTypes";
 
 export function SeromFloor(props: any) {
   const cluster1: number = props.f_idx === 1 ? 3 : 5;
