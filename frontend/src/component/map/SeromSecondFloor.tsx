@@ -1,5 +1,5 @@
 import "./seromSecondFloor.css";
-import { lentInfo, cabinetInfo } from "../../pages/Lent";
+import { lentInfo, cabinetInfo } from "../../types/cabinetTypes";
 
 export function SeromSecondFloor(props: any) {
   const findIdx = (name: string) => {
