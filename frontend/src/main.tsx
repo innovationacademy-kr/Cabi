@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import rootReducer from "./status";
 
 const store = configureStore({reducer: rootReducer});
-store.subscribe(()=>{console.log("subscribe = ", store.getState())});
+// store.subscribe(()=>{console.log("subscribe = ", store.getState())});
 
 ReactDOM.render(
   <React.StrictMode>
