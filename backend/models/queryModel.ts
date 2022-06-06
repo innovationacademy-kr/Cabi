@@ -223,6 +223,9 @@ export async function updateUser(user: userInfo) {
   pool = await con.getConnection();
   await pool
     .query(content)
+    .then((res: any) => {
+      console.log(res);
+    })
     .catch((err: any) => {
       console.log(err);
       throw err;
