@@ -5,7 +5,7 @@ const con = mariadb.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "42cabi_DB",
+  database: "42cabi_test",
   dateStrings: true,
 });
 
