@@ -6,7 +6,6 @@ export const con = mariadb.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  // database: "42cabi_DB",
   database: "42cabi_test",
   dateStrings: true,
 });
@@ -51,7 +50,7 @@ export async function checkUser(user: userInfo) {
 //사용자가 없는 경우, user 값 생성
 export async function addUser(user: userInfo) {
   let pool: mariadb.PoolConnection;
-  const content: string = `INSERT INTO user value('${user.user_id}', '${user.intra_id}', 0, '${user.email}', "", now(), now()`;
+  const content: string = `INSERT INTO user value('${user.user_id}', '${user.intra_id}', 0, '${user.email}', '', now(), now()`;
 
   pool = await con.getConnection();
   await pool
