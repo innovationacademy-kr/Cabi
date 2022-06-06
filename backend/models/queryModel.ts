@@ -6,7 +6,8 @@ export const con = mariadb.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "42cabi_DB",
+  // database: "42cabi_DB",
+  database: "42cabi_test",
   dateStrings: true,
 });
 
@@ -35,6 +36,7 @@ export async function checkUser(user: userInfo) {
           activation: false,
         };
       } else {
+        await updateUser(user);
         return await getUser(user); //본인 정보 및 렌트 정보 - 리턴 페이지
       }
     });
@@ -49,7 +51,7 @@ export async function checkUser(user: userInfo) {
 //사용자가 없는 경우, user 값 생성
 export async function addUser(user: userInfo) {
   let pool: mariadb.PoolConnection;
-  const content: string = `INSERT INTO user value('${user.user_id}', '${user.intra_id}', 0, '${user.email}', "")`;
+  const content: string = `INSERT INTO user value('${user.user_id}', '${user.intra_id}', 0, '${user.email}', "", now(), now()`;
 
   pool = await con.getConnection();
   await pool
@@ -208,6 +210,20 @@ export async function activateExtension(user: any) {
       }, expire_time=ADDDATE(now(), 7) WHERE lent_user_id=${user.user_id}`;
       pool.query(content2);
     })
+    .catch((err: any) => {
+      console.log(err);
+      throw err;
+    });
+  if (pool) pool.end();
+}
+
+export async function updateUser(user: userInfo) {
+  let pool: mariadb.PoolConnection;
+  const content = `UPDATE user SET lastLogin=now() where user_id=${user.user_id}`;
+
+  pool = await con.getConnection();
+  await pool
+    .query(content)
     .catch((err: any) => {
       console.log(err);
       throw err;
