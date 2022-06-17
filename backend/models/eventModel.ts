@@ -86,8 +86,8 @@ export async function getEventInfo(intra_id: string){
 
 export async function checkEventInfo(intra_id: string) : Promise<boolean> {
 	let pool: mariadb.PoolConnection;
-	const selectContent: string = `select count(*) as count from event where intra_id="${intra_id}"`;
-	let check: boolean;
+	const selectContent: string = `select count(*) as count from 42cabi_DB.event where intra_id="${intra_id}"`;
+	let check: boolean = false;
 	pool = await con.getConnection();
 	await pool
 	  .query(selectContent)
@@ -98,12 +98,11 @@ export async function checkEventInfo(intra_id: string) : Promise<boolean> {
 		else {
 			check = false;
 		}
-		return check;
-	  })
-	  .catch((err: any) => {
+	})
+	.catch((err: any) => {
 		console.log(err);
 		throw err;
-	  });
+	});
 	if (pool) pool.end();
-	return false;
+	return check;
 }

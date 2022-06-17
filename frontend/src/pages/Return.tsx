@@ -97,7 +97,8 @@ export default function Return() {
     await axios
     .get("/api/event/winner")
     .then((res) => {
-      isEventWinner = res.data;
+      console.log(res);
+      isEventWinner = res.data.winner;
     });
   };
 
