@@ -1,8 +1,14 @@
+import { useState } from "react";
 import "./returnEventModal.css";
 
 export default function ReturnEventModal() {
+  const [close, setClose] = useState(true);
+  
+  const handleClick = () => {
+    setClose(!close);
+  }
   return (
-    <div className="modal" id="returneventmodal">
+    <div className={close ? "modal" : "modal hidden"} id="returneventmodal">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content returnEvent">
           <div className="modal-header">
@@ -17,13 +23,14 @@ export default function ReturnEventModal() {
             <div>당신은 깐부 이벤트에 당첨되었습니다!</div>
             <div>내 사물함을 확인해주세요!</div>
             <div>#42seoul_club_cabinet</div>
-            <div>~채널에 인증해주세요~</div>
+            <div>~채널에서 짝을 찾아주세요~</div>
           </div>
           <div className="modal-footer justify-content-center">
             <button
               type="button"
               className="btn btn-primary returnEventBtn"
               data-bs-dismiss="modal"
+              onClick={handleClick}
             >
               확인
             </button>

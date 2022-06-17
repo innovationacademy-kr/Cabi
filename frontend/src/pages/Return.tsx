@@ -27,9 +27,8 @@ export default function Return() {
       : ""
   );
 
-  const [isExpired, setisExpired] = useState<boolean>(false);
-
   let isEventWinner = false;
+  const [isExpired, setisExpired] = useState<boolean>(false);
 
   useEffect(() => {
     apiCheck().then(() => {
@@ -104,8 +103,9 @@ export default function Return() {
 
   return (
     <div className="container" id="container">
-      {/* 상단바 */}
+      {/* Event Modal */}
       {isEventWinner ? <ReturnEventModal /> : null}
+      {/* 상단바 */}
       <div className="row align-items-center">
         <div className="col">
           <div className="px-4">
@@ -202,7 +202,7 @@ export default function Return() {
       ></PasswordModal>
       <ContentsModal contents={content} path={path}></ContentsModal>
       <ExtensionModal setContent={setContent}></ExtensionModal>
-      <ReturnEventModal></ReturnEventModal>
+      {/* <ReturnEventModal></ReturnEventModal> */}
     </div>
   );
 }
