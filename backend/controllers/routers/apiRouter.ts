@@ -135,10 +135,7 @@ apiRouter.post("/return", (req: any, res: any) => {
 
 // 적절한 유저가 페이지를 접근하는지에 대한 정보
 apiRouter.post("/check", async (req: any, res: any) => {
-	//점검중
-  return res.status(400).send({ error: "Permission Denied" });
-  
-if (!req.session || !req.session.passport || !req.session.passport.user) {
+	if (!req.session || !req.session.passport || !req.session.passport.user) {
     res.status(400).send({ error: "Permission Denied" });
   } else {
     const idx = userList.findIndex(
