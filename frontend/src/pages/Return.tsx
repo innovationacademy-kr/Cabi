@@ -27,8 +27,8 @@ export default function Return() {
       : ""
   );
 
-  let isEventWinner = false;
   const [isExpired, setisExpired] = useState<boolean>(false);
+  const [isEventWinner, setEventWinner] = useState<boolean>(false);
 
   useEffect(() => {
     apiCheck().then(() => {
@@ -96,9 +96,8 @@ export default function Return() {
     await axios
     .get("/api/event/winner")
     .then((res) => {
-      console.log(res);
-      isEventWinner = res.data.winner;
-    });
+			setEventWinner(res.data.winner);
+		});
   };
 
   return (
@@ -202,7 +201,6 @@ export default function Return() {
       ></PasswordModal>
       <ContentsModal contents={content} path={path}></ContentsModal>
       <ExtensionModal setContent={setContent}></ExtensionModal>
-      {/* <ReturnEventModal></ReturnEventModal> */}
     </div>
   );
 }

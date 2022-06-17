@@ -2,13 +2,13 @@ import { useState } from "react";
 import "./returnEventModal.css";
 
 export default function ReturnEventModal() {
-  const [close, setClose] = useState(true);
+  const [open, setOpen] = useState(true);
   
   const handleClick = () => {
-    setClose(!close);
+    setOpen(!open);
   }
   return (
-    <div className={close ? "modal" : "modal hidden"} id="returneventmodal">
+    <div className={open ? "modal" : "modal hidden"} id="returneventmodal">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content returnEvent">
           <div className="modal-header">
