@@ -26,11 +26,15 @@ export default function Return() {
       ? "disabled"
       : ""
   );
+
   const [isExpired, setisExpired] = useState<boolean>(false);
+
+  let isEventWinner = false;
 
   useEffect(() => {
     apiCheck().then(() => {
       callReturn();
+      checkEvent();
     });
   }, [content, path, extension]);
 
@@ -45,6 +49,7 @@ export default function Return() {
         navigate("/");
       });
   };
+  
   const callReturn = async () => {
     await axios
       .post("/api/return_info")
@@ -67,28 +72,39 @@ export default function Return() {
             }
           }
           setExtension(extention);
-					//console.log(res.data);
-					if (res.data){
+          //console.log(res.data);
+          if (res.data){
             const date:Date = new Date(res.data.expire_time);
-						date.setDate(date.getDate() + 1);
-						date.setHours(0, 0, 0);
-						//console.log(date);
-						setisExpired(res.data && date < new Date());
-					} else {
-						setisExpired(false);
-					}
+            date.setDate(date.getDate() + 1);
+            date.setHours(0, 0, 0);
+            //console.log(date);
+            setisExpired(res.data && date < new Date());
+          } else {
+            setisExpired(false);
+          }
         }
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   const handleHome = () => {
     navigate("/lent");
   };
+
+  const checkEvent = async () => {
+    await axios
+    .get("/api/event/winner")
+    .then((res) => {
+      isEventWinner = res.data;
+    });
+  };
+
   return (
     <div className="container" id="container">
       {/* 상단바 */}
+      {isEventWinner ? <ReturnEventModal /> : null}
       <div className="row align-items-center">
         <div className="col">
           <div className="px-4">
