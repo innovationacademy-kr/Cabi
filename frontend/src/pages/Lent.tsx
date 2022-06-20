@@ -187,7 +187,6 @@ export default function Lent() {
       </div>
       <LentModal target={target} cabiNum={cabiNum}></LentModal>
       <ContentsModal contents="이미 대여중인 사물함이 있어요 :)" />
-
     </div>
   );
 }
