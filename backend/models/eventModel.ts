@@ -106,3 +106,27 @@ export async function checkEventInfo(intra_id: string) : Promise<boolean> {
 	if (pool) pool.end();
 	return check;
 }
+
+//event 당첨 가능 유무 조회
+export async function checkEventLimit() : Promise<boolean> {
+	let pool: mariadb.PoolConnection;
+	const selectContent: string = `select count(*) as count from 42cabi_DB.event where isEvent=0`;
+	let check: boolean = false;
+	pool = await con.getConnection();
+	await pool
+	  .query(selectContent)
+	  .then((res: any) => {
+		if (res[0].count === 0) {
+			check = false;
+		}
+		else {
+			check = true;
+		}
+	})
+	.catch((err: any) => {
+		console.log(err);
+		throw err;
+	});
+	if (pool) pool.end();
+	return check;
+}
