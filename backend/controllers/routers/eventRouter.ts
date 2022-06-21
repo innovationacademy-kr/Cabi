@@ -5,6 +5,7 @@ import {
 	insertEventInfo,
 	updateEventInfo,
 	checkEventInfo,
+	checkEventLimit,
 } from "../../models/eventModel";
 
 
@@ -46,21 +47,24 @@ eventRouter.post("/lent", async (req: any, res: any) => {
 			res.status(400).send({ error: "Permission Denied" });
 			return;
 		}
-		if (new Date(2022, 4, 16, 9, 0, 0) > new Date()){
-			return res.sendStatus(200);
-		}
 		// 특정 조건 추가할 것
-		const date = new Date();
-		const hour = date.getHours();
-		const miniutes = date.getMinutes();
-		if (hour === miniutes) {
+		if (await checkEventLimit() === true) {
 			await insertEventInfo(userList[idx].intra_id);
 		}
+		// if (new Date(2022, 4, 16, 9, 0, 0) > new Date()){
+		// 	return res.sendStatus(200);
+		// }
+		// const date = new Date();
+		// const hour = date.getHours();
+		// const miniutes = date.getMinutes();
+		// if (hour === miniutes) {
+		// 	await insertEventInfo(userList[idx].intra_id);
+		// }
 		res.sendStatus(200);
 		// 이벤트 당첨 조건 충족시 => event 테이블 조회 후 당첨자 정보 반환
 	} catch (e) {
 		console.log(e);
-		res.status(400).json({ error: e });
+		res.status(200).json({ status: false });
 	}
 });
 
