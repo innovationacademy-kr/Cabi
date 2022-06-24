@@ -7,6 +7,7 @@ import {
   getUser,
   activateExtension,
 } from "../../models/queryModel";
+import { loginBanCheck } from "../middleware/authMiddleware";
 
 export const apiRouter = express.Router();
 
@@ -134,33 +135,18 @@ apiRouter.post("/return", (req: any, res: any) => {
 });
 
 // 적절한 유저가 페이지를 접근하는지에 대한 정보
-apiRouter.post("/check", async (req: any, res: any) => {
-  if (!req.session || !req.session.passport || !req.session.passport.user) {
-    res.status(400).send({ error: "Permission Denied" });
-  } else {
-    const idx = userList.findIndex(
-      (user: userInfo) => user.access === req.session.passport.user.access
-    );
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    } else await res.send({ user: userList[idx] });
-  }
+apiRouter.post("/check", loginBanCheck, async (req: any, res: any) => {
+  const idx = userList.findIndex(
+    (user: userInfo) => user.access === req.session.passport.user.access
+  );
+  await res.send({ user: userList[idx] });
 });
 
-apiRouter.post("/extension", async (req: any, res: any) => {
+apiRouter.post("/extension", loginBanCheck, async (req: any, res: any) => {
   try {
-    if (!req.session || !req.session.passport || !req.session.passport.user) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     const idx = userList.findIndex(
       (user: userInfo) => user.access === req.session.passport.user.access
     );
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     activateExtension(userList[idx]).then((resp: any) => {
       res.sendStatus(200);
     });
