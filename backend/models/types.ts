@@ -73,3 +73,20 @@ export type eventInfo = {
   intra_id: string,
   isEvent: boolean
 };
+
+export type overUserInfo = {
+  user_id: number;
+  intra_id: string;
+  auth: number;
+  email: string;
+  cabinet_id: number;
+}
+
+export type banUserInfo = {
+  ban_id: number;
+  user_id: number;
+  intra_id: number;
+  cabinet_id: number;
+  bannedDate: string;
+  unBannedDate: string;
+};
