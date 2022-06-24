@@ -1,3 +1,7 @@
+export type user = {
+  user_id: number;
+  intra_id: string;
+}
 export type userInfo = {
   user_id: number;
   intra_id: string;

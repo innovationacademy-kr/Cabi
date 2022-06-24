@@ -89,7 +89,10 @@ apiRouter.post("/return", loginBanCheck, (req: any, res: any) => {
     const idx = userList.findIndex(
       (user: userInfo) => user.access === req.session.passport.user.access
     );
-    createLentLog(userList[idx]).then((resp: any) => {
+    createLentLog({
+      user_id: userList[idx].user_id,
+      intra_id: userList[idx].intra_id,
+    }).then((resp: any) => {
       res.sendStatus(200);
     });
   } catch (err) {

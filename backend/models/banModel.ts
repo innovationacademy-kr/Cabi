@@ -29,7 +29,7 @@ export async function getOverUser(days: number): Promise<overUserInfo[] | undefi
 		.then((res:any) => {
 			if (!res.length) overUserList = undefined;
 			else {
-				res.forEach((user) => {
+				res.forEach((user: any) => {
 					overUserList?.push({
 						user_id: user.user_id,
 						intra_id: user.intra_id,
@@ -131,11 +131,12 @@ export async function addBanUser(banUser: banUserAddInfo) {
  * 캐비넷 activation 변경
  *
  * @param cabinetId 캐비넷 PK
+ * @param activation 캐비넷 상태 값
  */
-export async function updateCabinetActivation(cabinetId: number) {
+export async function updateCabinetActivation(cabinetId: number, activation: number) {
 	let pool: mariadb.PoolConnection;
 	const content: string =`
-		UPDATE cabinet SET activation = 2 WHERE cabinet_id = ${cabinetId}
+		UPDATE cabinet SET activation = ${activation} WHERE cabinet_id = ${cabinetId}
 	`;
 
 	pool = await con.getConnection();

@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-import { lentInfo, lentCabinetInfo, userInfo } from "./types";
+import { lentInfo, lentCabinetInfo, userInfo, user } from "./types";
 import { sendLentMsg, sendReturnMsg } from "../controllers/middleware/slackMiddleware";
 
 export const con = mariadb.createPool({
@@ -169,7 +169,7 @@ export async function createLent(cabinet_id: number, user: userInfo) {
 }
 
 //lent_log 값 생성 후 lent 값 삭제
-export async function createLentLog(user: userInfo) {
+export async function createLentLog(user: user) {
   let pool: mariadb.PoolConnection;
   const content: string = `SELECT * FROM lent WHERE lent_user_id=${user.user_id}`;
 
