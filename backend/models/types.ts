@@ -79,6 +79,7 @@ export type overUserInfo = {
   intra_id: string;
   auth: number;
   email: string;
+  lent_id: number;
   cabinet_id: number;
 }
 

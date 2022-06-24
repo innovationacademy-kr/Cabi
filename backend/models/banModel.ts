@@ -19,7 +19,7 @@ export async function getOverUser(days: number): Promise<overUserInfo[] | undefi
 	let pool: mariadb.PoolConnection;
 	let overUserList: overUserInfo[] | undefined;
 	const content: string = `
-	SELECT  u.*, cabinet_id
+	SELECT  u.*, l.lent_id, l.cabinet_id
 	FROM USER u RIGHT OUTER JOIN lent l ON u.user_id = l.lent_user_id
 	WHERE DATEDIFF(now(), expire_time) = ${days}`;
 
@@ -35,6 +35,7 @@ export async function getOverUser(days: number): Promise<overUserInfo[] | undefi
 						intra_id: user.intra_id,
 						auth: user.auth,
 						email: user.email,
+						lent_id: user.lent_id,
 						cabinet_id: user.cabinet_id,
 					})
 				});
@@ -46,6 +47,26 @@ export async function getOverUser(days: number): Promise<overUserInfo[] | undefi
 		});
 		if (pool) pool.end();
 		return overUserList;
+}
+
+/**
+ * 유저 권한 ban(1) 으로 변경
+ *
+ * @param userId 유저 PK
+ */
+export async function updateUserAuth(userId: number) {
+	let pool: mariadb.PoolConnection;
+	const content = `
+	UPDATE user SET auth = 1 WHERE user_id = ${userId};
+	`;
+
+	pool = await con.getConnection();
+	await pool
+		.query(content)
+		.catch((err: any) => {
+			console.error(err);
+			throw new Error("updateUserAuth Error");
+		});
 }
 
 /**
