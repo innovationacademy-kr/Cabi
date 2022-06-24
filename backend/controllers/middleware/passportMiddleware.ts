@@ -1,5 +1,5 @@
 import passport from "passport";
-import { userList } from "../../models/userModel";
+import { userList } from "../../models/types";
 
 import dotenv from "dotenv";
 
@@ -48,7 +48,7 @@ const FortyTwoVerify = (
     user_id: profile.id,
     intra_id: profile.username,
     email: profile.emails[0].value,
-    auth: false,
+    auth: 0,
     access: accessToken,
     refresh: refreshToken,
     phone: "",

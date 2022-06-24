@@ -2,7 +2,7 @@ import schedule from "node-schedule";
 import { WebClient } from "@slack/web-api";
 import { slackReturnUser, slackOverdueUser } from "../../models/slackModel";
 import dotenv from "dotenv";
-import { slackUserList, slackUser } from "../../models/userModel";
+import { slackUserList, slackUser } from "../../models/types";
 
 const env = process.env;
 if (env.USER === "ec2-user") {

@@ -1,5 +1,5 @@
 import express from "express";
-import { cabinetList, userList, userInfo } from "../../models/userModel";
+import { cabinetList, userList, userInfo } from "../../models/types";
 import {
   createLentLog,
   createLent,
@@ -7,6 +7,7 @@ import {
   getUser,
   activateExtension,
 } from "../../models/queryModel";
+import { loginBanCheck } from "../middleware/authMiddleware";
 
 export const apiRouter = express.Router();
 
@@ -20,19 +21,8 @@ apiRouter.post("/cabinet", (req: any, res: any) => {
 });
 
 // 현재 모든 대여자들의 정보
-apiRouter.post("/lent_info", async (req: any, res: any) => {
+apiRouter.post("/lent_info", loginBanCheck, async (req: any, res: any) => {
   try {
-    if (!req.session || !req.session.passport || !req.session.passport.user) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
-    const idx = userList.findIndex(
-      (user: userInfo) => user.access === req.session.passport.user.access
-    );
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     getLentUser().then((resp: any) => {
       const isLent = resp.lentInfo.findIndex(
         (cabinet: any) =>
@@ -48,20 +38,12 @@ apiRouter.post("/lent_info", async (req: any, res: any) => {
 });
 
 // 특정 사물함을 빌릴 때 요청
-apiRouter.post("/lent", async (req: any, res: any) => {
+apiRouter.post("/lent", loginBanCheck, async (req: any, res: any) => {
   let errno: number;
   try {
-    if (!req.session || !req.session.passport || !req.session.passport.user) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     const idx = userList.findIndex(
       (user: userInfo) => user.access === req.session.passport.user.access
     );
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     await getUser(userList[idx]).then(async (resp: any) => {
       if (resp.lent_id === -1) {
         await createLent(req.body.cabinet_id, req.session.passport.user).then(
@@ -86,19 +68,11 @@ apiRouter.post("/lent", async (req: any, res: any) => {
 });
 
 // 특정 사용자가 현재 대여하고 있는 사물함의 정보
-apiRouter.post("/return_info", async (req: any, res: any) => {
+apiRouter.post("/return_info", loginBanCheck, async (req: any, res: any) => {
   try {
-    if (!req.session || !req.session.passport || !req.session.passport.user) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     const idx = userList.findIndex(
       (user: userInfo) => user.access === req.session.passport.user.access
     );
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     getUser(userList[idx]).then((resp: any) => {
       res.send(resp);
     });
@@ -110,20 +84,15 @@ apiRouter.post("/return_info", async (req: any, res: any) => {
 });
 
 // 특정 사물함을 반납할 때 요청
-apiRouter.post("/return", (req: any, res: any) => {
+apiRouter.post("/return", loginBanCheck, (req: any, res: any) => {
   try {
-    if (!req.session || !req.session.passport || !req.session.passport.user) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     const idx = userList.findIndex(
       (user: userInfo) => user.access === req.session.passport.user.access
     );
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
-    createLentLog(userList[idx]).then((resp: any) => {
+    createLentLog({
+      user_id: userList[idx].user_id,
+      intra_id: userList[idx].intra_id,
+    }).then((resp: any) => {
       res.sendStatus(200);
     });
   } catch (err) {
@@ -134,33 +103,18 @@ apiRouter.post("/return", (req: any, res: any) => {
 });
 
 // 적절한 유저가 페이지를 접근하는지에 대한 정보
-apiRouter.post("/check", async (req: any, res: any) => {
-  if (!req.session || !req.session.passport || !req.session.passport.user) {
-    res.status(400).send({ error: "Permission Denied" });
-  } else {
-    const idx = userList.findIndex(
-      (user: userInfo) => user.access === req.session.passport.user.access
-    );
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    } else await res.send({ user: userList[idx] });
-  }
+apiRouter.post("/check", loginBanCheck, async (req: any, res: any) => {
+  const idx = userList.findIndex(
+    (user: userInfo) => user.access === req.session.passport.user.access
+  );
+  await res.send({ user: userList[idx] });
 });
 
-apiRouter.post("/extension", async (req: any, res: any) => {
+apiRouter.post("/extension", loginBanCheck, async (req: any, res: any) => {
   try {
-    if (!req.session || !req.session.passport || !req.session.passport.user) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     const idx = userList.findIndex(
       (user: userInfo) => user.access === req.session.passport.user.access
     );
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     activateExtension(userList[idx]).then((resp: any) => {
       res.sendStatus(200);
     });

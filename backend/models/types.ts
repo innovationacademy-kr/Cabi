@@ -1,7 +1,11 @@
+export type user = {
+  user_id: number;
+  intra_id: string;
+}
 export type userInfo = {
   user_id: number;
   intra_id: string;
-  auth?: boolean;
+  auth?: number;
   email: string;
   phone?: string;
   access: string;
@@ -72,4 +76,34 @@ export type eventInfo = {
   event_name: string,
   intra_id: string,
   isEvent: boolean
+};
+
+export type overUserInfo = {
+  user_id: number;
+  intra_id: string;
+  auth: number;
+  email: string;
+  lent_id: number;
+  cabinet_id: number;
+}
+
+export type banUserInfo = {
+  ban_id: number;
+  user_id: number;
+  intra_id: number;
+  cabinet_id: number;
+  bannedDate: string;
+  unBannedDate: string;
+};
+
+export type banUserAddInfo = {
+  user_id: number;
+  intra_id: string;
+  cabinet_id: number | null;
+};
+
+export type banCabinetInfo = {
+  user_id: number;
+  cabinet_id: number;
+  lent_id: number;
 };

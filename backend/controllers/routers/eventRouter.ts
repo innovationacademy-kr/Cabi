@@ -1,29 +1,22 @@
 import express from "express";
-import { userList, userInfo } from "../../models/userModel";
+import { userList, userInfo } from "../../models/types";
 import {
 	getEventInfo,
 	insertEventInfo,
 	updateEventInfo,
 	checkEventInfo,
-	checkEventLimit,
+	checkEventLimit
 } from "../../models/eventModel";
+import { loginBanCheck } from "../middleware/authMiddleware";
 
 
 export const eventRouter = express.Router();
 
-eventRouter.get("/list", async (req: any, res: any) => {
+eventRouter.get("/list", loginBanCheck, async (req: any, res: any) => {
 	try {
-		if (!req.session || !req.session.passport || !req.session.passport.user) {
-			res.status(400).send({ error: "Permission Denied" });
-			return;
-		}
 		const idx = userList.findIndex(
 			(user: userInfo) => user.access === req.session.passport.user.access
 		);
-		if (idx === -1) {
-			res.status(400).send({ error: "Permission Denied" });
-			return;
-		}
 		getEventInfo(userList[idx].intra_id).then((resp: any) => {
 			res.send(resp);
 		});
@@ -34,20 +27,12 @@ eventRouter.get("/list", async (req: any, res: any) => {
 	}
 });
 
-eventRouter.post("/lent", async (req: any, res: any) => {
+eventRouter.post("/lent", loginBanCheck, async (req: any, res: any) => {
 	try {
-		if (!req.session || !req.session.passport || !req.session.passport.user) {
-			res.status(400).send({ error: "Permission Denied" });
-			return;
-		}
+		// 특정 조건 추가할 것
 		const idx = userList.findIndex(
 			(user: userInfo) => user.access === req.session.passport.user.access
 		);
-		if (idx === -1) {
-			res.status(400).send({ error: "Permission Denied" });
-			return;
-		}
-		// 특정 조건 추가할 것
 		if (await checkEventLimit() === true) {
 			await insertEventInfo(userList[idx].intra_id);
 		}
@@ -68,21 +53,12 @@ eventRouter.post("/lent", async (req: any, res: any) => {
 	}
 });
 
-eventRouter.post("/return", async (req: any, res: any) => {
+eventRouter.post("/return", loginBanCheck, async (req: any, res: any) => {
 	try {
-		if (!req.session || !req.session.passport || !req.session.passport.user) {
-			res.status(400).send({ error: "Permission Denied" });
-			return;
-		}
+		// 특정 조건 추가할 것
 		const idx = userList.findIndex(
 			(user: userInfo) => user.access === req.session.passport.user.access
 		);
-		if (idx === -1) {
-			res.status(400).send({ error: "Permission Denied" });
-			return;
-		}
-
-		// 특정 조건 추가할 것
 		updateEventInfo(userList[idx].intra_id).then((resp: any) => {
 			res.sendStatus(200);
 		});
@@ -95,19 +71,11 @@ eventRouter.post("/return", async (req: any, res: any) => {
 });
 
 //이벤트 당첨자
-eventRouter.get("/winner", async (req: any, res: any) => {
+eventRouter.get("/winner", loginBanCheck, async (req: any, res: any) => {
 	try {
-		if (!req.session || !req.session.passport || !req.session.passport.user) {
-			res.status(401).send({ error: "Permission Denied" });
-			return;
-		}
 		const idx = userList.findIndex(
 			(user: userInfo) => user.access === req.session.passport.user.access
 		);
-		if (idx === -1) {
-			res.status(400).send({ error: "Permission Denied" });
-			return;
-		}
 		checkEventInfo(userList[idx].intra_id).then((resp: any) => {
 			if (resp == true) {
 				res.status(200).send({winner: true});
