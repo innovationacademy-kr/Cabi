@@ -62,40 +62,43 @@ const scheduling = () => {
   rule.minute = 0;
   
   const result = schedule.scheduleJob(rule, async () => {
-    // try, catch
-    console.log('Scheduling');
-    const dayList = [0, 7, 14];
-    dayList.forEach(day => {
-      getOverUser(day).then(res => {
+    try {
+      const dayList = [0, 7, 14];
+      dayList.forEach(day => {
+        getOverUser(day).then(res => {
+          if (res) {
+            mailing(res, day);
+          }
+        }).catch(e => console.error(e));
+      })
+      //15
+      getOverUser(15).then(res => {
         if (res) {
-          mailing(res, day);
+          res.forEach(async user => {
+            //user
+            await updateUserAuth(user.user_id);
+            //cabinet
+            await updateCabinetActivation(user.cabinet_id, 2);
+            //return
+            await createLentLog({
+              user_id: user.user_id,
+              intra_id: user.intra_id,
+            });
+            //ban
+            await addBanUser({
+              user_id: user.user_id,
+              intra_id: user.intra_id,
+              cabinet_id: user.cabinet_id,
+            });
+          });
+          mailing(res, 15);
         }
       }).catch(e => console.error(e));
-    })
-    //15
-    getOverUser(15).then(res => {
-      if (res) {
-        res.forEach(async user => {
-          //user
-          await updateUserAuth(user.user_id);
-          //cabinet
-          await updateCabinetActivation(user.cabinet_id, 2);
-          //return
-          await createLentLog({
-            user_id: user.user_id,
-            intra_id: user.intra_id,
-          });
-          //ban
-          await addBanUser({
-            user_id: user.user_id,
-            intra_id: user.intra_id,
-            cabinet_id: user.cabinet_id,
-          });
-        });
-        mailing(res, 15);
-      }
-    }).catch(e => console.error(e));
-  })
+    } catch(e) {
+      console.error(e);
+      throw e;
+    }
+  });
 }
 
 export default scheduling;
