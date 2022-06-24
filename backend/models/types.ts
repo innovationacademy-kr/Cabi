@@ -90,3 +90,9 @@ export type banUserInfo = {
   bannedDate: string;
   unBannedDate: string;
 };
+
+export type banUserAddInfo = {
+  user_id: number;
+  intra_id: string;
+  cabinet_id: number | null;
+}

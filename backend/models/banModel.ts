@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-import { banUserInfo, overUserInfo, userInfo, userList } from "./types";
+import { banUserAddInfo, banUserInfo, overUserInfo, userInfo, userList } from "./types";
 
 const con = mariadb.createPool({
 	host: "localhost",
@@ -57,7 +57,7 @@ export async function getOverUser(days: number): Promise<overUserInfo[] | undefi
 export async function checkBanUser(userId:string): Promise<banUserInfo | undefined> {
 	let pool: mariadb.PoolConnection;
 	let ban_user: banUserInfo | undefined;
-	const content: string = `SELECT * FROM ban WHERE user_id = '${userId}' and unBannedDate IS NULL`;
+	const content: string = `SELECT * FROM ban_user WHERE user_id = '${userId}' and unBannedDate IS NULL`;
 
 	pool = await con.getConnection();
 	ban_user = await pool
@@ -81,4 +81,27 @@ export async function checkBanUser(userId:string): Promise<banUserInfo | undefin
 		});
 		if (pool) pool.end();
 		return ban_user;
+}
+
+/**
+ * banUser 추가
+ *
+ * @param banUser 추가될 유저 정보
+ */
+export async function addBanUser(banUser: banUserAddInfo) {
+	let pool: mariadb.PoolConnection;
+	const cabinet_id = banUser.cabinet_id ? banUser.cabinet_id : null;
+	const content = `
+	INSERT INTO ban_user(user_id, intra_id, cabinet_id, bannedDate)
+	values (${banUser.user_id}, '${banUser.intra_id}', ${cabinet_id}, now());
+	`;
+
+	pool = await con.getConnection();
+	await pool
+		.query(content)
+		.catch((err: any) => {
+			console.error(err);
+			throw new Error("CheckBanUser Error");
+		});
+		if (pool) pool.end();
 }
