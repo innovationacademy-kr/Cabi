@@ -5,7 +5,7 @@ import schedule from 'node-schedule';
 import fs from 'fs';
 import mailer from 'nodemailer';
 import { createLentLog } from '../../models/queryModel';
-import { overUserInfo, userInfo } from '../../models/types';
+import { overUserInfo } from '../../models/types';
 import { addBanUser, getOverUser, updateCabinetActivation, updateUserAuth } from '../../models/banModel';
 require('dotenv').config();
 
