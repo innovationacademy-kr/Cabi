@@ -1,6 +1,6 @@
 import express from "express";
 import passport from "passport";
-import { userList, userInfo, lentCabinetInfo } from "../../models/userModel";
+import { userList, userInfo, lentCabinetInfo } from "../../models/types";
 import { checkUser } from "../../models/queryModel";
 
 export const authRouter = express.Router();

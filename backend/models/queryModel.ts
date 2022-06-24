@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-import { lentInfo, lentCabinetInfo, userInfo } from "./userModel";
+import { lentInfo, lentCabinetInfo, userInfo } from "./types";
 import { sendLentMsg, sendReturnMsg } from "../controllers/middleware/slackMiddleware";
 
 export const con = mariadb.createPool({

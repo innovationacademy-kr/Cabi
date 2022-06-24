@@ -1,5 +1,5 @@
 import express from "express";
-import { cabinetList, userList, userInfo } from "../../models/userModel";
+import { cabinetList, userList, userInfo } from "../../models/types";
 import {
   createLentLog,
   createLent,
