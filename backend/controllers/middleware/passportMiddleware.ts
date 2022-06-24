@@ -1,5 +1,5 @@
 import passport from "passport";
-import { userList } from "../../models/userModel";
+import { userList } from "../../models/types";
 
 import dotenv from "dotenv";
 

@@ -1,5 +1,5 @@
 import express from "express";
-import { userList, userInfo } from "../../models/userModel";
+import { userList, userInfo } from "../../models/types";
 import {
 	getEventInfo,
 	insertEventInfo,
