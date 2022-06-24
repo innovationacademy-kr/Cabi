@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-import { banUserAddInfo, banUserInfo, overUserInfo, userInfo, userList } from "./types";
+import { banCabinetInfo, banUserAddInfo, banUserInfo, overUserInfo, userInfo, userList } from "./types";
 
 const con = mariadb.createPool({
 	host: "localhost",
@@ -123,6 +123,27 @@ export async function addBanUser(banUser: banUserAddInfo) {
 		.catch((err: any) => {
 			console.error(err);
 			throw new Error("CheckBanUser Error");
+		});
+		if (pool) pool.end();
+}
+
+/**
+ * 캐비넷 activation 변경
+ *
+ * @param cabinetId 캐비넷 PK
+ */
+export async function updateCabinetActivation(cabinetId: number) {
+	let pool: mariadb.PoolConnection;
+	const content: string =`
+		UPDATE cabinet SET activation = 2 WHERE cabinet_id = ${cabinetId}
+	`;
+
+	pool = await con.getConnection();
+	await pool
+		.query(content)
+		.catch((err: any) => {
+			console.error(err);
+			throw new Error("updateCabinetActivation Error");
 		});
 		if (pool) pool.end();
 }

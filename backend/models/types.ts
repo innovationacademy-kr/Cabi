@@ -96,4 +96,10 @@ export type banUserAddInfo = {
   user_id: number;
   intra_id: string;
   cabinet_id: number | null;
-}
+};
+
+export type banCabinetInfo = {
+  user_id: number;
+  cabinet_id: number;
+  lent_id: number;
+};
