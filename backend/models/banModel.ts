@@ -111,7 +111,7 @@ export async function checkBanUser(userId:string): Promise<banUserInfo | undefin
  */
 export async function addBanUser(banUser: banUserAddInfo) {
 	let pool: mariadb.PoolConnection;
-	const cabinet_id = banUser.cabinet_id ? banUser.cabinet_id : null;
+	const cabinet_id = banUser.cabinet_id ? banUser.cabinet_id : "NULL";
 	const content = `
 	INSERT INTO ban_user(user_id, intra_id, cabinet_id, bannedDate)
 	values (${banUser.user_id}, '${banUser.intra_id}', ${cabinet_id}, now());
