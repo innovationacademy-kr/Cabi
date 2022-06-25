@@ -1,11 +1,8 @@
-import schedule from 'node-schedule';
-// const schedule = require('node-schedule');
-// const mailer = require('nodemailer');
-// const fs = require('fs');
 import fs from 'fs';
 import mailer from 'nodemailer';
-import { createLentLog } from '../../models/queryModel';
+import schedule from 'node-schedule';
 import { overUserInfo } from '../../models/types';
+import { createLentLog } from '../../models/queryModel';
 import { addBanUser, getOverUser, updateCabinetActivation, updateUserAuth } from '../../models/banModel';
 require('dotenv').config();
 
@@ -57,9 +54,10 @@ const mailing = (info: overUserInfo[], num: number) => {
 
 const scheduling = () => {
   const rule = new schedule.RecurrenceRule();
+  //mon - sun, 09 pm
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 12;
-  rule.minute = 0;
+  rule.hour = 11;
+  rule.minute = 45;
   
   const result = schedule.scheduleJob(rule, async () => {
     try {
