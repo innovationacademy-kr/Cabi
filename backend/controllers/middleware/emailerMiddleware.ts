@@ -58,7 +58,7 @@ const mailing = (info: overUserInfo[], num: number) => {
 const scheduling = () => {
   const rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 9;
+  rule.hour = 12;
   rule.minute = 0;
   
   const result = schedule.scheduleJob(rule, async () => {
