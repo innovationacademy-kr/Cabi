@@ -29,9 +29,9 @@ const sendMail = (email: string, subject: string, file: string) => {
 
   transporter.sendMail(mailOptions, (err: any, info:any) => {
     if (err) {
-      console.log(err)
+      // console.log(err)
     } else {
-      console.log(email + ': ' + info.response);
+      // console.log(email + ': ' + info.response + ' : ' + new Date());
     }
   });
 }
