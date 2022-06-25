@@ -24,7 +24,7 @@ authRouter.get(
     }
     try {
       await checkUser(req.session.passport.user).then(
-        (resp: lentCabinetInfo) => {
+        (resp: any) => {
           if (!resp) {
             res.status(400).send({ error: "Permission Denied" });
             return;
