@@ -17,10 +17,10 @@ const con = mariadb.createPool({
  */
 export async function getOverUser(days: number): Promise<overUserInfo[] | undefined> {
 	let pool: mariadb.PoolConnection;
-	let overUserList: overUserInfo[] | undefined;
+	let overUserList: overUserInfo[] | undefined = [];
 	const content: string = `
-	SELECT  u.*, l.lent_id, l.cabinet_id
-	FROM USER u RIGHT OUTER JOIN lent l ON u.user_id = l.lent_user_id
+	SELECT  u.*, l.lent_id, l.lent_cabinet_id
+	FROM user u RIGHT OUTER JOIN lent l ON u.user_id = l.lent_user_id
 	WHERE DATEDIFF(now(), expire_time) = ${days}`;
 
 	pool = await con.getConnection();
