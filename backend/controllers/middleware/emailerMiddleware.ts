@@ -3,6 +3,7 @@ import mailer from 'nodemailer';
 import schedule from 'node-schedule';
 import { overUserInfo } from '../../models/types';
 import { createLentLog } from '../../models/queryModel';
+import { connectionForCabinet } from '../../models/dbModel';
 import { addBanUser, getOverUser, updateCabinetActivation, updateUserAuth } from '../../models/banModel';
 require('dotenv').config();
 
@@ -90,6 +91,7 @@ const scheduling = () => {
             });
           });
           mailing(res, 15);
+          connectionForCabinet();
         }
       }).catch(e => console.error(e));
     } catch(e) {
@@ -100,3 +102,4 @@ const scheduling = () => {
 }
 
 export default scheduling;
+
