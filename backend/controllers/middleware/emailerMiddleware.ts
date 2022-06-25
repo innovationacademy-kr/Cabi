@@ -56,9 +56,9 @@ const scheduling = () => {
   const rule = new schedule.RecurrenceRule();
   //mon - sun, 09 pm
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 11;
-  rule.minute = 45;
-  
+  rule.hour = 12;
+  rule.minute = 15;
+
   const result = schedule.scheduleJob(rule, async () => {
     try {
       const dayList = [0, 7, 14];
