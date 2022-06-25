@@ -57,7 +57,7 @@ const scheduling = () => {
   //mon - sun, 09 pm
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
   rule.hour = 11;
-  rule.minute = 40;
+  rule.minute = 45;
   
   const result = schedule.scheduleJob(rule, async () => {
     try {
