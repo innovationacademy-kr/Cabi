@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-import { banUserAddInfo, banUserInfo, overUserInfo, userInfo, userList } from "./types";
+import { banUserAddInfo, banUserInfo, overUserInfo } from "./types";
 
 const con = mariadb.createPool({
 	host: "localhost",

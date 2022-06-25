@@ -1,7 +1,7 @@
 import passport from "passport";
-import { userList } from "../../models/types";
 
 import dotenv from "dotenv";
+import { jwtToken } from "./jwtMiddleware";
 
 const env = process.env;
 if (env.USER === "ec2-user") {
@@ -26,34 +26,29 @@ const FortyTwoOpt = {
   passReqToCallback: true,
 };
 
-const FortyTwoVerify = (
+const FortyTwoVerify = async (
   req: any,
   accessToken: any,
   refreshToken: any,
   profile: any,
   cb: any
 ) => {
-  const userInfo = {
-    user_id: profile.id,
-    intra_id: profile.username,
-    email: profile.emails[0].value,
-    access: accessToken,
-    refresh: refreshToken,
-  };
-  const idx = userList.findIndex((user) => user.user_id === profile.id);
-  if (idx !== -1) {
-    userList.splice(idx, 1);
+  try {
+    console.log('FortyTwoVerify ');
+    const userInfo = {
+      user_id: profile.id,
+      intra_id: profile.username,
+      email: profile.emails[0].value,
+      access: accessToken,
+      refresh: refreshToken,
+    };
+    const result = await jwtToken.sign(userInfo);
+    req.res.cookie("accessToken", result.accessToken, { httpOnly: true, secure: true });
+
+    return cb(null, userInfo);
+  } catch (err: any) {
+    console.log('FortyTwoVerify - ', err);
   }
-  userList.push({
-    user_id: profile.id,
-    intra_id: profile.username,
-    email: profile.emails[0].value,
-    auth: 0,
-    access: accessToken,
-    refresh: refreshToken,
-    phone: "",
-  });
-  return cb(null, userInfo);
 };
 
 export default function passportUse() {

@@ -5,15 +5,15 @@ import jwt from "jsonwebtoken";
 const TOKEN_EXPIRED: number = -3;
 const TOKEN_INVALID: number = -2;
 
-export interface JwtPayload {
-  user_id: number;
-  intra_id: string;
-  auth?: boolean | undefined;
-  email?: string;
-  phone?: string | undefined;
-  access?: string;
-  refresh?: string;
-}
+// export interface userInfo {
+//   user_id: number;
+//   intra_id: string;
+//   auth?: boolean | undefined;
+//   email?: string;
+//   phone?: string | undefined;
+//   access?: string;
+//   refresh?: string;
+// }
 
 export const jwtToken = {
   sign: async (user: userInfo) => {
@@ -42,9 +42,9 @@ export const jwtToken = {
   }
 }
 
-export const verifyToken = async (req: any, res:any): Promise<JwtPayload | undefined> => {
+export const verifyToken = async (req: any, res:any): Promise<userInfo | undefined> => {
   try {
-    const decoded = await jwtToken.verify(req.cookie.accessToken) as JwtPayload;
+    const decoded = await jwtToken.verify(req.cookie.accessToken) as userInfo;
     if (typeof decoded === "number") {
       if (decoded === TOKEN_EXPIRED) {
         res.status(419).send({ error: "Expired token" });
@@ -53,15 +53,16 @@ export const verifyToken = async (req: any, res:any): Promise<JwtPayload | undef
       }
       return undefined;
     }
+    return decoded;
   } catch (err: any) {
     console.error('verifyToken - ', err.message);
     res.status(400).send({ error: err.message });
   }
 }
 
-export const verifyAndRedirect = async (req:any, res: any): Promise<JwtPayload | undefined> => {
+export const verifyAndRedirect = async (req:any, res: any): Promise<userInfo | undefined> => {
   try {
-    const decoded = await jwtToken.verify(req.cookies.accessToken) as JwtPayload;
+    const decoded = await jwtToken.verify(req.cookies.accessToken) as userInfo;
     if (typeof decoded === "number"){
       if (decoded === TOKEN_EXPIRED) {
         res.status(419).redirect("/");

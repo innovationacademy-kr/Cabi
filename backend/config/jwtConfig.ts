@@ -1,4 +1,4 @@
-import { jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 type jwtSecret = {
 	secretKey: string,
@@ -8,8 +8,8 @@ type jwtSecret = {
 export const secret: jwtSecret = {
 	secretKey: process.env.JWT_SECRETKEY ? process.env.JWT_SECRETKEY : 'SecretKey',
 	options: {
-		algorithm: process.env.JWT_ALGORITHM,
-		expireIn: process.env.JWT_EXPIRESIN,
-		issuer: process.env.JWT_ISSUER,
+		algorithm: "HS256",
+    	expiresIn: "30m",
+    	issuer: "42cabi"
 	}
 }
