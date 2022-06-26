@@ -44,7 +44,7 @@ export const jwtToken = {
 
 export const verifyToken = async (req: any, res:any): Promise<userInfo | undefined> => {
   try {
-    const decoded = await jwtToken.verify(req.cookie.accessToken) as userInfo;
+    const decoded = await jwtToken.verify(req.cookies.accessToken) as userInfo;
     if (typeof decoded === "number") {
       if (decoded === TOKEN_EXPIRED) {
         res.status(419).send({ error: "Expired token" });
