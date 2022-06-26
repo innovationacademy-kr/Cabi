@@ -38,16 +38,16 @@ const sendMail = (email: string, subject: string, file: string) => {
 const mailing = (info: overUserInfo[], num: number) => {
   const fortytwo = '@student.42seoul.kr';
   let subject = '42CABI 사물함 연체 알림';
-  let file = '../../email/overdue.txt';
+  let file = './email/overdue.txt';
   if (num === 0) {
-    file = '../../email/soonoverdue.txt';
+    file = './email/soonoverdue.txt';
   } else if (num === 7) {
-    file = '../../email/overdue.txt';
+    file = './email/overdue.txt';
   } else if (num === 14) {
-    file = '../../email/lastoverdue.txt';
+    file = './email/lastoverdue.txt';
   } else if (num === 15) {
     subject = '42CABI 영구사용정지 안내';
-    file = '../../email/ban.txt';
+    file = './email/ban.txt';
   }
   info.forEach(user => sendMail(user.intra_id + fortytwo, subject, file));
 }
@@ -57,7 +57,7 @@ const scheduling = () => {
   //mon - sun, 09 pm
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
   rule.hour = 12;
-  rule.minute = 15;
+  rule.minute = 13;
 
   const result = schedule.scheduleJob(rule, async () => {
     try {
