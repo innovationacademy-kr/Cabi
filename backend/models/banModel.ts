@@ -36,7 +36,7 @@ export async function getOverUser(days: number): Promise<overUserInfo[] | undefi
 						auth: user.auth,
 						email: user.email,
 						lent_id: user.lent_id,
-						cabinet_id: user.cabinet_id,
+						cabinet_id: user.lent_cabinet_id,
 					})
 				});
 			}
