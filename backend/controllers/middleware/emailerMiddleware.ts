@@ -30,8 +30,10 @@ const sendMail = (email: string, subject: string, file: string) => {
   transporter.sendMail(mailOptions, (err: any, info:any) => {
     if (err) {
       // console.log(err)
+      fs.writeFileSync('../emailLog.txt', `${new Date()} : ${err}`);
     } else {
       // console.log(email + ': ' + info.response + ' : ' + new Date());
+      fs.writeFileSync('../emailLog.txt', `${new Date()} : ${info.response}`);
     }
   });
 }
