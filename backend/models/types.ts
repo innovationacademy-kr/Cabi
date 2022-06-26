@@ -23,7 +23,7 @@ export interface lentInfo extends lent {
 };
 
 //lent 된 Cabinet 하나의 Info
-export interface lentCabinetInfo {
+export interface lentCabinetInfo extends lent {
   cabinet_num: number;
   location: string;
   floor: number;
