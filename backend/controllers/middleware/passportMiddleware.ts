@@ -34,7 +34,6 @@ const FortyTwoVerify = async (
   cb: any
 ) => {
   try {
-    console.log('FortyTwoVerify ');
     const userInfo = {
       user_id: profile.id,
       intra_id: profile.username,
