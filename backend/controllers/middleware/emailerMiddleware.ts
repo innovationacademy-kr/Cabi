@@ -30,8 +30,10 @@ const sendMail = (email: string, subject: string, file: string) => {
   transporter.sendMail(mailOptions, (err: any, info:any) => {
     if (err) {
       // console.log(err)
+      fs.writeFileSync('../emailLog.txt', `${new Date()} : ${err}`);
     } else {
       // console.log(email + ': ' + info.response + ' : ' + new Date());
+      fs.writeFileSync('../emailLog.txt', `${new Date()} : ${info.response}`);
     }
   });
 }
@@ -41,7 +43,7 @@ const mailing = (info: overUserInfo[], num: number) => {
   let subject = '42CABI 사물함 연체 알림';
   let file = './email/overdue.txt';
   if (num === 0) {
-    file = '.email/soonoverdue.txt';
+    file = './email/soonoverdue.txt';
   } else if (num === 7) {
     file = './email/overdue.txt';
   } else if (num === 14) {

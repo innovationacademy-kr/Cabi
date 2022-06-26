@@ -18,12 +18,13 @@ export interface lent {
   expire_time?: string;
   extension: boolean;
 }
-export interface lentInfo extends lent{
+
+export interface lentInfo extends lent {
   intra_id?: string;
 };
 
 //lent 된 Cabinet 하나의 Info
-export interface lentCabinetInfo {
+export interface lentCabinetInfo extends lent {
   cabinet_num: number;
   location: string;
   floor: number;
