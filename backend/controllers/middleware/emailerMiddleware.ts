@@ -3,6 +3,7 @@ import mailer from 'nodemailer';
 import schedule from 'node-schedule';
 import { overUserInfo } from '../../models/types';
 import { createLentLog } from '../../models/queryModel';
+import { connectionForCabinet } from '../../models/dbModel';
 import { addBanUser, getOverUser, updateCabinetActivation, updateUserAuth } from '../../models/banModel';
 require('dotenv').config();
 
@@ -28,9 +29,9 @@ const sendMail = (email: string, subject: string, file: string) => {
 
   transporter.sendMail(mailOptions, (err: any, info:any) => {
     if (err) {
-      console.log(err)
+      // console.log(err)
     } else {
-      console.log(email + ': ' + info.response);
+      // console.log(email + ': ' + info.response + ' : ' + new Date());
     }
   });
 }
@@ -56,9 +57,9 @@ const scheduling = () => {
   const rule = new schedule.RecurrenceRule();
   //mon - sun, 09 pm
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 12;
-  rule.minute = 13;
-
+  rule.hour = 9;
+  rule.minute = 0;
+  
   const result = schedule.scheduleJob(rule, async () => {
     try {
       const dayList = [0, 7, 14];
@@ -90,6 +91,7 @@ const scheduling = () => {
             });
           });
           mailing(res, 15);
+          connectionForCabinet();
         }
       }).catch(e => console.error(e));
     } catch(e) {
@@ -100,3 +102,4 @@ const scheduling = () => {
 }
 
 export default scheduling;
+

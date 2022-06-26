@@ -1,4 +1,4 @@
-import { checkBannedUserList, con } from "../../models/queryModel";
+import { checkBannedUserList } from "../../models/queryModel";
 import { userList, userInfo } from "../../models/types";
 
 export async function loginBanCheck(req: any, res: any, next: any) {
