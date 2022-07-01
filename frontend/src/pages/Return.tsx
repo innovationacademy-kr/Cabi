@@ -6,7 +6,7 @@ import ReturnModal from "../modal/ReturnModal";
 import PasswordModal from "../modal/PasswordModal";
 import ContentsModal from "../modal/ContentsModal";
 import ExtensionModal from "../modal/ExtensionModal";
-import ReturnEventModal from "../modal/ReturnEventModal";
+// import ReturnEventModal from "../modal/ReturnEventModal";
 import { userInfo } from "../types/userTypes";
 import { lentCabinetInfo } from "../types/cabinetTypes";
 import "./main.css";
@@ -28,12 +28,12 @@ export default function Return() {
   );
 
   const [isExpired, setisExpired] = useState<boolean>(false);
-  const [isEventWinner, setEventWinner] = useState<boolean>(false);
+  // const [isEventWinner, setEventWinner] = useState<boolean>(false);
 
   useEffect(() => {
     apiCheck().then(() => {
       callReturn();
-      checkEvent();
+      // checkEvent();
     });
   }, [content, path, extension]);
 
@@ -92,18 +92,18 @@ export default function Return() {
     navigate("/lent");
   };
 
-  const checkEvent = async () => {
-    await axios
-    .get("/api/event/winner")
-    .then((res) => {
-			setEventWinner(res.data.winner);
-		});
-  };
+  // const checkEvent = async () => {
+  //   await axios
+  //   .get("/api/event/winner")
+  //   .then((res) => {
+	// 		setEventWinner(res.data.winner);
+	// 	});
+  // };
 
   return (
     <div className="container" id="container">
       {/* Event Modal */}
-      {isEventWinner ? <ReturnEventModal /> : null}
+      {/* {isEventWinner ? <ReturnEventModal /> : null} */}
       {/* 상단바 */}
       <div className="row align-items-center">
         <div className="col">

@@ -1,25 +1,32 @@
 import fs from 'fs';
-import mailer from 'nodemailer';
+import dotenv from "dotenv";
 import schedule from 'node-schedule';
 import { overUserInfo } from '../../models/types';
 import { createLentLog } from '../../models/queryModel';
 import { connectionForCabinet } from '../../models/dbModel';
 import { addBanUser, getOverUser, updateCabinetActivation, updateUserAuth } from '../../models/banModel';
-require('dotenv').config();
+const mailer = require('nodemailer');
+
+const env = process.env;
+if (env.USER === "ec2-user") {
+  dotenv.config({ path: env.PWD + "/.env" }); //dep
+} else {
+  dotenv.config(); //local
+}
 
 let transporter = mailer.createTransport({
-  service: process.env.MAIL_SERVICE,
-  host: process.env.MAIL_HOST,
+  service: env.MAIL_SERVICE,
+  host: env.MAIL_HOST,
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    user: env.MAIL_USER,
+    pass: env.MAIL_PASS,
   },
   secure: true,
   port: 465,
   tls: {
-    maxVersion: process.env.MAIL_TLS_MAXVERSION,
-    minVersion: process.env.MAIL_TLS_MINVERSION,
-    ciphers: process.env.MAIL_TLS_CIPHERS,
+    maxVersion: env.MAIL_TLS_MAXVERSION,
+    minVersion: env.MAIL_TLS_MINVERSION,
+    ciphers: env.MAIL_TLS_CIPHERS,
   }
 });
 
