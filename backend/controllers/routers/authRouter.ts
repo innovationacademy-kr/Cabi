@@ -1,6 +1,5 @@
 import express from "express";
 import passport from "passport";
-import { userList, userInfo, lentCabinetInfo } from "../../models/userModel";
 import { checkUser } from "../../models/queryModel";
 
 export const authRouter = express.Router();
@@ -14,29 +13,9 @@ authRouter.get(
     failureRedirect: "/",
   }),
   async (req: any, res: any) => {
-    const idx = userList.findIndex(
-      (user: userInfo) => user.access === req.session.passport.user.access
-    );
-
-    if (idx === -1) {
-      res.status(400).send({ error: "Permission Denied" });
-      return;
-    }
     try {
-      await checkUser(req.session.passport.user).then(
-        (resp: lentCabinetInfo) => {
-          if (!resp) {
-            res.status(400).send({ error: "Permission Denied" });
-            return;
-          }
-          if (resp.lent_id !== -1) {
-            // lent_id가 -1이 아니라면 -> 빌린 사물함이 있음
-            res.redirect("/return"); // /return으로 이동
-          } else {
-            res.redirect("/lent"); // lent_id === -1 -> 빌린 사물함이 없음 -> /lent로 이동
-          }
-        }
-      );
+      // console.log(res, req.session.passport.user);
+      verifyLent(res, req.session.passport.user);
     } catch (err) {
       //console.log(err);
       //res.status(400).json({ error: err });
@@ -45,16 +24,24 @@ authRouter.get(
   }
 );
 authRouter.post("/auth/logout", (req: any, res: any) => {
-  const idx = userList.findIndex(
-    (user: userInfo) => user.access === req.session.passport.user.access
-  );
-  if (idx !== -1) {
-    userList.splice(idx, 1);
-  } else {
-    res.status(400).send({ error: "Permission Denied" });
-    return;
+  try {
+    req.logout();
+    res.clearCookie("accessToken");
+    res.redirect("/");
+  } catch (e) {
+    console.log(e);
   }
-  req.logout();
-  req.session = null;
-  res.send({ result: "success" });
 });
+export const verifyLent =async (res: any, decoded: any) => {
+  try {
+    const lentCabinet: any = await checkUser(decoded);
+    if (lentCabinet.lent_id !== -1) {
+      return res.redirect("/return");
+    } else {
+      return res.redirect("/lent");
+    }
+  } catch (err: any) {
+    console.error('verifyLent - ', err);
+    res.status(400).redirect("/");
+  }
+}

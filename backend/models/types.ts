@@ -1,29 +1,30 @@
-export type userInfo = {
+export interface user {
   user_id: number;
   intra_id: string;
-  auth?: boolean;
+}
+export interface userInfo extends user {
+  auth?: number;
   email: string;
   phone?: string;
   access: string;
   refresh: string;
 };
-export type lentInfo = {
+
+export interface lent {
   lent_id: number;
   lent_cabinet_id: number;
   lent_user_id: number;
   lent_time?: string;
   expire_time?: string;
   extension: boolean;
+}
+
+export interface lentInfo extends lent {
   intra_id?: string;
 };
+
 //lent 된 Cabinet 하나의 Info
-export type lentCabinetInfo = {
-  lent_id: number;
-  lent_cabinet_id: number;
-  lent_user_id: number;
-  lent_time: string;
-  expire_time: string;
-  extension: boolean;
+export interface lentCabinetInfo extends lent {
   cabinet_num: number;
   location: string;
   floor: number;
@@ -31,23 +32,18 @@ export type lentCabinetInfo = {
   activation: boolean;
 };
 //cabinet & lent table
-export type cabinetInfo = {
+export interface cabinetInfo extends lentCabinetInfo {
   cabinet_id: number;
-  cabinet_num: number;
-  location: string;
-  floor: number;
-  section: string;
-  activation: boolean;
 };
 //all cabinet info
-export type cabinetListInfo = {
+export interface cabinetListInfo {
   location?: Array<string>;
   floor?: Array<Array<number>>;
   section?: Array<Array<Array<string>>>;
   cabinet?: Array<Array<Array<Array<cabinetInfo>>>>;
 };
 //slack user
-export type slackUser = {
+export interface slackUser {
   id: string;
   name: string;
 };
@@ -65,11 +61,34 @@ export let cabinetList: cabinetListInfo = {
 //slack user info list
 export let slackUserList: Array<slackUser> = [];
 
-
 // eventInfo
-export type eventInfo = {
+export interface eventInfo {
   event_id: number,
   event_name: string,
   intra_id: string,
   isEvent: boolean
+};
+
+export interface overUserInfo extends user {
+  auth: number;
+  email: string;
+  lent_id: number;
+  cabinet_id: number;
+}
+
+export interface banUserInfo extends user {
+  ban_id: number;
+  cabinet_id: number;
+  bannedDate: string;
+  unBannedDate: string;
+};
+
+export interface banUserAddInfo extends user {
+  cabinet_id: number | null;
+};
+
+export interface banCabinetInfo {
+  user_id: number;
+  cabinet_id: number;
+  lent_id: number;
 };

@@ -27,7 +27,6 @@ export default function Carousel(props: any) {
           intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}
           isLent={props.isLent}
           expire_time={props.outer_lent[id]?.expire_time}
-          checkEvent={props.checkEvent}
         ></CabinetBox>
       );
     }
