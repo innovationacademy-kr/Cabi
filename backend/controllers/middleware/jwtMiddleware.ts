@@ -5,16 +5,6 @@ import jwt from "jsonwebtoken";
 const TOKEN_EXPIRED: number = -3;
 const TOKEN_INVALID: number = -2;
 
-// export interface userInfo {
-//   user_id: number;
-//   intra_id: string;
-//   auth?: boolean | undefined;
-//   email?: string;
-//   phone?: string | undefined;
-//   access?: string;
-//   refresh?: string;
-// }
-
 export const jwtToken = {
   sign: async (user: userInfo) => {
     const result = {
