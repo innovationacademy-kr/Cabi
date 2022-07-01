@@ -5,6 +5,10 @@ import { jwtToken, verifyToken } from "./jwtMiddleware";
 
 export async function loginBanCheck(req: any, res: any, next: any) {
   try {
+    // if (!req.session || !req.session.passport || !req.session.passport.user) {
+    //   res.status(400).send({ error: "Permission Denied" });
+    //   return;
+    // }
     const idx = verifyToken(req, res);
     if (idx === undefined) {
       res.status(400).send({ error: "Permission Denied" });
