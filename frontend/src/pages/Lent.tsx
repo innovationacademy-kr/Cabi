@@ -7,8 +7,8 @@ import Location from "../component/Location";
 import Question from "../component/Question";
 import LentModal from "../modal/LentModal";
 import ContentsModal from "../modal/ContentsModal";
-import EventModal from "../modal/EventModal";
-import { eventInfo } from "../event/EventType";
+// import EventModal from "../modal/EventModal";
+// import { eventInfo } from "../event/EventType";
 import { useDispatch, useSelector } from "react-redux";
 import { cabinetAll } from "../status/cabinetReducer";
 import { lentAll } from "../status/lentReducer";
@@ -23,10 +23,11 @@ export default function Lent() {
   const [isLent, setisLent] = useState<number>(0);
   const [target, setTarget] = useState<number>(-1);
   const [cabiNum, setCabiNum] = useState<number>(-1);
-  const [event, setEvent] = useState<Array<eventInfo>>([]);
+
   const info = useSelector((state :RootState) => state.cabinetReducer);
   const lent = useSelector((state :RootState) => state.lentReducer);
   const user = useSelector((state :RootState) => state.userReducer);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function Lent() {
       handleClick();
     }
     handleLent();
-    handleEvent();
+    // handleEvent();
   }, []);
 
   const apiCheck = async () => {
@@ -79,26 +80,12 @@ export default function Lent() {
       });
   };
 
-  const handleEvent = () => {
-    const url = "/api/event/list"
-    axios.get(url).then((res:any) => {
-      setEvent(res.data.eventInfo);
-    }).catch((err: any) => {console.log(err)});
-  };
-
-  const checkEventWinner = (intra:string): null | eventInfo => {
-    let result = null;
-
-    if (intra === "") {
-      return result;
-    }
-    event.forEach((aEvent:eventInfo) => {
-      if (aEvent.intra_id === intra) {
-        return result = aEvent;
-      }
-    })
-    return result;
-  };
+  // const handleEvent = () => {
+  //   const url = "/api/event/list"
+  //   axios.get(url).then((res:any) => {
+  //     setEvent(res.data.eventInfo);
+  //   }).catch((err: any) => {console.log(err)});
+  // };
 
   const navTabs = () => {
     let list: Array<JSX.Element> = [];
@@ -144,7 +131,6 @@ export default function Lent() {
           floor_name={floor}
           isLent={isLent}
           lent={lent}
-          checkEvent={checkEventWinner}
         ></Carousel>
       );
     });
@@ -154,7 +140,7 @@ export default function Lent() {
   return (
     <div className="container col" id="container">
       {/* 이벤트 모달 사용 시 하단 코드활성화 */}
-      {localStorage.getItem("eventShown") ? null : <EventModal />}
+      {/* {localStorage.getItem("eventShown") ? null : <EventModal />} */}
       <div className="row align-items-center">
         <div className="col">
           <div className="px-4">

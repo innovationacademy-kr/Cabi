@@ -13,6 +13,7 @@ import { eventRouter } from "./controllers/routers/eventRouter";
 import { connectionForCabinet } from "./models/dbModel";
 import passportConfig from "./controllers/middleware/passportMiddleware";
 import slack from "./controllers/middleware/slackMiddleware";
+import scheduling from "./controllers/middleware/emailerMiddleware";
 
 import dotenv from "dotenv";
 
@@ -63,6 +64,7 @@ app.use("/api/event", eventRouter);
 app.use("/api", apiRouter);
 app.use("/", authRouter);
 slack();
+scheduling();
 connectionForCabinet();
 
 app.use("/", function (req, res) {

@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-import { eventInfo } from "./userModel";
+import { eventInfo } from "./types";
 import { con } from "./queryModel";
 
 // event 정보 추가
