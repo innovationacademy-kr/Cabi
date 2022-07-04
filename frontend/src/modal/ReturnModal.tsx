@@ -3,9 +3,8 @@ import "./returnModal.css";
 // import { useState } from "react";
 
 export default function ReturnModal(props: any) {
-
   // 리턴 모달에 이벤트를 띄울 시, 하단의 함수를 사용하여 returnTarget의 값을 바꾸어 사용했어요.
-  // 현재 리턴모달 측 변경하는 이벤트를 사용하지 않으므로, returnTarget의 값은 기본값인 contentsmodal 이 됩니다. 
+  // 현재 리턴모달 측 변경하는 이벤트를 사용하지 않으므로, returnTarget의 값은 기본값인 contentsmodal 이 됩니다.
 
   // const handleReturn = () => {
   //   let result: number = 0;
@@ -33,11 +32,11 @@ export default function ReturnModal(props: any) {
   //   : "#contentsmodal";
   const returnTarget: string = "#contentsmodal";
 
-  const handleEventReturn = () => {
-    const url = "/api/event/return"
-    axios.post(url)
-      .catch((err) => {console.log(err)});
-  };
+  // const handleEventReturn = () => {
+  //   const url = "/api/event/return"
+  //   axios.post(url)
+  //     .catch((err) => {console.log(err)});
+  // };
 
   const handleClick = async () => {
     const url = "/api/return";
@@ -56,9 +55,8 @@ export default function ReturnModal(props: any) {
         props.setPath("");
       });
 
-      // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 return 했음을 알려주는 함수입니다.
-      handleEventReturn();
-
+    // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 return 했음을 알려주는 함수입니다.
+    // handleEventReturn();
   };
 
   return (

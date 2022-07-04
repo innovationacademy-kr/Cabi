@@ -12,7 +12,8 @@
   color: #464646a6;
 }
 
-#cabinet_image, #cabinet_image > img {
+#cabinet_image,
+#cabinet_image > img {
   width: 100%;
   height: 100%;
 }
@@ -31,4 +32,12 @@
 
 .expiredLentCabinet {
   background: #b90e7aaf;
+}
+
+.disabledCabinet {
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.longTermCabinet {
+  background: #debc6faf;
 }

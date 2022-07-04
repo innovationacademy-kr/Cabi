@@ -6,7 +6,7 @@ import ReturnModal from "../modal/ReturnModal";
 import PasswordModal from "../modal/PasswordModal";
 import ContentsModal from "../modal/ContentsModal";
 import ExtensionModal from "../modal/ExtensionModal";
-import ReturnEventModal from "../modal/ReturnEventModal";
+// import ReturnEventModal from "../modal/ReturnEventModal";
 import { userInfo } from "../types/userTypes";
 import { lentCabinetInfo } from "../types/cabinetTypes";
 import "./main.css";
@@ -28,12 +28,12 @@ export default function Return() {
   );
 
   const [isExpired, setisExpired] = useState<boolean>(false);
-  const [isEventWinner, setEventWinner] = useState<boolean>(false);
+  // const [isEventWinner, setEventWinner] = useState<boolean>(false);
 
   useEffect(() => {
     apiCheck().then(() => {
       callReturn();
-      checkEvent();
+      // checkEvent();
     });
   }, [content, path, extension]);
 
@@ -48,7 +48,7 @@ export default function Return() {
         navigate("/");
       });
   };
-  
+
   const callReturn = async () => {
     await axios
       .post("/api/return_info")
@@ -58,22 +58,21 @@ export default function Return() {
           setLentCabinet(res.data);
           let extention = "";
           if (res.data) {
-            const date:Date = new Date(res.data.expire_time);
-            const nowDate:Date = new Date();
+            const date: Date = new Date(res.data.expire_time);
+            const nowDate: Date = new Date();
             nowDate.setDate(nowDate.getDate() + 7);
             date.setDate(date.getDate() + 1);
             date.setHours(0, 0, 0);
-            if ((date > nowDate) || (res.data.extension > 0)){
+            if (date > nowDate || res.data.extension > 0) {
               extention = "disabled";
-            }
-            else if (res.data.lent_id === - 1) {
+            } else if (res.data.lent_id === -1) {
               extention = "hidden";
             }
           }
           setExtension(extention);
           //console.log(res.data);
-          if (res.data){
-            const date:Date = new Date(res.data.expire_time);
+          if (res.data) {
+            const date: Date = new Date(res.data.expire_time);
             date.setDate(date.getDate() + 1);
             date.setHours(0, 0, 0);
             //console.log(date);
@@ -92,18 +91,16 @@ export default function Return() {
     navigate("/lent");
   };
 
-  const checkEvent = async () => {
-    await axios
-    .get("/api/event/winner")
-    .then((res) => {
-			setEventWinner(res.data.winner);
-		});
-  };
+  // const checkEvent = async () => {
+  //   await axios.get("/api/event/winner").then((res) => {
+  //     setEventWinner(res.data.winner);
+  //   });
+  // };
 
   return (
     <div className="container" id="container">
       {/* Event Modal */}
-      {isEventWinner ? <ReturnEventModal /> : null}
+      {/* {isEventWinner ? <ReturnEventModal /> : null} */}
       {/* 상단바 */}
       <div className="row align-items-center">
         <div className="col">
@@ -132,7 +129,8 @@ export default function Return() {
             ) : (
               <div>
                 <div className="card-title text-center display-5">
-                  {lentCabinet?.location} {lentCabinet?.floor}{"F "}
+                  {lentCabinet?.location} {lentCabinet?.floor}
+                  {"F "}
                   {lentCabinet?.cabinet_num}
                 </div>
                 <div className="card-subtitle mb-2 text-muted text-center">

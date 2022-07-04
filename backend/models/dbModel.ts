@@ -36,7 +36,7 @@ export async function connectionForCabinet() {
         const result3 = await pool.query(content3);
         result3.forEach(async (element3: any) => {
           let lastList: Array<cabinetInfo> = [];
-          const content4: string = `select * from cabinet where location='${element1.location}' and floor=${element2.floor} and section='${element3.section}' and activation=1 order by cabinet_num`;
+          const content4: string = `select * from cabinet where location='${element1.location}' and floor=${element2.floor} and section='${element3.section}' order by cabinet_num`;
 
           sectionList.push(element3.section);
           //cabinet info with exact section

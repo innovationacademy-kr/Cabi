@@ -25,16 +25,16 @@ export default function LentModal(props: any) {
         console.log(err);
       });
 
-      // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 lent 했음을 알려주는 함수입니다.
-      handleEventLent();
+    // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 lent 했음을 알려주는 함수입니다.
+    // handleEventLent();
   };
 
-  const handleEventLent = () => {
-    const url = "/api/event/lent"
-    axios.post(url)
-			.then(res => {})
-      .catch(err => {console.log(err)});
-  };
+  // const handleEventLent = () => {
+  //   const url = "/api/event/lent"
+  //   axios.post(url)
+  // 		.then(res => {})
+  //     .catch(err => {console.log(err)});
+  // };
 
   return (
     <div className="modal" id="lentmodal" tabIndex={-1}>
