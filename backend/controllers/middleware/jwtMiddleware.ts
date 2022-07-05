@@ -27,10 +27,12 @@ export const jwtToken = {
 }
 
 export const verifyToken = async (token: string, res: any): Promise<userInfo | undefined> => {
+  //check whether token is undefined or not
   if (!token) {
     res.status(401).send({ error : 'verify token not exist' });
     return undefined;
   }
+  //verify token
   const decoded = await jwtToken.verify(token) as userInfo;
   if (typeof decoded === "number") {
     if (decoded === TOKEN_EXPIRED) {
@@ -40,22 +42,6 @@ export const verifyToken = async (token: string, res: any): Promise<userInfo | u
     }
     return undefined;
   }
+  //normal token
   return decoded;
 }
-
-// export const verifyAndRedirect = async (token: string, res: any): Promise<userInfo | undefined> => {
-//   if (!token) {
-//     res.status(401).redirect("/");
-//     return undefined;
-//   }
-//   const decoded = await jwtToken.verify(token) as userInfo;
-//   if (typeof decoded === "number"){
-//     if (decoded === TOKEN_EXPIRED) {
-//       res.status(419).redirect("/");
-//     } else if (decoded === TOKEN_INVALID) {
-//       res.status(401).redirect("/");
-//     }
-//     return undefined;
-//   }
-//   return decoded;
-// }

@@ -9,7 +9,6 @@ import {
 import { loginBanCheck } from "../middleware/authMiddleware";
 import { verifyToken } from "../middleware/jwtMiddleware";
 
-
 export const eventRouter = express.Router();
 
 eventRouter.get("/list", loginBanCheck, async (req: any, res: any) => {
@@ -21,7 +20,7 @@ eventRouter.get("/list", loginBanCheck, async (req: any, res: any) => {
 			});
 		}
 	} catch (e) {
-		console.log(e);
+		console.error(e);
 		res.status(400).json({ error: e });
 	}
 });
@@ -36,7 +35,7 @@ eventRouter.post("/lent", loginBanCheck, async (req: any, res: any) => {
 			res.sendStatus(200);
 		}
 	} catch (e) {
-		console.log(e);
+		console.error(e);
 		res.status(200).json({ status: false });
 	}
 });
@@ -50,7 +49,7 @@ eventRouter.post("/return", loginBanCheck, async (req: any, res: any) => {
 			});
 		}
 	} catch (e) {
-		console.log(e);
+		console.error(e);
 		res.status(400).json({ error: e });
 	}
 });
@@ -70,7 +69,7 @@ eventRouter.get("/winner", loginBanCheck, async (req: any, res: any) => {
 			});
 		}
 	} catch (e) {
-		console.log(e);
+		console.error(e);
 		res.status(400).json({ error: e });
 	}
 });
