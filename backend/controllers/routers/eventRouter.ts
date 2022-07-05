@@ -14,13 +14,11 @@ export const eventRouter = express.Router();
 
 eventRouter.get("/list", loginBanCheck, async (req: any, res: any) => {
 	try {
-		const user = await verifyToken(req, res);
-		if (user !== undefined) {
+		const user = await verifyToken(req.cookies.accessToken, res);
+		if (user) {
 			getEventInfo(user.intra_id).then((resp: any) => {
 				res.send(resp);
 			});
-		} else {
-			res.status(400).json({ error: "Permission denied" });
 		}
 	} catch (e) {
 		console.log(e);
@@ -30,14 +28,12 @@ eventRouter.get("/list", loginBanCheck, async (req: any, res: any) => {
 
 eventRouter.post("/lent", loginBanCheck, async (req: any, res: any) => {
 	try {
-		const user = await verifyToken(req, res);
-		if (user !== undefined) {
+		const user = await verifyToken(req.cookies.accessToken, res);
+		if (user) {
 			if (await checkEventLimit() === true) {
 				await insertEventInfo(user.intra_id);
 			}
 			res.sendStatus(200);
-		} else {
-			res.status(400).json({ error: "Permission denied" });
 		}
 	} catch (e) {
 		console.log(e);
@@ -47,13 +43,11 @@ eventRouter.post("/lent", loginBanCheck, async (req: any, res: any) => {
 
 eventRouter.post("/return", loginBanCheck, async (req: any, res: any) => {
 	try {
-		const user = await verifyToken(req, res);
-		if (user !== undefined) {
+		const user = await verifyToken(req.cookies.accessToken, res);
+		if (user) {
 			updateEventInfo(user.intra_id).then((resp: any) => {
 				res.sendStatus(200);
 			});
-		} else {
-			res.status(400).json({ error: "Permission denied" });
 		}
 	} catch (e) {
 		console.log(e);
@@ -64,8 +58,8 @@ eventRouter.post("/return", loginBanCheck, async (req: any, res: any) => {
 //이벤트 당첨자
 eventRouter.get("/winner", loginBanCheck, async (req: any, res: any) => {
 	try {
-		const user = await verifyToken(req, res);
-		if (user !== undefined) {
+		const user = await verifyToken(req.cookies.accessToken, res);
+		if (user) {
 			checkEventInfo(user.intra_id).then((resp: any) => {
 				if (resp == true) {
 					res.status(200).send({winner: true});
@@ -74,8 +68,6 @@ eventRouter.get("/winner", loginBanCheck, async (req: any, res: any) => {
 					res.status(200).send({winner: false});
 				}
 			});
-		} else {
-			res.status(400).json({ error: "Permission denied" });
 		}
 	} catch (e) {
 		console.log(e);
