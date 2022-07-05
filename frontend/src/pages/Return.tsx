@@ -92,9 +92,11 @@ export default function Return() {
   };
 
   // const checkEvent = async () => {
-  //   await axios.get("/api/event/winner").then((res) => {
-  //     setEventWinner(res.data.winner);
-  //   });
+  //   await axios
+  //   .get("/api/event/winner")
+  //   .then((res) => {
+  // 		setEventWinner(res.data.winner);
+  // 	});
   // };
 
   return (

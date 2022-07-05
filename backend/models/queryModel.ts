@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-import { lentInfo, lentCabinetInfo, userInfo } from "./userModel";
+import { lentInfo, lentCabinetInfo, userInfo, user } from "./types";
 import {
   sendLentMsg,
   sendReturnMsg,
@@ -172,7 +172,7 @@ export async function createLent(cabinet_id: number, user: userInfo) {
 }
 
 //lent_log 값 생성 후 lent 값 삭제
-export async function createLentLog(user: any) {
+export async function createLentLog(user: user) {
   let pool: mariadb.PoolConnection;
   const content: string = `SELECT * FROM lent WHERE lent_user_id=${user.user_id}`;
 
@@ -234,4 +234,24 @@ export async function updateUser(user: userInfo) {
       throw err;
     });
   if (pool) pool.end();
+}
+
+// 해당 유저가 Ban처리 되어있는지 확인
+export async function checkBannedUserList(user_id: number) {
+  let pool: mariadb.PoolConnection;
+  const content: string = `SELECT * FROM user where user_id=${user_id}`;
+  let isBanned = 0;
+
+  pool = await con.getConnection();
+  await pool
+    .query(content)
+    .then((res: any) => {
+      isBanned = res[0].auth;
+    })
+    .catch((err: any) => {
+      console.log(err);
+      throw err;
+    });
+  if (pool) pool.end();
+  return isBanned;
 }

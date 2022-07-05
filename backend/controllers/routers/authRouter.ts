@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
-import { userList, userInfo, lentCabinetInfo } from "../../models/userModel";
 import { checkUser } from "../../models/queryModel";
+import { lentCabinetInfo, userInfo, userList } from "../../models/types";
 
 export const authRouter = express.Router();
 
@@ -39,22 +39,16 @@ authRouter.get(
       );
     } catch (err) {
       //console.log(err);
-      //res.status(400).json({ error: err });
       res.status(400).json({ error: err }).redirect("/");
     }
   }
 );
 authRouter.post("/auth/logout", (req: any, res: any) => {
-  const idx = userList.findIndex(
-    (user: userInfo) => user.access === req.session.passport.user.access
-  );
-  if (idx !== -1) {
-    userList.splice(idx, 1);
-  } else {
-    res.status(400).send({ error: "Permission Denied" });
-    return;
+  try {
+    req.logout();
+    res.clearCookie("accessToken");
+    res.redirect("/");
+  } catch (e) {
+    console.log(e);
   }
-  req.logout();
-  req.session = null;
-  res.send({ result: "success" });
 });

@@ -82,15 +82,10 @@ export default function Lent() {
   };
 
   // const handleEvent = () => {
-  //   const url = "/api/event/list";
-  //   axios
-  //     .get(url)
-  //     .then((res: any) => {
-  //       setEvent(res.data.eventInfo);
-  //     })
-  //     .catch((err: any) => {
-  //       console.log(err);
-  //     });
+  //   const url = "/api/event/list"
+  //   axios.get(url).then((res:any) => {
+  //     setEvent(res.data.eventInfo);
+  //   }).catch((err: any) => {console.log(err)});
   // };
 
   const navTabs = () => {
