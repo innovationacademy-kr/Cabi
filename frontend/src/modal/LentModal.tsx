@@ -22,7 +22,7 @@ export default function LentModal(props: any) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
 
       // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 lent 했음을 알려주는 함수입니다.
@@ -33,7 +33,7 @@ export default function LentModal(props: any) {
     const url = "/api/event/lent"
     axios.post(url)
 			.then(res => {})
-      .catch(err => {console.log(err)});
+      .catch(err => {console.error(err)});
   };
 
   return (

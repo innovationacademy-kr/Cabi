@@ -47,7 +47,7 @@ export default function Lent() {
         dispatch(userAll(res.data.user));
       })
       .catch((err: any) => {
-        console.log(err);
+        console.error(err);
         navigate("/");
       });
   };
@@ -64,7 +64,7 @@ export default function Lent() {
         setisLent(res.data.isLent);
       })
       .catch((err: any) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -76,7 +76,7 @@ export default function Lent() {
         dispatch(cabinetAll(res.data));
       })
       .catch((err: any) => {
-        console.log(err);
+        console.error(err);
       });
   };
 

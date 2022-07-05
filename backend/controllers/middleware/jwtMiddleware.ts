@@ -7,64 +7,55 @@ const TOKEN_INVALID: number = -2;
 
 export const jwtToken = {
   sign: async (user: userInfo) => {
-    const result = {
+    return {
       accessToken : jwt.sign(user, secret.secretKey, secret.options)
     }
-    return result;
   },
   verify: async (token: string) => {
-    let decoded;
     try {
-      decoded = jwt.verify(token, secret.secretKey);
+      return jwt.verify(token, secret.secretKey);
     } catch (err: any) {
       if (err.message === "jwt expired") {
-        console.error('expired token');
         return TOKEN_EXPIRED;
       } else if (err.message === "invalid token") {
-        console.error('invalid token');
         return TOKEN_INVALID;
       } else {
-        console.error('invalid token');
         return TOKEN_INVALID;
       }
     }
-    return decoded;
   }
 }
 
-export const verifyToken = async (req: any, res:any): Promise<userInfo | undefined> => {
-  try {
-    const decoded = await jwtToken.verify(req.cookies.accessToken) as userInfo;
-    if (typeof decoded === "number") {
-      if (decoded === TOKEN_EXPIRED) {
-        res.status(419).send({ error: "Expired token" });
-      } else if (decoded === TOKEN_INVALID) {
-        res.status(401).send({ error: "Invalid token" });
-      }
-      return undefined;
-    }
-    return decoded;
-  } catch (err: any) {
-    console.error('verifyToken - ', err.message);
-    res.status(400).send({ error: err.message });
+export const verifyToken = async (token: string, res: any): Promise<userInfo | undefined> => {
+  if (!token) {
+    res.status(401).send({ error : 'verify token not exist' });
+    return undefined;
   }
-}
-
-export const verifyAndRedirect = async (req:any, res: any): Promise<userInfo | undefined> => {
-  try {
-    const decoded = await jwtToken.verify(req.cookies.accessToken) as userInfo;
-    if (typeof decoded === "number"){
-      if (decoded === TOKEN_EXPIRED) {
-        res.status(419).redirect("/");
-      } else if (decoded === TOKEN_INVALID) {
-        res.status(401).redirect("/");
-      }
-    } else {
-      return decoded;
+  const decoded = await jwtToken.verify(token) as userInfo;
+  if (typeof decoded === "number") {
+    if (decoded === TOKEN_EXPIRED) {
+      res.status(419).send({ error: "Expired token" });
+    } else if (decoded === TOKEN_INVALID) {
+      res.status(401).send({ error: "Invalid token" });
     }
     return undefined;
-  } catch (err: any) {
-    console.error('verifyAndRedirect - ', err);
-    res.state(400).redirect("/");
   }
+  return decoded;
 }
+
+// export const verifyAndRedirect = async (token: string, res: any): Promise<userInfo | undefined> => {
+//   if (!token) {
+//     res.status(401).redirect("/");
+//     return undefined;
+//   }
+//   const decoded = await jwtToken.verify(token) as userInfo;
+//   if (typeof decoded === "number"){
+//     if (decoded === TOKEN_EXPIRED) {
+//       res.status(419).redirect("/");
+//     } else if (decoded === TOKEN_INVALID) {
+//       res.status(401).redirect("/");
+//     }
+//     return undefined;
+//   }
+//   return decoded;
+// }
