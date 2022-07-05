@@ -43,10 +43,9 @@ const FortyTwoVerify = async (
     };
     const result = await jwtToken.sign(userInfo);
     req.res.cookie("accessToken", result.accessToken, { httpOnly: true, secure: true });
-
     return cb(null, userInfo);
   } catch (err: any) {
-    console.log('FortyTwoVerify - ', err);
+    console.error('FortyTwoVerify - ', err);
   }
 };
 
