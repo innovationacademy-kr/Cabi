@@ -32,6 +32,7 @@ authRouter.post("/auth/logout", async (req: any, res: any) => {
   }
 });
 
+//verify whether the user lent cabinet or not
 export const verifyLent = async (res: any, decoded: userInfo) => {
   const lentCabinet = await checkUser(decoded);
   if (lentCabinet.lent_id !== -1) {
