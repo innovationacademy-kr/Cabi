@@ -1,5 +1,5 @@
 import mariadb from "mariadb";
-import { cabinetList, cabinetInfo } from "./types";
+import { cabinetList, cabinetInfo, cabinetListInfo } from "./types";
 
 const con = mariadb.createPool({
   host: "localhost",
@@ -9,8 +9,14 @@ const con = mariadb.createPool({
   dateStrings: true,
 });
 
-export async function connectionForCabinet() {
-  if (cabinetList.location?.length) return;
+export async function connectionForCabinet() : Promise<cabinetListInfo> {
+  // if (cabinetList.location?.length) return;
+  const cabinet : cabinetListInfo = {
+    location : undefined,
+    floor : undefined,
+    section : undefined,
+    cabinet : undefined,
+  };
   let pool: mariadb.PoolConnection;
   try {
     pool = await con.getConnection();
@@ -23,12 +29,12 @@ export async function connectionForCabinet() {
       let tmpCabinetList: Array<Array<Array<cabinetInfo>>> = [];
       const content2: string = `select distinct cabinet.floor from cabinet where location='${element1.location}' order by floor`;
 
-      cabinetList.location?.push(element1.location);
+      cabinet.location?.push(element1.location);
       //floor info with exact location
       const result2 = await pool.query(content2);
       result2.forEach(async (element2: any) => {
         let sectionList: Array<string> = [];
-        let cabinetList: Array<Array<cabinetInfo>> = [];
+        let cabinet: Array<Array<cabinetInfo>> = [];
         const content3: string = `select distinct cabinet.section from cabinet where location='${element1.location}' and floor=${element2.floor}`;
 
         floorList.push(element2.floor);
@@ -44,18 +50,20 @@ export async function connectionForCabinet() {
           result4.forEach(async (element4: any) => {
             lastList.push(element4);
           });
-          cabinetList.push(lastList);
+          cabinet.push(lastList);
         });
         list.push(sectionList);
-        tmpCabinetList.push(cabinetList);
+        tmpCabinetList.push(cabinet);
       });
-      cabinetList.floor?.push(floorList);
-      cabinetList.section?.push(list);
-      cabinetList.cabinet?.push(tmpCabinetList);
+      cabinet.floor?.push(floorList);
+      cabinet.section?.push(list);
+      cabinet.cabinet?.push(tmpCabinetList);
     });
     if (pool) pool.end();
   } catch (err) {
     console.error(err);
     throw err;
+  } finally {
+    return cabinet;
   }
 }
