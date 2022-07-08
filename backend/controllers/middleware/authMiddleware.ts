@@ -5,7 +5,7 @@ import { jwtToken, verifyToken } from "./jwtMiddleware";
 //authorization for api request
 export async function loginBanCheck(req: any, res: any, next: any) {
   try {
-    if (!validateUser(req, res)) {
+    if (!await validateUser(req)) {
       return res.status(400).send({ error: "Permission Denied" });
     }
     const user = await verifyToken(req.cookies.accessToken, res);
@@ -34,7 +34,7 @@ export async function loginBanCheck(req: any, res: any, next: any) {
 //authorization before 42login
 export default async function authCheck(req: any, res: any, next: any) {
   try {
-    if (!validateUser(req, res)) {
+    if (!await validateUser(req)) {
       return next();
     }
     //verify accessToken
@@ -65,7 +65,7 @@ export default async function authCheck(req: any, res: any, next: any) {
   }
 }
 
-async function validateUser(req:any, res:any) : Promise<boolean | userInfo> {
+async function validateUser(req:any) : Promise<boolean | userInfo> {
   //check accessToken
   if (!req.cookies || !req.cookies.accessToken) {
     return false;
