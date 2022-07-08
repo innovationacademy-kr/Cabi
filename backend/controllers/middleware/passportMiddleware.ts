@@ -1,7 +1,7 @@
 import passport from "passport";
 
 import dotenv from "dotenv";
-import { userList } from "../../models/types";
+import { jwtToken } from "./jwtMiddleware";
 
 const env = process.env;
 if (env.USER === "ec2-user") {
@@ -33,14 +33,14 @@ const FortyTwoVerify = async (
   profile: any,
   cb: any
 ) => {
+  const userInfo = {
+    user_id: Number(profile.id),
+    intra_id: profile.username,
+    email: profile.emails[0].value,
+    access: accessToken,
+    refresh: refreshToken,
+  };
   try {
-    const userInfo = {
-      user_id: Number(profile.id),
-      intra_id: profile.username,
-      email: profile.emails[0].value,
-      access: accessToken,
-      refresh: refreshToken,
-    };
     //issue new token
     const result = await jwtToken.sign(userInfo);
     //make cookie with jwt
@@ -50,15 +50,6 @@ const FortyTwoVerify = async (
   } catch (err: any) {
     console.error('FortyTwoVerify - ', err);
   }
-  userList.push({
-    user_id: profile.id,
-    intra_id: profile.username,
-    email: profile.emails[0].value,
-    auth: 0,
-    access: accessToken,
-    refresh: refreshToken,
-    phone: "",
-  });
   return cb(null, userInfo);
 };
 
