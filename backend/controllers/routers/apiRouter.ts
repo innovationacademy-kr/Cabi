@@ -9,15 +9,17 @@ import {
 } from "../../models/queryModel";
 import { loginBanCheck } from "../middleware/authMiddleware";
 import { verifyToken } from "../middleware/jwtMiddleware";
+import { connectionForCabinet } from "../../models/dbModel";
 
 export const apiRouter = express.Router();
 
 // 전체 사물함에 대한 정보
-apiRouter.post("/cabinet", (req: any, res: any) => {
-  if (!cabinetList) {
+apiRouter.post("/cabinet", async (req: any, res: any) => {
+  const cabinet = await connectionForCabinet();
+  if (cabinet.location?.length === 0) {
     res.status(400).send({ error: "no cabinet information" });
   } else {
-    res.send(cabinetList);
+    res.send(cabinet);
   }
 });
 
