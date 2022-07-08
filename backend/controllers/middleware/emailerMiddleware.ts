@@ -83,29 +83,29 @@ const scheduling = () => {
         }).catch(e => console.error(e));
       })
       //15
-      // getOverUser(15).then(res => {
-      //   if (res) {
-      //     res.forEach(async user => {
-      //       //user
-      //       await updateUserAuth(user.user_id);
-      //       //cabinet
-      //       await updateCabinetActivation(user.cabinet_id, 2);
-      //       //return
-      //       await createLentLog({
-      //         user_id: user.user_id,
-      //         intra_id: user.intra_id,
-      //       });
-      //       //ban
-      //       await addBanUser({
-      //         user_id: user.user_id,
-      //         intra_id: user.intra_id,
-      //         cabinet_id: user.cabinet_id,
-      //       });
-      //     });
-      //     mailing(res, 15);
-      //     connectionForCabinet();
-      //   }
-      // }).catch(e => console.error(e));
+      getOverUser(15).then(res => {
+				if (res) {
+					res.forEach(async user => {
+						//user
+						await updateUserAuth(user.user_id);
+						//cabinet
+						await updateCabinetActivation(user.cabinet_id, 2);
+						//return
+						await createLentLog({
+							user_id: user.user_id,
+							intra_id: user.intra_id,
+						});
+            //ban
+						await addBanUser({
+							user_id: user.user_id,
+							intra_id: user.intra_id,
+							cabinet_id: user.cabinet_id,
+						});
+					});
+					mailing(res, 15);
+          connectionForCabinet();
+        }
+      }).catch(e => console.error(e));
     } catch(e) {
       console.error(e);
       throw e;
