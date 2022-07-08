@@ -33,14 +33,14 @@ const FortyTwoVerify = async (
   profile: any,
   cb: any
 ) => {
+  const userInfo = {
+    user_id: Number(profile.id),
+    intra_id: profile.username,
+    email: profile.emails[0].value,
+    access: accessToken,
+    refresh: refreshToken,
+  };
   try {
-    const userInfo = {
-      user_id: Number(profile.id),
-      intra_id: profile.username,
-      email: profile.emails[0].value,
-      access: accessToken,
-      refresh: refreshToken,
-    };
     //issue new token
     const result = await jwtToken.sign(userInfo);
     //make cookie with jwt
