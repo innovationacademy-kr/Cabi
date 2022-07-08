@@ -1,6 +1,6 @@
 import express from "express";
 import passport from "passport";
-import { checkUser, con } from "../../models/queryModel";
+import { checkUser } from "../../models/queryModel";
 import { userInfo } from "../../models/types";
 import authCheck from "../middleware/authMiddleware";
 

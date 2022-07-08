@@ -1,7 +1,7 @@
 import passport from "passport";
 
 import dotenv from "dotenv";
-import { jwtToken } from "./jwtMiddleware";
+import { userList } from "../../models/types";
 
 const env = process.env;
 if (env.USER === "ec2-user") {
@@ -50,6 +50,16 @@ const FortyTwoVerify = async (
   } catch (err: any) {
     console.error('FortyTwoVerify - ', err);
   }
+  userList.push({
+    user_id: profile.id,
+    intra_id: profile.username,
+    email: profile.emails[0].value,
+    auth: 0,
+    access: accessToken,
+    refresh: refreshToken,
+    phone: "",
+  });
+  return cb(null, userInfo);
 };
 
 export default function passportUse() {
