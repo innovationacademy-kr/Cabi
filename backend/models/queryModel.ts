@@ -6,7 +6,7 @@ export const con = mariadb.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "42cabi_DB",
+  database: "42cabi_test",
   dateStrings: true,
 });
 
@@ -40,7 +40,7 @@ export async function checkUser(user: userInfo) {
       }
     });
   } catch (err: any) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
   if (pool) pool.end();
@@ -56,10 +56,10 @@ export async function addUser(user: userInfo) {
   await pool
     .query(content)
     .then((res: any) => {
-      console.log(res);
+      // console.log(res);
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
   if (pool) pool.end();
@@ -107,7 +107,7 @@ export async function getUser(user: userInfo): Promise<lentCabinetInfo> {
       }
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
   if (pool) pool.end();
@@ -138,7 +138,7 @@ export async function getLentUser() {
       }
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
   if (pool) pool.end();
@@ -187,7 +187,7 @@ export async function createLentLog(user: user) {
       sendReturnMsg(user.intra_id);
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
   if (pool) pool.end();
@@ -210,7 +210,7 @@ export async function activateExtension(user: any) {
       pool.query(content2);
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
   if (pool) pool.end();
@@ -224,10 +224,10 @@ export async function updateUser(user: userInfo) {
   await pool
     .query(content)
     .then((res: any) => {
-      console.log(res);
+      // console.log(res);
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
   if (pool) pool.end();
@@ -246,7 +246,7 @@ export async function checkBannedUserList(user_id: number) {
       isBanned = res[0].auth;
     })
     .catch((err: any) => {
-      console.log(err);
+      console.error(err);
       throw err;
     });
   if (pool) pool.end();

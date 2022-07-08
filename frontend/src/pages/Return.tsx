@@ -44,7 +44,7 @@ export default function Return() {
         setUser(res.data.user);
       })
       .catch((err: any) => {
-        console.log(err);
+        console.error(err);
         navigate("/");
       });
   };
@@ -84,7 +84,7 @@ export default function Return() {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 

@@ -36,7 +36,7 @@ export default function ReturnModal(props: any) {
   const handleEventReturn = () => {
     const url = "/api/event/return"
     axios.post(url)
-      .catch((err) => {console.log(err)});
+      .catch((err) => {console.error(err)});
   };
 
   const handleClick = async () => {
@@ -51,7 +51,7 @@ export default function ReturnModal(props: any) {
         }
       })
       .catch((err: any) => {
-        console.log(err);
+        console.error(err);
         props.setContent("다시 시도해주세요!");
         props.setPath("");
       });

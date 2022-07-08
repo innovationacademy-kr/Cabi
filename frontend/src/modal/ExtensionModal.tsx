@@ -13,7 +13,7 @@ export default function ExtensionModal(props: any) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 

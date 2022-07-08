@@ -18,7 +18,7 @@ export async function insertEventInfo(intra_id:string) {
 		  .query(insertContent)
 		  .then((result:any) => {})
 		  .catch((err:any) => {
-			console.log(err);
+			console.error(err);
 			throw err;
 		  });
 	  }
@@ -27,7 +27,7 @@ export async function insertEventInfo(intra_id:string) {
 	  //}
 	})
 	.catch((err: any) => {
-	  console.log(err);
+	  console.error(err);
 	  throw err;
 	})
 
@@ -51,13 +51,13 @@ export async function updateEventInfo(intra_id:string) {
 		  .query(updateContent)
 		  .then((result:any) => {})
 		  .catch((err:any) => {
-				console.log(err);
+				console.error(err);
 			throw err;
 		  });
 	  }
 	})
 	.catch((err: any) => {
-	  console.log(err);
+	  console.error(err);
 	  throw err;
 	})
 
@@ -77,7 +77,7 @@ export async function getEventInfo(intra_id: string){
 		eventInfo = res;
 	  })
 	  .catch((err: any) => {
-		console.log(err);
+		console.error(err);
 		throw err;
 	  });
 	if (pool) pool.end();
@@ -100,7 +100,7 @@ export async function checkEventInfo(intra_id: string) : Promise<boolean> {
 		}
 	})
 	.catch((err: any) => {
-		console.log(err);
+		console.error(err);
 		throw err;
 	});
 	if (pool) pool.end();
@@ -124,7 +124,7 @@ export async function checkEventLimit() : Promise<boolean> {
 		}
 	})
 	.catch((err: any) => {
-		console.log(err);
+		console.error(err);
 		throw err;
 	});
 	if (pool) pool.end();

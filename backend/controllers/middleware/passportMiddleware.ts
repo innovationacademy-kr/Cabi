@@ -33,16 +33,22 @@ const FortyTwoVerify = async (
   profile: any,
   cb: any
 ) => {
-  const userInfo = {
-    user_id: profile.id,
-    intra_id: profile.username,
-    email: profile.emails[0].value,
-    access: accessToken,
-    refresh: refreshToken,
-  };
-  const idx = userList.findIndex((user) => user.user_id === profile.id);
-  if (idx !== -1) {
-    userList.splice(idx, 1);
+  try {
+    const userInfo = {
+      user_id: Number(profile.id),
+      intra_id: profile.username,
+      email: profile.emails[0].value,
+      access: accessToken,
+      refresh: refreshToken,
+    };
+    //issue new token
+    const result = await jwtToken.sign(userInfo);
+    //make cookie with jwt
+    req.res.cookie("accessToken", result.accessToken, { httpOnly: true, secure: true });
+    //save userInfo in session
+    return cb(null, userInfo);
+  } catch (err: any) {
+    console.error('FortyTwoVerify - ', err);
   }
   userList.push({
     user_id: profile.id,

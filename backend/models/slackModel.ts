@@ -9,15 +9,15 @@ export async function slackOverdueUser(day: string) {
 	await pool
 	  .query(content)
 	  .then((res: any) => {
-		if (res) {
-		  for (let i = 0; i < res.length; i++) {
-			intraList.push(res[i].intra_id);
-		  }
-		}
+			if (res) {
+			  for (let i = 0; i < res.length; i++) {
+					intraList.push(res[i].intra_id);
+			  }
+			}
 	  })
 	  .catch((err: any) => {
-		console.log(err);
-		throw err;
+			console.error(err);
+			throw err;
 	  });
 	if (pool) pool.end();
 	return intraList;
@@ -39,7 +39,7 @@ export async function slackOverdueUser(day: string) {
 		}
 	  })
 	  .catch((err: any) => {
-		console.log(err);
+		console.error(err);
 		throw err;
 	  });
 	if (pool) pool.end();

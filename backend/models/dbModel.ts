@@ -5,7 +5,7 @@ const con = mariadb.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "42cabi_DB",
+  database: "42cabi_test",
   dateStrings: true,
 });
 
@@ -55,7 +55,7 @@ export async function connectionForCabinet() {
     });
     if (pool) pool.end();
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
 }

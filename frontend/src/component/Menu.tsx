@@ -13,7 +13,7 @@ export default function Menu(props: any) {
       .then((res) => {
         navigate("/");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
   const cabinetPage = () => {
     if (props.url === "/return") {
