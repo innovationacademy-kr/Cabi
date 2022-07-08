@@ -13,7 +13,7 @@ export const jwtToken = {
   },
   verify: async (token: string) => {
     try {
-      return jwt.verify(token, secret.secretKey);
+      return jwt.verify(token, secret.secretKey) as userInfo;
     } catch (err: any) {
       if (err.message === "jwt expired") {
         return TOKEN_EXPIRED;
