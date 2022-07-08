@@ -49,8 +49,10 @@ export interface slackUser {
 };
 
 //variables
-//users logged in
-export let userList: Array<userInfo> = [];
+
+// //users logged in
+// export let userList: Array<userInfo> = [];
+
 //all cabinet for rent
 export let cabinetList: cabinetListInfo = {
   location: [],
