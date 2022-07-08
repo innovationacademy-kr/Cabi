@@ -63,7 +63,7 @@ export async function connectionForCabinet() : Promise<cabinetListInfo> {
   } catch (err) {
     console.error(err);
     throw err;
-  } finally {
-    return cabinet;
   }
+  console.log(cabinet);
+  return cabinet;
 }
