@@ -23,7 +23,7 @@ export async function connectionForCabinet() : Promise<cabinetListInfo> {
     //location info
     const content1: string = "select distinct cabinet.location from cabinet";
     const result1 = await pool.query(content1);
-    result1.forEach(async (element1: any) => {
+    for (const element1 of result1) {
       let floorList: Array<number> = [];
       let list: Array<Array<string>> = [];
       let tmpCabinetList: Array<Array<Array<cabinetInfo>>> = [];
@@ -55,6 +55,14 @@ export async function connectionForCabinet() : Promise<cabinetListInfo> {
         tmpCabinetList.push(cabinet);
       }
 
+      console.log(floorList);
+      console.log(list);
+      console.log(tmpCabinetList);
+      allCabinet.floor?.push(floorList);
+      allCabinet.section?.push(list);
+      allCabinet.cabinet?.push(tmpCabinetList);
+    }
+
       // result2.forEach(async (element2: any) => {
       //   let sectionList: Array<string> = [];
       //   let cabinet: Array<Array<cabinetInfo>> = [];
@@ -77,14 +85,6 @@ export async function connectionForCabinet() : Promise<cabinetListInfo> {
       //   list.push(sectionList);
       //   tmpCabinetList.push(cabinet);
       // });
-
-      console.log(floorList);
-      console.log(list);
-      console.log(tmpCabinetList);
-      allCabinet.floor?.push(floorList);
-      allCabinet.section?.push(list);
-      allCabinet.cabinet?.push(tmpCabinetList);
-    });
     if (pool) pool.end();
   } catch (err) {
     console.error(err);
