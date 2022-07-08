@@ -62,34 +62,10 @@ export async function connectionForCabinet() : Promise<cabinetListInfo> {
       allCabinet.section?.push(list);
       allCabinet.cabinet?.push(tmpCabinetList);
     }
-
-      // result2.forEach(async (element2: any) => {
-      //   let sectionList: Array<string> = [];
-      //   let cabinet: Array<Array<cabinetInfo>> = [];
-      //   const content3: string = `select distinct cabinet.section from cabinet where location='${element1.location}' and floor=${element2.floor}`;
-      //   floorList.push(element2.floor);
-      //   //section info with exact floor
-      //   const result3 = await pool.query(content3);
-      //   result3.forEach(async (element3: any) => {
-      //     let lastList: Array<cabinetInfo> = [];
-      //     const content4: string = `select * from cabinet where location='${element1.location}' and floor=${element2.floor} and section='${element3.section}' and activation=1 order by cabinet_num`;
-
-      //     sectionList.push(element3.section);
-      //     //cabinet info with exact section
-      //     const result4 = await pool.query(content4);
-      //     result4.forEach(async (element4: any) => {
-      //       lastList.push(element4);
-      //     });
-      //     cabinet.push(lastList);
-      //   });
-      //   list.push(sectionList);
-      //   tmpCabinetList.push(cabinet);
-      // });
     if (pool) pool.end();
   } catch (err) {
     console.error(err);
     throw err;
   }
-  console.log(allCabinet);
   return allCabinet;
 }
