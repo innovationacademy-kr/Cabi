@@ -12,10 +12,10 @@ const con = mariadb.createPool({
 export async function connectionForCabinet() : Promise<cabinetListInfo> {
   // if (cabinetList.location?.length) return;
   const cabinet : cabinetListInfo = {
-    location : undefined,
-    floor : undefined,
-    section : undefined,
-    cabinet : undefined,
+    location : [],
+    floor : [],
+    section : [],
+    cabinet : [],
   };
   let pool: mariadb.PoolConnection;
   try {
