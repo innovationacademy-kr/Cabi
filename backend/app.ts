@@ -65,7 +65,7 @@ app.use("/api", apiRouter);
 app.use("/", authRouter);
 slack();
 scheduling();
-connectionForCabinet();
+// connectionForCabinet();
 
 app.use("/", function (req, res) {
   res.sendFile(path.join(__dirname, "./views/index.html"));
