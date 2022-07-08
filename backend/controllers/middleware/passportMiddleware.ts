@@ -35,7 +35,7 @@ const FortyTwoVerify = async (
 ) => {
   try {
     const userInfo = {
-      user_id: profile.id,
+      user_id: Number(profile.id),
       intra_id: profile.username,
       email: profile.emails[0].value,
       access: accessToken,
