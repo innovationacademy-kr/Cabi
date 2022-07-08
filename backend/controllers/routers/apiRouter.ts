@@ -1,5 +1,5 @@
 import express from "express";
-import { cabinetList } from "../../models/types";
+import { cabinetList, lentInfo } from "../../models/types";
 import {
   createLentLog,
   createLent,
@@ -26,9 +26,10 @@ apiRouter.post("/lent_info", loginBanCheck, async (req: any, res: any) => {
   try {
     const lent = await getLentUser();
     const user = await verifyToken(req.cookies.accessToken, res);
+
 		if (user) {
-      const isLent = lent.lentInfo.findIndex((cabinet: any) => cabinet.lent_user_id === user.user_id);
-			res.send({
+      const isLent = lent.lentInfo.findIndex((cabinet: lentInfo) => cabinet.lent_user_id === user.user_id);
+      res.send({
         lentInfo: lent.lentInfo,
         isLent: isLent
       });
