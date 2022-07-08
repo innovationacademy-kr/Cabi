@@ -16,6 +16,7 @@ export const apiRouter = express.Router();
 // 전체 사물함에 대한 정보
 apiRouter.post("/cabinet", async (req: any, res: any) => {
   const cabinet = await connectionForCabinet();
+  console.log(cabinet);
   if (cabinet.location?.length === 0) {
     res.status(400).send({ error: "no cabinet information" });
   } else {
