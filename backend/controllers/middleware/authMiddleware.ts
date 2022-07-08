@@ -5,16 +5,24 @@ import { jwtToken, verifyToken } from "./jwtMiddleware";
 //authorization for api request
 export async function loginBanCheck(req: any, res: any, next: any) {
   try {
+    if (!validateUser(req, res)) {
+      return res.status(400).send({ error: "Permission Denied" });
+    }
     const user = await verifyToken(req.cookies.accessToken, res);
-    if (user) {
-      //check whether the user is banned or not
-      const isBanned = await checkBannedUserList(user.user_id);
-      if (isBanned === 1) {
-        return res.status(400).send({ error: "Permission Denied" });
-      };
-      //normal user can access to api server
+    if (!user) {
+      return res.status(400).send({ error: "Permission Denied" });
+    }
+    //verify whether same user or not
+    if (req.session.passport.user.user_id !== user.user_id) {
       return next();
     }
+    //check whether the user is banned or not
+    const isBanned = await checkBannedUserList(user.user_id);
+    if (isBanned === 1) {
+      return res.status(400).send({ error: "Permission Denied" });
+    };
+    //normal user can access to api server
+    return next();
   } catch(err: any) {
     const error = new Error(err.message)
     error.name = 'LoginBanCheckError';
@@ -26,13 +34,16 @@ export async function loginBanCheck(req: any, res: any, next: any) {
 //authorization before 42login
 export default async function authCheck(req: any, res: any, next: any) {
   try {
-    //check accessToken
-    if (!req.cookies || !req.cookies.accessToken) {
+    if (!validateUser(req, res)) {
       return next();
     }
     //verify accessToken
     const decoded = await jwtToken.verify(req.cookies.accessToken) as userInfo;
     if (typeof decoded === "number") {
+      return next();
+    }
+    //verify whether same user or not
+    if (req.session.passport.user.user_id !== decoded.user_id) {
       return next();
     }
     //check whether the user is banned or not
@@ -52,4 +63,16 @@ export default async function authCheck(req: any, res: any, next: any) {
     console.error(error);
     next();
   }
+}
+
+async function validateUser(req:any, res:any) : Promise<boolean | userInfo> {
+  //check accessToken
+  if (!req.cookies || !req.cookies.accessToken) {
+    return false;
+  }
+  //verify whether session is there or not
+  if (!req.session || !req.session.passport || !req.session.passport.user) {
+    return false;
+  }
+  return true;
 }
