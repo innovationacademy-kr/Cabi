@@ -55,6 +55,9 @@ export async function connectionForCabinet() : Promise<cabinetListInfo> {
         list.push(sectionList);
         tmpCabinetList.push(cabinet);
       });
+      console.log(floorList);
+      console.log(list);
+      console.log(tmpCabinetList);
       cabinet.floor?.push(floorList);
       cabinet.section?.push(list);
       cabinet.cabinet?.push(tmpCabinetList);
