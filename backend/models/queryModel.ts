@@ -260,7 +260,7 @@ export async function checkCabinetStatus(cabinet_id: number) {
     const cabinet = await pool.query(content);
 
     if (pool) pool.end();
-    if (cabinet === 1) {
+    if (cabinet[0].activation === 1) {
       return 1;
     }
   } catch (err :any) {
