@@ -218,7 +218,7 @@ export async function activateExtension(user: any) {
 
 export async function updateUser(user: userInfo) {
   let pool: mariadb.PoolConnection;
-  const content = `UPDATE user SET lastLogin=now() where user_id=${user.user_id}`;
+  const content = `UPDATE user SET lastLogin=now() WHERE user_id=${user.user_id}`;
 
   pool = await con.getConnection();
   await pool
@@ -236,7 +236,7 @@ export async function updateUser(user: userInfo) {
 // 해당 유저가 Ban처리 되어있는지 확인
 export async function checkBannedUserList(user_id: number) {
   let pool: mariadb.PoolConnection;
-  const content: string = `SELECT * FROM user where user_id=${user_id}`;
+  const content: string = `SELECT * FROM user WHERE user_id=${user_id}`;
   let isBanned = 0;
 
   pool = await con.getConnection();
@@ -255,7 +255,7 @@ export async function checkBannedUserList(user_id: number) {
 
 export async function checkCabinetStatus(cabinet_id: number) {
   try {
-    const content = `SELECT activation FROM cabinet where cabinet_id=${cabinet_id}`;
+    const content = `SELECT activation FROM cabinet WHERE cabinet_id=${cabinet_id}`;
     const pool = await con.getConnection();
     const cabinet = await pool.query(content);
 
@@ -267,6 +267,7 @@ export async function checkCabinetStatus(cabinet_id: number) {
     const error = new Error(err.message);
     error.name = 'CheckCabinetStatusError';
     console.error(error);
+    throw error;
   }
   return 0;
 }
