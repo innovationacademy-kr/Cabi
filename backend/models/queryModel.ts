@@ -253,3 +253,20 @@ export async function checkBannedUserList(user_id: number) {
   return isBanned;
 }
 
+export async function checkCabinetStatus(cabinet_id: number) {
+  try {
+    const content = `SELECT activation FROM cabinet where cabinet_id=${cabinet_id}`;
+    const pool = await con.getConnection();
+    const cabinet = await pool.query(content);
+
+    if (pool) pool.end();
+    if (cabinet === 1) {
+      return 1;
+    }
+  } catch (err :any) {
+    const error = new Error(err.message);
+    error.name = 'CheckCabinetStatusError';
+    console.error(error);
+  }
+  return 0;
+}

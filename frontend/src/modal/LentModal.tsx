@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ContentsModal from "./ContentsModal";
 import "./lentModal.css";
 
 export default function LentModal(props: any) {
   const navigate = useNavigate();
+  const [errorModal, setError] = useState<boolean>(false);
   const [state, setState] = useState<boolean>(false);
 
   const handleClick = () => {
@@ -23,18 +25,19 @@ export default function LentModal(props: any) {
       })
       .catch((err) => {
         console.error(err);
+        alert("🚨 대여에 실패했습니다 🚨");
       });
 
       // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 lent 했음을 알려주는 함수입니다.
-      handleEventLent();
+      // handleEventLent();
   };
 
-  const handleEventLent = () => {
-    const url = "/api/event/lent"
-    axios.post(url)
-			.then(res => {})
-      .catch(err => {console.error(err)});
-  };
+  // const handleEventLent = () => {
+  //   const url = "/api/event/lent"
+  //   axios.post(url)
+	// 		.then(res => {})
+  //     .catch(err => {console.error(err)});
+  // };
 
   return (
     <div className="modal" id="lentmodal" tabIndex={-1}>

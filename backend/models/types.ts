@@ -54,12 +54,12 @@ export interface slackUser {
 // export let userList: Array<userInfo> = [];
 
 //all cabinet for rent
-export let cabinetList: cabinetListInfo = {
-  location: [],
-  floor: [],
-  section: [],
-  cabinet: [],
-};
+// export let cabinetList: cabinetListInfo = {
+//   location: [],
+//   floor: [],
+//   section: [],
+//   cabinet: [],
+// };
 //slack user info list
 export let slackUserList: Array<slackUser> = [];
 

@@ -1,11 +1,12 @@
 import express from "express";
-import { cabinetList, lentInfo } from "../../models/types";
+import { lentInfo } from "../../models/types";
 import {
   createLentLog,
   createLent,
   getLentUser,
   getUser,
   activateExtension,
+  checkCabinetStatus,
 } from "../../models/queryModel";
 import { loginBanCheck } from "../middleware/authMiddleware";
 import { verifyToken } from "../middleware/jwtMiddleware";
@@ -47,7 +48,8 @@ apiRouter.post("/lent", loginBanCheck, async (req: any, res: any) => {
   let errno: number;
   try {
     const user = await verifyToken(req.cookies.accessToken, res);
-    if (user) {
+    const cabinetStatus = await checkCabinetStatus(req.body.cabinet_id);
+    if (user && cabinetStatus) {
       const myLent = await getUser(user);
       if (myLent.lent_id === -1) {
         const response = await createLent(req.body.cabinet_id, user);
@@ -56,6 +58,8 @@ apiRouter.post("/lent", loginBanCheck, async (req: any, res: any) => {
       } else {
         res.send({ cabinet_id: -1 });
       }
+    } else {
+      res.status(400).send({ cabinet_id: req.cabinet_id })
     }
   } catch (err) {
     // console.error(err);

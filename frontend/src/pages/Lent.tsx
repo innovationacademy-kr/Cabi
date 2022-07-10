@@ -148,10 +148,10 @@ export default function Lent() {
           </div>
         </div>
         <div className="col">
-          <Location info={info} l_idx={l_idx} setLidx={setLidx}></Location>
+          <Location info={info} l_idx={l_idx} setLidx={setLidx} />
         </div>
         <div className="col">
-          <Menu url="/return"></Menu>
+          <Menu url="/return" />
         </div>
       </div>
       <div className="row my-2 mx-2">
@@ -169,9 +169,9 @@ export default function Lent() {
         </div>
       </div>
       <div className="text-right">
-      <Question></Question>
+        <Question />
       </div>
-      <LentModal target={target} cabiNum={cabiNum}></LentModal>
+      <LentModal target={target} cabiNum={cabiNum} />
       <ContentsModal contents="이미 대여중인 사물함이 있어요 :)" />
     </div>
   );
