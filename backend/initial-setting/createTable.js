@@ -15,6 +15,7 @@ const cabinetQuery = fs.readFileSync('cabinet.sql').toString('utf-8');
 const banUserQuery = fs.readFileSync('ban_user.sql').toString('utf-8');
 const lentQuery = fs.readFileSync('lent.sql').toString('utf-8');
 const lentLogQuery = fs.readFileSync('lent_log.sql').toString('utf-8');
+const eventQuery = fs.readFileSync('event.sql').toString('utf-8');
 const cabinetDataQuery = fs.readFileSync('cabinet_data.sql').toString('utf-8');
 
 const init = async () => {
@@ -25,12 +26,14 @@ const init = async () => {
       pool.query(disabledLogQuery),
       pool.query(banUserQuery),
       pool.query(lentLogQuery),
+      pool.query(eventQuery),
     ]);
     console.log('  ✅  User Table');
     console.log('  ✅  Cabinet Table');
     console.log('  ✅  Lent Log Table');
     console.log('  ✅  Disable Log Table');
     console.log('  ✅  Ban Log Table');
+    console.log('  ✅  Event Table');
     
     await pool.query(lentQuery);
     console.log('  ✅  Lent Table');
@@ -42,7 +45,7 @@ const init = async () => {
   } finally {
     pool.end();
     console.log(
-      `\n\n use ${config.getDatabase()}\n show tables\n 위 명령어를 사용해 위에 명시한 6개 테이블이 잘 만들어졌는지 확인해주세요.\n`
+      `\n\n use ${config.getDatabase()}\n show tables\n 위 명령어를 사용해 위에 명시한 테이블이 잘 만들어졌는지 확인해주세요.\n`
     );
     process.exit(0);
   }

@@ -20,4 +20,3 @@ RUN		chmod 777 /initial-setting/init.sh
 
 RUN		npm i
 
-# CMD	[ "/initial-setting/init.sh" ]
