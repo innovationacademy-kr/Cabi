@@ -1,14 +1,15 @@
 import mariadb from "mariadb";
 import { lentInfo, lentCabinetInfo, userInfo, user } from "./types";
 import { sendLentMsg, sendReturnMsg } from "../controllers/middleware/slackMiddleware";
+const env = process.env;
 
 export const con = mariadb.createPool({
-  host: "localhost",
-  user: "root",
-  port: 3307,
-  password: "1234",
-  database: "42cabi_test",
-  dateStrings: true,
+	host: env.HOST,
+	user: env.DB_USER,
+	port: 3307,
+	password: env.DB_PASSWORD,
+	database: env.DATABASE,
+	dateStrings: true,
 });
 
 //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser

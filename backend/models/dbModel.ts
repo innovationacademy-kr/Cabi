@@ -1,13 +1,15 @@
 import mariadb from "mariadb";
 import { cabinetInfo, cabinetListInfo } from "./types";
 
+const env = process.env;
+
 const con = mariadb.createPool({
-  host: "localhost",
-  user: "root",
-  port: 3307,
-  password: "1234",
-  database: "42cabi_test",
-  dateStrings: true,
+	host: env.HOST,
+	user: env.DB_USER,
+	port: 3307,
+	password: env.DB_PASSWORD,
+	database: env.DATABASE,
+	dateStrings: true,
 });
 
 export async function connectionForCabinet() : Promise<cabinetListInfo> {

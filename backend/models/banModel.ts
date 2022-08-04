@@ -1,12 +1,14 @@
 import mariadb from "mariadb";
 import { banUserAddInfo, banUserInfo, overUserInfo } from "./types";
 
+const env = process.env;
+
 const con = mariadb.createPool({
-	host: "localhost",
-	user: "root",
+	host: env.HOST,
+	user: env.DB_USER,
 	port: 3307,
-	password: "1234",
-	database: "42cabi_test",
+	password: env.DB_PASSWORD,
+	database: env.DATABASE,
 	dateStrings: true,
 });
 
