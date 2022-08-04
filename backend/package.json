@@ -6,7 +6,8 @@
 	"scripts": {
 		"doc": "swagger-cli bundle ./api/openapi.yaml --outfile ./api/swagger.yaml --type yaml",
 		"prestart": "npm run doc",
-		"start": "nodemon ./bin/www.ts"
+		"start": "nodemon ./bin/www.ts",
+		"table": "cd initial-setting && node createTable.js"
 	},
 	"keywords": [],
 	"author": "",

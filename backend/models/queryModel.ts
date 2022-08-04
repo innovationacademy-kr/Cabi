@@ -5,7 +5,8 @@ import { sendLentMsg, sendReturnMsg } from "../controllers/middleware/slackMiddl
 export const con = mariadb.createPool({
   host: "localhost",
   user: "root",
-  password: "",
+  port: 3307,
+  password: "1234",
   database: "42cabi_test",
   dateStrings: true,
 });
