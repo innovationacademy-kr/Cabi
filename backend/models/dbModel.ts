@@ -6,7 +6,7 @@ const env = process.env;
 const con = mariadb.createPool({
 	host: env.HOST,
 	user: env.DB_USER,
-	port: 3307,
+	port: parseInt(env.DB_PORT ? env.DB_PORT : '', 10),
 	password: env.DB_PASSWORD,
 	database: env.DATABASE,
 	dateStrings: true,

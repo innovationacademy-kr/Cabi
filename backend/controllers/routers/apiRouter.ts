@@ -38,7 +38,6 @@ apiRouter.post("/lent_info", loginBanCheck, async (req: any, res: any) => {
       });
     }
   } catch (err: any) {
-    // console.error(err);
     res.sendStatus(400);
   }
 });

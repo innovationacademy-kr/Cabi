@@ -10,7 +10,6 @@ import { apiRouter } from "./controllers/routers/apiRouter";
 import { authRouter } from "./controllers/routers/authRouter";
 import { eventRouter } from "./controllers/routers/eventRouter";
 
-import { connectionForCabinet } from "./models/dbModel";
 import passportConfig from "./controllers/middleware/passportMiddleware";
 import slack from "./controllers/middleware/slackMiddleware";
 import scheduling from "./controllers/middleware/emailerMiddleware";
