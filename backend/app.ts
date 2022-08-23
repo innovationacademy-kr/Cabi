@@ -63,7 +63,7 @@ app.use("/api/event", eventRouter);
 app.use("/api", apiRouter);
 app.use("/", authRouter);
 slack();
-scheduling();
+// scheduling();
 // connectionForCabinet();
 
 app.use("/", function (req, res) {
