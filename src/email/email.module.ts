@@ -17,7 +17,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
                 },
                 secure: true,
                 defaults: {
-                    from: `"${process.env.MAIL_FROM}" <${process.env.MAIL_USER}>`,
+                    from: `42CABI ${process.env.MAIL_FROM}`,
                 },
                 template: {
                     dir: path.join(__dirname, '../templates/'),

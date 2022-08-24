@@ -10,7 +10,7 @@ export class MailService {
             from: `42CABI ${process.env.MAIL_FROM}`,
             to: email,
             subject: subject,
-            text: `./${file}`,
+            template: `./${file}`,
         })
         .then((success) => {
             console.log(success);
