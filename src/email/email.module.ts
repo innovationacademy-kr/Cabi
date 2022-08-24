@@ -1,6 +1,8 @@
 import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
 import { MailService } from "./email.service";
+import * as path from 'path';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 
 @Module({
     imports: [
@@ -14,6 +16,17 @@ import { MailService } from "./email.service";
                     pass: process.env.MAIL_PASS
                 },
                 secure: true,
+                defaults: {
+                    from: `"${process.env.MAIL_FROM}" <${process.env.MAIL_USER}>`,
+                },
+                template: {
+                    dir: path.join(__dirname, '../templates/'),
+                    adapter: new EjsAdapter(),
+                    options: {
+                      strict: true,
+                    },
+                },
+                // nestjs에서도 사용하는 옵션인가요..?
                 tls: {
                     maxVersion: process.env.MAIL_TLS_MAXVERSION,
                     minVersion: process.env.MAIL_TLS_MINVERSION,
@@ -22,7 +35,7 @@ import { MailService } from "./email.service";
             }
         }),
     ],
-    
+
     providers: [MailService],
     exports: [MailService],
 })
