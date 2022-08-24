@@ -46,6 +46,7 @@ export class MailService {
 
     @Cron(CronExpression.EVERY_DAY_AT_9PM)
     public scheduling() {
+        this.logger.log('연체된 사용자들에게 메일을 보내는 중...');
         const dayList = [0, 7, 14];
         dayList.forEach(day => {
             getOverUser(day).then(res => {
