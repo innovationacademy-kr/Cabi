@@ -5,7 +5,7 @@ import fs from 'fs';
 
 @Injectable()
 export class MailService {
-  private logger = new Logger('EmailService');
+  private logger = new Logger(MailService.name);
   constructor(private readonly mailerService: MailerService) {}
 
   public sendMail(intra_id: string, subject: string, file: string): void {
