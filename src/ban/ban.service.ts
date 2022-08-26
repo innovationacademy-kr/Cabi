@@ -17,7 +17,7 @@ export class BanService {
 
 	/**
 	* n일 이상 연체자 조회
-	*
+	* FIXME: v1의 banModel.ts
 	* @param days 연체일
 	* @return userInfo 리스트 or undefined
 	*/
@@ -57,7 +57,7 @@ export class BanService {
 
 	/**
 	* 유저 권한 ban(1) 으로 변경
-	*
+	* FIXME: v1의 banModel.ts
 	* @param userId 유저 PK
 	*/
 	async updateUserAuth(userId: number) {
@@ -77,7 +77,7 @@ export class BanService {
 
 	/**
 	 * 캐비넷 activation 변경
-	 *
+	 * FIXME: v1의 banModel.ts
 	 * @param cabinetId 캐비넷 PK
 	 * @param activation 캐비넷 상태 값
 	 */
@@ -99,7 +99,7 @@ export class BanService {
 
 	/**
 	 * banUser 추가
-	 *
+	 * FIXME: v1의 banModel.ts
 	 * @param banUser 추가될 유저 정보
 	 */
 	async addBanUser(banUser: banUserAddInfoDto) {
@@ -118,5 +118,26 @@ export class BanService {
 				throw new Error("CheckBanUser Error");
 			});
 			if (pool) pool.end();
+	}
+
+	// FIXME: v1의 queryModel.ts
+	// 해당 유저가 Ban처리 되어있는지 확인
+	async checkBannedUserList(user_id: number) {
+		let pool: mariadb.PoolConnection;
+		const content: string = `SELECT * FROM user WHERE user_id=${user_id}`;
+		let isBanned = 0;
+
+		pool = await con.getConnection();
+		await pool
+		.query(content)
+		.then((res: any) => {
+			isBanned = res[0].auth;
+		})
+		.catch((err: any) => {
+			this.logger.error(err);
+			throw err;
+		});
+		if (pool) pool.end();
+		return isBanned;
 	}
 }

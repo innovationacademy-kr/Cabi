@@ -67,8 +67,7 @@ export class MailService {
         })
         .catch((e) => this.logger.error(e));
     });
-    //15
-    // ban 유저 관련 db작업은 따로 빼는게 좋을 것 같습니다.
+    // 연체 후 14일이 경과하여 밴 메일을 보냄.
     this.banService.getOverUser(15)
       .then((res) => {
         if (res) {
@@ -78,7 +77,7 @@ export class MailService {
             //cabinet
             await this.banService.updateCabinetActivation(user.cabinet_id, 2);
             //return
-            await createLentLog({
+            await createLentLog({ // TODO: v1의 queryModel.ts에 있는 내용이며 다른곳에서도 쓰임.
               user_id: user.user_id,
               intra_id: user.intra_id,
             });
@@ -90,7 +89,7 @@ export class MailService {
             });
           });
           this.mailing(res, 15);
-          connectionForCabinet();
+          connectionForCabinet(); // TODO: v1의 dbModel.ts에 있는 내용이며 다른곳에서도 쓰임.
         }
       })
       .catch((e) => this.logger.error(e));
