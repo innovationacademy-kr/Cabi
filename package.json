@@ -29,8 +29,9 @@
     "@nestjs/schedule": "^2.1.0",
     "@types/cron": "^2.0.0",
     "config": "^3.3.7",
-    "ejs": "^3.1.8",
+    "handlebars": "^4.7.7",
     "mariadb": "^3.0.1",
+    "nodemailer": "^6.7.8",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
@@ -42,6 +43,7 @@
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.4",
     "@types/node": "^16.0.0",
+    "@types/nodemailer": "^6.4.5",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",

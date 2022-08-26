@@ -30,16 +30,16 @@ export class MailService {
 
     public mailing(info: overUserInfo[], num: number) {
         let subject = '42CABI 사물함 연체 알림';
-        let file = 'overdue.ejs';
+        let file = 'overdue.hbs';
         if (num === 0) {
-            file = 'soonoverdue.ejs';
+            file = 'soonoverdue.hbs';
         } else if (num === 7) {
-            file = 'overdue.ejs';
+            file = 'overdue.hbs';
         } else if (num === 14) {
-            file = 'lastoverdue.ejs';
+            file = 'lastoverdue.hbs';
         } else if (num === 15) {
             subject = '42CABI 영구사용정지 안내';
-            file = 'ban.ejs';
+            file = 'ban.hbs';
         }
         info.forEach(user => this.sendMail(user.intra_id, subject, file));
     }

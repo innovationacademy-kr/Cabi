@@ -2,7 +2,7 @@ import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
 import { MailService } from "./email.service";
 import * as path from 'path';
-import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
     imports: [
@@ -19,9 +19,9 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
                     secure: true,
                     template: {
                         dir: path.join(__dirname, './templates/'),
-                        adapter: new EjsAdapter(),
+                        adapter: new HandlebarsAdapter(),
                         options: {
-                          strict: false,
+                          strict: true,
                         },
                     },
                     // nestjs에서도 사용하는 옵션인가요..?
