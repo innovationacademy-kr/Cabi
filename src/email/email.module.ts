@@ -3,9 +3,13 @@ import { Module } from '@nestjs/common';
 import { MailService } from './email.service';
 import * as path from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { BanService } from '../ban/ban.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    BanService,
+    ScheduleModule.forRoot(),
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: {

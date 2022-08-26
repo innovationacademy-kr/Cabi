@@ -2,11 +2,16 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import fs from 'fs';
+import { BanService } from 'src/ban/ban.service';
+import { overUserInfoDto } from 'src/ban/dto/overUserInfo.dto';
 
 @Injectable()
 export class MailService {
   private logger = new Logger(MailService.name);
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    private banService: BanService,
+    ) {}
 
   public sendMail(intra_id: string, subject: string, file: string): void {
     this.mailerService
@@ -33,7 +38,7 @@ export class MailService {
       });
   }
 
-  public mailing(info: overUserInfo[], num: number) {
+  public mailing(info: overUserInfoDto[], num: number) {
     let subject = '42CABI 사물함 연체 알림';
     let file = 'overdue.hbs';
     if (num === 0) {
@@ -54,7 +59,7 @@ export class MailService {
     this.logger.log('연체된 사용자들에게 메일을 보내는 중...');
     const dayList = [0, 7, 14];
     dayList.forEach((day) => {
-      getOverUser(day)
+      this.banService.getOverUser(day)
         .then((res) => {
           if (res) {
             this.mailing(res, day);
@@ -64,21 +69,21 @@ export class MailService {
     });
     //15
     // ban 유저 관련 db작업은 따로 빼는게 좋을 것 같습니다.
-    getOverUser(15)
+    this.banService.getOverUser(15)
       .then((res) => {
         if (res) {
           res.forEach(async (user) => {
             //user
-            await updateUserAuth(user.user_id);
+            await this.banService.updateUserAuth(user.user_id);
             //cabinet
-            await updateCabinetActivation(user.cabinet_id, 2);
+            await this.banService.updateCabinetActivation(user.cabinet_id, 2);
             //return
             await createLentLog({
               user_id: user.user_id,
               intra_id: user.intra_id,
             });
             //ban
-            await addBanUser({
+            await this.banService.addBanUser({
               user_id: user.user_id,
               intra_id: user.intra_id,
               cabinet_id: user.cabinet_id,
