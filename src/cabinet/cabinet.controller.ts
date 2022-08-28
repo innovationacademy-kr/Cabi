@@ -29,15 +29,34 @@ export class CabinetController {
   }
 
   @Post('lent')
-  async postLent() {
+  async postLent(
+    @Body(new ValidationPipe()) 
+    userInfoDto: UserInfoDto,
+    cabinet_id: number
+  ) {
     // 특정 사물함을 빌릴 때 요청
     this.logger.log('postLent');
+    let errno: number;
+    const cabinetStatus = await this.cabinetService.checkCabinetStatus(cabinet_id);
+    if ( userInfoDto && cabinetStatus ) {
+      const myLent = await this.cabinetService.getUser(userInfoDto);
+      if (myLent.lent_id === -1) {
+        const response = await this.lentService.createLent(cabinet_id, userInfoDto);
+        errno = response && response.errno === -1 ? -2 : cabinet_id;
+        return { cabinet_id : errno };
+      } else {
+        return { cabinet_id : -1 };
+      }
+    } else {
+      throw new BadRequestException({ cabinet_id: cabinet_id });
+    }
   }
 
   @Post('return_info')
   async postReturnInfo() {
     // 특정 사용자가 현재 대여하고 있는 사물함의 정보
     this.logger.log('postReturnInfo');
+
   }
 
   /**
