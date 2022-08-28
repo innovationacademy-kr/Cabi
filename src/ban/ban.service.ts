@@ -1,20 +1,13 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { overUserInfoDto } from './dto/overUserInfo.dto';
 import mariadb from 'mariadb';
 import { banUserAddInfoDto } from './dto/banUserAddInfo.dto';
-
-// TODO: 추후 config로 value값 가리는게 좋을 것 같습니다.
-const con = mariadb.createPool({
-	host: "localhost",
-	user: "root",
-	password: "",
-	database: "42cabi_DB",
-	dateStrings: true,
-});
+import { IBanRepository } from './repository/ban.repository';
 
 @Injectable()
 export class BanService {
 	private logger = new Logger(BanService.name);
+	constructor(private banRepository: IBanRepository) {}
 
 	/**
 	* n일 이상 연체자 조회
@@ -23,37 +16,12 @@ export class BanService {
 	* @return userInfo 리스트 or undefined
 	*/
 	async getOverUser(days: number): Promise<overUserInfoDto[] | undefined> {
-	let pool: mariadb.PoolConnection;
-	let overUserList: overUserInfoDto[] | undefined = [];
-	const content: string = `
-	SELECT  u.*, l.lent_id, l.lent_cabinet_id
-	FROM user u RIGHT OUTER JOIN lent l ON u.user_id = l.lent_user_id
-	WHERE DATEDIFF(now(), expire_time) = ${days}`;
-
-	pool = await con.getConnection();
-	await pool
-		.query(content)
-		.then((res:any) => {
-			if (!res.length) overUserList = undefined;
-			else {
-				res.forEach((user: any) => {
-					overUserList?.push({
-						user_id: user.user_id,
-						intra_id: user.intra_id,
-						auth: user.auth,
-						email: user.email,
-						lent_id: user.lent_id,
-						cabinet_id: user.lent_cabinet_id,
-					})
-				});
-			}
-		})
-		.catch((err) => {
+		try {
+			return await this.banRepository.getOverUser(days);
+		} catch(err) {
 			this.logger.error(err);
-			throw new Error("getOverUser Error");
-		});
-		if (pool) pool.end();
-		return overUserList;
+			throw new InternalServerErrorException(err);
+		}
 	}
 
 	/**
@@ -63,19 +31,13 @@ export class BanService {
 	 *		공유 사물함 기능이 추가 되면 다른 용도로도 쓰일 수 있으므로 auth service로 이동 필요.
 	* @param userId 유저 PK
 	*/
-	async updateUserAuth(userId: number) {
-	let pool: mariadb.PoolConnection;
-	const content = `
-	UPDATE user SET auth = 1 WHERE user_id = ${userId};
-	`;
-
-	pool = await con.getConnection();
-	await pool
-		.query(content)
-		.catch((err: any) => {
+	async updateUserAuth(userId: number): Promise<void> {
+		try {
+			return await this.banRepository.updateUserAuth(userId);
+		} catch(err) {
 			this.logger.error(err);
-			throw new Error("updateUserAuth Error");
-		});
+			throw new InternalServerErrorException(err);
+		}
 	}
 
 	/**
@@ -86,21 +48,14 @@ export class BanService {
 	 * @param cabinetId 캐비넷 PK
 	 * @param activation 캐비넷 상태 값
 	 */
-	async updateCabinetActivation(cabinetId: number, activation: number) {
-		let pool: mariadb.PoolConnection;
-		const content: string =`
-			UPDATE cabinet SET activation = ${activation} WHERE cabinet_id = ${cabinetId}
-		`;
-
-		pool = await con.getConnection();
-		await pool
-			.query(content)
-			.catch((err: any) => {
-				this.logger.error(err);
-				throw new Error("updateCabinetActivation Error");
-			});
-			if (pool) pool.end();
-	}
+	 async updateCabinetActivation(cabinetId: number, activation: number): Promise<void> {
+		try {
+			return await this.banRepository.updateCabinetActivation(cabinetId, activation);
+		} catch(err) {
+			this.logger.error(err);
+			throw new InternalServerErrorException(err);
+		}
+	 }
 
 	/**
 	 * banUser 추가
@@ -108,41 +63,26 @@ export class BanService {
 	 * @param banUser 추가될 유저 정보
 	 */
 	async addBanUser(banUser: banUserAddInfoDto) {
-		let pool: mariadb.PoolConnection;
-		const cabinet_id = banUser.cabinet_id ? banUser.cabinet_id : "NULL";
-		const content = `
-		INSERT INTO ban_user(user_id, intra_id, cabinet_id, bannedDate)
-		values (${banUser.user_id}, '${banUser.intra_id}', ${cabinet_id}, now());
-		`;
-
-		pool = await con.getConnection();
-		await pool
-			.query(content)
-			.catch((err: any) => {
-				this.logger.error(err);
-				throw new Error("CheckBanUser Error");
-			});
-			if (pool) pool.end();
+		try {
+			return await this.banRepository.addBanUser(banUser);
+		} catch(err) {
+			this.logger.error(err);
+			throw new InternalServerErrorException(err);
+		}
 	}
 
-	// FIXME: v1의 queryModel.ts
-	// 해당 유저가 Ban처리 되어있는지 확인
+	/**
+	 * 해당 유저가 Ban처리 되어있는지 확인
+	 * FIXME: v1의 queryModel.ts
+	 * FIXME: 정확히 어떤 타입을 return 하는지 명시 필요.
+	 * @param user_id 추가될 유저의 id
+	 */
 	async checkBannedUserList(user_id: number) {
-		let pool: mariadb.PoolConnection;
-		const content: string = `SELECT * FROM user WHERE user_id=${user_id}`;
-		let isBanned = 0;
-
-		pool = await con.getConnection();
-		await pool
-		.query(content)
-		.then((res: any) => {
-			isBanned = res[0].auth;
-		})
-		.catch((err: any) => {
+		try {
+			return await this.banRepository.checkBannedUserList(user_id);
+		} catch(err) {
 			this.logger.error(err);
-			throw err;
-		});
-		if (pool) pool.end();
-		return isBanned;
+			throw new InternalServerErrorException(err);
+		}
 	}
 }
