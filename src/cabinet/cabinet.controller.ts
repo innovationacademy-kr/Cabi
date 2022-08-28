@@ -28,6 +28,7 @@ export class CabinetController {
     return this.cabinetService.getAllLentInfo(userId);
   }
 
+  //getUser는 userService에 들어가나요?
   @Post('lent')
   async postLent(
     @Body(new ValidationPipe()) 
@@ -52,11 +53,14 @@ export class CabinetController {
     }
   }
 
+  //TODO: lentCabinetInfoDto 추가 필요
   @Post('return_info')
-  async postReturnInfo() {
+  async postReturnInfo(
+    @Body(new ValidationPipe()) userInfoDto: UserInfoDto
+  ): Promise<lentCabinetInfoDto> {
     // 특정 사용자가 현재 대여하고 있는 사물함의 정보
     this.logger.log('postReturnInfo');
-
+    return await this.cabinetService.getUser(userInfoDto);
   }
 
   /**
