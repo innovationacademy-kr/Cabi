@@ -1,3 +1,6 @@
+/**
+ * 로그인한 사용자의 데이터를 저장하는 DTO
+ */
 export class UserSessionDto {
   /**
    * 42 계정 고유 ID
@@ -18,4 +21,14 @@ export class UserSessionDto {
    * 42 계정 전화번호
    */
   phone?: string;
+
+  /**
+   * 발급 시간
+   */
+  iat?: number;
+
+  /**
+   * 만료 시간
+   */
+  ext?: number;
 }

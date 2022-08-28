@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
-import { UserSessionDto } from './user.session.dto';
+import { UserSessionDto } from '../dto/user.session.dto';
 
 /**
  * passport-42 Strategy
@@ -35,7 +35,6 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
    * cb(null, user); 콜백함수는 res 객체의 user라는 필드로 user의 객체를 넘깁니다.
    */
   async validate(req, accessToken, refreshToken, profile, cb) {
-    console.log('validate', accessToken, refreshToken);
     const user: UserSessionDto = {
       user_id: profile.userId,
       email: profile.email,
