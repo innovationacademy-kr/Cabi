@@ -3,6 +3,7 @@ import { overUserInfoDto } from './dto/overUserInfo.dto';
 import mariadb from 'mariadb';
 import { banUserAddInfoDto } from './dto/banUserAddInfo.dto';
 
+// TODO: 추후 config로 value값 가리는게 좋을 것 같습니다.
 const con = mariadb.createPool({
 	host: "localhost",
 	user: "root",
