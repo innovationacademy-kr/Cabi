@@ -58,6 +58,8 @@ export class BanService {
 	/**
 	* 유저 권한 ban(1) 으로 변경
 	* FIXME: v1의 banModel.ts
+	FIXME: 현재 유저의 auth를 ban으로 바꾸는 용도로만 쓰여 ban service에 있지만
+	 *		공유 사물함 기능이 추가 되면 다른 용도로도 쓰일 수 있으므로 auth service로 이동 필요.
 	* @param userId 유저 PK
 	*/
 	async updateUserAuth(userId: number) {
@@ -78,6 +80,8 @@ export class BanService {
 	/**
 	 * 캐비넷 activation 변경
 	 * FIXME: v1의 banModel.ts
+	 * FIXME: 현재 강제 반납 사물함 비활성화 처리로만 쓰여 ban service에 있지만
+	 * 		 공유 사물함 기능이 추가 되면 다른 용도로도 쓰일 수 있으므로 cabinet service로 이동 필요.
 	 * @param cabinetId 캐비넷 PK
 	 * @param activation 캐비넷 상태 값
 	 */
