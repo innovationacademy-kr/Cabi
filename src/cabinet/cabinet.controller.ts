@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Logger, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Logger, Post, ValidationPipe } from '@nestjs/common';
 import { CabinetListDto } from './dto/cabinet-list.dto';
 import { CabinetService } from './cabinet.service';
 import { MyLentInfoDto } from './dto/my-lent-info.dto';
@@ -46,14 +46,37 @@ export class CabinetController {
     this.logger.log('postReturn');
   }
 
+  /**
+   * 적절한 유저가 페이지를 접근하는지에 대한 정보
+   * @param UserInfoDto
+   * @return Promise<UserInfoDto | Boolean>
+   * FIXME: Auth Controller에 들어가는게 더 적절할 것 같습니다.
+   * TODO: UseGuards 추가 필요.
+   * TODO: Auth Service에 loginBanCheck 포팅 필요.
+   */
   @Post('check')
-  async postCheck() {
-    // 적절한 유저가 페이지를 접근하는지에 대한 정보
-    this.logger.log('postCheck');
+  async postCheck(
+    @Body(new ValidationPipe()) userInfoDto: UserInfoDto
+    ): Promise<UserInfoDto | Boolean> {
+    return await this.authService.loginBanCheck(userInfoDto);
   }
 
+  /**
+   * 대여 연장 요청이 들어올 때 이를 처리하는 api
+   * @param UserInfoDto
+   * @return Promise<void>
+   * FIXME: Lent Controller에 들어가는게 적절할 것 같습니다.
+   * FIXME: 새 대여 정책에서 해당 연장 기능이 없어질 수 있음.
+   * TODO: UseGuards 추가 필요.
+   * TODO: Lent Service에 activateExtension 포팅 필요.
+   */
   @Post('extension')
-  async postExtension() {
-    this.logger.log('postExtension');
+  async postExtension(
+    @Body(new ValidationPipe()) userInfoDto: UserInfoDto
+  ): Promise<void> {
+    this.authService.loginBanCheck(userInfoDto)
+    .catch(new Error('LoginBanCheckError'));
+
+    return await this.lentService.activateExtension(userInfoDto);
   }
 }
