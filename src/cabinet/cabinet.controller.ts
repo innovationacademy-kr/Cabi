@@ -40,16 +40,31 @@ export class CabinetController {
     this.logger.log('postReturnInfo');
   }
 
+  /**
+   * 특정 사물함을 반납할 때 요청
+   * @param UserInfoDto
+   * @return Promise<void>
+   * FIXME: Lent Controller에 들어가는게 적절할 것 같습니다.
+   * TODO: UserDto 추가 필요.
+   * TODO: Lent Service에 createLentLog(): UserDto 필요.
+   */
   @Post('return')
-  async postReturn() {
-    // 특정 사물함을 반납할 때 요청
-    this.logger.log('postReturn');
+  async postReturn(
+    @Body(new ValidationPipe()) userInfoDto: UserInfoDto
+  ): Promise<void> {
+    await this.authService.loginBanCheck(userInfoDto)
+    .catch(new Error('LoginBanCheckError'));
+
+    let userDto: UserDto = new UserDto();
+    userDto.user_id = userInfoDto.user_id;
+    userDto.intra_id = userInfoDto.intra_id;
+    return this.lentService.createLentLog(userDto);
   }
 
   /**
    * 적절한 유저가 페이지를 접근하는지에 대한 정보
    * @param UserInfoDto
-   * @return Promise<UserInfoDto | Boolean>
+   * @return Promise<UserInfoDto>
    * FIXME: Auth Controller에 들어가는게 더 적절할 것 같습니다.
    * TODO: UseGuards 추가 필요.
    * TODO: Auth Service에 loginBanCheck 포팅 필요.
@@ -57,7 +72,7 @@ export class CabinetController {
   @Post('check')
   async postCheck(
     @Body(new ValidationPipe()) userInfoDto: UserInfoDto
-    ): Promise<UserInfoDto | Boolean> {
+    ): Promise<UserInfoDto> {
     return await this.authService.loginBanCheck(userInfoDto);
   }
 
@@ -74,7 +89,7 @@ export class CabinetController {
   async postExtension(
     @Body(new ValidationPipe()) userInfoDto: UserInfoDto
   ): Promise<void> {
-    this.authService.loginBanCheck(userInfoDto)
+    await this.authService.loginBanCheck(userInfoDto)
     .catch(new Error('LoginBanCheckError'));
 
     return await this.lentService.activateExtension(userInfoDto);
