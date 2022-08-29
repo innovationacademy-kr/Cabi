@@ -11,7 +11,7 @@ export class MailService {
   constructor(
     private readonly mailerService: MailerService,
     private banService: BanService,
-    ) {}
+  ) {}
 
   public sendMail(intra_id: string, subject: string, file: string): void {
     this.mailerService
@@ -59,7 +59,8 @@ export class MailService {
     this.logger.log('연체된 사용자들에게 메일을 보내는 중...');
     const dayList = [0, 7, 14];
     dayList.forEach((day) => {
-      this.banService.getOverUser(day)
+      this.banService
+        .getOverUser(day)
         .then((res) => {
           if (res) {
             this.mailing(res, day);
@@ -68,7 +69,8 @@ export class MailService {
         .catch((e) => this.logger.error(e));
     });
     // 연체 후 14일이 경과하여 밴 메일을 보냄.
-    this.banService.getOverUser(15)
+    this.banService
+      .getOverUser(15)
       .then((res) => {
         if (res) {
           res.forEach(async (user) => {
@@ -77,7 +79,8 @@ export class MailService {
             //cabinet
             await this.banService.updateCabinetActivation(user.cabinet_id, 2);
             //return
-            await createLentLog({ // TODO: v1의 queryModel.ts에 있는 내용이며 다른곳에서도 쓰임.
+            await createLentLog({
+              // TODO: v1의 queryModel.ts에 있는 내용이며 다른곳에서도 쓰임.
               user_id: user.user_id,
               intra_id: user.intra_id,
             });
