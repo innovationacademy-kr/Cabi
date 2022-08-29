@@ -82,11 +82,11 @@ export class MailService {
             //cabinet
             await this.banService.updateCabinetActivation(user.cabinet_id, 2);
             //return
-            await createLentLog({
-              // TODO: v1의 queryModel.ts에 있는 내용이며 다른곳에서도 쓰임.
-              user_id: user.user_id,
-              intra_id: user.intra_id,
-            });
+            // await createLentLog({
+            //   //TODO: v1의 queryModel.ts에 있는 내용이며 다른곳에서도 쓰임.
+            //   user_id: user.user_id,
+            //   intra_id: user.intra_id,
+            // });
             //ban
             await this.banService.addBanUser({
               user_id: user.user_id,
@@ -95,7 +95,7 @@ export class MailService {
             });
           });
           this.mailing(res, 15);
-          connectionForCabinet(); // TODO: v1의 dbModel.ts에 있는 내용이며 다른곳에서도 쓰임.
+          // connectionForCabinet(); //TODO: v1의 dbModel.ts에 있는 내용이며 다른곳에서도 쓰임.
         }
       })
       .catch((e) => this.logger.error(e));

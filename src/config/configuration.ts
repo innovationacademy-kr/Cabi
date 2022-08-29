@@ -7,12 +7,12 @@ export default () => ({
     database: process.env.DATABASE,
   },
   jwt: {
-    secret: process.env.JWT_SECRET,
-    expiresIn: process.env.JWT_EXPIRES,
+    secret: process.env.JWT_SECRETKEY,
+    expiresIn: process.env.JWT_EXPIREIN,
   },
   ftAuth: {
-    clientid: process.env.CLIENT_ID,
-    secret: process.env.CLIENT_SECRET,
-    callbackuri: process.env.CLIENT_CALLBACK,
+    clientid: process.env.FORTYTWO_APP_ID,
+    secret: process.env.FORTYTWO_APP_SECRET,
+    callbackuri: process.env.CALLBACK_URL,
   },
 });
