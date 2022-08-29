@@ -23,14 +23,13 @@ export class RawqueryBanRepository implements IBanRepository {
    * @return userInfoDto 리스트 or undefined
    */
   async getOverUser(days: number): Promise<overUserInfoDto[] | undefined> {
-    let pool: mariadb.PoolConnection;
+    const pool: mariadb.PoolConnection = await this.con.getConnection();
     let overUserList: overUserInfoDto[] | undefined = [];
     const content = `
 		SELECT  u.*, l.lent_id, l.lent_cabinet_id
 		FROM user u RIGHT OUTER JOIN lent l ON u.user_id = l.lent_user_id
 		WHERE DATEDIFF(now(), expire_time) = ${days}`;
 
-    pool = await this.con.getConnection();
     await pool
       .query(content)
       .then((res: any) => {
@@ -60,12 +59,11 @@ export class RawqueryBanRepository implements IBanRepository {
    * @param userId 유저 PK
    */
   async updateUserAuth(userId: number): Promise<void> {
-    let pool: mariadb.PoolConnection;
+    const pool: mariadb.PoolConnection = await this.con.getConnection();
     const content = `
 		UPDATE user SET auth = 1 WHERE user_id = ${userId};
 		`;
 
-    pool = await this.con.getConnection();
     await pool.query(content).catch((err: any) => {
       throw new Error('updateUserAuth Error');
     });
@@ -80,12 +78,11 @@ export class RawqueryBanRepository implements IBanRepository {
     cabinetId: number,
     activation: number,
   ): Promise<void> {
-    let pool: mariadb.PoolConnection;
+    const pool: mariadb.PoolConnection = await this.con.getConnection();
     const content = `
 			UPDATE cabinet SET activation = ${activation} WHERE cabinet_id = ${cabinetId}
 		`;
 
-    pool = await this.con.getConnection();
     await pool.query(content).catch((err: any) => {
       throw new Error('updateCabinetActivation Error');
     });
@@ -97,14 +94,13 @@ export class RawqueryBanRepository implements IBanRepository {
    * @param banUser 추가될 유저 정보
    */
   async addBanUser(banUser: banUserAddInfoDto) {
-    let pool: mariadb.PoolConnection;
+    const pool: mariadb.PoolConnection = await this.con.getConnection();
     const cabinet_id = banUser.cabinet_id ? banUser.cabinet_id : 'NULL';
     const content = `
 		INSERT INTO ban_user(user_id, intra_id, cabinet_id, bannedDate)
 		values (${banUser.user_id}, '${banUser.intra_id}', ${cabinet_id}, now());
 		`;
 
-    pool = await this.con.getConnection();
     await pool.query(content).catch((err: any) => {
       throw new Error('CheckBanUser Error');
     });
@@ -116,11 +112,10 @@ export class RawqueryBanRepository implements IBanRepository {
    * @param user_id 추가될 유저의 id
    */
   async checkBannedUserList(user_id: number) {
-    let pool: mariadb.PoolConnection;
+    const pool: mariadb.PoolConnection = await this.con.getConnection();
     const content = `SELECT * FROM user WHERE user_id=${user_id}`;
     let isBanned = 0;
 
-    pool = await this.con.getConnection();
     await pool
       .query(content)
       .then((res: any) => {
