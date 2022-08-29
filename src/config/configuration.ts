@@ -15,4 +15,7 @@ export default () => ({
     secret: process.env.CLIENT_SECRET,
     callbackuri: process.env.CLIENT_CALLBACK,
   },
+  email: {
+    test: process.env.TEST,
+  },
 });
