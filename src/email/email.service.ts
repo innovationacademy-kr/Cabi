@@ -52,7 +52,7 @@ export class MailService {
       file = 'ban.hbs';
     }
     // 배포 시에만 메일 발송 환경변수 확인
-    if (process.env.DEP === 'true') {
+    if (process.env.TEST === 'false') {
       info.forEach((user) => this.sendMail(user.intra_id, subject, file));
     }
   }
