@@ -51,7 +51,10 @@ export class MailService {
       subject = '42CABI 영구사용정지 안내';
       file = 'ban.hbs';
     }
-    info.forEach((user) => this.sendMail(user.intra_id, subject, file));
+    // 배포 시에만 메일 발송 환경변수 확인
+    if (process.env.DEP === 'true') {
+      info.forEach((user) => this.sendMail(user.intra_id, subject, file));
+    }
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_9PM)
