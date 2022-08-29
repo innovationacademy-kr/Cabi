@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CabinetModule } from './cabinet/cabinet.module';
+import { BanModule } from './ban/ban.module';
 import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 
@@ -14,6 +15,7 @@ import { SessionMiddleware } from './middleware/session-middleware';
       isGlobal: true, // TODO: remove after
     }),
     CabinetModule,
+    BanModule,
     AuthModule,
   ],
   controllers: [AppController],
