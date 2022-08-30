@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CabinetListDto } from './dto/cabinet-list.dto';
 import { ICabinetRepository } from './repository/cabinet.repository';
 import { MyLentInfoDto } from './dto/my-lent-info.dto';
+import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 
 @Injectable()
 export class CabinetService {
@@ -28,6 +29,23 @@ export class CabinetService {
         lentInfo,
         isLent,
       };
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  //lent_log 값 생성 후 lent 값 삭제
+  async createLentLog(user_id: number, intra_id: string): Promise<void> {
+    try {
+      await this.cabinetRepository.createLentLog(user_id, intra_id);
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async activateExtension(user: UserSessionDto): Promise<void> {
+    try {
+      await this.cabinetRepository.activateExtension(user);
     } catch (e) {
       throw new InternalServerErrorException();
     }

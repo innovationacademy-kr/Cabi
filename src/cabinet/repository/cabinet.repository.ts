@@ -1,3 +1,4 @@
+import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 import { CabinetListDto } from '../dto/cabinet-list.dto';
 import { LentInfoDto } from '../dto/lent-info.dto';
 
@@ -15,4 +16,16 @@ export abstract class ICabinetRepository {
    * @return LentInfoDto[]
    */
   abstract getLentUsers(): Promise<LentInfoDto[]>;
+
+  /**
+   * lent_log 값 생성 후 lent 값 삭제
+   *
+   */
+  abstract createLentLog(user_id: number, intra_id: string): Promise<void>;
+
+  /**
+   * 대여기간 연장 수행.
+   *
+   */
+  abstract activateExtension(user: UserSessionDto): Promise<void>;
 }

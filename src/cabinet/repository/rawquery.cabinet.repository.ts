@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import * as mariadb from 'mariadb';
 import { Inject } from '@nestjs/common';
 import { ICabinetRepository } from './cabinet.repository';
+import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 
 export class RawqueryCabinetRepository implements ICabinetRepository {
   private pool;
@@ -98,5 +99,53 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
       });
     if (connection) connection.end();
     return lentInfo;
+  }
+
+  //lent_log 값 생성 후 lent 값 삭제
+  async createLentLog(user_id: number, intra_id: string): Promise<void> {
+    let pool: mariadb.PoolConnection;
+    const content: string = `SELECT * FROM lent WHERE lent_user_id=${user_id}`;
+
+    const connection = await this.pool.getConnection();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        if (res[0] === undefined) return;
+        pool.query(
+          `INSERT INTO lent_log (log_user_id, log_cabinet_id, lent_time, return_time) VALUES (${res[0].lent_user_id}, ${res[0].lent_cabinet_id}, '${res[0].lent_time}', now())`
+        );
+        pool.query(
+          `DELETE FROM lent WHERE lent_cabinet_id=${res[0].lent_cabinet_id}`
+        );
+        // sendReturnMsg(intra_id); // 슬랙 메시지 보내는 기능.
+      })
+      .catch((err: any) => {
+        console.error(err);
+        throw err;
+      });
+    if (pool) pool.end();
+  }
+
+  // 대여기간 연장 수행.
+  async activateExtension(user: UserSessionDto): Promise<void> {
+    const content: string = `SELECT * FROM lent WHERE lent_user_id=${user.user_id}`;
+
+    const connection = await this.pool.getConnection();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        if (res[0] === undefined) {
+          return;
+        }
+        const content2: string = `UPDATE lent set extension=${
+          res[0].extension + 1
+        }, expire_time=ADDDATE(now(), 7) WHERE lent_user_id=${user.user_id}`;
+        connection.query(content2);
+      })
+      .catch((err: any) => {
+        console.error(err);
+        throw err;
+      });
+    if (connection) connection.end();
   }
 }
