@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import * as mariadb from 'mariadb';
 import { Inject } from '@nestjs/common';
 import { ICabinetRepository } from './cabinet.repository';
+import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { lentCabinetInfoDto } from '../dto/cabinet-lent-info.dto';
 
 export class RawqueryCabinetRepository implements ICabinetRepository {
   private pool;
@@ -98,5 +100,144 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
       });
     if (connection) connection.end();
     return lentInfo;
+  }
+
+  async checkCabinetStatus(cabinet_id: number): Promise<number> {
+    try {
+      const content = `SELECT activation FROM cabinet WHERE cabinet_id=${cabinet_id}`;
+      const connection = await this.pool.getConnection();
+      const cabinet = await connection.query(content);
+
+      if (connection) connection.end();
+      if (cabinet[0].activation === 1) {
+        return 1;
+      }
+    } catch (err: any) {
+      const error = new Error(err.message);
+      error.name = 'CheckCabinetStatusError';
+      console.error(error);
+      throw error;
+    }
+    return 0;
+  }
+
+  async getUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
+    let lentCabinet: lentCabinetInfoDto;
+    const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
+
+    const connection = await this.pool.getConnection();
+    lentCabinet = await connection
+      .query(content)
+      .then((res: any) => {
+        if (res.length !== 0) {
+          // lent page
+          return {
+            lent_id: res[0].lent_id,
+            lent_cabinet_id: res[0].lent_cabinet_id,
+            lent_user_id: res[0].lent_user_id,
+            lent_time: res[0].lent_time,
+            expire_time: res[0].expire_time,
+            extension: res[0].extension,
+            cabinet_num: res[0].cabinet_num,
+            location: res[0].location,
+            floor: res[0].floor,
+            section: res[0].section,
+            activation: res[0].activation,
+          };
+        } else {
+          return {
+            lent_id: -1,
+            lent_cabinet_id: -1,
+            lent_user_id: -1,
+            lent_time: '',
+            expire_time: '',
+            extension: false,
+            cabinet_num: -1,
+            location: '',
+            floor: -1,
+            section: '',
+            activation: false,
+          };
+        }
+      })
+      .catch((err: any) => {
+        console.error(err);
+        throw err;
+      });
+    if (connection) connection.end();
+    return lentCabinet;
+  }
+
+  async createLent(
+    cabinet_id: number,
+    user: UserSessionDto,
+  ): Promise<{ errno: number }> {
+    let errResult = 0;
+
+    const content = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
+    const connection = await this.pool.getConnection();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        if (res) {
+          const date = new Date();
+          date.setDate(date.getDate() + 7);
+          const day = date.toISOString().replace(/T.+/, '');
+          //sendLentMsg(user.intra_id, day); // 슬랙 메시지 발송
+        }
+      })
+      .catch((err: any) => {
+        if (err.errno === 1062) errResult = -1;
+      });
+    if (connection) connection.end();
+    return { errno: errResult };
+  }
+
+  //lent_log 값 생성 후 lent 값 삭제
+  async createLentLog(user_id: number, intra_id: string): Promise<void> {
+    let pool: mariadb.PoolConnection;
+    const content = `SELECT * FROM lent WHERE lent_user_id=${user_id}`;
+
+    const connection = await this.pool.getConnection();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        if (res[0] === undefined) return;
+        pool.query(
+          `INSERT INTO lent_log (log_user_id, log_cabinet_id, lent_time, return_time) VALUES (${res[0].lent_user_id}, ${res[0].lent_cabinet_id}, '${res[0].lent_time}', now())`,
+        );
+        pool.query(
+          `DELETE FROM lent WHERE lent_cabinet_id=${res[0].lent_cabinet_id}`,
+        );
+        // sendReturnMsg(intra_id); // 슬랙 메시지 보내는 기능.
+      })
+      .catch((err: any) => {
+        console.error(err);
+        throw err;
+      });
+    if (pool) pool.end();
+  }
+
+  // 대여기간 연장 수행.
+  async activateExtension(user: UserSessionDto): Promise<void> {
+    const content = `SELECT * FROM lent WHERE lent_user_id=${user.user_id}`;
+
+    const connection = await this.pool.getConnection();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        if (res[0] === undefined) {
+          return;
+        }
+        const content2 = `UPDATE lent set extension=${
+          res[0].extension + 1
+        }, expire_time=ADDDATE(now(), 7) WHERE lent_user_id=${user.user_id}`;
+        connection.query(content2);
+      })
+      .catch((err: any) => {
+        console.error(err);
+        throw err;
+      });
+    if (connection) connection.end();
   }
 }
