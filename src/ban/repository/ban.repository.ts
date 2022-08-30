@@ -33,7 +33,9 @@ export abstract class IBanRepository {
 
   /**
    * 해당 유저가 Ban처리 되어있는지 확인
+   *
    * @param user_id 추가될 유저의 id
+   * @return ban 되어있을 경우 1, 아니면 0
    */
-  abstract checkBannedUserList(user_id: number);
+  abstract checkBannedUserList(user_id: number): Promise<number>;
 }
