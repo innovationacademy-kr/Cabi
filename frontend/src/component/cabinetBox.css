@@ -1,0 +1,34 @@
+#cabinet_num {
+  font-weight: bolder;
+  font-size: larger;
+  text-align: center;
+  padding: 7px;
+}
+
+#intra_id {
+  font-size: smaller;
+  text-align: center;
+  padding: 5px;
+  color: #464646a6;
+}
+
+#cabinet_image, #cabinet_image > img {
+  width: 100%;
+  height: 100%;
+}
+
+#cabinet_image > img {
+  object-fit: cover;
+}
+
+.lentCabinet {
+  background: rgba(128, 117, 140, 0.249);
+}
+
+.myLentCabinet {
+  background: #7566abaf;
+}
+
+.expiredLentCabinet {
+  background: #b90e7aaf;
+}
