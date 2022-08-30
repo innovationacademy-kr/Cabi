@@ -10,12 +10,14 @@ import {
 import { CabinetListDto } from './dto/cabinet-list.dto';
 import { CabinetService } from './cabinet.service';
 import { MyLentInfoDto } from './dto/my-lent-info.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 import { User } from 'src/auth/user.decorator';
 import { AuthService } from 'src/auth/auth.service';
 import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
 
+@ApiTags('Cabinet')
 @Controller('api')
 export class CabinetController {
   private logger = new Logger(CabinetController.name);
@@ -25,6 +27,10 @@ export class CabinetController {
     private authService: AuthService,
   ) {}
 
+  @ApiOperation({
+    summary: '전체 사물함 정보 호출',
+    description: '전체 사물함 정보를 가져옵니다.',
+  })
   @Post('cabinet')
   async postCabinet(): Promise<CabinetListDto> {
     // 전체 사물함에 대한 정보
@@ -36,6 +42,10 @@ export class CabinetController {
     return cabinet;
   }
 
+  @ApiOperation({
+    summary: '대여자 정보 호출',
+    description: '현재 모든 사물함 대여자의 정보를 가져옵니다.',
+  })
   @Post('lent_info')
   async postLentInfo(@User() user: UserSessionDto): Promise<MyLentInfoDto> {
     // 현재 모든 대여자들의 정보
@@ -46,6 +56,10 @@ export class CabinetController {
     return this.cabinetService.getAllLentInfo(userId);
   }
 
+  @ApiOperation({
+    summary: '사물함 대여',
+    description: '특정 사물함을 대여합니다.',
+  })
   @Post('lent')
   @UseGuards(BanCheckGuard)
   async postLent(
@@ -57,6 +71,10 @@ export class CabinetController {
     return this.cabinetService.lentCabinet(user, cabinet_id);
   }
 
+  @ApiOperation({
+    summary: '유저의 대여 중 사물함 정보',
+    description: '특정 유저가 현재 대여하고 있는 사물함의 정보를 가져옵니다.',
+  })
   @Post('return_info')
   @UseGuards(BanCheckGuard)
   async postReturnInfo(
@@ -73,6 +91,10 @@ export class CabinetController {
    * @return Promise<void>
    * FIXME: Lent Controller에 들어가는게 적절할 것 같습니다.
    */
+  @ApiOperation({
+    summary: '사물함 반납',
+    description: ' 특정 사물함을 반납을 처리합니다.',
+  })
   @Post('return')
   @UseGuards(BanCheckGuard)
   async postReturn(@User() user: UserSessionDto): Promise<void> {
@@ -85,6 +107,10 @@ export class CabinetController {
    * @return Promise<{ user: UserSessionDto }>
    * FIXME: Auth Controller에 들어가는게 더 적절할 것 같습니다.
    */
+  @ApiOperation({
+    summary: '페이지 접근 권한',
+    description: '유저의 페이지 접근 권한 여부 정보를 리턴합니다.',
+  })
   @Post('check')
   @UseGuards(BanCheckGuard)
   async postCheck(
@@ -101,6 +127,10 @@ export class CabinetController {
    * FIXME: 새 대여 정책에서 해당 연장 기능이 없어질 수 있음.
    * TODO: Lent Service에 activateExtension 포팅 필요.
    */
+  @ApiOperation({
+    summary: '사물함 연장',
+    description: '특정 사물함의 대여기간을 연장합니다.',
+  })
   @Post('extension')
   @UseGuards(BanCheckGuard)
   async postExtension(@User() user: UserSessionDto): Promise<void> {

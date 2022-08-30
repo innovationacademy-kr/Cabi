@@ -15,7 +15,7 @@ export class MailService {
     @Inject(ConfigService) private configService: ConfigService,
     private readonly mailerService: MailerService,
     private banService: BanService,
-    private cabinetService: CabinetService
+    private cabinetService: CabinetService,
   ) {
     this.mailTest = configService.get<string>('email.test');
   }
