@@ -111,7 +111,7 @@ export class RawqueryBanRepository implements IBanRepository {
    * 해당 유저가 Ban처리 되어있는지 확인
    * @param user_id 추가될 유저의 id
    */
-  async checkBannedUserList(user_id: number) {
+  async checkBannedUserList(user_id: number): Promise<number> {
     const pool: mariadb.PoolConnection = await this.con.getConnection();
     const content = `SELECT * FROM user WHERE user_id=${user_id}`;
     let isBanned = 0;
