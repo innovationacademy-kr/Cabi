@@ -33,7 +33,6 @@ export class BanCheckGuard implements CanActivate {
       this.logger.debug(`can't find UserSession`);
       return false;
     }
-    this.logger.debug(user);
     const ban = await this.banService.checkBannedUserList(user.user_id);
     return ban === 0;
   }
