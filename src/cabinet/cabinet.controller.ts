@@ -14,6 +14,7 @@ import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 import { User } from 'src/auth/user.decorator';
 import { AuthService } from 'src/auth/auth.service';
 import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
+import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
 
 @Controller('api')
 export class CabinetController {
@@ -36,10 +37,12 @@ export class CabinetController {
   }
 
   @Post('lent_info')
-  async postLentInfo(): Promise<MyLentInfoDto> {
+  async postLentInfo(@User() user: UserSessionDto): Promise<MyLentInfoDto> {
     // 현재 모든 대여자들의 정보
+    // FIXME: 대여를 한 유저가 있으면 추가로 대여하지 못하게 막는 로직은
+    //         API를 따로 만들어 분리를 하는게 좋을 것 같습니다.
     this.logger.log('postLentInfo');
-    const userId = 12345; // TODO: 실제 유저 ID를 받아야 함.
+    const userId = user.user_id; // TODO: 실제 유저 ID를 받아야 함.
     return this.cabinetService.getAllLentInfo(userId);
   }
 
@@ -47,8 +50,8 @@ export class CabinetController {
   @UseGuards(BanCheckGuard)
   async postLent(
     @User() user: UserSessionDto,
-    @Body(ValidationPipe) cabinet_id: number
-  ):Promise<{ cabinet_id : number }> {
+    @Body(ValidationPipe) cabinet_id: number,
+  ): Promise<{ cabinet_id: number }> {
     // 특정 사물함을 빌릴 때 요청
     this.logger.log('postLent');
     return this.cabinetService.lentCabinet(user, cabinet_id);
@@ -57,7 +60,7 @@ export class CabinetController {
   @Post('return_info')
   @UseGuards(BanCheckGuard)
   async postReturnInfo(
-    @User() user: UserSessionDto
+    @User() user: UserSessionDto,
   ): Promise<lentCabinetInfoDto> {
     // 특정 사용자가 현재 대여하고 있는 사물함의 정보
     this.logger.log('postReturnInfo');
@@ -69,8 +72,6 @@ export class CabinetController {
    * @param UserSessionDto
    * @return Promise<void>
    * FIXME: Lent Controller에 들어가는게 적절할 것 같습니다.
-   * TODO: UserDto 추가 필요.
-   * TODO: Lent Service에 createLentLog(): UserDto 필요.
    */
   @Post('return')
   @UseGuards(BanCheckGuard)
@@ -86,7 +87,9 @@ export class CabinetController {
    */
   @Post('check')
   @UseGuards(BanCheckGuard)
-  async postCheck(@User() user: UserSessionDto): Promise<{ user: UserSessionDto }> {
+  async postCheck(
+    @User() user: UserSessionDto,
+  ): Promise<{ user: UserSessionDto }> {
     return await { user };
   }
 

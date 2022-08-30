@@ -102,17 +102,17 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
     return lentInfo;
   }
 
-  async checkCabinetStatus(cabinet_id: number):Promise<number> {
+  async checkCabinetStatus(cabinet_id: number): Promise<number> {
     try {
       const content = `SELECT activation FROM cabinet WHERE cabinet_id=${cabinet_id}`;
-      const pool = await this.pool.getConnection();
-      const cabinet = await pool.query(content);
-  
-      if (pool) pool.end();
+      const connection = await this.pool.getConnection();
+      const cabinet = await connection.query(content);
+
+      if (connection) connection.end();
       if (cabinet[0].activation === 1) {
         return 1;
       }
-    } catch (err :any) {
+    } catch (err: any) {
       const error = new Error(err.message);
       error.name = 'CheckCabinetStatusError';
       console.error(error);
@@ -122,12 +122,11 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
   }
 
   async getUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
-    let pool: mariadb.PoolConnection;
     let lentCabinet: lentCabinetInfoDto;
-    const content: string = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
+    const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
 
-    pool = await this.pool.getConnection();
-    lentCabinet = await pool
+    const connection = await this.pool.getConnection();
+    lentCabinet = await connection
       .query(content)
       .then((res: any) => {
         if (res.length !== 0) {
@@ -150,13 +149,13 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
             lent_id: -1,
             lent_cabinet_id: -1,
             lent_user_id: -1,
-            lent_time: "",
-            expire_time: "",
+            lent_time: '',
+            expire_time: '',
             extension: false,
             cabinet_num: -1,
-            location: "",
+            location: '',
             floor: -1,
-            section: "",
+            section: '',
             activation: false,
           };
         }
@@ -165,36 +164,39 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
         console.error(err);
         throw err;
       });
-    if (pool) pool.end();
+    if (connection) connection.end();
     return lentCabinet;
   }
 
-  async createLent(cabinet_id: number, user: UserSessionDto):Promise<{ errno : number }> {
+  async createLent(
+    cabinet_id: number,
+    user: UserSessionDto,
+  ): Promise<{ errno: number }> {
     let errResult = 0;
-    let pool: mariadb.PoolConnection;
-    const content: string = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
-    pool = await this.pool.getConnection();
-    await pool
+
+    const content = `INSERT INTO lent (lent_cabinet_id, lent_user_id, lent_time, expire_time, extension) VALUES (${cabinet_id}, ${user.user_id}, now(), ADDDATE(now(), 30), 0)`;
+    const connection = await this.pool.getConnection();
+    await connection
       .query(content)
       .then((res: any) => {
         if (res) {
-          let date = new Date();
+          const date = new Date();
           date.setDate(date.getDate() + 7);
-          let day = date.toISOString().replace(/T.+/, "");
+          const day = date.toISOString().replace(/T.+/, '');
           //sendLentMsg(user.intra_id, day); // 슬랙 메시지 발송
         }
       })
       .catch((err: any) => {
         if (err.errno === 1062) errResult = -1;
       });
-    if (pool) pool.end();
+    if (connection) connection.end();
     return { errno: errResult };
   }
-  
+
   //lent_log 값 생성 후 lent 값 삭제
   async createLentLog(user_id: number, intra_id: string): Promise<void> {
     let pool: mariadb.PoolConnection;
-    const content: string = `SELECT * FROM lent WHERE lent_user_id=${user_id}`;
+    const content = `SELECT * FROM lent WHERE lent_user_id=${user_id}`;
 
     const connection = await this.pool.getConnection();
     await connection
@@ -202,10 +204,10 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
       .then((res: any) => {
         if (res[0] === undefined) return;
         pool.query(
-          `INSERT INTO lent_log (log_user_id, log_cabinet_id, lent_time, return_time) VALUES (${res[0].lent_user_id}, ${res[0].lent_cabinet_id}, '${res[0].lent_time}', now())`
+          `INSERT INTO lent_log (log_user_id, log_cabinet_id, lent_time, return_time) VALUES (${res[0].lent_user_id}, ${res[0].lent_cabinet_id}, '${res[0].lent_time}', now())`,
         );
         pool.query(
-          `DELETE FROM lent WHERE lent_cabinet_id=${res[0].lent_cabinet_id}`
+          `DELETE FROM lent WHERE lent_cabinet_id=${res[0].lent_cabinet_id}`,
         );
         // sendReturnMsg(intra_id); // 슬랙 메시지 보내는 기능.
       })
@@ -218,7 +220,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
 
   // 대여기간 연장 수행.
   async activateExtension(user: UserSessionDto): Promise<void> {
-    const content: string = `SELECT * FROM lent WHERE lent_user_id=${user.user_id}`;
+    const content = `SELECT * FROM lent WHERE lent_user_id=${user.user_id}`;
 
     const connection = await this.pool.getConnection();
     await connection
@@ -227,7 +229,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
         if (res[0] === undefined) {
           return;
         }
-        const content2: string = `UPDATE lent set extension=${
+        const content2 = `UPDATE lent set extension=${
           res[0].extension + 1
         }, expire_time=ADDDATE(now(), 7) WHERE lent_user_id=${user.user_id}`;
         connection.query(content2);

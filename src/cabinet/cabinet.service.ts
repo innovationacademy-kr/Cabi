@@ -35,18 +35,26 @@ export class CabinetService {
     }
   }
 
-  async lentCabinet(user: UserSessionDto, cabinet_id: number):Promise<{ cabinet_id: number }> {
+  async lentCabinet(
+    user: UserSessionDto,
+    cabinet_id: number,
+  ): Promise<{ cabinet_id: number }> {
     try {
       let errno: number;
-      const cabinetStatus = await this.cabinetRepository.checkCabinetStatus(cabinet_id);
-      if ( user && cabinetStatus ) {
+      const cabinetStatus = await this.cabinetRepository.checkCabinetStatus(
+        cabinet_id,
+      );
+      if (user && cabinetStatus) {
         const myLent = await this.getUser(user);
         if (myLent.lent_id === -1) {
-          const response = await this.cabinetRepository.createLent(cabinet_id, user);
+          const response = await this.cabinetRepository.createLent(
+            cabinet_id,
+            user,
+          );
           errno = response && response.errno === -1 ? -2 : cabinet_id;
-          return { cabinet_id : errno };
+          return { cabinet_id: errno };
         } else {
-          return { cabinet_id : -1 };
+          return { cabinet_id: -1 };
         }
       }
     } catch (e) {
@@ -57,11 +65,11 @@ export class CabinetService {
   async getUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
     try {
       return await this.cabinetRepository.getUser(user);
-    } catch(e) {
+    } catch (e) {
       throw new InternalServerErrorException();
     }
   }
-  
+
   //lent_log 값 생성 후 lent 값 삭제
   async createLentLog(user_id: number, intra_id: string): Promise<void> {
     try {
