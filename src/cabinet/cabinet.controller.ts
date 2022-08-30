@@ -10,13 +10,14 @@ import {
 import { CabinetListDto } from './dto/cabinet-list.dto';
 import { CabinetService } from './cabinet.service';
 import { MyLentInfoDto } from './dto/my-lent-info.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 import { User } from 'src/auth/user.decorator';
 import { AuthService } from 'src/auth/auth.service';
 import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
 
+@ApiTags('Cabinet')
 @Controller('api')
 export class CabinetController {
   private logger = new Logger(CabinetController.name);

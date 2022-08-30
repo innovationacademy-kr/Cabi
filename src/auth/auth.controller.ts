@@ -3,10 +3,11 @@ import { JwtAuthGuard } from './jwt/guard/jwtauth.guard';
 import { Response } from 'express';
 import { FtGuard } from './42/guard/ft.guard';
 import { UserSessionDto } from './dto/user.session.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
 import { User } from './user.decorator';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   private logger = new Logger(AuthController.name);
