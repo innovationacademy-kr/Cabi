@@ -101,7 +101,6 @@ export class CabinetController {
    * @param UserSessionDto
    * @return Promise<{ user: UserSessionDto }>
    * FIXME: Auth Controller에 들어가는게 더 적절할 것 같습니다.
-   * TODO: Auth Service에 loginBanCheck 포팅 필요.
    */
   @Post('check')
   @UseGuards(BanCheckGuard)
