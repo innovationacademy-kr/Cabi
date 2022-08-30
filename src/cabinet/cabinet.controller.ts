@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Logger, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Logger, Post, ValidationPipe } from '@nestjs/common';
 import { CabinetListDto } from './dto/cabinet-list.dto';
 import { CabinetService } from './cabinet.service';
 import { MyLentInfoDto } from './dto/my-lent-info.dto';
@@ -28,32 +28,93 @@ export class CabinetController {
     return this.cabinetService.getAllLentInfo(userId);
   }
 
+  //getUser는 userService에 들어가나요?
   @Post('lent')
-  async postLent() {
+  async postLent(
+    @Body(new ValidationPipe()) 
+    userInfoDto: UserInfoDto,
+    cabinet_id: number
+  ) {
     // 특정 사물함을 빌릴 때 요청
     this.logger.log('postLent');
+    let errno: number;
+    const cabinetStatus = await this.cabinetService.checkCabinetStatus(cabinet_id);
+    if ( userInfoDto && cabinetStatus ) {
+      const myLent = await this.cabinetService.getUser(userInfoDto);
+      if (myLent.lent_id === -1) {
+        const response = await this.lentService.createLent(cabinet_id, userInfoDto);
+        errno = response && response.errno === -1 ? -2 : cabinet_id;
+        return { cabinet_id : errno };
+      } else {
+        return { cabinet_id : -1 };
+      }
+    } else {
+      throw new BadRequestException({ cabinet_id: cabinet_id });
+    }
   }
 
+  //TODO: lentCabinetInfoDto 추가 필요
   @Post('return_info')
-  async postReturnInfo() {
+  async postReturnInfo(
+    @Body(new ValidationPipe()) userInfoDto: UserInfoDto
+  ): Promise<lentCabinetInfoDto> {
     // 특정 사용자가 현재 대여하고 있는 사물함의 정보
     this.logger.log('postReturnInfo');
+    return await this.cabinetService.getUser(userInfoDto);
   }
 
+  /**
+   * 특정 사물함을 반납할 때 요청
+   * @param UserInfoDto
+   * @return Promise<void>
+   * FIXME: Lent Controller에 들어가는게 적절할 것 같습니다.
+   * TODO: UserDto 추가 필요.
+   * TODO: Lent Service에 createLentLog(): UserDto 필요.
+   */
   @Post('return')
-  async postReturn() {
-    // 특정 사물함을 반납할 때 요청
-    this.logger.log('postReturn');
+  async postReturn(
+    @Body(new ValidationPipe()) userInfoDto: UserInfoDto
+  ): Promise<void> {
+    await this.authService.loginBanCheck(userInfoDto)
+    .catch(new Error('LoginBanCheckError'));
+
+    let userDto: UserDto = new UserDto();
+    userDto.user_id = userInfoDto.user_id;
+    userDto.intra_id = userInfoDto.intra_id;
+    return this.lentService.createLentLog(userDto);
   }
 
+  /**
+   * 적절한 유저가 페이지를 접근하는지에 대한 정보
+   * @param UserInfoDto
+   * @return Promise<UserInfoDto>
+   * FIXME: Auth Controller에 들어가는게 더 적절할 것 같습니다.
+   * TODO: UseGuards 추가 필요.
+   * TODO: Auth Service에 loginBanCheck 포팅 필요.
+   */
   @Post('check')
-  async postCheck() {
-    // 적절한 유저가 페이지를 접근하는지에 대한 정보
-    this.logger.log('postCheck');
+  async postCheck(
+    @Body(new ValidationPipe()) userInfoDto: UserInfoDto
+    ): Promise<UserInfoDto> {
+    return await this.authService.loginBanCheck(userInfoDto);
   }
 
+  /**
+   * 대여 연장 요청이 들어올 때 이를 처리하는 api
+   * @param UserInfoDto
+   * @return Promise<void>
+   * FIXME: Lent Controller에 들어가는게 적절할 것 같습니다.
+   * FIXME: 새 대여 정책에서 해당 연장 기능이 없어질 수 있음.
+   * TODO: UseGuards 추가 필요.
+   * TODO: Lent Service에 activateExtension 포팅 필요.
+   */
   @Post('extension')
-  async postExtension() {
-    this.logger.log('postExtension');
+  async postExtension(
+    @Body(new ValidationPipe()) userInfoDto: UserInfoDto
+  ): Promise<void> {
+    await this.authService.loginBanCheck(userInfoDto)
+    .catch(new Error('LoginBanCheckError'));
+
+    return await this.lentService.activateExtension(userInfoDto);
   }
 }
