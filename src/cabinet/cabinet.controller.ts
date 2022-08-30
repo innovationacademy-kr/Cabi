@@ -13,6 +13,7 @@ import { MyLentInfoDto } from './dto/my-lent-info.dto';
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 import { User } from 'src/auth/user.decorator';
 import { AuthService } from 'src/auth/auth.service';
+import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
 
 @Controller('api')
 export class CabinetController {
@@ -42,44 +43,25 @@ export class CabinetController {
     return this.cabinetService.getAllLentInfo(userId);
   }
 
-  //getUser는 userService에 들어가나요?
   @Post('lent')
+  @UseGuards(BanCheckGuard)
   async postLent(
-    @Body(new ValidationPipe())
-    userInfoDto: UserInfoDto,
-    cabinet_id: number,
-  ) {
+    @User() user: UserSessionDto,
+    @Body(ValidationPipe) cabinet_id: number
+  ):Promise<{ cabinet_id : number }> {
     // 특정 사물함을 빌릴 때 요청
     this.logger.log('postLent');
-    let errno: number;
-    const cabinetStatus = await this.cabinetService.checkCabinetStatus(
-      cabinet_id,
-    );
-    if (userInfoDto && cabinetStatus) {
-      const myLent = await this.cabinetService.getUser(userInfoDto);
-      if (myLent.lent_id === -1) {
-        const response = await this.lentService.createLent(
-          cabinet_id,
-          userInfoDto,
-        );
-        errno = response && response.errno === -1 ? -2 : cabinet_id;
-        return { cabinet_id: errno };
-      } else {
-        return { cabinet_id: -1 };
-      }
-    } else {
-      throw new BadRequestException({ cabinet_id: cabinet_id });
-    }
+    return this.cabinetService.lentCabinet(user, cabinet_id);
   }
 
-  //TODO: lentCabinetInfoDto 추가 필요
   @Post('return_info')
+  @UseGuards(BanCheckGuard)
   async postReturnInfo(
-    @Body(new ValidationPipe()) userInfoDto: UserInfoDto,
+    @User() user: UserSessionDto
   ): Promise<lentCabinetInfoDto> {
     // 특정 사용자가 현재 대여하고 있는 사물함의 정보
     this.logger.log('postReturnInfo');
-    return await this.cabinetService.getUser(userInfoDto);
+    return await this.cabinetService.getUser(user);
   }
 
   /**
