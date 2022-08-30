@@ -16,6 +16,7 @@ import { User } from 'src/auth/user.decorator';
 import { AuthService } from 'src/auth/auth.service';
 import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
+import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 
 @ApiTags('Cabinet')
 @Controller('api')
@@ -31,6 +32,7 @@ export class CabinetController {
     summary: '전체 사물함 정보 호출',
     description: '전체 사물함 정보를 가져옵니다.',
   })
+  // NOTE: 의도된 방식인진 모르겠제만 해당 엔드포인트에 대해선 auth 체크를 하지 않습니다.
   @Post('cabinet')
   async postCabinet(): Promise<CabinetListDto> {
     // 전체 사물함에 대한 정보
@@ -47,12 +49,13 @@ export class CabinetController {
     description: '현재 모든 사물함 대여자의 정보를 가져옵니다.',
   })
   @Post('lent_info')
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async postLentInfo(@User() user: UserSessionDto): Promise<MyLentInfoDto> {
     // 현재 모든 대여자들의 정보
     // FIXME: 대여를 한 유저가 있으면 추가로 대여하지 못하게 막는 로직은
     //         API를 따로 만들어 분리를 하는게 좋을 것 같습니다.
     this.logger.log('postLentInfo');
-    const userId = user.user_id; // TODO: 실제 유저 ID를 받아야 함.
+    const userId = user.user_id;
     return this.cabinetService.getAllLentInfo(userId);
   }
 
@@ -61,7 +64,7 @@ export class CabinetController {
     description: '특정 사물함을 대여합니다.',
   })
   @Post('lent')
-  @UseGuards(BanCheckGuard)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async postLent(
     @User() user: UserSessionDto,
     @Body(ValidationPipe) cabinet_id: number,
@@ -76,7 +79,7 @@ export class CabinetController {
     description: '특정 유저가 현재 대여하고 있는 사물함의 정보를 가져옵니다.',
   })
   @Post('return_info')
-  @UseGuards(BanCheckGuard)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async postReturnInfo(
     @User() user: UserSessionDto,
   ): Promise<lentCabinetInfoDto> {
@@ -96,7 +99,7 @@ export class CabinetController {
     description: ' 특정 사물함을 반납을 처리합니다.',
   })
   @Post('return')
-  @UseGuards(BanCheckGuard)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async postReturn(@User() user: UserSessionDto): Promise<void> {
     return this.cabinetService.createLentLog(user.user_id, user.intra_id);
   }
@@ -112,11 +115,9 @@ export class CabinetController {
     description: '유저의 페이지 접근 권한 여부 정보를 리턴합니다.',
   })
   @Post('check')
-  @UseGuards(BanCheckGuard)
-  async postCheck(
-    @User() user: UserSessionDto,
-  ): Promise<{ user: UserSessionDto }> {
-    return await { user };
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  postCheck(@User() user: UserSessionDto): { user: UserSessionDto } {
+    return { user };
   }
 
   /**
@@ -132,7 +133,7 @@ export class CabinetController {
     description: '특정 사물함의 대여기간을 연장합니다.',
   })
   @Post('extension')
-  @UseGuards(BanCheckGuard)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async postExtension(@User() user: UserSessionDto): Promise<void> {
     // 추후 lentService로 변경해야 함.
     return await this.cabinetService.activateExtension(user);
