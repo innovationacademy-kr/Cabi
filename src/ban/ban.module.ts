@@ -10,5 +10,6 @@ const repo = {
 
 @Module({
   providers: [BanService, repo],
+  exports: [BanService],
 })
 export class BanModule {}

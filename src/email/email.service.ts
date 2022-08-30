@@ -1,17 +1,24 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import fs from 'fs';
 import { BanService } from 'src/ban/ban.service';
 import { overUserInfoDto } from 'src/ban/dto/overUserInfo.dto';
+import { CabinetService } from 'src/cabinet/cabinet.service';
 
 @Injectable()
 export class MailService {
   private logger = new Logger(MailService.name);
+  private mailTest: string;
   constructor(
+    @Inject(ConfigService) private configService: ConfigService,
     private readonly mailerService: MailerService,
     private banService: BanService,
-  ) {}
+    private cabinetService: CabinetService,
+  ) {
+    this.mailTest = configService.get<string>('email.test');
+  }
 
   public sendMail(intra_id: string, subject: string, file: string): void {
     this.mailerService
@@ -52,7 +59,7 @@ export class MailService {
       file = 'ban.hbs';
     }
     // 배포 시에만 메일 발송 환경변수 확인
-    if (process.env.TEST === 'false') {
+    if (this.mailTest === 'false') {
       info.forEach((user) => this.sendMail(user.intra_id, subject, file));
     }
   }
@@ -82,11 +89,11 @@ export class MailService {
             //cabinet
             await this.banService.updateCabinetActivation(user.cabinet_id, 2);
             //return
-            // await createLentLog({
-            //   //TODO: v1의 queryModel.ts에 있는 내용이며 다른곳에서도 쓰임.
-            //   user_id: user.user_id,
-            //   intra_id: user.intra_id,
-            // });
+            await this.cabinetService.createLentLog(
+              // TODO: v1의 queryModel.ts에 있는 내용이며 다른곳에서도 쓰임.
+              user.user_id,
+              user.intra_id,
+            );
             //ban
             await this.banService.addBanUser({
               user_id: user.user_id,
@@ -95,7 +102,7 @@ export class MailService {
             });
           });
           this.mailing(res, 15);
-          // connectionForCabinet(); //TODO: v1의 dbModel.ts에 있는 내용이며 다른곳에서도 쓰임.
+          this.cabinetService.getAllCabinets(); // TODO: v1의 dbModel.ts에 있는 내용이며 다른곳에서도 쓰임.
         }
       })
       .catch((e) => this.logger.error(e));

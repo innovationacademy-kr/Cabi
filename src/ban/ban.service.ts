@@ -4,7 +4,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { overUserInfoDto } from './dto/overUserInfo.dto';
-import mariadb from 'mariadb';
 import { banUserAddInfoDto } from './dto/banUserAddInfo.dto';
 import { IBanRepository } from './repository/ban.repository';
 

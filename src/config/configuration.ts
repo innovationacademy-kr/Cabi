@@ -15,4 +15,7 @@ export default () => ({
     secret: process.env.FORTYTWO_APP_SECRET,
     callbackuri: process.env.CALLBACK_URL,
   },
+  email: {
+    test: process.env.TEST,
+  },
 });
