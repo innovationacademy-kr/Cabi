@@ -63,12 +63,11 @@ export class CabinetController {
   @UseGuards(JwtAuthGuard, BanCheckGuard)
   async postLent(
     @User() user: UserSessionDto,
-    @Body(ValidationPipe) cabinet_id: number,
+    @Body(ValidationPipe) cabinet: { cabinet_id: number },
   ): Promise<{ cabinet_id: number }> {
     // 특정 사물함을 빌릴 때 요청
     this.logger.log('postLent');
-    // console.log(cabinet_id);
-    return this.cabinetService.lentCabinet(user, cabinet_id);
+    return this.cabinetService.lentCabinet(user, cabinet.cabinet_id);
   }
 
   @ApiOperation({

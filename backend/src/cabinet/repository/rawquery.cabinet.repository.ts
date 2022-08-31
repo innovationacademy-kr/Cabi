@@ -106,9 +106,9 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
 
   async checkCabinetStatus(cabinet_id: number): Promise<number> {
     try {
-      // console.log(cabinet_id.cabinet_id);
+      // console.log(cabinet_id);
       const content = `SELECT activation FROM cabinet WHERE cabinet_id=${cabinet_id}`;
-      // console.log(content);
+      console.log(content);
       const connection = await this.pool.getConnection();
       const cabinet = await connection.query(content);
 
@@ -129,7 +129,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
     let lentCabinet: lentCabinetInfoDto;
     const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
 
-    // console.log(content);
+    console.log(content);
     const connection = await this.pool.getConnection();
     lentCabinet = await connection
       .query(content)
