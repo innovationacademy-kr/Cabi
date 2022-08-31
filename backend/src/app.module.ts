@@ -7,8 +7,6 @@ import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -31,8 +29,8 @@ import { AppController } from './app.controller';
     //   serveRoot: '/data',
     // }),
   ],
-  controllers: [AppController],
-  providers: [SessionMiddleware, AppService],
+  controllers: [],
+  providers: [SessionMiddleware],
 })
 export class AppModule implements NestModule {
   constructor(public sessionMiddleware: SessionMiddleware) {}

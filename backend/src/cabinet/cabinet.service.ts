@@ -46,7 +46,6 @@ export class CabinetService {
       );
       if (user && cabinetStatus) {
         const myLent = await this.getUser(user);
-        console.log(myLent);
         if (myLent.lent_id === -1) {
           const response = await this.cabinetRepository.createLent(
             cabinet_id,
