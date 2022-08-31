@@ -18,5 +18,14 @@ export default () => ({
   },
   email: {
     test: process.env.TEST,
+    host: process.env.MAIL_HOST,
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+    from: process.env.MAIL_FROM,
+    tls: {
+      maxVersion: process.env.MAIL_TLS_MAXVERSION,
+      minVersion: process.env.MAIL_TLS_MINVERSION,
+      ciphers: process.env.MAIL_TLS_CIPHERS,
+    },
   },
 });

@@ -13,6 +13,7 @@ const repo = {
 
 @Module({
   imports: [AuthModule, BanModule],
+  exports: [CabinetService],
   controllers: [CabinetController],
   providers: [CabinetService, repo],
 })
