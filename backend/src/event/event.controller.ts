@@ -1,9 +1,9 @@
 import { Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
-import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
-import { User } from 'src/auth/user.decorator';
-import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
+import { UserSessionDto } from '../auth/dto/user.session.dto';
+import { JwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
+import { User } from '../auth/user.decorator';
+import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { EventInfoDto } from './dto/event-info.dto';
 import { EventService } from './evnet.service';
 
