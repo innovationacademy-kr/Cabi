@@ -11,6 +11,7 @@ export class RawqueryEventRepository implements IEventRepository {
     this.pool = mariadb.createPool({
       host: this.configService.get<string>('database.host'),
       user: this.configService.get<string>('database.user'),
+      port: this.configService.get<number>('database.port'),
       password: this.configService.get<string>('database.password'),
       database: this.configService.get<string>('database.database'),
       dateStrings: true,
@@ -31,7 +32,7 @@ export class RawqueryEventRepository implements IEventRepository {
         is_event: getEventInfo[i].isEvent,
       });
     }
-    connection.release();
+    if (connection) connection.end();
     return eventInfo;
   }
 
@@ -45,7 +46,7 @@ export class RawqueryEventRepository implements IEventRepository {
     if (!checkEventUser) {
       await connection.query(insertContent, intra_id);
     }
-    connection.release();
+    if (connection) connection.end();
   }
 
   // 이벤트 정보 업데이트
@@ -59,7 +60,7 @@ export class RawqueryEventRepository implements IEventRepository {
     if (updateEventInfo) {
       await connection.query(updateContent, intra_id);
     }
-    connection.release();
+    if (connection) connection.end();
   }
 
   // 이벤트 정보
@@ -69,7 +70,7 @@ export class RawqueryEventRepository implements IEventRepository {
     const selectContent = `select count(*) as count from 42cabi_DB.event where intra_id="${intra_id}"`;
 
     const checkEventInfo = await connection.query(selectContent, intra_id);
-    connection.release();
+    if (connection) connection.end();
     if (checkEventInfo) {
       return true;
     }
@@ -83,7 +84,7 @@ export class RawqueryEventRepository implements IEventRepository {
     const selectContent = `select count(*) as count from 42cabi_DB.event where isEvent=0`;
     const checkEventInfo = await connection.query(selectContent);
 
-    connection.release();
+    if (connection) connection.end();
     if (checkEventInfo) {
       return true;
     }

@@ -5,6 +5,13 @@ import { FtStrategy } from './42/ft.strategy';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { AuthService } from './auth.service';
+import { IAuthRepository } from './repository/auth.repository';
+import { RawqueryAuthRepository } from './repository/rawquery.auth.repository';
+
+const repo = {
+  provide: IAuthRepository,
+  useClass: RawqueryAuthRepository,
+};
 
 @Module({
   imports: [
@@ -18,7 +25,7 @@ import { AuthService } from './auth.service';
       inject: [ConfigService],
     }),
   ],
-  providers: [FtStrategy, JwtStrategy, AuthService],
+  providers: [FtStrategy, JwtStrategy, AuthService, repo],
   controllers: [AuthController],
 })
 export class AuthModule {}

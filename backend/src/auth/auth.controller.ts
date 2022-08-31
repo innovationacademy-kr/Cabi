@@ -6,11 +6,13 @@ import { UserSessionDto } from './dto/user.session.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
 import { User } from './user.decorator';
+import { AuthService } from './auth.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   private logger = new Logger(AuthController.name);
+  constructor(private authService: AuthService) {}
 
   @ApiOperation({
     summary: '42 로그인',
@@ -30,11 +32,11 @@ export class AuthController {
   })
   @Get('login/callback')
   @UseGuards(FtGuard, JWTSignGuard)
-  loginCallback(@Res() res: Response, @User() user: UserSessionDto) {
+  async loginCallback(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log('Login -> callback');
 
-    const lentCabinet = true; // TODO: 렌트 여부를 가져오는 서비스 로직 제작 필요
-    if (lentCabinet) {
+    const lentCabinet = await this.authService.checkUser(user);
+    if (lentCabinet.lent_id !== -1) {
       return res.redirect('/return');
     }
     return res.redirect('/lent');

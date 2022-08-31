@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "build:fe": "npm i --prefix ../frontend && npm run build --prefix ../frontend",
+    "build:fe": "npm i --prefix ../frontend && npm run build --prefix ../frontend && cp -r ../frontend/img ../frontend/dist",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

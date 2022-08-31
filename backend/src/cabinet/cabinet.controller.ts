@@ -13,7 +13,6 @@ import { MyLentInfoDto } from './dto/my-lent-info.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 import { User } from 'src/auth/user.decorator';
-import { AuthService } from 'src/auth/auth.service';
 import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
@@ -23,10 +22,7 @@ import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 export class CabinetController {
   private logger = new Logger(CabinetController.name);
 
-  constructor(
-    private cabinetService: CabinetService,
-    private authService: AuthService,
-  ) {}
+  constructor(private cabinetService: CabinetService) {}
 
   @ApiOperation({
     summary: '전체 사물함 정보 호출',
@@ -71,6 +67,7 @@ export class CabinetController {
   ): Promise<{ cabinet_id: number }> {
     // 특정 사물함을 빌릴 때 요청
     this.logger.log('postLent');
+    // console.log(cabinet_id);
     return this.cabinetService.lentCabinet(user, cabinet_id);
   }
 

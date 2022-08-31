@@ -1,7 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CabinetModule } from './cabinet/cabinet.module';
 import { BanModule } from './ban/ban.module';
@@ -9,6 +7,8 @@ import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -21,11 +21,18 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     AuthModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../', 'frontend/dist/'),
-      serveRoot: '',
+      // serveRoot: '../img'
     }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: path.join(process.mainModule['path'], 'client'),
+    // }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: path.join(process.mainModule['path'], 'data'),
+    //   serveRoot: '/data',
+    // }),
   ],
   controllers: [AppController],
-  providers: [AppService, SessionMiddleware],
+  providers: [SessionMiddleware, AppService],
 })
 export class AppModule implements NestModule {
   constructor(public sessionMiddleware: SessionMiddleware) {}

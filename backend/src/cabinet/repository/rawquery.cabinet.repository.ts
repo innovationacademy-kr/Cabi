@@ -15,8 +15,10 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
     this.pool = mariadb.createPool({
       host: this.configService.get<string>('database.host'),
       user: this.configService.get<string>('database.user'),
+      port: this.configService.get<number>('database.port'),
       password: this.configService.get<string>('database.password'),
       database: this.configService.get<string>('database.database'),
+      dateStrings: true,
     });
   }
 
@@ -104,7 +106,9 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
 
   async checkCabinetStatus(cabinet_id: number): Promise<number> {
     try {
+      // console.log(cabinet_id.cabinet_id);
       const content = `SELECT activation FROM cabinet WHERE cabinet_id=${cabinet_id}`;
+      // console.log(content);
       const connection = await this.pool.getConnection();
       const cabinet = await connection.query(content);
 
@@ -125,10 +129,12 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
     let lentCabinet: lentCabinetInfoDto;
     const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
 
+    // console.log(content);
     const connection = await this.pool.getConnection();
     lentCabinet = await connection
       .query(content)
       .then((res: any) => {
+        // console.log(res);
         if (res.length !== 0) {
           // lent page
           return {
@@ -195,7 +201,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
 
   //lent_log 값 생성 후 lent 값 삭제
   async createLentLog(user_id: number, intra_id: string): Promise<void> {
-    let pool: mariadb.PoolConnection;
+    // let pool: mariadb.PoolConnection;
     const content = `SELECT * FROM lent WHERE lent_user_id=${user_id}`;
 
     const connection = await this.pool.getConnection();
@@ -203,10 +209,10 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
       .query(content)
       .then((res: any) => {
         if (res[0] === undefined) return;
-        pool.query(
+        connection.query(
           `INSERT INTO lent_log (log_user_id, log_cabinet_id, lent_time, return_time) VALUES (${res[0].lent_user_id}, ${res[0].lent_cabinet_id}, '${res[0].lent_time}', now())`,
         );
-        pool.query(
+        connection.query(
           `DELETE FROM lent WHERE lent_cabinet_id=${res[0].lent_cabinet_id}`,
         );
         // sendReturnMsg(intra_id); // 슬랙 메시지 보내는 기능.
@@ -215,7 +221,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
         console.error(err);
         throw err;
       });
-    if (pool) pool.end();
+    if (connection) connection.end();
   }
 
   // 대여기간 연장 수행.
