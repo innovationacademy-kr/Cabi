@@ -7,6 +7,7 @@ import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -17,17 +18,11 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     CabinetModule,
     BanModule,
     AuthModule,
+    EventModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../', 'frontend/dist/'),
       // serveRoot: '../img'
     }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: path.join(process.mainModule['path'], 'client'),
-    // }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: path.join(process.mainModule['path'], 'data'),
-    //   serveRoot: '/data',
-    // }),
   ],
   controllers: [],
   providers: [SessionMiddleware],

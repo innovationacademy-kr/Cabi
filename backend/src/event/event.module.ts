@@ -16,4 +16,4 @@ const repo = {
   controllers: [EventController],
   providers: [EventService, repo],
 })
-export class SearchModule {}
+export class EventModule {}

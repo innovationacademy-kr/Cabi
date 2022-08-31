@@ -3,7 +3,7 @@ export default () => ({
   database: {
     host: process.env.HOST,
     user: process.env.DB_USER,
-    port: 3307,
+    port: process.env.DB_PORT,
     password: process.env.DB_PASSWORD,
     database: process.env.DATABASE,
   },
