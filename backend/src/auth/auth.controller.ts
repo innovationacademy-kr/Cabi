@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Post, Res, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './jwt/guard/jwtauth.guard';
 import { Response } from 'express';
 import { FtGuard } from './42/guard/ft.guard';
@@ -46,7 +46,8 @@ export class AuthController {
     summary: '로그아웃',
     description: '로그아웃을 수행합니다.',
   })
-  @Get('logout')
+  // FIXME: front 코드에서는 logout 버튼을 누르면 post를 줌. 둘 중 하나를 고쳐야할 것 같습니다.
+  @Post('logout')
   @UseGuards(JwtAuthGuard)
   logout(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log(`${user.intra_id} logged out`);

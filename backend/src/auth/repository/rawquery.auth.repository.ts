@@ -63,7 +63,6 @@ export class RawqueryAuthRepository implements IAuthRepository {
     await connection
       .query(content)
       .then((res: any) => {
-        // console.log(res);
       })
       .catch((err: any) => {
         console.error(err);
@@ -79,7 +78,6 @@ export class RawqueryAuthRepository implements IAuthRepository {
     await connection
       .query(content)
       .then((res: any) => {
-        // console.log(res);
       })
       .catch((err: any) => {
         console.error(err);
