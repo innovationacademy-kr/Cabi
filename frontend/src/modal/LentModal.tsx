@@ -19,7 +19,8 @@ export default function LentModal(props: any) {
           alert("이미 대여중인 사물함입니다!");
           return;
         }
-        if (res.status === 200) {
+        // FIXME: Before res.status === 200
+        if (res.status === 201) {
           navigate("/return");
         }
       })

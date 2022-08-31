@@ -5,7 +5,7 @@ import "./returnModal.css";
 export default function ReturnModal(props: any) {
 
   // 리턴 모달에 이벤트를 띄울 시, 하단의 함수를 사용하여 returnTarget의 값을 바꾸어 사용했어요.
-  // 현재 리턴모달 측 변경하는 이벤트를 사용하지 않으므로, returnTarget의 값은 기본값인 contentsmodal 이 됩니다. 
+  // 현재 리턴모달 측 변경하는 이벤트를 사용하지 않으므로, returnTarget의 값은 기본값인 contentsmodal 이 됩니다.
 
   // const handleReturn = () => {
   //   let result: number = 0;
@@ -44,7 +44,8 @@ export default function ReturnModal(props: any) {
     await axios
       .post(url, { lent_id: props.lentCabinet.lent_id })
       .then((res: any) => {
-        if (res.status === 200) {
+        // FIXME: Before res.status === 200
+        if (res.status === 201) {
           localStorage.clear();
           props.setContent("반납되었습니다");
           props.setPath("/lent");

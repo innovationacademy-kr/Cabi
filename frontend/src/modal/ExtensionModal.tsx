@@ -6,7 +6,8 @@ export default function ExtensionModal(props: any) {
     await axios
       .post("/api/extension")
       .then((res: any) => {
-        if (res.status === 200) {
+        // FIXME: Before res.status === 200
+        if (res.status === 201) {
           props.setContent("연장되었습니다!!");
         } else {
           props.setContent("다시 시도해주세요..");

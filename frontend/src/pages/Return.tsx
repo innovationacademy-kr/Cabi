@@ -48,13 +48,14 @@ export default function Return() {
         navigate("/");
       });
   };
-  
+
   const callReturn = async () => {
     await axios
       .post("/api/return_info")
       .then((res: any) => {
         // 특정 사용자가 현재 대여하고 있는 사물함의 정보
-        if (res.status === 200) {
+        // FIXME: Before res.status === 200
+        if (res.status === 201) {
           setLentCabinet(res.data);
           let extention = "";
           if (res.data) {
