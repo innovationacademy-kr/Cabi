@@ -60,14 +60,10 @@ export class RawqueryAuthRepository implements IAuthRepository {
     const content = `INSERT INTO user value('${user.user_id}', '${user.intra_id}', 0, '${user.email}', '', now(), now())`;
 
     const connection = await this.pool.getConnection();
-    await connection
-      .query(content)
-      .then((res: any) => {
-      })
-      .catch((err: any) => {
-        console.error(err);
-        throw err;
-      });
+    await connection.query(content).catch((err: any) => {
+      console.error(err);
+      throw err;
+    });
     if (connection) connection.end();
   }
 
@@ -75,24 +71,19 @@ export class RawqueryAuthRepository implements IAuthRepository {
     const content = `UPDATE user SET lastLogin=now() WHERE user_id=${user.user_id}`;
 
     const connection = await this.pool.getConnection();
-    await connection
-      .query(content)
-      .then((res: any) => {
-      })
-      .catch((err: any) => {
-        console.error(err);
-        throw err;
-      });
+    await connection.query(content).catch((err: any) => {
+      console.error(err);
+      throw err;
+    });
     if (connection) connection.end();
   }
 
   //본인 정보 및 렌트 정보 - 리턴 페이지
   async getUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
-    let lentCabinet: lentCabinetInfoDto;
     const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
 
     const connection = await this.pool.getConnection();
-    lentCabinet = await connection
+    const lentCabinet: lentCabinetInfoDto = await connection
       .query(content)
       .then((res: any) => {
         if (res.length !== 0) {

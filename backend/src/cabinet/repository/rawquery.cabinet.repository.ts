@@ -124,11 +124,10 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
   }
 
   async getUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
-    let lentCabinet: lentCabinetInfoDto;
     const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
 
     const connection = await this.pool.getConnection();
-    lentCabinet = await connection
+    const lentCabinet: lentCabinetInfoDto = await connection
       .query(content)
       .then((res: any) => {
         if (res.length !== 0) {
@@ -184,7 +183,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
         if (res) {
           const date = new Date();
           date.setDate(date.getDate() + 7);
-          const day = date.toISOString().replace(/T.+/, '');
+          //const day = date.toISOString().replace(/T.+/, '');
           //sendLentMsg(user.intra_id, day); // 슬랙 메시지 발송
         }
       })

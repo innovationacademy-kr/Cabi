@@ -2,7 +2,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import fs from 'fs';
+// import fs from 'fs';
 import { BanService } from 'src/ban/ban.service';
 import { overUserInfoDto } from 'src/ban/dto/overUserInfo.dto';
 import { CabinetService } from 'src/cabinet/cabinet.service';
@@ -10,38 +10,42 @@ import { CabinetService } from 'src/cabinet/cabinet.service';
 @Injectable()
 export class MailService {
   private logger = new Logger(MailService.name);
-  private mailTest: string;
+  private mailTest: boolean;
   constructor(
     @Inject(ConfigService) private configService: ConfigService,
     private readonly mailerService: MailerService,
     private banService: BanService,
     private cabinetService: CabinetService,
   ) {
-    this.mailTest = configService.get<string>('email.test');
+    this.mailTest = configService.get<boolean>('email.test');
   }
 
   public sendMail(intra_id: string, subject: string, file: string): void {
     this.mailerService
       .sendMail({
-        from: `"42CABI" <${process.env.MAIL_FROM}>`,
+        from: `"42CABI" <${this.configService.get<string>('email.from')}>`,
         to: intra_id + '@student.42seoul.kr',
         subject: subject,
         template: `./${file}`,
         context: { intra_id },
       })
       .then((success) => {
-        this.logger.log(`Send mail to ${intra_id} success! ${success}`);
-        fs.appendFileSync(
-          './email_logs/emailLog.txt',
-          `${intra_id} : ${new Date()} : ${success.response}`,
-        );
+        this.logger.log(`Send mail to ${intra_id} success!`);
+        // FIXME: 이메일 성공/실패 여부를 로깅하는 부분을 추후에 리팩토링하면 좋을거 같아요
+        this.logger.log(`${intra_id} : ${new Date()} : ${success.response}`);
+        // fs.appendFileSync(
+        //   './email_logs/emailLog.txt',
+        //   `${intra_id} : ${new Date()} : ${success.response}`,
+        // );
       })
       .catch((err) => {
         this.logger.error(`Send mail to ${intra_id} failed.. 🥺 ${err}`);
-        fs.appendFileSync(
-          './email_logs/emailLog.txt',
-          `${intra_id} : ${new Date()} : ${err}`,
-        );
+        // FIXME: 이메일 성공/실패 여부를 로깅하는 부분을 추후에 리팩토링하면 좋을거 같아요
+        this.logger.error(`${intra_id} : ${new Date()} : ${err}`);
+        // fs.appendFileSync(
+        //   './email_logs/emailLog.txt',
+        //   `${intra_id} : ${new Date()} : ${err}`,
+        // );
       });
   }
 
@@ -59,8 +63,14 @@ export class MailService {
       file = 'ban.hbs';
     }
     // 배포 시에만 메일 발송 환경변수 확인
-    if (this.mailTest === 'false') {
-      info.forEach((user) => this.sendMail(user.intra_id, subject, file));
+    if (this.mailTest === false) {
+      info.forEach((user) => {
+        this.sendMail(user.intra_id, subject, file);
+      });
+    } else {
+      info.forEach((user) => {
+        this.logger.debug(`[TESTING] [${subject}], sentTo: ${user.intra_id}`);
+      });
     }
   }
 

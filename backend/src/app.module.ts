@@ -7,6 +7,7 @@ import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { MailModule } from './email/email.module';
 import { EventModule } from './event/event.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { EventModule } from './event/event.module';
     CabinetModule,
     BanModule,
     AuthModule,
+    MailModule,
     EventModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../', 'frontend/dist/'),

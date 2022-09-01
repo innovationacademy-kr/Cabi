@@ -51,7 +51,7 @@ export class RawqueryBanRepository implements IBanRepository {
         }
       })
       .catch((err) => {
-        throw new Error('getOverUser Error');
+        throw new Error(`getOverUser Error - ${err}`);
       });
     if (connection) connection.end();
     return overUserList;
@@ -69,7 +69,7 @@ export class RawqueryBanRepository implements IBanRepository {
 		`;
 
     await connection.query(content).catch((err: any) => {
-      throw new Error('updateUserAuth Error');
+      throw new Error(`updateUserAuth Error - ${err}`);
     });
     if (connection) connection.end();
   }
@@ -89,7 +89,7 @@ export class RawqueryBanRepository implements IBanRepository {
 		`;
 
     await connection.query(content).catch((err: any) => {
-      throw new Error('updateCabinetActivation Error');
+      throw new Error(`updateCabinetActivation Error - ${err}`);
     });
     if (connection) connection.end();
   }
@@ -107,7 +107,7 @@ export class RawqueryBanRepository implements IBanRepository {
 		`;
 
     await connection.query(content).catch((err: any) => {
-      throw new Error('CheckBanUser Error');
+      throw new Error(`CheckBanUser Error - ${err}`);
     });
     if (connection) connection.end();
   }
