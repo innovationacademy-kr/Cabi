@@ -82,7 +82,7 @@ jobs:
             echo "env 파일 복사"
             cp 42cabi-dev.env $HOME/git/42cabi-dev/backend/.env
             echo "앱 배포 (reload)"
-            pm2 reload cabi-dev
+            pm2 reload 42cabi-dev
 
   CD-main:
     name: deploy-main
@@ -109,4 +109,4 @@ jobs:
             echo "env 파일 복사"
             cp 42cabi-main.env $HOME/git/42cabi-main/backend/.env
             echo "앱 배포 (reload)"
-            pm2 reload cabi-main
+            pm2 reload 42cabi-main
