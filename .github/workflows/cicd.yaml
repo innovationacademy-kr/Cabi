@@ -1,0 +1,30 @@
+name: CI/CD
+on: [push]
+
+jobs:
+  backend-CI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v2
+      - name: Node.js 16.x Version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: 종속 모듈들 캐싱
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/node_modules
+          key: npm-packages-${{ hashFiles('**/backend/package-lock.json') }}
+        id: cache 
+      - name: 종속 모듈들 설치
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install --prefix backend
+      - name: lint 체크
+        run: npm run lint --prefix backend
+      - name: 빌드 체크
+        run: npm run build --prefix backend
+      - name: 단위 테스트 체크
+        run: npm run test --prefix backend
+      - name: 통합 테스트 체크
+        run: npm run test:e2e --prefix backend
