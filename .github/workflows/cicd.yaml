@@ -14,7 +14,7 @@ jobs:
       - name: 종속 모듈들 캐싱
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/node_modules
+          path: ${{ github.workspace }}/backend/node_modules
           key: npm-packages-${{ hashFiles('**/backend/package-lock.json') }}
         id: cache 
       - name: 종속 모듈들 설치
@@ -41,7 +41,7 @@ jobs:
       - name: 종속 모듈들 캐싱
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/node_modules
+          path: ${{ github.workspace }}/frontend/node_modules
           key: npm-packages-${{ hashFiles('**/frontend/package-lock.json') }}
         id: cache 
       - name: 종속 모듈들 설치
