@@ -1,21 +1,29 @@
 import axios from "axios";
+import { axiosExtension } from "../network/axios/axios.custom";
 import "./extensionModal.css";
 
 export default function ExtensionModal(props: any) {
   const handleSubmit = async () => {
-    await axios
-      .post("/api/extension")
-      .then((res: any) => {
-        // FIXME: Before res.status === 200
-        if (res.status === 201) {
-          props.setContent("연장되었습니다!!");
-        } else {
-          props.setContent("다시 시도해주세요..");
-        }
+    axiosExtension()
+      .then((response) => {
+        props.setContent("연장되었습니다!!");
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch((error) => {
+        console.error(error);
+      })
+    // await axios
+    //   .post("/api/extension")
+    //   .then((res: any) => {
+    //     // FIXME: Before res.status === 200
+    //     if (res.status === 201) {
+    //       props.setContent("연장되었습니다!!");
+    //     } else {
+    //       props.setContent("다시 시도해주세요..");
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   };
 
   return (

@@ -1,4 +1,5 @@
-import axios from "axios";
+// import axios from "axios";
+import { axiosApiCheck, axiosLentInfo, axiosCabinetInfo } from "../network/axios/axios.custom";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Menu from "../component/Menu";
@@ -40,9 +41,17 @@ export default function Lent() {
   }, []);
 
   const apiCheck = async () => {
-    const url = "/api/check";
-    await axios
-      .post(url)
+    // const url = "/api/check";
+    // await axios
+    //   .post(url)
+    //   .then((res: any) => {
+    //     dispatch(userAll(res.data.user));
+    //   })
+    //   .catch((err: any) => {
+    //     console.error(err);
+    //     navigate("/");
+    //   });
+    axiosApiCheck()
       .then((res: any) => {
         dispatch(userAll(res.data.user));
       })
@@ -55,10 +64,19 @@ export default function Lent() {
   const handleHome = () => {
     navigate(0);
   };
+
   const handleLent = () => {
-    const url = "/api/lent_info";
-    axios
-      .post(url)
+    // const url = "/api/lent_info";
+    // axios
+    //   .post(url)
+    //   .then((res: any) => {
+    //     dispatch(lentAll(res.data.lentInfo));
+    //     setisLent(res.data.isLent);
+    //   })
+    //   .catch((err: any) => {
+    //     console.error(err);
+    //   });
+    axiosLentInfo()
       .then((res: any) => {
         dispatch(lentAll(res.data.lentInfo));
         setisLent(res.data.isLent);
@@ -69,9 +87,16 @@ export default function Lent() {
   };
 
   const handleClick = () => {
-    const url = "/api/cabinet";
-    axios
-      .post(url)
+    // const url = "/api/cabinet";
+    // axios
+    //   .post(url)
+    //   .then((res: any) => {
+    //     dispatch(cabinetAll(res.data));
+    //   })
+    //   .catch((err: any) => {
+    //     console.error(err);
+    //   });
+    axiosCabinetInfo()
       .then((res: any) => {
         dispatch(cabinetAll(res.data));
       })
