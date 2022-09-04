@@ -105,6 +105,7 @@ jobs:
             git pull origin main
             echo "앱 빌드"
             npm install
+            npm run build:fe
             npm run build
             echo "env 파일 복사"
             cp 42cabi-main.env $HOME/git/42cabi-main/backend/.env
