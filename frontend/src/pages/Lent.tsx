@@ -42,9 +42,6 @@ export default function Lent() {
       handleClick();
     }
     handleLent();
-    console.log(`user: ${user}`);
-    console.log(`info: ${info}`);
-    console.log(`lent: ${lent}`);
     // handleEvent();
   }, []);
 
@@ -147,7 +144,6 @@ export default function Lent() {
   };
   const navContent = () => {
     let list: Array<JSX.Element> = [];
-    console.log(`carousel : ${info}`);
     if (!info || !info.floor || info.floor.length <= l_idx) {
       return list;
     }

@@ -28,10 +28,10 @@ export const cabinetSlice = createSlice({
   reducers: {
     // Use the PayloadAction type to declare the contents of `action.payload`
     cabinetAll: (state, action: PayloadAction<locationInfo>) => {
-      state = action.payload;
+      return action.payload;
     },
     cabinetInitialize: (state) => {
-      state = initialState;
+      return initialState;
     },
   }
 })

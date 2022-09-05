@@ -10,7 +10,7 @@ export default function Menu(props: any) {
   const handleClick = () => {
     axiosLogout()
       .then((res) => navigate("/"))
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
   };
   const cabinetPage = () => {
     if (props.url === "/return") {

@@ -22,10 +22,10 @@ export const lentSlice = createSlice({
   reducers: {
     // Use the PayloadAction type to declare the contents of `action.payload`
     lentAll: (state, action: PayloadAction<lentInfo[]>) => {
-      state = action.payload;
+      return action.payload;
     },
     lentInfoInitialize: (state) => {
-      state = initialState;
+      return initialState;
     },
   }
 })

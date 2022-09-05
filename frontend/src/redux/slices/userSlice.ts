@@ -28,10 +28,10 @@ export const userSlice = createSlice({
   reducers: {
     // Use the PayloadAction type to declare the contents of `action.payload`
     userAll: (state, action: PayloadAction<userInfo>) => {
-      state = action.payload;
+      return action.payload;
     },
     userInfoInitialize: (state) => {
-      state = initialState;
+      return initialState;
     },
   }
 })
