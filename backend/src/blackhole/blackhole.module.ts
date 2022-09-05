@@ -3,6 +3,7 @@ import { HttpModule } from '@nestjs/axios';
 import { BlackholeService } from './blackhole.service';
 import { IBlackholeRepository } from './repository/blackhole.repository';
 import { RawqueryBlackholeRepository } from './repository/rawquery.blackhole.repository';
+import { AuthModule } from 'src/auth/auth.module';
 
 const repo = {
   provide: IBlackholeRepository,
@@ -10,10 +11,11 @@ const repo = {
 };
 
 @Module({
-  imports: [HttpModule],
+  imports: [
+    AuthModule,
+    HttpModule,
+  ],
   providers: [BlackholeService, repo],
   // exports: [BlackholeService]
 })
-export class BlackholeModule {
-
-}
+export class BlackholeModule {}
