@@ -1,4 +1,5 @@
 import axios from "axios";
+import { axiosLent } from "../network/axios/axios.custom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ContentsModal from "./ContentsModal";
@@ -10,25 +11,38 @@ export default function LentModal(props: any) {
   const [state, setState] = useState<boolean>(false);
 
   const handleClick = () => {
-    const url = "/api/lent";
+    // const url = "/api/lent";
+    // axios
+    //   .post(url, { cabinet_id: props.target })
+    //   .then((res: any) => {
+    //     if (res.data.cabinet_id && res.data.cabinet_id === -2) {
+    //       alert("이미 대여중인 사물함입니다!");
+    //       return;
+    //     }
+    //     // FIXME: Before res.status === 200
+    //     if (res.status === 201) {
+    //       navigate("/return");
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //     alert("🚨 대여에 실패했습니다 🚨");
+    //   });
 
-    axios
-      .post(url, { cabinet_id: props.target })
-      .then((res: any) => {
-        if (res.data.cabinet_id && res.data.cabinet_id === -2) {
-          alert("이미 대여중인 사물함입니다!");
-          return;
-        }
-        // FIXME: Before res.status === 200
-        if (res.status === 201) {
-          navigate("/return");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
+      axiosLent(props.target)
+        .then((response) => {
+          if (response.data.cabinet_id && response.data.cabinet_id === -2) {
+            alert("이미 대여중인 사물함입니다!");
+          }
+          else {
+            navigate("/return");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
         alert("🚨 대여에 실패했습니다 🚨");
-      });
-
+        })
+        
       // 5월 이벤트 사용을 위해, event 테이블에 당첨자가 lent 했음을 알려주는 함수입니다.
       // handleEventLent();
   };

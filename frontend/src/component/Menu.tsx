@@ -1,19 +1,16 @@
 import axios from "axios";
+import { axiosLogout } from "../network/axios/axios.custom";
 import { useNavigate } from "react-router-dom";
 import MenualModal from "../modal/MenualModal";
 import "./menu.css";
 
 export default function Menu(props: any) {
   const navigate = useNavigate();
-  const url = "/auth/logout";
 
   const handleClick = () => {
-    axios
-      .post(url)
-      .then((res) => {
-        navigate("/");
-      })
-      .catch((err) => console.error(err));
+    axiosLogout()
+      .then((res) => navigate("/"))
+      .catch((error) => console.log(error));
   };
   const cabinetPage = () => {
     if (props.url === "/return") {

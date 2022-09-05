@@ -1,4 +1,5 @@
 import axios from "axios";
+import { axiosApiCheck, axiosReturnInfo } from "../network/axios/axios.custom";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import Menu from "../component/Menu";
@@ -38,8 +39,16 @@ export default function Return() {
   }, [content, path, extension]);
 
   const apiCheck = async () => {
-    await axios
-      .post("/api/check")
+    // await axios
+    //   .post("/api/check")
+    //   .then((res: any) => {
+    //     setUser(res.data.user);
+    //   })
+    //   .catch((err: any) => {
+    //     console.error(err);
+    //     navigate("/");
+    //   });
+    axiosApiCheck()
       .then((res: any) => {
         setUser(res.data.user);
       })
@@ -50,43 +59,76 @@ export default function Return() {
   };
 
   const callReturn = async () => {
-    await axios
-      .post("/api/return_info")
-      .then((res: any) => {
-        // 특정 사용자가 현재 대여하고 있는 사물함의 정보
-        // FIXME: Before res.status === 200
-        if (res.status === 201) {
-          setLentCabinet(res.data);
-          let extention = "";
-          if (res.data) {
-            const date:Date = new Date(res.data.expire_time);
-            const nowDate:Date = new Date();
-            nowDate.setDate(nowDate.getDate() + 7);
-            date.setDate(date.getDate() + 1);
-            date.setHours(0, 0, 0);
-            if ((date > nowDate) || (res.data.extension > 0)){
-              extention = "disabled";
-            }
-            else if (res.data.lent_id === - 1) {
-              extention = "hidden";
-            }
-          }
-          setExtension(extention);
-          //console.log(res.data);
-          if (res.data){
-            const date:Date = new Date(res.data.expire_time);
-            date.setDate(date.getDate() + 1);
-            date.setHours(0, 0, 0);
-            //console.log(date);
-            setisExpired(res.data && date < new Date());
-          } else {
-            setisExpired(false);
-          }
+    axiosReturnInfo()
+    .then((res: any) => {
+      // 특정 사용자가 현재 대여하고 있는 사물함의 정보
+      setLentCabinet(res.data);
+      let extention = "";
+      if (res.data) {
+        const date:Date = new Date(res.data.expire_time);
+        const nowDate:Date = new Date();
+        nowDate.setDate(nowDate.getDate() + 7);
+        date.setDate(date.getDate() + 1);
+        date.setHours(0, 0, 0);
+        if ((date > nowDate) || (res.data.extension > 0)){
+          extention = "disabled";
         }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+        else if (res.data.lent_id === - 1) {
+          extention = "hidden";
+        }
+      }
+      setExtension(extention);
+      //console.log(res.data);
+      if (res.data){
+        const date:Date = new Date(res.data.expire_time);
+        date.setDate(date.getDate() + 1);
+        date.setHours(0, 0, 0);
+        //console.log(date);
+        setisExpired(res.data && date < new Date());
+      } else {
+        setisExpired(false);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+    // await axios
+    //   .post("/api/return_info")
+    //   .then((res: any) => {
+    //     // 특정 사용자가 현재 대여하고 있는 사물함의 정보
+    //     // FIXME: Before res.status === 200
+    //     if (res.status === 201) {
+    //       setLentCabinet(res.data);
+    //       let extention = "";
+    //       if (res.data) {
+    //         const date:Date = new Date(res.data.expire_time);
+    //         const nowDate:Date = new Date();
+    //         nowDate.setDate(nowDate.getDate() + 7);
+    //         date.setDate(date.getDate() + 1);
+    //         date.setHours(0, 0, 0);
+    //         if ((date > nowDate) || (res.data.extension > 0)){
+    //           extention = "disabled";
+    //         }
+    //         else if (res.data.lent_id === - 1) {
+    //           extention = "hidden";
+    //         }
+    //       }
+    //       setExtension(extention);
+    //       //console.log(res.data);
+    //       if (res.data){
+    //         const date:Date = new Date(res.data.expire_time);
+    //         date.setDate(date.getDate() + 1);
+    //         date.setHours(0, 0, 0);
+    //         //console.log(date);
+    //         setisExpired(res.data && date < new Date());
+    //       } else {
+    //         setisExpired(false);
+    //       }
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   };
 
   const handleHome = () => {
