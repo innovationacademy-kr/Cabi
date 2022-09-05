@@ -124,11 +124,11 @@ export class BlackholeService {
   }
 
   /**
-   * 매일 오전 00시에 DB에 존재하는 유저들에 대해 블랙홀에 빠졌는지를 판단한다.
+   * 매일 오전 02시에 DB에 존재하는 유저들에 대해 블랙홀에 빠졌는지를 판단한다.
    * @Param void
    * @return void
    */
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_10_SECONDS) // FIXME: 시간 간격 오전 2시로 수정해야 합니다.
   async validateBlackholedUsers(): Promise<void> {
     const users: string[] = await this.authService.getAllUser();
 
