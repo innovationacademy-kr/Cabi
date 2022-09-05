@@ -10,13 +10,14 @@ import LentModal from "../modal/LentModal";
 import ContentsModal from "../modal/ContentsModal";
 // import EventModal from "../modal/EventModal";
 // import { eventInfo } from "../event/EventType";
-import { useDispatch, useSelector } from "react-redux";
-import { cabinetAll } from "../status/cabinetReducer";
-import { lentAll } from "../status/lentReducer";
+// import { useDispatch, useSelector } from "react-redux";
+import { cabinetAll } from "../redux/slices/cabinetSlice";
+import { lentAll } from "../redux/slices/lentSlice";
+import { userAll } from "../redux/slices/userSlice";
 import { RootState } from "../status";
-import { userAll } from "../status/userReducer";
 import "./lent.css";
 import "./main.css";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
 
 export default function Lent() {
   const navigate = useNavigate();
@@ -25,11 +26,15 @@ export default function Lent() {
   const [target, setTarget] = useState<number>(-1);
   const [cabiNum, setCabiNum] = useState<number>(-1);
 
-  const info = useSelector((state :RootState) => state.cabinetReducer);
-  const lent = useSelector((state :RootState) => state.lentReducer);
-  const user = useSelector((state :RootState) => state.userReducer);
+  // const info = useSelector((state :RootState) => state.cabinetReducer);
+  // const lent = useSelector((state :RootState) => state.lentReducer);
+  //const user = useSelector((state :RootState) => state.userReducer);
 
-  const dispatch = useDispatch();
+  const info = useAppSelector((state) => state.cabinet);
+  const lent = useAppSelector((state) => state.lent);
+  const user = useAppSelector((state) => state.user);
+  
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     apiCheck();
@@ -37,6 +42,9 @@ export default function Lent() {
       handleClick();
     }
     handleLent();
+    console.log(`user: ${user}`);
+    console.log(`info: ${info}`);
+    console.log(`lent: ${lent}`);
     // handleEvent();
   }, []);
 
@@ -139,7 +147,7 @@ export default function Lent() {
   };
   const navContent = () => {
     let list: Array<JSX.Element> = [];
-
+    console.log(`carousel : ${info}`);
     if (!info || !info.floor || info.floor.length <= l_idx) {
       return list;
     }
