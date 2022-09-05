@@ -14,4 +14,12 @@ export class AuthService {
       throw new InternalServerErrorException();
     }
   }
+
+  async getAllUser(): Promise<string[]> {
+    try {
+      return this.authRepository.getAllUser();
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
 }

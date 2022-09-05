@@ -6,4 +6,5 @@ export abstract class IAuthRepository {
   abstract addUser(user: UserSessionDto): Promise<void>;
   abstract updateUser(user: UserSessionDto): Promise<void>;
   abstract getUser(user: UserSessionDto): Promise<lentCabinetInfoDto>;
+  abstract getAllUser(): Promise<string[]>;
 }
