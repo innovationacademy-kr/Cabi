@@ -22,11 +22,11 @@ import { BlackholeModule } from './blackhole/blackhole.module';
     AuthModule,
     MailModule,
     EventModule,
+    BlackholeModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../', 'frontend/dist/'),
       // serveRoot: '../img'
     }),
-    BlackholeModule,
   ],
   controllers: [],
   providers: [SessionMiddleware],
