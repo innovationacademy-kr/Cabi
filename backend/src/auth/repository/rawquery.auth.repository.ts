@@ -124,4 +124,24 @@ export class RawqueryAuthRepository implements IAuthRepository {
     if (connection) connection.end();
     return lentCabinet;
   }
+
+  async getAllUser(): Promise<string[]> {
+    const content = `SELECT * FROM user;`;
+
+    const userList: string[] = [];
+    const connection = await this.pool.getConnection();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        res.forEach((user: any) => {
+          userList.push(user.intra_id);
+        });
+      })
+      .catch((err: any) => {
+        console.error(err);
+        throw err;
+      });
+    if (connection) connection.end();
+    return userList;
+  }
 }
