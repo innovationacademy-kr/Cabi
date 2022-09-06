@@ -136,7 +136,7 @@ export class BlackholeService {
    * @Param void
    * @return void
    */
-  // @Cron(CronExpression.EVERY_10_SECONDS) // FIXME: 시간 간격 오전 2시로 수정해야 합니다.
+  @Cron(CronExpression.EVERY_DAY_AT_2AM)
   async validateBlackholedUsers(): Promise<void> {
     const users: UserDto[] = await this.authService.getAllUser();
 
