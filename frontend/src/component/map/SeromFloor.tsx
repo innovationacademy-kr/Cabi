@@ -18,7 +18,7 @@ export function SeromFloor(props: SeromFloorProps) {
     // const idx = props.info?.section[props.l_idx][props.f_idx].findIndex(
     //   (section: string) => section === name
     // );
-    const idx: number | undefined = props.info?.section?.[props.l_idx][props.f_idx].findIndex(
+    const idx: number | undefined = props.info.section?.[props.l_idx][props.f_idx].findIndex(
       (section: string) => section === name
     );
     if (idx === -1 || idx === undefined) {
@@ -33,7 +33,7 @@ export function SeromFloor(props: SeromFloorProps) {
     }
   };
   const countCabinet = (name: string): number | undefined => {
-    return props.info?.cabinet?.[props.l_idx][props.f_idx][findIdx(name) - 1]
+    return props.info.cabinet?.[props.l_idx][props.f_idx][findIdx(name) - 1]
       .length;
   };
   const countLentCabinet = (name: string): number => {
