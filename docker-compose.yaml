@@ -1,0 +1,9 @@
+version: '3'
+services:
+  gateway:
+    container_name: nginx_gateway
+    image: nginx:latest
+    ports:
+      - '80:80'
+    volumes:
+      - ./dev/:/etc/nginx/conf.d/
