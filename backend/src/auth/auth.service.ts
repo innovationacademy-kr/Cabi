@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { lentCabinetInfoDto } from 'src/cabinet/dto/cabinet-lent-info.dto';
+import { UserDto } from 'src/user/dto/user.dto';
 import { UserSessionDto } from './dto/user.session.dto';
 import { IAuthRepository } from './repository/auth.repository';
 
@@ -15,7 +16,7 @@ export class AuthService {
     }
   }
 
-  async getAllUser(): Promise<string[]> {
+  async getAllUser(): Promise<UserDto[]> {
     try {
       return this.authRepository.getAllUser();
     } catch (e) {

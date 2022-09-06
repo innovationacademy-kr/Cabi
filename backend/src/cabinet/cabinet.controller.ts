@@ -16,6 +16,7 @@ import { User } from 'src/auth/user.decorator';
 import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
+import { UserDto } from 'src/user/dto/user.dto';
 
 @ApiTags('Cabinet')
 @Controller('api')
@@ -96,8 +97,12 @@ export class CabinetController {
   })
   @Post('return')
   @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async postReturn(@User() user: UserSessionDto): Promise<void> {
-    return this.cabinetService.createLentLog(user.user_id, user.intra_id);
+  async postReturn(@User() userSession: UserSessionDto): Promise<number> {
+    let user: UserDto = {
+      user_id: userSession.user_id,
+      intra_id: userSession.intra_id,
+    }
+    return await this.cabinetService.createLentLog(user);
   }
 
   /**

@@ -12,6 +12,8 @@ import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { IBlackholeRepository } from './repository/blackhole.repository';
 import { AuthService } from 'src/auth/auth.service';
+import { CabinetService } from 'src/cabinet/cabinet.service';
+import { UserDto } from 'src/user/dto/user.dto';
 
 @Injectable()
 export class BlackholeService {
@@ -26,6 +28,7 @@ export class BlackholeService {
     private readonly httpService: HttpService,
     @Inject(ConfigService) private configService: ConfigService,
     private readonly authService: AuthService,
+    private readonly cabinetService: CabinetService,
   ) {
     this.logger = new Logger(BlackholeService.name);
     this.client_id = this.configService.get<string>('ftAuth.clientid');
@@ -46,12 +49,17 @@ export class BlackholeService {
    * @Param intra_id: string
    * @return void
    */
-  async deleteBlackholedUser(intra_id: string): Promise<void> {
+  async deleteBlackholedUser(user: UserDto): Promise<void> {
     try {
-      this.logger.warn(`delete ${intra_id}`);
-      this.blackholeRepository.deleteBlackholedUser(intra_id);
-    } catch (err) {
-      this.logger.error(err);
+    this.logger.warn(`Return ${user.intra_id}'s cabinet`);
+      const myLent = await this.cabinetService.getUserLentInfo(user);
+        if (myLent.lent_id !== -1) {
+          const cabinet_id = await this.cabinetService.createLentLog(user);
+          await this.cabinetService.updateActivationToBan(cabinet_id);
+        }
+        this.blackholeRepository.deleteBlackholedUser(user.user_id);
+      } catch (err) {
+        this.logger.error(err);
     }
   }
 
@@ -89,8 +97,8 @@ export class BlackholeService {
    * @Param intra_id: string
    * @return void
    */
-  async validateBlackholedUser(intra_id: string): Promise<void> {
-    const url = `https://api.intra.42.fr/v2/users/${intra_id}`;
+  async validateBlackholedUser(user: UserDto): Promise<void> {
+    const url = `https://api.intra.42.fr/v2/users/${user.intra_id}`;
     const headersRequest = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.token}`,
@@ -102,20 +110,20 @@ export class BlackholeService {
         .pipe(map((res) => res.data)),
       )
       .then((data) => {
-        this.logger.log(`id: ${data.id}, intra_id: ${intra_id}`);
+        this.logger.log(`id: ${user.user_id}, intra_id: ${user.intra_id}`);
         const LearnerBlackhole: string = data.cursus_users[1].blackholed_at;
         const today = new Date();
         if (LearnerBlackhole) {
           this.logger.log(`Blackhole_day: ${new Date(LearnerBlackhole)}`);
           this.logger.log(`Today: ${today}`);
           if (new Date(LearnerBlackhole) >= today) {
-            this.logger.log(`${intra_id} not yet fall into a blackhole`);
+            this.logger.log(`${user.intra_id} not yet fall into a blackhole`);
           } else {
-            this.logger.log(`${intra_id} already fell into a blackhole`);
-            this.deleteBlackholedUser(intra_id);
+            this.logger.log(`${user.intra_id} already fell into a blackhole`);
+            this.deleteBlackholedUser(user);
           }
         } else {
-          this.logger.log(`${intra_id} is Member, doesn't have blackhole date`);
+          this.logger.log(`${user.intra_id} is Member, doesn't have blackhole date`);
         }
       })
       .catch((err) => {
@@ -128,9 +136,9 @@ export class BlackholeService {
    * @Param void
    * @return void
    */
-  @Cron(CronExpression.EVERY_10_SECONDS) // FIXME: 시간 간격 오전 2시로 수정해야 합니다.
+  // @Cron(CronExpression.EVERY_10_SECONDS) // FIXME: 시간 간격 오전 2시로 수정해야 합니다.
   async validateBlackholedUsers(): Promise<void> {
-    const users: string[] = await this.authService.getAllUser();
+    const users: UserDto[] = await this.authService.getAllUser();
 
     await this.postOauthToken(0)
     .catch((err) => {
@@ -138,15 +146,15 @@ export class BlackholeService {
     });
 
     // intra API 요청 시간 간격에 제한이 있어 비동기로 처리 불가하다.
-    for (const intra_id of users) {
-      await this.validateBlackholedUser(intra_id)
+    for (const user of users) {
+      await this.validateBlackholedUser(user)
       .catch((err) => {
         if (err.status === 401 || err.status === 429) { // 토큰이 만료되었거나 유효하지 않아 새로 발급한다.
           this.logger.warn('Token is expired or not valid. Reissuing token...');
           this.postOauthToken(1);
         } else if (err.status === 404) { // 계정이 만료되어 intra에서는 삭제됐지만 cabi db에는 존재하는 유저를 삭제한다.
-          this.logger.warn(`${intra_id} is already expired in 42 intra`);
-          this.deleteBlackholedUser(intra_id);
+          this.logger.warn(`${user.intra_id} is already expired in 42 intra`);
+          this.deleteBlackholedUser(user);
         } else {
           throw new HttpException( // 기타 오류
             'validateBlackholedUsers',

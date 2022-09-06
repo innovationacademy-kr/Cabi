@@ -5,5 +5,5 @@ export abstract class IBlackholeRepository {
    * @Param intra_id: string
    * @return void
    */
-  abstract deleteBlackholedUser(intra_id: string): Promise<void>;
+  abstract deleteBlackholedUser(user_id: number): Promise<void>;
 }

@@ -17,7 +17,7 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
     });
   }
 
-  async deleteBlackholedUser(intra_id: string): Promise<void> {
+  async deleteBlackholedUser(user_id: number): Promise<void> {
     const connection = await this.pool.getConnection();
     const content = `
     ALTER TABLE lent DROP FOREIGN KEY lent_user_id;
@@ -33,7 +33,7 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
       throw new Error(`deleteBlackholedUser Error - ${err}`);
     });
     const content3 = `
-    DELETE FROM user WHERE intra_id = '${intra_id}';
+    DELETE FROM user WHERE user_id = '${user_id}';
     `;
     await connection.query(content3).catch((err: any) => {
       throw new Error(`deleteBlackholedUser Error - ${err}`);
