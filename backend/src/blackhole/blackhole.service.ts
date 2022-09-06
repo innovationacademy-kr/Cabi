@@ -51,12 +51,13 @@ export class BlackholeService {
    */
   async deleteBlackholedUser(user: UserDto): Promise<void> {
     try {
-    this.logger.warn(`Return ${user.intra_id}'s cabinet`);
       const myLent = await this.cabinetService.getUserLentInfo(user);
         if (myLent.lent_id !== -1) {
+          this.logger.warn(`Return ${user.intra_id}'s cabinet`);
           const cabinet_id = await this.cabinetService.createLentLog(user);
           await this.cabinetService.updateActivationToBan(cabinet_id);
         }
+        this.logger.warn(`Delete User ${user.intra_id}`);
         this.blackholeRepository.deleteBlackholedUser(user.user_id);
       } catch (err) {
         this.logger.error(err);
