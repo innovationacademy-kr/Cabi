@@ -82,7 +82,7 @@ export class CabinetController {
   ): Promise<lentCabinetInfoDto> {
     // 특정 사용자가 현재 대여하고 있는 사물함의 정보
     this.logger.log('postReturnInfo');
-    return await this.cabinetService.getUser(user);
+    return await this.cabinetService.getUserLentInfo(user);
   }
 
   /**
