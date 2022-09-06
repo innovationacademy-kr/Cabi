@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 
 // Define a type for the slice state
-interface lentInfo {
+export interface lentInfo {
   lent_id: number;
   lent_cabinet_id: number;
   lent_user_id: number;

@@ -1,11 +1,25 @@
 import React from "react";
 import CabinetBox from "./CabinetBox";
-import { cabinetInfo } from "../types/cabinetTypes";
 import { SeromSecondFloor } from "./map/SeromSecondFloor";
 import { SeromFloor } from "./map/SeromFloor";
 import "./carousel.css";
+import { cabinetInfo, locationInfo } from "../redux/slices/cabinetSlice";
+import { lentInfo } from "../redux/slices/lentSlice";
 
-export default function Carousel(props: any) {
+interface CarouselProps {
+  setTarget: React.Dispatch<React.SetStateAction<number>>;
+  setCabiNum: React.Dispatch<React.SetStateAction<number>>;
+  info: locationInfo;
+  user: string;
+  l_idx: number;
+  outer_i: number;
+  outer_lent: lentInfo[];
+  floor_name: number;
+  isLent: number;
+  lent: lentInfo[];
+}
+
+export default function Carousel(props: CarouselProps) {
   const cabinetBlock = (f_idx: number, s_idx: number) => {
     let list: Array<JSX.Element> = [];
     if (!props.info || !props.info.cabinet) return [];
