@@ -12,6 +12,14 @@ export interface lentInfo {
   intra_id?: string;
 };
 
+export interface lentCabinetInfo extends lentInfo {
+  cabinet_num: number;
+  location: string;
+  floor: number;
+  section: string;
+  activation: boolean;
+};
+
 // Define the initial state using that type
 const initialState = [] as lentInfo[];
 
