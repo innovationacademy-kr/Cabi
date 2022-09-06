@@ -27,5 +27,6 @@ const repo = {
   ],
   providers: [FtStrategy, JwtStrategy, AuthService, repo],
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}

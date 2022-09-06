@@ -9,6 +9,8 @@ import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { MailModule } from './email/email.module';
 import { EventModule } from './event/event.module';
+import { BlackholeModule } from './blackhole/blackhole.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -21,10 +23,12 @@ import { EventModule } from './event/event.module';
     AuthModule,
     MailModule,
     EventModule,
+    BlackholeModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../', 'frontend/dist/'),
       // serveRoot: '../img'
     }),
+    UserModule,
   ],
   controllers: [],
   providers: [SessionMiddleware],
