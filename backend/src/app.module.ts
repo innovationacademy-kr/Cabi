@@ -6,7 +6,6 @@ import { BanModule } from './ban/ban.module';
 import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 import { join } from 'path';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { MailModule } from './email/email.module';
 import { EventModule } from './event/event.module';
 import { BlackholeModule } from './blackhole/blackhole.module';
@@ -24,10 +23,6 @@ import { UserModule } from './user/user.module';
     MailModule,
     EventModule,
     BlackholeModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../', 'frontend/dist/'),
-      // serveRoot: '../img'
-    }),
     UserModule,
   ],
   controllers: [],
