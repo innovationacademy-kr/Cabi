@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import MenualModal from "../modal/MenualModal";
 import "./menu.css";
 
-export default function Menu(props: any) {
+interface MenuProps {
+  url: string;
+}
+
+export default function Menu(props: MenuProps) {
   const navigate = useNavigate();
 
   const handleClick = () => {

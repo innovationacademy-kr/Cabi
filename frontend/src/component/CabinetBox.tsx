@@ -1,7 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import "./cabinetBox.css";
 
-export default function CabinetBox(props: any) {
+interface CabinetBoxProps {
+  className: string;
+  setTarget: React.Dispatch<React.SetStateAction<number>>;
+  setCabiNum: React.Dispatch<React.SetStateAction<number>>;
+  user: string;
+  cabinet_id: number;
+  cabinet_num: number;
+  intra_id: string | undefined;
+  isLent: number;
+  expire_time: string | undefined;
+}
+
+export default function CabinetBox(props: CabinetBoxProps) {
   const navigate = useNavigate();
   let isExpired: boolean = false;
   let toggleName: string = props.intra_id !== "" ? "" : "modal";

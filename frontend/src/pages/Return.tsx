@@ -8,8 +8,12 @@ import PasswordModal from "../modal/PasswordModal";
 import ContentsModal from "../modal/ContentsModal";
 import ExtensionModal from "../modal/ExtensionModal";
 // import ReturnEventModal from "../modal/ReturnEventModal";
-import { userInfo } from "../types/userTypes";
-import { lentCabinetInfo } from "../types/cabinetTypes";
+// import { userInfo } from "../types/userTypes";
+// import { lentCabinetInfo } from "../types/cabinetTypes";
+
+import { lentCabinetInfo } from "../redux/slices/lentSlice";
+import { userInfo } from "../redux/slices/userSlice";
+
 import "./main.css";
 import "./return.css";
 

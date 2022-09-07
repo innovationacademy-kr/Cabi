@@ -103,6 +103,8 @@ export default function Lent() {
     //   });
     axiosCabinetInfo()
       .then((res: any) => {
+        // TODO: cabinetAll 액션 동작하지 않는 경우 예외처리
+        // 프론트와 백엔드 서버가 각기 다른 경우 빈 객체로 받아올 수 있어서 예외처리 필요
         dispatch(cabinetAll(res.data));
       })
       .catch((err: any) => {

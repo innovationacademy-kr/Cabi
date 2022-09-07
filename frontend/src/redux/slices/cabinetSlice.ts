@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../store'
 
-interface cabinetInfo {
+export interface cabinetInfo {
 	cabinet_id: number;
 	cabinet_num: number;
 	location: string;
@@ -11,11 +11,11 @@ interface cabinetInfo {
 };
 
 // Define a type for the slice state
-interface locationInfo {
-  location?: Array<string>;
-  floor?: Array<Array<number>>;
-  section?: Array<Array<Array<string>>>;
-  cabinet?: Array<Array<Array<Array<cabinetInfo>>>>;
+export interface locationInfo {
+  location: Array<string>;
+  floor: Array<Array<number>>;
+  section: Array<Array<Array<string>>>;
+  cabinet: Array<Array<Array<Array<cabinetInfo>>>>;
 };
 
 // Define the initial state using that type
