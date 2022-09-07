@@ -9,6 +9,9 @@
     "start": "npm run build"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.4",
     "@reduxjs/toolkit": "^1.8.2",
     "axios": "^0.24.0",
     "bootstrap-icons": "^1.7.2",

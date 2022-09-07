@@ -33,7 +33,7 @@ export default function Location(props: LocationProps) {
       >
         {location?.map((loc: string, idx: number) => {
           return (
-            <a className="dropdown-item" onClick={() => handleInfo(idx)}>
+            <a className="dropdown-item" onClick={() => handleInfo(idx)} key={idx}>
               {loc}
             </a>
           );
