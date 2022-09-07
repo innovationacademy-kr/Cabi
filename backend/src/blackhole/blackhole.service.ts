@@ -57,8 +57,9 @@ export class BlackholeService {
           const cabinet_id = await this.cabinetService.createLentLog(user);
           await this.cabinetService.updateActivationToBan(cabinet_id);
         }
-        this.logger.warn(`Delete User ${user.intra_id}`);
-        this.blackholeRepository.deleteBlackholedUser(user.user_id);
+        // TODO: User를 삭제하는 대신, User Table에 is_blackholed 필드를 추가하고 해당 값을 true로 바꾸는 식으로 변경해야 함.
+        // this.logger.warn(`Delete User ${user.intra_id}`);
+        // this.blackholeRepository.deleteBlackholedUser(user.user_id);
       } catch (err) {
         this.logger.error(err);
     }
