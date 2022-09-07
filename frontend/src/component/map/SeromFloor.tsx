@@ -18,10 +18,10 @@ export function SeromFloor(props: SeromFloorProps) {
     // const idx = props.info?.section[props.l_idx][props.f_idx].findIndex(
     //   (section: string) => section === name
     // );
-    const idx: number | undefined = props.info.section?.[props.l_idx][props.f_idx].findIndex(
+    const idx: number = props.info.section[props.l_idx][props.f_idx].findIndex(
       (section: string) => section === name
     );
-    if (idx === -1 || idx === undefined) {
+    if (idx === -1) {
       // FIXME Before (idx === -1)
       // info의 타입 locationInfo 내부 프로퍼티들이 전부 선택적 프로퍼티임
       // props.info?.section 에 옵셔널 체이닝으로 section?. 으로 수정
@@ -32,15 +32,15 @@ export function SeromFloor(props: SeromFloorProps) {
       return idx + 1;
     }
   };
-  const countCabinet = (name: string): number | undefined => {
-    return props.info.cabinet?.[props.l_idx][props.f_idx][findIdx(name) - 1]
+  const countCabinet = (name: string): number => {
+    return props.info.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1]
       .length;
   };
   const countLentCabinet = (name: string): number => {
     let count = 0;
     props.lent?.forEach((cabi: lentInfo) => {
       if (props.info) {
-        props.info.cabinet?.[props.l_idx][props.f_idx][findIdx(name) - 1].forEach(
+        props.info.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1].forEach(
           (cabinet: cabinetInfo) => {
             if (cabinet.cabinet_id === cabi.lent_cabinet_id) {
               count++;

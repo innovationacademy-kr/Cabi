@@ -25,26 +25,46 @@ export default function Carousel(props: CarouselProps) {
     if (!props.info || !props.info.cabinet) return [];
     const cab: Array<cabinetInfo> =
       props.info.cabinet[props.l_idx][f_idx][s_idx];
-    for (let i = 0; i < cab.length; i++) {
-      var id = props.outer_lent.findIndex(
-        (l: any) => l.lent_cabinet_id === cab[i].cabinet_id
-      );
-      list.push(
-        <CabinetBox
-          className="d-block w-100"
-          setTarget={props.setTarget}
-          setCabiNum={props.setCabiNum}
-          key={`cab_box_${cab[i].cabinet_id}`}
-          user={props.user}
-          cabinet_id={cab[i].cabinet_id}
-          cabinet_num={cab[i].cabinet_num}
-          intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}
-          isLent={props.isLent}
-          expire_time={props.outer_lent[id]?.expire_time}
-        ></CabinetBox>
-      );
-    }
-    return list;
+      for (let i = 0; i < cab.length; i++) {
+        var id = props.outer_lent.findIndex(
+          (l: any) => l.lent_cabinet_id === cab[i].cabinet_id
+          );
+          list.push(
+            <CabinetBox
+            className="d-block w-100"
+            setTarget={props.setTarget}
+            setCabiNum={props.setCabiNum}
+            key={`cab_box_${cab[i].cabinet_id}`}
+            user={props.user}
+            cabinet_id={cab[i].cabinet_id}
+            cabinet_num={cab[i].cabinet_num}
+            intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}
+            isLent={props.isLent}
+            expire_time={props.outer_lent[id]?.expire_time}
+            ></CabinetBox>
+            );
+          }
+          return list;
+    // const newCab: Array<JSX.Element> = cab.map((cabEl, index) => {
+    //   let id = props.outer_lent.findIndex(
+    //     (l: any) => l.lent_cabinet_id === cabEl.cabinet_id
+    //   );
+    //   return (
+    //     <CabinetBox
+    //       className="d-block w-100"
+    //       setTarget={props.setTarget}
+    //       setCabiNum={props.setCabiNum}
+    //       key={`cab_box_${cabEl.cabinet_id}`}
+    //       user={props.user}
+    //       cabinet_id={cabEl.cabinet_id}
+    //       cabinet_num={cabEl.cabinet_num}
+    //       intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}
+    //       isLent={props.isLent}
+    //       expire_time={props.outer_lent[id]?.expire_time}
+    //     />
+    //   );
+    // })
+    // return newCab;
   };
   const mapButton = () => {
     return (

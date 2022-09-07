@@ -12,24 +12,24 @@ interface SeromSecondFloorProps {
 
 export function SeromSecondFloor(props: SeromSecondFloorProps) {
   const findIdx = (name: string) => {
-    const idx = props.info.section?.[props.l_idx][props.f_idx].findIndex(
+    const idx = props.info.section[props.l_idx][props.f_idx].findIndex(
       (section: string) => section === name
     );
-    if (idx === -1 || idx === undefined) {
+    if (idx === -1) {
       return 1;
     } else {
       return idx + 1;
     }
   };
-  const countCabinet = (name: string): number | undefined => {
-    return props.info.cabinet?.[props.l_idx][props.f_idx][findIdx(name) - 1]
+  const countCabinet = (name: string): number => {
+    return props.info.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1]
       .length;
   };
   const countLentCabinet = (name: string): number => {
     let count = 0;
     props.lent?.forEach((cabi: lentInfo) => {
       if (props.info) {
-        props.info.cabinet?.[props.l_idx][props.f_idx][findIdx(name) - 1].forEach(
+        props.info.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1].forEach(
           (cabinet: cabinetInfo) => {
             if (cabinet.cabinet_id === cabi.lent_cabinet_id) {
               count++;

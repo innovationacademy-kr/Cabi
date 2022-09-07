@@ -12,10 +12,10 @@ export interface cabinetInfo {
 
 // Define a type for the slice state
 export interface locationInfo {
-  location?: Array<string>;
-  floor?: Array<Array<number>>;
-  section?: Array<Array<Array<string>>>;
-  cabinet?: Array<Array<Array<Array<cabinetInfo>>>>;
+  location: Array<string>;
+  floor: Array<Array<number>>;
+  section: Array<Array<Array<string>>>;
+  cabinet: Array<Array<Array<Array<cabinetInfo>>>>;
 };
 
 // Define the initial state using that type
