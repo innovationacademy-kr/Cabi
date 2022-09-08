@@ -137,7 +137,7 @@ export class RawqueryAuthRepository implements IAuthRepository {
         res.forEach((user: any) => {
           userList.push({
             user_id: user.user_id,
-            intra_id: user.intra_id
+            intra_id: user.intra_id,
           });
         });
       })

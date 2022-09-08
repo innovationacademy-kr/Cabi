@@ -52,18 +52,18 @@ export class BlackholeService {
   async deleteBlackholedUser(user: UserDto): Promise<void> {
     try {
       const myLent = await this.cabinetService.getUserLentInfo(user);
-        if (myLent.lent_id !== -1) {
-          this.logger.warn(`Return ${user.intra_id}'s cabinet`);
-          const cabinet_id = await this.cabinetService.createLentLog(user);
-          await this.cabinetService.updateActivationToBan(cabinet_id);
-        }
-        // FIXME:
-        // 인트라에서 유저의 계정이 만료되면 해당 유저가 가지고 있던 user_id와 intra_id가 다른 유저에게 재할당될 수 있습니다.
-        // 따라서 기존 값을 유지하기보다는 삭제 처리를 해야 추후에 새로 값을 할당 받은 유저가 서비스를 이용할 수 있을 것 같네요.
-        this.logger.warn(`Delete User ${user.intra_id}`);
-        this.blackholeRepository.deleteBlackholedUser(user.user_id);
-      } catch (err) {
-        this.logger.error(err);
+      if (myLent.lent_id !== -1) {
+        this.logger.warn(`Return ${user.intra_id}'s cabinet`);
+        const cabinet_id = await this.cabinetService.createLentLog(user);
+        await this.cabinetService.updateActivationToBan(cabinet_id);
+      }
+      // FIXME:
+      // 인트라에서 유저의 계정이 만료되면 해당 유저가 가지고 있던 user_id와 intra_id가 다른 유저에게 재할당될 수 있습니다.
+      // 따라서 기존 값을 유지하기보다는 삭제 처리를 해야 추후에 새로 값을 할당 받은 유저가 서비스를 이용할 수 있을 것 같네요.
+      this.logger.warn(`Delete User ${user.intra_id}`);
+      this.blackholeRepository.deleteBlackholedUser(user.user_id);
+    } catch (err) {
+      this.logger.error(err);
     }
   }
 
@@ -80,15 +80,14 @@ export class BlackholeService {
         .post(url, null, this.postConfig)
         .pipe(map((res) => res.data)),
     )
-    .then((data) => {
-      this.token = data.access_token;
-      this.logger.log(`Issued new token ${this.token}`);
-      if (flag === 1)
-        this.validateBlackholedUsers();
-    })
-    .catch((err) => {
-      throw new HttpException('postOauthToken', err.response.status);
-    });
+      .then((data) => {
+        this.token = data.access_token;
+        this.logger.log(`Issued new token ${this.token}`);
+        if (flag === 1) this.validateBlackholedUsers();
+      })
+      .catch((err) => {
+        throw new HttpException('postOauthToken', err.response.status);
+      });
   }
 
   /**
@@ -114,17 +113,19 @@ export class BlackholeService {
       await this.httpService
         .get(url, { headers: headersRequest })
         .pipe(map((res) => res.data)),
-      )
+    )
       .then((data) => {
         this.logger.log(`id: ${user.user_id}, intra_id: ${user.intra_id}`);
-        if (data['staff?'] === true) { // 스태프는 삭제하지 않음.
+        if (data['staff?'] === true) {
+          // 스태프는 삭제하지 않음.
           this.logger.warn(`${user.intra_id} is staff`);
-          return ;
+          return;
         }
-        if (!data.cursus_users[1]) { // 카뎃이 아닌 경우는 강제 반납 및 삭제 처리.
+        if (!data.cursus_users[1]) {
+          // 카뎃이 아닌 경우는 강제 반납 및 삭제 처리.
           this.logger.warn(`${user.intra_id} is not Cadet`);
           this.deleteBlackholedUser(user);
-          return ;
+          return;
         }
         const LearnerBlackhole: string = data.cursus_users[1].blackholed_at;
         const today = new Date();
@@ -138,12 +139,14 @@ export class BlackholeService {
             this.deleteBlackholedUser(user);
           }
         } else {
-          this.logger.log(`${user.intra_id} is Member, doesn't have blackhole date`);
+          this.logger.log(
+            `${user.intra_id} is Member, doesn't have blackhole date`,
+          );
         }
       })
       .catch((err) => {
         throw new HttpException(err.response.data, err.response.status);
-      })
+      });
   }
 
   /**
@@ -154,22 +157,26 @@ export class BlackholeService {
   @Cron(CronExpression.EVERY_DAY_AT_2AM)
   async validateBlackholedUsers(): Promise<void> {
     const users: UserDto[] = await this.authService.getAllUser();
-    await this.postOauthToken(0)
-    .catch((err) => {
+    await this.postOauthToken(0).catch((err) => {
       this.logger.error(err);
     });
 
     // intra API 요청 시간 간격에 제한이 있어 비동기로 처리 불가하다.
     for (const user of users) {
-      await this.validateBlackholedUser(user)
-      .catch((err) => {
-        HttpStatus.TOO_MANY_REQUESTS
-        if (err.status === HttpStatus.UNAUTHORIZED
-          || err.status === HttpStatus.TOO_MANY_REQUESTS) { // 토큰이 만료되었거나 유효하지 않아 새로 발급한다.
+      await this.validateBlackholedUser(user).catch((err) => {
+        HttpStatus.TOO_MANY_REQUESTS;
+        if (
+          err.status === HttpStatus.UNAUTHORIZED ||
+          err.status === HttpStatus.TOO_MANY_REQUESTS
+        ) {
+          // 토큰이 만료되었거나 유효하지 않아 새로 발급한다.
           this.logger.warn('Token is expired or not valid. Reissuing token...');
           this.postOauthToken(1);
-        } else if (err.status === HttpStatus.NOT_FOUND) { // 계정이 만료되어 intra에서는 삭제됐지만 cabi db에는 존재하는 유저를 삭제한다.
-          this.logger.warn(`${user.intra_id} is already expired or not exists in 42 intra`);
+        } else if (err.status === HttpStatus.NOT_FOUND) {
+          // 계정이 만료되어 intra에서는 삭제됐지만 cabi db에는 존재하는 유저를 삭제한다.
+          this.logger.warn(
+            `${user.intra_id} is already expired or not exists in 42 intra`,
+          );
           this.deleteBlackholedUser(user);
         } else {
           console.log(err.status);

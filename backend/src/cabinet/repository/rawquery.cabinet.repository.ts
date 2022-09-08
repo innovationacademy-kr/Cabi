@@ -201,7 +201,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
     const content = `SELECT * FROM lent WHERE lent_user_id=${user.user_id}`;
 
     const connection = await this.pool.getConnection();
-    let lent_cabinet_id: number = -1;
+    let lent_cabinet_id = -1;
     await connection
       .query(content)
       .then((res: any) => {
@@ -264,6 +264,6 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
         connection.rollback();
         console.log(err);
       });
-      if (connection) connection.end();
-    }
+    if (connection) connection.end();
+  }
 }

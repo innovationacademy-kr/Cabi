@@ -1,4 +1,4 @@
 export class UserDto {
-	user_id: number;
-	intra_id: string;
+  user_id: number;
+  intra_id: string;
 }

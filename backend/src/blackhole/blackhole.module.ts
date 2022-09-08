@@ -12,11 +12,7 @@ const repo = {
 };
 
 @Module({
-  imports: [
-    AuthModule,
-    CabinetModule,
-    HttpModule,
-  ],
+  imports: [AuthModule, CabinetModule, HttpModule],
   providers: [BlackholeService, repo],
   // exports: [BlackholeService]
 })
