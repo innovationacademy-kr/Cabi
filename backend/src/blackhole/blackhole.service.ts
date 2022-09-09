@@ -59,9 +59,10 @@ export class BlackholeService {
       }
       // FIXME:
       // 인트라에서 유저의 계정이 만료되면 해당 유저가 가지고 있던 user_id와 intra_id가 다른 유저에게 재할당될 수 있습니다.
-      // 따라서 기존 값을 유지하기보다는 삭제 처리를 해야 추후에 새로 값을 할당 받은 유저가 서비스를 이용할 수 있을 것 같네요.
-      this.logger.warn(`Delete User ${user.intra_id}`);
-      this.blackholeRepository.deleteBlackholedUser(user.user_id);
+      // 따라서 블랙홀에 빠진 유저의 user_id는 음수로, Intra_id 앞에는 blackholed 라는 텍스트를 붙혀 유저 정보를 업데이트 하는 방식으로
+      // 무결성이 발생할 수 있는 문제를 해결하도록 수정하겠습니다.
+      // this.logger.warn(`Delete User ${user.intra_id}`);
+      // this.blackholeRepository.deleteBlackholedUser(user.user_id);
     } catch (err) {
       this.logger.error(err);
     }
