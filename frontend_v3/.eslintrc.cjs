@@ -28,6 +28,7 @@ module.exports = {
     "react/jsx-filename-extension": 0,
     "no-shadow": 0,
     "import/no-extraneous-dependencies": 0,
+    "react/function-component-definition": 0,
     "import/extensions": [
       "off",
       "always",
