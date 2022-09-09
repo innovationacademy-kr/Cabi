@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import React from "react";
 import "./App.css";
 import GlobalStyle from "./styles/GlobalStyle";
 
-function App() {
-  return <GlobalStyle />;
+function App(): JSX.Element {
+  return (
+    <div>
+      <GlobalStyle />
+      <h1>sample</h1>
+    </div>
+  );
 }
 
 export default App;

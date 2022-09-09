@@ -3,6 +3,8 @@ import { Global, css } from "@emotion/react";
 const style = css`
   html {
     font-size: 16px;
+    max-width: 480px;
+    margin: auto;
   }
 
   body {
