@@ -98,10 +98,10 @@ export class CabinetController {
   @Post('return')
   @UseGuards(JwtAuthGuard, BanCheckGuard)
   async postReturn(@User() userSession: UserSessionDto): Promise<number> {
-    let user: UserDto = {
+    const user: UserDto = {
       user_id: userSession.user_id,
       intra_id: userSession.intra_id,
-    }
+    };
     return await this.cabinetService.createLentLog(user);
   }
 
