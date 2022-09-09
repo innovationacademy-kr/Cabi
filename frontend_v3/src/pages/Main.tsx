@@ -1,12 +1,11 @@
-import React from "react";
-import Login from "../components/templates/Login";
-import Footer from "../components/templates/Footer";
+import CabinetTemplate from "../components/templates/CabinetTemplate";
+import FooterTemplate from "../components/templates/FooterTemplate";
 
 const Main = (): JSX.Element => {
   return (
     <>
-      <Login />
-      <Footer />
+      <h1>Hello</h1>
+      <h1>Main Page</h1>
     </>
   );
 };
