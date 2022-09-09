@@ -78,6 +78,11 @@ export default function Carousel(props: CarouselProps) {
       </span>
     );
   };
+
+  // TODO: gyuwlee
+  // navIndicator 내, mapIndicator의 리턴값이 child로 들어가서 key 값 필요
+  // 임의로 -1을 key 값으로 지정
+  // mapIndicator와 navIndicator를 분리하면 좋을 것 같습니다
   const mapIndicator = () => {
     return (
       <button
@@ -87,9 +92,11 @@ export default function Carousel(props: CarouselProps) {
         data-bs-slide-to={0}
         aria-current="true"
         aria-label="Slide 0"
+        key={-1}
       ></button>
     );
   };
+  
   const navIndicator = (idx: number) => {
     let list: Array<JSX.Element> = [];
     if (
@@ -108,6 +115,7 @@ export default function Carousel(props: CarouselProps) {
           data-bs-slide-to={`${i + 1}`}
           aria-current="true"
           aria-label={`Slide ${i + 1}`}
+          key={i}
         ></button>
       );
     }

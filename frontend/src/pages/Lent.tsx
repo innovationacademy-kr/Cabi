@@ -2,10 +2,12 @@
 import { axiosApiCheck, axiosLentInfo, axiosCabinetInfo } from "../network/axios/axios.custom";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Menu from "../component/Menu";
+// import Menu from "../component/Menu";
+import MenuButton from "../component/button/MenuButton";
 import Carousel from "../component/Carousel";
 import Location from "../component/Location";
-import Question from "../component/Question";
+// import Question from "../component/Question";
+import QuestionButton from "../component/button/QuestionButton";
 import LentModal from "../modal/LentModal";
 import ContentsModal from "../modal/ContentsModal";
 // import EventModal from "../modal/EventModal";
@@ -18,6 +20,8 @@ import { RootState } from "../status";
 import "./lent.css";
 import "./main.css";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
+
+import HomeButton from "../component/button/HomeButton";
 
 export default function Lent() {
   const navigate = useNavigate();
@@ -66,9 +70,10 @@ export default function Lent() {
       });
   };
 
-  const handleHome = () => {
-    navigate(0);
-  };
+  // XXX: moved to HomeButton.tsx
+  // const handleHome = () => {
+  //   navigate(0);
+  // };
 
   const handleLent = () => {
     // const url = "/api/lent_info";
@@ -162,6 +167,7 @@ export default function Lent() {
           floor_name={floor}
           isLent={isLent}
           lent={lent}
+          key={idx}
         ></Carousel>
       );
     });
@@ -175,14 +181,16 @@ export default function Lent() {
       <div className="row align-items-center">
         <div className="col">
           <div className="px-4">
-            <img src="../img/cabinet.ico" onClick={handleHome} width="30" />
+            {/* <img src="../img/cabinet.ico" onClick={handleHome} width="30" /> */}
+            <HomeButton />
           </div>
         </div>
         <div className="col">
           <Location info={info} l_idx={l_idx} setLidx={setLidx} />
         </div>
         <div className="col">
-          <Menu url="/return" />
+          {/* <Menu url="/return" /> */}
+          <MenuButton url="/return" />
         </div>
       </div>
       <div className="row my-2 mx-2">
@@ -200,7 +208,7 @@ export default function Lent() {
         </div>
       </div>
       <div className="text-right">
-        <Question />
+        <QuestionButton />
       </div>
       <LentModal target={target} cabiNum={cabiNum} />
       <ContentsModal contents="이미 대여중인 사물함이 있어요 :)" />
