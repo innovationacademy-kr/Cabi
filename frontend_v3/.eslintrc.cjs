@@ -30,6 +30,7 @@ module.exports = {
     "import/no-extraneous-dependencies": 0,
     "react/function-component-definition": 0,
     "no-useless-catch": 0,
+    "react/react-in-jsx-scope": "off",
     camelcase: 0,
     "import/extensions": [
       "off",
