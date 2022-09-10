@@ -18,7 +18,7 @@ const HomeButton = (): JSX.Element => {
   const navigate = useNavigate();
 
   const handleClick = (): void => {
-    navigate("/Lent");
+    navigate("/main");
   };
 
   return <Button onClick={handleClick} />;
