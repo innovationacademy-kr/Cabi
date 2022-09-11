@@ -11,12 +11,18 @@ import { EventModule } from './event/event.module';
 import { BlackholeModule } from './blackhole/blackhole.module';
 import { UserModule } from './user/user.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import TypeOrmConfigService from './config/typeorm.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
       isGlobal: true, // TODO: remove after
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: TypeOrmConfigService,
     }),
     CabinetModule,
     BanModule,
