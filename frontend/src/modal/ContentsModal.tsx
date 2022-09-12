@@ -1,7 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import "./ContentsModal.css";
 
-export default function ContentsModal(props: any) {
+interface ContentsModalProps {
+  path?: string;
+  contents: string;
+}
+
+export default function ContentsModal(props: ContentsModalProps) {
   const navigate = useNavigate();
 
   const handleRedirect = () => {

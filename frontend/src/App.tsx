@@ -3,11 +3,13 @@ import Main from "./pages/Main";
 import Return from "./pages/Return";
 import Footer from "./component/Footer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import GlobalStyle from "./GlobalStyle";
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
+        <GlobalStyle />
         <section>
           <Routes>
             <Route path="/" element={<Main />}></Route>

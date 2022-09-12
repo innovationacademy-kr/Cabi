@@ -2,7 +2,11 @@ import axios from "axios";
 import { axiosExtension } from "../network/axios/axios.custom";
 import "./extensionModal.css";
 
-export default function ExtensionModal(props: any) {
+interface ExtensionModalProps {
+  setContent: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function ExtensionModal(props: ExtensionModalProps) {
   const handleSubmit = async () => {
     axiosExtension()
       .then((response) => {

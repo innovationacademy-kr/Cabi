@@ -15,4 +15,10 @@ services:
       - "3307:3306"
     tty:
       true
-
+  gateway:
+    container_name: nginx_gateway
+    image: nginx:latest
+    ports:
+      - '80:80'
+    volumes:
+      - ../dev/:/etc/nginx/conf.d/

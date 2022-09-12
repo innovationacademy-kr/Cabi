@@ -1,0 +1,8 @@
+{
+  "name": "42cabi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/innovationacademy-kr/42cabi.git",
+  "author": "--replace-all <gyuwonlee.olivia@gmail.com>",
+  "license": "MIT"
+}

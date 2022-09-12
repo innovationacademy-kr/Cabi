@@ -1,7 +1,14 @@
 import "../pages/lent.css";
+import { locationInfo } from "../redux/slices/cabinetSlice";
 
-export default function Location(props: any) {
-  let location: Array<string> = props.info.location;
+interface LocationProps {
+  info: locationInfo;
+  l_idx: number;
+  setLidx: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export default function Location(props: LocationProps) {
+  let location: Array<string> | undefined = props.info.location;
 
   const handleInfo = (loc: number) => {
     props.setLidx(loc);
@@ -26,7 +33,7 @@ export default function Location(props: any) {
       >
         {location?.map((loc: string, idx: number) => {
           return (
-            <a className="dropdown-item" onClick={() => handleInfo(idx)}>
+            <a className="dropdown-item" onClick={() => handleInfo(idx)} key={idx}>
               {loc}
             </a>
           );

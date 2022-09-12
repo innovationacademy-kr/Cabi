@@ -7,6 +7,7 @@ import { Inject } from '@nestjs/common';
 import { ICabinetRepository } from './cabinet.repository';
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 import { lentCabinetInfoDto } from '../dto/cabinet-lent-info.dto';
+import { UserDto } from 'src/user/dto/user.dto';
 
 export class RawqueryCabinetRepository implements ICabinetRepository {
   private pool;
@@ -123,8 +124,8 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
     return 0;
   }
 
-  async getUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
-    const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
+  async getUserLentInfo(user_id: number): Promise<lentCabinetInfoDto> {
+    const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user_id}'`;
 
     const connection = await this.pool.getConnection();
     const lentCabinet: lentCabinetInfoDto = await connection
@@ -195,28 +196,31 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
   }
 
   //lent_log 값 생성 후 lent 값 삭제
-  async createLentLog(user_id: number, intra_id: string): Promise<void> {
+  async createLentLog(user: UserDto): Promise<number> {
     // let pool: mariadb.PoolConnection;
-    const content = `SELECT * FROM lent WHERE lent_user_id=${user_id}`;
+    const content = `SELECT * FROM lent WHERE lent_user_id=${user.user_id}`;
 
     const connection = await this.pool.getConnection();
+    let lent_cabinet_id = -1;
     await connection
       .query(content)
       .then((res: any) => {
-        if (res[0] === undefined) return;
+        if (res[0] === undefined) return -1;
         connection.query(
           `INSERT INTO lent_log (log_user_id, log_cabinet_id, lent_time, return_time) VALUES (${res[0].lent_user_id}, ${res[0].lent_cabinet_id}, '${res[0].lent_time}', now())`,
         );
         connection.query(
           `DELETE FROM lent WHERE lent_cabinet_id=${res[0].lent_cabinet_id}`,
         );
-        // sendReturnMsg(intra_id); // 슬랙 메시지 보내는 기능.
+        lent_cabinet_id = res[0].lent_cabinet_id;
+        // sendReturnMsg(user.intra_id); // 슬랙 메시지 보내는 기능.
       })
       .catch((err: any) => {
         console.error(err);
         throw err;
       });
     if (connection) connection.end();
+    return lent_cabinet_id;
   }
 
   // 대여기간 연장 수행.
@@ -238,6 +242,27 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
       .catch((err: any) => {
         console.error(err);
         throw err;
+      });
+    if (connection) connection.end();
+  }
+
+  async updateActivationToBan(cabinet_id: number): Promise<void> {
+    const content = `
+      UPDATE cabinet c
+      SET activation= 2
+      WHERE cabinet_id= ${cabinet_id}
+    `;
+
+    const connection = await this.pool.getConnection();
+    connection.beginTransaction();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        connection.commit();
+      })
+      .catch((err) => {
+        connection.rollback();
+        console.log(err);
       });
     if (connection) connection.end();
   }
