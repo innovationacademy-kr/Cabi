@@ -1,4 +1,4 @@
-import { LentInfoDto } from './lent-info.dto';
+import { LentInfoDto } from './lent.info.dto';
 
 export class MyLentInfoDto {
   lentInfo: LentInfoDto[];

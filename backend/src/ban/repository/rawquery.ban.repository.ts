@@ -2,8 +2,8 @@ import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IBanRepository } from './ban.repository';
 import * as mariadb from 'mariadb';
-import { OverUserInfoDto } from '../dto/overUserInfo.dto';
-import { BanUserDto } from '../dto/banUserAddInfo.dto';
+import { OverUserInfoDto } from '../dto/over.user.Info.dto';
+import { BanUserDto } from '../dto/ban.user.dto';
 
 export class RawqueryBanRepository implements IBanRepository {
   private pool;
