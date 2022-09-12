@@ -2,8 +2,8 @@ import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IBanRepository } from './ban.repository';
 import * as mariadb from 'mariadb';
-import { overUserInfoDto } from '../dto/overUserInfo.dto';
-import { banUserAddInfoDto } from '../dto/banUserAddInfo.dto';
+import { OverUserInfoDto } from '../dto/overUserInfo.dto';
+import { BanUserDto } from '../dto/banUserAddInfo.dto';
 
 export class RawqueryBanRepository implements IBanRepository {
   private pool;
@@ -24,10 +24,10 @@ export class RawqueryBanRepository implements IBanRepository {
    * @param days 연체일
    * @return userInfoDto 리스트 or undefined
    */
-  async getOverUser(days: number): Promise<overUserInfoDto[] | undefined> {
+  async getOverUser(days: number): Promise<OverUserInfoDto[] | undefined> {
     // const pool: mariadb.PoolConnection = await this.con.getConnection();
     const connection = await this.pool.getConnection();
-    let overUserList: overUserInfoDto[] | undefined = [];
+    let overUserList: OverUserInfoDto[] | undefined = [];
     const content = `
 		SELECT  u.*, l.lent_id, l.lent_cabinet_id
 		FROM user u RIGHT OUTER JOIN lent l ON u.user_id = l.lent_user_id
@@ -98,7 +98,7 @@ export class RawqueryBanRepository implements IBanRepository {
    * banUser 추가
    * @param banUser 추가될 유저 정보
    */
-  async addBanUser(banUser: banUserAddInfoDto) {
+  async addBanUser(banUser: BanUserDto) {
     const connection = await this.pool.getConnection();
     const cabinet_id = banUser.cabinet_id ? banUser.cabinet_id : 'NULL';
     const content = `

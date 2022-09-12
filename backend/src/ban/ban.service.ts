@@ -3,8 +3,8 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { overUserInfoDto } from './dto/overUserInfo.dto';
-import { banUserAddInfoDto } from './dto/banUserAddInfo.dto';
+import { OverUserInfoDto } from './dto/over.user.Info.dto';
+import { BanUserDto } from './dto/ban.user.dto';
 import { IBanRepository } from './repository/ban.repository';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class BanService {
    * @param days 연체일
    * @return userInfo 리스트 or undefined
    */
-  async getOverUser(days: number): Promise<overUserInfoDto[] | undefined> {
+  async getOverUser(days: number): Promise<OverUserInfoDto[] | undefined> {
     try {
       return await this.banRepository.getOverUser(days);
     } catch (err) {
@@ -71,7 +71,7 @@ export class BanService {
    * FIXME: v1의 banModel.ts
    * @param banUser 추가될 유저 정보
    */
-  async addBanUser(banUser: banUserAddInfoDto) {
+  async addBanUser(banUser: BanUserDto) {
     try {
       return await this.banRepository.addBanUser(banUser);
     } catch (err) {

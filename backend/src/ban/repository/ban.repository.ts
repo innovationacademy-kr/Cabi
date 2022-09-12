@@ -1,5 +1,5 @@
-import { banUserAddInfoDto } from '../dto/banUserAddInfo.dto';
-import { overUserInfoDto } from '../dto/overUserInfo.dto';
+import { BanUserDto } from '../dto/ban.user.dto';
+import { OverUserInfoDto } from '../dto/over.user.Info.dto';
 
 export abstract class IBanRepository {
   /**
@@ -7,7 +7,7 @@ export abstract class IBanRepository {
    * @param days 연체일
    * @return userInfoDto 리스트 or undefined
    */
-  abstract getOverUser(days: number): Promise<overUserInfoDto[] | undefined>;
+  abstract getOverUser(days: number): Promise<OverUserInfoDto[] | undefined>;
 
   /**
    * 유저 권한 ban(1) 으로 변경
@@ -29,7 +29,7 @@ export abstract class IBanRepository {
    * banUser 추가
    * @param banUser 추가될 유저 정보
    */
-  abstract addBanUser(banUser: banUserAddInfoDto): Promise<void>;
+  abstract addBanUser(banUser: BanUserDto): Promise<void>;
 
   /**
    * 해당 유저가 Ban처리 되어있는지 확인

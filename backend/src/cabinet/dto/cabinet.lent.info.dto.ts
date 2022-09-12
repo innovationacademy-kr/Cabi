@@ -1,4 +1,4 @@
-export class lentCabinetInfoDto {
+export class LentCabinetInfoDto {
   lent_id: number;
   lent_cabinet_id: number;
   lent_user_id: number;
