@@ -5,12 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ContentsModal from "./ContentsModal";
 import "./lentModal.css";
 
-interface LentModalProps {
-  target: number;
-  cabiNum: number;
-}
-
-export default function LentModal(props: LentModalProps) {
+export default function LentModal(props: any) {
   const navigate = useNavigate();
   const [errorModal, setError] = useState<boolean>(false);
   const [state, setState] = useState<boolean>(false);

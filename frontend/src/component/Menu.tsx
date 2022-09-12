@@ -1,22 +1,16 @@
-// MenuButton.tsx 로 사용 중
-
 import axios from "axios";
 import { axiosLogout } from "../network/axios/axios.custom";
 import { useNavigate } from "react-router-dom";
 import MenualModal from "../modal/MenualModal";
 import "./menu.css";
 
-interface MenuProps {
-  url: string;
-}
-
-export default function Menu(props: MenuProps) {
+export default function Menu(props: any) {
   const navigate = useNavigate();
 
   const handleClick = () => {
     axiosLogout()
       .then((res) => navigate("/"))
-      .catch((error) => console.error(error));
+      .catch((error) => console.log(error));
   };
   const cabinetPage = () => {
     if (props.url === "/return") {

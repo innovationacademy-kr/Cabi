@@ -1,70 +1,36 @@
 import React from "react";
 import CabinetBox from "./CabinetBox";
+import { cabinetInfo } from "../types/cabinetTypes";
 import { SeromSecondFloor } from "./map/SeromSecondFloor";
 import { SeromFloor } from "./map/SeromFloor";
 import "./carousel.css";
-import { cabinetInfo, locationInfo } from "../redux/slices/cabinetSlice";
-import { lentInfo } from "../redux/slices/lentSlice";
 
-interface CarouselProps {
-  setTarget: React.Dispatch<React.SetStateAction<number>>;
-  setCabiNum: React.Dispatch<React.SetStateAction<number>>;
-  info: locationInfo;
-  user: string;
-  l_idx: number;
-  outer_i: number;
-  outer_lent: lentInfo[];
-  floor_name: number;
-  isLent: number;
-  lent: lentInfo[];
-}
-
-export default function Carousel(props: CarouselProps) {
+export default function Carousel(props: any) {
   const cabinetBlock = (f_idx: number, s_idx: number) => {
     let list: Array<JSX.Element> = [];
     if (!props.info || !props.info.cabinet) return [];
     const cab: Array<cabinetInfo> =
       props.info.cabinet[props.l_idx][f_idx][s_idx];
-      for (let i = 0; i < cab.length; i++) {
-        var id = props.outer_lent.findIndex(
-          (l: any) => l.lent_cabinet_id === cab[i].cabinet_id
-          );
-          list.push(
-            <CabinetBox
-            className="d-block w-100"
-            setTarget={props.setTarget}
-            setCabiNum={props.setCabiNum}
-            key={`cab_box_${cab[i].cabinet_id}`}
-            user={props.user}
-            cabinet_id={cab[i].cabinet_id}
-            cabinet_num={cab[i].cabinet_num}
-            intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}
-            isLent={props.isLent}
-            expire_time={props.outer_lent[id]?.expire_time}
-            ></CabinetBox>
-            );
-          }
-          return list;
-    // const newCab: Array<JSX.Element> = cab.map((cabEl, index) => {
-    //   let id = props.outer_lent.findIndex(
-    //     (l: any) => l.lent_cabinet_id === cabEl.cabinet_id
-    //   );
-    //   return (
-    //     <CabinetBox
-    //       className="d-block w-100"
-    //       setTarget={props.setTarget}
-    //       setCabiNum={props.setCabiNum}
-    //       key={`cab_box_${cabEl.cabinet_id}`}
-    //       user={props.user}
-    //       cabinet_id={cabEl.cabinet_id}
-    //       cabinet_num={cabEl.cabinet_num}
-    //       intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}
-    //       isLent={props.isLent}
-    //       expire_time={props.outer_lent[id]?.expire_time}
-    //     />
-    //   );
-    // })
-    // return newCab;
+    for (let i = 0; i < cab.length; i++) {
+      var id = props.outer_lent.findIndex(
+        (l: any) => l.lent_cabinet_id === cab[i].cabinet_id
+      );
+      list.push(
+        <CabinetBox
+          className="d-block w-100"
+          setTarget={props.setTarget}
+          setCabiNum={props.setCabiNum}
+          key={`cab_box_${cab[i].cabinet_id}`}
+          user={props.user}
+          cabinet_id={cab[i].cabinet_id}
+          cabinet_num={cab[i].cabinet_num}
+          intra_id={id !== -1 ? props.outer_lent[id].intra_id : ""}
+          isLent={props.isLent}
+          expire_time={props.outer_lent[id]?.expire_time}
+        ></CabinetBox>
+      );
+    }
+    return list;
   };
   const mapButton = () => {
     return (
@@ -78,11 +44,6 @@ export default function Carousel(props: CarouselProps) {
       </span>
     );
   };
-
-  // TODO: gyuwlee
-  // navIndicator 내, mapIndicator의 리턴값이 child로 들어가서 key 값 필요
-  // 임의로 -1을 key 값으로 지정
-  // mapIndicator와 navIndicator를 분리하면 좋을 것 같습니다
   const mapIndicator = () => {
     return (
       <button
@@ -92,11 +53,9 @@ export default function Carousel(props: CarouselProps) {
         data-bs-slide-to={0}
         aria-current="true"
         aria-label="Slide 0"
-        key={-1}
       ></button>
     );
   };
-  
   const navIndicator = (idx: number) => {
     let list: Array<JSX.Element> = [];
     if (
@@ -115,7 +74,6 @@ export default function Carousel(props: CarouselProps) {
           data-bs-slide-to={`${i + 1}`}
           aria-current="true"
           aria-label={`Slide ${i + 1}`}
-          key={i}
         ></button>
       );
     }

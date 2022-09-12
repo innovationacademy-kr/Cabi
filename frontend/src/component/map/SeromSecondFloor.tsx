@@ -1,18 +1,9 @@
 import "./seromSecondFloor.css";
-import { cabinetInfo, locationInfo } from "../../redux/slices/cabinetSlice";
-import { lentInfo } from "../../redux/slices/lentSlice";
+import { lentInfo, cabinetInfo } from "../../types/cabinetTypes";
 
-interface SeromSecondFloorProps {
-  info: locationInfo;
-  l_idx: number;
-  f_idx: number;
-  floor_name: number;
-  lent: lentInfo[];
-}
-
-export function SeromSecondFloor(props: SeromSecondFloorProps) {
+export function SeromSecondFloor(props: any) {
   const findIdx = (name: string) => {
-    const idx = props.info.section[props.l_idx][props.f_idx].findIndex(
+    const idx = props.info?.section[props.l_idx][props.f_idx].findIndex(
       (section: string) => section === name
     );
     if (idx === -1) {
@@ -22,7 +13,7 @@ export function SeromSecondFloor(props: SeromSecondFloorProps) {
     }
   };
   const countCabinet = (name: string): number => {
-    return props.info.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1]
+    return props.info?.cabinet[props.l_idx][props.f_idx][findIdx(name) - 1]
       .length;
   };
   const countLentCabinet = (name: string): number => {

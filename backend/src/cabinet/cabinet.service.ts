@@ -4,7 +4,6 @@ import { ICabinetRepository } from './repository/cabinet.repository';
 import { MyLentInfoDto } from './dto/my-lent-info.dto';
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
 import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
-import { UserDto } from 'src/user/dto/user.dto';
 
 @Injectable()
 export class CabinetService {
@@ -46,7 +45,7 @@ export class CabinetService {
         cabinet_id,
       );
       if (user && cabinetStatus) {
-        const myLent = await this.getUserLentInfo(user);
+        const myLent = await this.getUser(user);
         if (myLent.lent_id === -1) {
           const response = await this.cabinetRepository.createLent(
             cabinet_id,
@@ -63,18 +62,18 @@ export class CabinetService {
     }
   }
 
-  async getUserLentInfo(user: UserDto): Promise<lentCabinetInfoDto> {
+  async getUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
     try {
-      return await this.cabinetRepository.getUserLentInfo(user.user_id);
+      return await this.cabinetRepository.getUser(user);
     } catch (e) {
       throw new InternalServerErrorException();
     }
   }
 
   //lent_log 값 생성 후 lent 값 삭제
-  async createLentLog(user: UserDto): Promise<number> {
+  async createLentLog(user_id: number, intra_id: string): Promise<void> {
     try {
-      return await this.cabinetRepository.createLentLog(user);
+      await this.cabinetRepository.createLentLog(user_id, intra_id);
     } catch (e) {
       throw new InternalServerErrorException();
     }
@@ -83,14 +82,6 @@ export class CabinetService {
   async activateExtension(user: UserSessionDto): Promise<void> {
     try {
       await this.cabinetRepository.activateExtension(user);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async updateActivationToBan(cabinet_id: number): Promise<void> {
-    try {
-      await this.cabinetRepository.updateActivationToBan(cabinet_id);
     } catch (e) {
       throw new InternalServerErrorException();
     }

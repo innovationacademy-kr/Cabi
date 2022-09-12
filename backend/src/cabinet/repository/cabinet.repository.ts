@@ -1,5 +1,4 @@
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
-import { UserDto } from 'src/user/dto/user.dto';
 import { lentCabinetInfoDto } from '../dto/cabinet-lent-info.dto';
 import { CabinetListDto } from '../dto/cabinet-list.dto';
 import { LentInfoDto } from '../dto/lent-info.dto';
@@ -30,7 +29,7 @@ export abstract class ICabinetRepository {
    * 본인 정보 및 렌트 정보 - 리턴 페이지
    * @return lentCabinetInfoDto
    */
-  abstract getUserLentInfo(user_id: number): Promise<lentCabinetInfoDto>;
+  abstract getUser(user: UserSessionDto): Promise<lentCabinetInfoDto>;
 
   /**
    * lent 값을 생성합니다.
@@ -45,17 +44,11 @@ export abstract class ICabinetRepository {
    * lent_log 값 생성 후 lent 값 삭제
    *
    */
-  abstract createLentLog(user: UserDto): Promise<number>;
+  abstract createLentLog(user_id: number, intra_id: string): Promise<void>;
 
   /**
    * 대여기간 연장 수행.
    *
    */
   abstract activateExtension(user: UserSessionDto): Promise<void>;
-
-  /**
-   * 특정 사물함의 상태를 ban으로 변경
-   * @param cabinet_id
-   */
-  abstract updateActivationToBan(cabinet_id: number): Promise<void>;
 }

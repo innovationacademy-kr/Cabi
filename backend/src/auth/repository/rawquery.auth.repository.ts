@@ -4,7 +4,6 @@ import { IAuthRepository } from './auth.repository';
 import * as mariadb from 'mariadb';
 import { ConfigService } from '@nestjs/config';
 import { Inject } from '@nestjs/common';
-import { UserDto } from 'src/user/dto/user.dto';
 
 export class RawqueryAuthRepository implements IAuthRepository {
   private pool;
@@ -124,28 +123,5 @@ export class RawqueryAuthRepository implements IAuthRepository {
       });
     if (connection) connection.end();
     return lentCabinet;
-  }
-
-  async getAllUser(): Promise<UserDto[]> {
-    const content = `SELECT * FROM user;`;
-
-    const userList: UserDto[] = [];
-    const connection = await this.pool.getConnection();
-    await connection
-      .query(content)
-      .then((res: any) => {
-        res.forEach((user: any) => {
-          userList.push({
-            user_id: user.user_id,
-            intra_id: user.intra_id,
-          });
-        });
-      })
-      .catch((err: any) => {
-        console.error(err);
-        throw err;
-      });
-    if (connection) connection.end();
-    return userList;
   }
 }

@@ -1,5 +1,3 @@
-/* MenuButton 에서 CSS in JS로 사용 중 */
-
 .btn:focus,
 .btn:active:focus {
   outline: 0px;

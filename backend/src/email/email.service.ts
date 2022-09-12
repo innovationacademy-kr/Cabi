@@ -6,7 +6,6 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { BanService } from 'src/ban/ban.service';
 import { overUserInfoDto } from 'src/ban/dto/overUserInfo.dto';
 import { CabinetService } from 'src/cabinet/cabinet.service';
-import { UserDto } from 'src/user/dto/user.dto';
 
 @Injectable()
 export class MailService {
@@ -94,17 +93,17 @@ export class MailService {
       .getOverUser(15)
       .then((res) => {
         if (res) {
-          res.forEach(async (user: overUserInfoDto) => {
+          res.forEach(async (user) => {
             //user
             await this.banService.updateUserAuth(user.user_id);
             //cabinet
             await this.banService.updateCabinetActivation(user.cabinet_id, 2);
             //return
-            await this.cabinetService.createLentLog({
+            await this.cabinetService.createLentLog(
               // TODO: v1의 queryModel.ts에 있는 내용이며 다른곳에서도 쓰임.
-              user_id: user.user_id,
-              intra_id: user.intra_id,
-            });
+              user.user_id,
+              user.intra_id,
+            );
             //ban
             await this.banService.addBanUser({
               user_id: user.user_id,

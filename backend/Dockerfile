@@ -9,11 +9,6 @@ RUN		apt-get update -y; \
 
 WORKDIR /
 
-RUN		apt install curl -y
-RUN		npm cache clean -f
-RUN		npm install -g n
-RUN		n latest
-
 RUN		mkdir -p /initial-setting/config
 
 COPY	./initial-setting/* /initial-setting/

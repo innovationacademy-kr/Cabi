@@ -1,12 +1,7 @@
 // import axios from "axios";
 import "./passwordModal.css";
 
-interface PasswordModalProps {
-  cabinetPassword: string;
-  setCabinetPassword: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export default function PasswordModal(props: PasswordModalProps) {
+export default function PasswordModal(props: any) {
   const setCabinetPassword = props.setCabinetPassword;
 
   const onChange = (e: any) => {

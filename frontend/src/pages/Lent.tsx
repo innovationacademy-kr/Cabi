@@ -2,26 +2,21 @@
 import { axiosApiCheck, axiosLentInfo, axiosCabinetInfo } from "../network/axios/axios.custom";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import Menu from "../component/Menu";
-import MenuButton from "../component/button/MenuButton";
+import Menu from "../component/Menu";
 import Carousel from "../component/Carousel";
 import Location from "../component/Location";
-// import Question from "../component/Question";
-import QuestionButton from "../component/button/QuestionButton";
+import Question from "../component/Question";
 import LentModal from "../modal/LentModal";
 import ContentsModal from "../modal/ContentsModal";
 // import EventModal from "../modal/EventModal";
 // import { eventInfo } from "../event/EventType";
-// import { useDispatch, useSelector } from "react-redux";
-import { cabinetAll } from "../redux/slices/cabinetSlice";
-import { lentAll } from "../redux/slices/lentSlice";
-import { userAll } from "../redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { cabinetAll } from "../status/cabinetReducer";
+import { lentAll } from "../status/lentReducer";
 import { RootState } from "../status";
+import { userAll } from "../status/userReducer";
 import "./lent.css";
 import "./main.css";
-import { useAppSelector, useAppDispatch } from "../redux/hooks";
-
-import HomeButton from "../component/button/HomeButton";
 
 export default function Lent() {
   const navigate = useNavigate();
@@ -30,15 +25,11 @@ export default function Lent() {
   const [target, setTarget] = useState<number>(-1);
   const [cabiNum, setCabiNum] = useState<number>(-1);
 
-  // const info = useSelector((state :RootState) => state.cabinetReducer);
-  // const lent = useSelector((state :RootState) => state.lentReducer);
-  //const user = useSelector((state :RootState) => state.userReducer);
+  const info = useSelector((state :RootState) => state.cabinetReducer);
+  const lent = useSelector((state :RootState) => state.lentReducer);
+  const user = useSelector((state :RootState) => state.userReducer);
 
-  const info = useAppSelector((state) => state.cabinet);
-  const lent = useAppSelector((state) => state.lent);
-  const user = useAppSelector((state) => state.user);
-  
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     apiCheck();
@@ -70,10 +61,9 @@ export default function Lent() {
       });
   };
 
-  // XXX: moved to HomeButton.tsx
-  // const handleHome = () => {
-  //   navigate(0);
-  // };
+  const handleHome = () => {
+    navigate(0);
+  };
 
   const handleLent = () => {
     // const url = "/api/lent_info";
@@ -108,8 +98,6 @@ export default function Lent() {
     //   });
     axiosCabinetInfo()
       .then((res: any) => {
-        // TODO: cabinetAll 액션 동작하지 않는 경우 예외처리
-        // 프론트와 백엔드 서버가 각기 다른 경우 빈 객체로 받아올 수 있어서 예외처리 필요
         dispatch(cabinetAll(res.data));
       })
       .catch((err: any) => {
@@ -151,6 +139,7 @@ export default function Lent() {
   };
   const navContent = () => {
     let list: Array<JSX.Element> = [];
+
     if (!info || !info.floor || info.floor.length <= l_idx) {
       return list;
     }
@@ -167,7 +156,6 @@ export default function Lent() {
           floor_name={floor}
           isLent={isLent}
           lent={lent}
-          key={idx}
         ></Carousel>
       );
     });
@@ -181,16 +169,14 @@ export default function Lent() {
       <div className="row align-items-center">
         <div className="col">
           <div className="px-4">
-            {/* <img src="../img/cabinet.ico" onClick={handleHome} width="30" /> */}
-            <HomeButton />
+            <img src="../img/cabinet.ico" onClick={handleHome} width="30" />
           </div>
         </div>
         <div className="col">
           <Location info={info} l_idx={l_idx} setLidx={setLidx} />
         </div>
         <div className="col">
-          {/* <Menu url="/return" /> */}
-          <MenuButton url="/return" />
+          <Menu url="/return" />
         </div>
       </div>
       <div className="row my-2 mx-2">
@@ -208,7 +194,7 @@ export default function Lent() {
         </div>
       </div>
       <div className="text-right">
-        <QuestionButton />
+        <Question />
       </div>
       <LentModal target={target} cabiNum={cabiNum} />
       <ContentsModal contents="이미 대여중인 사물함이 있어요 :)" />
