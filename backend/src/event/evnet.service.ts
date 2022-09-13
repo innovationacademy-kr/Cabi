@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { EventInfoDto } from './dto/event-info.dto';
+import { EventInfoDto } from './dto/event.info.dto';
 import { IEventRepository } from './repository/IEventRepository';
 
 @Injectable()
