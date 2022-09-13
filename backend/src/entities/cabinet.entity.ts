@@ -1,4 +1,4 @@
-import Lent_type from 'src/enums/lent-type.enum';
+import Lent_type from 'src/enums/lent.type.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
