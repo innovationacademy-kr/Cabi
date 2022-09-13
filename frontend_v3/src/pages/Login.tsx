@@ -4,7 +4,7 @@ import FooterTemplate from "../components/templates/FooterTemplate";
 const Login = (): JSX.Element => {
   return (
     <>
-      {/* <LoginTemplate /> */}
+      <LoginTemplate />
       <FooterTemplate />
     </>
   );
