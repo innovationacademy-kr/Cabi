@@ -10,7 +10,6 @@ const style = css`
   body {
     background: -webkit-linear-gradient(to bottom, #6667ab, #6c337d);
     background: linear-gradient(to bottom, #6667ab, #6c337d);
-    padding: 3%;
     justify-content: center;
     font-family: "EliceDigitalBaeum_Regular";
     height: 100vh;
