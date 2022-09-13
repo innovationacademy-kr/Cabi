@@ -55,7 +55,7 @@ describe('Cabinet E2E Test', () => {
           .set('Cookie', userCookie);
 
         //then
-        expect(response.status).toBe(401);
+        expect(response.status).toBe(401); //401 Unauthorized
       });
     });
 
@@ -68,7 +68,7 @@ describe('Cabinet E2E Test', () => {
 
         // when
         const response = await request(app.getHttpServer())
-          .get(`/api/lent_info/${cabiLocation}/${cabiFloor}`)
+          .get(`/api/cabinet_info/${cabiLocation}/${cabiFloor}`)
           .set('Cookie', userCookie);
 
         // then
@@ -92,11 +92,11 @@ describe('Cabinet E2E Test', () => {
 
         // when
         const response = await request(app.getHttpServer())
-          .get(`/api/lent_info/${cabiLocation}/${cabiFloor}`)
+          .get(`/api/cabinet_info/${cabiLocation}/${cabiFloor}`)
           .set('Cookie', userCookie);
 
         // then
-        expect(response.status).toBe(400);
+        expect(response.status).toBe(400); // 400 Bad Request
       });
 
       test('비정상적인 요청 - 비정상적인 층 파라미터 전달', async () => {
@@ -107,7 +107,58 @@ describe('Cabinet E2E Test', () => {
 
         // when
         const response = await request(app.getHttpServer())
-          .get(`/api/lent_info/${cabiLocation}/${cabiFloor}`)
+          .get(`/api/cabinet_info/${cabiLocation}/${cabiFloor}`)
+          .set('Cookie', userCookie);
+
+        // then
+        expect(response.status).toBe(400);
+      });
+    });
+
+    describe('/api/cabinet_info/:cabinet_id', () => {
+      test('정상적인 요청', async () => {
+        // given
+        const cabinetId = 1;
+        const userCookie = cookie;
+
+        // when
+        const response = await request(app.getHttpServer())
+          .get(`/api/cabinet_info/${cabinetId}`)
+          .set('Cookie', userCookie);
+
+        // then
+        expect(response.status).toBe(200);
+        expect(response.body).toBeDefined();
+        expect(response.body.cabinet_id).toBeDefined();
+        expect(response.body.cabinet_num).toBeDefined();
+        expect(response.body.is_lent).toBeDefined();
+        expect(response.body.lent_type).toBeDefined();
+        expect(response.body.max_user).toBeDefined();
+        //NOTE: 선택적 프로퍼티는 어떻게 확인하는지 모르겠습니다.
+      });
+
+      test('정상적인 요청 - 본인의 cabinet_id를 요청한 경우', async () => {
+        // given
+        const cabinetId = 2; // TODO: 현재 사용 유저의 cabinet_id를 지정
+        const userCookie = cookie;
+
+        // when
+        const response = await request(app.getHttpServer())
+          .get(`/api/cabinet_info/${cabinetId}`)
+          .set('Cookie', userCookie);
+
+        // then
+        // TODO: api/my_lent_info로 리다이렉션
+      });
+
+      test('비정상적인 요청 - 비정상적인 cabinet_id 전달', async () => {
+        // given
+        const cabinetId = 9999999;
+        const userCookie = cookie;
+
+        // when
+        const response = await request(app.getHttpServer())
+          .get(`/api/cabinet_info/${cabinetId}`)
           .set('Cookie', userCookie);
 
         // then
