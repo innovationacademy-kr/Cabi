@@ -40,9 +40,9 @@ describe('Cabinet E2E Test', () => {
         expect(response.body).toBeDefined();
         expect(response.body.location).toBeDefined();
         expect(response.body.floors).toBeDefined();
-      //expect(response.body).toContain('');
-      //expect(response.body.floors).toContain('');
-      // NOTE: 배열인지 확인하는 matcher는 찾지 못해서 주석처리 합니다. 
+        //expect(response.body).toContain('');
+        //expect(response.body.floors).toContain('');
+        // NOTE: 배열인지 확인하는 matcher는 찾지 못해서 주석처리 합니다.
       });
 
       test('비정상적인 요청 - 잘못된 세션', async () => {
@@ -166,5 +166,4 @@ describe('Cabinet E2E Test', () => {
       });
     });
   });
-
 });
