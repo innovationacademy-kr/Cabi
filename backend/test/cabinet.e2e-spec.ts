@@ -58,6 +58,62 @@ describe('Cabinet E2E Test', () => {
         expect(response.status).toBe(401);
       });
     });
+
+    describe('/api/cabinet_info/:location/:floor', () => {
+      test('정상적인 요청', async () => {
+        // given
+        const cabiLocation = '새롬관';
+        const cabiFloor = 2;
+        const userCookie = cookie;
+
+        // when
+        const response = await request(app.getHttpServer())
+          .get(`/api/lent_info/${cabiLocation}/${cabiFloor}`)
+          .set('Cookie', userCookie);
+
+        // then
+        expect(response.status).toBe(200);
+        expect(response.body).toBeDefined();
+        expect(response.body.section).toBeDefined();
+        expect(response.body.cabinets).toBeDefined();
+        expect(response.body.cabinets.cabinet_id).toBeDefined();
+        expect(response.body.cabinets.cabinet_num).toBeDefined();
+        expect(response.body.cabinets.is_lent).toBeDefined();
+        expect(response.body.cabinets.lent_type).toBeDefined();
+        expect(response.body.cabinets.max_user).toBeDefined();
+        //NOTE: 선택적 프로퍼티는 어떻게 확인하는지 모르겠습니다.
+      });
+
+      test('비정상적인 요청 - 비정상적인 건물 파라미터 전달', async () => {
+        // given
+        const cabiLocation = '마루관';
+        const cabiFloor = 2;
+        const userCookie = cookie;
+
+        // when
+        const response = await request(app.getHttpServer())
+          .get(`/api/lent_info/${cabiLocation}/${cabiFloor}`)
+          .set('Cookie', userCookie);
+
+        // then
+        expect(response.status).toBe(400);
+      });
+
+      test('비정상적인 요청 - 비정상적인 층 파라미터 전달', async () => {
+        // given
+        const cabiLocation = '새롬관';
+        const cabiFloor = 10;
+        const userCookie = cookie;
+
+        // when
+        const response = await request(app.getHttpServer())
+          .get(`/api/lent_info/${cabiLocation}/${cabiFloor}`)
+          .set('Cookie', userCookie);
+
+        // then
+        expect(response.status).toBe(400);
+      });
+    });
   });
 
 });
