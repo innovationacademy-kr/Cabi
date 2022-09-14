@@ -63,7 +63,10 @@ export class BlackholeService {
       // 무결성이 발생할 수 있는 문제를 해결하도록 수정하겠습니다.
       // this.logger.warn(`Delete User ${user.intra_id}`);
       // this.blackholeRepository.deleteBlackholedUser(user.user_id);
-      this.blackholeRepository.updateBlackholedUser(user.user_id, user.intra_id);
+      this.blackholeRepository.updateBlackholedUser(
+        user.user_id,
+        user.intra_id,
+      );
     } catch (err) {
       this.logger.error(err);
     }
@@ -165,32 +168,34 @@ export class BlackholeService {
 
     // intra API 요청 시간 간격에 제한이 있어 비동기로 처리 불가하다.
     for (const user of users) {
-      if (user.user_id > 0){
-      await this.validateBlackholedUser(user).catch((err) => {
-        HttpStatus.TOO_MANY_REQUESTS;
-        if (
-          err.status === HttpStatus.UNAUTHORIZED ||
-          err.status === HttpStatus.TOO_MANY_REQUESTS
-        ) {
-          // 토큰이 만료되었거나 유효하지 않아 새로 발급한다.
-          this.logger.warn('Token is expired or not valid. Reissuing token...');
-          // FIXME: 무한루프의 가능성이 있습니다.
-          // this.postOauthToken(1);
-        } else if (err.status === HttpStatus.NOT_FOUND) {
-          // 계정이 만료되어 intra에서는 삭제됐지만 cabi db에는 존재하는 유저를 삭제한다.
-          this.logger.warn(
-            `${user.intra_id} is already expired or not exists in 42 intra`,
-          );
-          this.updateBlackholedUser(user);
-        } else {
-          console.log(err.status);
-          throw new HttpException( // 기타 오류
-            'validateBlackholedUsers',
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
-      });
-    }
+      if (user.user_id > 0) {
+        await this.validateBlackholedUser(user).catch((err) => {
+          HttpStatus.TOO_MANY_REQUESTS;
+          if (
+            err.status === HttpStatus.UNAUTHORIZED ||
+            err.status === HttpStatus.TOO_MANY_REQUESTS
+          ) {
+            // 토큰이 만료되었거나 유효하지 않아 새로 발급한다.
+            this.logger.warn(
+              'Token is expired or not valid. Reissuing token...',
+            );
+            // FIXME: 무한루프의 가능성이 있습니다.
+            // this.postOauthToken(1);
+          } else if (err.status === HttpStatus.NOT_FOUND) {
+            // 계정이 만료되어 intra에서는 삭제됐지만 cabi db에는 존재하는 유저를 삭제한다.
+            this.logger.warn(
+              `${user.intra_id} is already expired or not exists in 42 intra`,
+            );
+            this.updateBlackholedUser(user);
+          } else {
+            console.log(err.status);
+            throw new HttpException( // 기타 오류
+              'validateBlackholedUsers',
+              HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+          }
+        });
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { CabinetInfoDto } from './cabinet-info.dto';
+import { CabinetInfoDto } from './cabinet.info.dto';
 
 export class CabinetListDto {
   location?: Array<string>;

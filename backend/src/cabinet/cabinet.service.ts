@@ -1,9 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CabinetListDto } from './dto/cabinet-list.dto';
+import { CabinetListDto } from './dto/cabinet.list.dto';
 import { ICabinetRepository } from './repository/cabinet.repository';
-import { MyLentInfoDto } from './dto/my-lent-info.dto';
+import { MyLentInfoDto } from './dto/my.lent.info.dto';
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
-import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
+import { LentCabinetInfoDto } from './dto/cabinet.lent.info.dto';
 import { UserDto } from 'src/user/dto/user.dto';
 
 @Injectable()
@@ -63,7 +63,7 @@ export class CabinetService {
     }
   }
 
-  async getUserLentInfo(user: UserDto): Promise<lentCabinetInfoDto> {
+  async getUserLentInfo(user: UserDto): Promise<LentCabinetInfoDto> {
     try {
       return await this.cabinetRepository.getUserLentInfo(user.user_id);
     } catch (e) {
