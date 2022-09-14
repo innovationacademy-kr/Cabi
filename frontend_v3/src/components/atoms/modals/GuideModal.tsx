@@ -3,7 +3,14 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import GuideBox from "./GuideBox";
 
-export default function GuideModal(): JSX.Element {
+interface GuideModalProps {
+  box: JSX.Element;
+  isLentAble: boolean;
+}
+
+export default function GuideModal(props: GuideModalProps): JSX.Element {
+  const { box, isLentAble } = props;
+  const Children: any = box;
   const [open, setOpen] = React.useState(false);
   const handleOpen = (): void => setOpen(true);
   const handleClose = (): void => setOpen(false);
@@ -19,9 +26,7 @@ export default function GuideModal(): JSX.Element {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div>
-          <GuideBox />
-        </div>
+        <div>{React.cloneElement(box, { isLentAble, handleClose })}</div>
       </Modal>
     </div>
   );
