@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EventInfoDto } from '../dto/event-info.dto';
+import { EventInfoDto } from '../dto/event.info.dto';
 import { IEventRepository } from './IEventRepository';
 import * as mariadb from 'mariadb';
 

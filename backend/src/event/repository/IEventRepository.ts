@@ -1,4 +1,4 @@
-import { EventInfoDto } from '../dto/event-info.dto';
+import { EventInfoDto } from '../dto/event.info.dto';
 
 export abstract class IEventRepository {
   /**

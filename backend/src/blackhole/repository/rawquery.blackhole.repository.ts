@@ -46,8 +46,7 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
   }
 
   async updateBlackholedUser(user_id: number, intra_id: string): Promise<void> {
-    const connection = await this.pool.getConnection()
-    .catch((err: any) => {
+    const connection = await this.pool.getConnection().catch((err: any) => {
       throw new Error(`updateBlackholedUser Error - ${err}`);
     });
 
@@ -58,13 +57,14 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
         IF(@MIN_ID > 0, -2, @MIN_ID - 1)
     ) WHERE log_user_id = ${user_id};
     `;
-    await connection.query(content)
-    .then(() => {
-      this.logger.warn(`Update lent_log info of ${intra_id}`)
-    })
-    .catch((err: any) => {
-      throw new Error(`updateBlackholedUser Error - ${err}`);
-    });
+    await connection
+      .query(content)
+      .then(() => {
+        this.logger.warn(`Update lent_log info of ${intra_id}`);
+      })
+      .catch((err: any) => {
+        throw new Error(`updateBlackholedUser Error - ${err}`);
+      });
 
     const content2 = `
     SET @MIN_ID := (SELECT MIN(user_id) from user);
@@ -75,13 +75,14 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
         intra_id = CONCAT('[BLACKHOLED]', intra_id)
     WHERE user_id = ${user_id};
     `;
-    await connection.query(content2)
-    .then(() => {
-      this.logger.warn(`Update ban info of ${intra_id}`)
-    })
-    .catch((err: any) => {
-      throw new Error(`updateBlackholedUser Error - ${err}`);
-    });
+    await connection
+      .query(content2)
+      .then(() => {
+        this.logger.warn(`Update ban info of ${intra_id}`);
+      })
+      .catch((err: any) => {
+        throw new Error(`updateBlackholedUser Error - ${err}`);
+      });
 
     const content3 = `
     SET @MIN_ID := (SELECT MIN(user_id) from user);
@@ -93,13 +94,14 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
         auth = 2
     WHERE user_id = ${user_id};
     `;
-    await connection.query(content3)
-    .then(() => {
-      this.logger.warn(`Update user info of ${intra_id}`)
-    })
-    .catch((err: any) => {
-      throw new Error(`updateBlackholedUser Error - ${err}`);
-    });
+    await connection
+      .query(content3)
+      .then(() => {
+        this.logger.warn(`Update user info of ${intra_id}`);
+      })
+      .catch((err: any) => {
+        throw new Error(`updateBlackholedUser Error - ${err}`);
+      });
     if (connection) connection.end();
   }
 }

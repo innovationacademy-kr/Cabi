@@ -4,7 +4,7 @@ import { UserSessionDto } from '../auth/dto/user.session.dto';
 import { JwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
 import { User } from '../auth/user.decorator';
 import { BanCheckGuard } from '../ban/guard/ban-check.guard';
-import { EventInfoDto } from './dto/event-info.dto';
+import { EventInfoDto } from './dto/event.info.dto';
 import { EventService } from './evnet.service';
 
 @ApiTags('Event')

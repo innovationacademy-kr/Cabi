@@ -1,4 +1,4 @@
-import { lentCabinetInfoDto } from 'src/cabinet/dto/cabinet-lent-info.dto';
+import { LentCabinetInfoDto } from 'src/cabinet/dto/cabinet.lent.info.dto';
 import { UserSessionDto } from '../dto/user.session.dto';
 import { IAuthRepository } from './auth.repository';
 import * as mariadb from 'mariadb';
@@ -21,8 +21,8 @@ export class RawqueryAuthRepository implements IAuthRepository {
   }
 
   //사용자 확인 - 사용자가 없는 경우, addUser, 있는 경우, getUser
-  async checkUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
-    let lentCabinet: lentCabinetInfoDto;
+  async checkUser(user: UserSessionDto): Promise<LentCabinetInfoDto> {
+    let lentCabinet: LentCabinetInfoDto;
     const content = `SELECT * FROM user WHERE user_id = ${user.user_id}`;
 
     try {
@@ -80,11 +80,11 @@ export class RawqueryAuthRepository implements IAuthRepository {
   }
 
   //본인 정보 및 렌트 정보 - 리턴 페이지
-  async getUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
+  async getUser(user: UserSessionDto): Promise<LentCabinetInfoDto> {
     const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user.user_id}'`;
 
     const connection = await this.pool.getConnection();
-    const lentCabinet: lentCabinetInfoDto = await connection
+    const lentCabinet: LentCabinetInfoDto = await connection
       .query(content)
       .then((res: any) => {
         if (res.length !== 0) {

@@ -14,5 +14,8 @@ export abstract class IBlackholeRepository {
    * 2. ban_user 테이블에서 user_id를 음수로 업데이트
    * 3. user 테이블에서 user_id를 음수로, intra_id를 [BLACKHOLED]${intra_id}로 업데이트
    */
-   abstract updateBlackholedUser(user_id: number, intra_id: string): Promise<void>;
+  abstract updateBlackholedUser(
+    user_id: number,
+    intra_id: string,
+  ): Promise<void>;
 }
