@@ -82,11 +82,11 @@ const GuideBox = (props: GuideBoxProps): JSX.Element => {
   );
 };
 
-// GuideBox.defaultProps = {
-//   // eslint-disable-next-line react/default-props-match-prop-types
-//   handleClose: () => {
-//     console.log("closed");
-//   },
-// };
+GuideBox.defaultProps = {
+  // eslint-disable-next-line react/default-props-match-prop-types
+  handleClose: () => {
+    console.log("closed");
+  },
+};
 
 export default GuideBox;
