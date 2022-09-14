@@ -62,7 +62,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   const handleLent = (): void => {
     axiosLent(cabinet_id)
       .then(() => {
-        navigate("/return");
+        navigate("/Lent");
       })
       .catch((error) => {
         console.error(error);
