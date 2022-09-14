@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('user')
+@Entity('ban_user')
 export default class BanUser {
   @PrimaryGeneratedColumn({
     name: 'ban_id',
