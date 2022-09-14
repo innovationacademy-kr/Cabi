@@ -1,7 +1,7 @@
 /**
  * 연체자 정보를 담은 DTO 입니다.
  */
-export class overUserInfoDto {
+export class OverUserDto {
   // properties for UserDto
   user_id: number;
   intra_id: string;

@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 // import fs from 'fs';
 import { BanService } from 'src/ban/ban.service';
-import { overUserInfoDto } from 'src/ban/dto/overUserInfo.dto';
+import { OverUserDto } from 'src/ban/dto/over.user.dto';
 import { CabinetService } from 'src/cabinet/cabinet.service';
 import { UserDto } from 'src/user/dto/user.dto';
 
@@ -50,7 +50,7 @@ export class MailService {
       });
   }
 
-  public mailing(info: overUserInfoDto[], num: number) {
+  public mailing(info: OverUserDto[], num: number) {
     let subject = '42CABI 사물함 연체 알림';
     let file = 'overdue.hbs';
     if (num === 0) {
@@ -94,7 +94,7 @@ export class MailService {
       .getOverUser(15)
       .then((res) => {
         if (res) {
-          res.forEach(async (user: overUserInfoDto) => {
+          res.forEach(async (user: OverUserDto) => {
             //user
             await this.banService.updateUserAuth(user.user_id);
             //cabinet
