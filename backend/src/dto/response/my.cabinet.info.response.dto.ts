@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CabinetExtendDto } from '../cabinet.extend.dto';
 import { LentDto } from '../lent.dto';
 
@@ -6,6 +7,15 @@ import { LentDto } from '../lent.dto';
  * @extends CabinetExtendDto
  */
 export class MyCabinetInfoResponseDto extends CabinetExtendDto {
+  @ApiProperty({
+    description: '캐비넷이 대여되었는지 여부',
+    example: true,
+  })
   is_lent: boolean; // 대여했는지 여부 - 기존 activation
-  lent_info: LentDto[]; // 대여한 유저의 정보 (없다면 빈 배열)
+
+  @ApiPropertyOptional({
+    description: '대여되어 있을 경우 대여 정보',
+    type: LentDto,
+  })
+  lent_info?: LentDto; // 대여한 유저의 정보 (optional)
 }
