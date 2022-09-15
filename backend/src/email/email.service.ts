@@ -6,7 +6,6 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { BanService } from 'src/ban/ban.service';
 import { OverUserDto } from 'src/ban/dto/over.user.dto';
 import { CabinetService } from 'src/cabinet/cabinet.service';
-import { UserDto } from 'src/user/dto/user.dto';
 
 @Injectable()
 export class MailService {

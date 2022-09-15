@@ -2,22 +2,16 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
-      jsx: true,
+      jsx: true
     },
     ecmaVersion: 13,
-    sourceType: "module",
+    sourceType: "module"
   },
   plugins: ["react", "@typescript-eslint"],
-  extends: [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "airbnb",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-  ],
+  extends: ["eslint:recommended", "plugin:react/recommended", "airbnb", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "plugin:storybook/recommended"],
   env: {
     browser: true,
-    es2021: true,
+    es2021: true
   },
   rules: {
     "@typescript-eslint/interface-name-prefix": 0,
@@ -32,22 +26,18 @@ module.exports = {
     "no-useless-catch": 0,
     "react/react-in-jsx-scope": "off",
     camelcase: 0,
-    "import/extensions": [
-      "off",
-      "always",
-      {
-        js: "never",
-        jsx: "never",
-        ts: "never",
-        tsx: "never",
-      },
-    ],
+    "import/extensions": ["off", "always", {
+      js: "never",
+      jsx: "never",
+      ts: "never",
+      tsx: "never"
+    }]
   },
   settings: {
     "import/resolver": {
       node: {
-        extensions: [".ts", ".tsx", ".js", ".jsx"],
-      },
-    },
-  },
+        extensions: [".ts", ".tsx", ".js", ".jsx"]
+      }
+    }
+  }
 };

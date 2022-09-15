@@ -1,12 +1,12 @@
-import { CabinetListDto } from '../dto/cabinet-list.dto';
-import { CabinetInfoDto } from '../dto/cabinet-info.dto';
-import { LentInfoDto } from '../dto/lent-info.dto';
+import { CabinetListDto } from '../dto/cabinet.list.dto';
+import { CabinetInfoDto } from '../dto/cabinet.info.dto';
+import { LentInfoDto } from '../dto/lent.info.dto';
 import { ConfigService } from '@nestjs/config';
 import * as mariadb from 'mariadb';
 import { Inject } from '@nestjs/common';
 import { ICabinetRepository } from './cabinet.repository';
 import { UserSessionDto } from 'src/auth/dto/user.session.dto';
-import { lentCabinetInfoDto } from '../dto/cabinet-lent-info.dto';
+import { LentCabinetInfoDto } from '../dto/cabinet.lent.info.dto';
 import { UserDto } from 'src/user/dto/user.dto';
 
 export class RawqueryCabinetRepository implements ICabinetRepository {
@@ -124,11 +124,11 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
     return 0;
   }
 
-  async getUserLentInfo(user_id: number): Promise<lentCabinetInfoDto> {
+  async getUserLentInfo(user_id: number): Promise<LentCabinetInfoDto> {
     const content = `SELECT * FROM lent l JOIN cabinet c ON l.lent_cabinet_id=c.cabinet_id WHERE l.lent_user_id='${user_id}'`;
 
     const connection = await this.pool.getConnection();
-    const lentCabinet: lentCabinetInfoDto = await connection
+    const lentCabinet: LentCabinetInfoDto = await connection
       .query(content)
       .then((res: any) => {
         if (res.length !== 0) {
