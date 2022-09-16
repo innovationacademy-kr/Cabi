@@ -17,7 +17,7 @@ export default class Cabinet {
   @Column({
     name: 'location',
     type: 'varchar',
-    length: 30,
+    length: 32,
   })
   location: string;
 
@@ -30,7 +30,7 @@ export default class Cabinet {
   @Column({
     name: 'section',
     type: 'varchar',
-    length: 30,
+    length: 32,
   })
   section: string;
 
@@ -41,40 +41,38 @@ export default class Cabinet {
   })
   activation: number;
 
-  /**
-   * 새로 추가될 필드입니다.
-   */
-  // @Column({
-  //   name: 'lent_type',
-  //     type: 'enum',
-  // })
-  // lent_type: Lent_type;
+  @Column({
+    name: 'lent_type',
+    type: 'enum',
+    default: 'PRIVATE',
+  })
+  lent_type: Lent_type;
 
-  // @Column({
-  //   name: 'max_user',
-  //     type: 'tinyint',
-  //     default: 3,
-  // })
-  // max_user: number;
+  @Column({
+    name: 'max_user',
+      type: 'tinyint',
+      default: 3,
+  })
+  max_user: number;
 
-  // @Column({
-  //   name: 'min_user',
-  //     type: 'tinyint',
-  //     default: 1,
-  // })
-  // min_user: number;
+  @Column({
+    name: 'min_user',
+      type: 'tinyint',
+      default: 0,
+  })
+  min_user: number;
 
-  // @Column({
-  //   name: 'memo',
-  //     type: 'varchar',
-  //     length: 50,
-  // })
-  // memo: string;
+  @Column({
+    name: 'memo',
+      type: 'varchar',
+      length: 64,
+  })
+  memo: string;
 
-  // @Column({
-  //   name: 'title',
-  //     type: 'varchar',
-  //     length: 128,
-  // })
-  // title: string;
+  @Column({
+    name: 'title',
+      type: 'varchar',
+      length: 64,
+  })
+  title: string;
 }

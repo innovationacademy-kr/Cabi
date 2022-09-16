@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('ban_user')
+@Entity('ban_log')
 export default class BanUser {
   @PrimaryGeneratedColumn({
     name: 'ban_id',
@@ -15,18 +15,10 @@ export default class BanUser {
   ban_user_id: number;
 
   @Column({
-    name: 'intra_id',
-    nullable: false,
-    type: 'varchar',
-    length: 30,
-  })
-  intra_id: string;
-
-  @Column({
-    name: 'cabinet_id',
+    name: 'ban_cabinet_id',
     type: 'int',
   })
-  cabinet_id: number;
+  ban_cabinet_id: number;
 
   @Column({
     name: 'banned_date',

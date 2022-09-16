@@ -18,7 +18,7 @@ export default class User {
     name: 'intra_id',
     nullable: false,
     type: 'varchar',
-    length: 30,
+    length: 32,
   })
   intra_id: string;
 
@@ -54,13 +54,6 @@ export default class User {
     name: 'last_login',
   })
   last_login: Date;
-
-  //추가될 column
-  // @Column({
-  //     name: 'blackholed',
-  //     type: 'boolean'
-  // })
-  // blackholed: boolean;
 
   @Column({
     name: 'is_lent',

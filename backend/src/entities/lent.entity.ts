@@ -10,7 +10,9 @@ import User from './user.entity';
 
 @Entity('lent')
 export default class Lent {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    name: 'lent_id',
+  })
   lent_id: number;
 
   @Column({
@@ -36,14 +38,4 @@ export default class Lent {
     name: 'lent_cabinet_id',
   })
   lent_cabinet_id: Cabinet;
-
-  /**
-   * 기존 ERD에는 존재하나 삭제하고 수정할 부분입니다.
-   * TODO: extension 삭제
-   */
-  @Column({
-    name: 'extension',
-    default: false,
-  })
-  extension: boolean;
 }
