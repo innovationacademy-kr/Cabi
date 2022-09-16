@@ -81,3 +81,24 @@ export const axiosReturnInfo = async (): Promise<any> => {
     throw error;
   }
 };
+
+// TODO: my_lent_info API 분리 후 업데이트
+const axiosUpdateCabinetMemoURL = "/api/";
+export const axiosUpdateCabinetMemo = async (memo: string): Promise<any> => {
+  try {
+    const response = await instance.patch(axiosUpdateCabinetMemoURL, memo);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUpdateCabinetTitleURL = "/api/";
+export const axiosUpdateCabinetTitle = async (title: string): Promise<any> => {
+  try {
+    const response = await instance.patch(axiosUpdateCabinetTitleURL, title);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
