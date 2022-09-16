@@ -56,8 +56,8 @@ DROP TABLE IF EXISTS `cabinet`;
 CREATE TABLE `cabinet` (
   `cabinet_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '사물함ID',
   `cabinet_num` int(11) NOT NULL COMMENT '사물함 번호',
-  `floor` int(11) NOT NULL COMMENT '층',
   `location` varchar(32) NOT NULL COMMENT '건물 위치',
+  `floor` int(11) NOT NULL COMMENT '층',
   `section` varchar(32) NOT NULL COMMENT '구역',
   `activation` tinyint(4) NOT NULL DEFAULT 1 COMMENT '사용가능 여부',
   `lent_type` varchar(16) NOT NULL DEFAULT 'PRIVATE' COMMENT '사물함 타입',
