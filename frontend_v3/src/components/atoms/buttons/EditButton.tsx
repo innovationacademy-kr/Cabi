@@ -5,6 +5,10 @@ import {
   faCircleCheck,
 } from "@fortawesome/free-regular-svg-icons";
 import styled from "@emotion/styled";
+import {
+  axiosUpdateCabinetMemo,
+  axiosUpdateCabinetTitle,
+} from "../../../network/axios/axios.custom";
 
 const Button = styled.button`
   display: flex;
@@ -23,21 +27,40 @@ const Button = styled.button`
 `;
 
 interface EditButtonProps {
+  contentType: "title" | "memo";
   isToggle: boolean;
   setIsToggle: Dispatch<SetStateAction<boolean>>;
-  value: string;
+  inputValue: string;
+  setTextValue: Dispatch<SetStateAction<string>>;
 }
 
 const EditButton = (props: EditButtonProps): JSX.Element => {
-  const { isToggle, setIsToggle, value } = props;
+  const { isToggle, setIsToggle, inputValue, contentType, setTextValue } =
+    props;
   const handleEditButtonClick = (): void => {
     setIsToggle(true);
   };
   const handleSaveButtonClick = (): void => {
     setIsToggle(false);
-    // TODO: gyuwlee
-    // value를 이용해 서버에 저장하는 로직 추가
-    // 버튼을 눌렀을 때 서버에 저장하는 로직이 실행되고 나서, value를 새로 저장된 값으로 업데이트하도록 다시 API를 호출해야 할 것 같습니다.
+    if (contentType === "title") {
+      axiosUpdateCabinetTitle(inputValue)
+        .then(() => {
+          setTextValue(inputValue);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("🚨 수정에 실패했습니다 🚨");
+        });
+    } else {
+      axiosUpdateCabinetMemo(inputValue)
+        .then(() => {
+          setTextValue(inputValue);
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("🚨 수정에 실패했습니다 🚨");
+        });
+    }
   };
 
   return isToggle === false ? (
