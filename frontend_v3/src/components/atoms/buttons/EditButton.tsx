@@ -31,12 +31,21 @@ interface EditButtonProps {
   isToggle: boolean;
   setIsToggle: Dispatch<SetStateAction<boolean>>;
   inputValue: string;
+  textValue: string;
   setTextValue: Dispatch<SetStateAction<string>>;
+  setInputValue: Dispatch<SetStateAction<string>>;
 }
 
 const EditButton = (props: EditButtonProps): JSX.Element => {
-  const { isToggle, setIsToggle, inputValue, contentType, setTextValue } =
-    props;
+  const {
+    isToggle,
+    setIsToggle,
+    inputValue,
+    textValue,
+    contentType,
+    setTextValue,
+    setInputValue,
+  } = props;
   const handleEditButtonClick = (): void => {
     setIsToggle(true);
   };
@@ -50,6 +59,7 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
         .catch((error) => {
           console.error(error);
           alert("🚨 수정에 실패했습니다 🚨");
+          setInputValue(textValue);
         });
     } else {
       axiosUpdateCabinetMemo(inputValue)
@@ -59,6 +69,7 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
         .catch((error) => {
           console.error(error);
           alert("🚨 수정에 실패했습니다 🚨");
+          setInputValue(textValue);
         });
     }
   };

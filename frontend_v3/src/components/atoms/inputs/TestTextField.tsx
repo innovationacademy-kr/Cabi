@@ -32,14 +32,16 @@ const TestTextField = (props: TestTextFieldProps): JSX.Element => {
       {isToggle === false ? (
         <p>{textValue}</p>
       ) : (
-        <input type="text" onChange={handleChange} />
+        <input type="text" value={inputValue} onChange={handleChange} />
       )}
       <EditButton
         isToggle={isToggle}
         setIsToggle={setIsToggle}
         contentType={contentType}
         inputValue={inputValue}
+        textValue={textValue}
         setTextValue={setTextValue}
+        setInputValue={setInputValue}
       />
     </Container>
   );
