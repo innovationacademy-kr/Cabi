@@ -1,4 +1,4 @@
-import { UserDto } from "src/user/dto/user.dto";
+import { UserDto } from 'src/user/dto/user.dto';
 
 /**
  * 연체자 정보를 담은 DTO 입니다.

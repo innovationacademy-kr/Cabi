@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Entity } from 'typeorm';
 
 @Entity()
 export default class Event {

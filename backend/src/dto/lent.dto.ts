@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsDate, IsNumber, ValidateNested } from 'class-validator';
+import { IsBoolean, IsDate, IsNumber, ValidateNested } from 'class-validator';
 import { UserDto } from './user.dto';
 
 /**
@@ -17,7 +17,7 @@ export class LentDto {
     description: '해당 사물함을 사용하고 있는 유저들',
     type: [UserDto],
   })
-  @ValidateNested({each:true})
+  @ValidateNested({ each: true })
   users: UserDto[]; // 해당 사물함을 사용하고 있는 유저들
 
   @ApiProperty({

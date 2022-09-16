@@ -50,29 +50,29 @@ export default class Cabinet {
 
   @Column({
     name: 'max_user',
-      type: 'tinyint',
-      default: 3,
+    type: 'tinyint',
+    default: 3,
   })
   max_user: number;
 
   @Column({
     name: 'min_user',
-      type: 'tinyint',
-      default: 0,
+    type: 'tinyint',
+    default: 0,
   })
   min_user: number;
 
   @Column({
     name: 'memo',
-      type: 'varchar',
-      length: 64,
+    type: 'varchar',
+    length: 64,
   })
   memo: string;
 
   @Column({
     name: 'title',
-      type: 'varchar',
-      length: 64,
+    type: 'varchar',
+    length: 64,
   })
   title: string;
 }

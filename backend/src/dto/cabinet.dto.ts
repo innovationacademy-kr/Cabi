@@ -40,5 +40,5 @@ export class CabinetDto {
     example: 3,
   })
   @IsNumber()
-  max_user: number = 3; // 해당 사물함을 대여할 수 있는 최대 유저 수
+  max_user = 3; // 해당 사물함을 대여할 수 있는 최대 유저 수
 }

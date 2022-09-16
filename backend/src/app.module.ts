@@ -13,7 +13,7 @@ import { UserModule } from './user/user.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import TypeOrmConfigService from './config/typeorm.config';
-import { TypeOrmExModule } from './typeorm-ex/typeorm-ex.module';
+// mport { TypeOrmExModule } from './typeorm-ex/typeorm-ex.module';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { TypeOrmExModule } from './typeorm-ex/typeorm-ex.module';
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
-    TypeOrmExModule,
+    // TypeOrmExModule,
     CabinetModule,
     BanModule,
     AuthModule,
