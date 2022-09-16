@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -33,7 +34,7 @@ export default class Lent {
   })
   lent_user_id: User;
 
-  @OneToOne(() => Cabinet)
+  @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
   @JoinColumn({
     name: 'lent_cabinet_id',
   })

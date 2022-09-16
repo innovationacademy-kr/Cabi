@@ -1,11 +1,13 @@
 import Lent_type from 'src/enums/lent.type.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import Lent from './lent.entity';
 
 @Entity('cabinet')
 export default class Cabinet {
   @PrimaryGeneratedColumn({
     name: 'cabinet_id',
   })
+  @OneToMany(() => Lent, (lent) => lent.lent_cabinet_id)
   cabinet_id: number;
 
   @Column({
