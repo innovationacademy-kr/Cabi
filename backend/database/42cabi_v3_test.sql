@@ -151,7 +151,7 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL COMMENT '유저ID',
-  `intra_id` varchar(30) NOT NULL COMMENT '인트라ID',
+  `intra_id` varchar(32) NOT NULL COMMENT '인트라ID',
   `state` tinyint(4) NOT NULL DEFAULT 0 COMMENT '유저의 상태',
   `email` varchar(128) DEFAULT NULL COMMENT '이메일',
   `phone` varchar(128) DEFAULT NULL COMMENT '휴대폰 번호',
