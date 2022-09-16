@@ -81,3 +81,13 @@ export const axiosReturnInfo = async (): Promise<any> => {
     throw error;
   }
 };
+
+const axiosMyLentInfoURL = "/api/my_lent_info";
+export const axiosMyLentInfo = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyLentInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
