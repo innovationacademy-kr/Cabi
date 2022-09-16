@@ -125,7 +125,6 @@ CREATE TABLE `lent_log` (
   `return_time` datetime NOT NULL COMMENT '반납일',
   PRIMARY KEY (`log_id`),
   UNIQUE KEY `log_id` (`log_id`),
-  UNIQUE KEY `log_id_2` (`log_id`),
   KEY `log_cabinet_id` (`log_cabinet_id`),
   KEY `log_user_id` (`log_user_id`),
   CONSTRAINT `log_cabinet_id` FOREIGN KEY (`log_cabinet_id`) REFERENCES `cabinet` (`cabinet_id`) ON UPDATE CASCADE,
