@@ -46,6 +46,7 @@ export default class Cabinet {
   @Column({
     name: 'lent_type',
     type: 'enum',
+    enum: LentType,
     default: LentType.PRIVATE,
   })
   lent_type: LentType;
