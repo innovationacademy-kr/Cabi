@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { LentType } from 'src/enum/lent.type.enum';
+import LentType from 'src/enums/lent.type.enum';
 
 /**
  * 사물함에 대한 기본 정보

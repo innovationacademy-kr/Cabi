@@ -1,9 +1,9 @@
 /**
  * 사물함 type을 정의
  */
-enum Lent_type {
+enum LentType {
   PRIVATE = 'PRIVATE',
   SHARE = 'SHARE',
   CIRCLE = 'CIRCLE',
 }
-export default Lent_type;
+export default LentType;
