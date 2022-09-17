@@ -1,4 +1,4 @@
-import Lent_type from 'src/enums/lent.type.enum';
+import LentType from 'src/enums/lent.type.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Lent from './lent.entity';
 
@@ -46,9 +46,9 @@ export default class Cabinet {
   @Column({
     name: 'lent_type',
     type: 'enum',
-    default: Lent_type.PRIVATE,
+    default: LentType.PRIVATE,
   })
-  lent_type: Lent_type;
+  lent_type: LentType;
 
   @Column({
     name: 'max_user',
