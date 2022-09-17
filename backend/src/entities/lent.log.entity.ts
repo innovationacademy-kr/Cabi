@@ -1,5 +1,7 @@
 import Lent_type from 'src/enums/lent.type.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import Cabinet from './cabinet.entity';
+import User from './user.entity';
 
 @Entity('lent_log')
 export default class LentLog {
@@ -7,18 +9,6 @@ export default class LentLog {
     name: 'log_id',
   })
   log_id: number;
-
-  @Column({
-    name: 'log_user_id',
-    type: 'int',
-  })
-  log_user_id: number;
-
-  @Column({
-    name: 'log_cabinet_id',
-    type: 'int',
-  })
-  log_cabinet_id: number;
 
   @Column({
     name: 'lent_time',
@@ -37,4 +27,16 @@ export default class LentLog {
     type: 'enum',
   })
   lent_type: Lent_type;
+
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'log_user_id',
+  })
+  log_user_id: User;
+
+  @OneToOne(() => Cabinet)
+  @JoinColumn({
+    name: 'log_cabinet_id',
+  })
+  log_cabinet_id: Cabinet;
 }
