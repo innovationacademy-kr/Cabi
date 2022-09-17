@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import Cabinet from './cabinet.entity';
+import User from './user.entity';
 
 @Entity('ban_log')
 export default class BanUser {
@@ -6,19 +8,6 @@ export default class BanUser {
     name: 'ban_id',
   })
   ban_id: number;
-
-  @Column({
-    name: 'ban_user_id',
-    nullable: false,
-    type: 'int',
-  })
-  ban_user_id: number;
-
-  @Column({
-    name: 'ban_cabinet_id',
-    type: 'int',
-  })
-  ban_cabinet_id: number;
 
   @Column({
     name: 'banned_date',
@@ -31,4 +20,16 @@ export default class BanUser {
     type: 'datetime',
   })
   unbanned_date: Date;
+
+  @OneToOne(() => User)
+  @JoinColumn({
+    name: 'ban_user_id',
+  })
+  ban_user_id: User;
+
+  @OneToOne(() => Cabinet)
+  @JoinColumn({
+    name: 'ban_cabinet_id',
+  })
+  ban_cabinet_id: Cabinet;
 }
