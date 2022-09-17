@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDate, IsNumber, ValidateNested } from 'class-validator';
 import { UserDto } from './user.dto';
 
 /**
