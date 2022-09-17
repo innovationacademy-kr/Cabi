@@ -11,7 +11,7 @@ export default class TypeOrmConfigService implements TypeOrmOptionsFactory {
       type: 'mysql',
       host: this.configService.get('database.host'),
       port: this.configService.get('database.port'),
-      username: this.configService.get('database.username'),
+      username: this.configService.get('database.user'),
       password: this.configService.get('database.password'),
       database: this.configService.get('database.database'),
       entities: [`${__dirname}/../**/entities/*.entity.{js,ts}`],
