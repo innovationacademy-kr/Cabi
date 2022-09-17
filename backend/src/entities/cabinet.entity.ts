@@ -39,14 +39,14 @@ export default class Cabinet {
   @Column({
     name: 'activation',
     type: 'tinyint',
-    default: true,
+    default: 1,
   })
   activation: number;
 
   @Column({
     name: 'lent_type',
     type: 'enum',
-    default: 'PRIVATE',
+    default: Lent_type.PRIVATE,
   })
   lent_type: Lent_type;
 
@@ -66,6 +66,7 @@ export default class Cabinet {
 
   @Column({
     name: 'memo',
+    nullable: true,
     type: 'varchar',
     length: 64,
   })
@@ -73,6 +74,7 @@ export default class Cabinet {
 
   @Column({
     name: 'title',
+    nullable: true,
     type: 'varchar',
     length: 64,
   })

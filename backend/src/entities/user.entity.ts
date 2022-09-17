@@ -16,15 +16,15 @@ export default class User {
 
   @Column({
     name: 'intra_id',
-    nullable: false,
+    unique: true,
     type: 'varchar',
     length: 32,
   })
   intra_id: string;
 
   @Column({
-    name: 'auth',
-    default: false,
+    name: 'state',
+    default: 0,
     type: 'tinyint',
   })
   auth: number;
@@ -32,6 +32,7 @@ export default class User {
   @Column({
     name: 'email',
     unique: true,
+    nullable: true,
     type: 'varchar',
     length: 128,
   })
@@ -40,6 +41,7 @@ export default class User {
   @Column({
     name: 'phone',
     unique: true,
+    nullable: true,
     type: 'varchar',
     length: 128,
   })

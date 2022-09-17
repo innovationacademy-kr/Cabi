@@ -3,7 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import Cabinet from './cabinet.entity';
@@ -34,13 +34,13 @@ export default class LentLog {
   })
   lent_type: Lent_type;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User, (user) => user.user_id)
   @JoinColumn({
     name: 'log_user_id',
   })
   log_user_id: User;
 
-  @OneToOne(() => Cabinet)
+  @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
   @JoinColumn({
     name: 'log_cabinet_id',
   })

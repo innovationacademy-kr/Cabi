@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import Cabinet from './cabinet.entity';
@@ -27,13 +27,13 @@ export default class BanUser {
   })
   unbanned_date: Date;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User, (user) => user.user_id)
   @JoinColumn({
     name: 'ban_user_id',
   })
   ban_user_id: User;
 
-  @OneToOne(() => Cabinet)
+  @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
   @JoinColumn({
     name: 'ban_cabinet_id',
   })
