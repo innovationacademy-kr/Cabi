@@ -1,4 +1,4 @@
-import Lent_type from 'src/enums/lent.type.enum';
+import LentType from 'src/enums/lent.type.enum';
 import {
   Column,
   Entity,
@@ -32,7 +32,7 @@ export default class LentLog {
     name: 'lent_type',
     type: 'enum',
   })
-  lent_type: Lent_type;
+  lent_type: LentType;
 
   @ManyToOne(() => User, (user) => user.user_id)
   @JoinColumn({
