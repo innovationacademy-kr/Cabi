@@ -11,6 +11,9 @@ import { EventModule } from './event/event.module';
 import { BlackholeModule } from './blackhole/blackhole.module';
 import { UserModule } from './user/user.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import TypeOrmConfigService from './config/typeorm.config';
+// mport { TypeOrmExModule } from './typeorm-ex/typeorm-ex.module';
 
 @Module({
   imports: [
@@ -18,6 +21,11 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       load: [configuration],
       isGlobal: true, // TODO: remove after
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: TypeOrmConfigService,
+    }),
+    // TypeOrmExModule,
     CabinetModule,
     BanModule,
     AuthModule,

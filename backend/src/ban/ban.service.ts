@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { OverUserInfoDto } from './dto/over.user.Info.dto';
+import { OverUserDto } from './dto/over.user.dto';
 import { BanUserDto } from './dto/ban.user.dto';
 import { IBanRepository } from './repository/ban.repository';
 
@@ -18,7 +18,7 @@ export class BanService {
    * @param days 연체일
    * @return userInfo 리스트 or undefined
    */
-  async getOverUser(days: number): Promise<OverUserInfoDto[] | undefined> {
+  async getOverUser(days: number): Promise<OverUserDto[] | undefined> {
     try {
       return await this.banRepository.getOverUser(days);
     } catch (err) {

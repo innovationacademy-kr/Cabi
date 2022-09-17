@@ -1,5 +1,5 @@
 import { BanUserDto } from '../dto/ban.user.dto';
-import { OverUserInfoDto } from '../dto/over.user.Info.dto';
+import { OverUserDto } from '../dto/over.user.dto';
 
 export abstract class IBanRepository {
   /**
@@ -7,7 +7,7 @@ export abstract class IBanRepository {
    * @param days 연체일
    * @return userInfoDto 리스트 or undefined
    */
-  abstract getOverUser(days: number): Promise<OverUserInfoDto[] | undefined>;
+  abstract getOverUser(days: number): Promise<OverUserDto[] | undefined>;
 
   /**
    * 유저 권한 ban(1) 으로 변경

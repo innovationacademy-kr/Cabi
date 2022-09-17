@@ -257,7 +257,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
     connection.beginTransaction();
     await connection
       .query(content)
-      .then((res: any) => {
+      .then(() => {
         connection.commit();
       })
       .catch((err) => {

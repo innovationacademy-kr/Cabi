@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { LentType } from 'src/enum/lent.type.enum';
+import LentType from 'src/enums/lent.type.enum';
 
 /**
  * 사물함에 대한 기본 정보
@@ -34,5 +34,5 @@ export class CabinetDto {
     description: '해당 사물함을 대여할 수 있는 최대 유저 수',
     example: 3,
   })
-  max_user: number; // 해당 사물함을 대여할 수 있는 최대 유저 수
+  max_user = 3; // 해당 사물함을 대여할 수 있는 최대 유저 수
 }

@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IBanRepository } from './ban.repository';
 import * as mariadb from 'mariadb';
-import { OverUserInfoDto } from '../dto/over.user.Info.dto';
+import { OverUserDto } from '../dto/over.user.dto';
 import { BanUserDto } from '../dto/ban.user.dto';
 
 export class RawqueryBanRepository implements IBanRepository {
@@ -24,10 +24,10 @@ export class RawqueryBanRepository implements IBanRepository {
    * @param days 연체일
    * @return userInfoDto 리스트 or undefined
    */
-  async getOverUser(days: number): Promise<OverUserInfoDto[] | undefined> {
+  async getOverUser(days: number): Promise<OverUserDto[] | undefined> {
     // const pool: mariadb.PoolConnection = await this.con.getConnection();
     const connection = await this.pool.getConnection();
-    let overUserList: OverUserInfoDto[] | undefined = [];
+    let overUserList: OverUserDto[] | undefined = [];
     const content = `
 		SELECT  u.*, l.lent_id, l.lent_cabinet_id
 		FROM user u RIGHT OUTER JOIN lent l ON u.user_id = l.lent_user_id
