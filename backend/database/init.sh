@@ -6,7 +6,7 @@ RESET='\033[0m'
 
 service mysql start
 
-# Check if the database exists
+#Check if the database exists
 
 if [ -d "/var/lib/mysql/$MARIADB_DATABASE" ]
 then
