@@ -31,6 +31,7 @@ module.exports = {
     "import/no-extraneous-dependencies": 0,
     "react/function-component-definition": 0,
     "no-useless-catch": 0,
+    "max-classes-per-file": 0,
     "react/react-in-jsx-scope": "off",
     "react/no-array-index-key": 0,
     camelcase: 0,
