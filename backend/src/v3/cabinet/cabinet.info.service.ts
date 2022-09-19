@@ -16,7 +16,7 @@ export class CabinetService {
         return { space_data };
     }
 
-    async getCabinetInfoByFloor(
+    async getCabinetInfoByParam(
         location: string,
         floor: number,
     ): Promise<LentInfoResponseDto> {

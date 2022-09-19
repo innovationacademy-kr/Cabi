@@ -35,15 +35,15 @@ export class CabinetController {
   async getCabinetsInfoByParam(
     @Param('location') location: string,
     @Param('floor', ParseIntPipe) floor: number,
-  ): Promise<CabinetInfoResponseDto> {
+  ): Promise<LentInfoResponseDto> {
     this.logger.log('getCabinetInfoByParam');
-    return await this.cabinetService.getCabinetInfoByFloor(location, floor);
+    return await this.cabinetService.getCabinetInfoByParam(location, floor);
   }
 
   @Get('/:cabinet_id')
   async getCabinetInfoById(
     @Param('cabinet_id', ParseIntPipe) cabinetId: number,
-  ): Promise<LentInfoResponseDto> {
+  ): Promise<CabinetInfoResponseDto> {
     this.logger.log('getCabinetInfoById');
     return await this.cabinetService.getCabinetInfo(cabinetId);
   }
