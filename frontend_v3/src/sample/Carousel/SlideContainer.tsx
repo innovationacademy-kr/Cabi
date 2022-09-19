@@ -5,7 +5,6 @@ import Slide from "./Slide";
 const SlideContainerComponent = styled.div`
   display: flex;
   flex-wrap: wrap;
-  overflow: hidden auto;
   flex-direction: row;
   width: 450px;
   height: 480px;
