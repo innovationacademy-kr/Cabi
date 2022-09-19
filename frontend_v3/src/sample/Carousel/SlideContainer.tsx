@@ -1,0 +1,27 @@
+import React from "react";
+import styled from "@emotion/styled";
+import Slide from "./Slide";
+
+const SlideContainerComponent = styled.div`
+  display: flex;
+  width: 150px;
+  height: 480px;
+  margin: 10px auto;
+`;
+
+interface SlideContainerProps {
+  slideRef: any;
+}
+
+const SlideContainer = (props: SlideContainerProps): JSX.Element => {
+  const { slideRef } = props;
+  return (
+    <SlideContainerComponent ref={slideRef}>
+      <Slide color="red" />
+      <Slide color="green" />
+      <Slide color="blue" />
+    </SlideContainerComponent>
+  );
+};
+
+export default SlideContainer;
