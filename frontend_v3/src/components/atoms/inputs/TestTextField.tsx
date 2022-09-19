@@ -12,24 +12,37 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const TestTextField = (): JSX.Element => {
-  // TODO: gyuwlee(?)
-  // value 의 초기 값을 빈 문자열이 아닌 '서버에서 받아온 값'으로 설정해야 합니다.
-  const [value, setValue] = useState("");
+interface TestTextFieldProps {
+  contentType: "title" | "memo";
+  currentContent: string;
+}
+
+const TestTextField = (props: TestTextFieldProps): JSX.Element => {
+  const { contentType, currentContent } = props;
+  const [textValue, setTextValue] = useState(currentContent);
+  const [inputValue, setInputValue] = useState(textValue);
   const [isToggle, setIsToggle] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setValue(e.target.value);
+    setInputValue(e.target.value);
   };
 
   return (
     <Container>
       {isToggle === false ? (
-        <p>{value}</p>
+        <p>{textValue}</p>
       ) : (
-        <input type="text" onChange={handleChange} />
+        <input type="text" value={inputValue} onChange={handleChange} />
       )}
-      <EditButton isToggle={isToggle} setIsToggle={setIsToggle} value={value} />
+      <EditButton
+        isToggle={isToggle}
+        setIsToggle={setIsToggle}
+        contentType={contentType}
+        inputValue={inputValue}
+        textValue={textValue}
+        setTextValue={setTextValue}
+        setInputValue={setInputValue}
+      />
     </Container>
   );
 };
