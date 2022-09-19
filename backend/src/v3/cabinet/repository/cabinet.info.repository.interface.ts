@@ -7,7 +7,7 @@ export abstract class ICabinetInfoRepository {
      * 
      * @return LentInfoResponseDto
      */
-    abstract getCabinetsInfo(location: string, floor: number): Promise<LentInfoResponseDto>;
+    abstract getFloorInfo(location: string, floor: number): Promise<LentInfoResponseDto>;
 
     /**
      * 특정 사물함의 정보를 가져옵니다.
