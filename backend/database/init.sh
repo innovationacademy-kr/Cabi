@@ -36,6 +36,7 @@ else
 
 	# Import v2 database
 	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE_V2 < /database/42cabi_v2_test.sql
+	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE_V2 < /database/cabinet_data_v2.sql
 fi
 
 service mysql stop
