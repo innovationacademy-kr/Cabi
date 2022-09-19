@@ -46,8 +46,6 @@ let sample4: UserDto[] = [
 const Main = (): JSX.Element => {
   return (
     <>
-      <h1>Hello</h1>
-      <h1>Main Page</h1>
       {/*
         <div style={{ display: "flex" }}>
           <CabinetBoxButton
@@ -84,6 +82,8 @@ const Main = (): JSX.Element => {
           />
         </div>
   */}
+      <CabinetTemplate />
+      <FooterTemplate />
     </>
   );
 };

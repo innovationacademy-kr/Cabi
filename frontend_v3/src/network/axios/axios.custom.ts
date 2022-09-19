@@ -1,6 +1,7 @@
 import instance from "./axios.instance";
 
 const axiosLogoutUrl = "/auth/logout";
+
 export const axiosLogout = async (): Promise<any> => {
   try {
     const response = await instance.post(axiosLogoutUrl);
@@ -86,6 +87,27 @@ const axiosMyLentInfoURL = "/api/my_lent_info";
 export const axiosMyLentInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyLentInfoURL);
+      return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// TODO: my_lent_info API 분리 후 업데이트
+const axiosUpdateCabinetMemoURL = "/api/";
+export const axiosUpdateCabinetMemo = async (memo: string): Promise<any> => {
+  try {
+    const response = await instance.patch(axiosUpdateCabinetMemoURL, memo);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUpdateCabinetTitleURL = "/api/";
+export const axiosUpdateCabinetTitle = async (title: string): Promise<any> => {
+  try {
+    const response = await instance.patch(axiosUpdateCabinetTitleURL, title);
     return response;
   } catch (error) {
     throw error;
