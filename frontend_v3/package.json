@@ -27,6 +27,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.0",
+    "@fortawesome/free-regular-svg-icons": "^6.2.0",
+    "@mui/icons-material": "^5.10.3",
     "@storybook/addon-actions": "^6.5.10",
     "@storybook/addon-essentials": "^6.5.10",
     "@storybook/addon-interactions": "^6.5.10",
