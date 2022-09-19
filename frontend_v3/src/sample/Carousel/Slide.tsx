@@ -5,6 +5,7 @@ import Box from "./Box";
 const SlideComponent = styled.div`
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   overflow: hidden auto;
   width: 150px;
   height: 480px;
