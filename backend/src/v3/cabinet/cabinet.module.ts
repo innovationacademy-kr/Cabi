@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CabinetController } from './cabinet.controller';
+import { CabinetController } from './cabinet.info.controller';
 
 @Module({
   controllers: [CabinetController],
