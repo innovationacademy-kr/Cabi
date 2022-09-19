@@ -4,6 +4,8 @@ import BuildingButton from "../atoms/buttons/BuildingButton";
 import MenuButton from "../atoms/buttons/MenuButton";
 // import FloorButton from "../atoms/buttons/FloorButton";
 import QuestionButton from "../atoms/buttons/QustionButton";
+import GuideModal from "../atoms/modals/GuideModal";
+import GuideBox from "../atoms/modals/GuideBox";
 
 const MainSection = styled.section`
   height: 90vh;
@@ -32,7 +34,8 @@ const MainQuestionSection = styled.div`
   display: flex;
   justify-content: flex-end;
   height: 5%;
-  padding: 0 0.7rem;
+  position: relative;
+  bottom: 1rem;
 `;
 const CabinetTemplate = (): JSX.Element => {
   return (
@@ -44,7 +47,7 @@ const CabinetTemplate = (): JSX.Element => {
       </MainNavSection>
       <MainCarouselSection>Carousel Section</MainCarouselSection>
       <MainQuestionSection>
-        <QuestionButton />
+        <GuideModal box={<GuideBox />} ModalButton={QuestionButton} />
       </MainQuestionSection>
     </MainSection>
   );

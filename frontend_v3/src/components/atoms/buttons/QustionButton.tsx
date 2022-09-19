@@ -1,8 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
 import styled from "@emotion/styled";
-import TestModal from "../modals/QuestionTestModal";
 
 const Button = styled.button`
   display: flex;
@@ -27,20 +25,9 @@ const Button = styled.button`
 // 그렇게 되면, 모달의 open 상태를 버튼과 모달 중 어느 컴포넌트에서 관리해야 할까요..? 우선은 버튼에 두었습니다.
 // 의견을 부탁드립니다.. @->---
 const QuestionButton = (): JSX.Element => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleClick = (): void => {
-    setIsModalOpen(!isModalOpen);
-  };
-
   return (
-    <Button onClick={handleClick}>
+    <Button>
       <FontAwesomeIcon icon={faCircleQuestion} />
-      {/* TODO: gyuwlee */}
-      {/* TestModal 제거 */}
-      {isModalOpen && (
-        <TestModal open={isModalOpen} handleClick={handleClick} />
-      )}
     </Button>
   );
 };
