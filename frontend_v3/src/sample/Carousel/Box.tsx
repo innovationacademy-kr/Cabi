@@ -15,7 +15,11 @@ interface BoxProps {
 }
 const Box = (props: BoxProps): JSX.Element => {
   const { index, color } = props;
-  return <BoxComponent color={color}>{index}</BoxComponent>;
+  return (
+    <BoxComponent id="this" color={color}>
+      {index}
+    </BoxComponent>
+  );
 };
 
 export default Box;

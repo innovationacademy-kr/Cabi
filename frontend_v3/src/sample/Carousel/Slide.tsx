@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import Box from "./Box";
 
 const SlideComponent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
   width: 150px;
   height: 480px;
   margin: auto;
@@ -26,21 +28,19 @@ const Slide = (props: SlideProps): JSX.Element => {
   ];
 
   const BoxesOneRow = (): JSX.Element[] => {
-    const list: JSX.Element[] = [];
-    for (let index = 0; index < countOneRow.length / 3; index += 1) {
-      const temp: JSX.Element[] = [];
-      for (let idx = 0; idx < 3; idx += 1) {
-        if (countOneRow[index * 3 + idx])
-          temp.push(<Box key={idx} index={index * 3 + idx} color={color} />);
-      }
-      list.push(<BoxLineComponet key={index}>{temp}</BoxLineComponet>);
-    }
-    return list;
-    /*
+    // const list: JSX.Element[] = [];
+    // for (let index = 0; index < countOneRow.length / 3; index += 1) {
+    //   const temp: JSX.Element[] = [];
+    //   for (let idx = 0; idx < 3; idx += 1) {
+    //     if (countOneRow[index * 3 + idx])
+    //       temp.push(<Box key={idx} index={index * 3 + idx} color={color} />);
+    //   }
+    //   list.push(<BoxLineComponet key={index}>{temp}</BoxLineComponet>);
+    // }
+    // return list;
     return countOneRow.map((item: number, index: number) => {
       return <Box key={index} index={index} color={color} />;
     });
-    */
   };
 
   const count = [
@@ -61,7 +61,13 @@ const Slide = (props: SlideProps): JSX.Element => {
       );
     });
   };
-  return <SlideComponent>{BoxesOneRow()}</SlideComponent>;
+  return (
+    <SlideComponent>
+      {countOneRow.map((item: number, index: number) => {
+        return <Box key={index} index={index} color={color} />;
+      })}
+    </SlideComponent>
+  );
 };
 
 export default Slide;
