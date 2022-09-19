@@ -5,7 +5,7 @@ export default () => ({
     user: process.env.DB_USER,
     port: process.env.DB_PORT,
     password: process.env.DB_PASSWORD,
-    database: process.env.DATABASE,
+    database: process.env.DATABASE_V2,
   },
   jwt: {
     secret: process.env.JWT_SECRETKEY,
