@@ -4,7 +4,7 @@ const axiosLogoutUrl = "/auth/logout";
 
 export const axiosLogout = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosLogoutUrl);
+    const response = await instance.post(axiosLogoutUrl);
     return response;
   } catch (error) {
     throw error;
