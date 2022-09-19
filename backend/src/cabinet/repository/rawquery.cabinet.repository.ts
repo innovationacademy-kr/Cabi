@@ -18,7 +18,7 @@ export class RawqueryCabinetRepository implements ICabinetRepository {
       user: this.configService.get<string>('database.user'),
       port: this.configService.get<number>('database.port'),
       password: this.configService.get<string>('database.password'),
-      database: this.configService.get<string>('database.database'),
+      database: this.configService.get<string>('database.database_v2'),
       dateStrings: true,
     });
   }

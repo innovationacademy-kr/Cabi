@@ -6,7 +6,7 @@ RESET='\033[0m'
 
 service mysql start
 
-#Check if the database exists
+# Check if the database exists
 
 if [ -d "/var/lib/mysql/$MARIADB_DATABASE" ]
 then
@@ -22,6 +22,20 @@ else
 
 	# Import database
 	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE < /database/42cabi_v3_test.sql
+fi
+
+# Check if the v2 database exists
+
+if [ -d "/var/lib/mysql/$MARIADB_DATABASE_V2" ]
+then
+	echo -e "${RED} Database [$MARIADB_DATABASE_V2] already exists ${RESET}"
+else
+	# Create v2 database and grant all on db_user for 42cabi
+	echo -e "${GREEN} CREATE DATABASE IF NOT EXISTS $MARIADB_DATABASE_V2; GRANT ALL ON $MARIADB_DATABASE_V2.* TO '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_PASSWORD'; FLUSH PRIVILEGES; ${RESET}"
+	echo "CREATE DATABASE IF NOT EXISTS $MARIADB_DATABASE_V2; GRANT ALL ON $MARIADB_DATABASE_V2.* TO '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_PASSWORD'; FLUSH PRIVILEGES;" | mysql -u$MARIADB_USER -p$MARIADB_PASSWORD
+
+	# Import v2 database
+	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE_V2 < /database/42cabi_v2_test.sql
 fi
 
 service mysql stop
