@@ -13,6 +13,7 @@ import { UserModule } from './user/user.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import TypeOrmConfigService from './config/typeorm.config';
+import { V3Module } from './v3/v3.module';
 // mport { TypeOrmExModule } from './typeorm-ex/typeorm-ex.module';
 
 @Module({
@@ -37,6 +38,7 @@ import TypeOrmConfigService from './config/typeorm.config';
       // serveRoot: '../img'
     }),
     UserModule,
+    V3Module,
   ],
   controllers: [],
   providers: [SessionMiddleware],

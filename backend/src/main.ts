@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // for URI Versioning
+  app.enableVersioning();
   const swaggerConfig = new DocumentBuilder()
     .setTitle('42cabi v2 API')
     .setDescription('42cabi v2 API 명세')
