@@ -1,4 +1,4 @@
-import React from "react";
+import React, { LegacyRef } from "react";
 import styled from "@emotion/styled";
 import Slide from "./Slide";
 
@@ -10,7 +10,7 @@ const SlideContainerComponent = styled.div`
 `;
 
 interface SlideContainerProps {
-  slideRef: any;
+  slideRef: LegacyRef<HTMLDivElement> | undefined;
 }
 
 const SlideContainer = (props: SlideContainerProps): JSX.Element => {

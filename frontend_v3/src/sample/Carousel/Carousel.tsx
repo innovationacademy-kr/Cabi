@@ -9,14 +9,16 @@ const CarouselComponent = styled.div`
   overflow: hidden;
 `;
 
-const Carousel = () => {
+const Carousel = (): JSX.Element => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const slideRef = useRef(null);
+  const slideRef = useRef<HTMLInputElement>(null);
   const lastSlide = 2;
 
   useEffect(() => {
-    slideRef.current.style.transition = "all 0.5s ease-in-out";
-    slideRef.current.style.transform = `translateX(-${currentSlide}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 에니메이션을 만듭니다.
+    if (slideRef.current != null) {
+      slideRef.current.style.transition = "all 0.5s ease-in-out";
+      slideRef.current.style.transform = `translateX(-${currentSlide}00%)`; // 백틱을 사용하여 슬라이드로 이동하는 에니메이션을 만듭니다.
+    }
   }, [currentSlide]);
 
   return (

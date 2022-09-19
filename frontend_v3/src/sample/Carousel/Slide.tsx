@@ -54,7 +54,7 @@ const Slide = (props: SlideProps): JSX.Element => {
     return count.map((items: number[], index: number) => {
       return (
         <BoxLineComponet key={index}>
-          {items.map((item, idx: number) => {
+          {items.map((item: number, idx: number) => {
             return <Box key={idx} index={idx + index * 3} color={color} />;
           })}
         </BoxLineComponet>
