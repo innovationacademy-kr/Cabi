@@ -1,6 +1,7 @@
 import instance from "./axios.instance";
 
 const axiosLogoutUrl = "/auth/logout";
+
 export const axiosLogout = async (): Promise<any> => {
   try {
     const response = await instance.post(axiosLogoutUrl);
