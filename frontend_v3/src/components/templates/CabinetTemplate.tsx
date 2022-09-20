@@ -6,8 +6,8 @@ import MenuButton from "../atoms/buttons/MenuButton";
 import QuestionButton from "../atoms/buttons/QustionButton";
 
 const MainSection = styled.section`
-  height: 90vh;
-  width: 25rem;
+  height: 100%;
+  width: 100%;
   background-color: #ffffffec;
   border-radius: 1rem;
 

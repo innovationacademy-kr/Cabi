@@ -2,11 +2,11 @@ import styled from "@emotion/styled";
 import LoginButton from "../atoms/buttons/LoginButton";
 
 const LoginSection = styled.section`
-  height: 90vh;
+  height: 100%;
   text-align: center;
 
   > img {
-    height: 13rem;
+    height: 24%;
     object-fit: scale-down;
     padding: 10rem 0;
   }

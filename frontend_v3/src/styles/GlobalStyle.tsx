@@ -19,8 +19,10 @@ const style = css`
     background: -webkit-linear-gradient(to bottom, #6667ab, #6c337d);
     background: linear-gradient(to bottom, #6667ab, #6c337d);
     justify-content: center;
+    box-sizing: border-box;
     height: 100vh;
     margin: 0;
+    padding: 0 1rem;
     font-family: "EliceDigitalBaeum_Regular";
   }
 `;
