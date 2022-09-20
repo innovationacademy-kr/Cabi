@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, Get, HttpException, HttpStatus, Logger, Param, Post, UseGuards } from '@nestjs/common';
+import { BadRequestException, ConflictException, Controller, ForbiddenException, Get, HttpException, HttpStatus, ImATeapotException, InternalServerErrorException, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/auth/user.decorator';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
@@ -20,8 +20,16 @@ export class LentController {
     try {
       return await this.lentService.lentCabinet(cabinet_id, user);
     } catch (err) {
-      if (err.status === HttpStatus.FORBIDDEN) {
-        throw new ForbiddenException(` already lent cabinet!`);
+      if (err.status === HttpStatus.BAD_REQUEST) {
+        throw new BadRequestException(err.message);
+      } else if (err.status === HttpStatus.FORBIDDEN) {
+        throw new ForbiddenException(err.message);
+      } else if (err.status === HttpStatus.I_AM_A_TEAPOT) {
+        throw new ImATeapotException(err.message);
+      } else if (err.status === HttpStatus.CONFLICT) {
+        throw new ConflictException(err.message);
+      } else {
+        throw new InternalServerErrorException();
       }
     }
   }
