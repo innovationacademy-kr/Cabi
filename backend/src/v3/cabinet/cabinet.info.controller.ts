@@ -43,7 +43,7 @@ export class CabinetController {
 
   @ApiOperation({
     summary: '사물함 정보 호출',
-    description: 'cabinet_id를 받아 특정 사물함의 상세정보를 받아옵니다.'
+    description: 'cabinet_id를 받아 특정 사물함의 상세정보를 받아옵니다.',
   })
   @Get('/:cabinet_id')
   async getCabinetInfoById(

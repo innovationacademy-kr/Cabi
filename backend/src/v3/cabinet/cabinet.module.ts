@@ -11,14 +11,8 @@ const repo = {
 };
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature(
-      [Cabinet],
-    ),
-  ],
-  exports: [
-    CabinetInfoService,
-  ],
+  imports: [TypeOrmModule.forFeature([Cabinet])],
+  exports: [CabinetInfoService],
   controllers: [CabinetController],
   providers: [CabinetInfoService, repo],
 })
