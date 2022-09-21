@@ -47,14 +47,12 @@ export default class Cabinet {
     name: 'lent_type',
     type: 'enum',
     enum: LentType,
-    default: LentType.PRIVATE,
   })
   lent_type: LentType;
 
   @Column({
     name: 'max_user',
     type: 'tinyint',
-    default: 3,
   })
   max_user: number;
 
