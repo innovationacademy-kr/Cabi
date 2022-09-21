@@ -16,6 +16,18 @@ export default class BanLog {
   ban_id: number;
 
   @Column({
+    name: 'ban_user_id',
+    type: 'int',
+  })
+  ban_user_id: number;
+
+  @Column({
+    name: 'ban_cabinet_id',
+    type: 'int',
+  })
+  ban_cabinet_id: number;
+
+  @Column({
     name: 'banned_date',
     type: 'datetime',
   })
@@ -31,11 +43,11 @@ export default class BanLog {
   @JoinColumn({
     name: 'ban_user_id',
   })
-  ban_user_id: User;
+  user: User;
 
   @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
   @JoinColumn({
     name: 'ban_cabinet_id',
   })
-  ban_cabinet_id: Cabinet;
+  cabinet: Cabinet;
 }

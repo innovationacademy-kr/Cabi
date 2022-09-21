@@ -17,6 +17,18 @@ export default class Lent {
   lent_id: number;
 
   @Column({
+    name: 'lent_user_id',
+    type: 'int',
+  })
+  lent_user_id: number;
+
+  @Column({
+    name: 'lent_cabinet_id',
+    type: 'int',
+  })
+  lent_cabinet_id: number;
+
+  @Column({
     name: 'lent_time',
     type: 'datetime',
   })
@@ -32,11 +44,11 @@ export default class Lent {
   @JoinColumn({
     name: 'lent_user_id',
   })
-  lent_user_id: User;
+  user: User;
 
   @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
   @JoinColumn({
     name: 'lent_cabinet_id',
   })
-  lent_cabinet_id: Cabinet;
+  cabinet: Cabinet;
 }
