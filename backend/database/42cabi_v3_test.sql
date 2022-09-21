@@ -156,7 +156,6 @@ CREATE TABLE `user` (
   `phone` varchar(128) DEFAULT NULL COMMENT '휴대폰 번호',
   `first_login` datetime DEFAULT NULL COMMENT '첫 로그인 시간',
   `last_login` datetime DEFAULT NULL COMMENT '마지막 로그인 시간',
-  `is_lent` tinyint(1) NOT NULL COMMENT '대여 여부',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `intra_id` (`intra_id`),
   UNIQUE KEY `email` (`email`),

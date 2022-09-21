@@ -80,12 +80,12 @@ export default class Cabinet {
   })
   title: string;
 
-  @OneToMany(() => Lent, (lent) => lent.lent_cabinet_id)
+  @OneToMany(() => Lent, (lent) => lent.cabinet)
   lent: Lent[];
 
-  @OneToMany(() => BanLog, (banLog) => banLog.ban_cabinet_id)
+  @OneToMany(() => BanLog, (banLog) => banLog.cabinet)
   BanLog: BanLog[];
 
-  @OneToMany(() => LentLog, (lentLog) => lentLog.log_cabinet_id)
+  @OneToMany(() => LentLog, (lentLog) => lentLog.cabinet)
   LentLog: LentLog[];
 }
