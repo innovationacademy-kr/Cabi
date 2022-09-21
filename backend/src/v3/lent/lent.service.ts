@@ -23,7 +23,7 @@ export class LentService {
     }
 
     // TODO: Repository 함수 구현 필요.
-    let cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetInfo(cabinet_id); // TODO: Lent Module에서 Cabinet Module을 import하고, Cabinet Module에서 service를 provider로 등록 필요.
+    let cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetInfo(cabinet_id);
     console.log(cabinet);
     // 2. 사용 가능한 사물함인지 확인
     if (cabinet.activation !== 1) {
@@ -42,9 +42,14 @@ export class LentService {
       throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is full!`, HttpStatus.CONFLICT);
     }
 
-    // // 대여가 가능하므로 대여 시도
-    // // 1. lent table에 insert
+    // 대여가 가능하므로 대여 시도
+    // 1. lent table에 insert
     await this.lentRepository.lentCabinet(user, cabinet);
+
+    // 2. 현재 대여로 인해 Cabinet이 풀방이 되면 Cabinet의 activation을 3으로 수정.
+    if (lent_user_cnt + 1 === cabinet.max_user) {
+      await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3); // TODO: Cabinet Repository에서 Cabinet Activation을 변경하는 함수가 필요합니다.
+    }
     let response: MyCabinetInfoResponseDto;
     return response;
   }
