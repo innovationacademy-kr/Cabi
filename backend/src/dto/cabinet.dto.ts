@@ -34,5 +34,5 @@ export class CabinetDto {
     description: '해당 사물함을 대여할 수 있는 최대 유저 수',
     example: 3,
   })
-  max_user = 3; // 해당 사물함을 대여할 수 있는 최대 유저 수
+  max_user: number; // 해당 사물함을 대여할 수 있는 최대 유저 수
 }
