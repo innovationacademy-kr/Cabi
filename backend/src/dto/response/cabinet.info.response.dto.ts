@@ -9,7 +9,7 @@ import { LentDto } from '../lent.dto';
 export class CabinetInfoResponseDto extends CabinetDto {
   @ApiPropertyOptional({
     description: '대여되어 있을 경우 대여 정보',
-    type: LentDto,
+    type: [LentDto],
   })
   lent_info?: LentDto[]; // 대여 정보 (optional)
 }
