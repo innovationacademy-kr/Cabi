@@ -25,7 +25,6 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         cabinet_id,
       },
     });
-    cabinetInfo.activation = 3;
     // TODO: lent_info 가져오는 로직이 어디에 repository에 포함되어야 하는지, service에 포함되어야하는지..
     const cabinetInfoDto: CabinetInfoResponseDto = {
       cabinet_id: cabinetInfo.cabinet_id,
@@ -35,18 +34,19 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       max_user: cabinetInfo.max_user,
       activation: cabinetInfo.activation,
     };
-    if (cabinetInfo.activation === 3) {
+    if (cabinetInfo.activation === 3) { // FIXME: lent_info는 대여중일 때만 추가되나요..? 공유사물함 인원이 다 차지 않은 경우에는 lent_info를 안보여주는게 맞는지 의문입니다.
       cabinetInfoDto.lent_info = await this.getLentUsers(cabinet_id);
     }
     return cabinetInfoDto;
   }
 
   async getLentUsers(cabinet_id: number): Promise<LentDto[]> {
-    let lentDto: Array<LentDto>;
+    let lentDto: Array<LentDto> = [];
     const lentInfo = await this.cabinetInfoRepository.findOne({
-      relations: {
-        lent: true,
-      },
+      relations: [
+        'lent',
+        'lent.user',
+      ],
       where: {
         cabinet_id,
         lent: {
@@ -54,6 +54,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         },
       },
     });
+    // console.log(lentInfo.lent);
     lentInfo.lent.forEach((lent) =>
       lentDto.push({
         user_id: lent.user.user_id,
@@ -64,7 +65,6 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         is_expired: false,
       }),
     );
-    console.log(lentInfo);
     return lentDto;
   }
 }
