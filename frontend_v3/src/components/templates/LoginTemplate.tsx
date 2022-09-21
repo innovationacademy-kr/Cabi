@@ -2,13 +2,19 @@ import styled from "@emotion/styled";
 import LoginButton from "../atoms/buttons/LoginButton";
 
 const LoginSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100%;
+  overflow: hidden;
   text-align: center;
 
   > img {
-    height: 24%;
-    object-fit: scale-down;
-    padding: 10rem 0;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: 5rem;
   }
 
   > a:hover,
