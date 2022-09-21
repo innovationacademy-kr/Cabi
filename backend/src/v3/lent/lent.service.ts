@@ -47,9 +47,9 @@ export class LentService {
     await this.lentRepository.lentCabinet(user, cabinet);
 
     // 2. 현재 대여로 인해 Cabinet이 풀방이 되면 Cabinet의 activation을 3으로 수정.
-    if (lent_user_cnt + 1 === cabinet.max_user) {
-      await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3); // TODO: Cabinet Repository에서 Cabinet Activation을 변경하는 함수가 필요합니다.
-    }
+    // if (lent_user_cnt + 1 === cabinet.max_user) {
+    //   await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3); // TODO: Cabinet Repository에서 Cabinet Activation을 변경하는 함수가 필요합니다.
+    // }
     let response: MyCabinetInfoResponseDto;
     return response;
   }
