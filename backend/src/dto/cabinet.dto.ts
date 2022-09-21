@@ -38,7 +38,7 @@ export class CabinetDto {
 
   @ApiProperty({
     description: '사물함 상태 (0: 고장, 1: 사용가능, 2: ban , 3: 대여중',
-    example: 1
+    example: 1,
   })
   activation: number; // 사물함의 현재 상태
 }

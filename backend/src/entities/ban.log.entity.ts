@@ -9,7 +9,7 @@ import Cabinet from './cabinet.entity';
 import User from './user.entity';
 
 @Entity('ban_log')
-export default class BanUser {
+export default class BanLog {
   @PrimaryGeneratedColumn({
     name: 'ban_id',
   })
