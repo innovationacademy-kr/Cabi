@@ -7,15 +7,9 @@ import { LentDto } from '../lent.dto';
  * @extends CabinetExtendDto
  */
 export class MyCabinetInfoResponseDto extends CabinetExtendDto {
-  @ApiProperty({
-    description: '캐비넷이 대여되었는지 여부',
-    example: true,
-  })
-  is_lent: boolean; // 대여했는지 여부 - 기존 activation
-
   @ApiPropertyOptional({
     description: '대여되어 있을 경우 대여 정보',
-    type: LentDto,
+    type: [LentDto],
   })
-  lent_info?: LentDto; // 대여한 유저의 정보 (optional)
+  lent_info?: LentDto[]; // 대여한 유저의 정보 (optional)
 }

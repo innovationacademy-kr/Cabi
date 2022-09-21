@@ -34,5 +34,11 @@ export class CabinetDto {
     description: '해당 사물함을 대여할 수 있는 최대 유저 수',
     example: 3,
   })
-  max_user = 3; // 해당 사물함을 대여할 수 있는 최대 유저 수
+  max_user: number; // 해당 사물함을 대여할 수 있는 최대 유저 수
+
+  @ApiProperty({
+    description: '사물함 상태 (0: 고장, 1: 사용가능, 2: ban , 3: 대여중',
+    example: 1
+  })
+  activation: number; // 사물함의 현재 상태
 }
