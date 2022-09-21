@@ -17,5 +17,5 @@ export class MyCabinetInfoResponseDto extends CabinetExtendDto {
     description: '대여되어 있을 경우 대여 정보',
     type: LentDto,
   })
-  lent_info?: LentDto; // 대여한 유저의 정보 (optional)
+  lent_info?: LentDto[]; // 대여한 유저의 정보 (optional)
 }
