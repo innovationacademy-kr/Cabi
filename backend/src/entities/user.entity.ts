@@ -2,9 +2,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import BanLog from './ban.log.entity';
+import Lent from './lent.entity';
+import LentLog from './lent.log.entity';
 
 @Entity('user')
 export default class User {
@@ -57,10 +62,12 @@ export default class User {
   })
   last_login: Date;
 
-  @Column({
-    name: 'is_lent',
-    type: 'boolean',
-    default: false,
-  })
-  is_lent: boolean;
+  @OneToOne(() => Lent, (lent) => lent.lent_user_id)
+  lent: Lent[];
+
+  @OneToMany(() => BanLog, (banLog) => banLog.ban_user_id)
+  BanLog: BanLog[];
+
+  @OneToMany(() => LentLog, (lentLog) => lentLog.log_user_id)
+  LentLog: LentLog[];
 }

@@ -1,13 +1,14 @@
 import LentType from 'src/enums/lent.type.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import BanLog from './ban.log.entity';
 import Lent from './lent.entity';
+import LentLog from './lent.log.entity';
 
 @Entity('cabinet')
 export default class Cabinet {
   @PrimaryGeneratedColumn({
     name: 'cabinet_id',
   })
-  @OneToMany(() => Lent, (lent) => lent.lent_cabinet_id)
   cabinet_id: number;
 
   @Column({
@@ -78,4 +79,13 @@ export default class Cabinet {
     length: 64,
   })
   title: string;
+
+  @OneToMany(() => Lent, (lent) => lent.lent_cabinet_id)
+  lent: Lent[];
+
+  @OneToMany(() => BanLog, (banLog) => banLog.ban_cabinet_id)
+  BanLog: BanLog[];
+
+  @OneToMany(() => LentLog, (lentLog) => lentLog.log_cabinet_id)
+  LentLog: LentLog[];
 }
