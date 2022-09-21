@@ -25,6 +25,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         cabinet_id,
       },
     });
+    cabinetInfo.activation = 3;
     // TODO: lent_info 가져오는 로직이 어디에 repository에 포함되어야 하는지, service에 포함되어야하는지..
     const cabinetInfoDto: CabinetInfoResponseDto = {
       cabinet_id: cabinetInfo.cabinet_id,
@@ -49,20 +50,21 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       where: {
         cabinet_id,
         lent: {
-          lent_cabinet_id: true,
+          cabinet: true,
         },
       },
     });
     lentInfo.lent.forEach((lent) =>
       lentDto.push({
-        user_id: lent.lent_user_id.user_id,
-        intra_id: lent.lent_user_id.intra_id,
+        user_id: lent.user.user_id,
+        intra_id: lent.user.intra_id,
         lent_id: lent.lent_id,
         lent_time: lent.lent_time,
         expire_time: lent.expire_time,
         is_expired: false,
       }),
     );
+    console.log(lentInfo);
     return lentDto;
   }
 }
