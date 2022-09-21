@@ -3,7 +3,7 @@ import { ApiOperation } from '@nestjs/swagger';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
-import { CabinetService } from './cabinet.info.service';
+import { CabinetInfoService } from './cabinet.info.service';
 
 @Controller({
   version: '3',
@@ -12,7 +12,7 @@ import { CabinetService } from './cabinet.info.service';
 export class CabinetController {
   private logger = new Logger(CabinetController.name);
 
-  constructor(private cabinetService: CabinetService) {}
+  constructor(private cabinetService: CabinetInfoService) {}
 
   // TODO: AuthGuard 처리는 기능 구현을 해보고 추가할 지 말지 결정하는 걸로 하겠습니다.
   @ApiOperation({
@@ -33,6 +33,7 @@ export class CabinetController {
   })
   @Get('/:location/:floor')
   async getCabinetsInfoByParam(
+    // Note: location을 영어로 넘겨줄 수 있는지?
     @Param('location') location: string,
     @Param('floor', ParseIntPipe) floor: number,
   ): Promise<LentInfoResponseDto> {

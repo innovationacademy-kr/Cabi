@@ -6,15 +6,14 @@ import { SpaceDataDto } from "src/dto/space.data.dto";
 import { ICabinetInfoRepository } from "./repository/cabinet.info.repository.interface";
 
 @Injectable()
-export class CabinetService {
+export class CabinetInfoService {
     constructor(
         @Inject('ICabinetInfoRepository')
         private cabinetInfoRepository: ICabinetInfoRepository,
     ) {}
 
     async getSpaceInfo(): Promise<SpaceDataResponseDto> {
-        // Note: 새롬관에서 serom으로 바꿨을 때 문제가 생기는지?
-        const location: string = "serom";
+        const location: string = "새롬관";
         const floors: number[] = [2, 4, 5];
         const space_data: SpaceDataDto[] = [{location, floors},];
 
@@ -36,7 +35,11 @@ export class CabinetService {
         cabinetId: number,
     ): Promise<CabinetInfoResponseDto> {
         try {
-            return this.cabinetInfoRepository.getCabinetInfo(cabinetId);
+            const cabinetInfo = await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
+            if (cabinetInfo.activation === 3) {
+                cabinetInfo.lent_info = await this.cabinetInfoRepository.getLentUsers(cabinetId);
+            }
+            return cabinetInfo;
         } catch (e) {
             throw new InternalServerErrorException();
         }
