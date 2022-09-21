@@ -62,12 +62,9 @@ export default class User {
   })
   last_login: Date;
 
-  @OneToOne(() => Lent, (lent) => lent.lent_user_id)
-  lent: Lent[];
-
-  @OneToMany(() => BanLog, (banLog) => banLog.ban_user_id)
+  @OneToMany(() => BanLog, (banLog) => banLog.user)
   BanLog: BanLog[];
 
-  @OneToMany(() => LentLog, (lentLog) => lentLog.log_user_id)
+  @OneToMany(() => LentLog, (lentLog) => lentLog.user)
   LentLog: LentLog[];
 }

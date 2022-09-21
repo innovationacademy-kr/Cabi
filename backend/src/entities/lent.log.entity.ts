@@ -16,6 +16,18 @@ export default class LentLog {
   log_id: number;
 
   @Column({
+    name: 'log_user_id',
+    type: 'int',
+  })
+  log_user_id: number;
+
+  @Column({
+    name: 'log_cabinet_id',
+    type: 'int',
+  })
+  log_cabinet_id: number;
+
+  @Column({
     name: 'lent_time',
     type: 'datetime',
   })
@@ -31,11 +43,11 @@ export default class LentLog {
   @JoinColumn({
     name: 'log_user_id',
   })
-  log_user_id: User;
+  user: User;
 
   @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
   @JoinColumn({
     name: 'log_cabinet_id',
   })
-  log_cabinet_id: Cabinet;
+  cabinet: Cabinet;
 }
