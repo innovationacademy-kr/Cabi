@@ -24,5 +24,11 @@ export interface ICabinetInfoRepository {
    */
   getLentUsers(cabinet_id: number): Promise<LentDto[]>;
 
+  /**
+   * 특정 사물함의 activation을 변경합니다.
+   * 
+   * @param cabinet_id 
+   * @param activation 
+   */
   updateCabinetActivation(cabinet_id: number, activation: number): Promise<void>;
 }
