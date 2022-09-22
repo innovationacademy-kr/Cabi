@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Controller, ForbiddenException, Get, HttpException, HttpStatus, ImATeapotException, InternalServerErrorException, Logger, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { BadRequestException, ConflictException, Controller, Delete, ForbiddenException, Get, HttpException, HttpStatus, ImATeapotException, InternalServerErrorException, Logger, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/auth/user.decorator';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';

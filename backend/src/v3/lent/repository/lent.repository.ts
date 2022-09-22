@@ -80,6 +80,9 @@ export class lentRepository implements ILentRepository {
         }
       },
     });
+    if (result === null) {
+      return null;
+    }
     return result.lent_cabinet_id;
   }
 
