@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import * as mariadb from 'mariadb';
 import { Inject } from '@nestjs/common';
 import { ICabinetRepository } from './cabinet.repository';
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { LentCabinetInfoDto } from '../dto/cabinet.lent.info.dto';
 import { UserDto } from 'src/user/dto/user.dto';
 

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
-import { UserSessionDto } from '../dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 /**
  * passport-42 Strategy
@@ -23,7 +23,6 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
         userId: 'id',
         email: 'email',
         login: 'login',
-        phone: 'phone',
       },
     });
   }
@@ -39,7 +38,6 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
       user_id: profile.userId,
       email: profile.email,
       intra_id: profile.login,
-      phone: profile.phone === 'hidden' ? undefined : profile.phone,
     };
     cb(null, user);
   }

@@ -11,7 +11,7 @@ import { CabinetListDto } from './dto/cabinet.list.dto';
 import { CabinetService } from './cabinet.service';
 import { MyLentInfoDto } from './dto/my.lent.info.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { User } from 'src/auth/user.decorator';
 import { LentCabinetInfoDto } from './dto/cabinet.lent.info.dto';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
