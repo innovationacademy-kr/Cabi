@@ -10,27 +10,26 @@ const Button = styled.button`
   height: 1.5rem;
   padding: 0;
   background-color: transparent;
-  color: ${(props) => props.color};
+  color: ${(props): string => (props.color ? props.color : "black")};
 `;
 
 interface SectionButtonProps {
   index: number;
   isClicked: boolean;
-  isSet: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentSlide: React.Dispatch<React.SetStateAction<number>>;
 }
 
-//TODO: hybae
-//handler 내 로직 추가 필요
+// TODO: hybae
+// handler 내 로직 추가 필요
 
 const nonClickedColor = "#c0c0c0";
 const clickedColor = "#6767aa";
 
 const SectionButton = (props: SectionButtonProps): JSX.Element => {
-  const { index, isClicked, isSet } = props;
+  const { index, isClicked, setCurrentSlide } = props;
 
-  const clickHandler = () => {
-    console.log(`move to ${index}`);
-    isSet(index);
+  const clickHandler = (): void => {
+    setCurrentSlide(index);
   };
 
   return (

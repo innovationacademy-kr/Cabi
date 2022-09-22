@@ -12,27 +12,30 @@ const Button = styled.button`
 
 interface SlideButtonProps {
   direction: string;
+  lastSlide: number;
+  currentSlide: number;
+  setCurrentSlide: React.Dispatch<React.SetStateAction<number>>;
 }
 
-//TODO: hybae
-//handler 내 로직 추가 필요
+// TODO: hybae
+// handler 내 로직 추가 필요
 const SlideButton = (props: SlideButtonProps): JSX.Element => {
-  const { direction } = props;
+  const { direction, lastSlide, currentSlide, setCurrentSlide } = props;
 
-  const leftClickHandler = () => {
-    console.log(`move to left`);
-  };
-
-  const rightClickHandler = () => {
-    console.log(`move to right`);
+  const clickHandler = (): void => {
+    if (direction === "left") {
+      if (currentSlide === 0) setCurrentSlide(lastSlide);
+      else setCurrentSlide(currentSlide - 1);
+    } else if (currentSlide === lastSlide) setCurrentSlide(0);
+    else setCurrentSlide(currentSlide + 1);
   };
 
   return direction === "left" ? (
-    <Button onClick={leftClickHandler}>
+    <Button onClick={clickHandler}>
       <FontAwesomeIcon icon={faAngleLeft} />
     </Button>
   ) : (
-    <Button onClick={rightClickHandler}>
+    <Button onClick={clickHandler}>
       <FontAwesomeIcon icon={faAngleRight} />
     </Button>
   );

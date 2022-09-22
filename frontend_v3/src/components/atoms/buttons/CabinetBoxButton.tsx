@@ -5,10 +5,10 @@ const Cabinet = styled.button`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  width: 5rem;
-  height: 5rem;
+  width: 88px;
+  height: 88px;
   padding: 0;
-  border: 0.1rem solid #dee2e6;
+  border: 1px solid #dee2e6;
   border-radius: 0;
   outline: 0;
   background: ${(props) => props.color || "white"};
@@ -30,7 +30,7 @@ const CabinetInfoText = styled.div`
   height: 50%;
 `;
 
-//TODO: hybae
+// TODO: hybae
 // Data type 정리
 interface UserDto {
   user_id: number; // 42 고유 ID
@@ -52,15 +52,17 @@ const myCabinet = "#7566ab";
 const lentedCabinet = "rgba(128, 117, 140)";
 const expiredCabinet = "#b90e7a";
 
-//TODO: hybae
-//핸들러 추가
+// TODO: hybae
+// 핸들러 추가
+// line 64: 로그인 기능 추가 후 적용
 const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
-  const { cabinet_type, cabinet_number, is_expired, lender, user } = props;
+  const { cabinet_type, cabinet_number, is_expired, lender, user, isLent } =
+    props;
 
   const setCabinetColor = (): string => {
     if (is_expired) return expiredCabinet;
-    if (lender.findIndex((index) => index.intra_id === user) !== -1)
-      return myCabinet;
+    // if (lender.findIndex((index) => index.intra_id === user) !== -1)
+    //   return myCabinet;
     if ((cabinet_type === "SHARE" && lender.length < 3) || lender.length === 0)
       return emptyCabinet;
     return lentedCabinet;
@@ -69,11 +71,11 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
   const setCabinetText = (): string => {
     switch (cabinet_type) {
       case "PRIVATE":
-        return lender === undefined ? "" : lender[0].intra_id;
+        return lender.length === 0 ? "" : lender[0].intra_id;
       case "SHARE":
         return `[${lender.length} / 3]`;
       case "CIRCLE":
-        return lender === undefined ? "" : lender[0].intra_id;
+        return lender.length === 0 ? "" : lender[0].intra_id;
       default:
         return "";
     }
@@ -82,7 +84,9 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
   const backgroundColor = setCabinetColor();
   const cabinet_text = setCabinetText();
 
-  const handleClick = (): void => {};
+  const handleClick = (): void => {
+    console.log(`TYPE : ${cabinet_type}\nLEN : ${lender.length}`);
+  };
 
   return (
     <Cabinet onClick={handleClick} color={backgroundColor}>
