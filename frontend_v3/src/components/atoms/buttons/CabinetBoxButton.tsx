@@ -5,13 +5,13 @@ const Cabinet = styled.button`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  width: 88px;
-  height: 88px;
+  width: 90px;
+  height: 90px;
   padding: 0;
   border: 1px solid #dee2e6;
   border-radius: 0;
   outline: 0;
-  background: ${(props) => props.color || "white"};
+  background: ${(props): string => props.color || "white"};
 `;
 
 const CabinetInfoNumber = styled.div`
