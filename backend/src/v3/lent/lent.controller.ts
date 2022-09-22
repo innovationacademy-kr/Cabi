@@ -42,7 +42,7 @@ export class LentController {
 
   @Patch('/update_cabinet_title/:cabinet_title')
   // @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async updateLentCabinetTitle(@Param('cabinet_title') cabinet_title: string) {
+  async updateLentCabinetTitle(@Param('cabinet_title') cabinet_title: string): Promise<void> {
     const user: UserSessionDto = {
       user_id: 85330,
       intra_id: 'sichoi',
@@ -52,8 +52,8 @@ export class LentController {
     try {
       return await this.lentService.updateLentCabinetTitle(cabinet_title, user);
     } catch (err) {
-      if (err.status === HttpStatus.FORBIDDEN) {
-        throw new ForbiddenException(err.message);
+      if (err.status === HttpStatus.BAD_REQUEST) {
+        throw new BadRequestException(err.message);
       } else {
         throw new InternalServerErrorException();
       }
@@ -62,7 +62,7 @@ export class LentController {
 
   @Patch('/update_cabinet_memo/:cabinet_memo')
   // @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async updateLentCabinetMemo(@Param('cabinet_memo') cabinet_memo: string) {
+  async updateLentCabinetMemo(@Param('cabinet_memo') cabinet_memo: string): Promise<void> {
     const user: UserSessionDto = {
       user_id: 85330,
       intra_id: 'sichoi',
@@ -72,8 +72,28 @@ export class LentController {
     try {
       return await this.lentService.updateLentCabinetMemo(cabinet_memo, user);
     } catch (err) {
-      if (err.status === HttpStatus.FORBIDDEN) {
-        throw new ForbiddenException(err.message);
+      if (err.status === HttpStatus.BAD_REQUEST) {
+        throw new BadRequestException(err.message);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+
+  @Delete('/return')
+  // @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async returnLentCabinet(): Promise<void> {
+    const user: UserSessionDto = {
+      user_id: 85330,
+      intra_id: 'sichoi',
+      iat: 0,
+      ext: 253402182000000,
+    };
+    try {
+      return await this.lentService.returnLentCabinet(user);
+    } catch (err) {
+      if (err.status === HttpStatus.BAD_REQUEST) {
+        throw new BadRequestException(err.message);
       } else {
         throw new InternalServerErrorException();
       }

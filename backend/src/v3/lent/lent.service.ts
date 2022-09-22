@@ -58,7 +58,7 @@ export class LentService {
     // 1. 해당 유저가 대여중인 사물함 id를 가져옴.
     const my_cabinet_id: number = await this.lentRepository.getLentCabinetId(user.user_id);
     if (my_cabinet_id === null) {
-      throw new HttpException(`${user.intra_id} doesn't lent cabinet!`, HttpStatus.FORBIDDEN);
+      throw new HttpException(`${user.intra_id} doesn't lent cabinet!`, HttpStatus.BAD_REQUEST);
     }
     // 2. 해당 캐비넷 제목 업데이트
     await this.lentRepository.updateLentCabinetTitle(cabinet_title, my_cabinet_id);
@@ -68,9 +68,13 @@ export class LentService {
     // 1. 해당 유저가 대여중인 사물함 id를 가져옴.
     const my_cabinet_id: number = await this.lentRepository.getLentCabinetId(user.user_id);
     if (my_cabinet_id === null) {
-      throw new HttpException(`${user.intra_id} doesn't lent cabinet!`, HttpStatus.FORBIDDEN);
+      throw new HttpException(`${user.intra_id} doesn't lent cabinet!`, HttpStatus.BAD_REQUEST);
     }
     // 2. 해당 캐비넷 메모 업데이트
     await this.lentRepository.updateLentCabinetMemo(cabinet_memo, my_cabinet_id);
+  }
+
+  async returnLentCabinet(user: UserSessionDto): Promise<void> {
+    // TODO: 구현 필요.
   }
 }
