@@ -3,12 +3,13 @@ import styled from "@emotion/styled";
 import { axiosReturn } from "../../../network/axios/axios.custom";
 
 const Button = styled.button`
+  position: absolute;
   display: flex;
   color: #6667ab;
   font-size: 1.2rem;
   justify-content: center;
   align-items: center;
-  width: 50vw;
+  width: 50%;
   height: 3rem;
   padding: 0.5rem;
   border: 0.2rem #6667ab solid;
