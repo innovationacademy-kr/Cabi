@@ -9,6 +9,7 @@ import { LentController } from './lent.controller';
 import { LentService } from './lent.service';
 import { lentRepository } from './repository/lent.repository';
 import { ILentRepository } from './repository/lent.repository.interface';
+import { UserModule } from '../user/user.module';
 
 const repo = {
   provide: ILentRepository,
@@ -16,7 +17,7 @@ const repo = {
 };
 
 @Module({
-  imports: [CabinetModule, AuthModule, BanModule, TypeOrmModule.forFeature([Lent])],
+  imports: [CabinetModule, UserModule, AuthModule, BanModule, TypeOrmModule.forFeature([Lent])],
   controllers: [LentController],
   providers: [LentService, repo],
 })

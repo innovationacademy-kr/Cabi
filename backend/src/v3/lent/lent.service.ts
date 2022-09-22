@@ -12,34 +12,31 @@ export class LentService {
   constructor(
     private lentRepository: ILentRepository,
     private cabinetInfoService: CabinetInfoService,
+    // private userService: UserService,
     ) {}
   async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<MyCabinetInfoResponseDto> {
     // 1. 해당 유저가 대여중인 사물함이 있는지 확인
-    // TODO: Repository 함수 구현 필요.
     const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
     console.log(is_lent);
     if (is_lent) {
       throw new HttpException(`${user.intra_id} already lent cabinet!`, HttpStatus.BAD_REQUEST);
     }
 
-    // TODO: Repository 함수 구현 필요.
-    let cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetInfo(cabinet_id);
+    // 2. 고장이나 ban 사물함인지 확인
+    const cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetInfo(cabinet_id); // TODO: CabinetDto만 받아오는 내부적으로만 사용되는 Repository function 필요.
     console.log(cabinet);
-    // 2. 사용 가능한 사물함인지 확인
-    if (cabinet.activation !== 1) {
+    if (cabinet.activation === 0 || cabinet.activation === 2) {
       throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is unavailable!`, HttpStatus.FORBIDDEN);
     }
 
-    // 3. 동아리 사물함인지 확인
-    if (cabinet.lent_type === LentType.CIRCLE) {
-      throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is circle cabinet!`, HttpStatus.I_AM_A_TEAPOT);
+    // 3. 잔여 자리가 있는지 확인
+    if (cabinet.activation === 3) {
+      throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is full!`, HttpStatus.CONFLICT);
     }
 
-    const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(cabinet_id);
-    console.log(lent_user_cnt);
-    // 4. 잔여 자리가 있는지 확인
-    if (lent_user_cnt === cabinet.max_user) {
-      throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is full!`, HttpStatus.CONFLICT);
+    // 4. 동아리 사물함인지 확인
+    if (cabinet.lent_type === LentType.CIRCLE) {
+      throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is circle cabinet!`, HttpStatus.I_AM_A_TEAPOT);
     }
 
     // 대여가 가능하므로 대여 시도
@@ -47,10 +44,13 @@ export class LentService {
     await this.lentRepository.lentCabinet(user, cabinet);
 
     // 2. 현재 대여로 인해 Cabinet이 풀방이 되면 Cabinet의 activation을 3으로 수정.
-    // if (lent_user_cnt + 1 === cabinet.max_user) {
-    //   await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3); // TODO: Cabinet Repository에서 Cabinet Activation을 변경하는 함수가 필요합니다.
+    const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(cabinet_id);
+    console.log(lent_user_cnt);
+    // if (lent_user_cnt === cabinet.max_user) {
+      // await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3); // TODO: Cabinet Repository에서 Cabinet Activation을 변경하는 함수가 필요합니다.
     // }
-    let response: MyCabinetInfoResponseDto;
+    const response: MyCabinetInfoResponseDto = undefined;
+    // const response: MyCabinetInfoResponseDto = await this.UserService.getMyLentInfo(user); // TODO: User 모듈에서 구현 필요.
     return response;
   }
 }
