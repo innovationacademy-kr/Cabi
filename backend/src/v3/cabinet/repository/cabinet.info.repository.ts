@@ -54,7 +54,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         },
       },
     });
-    // console.log(lentInfo.lent);
+
     lentInfo.lent.forEach((lent) =>
       lentDto.push({
         user_id: lent.user.user_id,
@@ -66,5 +66,16 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       }),
     );
     return lentDto;
+  }
+
+  async updateCabinetActivation(cabinet_id: number, activation: number): Promise<void> {
+    const cabinet = await this.cabinetInfoRepository.findOne({
+      where: {
+        cabinet_id,
+      }
+    })
+    cabinet.activation = activation;
+    console.log(cabinet);
+    await this.cabinetInfoRepository.save(cabinet);
   }
 }

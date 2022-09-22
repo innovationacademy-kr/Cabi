@@ -23,4 +23,6 @@ export interface ICabinetInfoRepository {
    * @return LentDto[]
    */
   getLentUsers(cabinet_id: number): Promise<LentDto[]>;
+
+  updateCabinetActivation(cabinet_id: number, activation: number): Promise<void>;
 }
