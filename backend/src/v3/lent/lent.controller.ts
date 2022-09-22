@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Controller, ForbiddenException, Get, HttpException, HttpStatus, ImATeapotException, InternalServerErrorException, Logger, Param, Post, UseGuards } from '@nestjs/common';
+import { BadRequestException, ConflictException, Controller, ForbiddenException, Get, HttpException, HttpStatus, ImATeapotException, InternalServerErrorException, Logger, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/auth/user.decorator';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
@@ -34,6 +34,46 @@ export class LentController {
         throw new ImATeapotException(err.message);
       } else if (err.status === HttpStatus.CONFLICT) {
         throw new ConflictException(err.message);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+
+  @Patch('/update_cabinet_title/:cabinet_title')
+  // @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async updateLentCabinetTitle(@Param('cabinet_title') cabinet_title: string) {
+    const user: UserSessionDto = {
+      user_id: 85330,
+      intra_id: 'sichoi',
+      iat: 0,
+      ext: 253402182000000,
+    };
+    try {
+      return await this.lentService.updateLentCabinetTitle(cabinet_title, user);
+    } catch (err) {
+      if (err.status === HttpStatus.FORBIDDEN) {
+        throw new ForbiddenException(err.message);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+
+  @Patch('/update_cabinet_memo/:cabinet_memo')
+  // @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async updateLentCabinetMemo(@Param('cabinet_memo') cabinet_memo: string) {
+    const user: UserSessionDto = {
+      user_id: 85330,
+      intra_id: 'sichoi',
+      iat: 0,
+      ext: 253402182000000,
+    };
+    try {
+      return await this.lentService.updateLentCabinetMemo(cabinet_memo, user);
+    } catch (err) {
+      if (err.status === HttpStatus.FORBIDDEN) {
+        throw new ForbiddenException(err.message);
       } else {
         throw new InternalServerErrorException();
       }

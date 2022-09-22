@@ -26,4 +26,29 @@ export abstract class ILentRepository {
    * @return Lent
    */
   abstract lentCabinet(user: UserSessionDto, cabinet: CabinetDto): Promise<void>;
+
+  /**
+   * 해당 user_id로 대여중인 Cabinet id를 반환합니다.
+   * 실패 시,
+   * @param user_id
+   * @return number
+   */
+  abstract getLentCabinetId(user_id: number): Promise<number>;
+
+  /**
+   * cabinet_id에 대응하는 캐비넷의 제목을 cabinet_title로 업데이트합니다.
+   * @param cabinet_title
+   * @param cabinet_id
+   * @return void
+   */
+  abstract updateLentCabinetTitle(cabinet_title: string, cabinet_id: number): Promise<void>;
+
+
+  /**
+   * cabinet_id에 대응하는 캐비넷의 메모를 cabinet_memo로 업데이트합니다.
+   * @param cabinet_memo
+   * @param cabinet_id
+   * @return void
+   */
+  abstract updateLentCabinetMemo(cabinet_memo: string, cabinet_id: number): Promise<void>;
 }
