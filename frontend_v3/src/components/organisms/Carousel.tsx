@@ -39,6 +39,8 @@ const Carousel = (props: CarouselProps): JSX.Element => {
   const [mouseDownClientY, setMouseDownClientY] = useState(0);
   const [mouseUpClientX, setMouseUpClientX] = useState(0);
   const [mouseUpClientY, setMouseUpClientY] = useState(0);
+  const [tochedX, setTochedX] = useState(0);
+  const [tochedY, setTochedY] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideRef = useRef<HTMLInputElement>(null);
   // TODO: hybae
@@ -80,6 +82,24 @@ const Carousel = (props: CarouselProps): JSX.Element => {
     setMouseUpClientY(e.clientY);
   };
 
+  const onTouchStart = (e: React.TouchEvent): void => {
+    setTochedX(e.changedTouches[0].pageX);
+    setTochedY(e.changedTouches[0].pageY);
+  };
+  const onTouchEnd = (e: React.TouchEvent): void => {
+    const distanceX = tochedX - e.changedTouches[0].pageX;
+    const distanceY = tochedY - e.changedTouches[0].pageY;
+    const vector = Math.abs(distanceX / distanceY);
+
+    if (distanceX > 30 && vector > 2) {
+      if (currentSlide === lastSlide) setCurrentSlide(0);
+      else setCurrentSlide(currentSlide + 1);
+    } else if (distanceX < -30 && vector > 2) {
+      if (currentSlide === 0) setCurrentSlide(lastSlide);
+      else setCurrentSlide(currentSlide - 1);
+    }
+  };
+
   const renderSectionButtons = (): JSX.Element[] => {
     const sectionButtons: JSX.Element[] = [];
     for (let i = 0; i <= lastSlide; i += 1) {
@@ -105,7 +125,12 @@ const Carousel = (props: CarouselProps): JSX.Element => {
           currentSlide={currentSlide}
           setCurrentSlide={setCurrentSlide}
         />
-        <CarouselArea onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
+        <CarouselArea
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <SlideContainer slideRef={slideRef} slideCount={slideCount} />
         </CarouselArea>
         <SlideButton
