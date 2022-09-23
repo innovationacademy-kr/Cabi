@@ -15,21 +15,21 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
 
   async getLocation(): Promise<string[]> {
     const location = await this.cabinetInfoRepository
-    .createQueryBuilder("cabinet")
-    .select("cabinet.location")
-    .distinct(true)
-    .getRawMany()
+      .createQueryBuilder('cabinet')
+      .select('cabinet.location')
+      .distinct(true)
+      .getRawMany();
 
     return location.map((l) => l.cabinet_location);
   }
-  
+
   async getFloors(location: string): Promise<number[]> {
     const floors = await this.cabinetInfoRepository
-    .createQueryBuilder("cabinet")
-    .select("cabinet.floor")
-    .distinct(true)
-    .where("cabinet.location = :location", { location })
-    .getRawMany()
+      .createQueryBuilder('cabinet')
+      .select('cabinet.floor')
+      .distinct(true)
+      .where('cabinet.location = :location', { location })
+      .getRawMany();
 
     return floors.map((f) => f.cabinet_floor);
   }
@@ -50,25 +50,23 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         this.getCabinetResponseInfo(cabinet.cabinet_id),
       ),
     );
-    
+
     return {
       section,
       cabinets: cabinetInfoDto,
-    }
+    };
   }
 
   async getSectionInfo(location: string, floor: number): Promise<string[]> {
     const section = await this.cabinetInfoRepository
-    .createQueryBuilder("cabinet")
-    .select("cabinet.section")
-    .distinct(true)
-    .where("cabinet.location = :location", { location })
-    .andWhere("cabinet.floor = :floor", { floor })
-    .getRawMany()
+      .createQueryBuilder('cabinet')
+      .select('cabinet.section')
+      .distinct(true)
+      .where('cabinet.location = :location', { location })
+      .andWhere('cabinet.floor = :floor', { floor })
+      .getRawMany();
 
-    return section.map((s) => (
-      s.cabinet_section
-    ));
+    return section.map((s) => s.cabinet_section);
   }
 
   async getCabinetResponseInfo(
@@ -80,7 +78,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       return {
         ...cabinetInfo,
         lent_info: lentInfo,
-      }
+      };
     }
     return cabinetInfo;
   }
@@ -89,7 +87,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     const cabinet = await this.cabinetInfoRepository.findOne({
       where: {
         cabinet_id,
-      }
+      },
     });
     return {
       cabinet_id: cabinet.cabinet_id,

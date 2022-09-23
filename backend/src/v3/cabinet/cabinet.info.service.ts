@@ -18,7 +18,7 @@ export class CabinetInfoService {
   ) {}
 
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
-    let spaceData: SpaceDataDto[] = [];
+    const spaceData: SpaceDataDto[] = [];
     const location = await this.cabinetInfoRepository.getLocation();
     for (const l of location) {
       const floors = await this.cabinetInfoRepository.getFloors(l);
@@ -45,16 +45,13 @@ export class CabinetInfoService {
     cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {
     try {
-      
       return await this.cabinetInfoRepository.getCabinetResponseInfo(cabinetId);
     } catch (e) {
       throw new InternalServerErrorException();
     }
   }
 
-  async getCabinetInfo(
-    cabinetId: number,
-  ): Promise<CabinetDto> {
+  async getCabinetInfo(cabinetId: number): Promise<CabinetDto> {
     try {
       return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
     } catch (e) {

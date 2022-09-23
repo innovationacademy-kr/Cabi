@@ -4,18 +4,17 @@ import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.d
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
 
 export interface ICabinetInfoRepository {
-
   /**
    * 존재하는 건물 정보를 가져옵니다.
-   * 
+   *
    * @return string[]
    */
   getLocation(): Promise<string[]>;
 
   /**
    * 건물에 존재하는 층 정보를 가져옵니다.
-   * 
-   * @param location 
+   *
+   * @param location
    * @return number[]
    */
   getFloors(location: string): Promise<number[]>;
@@ -26,12 +25,12 @@ export interface ICabinetInfoRepository {
    * @return LentInfoResponseDto
    */
   getFloorInfo(location: string, floor: number): Promise<LentInfoResponseDto>;
-  
+
   /**
    * 특정 건물과 층에 있는 section 정보를 가져옵니다.
    *
-   * @param location 
-   * @param floor 
+   * @param location
+   * @param floor
    * @return string[]
    */
   getSectionInfo(location: string, floor: number): Promise<string[]>;
@@ -45,9 +44,9 @@ export interface ICabinetInfoRepository {
 
   /**
    * 특정 사물함의 기본정보를 가져옵니다.
-   * 
+   *
    * @param cabinet_id
-   * @return CabinetDto 
+   * @return CabinetDto
    */
   getCabinetInfo(cabinet_id: number): Promise<CabinetDto>;
 

@@ -1,5 +1,9 @@
 import { Controller, Get, Logger, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiFoundResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiFoundResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
@@ -20,7 +24,8 @@ export class CabinetController {
     description: 'cabi에 존재하는 건물/층 정보를 받아옵니다.',
   })
   @ApiFoundResponse({
-    description: 'cabi에 존재하는 건물/층 정보를 SpaceDataResponseDto 형식으로 받아옵니다.',
+    description:
+      'cabi에 존재하는 건물/층 정보를 SpaceDataResponseDto 형식으로 받아옵니다.',
   })
   @Get()
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
@@ -35,7 +40,8 @@ export class CabinetController {
     description: 'cabi에 존재하는 건물/층 정보를 받아옵니다.',
   })
   @ApiFoundResponse({
-    description: '정상적인 건물 정보와 층 정보가 들어오면 층에 존재하는 section 정보와 사물함 정보를 가져옵니다.',
+    description:
+      '정상적인 건물 정보와 층 정보가 들어오면 층에 존재하는 section 정보와 사물함 정보를 가져옵니다.',
   })
   @ApiBadRequestResponse({
     description: '비정상 파라미터',
@@ -54,7 +60,8 @@ export class CabinetController {
     description: 'cabinet_id를 받아 특정 사물함의 상세정보를 받아옵니다.',
   })
   @ApiFoundResponse({
-    description: '파라미터로 받은 사물함의 정보를 CabinetInfoResponseDto 형식으로 받아옵니다'
+    description:
+      '파라미터로 받은 사물함의 정보를 CabinetInfoResponseDto 형식으로 받아옵니다',
   })
   @ApiBadRequestResponse({
     description: '비정상 파라미터',
