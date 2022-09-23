@@ -15,7 +15,7 @@ import { AuthService } from './auth.service';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 
 @ApiTags('Auth')
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
   private logger = new Logger(AuthController.name);
   constructor(private authService: AuthService) {}
