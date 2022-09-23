@@ -8,6 +8,7 @@ import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
 import { axiosLent } from "../../../network/axios/axios.custom";
 import CheckButton from "../buttons/CheckButton";
+import { UserDto } from "../../../types/dto/user.dto";
 
 const LentBoxContainer = styled.div``;
 
@@ -47,11 +48,6 @@ const cabinetInfo = {
 // 이것도 리덕스에 저장해서 사용해야 할까요? 아니면 props로 넘겨주는 게 나을까요?
 // isLentable: 현재 접속한 사용자가 새 사물함을 대여가능한 상태인지 여부를 나타내는 값입니다.
 // 리덕스에 저장 후 Selector로 가져와서 사용하게 될 것 같습니다.
-interface UserDto {
-  user_id: number; // 42 고유 ID
-  intra_id: string; // 42 로그인 ID
-  email?: string; // 42 이메일 ID (확장성을 위해 옵셔널 필드로 지정)
-}
 
 interface LentBoxProps {
   // eslint-disable-next-line react/require-default-props
@@ -59,7 +55,7 @@ interface LentBoxProps {
   cabinet_number: number;
   lender: UserDto[];
   cabinet_type: string;
-  isLentAble: number;
+  isLentAble: boolean;
 }
 
 const LentBox = (props: LentBoxProps): JSX.Element => {
@@ -150,9 +146,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
 
   return (
     <LentBoxContainer typeof={cabinet_type} results={lender.length}>
-      {(cabinet_type === "SHARE" && lender.length < 3) || lender.length === 0
-        ? LentAble
-        : LentUnable}
+      {isLentAble ? LentAble : LentUnable}
     </LentBoxContainer>
   );
 };
