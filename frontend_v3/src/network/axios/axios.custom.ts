@@ -73,37 +73,10 @@ export const axiosCabinetInfo = async (): Promise<any> => {
   }
 };
 
-// TODO API 변경 후 적용사항
-// location, floor에 따른 cabinets 반환
-const axiosCabinetLocationInfoURL = "/api/cabinet_info/";
-export const axiosCabinetLocationInfo = async (
-  location: string,
-  floor: number
-): Promise<any> => {
-  try {
-    const response = await instance.get(
-      `${axiosCabinetLocationInfoURL}${location}/${floor}`
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const axiosReturnInfoURL = "/api/return_info";
 export const axiosReturnInfo = async (): Promise<any> => {
   try {
     const response = await instance.post(axiosReturnInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosMyLentInfoURL = "/api/my_lent_info";
-export const axiosMyLentInfo = async (): Promise<any> => {
-  try {
-    const response = await instance.get(axiosMyLentInfoURL);
     return response;
   } catch (error) {
     throw error;
@@ -125,6 +98,64 @@ const axiosUpdateCabinetTitleURL = "/api/";
 export const axiosUpdateCabinetTitle = async (title: string): Promise<any> => {
   try {
     const response = await instance.patch(axiosUpdateCabinetTitleURL, title);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// V3 API
+// TODO
+// 차후 API 확인 후에 URL 수정
+const axiosLocationFloorURL = "/v3/api/cabinet_info";
+export const axiosLocationFloor = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosLocationFloorURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCabinetByLocationFloorURL = "/v3/api/cabinet_info/";
+export const axiosCabinetByLocationFloor = async (
+  location: string,
+  floor: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      `${axiosCabinetByLocationFloorURL}${location}/${floor}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCabinetByIdURL = "/v3/api/cabinet_info/";
+export const axiosCabinetById = async (cabinetId: number): Promise<any> => {
+  try {
+    const response = await instance.get(`${axiosCabinetByIdURL}${cabinetId}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosLentIdURL = "/v3/api/lent/";
+export const axiosLentId = async (cabinetId: number): Promise<any> => {
+  try {
+    const response = await instance.post(`${axiosLentIdURL}${cabinetId}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosMyLentInfoURL = "/v3/api/my_lent_info";
+export const axiosMyLentInfo = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyLentInfoURL);
     return response;
   } catch (error) {
     throw error;
