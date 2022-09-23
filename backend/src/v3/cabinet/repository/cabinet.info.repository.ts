@@ -31,7 +31,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       'Cluster 1 - Terrace',
     ];
     const cabinetInfoDto = await Promise.all(
-      cabinets.map((cabinet) => this.getCabinetInfo(cabinet.cabinet_id)),
+      cabinets.map((cabinet) => this.getCabinetResponseInfo(cabinet.cabinet_id)),
     );
     return {
       section,
@@ -39,7 +39,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     };
   }
 
-  async getCabinetInfo(cabinet_id: number): Promise<CabinetInfoResponseDto> {
+  async getCabinetResponseInfo(cabinet_id: number): Promise<CabinetInfoResponseDto> {
     const cabinetInfo = await this.cabinetInfoRepository.findOne({
       where: {
         cabinet_id,

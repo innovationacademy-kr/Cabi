@@ -51,6 +51,6 @@ export class CabinetController {
   ): Promise<CabinetInfoResponseDto> {
     this.logger.log('getCabinetInfoById');
     await this.cabinetService.updateCabinetActivation(cabinetId, 3);
-    return await this.cabinetService.getCabinetInfo(cabinetId);
+    return await this.cabinetService.getCabinetResponseInfo(cabinetId);
   }
 }

@@ -35,9 +35,9 @@ export class CabinetInfoService {
     }
   }
 
-  async getCabinetInfo(cabinetId: number): Promise<CabinetInfoResponseDto> {
+  async getCabinetResponseInfo(cabinetId: number): Promise<CabinetInfoResponseDto> {
     try {
-      return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
+      return await this.cabinetInfoRepository.getCabinetResponseInfo(cabinetId);
     } catch (e) {
       throw new InternalServerErrorException();
     }
