@@ -1,4 +1,4 @@
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { UserDto } from 'src/user/dto/user.dto';
 import { LentCabinetInfoDto } from '../dto/cabinet.lent.info.dto';
 import { CabinetListDto } from '../dto/cabinet.list.dto';

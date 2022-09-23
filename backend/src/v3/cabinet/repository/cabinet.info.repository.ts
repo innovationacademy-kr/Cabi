@@ -31,7 +31,9 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       'Cluster 1 - Terrace',
     ];
     const cabinetInfoDto = await Promise.all(
-      cabinets.map((cabinet) => this.getCabinetResponseInfo(cabinet.cabinet_id)),
+      cabinets.map((cabinet) =>
+        this.getCabinetResponseInfo(cabinet.cabinet_id),
+      ),
     );
     return {
       section,
@@ -39,7 +41,9 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     };
   }
 
-  async getCabinetResponseInfo(cabinet_id: number): Promise<CabinetInfoResponseDto> {
+  async getCabinetResponseInfo(
+    cabinet_id: number,
+  ): Promise<CabinetInfoResponseDto> {
     const cabinetInfo = await this.cabinetInfoRepository.findOne({
       where: {
         cabinet_id,
@@ -58,7 +62,6 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       // FIXME: lent_info는 대여중일 때만 추가되나요..? 공유사물함 인원이 다 차지 않은 경우에는 lent_info를 안보여주는게 맞는지 의문입니다.
       cabinetInfoDto.lent_info = await this.getLentUsers(cabinet_id);
     }
-    console.log(cabinetInfoDto);
     return cabinetInfoDto;
   }
 
@@ -73,7 +76,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         },
       },
     });
-
+    // console.log(lentInfo.lent);
     lentInfo.lent.forEach((lent) =>
       lentDto.push({
         user_id: lent.user.user_id,

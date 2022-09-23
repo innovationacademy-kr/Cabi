@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import BanLog from './ban.log.entity';
+import Lent from './lent.entity';
 import LentLog from './lent.log.entity';
 
 @Entity('user')
@@ -62,6 +64,9 @@ export default class User {
 
   @OneToMany(() => BanLog, (banLog) => banLog.user)
   BanLog: BanLog[];
+
+  @OneToOne(() => Lent, (lent) => lent.user)
+  Lent: Lent | null;
 
   @OneToMany(() => LentLog, (lentLog) => lentLog.user)
   LentLog: LentLog[];

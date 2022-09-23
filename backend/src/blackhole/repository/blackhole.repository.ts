@@ -1,3 +1,5 @@
+import { UserDto } from 'src/dto/user.dto';
+
 export abstract class IBlackholeRepository {
   /**
    * 블랙홀에 빠진 유저를 DB에서 삭제한다.
@@ -18,4 +20,11 @@ export abstract class IBlackholeRepository {
     user_id: number,
     intra_id: string,
   ): Promise<void>;
+
+  /**
+   * DB에 존재하는 모든 사용자를 가져옵니다.
+   *
+   * @return UserDto[]
+   */
+  abstract getAllUser(): Promise<UserDto[]>;
 }

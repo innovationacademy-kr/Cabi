@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 /**
  * (사전에 인증받았다고 가정한) 사용자 정보를 이용해 JWT 토큰을 발급하여 쿠키에 삽입합니다.

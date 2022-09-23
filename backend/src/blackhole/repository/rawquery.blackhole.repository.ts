@@ -2,6 +2,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IBlackholeRepository } from './blackhole.repository';
 import * as mariadb from 'mariadb';
+import { UserDto } from 'src/dto/user.dto';
 
 export class RawqueryBlackholeRepository implements IBlackholeRepository {
   private pool: mariadb.Pool;
@@ -103,5 +104,28 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
         throw new Error(`updateBlackholedUser Error - ${err}`);
       });
     if (connection) connection.end();
+  }
+
+  async getAllUser(): Promise<UserDto[]> {
+    const content = `SELECT * FROM user;`;
+
+    const userList: UserDto[] = [];
+    const connection = await this.pool.getConnection();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        res.forEach((user: any) => {
+          userList.push({
+            user_id: user.user_id,
+            intra_id: user.intra_id,
+          });
+        });
+      })
+      .catch((err: any) => {
+        console.error(err);
+        throw err;
+      });
+    if (connection) connection.end();
+    return userList;
   }
 }
