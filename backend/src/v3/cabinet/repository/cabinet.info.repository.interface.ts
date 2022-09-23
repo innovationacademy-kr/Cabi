@@ -13,6 +13,7 @@ export interface ICabinetInfoRepository {
   /**
    * 특정 사물함의 정보를 가져옵니다.
    *
+   * @param cabinet_id
    * @return CabinetInfoResponstDto
    */
   getCabinetInfo(cabinet_id: number): Promise<CabinetInfoResponseDto>;
@@ -20,6 +21,7 @@ export interface ICabinetInfoRepository {
   /**
    * 특정 사물함의 lent 정보들을 가져옵니다.
    *
+   * @param cabinet_id
    * @return LentDto[]
    */
   getLentUsers(cabinet_id: number): Promise<LentDto[]>;

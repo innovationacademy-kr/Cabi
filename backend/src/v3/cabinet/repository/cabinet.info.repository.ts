@@ -16,7 +16,28 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     location: string,
     floor: number,
   ): Promise<LentInfoResponseDto> {
-    return;
+    const cabinets = await this.cabinetInfoRepository.find({
+      where: {
+        location,
+        floor,
+      }
+    });
+    // TODO: section 저장은 어디서하는지..?
+    const section = [
+      "Oasis",
+      "End of Cluster 2",
+      "Cluster 1 - OA",
+      "End of Cluster 1",
+      "Cluster 1 - Terrace",
+    ];
+    const cabinetInfoDto = await Promise.all(
+      cabinets.map((cabinet) => (
+        this.getCabinetInfo(cabinet.cabinet_id)
+    )));
+    return {
+      section,
+      cabinets: cabinetInfoDto,
+    }
   }
 
   async getCabinetInfo(cabinet_id: number): Promise<CabinetInfoResponseDto> {
