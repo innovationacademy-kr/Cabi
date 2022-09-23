@@ -81,7 +81,6 @@ export class LentService {
   async returnLentCabinet(user: UserSessionDto): Promise<void> {
     // 1. 해당 유저가 대여중인 lent 정보를 가져옴.
     const lent: Lent = await this.lentRepository.getLent(user.user_id);
-    console.log(lent);
     if (lent === null) {
       throw new HttpException(`${user.intra_id} doesn't lent cabinet!`, HttpStatus.BAD_REQUEST);
     }

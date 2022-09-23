@@ -97,6 +97,7 @@ export class LentController {
       if (err.status === HttpStatus.BAD_REQUEST) {
         throw new BadRequestException(err.message);
       } else {
+        console.log(err);
         throw new InternalServerErrorException();
       }
     }

@@ -116,6 +116,9 @@ export class lentRepository implements ILentRepository {
   async getLent(user_id: number): Promise<Lent> {
     console.log(user_id);
     const result = await this.lentRepository.findOne({
+      relations: {
+        cabinet: true,
+      },
       where: {
         lent_user_id: user_id,
       }
