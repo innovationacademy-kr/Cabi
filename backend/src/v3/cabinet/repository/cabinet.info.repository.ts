@@ -1,16 +1,38 @@
 import { InjectRepository } from '@nestjs/typeorm';
+import { CabinetDto } from 'src/dto/cabinet.dto';
 import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
 import Cabinet from 'src/entities/cabinet.entity';
 import { Repository } from 'typeorm';
-import { ICabinetInfoRepository } from './cabinet.info.repository.interface';
+import { ICabinetInfoRepository } from './interface.cabinet.info.repository';
 
 export class CabinetInfoRepository implements ICabinetInfoRepository {
   constructor(
     @InjectRepository(Cabinet)
     private cabinetInfoRepository: Repository<Cabinet>,
   ) {}
+
+  async getLocation(): Promise<string[]> {
+    const location = await this.cabinetInfoRepository
+    .createQueryBuilder("cabinet")
+    .select("cabinet.location")
+    .distinct(true)
+    .getRawMany()
+
+    return location.map((l) => l.cabinet_location);
+  }
+  
+  async getFloors(location: string): Promise<number[]> {
+    const floors = await this.cabinetInfoRepository
+    .createQueryBuilder("cabinet")
+    .select("cabinet.floor")
+    .distinct(true)
+    .where("cabinet.location = :location", { location })
+    .getRawMany()
+
+    return floors.map((f) => f.cabinet_floor);
+  }
 
   async getFloorInfo(
     location: string,
@@ -22,51 +44,65 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         floor,
       },
     });
-    // TODO: section 저장은 어디서하는지..?
-    const section = [
-      'Oasis',
-      'End of Cluster 2',
-      'Cluster 1 - OA',
-      'End of Cluster 1',
-      'Cluster 1 - Terrace',
-    ];
+    const section = await this.getSectionInfo(location, floor);
     const cabinetInfoDto = await Promise.all(
       cabinets.map((cabinet) =>
         this.getCabinetResponseInfo(cabinet.cabinet_id),
       ),
     );
+    
     return {
       section,
       cabinets: cabinetInfoDto,
-    };
+    }
+  }
+
+  async getSectionInfo(location: string, floor: number): Promise<string[]> {
+    const section = await this.cabinetInfoRepository
+    .createQueryBuilder("cabinet")
+    .select("cabinet.section")
+    .distinct(true)
+    .where("cabinet.location = :location", { location })
+    .andWhere("cabinet.floor = :floor", { floor })
+    .getRawMany()
+
+    return section.map((s) => (
+      s.cabinet_section
+    ));
   }
 
   async getCabinetResponseInfo(
     cabinet_id: number,
   ): Promise<CabinetInfoResponseDto> {
-    const cabinetInfo = await this.cabinetInfoRepository.findOne({
+    const cabinetInfo = await this.getCabinetInfo(cabinet_id);
+    if (cabinetInfo.activation === 3 || cabinetInfo.activation === 1) {
+      const lentInfo = await this.getLentUsers(cabinet_id);
+      return {
+        ...cabinetInfo,
+        lent_info: lentInfo,
+      }
+    }
+    return cabinetInfo;
+  }
+
+  async getCabinetInfo(cabinet_id: number): Promise<CabinetDto> {
+    const cabinet = await this.cabinetInfoRepository.findOne({
       where: {
         cabinet_id,
-      },
+      }
     });
-    // TODO: lent_info 가져오는 로직이 어디에 repository에 포함되어야 하는지, service에 포함되어야하는지..
-    const cabinetInfoDto: CabinetInfoResponseDto = {
-      cabinet_id: cabinetInfo.cabinet_id,
-      cabinet_num: cabinetInfo.cabinet_num,
-      lent_type: cabinetInfo.lent_type,
-      cabinet_title: cabinetInfo.title,
-      max_user: cabinetInfo.max_user,
-      activation: cabinetInfo.activation,
+    return {
+      cabinet_id: cabinet.cabinet_id,
+      cabinet_num: cabinet.cabinet_num,
+      lent_type: cabinet.lent_type,
+      cabinet_title: cabinet.title,
+      max_user: cabinet.max_user,
+      activation: cabinet.activation,
     };
-    if (cabinetInfo.activation === 3) {
-      // FIXME: lent_info는 대여중일 때만 추가되나요..? 공유사물함 인원이 다 차지 않은 경우에는 lent_info를 안보여주는게 맞는지 의문입니다.
-      cabinetInfoDto.lent_info = await this.getLentUsers(cabinet_id);
-    }
-    return cabinetInfoDto;
   }
 
   async getLentUsers(cabinet_id: number): Promise<LentDto[]> {
-    const lentDto: Array<LentDto> = [];
+    const lentDto: LentDto[] = [];
     const lentInfo = await this.cabinetInfoRepository.findOne({
       relations: ['lent', 'lent.user'],
       where: {
@@ -76,7 +112,9 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         },
       },
     });
-    // console.log(lentInfo.lent);
+    if (!lentInfo) {
+      return lentDto;
+    }
     lentInfo.lent.forEach((lent) =>
       lentDto.push({
         user_id: lent.user.user_id,
