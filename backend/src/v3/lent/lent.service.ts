@@ -30,7 +30,7 @@ export class LentService {
 
     // TODO: Repository 함수 구현 필요.
     const cabinet: CabinetInfoResponseDto =
-      await this.cabinetInfoService.getCabinetInfo(cabinet_id);
+      await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id);
     console.log(cabinet);
     // 2. 사용 가능한 사물함인지 확인
     if (cabinet.activation !== 1) {
