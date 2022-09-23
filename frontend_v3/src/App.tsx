@@ -5,7 +5,6 @@ import GlobalStyle from "./styles/GlobalStyle";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 import Lent from "./pages/Lent";
-import Carousel from "./sample/Carousel/Carousel";
 
 // 기존 .App 설정
 const AppDiv = styled.div`
@@ -27,7 +26,6 @@ function App(): JSX.Element {
             <Route path="/" element={<Login />} />
             <Route path="/main" element={<Main />} />
             <Route path="/Lent" element={<Lent />} />
-            <Route path="/Carousel" element={<Carousel />} />
             <Route path="/*" element={<Login />} />
           </Routes>
         </Section>
