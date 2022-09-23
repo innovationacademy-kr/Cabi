@@ -1,4 +1,7 @@
 import styled from "@emotion/styled";
+import { useState } from "react";
+import LentBox from "../modals/LentBox";
+import LentModal from "../modals/LentModal";
 
 const Cabinet = styled.button`
   display: flex;
@@ -58,6 +61,11 @@ const expiredCabinet = "#b90e7a";
 const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
   const { cabinet_type, cabinet_number, is_expired, lender, user, isLent } =
     props;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleClick = (): void => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   const setCabinetColor = (): string => {
     if (is_expired) return expiredCabinet;
@@ -84,14 +92,22 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
   const backgroundColor = setCabinetColor();
   const cabinet_text = setCabinetText();
 
-  const handleClick = (): void => {
-    console.log(`TYPE : ${cabinet_type}\nLEN : ${lender.length}`);
-  };
+  // const handleClick = (): void => {
+  //   console.log(`TYPE : ${cabinet_type}\nLEN : ${lender.length}`);
+  // };
 
   return (
     <Cabinet onClick={handleClick} color={backgroundColor}>
       <CabinetInfoNumber>{cabinet_number}</CabinetInfoNumber>
       <CabinetInfoText>{cabinet_text}</CabinetInfoText>
+      {isModalOpen && (
+        <LentModal
+          cabinet_type={cabinet_type}
+          cabinet_number={cabinet_number}
+          lender={lender}
+          handleClose={handleClick}
+        />
+      )}
     </Cabinet>
   );
 };

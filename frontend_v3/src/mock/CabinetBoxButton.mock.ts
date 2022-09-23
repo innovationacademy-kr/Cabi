@@ -142,4 +142,180 @@ MockDatas[8] = {
   user: "seuan3",
 };
 
+MockDatas[9] = {
+  cabinet_type: "SHARE",
+  cabinet_number: 10,
+  is_expired: false,
+  lender: [
+    {
+      user_id: 14,
+      intra_id: "seuan3",
+    },
+    {
+      user_id: 15,
+      intra_id: "seuan4",
+    },
+    {
+      user_id: 16,
+      intra_id: "seuan4",
+    },
+  ],
+  isLent: 1,
+  user: "seuan3",
+};
+
+MockDatas[10] = {
+  cabinet_type: "SHARE",
+  cabinet_number: 11,
+  is_expired: false,
+  lender: [
+    {
+      user_id: 14,
+      intra_id: "seuan3",
+    },
+    {
+      user_id: 15,
+      intra_id: "seuan4",
+    },
+    {
+      user_id: 16,
+      intra_id: "seuan4",
+    },
+  ],
+  isLent: 1,
+  user: "seuan3",
+};
+
+MockDatas[11] = {
+  cabinet_type: "SHARE",
+  cabinet_number: 12,
+  is_expired: false,
+  lender: [
+    {
+      user_id: 14,
+      intra_id: "seuan3",
+    },
+    {
+      user_id: 15,
+      intra_id: "seuan4",
+    },
+    {
+      user_id: 16,
+      intra_id: "seuan4",
+    },
+  ],
+  isLent: 1,
+  user: "seuan3",
+};
+
+MockDatas[12] = {
+  cabinet_type: "SHARE",
+  cabinet_number: 13,
+  is_expired: false,
+  lender: [
+    {
+      user_id: 14,
+      intra_id: "seuan3",
+    },
+    {
+      user_id: 15,
+      intra_id: "seuan4",
+    },
+    {
+      user_id: 16,
+      intra_id: "seuan4",
+    },
+  ],
+  isLent: 1,
+  user: "seuan3",
+};
+
+MockDatas[13] = {
+  cabinet_type: "SHARE",
+  cabinet_number: 14,
+  is_expired: false,
+  lender: [
+    {
+      user_id: 14,
+      intra_id: "seuan3",
+    },
+    {
+      user_id: 15,
+      intra_id: "seuan4",
+    },
+    {
+      user_id: 16,
+      intra_id: "seuan4",
+    },
+  ],
+  isLent: 1,
+  user: "seuan3",
+};
+
+MockDatas[14] = {
+  cabinet_type: "SHARE",
+  cabinet_number: 15,
+  is_expired: false,
+  lender: [
+    {
+      user_id: 14,
+      intra_id: "seuan3",
+    },
+    {
+      user_id: 15,
+      intra_id: "seuan4",
+    },
+    {
+      user_id: 16,
+      intra_id: "seuan4",
+    },
+  ],
+  isLent: 1,
+  user: "seuan3",
+};
+
+MockDatas[15] = {
+  cabinet_type: "SHARE",
+  cabinet_number: 16,
+  is_expired: false,
+  lender: [
+    {
+      user_id: 14,
+      intra_id: "seuan3",
+    },
+    {
+      user_id: 15,
+      intra_id: "seuan4",
+    },
+    {
+      user_id: 16,
+      intra_id: "seuan4",
+    },
+  ],
+  isLent: 1,
+  user: "seuan3",
+};
+
+MockDatas[16] = {
+  cabinet_type: "SHARE",
+  cabinet_number: 17,
+  is_expired: false,
+  lender: [
+    {
+      user_id: 14,
+      intra_id: "seuan3",
+    },
+    {
+      user_id: 15,
+      intra_id: "seuan4",
+    },
+    {
+      user_id: 16,
+      intra_id: "seuan4",
+    },
+  ],
+  isLent: 1,
+  user: "seuan3",
+};
+
 export default MockDatas;
