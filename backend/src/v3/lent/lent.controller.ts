@@ -17,11 +17,11 @@ export class LentController {
   @Post('/:cabinet_id')
   // @UseGuards(JwtAuthGuard, BanCheckGuard) // TODO: 연체자가 대여를 시도하면 프론트 단에서 경고 메시지를 띄우는 것도 좋을 것 같습니다.
   async lentCabinet(
-    @Param() cabinet_id: number,
+    @Param('cabinet_id') cabinet_id: number,
   ): Promise<MyCabinetInfoResponseDto> {
     const user: UserSessionDto = {
-      user_id: 80400,
-      intra_id: 'hyospark',
+      user_id: 1,
+      intra_id: 'test',
       iat: 0,
       ext: 253402182000000,
     };
@@ -86,8 +86,8 @@ export class LentController {
   // @UseGuards(JwtAuthGuard, BanCheckGuard)
   async returnLentCabinet(): Promise<void> {
     const user: UserSessionDto = {
-      user_id: 85330,
-      intra_id: 'sichoi',
+      user_id: 1,
+      intra_id: 'test',
       iat: 0,
       ext: 253402182000000,
     };

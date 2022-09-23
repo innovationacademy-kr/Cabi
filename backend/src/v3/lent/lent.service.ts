@@ -3,8 +3,10 @@ import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import Lent from 'src/entities/lent.entity';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
+import { UserService } from '../user/user.service';
 import { ILentRepository } from './repository/lent.repository.interface';
 
 @Injectable()
@@ -12,7 +14,7 @@ export class LentService {
   constructor(
     private lentRepository: ILentRepository,
     private cabinetInfoService: CabinetInfoService,
-    // private userService: UserService,
+    private userService: UserService,
     ) {}
   async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<MyCabinetInfoResponseDto> {
     // 1. 해당 유저가 대여중인 사물함이 있는지 확인
@@ -49,11 +51,10 @@ export class LentService {
     // 2. 현재 대여로 인해 Cabinet이 풀방이 되면 Cabinet의 activation을 3으로 수정.
     const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(cabinet_id);
     console.log(lent_user_cnt);
-    // if (lent_user_cnt === cabinet.max_user) {
-      // await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3); // TODO: Cabinet Repository에서 Cabinet Activation을 변경하는 함수가 필요합니다.
-    // }
-    const response: MyCabinetInfoResponseDto = undefined;
-    // const response: MyCabinetInfoResponseDto = await this.UserService.getMyLentInfo(user); // TODO: User 모듈에서 구현 필요.
+    if (lent_user_cnt === cabinet.max_user) {
+      await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3);
+    }
+    const response: MyCabinetInfoResponseDto = await this.userService.getCabinetByUserId(user.user_id);
     return response;
   }
 
@@ -78,6 +79,21 @@ export class LentService {
   }
 
   async returnLentCabinet(user: UserSessionDto): Promise<void> {
-    // TODO: 구현 필요.
+    // 1. 해당 유저가 대여중인 lent 정보를 가져옴.
+    const lent: Lent = await this.lentRepository.getLent(user.user_id);
+    console.log(lent);
+    if (lent === null) {
+      throw new HttpException(`${user.intra_id} doesn't lent cabinet!`, HttpStatus.BAD_REQUEST);
+    }
+    // 2. Lent Table에서 값 제거.
+    await this.lentRepository.deleteLentByLentId(lent.lent_id);
+    // 3. 해당 캐비넷은 대여 가능해 졌으므로 activation 1로 수정.
+    await this.cabinetInfoService.updateCabinetActivation(lent.lent_cabinet_id, 1);
+    // 4. Lent Log Table에서 값 추가.
+    await this.lentRepository.addLentLog(lent);
+    // 5. 개인 사물함인 경우 Cabinet Status 사용 가능으로 수정.
+    if (lent.cabinet.lent_type === LentType.PRIVATE) {
+      await this.cabinetInfoService.updateCabinetActivation(lent.lent_cabinet_id, 1);
+    }
   }
 }

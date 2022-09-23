@@ -2,6 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
+import LentLog from 'src/entities/lent.log.entity';
 import LentType from 'src/enums/lent.type.enum';
 import { Repository } from 'typeorm';
 import { ILentRepository } from './lent.repository.interface';
@@ -10,6 +11,8 @@ export class lentRepository implements ILentRepository {
   constructor(
     @InjectRepository(Lent)
     private lentRepository: Repository<Lent>,
+    @InjectRepository(LentLog)
+    private lentLogRepository: Repository<LentLog>,
   ) {}
 
   async getIsLent(user_id: number): Promise<boolean> {
@@ -108,5 +111,42 @@ export class lentRepository implements ILentRepository {
         cabinet_id: cabinet_id,
     })
     .execute();
+  }
+
+  async getLent(user_id: number): Promise<Lent> {
+    console.log(user_id);
+    const result = await this.lentRepository.findOne({
+      where: {
+        lent_user_id: user_id,
+      }
+    });
+    console.log(result);
+    if (result === null) {
+      return null;
+    }
+    return result;
+  }
+
+  async deleteLentByLentId(lent_id: number): Promise<void> {
+    await this.lentRepository.createQueryBuilder()
+    .delete()
+    .from(Lent)
+    .where({
+      lent_id: lent_id,
+    })
+    .execute();
+  }
+
+  async addLentLog(lent: Lent): Promise<void> {
+    await this.lentLogRepository.insert({
+      user: {
+        user_id: lent.lent_user_id,
+      },
+      cabinet: {
+        cabinet_id: lent.lent_cabinet_id,
+      },
+      lent_time: lent.lent_time,
+      return_time: new Date(),
+    });
   }
 }

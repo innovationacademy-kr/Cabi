@@ -50,4 +50,26 @@ export abstract class ILentRepository {
    * @return void
    */
   abstract updateLentCabinetMemo(cabinet_memo: string, cabinet_id: number): Promise<void>;
+
+  /**
+   * user_id에 대응하는 lent 정보를 반환합니다.
+   * @param user_id
+   * @return Lent
+   */
+  abstract getLent(user_id: number): Promise<Lent>;
+
+  /**
+   * user_id에 대응하는 Lent값을 삭제합니다.
+   * 해당 Lent 값을 반환합니다.
+   * @param user_id
+   * @return void
+   */
+  abstract deleteLentByLentId(lent_id: number): Promise<void>;
+
+  /**
+   * 기존 lent 정보를 lent log에 추가합니다.
+   * @param Lent
+   * @return void
+   */
+  abstract addLentLog(lent: Lent): Promise<void>;
 }

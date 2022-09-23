@@ -14,6 +14,7 @@ const repo = {
 @Module({
   imports: [TypeOrmModule.forFeature([User]), AuthModule],
   controllers: [MyLentInfoController],
+  exports: [UserService],
   providers: [UserService, repo],
 })
 export class UserModule {}
