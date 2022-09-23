@@ -4,6 +4,7 @@ import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { useAppSelector } from "../../../redux/hooks";
 
 const Button = styled.button`
   display: flex;
@@ -17,7 +18,14 @@ const Button = styled.button`
   background-color: transparent;
 `;
 
-const BuildingButton = (): JSX.Element => {
+interface LocationButtonProps {
+  currentLocation: string;
+  setCurrentLocation: (location: string) => void;
+}
+
+const LocationButton = (props: LocationButtonProps): JSX.Element => {
+  const { currentLocation, setCurrentLocation } = props;
+  const locations = useAppSelector((state) => state.cabinet.location);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -25,10 +33,10 @@ const BuildingButton = (): JSX.Element => {
     setAnchorEl(event.currentTarget);
   };
 
-  // todo : seuan
-  // 차후 새롬관, 마루관에 따라 다르게 보여줘야할 경우 건물의 정보를 받아와야합니다.
-  // 현재는 새롬관(default)만 존재하므로 고려하지 않아도 됩니다.
-  const handleBuilding = (): void => {
+  const handleBuilding = (e: any): void => {
+    const getLocation: string | null =
+      e.currentTarget.getAttribute("button-key");
+    if (getLocation) setCurrentLocation(getLocation);
     setAnchorEl(null);
   };
 
@@ -36,14 +44,23 @@ const BuildingButton = (): JSX.Element => {
     <div>
       <Button onClick={handleClick}>
         <FontAwesomeIcon icon={faSortDown} />
-        &nbsp;새롬관
+        &nbsp;{currentLocation}
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleBuilding}>
-        <MenuItem onClick={handleBuilding}>새롬관</MenuItem>
-        <MenuItem onClick={handleBuilding}>마루관</MenuItem>
+        {locations?.map((location: string) => {
+          return (
+            <MenuItem
+              button-key={location}
+              key={location}
+              onClick={handleBuilding}
+            >
+              {location}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </div>
   );
 };
 
-export default BuildingButton;
+export default LocationButton;

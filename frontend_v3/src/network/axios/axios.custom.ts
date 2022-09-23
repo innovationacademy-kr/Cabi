@@ -73,6 +73,23 @@ export const axiosCabinetInfo = async (): Promise<any> => {
   }
 };
 
+// TODO API 변경 후 적용사항
+// location, floor에 따른 cabinets 반환
+const axiosCabinetLocationInfoURL = "/api/cabinet_info/";
+export const axiosCabinetLocationInfo = async (
+  location: string,
+  floor: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      `${axiosCabinetLocationInfoURL}${location}/${floor}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosReturnInfoURL = "/api/return_info";
 export const axiosReturnInfo = async (): Promise<any> => {
   try {
