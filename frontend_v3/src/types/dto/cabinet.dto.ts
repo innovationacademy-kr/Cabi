@@ -3,8 +3,8 @@ import { LentDto } from "./lent.dto";
 // TODO :hybae
 // lent_type을 LentType으로 변경 예정
 export interface MyCabinetInfoResponseDto {
-  is_lent: boolean; // 대여했는지 여부
-  lent_info?: LentDto; // 대여 정보 (optional)
+  activation: number; // (0: 고장, 1: 사용가능, 2: ban, 3: 대여중)
+  lent_info?: LentDto[]; // 대여 정보 (optional)
   location: string; // 사물함 건물
   floor: number; // 사물함 층수
   section: string; // 사물함의 섹션 종류 (오아시스 등)
