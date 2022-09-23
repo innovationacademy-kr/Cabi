@@ -4,18 +4,19 @@ import Modal from "@mui/material/Modal";
 
 interface GuideModalProps {
   box: JSX.Element;
+  button: JSX.Element;
 }
 
 export default function GuideModal(props: GuideModalProps): JSX.Element {
-  const { box } = props;
+  const { box, button } = props;
   const [open, setOpen] = React.useState(false);
   const handleOpen = (): void => setOpen(true);
   const handleClose = (): void => setOpen(false);
 
   return (
-    <div>
-      <Button onClick={handleOpen} variant="contained" color="primary">
-        Open modal
+    <div className="modalButton">
+      <Button sx={{ padding: 0 }} onClick={handleOpen}>
+        {button}
       </Button>
       <Modal
         open={open}
