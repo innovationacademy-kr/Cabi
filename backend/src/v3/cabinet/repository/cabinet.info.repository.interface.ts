@@ -28,9 +28,12 @@ export interface ICabinetInfoRepository {
 
   /**
    * 특정 사물함의 activation을 변경합니다.
-   * 
-   * @param cabinet_id 
-   * @param activation 
+   *
+   * @param cabinet_id
+   * @param activation
    */
-  updateCabinetActivation(cabinet_id: number, activation: number): Promise<void>;
+  updateCabinetActivation(
+    cabinet_id: number,
+    activation: number,
+  ): Promise<void>;
 }

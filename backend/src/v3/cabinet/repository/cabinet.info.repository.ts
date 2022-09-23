@@ -20,24 +20,23 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       where: {
         location,
         floor,
-      }
+      },
     });
     // TODO: section 저장은 어디서하는지..?
     const section = [
-      "Oasis",
-      "End of Cluster 2",
-      "Cluster 1 - OA",
-      "End of Cluster 1",
-      "Cluster 1 - Terrace",
+      'Oasis',
+      'End of Cluster 2',
+      'Cluster 1 - OA',
+      'End of Cluster 1',
+      'Cluster 1 - Terrace',
     ];
     const cabinetInfoDto = await Promise.all(
-      cabinets.map((cabinet) => (
-        this.getCabinetInfo(cabinet.cabinet_id)
-    )));
+      cabinets.map((cabinet) => this.getCabinetInfo(cabinet.cabinet_id)),
+    );
     return {
       section,
       cabinets: cabinetInfoDto,
-    }
+    };
   }
 
   async getCabinetInfo(cabinet_id: number): Promise<CabinetInfoResponseDto> {
@@ -55,19 +54,18 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       max_user: cabinetInfo.max_user,
       activation: cabinetInfo.activation,
     };
-    if (cabinetInfo.activation === 3) { // FIXME: lent_info는 대여중일 때만 추가되나요..? 공유사물함 인원이 다 차지 않은 경우에는 lent_info를 안보여주는게 맞는지 의문입니다.
+    if (cabinetInfo.activation === 3) {
+      // FIXME: lent_info는 대여중일 때만 추가되나요..? 공유사물함 인원이 다 차지 않은 경우에는 lent_info를 안보여주는게 맞는지 의문입니다.
       cabinetInfoDto.lent_info = await this.getLentUsers(cabinet_id);
     }
+    console.log(cabinetInfoDto);
     return cabinetInfoDto;
   }
 
   async getLentUsers(cabinet_id: number): Promise<LentDto[]> {
-    let lentDto: Array<LentDto> = [];
+    const lentDto: Array<LentDto> = [];
     const lentInfo = await this.cabinetInfoRepository.findOne({
-      relations: [
-        'lent',
-        'lent.user',
-      ],
+      relations: ['lent', 'lent.user'],
       where: {
         cabinet_id,
         lent: {
@@ -89,14 +87,16 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     return lentDto;
   }
 
-  async updateCabinetActivation(cabinet_id: number, activation: number): Promise<void> {
+  async updateCabinetActivation(
+    cabinet_id: number,
+    activation: number,
+  ): Promise<void> {
     const cabinet = await this.cabinetInfoRepository.findOne({
       where: {
         cabinet_id,
-      }
-    })
+      },
+    });
     cabinet.activation = activation;
-    console.log(cabinet);
     await this.cabinetInfoRepository.save(cabinet);
   }
 }

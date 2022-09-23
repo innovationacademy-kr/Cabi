@@ -43,9 +43,15 @@ export class CabinetInfoService {
     }
   }
 
-  async updateCabinetActivation(cabinet_id: number, activation: number): Promise<void> {
+  async updateCabinetActivation(
+    cabinet_id: number,
+    activation: number,
+  ): Promise<void> {
     try {
-      await this.cabinetInfoRepository.updateCabinetActivation(cabinet_id, activation);
+      await this.cabinetInfoRepository.updateCabinetActivation(
+        cabinet_id,
+        activation,
+      );
     } catch (e) {
       throw new InternalServerErrorException();
     }

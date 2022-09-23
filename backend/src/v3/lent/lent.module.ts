@@ -16,7 +16,12 @@ const repo = {
 };
 
 @Module({
-  imports: [CabinetModule, AuthModule, BanModule, TypeOrmModule.forFeature([Lent])],
+  imports: [
+    CabinetModule,
+    AuthModule,
+    BanModule,
+    TypeOrmModule.forFeature([Lent]),
+  ],
   controllers: [LentController],
   providers: [LentService, repo],
 })
