@@ -8,14 +8,23 @@ import LentInfo from "../organisms/LentInfo";
 import { axiosMyLentInfo } from "../../network/axios/axios.custom";
 import { MyCabinetInfoResponseDto } from "../../types/dto/cabinet.dto";
 
+// const LentSection = styled.section`
+//   position: absolute;
+//   left: 5vw;
+//   top: 5vw;
+//   background-color: #f4f3f8;
+//   border-radius: 1rem;
+//   width: 90vw;
+//   height: calc(90vh - 10vw);
+// `;
+
 const LentSection = styled.section`
-  position: absolute;
+  width: 100%;
+  height: 100%;
   left: 5vw;
   top: 5vw;
   background-color: #f4f3f8;
   border-radius: 1rem;
-  width: 90vw;
-  height: calc(90vh - 10vw);
 `;
 
 const LentNavSection = styled.div`
@@ -30,14 +39,16 @@ const LentInfoSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80%;
+  height: 75%;
 `;
 
 const LentReturnSection = styled.div`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 10%;
+  margin-top: 5%;
 `;
 
 const LentTemplate = (): JSX.Element => {
@@ -59,7 +70,7 @@ const LentTemplate = (): JSX.Element => {
   }, []);
 
   return (
-    <LentSection>
+    <LentSection id="test">
       <LentNavSection>
         <HomeButton />
         <MenuButton />

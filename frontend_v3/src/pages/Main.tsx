@@ -1,6 +1,7 @@
 import CabinetTemplate from "../components/templates/CabinetTemplate";
 import FooterTemplate from "../components/templates/FooterTemplate";
 import CabinetBoxButton from "../components/atoms/buttons/CabinetBoxButton";
+import ContentTemplate from "../components/templates/ContentTemplate";
 
 /*
 interface UserDto {
@@ -82,7 +83,9 @@ const Main = (): JSX.Element => {
           />
         </div>
   */}
-      <CabinetTemplate />
+      <ContentTemplate>
+        <CabinetTemplate />
+      </ContentTemplate>
       <FooterTemplate />
     </>
   );

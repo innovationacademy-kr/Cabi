@@ -6,7 +6,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { BanService } from '../ban.service';
 
 /**

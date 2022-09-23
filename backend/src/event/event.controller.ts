@@ -1,6 +1,6 @@
 import { Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserSessionDto } from '../auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { JwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
 import { User } from '../auth/user.decorator';
 import { BanCheckGuard } from '../ban/guard/ban-check.guard';

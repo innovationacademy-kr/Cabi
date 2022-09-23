@@ -50,6 +50,6 @@ export class CabinetController {
     @Param('cabinet_id', ParseIntPipe) cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {
     this.logger.log('getCabinetInfoById');
-    return await this.cabinetService.getCabinetInfo(cabinetId);
+    return await this.cabinetService.getCabinetResponseInfo(cabinetId);
   }
 }

@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { CabinetDto } from "src/dto/cabinet.dto";
-import { CabinetInfoResponseDto } from "src/dto/response/cabinet.info.response.dto";
-import { MyCabinetInfoResponseDto } from "src/dto/response/my.cabinet.info.response.dto";
-import { UserSessionDto } from "src/dto/user.session.dto";
-import LentType from "src/enums/lent.type.enum";
-import { CabinetInfoService } from "../cabinet/cabinet.info.service";
-import { ILentRepository } from "./repository/lent.repository.interface";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CabinetDto } from 'src/dto/cabinet.dto';
+import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
+import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
+import LentType from 'src/enums/lent.type.enum';
+import { CabinetInfoService } from '../cabinet/cabinet.info.service';
+import { ILentRepository } from './repository/lent.repository.interface';
 
 @Injectable()
 export class LentService {
@@ -19,11 +19,14 @@ export class LentService {
     const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
     console.log(is_lent);
     if (is_lent) {
-      throw new HttpException(`${user.intra_id} already lent cabinet!`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        `${user.intra_id} already lent cabinet!`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     // 2. 고장이나 ban 사물함인지 확인
-    const cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetInfo(cabinet_id); // TODO: CabinetDto만 받아오는 내부적으로만 사용되는 Repository function 필요.
+    const cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id); // TODO: CabinetDto만 받아오는 내부적으로만 사용되는 Repository function 필요.
     console.log(cabinet);
     if (cabinet.activation === 0 || cabinet.activation === 2) {
       throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is unavailable!`, HttpStatus.FORBIDDEN);
