@@ -42,4 +42,18 @@ export class CabinetInfoService {
       throw new InternalServerErrorException();
     }
   }
+
+  async updateCabinetActivation(
+    cabinet_id: number,
+    activation: number,
+  ): Promise<void> {
+    try {
+      await this.cabinetInfoRepository.updateCabinetActivation(
+        cabinet_id,
+        activation,
+      );
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
 }
