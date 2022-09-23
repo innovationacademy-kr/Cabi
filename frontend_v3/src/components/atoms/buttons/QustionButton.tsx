@@ -8,6 +8,7 @@ const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: translateX(50%);
   width: 2rem;
   height: 2rem;
   padding: 0;
@@ -27,20 +28,9 @@ const Button = styled.button`
 // 그렇게 되면, 모달의 open 상태를 버튼과 모달 중 어느 컴포넌트에서 관리해야 할까요..? 우선은 버튼에 두었습니다.
 // 의견을 부탁드립니다.. @->---
 const QuestionButton = (): JSX.Element => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleClick = (): void => {
-    setIsModalOpen(!isModalOpen);
-  };
-
   return (
-    <Button onClick={handleClick}>
+    <Button className="QuestionButton">
       <FontAwesomeIcon icon={faCircleQuestion} />
-      {/* TODO: gyuwlee */}
-      {/* TestModal 제거 */}
-      {isModalOpen && (
-        <TestModal open={isModalOpen} handleClick={handleClick} />
-      )}
     </Button>
   );
 };
