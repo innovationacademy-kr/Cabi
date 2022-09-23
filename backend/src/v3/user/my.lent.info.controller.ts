@@ -1,4 +1,11 @@
-import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Logger,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiNoContentResponse,
   ApiOkResponse,
@@ -7,7 +14,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
+import { User } from 'src/auth/user.decorator';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
+import { UserService } from './user.service';
 
 @ApiTags('User')
 @Controller({
@@ -16,6 +26,8 @@ import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.respo
 })
 export class MyLentInfoController {
   private logger = new Logger(MyLentInfoController.name);
+
+  constructor(private userService: UserService) {}
 
   @ApiOperation({
     summary: '자기 자신의 대여 정보를 가져옴.',
@@ -33,7 +45,15 @@ export class MyLentInfoController {
   })
   @Get()
   @UseGuards(JwtAuthGuard /*, BanCheckGuard */)
-  async getMyLentInfo(): Promise<MyCabinetInfoResponseDto> {
-    return new MyCabinetInfoResponseDto();
+  async getMyLentInfo(
+    @User() user: UserSessionDto,
+  ): Promise<MyCabinetInfoResponseDto> {
+    this.logger.log(`call getMyLentInfo by ${user.intra_id}`);
+    const result = await this.userService.getCabinetByUserId(user.user_id);
+    console.log('fin');
+    if (result === null) {
+      throw new HttpException('', HttpStatus.NO_CONTENT);
+    }
+    return result;
   }
 }

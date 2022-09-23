@@ -31,14 +31,14 @@ export class TypeormAuthRepository implements IAuthRepository {
   }
 
   async checkUserBorrowed(user: UserDto): Promise<boolean> {
-    const result = await this.userRepository.find({
+    const result = await this.userRepository.findOne({
       relations: {
-        LentLog: true,
+        Lent: true,
       },
       where: {
         user_id: user.user_id,
       },
     });
-    return result.length !== 0;
+    return result.Lent !== null;
   }
 }
