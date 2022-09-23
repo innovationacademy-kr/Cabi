@@ -35,9 +35,25 @@ export class CabinetInfoService {
     }
   }
 
-  async getCabinetInfo(cabinetId: number): Promise<CabinetInfoResponseDto> {
+  async getCabinetResponseInfo(
+    cabinetId: number,
+  ): Promise<CabinetInfoResponseDto> {
     try {
-      return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
+      return await this.cabinetInfoRepository.getCabinetResponseInfo(cabinetId);
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async updateCabinetActivation(
+    cabinet_id: number,
+    activation: number,
+  ): Promise<void> {
+    try {
+      await this.cabinetInfoRepository.updateCabinetActivation(
+        cabinet_id,
+        activation,
+      );
     } catch (e) {
       throw new InternalServerErrorException();
     }
