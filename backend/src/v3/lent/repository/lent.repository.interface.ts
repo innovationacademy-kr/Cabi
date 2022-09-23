@@ -1,8 +1,9 @@
-import { CabinetDto } from 'src/dto/cabinet.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
-import Lent from 'src/entities/lent.entity';
+import { CabinetDto } from "src/dto/cabinet.dto";
+import { UserSessionDto } from "src/dto/user.session.dto";
+import Lent from "src/entities/lent.entity";
 
 export abstract class ILentRepository {
+
   /**
    * 사용자가 사물함을 대여중인지 아닌지를 반환합니다.
    * @param user_id
@@ -24,8 +25,5 @@ export abstract class ILentRepository {
    * @param cabinet_id
    * @return Lent
    */
-  abstract lentCabinet(
-    user: UserSessionDto,
-    cabinet: CabinetDto,
-  ): Promise<void>;
+  abstract lentCabinet(user: UserSessionDto, cabinet: CabinetDto): Promise<void>;
 }

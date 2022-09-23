@@ -1,10 +1,10 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { CabinetDto } from 'src/dto/cabinet.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
-import Lent from 'src/entities/lent.entity';
-import LentType from 'src/enums/lent.type.enum';
-import { Repository } from 'typeorm';
-import { ILentRepository } from './lent.repository.interface';
+import { InjectRepository } from "@nestjs/typeorm";
+import { CabinetDto } from "src/dto/cabinet.dto";
+import { UserSessionDto } from "src/dto/user.session.dto";
+import Lent from "src/entities/lent.entity";
+import LentType from "src/enums/lent.type.enum";
+import { Repository } from "typeorm";
+import { ILentRepository } from "./lent.repository.interface";
 
 export class lentRepository implements ILentRepository {
   constructor(
@@ -37,7 +37,7 @@ export class lentRepository implements ILentRepository {
       where: {
         cabinet: {
           cabinet_id: cabinet_id,
-        },
+        }
       },
     });
     return result;
@@ -45,7 +45,7 @@ export class lentRepository implements ILentRepository {
 
   async lentCabinet(user: UserSessionDto, cabinet: CabinetDto): Promise<void> {
     const lent_time = new Date();
-    const expire_time = new Date();
+    let expire_time = new Date();
     if (cabinet.lent_type === LentType.PRIVATE) {
       expire_time.setDate(lent_time.getDate() + 30);
     } else {
