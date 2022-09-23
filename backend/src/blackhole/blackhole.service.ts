@@ -161,7 +161,7 @@ export class BlackholeService {
    */
   @Cron(CronExpression.EVERY_DAY_AT_2AM)
   async validateBlackholedUsers(): Promise<void> {
-    const users: UserDto[] = await this.authService.getAllUser();
+    const users: UserDto[] = await this.blackholeRepository.getAllUser();
     await this.postOauthToken(0).catch((err) => {
       this.logger.error(err);
     });

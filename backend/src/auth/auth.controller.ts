@@ -1,12 +1,18 @@
-import { Controller, Get, Logger, Post, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Res, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './jwt/guard/jwtauth.guard';
 import { Response } from 'express';
 import { FtGuard } from './42/guard/ft.guard';
-import { UserSessionDto } from './dto/user.session.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiFoundResponse,
+  ApiInternalServerErrorResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
 import { User } from './user.decorator';
 import { AuthService } from './auth.service';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -15,9 +21,12 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @ApiOperation({
-    summary: '42 로그인',
+    summary: 'intra 로그인에 대한 요청입니다.',
     description:
-      '42 OAuth 로그인 요청, 성공시 login/callback으로 리다이렉트합니다.',
+      '로그인을 하고자 할 때 해당 URI로 접근해야 합니다. 접근하면 자동으로 42 OAuth 인증을 수행하며 인증이 완료되면 auth/login/callback 으로 리다이렉트 해줍니다.',
+  })
+  @ApiFoundResponse({
+    description: '42 OAuth 페이지로 리다이렉트',
   })
   @Get('login')
   @UseGuards(FtGuard)
@@ -26,28 +35,45 @@ export class AuthController {
   }
 
   @ApiOperation({
-    summary: '로그인 콜백',
+    summary: 'intra 로그인 시도 후 처리에 대한 요청입니다.',
     description:
-      '42 OAuth 로그인 성공시 호출 되며 유저의 렌트 여부에 따라 return / lent로 리다이렉트합니다.',
+      'intra 로그인 시도 후 OAuth 인증이 완료되면 해당 URI로 자동으로 리다이렉트 됩니다. 정상적으로 인증이 완료되었다면 쿠키에 JWT 토큰을 심으며 사용자의 사물함 대여 여부에 따라 리다이렉트를 해줍니다.',
+  })
+  @ApiFoundResponse({
+    description:
+      '정상적으로 인증이 완료되었다면 cabinet_info 또는 my_lent_info로 리다이렉트 합니다.',
+  })
+  @ApiInternalServerErrorResponse({
+    description: '토큰 에러, 키 에러, 기타 에러 발생 시',
   })
   @Get('login/callback')
   @UseGuards(FtGuard, JWTSignGuard)
   async loginCallback(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log('Login -> callback');
-
-    const lentCabinet = await this.authService.checkUser(user);
-    if (lentCabinet.lent_id !== -1) {
-      return res.redirect('/return');
+    // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
+    const join = await this.authService.addUserIfNotExists(user);
+    if (!join) {
+      return res.redirect('/cabinet_info');
     }
-    return res.redirect('/lent');
+    const lent = await this.authService.checkUserBorrowed(user);
+    if (!lent) {
+      return res.redirect('/cabinet_info');
+    }
+    return res.redirect('/my_lent_info');
   }
 
   @ApiOperation({
-    summary: '로그아웃',
-    description: '로그아웃을 수행합니다.',
+    summary: 'cabi에서 로그아웃을 합니다 (JWT 세션 제거)',
+    description:
+      'cabi에서 로그아웃을 할 때 호출합니다. 호출 시 쿠키 내의 accessToken 을 제거합니다.',
   })
-  // FIXME: front 코드에서는 logout 버튼을 누르면 post를 줌. 둘 중 하나를 고쳐야할 것 같습니다.
-  @Post('logout')
+  @ApiFoundResponse({
+    description: '로그아웃 성공시 메인 페이지로 리다이렉트',
+  })
+  @ApiUnauthorizedResponse({
+    description: '로그아웃 상태거나 JWT 세션이 만료됨',
+  })
+  @Get('logout')
   @UseGuards(JwtAuthGuard)
   logout(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log(`${user.intra_id} logged out`);

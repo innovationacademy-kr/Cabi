@@ -65,6 +65,9 @@ export default class User {
   @OneToMany(() => BanLog, (banLog) => banLog.user)
   BanLog: BanLog[];
 
+  @OneToOne(() => Lent, (lent) => lent.user)
+  Lent: Lent | null;
+
   @OneToMany(() => LentLog, (lentLog) => lentLog.user)
   LentLog: LentLog[];
 }

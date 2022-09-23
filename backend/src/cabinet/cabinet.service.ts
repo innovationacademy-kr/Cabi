@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CabinetListDto } from './dto/cabinet.list.dto';
 import { ICabinetRepository } from './repository/cabinet.repository';
 import { MyLentInfoDto } from './dto/my.lent.info.dto';
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { LentCabinetInfoDto } from './dto/cabinet.lent.info.dto';
 import { UserDto } from 'src/user/dto/user.dto';
 
