@@ -3,11 +3,12 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { SpaceDataDto } from 'src/dto/space.data.dto';
-import { ICabinetInfoRepository } from './repository/cabinet.info.repository.interface';
+import { ICabinetInfoRepository } from './repository/interface.cabinet.info.repository';
 
 @Injectable()
 export class CabinetInfoService {
@@ -17,11 +18,16 @@ export class CabinetInfoService {
   ) {}
 
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
-    const location = '새롬관';
-    const floors: number[] = [2, 4, 5];
-    const space_data: SpaceDataDto[] = [{ location, floors }];
-
-    return { space_data };
+    const spaceData: SpaceDataDto[] = [];
+    const location = await this.cabinetInfoRepository.getLocation();
+    for (const l of location) {
+      const floors = await this.cabinetInfoRepository.getFloors(l);
+      spaceData.push({
+        location: l,
+        floors,
+      });
+    }
+    return { space_data: spaceData };
   }
 
   async getCabinetInfoByParam(
@@ -40,6 +46,14 @@ export class CabinetInfoService {
   ): Promise<CabinetInfoResponseDto> {
     try {
       return await this.cabinetInfoRepository.getCabinetResponseInfo(cabinetId);
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async getCabinetInfo(cabinetId: number): Promise<CabinetDto> {
+    try {
+      return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
     } catch (e) {
       throw new InternalServerErrorException();
     }
