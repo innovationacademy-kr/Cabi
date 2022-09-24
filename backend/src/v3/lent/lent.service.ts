@@ -29,7 +29,7 @@ export class LentService {
 
     // 2. 고장이나 ban 사물함인지 확인
     const cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id); // TODO: CabinetDto만 받아오는 내부적으로만 사용되는 Repository function 필요.
-    console.log(cabinet);
+    // console.log(cabinet);
     if (cabinet.activation === 0 || cabinet.activation === 2) {
       throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is unavailable!`, HttpStatus.FORBIDDEN);
     }
@@ -46,12 +46,13 @@ export class LentService {
 
     // 대여가 가능하므로 대여 시도
     // 1. lent table에 insert
-    await this.lentRepository.lentCabinet(user, cabinet);
-
-    // 2. 현재 대여로 인해 Cabinet이 풀방이 되면 Cabinet의 activation을 3으로 수정.
     const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(cabinet_id);
-    console.log(lent_user_cnt);
-    if (lent_user_cnt === cabinet.max_user) {
+    const is_generate_expire_time: boolean = (lent_user_cnt + 1 === cabinet.max_user) ? true : false;
+    console.log(is_generate_expire_time);
+    await this.lentRepository.lentCabinet(user, cabinet, is_generate_expire_time);
+
+    // 2. 현재 대여로 인해 Cabinet이 풀방이 되어 만료 기한이 생기면 Cabinet의 activation을 3으로 수정.
+    if (is_generate_expire_time) {
       await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3);
     }
     const response: MyCabinetInfoResponseDto = await this.userService.getCabinetByUserId(user.user_id);
@@ -86,13 +87,20 @@ export class LentService {
     }
     // 2. Lent Table에서 값 제거.
     await this.lentRepository.deleteLentByLentId(lent.lent_id);
-    // 3. 해당 캐비넷은 대여 가능해 졌으므로 activation 1로 수정.
-    await this.cabinetInfoService.updateCabinetActivation(lent.lent_cabinet_id, 1);
+    // // 3. 해당 캐비넷은 대여 가능해 졌으므로 activation 1로 수정.
+    // await this.cabinetInfoService.updateCabinetActivation(lent.lent_cabinet_id, 1);
     // 4. Lent Log Table에서 값 추가.
     await this.lentRepository.addLentLog(lent);
     // 5. 개인 사물함인 경우 Cabinet Status 사용 가능으로 수정.
     if (lent.cabinet.lent_type === LentType.PRIVATE) {
       await this.cabinetInfoService.updateCabinetActivation(lent.lent_cabinet_id, 1);
+    }
+    // 6. 공유 사물함인 경우 전체 인원 모두 중도 이탈했다면 Cabinet Status 사용 가능으로 수정.
+    if (lent.cabinet.lent_type === LentType.SHARE) {
+      const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(lent.cabinet.cabinet_id);
+      if (lent_user_cnt === 0) {
+        await this.cabinetInfoService.updateCabinetActivation(lent.lent_cabinet_id, 1);
+      }
     }
   }
 }

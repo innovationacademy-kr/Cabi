@@ -1,5 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetDto } from 'src/dto/cabinet.dto';
+import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
@@ -46,13 +47,31 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
-  async lentCabinet(user: UserSessionDto, cabinet: CabinetDto): Promise<void> {
+  async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
+    await this.lentRepository.createQueryBuilder()
+    .update(Lent)
+    .set({
+        expire_time: expire_time,
+    })
+    .where({
+        lent_id: lent_id,
+    })
+    .execute();
+  }
+
+  async lentCabinet(user: UserSessionDto, cabinet: CabinetInfoResponseDto, is_generate_expire_time: boolean): Promise<void> {
     const lent_time = new Date();
     const expire_time = new Date();
     if (cabinet.lent_type === LentType.PRIVATE) {
       expire_time.setDate(lent_time.getDate() + 30);
     } else {
       expire_time.setDate(lent_time.getDate() + 45);
+      if (is_generate_expire_time === true && cabinet.lent_info) {
+        for await (const lent_info of cabinet.lent_info) {
+          console.log(expire_time);
+          this.setExpireTime(lent_info.lent_id, expire_time);
+        }
+      }
     }
     await this.lentRepository.insert({
       user: {

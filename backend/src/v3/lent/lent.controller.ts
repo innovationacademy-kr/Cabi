@@ -20,8 +20,8 @@ export class LentController {
     @Param('cabinet_id') cabinet_id: number,
   ): Promise<MyCabinetInfoResponseDto> {
     const user: UserSessionDto = {
-      user_id: 1,
-      intra_id: 'test',
+      user_id: 76317,
+      intra_id: 'joopark',
       iat: 0,
       ext: 253402182000000,
     };
@@ -86,8 +86,8 @@ export class LentController {
   // @UseGuards(JwtAuthGuard, BanCheckGuard)
   async returnLentCabinet(): Promise<void> {
     const user: UserSessionDto = {
-      user_id: 1,
-      intra_id: 'test',
+      user_id: 76317,
+      intra_id: 'joopark',
       iat: 0,
       ext: 253402182000000,
     };

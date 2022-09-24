@@ -1,4 +1,5 @@
 import { CabinetDto } from 'src/dto/cabinet.dto';
+import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 
@@ -18,13 +19,21 @@ export abstract class ILentRepository {
   abstract getLentUserCnt(cabinet_id: number): Promise<number>;
 
   /**
+   * lent_id에 대응하는 lent의 expire_time을 설정합니다.
+   * @param lent_id
+   * @param expire_time
+   * @return void
+   */
+  abstract setExpireTime(lent_id: number, expire_time: Date): Promise<void>;
+
+  /**
    * 특정 user_id로 해당 캐비넷 대여를 시도합니다.
    * 대여에 성공하면 Lent를 반환합니다.
    * @param user_id
    * @param cabinet_id
    * @return Lent
    */
-  abstract lentCabinet(user: UserSessionDto, cabinet: CabinetDto): Promise<void>;
+  abstract lentCabinet(user: UserSessionDto, cabinet: CabinetInfoResponseDto, is_generate_expire_time: boolean): Promise<void>;
 
   /**
    * 해당 user_id로 대여중인 Cabinet id를 반환합니다.
