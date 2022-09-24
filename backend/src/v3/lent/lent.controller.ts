@@ -37,6 +37,7 @@ export class LentController {
       } else if (err.status === HttpStatus.CONFLICT) {
         throw new ConflictException(err.message);
       } else {
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
@@ -57,6 +58,7 @@ export class LentController {
       if (err.status === HttpStatus.BAD_REQUEST) {
         throw new BadRequestException(err.message);
       } else {
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
@@ -77,6 +79,7 @@ export class LentController {
       if (err.status === HttpStatus.BAD_REQUEST) {
         throw new BadRequestException(err.message);
       } else {
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
@@ -97,7 +100,7 @@ export class LentController {
       if (err.status === HttpStatus.BAD_REQUEST) {
         throw new BadRequestException(err.message);
       } else {
-        console.log(err);
+        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
