@@ -68,7 +68,6 @@ export class lentRepository implements ILentRepository {
       expire_time.setDate(lent_time.getDate() + 45);
       if (is_generate_expire_time === true && cabinet.lent_info) {
         for await (const lent_info of cabinet.lent_info) {
-          console.log(expire_time);
           this.setExpireTime(lent_info.lent_id, expire_time);
         }
       }
@@ -133,7 +132,6 @@ export class lentRepository implements ILentRepository {
   }
 
   async getLent(user_id: number): Promise<Lent> {
-    console.log(user_id);
     const result = await this.lentRepository.findOne({
       relations: {
         cabinet: true,
@@ -142,7 +140,6 @@ export class lentRepository implements ILentRepository {
         lent_user_id: user_id,
       }
     });
-    console.log(result);
     if (result === null) {
       return null;
     }

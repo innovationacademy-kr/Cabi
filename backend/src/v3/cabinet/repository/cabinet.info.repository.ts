@@ -76,7 +76,6 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         },
       },
     });
-    // console.log(lentInfo.lent);
     lentInfo.lent.forEach((lent) =>
       lentDto.push({
         user_id: lent.user.user_id,

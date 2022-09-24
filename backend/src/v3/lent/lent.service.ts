@@ -19,7 +19,6 @@ export class LentService {
   async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<MyCabinetInfoResponseDto> {
     // 1. 해당 유저가 대여중인 사물함이 있는지 확인
     const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
-    console.log(is_lent);
     if (is_lent) {
       throw new HttpException(
         `${user.intra_id} already lent cabinet!`,
@@ -28,8 +27,7 @@ export class LentService {
     }
 
     // 2. 고장이나 ban 사물함인지 확인
-    const cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id); // TODO: CabinetDto만 받아오는 내부적으로만 사용되는 Repository function 필요.
-    // console.log(cabinet);
+    const cabinet: CabinetInfoResponseDto = await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id);
     if (cabinet.activation === 0 || cabinet.activation === 2) {
       throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is unavailable!`, HttpStatus.FORBIDDEN);
     }
@@ -48,7 +46,6 @@ export class LentService {
     // 1. lent table에 insert
     const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(cabinet_id);
     const is_generate_expire_time: boolean = (lent_user_cnt + 1 === cabinet.max_user) ? true : false;
-    console.log(is_generate_expire_time);
     await this.lentRepository.lentCabinet(user, cabinet, is_generate_expire_time);
 
     // 2. 현재 대여로 인해 Cabinet이 풀방이 되어 만료 기한이 생기면 Cabinet의 activation을 3으로 수정.
