@@ -13,7 +13,7 @@ import { UserModule } from '../user/user.module';
 import LentLog from 'src/entities/lent.log.entity';
 
 const repo = {
-  provide: ILentRepository,
+  provide: 'ILentRepository',
   useClass: lentRepository,
 };
 
