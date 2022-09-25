@@ -4,7 +4,7 @@ import User from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { IAuthRepository } from './auth.repository.interface';
 
-export class TypeormAuthRepository implements IAuthRepository {
+export class AuthRepository implements IAuthRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
@@ -21,7 +21,6 @@ export class TypeormAuthRepository implements IAuthRepository {
         intra_id: user.intra_id,
         auth: 0,
         email: user.email,
-        phone: '',
         first_login: new Date(),
         last_login: new Date(),
       });
