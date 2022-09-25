@@ -31,9 +31,7 @@ CREATE TABLE `ban_log` (
   PRIMARY KEY (`ban_log_id`),
   UNIQUE KEY `ban_id` (`ban_log_id`),
   KEY `ban_cabinet_id` (`ban_cabinet_id`),
-  KEY `ban_user_id` (`ban_user_id`),
-  CONSTRAINT `ban_cabinet_id` FOREIGN KEY (`ban_cabinet_id`) REFERENCES `cabinet` (`cabinet_id`) ON UPDATE CASCADE,
-  CONSTRAINT `ban_user_id` FOREIGN KEY (`ban_user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
+  KEY `ban_user_id` (`ban_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='차단 로그';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -126,9 +124,7 @@ CREATE TABLE `lent_log` (
   PRIMARY KEY (`log_id`),
   UNIQUE KEY `log_id` (`log_id`),
   KEY `log_cabinet_id` (`log_cabinet_id`),
-  KEY `log_user_id` (`log_user_id`),
-  CONSTRAINT `log_cabinet_id` FOREIGN KEY (`log_cabinet_id`) REFERENCES `cabinet` (`cabinet_id`) ON UPDATE CASCADE,
-  CONSTRAINT `log_user_id` FOREIGN KEY (`log_user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
+  KEY `log_user_id` (`log_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='과거 대여 이력';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
