@@ -1,4 +1,3 @@
-import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
@@ -33,7 +32,11 @@ export interface ILentRepository {
    * @param cabinet_id
    * @return Lent
    */
-  lentCabinet(user: UserSessionDto, cabinet: CabinetInfoResponseDto, is_generate_expire_time: boolean): Promise<void>;
+  lentCabinet(
+    user: UserSessionDto,
+    cabinet: CabinetInfoResponseDto,
+    is_generate_expire_time: boolean,
+  ): Promise<void>;
 
   /**
    * 해당 user_id로 대여중인 Cabinet id를 반환합니다.
@@ -49,8 +52,10 @@ export interface ILentRepository {
    * @param cabinet_id
    * @return void
    */
-  updateLentCabinetTitle(cabinet_title: string, cabinet_id: number): Promise<void>;
-
+  updateLentCabinetTitle(
+    cabinet_title: string,
+    cabinet_id: number,
+  ): Promise<void>;
 
   /**
    * cabinet_id에 대응하는 캐비넷의 메모를 cabinet_memo로 업데이트합니다.
@@ -58,7 +63,10 @@ export interface ILentRepository {
    * @param cabinet_id
    * @return void
    */
-  updateLentCabinetMemo(cabinet_memo: string, cabinet_id: number): Promise<void>;
+  updateLentCabinetMemo(
+    cabinet_memo: string,
+    cabinet_id: number,
+  ): Promise<void>;
 
   /**
    * user_id에 대응하는 lent 정보를 반환합니다.

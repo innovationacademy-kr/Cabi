@@ -1,5 +1,4 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
@@ -48,18 +47,23 @@ export class lentRepository implements ILentRepository {
   }
 
   async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
-    await this.lentRepository.createQueryBuilder()
-    .update(Lent)
-    .set({
+    await this.lentRepository
+      .createQueryBuilder()
+      .update(Lent)
+      .set({
         expire_time: expire_time,
-    })
-    .where({
+      })
+      .where({
         lent_id: lent_id,
-    })
-    .execute();
+      })
+      .execute();
   }
 
-  async lentCabinet(user: UserSessionDto, cabinet: CabinetInfoResponseDto, is_generate_expire_time: boolean): Promise<void> {
+  async lentCabinet(
+    user: UserSessionDto,
+    cabinet: CabinetInfoResponseDto,
+    is_generate_expire_time: boolean,
+  ): Promise<void> {
     const lent_time = new Date();
     const expire_time = new Date();
     if (cabinet.lent_type === LentType.PRIVATE) {
@@ -93,12 +97,12 @@ export class lentRepository implements ILentRepository {
       select: {
         cabinet: {
           cabinet_id: true,
-        }
+        },
       },
       where: {
         user: {
           user_id: user_id,
-        }
+        },
       },
     });
     if (result === null) {
@@ -107,28 +111,36 @@ export class lentRepository implements ILentRepository {
     return result.lent_cabinet_id;
   }
 
-  async updateLentCabinetTitle(cabinet_title: string, cabinet_id: number): Promise<void> {
-    await this.lentRepository.createQueryBuilder()
-    .update('cabinet')
-    .set({
-        title: cabinet_title
-    })
-    .where({
+  async updateLentCabinetTitle(
+    cabinet_title: string,
+    cabinet_id: number,
+  ): Promise<void> {
+    await this.lentRepository
+      .createQueryBuilder()
+      .update('cabinet')
+      .set({
+        title: cabinet_title,
+      })
+      .where({
         cabinet_id: cabinet_id,
-    })
-    .execute();
+      })
+      .execute();
   }
 
-  async updateLentCabinetMemo(cabinet_memo: string, cabinet_id: number): Promise<void> {
-    await this.lentRepository.createQueryBuilder()
-    .update('cabinet')
-    .set({
-        memo: cabinet_memo
-    })
-    .where({
+  async updateLentCabinetMemo(
+    cabinet_memo: string,
+    cabinet_id: number,
+  ): Promise<void> {
+    await this.lentRepository
+      .createQueryBuilder()
+      .update('cabinet')
+      .set({
+        memo: cabinet_memo,
+      })
+      .where({
         cabinet_id: cabinet_id,
-    })
-    .execute();
+      })
+      .execute();
   }
 
   async getLent(user_id: number): Promise<Lent> {
@@ -138,7 +150,7 @@ export class lentRepository implements ILentRepository {
       },
       where: {
         lent_user_id: user_id,
-      }
+      },
     });
     if (result === null) {
       return null;
@@ -147,13 +159,14 @@ export class lentRepository implements ILentRepository {
   }
 
   async deleteLentByLentId(lent_id: number): Promise<void> {
-    await this.lentRepository.createQueryBuilder()
-    .delete()
-    .from(Lent)
-    .where({
-      lent_id: lent_id,
-    })
-    .execute();
+    await this.lentRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Lent)
+      .where({
+        lent_id: lent_id,
+      })
+      .execute();
   }
 
   async addLentLog(lent: Lent): Promise<void> {

@@ -1,9 +1,32 @@
-import { BadRequestException, ConflictException, Controller, Delete, ForbiddenException, Get, HttpCode, HttpException, HttpStatus, ImATeapotException, InternalServerErrorException, Logger, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiConflictResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  BadRequestException,
+  ConflictException,
+  Controller,
+  Delete,
+  ForbiddenException,
+  HttpCode,
+  HttpStatus,
+  ImATeapotException,
+  InternalServerErrorException,
+  Logger,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/auth/user.decorator';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
-import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { LentService } from './lent.service';
 
@@ -17,20 +40,23 @@ export class LentController {
 
   @ApiOperation({
     summary: '특정 캐비넷 대여 시도',
-    description: 'cabinet_id에 해당하는 캐비넷 대여를 시도합니다.'
+    description: 'cabinet_id에 해당하는 캐비넷 대여를 시도합니다.',
   })
   @ApiCreatedResponse({
     description: '대여에 성공 시, 201 Created를 응답합니다.',
   })
   @ApiBadRequestResponse({
-    description: '이미 대여중인 사물함이 있는 경우, 400 Bad_Request를 응답합니다.',
+    description:
+      '이미 대여중인 사물함이 있는 경우, 400 Bad_Request를 응답합니다.',
   })
   @ApiForbiddenResponse({
-    description: '임시 밴 사물함이나 고장 사물함을 대여 시도한 경우, 403 Forbidden을 응답합니다.',
+    description:
+      '임시 밴 사물함이나 고장 사물함을 대여 시도한 경우, 403 Forbidden을 응답합니다.',
   })
   @ApiResponse({
     status: HttpStatus.I_AM_A_TEAPOT,
-    description: "동아리 사물함을 대여 시도한 경우, 418 I'm a teapot을 응답합니다."
+    description:
+      "동아리 사물함을 대여 시도한 경우, 418 I'm a teapot을 응답합니다.",
   })
   @ApiConflictResponse({
     description: '잔여 자리가 없는 경우, 409 Conflict를 응답합니다.',
@@ -39,7 +65,9 @@ export class LentController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtAuthGuard, BanCheckGuard)
   async lentCabinet(
-    @Param('cabinet_id') cabinet_id: number, @User() user: UserSessionDto): Promise<void> {
+    @Param('cabinet_id') cabinet_id: number,
+    @User() user: UserSessionDto,
+  ): Promise<void> {
     try {
       return await this.lentService.lentCabinet(cabinet_id, user);
     } catch (err) {
@@ -66,12 +94,16 @@ export class LentController {
     description: 'Patch 성공 시, 200 Ok를 응답합니다.',
   })
   @ApiBadRequestResponse({
-    description: '대여하고 있지 않은 사물함의 제목을 업데이트 시도하면, 400 Bad_Request를 응답합니다.',
+    description:
+      '대여하고 있지 않은 사물함의 제목을 업데이트 시도하면, 400 Bad_Request를 응답합니다.',
   })
   @Patch('/update_cabinet_title/:cabinet_title')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async updateLentCabinetTitle(@Param('cabinet_title') cabinet_title: string, @User() user: UserSessionDto): Promise<void> {
+  async updateLentCabinetTitle(
+    @Param('cabinet_title') cabinet_title: string,
+    @User() user: UserSessionDto,
+  ): Promise<void> {
     try {
       return await this.lentService.updateLentCabinetTitle(cabinet_title, user);
     } catch (err) {
@@ -92,12 +124,16 @@ export class LentController {
     description: 'Patch 성공 시, 200 Ok를 응답합니다.',
   })
   @ApiBadRequestResponse({
-    description: '대여하고 있지 않은 사물함의 메모를 업데이트 시도하면, 400 Bad_Request를 응답합니다.',
+    description:
+      '대여하고 있지 않은 사물함의 메모를 업데이트 시도하면, 400 Bad_Request를 응답합니다.',
   })
   @Patch('/update_cabinet_memo/:cabinet_memo')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async updateLentCabinetMemo(@Param('cabinet_memo') cabinet_memo: string, @User() user: UserSessionDto): Promise<void> {
+  async updateLentCabinetMemo(
+    @Param('cabinet_memo') cabinet_memo: string,
+    @User() user: UserSessionDto,
+  ): Promise<void> {
     try {
       return await this.lentService.updateLentCabinetMemo(cabinet_memo, user);
     } catch (err) {
@@ -118,7 +154,8 @@ export class LentController {
     description: 'Delete 성공 시, 204 No_Content를 응답합니다.',
   })
   @ApiBadRequestResponse({
-    description: '대여하고 있지 않은 사물함을 반납 시도하면, 400 Bad_Request를 응답합니다.',
+    description:
+      '대여하고 있지 않은 사물함을 반납 시도하면, 400 Bad_Request를 응답합니다.',
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
