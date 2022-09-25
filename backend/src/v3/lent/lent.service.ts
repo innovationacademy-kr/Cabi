@@ -16,7 +16,7 @@ export class LentService {
     private cabinetInfoService: CabinetInfoService,
     private userService: UserService,
     ) {}
-  async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<MyCabinetInfoResponseDto> {
+  async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<void> {
     // 1. 해당 유저가 대여중인 사물함이 있는지 확인
     const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
     if (is_lent) {
@@ -52,8 +52,6 @@ export class LentService {
     if (is_generate_expire_time) {
       await this.cabinetInfoService.updateCabinetActivation(cabinet_id, 3);
     }
-    const response: MyCabinetInfoResponseDto = await this.userService.getCabinetByUserId(user.user_id);
-    return response;
   }
 
   async updateLentCabinetTitle(cabinet_title: string, user: UserSessionDto): Promise<void> {

@@ -20,7 +20,7 @@ export class LentController {
     description: 'cabinet_id에 해당하는 캐비넷 대여를 시도합니다.'
   })
   @ApiCreatedResponse({
-    description: '대여에 성공 시, 201 Created를 응답하고, my_lent_info로 리다이렉트됩니다.',
+    description: '대여에 성공 시, 201 Created를 응답합니다.',
   })
   @ApiBadRequestResponse({
     description: '이미 대여중인 사물함이 있는 경우, 400 Bad_Request를 응답합니다.',
@@ -38,9 +38,8 @@ export class LentController {
   @Post('/:cabinet_id')
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(JwtAuthGuard, BanCheckGuard)
-  // FIXME: MyCabinetInfoResponseDto을 Response로 반환하지 않도록 수정.
   async lentCabinet(
-    @Param('cabinet_id') cabinet_id: number, @User() user: UserSessionDto): Promise<MyCabinetInfoResponseDto> {
+    @Param('cabinet_id') cabinet_id: number, @User() user: UserSessionDto): Promise<void> {
     try {
       return await this.lentService.lentCabinet(cabinet_id, user);
     } catch (err) {
