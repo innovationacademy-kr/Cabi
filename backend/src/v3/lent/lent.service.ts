@@ -84,15 +84,13 @@ export class LentService {
     }
     // 2. Lent Table에서 값 제거.
     await this.lentRepository.deleteLentByLentId(lent.lent_id);
-    // // 3. 해당 캐비넷은 대여 가능해 졌으므로 activation 1로 수정.
-    // await this.cabinetInfoService.updateCabinetActivation(lent.lent_cabinet_id, 1);
-    // 4. Lent Log Table에서 값 추가.
+    // 3. Lent Log Table에서 값 추가.
     await this.lentRepository.addLentLog(lent);
-    // 5. 개인 사물함인 경우 Cabinet Status 사용 가능으로 수정.
+    // 4. 개인 사물함인 경우 Cabinet Status 사용 가능으로 수정.
     if (lent.cabinet.lent_type === LentType.PRIVATE) {
       await this.cabinetInfoService.updateCabinetActivation(lent.lent_cabinet_id, 1);
     }
-    // 6. 공유 사물함인 경우 전체 인원 모두 중도 이탈했다면 Cabinet Status 사용 가능으로 수정.
+    // 5. 공유 사물함인 경우 전체 인원 모두 중도 이탈했다면 Cabinet Status 사용 가능으로 수정.
     if (lent.cabinet.lent_type === LentType.SHARE) {
       const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(lent.cabinet.cabinet_id);
       if (lent_user_cnt === 0) {

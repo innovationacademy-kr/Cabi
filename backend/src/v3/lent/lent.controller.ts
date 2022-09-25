@@ -15,16 +15,9 @@ export class LentController {
   constructor(private lentService: LentService) {}
 
   @Post('/:cabinet_id')
-  // @UseGuards(JwtAuthGuard, BanCheckGuard) // TODO: 연체자가 대여를 시도하면 프론트 단에서 경고 메시지를 띄우는 것도 좋을 것 같습니다.
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async lentCabinet(
-    @Param('cabinet_id') cabinet_id: number,
-  ): Promise<MyCabinetInfoResponseDto> {
-    const user: UserSessionDto = {
-      user_id: 76317,
-      intra_id: 'joopark',
-      iat: 0,
-      ext: 253402182000000,
-    };
+    @Param('cabinet_id') cabinet_id: number, @User() user: UserSessionDto): Promise<MyCabinetInfoResponseDto> {
     try {
       return await this.lentService.lentCabinet(cabinet_id, user);
     } catch (err) {
@@ -44,14 +37,8 @@ export class LentController {
   }
 
   @Patch('/update_cabinet_title/:cabinet_title')
-  // @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async updateLentCabinetTitle(@Param('cabinet_title') cabinet_title: string): Promise<void> {
-    const user: UserSessionDto = {
-      user_id: 85330,
-      intra_id: 'sichoi',
-      iat: 0,
-      ext: 253402182000000,
-    };
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async updateLentCabinetTitle(@Param('cabinet_title') cabinet_title: string, @User() user: UserSessionDto): Promise<void> {
     try {
       return await this.lentService.updateLentCabinetTitle(cabinet_title, user);
     } catch (err) {
@@ -65,14 +52,8 @@ export class LentController {
   }
 
   @Patch('/update_cabinet_memo/:cabinet_memo')
-  // @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async updateLentCabinetMemo(@Param('cabinet_memo') cabinet_memo: string): Promise<void> {
-    const user: UserSessionDto = {
-      user_id: 85330,
-      intra_id: 'sichoi',
-      iat: 0,
-      ext: 253402182000000,
-    };
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async updateLentCabinetMemo(@Param('cabinet_memo') cabinet_memo: string, @User() user: UserSessionDto): Promise<void> {
     try {
       return await this.lentService.updateLentCabinetMemo(cabinet_memo, user);
     } catch (err) {
@@ -86,14 +67,8 @@ export class LentController {
   }
 
   @Delete('/return')
-  // @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async returnLentCabinet(): Promise<void> {
-    const user: UserSessionDto = {
-      user_id: 76317,
-      intra_id: 'joopark',
-      iat: 0,
-      ext: 253402182000000,
-    };
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async returnLentCabinet(@User() user: UserSessionDto): Promise<void> {
     try {
       return await this.lentService.returnLentCabinet(user);
     } catch (err) {
