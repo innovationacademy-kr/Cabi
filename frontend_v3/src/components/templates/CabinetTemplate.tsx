@@ -6,6 +6,8 @@ import LocationButton from "../atoms/buttons/LocationButton";
 import MenuButton from "../atoms/buttons/MenuButton";
 import FloorButton from "../atoms/buttons/FloorButton";
 import QuestionButton from "../atoms/buttons/QustionButton";
+import GuideModal from "../atoms/modals/GuideModal";
+import GuideBox from "../atoms/modals/GuideBox";
 import Carousel from "../organisms/Carousel";
 import { axiosCabinetInfo } from "../../network/axios/axios.custom";
 import { cabinetAll } from "../../redux/slices/cabinetSlice";
@@ -100,7 +102,7 @@ const CabinetTemplate = (): JSX.Element => {
         <Carousel slideCount={3} />
       </MainCarouselSection>
       <MainQuestionSection>
-        <QuestionButton />
+        <GuideModal box={<GuideBox />} button={<QuestionButton />} />
       </MainQuestionSection>
     </MainSection>
   );

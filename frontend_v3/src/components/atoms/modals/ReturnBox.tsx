@@ -1,8 +1,8 @@
-import { axiosReturn } from "../../../network/axios/axios.custom";
 import { useNavigate } from "react-router-dom";
-import CheckButton from "./../buttons/CheckButton";
 import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
+import CheckButton from "../buttons/CheckButton";
+import { axiosReturn } from "../../../network/axios/axios.custom";
 
 const BoxStyle = {
   position: "fixed" as const,

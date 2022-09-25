@@ -31,9 +31,7 @@ CREATE TABLE `ban_log` (
   PRIMARY KEY (`ban_log_id`),
   UNIQUE KEY `ban_id` (`ban_log_id`),
   KEY `ban_cabinet_id` (`ban_cabinet_id`),
-  KEY `ban_user_id` (`ban_user_id`),
-  CONSTRAINT `ban_cabinet_id` FOREIGN KEY (`ban_cabinet_id`) REFERENCES `cabinet` (`cabinet_id`) ON UPDATE CASCADE,
-  CONSTRAINT `ban_user_id` FOREIGN KEY (`ban_user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
+  KEY `ban_user_id` (`ban_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='차단 로그';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -90,7 +88,7 @@ CREATE TABLE `lent` (
   `lent_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '렌트ID',
   `lent_cabinet_id` int(11) NOT NULL COMMENT '사물함ID',
   `lent_user_id` int(11) NOT NULL COMMENT '유저ID',
-  `expire_time` datetime NOT NULL COMMENT '만료일',
+  `expire_time` datetime DEFAULT NULL COMMENT '만료일',
   `lent_time` datetime NOT NULL COMMENT '대여시간',
   PRIMARY KEY (`lent_id`),
   UNIQUE KEY `lent_id` (`lent_id`),
@@ -126,9 +124,7 @@ CREATE TABLE `lent_log` (
   PRIMARY KEY (`log_id`),
   UNIQUE KEY `log_id` (`log_id`),
   KEY `log_cabinet_id` (`log_cabinet_id`),
-  KEY `log_user_id` (`log_user_id`),
-  CONSTRAINT `log_cabinet_id` FOREIGN KEY (`log_cabinet_id`) REFERENCES `cabinet` (`cabinet_id`) ON UPDATE CASCADE,
-  CONSTRAINT `log_user_id` FOREIGN KEY (`log_user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
+  KEY `log_user_id` (`log_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='과거 대여 이력';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -153,13 +149,11 @@ CREATE TABLE `user` (
   `intra_id` varchar(32) NOT NULL COMMENT '인트라ID',
   `state` tinyint(4) NOT NULL DEFAULT 0 COMMENT '유저의 상태',
   `email` varchar(128) DEFAULT NULL COMMENT '이메일',
-  `phone` varchar(128) DEFAULT NULL COMMENT '휴대폰 번호',
   `first_login` datetime DEFAULT NULL COMMENT '첫 로그인 시간',
   `last_login` datetime DEFAULT NULL COMMENT '마지막 로그인 시간',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `intra_id` (`intra_id`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `phone` (`phone`)
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='유저 정보';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

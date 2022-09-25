@@ -43,15 +43,6 @@ export default class User {
   })
   email: string;
 
-  @Column({
-    name: 'phone',
-    unique: true,
-    nullable: true,
-    type: 'varchar',
-    length: 128,
-  })
-  phone: string;
-
   @CreateDateColumn({
     name: 'first_login',
   })
