@@ -26,19 +26,25 @@ const MainNavSection = styled.div`
   display: flex;
   justify-content: space-between;
   height: 5%;
+  max-height: 2rem;
   padding: 0.5rem 0.7rem 0 0.7rem;
 `;
 
-const MainFloorSection = styled.div``;
+const MainFloorSection = styled.div`
+  height: 5%;
+  max-height: 2rem;
+`;
 
 const MainCarouselSection = styled.div`
   color: #333;
-  height: 90%;
+  height: 100%;
+  max-height: calc(100% - 6.7rem);
 `;
 const MainQuestionSection = styled.div`
   display: flex;
   justify-content: flex-end;
   height: 5%;
+  max-height: 2rem;
   padding: 0 0.7rem;
 `;
 
