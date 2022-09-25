@@ -5,13 +5,13 @@ import { FtStrategy } from './42/ft.strategy';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { AuthService } from './auth.service';
-import { TypeormAuthRepository } from './repository/typeorm.auth.repository';
+import { AuthRepository } from './repository/auth.repository';
 import User from 'src/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 const repo = {
   provide: 'IAuthRepository',
-  useClass: TypeormAuthRepository,
+  useClass: AuthRepository,
 };
 
 @Module({
