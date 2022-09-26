@@ -22,7 +22,8 @@ interface LentInfoProps {
   lent_type?: string | undefined; // 사물함의 종류 (개인, 공유, 동아리)
   cabinet_title: string | undefined; // 공유/동아리 사물함인 경우 사물함에 대한 설명
   max_user?: number | undefined; // 해당 사물함을 대여할 수 있는 최대 유저 수
-  lent_info: LentDto | undefined;
+  lent_info: LentDto[] | undefined;
+  // lent_info: LentDto | undefined;
 }
 
 const LentInfo = (prop: LentInfoProps): JSX.Element => {
@@ -50,9 +51,18 @@ const LentInfo = (prop: LentInfoProps): JSX.Element => {
     );
   };
 
+  // const userInfo = (): JSX.Element[] | null => {
+  //   if (lent_info) {
+  //     return lent_info.users.map((user: UserDto) => {
+  //       return <p key={user.user_id}>{user.intra_id}</p>;
+  //     });
+  //   }
+  //   return null;
+  // };
+
   const userInfo = (): JSX.Element[] | null => {
     if (lent_info) {
-      return lent_info.users.map((user: UserDto) => {
+      return lent_info.map((user: LentDto) => {
         return <p key={user.user_id}>{user.intra_id}</p>;
       });
     }
