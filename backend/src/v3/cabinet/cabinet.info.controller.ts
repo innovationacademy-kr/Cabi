@@ -3,12 +3,14 @@ import {
   ApiBadRequestResponse,
   ApiFoundResponse,
   ApiOperation,
+  ApiTags,
 } from '@nestjs/swagger';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { CabinetInfoService } from './cabinet.info.service';
 
+@ApiTags('(V3) Cabinet')
 @Controller({
   version: '3',
   path: 'api/cabinet_info',

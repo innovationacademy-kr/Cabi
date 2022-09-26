@@ -1,3 +1,5 @@
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+
 export class LentCabinetInfoDto {
   lent_id: number;
   lent_cabinet_id: number;
@@ -9,5 +11,5 @@ export class LentCabinetInfoDto {
   location: string;
   floor: number;
   section: string;
-  activation: boolean;
+  status: CabinetStatusType;
 }

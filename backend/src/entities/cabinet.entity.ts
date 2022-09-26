@@ -1,4 +1,5 @@
 import LentType from 'src/enums/lent.type.enum';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import BanLog from './ban.log.entity';
 import Lent from './lent.entity';
@@ -38,11 +39,11 @@ export default class Cabinet {
   section: string;
 
   @Column({
-    name: 'activation',
-    type: 'tinyint',
-    default: 1,
+    name: 'status',
+    type: 'enum',
+    enum: CabinetStatusType,
   })
-  activation: number;
+  status: CabinetStatusType;
 
   @Column({
     name: 'lent_type',

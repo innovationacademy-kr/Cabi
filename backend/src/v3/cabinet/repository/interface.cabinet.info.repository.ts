@@ -2,6 +2,7 @@ import { CabinetDto } from 'src/dto/cabinet.dto';
 import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 
 export interface ICabinetInfoRepository {
   /**
@@ -58,13 +59,13 @@ export interface ICabinetInfoRepository {
   getLentUsers(cabinet_id: number): Promise<LentDto[]>;
 
   /**
-   * 특정 사물함의 activation을 변경합니다.
+   * 특정 사물함의 status를 변경합니다.
    *
    * @param cabinet_id
-   * @param activation
+   * @param status
    */
-  updateCabinetActivation(
+  updateCabinetStatus(
     cabinet_id: number,
-    activation: number,
+    status: CabinetStatusType,
   ): Promise<void>;
 }

@@ -35,7 +35,7 @@ export class UserRepository implements IUserRepository {
       cabinet_title: result.Lent.cabinet.title,
       cabinet_memo: result.Lent.cabinet.memo,
       max_user: result.Lent.cabinet.max_user,
-      activation: result.Lent.cabinet.activation,
+      status: result.Lent.cabinet.status,
       lent_info: [
         {
           user_id: result.user_id,

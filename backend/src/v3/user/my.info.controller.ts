@@ -11,7 +11,7 @@ import { UserLentResponseDto } from 'src/dto/response/lent.user.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { UserService } from './user.service';
 
-@ApiTags('User')
+@ApiTags('(V3) User')
 @Controller({
   version: '3',
   path: 'api/my_info',
