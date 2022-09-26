@@ -18,7 +18,7 @@ import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { UserDto } from 'src/user/dto/user.dto';
 
-@ApiTags('Cabinet')
+@ApiTags('(V2) Cabinet')
 @Controller('api')
 export class CabinetController {
   private logger = new Logger(CabinetController.name);

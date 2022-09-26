@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 
 /**
@@ -37,8 +38,9 @@ export class CabinetDto {
   max_user: number; // 해당 사물함을 대여할 수 있는 최대 유저 수
 
   @ApiProperty({
-    description: '사물함 상태 (0: 고장, 1: 사용가능, 2: ban , 3: 대여중',
-    example: 1,
+    description: '사물함 상태',
+    enum: ['AVAILABLE', 'FULL', 'EXPIRED', 'BROKEN', 'BANNED'],
+    example: 'PRIVATE',
   })
-  activation: number; // 사물함의 현재 상태
+  status: CabinetStatusType; // 사물함의 현재 상태
 }

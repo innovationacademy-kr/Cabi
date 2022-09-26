@@ -8,6 +8,7 @@ import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.d
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { SpaceDataDto } from 'src/dto/space.data.dto';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { ICabinetInfoRepository } from './repository/interface.cabinet.info.repository';
 
 @Injectable()
@@ -59,15 +60,12 @@ export class CabinetInfoService {
     }
   }
 
-  async updateCabinetActivation(
+  async updateCabinetStatus(
     cabinet_id: number,
-    activation: number,
+    status: CabinetStatusType,
   ): Promise<void> {
     try {
-      await this.cabinetInfoRepository.updateCabinetActivation(
-        cabinet_id,
-        activation,
-      );
+      await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status);
     } catch (e) {
       throw new InternalServerErrorException();
     }

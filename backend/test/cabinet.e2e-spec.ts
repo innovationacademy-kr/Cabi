@@ -143,7 +143,7 @@ describe('Cabinet E2E Test', () => {
         const userCookie = cookie;
 
         // when
-        const response = await request(app.getHttpServer())
+        await request(app.getHttpServer())
           .get(`/api/cabinet_info/${cabinetId}`)
           .set('Cookie', userCookie);
 

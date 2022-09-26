@@ -7,7 +7,7 @@ import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { EventInfoDto } from './dto/event.info.dto';
 import { EventService } from './evnet.service';
 
-@ApiTags('Event')
+@ApiTags('(V2) Event')
 @Controller('/api/event')
 @UseGuards(JwtAuthGuard, BanCheckGuard)
 export class EventController {

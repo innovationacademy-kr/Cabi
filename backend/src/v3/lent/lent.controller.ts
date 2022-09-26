@@ -23,6 +23,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/auth/user.decorator';
@@ -30,6 +31,7 @@ import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { LentService } from './lent.service';
 
+@ApiTags('(V3) Lent')
 @Controller({
   version: '3',
   path: '/api/lent',

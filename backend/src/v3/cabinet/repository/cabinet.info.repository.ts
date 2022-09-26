@@ -4,6 +4,7 @@ import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
 import Cabinet from 'src/entities/cabinet.entity';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { Repository } from 'typeorm';
 import { ICabinetInfoRepository } from './interface.cabinet.info.repository';
 
@@ -73,7 +74,11 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     cabinet_id: number,
   ): Promise<CabinetInfoResponseDto> {
     const cabinetInfo = await this.getCabinetInfo(cabinet_id);
-    if (cabinetInfo.activation === 3 || cabinetInfo.activation === 1) {
+    if (
+      cabinetInfo.status === CabinetStatusType.FULL ||
+      cabinetInfo.status === CabinetStatusType.AVAILABLE
+    ) {
+      // FIXME: 지워도 되나 확인해주세용.
       const lentInfo = await this.getLentUsers(cabinet_id);
       return {
         ...cabinetInfo,
@@ -95,7 +100,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       lent_type: cabinet.lent_type,
       cabinet_title: cabinet.title,
       max_user: cabinet.max_user,
-      activation: cabinet.activation,
+      status: cabinet.status,
     };
   }
 
@@ -126,16 +131,16 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     return lentDto;
   }
 
-  async updateCabinetActivation(
+  async updateCabinetStatus(
     cabinet_id: number,
-    activation: number,
+    status: CabinetStatusType,
   ): Promise<void> {
     const cabinet = await this.cabinetInfoRepository.findOne({
       where: {
         cabinet_id,
       },
     });
-    cabinet.activation = activation;
+    cabinet.status = status;
     await this.cabinetInfoRepository.save(cabinet);
   }
 }

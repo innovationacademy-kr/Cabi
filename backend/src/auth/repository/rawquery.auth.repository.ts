@@ -1,4 +1,3 @@
-import { LentCabinetInfoDto } from 'src/cabinet/dto/cabinet.lent.info.dto';
 import { IAuthRepository } from './auth.repository.interface';
 import * as mariadb from 'mariadb';
 import { ConfigService } from '@nestjs/config';

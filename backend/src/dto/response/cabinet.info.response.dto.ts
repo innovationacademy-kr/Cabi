@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CabinetDto } from '../cabinet.dto';
 import { LentDto } from '../lent.dto';
 
