@@ -43,7 +43,7 @@ export const axiosReturn = async (lent_id: number): Promise<any> => {
   }
 };
 
-const axiosMyInfoURL = "v3/api/my_info";
+const axiosMyInfoURL = "/v3/api/my_info";
 export const axiosMyInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyInfoURL);
