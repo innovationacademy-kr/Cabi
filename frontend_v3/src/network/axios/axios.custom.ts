@@ -4,7 +4,7 @@ const axiosLogoutUrl = "/auth/logout";
 
 export const axiosLogout = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosLogoutUrl);
+    const response = await instance.get(axiosLogoutUrl);
     return response;
   } catch (error) {
     throw error;
@@ -43,10 +43,10 @@ export const axiosReturn = async (lent_id: number): Promise<any> => {
   }
 };
 
-const axiosApiCheckUrl = "/api/check";
-export const axiosApiCheck = async (): Promise<any> => {
+const axiosMyInfoURL = "v3/api/my_info";
+export const axiosMyInfo = async (): Promise<any> => {
   try {
-    const response = await instance.post(axiosApiCheckUrl);
+    const response = await instance.get(axiosMyInfoURL);
     return response;
   } catch (error) {
     throw error;

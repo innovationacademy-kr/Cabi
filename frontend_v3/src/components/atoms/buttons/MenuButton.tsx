@@ -17,9 +17,16 @@ const Button = styled.button`
   background-color: transparent;
 `;
 
+const logoutStyle = {
+  color: "rgba(0, 0, 0, 0.87)",
+  fontFamily: "Roboto ,sans-serif",
+  fontWeight: "400",
+};
+
 // TODO: hybae
 // event handler 추가
 const MenuButton = (): JSX.Element => {
+  const logoutURL = "/auth/logout";
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -42,16 +49,16 @@ const MenuButton = (): JSX.Element => {
     window.open("https://42born2code.slack.com/archives/C02V6GE8LD7");
   };
 
-  const handleLogout = (): void => {
-    axiosLogout()
-      .then((response) => {
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error(error);
-        // navigate("/");
-      });
-  };
+  // const handleLogout = (): void => {
+  //   axiosLogout()
+  //     .then((response) => {
+  //       navigate("/");
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+
   return (
     <div>
       <Button onClick={handleClick}>
@@ -61,7 +68,11 @@ const MenuButton = (): JSX.Element => {
         <MenuItem onClick={handleClose}>내 사물함</MenuItem>
         <MenuItem onClick={handleGuide}>이용안내</MenuItem>
         <MenuItem onClick={handleReport}>슬랙문의</MenuItem>
-        <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
+        <MenuItem>
+          <a href={logoutURL} style={logoutStyle}>
+            로그아웃
+          </a>
+        </MenuItem>
       </Menu>
     </div>
   );
