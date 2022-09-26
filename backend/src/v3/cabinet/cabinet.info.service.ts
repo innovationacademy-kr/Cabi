@@ -65,10 +65,7 @@ export class CabinetInfoService {
     status: CabinetStatusType,
   ): Promise<void> {
     try {
-      await this.cabinetInfoRepository.updateCabinetStatus(
-        cabinet_id,
-        status,
-      );
+      await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status);
     } catch (e) {
       throw new InternalServerErrorException();
     }

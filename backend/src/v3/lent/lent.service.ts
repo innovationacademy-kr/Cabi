@@ -27,7 +27,10 @@ export class LentService {
     // 2. 고장이나 ban 사물함인지 확인
     const cabinet: CabinetInfoResponseDto =
       await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id);
-    if (cabinet.status === CabinetStatusType.BROKEN || cabinet.status === CabinetStatusType.BANNED) {
+    if (
+      cabinet.status === CabinetStatusType.BROKEN ||
+      cabinet.status === CabinetStatusType.BANNED
+    ) {
       throw new HttpException(
         `cabinet_id: ${cabinet.cabinet_id} is unavailable!`,
         HttpStatus.FORBIDDEN,
@@ -65,7 +68,10 @@ export class LentService {
 
     // 2. 현재 대여로 인해 Cabinet이 풀방이 되어 만료 기한이 생기면 Cabinet의 status를 FULL로 수정.
     if (is_generate_expire_time) {
-      await this.cabinetInfoService.updateCabinetStatus(cabinet_id, CabinetStatusType.FULL);
+      await this.cabinetInfoService.updateCabinetStatus(
+        cabinet_id,
+        CabinetStatusType.FULL,
+      );
     }
   }
 
