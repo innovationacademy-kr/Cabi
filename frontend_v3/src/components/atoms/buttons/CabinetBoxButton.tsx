@@ -88,10 +88,6 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
 
   const backgroundColor = setCabinetColor();
   const cabinet_text = setCabinetText();
-  console.log(
-    lender.findIndex((index) => index.intra_id === user),
-    backgroundColor
-  );
 
   // const handleClick = (): void => {
   //   console.log(`TYPE : ${cabinet_type}\nLEN : ${lender.length}`);
