@@ -34,7 +34,8 @@ import { V3Module } from './v3/v3.module';
     EventModule,
     BlackholeModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../', 'frontend/dist/'),
+      rootPath: join(__dirname, '../../', 'frontend_v3/dist/'),
+      exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
       // serveRoot: '../img'
     }),
     UserModule,

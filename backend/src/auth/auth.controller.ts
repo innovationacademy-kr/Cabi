@@ -41,7 +41,7 @@ export class AuthController {
   })
   @ApiFoundResponse({
     description:
-      '정상적으로 인증이 완료되었다면 cabinet_info 또는 my_lent_info로 리다이렉트 합니다.',
+      '정상적으로 인증이 완료되었다면 main 또는 lent로 리다이렉트 합니다.',
   })
   @ApiInternalServerErrorResponse({
     description: '토큰 에러, 키 에러, 기타 에러 발생 시',
@@ -53,13 +53,13 @@ export class AuthController {
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
     const join = await this.authService.addUserIfNotExists(user);
     if (!join) {
-      return res.redirect('/cabinet_info');
+      return res.redirect('/main');
     }
     const lent = await this.authService.checkUserBorrowed(user);
     if (!lent) {
-      return res.redirect('/cabinet_info');
+      return res.redirect('/main');
     }
-    return res.redirect('/my_lent_info');
+    return res.redirect('/lent');
   }
 
   @ApiOperation({
