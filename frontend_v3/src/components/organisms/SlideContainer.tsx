@@ -14,7 +14,7 @@ const SlideContainerComponent = styled.div`
 
 interface SlideContainerProps {
   slideRef: LegacyRef<HTMLDivElement> | undefined;
-  slideCount: number;
+  slideCount: number | undefined;
 }
 
 const SlideContainer = (props: SlideContainerProps): JSX.Element => {

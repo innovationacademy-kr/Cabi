@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import HomeButton from "../atoms/buttons/HomeButton";
 import LocationButton from "../atoms/buttons/LocationButton";
 import MenuButton from "../atoms/buttons/MenuButton";
@@ -9,12 +8,17 @@ import QuestionButton from "../atoms/buttons/QustionButton";
 import GuideModal from "../atoms/modals/GuideModal";
 import GuideBox from "../atoms/modals/GuideBox";
 import Carousel from "../organisms/Carousel";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { userAll } from "../../redux/slices/userSlice";
 import {
-  axiosCabinetInfo,
+  CabinetLocationFloorDto,
+  CabinetInfoByLocationFloorDto,
+} from "../../types/dto/cabinet.dto";
+import {
+  axiosLocationFloor,
+  axiosCabinetByLocationFloor,
   axiosMyInfo,
 } from "../../network/axios/axios.custom";
-import { cabinetAll } from "../../redux/slices/cabinetSlice";
-import { userAll } from "../../redux/slices/userSlice";
 
 const MainSection = styled.section`
   height: 100%;
@@ -52,15 +56,16 @@ const MainQuestionSection = styled.div`
   padding: 0 0.7rem;
 `;
 
-// TODO: hybae
-// slide 개수를 건물, 층에 따라 계산하여 Carousel의 인자로 넘겨줘야 함.
-
 const CabinetTemplate = (): JSX.Element => {
-  // 기존 API
+  // v3 API
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const [currentLocation, setCurrentLocation] = useState<string>("새롬관");
   const [currentFloor, setCurrentFloor] = useState<number>(2);
+  const [locationFloor, setLocationFloor] =
+    useState<CabinetLocationFloorDto[]>();
+  const [infoByLocationFloor, setInfoByLocationFloor] =
+    useState<CabinetInfoByLocationFloorDto>();
   useEffect(() => {
     if (user.user_id === 0) {
       axiosMyInfo()
@@ -71,55 +76,53 @@ const CabinetTemplate = (): JSX.Element => {
           console.error(error);
         });
     }
-    axiosCabinetInfo()
+  }, []);
+
+  useEffect(() => {
+    axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
-        dispatch(cabinetAll(response.data));
+        setInfoByLocationFloor(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
-  interface cabinetInfo {
-    cabinet_id: number;
-    cabinet_num: number;
-    location: string;
-    floor: number;
-    section: string;
-    activation: boolean;
-  }
-
-  const cabinets = useAppSelector((state) => state.cabinet.cabinet);
-  const target: Array<cabinetInfo> = [];
-  cabinets?.[0].forEach((e) => {
-    e.forEach((e) => {
-      e.forEach((cabinetInfo: cabinetInfo) => {
-        if (
-          cabinetInfo.location === currentLocation &&
-          cabinetInfo.floor === currentFloor
-        )
-          target.push(cabinetInfo);
+  useEffect(() => {
+    axiosLocationFloor()
+      .then((response) => {
+        setLocationFloor(response.data.space_data);
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    });
-  });
-  console.log(`Current location: ${currentLocation} floor: ${currentFloor}`);
-  console.log(target);
+  }, []);
+
+  console.log(infoByLocationFloor?.cabinets);
 
   return (
     <MainSection>
       <MainNavSection>
         <HomeButton />
         <LocationButton
+          locations={locationFloor?.map(
+            (e: CabinetLocationFloorDto) => e.location
+          )}
           currentLocation={currentLocation}
           setCurrentLocation={setCurrentLocation}
         />
         <MenuButton />
       </MainNavSection>
       <MainFloorSection>
-        <FloorButton setFloor={setCurrentFloor} />
+        <FloorButton
+          setFloor={setCurrentFloor}
+          floorsByLocation={
+            locationFloor?.filter((e) => e.location === currentLocation)[0]
+          }
+        />
       </MainFloorSection>
       <MainCarouselSection>
-        <Carousel slideCount={3} />
+        <Carousel slideCount={infoByLocationFloor?.section.length} />
       </MainCarouselSection>
       <MainQuestionSection>
         <GuideModal box={<GuideBox />} button={<QuestionButton />} />

@@ -34,7 +34,7 @@ const RowDiv = styled.div`
 `;
 
 interface CarouselProps {
-  slideCount: number;
+  slideCount: number | undefined;
 }
 
 const Carousel = (props: CarouselProps): JSX.Element => {
@@ -49,7 +49,7 @@ const Carousel = (props: CarouselProps): JSX.Element => {
   const slideRef = useRef<HTMLInputElement>(null);
   // TODO: hybae
   // axios response.data에서 슬라이드가 몇 개로 나눠져야하는지 판단해서 값 대입
-  const lastSlide = slideCount - 1;
+  const lastSlide = slideCount - 1; // slideCount가 undefined인 경우 처리..?
 
   useEffect(() => {
     if (slideRef.current != null) {

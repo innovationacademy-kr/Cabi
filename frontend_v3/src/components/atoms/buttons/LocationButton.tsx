@@ -4,7 +4,6 @@ import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useAppSelector } from "../../../redux/hooks";
 
 const Button = styled.button`
   display: flex;
@@ -19,13 +18,13 @@ const Button = styled.button`
 `;
 
 interface LocationButtonProps {
+  locations: string[] | undefined;
   currentLocation: string;
   setCurrentLocation: (location: string) => void;
 }
 
 const LocationButton = (props: LocationButtonProps): JSX.Element => {
-  const { currentLocation, setCurrentLocation } = props;
-  const locations = useAppSelector((state) => state.cabinet.location);
+  const { locations, currentLocation, setCurrentLocation } = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
