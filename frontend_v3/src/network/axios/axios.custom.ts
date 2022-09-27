@@ -83,8 +83,8 @@ export const axiosReturnInfo = async (): Promise<any> => {
   }
 };
 
-// TODO: my_lent_info API 분리 후 업데이트
-const axiosUpdateCabinetMemoURL = "/api/";
+const axiosUpdateCabinetMemoURL =
+  "/v3/api/lent/update_cabinet_title/{cabinet_title}";
 export const axiosUpdateCabinetMemo = async (memo: string): Promise<any> => {
   try {
     const response = await instance.patch(axiosUpdateCabinetMemoURL, memo);
@@ -94,7 +94,8 @@ export const axiosUpdateCabinetMemo = async (memo: string): Promise<any> => {
   }
 };
 
-const axiosUpdateCabinetTitleURL = "/api/";
+const axiosUpdateCabinetTitleURL =
+  "/v3/api/lent/update_cabinet_title/{cabinet_title}";
 export const axiosUpdateCabinetTitle = async (title: string): Promise<any> => {
   try {
     const response = await instance.patch(axiosUpdateCabinetTitleURL, title);

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { LentDto } from "../../types/dto/lent.dto";
 import { UserDto } from "../../types/dto/user.dto";
-import TestTextField from "../atoms/inputs/TestTextField";
+import LentTextField from "../atoms/inputs/LentTextField";
 
 const Content = styled.div`
   display: flex;
@@ -72,12 +72,12 @@ const LentInfo = (prop: LentInfoProps): JSX.Element => {
   return (
     <Content>
       {cabinetInfo()}
-      <TestTextField
+      <LentTextField
         contentType="title"
         currentContent="방 제목을 설정해주세요!"
       />
       {userInfo()}
-      <TestTextField
+      <LentTextField
         contentType="memo"
         currentContent="아직 사용자가 없습니다!"
       />
