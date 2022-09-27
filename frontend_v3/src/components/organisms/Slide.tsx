@@ -12,9 +12,11 @@ const SlideComponent = styled.div`
   align-content: flex-start;
   overflow: hidden auto;
   width: 270px;
-  height: 480px;
+  height: 100%;
   margin: auto;
-  -webkit-overflow-scrolling: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 interface SlideProps {

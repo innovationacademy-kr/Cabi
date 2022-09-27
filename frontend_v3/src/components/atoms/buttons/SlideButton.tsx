@@ -6,6 +6,7 @@ const Button = styled.button`
   width: 1.5rem;
   height: 3rem;
   padding: 0;
+  margin: 0.5rem;
   background-color: transparent;
   color: #c0c0c0;
 `;

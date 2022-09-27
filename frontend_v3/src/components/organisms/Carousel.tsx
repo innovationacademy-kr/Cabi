@@ -8,10 +8,13 @@ const CarouselComponent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  margin: 0;
 `;
 const CarouselArea = styled.div`
   width: 270px;
-  margin: auto;
+  height: 100%;
+  margin: 0;
   overflow: hidden;
 `;
 
@@ -25,6 +28,7 @@ const SectionButtonArea = styled.div`
 
 const RowDiv = styled.div`
   display: flex;
+  height: calc(100% - 2rem);
   flex-direction: row;
   align-items: center;
 `;

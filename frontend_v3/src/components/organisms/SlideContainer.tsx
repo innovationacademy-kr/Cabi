@@ -9,7 +9,7 @@ const SlideContainerComponent = styled.div`
   flex-direction: row;
   width: ${(props) => (props.results ? `${props.results * 270}px` : `270px`)};
   height: 100%;
-  margin: 10px auto;
+  margin: 0;
 `;
 
 interface SlideContainerProps {
