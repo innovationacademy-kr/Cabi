@@ -101,6 +101,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       cabinet_title: cabinet.title,
       max_user: cabinet.max_user,
       status: cabinet.status,
+      section: cabinet.section,
     };
   }
 

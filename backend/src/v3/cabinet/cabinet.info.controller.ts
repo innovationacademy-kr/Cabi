@@ -2,6 +2,7 @@ import { Controller, Get, Logger, Param, ParseIntPipe } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -25,7 +26,8 @@ export class CabinetController {
     summary: 'space 정보 호출',
     description: 'cabi에 존재하는 건물/층 정보를 받아옵니다.',
   })
-  @ApiFoundResponse({
+  @ApiOkResponse({
+    type: SpaceDataResponseDto,
     description:
       'cabi에 존재하는 건물/층 정보를 SpaceDataResponseDto 형식으로 받아옵니다.',
   })
@@ -41,7 +43,8 @@ export class CabinetController {
     summary: '층 정보 호출',
     description: 'cabi에 존재하는 건물/층 정보를 받아옵니다.',
   })
-  @ApiFoundResponse({
+  @ApiOkResponse({
+    type: LentInfoResponseDto,
     description:
       '정상적인 건물 정보와 층 정보가 들어오면 층에 존재하는 section 정보와 사물함 정보를 가져옵니다.',
   })
@@ -61,7 +64,8 @@ export class CabinetController {
     summary: '사물함 정보 호출',
     description: 'cabinet_id를 받아 특정 사물함의 상세정보를 받아옵니다.',
   })
-  @ApiFoundResponse({
+  @ApiOkResponse({
+    type: CabinetInfoResponseDto,
     description:
       '파라미터로 받은 사물함의 정보를 CabinetInfoResponseDto 형식으로 받아옵니다',
   })
