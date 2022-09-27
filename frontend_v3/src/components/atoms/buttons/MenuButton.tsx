@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import { axiosLogout } from "../../../network/axios/axios.custom";
+import { useAppDispatch } from "../../../redux/hooks";
+import { userInfoInitialize } from "../../../redux/slices/userSlice";
 
 const Button = styled.button`
   display: flex;
@@ -23,13 +25,11 @@ const logoutStyle = {
   fontWeight: "400",
 };
 
-// TODO: hybae
-// event handler 추가
 const MenuButton = (): JSX.Element => {
-  const logoutURL = "/auth/logout";
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
+  const dispatch = useAppDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -55,15 +55,16 @@ const MenuButton = (): JSX.Element => {
     window.open(circleUrl);
   };
 
-  // const handleLogout = (): void => {
-  //   axiosLogout()
-  //     .then((response) => {
-  //       navigate("/");
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
+  const handleLogout = (): void => {
+    axiosLogout()
+      .then((response) => {
+        dispatch(userInfoInitialize());
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div>
@@ -75,11 +76,7 @@ const MenuButton = (): JSX.Element => {
         {/* <MenuItem onClick={handleGuide}>이용안내</MenuItem> */}
         <MenuItem onClick={handleReport}>슬랙문의</MenuItem>
         <MenuItem onClick={handleCircle}>사물함 신청</MenuItem>
-        <MenuItem>
-          <a href={logoutURL} style={logoutStyle}>
-            로그아웃
-          </a>
-        </MenuItem>
+        <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
       </Menu>
     </div>
   );
