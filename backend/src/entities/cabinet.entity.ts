@@ -39,7 +39,7 @@ export default class Cabinet {
   section: string;
 
   @Column({
-    name: 'status',
+    name: 'cabinet_status',
     type: 'enum',
     enum: CabinetStatusType,
   })

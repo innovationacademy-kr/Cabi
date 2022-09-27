@@ -123,7 +123,7 @@ export class LentService {
     if (lent === null) {
       throw new HttpException(
         `${user.intra_id} doesn't lent cabinet!`,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.FORBIDDEN,
       );
     }
     // 2. Lent Table에서 값 제거.
