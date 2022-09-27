@@ -20,9 +20,13 @@ export const userSlice = createSlice({
     userInfoInitialize: (state) => {
       return initialState;
     },
+    setUserCabinet: (state, action: PayloadAction<number>) => {
+      state.cabinet_id = action.payload;
+    },
   },
 });
 
-export const { userAll, userInfoInitialize } = userSlice.actions;
+export const { userAll, userInfoInitialize, setUserCabinet } =
+  userSlice.actions;
 
 export default userSlice.reducer;
