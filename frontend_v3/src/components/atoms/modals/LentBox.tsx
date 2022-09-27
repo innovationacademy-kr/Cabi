@@ -18,6 +18,7 @@ const BoxStyle = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "24rem",
+  maxWidth: "70vw",
   bgcolor: "background.paper",
   border: 0,
   borderRadius: "1rem",
@@ -82,7 +83,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   const LentAble: JSX.Element = (
     <Box sx={BoxStyle}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
-        [{cabinetInfo.cabinet_num}]번 사물함을 대여합니다.
+        [{cabinet_number}]번 사물함을 대여합니다.
       </Typography>
       <Typography id="modal-modal-description" sx={{ mt: 2 }} align="center">
         대여기간은 +30일 입니다.
@@ -90,7 +91,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
       <Typography id="modal-modal-description" sx={{ mt: 2 }} align="center">
         이용 중 귀중품 분실에 책임지지 않습니다.
       </Typography>
-      {cabinet_type === "SHARE" && (
+      {cabinet_type === "SHARE" && lender?.length > 0 && (
         <>
           <p>대여자 목록</p>
           {lender.map((item) => (
@@ -145,9 +146,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   );
 
   return (
-    <LentBoxContainer typeof={cabinet_type} results={lender.length}>
-      {isLentAble ? LentAble : LentUnable}
-    </LentBoxContainer>
+    <LentBoxContainer>{isLentAble ? LentAble : LentUnable}</LentBoxContainer>
   );
 };
 
