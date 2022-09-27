@@ -77,18 +77,11 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     cabinet_id: number,
   ): Promise<CabinetInfoResponseDto> {
     const cabinetInfo = await this.getCabinetInfo(cabinet_id);
-    if (
-      cabinetInfo.status === CabinetStatusType.FULL ||
-      cabinetInfo.status === CabinetStatusType.AVAILABLE
-    ) {
-      // FIXME: 지워도 되나 확인해주세용.
-      const lentInfo = await this.getLentUsers(cabinet_id);
-      return {
-        ...cabinetInfo,
-        lent_info: lentInfo,
-      };
+    const lentInfo = await this.getLentUsers(cabinet_id);
+    return {
+      ...cabinetInfo,
+      lent_info: lentInfo,
     }
-    return cabinetInfo;
   }
 
   async getCabinetInfo(cabinet_id: number): Promise<CabinetDto> {
