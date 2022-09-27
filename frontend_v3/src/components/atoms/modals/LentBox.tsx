@@ -9,6 +9,8 @@ import styled from "@emotion/styled";
 import { axiosLentId } from "../../../network/axios/axios.custom";
 import CheckButton from "../buttons/CheckButton";
 import { UserDto } from "../../../types/dto/user.dto";
+import { useAppDispatch } from "../../../redux/hooks";
+import { setUserCabinet } from "../../../redux/slices/userSlice";
 
 const LentBoxContainer = styled.div``;
 
@@ -54,16 +56,24 @@ interface LentBoxProps {
   // eslint-disable-next-line react/require-default-props
   handleClose: () => void;
   cabinet_number: number;
+  cabinet_id: number;
   lender: UserDto[];
   cabinet_type: string;
   isLentAble: boolean;
 }
 
 const LentBox = (props: LentBoxProps): JSX.Element => {
-  const { handleClose, isLentAble, cabinet_number, lender, cabinet_type } =
-    props;
+  const {
+    handleClose,
+    isLentAble,
+    cabinet_number,
+    lender,
+    cabinet_type,
+    cabinet_id,
+  } = props;
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const handleCheckClick = (): void => {
     setChecked(!checked);
   };
@@ -71,6 +81,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   const handleLent = (): void => {
     axiosLentId(cabinet_number)
       .then(() => {
+        dispatch(setUserCabinet(cabinet_id));
         navigate("/Lent");
       })
       .catch((error) => {
