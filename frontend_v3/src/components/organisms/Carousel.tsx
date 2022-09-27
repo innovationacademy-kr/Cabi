@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import SlideContainer from "./SlideContainer";
 import SlideButton from "../atoms/buttons/SlideButton";
 import SectionButton from "../atoms/buttons/SectionButton";
+import { CabinetInfoByLocationFloorDto } from "../../types/dto/cabinet.dto";
 
 const CarouselComponent = styled.div`
   display: flex;
@@ -35,10 +36,11 @@ const RowDiv = styled.div`
 
 interface CarouselProps {
   slideCount: number | undefined;
+  cabinets: CabinetInfoByLocationFloorDto[] | undefined;
 }
 
 const Carousel = (props: CarouselProps): JSX.Element => {
-  const { slideCount } = props;
+  const { slideCount, cabinets } = props;
   const [mouseDownClientX, setMouseDownClientX] = useState(0);
   const [mouseDownClientY, setMouseDownClientY] = useState(0);
   const [mouseUpClientX, setMouseUpClientX] = useState(0);
@@ -135,7 +137,11 @@ const Carousel = (props: CarouselProps): JSX.Element => {
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
         >
-          <SlideContainer slideRef={slideRef} slideCount={slideCount} />
+          <SlideContainer
+            slideRef={slideRef}
+            slideCount={slideCount}
+            cabinets={cabinets}
+          />
         </CarouselArea>
         <SlideButton
           direction="right"

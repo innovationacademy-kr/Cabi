@@ -2,6 +2,7 @@ import React, { LegacyRef } from "react";
 import styled from "@emotion/styled";
 import Slide from "./Slide";
 import MockDatas from "../../mock/CabinetBoxButton.mock";
+import { CabinetInfoByLocationFloorDto } from "../../types/dto/cabinet.dto";
 
 const SlideContainerComponent = styled.div`
   display: flex;
@@ -15,15 +16,32 @@ const SlideContainerComponent = styled.div`
 interface SlideContainerProps {
   slideRef: LegacyRef<HTMLDivElement> | undefined;
   slideCount: number | undefined;
+  cabinets: CabinetInfoByLocationFloorDto[] | undefined;
 }
 
+const Loading = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`;
+
 const SlideContainer = (props: SlideContainerProps): JSX.Element => {
-  const { slideRef, slideCount } = props;
+  const { slideRef, slideCount, cabinets } = props;
+
+  const renderSlides = (): JSX.Element[] => {
+    if (cabinets) {
+      return cabinets.map((item: CabinetInfoByLocationFloorDto, i: number) => {
+        return <Slide key={i} datas={item.cabinets} />;
+      });
+    }
+
+    return [<Loading key={0}>Loading...</Loading>];
+  };
+
   return (
     <SlideContainerComponent ref={slideRef} results={slideCount}>
-      <Slide datas={MockDatas} />
-      <Slide datas={MockDatas} />
-      <Slide datas={MockDatas} />
+      {renderSlides()}
     </SlideContainerComponent>
   );
 };
