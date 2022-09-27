@@ -1,10 +1,18 @@
-import { Controller, Get, Logger, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from './jwt/guard/jwtauth.guard';
 import { Response } from 'express';
 import { FtGuard } from './42/guard/ft.guard';
 import {
   ApiFoundResponse,
   ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
   ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -67,20 +75,18 @@ export class AuthController {
     description:
       'cabi에서 로그아웃을 할 때 호출합니다. 호출 시 쿠키 내의 accessToken 을 제거합니다.',
   })
-  @ApiFoundResponse({
-    description: '로그아웃 성공시 메인 페이지로 리다이렉트',
+  @ApiNoContentResponse({
+    description: '로그아웃 성공',
   })
   @ApiUnauthorizedResponse({
-    description: '로그아웃 상태거나 JWT 세션이 만료됨',
+    description: '이미 로그아웃 상태거나 JWT 세션이 만료됨',
   })
   @Get('logout')
   @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
   logout(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log(`${user.intra_id} logged out`);
     // NOTE: 토큰을 쿠키에 저장하지 않는다면 다른 로그아웃 방식을 고안해야 함. (세션을 블랙리스트 캐시에 추가하거나...)
     res.clearCookie('accessToken');
-    // console.log(res);
-    res.redirect('/');
-    // console.log(res);
   }
 }
