@@ -9,8 +9,12 @@ import QuestionButton from "../atoms/buttons/QustionButton";
 import GuideModal from "../atoms/modals/GuideModal";
 import GuideBox from "../atoms/modals/GuideBox";
 import Carousel from "../organisms/Carousel";
-import { axiosCabinetInfo } from "../../network/axios/axios.custom";
+import {
+  axiosCabinetInfo,
+  axiosMyInfo,
+} from "../../network/axios/axios.custom";
 import { cabinetAll } from "../../redux/slices/cabinetSlice";
+import { userAll } from "../../redux/slices/userSlice";
 
 const MainSection = styled.section`
   height: 100%;
@@ -54,9 +58,19 @@ const MainQuestionSection = styled.div`
 const CabinetTemplate = (): JSX.Element => {
   // 기존 API
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
   const [currentLocation, setCurrentLocation] = useState<string>("새롬관");
   const [currentFloor, setCurrentFloor] = useState<number>(2);
   useEffect(() => {
+    if (user.user_id === 0) {
+      axiosMyInfo()
+        .then((response) => {
+          dispatch(userAll(response.data));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
     axiosCabinetInfo()
       .then((response) => {
         dispatch(cabinetAll(response.data));
