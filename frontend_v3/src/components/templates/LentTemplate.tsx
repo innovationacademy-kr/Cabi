@@ -61,7 +61,9 @@ const LentTemplate = (): JSX.Element => {
   const cabinetId = useAppSelector((state) => state.user.cabinet_id);
 
   useEffect(() => {
-    if (cabinetId === -1) navigate("/main"); // 대여하지 않은 상태에서 /lent 페이지 접근 시 /main으로 navigate
+    // TODO (seuan)
+    // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
+    // if (cabinetId === -1) navigate("/main");
     axiosMyLentInfo()
       .then((response) => {
         setMyLentInfo(response);
