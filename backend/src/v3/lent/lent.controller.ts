@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   ConflictException,
   Controller,
   Delete,
@@ -13,9 +14,11 @@ import {
   Patch,
   Post,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -24,10 +27,13 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/auth/user.decorator';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
+import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
+import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { LentService } from './lent.service';
 
@@ -92,25 +98,35 @@ export class LentController {
     summary: '캐비넷의 제목 업데이트',
     description: '자신이 대여한 캐비넷의 제목을 업데이트합니다.',
   })
+  @ApiBody({ type: [UpdateCabinetTitleRequestDto] })
   @ApiOkResponse({
     description: 'Patch 성공 시, 200 Ok를 응답합니다.',
   })
-  @ApiBadRequestResponse({
-    description:
-      '대여하고 있지 않은 사물함의 제목을 업데이트 시도하면, 400 Bad_Request를 응답합니다.',
+  @ApiForbiddenResponse({
+    description: '사물함을 빌리지 않았는데 호출할 때',
   })
-  @Patch('/update_cabinet_title/:cabinet_title')
+  @ApiBadRequestResponse({
+    description: '요청 필드가 비어있을 때',
+  })
+  @ApiUnauthorizedResponse({
+    description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
+  })
+  @Patch('/update_cabinet_title')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, BanCheckGuard)
   async updateLentCabinetTitle(
-    @Param('cabinet_title') cabinet_title: string,
+    @Body(new ValidationPipe())
+    updateCabinetTitleRequestDto: UpdateCabinetTitleRequestDto,
     @User() user: UserSessionDto,
   ): Promise<void> {
     try {
-      return await this.lentService.updateLentCabinetTitle(cabinet_title, user);
+      return await this.lentService.updateLentCabinetTitle(
+        updateCabinetTitleRequestDto.cabinet_title,
+        user,
+      );
     } catch (err) {
       if (err.status === HttpStatus.BAD_REQUEST) {
-        throw new BadRequestException(err.message);
+        throw err;
       } else {
         this.logger.error(err);
         throw new InternalServerErrorException();
@@ -122,25 +138,35 @@ export class LentController {
     summary: '캐비넷의 메모 업데이트',
     description: '자신이 대여한 캐비넷의 메모를 업데이트합니다.',
   })
+  @ApiBody({ type: [UpdateCabinetMemoRequestDto] })
   @ApiOkResponse({
     description: 'Patch 성공 시, 200 Ok를 응답합니다.',
   })
-  @ApiBadRequestResponse({
-    description:
-      '대여하고 있지 않은 사물함의 메모를 업데이트 시도하면, 400 Bad_Request를 응답합니다.',
+  @ApiForbiddenResponse({
+    description: '사물함을 빌리지 않았는데 호출할 때',
   })
-  @Patch('/update_cabinet_memo/:cabinet_memo')
+  @ApiBadRequestResponse({
+    description: '요청 필드가 비어있을 때',
+  })
+  @ApiUnauthorizedResponse({
+    description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
+  })
+  @Patch('/update_cabinet_memo')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard, BanCheckGuard)
   async updateLentCabinetMemo(
-    @Param('cabinet_memo') cabinet_memo: string,
+    @Body(new ValidationPipe())
+    updateCabinetMemoRequestDto: UpdateCabinetMemoRequestDto,
     @User() user: UserSessionDto,
   ): Promise<void> {
     try {
-      return await this.lentService.updateLentCabinetMemo(cabinet_memo, user);
+      return await this.lentService.updateLentCabinetMemo(
+        updateCabinetMemoRequestDto.cabinet_memo,
+        user,
+      );
     } catch (err) {
-      if (err.status === HttpStatus.BAD_REQUEST) {
-        throw new BadRequestException(err.message);
+      if (err.status === HttpStatus.FORBIDDEN) {
+        throw err;
       } else {
         this.logger.error(err);
         throw new InternalServerErrorException();
