@@ -45,7 +45,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         floor,
       },
     });
-    
+
     const sections = await this.getSectionInfo(location, floor);
     const cabinetInfoDto = await Promise.all(
       cabinets.map((cabinet) =>
@@ -81,7 +81,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     return {
       ...cabinetInfo,
       lent_info: lentInfo,
-    }
+    };
   }
 
   async getCabinetInfo(cabinet_id: number): Promise<CabinetDto> {

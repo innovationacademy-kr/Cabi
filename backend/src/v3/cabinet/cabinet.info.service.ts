@@ -37,7 +37,7 @@ export class CabinetInfoService {
     location: string,
     floor: number,
   ): Promise<CabinetsPerSectionResponseDto[]> {
-      return this.cabinetInfoRepository.getFloorInfo(location, floor);
+    return this.cabinetInfoRepository.getFloorInfo(location, floor);
   }
 
   async getCabinetResponseInfo(
@@ -51,7 +51,11 @@ export class CabinetInfoService {
   }
 
   async getCabinetInfo(cabinetId: number): Promise<CabinetDto> {
+    try {
       return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
   }
 
   async updateCabinetStatus(
