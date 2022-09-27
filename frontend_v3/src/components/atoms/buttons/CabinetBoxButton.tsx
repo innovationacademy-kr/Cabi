@@ -5,14 +5,15 @@ import * as cabinetColor from "../../../themes/cabinetColor";
 import { LentDto } from "../../../types/dto/lent.dto";
 // import LentModal from "../modals/LentModal";
 
-const Cabinet = styled.button`
+const Cabinet = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  width: 90px;
-  height: 90px;
+  width: 88px;
+  height: 88px;
   padding: 0;
+  margin: 0;
   border: 1px solid #dee2e6;
   border-radius: 0;
   outline: 0;

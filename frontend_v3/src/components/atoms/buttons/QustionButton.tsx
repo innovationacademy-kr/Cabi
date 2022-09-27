@@ -1,10 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
 import styled from "@emotion/styled";
-import TestModal from "../modals/QuestionTestModal";
 
-const Button = styled.button`
+const Button = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
