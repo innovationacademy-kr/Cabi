@@ -86,7 +86,7 @@ export class LentService {
     if (my_cabinet_id === null) {
       throw new HttpException(
         `${user.intra_id} doesn't lent cabinet!`,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.FORBIDDEN,
       );
     }
     // 2. 해당 캐비넷 제목 업데이트
@@ -107,7 +107,7 @@ export class LentService {
     if (my_cabinet_id === null) {
       throw new HttpException(
         `${user.intra_id} doesn't lent cabinet!`,
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.FORBIDDEN,
       );
     }
     // 2. 해당 캐비넷 메모 업데이트
