@@ -1,4 +1,6 @@
 import {
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -35,11 +37,7 @@ export class CabinetInfoService {
     location: string,
     floor: number,
   ): Promise<CabinetsPerSectionResponseDto[]> {
-    try {
       return this.cabinetInfoRepository.getFloorInfo(location, floor);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
   }
 
   async getCabinetResponseInfo(
@@ -48,16 +46,12 @@ export class CabinetInfoService {
     try {
       return await this.cabinetInfoRepository.getCabinetResponseInfo(cabinetId);
     } catch (e) {
-      throw new InternalServerErrorException();
+      throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
     }
   }
 
   async getCabinetInfo(cabinetId: number): Promise<CabinetDto> {
-    try {
       return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
   }
 
   async updateCabinetStatus(

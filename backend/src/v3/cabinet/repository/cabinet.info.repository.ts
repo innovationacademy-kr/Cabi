@@ -45,6 +45,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         floor,
       },
     });
+    
     const sections = await this.getSectionInfo(location, floor);
     const cabinetInfoDto = await Promise.all(
       cabinets.map((cabinet) =>
