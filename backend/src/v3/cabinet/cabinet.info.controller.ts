@@ -1,13 +1,12 @@
 import { Controller, Get, Logger, Param, ParseIntPipe } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
-import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
+import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { CabinetInfoService } from './cabinet.info.service';
 
@@ -44,7 +43,7 @@ export class CabinetController {
     description: 'cabi에 존재하는 건물/층 정보를 받아옵니다.',
   })
   @ApiOkResponse({
-    type: LentInfoResponseDto,
+    type: [CabinetsPerSectionResponseDto],
     description:
       '정상적인 건물 정보와 층 정보가 들어오면 층에 존재하는 section 정보와 사물함 정보를 가져옵니다.',
   })
@@ -55,7 +54,7 @@ export class CabinetController {
   async getCabinetsInfoByParam(
     @Param('location') location: string,
     @Param('floor', ParseIntPipe) floor: number,
-  ): Promise<LentInfoResponseDto> {
+  ): Promise<CabinetsPerSectionResponseDto[]> {
     this.logger.log('getCabinetInfoByParam');
     return await this.cabinetService.getCabinetInfoByParam(location, floor);
   }

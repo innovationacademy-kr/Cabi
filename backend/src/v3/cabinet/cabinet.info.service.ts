@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
-import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
+import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { SpaceDataDto } from 'src/dto/space.data.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
@@ -34,7 +34,7 @@ export class CabinetInfoService {
   async getCabinetInfoByParam(
     location: string,
     floor: number,
-  ): Promise<LentInfoResponseDto> {
+  ): Promise<CabinetsPerSectionResponseDto[]> {
     try {
       return this.cabinetInfoRepository.getFloorInfo(location, floor);
     } catch (e) {
