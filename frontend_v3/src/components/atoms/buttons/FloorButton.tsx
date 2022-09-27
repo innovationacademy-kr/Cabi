@@ -16,21 +16,27 @@ import { CabinetLocationFloorDto } from "../../../types/dto/cabinet.dto";
 //   // 4. handleClick 이벤트 핸들러 구현
 
 interface FloorButtonProps {
+  currentFloor: number;
   setFloor: (floor: number) => void;
   floorsByLocation: CabinetLocationFloorDto | undefined;
 }
 
 const FloorButton = (props: FloorButtonProps): JSX.Element => {
-  const { setFloor, floorsByLocation } = props;
+  const { currentFloor, setFloor, floorsByLocation } = props;
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     const getFloor: string | null = e.currentTarget.getAttribute("button-key");
     if (getFloor) setFloor(parseInt(getFloor, 10));
   };
   return (
-    <ButtonGroup variant="contained" color="primary">
+    <ButtonGroup color="primary">
       {floorsByLocation?.floors?.map((floor: number) => {
         return (
-          <Button key={floor} button-key={floor} onClick={handleClick}>
+          <Button
+            variant={floor === currentFloor ? "outlined" : "contained"}
+            key={floor}
+            button-key={floor}
+            onClick={handleClick}
+          >
             {floor}F
           </Button>
         );

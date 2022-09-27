@@ -112,6 +112,7 @@ const CabinetTemplate = (): JSX.Element => {
       </MainNavSection>
       <MainFloorSection>
         <FloorButton
+          currentFloor={currentFloor}
           setFloor={setCurrentFloor}
           floorsByLocation={
             locationFloor?.filter((e) => e.location === currentLocation)[0]
