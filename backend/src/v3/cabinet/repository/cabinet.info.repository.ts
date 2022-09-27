@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
-import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
+import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import Cabinet from 'src/entities/cabinet.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { Repository } from 'typeorm';
@@ -38,24 +38,26 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
   async getFloorInfo(
     location: string,
     floor: number,
-  ): Promise<LentInfoResponseDto> {
+  ): Promise<CabinetsPerSectionResponseDto[]> {
     const cabinets = await this.cabinetInfoRepository.find({
       where: {
         location,
         floor,
       },
     });
-    const section = await this.getSectionInfo(location, floor);
+    const sections = await this.getSectionInfo(location, floor);
     const cabinetInfoDto = await Promise.all(
       cabinets.map((cabinet) =>
         this.getCabinetResponseInfo(cabinet.cabinet_id),
       ),
     );
 
-    return {
+    const rtn = sections.map((section) => ({
       section,
-      cabinets: cabinetInfoDto,
-    };
+      cabinets: cabinetInfoDto.filter((cabinet) => cabinet.section === section),
+    }));
+
+    return rtn;
   }
 
   async getSectionInfo(location: string, floor: number): Promise<string[]> {

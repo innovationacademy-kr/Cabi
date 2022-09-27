@@ -1,7 +1,7 @@
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
-import { LentInfoResponseDto } from 'src/dto/response/lent.info.response.dto';
+import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 
 export interface ICabinetInfoRepository {
@@ -23,9 +23,12 @@ export interface ICabinetInfoRepository {
   /**
    * 특정 건물과 층에 있는 정보들을 가져옵니다.
    *
-   * @return LentInfoResponseDto
+   * @return CabinetsPerSectionResponseDto[]
    */
-  getFloorInfo(location: string, floor: number): Promise<LentInfoResponseDto>;
+  getFloorInfo(
+    location: string,
+    floor: number,
+  ): Promise<CabinetsPerSectionResponseDto[]>;
 
   /**
    * 특정 건물과 층에 있는 section 정보를 가져옵니다.
