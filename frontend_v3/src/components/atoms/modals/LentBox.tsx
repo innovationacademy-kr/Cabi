@@ -6,7 +6,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
-import { axiosLent } from "../../../network/axios/axios.custom";
+import { axiosLentId } from "../../../network/axios/axios.custom";
 import CheckButton from "../buttons/CheckButton";
 import { UserDto } from "../../../types/dto/user.dto";
 
@@ -68,7 +68,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   };
 
   const handleLent = (): void => {
-    axiosLent(cabinet_number)
+    axiosLentId(cabinet_number)
       .then(() => {
         navigate("/Lent");
       })

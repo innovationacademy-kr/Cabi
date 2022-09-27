@@ -65,7 +65,7 @@ const CabinetTemplate = (): JSX.Element => {
   const [locationFloor, setLocationFloor] =
     useState<CabinetLocationFloorDto[]>();
   const [infoByLocationFloor, setInfoByLocationFloor] =
-    useState<CabinetInfoByLocationFloorDto>();
+    useState<CabinetInfoByLocationFloorDto[]>();
   useEffect(() => {
     if (user.user_id === 0) {
       axiosMyInfo()
@@ -76,6 +76,13 @@ const CabinetTemplate = (): JSX.Element => {
           console.error(error);
         });
     }
+    axiosLocationFloor()
+      .then((response) => {
+        setLocationFloor(response.data.space_data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   useEffect(() => {
@@ -86,28 +93,18 @@ const CabinetTemplate = (): JSX.Element => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
-
-  useEffect(() => {
-    axiosLocationFloor()
-      .then((response) => {
-        setLocationFloor(response.data.space_data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  console.log(infoByLocationFloor?.cabinets);
+  }, [currentLocation, currentFloor]);
 
   return (
     <MainSection>
       <MainNavSection>
         <HomeButton />
         <LocationButton
-          locations={locationFloor?.map(
-            (e: CabinetLocationFloorDto) => e.location
-          )}
+          locations={
+            locationFloor
+              ? locationFloor.map((e: CabinetLocationFloorDto) => e.location)
+              : undefined
+          }
           currentLocation={currentLocation}
           setCurrentLocation={setCurrentLocation}
         />
@@ -122,7 +119,10 @@ const CabinetTemplate = (): JSX.Element => {
         />
       </MainFloorSection>
       <MainCarouselSection>
-        <Carousel slideCount={infoByLocationFloor?.section.length} />
+        <Carousel
+          slideCount={infoByLocationFloor?.length}
+          cabinets={infoByLocationFloor}
+        />
       </MainCarouselSection>
       <MainQuestionSection>
         <GuideModal box={<GuideBox />} button={<QuestionButton />} />

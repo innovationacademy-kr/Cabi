@@ -1,4 +1,6 @@
 import { LentDto } from "./lent.dto";
+import CabinetType from "../enum/cabinet.type.enum";
+import CabinetStatus from "../enum/cabinet.status.enum";
 
 // TODO :hybae
 // lent_type을 LentType으로 변경 예정
@@ -21,7 +23,18 @@ export interface CabinetLocationFloorDto {
   floors: Array<number>;
 }
 
+export interface CabinetInfo {
+  cabinet_id: number;
+  cabinet_num: number;
+  lent_type: CabinetType;
+  cabinet_title: string | null;
+  max_user: number;
+  status: CabinetStatus;
+  section: string;
+  lent_info: LentDto[];
+}
+
 export interface CabinetInfoByLocationFloorDto {
-  section: Array<string>;
-  cabinets: Array<object>;
+  section: Array<object>;
+  cabinets: CabinetInfo[];
 }

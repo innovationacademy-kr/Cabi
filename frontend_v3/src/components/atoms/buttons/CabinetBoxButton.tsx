@@ -1,11 +1,8 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
-import GuideModal from "../modals/GuideModal";
-import LentBox from "../modals/LentBox";
-import { UserDto } from "../../../types/dto/user.dto";
 import CabinetStatus from "../../../types/enum/cabinet.status.enum";
 import CabinetType from "../../../types/enum/cabinet.type.enum";
 import * as cabinetColor from "../../../themes/cabinetColor";
+import { LentDto } from "../../../types/dto/lent.dto";
 // import LentModal from "../modals/LentModal";
 
 const Cabinet = styled.button`
@@ -41,23 +38,20 @@ const CabinetInfoText = styled.div`
 interface CabinetBoxButtonProps {
   cabinet_type: CabinetType;
   cabinet_number: number;
-  is_expired: boolean;
-  lender: UserDto[];
-  activation: CabinetStatus;
-  user: string;
+  lender: LentDto[];
+  status: CabinetStatus;
 }
 
 // TODO: hybae
 // 핸들러 추가
 // line 64: 로그인 기능 추가 후 적용
 const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
-  const { cabinet_type, cabinet_number, is_expired, lender, user, activation } =
-    props;
+  const { cabinet_type, cabinet_number, lender, status } = props;
 
   const setCabinetColor = (): string => {
     // if (lender.findIndex((e) => e.intra_id === user))
     //   return cabinetColor.myCabinet;
-    switch (activation) {
+    switch (status) {
       case CabinetStatus.AVAILABLE:
         return cabinetColor.emptyCabinet;
       case CabinetStatus.FULL:
@@ -74,6 +68,8 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
   };
 
   const setCabinetText = (): string => {
+    if (status === CabinetStatus.BANNED) return "사용불가";
+    if (status === CabinetStatus.BROKEN) return "고장";
     switch (cabinet_type) {
       case CabinetType.PRIVATE:
         return lender.length === 0 ? "" : lender[0].intra_id;
@@ -86,25 +82,10 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
     }
   };
 
-  const backgroundColor = setCabinetColor();
-  const cabinet_text = setCabinetText();
-
-  // const handleClick = (): void => {
-  //   console.log(`TYPE : ${cabinet_type}\nLEN : ${lender.length}`);
-  // };
   return (
-    // <Cabinet onClick={handleClick} color={backgroundColor}>
-    <Cabinet color={backgroundColor}>
+    <Cabinet color={setCabinetColor()}>
       <CabinetInfoNumber>{cabinet_number}</CabinetInfoNumber>
-      <CabinetInfoText>{cabinet_text}</CabinetInfoText>
-      {/* {isModalOpen && (
-        <LentModal
-          cabinet_type={cabinet_type}
-          cabinet_number={cabinet_number}
-          lender={lender}
-          handleClose={handleClick}
-        />
-      )} */}
+      <CabinetInfoText>{setCabinetText()}</CabinetInfoText>
     </Cabinet>
   );
 };
