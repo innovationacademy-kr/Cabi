@@ -1,7 +1,7 @@
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 import React from "react";
-import { useAppSelector } from "../../../redux/hooks";
+import { CabinetLocationFloorDto } from "../../../types/dto/cabinet.dto";
 
 // XXX:
 // 로그인 시 최초 API 호출로 4중 배열 불러오고, 버튼에서는 내부 커스텀 액션으로 필요한 정보만 나눠서 가져오기
@@ -17,18 +17,18 @@ import { useAppSelector } from "../../../redux/hooks";
 
 interface FloorButtonProps {
   setFloor: (floor: number) => void;
+  floorsByLocation: CabinetLocationFloorDto | undefined;
 }
 
 const FloorButton = (props: FloorButtonProps): JSX.Element => {
-  const { setFloor } = props;
-  const floors = useAppSelector((state) => state.cabinet.floor);
+  const { setFloor, floorsByLocation } = props;
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
     const getFloor: string | null = e.currentTarget.getAttribute("button-key");
     if (getFloor) setFloor(parseInt(getFloor, 10));
   };
   return (
     <ButtonGroup variant="contained" color="primary">
-      {floors?.[0].map((floor: number) => {
+      {floorsByLocation?.floors?.map((floor: number) => {
         return (
           <Button key={floor} button-key={floor} onClick={handleClick}>
             {floor}F

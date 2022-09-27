@@ -15,3 +15,13 @@ export interface MyCabinetInfoResponseDto {
   cabinet_title: string; // 공유/동아리 사물함인 경우 사물함에 대한 설명
   max_user: number; // 해당 사물함을 대여할 수 있는 최대 유저 수
 }
+
+export interface CabinetLocationFloorDto {
+  location: string;
+  floors: Array<number>;
+}
+
+export interface CabinetInfoByLocationFloorDto {
+  section: Array<string>;
+  cabinets: Array<object>;
+}
