@@ -7,6 +7,7 @@ import ReturnButton from "../atoms/buttons/ReturnButton";
 import LentInfo from "../organisms/LentInfo";
 import { axiosMyLentInfo } from "../../network/axios/axios.custom";
 import { MyCabinetInfoResponseDto } from "../../types/dto/cabinet.dto";
+import { useAppSelector } from "../../redux/hooks";
 
 // const LentSection = styled.section`
 //   position: absolute;
@@ -57,8 +58,10 @@ const LentTemplate = (): JSX.Element => {
   );
 
   const navigate = useNavigate();
+  const cabinetId = useAppSelector((state) => state.user.cabinet_id);
 
   useEffect(() => {
+    if (cabinetId === -1) navigate("/main"); // 대여하지 않은 상태에서 /lent 페이지 접근 시 /main으로 navigate
     axiosMyLentInfo()
       .then((response) => {
         setMyLentInfo(response);
