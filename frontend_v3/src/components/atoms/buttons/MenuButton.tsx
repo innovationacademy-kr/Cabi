@@ -40,13 +40,19 @@ const MenuButton = (): JSX.Element => {
   };
 
   // TODO (seuan)
-  // Guide Modal 이슈 해결 후 추가 예정
-  const handleGuide = (): void => {
-    console.log("Guide");
-  };
+  // Guide Modal 이슈 해결 후 추가 예정 -> MenuItem에서 제거.
+  // const handleGuide = (): void => {
+  //   console.log("Guide");
+  // };
 
   const handleReport = (): void => {
-    window.open("https://42born2code.slack.com/archives/C02V6GE8LD7");
+    const slackUrl = "https://42born2code.slack.com/archives/C02V6GE8LD7";
+    window.open(slackUrl);
+  };
+
+  const handleCircle = (): void => {
+    const circleUrl = "https://forms.gle/6GHUnNfyJeD55sB67";
+    window.open(circleUrl);
   };
 
   // const handleLogout = (): void => {
@@ -66,8 +72,9 @@ const MenuButton = (): JSX.Element => {
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         <MenuItem onClick={handleClose}>내 사물함</MenuItem>
-        <MenuItem onClick={handleGuide}>이용안내</MenuItem>
+        {/* <MenuItem onClick={handleGuide}>이용안내</MenuItem> */}
         <MenuItem onClick={handleReport}>슬랙문의</MenuItem>
+        <MenuItem onClick={handleCircle}>사물함 신청</MenuItem>
         <MenuItem>
           <a href={logoutURL} style={logoutStyle}>
             로그아웃

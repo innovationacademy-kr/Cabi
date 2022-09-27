@@ -5,7 +5,7 @@ import { UserDto } from "../../types/dto/user.dto";
 const initialState = {
   user_id: 0,
   intra_id: "default",
-  cabinet_id: 0,
+  cabinet_id: -1,
 } as UserDto;
 
 export const userSlice = createSlice({
