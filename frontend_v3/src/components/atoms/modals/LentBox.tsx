@@ -79,7 +79,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   };
 
   const handleLent = (): void => {
-    axiosLentId(cabinet_number)
+    axiosLentId(cabinet_id)
       .then(() => {
         dispatch(setUserCabinet(cabinet_id));
         navigate("/Lent");

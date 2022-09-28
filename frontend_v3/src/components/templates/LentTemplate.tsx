@@ -84,6 +84,7 @@ const LentTemplate = (): JSX.Element => {
         <LentInfo
           location={myLentInfo?.location}
           floor={myLentInfo?.floor}
+          cabinet_num={myLentInfo?.cabinet_num}
           cabinet_id={myLentInfo?.cabinet_id}
           lent_info={myLentInfo?.lent_info}
           cabinet_title={myLentInfo?.cabinet_title}
