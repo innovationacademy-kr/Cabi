@@ -66,7 +66,7 @@ const LentTemplate = (): JSX.Element => {
     // if (cabinetId === -1) navigate("/main");
     axiosMyLentInfo()
       .then((response) => {
-        setMyLentInfo(response);
+        setMyLentInfo(response.data);
       })
       .catch((error) => {
         console.error(error);
