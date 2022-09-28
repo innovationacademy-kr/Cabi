@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
@@ -15,12 +16,14 @@ import { ICabinetInfoRepository } from './repository/interface.cabinet.info.repo
 
 @Injectable()
 export class CabinetInfoService {
+  private logger = new Logger(CabinetInfoService.name);
   constructor(
     @Inject('ICabinetInfoRepository')
     private cabinetInfoRepository: ICabinetInfoRepository,
   ) {}
 
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
+    this.logger.debug(`Called ${CabinetInfoService.name} ${this.getSpaceInfo.name}`);
     const spaceData: SpaceDataDto[] = [];
     const location = await this.cabinetInfoRepository.getLocation();
     for (const l of location) {
@@ -37,6 +40,7 @@ export class CabinetInfoService {
     location: string,
     floor: number,
   ): Promise<CabinetsPerSectionResponseDto[]> {
+    this.logger.debug(`Called ${CabinetInfoService.name} ${this.getCabinetInfoByParam.name}`);
     const cabinetInfo = await this.cabinetInfoRepository.getFloorInfo(
       location,
       floor,
@@ -50,6 +54,7 @@ export class CabinetInfoService {
   async getCabinetResponseInfo(
     cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {
+    this.logger.debug(`Called ${CabinetInfoService.name} ${this.getCabinetResponseInfo.name}`);
     try {
       return await this.cabinetInfoRepository.getCabinetResponseInfo(cabinetId);
     } catch (e) {
@@ -58,6 +63,7 @@ export class CabinetInfoService {
   }
 
   async getCabinetInfo(cabinetId: number): Promise<CabinetDto> {
+    this.logger.debug(`Called ${CabinetInfoService.name} ${this.getCabinetInfo.name}`);
     try {
       return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
     } catch (e) {
@@ -69,6 +75,7 @@ export class CabinetInfoService {
     cabinet_id: number,
     status: CabinetStatusType,
   ): Promise<void> {
+    this.logger.debug(`Called ${CabinetInfoService.name} ${this.updateCabinetStatus.name}`);
     try {
       await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status);
     } catch (e) {
