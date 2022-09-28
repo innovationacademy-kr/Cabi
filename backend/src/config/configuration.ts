@@ -1,5 +1,6 @@
 export default () => ({
   port: process.env.PORT,
+  is_local: process.env.LOCAL,
   database: {
     host: process.env.HOST,
     user: process.env.DB_USER,
