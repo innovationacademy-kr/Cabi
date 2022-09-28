@@ -7,10 +7,10 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ILentRepository } from './repository/lent.repository.interface';
-import { LentController } from './lent.controller';
 
 @Injectable()
 export class LentService {
+  private logger = new Logger(LentService.name);
   constructor(
     @Inject('ILentRepository')
     private lentRepository: ILentRepository,
@@ -18,6 +18,7 @@ export class LentService {
     private dataSource: DataSource,
   ) {}
   async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<void> {
+    this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
     // 1. 해당 유저가 대여중인 사물함이 있는지 확인
     const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
     if (is_lent) {
@@ -80,6 +81,7 @@ export class LentService {
         );
       }
     } catch(err) {
+      this.logger.error(err);
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();
@@ -90,6 +92,7 @@ export class LentService {
     cabinet_title: string,
     user: UserSessionDto,
   ): Promise<void> {
+    this.logger.debug(`Called ${LentService.name} ${this.updateLentCabinetTitle.name}`);
     // 1. 해당 유저가 대여중인 사물함 id를 가져옴.
     const my_cabinet_id: number = await this.lentRepository.getLentCabinetId(
       user.user_id,
@@ -111,6 +114,7 @@ export class LentService {
     cabinet_memo: string,
     user: UserSessionDto,
   ): Promise<void> {
+    this.logger.debug(`Called ${LentService.name} ${this.updateLentCabinetMemo.name}`);
     // 1. 해당 유저가 대여중인 사물함 id를 가져옴.
     const my_cabinet_id: number = await this.lentRepository.getLentCabinetId(
       user.user_id,
@@ -129,6 +133,7 @@ export class LentService {
   }
 
   async returnLentCabinet(user: UserSessionDto): Promise<void> {
+    this.logger.debug(`Called ${LentService.name} ${this.returnLentCabinet.name}`);
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
