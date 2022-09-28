@@ -58,7 +58,9 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       cabinets: cabinetInfoDto.filter((cabinet) => cabinet.section === section),
     }));
 
-    rtn.sort((v1, v2) => v1.cabinets[0].cabinet_num - v2.cabinets[0].cabinet_num)
+    rtn.sort(
+      (v1, v2) => v1.cabinets[0].cabinet_num - v2.cabinets[0].cabinet_num,
+    );
     return rtn;
   }
 
