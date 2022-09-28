@@ -39,6 +39,11 @@ else
 	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE_V2 < /database/cabinet_data_v2.sql
 fi
 
+if [-d "/database/credentials/sample_data.sql" ]
+then
+	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE_V2 < /database/credentials/sample_data.sql
+fi
+
 service mysql stop
 
 exec "$@"
