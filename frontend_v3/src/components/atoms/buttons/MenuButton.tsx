@@ -19,12 +19,6 @@ const Button = styled.button`
   background-color: transparent;
 `;
 
-const logoutStyle = {
-  color: "rgba(0, 0, 0, 0.87)",
-  fontFamily: "Roboto ,sans-serif",
-  fontWeight: "400",
-};
-
 const MenuButton = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
@@ -39,12 +33,6 @@ const MenuButton = (): JSX.Element => {
   const handleClose = (): void => {
     setAnchorEl(null);
   };
-
-  // TODO (seuan)
-  // Guide Modal 이슈 해결 후 추가 예정 -> MenuItem에서 제거.
-  // const handleGuide = (): void => {
-  //   console.log("Guide");
-  // };
 
   const handleMyCabinet = (): void => {
     if (!(user.cabinet_id === -1)) navigate("/lent");
@@ -77,7 +65,9 @@ const MenuButton = (): JSX.Element => {
         <FontAwesomeIcon icon={faBars} />
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem onClick={handleMyCabinet}>내 사물함</MenuItem>
+        {user?.cabinet_id !== -1 && (
+          <MenuItem onClick={handleMyCabinet}>내 사물함</MenuItem>
+        )}
         <MenuItem onClick={handleReport}>슬랙문의</MenuItem>
         <MenuItem onClick={handleCircle}>사물함 신청</MenuItem>
         <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
