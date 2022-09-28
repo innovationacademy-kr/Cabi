@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import { axiosReturn } from "../../../network/axios/axios.custom";
+import { axiosV3Return } from "../../../network/axios/axios.custom";
+import { setUserCabinet } from "../../../redux/slices/userSlice";
+import { useAppDispatch } from "../../../redux/hooks";
 
 const Button = styled.button`
   position: absolute;
@@ -18,18 +20,18 @@ const Button = styled.button`
 `;
 
 interface ReturnButtonProps {
-  lent_id: number;
   button_title: string;
 }
 
 const ReturnButton = (props: ReturnButtonProps): JSX.Element => {
-  const { lent_id, button_title } = props;
-
+  const { button_title } = props;
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleClick = (): void => {
-    axiosReturn(lent_id)
+    axiosV3Return()
       .then((response) => {
+        dispatch(setUserCabinet(-1));
         navigate("/main");
       })
       .catch((error) => {
