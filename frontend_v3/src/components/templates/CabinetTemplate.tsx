@@ -9,7 +9,6 @@ import GuideModal from "../atoms/modals/GuideModal";
 import GuideBox from "../atoms/modals/GuideBox";
 import Carousel from "../organisms/Carousel";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { userAll } from "../../redux/slices/userSlice";
 import {
   CabinetLocationFloorDto,
   CabinetInfoByLocationFloorDto,
@@ -17,7 +16,6 @@ import {
 import {
   axiosLocationFloor,
   axiosCabinetByLocationFloor,
-  axiosMyInfo,
 } from "../../network/axios/axios.custom";
 
 const MainSection = styled.section`
@@ -58,8 +56,6 @@ const MainQuestionSection = styled.div`
 
 const CabinetTemplate = (): JSX.Element => {
   // v3 API
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
   const [currentLocation, setCurrentLocation] = useState<string>("새롬관");
   const [currentFloor, setCurrentFloor] = useState<number>(2);
   const [locationFloor, setLocationFloor] =
@@ -67,15 +63,6 @@ const CabinetTemplate = (): JSX.Element => {
   const [infoByLocationFloor, setInfoByLocationFloor] =
     useState<CabinetInfoByLocationFloorDto[]>();
   useEffect(() => {
-    if (user.user_id === 0) {
-      axiosMyInfo()
-        .then((response) => {
-          dispatch(userAll(response.data));
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
     axiosLocationFloor()
       .then((response) => {
         setLocationFloor(response.data.space_data);
