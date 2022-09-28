@@ -16,7 +16,10 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, swaggerDocument);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('port');
-  app.enableCors();
+  const is_local: boolean = Boolean(configService.get<string>('is_local'));
+  if (is_local === true) {
+    app.enableCors();
+  }
   await app.listen(port);
 }
 bootstrap();
