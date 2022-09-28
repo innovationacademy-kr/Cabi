@@ -39,9 +39,16 @@ else
 	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE_V2 < /database/cabinet_data_v2.sql
 fi
 
-if [-d "/database/credentials/sample_data.sql" ]
+if [ -d "/database/credentials" ]
 then
-	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE_V2 < /database/credentials/sample_data.sql
+	search_dir=/database/credentials
+	for entry in "$search_dir"/*
+	do
+		echo -e "${GREEN} mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE < $entry ${RESET}"
+		mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE < $entry
+	done
+else
+	echo -e "${RED} credentials directory doesn't exist!! RUN - mkdir  ${RESET}"
 fi
 
 service mysql stop

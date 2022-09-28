@@ -13,8 +13,9 @@ RUN			mkdir -p /var/run/mysqld && \
 			chmod 777 /var/run/mysqld
 
 RUN			mkdir -p /database
+RUN			mkdir -p /database/credentials
 
-COPY		./database/* /database/
+COPY		./database/ /database/
 
 RUN			chmod 777 /database/init.sh
 
