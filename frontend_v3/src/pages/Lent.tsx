@@ -10,7 +10,7 @@ const Lent = (): JSX.Element => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.intra_id === "default") navigate("/");
+    if (user.intra_id === "default" || user.cabinet_id === -1) navigate("/");
   }, []);
 
   return (
