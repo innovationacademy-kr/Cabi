@@ -79,7 +79,7 @@ const LentInfo = (prop: LentInfoProps): JSX.Element => {
       {userInfo()}
       <LentTextField
         contentType="memo"
-        currentContent="아직 사용자가 없습니다!"
+        currentContent="필요한 내용을 메모해주세요!"
       />
     </Content>
   );
