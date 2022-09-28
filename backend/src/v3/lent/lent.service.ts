@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
@@ -6,6 +7,7 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ILentRepository } from './repository/lent.repository.interface';
+import { LentController } from './lent.controller';
 
 @Injectable()
 export class LentService {
@@ -13,6 +15,7 @@ export class LentService {
     @Inject('ILentRepository')
     private lentRepository: ILentRepository,
     private cabinetInfoService: CabinetInfoService,
+    private dataSource: DataSource,
   ) {}
   async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<void> {
     // 1. 해당 유저가 대여중인 사물함이 있는지 확인
@@ -52,26 +55,34 @@ export class LentService {
         HttpStatus.I_AM_A_TEAPOT,
       );
     }
-
-    // 대여가 가능하므로 대여 시도
-    // 1. lent table에 insert
-    const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
-      cabinet_id,
-    );
-    const is_generate_expire_time: boolean =
-      lent_user_cnt + 1 === cabinet.max_user ? true : false;
-    await this.lentRepository.lentCabinet(
-      user,
-      cabinet,
-      is_generate_expire_time,
-    );
-
-    // 2. 현재 대여로 인해 Cabinet이 풀방이 되어 만료 기한이 생기면 Cabinet의 status를 FULL로 수정.
-    if (is_generate_expire_time) {
-      await this.cabinetInfoService.updateCabinetStatus(
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      // 대여가 가능하므로 대여 시도
+      // 1. lent table에 insert
+      const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
         cabinet_id,
-        CabinetStatusType.FULL,
       );
+      const is_generate_expire_time: boolean =
+        lent_user_cnt + 1 === cabinet.max_user ? true : false;
+      await this.lentRepository.lentCabinet(
+        user,
+        cabinet,
+        is_generate_expire_time,
+      );
+
+      // 2. 현재 대여로 인해 Cabinet이 풀방이 되어 만료 기한이 생기면 Cabinet의 status를 FULL로 수정.
+      if (is_generate_expire_time) {
+        await this.cabinetInfoService.updateCabinetStatus(
+          cabinet_id,
+          CabinetStatusType.FULL,
+        );
+      }
+    } catch(err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -118,36 +129,45 @@ export class LentService {
   }
 
   async returnLentCabinet(user: UserSessionDto): Promise<void> {
-    // 1. 해당 유저가 대여중인 lent 정보를 가져옴.
-    const lent: Lent = await this.lentRepository.getLent(user.user_id);
-    if (lent === null) {
-      throw new HttpException(
-        `${user.intra_id} doesn't lent cabinet!`,
-        HttpStatus.FORBIDDEN,
-      );
-    }
-    // 2. Lent Table에서 값 제거.
-    await this.lentRepository.deleteLentByLentId(lent.lent_id);
-    // 3. Lent Log Table에서 값 추가.
-    await this.lentRepository.addLentLog(lent);
-    // 4. 개인 사물함인 경우 Cabinet Status 사용 가능으로 수정.
-    if (lent.cabinet.lent_type === LentType.PRIVATE) {
-      await this.cabinetInfoService.updateCabinetStatus(
-        lent.lent_cabinet_id,
-        CabinetStatusType.AVAILABLE,
-      );
-    }
-    // 5. 공유 사물함인 경우 전체 인원 모두 중도 이탈했다면 Cabinet Status 사용 가능으로 수정.
-    if (lent.cabinet.lent_type === LentType.SHARE) {
-      const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
-        lent.cabinet.cabinet_id,
-      );
-      if (lent_user_cnt === 0) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      // 1. 해당 유저가 대여중인 lent 정보를 가져옴.
+      const lent: Lent = await this.lentRepository.getLent(user.user_id);
+      if (lent === null) {
+        throw new HttpException(
+          `${user.intra_id} doesn't lent cabinet!`,
+          HttpStatus.FORBIDDEN,
+        );
+      }
+      // 2. Lent Table에서 값 제거.
+      await this.lentRepository.deleteLentByLentId(lent.lent_id);
+      // 3. Lent Log Table에서 값 추가.
+      await this.lentRepository.addLentLog(lent);
+      // 4. 개인 사물함인 경우 Cabinet Status 사용 가능으로 수정.
+      if (lent.cabinet.lent_type === LentType.PRIVATE) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
           CabinetStatusType.AVAILABLE,
         );
       }
+      // 5. 공유 사물함인 경우 전체 인원 모두 중도 이탈했다면 Cabinet Status 사용 가능으로 수정.
+      if (lent.cabinet.lent_type === LentType.SHARE) {
+        const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
+          lent.cabinet.cabinet_id,
+        );
+        if (lent_user_cnt === 0) {
+          await this.cabinetInfoService.updateCabinetStatus(
+            lent.lent_cabinet_id,
+            CabinetStatusType.AVAILABLE,
+          );
+        }
+      }
+    } catch(err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
     }
   }
 }
