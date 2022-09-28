@@ -48,6 +48,7 @@ const Slide = (props: SlideProps): JSX.Element => {
                 key={index}
                 cabinet_type={item.lent_type}
                 cabinet_number={item.cabinet_num}
+                cabinet_id={item.cabinet_id}
                 lender={item.lent_info}
                 status={item.status}
               />
