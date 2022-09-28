@@ -83,9 +83,9 @@ export const axiosReturnInfo = async (): Promise<any> => {
   }
 };
 
-const axiosUpdateCabinetMemoURL = "/v3/api/lent/update_cabinet_memo/";
+const axiosUpdateCabinetMemoURL = "/v3/api/lent/update_cabinet_memo";
 export const axiosUpdateCabinetMemo = async (
-  cabinet_memo: string
+  cabinet_memo: object
 ): Promise<any> => {
   try {
     const response = await instance.patch(
@@ -98,9 +98,9 @@ export const axiosUpdateCabinetMemo = async (
   }
 };
 
-const axiosUpdateCabinetTitleURL = "/v3/api/lent/update_cabinet_title/";
+const axiosUpdateCabinetTitleURL = "/v3/api/lent/update_cabinet_title";
 export const axiosUpdateCabinetTitle = async (
-  cabinet_title: string
+  cabinet_title: object
 ): Promise<any> => {
   try {
     const response = await instance.patch(

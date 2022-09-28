@@ -52,7 +52,8 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
   const handleSaveButtonClick = (): void => {
     setIsToggle(false);
     if (contentType === "title") {
-      axiosUpdateCabinetTitle(inputValue)
+      const cabinet_title = inputValue;
+      axiosUpdateCabinetTitle({ cabinet_title })
         .then(() => {
           setTextValue(inputValue);
         })
@@ -62,7 +63,8 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
           setInputValue(textValue);
         });
     } else {
-      axiosUpdateCabinetMemo(inputValue)
+      const cabinet_memo = inputValue;
+      axiosUpdateCabinetMemo({ cabinet_memo })
         .then(() => {
           setTextValue(inputValue);
         })
