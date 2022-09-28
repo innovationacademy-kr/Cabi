@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Logger,
-  Param,
-  ParseIntPipe,
-} from '@nestjs/common';
+import { Controller, Get, Logger, Param, ParseIntPipe } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
@@ -63,14 +55,7 @@ export class CabinetController {
     @Param('floor', ParseIntPipe) floor: number,
   ): Promise<CabinetsPerSectionResponseDto[]> {
     this.logger.log('getCabinetInfoByParam');
-    const cabinetInfo = await this.cabinetService.getCabinetInfoByParam(
-      location,
-      floor,
-    );
-    if (cabinetInfo.length === 0) {
-      throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
-    }
-    return cabinetInfo;
+    return await this.cabinetService.getCabinetInfoByParam(location, floor);
   }
 
   @ApiOperation({

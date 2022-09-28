@@ -37,7 +37,14 @@ export class CabinetInfoService {
     location: string,
     floor: number,
   ): Promise<CabinetsPerSectionResponseDto[]> {
-    return this.cabinetInfoRepository.getFloorInfo(location, floor);
+    const cabinetInfo = await this.cabinetInfoRepository.getFloorInfo(
+      location,
+      floor,
+    );
+    if (cabinetInfo.length === 0) {
+      throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
+    }
+    return cabinetInfo;
   }
 
   async getCabinetResponseInfo(
