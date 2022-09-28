@@ -170,3 +170,13 @@ export const axiosMyLentInfo = async (): Promise<any> => {
     throw error;
   }
 };
+
+const axiosV3ReturnURL = "v3/api/lent/return";
+export const axiosV3Return = async (): Promise<any> => {
+  try {
+    const response = await instance.delete(axiosV3ReturnURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

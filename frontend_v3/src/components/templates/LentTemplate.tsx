@@ -66,7 +66,7 @@ const LentTemplate = (): JSX.Element => {
     // if (cabinetId === -1) navigate("/main");
     axiosMyLentInfo()
       .then((response) => {
-        setMyLentInfo(response);
+        setMyLentInfo(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -91,10 +91,7 @@ const LentTemplate = (): JSX.Element => {
         />
       </LentInfoSection>
       <LentReturnSection>
-        <ReturnButton
-          button_title="반 납 하 기"
-          lent_id={myLentInfo?.cabinet_id || -1}
-        />
+        <ReturnButton button_title="반 납 하 기" />
       </LentReturnSection>
     </LentSection>
   );

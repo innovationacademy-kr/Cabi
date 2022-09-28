@@ -34,6 +34,7 @@ module.exports = {
     "max-classes-per-file": 0,
     "react/react-in-jsx-scope": "off",
     "react/no-array-index-key": 0,
+    "no-param-reassign": 0,
     camelcase: 0,
     "import/extensions": [
       "off",

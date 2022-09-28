@@ -3,6 +3,7 @@ import CabinetStatus from "../../../types/enum/cabinet.status.enum";
 import CabinetType from "../../../types/enum/cabinet.type.enum";
 import * as cabinetColor from "../../../themes/cabinetColor";
 import { LentDto } from "../../../types/dto/lent.dto";
+import { useAppSelector } from "../../../redux/hooks";
 // import LentModal from "../modals/LentModal";
 
 const Cabinet = styled.div`
@@ -39,6 +40,7 @@ const CabinetInfoText = styled.div`
 interface CabinetBoxButtonProps {
   cabinet_type: CabinetType;
   cabinet_number: number;
+  cabinet_id: number;
   lender: LentDto[];
   status: CabinetStatus;
 }
@@ -47,11 +49,11 @@ interface CabinetBoxButtonProps {
 // 핸들러 추가
 // line 64: 로그인 기능 추가 후 적용
 const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
-  const { cabinet_type, cabinet_number, lender, status } = props;
+  const { cabinet_type, cabinet_number, cabinet_id, lender, status } = props;
+  const user = useAppSelector((state) => state.user);
 
   const setCabinetColor = (): string => {
-    // if (lender.findIndex((e) => e.intra_id === user))
-    //   return cabinetColor.myCabinet;
+    if (cabinet_id === user.cabinet_id) return cabinetColor.myCabinet;
     switch (status) {
       case CabinetStatus.AVAILABLE:
         return cabinetColor.emptyCabinet;

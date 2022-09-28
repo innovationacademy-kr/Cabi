@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import { axiosLogout } from "../../../network/axios/axios.custom";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { userInfoInitialize } from "../../../redux/slices/userSlice";
 
 const Button = styled.button`
   display: flex;
@@ -23,13 +25,12 @@ const logoutStyle = {
   fontWeight: "400",
 };
 
-// TODO: hybae
-// event handler 추가
 const MenuButton = (): JSX.Element => {
-  const logoutURL = "/auth/logout";
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -45,6 +46,10 @@ const MenuButton = (): JSX.Element => {
   //   console.log("Guide");
   // };
 
+  const handleMyCabinet = (): void => {
+    if (!(user.cabinet_id === -1)) navigate("/lent");
+  };
+
   const handleReport = (): void => {
     const slackUrl = "https://42born2code.slack.com/archives/C02V6GE8LD7";
     window.open(slackUrl);
@@ -55,15 +60,16 @@ const MenuButton = (): JSX.Element => {
     window.open(circleUrl);
   };
 
-  // const handleLogout = (): void => {
-  //   axiosLogout()
-  //     .then((response) => {
-  //       navigate("/");
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
+  const handleLogout = (): void => {
+    axiosLogout()
+      .then((response) => {
+        dispatch(userInfoInitialize());
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div>
@@ -71,15 +77,10 @@ const MenuButton = (): JSX.Element => {
         <FontAwesomeIcon icon={faBars} />
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem onClick={handleClose}>내 사물함</MenuItem>
-        {/* <MenuItem onClick={handleGuide}>이용안내</MenuItem> */}
+        <MenuItem onClick={handleMyCabinet}>내 사물함</MenuItem>
         <MenuItem onClick={handleReport}>슬랙문의</MenuItem>
         <MenuItem onClick={handleCircle}>사물함 신청</MenuItem>
-        <MenuItem>
-          <a href={logoutURL} style={logoutStyle}>
-            로그아웃
-          </a>
-        </MenuItem>
+        <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
       </Menu>
     </div>
   );
