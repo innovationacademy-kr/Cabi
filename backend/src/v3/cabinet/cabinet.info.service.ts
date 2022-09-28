@@ -1,7 +1,8 @@
 import {
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
-  InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { CabinetDto } from 'src/dto/cabinet.dto';
@@ -21,7 +22,9 @@ export class CabinetInfoService {
   ) {}
 
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
-    this.logger.debug(`Called ${CabinetInfoService.name} ${this.getSpaceInfo.name}`);
+    this.logger.debug(
+      `Called ${CabinetInfoService.name} ${this.getSpaceInfo.name}`,
+    );
     const spaceData: SpaceDataDto[] = [];
     const location = await this.cabinetInfoRepository.getLocation();
     for (const l of location) {
@@ -38,43 +41,46 @@ export class CabinetInfoService {
     location: string,
     floor: number,
   ): Promise<CabinetsPerSectionResponseDto[]> {
-    this.logger.debug(`Called ${CabinetInfoService.name} ${this.getCabinetInfoByParam.name}`);
-    try {
-      return this.cabinetInfoRepository.getFloorInfo(location, floor);
-    } catch (e) {
-      throw new InternalServerErrorException();
+    this.logger.debug(
+      `Called ${CabinetInfoService.name} ${this.getCabinetInfoByParam.name}`,
+    );
+    const cabinetInfo = await this.cabinetInfoRepository.getFloorInfo(
+      location,
+      floor,
+    );
+    if (cabinetInfo.length === 0) {
+      throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
     }
+    return cabinetInfo;
   }
 
   async getCabinetResponseInfo(
     cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {
-    this.logger.debug(`Called ${CabinetInfoService.name} ${this.getCabinetResponseInfo.name}`);
+    this.logger.debug(
+      `Called ${CabinetInfoService.name} ${this.getCabinetResponseInfo.name}`,
+    );
     try {
       return await this.cabinetInfoRepository.getCabinetResponseInfo(cabinetId);
     } catch (e) {
-      throw new InternalServerErrorException();
+      throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
     }
   }
 
   async getCabinetInfo(cabinetId: number): Promise<CabinetDto> {
-    this.logger.debug(`Called ${CabinetInfoService.name} ${this.getCabinetInfo.name}`);
-    try {
-      return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+    this.logger.debug(
+      `Called ${CabinetInfoService.name} ${this.getCabinetInfo.name}`,
+    );
+    return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
   }
 
   async updateCabinetStatus(
     cabinet_id: number,
     status: CabinetStatusType,
   ): Promise<void> {
-    this.logger.debug(`Called ${CabinetInfoService.name} ${this.updateCabinetStatus.name}`);
-    try {
-      await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+    this.logger.debug(
+      `Called ${CabinetInfoService.name} ${this.updateCabinetStatus.name}`,
+    );
+    await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status);
   }
 }

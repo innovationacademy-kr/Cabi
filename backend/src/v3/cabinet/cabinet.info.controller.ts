@@ -34,7 +34,6 @@ export class CabinetController {
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
     this.logger.log('getSpaceInfo');
     const cabinetInfo = await this.cabinetService.getSpaceInfo();
-    // TODO: SpaceDataResponseDto가 잘 가져와졌는지 확인하는 로직 추가 필요한지?
     return cabinetInfo;
   }
 

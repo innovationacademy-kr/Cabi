@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
@@ -80,7 +86,7 @@ export class LentService {
           CabinetStatusType.FULL,
         );
       }
-    } catch(err) {
+    } catch (err) {
       this.logger.error(err);
       await queryRunner.rollbackTransaction();
     } finally {
@@ -92,7 +98,9 @@ export class LentService {
     cabinet_title: string,
     user: UserSessionDto,
   ): Promise<void> {
-    this.logger.debug(`Called ${LentService.name} ${this.updateLentCabinetTitle.name}`);
+    this.logger.debug(
+      `Called ${LentService.name} ${this.updateLentCabinetTitle.name}`,
+    );
     // 1. 해당 유저가 대여중인 사물함 id를 가져옴.
     const my_cabinet_id: number = await this.lentRepository.getLentCabinetId(
       user.user_id,
@@ -114,7 +122,9 @@ export class LentService {
     cabinet_memo: string,
     user: UserSessionDto,
   ): Promise<void> {
-    this.logger.debug(`Called ${LentService.name} ${this.updateLentCabinetMemo.name}`);
+    this.logger.debug(
+      `Called ${LentService.name} ${this.updateLentCabinetMemo.name}`,
+    );
     // 1. 해당 유저가 대여중인 사물함 id를 가져옴.
     const my_cabinet_id: number = await this.lentRepository.getLentCabinetId(
       user.user_id,
@@ -133,7 +143,9 @@ export class LentService {
   }
 
   async returnLentCabinet(user: UserSessionDto): Promise<void> {
-    this.logger.debug(`Called ${LentService.name} ${this.returnLentCabinet.name}`);
+    this.logger.debug(
+      `Called ${LentService.name} ${this.returnLentCabinet.name}`,
+    );
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -169,7 +181,7 @@ export class LentService {
           );
         }
       }
-    } catch(err) {
+    } catch (err) {
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();
