@@ -1,13 +1,13 @@
 import { Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserSessionDto } from '../auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { JwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
 import { User } from '../auth/user.decorator';
 import { BanCheckGuard } from '../ban/guard/ban-check.guard';
-import { EventInfoDto } from './dto/event-info.dto';
+import { EventInfoDto } from './dto/event.info.dto';
 import { EventService } from './evnet.service';
 
-@ApiTags('Event')
+@ApiTags('(V2) Event')
 @Controller('/api/event')
 @UseGuards(JwtAuthGuard, BanCheckGuard)
 export class EventController {

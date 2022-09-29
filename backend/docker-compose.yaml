@@ -11,6 +11,7 @@ services:
       MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MARIADB_DATABASE_V2: ${DATABASE_V2}
     ports:
       - "3307:3306"
     tty:

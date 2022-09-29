@@ -1,18 +1,25 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 // import fs from 'fs';
 import { BanService } from 'src/ban/ban.service';
-import { overUserInfoDto } from 'src/ban/dto/overUserInfo.dto';
+import { OverUserDto } from 'src/ban/dto/over.user.dto';
 import { CabinetService } from 'src/cabinet/cabinet.service';
 import { UserDto } from 'src/user/dto/user.dto';
+import { IEmailRepository } from './repository/email.repository.interface';
 
 @Injectable()
 export class MailService {
   private logger = new Logger(MailService.name);
   private mailTest: boolean;
   constructor(
+    private emailRepository: IEmailRepository,
     @Inject(ConfigService) private configService: ConfigService,
     private readonly mailerService: MailerService,
     private banService: BanService,
@@ -50,7 +57,7 @@ export class MailService {
       });
   }
 
-  public mailing(info: overUserInfoDto[], num: number) {
+  public mailing(info: OverUserDto[], num: number) {
     let subject = '42CABI 사물함 연체 알림';
     let file = 'overdue.hbs';
     if (num === 0) {
@@ -94,7 +101,7 @@ export class MailService {
       .getOverUser(15)
       .then((res) => {
         if (res) {
-          res.forEach(async (user: overUserInfoDto) => {
+          res.forEach(async (user: OverUserDto) => {
             //user
             await this.banService.updateUserAuth(user.user_id);
             //cabinet
@@ -117,5 +124,13 @@ export class MailService {
         }
       })
       .catch((e) => this.logger.error(e));
+  }
+
+  async getAllUser(): Promise<UserDto[]> {
+    try {
+      return this.emailRepository.getAllUser();
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
   }
 }

@@ -41,20 +41,20 @@ jobs:
       - name: 종속 모듈들 캐싱
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/frontend/node_modules
-          key: npm-packages-${{ hashFiles('**/frontend/package-lock.json') }}
+          path: ${{ github.workspace }}/frontend_v3/node_modules
+          key: npm-packages-${{ hashFiles('**/frontend_v3/package-lock.json') }}
         id: cache 
       - name: 종속 모듈들 설치
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --prefix frontend
+        run: npm install --prefix frontend_v3
       # - name: lint 체크
-      #   run: npm run lint --prefix frontend
+      #   run: npm run lint --prefix frontend_v3
       - name: 빌드 체크
-        run: npm run build --prefix frontend
+        run: npm run build --prefix frontend_v3
       # - name: 단위 테스트 체크
-      #   run: npm run test --prefix frontend
+      #   run: npm run test --prefix frontend_v3
       # - name: 통합 테스트 체크
-      #   run: npm run test:e2e --prefix frontend
+      #   run: npm run test:e2e --prefix frontend_v3
 
   CD-develop:
     name: deploy-develop
@@ -77,7 +77,7 @@ jobs:
             git pull origin dev
             echo "앱 빌드"
             npm install
-            npm run build:fe
+            npm run build:fe_v3
             npm run build
             echo "env 파일 복사"
             cp 42cabi-dev.env $HOME/git/42cabi-dev/backend/.env
@@ -105,7 +105,7 @@ jobs:
             git pull origin main
             echo "앱 빌드"
             npm install
-            npm run build:fe
+            npm run build:fe_v3
             npm run build
             echo "env 파일 복사"
             cp 42cabi-main.env $HOME/git/42cabi-main/backend/.env

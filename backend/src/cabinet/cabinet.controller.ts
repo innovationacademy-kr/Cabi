@@ -7,18 +7,18 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { CabinetListDto } from './dto/cabinet-list.dto';
+import { CabinetListDto } from './dto/cabinet.list.dto';
 import { CabinetService } from './cabinet.service';
-import { MyLentInfoDto } from './dto/my-lent-info.dto';
+import { MyLentInfoDto } from './dto/my.lent.info.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { User } from 'src/auth/user.decorator';
-import { lentCabinetInfoDto } from './dto/cabinet-lent-info.dto';
+import { LentCabinetInfoDto } from './dto/cabinet.lent.info.dto';
 import { BanCheckGuard } from 'src/ban/guard/ban-check.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { UserDto } from 'src/user/dto/user.dto';
 
-@ApiTags('Cabinet')
+@ApiTags('(V2) Cabinet')
 @Controller('api')
 export class CabinetController {
   private logger = new Logger(CabinetController.name);
@@ -79,7 +79,7 @@ export class CabinetController {
   @UseGuards(JwtAuthGuard, BanCheckGuard)
   async postReturnInfo(
     @User() user: UserSessionDto,
-  ): Promise<lentCabinetInfoDto> {
+  ): Promise<LentCabinetInfoDto> {
     // 특정 사용자가 현재 대여하고 있는 사물함의 정보
     this.logger.log('postReturnInfo');
     return await this.cabinetService.getUserLentInfo(user);

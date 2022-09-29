@@ -2,6 +2,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IBlackholeRepository } from './blackhole.repository';
 import * as mariadb from 'mariadb';
+import { UserDto } from 'src/dto/user.dto';
 
 export class RawqueryBlackholeRepository implements IBlackholeRepository {
   private pool: mariadb.Pool;
@@ -14,7 +15,7 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
       user: this.configService.get<string>('database.user'),
       port: this.configService.get<number>('database.port'),
       password: this.configService.get<string>('database.password'),
-      database: this.configService.get<string>('database.database'),
+      database: this.configService.get<string>('database.databaseV2'),
       dateStrings: true,
       multipleStatements: true,
     });
@@ -46,8 +47,7 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
   }
 
   async updateBlackholedUser(user_id: number, intra_id: string): Promise<void> {
-    const connection = await this.pool.getConnection()
-    .catch((err: any) => {
+    const connection = await this.pool.getConnection().catch((err: any) => {
       throw new Error(`updateBlackholedUser Error - ${err}`);
     });
 
@@ -58,13 +58,14 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
         IF(@MIN_ID > 0, -2, @MIN_ID - 1)
     ) WHERE log_user_id = ${user_id};
     `;
-    await connection.query(content)
-    .then(() => {
-      this.logger.warn(`Update lent_log info of ${intra_id}`)
-    })
-    .catch((err: any) => {
-      throw new Error(`updateBlackholedUser Error - ${err}`);
-    });
+    await connection
+      .query(content)
+      .then(() => {
+        this.logger.warn(`Update lent_log info of ${intra_id}`);
+      })
+      .catch((err: any) => {
+        throw new Error(`updateBlackholedUser Error - ${err}`);
+      });
 
     const content2 = `
     SET @MIN_ID := (SELECT MIN(user_id) from user);
@@ -75,13 +76,14 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
         intra_id = CONCAT('[BLACKHOLED]', intra_id)
     WHERE user_id = ${user_id};
     `;
-    await connection.query(content2)
-    .then(() => {
-      this.logger.warn(`Update ban info of ${intra_id}`)
-    })
-    .catch((err: any) => {
-      throw new Error(`updateBlackholedUser Error - ${err}`);
-    });
+    await connection
+      .query(content2)
+      .then(() => {
+        this.logger.warn(`Update ban info of ${intra_id}`);
+      })
+      .catch((err: any) => {
+        throw new Error(`updateBlackholedUser Error - ${err}`);
+      });
 
     const content3 = `
     SET @MIN_ID := (SELECT MIN(user_id) from user);
@@ -93,13 +95,37 @@ export class RawqueryBlackholeRepository implements IBlackholeRepository {
         auth = 2
     WHERE user_id = ${user_id};
     `;
-    await connection.query(content3)
-    .then(() => {
-      this.logger.warn(`Update user info of ${intra_id}`)
-    })
-    .catch((err: any) => {
-      throw new Error(`updateBlackholedUser Error - ${err}`);
-    });
+    await connection
+      .query(content3)
+      .then(() => {
+        this.logger.warn(`Update user info of ${intra_id}`);
+      })
+      .catch((err: any) => {
+        throw new Error(`updateBlackholedUser Error - ${err}`);
+      });
     if (connection) connection.end();
+  }
+
+  async getAllUser(): Promise<UserDto[]> {
+    const content = `SELECT * FROM user;`;
+
+    const userList: UserDto[] = [];
+    const connection = await this.pool.getConnection();
+    await connection
+      .query(content)
+      .then((res: any) => {
+        res.forEach((user: any) => {
+          userList.push({
+            user_id: user.user_id,
+            intra_id: user.intra_id,
+          });
+        });
+      })
+      .catch((err: any) => {
+        console.error(err);
+        throw err;
+      });
+    if (connection) connection.end();
+    return userList;
   }
 }

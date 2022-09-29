@@ -1,8 +1,8 @@
-import { UserSessionDto } from 'src/auth/dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import { UserDto } from 'src/user/dto/user.dto';
-import { lentCabinetInfoDto } from '../dto/cabinet-lent-info.dto';
-import { CabinetListDto } from '../dto/cabinet-list.dto';
-import { LentInfoDto } from '../dto/lent-info.dto';
+import { LentCabinetInfoDto } from '../dto/cabinet.lent.info.dto';
+import { CabinetListDto } from '../dto/cabinet.list.dto';
+import { LentInfoDto } from '../dto/lent.info.dto';
 
 export abstract class ICabinetRepository {
   /**
@@ -28,9 +28,9 @@ export abstract class ICabinetRepository {
 
   /**
    * 본인 정보 및 렌트 정보 - 리턴 페이지
-   * @return lentCabinetInfoDto
+   * @return LentCabinetInfoDto
    */
-  abstract getUserLentInfo(user_id: number): Promise<lentCabinetInfoDto>;
+  abstract getUserLentInfo(user_id: number): Promise<LentCabinetInfoDto>;
 
   /**
    * lent 값을 생성합니다.

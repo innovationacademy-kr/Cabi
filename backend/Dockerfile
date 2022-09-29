@@ -1,27 +1,26 @@
-FROM	mariadb:10.7
+FROM		debian:buster
 
-RUN		apt-get update -y; \
-		apt-get upgrade -y; \
-		apt-get -y install nodejs \
-		npm \
-		systemd \
-		vim;
+RUN			apt-get update -y; \
+			apt-get upgrade -y; \
+			apt-get install -y \
+			mariadb-server \
+			vim
 
-WORKDIR /
+WORKDIR		/
 
-RUN		apt install curl -y
-RUN		npm cache clean -f
-RUN		npm install -g n
-RUN		n latest
+RUN			mkdir -p /var/run/mysqld && \
+			chown -R mysql:mysql /var/run/mysqld && \
+			chmod 777 /var/run/mysqld
 
-RUN		mkdir -p /initial-setting/config
+RUN			mkdir -p /database
+RUN			mkdir -p /database/credentials
 
-COPY	./initial-setting/* /initial-setting/
-COPY	./initial-setting/config/* /initial-setting/config
-COPY	./package.json /
-COPY	./.env /
+COPY		./database/ /database/
 
-RUN		chmod 777 /initial-setting/init.sh
+RUN			chmod 777 /database/init.sh
 
-RUN		npm i
+ENTRYPOINT	["bash", "/database/init.sh"]
 
+# Command to launch mariadb and enable the database to listen globally
+
+CMD ["mysqld", "--bind-address=0.0.0.0"]

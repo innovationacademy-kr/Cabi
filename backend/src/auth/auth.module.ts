@@ -5,16 +5,18 @@ import { FtStrategy } from './42/ft.strategy';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { AuthService } from './auth.service';
-import { IAuthRepository } from './repository/auth.repository';
-import { RawqueryAuthRepository } from './repository/rawquery.auth.repository';
+import { AuthRepository } from './repository/auth.repository';
+import User from 'src/entities/user.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 const repo = {
-  provide: IAuthRepository,
-  useClass: RawqueryAuthRepository,
+  provide: 'IAuthRepository',
+  useClass: AuthRepository,
 };
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('jwt.secret'),

@@ -1,0 +1,53 @@
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import Cabinet from './cabinet.entity';
+import User from './user.entity';
+
+@Entity('ban_log')
+export default class BanLog {
+  @PrimaryGeneratedColumn({
+    name: 'ban_id',
+  })
+  ban_id: number;
+
+  @Column({
+    name: 'ban_user_id',
+    type: 'int',
+  })
+  ban_user_id: number;
+
+  @Column({
+    name: 'ban_cabinet_id',
+    type: 'int',
+  })
+  ban_cabinet_id: number;
+
+  @Column({
+    name: 'banned_date',
+    type: 'datetime',
+  })
+  banned_date: Date;
+
+  @Column({
+    name: 'unbanned_date',
+    type: 'datetime',
+  })
+  unbanned_date: Date;
+
+  @ManyToOne(() => User, (user) => user.user_id)
+  @JoinColumn({
+    name: 'ban_user_id',
+  })
+  user: User;
+
+  @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
+  @JoinColumn({
+    name: 'ban_cabinet_id',
+  })
+  cabinet: Cabinet;
+}
