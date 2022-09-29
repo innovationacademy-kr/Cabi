@@ -14,7 +14,6 @@ const gaTracker = (): void => {
     if (initialize) {
       const history = createBrowserHistory();
       history.listen((res) => {
-        console.log(res.location);
         ReactGA.set({ page: res.location.pathname });
         ReactGA.pageview(res.location.pathname);
       });
