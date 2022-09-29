@@ -85,8 +85,25 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
         navigate("/Lent");
       })
       .catch((error) => {
-        console.error(error);
-        alert("🚨 대여에 실패했습니다 🚨");
+        switch (error.response.status) {
+          case 400:
+            alert("🚨 이미 대여중인 사물함이 있습니다 🚨");
+            break;
+          case 403:
+            alert(
+              "🚨 해당 사물함은 임시로 밴 되었거나, 고장난 사물함입니다 🚨"
+            );
+            break;
+          case 409:
+            alert("🚨 해당 사물함에 잔여 자리가 없습니다 🚨");
+            break;
+          case 418:
+            alert("🚨 해당 사물함은 동아리 전용 사물함입니다 🚨");
+            break;
+          default:
+            alert("🚨 대여에 실패했습니다 🚨");
+            break;
+        }
       });
     handleClose();
   };
