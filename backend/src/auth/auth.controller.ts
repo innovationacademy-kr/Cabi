@@ -59,15 +59,8 @@ export class AuthController {
   async loginCallback(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log('Login -> callback');
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
-    const join = await this.authService.addUserIfNotExists(user);
-    if (!join) {
-      return res.redirect('/main');
-    }
-    const lent = await this.authService.checkUserBorrowed(user);
-    if (!lent) {
-      return res.redirect('/main');
-    }
-    return res.redirect('/lent');
+    await this.authService.addUserIfNotExists(user);
+    return res.redirect('/main');
   }
 
   @ApiOperation({
