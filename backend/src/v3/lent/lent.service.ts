@@ -66,6 +66,7 @@ export class LentService {
           HttpStatus.I_AM_A_TEAPOT,
         );
       }
+
       // 대여가 가능하므로 대여 시도
       // 1. lent table에 insert
       const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
@@ -86,6 +87,7 @@ export class LentService {
           CabinetStatusType.FULL,
         );
       }
+
     } catch (err) {
       await queryRunner.rollbackTransaction();
         throw err;
@@ -181,6 +183,7 @@ export class LentService {
           );
         }
       }
+      await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;

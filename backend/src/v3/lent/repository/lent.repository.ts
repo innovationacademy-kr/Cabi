@@ -76,7 +76,7 @@ export class lentRepository implements ILentRepository {
         }
       }
     }
-    await this.lentRepository.insert({
+    const result = await this.lentRepository.insert({
       user: {
         user_id: user.user_id,
       },
@@ -156,7 +156,7 @@ export class lentRepository implements ILentRepository {
   }
 
   async deleteLentByLentId(lent_id: number): Promise<void> {
-    await this.lentRepository
+    const result = await this.lentRepository
       .createQueryBuilder()
       .delete()
       .from(Lent)
