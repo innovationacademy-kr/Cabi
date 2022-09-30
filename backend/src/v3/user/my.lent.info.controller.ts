@@ -7,6 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
@@ -41,8 +42,11 @@ export class MyLentInfoController {
   @ApiNoContentResponse({
     description: '대여한 사물함 없음',
   })
+  @ApiForbiddenResponse({
+    description: 'ban 당한 상태임',
+  })
   @ApiUnauthorizedResponse({
-    description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
+    description: '로그아웃 상태거나 JWT 세션이 만료됨',
   })
   @Get()
   @UseGuards(JwtAuthGuard, BanCheckGuard)

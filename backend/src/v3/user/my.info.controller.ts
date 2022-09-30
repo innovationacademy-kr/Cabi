@@ -1,5 +1,6 @@
 import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import {
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -30,8 +31,11 @@ export class MyInfoController {
   @ApiOkResponse({
     description: '정보 리턴',
   })
+  @ApiForbiddenResponse({
+    description: 'ban 당한 상태임',
+  })
   @ApiUnauthorizedResponse({
-    description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
+    description: '로그아웃 상태거나 JWT 세션이 만료됨',
   })
   @Get()
   @UseGuards(JwtAuthGuard, BanCheckGuard)
