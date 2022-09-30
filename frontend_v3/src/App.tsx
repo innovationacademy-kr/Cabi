@@ -1,22 +1,18 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import gaTracker from "./network/ga/gaTracker";
 import GlobalStyle from "./styles/GlobalStyle";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 import Lent from "./pages/Lent";
-
-// 기존 .App 설정
-const AppDiv = styled.div`
-  height: 100%;
-  margin: 0;
-`;
 
 const Section = styled.section`
   padding-bottom: 0.5rem;
 `;
 
 function App(): JSX.Element {
+  gaTracker();
   return (
     <BrowserRouter>
       <>
