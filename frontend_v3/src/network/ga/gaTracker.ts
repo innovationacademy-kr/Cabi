@@ -21,7 +21,6 @@ const gaTracker = (): void => {
 
     // 개발용
     ReactGA.initialize(import.meta.env.VITE_GA_TRACKING_ID);
-    console.log(import.meta.env.VITE_GA_TRACKING_ID); // 반드시 지워야함.
     const history = createBrowserHistory();
     history.listen((res) => {
       ReactGA.set({ page: res.location.pathname });
