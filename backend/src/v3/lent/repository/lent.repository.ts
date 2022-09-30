@@ -65,16 +65,16 @@ export class lentRepository implements ILentRepository {
     is_generate_expire_time: boolean,
   ): Promise<void> {
     const lent_time = new Date();
-    const expire_time = new Date();
+    let expire_time: Date = null;
     if (cabinet.lent_type === LentType.PRIVATE) {
+      expire_time = new Date();
       expire_time.setDate(lent_time.getDate() + 30);
-    } else {
+    } else if (is_generate_expire_time) {
+      expire_time = new Date();
       expire_time.setDate(lent_time.getDate() + 45);
-      if (is_generate_expire_time === true && cabinet.lent_info) {
         for await (const lent_info of cabinet.lent_info) {
           this.setExpireTime(lent_info.lent_id, expire_time);
         }
-      }
     }
     const result = await this.lentRepository.insert({
       user: {
