@@ -11,9 +11,9 @@ import User from './user.entity';
 @Entity('ban_log')
 export default class BanLog {
   @PrimaryGeneratedColumn({
-    name: 'ban_id',
+    name: 'ban_log_id',
   })
-  ban_id: number;
+  ban_log_id: number;
 
   @Column({
     name: 'ban_user_id',

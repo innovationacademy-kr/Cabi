@@ -32,6 +32,7 @@ import { User } from 'src/auth/user.decorator';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { LentService } from './lent.service';
 
 @ApiTags('(V3) Lent')
@@ -68,7 +69,7 @@ export class LentController {
   })
   @Post('/:cabinet_id')
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(JwtAuthGuard /* BanCheckGuard */)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async lentCabinet(
     @Param('cabinet_id') cabinet_id: number,
     @User() user: UserSessionDto,
@@ -104,7 +105,7 @@ export class LentController {
   })
   @Patch('/update_cabinet_title')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard /* BanCheckGuard */)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async updateLentCabinetTitle(
     @Body(new ValidationPipe())
     updateCabinetTitleRequestDto: UpdateCabinetTitleRequestDto,
@@ -144,7 +145,7 @@ export class LentController {
   })
   @Patch('/update_cabinet_memo')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard /* BanCheckGuard */)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async updateLentCabinetMemo(
     @Body(new ValidationPipe())
     updateCabinetMemoRequestDto: UpdateCabinetMemoRequestDto,
@@ -180,7 +181,7 @@ export class LentController {
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtAuthGuard /* BanCheckGuard */)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async returnLentCabinet(@User() user: UserSessionDto): Promise<void> {
     try {
       return await this.lentService.returnLentCabinet(user);

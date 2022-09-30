@@ -15,16 +15,12 @@ export class UserService {
   async getCabinetByUserId(
     userId: number,
   ): Promise<MyCabinetInfoResponseDto | null> {
-    this.logger.debug(
-      `Called ${UserService.name} ${this.getCabinetByUserId.name}`,
-    );
+    this.logger.debug(`Called ${this.getCabinetByUserId.name}`);
     return await this.userRepository.getCabinetByUserId(userId);
   }
 
   async checkUserBorrowed(user: UserDto): Promise<UserLentResponseDto> {
-    this.logger.debug(
-      `Called ${UserService.name} ${this.checkUserBorrowed.name}`,
-    );
+    this.logger.debug(`Called ${this.checkUserBorrowed.name}`);
     const cabinet_id = await this.userRepository.checkUserBorrowed(
       user.user_id,
     );
