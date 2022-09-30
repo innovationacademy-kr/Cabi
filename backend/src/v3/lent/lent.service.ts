@@ -87,7 +87,7 @@ export class LentService {
           CabinetStatusType.FULL,
         );
       }
-
+      await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
         throw err;
