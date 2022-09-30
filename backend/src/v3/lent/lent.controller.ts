@@ -1,13 +1,10 @@
 import {
-  BadRequestException,
   Body,
-  ConflictException,
   Controller,
   Delete,
-  ForbiddenException,
   HttpCode,
+  HttpException,
   HttpStatus,
-  ImATeapotException,
   InternalServerErrorException,
   Logger,
   Param,
@@ -22,6 +19,7 @@ import {
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
@@ -78,16 +76,10 @@ export class LentController {
     try {
       return await this.lentService.lentCabinet(cabinet_id, user);
     } catch (err) {
-      if (err.status === HttpStatus.BAD_REQUEST) {
-        throw new BadRequestException(err.message);
-      } else if (err.status === HttpStatus.FORBIDDEN) {
-        throw new ForbiddenException(err.message);
-      } else if (err.status === HttpStatus.I_AM_A_TEAPOT) {
-        throw new ImATeapotException(err.message);
-      } else if (err.status === HttpStatus.CONFLICT) {
-        throw new ConflictException(err.message);
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
       } else {
-        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
@@ -124,10 +116,10 @@ export class LentController {
         user,
       );
     } catch (err) {
-      if (err.status === HttpStatus.FORBIDDEN) {
+      this.logger.error(err);
+      if (err instanceof HttpException) {
         throw err;
       } else {
-        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
@@ -164,10 +156,10 @@ export class LentController {
         user,
       );
     } catch (err) {
-      if (err.status === HttpStatus.FORBIDDEN) {
+      this.logger.error(err);
+      if (err instanceof HttpException) {
         throw err;
       } else {
-        this.logger.error(err);
         throw new InternalServerErrorException();
       }
     }
@@ -181,7 +173,10 @@ export class LentController {
     description: 'Delete 성공 시, 204 No_Content를 응답합니다.',
   })
   @ApiForbiddenResponse({
-    description: '사물함을 빌리지 않았는데 호출할 때',
+    description: '사물함을 빌리지 않았는데 호출할 때 ',
+  })
+  @ApiInternalServerErrorResponse({
+    description: '쿼리 수행 에러 등 기타 서버 문제 발생 시'
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -190,11 +185,11 @@ export class LentController {
     try {
       return await this.lentService.returnLentCabinet(user);
     } catch (err) {
-      if (err.status === HttpStatus.FORBIDDEN) {
-        throw err;
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+          throw err;
       } else {
-        this.logger.error(err);
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(err.message);
       }
     }
   }

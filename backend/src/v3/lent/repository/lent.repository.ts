@@ -152,9 +152,6 @@ export class lentRepository implements ILentRepository {
         lent_user_id: user_id,
       },
     });
-    if (result === null) {
-      return null;
-    }
     return result;
   }
 
