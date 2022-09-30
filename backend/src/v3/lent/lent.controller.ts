@@ -176,7 +176,7 @@ export class LentController {
     description: '사물함을 빌리지 않았는데 호출할 때 ',
   })
   @ApiInternalServerErrorResponse({
-    description: '쿼리 수행 에러 등 기타 서버 문제 발생 시'
+    description: '쿼리 수행 에러 등 기타 서버 문제 발생 시',
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -187,7 +187,7 @@ export class LentController {
     } catch (err) {
       this.logger.error(err);
       if (err instanceof HttpException) {
-          throw err;
+        throw err;
       } else {
         throw new InternalServerErrorException(err.message);
       }

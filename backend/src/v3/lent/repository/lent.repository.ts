@@ -72,11 +72,11 @@ export class lentRepository implements ILentRepository {
     } else if (is_generate_expire_time) {
       expire_time = new Date();
       expire_time.setDate(lent_time.getDate() + 45);
-        for await (const lent_info of cabinet.lent_info) {
-          this.setExpireTime(lent_info.lent_id, expire_time);
-        }
+      for await (const lent_info of cabinet.lent_info) {
+        this.setExpireTime(lent_info.lent_id, expire_time);
+      }
     }
-    const result = await this.lentRepository.insert({
+    await this.lentRepository.insert({
       user: {
         user_id: user.user_id,
       },
@@ -156,7 +156,7 @@ export class lentRepository implements ILentRepository {
   }
 
   async deleteLentByLentId(lent_id: number): Promise<void> {
-    const result = await this.lentRepository
+    await this.lentRepository
       .createQueryBuilder()
       .delete()
       .from(Lent)

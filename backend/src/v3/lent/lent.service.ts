@@ -30,7 +30,9 @@ export class LentService {
     try {
       this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
       // 1. 해당 유저가 대여중인 사물함이 있는지 확인
-      const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
+      const is_lent: boolean = await this.lentRepository.getIsLent(
+        user.user_id,
+      );
       if (is_lent) {
         throw new HttpException(
           `${user.intra_id} already lent cabinet!`,
@@ -90,7 +92,7 @@ export class LentService {
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
-        throw err;
+      throw err;
     } finally {
       await queryRunner.release();
     }
