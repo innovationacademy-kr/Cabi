@@ -30,7 +30,9 @@ export class LentService {
     try {
       this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
       // 1. 해당 유저가 대여중인 사물함이 있는지 확인
-      const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
+      const is_lent: boolean = await this.lentRepository.getIsLent(
+        user.user_id,
+      );
       if (is_lent) {
         throw new HttpException(
           `${user.intra_id} already lent cabinet!`,
@@ -90,7 +92,7 @@ export class LentService {
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
-        throw err;
+      throw err;
     } finally {
       await queryRunner.release();
     }
@@ -171,8 +173,11 @@ export class LentService {
           CabinetStatusType.AVAILABLE,
         );
       }
-      // 5. 공유 사물함인 경우 전체 인원 모두 중도 이탈했다면 Cabinet Status 사용 가능으로 수정.
+      // TODO: 5. 공유 사물함은 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
+      // 전체 인원 모두 중도 이탈했다면 Cabinet Status AVAILABLE로 수정.
       if (lent.cabinet.lent_type === LentType.SHARE) {
+        // TODO: async penalizeToUser(user: UserSession, hour: number);
+        // await this.banService.penalizeToUser(user, 72);
         const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
           lent.cabinet.cabinet_id,
         );
