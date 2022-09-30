@@ -22,7 +22,7 @@ export class UserRepository implements IUserRepository {
         user_id: userId,
       },
     });
-    if (result.Lent === null) {
+    if (result === null || result.Lent === null) {
       return null;
     }
     return {
@@ -58,6 +58,6 @@ export class UserRepository implements IUserRepository {
         user_id: userId,
       },
     });
-    return result.Lent ? result.Lent.lent_cabinet_id : -1;
+    return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
   }
 }
