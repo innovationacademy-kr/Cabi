@@ -24,48 +24,49 @@ export class LentService {
     private dataSource: DataSource,
   ) {}
   async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<void> {
-    this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
-    // 1. 해당 유저가 대여중인 사물함이 있는지 확인
-    const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
-    if (is_lent) {
-      throw new HttpException(
-        `${user.intra_id} already lent cabinet!`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    // 2. 고장이나 ban 사물함인지 확인
-    const cabinet: CabinetInfoResponseDto =
-      await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id);
-    if (
-      cabinet.status === CabinetStatusType.BROKEN ||
-      cabinet.status === CabinetStatusType.BANNED
-    ) {
-      throw new HttpException(
-        `cabinet_id: ${cabinet.cabinet_id} is unavailable!`,
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    // 3. 잔여 자리가 있는지 확인
-    if (cabinet.status === CabinetStatusType.FULL) {
-      throw new HttpException(
-        `cabinet_id: ${cabinet.cabinet_id} is full!`,
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    // 4. 동아리 사물함인지 확인
-    if (cabinet.lent_type === LentType.CIRCLE) {
-      throw new HttpException(
-        `cabinet_id: ${cabinet.cabinet_id} is circle cabinet!`,
-        HttpStatus.I_AM_A_TEAPOT,
-      );
-    }
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
+      this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
+      // 1. 해당 유저가 대여중인 사물함이 있는지 확인
+      const is_lent: boolean = await this.lentRepository.getIsLent(user.user_id);
+      if (is_lent) {
+        throw new HttpException(
+          `${user.intra_id} already lent cabinet!`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // 2. 고장이나 ban 사물함인지 확인
+      const cabinet: CabinetInfoResponseDto =
+        await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id);
+      if (
+        cabinet.status === CabinetStatusType.BROKEN ||
+        cabinet.status === CabinetStatusType.BANNED
+      ) {
+        throw new HttpException(
+          `cabinet_id: ${cabinet.cabinet_id} is unavailable!`,
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
+      // 3. 잔여 자리가 있는지 확인
+      if (cabinet.status === CabinetStatusType.FULL) {
+        throw new HttpException(
+          `cabinet_id: ${cabinet.cabinet_id} is full!`,
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      // 4. 동아리 사물함인지 확인
+      if (cabinet.lent_type === LentType.CIRCLE) {
+        throw new HttpException(
+          `cabinet_id: ${cabinet.cabinet_id} is circle cabinet!`,
+          HttpStatus.I_AM_A_TEAPOT,
+        );
+      }
+
       // 대여가 가능하므로 대여 시도
       // 1. lent table에 insert
       const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
@@ -86,9 +87,10 @@ export class LentService {
           CabinetStatusType.FULL,
         );
       }
+      await queryRunner.commitTransaction();
     } catch (err) {
-      this.logger.error(err);
       await queryRunner.rollbackTransaction();
+        throw err;
     } finally {
       await queryRunner.release();
     }
@@ -181,8 +183,10 @@ export class LentService {
           );
         }
       }
+      await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
+      throw err;
     } finally {
       await queryRunner.release();
     }
