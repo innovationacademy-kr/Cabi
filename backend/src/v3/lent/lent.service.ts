@@ -13,6 +13,7 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ILentRepository } from './repository/lent.repository.interface';
+import { BanService } from '../ban/ban.service';
 
 @Injectable()
 export class LentService {
@@ -21,6 +22,7 @@ export class LentService {
     @Inject('ILentRepository')
     private lentRepository: ILentRepository,
     private cabinetInfoService: CabinetInfoService,
+    private banService: BanService,
     private dataSource: DataSource,
   ) {}
   async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<void> {
@@ -173,11 +175,10 @@ export class LentService {
           CabinetStatusType.AVAILABLE,
         );
       }
-      // TODO: 5. 공유 사물함은 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
+      // 5. 공유 사물함은 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
       // 전체 인원 모두 중도 이탈했다면 Cabinet Status AVAILABLE로 수정.
       if (lent.cabinet.lent_type === LentType.SHARE) {
-        // TODO: async penalizeToUser(user: UserSession, hour: number);
-        // await this.banService.penalizeToUser(user, 72);
+        await this.banService.blockingUser(user.user_id, 3);
         const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
           lent.cabinet.cabinet_id,
         );
