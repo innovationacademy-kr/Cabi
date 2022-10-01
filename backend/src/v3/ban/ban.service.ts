@@ -1,4 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import UserStateType from 'src/enums/user.state.type.enum';
+import { UserService } from '../user/user.service';
 import { IBanRepository } from './repository/ban.repository.interface';
 
 @Injectable()
@@ -6,7 +8,9 @@ export class BanService {
   private logger = new Logger(BanService.name);
 
   constructor(
-    @Inject('IBanRepository') private banRepository: IBanRepository,
+    @Inject('IBanRepository')
+    private banRepository: IBanRepository,
+    private userService: UserService,
   ) {}
 
   /**
@@ -49,6 +53,6 @@ export class BanService {
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
     await this.banRepository.addToBanLogByUserId(user_id, ban_day);
     // TODO: 2. 해당 user의 state를 BAN으로 변경. (user의 state에도 enum 추가 필요.)
-    // await this.userService.updateUserState(user_id, UserStateType.BANNED);
+    await this.userService.updateUserState(user_id, UserStateType.BANNED);
   }
 }
