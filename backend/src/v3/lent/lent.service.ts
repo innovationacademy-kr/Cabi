@@ -186,7 +186,7 @@ export class LentService {
       }
       // 5. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
       if (lent.cabinet.lent_type === LentType.SHARE) {
-        this.banService.blockingDropOffUser(lent);
+        await this.banService.blockingDropOffUser(lent);
       }
       await queryRunner.commitTransaction();
     } catch (err) {
