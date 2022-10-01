@@ -178,7 +178,7 @@ export class LentService {
       // 5. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
       // 전체 인원 모두 중도 이탈했다면 Cabinet Status AVAILABLE로 수정.
       if (lent.cabinet.lent_type === LentType.SHARE) {
-        this.banService.blockingDropOffUser(user.user_id, lent.lent_time);
+        this.banService.blockingDropOffUser(lent);
         const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
           lent.cabinet.cabinet_id,
         );
