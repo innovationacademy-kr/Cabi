@@ -23,6 +23,7 @@ export class BanCheckGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const result = await this.banCheck(req);
     if (result) {
+      this.logger.warn('현재 차단당한 상태입니다.');
       throw new ForbiddenException('현재 차단당한 상태입니다.');
     }
     return true;
