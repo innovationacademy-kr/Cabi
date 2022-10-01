@@ -90,7 +90,7 @@ export class LentService {
         user,
         cabinet,
         is_exist_expire_time,
-        will_full
+        will_full,
       );
 
       // 4. 현재 대여로 인해 Cabinet이 풀방이 되면 Cabinet의 status를 FULL로 수정.

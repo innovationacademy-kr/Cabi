@@ -30,6 +30,6 @@ export class BanRepository implements IBanRepository {
       ban_cabinet_id: lent.lent_cabinet_id,
       banned_date,
       unbanned_date,
-    })
+    });
   }
 }

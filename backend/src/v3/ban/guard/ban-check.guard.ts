@@ -5,7 +5,6 @@ import {
   ForbiddenException,
   Injectable,
   Logger,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { BanService } from '../ban.service';

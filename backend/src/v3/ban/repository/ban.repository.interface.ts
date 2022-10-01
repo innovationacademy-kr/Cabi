@@ -1,4 +1,4 @@
-import Lent from "src/entities/lent.entity";
+import Lent from 'src/entities/lent.entity';
 
 export interface IBanRepository {
   /**

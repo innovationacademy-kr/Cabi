@@ -36,7 +36,9 @@ export class BanService {
    * @param lent_time
    */
   async blockingDropOffUser(lent: Lent): Promise<void> {
-    this.logger.debug(`Called ${BanService.name} ${this.blockingDropOffUser.name}`);
+    this.logger.debug(
+      `Called ${BanService.name} ${this.blockingDropOffUser.name}`,
+    );
     const now = new Date();
     const target = new Date(lent.lent_time.getTime());
     target.setDate(target.getDate() + 3);
@@ -57,6 +59,9 @@ export class BanService {
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
     await this.banRepository.addToBanLogByUserId(lent, ban_day);
     // 2. 해당 user의 state를 BAN으로 변경.
-    await this.userService.updateUserState(lent.lent_user_id, UserStateType.BANNED);
+    await this.userService.updateUserState(
+      lent.lent_user_id,
+      UserStateType.BANNED,
+    );
   }
 }

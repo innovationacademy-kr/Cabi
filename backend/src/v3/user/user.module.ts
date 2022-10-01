@@ -17,7 +17,7 @@ const repo = {
   imports: [
     AuthModule,
     forwardRef(() => BanModule),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [MyLentInfoController, MyInfoController],
   providers: [UserService, repo],

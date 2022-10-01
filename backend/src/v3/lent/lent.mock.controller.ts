@@ -11,7 +11,7 @@ import {
   Patch,
   Post,
   ValidationPipe,
-  } from '@nestjs/common';
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -25,11 +25,11 @@ import {
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
-  } from '@nestjs/swagger';
-  import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
-  import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
-  import { UserSessionDto } from 'src/dto/user.session.dto';
-  import { LentService } from './lent.service';
+} from '@nestjs/swagger';
+import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
+import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
+import { LentService } from './lent.service';
 
 // mock up user here
 const user: UserSessionDto = {
@@ -44,12 +44,12 @@ const user: UserSessionDto = {
   // intra_id: 'eunbikim',
   iat: 0,
   ext: 9999999999999,
-}
+};
 
 @ApiTags('(V3) Lent for Mock Up data')
 @Controller({
-version: '3',
-path: '/api/lent_mock',
+  version: '3',
+  path: '/api/lent_mock',
 })
 export class LentMockController {
   private logger = new Logger(LentMockController.name);
@@ -64,16 +64,16 @@ export class LentMockController {
   })
   @ApiBadRequestResponse({
     description:
-    '이미 대여중인 사물함이 있는 경우, 400 Bad_Request를 응답합니다.',
+      '이미 대여중인 사물함이 있는 경우, 400 Bad_Request를 응답합니다.',
   })
   @ApiForbiddenResponse({
     description:
-    '임시 밴 사물함이나 고장 사물함을 대여 시도한 경우, 403 Forbidden을 응답합니다.',
+      '임시 밴 사물함이나 고장 사물함을 대여 시도한 경우, 403 Forbidden을 응답합니다.',
   })
   @ApiResponse({
     status: HttpStatus.I_AM_A_TEAPOT,
     description:
-    "동아리 사물함을 대여 시도한 경우, 418 I'm a teapot을 응답합니다.",
+      "동아리 사물함을 대여 시도한 경우, 418 I'm a teapot을 응답합니다.",
   })
   @ApiConflictResponse({
     description: '잔여 자리가 없는 경우, 409 Conflict를 응답합니다.',
@@ -81,18 +81,16 @@ export class LentMockController {
   @Post('/:cabinet_id')
   @HttpCode(HttpStatus.CREATED)
   // @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async lentCabinet(
-    @Param('cabinet_id') cabinet_id: number,
-  ): Promise<void> {
+  async lentCabinet(@Param('cabinet_id') cabinet_id: number): Promise<void> {
     try {
-    return await this.lentService.lentCabinet(cabinet_id, user);
+      return await this.lentService.lentCabinet(cabinet_id, user);
     } catch (err) {
-    this.logger.error(err);
-    if (err instanceof HttpException) {
-      throw err;
-    } else {
-      throw new InternalServerErrorException();
-    }
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
   }
 
@@ -121,17 +119,17 @@ export class LentMockController {
     updateCabinetTitleRequestDto: UpdateCabinetTitleRequestDto,
   ): Promise<void> {
     try {
-    return await this.lentService.updateLentCabinetTitle(
-      updateCabinetTitleRequestDto.cabinet_title,
-      user,
-    );
+      return await this.lentService.updateLentCabinetTitle(
+        updateCabinetTitleRequestDto.cabinet_title,
+        user,
+      );
     } catch (err) {
-    this.logger.error(err);
-    if (err instanceof HttpException) {
-      throw err;
-    } else {
-      throw new InternalServerErrorException();
-    }
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
   }
 
@@ -160,17 +158,17 @@ export class LentMockController {
     updateCabinetMemoRequestDto: UpdateCabinetMemoRequestDto,
   ): Promise<void> {
     try {
-    return await this.lentService.updateLentCabinetMemo(
-      updateCabinetMemoRequestDto.cabinet_memo,
-      user,
-    );
+      return await this.lentService.updateLentCabinetMemo(
+        updateCabinetMemoRequestDto.cabinet_memo,
+        user,
+      );
     } catch (err) {
-    this.logger.error(err);
-    if (err instanceof HttpException) {
-      throw err;
-    } else {
-      throw new InternalServerErrorException();
-    }
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
   }
 
@@ -192,14 +190,14 @@ export class LentMockController {
   // @UseGuards(JwtAuthGuard, BanCheckGuard)
   async returnLentCabinet(): Promise<void> {
     try {
-    return await this.lentService.returnLentCabinet(user);
+      return await this.lentService.returnLentCabinet(user);
     } catch (err) {
-    this.logger.error(err);
-    if (err instanceof HttpException) {
-      throw err;
-    } else {
-      throw new InternalServerErrorException(err.message);
-    }
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      } else {
+        throw new InternalServerErrorException(err.message);
+      }
     }
   }
-  }
+}

@@ -63,14 +63,16 @@ export class lentRepository implements ILentRepository {
     user: UserSessionDto,
     cabinet: CabinetInfoResponseDto,
     is_exist_expire_time: boolean,
-    will_full: boolean
+    will_full: boolean,
   ): Promise<void> {
     const lent_time = new Date();
     let expire_time: Date | null = null;
-    if (is_exist_expire_time) { // 기존 만료시간이 존재한다면 해당 만료시간으로 expire_time 설정.
-        expire_time = new Date(cabinet.lent_info[0].expire_time.getTime());
+    if (is_exist_expire_time) {
+      // 기존 만료시간이 존재한다면 해당 만료시간으로 expire_time 설정.
+      expire_time = new Date(cabinet.lent_info[0].expire_time.getTime());
     } else {
-      if (will_full) { // 만료시간 set x, 현재 대여로 풀방.
+      if (will_full) {
+        // 만료시간 set x, 현재 대여로 풀방.
         expire_time = new Date();
         if (cabinet.lent_type === LentType.PRIVATE) {
           expire_time.setDate(lent_time.getDate() + 30);

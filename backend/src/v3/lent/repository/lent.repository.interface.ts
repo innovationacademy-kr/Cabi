@@ -36,7 +36,7 @@ export interface ILentRepository {
     user: UserSessionDto,
     cabinet: CabinetInfoResponseDto,
     is_exist_expire_time: boolean,
-    will_full: boolean
+    will_full: boolean,
   ): Promise<void>;
 
   /**
