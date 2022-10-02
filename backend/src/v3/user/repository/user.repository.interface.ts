@@ -1,4 +1,5 @@
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
+import UserStateType from 'src/enums/user.state.type.enum';
 
 export interface IUserRepository {
   /**
@@ -16,4 +17,11 @@ export interface IUserRepository {
    * @return 빌린 사물함 고유 ID (대여하지 않았을 경우 -1)
    */
   checkUserBorrowed(userId: number): Promise<number>;
+
+  /**
+   * 유저의 상태를 업데이트합니다.
+   * @param user_id
+   * @param state
+   */
+  updateUserState(user_id: number, state: UserStateType): Promise<void>;
 }

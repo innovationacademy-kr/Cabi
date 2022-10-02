@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import User from 'src/entities/user.entity';
@@ -14,8 +14,13 @@ const repo = {
 };
 
 @Module({
-  imports: [AuthModule, BanModule, TypeOrmModule.forFeature([User])],
+  imports: [
+    AuthModule,
+    forwardRef(() => BanModule),
+    TypeOrmModule.forFeature([User]),
+  ],
   controllers: [MyLentInfoController, MyInfoController],
   providers: [UserService, repo],
+  exports: [UserService],
 })
 export class UserModule {}

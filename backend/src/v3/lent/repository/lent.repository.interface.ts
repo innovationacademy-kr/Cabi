@@ -35,7 +35,8 @@ export interface ILentRepository {
   lentCabinet(
     user: UserSessionDto,
     cabinet: CabinetInfoResponseDto,
-    is_generate_expire_time: boolean,
+    is_exist_expire_time: boolean,
+    will_full: boolean,
   ): Promise<void>;
 
   /**

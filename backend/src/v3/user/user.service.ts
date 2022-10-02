@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { UserLentResponseDto } from 'src/dto/response/lent.user.response.dto';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserDto } from 'src/dto/user.dto';
+import UserStateType from 'src/enums/user.state.type.enum';
 import { IUserRepository } from './repository/user.repository.interface';
 
 @Injectable()
@@ -29,5 +30,10 @@ export class UserService {
       user_id: user.user_id,
       intra_id: user.intra_id,
     };
+  }
+
+  async updateUserState(user_id: number, state: UserStateType): Promise<void> {
+    this.logger.debug(`Called ${this.updateUserState.name}`);
+    await this.userRepository.updateUserState(user_id, state);
   }
 }
