@@ -28,7 +28,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
-import { User } from 'src/auth/user.decorator';
+import { User } from 'src/decorator/user.decorator';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
