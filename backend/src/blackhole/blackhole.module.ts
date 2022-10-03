@@ -4,7 +4,7 @@ import { BlackholeService } from './blackhole.service';
 import { IBlackholeRepository } from './repository/blackhole.repository';
 import { RawqueryBlackholeRepository } from './repository/rawquery.blackhole.repository';
 import { AuthModule } from 'src/auth/auth.module';
-import { CabinetModule } from 'src/cabinet/cabinet.module';
+import { CabinetModule } from 'src/v3/cabinet/cabinet.module';
 
 const repo = {
   provide: IBlackholeRepository,
