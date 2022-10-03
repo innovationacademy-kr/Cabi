@@ -45,7 +45,7 @@ export class EmailSender {
     } else if (num === 14) {
       file = 'lastoverdue.hbs';
     } else if (num === 15) {
-      subject = '42CABI 영구사용정지 안내';
+      subject = '42CABI 강제 반납 안내';
       file = 'forcedreturn.hbs';
     }
     // 배포 시에만 메일 발송 환경변수 확인
