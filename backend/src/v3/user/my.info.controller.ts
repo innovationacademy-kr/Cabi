@@ -38,7 +38,7 @@ export class MyInfoController {
     description: '로그아웃 상태거나 JWT 세션이 만료됨',
   })
   @Get()
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  @UseGuards(JwtAuthGuard)
   async getMyInfo(@User() user: UserSessionDto): Promise<UserLentResponseDto> {
     this.logger.log(`call getMyInfo by ${user.intra_id}`);
     const result = await this.userService.checkUserBorrowed(user);
