@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import User from 'src/entities/user.entity';
+import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
 import { IUserRepository } from './user.repository.interface';
 
@@ -22,7 +23,7 @@ export class UserRepository implements IUserRepository {
         user_id: userId,
       },
     });
-    if (result.Lent === null) {
+    if (result === null || result.Lent === null) {
       return null;
     }
     return {
@@ -58,6 +59,16 @@ export class UserRepository implements IUserRepository {
         user_id: userId,
       },
     });
-    return result.Lent ? result.Lent.lent_cabinet_id : -1;
+    return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
+  }
+
+  async updateUserState(user_id: number, state: UserStateType): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: {
+        user_id,
+      },
+    });
+    user.state = state;
+    await this.userRepository.save(user);
   }
 }

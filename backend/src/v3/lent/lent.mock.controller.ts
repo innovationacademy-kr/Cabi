@@ -10,7 +10,6 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import {
@@ -27,21 +26,33 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
-import { User } from 'src/auth/user.decorator';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
-import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { LentService } from './lent.service';
 
-@ApiTags('(V3) Lent')
+// mock up user here
+const user: UserSessionDto = {
+  // TESTER 1
+  user_id: 85330,
+  intra_id: 'sichoi',
+  // TESTER 2
+  // user_id: 76317,
+  // intra_id: 'joopark',
+  // TESTER 3
+  // user_id: 110819,
+  // intra_id: 'eunbikim',
+  iat: 0,
+  ext: 9999999999999,
+};
+
+@ApiTags('(V3) Lent for Mock Up data')
 @Controller({
   version: '3',
-  path: '/api/lent',
+  path: '/api/lent_mock',
 })
-export class LentController {
-  private logger = new Logger(LentController.name);
+export class LentMockController {
+  private logger = new Logger(LentMockController.name);
   constructor(private lentService: LentService) {}
 
   @ApiOperation({
@@ -69,11 +80,8 @@ export class LentController {
   })
   @Post('/:cabinet_id')
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async lentCabinet(
-    @Param('cabinet_id') cabinet_id: number,
-    @User() user: UserSessionDto,
-  ): Promise<void> {
+  // @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async lentCabinet(@Param('cabinet_id') cabinet_id: number): Promise<void> {
     try {
       return await this.lentService.lentCabinet(cabinet_id, user);
     } catch (err) {
@@ -105,11 +113,10 @@ export class LentController {
   })
   @Patch('/update_cabinet_title')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  // @UseGuards(JwtAuthGuard, BanCheckGuard)
   async updateLentCabinetTitle(
     @Body(new ValidationPipe())
     updateCabinetTitleRequestDto: UpdateCabinetTitleRequestDto,
-    @User() user: UserSessionDto,
   ): Promise<void> {
     try {
       return await this.lentService.updateLentCabinetTitle(
@@ -145,11 +152,10 @@ export class LentController {
   })
   @Patch('/update_cabinet_memo')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  // @UseGuards(JwtAuthGuard, BanCheckGuard)
   async updateLentCabinetMemo(
     @Body(new ValidationPipe())
     updateCabinetMemoRequestDto: UpdateCabinetMemoRequestDto,
-    @User() user: UserSessionDto,
   ): Promise<void> {
     try {
       return await this.lentService.updateLentCabinetMemo(
@@ -181,8 +187,8 @@ export class LentController {
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async returnLentCabinet(@User() user: UserSessionDto): Promise<void> {
+  // @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async returnLentCabinet(): Promise<void> {
     try {
       return await this.lentService.returnLentCabinet(user);
     } catch (err) {

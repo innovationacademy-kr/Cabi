@@ -85,23 +85,53 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
         navigate("/Lent");
       })
       .catch((error) => {
-        console.error(error);
-        alert("🚨 대여에 실패했습니다 🚨");
+        switch (error.response.status) {
+          case 400:
+            alert("🚨 이미 대여중인 사물함이 있습니다 🚨");
+            break;
+          case 403:
+            alert(
+              "🚨 해당 사물함은 임시로 밴 되었거나, 고장난 사물함입니다 🚨"
+            );
+            break;
+          case 409:
+            alert("🚨 해당 사물함에 잔여 자리가 없습니다 🚨");
+            break;
+          case 418:
+            alert("🚨 해당 사물함은 동아리 전용 사물함입니다 🚨");
+            break;
+          default:
+            alert("🚨 대여에 실패했습니다 🚨");
+            break;
+        }
       });
     handleClose();
   };
+
+  const sharedCabinetMessage = [
+    "대여기간은 3인이 모두 공유하는 순간부터 +45일 입니다.",
+    "대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.",
+    "'내 사물함' 페이지의 메모 내용은 공유 인원끼리 공유됩니다.",
+    "이용 중 귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.",
+  ];
+  const personalCabinetMessage = [
+    "대여기간은 +30일 입니다.",
+    "이용 중 귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.",
+  ];
 
   const LentAble: JSX.Element = (
     <Box sx={BoxStyle}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
         [{cabinet_number}]번 사물함을 대여합니다.
       </Typography>
-      <Typography id="modal-modal-description" sx={{ mt: 2 }} align="center">
-        대여기간은 +30일 입니다.
-      </Typography>
-      <Typography id="modal-modal-description" sx={{ mt: 2 }} align="center">
-        이용 중 귀중품 분실에 책임지지 않습니다.
-      </Typography>
+      {(cabinet_type === "SHARE"
+        ? sharedCabinetMessage
+        : personalCabinetMessage
+      ).map((message) => (
+        <Typography id="modal-modal-description" sx={{ mt: 2 }} align="left">
+          {message}
+        </Typography>
+      ))}
       {cabinet_type === "SHARE" && lender?.length > 0 && (
         <>
           <p>대여자 목록</p>
@@ -134,7 +164,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     </Box>
   );
 
-  const LentUnableContent = "현재 대여가 불가능합니다 🥲";
+  const LentUnableContent = "현재 대여가 불가능한 사물함입니다";
   const LentUnable: JSX.Element = (
     <Box sx={BoxStyle}>
       <Typography

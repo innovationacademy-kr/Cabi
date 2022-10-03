@@ -7,6 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
@@ -17,6 +18,7 @@ import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/auth/user.decorator';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { UserService } from './user.service';
 
 @ApiTags('(V3) User')
@@ -40,11 +42,14 @@ export class MyLentInfoController {
   @ApiNoContentResponse({
     description: '대여한 사물함 없음',
   })
+  @ApiForbiddenResponse({
+    description: 'ban 당한 상태임',
+  })
   @ApiUnauthorizedResponse({
-    description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
+    description: '로그아웃 상태거나 JWT 세션이 만료됨',
   })
   @Get()
-  @UseGuards(JwtAuthGuard /*, BanCheckGuard */)
+  @UseGuards(JwtAuthGuard, BanCheckGuard)
   async getMyLentInfo(
     @User() user: UserSessionDto,
   ): Promise<MyCabinetInfoResponseDto> {

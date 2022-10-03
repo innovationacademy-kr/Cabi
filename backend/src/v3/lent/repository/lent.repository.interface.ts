@@ -27,15 +27,16 @@ export interface ILentRepository {
 
   /**
    * 특정 user_id로 해당 캐비넷 대여를 시도합니다.
-   * 대여에 성공하면 Lent를 반환합니다.
+   * 대여에 성공하면 void를 반환합니다.
    * @param user_id
    * @param cabinet_id
-   * @return Lent
+   * @return void
    */
   lentCabinet(
     user: UserSessionDto,
     cabinet: CabinetInfoResponseDto,
-    is_generate_expire_time: boolean,
+    is_exist_expire_time: boolean,
+    will_full: boolean,
   ): Promise<void>;
 
   /**

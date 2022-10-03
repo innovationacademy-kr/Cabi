@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { BanModule } from 'src/ban/ban.module';
 import { CabinetModule } from '../cabinet/cabinet.module';
 import Lent from 'src/entities/lent.entity';
 import { LentController } from './lent.controller';
 import { LentService } from './lent.service';
 import { lentRepository } from './repository/lent.repository';
 import LentLog from 'src/entities/lent.log.entity';
+import { BanModule } from '../ban/ban.module';
+import { LentMockController } from './lent.mock.controller';
 
 const repo = {
   provide: 'ILentRepository',
@@ -21,7 +22,7 @@ const repo = {
     BanModule,
     TypeOrmModule.forFeature([Lent, LentLog]),
   ],
-  controllers: [LentController],
+  controllers: [LentController, LentMockController],
   providers: [LentService, repo],
 })
 export class LentModule {}

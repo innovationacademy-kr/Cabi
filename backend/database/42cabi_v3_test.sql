@@ -147,7 +147,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL COMMENT '유저ID',
   `intra_id` varchar(32) NOT NULL COMMENT '인트라ID',
-  `state` tinyint(4) NOT NULL DEFAULT 0 COMMENT '유저의 상태',
+  `state` varchar(16) NOT NULL DEFAULT 'NORMAL' COMMENT '유저의 상태',
   `email` varchar(128) DEFAULT NULL COMMENT '이메일',
   `first_login` datetime DEFAULT NULL COMMENT '첫 로그인 시간',
   `last_login` datetime DEFAULT NULL COMMENT '마지막 로그인 시간',

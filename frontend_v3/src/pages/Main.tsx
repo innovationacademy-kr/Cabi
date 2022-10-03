@@ -17,6 +17,7 @@ const Main = (): JSX.Element => {
       axiosMyInfo()
         .then((response) => {
           dispatch(userAll(response.data));
+          if (response.data.cabinet_id !== -1) navigate("/lent");
         })
         .catch((error) => {
           navigate("/");

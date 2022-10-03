@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import User from 'src/entities/user.entity';
+import { BanModule } from '../ban/ban.module';
 import { MyInfoController } from './my.info.controller';
 import { MyLentInfoController } from './my.lent.info.controller';
 import { UserRepository } from './repository/user.repository';
@@ -13,8 +14,13 @@ const repo = {
 };
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), AuthModule],
+  imports: [
+    AuthModule,
+    forwardRef(() => BanModule),
+    TypeOrmModule.forFeature([User]),
+  ],
   controllers: [MyLentInfoController, MyInfoController],
   providers: [UserService, repo],
+  exports: [UserService],
 })
 export class UserModule {}

@@ -1,3 +1,4 @@
+import UserStateType from 'src/enums/user.state.type.enum';
 import {
   Column,
   CreateDateColumn,
@@ -29,10 +30,11 @@ export default class User {
 
   @Column({
     name: 'state',
-    default: 0,
-    type: 'tinyint',
+    type: 'enum',
+    enum: UserStateType,
+    default: UserStateType.NORMAL,
   })
-  auth: number;
+  state: UserStateType;
 
   @Column({
     name: 'email',
