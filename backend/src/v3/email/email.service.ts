@@ -1,6 +1,7 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Inject, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { UserOverDto } from "src/dto/user.over.dto";
 
 @Injectable()
 export class EmailService {
@@ -30,6 +31,28 @@ export class EmailService {
         });
     }
 
-    
-
+    public mailing(info: UserOverDto[], num: number) {
+        let subject = '42CABI 사물함 연체 알림';
+        let file;
+        if (num === 0) {
+          file = 'soonoverdue.hbs';
+        } else if (num === 7) {
+          file = 'overdue.hbs';
+        } else if (num === 14) {
+          file = 'lastoverdue.hbs';
+        } else if (num === 15) {
+          subject = '42CABI 영구사용정지 안내';
+          file = 'forcedreturn.hbs';
+        }
+        // 배포 시에만 메일 발송 환경변수 확인
+        if (this.emailTest === false) {
+          info.forEach((user) => {
+            this.sendEmail(user.intra_id, subject, file);
+          });
+        } else {
+          info.forEach((user) => {
+            this.logger.debug(`[TESTING] [${subject}], sentTo: ${user.intra_id}`);
+          });
+        }
+    }
 }
