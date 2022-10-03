@@ -1,8 +1,8 @@
 import React, { LegacyRef } from "react";
 import styled from "@emotion/styled";
 import Slide from "./Slide";
-import MockDatas from "../../mock/CabinetBoxButton.mock";
 import { CabinetInfoByLocationFloorDto } from "../../types/dto/cabinet.dto";
+import SectionMap from "./SectionMap";
 
 const SlideContainerComponent = styled.div`
   display: flex;
@@ -17,6 +17,8 @@ interface SlideContainerProps {
   slideRef: LegacyRef<HTMLDivElement> | undefined;
   slideCount: number | undefined;
   cabinets: CabinetInfoByLocationFloorDto[] | undefined;
+  sections: string[];
+  setCurrentSlide: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Loading = styled.div`
@@ -27,7 +29,7 @@ const Loading = styled.div`
 `;
 
 const SlideContainer = (props: SlideContainerProps): JSX.Element => {
-  const { slideRef, slideCount, cabinets } = props;
+  const { slideRef, slideCount, cabinets, sections, setCurrentSlide } = props;
 
   const renderSlides = (): JSX.Element[] => {
     if (cabinets) {
@@ -41,6 +43,7 @@ const SlideContainer = (props: SlideContainerProps): JSX.Element => {
 
   return (
     <SlideContainerComponent ref={slideRef} results={slideCount}>
+      <SectionMap sections={sections} setCurrentSlide={setCurrentSlide} />
       {renderSlides()}
     </SlideContainerComponent>
   );
