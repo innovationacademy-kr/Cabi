@@ -23,7 +23,9 @@ export class BanCheckGuard implements CanActivate {
     const result = await this.banCheck(req);
     if (result) {
       this.logger.warn('현재 차단당한 상태입니다.');
-      throw new ForbiddenException('현재 차단당한 상태입니다.');
+      throw new ForbiddenException(
+        '🚨 페널티로 인해 현재 사물함 대여가 불가능합니다 🚨',
+      );
     }
     return true;
   }
