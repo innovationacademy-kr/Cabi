@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
+import { axiosMyLentInfo } from "../../network/axios/axios.custom";
+import { MyCabinetInfoResponseDto } from "../../types/dto/cabinet.dto";
 import { LentDto } from "../../types/dto/lent.dto";
-import { UserDto } from "../../types/dto/user.dto";
 import LentTextField from "../atoms/inputs/LentTextField";
 
 const Content = styled.div`
@@ -13,56 +15,42 @@ const Content = styled.div`
 `;
 
 interface LentInfoProps {
-  location: string | undefined; // 사물함 건물
-  floor: number | undefined; // 사물함 층수
-  section?: string | undefined; // 사물함의 섹션 종류 (오아시스 등)
-  cabinet_memo: string | undefined; // 사물함 비밀번호와 관련된 메모
-  cabinet_id: number | undefined; // 캐비넷 고유 ID
-  cabinet_num?: number; // 사물함에 붙어있는 숫자
-  lent_type?: string | undefined; // 사물함의 종류 (개인, 공유, 동아리)
-  cabinet_title: string | undefined; // 공유/동아리 사물함인 경우 사물함에 대한 설명
-  max_user?: number | undefined; // 해당 사물함을 대여할 수 있는 최대 유저 수
-  lent_info: LentDto[] | undefined;
-  // lent_info: LentDto | undefined;
+  cabinet_data: MyCabinetInfoResponseDto | null;
 }
 
-const LentInfo = (prop: LentInfoProps): JSX.Element => {
-  const {
-    location,
-    floor,
-    section,
-    cabinet_memo,
-    cabinet_id,
-    cabinet_num,
-    lent_type,
-    cabinet_title,
-    max_user,
-    lent_info,
-  } = prop;
+const LentInfo = (): JSX.Element => {
+  const [myLentInfo, setMyLentInfo] = useState<MyCabinetInfoResponseDto | null>(
+    null
+  );
+  useEffect(() => {
+    // TODO (seuan)
+    // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
+    // if (cabinetId === -1) navigate("/main");
+    axiosMyLentInfo()
+      .then((response) => {
+        setMyLentInfo(response.data);
+      })
+      .then(() => console.log(myLentInfo))
+      .catch((error) => {
+        console.error(error);
+        // navigate("/main");
+      });
+  }, []);
 
   const cabinetInfo = (): JSX.Element => {
     return (
       <>
-        <p>
-          {location} {floor}F {cabinet_num}
-        </p>
+        <h2>
+          {myLentInfo?.location} {myLentInfo?.floor}F {myLentInfo?.cabinet_num}
+        </h2>
         <p>{/* lent_info.expire_time */}</p>
       </>
     );
   };
 
-  // const userInfo = (): JSX.Element[] | null => {
-  //   if (lent_info) {
-  //     return lent_info.users.map((user: UserDto) => {
-  //       return <p key={user.user_id}>{user.intra_id}</p>;
-  //     });
-  //   }
-  //   return null;
-  // };
-
   const userInfo = (): JSX.Element[] | null => {
-    if (lent_info) {
-      return lent_info.map((user: LentDto) => {
+    if (myLentInfo?.lent_info) {
+      return myLentInfo.lent_info.map((user: LentDto) => {
         return <p key={user.user_id}>{user.intra_id}</p>;
       });
     }
@@ -74,13 +62,13 @@ const LentInfo = (prop: LentInfoProps): JSX.Element => {
       {cabinetInfo()}
       <LentTextField
         contentType="title"
-        currentContent="방 제목을 설정해주세요!"
+        currentContent={myLentInfo?.cabinet_title}
       />
-      {userInfo()}
       <LentTextField
         contentType="memo"
-        currentContent="필요한 내용을 메모해주세요!"
+        currentContent={myLentInfo?.cabinet_memo}
       />
+      {userInfo()}
     </Content>
   );
 };

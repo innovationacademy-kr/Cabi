@@ -53,26 +53,8 @@ const LentReturnSection = styled.div`
 `;
 
 const LentTemplate = (): JSX.Element => {
-  const [myLentInfo, setMyLentInfo] = useState<MyCabinetInfoResponseDto | null>(
-    null
-  );
-
   const navigate = useNavigate();
   const cabinetId = useAppSelector((state) => state.user.cabinet_id);
-
-  useEffect(() => {
-    // TODO (seuan)
-    // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
-    // if (cabinetId === -1) navigate("/main");
-    axiosMyLentInfo()
-      .then((response) => {
-        setMyLentInfo(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-        // navigate("/main");
-      });
-  }, []);
 
   return (
     <LentSection id="test">
@@ -81,15 +63,7 @@ const LentTemplate = (): JSX.Element => {
         <MenuButton />
       </LentNavSection>
       <LentInfoSection>
-        <LentInfo
-          location={myLentInfo?.location}
-          floor={myLentInfo?.floor}
-          cabinet_num={myLentInfo?.cabinet_num}
-          cabinet_id={myLentInfo?.cabinet_id}
-          lent_info={myLentInfo?.lent_info}
-          cabinet_title={myLentInfo?.cabinet_title}
-          cabinet_memo={myLentInfo?.cabinet_memo}
-        />
+        <LentInfo />
       </LentInfoSection>
       <LentReturnSection>
         <ReturnButton button_title="반 납 하 기" />
