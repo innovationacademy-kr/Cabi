@@ -54,6 +54,10 @@ const Carousel = (props: CarouselProps): JSX.Element => {
   const lastSlide = slideCount ? slideCount - 1 : 0; // slideCount에 1 더해지지 않은 상태 입니다.
 
   useEffect(() => {
+    setCurrentSlide(0);
+  }, [cabinets]);
+
+  useEffect(() => {
     if (slideRef.current != null) {
       slideRef.current.style.transition = "all 0.5s ease-in-out";
       slideRef.current.style.transform = `translateX(-${
@@ -92,6 +96,7 @@ const Carousel = (props: CarouselProps): JSX.Element => {
     setTochedX(e.changedTouches[0].pageX);
     setTochedY(e.changedTouches[0].pageY);
   };
+
   const onTouchEnd = (e: React.TouchEvent): void => {
     const distanceX = tochedX - e.changedTouches[0].pageX;
     const distanceY = tochedY - e.changedTouches[0].pageY;
