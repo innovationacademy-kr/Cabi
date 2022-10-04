@@ -36,7 +36,7 @@ export class CabinetController {
     this.logger.log('postCabinet');
     const cabinet = await this.cabinetService.getAllCabinets();
     if (cabinet.location?.length === 0) {
-      throw new BadRequestException({ error: 'no cabinet information' });
+      throw new BadRequestException('🚨 캐비넷 정보가 없습니다 🚨');
     }
     return cabinet;
   }

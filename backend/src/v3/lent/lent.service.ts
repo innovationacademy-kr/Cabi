@@ -40,7 +40,7 @@ export class LentService {
       );
       if (is_lent) {
         throw new HttpException(
-          `${user.intra_id} already lent cabinet!`,
+          `🚨 이미 대여중인 사물함이 있습니다 🚨`,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -52,16 +52,25 @@ export class LentService {
         cabinet.status === CabinetStatusType.BROKEN ||
         cabinet.status === CabinetStatusType.BANNED
       ) {
+        const message =
+          cabinet.status === CabinetStatusType.BROKEN
+            ? '🚨 해당 사물함은 고장난 사물함입니다 🚨'
+            : '🚨 해당 사물함은 비활성화된 사물함입니다 🚨';
+        throw new HttpException(message, HttpStatus.FORBIDDEN);
+      }
+
+      // 3. 잔여 자리가 있는지 확인
+      if (cabinet.status === CabinetStatusType.SET_EXPIRE_FULL) {
         throw new HttpException(
-          `cabinet_id: ${cabinet.cabinet_id} is unavailable!`,
-          HttpStatus.FORBIDDEN,
+          `🚨 해당 사물함에 잔여 자리가 없습니다 🚨`,
+          HttpStatus.CONFLICT,
         );
       }
 
-      // 3. 동아리 사물함인지 확인
+      // 4. 동아리 사물함인지 확인
       if (cabinet.lent_type === LentType.CIRCLE) {
         throw new HttpException(
-          `cabinet_id: ${cabinet.cabinet_id} is circle cabinet!`,
+          `🚨 해당 사물함은 동아리 전용 사물함입니다 🚨`,
           HttpStatus.I_AM_A_TEAPOT,
         );
       }

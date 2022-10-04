@@ -49,7 +49,7 @@ export class MyLentInfoController {
     description: '로그아웃 상태거나 JWT 세션이 만료됨',
   })
   @Get()
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  @UseGuards(JwtAuthGuard)
   async getMyLentInfo(
     @User() user: UserSessionDto,
   ): Promise<MyCabinetInfoResponseDto> {

@@ -60,6 +60,7 @@ const CabinetTemplate = (): JSX.Element => {
   const [currentFloor, setCurrentFloor] = useState<number>(2);
   const [locationFloor, setLocationFloor] =
     useState<CabinetLocationFloorDto[]>();
+  const [sectionNames, setSectionNaems] = useState<string[]>([]);
   const [infoByLocationFloor, setInfoByLocationFloor] =
     useState<CabinetInfoByLocationFloorDto[]>();
   useEffect(() => {
@@ -76,6 +77,11 @@ const CabinetTemplate = (): JSX.Element => {
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setInfoByLocationFloor(response.data);
+        setSectionNaems(
+          response.data.map(
+            (item: CabinetInfoByLocationFloorDto) => item.section
+          )
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -110,6 +116,7 @@ const CabinetTemplate = (): JSX.Element => {
         <Carousel
           slideCount={infoByLocationFloor?.length}
           cabinets={infoByLocationFloor}
+          sections={sectionNames}
         />
       </MainCarouselSection>
       <MainQuestionSection>

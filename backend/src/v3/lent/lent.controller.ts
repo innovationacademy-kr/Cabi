@@ -81,7 +81,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(err.message);
       }
     }
   }
@@ -121,7 +121,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(err.message);
       }
     }
   }
@@ -161,7 +161,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(err.message);
       }
     }
   }
@@ -181,7 +181,7 @@ export class LentController {
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  @UseGuards(JwtAuthGuard)
   async returnLentCabinet(@User() user: UserSessionDto): Promise<void> {
     try {
       return await this.lentService.returnLentCabinet(user);

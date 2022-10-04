@@ -92,7 +92,7 @@ export class LentMockController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(err.message);
       }
     }
   }
@@ -131,7 +131,7 @@ export class LentMockController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(err.message);
       }
     }
   }
@@ -170,7 +170,7 @@ export class LentMockController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(err.message);
       }
     }
   }

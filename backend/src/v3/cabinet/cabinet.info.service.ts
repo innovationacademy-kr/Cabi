@@ -50,7 +50,10 @@ export class CabinetInfoService {
       floor,
     );
     if (cabinetInfo.length === 0) {
-      throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        '🚨 존재하지 않는 사물함 영역입니다 🚨',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return cabinetInfo;
   }
@@ -64,7 +67,10 @@ export class CabinetInfoService {
     try {
       return await this.cabinetInfoRepository.getCabinetResponseInfo(cabinetId);
     } catch (e) {
-      throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        '🚨 존재하지 않는 사물함입니다 🚨',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
