@@ -21,6 +21,8 @@ export class LentTools {
   /**
    * 처음으로 풀방이 되면 해당 사물함 이용자들의 만료시간을 설정해주는 함수.
    * @param lent_list
+   * @param lent_type
+   * @param queryRunner
    */
    async setExpireTimeAll(lent_list: LentDto[], lent_type: LentType, queryRunner: QueryRunner): Promise<void> {
     this.logger.debug(`Called ${LentTools.name} ${this.setExpireTimeAll.name}`);
@@ -54,10 +56,9 @@ export class LentTools {
         case CabinetStatusType.NOT_SET_EXPIRE_FULL:
           // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
           await this.setExpireTimeAll(cabinet.lent_info, cabinet.lent_type, queryRunner);
+          // 상태를 SET_EXPIRE_FULL로 변경
           await this.cabinetInfoService.updateCabinetStatus(cabinet.cabinet_id, CabinetStatusType.SET_EXPIRE_FULL, queryRunner);
           break ;
-        case CabinetStatusType.SET_EXPIRE_FULL:
-          throw new HttpException(`cabinet_id: ${cabinet.cabinet_id} is unavailable!`, HttpStatus.FORBIDDEN);
         case CabinetStatusType.SET_EXPIRE_AVAILABLE: {
           let new_lent = await this.lentRepository.lentCabinet(user, cabinet.cabinet_id, queryRunner);
           // 기존 유저의 만료시간으로 만료시간 설정

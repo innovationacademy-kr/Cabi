@@ -57,7 +57,7 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
     switch (status) {
       case CabinetStatus.AVAILABLE:
         return cabinetColor.emptyCabinet;
-      case CabinetStatus.FULL:
+      case CabinetStatus.SET_EXPIRE_FULL:
         return cabinetColor.lentedCabinet;
       case CabinetStatus.EXPIRED:
         return cabinetColor.expiredCabinet;
