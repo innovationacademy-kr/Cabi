@@ -40,7 +40,7 @@ const Slide = (props: SlideProps): JSX.Element => {
                 cabinet_number={item.cabinet_num}
                 cabinet_id={item.cabinet_id}
                 lender={item.lent_info}
-                isLentAble={item.status === CabinetStatus.AVAILABLE}
+                isLentAble={item.status === CabinetStatus.AVAILABLE || item.status === CabinetStatus.SET_EXPIRE_AVAILABLE}
               />
             }
             button={
