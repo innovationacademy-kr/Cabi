@@ -1,20 +1,15 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { CabinetModule } from './cabinet/cabinet.module';
-import { BanModule } from './ban/ban.module';
 import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 import { join } from 'path';
-import { MailModule } from './email/email.module';
 import { EventModule } from './event/event.module';
 import { BlackholeModule } from './blackhole/blackhole.module';
-import { UserModule } from './user/user.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import TypeOrmConfigService from './config/typeorm.config';
 import { V3Module } from './v3/v3.module';
-// mport { TypeOrmExModule } from './typeorm-ex/typeorm-ex.module';
 
 @Module({
   imports: [
@@ -26,11 +21,7 @@ import { V3Module } from './v3/v3.module';
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
-    // TypeOrmExModule,
-    CabinetModule,
-    BanModule,
     AuthModule,
-    MailModule,
     EventModule,
     BlackholeModule,
     ServeStaticModule.forRoot({
@@ -38,7 +29,6 @@ import { V3Module } from './v3/v3.module';
       exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
       // serveRoot: '../img'
     }),
-    UserModule,
     V3Module,
   ],
   controllers: [],

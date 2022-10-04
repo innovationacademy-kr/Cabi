@@ -15,7 +15,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
-import { User } from 'src/auth/user.decorator';
+import { User } from 'src/decorator/user.decorator';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { BanCheckGuard } from '../ban/guard/ban-check.guard';
