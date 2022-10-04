@@ -529,3 +529,9 @@ SET
     lent_type = 'SHARE'
 WHERE
     floor = 2;
+
+UPDATE cabinet
+SET
+    max_user = 1
+WHERE
+    lent_type = 'PRIVATE';
