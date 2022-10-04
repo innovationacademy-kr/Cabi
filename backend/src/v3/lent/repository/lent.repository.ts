@@ -45,7 +45,11 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
-  async setExpireTime(lent_id: number, expire_time: Date, queryRunner?: QueryRunner): Promise<void> {
+  async setExpireTime(
+    lent_id: number,
+    expire_time: Date,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
     await this.lentRepository
       .createQueryBuilder(this.setExpireTime.name, queryRunner)
       .update(Lent)
@@ -64,17 +68,18 @@ export class lentRepository implements ILentRepository {
     queryRunner: QueryRunner,
   ): Promise<LentDto> {
     const lent_time = new Date();
-    let expire_time: Date | null = null;
-    const result = await this.lentRepository.createQueryBuilder(this.lentCabinet.name, queryRunner)
-    .insert()
-    .into(Lent)
-    .values({
-      lent_user_id: user.user_id,
-      lent_cabinet_id: cabinet_id,
-      lent_time: lent_time,
-      expire_time: expire_time,
-    })
-    .execute();
+    const expire_time: Date | null = null;
+    const result = await this.lentRepository
+      .createQueryBuilder(this.lentCabinet.name, queryRunner)
+      .insert()
+      .into(Lent)
+      .values({
+        lent_user_id: user.user_id,
+        lent_cabinet_id: cabinet_id,
+        lent_time: lent_time,
+        expire_time: expire_time,
+      })
+      .execute();
     return {
       user_id: user.user_id,
       intra_id: user.intra_id,
@@ -82,7 +87,7 @@ export class lentRepository implements ILentRepository {
       lent_time,
       expire_time,
       is_expired: false,
-    }
+    };
   }
 
   async getLentCabinetId(user_id: number): Promise<number> {

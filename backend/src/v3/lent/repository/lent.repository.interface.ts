@@ -1,5 +1,4 @@
 import { LentDto } from 'src/dto/lent.dto';
-import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 import { QueryRunner } from 'typeorm';
@@ -25,7 +24,11 @@ export interface ILentRepository {
    * @param expire_time
    * @return void
    */
-  setExpireTime(lent_id: number, expire_time: Date, queryRunner?: QueryRunner): Promise<void>;
+  setExpireTime(
+    lent_id: number,
+    expire_time: Date,
+    queryRunner?: QueryRunner,
+  ): Promise<void>;
 
   /**
    * 특정 user_id로 해당 캐비넷 대여를 시도합니다.

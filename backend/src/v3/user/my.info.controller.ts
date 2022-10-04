@@ -10,7 +10,6 @@ import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/auth/user.decorator';
 import { UserLentResponseDto } from 'src/dto/response/lent.user.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
-import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { UserService } from './user.service';
 
 @ApiTags('(V3) User')

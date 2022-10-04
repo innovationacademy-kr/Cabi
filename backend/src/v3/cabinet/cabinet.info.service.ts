@@ -89,6 +89,10 @@ export class CabinetInfoService {
     this.logger.debug(
       `Called ${CabinetInfoService.name} ${this.updateCabinetStatus.name}`,
     );
-    await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status, queryRunner);
+    await this.cabinetInfoRepository.updateCabinetStatus(
+      cabinet_id,
+      status,
+      queryRunner,
+    );
   }
 }

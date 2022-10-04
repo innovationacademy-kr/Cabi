@@ -136,15 +136,16 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     status: CabinetStatusType,
     queryRunner?: QueryRunner,
   ): Promise<void> {
-    await this.cabinetInfoRepository.createQueryBuilder(this.updateCabinetStatus.name, queryRunner)
-    .update()
-    .set({
-      status,
-    })
-    .where({
-      cabinet_id,
-    })
-    .execute();
+    await this.cabinetInfoRepository
+      .createQueryBuilder(this.updateCabinetStatus.name, queryRunner)
+      .update()
+      .set({
+        status,
+      })
+      .where({
+        cabinet_id,
+      })
+      .execute();
     // const cabinet = await this.cabinetInfoRepository.findOne({
     //   where: {
     //     cabinet_id,
