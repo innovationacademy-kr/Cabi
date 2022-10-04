@@ -11,6 +11,7 @@ import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.sect
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { SpaceDataDto } from 'src/dto/space.data.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import { QueryRunner } from 'typeorm';
 import { ICabinetInfoRepository } from './repository/interface.cabinet.info.repository';
 
 @Injectable()
@@ -77,10 +78,11 @@ export class CabinetInfoService {
   async updateCabinetStatus(
     cabinet_id: number,
     status: CabinetStatusType,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     this.logger.debug(
       `Called ${CabinetInfoService.name} ${this.updateCabinetStatus.name}`,
     );
-    await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status);
+    await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status, queryRunner);
   }
 }

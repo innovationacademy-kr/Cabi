@@ -42,6 +42,9 @@ const user: UserSessionDto = {
   // TESTER 3
   // user_id: 110819,
   // intra_id: 'eunbikim',
+  // TESTER 4
+  // user_id: 69106,
+  // intra_id: 'hyoon',
   iat: 0,
   ext: 9999999999999,
 };

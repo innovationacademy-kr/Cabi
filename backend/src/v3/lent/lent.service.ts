@@ -14,6 +14,7 @@ import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ILentRepository } from './repository/lent.repository.interface';
 import { BanService } from '../ban/ban.service';
+import { LentTools } from './lent.component';
 
 @Injectable()
 export class LentService {
@@ -24,7 +25,9 @@ export class LentService {
     private cabinetInfoService: CabinetInfoService,
     private banService: BanService,
     private dataSource: DataSource,
+    private lentTools: LentTools,
   ) {}
+
   async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -55,51 +58,15 @@ export class LentService {
         );
       }
 
-      // 3. 잔여 자리가 있는지 확인
-      if (cabinet.status === CabinetStatusType.FULL) {
-        throw new HttpException(
-          `cabinet_id: ${cabinet.cabinet_id} is full!`,
-          HttpStatus.CONFLICT,
-        );
-      }
-
-      // 4. 동아리 사물함인지 확인
+      // 3. 동아리 사물함인지 확인
       if (cabinet.lent_type === LentType.CIRCLE) {
         throw new HttpException(
           `cabinet_id: ${cabinet.cabinet_id} is circle cabinet!`,
           HttpStatus.I_AM_A_TEAPOT,
         );
       }
-
-      // 대여가 가능하므로 대여 시도
-      // 1. lent table에 insert
-      const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
-        cabinet_id,
-      );
-      // 2. 만료시간이 설정되어 있는지 확인
-      let is_exist_expire_time = false;
-      if (cabinet.lent_info.length > 0 && cabinet.lent_info[0].expire_time) {
-        is_exist_expire_time = true;
-      }
-      // 3. 현재 대여로 풀방이 될 것인지 확인
-      let will_full = false;
-      if (lent_user_cnt + 1 === cabinet.max_user) {
-        will_full = true;
-      }
-      await this.lentRepository.lentCabinet(
-        user,
-        cabinet,
-        is_exist_expire_time,
-        will_full,
-      );
-
-      // 4. 현재 대여로 인해 Cabinet이 풀방이 되면 Cabinet의 status를 FULL로 수정.
-      if (will_full) {
-        await this.cabinetInfoService.updateCabinetStatus(
-          cabinet_id,
-          CabinetStatusType.FULL,
-        );
-      }
+      // 4. 현재 대여 상태에 따라 케이스 처리
+      await this.lentTools.lentStateTransition(user, cabinet, queryRunner);
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -177,13 +144,8 @@ export class LentService {
       await this.lentRepository.deleteLentByLentId(lent.lent_id);
       // 3. Lent Log Table에서 값 추가.
       await this.lentRepository.addLentLog(lent);
-      // 4. 캐비넷에 빈 자리가 생겼으므로 Cabinet Status AVAILABLE로 수정.
-      if (lent.cabinet.status !== CabinetStatusType.AVAILABLE) {
-        await this.cabinetInfoService.updateCabinetStatus(
-          lent.lent_cabinet_id,
-          CabinetStatusType.AVAILABLE,
-        );
-      }
+      // 4. 현재 대여 상태에 따라 케이스 처리
+      await this.lentTools.returnStateTransition(lent.cabinet);
       // 5. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
       if (lent.cabinet.lent_type === LentType.SHARE) {
         await this.banService.blockingDropOffUser(lent);

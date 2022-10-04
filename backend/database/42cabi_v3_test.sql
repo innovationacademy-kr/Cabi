@@ -57,7 +57,7 @@ CREATE TABLE `cabinet` (
   `location` varchar(32) NOT NULL COMMENT '건물 위치',
   `floor` int(11) NOT NULL COMMENT '층',
   `section` varchar(32) NOT NULL COMMENT '구역',
-  `cabinet_status` varchar(16) NOT NULL DEFAULT 'AVAILABLE' COMMENT '사물함 상태',
+  `cabinet_status` varchar(32) NOT NULL DEFAULT 'AVAILABLE' COMMENT '사물함 상태',
   `lent_type` varchar(16) NOT NULL DEFAULT 'PRIVATE' COMMENT '사물함 타입',
   `max_user` tinyint(4) NOT NULL DEFAULT 3 COMMENT '최대 사용자 수',
   `min_user` tinyint(4) NOT NULL DEFAULT 0 COMMENT '최소 사용자 수',

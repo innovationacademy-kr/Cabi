@@ -8,9 +8,12 @@ RUN			apt-get update -y; \
 
 WORKDIR		/
 
-RUN			mkdir -p /var/run/mysqld && \
-			chown -R mysql:mysql /var/run/mysqld && \
-			chmod 777 /var/run/mysqld
+RUN			mkdir -p /var/run/mysqld
+RUN			chown -R mysql:mysql /var/run/mysqld
+RUN			chmod 777 /var/run/mysqld
+
+RUN 		mkdir -p /var/lib/mysql
+RUN			chown -R mysql:mysql /var/lib/mysql
 
 RUN			mkdir -p /database
 RUN			mkdir -p /database/credentials

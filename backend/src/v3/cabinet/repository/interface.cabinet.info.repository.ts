@@ -3,6 +3,7 @@ import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import { QueryRunner } from 'typeorm';
 
 export interface ICabinetInfoRepository {
   /**
@@ -70,5 +71,6 @@ export interface ICabinetInfoRepository {
   updateCabinetStatus(
     cabinet_id: number,
     status: CabinetStatusType,
+    queryRunner?: QueryRunner,
   ): Promise<void>;
 }
