@@ -122,7 +122,6 @@ export class LentTools {
           cabinet.cabinet_id,
           CabinetStatusType.SET_EXPIRE_AVAILABLE,
         );
-        break;
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
           cabinet.cabinet_id,
