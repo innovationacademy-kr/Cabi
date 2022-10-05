@@ -1,10 +1,11 @@
-import { Controller, Get, Logger, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Logger, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
@@ -31,6 +32,7 @@ export class CabinetController {
       'cabi에 존재하는 건물/층 정보를 SpaceDataResponseDto 형식으로 받아옵니다.',
   })
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
     this.logger.log('getSpaceInfo');
     const cabinetInfo = await this.cabinetService.getSpaceInfo();
@@ -50,6 +52,7 @@ export class CabinetController {
     description: '비정상 파라미터',
   })
   @Get('/:location/:floor')
+  @UseGuards(JwtAuthGuard)
   async getCabinetsInfoByParam(
     @Param('location') location: string,
     @Param('floor', ParseIntPipe) floor: number,
@@ -71,6 +74,7 @@ export class CabinetController {
     description: '비정상 파라미터',
   })
   @Get('/:cabinet_id')
+  @UseGuards(JwtAuthGuard)
   async getCabinetInfoById(
     @Param('cabinet_id', ParseIntPipe) cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {
