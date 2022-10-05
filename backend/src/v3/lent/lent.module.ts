@@ -24,5 +24,6 @@ const repo = {
   ],
   controllers: [LentController, LentMockController],
   providers: [LentService, repo],
+  exports: [LentService],
 })
 export class LentModule {}

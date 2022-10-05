@@ -30,8 +30,8 @@ export class BlackholeService {
     private readonly httpService: HttpService,
     @Inject(ConfigService) private configService: ConfigService,
     private readonly cabinetService: CabinetInfoService,
-    private readonly lentService: LentService,
     private readonly userService: UserService,
+    private readonly lentService: LentService,
   ) {
     this.logger = new Logger(BlackholeService.name);
     this.client_id = this.configService.get<string>('ftAuth.clientid');
