@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
+import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import User from 'src/entities/user.entity';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
@@ -10,9 +10,10 @@ export class UserRepository implements IUserRepository {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  // NOTE: lent_info 안에 현재 user(user_id)만 나오는 문제가 있어 함수를 수정합니다.
   async getCabinetByUserId(
     userId: number,
-  ): Promise<MyCabinetInfoResponseDto | null> {
+  ): Promise<CabinetExtendDto | null> {
     const result = await this.userRepository.findOne({
       relations: {
         Lent: {
@@ -37,16 +38,6 @@ export class UserRepository implements IUserRepository {
       cabinet_memo: result.Lent.cabinet.memo,
       max_user: result.Lent.cabinet.max_user,
       status: result.Lent.cabinet.status,
-      lent_info: [
-        {
-          user_id: result.user_id,
-          intra_id: result.intra_id,
-          lent_id: result.Lent.lent_id,
-          lent_time: result.Lent.lent_time,
-          expire_time: result.Lent.expire_time,
-          is_expired: result.Lent.expire_time < new Date(),
-        },
-      ],
     };
   }
 
