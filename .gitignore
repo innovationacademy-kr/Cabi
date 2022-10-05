@@ -42,3 +42,10 @@ frontend_v3/yarn.lock
 
 #db credentials
 backend/database/credentials/*
+
+#docker mariadb volume
+aria_log_control
+aria_log.*
+ib_logfile*
+ibdata*
+ibtmp*

@@ -23,7 +23,7 @@ MockDatas[0] = {
       intra_id: "hybae",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "hybae",
 };
 
@@ -37,7 +37,7 @@ MockDatas[1] = {
       intra_id: "seuan",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan",
 };
 
@@ -101,7 +101,7 @@ MockDatas[6] = {
       intra_id: "hybae2",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "hybae2",
 };
 
@@ -136,7 +136,7 @@ MockDatas[8] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -158,7 +158,7 @@ MockDatas[9] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -198,7 +198,7 @@ MockDatas[12] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -220,7 +220,7 @@ MockDatas[13] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -242,7 +242,7 @@ MockDatas[14] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -264,7 +264,7 @@ MockDatas[15] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -286,7 +286,7 @@ MockDatas[16] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -300,7 +300,7 @@ MockDatas[17] = {
       intra_id: "hybae",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "hybae",
 };
 
@@ -314,7 +314,7 @@ MockDatas[18] = {
       intra_id: "seuan",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan",
 };
 
@@ -378,7 +378,7 @@ MockDatas[22] = {
       intra_id: "hybae2",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "hybae2",
 };
 
@@ -413,7 +413,7 @@ MockDatas[24] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -435,7 +435,7 @@ MockDatas[25] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -475,7 +475,7 @@ MockDatas[12] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -497,7 +497,7 @@ MockDatas[28] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -519,7 +519,7 @@ MockDatas[29] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -541,7 +541,7 @@ MockDatas[30] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -563,7 +563,7 @@ MockDatas[31] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -577,7 +577,7 @@ MockDatas[32] = {
       intra_id: "hybae",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "hybae",
 };
 
@@ -591,7 +591,7 @@ MockDatas[33] = {
       intra_id: "seuan",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan",
 };
 
@@ -655,7 +655,7 @@ MockDatas[38] = {
       intra_id: "hybae2",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "hybae2",
 };
 
@@ -690,7 +690,7 @@ MockDatas[39] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -712,7 +712,7 @@ MockDatas[40] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -752,7 +752,7 @@ MockDatas[43] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -774,7 +774,7 @@ MockDatas[44] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -796,7 +796,7 @@ MockDatas[45] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -818,7 +818,7 @@ MockDatas[46] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -840,7 +840,7 @@ MockDatas[47] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 
@@ -862,7 +862,7 @@ MockDatas[48] = {
       intra_id: "seuan4",
     },
   ],
-  status: CabinetStatus.FULL,
+  status: CabinetStatus.SET_EXPIRE_FULL,
   user: "seuan3",
 };
 

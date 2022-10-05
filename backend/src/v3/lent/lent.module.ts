@@ -9,6 +9,7 @@ import { lentRepository } from './repository/lent.repository';
 import LentLog from 'src/entities/lent.log.entity';
 import { BanModule } from '../ban/ban.module';
 import { LentMockController } from './lent.mock.controller';
+import { LentTools } from './lent.component';
 
 const repo = {
   provide: 'ILentRepository',
@@ -23,7 +24,7 @@ const repo = {
     TypeOrmModule.forFeature([Lent, LentLog]),
   ],
   controllers: [LentController, LentMockController],
-  providers: [LentService, repo],
+  providers: [LentService, repo, LentTools],
   exports: [LentService],
 })
 export class LentModule {}

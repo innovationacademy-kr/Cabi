@@ -18,7 +18,6 @@ import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/decorator/user.decorator';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
-import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { UserService } from './user.service';
 
 @ApiTags('(V3) User')
@@ -55,7 +54,6 @@ export class MyLentInfoController {
   ): Promise<MyCabinetInfoResponseDto> {
     this.logger.log(`call getMyLentInfo by ${user.intra_id}`);
     const result = await this.userService.getCabinetByUserId(user.user_id);
-    console.log('fin');
     if (result === null) {
       throw new HttpException('', HttpStatus.NO_CONTENT);
     }

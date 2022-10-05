@@ -39,7 +39,12 @@ export class CabinetDto {
 
   @ApiProperty({
     description: '사물함 상태',
-    enum: ['AVAILABLE', 'FULL', 'EXPIRED', 'BROKEN', 'BANNED'],
+    enum: [
+      'AVAILABLE',
+      'SET_EXPIRE_FULL',
+      'BROKEN',
+      'BANNED',
+    ],
     example: 'PRIVATE',
   })
   status: CabinetStatusType; // 사물함의 현재 상태

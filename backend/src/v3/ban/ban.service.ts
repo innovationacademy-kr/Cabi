@@ -42,8 +42,6 @@ export class BanService {
     const now = new Date();
     const target = new Date(lent.lent_time.getTime());
     target.setDate(target.getDate() + 3);
-    console.log(now);
-    console.log(target);
     if (now < target) {
       await this.blockingUser(lent, 3);
     }

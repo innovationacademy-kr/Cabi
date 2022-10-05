@@ -1,6 +1,7 @@
-import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
+import { LentDto } from 'src/dto/lent.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
+import { QueryRunner } from 'typeorm';
 
 export interface ILentRepository {
   /**
@@ -23,7 +24,11 @@ export interface ILentRepository {
    * @param expire_time
    * @return void
    */
-  setExpireTime(lent_id: number, expire_time: Date): Promise<void>;
+  setExpireTime(
+    lent_id: number,
+    expire_time: Date,
+    queryRunner?: QueryRunner,
+  ): Promise<void>;
 
   /**
    * 특정 user_id로 해당 캐비넷 대여를 시도합니다.
@@ -34,10 +39,9 @@ export interface ILentRepository {
    */
   lentCabinet(
     user: UserSessionDto,
-    cabinet: CabinetInfoResponseDto,
-    is_exist_expire_time: boolean,
-    will_full: boolean,
-  ): Promise<void>;
+    cabinet_id: number,
+    queryRunner: QueryRunner,
+  ): Promise<LentDto>;
 
   /**
    * 해당 user_id로 대여중인 Cabinet id를 반환합니다.

@@ -1,10 +1,9 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
+import { LentDto } from 'src/dto/lent.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
-import LentType from 'src/enums/lent.type.enum';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { ILentRepository } from './lent.repository.interface';
 
 export class lentRepository implements ILentRepository {
@@ -46,9 +45,13 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
-  async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
+  async setExpireTime(
+    lent_id: number,
+    expire_time: Date,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
     await this.lentRepository
-      .createQueryBuilder()
+      .createQueryBuilder(this.setExpireTime.name, queryRunner)
       .update(Lent)
       .set({
         expire_time: expire_time,
@@ -61,39 +64,30 @@ export class lentRepository implements ILentRepository {
 
   async lentCabinet(
     user: UserSessionDto,
-    cabinet: CabinetInfoResponseDto,
-    is_exist_expire_time: boolean,
-    will_full: boolean,
-  ): Promise<void> {
+    cabinet_id: number,
+    queryRunner: QueryRunner,
+  ): Promise<LentDto> {
     const lent_time = new Date();
-    let expire_time: Date | null = null;
-    if (is_exist_expire_time) {
-      // 기존 만료시간이 존재한다면 해당 만료시간으로 expire_time 설정.
-      expire_time = new Date(cabinet.lent_info[0].expire_time.getTime());
-    } else {
-      if (will_full) {
-        // 만료시간 set x, 현재 대여로 풀방.
-        expire_time = new Date();
-        if (cabinet.lent_type === LentType.PRIVATE) {
-          expire_time.setDate(lent_time.getDate() + 30);
-        } else {
-          expire_time.setDate(lent_time.getDate() + 45);
-          for await (const lent_info of cabinet.lent_info) {
-            this.setExpireTime(lent_info.lent_id, expire_time);
-          }
-        }
-      }
-    }
-    await this.lentRepository.insert({
-      user: {
-        user_id: user.user_id,
-      },
-      cabinet: {
-        cabinet_id: cabinet.cabinet_id,
-      },
+    const expire_time: Date | null = null;
+    const result = await this.lentRepository
+      .createQueryBuilder(this.lentCabinet.name, queryRunner)
+      .insert()
+      .into(Lent)
+      .values({
+        lent_user_id: user.user_id,
+        lent_cabinet_id: cabinet_id,
+        lent_time: lent_time,
+        expire_time: expire_time,
+      })
+      .execute();
+    return {
+      user_id: user.user_id,
+      intra_id: user.intra_id,
+      lent_id: result.identifiers.pop()['lent_id'],
       lent_time,
       expire_time,
-    });
+      is_expired: false,
+    };
   }
 
   async getLentCabinetId(user_id: number): Promise<number> {
