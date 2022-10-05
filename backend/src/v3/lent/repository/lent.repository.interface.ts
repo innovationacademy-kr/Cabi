@@ -58,7 +58,7 @@ export interface ILentRepository {
    * @return void
    */
   updateLentCabinetTitle(
-    cabinet_title: string,
+    cabinet_title: string | null,
     cabinet_id: number,
   ): Promise<void>;
 
@@ -69,7 +69,7 @@ export interface ILentRepository {
    * @return void
    */
   updateLentCabinetMemo(
-    cabinet_memo: string,
+    cabinet_memo: string | null,
     cabinet_id: number,
   ): Promise<void>;
 
