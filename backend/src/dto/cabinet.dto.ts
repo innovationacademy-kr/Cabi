@@ -42,6 +42,8 @@ export class CabinetDto {
     enum: [
       'AVAILABLE',
       'SET_EXPIRE_FULL',
+      'SET_EXPIRE_AVAILABLE',
+      'EXPIRED',
       'BROKEN',
       'BANNED',
     ],
