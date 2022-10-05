@@ -46,9 +46,14 @@ const LentInfo = (): JSX.Element => {
         <h2 style={{ marginBottom: "0.4rem" }}>
           {myLentInfo?.location} {myLentInfo?.floor}F {myLentInfo?.cabinet_num}
         </h2>
-        <p style={{ marginTop: 0, marginBottom: "2rem" }}>
-          ~ {myLentInfo?.lent_info?.[0].expire_time.toString().substring(0, 10)}
-        </p>
+        {myLentInfo?.lent_info?.[0].expire_time ? (
+          <p style={{ marginTop: 0, marginBottom: "2rem" }}>
+            ~{" "}
+            {myLentInfo?.lent_info?.[0].expire_time.toString().substring(0, 10)}
+          </p>
+        ) : (
+          <p />
+        )}
       </>
     );
   };
