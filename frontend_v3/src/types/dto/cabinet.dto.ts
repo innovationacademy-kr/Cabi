@@ -5,7 +5,7 @@ import CabinetStatus from "../enum/cabinet.status.enum";
 // TODO :hybae
 // lent_type을 LentType으로 변경 예정
 export interface MyCabinetInfoResponseDto {
-  activation: number; // (0: 고장, 1: 사용가능, 2: ban, 3: 대여중)
+  status: CabinetStatus;
   lent_info?: LentDto[]; // 대여 정보 (optional)
   location: string; // 사물함 건물
   floor: number; // 사물함 층수
