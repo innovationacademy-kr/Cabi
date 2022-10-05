@@ -1,5 +1,6 @@
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import UserStateType from 'src/enums/user.state.type.enum';
+import { QueryRunner } from 'typeorm';
 
 export interface IUserRepository {
   /**
@@ -23,5 +24,5 @@ export interface IUserRepository {
    * @param user_id
    * @param state
    */
-  updateUserState(user_id: number, state: UserStateType): Promise<void>;
+  updateUserState(user_id: number, state: UserStateType, queryRunner?: QueryRunner): Promise<void>;
 }

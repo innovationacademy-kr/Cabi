@@ -6,7 +6,7 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
@@ -90,6 +90,7 @@ export class LentService {
   async updateLentCabinetTitle(
     cabinet_title: string,
     user: UserSessionDto,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     this.logger.debug(
       `Called ${LentService.name} ${this.updateLentCabinetTitle.name}`,
@@ -108,12 +109,14 @@ export class LentService {
     await this.lentRepository.updateLentCabinetTitle(
       cabinet_title,
       my_cabinet_id,
+      queryRunner,
     );
   }
 
   async updateLentCabinetMemo(
     cabinet_memo: string,
     user: UserSessionDto,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     this.logger.debug(
       `Called ${LentService.name} ${this.updateLentCabinetMemo.name}`,
@@ -132,6 +135,7 @@ export class LentService {
     await this.lentRepository.updateLentCabinetMemo(
       cabinet_memo,
       my_cabinet_id,
+      queryRunner,
     );
   }
 
@@ -152,14 +156,14 @@ export class LentService {
         );
       }
       // 2. 현재 대여 상태에 따라 케이스 처리
-      await this.lentTools.returnStateTransition(lent.cabinet, user);
+      await this.lentTools.returnStateTransition(lent.cabinet, user, queryRunner);
       // 3. Lent Table에서 값 제거.
-      await this.lentRepository.deleteLentByLentId(lent.lent_id);
+      await this.lentRepository.deleteLentByLentId(lent.lent_id, queryRunner);
       // 4. Lent Log Table에서 값 추가.
-      await this.lentRepository.addLentLog(lent);
+      await this.lentRepository.addLentLog(lent, queryRunner);
       // 5. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
       if (lent.cabinet.lent_type === LentType.SHARE) {
-        await this.banService.blockingDropOffUser(lent);
+        await this.banService.blockingDropOffUser(lent, queryRunner);
       }
       await queryRunner.commitTransaction();
     } catch (err) {
