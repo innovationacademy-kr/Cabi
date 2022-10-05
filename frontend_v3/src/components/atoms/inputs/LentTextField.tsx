@@ -12,6 +12,24 @@ const Container = styled.div`
   height: 2rem;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid #fafafa;
+  padding: 0.5rem 1rem;
+  margin-top: 0.2rem;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: inset 5px 5px 9px #ededed, inset -5px -5px 9px #ffffff;
+`;
+
+const TextDiv = styled.div`
+  box-sizing: border-box;
+  height: 80%;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 interface LentTextFieldProps {
@@ -50,22 +68,27 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element => {
   };
 
   return (
-    <Container>
-      {isToggle === false ? (
-        <p>{textValue}</p>
-      ) : (
-        <input type="text" value={inputValue} onChange={handleChange} />
-      )}
-      <EditButton
-        isToggle={isToggle}
-        setIsToggle={setIsToggle}
-        contentType={contentType}
-        inputValue={inputValue}
-        textValue={textValue}
-        setTextValue={setTextValue}
-        setInputValue={setInputValue}
-      />
-    </Container>
+    <>
+      {contentType === "title" ? "방 제목" : "비밀스러운 메모장"}
+      <Container className="Container" style={{ marginBottom: "2rem" }}>
+        <TextDiv className="textDiv">
+          {isToggle === false ? (
+            <p style={{ margin: 0 }}>{textValue}</p> // 대체
+          ) : (
+            <input type="text" value={inputValue} onChange={handleChange} />
+          )}
+        </TextDiv>
+        <EditButton
+          isToggle={isToggle}
+          setIsToggle={setIsToggle}
+          contentType={contentType}
+          inputValue={inputValue}
+          textValue={textValue}
+          setTextValue={setTextValue}
+          setInputValue={setInputValue}
+        />
+      </Container>
+    </>
   );
 };
 
