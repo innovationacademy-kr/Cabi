@@ -65,7 +65,7 @@ export class lentRepository implements ILentRepository {
   async lentCabinet(
     user: UserSessionDto,
     cabinet_id: number,
-    queryRunner: QueryRunner,
+    queryRunner?: QueryRunner,
   ): Promise<LentDto> {
     const lent_time = new Date();
     const expire_time: Date | null = null;
@@ -116,12 +116,13 @@ export class lentRepository implements ILentRepository {
   async updateLentCabinetTitle(
     cabinet_title: string | null,
     cabinet_id: number,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     if (cabinet_title === '') {
       cabinet_title = null;
     }
     await this.lentRepository
-      .createQueryBuilder()
+      .createQueryBuilder(this.updateLentCabinetTitle.name, queryRunner)
       .update('cabinet')
       .set({
         title: cabinet_title,
@@ -135,12 +136,13 @@ export class lentRepository implements ILentRepository {
   async updateLentCabinetMemo(
     cabinet_memo: string | null,
     cabinet_id: number,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     if (cabinet_memo === '') {
       cabinet_memo = null;
     }
     await this.lentRepository
-      .createQueryBuilder()
+      .createQueryBuilder(this.updateLentCabinetMemo.name, queryRunner)
       .update('cabinet')
       .set({
         memo: cabinet_memo,
@@ -163,9 +165,9 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
-  async deleteLentByLentId(lent_id: number): Promise<void> {
+  async deleteLentByLentId(lent_id: number, queryRunner?: QueryRunner): Promise<void> {
     await this.lentRepository
-      .createQueryBuilder()
+      .createQueryBuilder(this.deleteLentByLentId.name, queryRunner)
       .delete()
       .from(Lent)
       .where({
@@ -174,16 +176,16 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
-  async addLentLog(lent: Lent): Promise<void> {
-    await this.lentLogRepository.insert({
-      user: {
-        user_id: lent.lent_user_id,
-      },
-      cabinet: {
-        cabinet_id: lent.lent_cabinet_id,
-      },
+  async addLentLog(lent: Lent, queryRunner?: QueryRunner): Promise<void> {
+    await this.lentLogRepository.createQueryBuilder(this.addLentLog.name, queryRunner)
+    .insert()
+    .into(LentLog)
+    .values({
+      log_user_id: lent.lent_user_id,
+      log_cabinet_id: lent.lent_cabinet_id,
       lent_time: lent.lent_time,
       return_time: new Date(),
-    });
+    })
+    .execute();
   }
 }

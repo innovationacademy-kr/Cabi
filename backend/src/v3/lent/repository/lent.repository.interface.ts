@@ -40,7 +40,7 @@ export interface ILentRepository {
   lentCabinet(
     user: UserSessionDto,
     cabinet_id: number,
-    queryRunner: QueryRunner,
+    queryRunner?: QueryRunner,
   ): Promise<LentDto>;
 
   /**
@@ -60,6 +60,7 @@ export interface ILentRepository {
   updateLentCabinetTitle(
     cabinet_title: string | null,
     cabinet_id: number,
+    queryRunner?: QueryRunner,
   ): Promise<void>;
 
   /**
@@ -71,6 +72,7 @@ export interface ILentRepository {
   updateLentCabinetMemo(
     cabinet_memo: string | null,
     cabinet_id: number,
+    queryRunner?: QueryRunner,
   ): Promise<void>;
 
   /**
@@ -86,12 +88,12 @@ export interface ILentRepository {
    * @param user_id
    * @return void
    */
-  deleteLentByLentId(lent_id: number): Promise<void>;
+  deleteLentByLentId(lent_id: number, queryRunner?: QueryRunner): Promise<void>;
 
   /**
    * 기존 lent 정보를 lent log에 추가합니다.
    * @param Lent
    * @return void
    */
-  addLentLog(lent: Lent): Promise<void>;
+  addLentLog(lent: Lent, queryRunner?: QueryRunner): Promise<void>;
 }

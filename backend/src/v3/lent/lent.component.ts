@@ -30,7 +30,7 @@ export class LentTools {
   async setExpireTimeAll(
     lent_list: LentDto[],
     lent_type: LentType,
-    queryRunner: QueryRunner,
+    queryRunner?: QueryRunner,
   ): Promise<void> {
     this.logger.debug(`Called ${LentTools.name} ${this.setExpireTimeAll.name}`);
     const expire_time = new Date();
@@ -105,7 +105,7 @@ export class LentTools {
     }
   }
 
-  async returnStateTransition(cabinet: Cabinet, user: UserSessionDto): Promise<void> {
+  async returnStateTransition(cabinet: Cabinet, user: UserSessionDto, queryRunner?: QueryRunner): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
@@ -116,6 +116,7 @@ export class LentTools {
         await this.cabinetInfoService.updateCabinetStatus(
           cabinet.cabinet_id,
           CabinetStatusType.SET_EXPIRE_AVAILABLE,
+          queryRunner,
         );
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
@@ -125,9 +126,10 @@ export class LentTools {
           await this.cabinetInfoService.updateCabinetStatus(
             cabinet.cabinet_id,
             CabinetStatusType.AVAILABLE,
+            queryRunner,
           );
-          await this.lentService.updateLentCabinetTitle('', user);
-          await this.lentService.updateLentCabinetMemo('', user);
+          await this.lentService.updateLentCabinetTitle('', user, queryRunner);
+          await this.lentService.updateLentCabinetMemo('', user, queryRunner);
         }
         break;
     }
