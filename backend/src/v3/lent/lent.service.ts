@@ -1,4 +1,5 @@
 import {
+  forwardRef,
   HttpException,
   HttpStatus,
   Inject,
@@ -25,6 +26,7 @@ export class LentService {
     private cabinetInfoService: CabinetInfoService,
     private banService: BanService,
     private dataSource: DataSource,
+    @Inject(forwardRef(() => LentTools))
     private lentTools: LentTools,
   ) {}
 
@@ -149,12 +151,12 @@ export class LentService {
           HttpStatus.FORBIDDEN,
         );
       }
-      // 2. Lent Table에서 값 제거.
+      // 2. 현재 대여 상태에 따라 케이스 처리
+      await this.lentTools.returnStateTransition(lent.cabinet, user);
+      // 3. Lent Table에서 값 제거.
       await this.lentRepository.deleteLentByLentId(lent.lent_id);
-      // 3. Lent Log Table에서 값 추가.
+      // 4. Lent Log Table에서 값 추가.
       await this.lentRepository.addLentLog(lent);
-      // 4. 현재 대여 상태에 따라 케이스 처리
-      await this.lentTools.returnStateTransition(lent.cabinet);
       // 5. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
       if (lent.cabinet.lent_type === LentType.SHARE) {
         await this.banService.blockingDropOffUser(lent);

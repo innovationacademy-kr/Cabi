@@ -114,9 +114,12 @@ export class lentRepository implements ILentRepository {
   }
 
   async updateLentCabinetTitle(
-    cabinet_title: string,
+    cabinet_title: string | null,
     cabinet_id: number,
   ): Promise<void> {
+    if (cabinet_title === '') {
+      cabinet_title = null;
+    }
     await this.lentRepository
       .createQueryBuilder()
       .update('cabinet')
@@ -130,9 +133,12 @@ export class lentRepository implements ILentRepository {
   }
 
   async updateLentCabinetMemo(
-    cabinet_memo: string,
+    cabinet_memo: string | null,
     cabinet_id: number,
   ): Promise<void> {
+    if (cabinet_memo === '') {
+      cabinet_memo = null;
+    }
     await this.lentRepository
       .createQueryBuilder()
       .update('cabinet')

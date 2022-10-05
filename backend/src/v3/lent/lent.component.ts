@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
@@ -7,6 +7,7 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { QueryRunner } from 'typeorm';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
+import { LentService } from './lent.service';
 import { ILentRepository } from './repository/lent.repository.interface';
 
 @Injectable()
@@ -16,6 +17,8 @@ export class LentTools {
     @Inject('ILentRepository')
     private lentRepository: ILentRepository,
     private cabinetInfoService: CabinetInfoService,
+    @Inject(forwardRef(() => LentService))
+    private lentService: LentService,
   ) {}
 
   /**
@@ -102,7 +105,7 @@ export class LentTools {
     }
   }
 
-  async returnStateTransition(cabinet: Cabinet): Promise<void> {
+  async returnStateTransition(cabinet: Cabinet, user: UserSessionDto): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
@@ -118,11 +121,13 @@ export class LentTools {
         const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
           cabinet.cabinet_id,
         );
-        if (lent_user_cnt === 0) {
+        if (lent_user_cnt - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
             cabinet.cabinet_id,
             CabinetStatusType.AVAILABLE,
           );
+          await this.lentService.updateLentCabinetTitle('', user);
+          await this.lentService.updateLentCabinetMemo('', user);
         }
         break;
     }
