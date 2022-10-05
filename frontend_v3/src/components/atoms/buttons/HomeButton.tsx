@@ -8,7 +8,7 @@ const Button = styled.button`
   width: 2rem;
   height: 2rem;
   padding: 0;
-  background: url("src/img/cabinet.ico") no-repeat;
+  background: url("/img/cabinet.ico") no-repeat;
   background-size: contain;
   border: 0;
   outline: 0;
