@@ -35,6 +35,21 @@ const CenterAlignStyle = {
   alignItems: "center",
 };
 
+const ScrollBox = styled.div`
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  height: 5rem;
+  overflow: auto;
+  background-color: #fafafa;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+`;
+
+const LenderBox = styled.div`
+  display: flex;
+`;
+
 // TODO:
 // cabinetInfo는 API로 받아와야 함
 const cabinetInfo = {
@@ -105,9 +120,15 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
 
   const LentAble: JSX.Element = (
     <Box sx={BoxStyle}>
-      <Typography id="modal-modal-title" variant="h6" component="h2">
+      <Typography
+        id="modal-modal-title"
+        variant="h6"
+        component="h2"
+        align="center"
+      >
         [{cabinet_number}]번 사물함을 대여합니다.
       </Typography>
+      <hr />
       <Typography
         id="modal-modal-title"
         align="center"
@@ -116,25 +137,40 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
       >
         {cabinet_title}
       </Typography>
-      {(cabinet_type === "SHARE"
-        ? sharedCabinetMessage
-        : personalCabinetMessage
-      ).map((message: string, i: number) => (
-        <Typography
-          key={i}
-          id="modal-modal-description"
-          sx={{ mt: 2 }}
-          align="left"
-        >
-          {message}
-        </Typography>
-      ))}
+      <ScrollBox>
+        {/* TODO: gyuwlee
+        산재해 있는 style 태그 변수화 필요 */}
+        <strong style={{ color: "red" }}>📌 이용 시 주의사항 📌</strong>
+        {(cabinet_type === "SHARE"
+          ? sharedCabinetMessage
+          : personalCabinetMessage
+        ).map((message: string, i: number) => (
+          <Typography
+            key={i}
+            id="modal-modal-description"
+            sx={{ mt: 2 }}
+            align="left"
+          >
+            {message}
+          </Typography>
+        ))}
+      </ScrollBox>
       {cabinet_type === "SHARE" && lender?.length > 0 && (
         <>
-          <p>대여자 목록</p>
-          {lender.map((item) => (
-            <p>{item.intra_id}</p>
-          ))}
+          <p style={{ margin: 0 }}>대여자 목록 : </p>
+          <LenderBox>
+            {lender.map((item) => (
+              <p
+                style={{
+                  marginTop: 0,
+                  marginBottom: 0,
+                  marginRight: "0.8rem",
+                }}
+              >
+                {item.intra_id}
+              </p>
+            ))}
+          </LenderBox>
         </>
       )}
       <FormGroup sx={CenterAlignStyle}>
