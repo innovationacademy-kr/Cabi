@@ -63,27 +63,19 @@ export class LentTools {
         );
         cabinet.lent_info.push(new_lent);
         if (lent_user_cnt + 1 === cabinet.max_user) {
-          await this.cabinetInfoService.updateCabinetStatus(
-            cabinet.cabinet_id,
-            CabinetStatusType.NOT_SET_EXPIRE_FULL,
+          // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
+          await this.setExpireTimeAll(
+            cabinet.lent_info,
+            cabinet.lent_type,
             queryRunner,
           );
-        } else {
-          break;
+          // 상태를 SET_EXPIRE_FULL로 변경
+          await this.cabinetInfoService.updateCabinetStatus(
+            cabinet.cabinet_id,
+            CabinetStatusType.SET_EXPIRE_FULL,
+            queryRunner,
+          );
         }
-      case CabinetStatusType.NOT_SET_EXPIRE_FULL:
-        // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
-        await this.setExpireTimeAll(
-          cabinet.lent_info,
-          cabinet.lent_type,
-          queryRunner,
-        );
-        // 상태를 SET_EXPIRE_FULL로 변경
-        await this.cabinetInfoService.updateCabinetStatus(
-          cabinet.cabinet_id,
-          CabinetStatusType.SET_EXPIRE_FULL,
-          queryRunner,
-        );
         break;
       case CabinetStatusType.SET_EXPIRE_AVAILABLE: {
         const new_lent = await this.lentRepository.lentCabinet(

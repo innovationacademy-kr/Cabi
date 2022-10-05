@@ -41,7 +41,6 @@ export class CabinetDto {
     description: '사물함 상태',
     enum: [
       'AVAILABLE',
-      'NOT_SET_EXPIRE_FULL',
       'SET_EXPIRE_FULL',
       'BROKEN',
       'BANNED',
