@@ -18,7 +18,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
-import { User } from './user.decorator';
+import { User } from '../decorator/user.decorator';
 import { AuthService } from './auth.service';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 

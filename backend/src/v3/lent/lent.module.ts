@@ -24,6 +24,7 @@ const repo = {
     TypeOrmModule.forFeature([Lent, LentLog]),
   ],
   controllers: [LentController, LentMockController],
-  providers: [LentService, repo, LentTools],
+  providers: [LentService, repo],
+  exports: [LentService],
 })
 export class LentModule {}

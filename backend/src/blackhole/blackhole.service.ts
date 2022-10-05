@@ -11,9 +11,11 @@ import { AxiosRequestConfig } from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { IBlackholeRepository } from './repository/blackhole.repository';
-import { AuthService } from 'src/auth/auth.service';
-import { CabinetService } from 'src/cabinet/cabinet.service';
-import { UserDto } from 'src/user/dto/user.dto';
+import { CabinetInfoService } from 'src/v3/cabinet/cabinet.info.service';
+import { UserDto } from 'src/dto/user.dto';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import { UserService } from 'src/v3/user/user.service';
+import { LentService } from 'src/v3/lent/lent.service';
 
 @Injectable()
 export class BlackholeService {
@@ -27,8 +29,9 @@ export class BlackholeService {
     private blackholeRepository: IBlackholeRepository,
     private readonly httpService: HttpService,
     @Inject(ConfigService) private configService: ConfigService,
-    private readonly authService: AuthService,
-    private readonly cabinetService: CabinetService,
+    private readonly cabinetService: CabinetInfoService,
+    private readonly userService: UserService,
+    private readonly lentService: LentService,
   ) {
     this.logger = new Logger(BlackholeService.name);
     this.client_id = this.configService.get<string>('ftAuth.clientid');
@@ -49,13 +52,14 @@ export class BlackholeService {
    * @Param intra_id: UserDto
    * @return void
    */
+  // TODO: 기존에 있던 모듈 삭제로 인해 사용함수 변경이 있었습니다. 한 번 확인해주세요!
   async updateBlackholedUser(user: UserDto): Promise<void> {
     try {
-      const myLent = await this.cabinetService.getUserLentInfo(user);
-      if (myLent.lent_id !== -1) {
+      const myLent = await this.userService.checkUserBorrowed(user);
+      if (myLent.cabinet_id !== -1) {
         this.logger.warn(`Return ${user.intra_id}'s cabinet`);
-        const cabinet_id = await this.cabinetService.createLentLog(user);
-        await this.cabinetService.updateActivationToBan(cabinet_id);
+        await this.lentService.returnLentCabinet(user);
+        await this.cabinetService.updateCabinetStatus(myLent.cabinet_id, CabinetStatusType.BANNED);
       }
       // FIXME:
       // 인트라에서 유저의 계정이 만료되면 해당 유저가 가지고 있던 user_id와 intra_id가 다른 유저에게 재할당될 수 있습니다.
