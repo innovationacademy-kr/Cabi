@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import User from 'src/entities/user.entity';
 import { BanModule } from '../ban/ban.module';
+import { CabinetModule } from '../cabinet/cabinet.module';
 import { MyInfoController } from './my.info.controller';
 import { MyLentInfoController } from './my.lent.info.controller';
 import { UserRepository } from './repository/user.repository';
@@ -17,6 +18,7 @@ const repo = {
   imports: [
     AuthModule,
     forwardRef(() => BanModule),
+    CabinetModule,
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [MyLentInfoController, MyInfoController],
