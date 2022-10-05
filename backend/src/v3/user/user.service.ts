@@ -4,6 +4,7 @@ import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.respo
 import { UserDto } from 'src/dto/user.dto';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { QueryRunner } from 'typeorm';
+import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { IUserRepository } from './repository/user.repository.interface';
 
 @Injectable()
@@ -12,13 +13,19 @@ export class UserService {
 
   constructor(
     @Inject('IUserRepository') private userRepository: IUserRepository,
+    private readonly cabinetInfoService: CabinetInfoService,
   ) {}
 
   async getCabinetByUserId(
     userId: number,
   ): Promise<MyCabinetInfoResponseDto | null> {
     this.logger.debug(`Called ${this.getCabinetByUserId.name}`);
-    return await this.userRepository.getCabinetByUserId(userId);
+    const cabinetExtendDto = await this.userRepository.getCabinetByUserId(userId);
+    const lent_info = await this.cabinetInfoService.getLentUsers(cabinetExtendDto.cabinet_id);
+    return {
+      ...cabinetExtendDto,
+      lent_info,
+    };
   }
 
   async checkUserBorrowed(user: UserDto): Promise<UserLentResponseDto> {

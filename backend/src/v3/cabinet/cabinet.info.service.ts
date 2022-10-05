@@ -6,6 +6,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { CabinetDto } from 'src/dto/cabinet.dto';
+import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
@@ -94,5 +95,12 @@ export class CabinetInfoService {
       status,
       queryRunner,
     );
+  }
+
+  async getLentUsers(cabinet_id: number): Promise <LentDto[]> {
+    this.logger.debug(
+      `Called ${CabinetInfoService.name} ${this.getLentUsers.name}`,
+    );
+    return await this.cabinetInfoRepository.getLentUsers(cabinet_id);
   }
 }
