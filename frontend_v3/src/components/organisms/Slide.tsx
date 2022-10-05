@@ -36,6 +36,7 @@ const Slide = (props: SlideProps): JSX.Element => {
             box={
               <LentBox
                 key={index}
+                cabinet_title={item.cabinet_title}
                 cabinet_type={item.lent_type}
                 cabinet_number={item.cabinet_num}
                 cabinet_id={item.cabinet_id}

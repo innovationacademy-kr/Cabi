@@ -55,6 +55,7 @@ const cabinetInfo = {
 interface LentBoxProps {
   // eslint-disable-next-line react/require-default-props
   handleClose: () => void;
+  cabinet_title: string | null;
   cabinet_number: number;
   cabinet_id: number;
   lender: UserDto[];
@@ -67,6 +68,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     handleClose,
     isLentAble,
     cabinet_number,
+    cabinet_title,
     lender,
     cabinet_type,
     cabinet_id,
@@ -105,6 +107,14 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     <Box sx={BoxStyle}>
       <Typography id="modal-modal-title" variant="h6" component="h2">
         [{cabinet_number}]번 사물함을 대여합니다.
+      </Typography>
+      <Typography
+        id="modal-modal-title"
+        align="center"
+        variant="h6"
+        component="h3"
+      >
+        {cabinet_title}
       </Typography>
       {(cabinet_type === "SHARE"
         ? sharedCabinetMessage

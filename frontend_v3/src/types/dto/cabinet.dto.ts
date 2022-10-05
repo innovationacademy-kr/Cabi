@@ -35,6 +35,6 @@ export interface CabinetInfo {
 }
 
 export interface CabinetInfoByLocationFloorDto {
-  section: Array<object>;
+  section: string; // swagger의 CabinetPerSectionDto에 맞추어 object -> string으로 수정했습니다.
   cabinets: CabinetInfo[];
 }
