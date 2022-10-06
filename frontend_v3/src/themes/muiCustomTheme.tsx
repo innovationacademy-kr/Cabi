@@ -1,6 +1,9 @@
 import { createTheme } from "@mui/material/styles";
 
-const muiCustomPaletteTheme = createTheme({
+const muiCustomTheme = createTheme({
+  typography: {
+    fontFamily: ["EliceDigitalBaeum_Regular", "sans-serif"].join(","),
+  },
   palette: {
     primary: {
       main: "#5657a5",
@@ -8,7 +11,10 @@ const muiCustomPaletteTheme = createTheme({
       // dark: main값을 통해 계산됨
       // contrastText: main값을 통해 계산됨
     },
+    secondary: {
+      main: "#6c757d",
+    },
   },
 });
 
-export default muiCustomPaletteTheme;
+export default muiCustomTheme;
