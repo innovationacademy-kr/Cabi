@@ -1,16 +1,25 @@
 import React from "react";
 import styled from "@emotion/styled";
 import MapButton from "../atoms/buttons/MapButton";
+import Spinner from "../atoms/Spinner";
+
+const FirstSlide = styled.div`
+  display: flex;
+  width: 270px;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: #dee2e6;
+`;
 
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  width: 270px;
+  width: 100%;
   height: 100%;
-  padding: 0;
-  margin: 0;
-  background-color: #dee2e6;
 `;
 
 interface SectionMapProps {
@@ -38,11 +47,23 @@ const SectionMap = (props: SectionMapProps): JSX.Element => {
         ];
 
   const renderSections = (): JSX.Element[] => {
-    return sections.map((section: string, i: number): JSX.Element => {
-      return (
+    const sectionList: JSX.Element[] = [
+      <MapButton
+        key="EV"
+        sectionName="E/V"
+        positionX={0}
+        positionY={3}
+        widthRate={1}
+        heightRate={1}
+        sectionSlide={null}
+        setCurrentSlide={null}
+      />,
+    ];
+    for (let i = 0; i < sections.length; i += 1) {
+      sectionList.push(
         <MapButton
           key={i}
-          sectionName={section}
+          sectionName={sections[i]}
           positionX={gridInfo[i][0]}
           positionY={gridInfo[i][1]}
           widthRate={gridInfo[i][2]}
@@ -51,22 +72,15 @@ const SectionMap = (props: SectionMapProps): JSX.Element => {
           setCurrentSlide={setCurrentSlide}
         />
       );
-    });
+    }
+    return sectionList;
   };
-  return (
-    <GridContainer>
-      {renderSections()}
-      <MapButton
-        sectionName="E/V"
-        positionX={0}
-        positionY={3}
-        widthRate={1}
-        heightRate={1}
-        sectionSlide={null}
-        setCurrentSlide={null}
-      />
-    </GridContainer>
-  );
+
+  const renderMap = (): JSX.Element => {
+    return <GridContainer>{renderSections()}</GridContainer>;
+  };
+
+  return <FirstSlide>{sections[0] ? renderMap() : <Spinner />}</FirstSlide>;
 };
 
 export default SectionMap;
