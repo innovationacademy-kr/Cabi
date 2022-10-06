@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-const muiCustomPaletteTheme = createTheme({
+const muiCustomTheme = createTheme({
   typography: {
     fontFamily: ["EliceDigitalBaeum_Regular", "sans-serif"].join(","),
   },
@@ -17,4 +17,4 @@ const muiCustomPaletteTheme = createTheme({
   },
 });
 
-export default muiCustomPaletteTheme;
+export default muiCustomTheme;
