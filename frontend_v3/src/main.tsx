@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import store from "./redux/store";
-import muiCustomPaletteTheme from "./themes/muiCustomPaletteTheme.tsx";
+import muiCustomPaletteTheme from "./themes/muiCustomPaletteTheme";
 import App from "./App";
 import "./index.css";
 

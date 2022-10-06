@@ -1,6 +1,9 @@
 import { createTheme } from "@mui/material/styles";
 
 const muiCustomPaletteTheme = createTheme({
+  typography: {
+    fontFamily: ["EliceDigitalBaeum_Regular", "sans-serif"].join(","),
+  },
   palette: {
     primary: {
       main: "#5657a5",
