@@ -1,5 +1,5 @@
 import { MailerModule } from '@nestjs-modules/mailer';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import MailerConfigService from 'src/config/mailer.config';
@@ -15,11 +15,11 @@ import { ExpiredChecker } from './expired.checker.component';
       imports: [ConfigModule],
       useClass: MailerConfigService,
     }),
-    LentModule,
+    forwardRef(() => LentModule),
     CabinetModule,
   ],
 
   providers: [EmailSender, ExpiredChecker],
-  exports: [EmailSender],
+  exports: [EmailSender, ExpiredChecker],
 })
 export class UtilsModule {}

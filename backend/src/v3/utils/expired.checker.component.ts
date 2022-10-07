@@ -1,4 +1,6 @@
 import {
+    forwardRef,
+  Inject,
   Injectable,
   Logger,
 } from '@nestjs/common';
@@ -13,7 +15,9 @@ import { EmailSender } from './email.sender.component';
 export class ExpiredChecker {
   private logger = new Logger(ExpiredChecker.name);
   constructor(
+    @Inject(forwardRef(() => LentTools))
     private readonly lentTools: LentTools,
+    @Inject(forwardRef(() => LentService))
     private readonly lentService: LentService,
     private readonly emailsender: EmailSender,
     private cabinetInfoService: CabinetInfoService,
@@ -38,12 +42,12 @@ export class ExpiredChecker {
     lentList.forEach(async (lent) => {
       const days = await this.getExpiredDays(lent.expire_time);
       if (days >= 0) {
-        if (days > 0)
+        if (days > 0 && days < 15)
           await this.cabinetInfoService.updateCabinetStatus(
             lent.lent_cabinet_id,
             CabinetStatusType.EXPIRED,
           );
-        else if (days == 15) {
+        else if (days >= 15) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.lent_cabinet_id,
             CabinetStatusType.BANNED,

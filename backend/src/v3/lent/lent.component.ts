@@ -8,6 +8,7 @@ import LentType from 'src/enums/lent.type.enum';
 import { QueryRunner } from 'typeorm';
 import { BanService } from '../ban/ban.service';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
+import { ExpiredChecker } from '../utils/expired.checker.component';
 import { LentService } from './lent.service';
 import { ILentRepository } from './repository/lent.repository.interface';
 
@@ -21,6 +22,8 @@ export class LentTools {
     @Inject(forwardRef(() => LentService))
     private lentService: LentService,
     private banService: BanService,
+    @Inject(forwardRef(() => ExpiredChecker))
+    private expiredChecker: ExpiredChecker,
   ) {}
 
   /**
@@ -140,12 +143,9 @@ export class LentTools {
         break;
       case CabinetStatusType.BANNED:
       case CabinetStatusType.EXPIRED:
-        const today = new Date();
-        const expire_time = lent.expire_time;
-        console.log(today.getDate() - expire_time.getDate());
         await this.banService.blockingUser(
           lent,
-          today.getDate() - expire_time.getDate(),
+          await this.expiredChecker.getExpiredDays(lent.expire_time),
           queryRunner,
         );
         if (CabinetStatusType.EXPIRED && lent_user_cnt - 1 === 0) {
