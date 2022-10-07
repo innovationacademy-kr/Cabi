@@ -15,7 +15,7 @@ const Login = (): JSX.Element => {
 
   console.log(user.intra_id);
   useEffect(() => {
-    const token = getCookie("accessToken");
+    const token = getCookie("access_token");
     if (!token) {
       dispatch(userInfoInitialize());
     }

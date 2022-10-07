@@ -33,7 +33,7 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
    * profile을 전부 콜백함수에 인자로 넘기면 너무 비대하므로 필드를 선택적으로 넘깁니다.
    * cb(null, user); 콜백함수는 res 객체의 user라는 필드로 user의 객체를 넘깁니다.
    */
-  async validate(req, accessToken, refreshToken, profile, cb) {
+  async validate(req, access_token, refreshToken, profile, cb) {
     const user: UserSessionDto = {
       user_id: profile.userId,
       email: profile.email,
