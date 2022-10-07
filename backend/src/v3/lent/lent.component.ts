@@ -116,6 +116,9 @@ export class LentTools {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
+    const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
+      lent.cabinet.cabinet_id,
+    );
     switch (lent.cabinet.status) {
       case CabinetStatusType.AVAILABLE:
         break;
@@ -126,9 +129,6 @@ export class LentTools {
           queryRunner,
         );
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
-        const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
-          lent.cabinet.cabinet_id,
-        );
         if (lent_user_cnt - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.cabinet.cabinet_id,
@@ -139,9 +139,10 @@ export class LentTools {
           await this.lentService.updateLentCabinetMemo('', user, queryRunner);
         }
         break;
-      case CabinetStatusType.BANNED || CabinetStatusType.EXPIRED:
+      case CabinetStatusType.BANNED: case CabinetStatusType.EXPIRED:
         const today = new Date();
         const expire_time = lent.expire_time;
+        console.log(today.getDate() - expire_time.getDate());
         await this.banService.blockingUser(
           lent,
           today.getDate() - expire_time.getDate(),
