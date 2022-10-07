@@ -138,7 +138,7 @@ export class LentTools {
       case CabinetStatusType.BANNED:
         const today = new Date();
         const expire_time = lent.expire_time;
-        await this.banService.blockingUser(lent, expire_time.getDate() - today.getDate(), queryRunner);
+        await this.banService.blockingUser(lent, today.getDate() - expire_time.getDate(), queryRunner);
         break;
       case CabinetStatusType.EXPIRED:
         if (lent_user_cnt - 1 === 0) {
