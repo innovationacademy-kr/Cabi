@@ -29,10 +29,10 @@ export class ExpiredChecker {
             const days = await this.getExpiredDays(lent.expire_time);
             if (days >= 0) {
                 if (days > 0) 
-                    this.cabinetInfoService.updateCabinetStatus(lent.cabinet_id, CabinetStatusType.EXPIRED);
+                    await this.cabinetInfoService.updateCabinetStatus(lent.cabinet_id, CabinetStatusType.EXPIRED);
                 else if (days == 15) {
-                    this.cabinetInfoService.updateCabinetStatus(lent.cabinet_id, CabinetStatusType.BANNED);
-                    this.lentService.returnLentCabinet(lent.user_id);
+                    await this.cabinetInfoService.updateCabinetStatus(lent.cabinet_id, CabinetStatusType.BANNED);
+                    await this.lentService.returnLentCabinet(lent.user_id);
                 }
                 this.emailsender.mailing(lent.intra_id, days);
             }

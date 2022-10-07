@@ -1,7 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { UserOverDto } from 'src/dto/user.over.dto';
 
 @Injectable()
 export class EmailSender {
