@@ -121,7 +121,9 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(err.message);
+        throw new InternalServerErrorException(
+          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
+        );
       }
     }
   }
@@ -182,9 +184,9 @@ export class LentController {
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard)
-  async returnLentCabinet(@User() user: UserSessionDto): Promise<void> {
+  async returnCabinet(@User() user: UserSessionDto): Promise<void> {
     try {
-      return await this.lentService.returnLentCabinet(user);
+      return await this.lentService.returnCabinet(user);
     } catch (err) {
       this.logger.error(err);
       if (err instanceof HttpException) {

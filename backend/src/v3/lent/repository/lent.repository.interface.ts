@@ -83,6 +83,12 @@ export interface ILentRepository {
   getLent(user_id: number): Promise<Lent>;
 
   /**
+   * 모든 Lent 정보를 가져옵니다.
+   * @return Lent[]
+   */
+  getAllLent(): Promise<Lent[]>;
+
+  /**
    * user_id에 대응하는 Lent값을 삭제합니다.
    * 해당 Lent 값을 반환합니다.
    * @param user_id

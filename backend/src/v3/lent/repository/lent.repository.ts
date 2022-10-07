@@ -140,6 +140,8 @@ export class lentRepository implements ILentRepository {
   ): Promise<void> {
     if (cabinet_memo === '') {
       cabinet_memo = null;
+    } else {
+      cabinet_memo = Buffer.from(cabinet_memo, 'utf8').toString('base64');
     }
     await this.lentRepository
       .createQueryBuilder(this.updateLentCabinetMemo.name, queryRunner)
@@ -165,7 +167,20 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
-  async deleteLentByLentId(lent_id: number, queryRunner?: QueryRunner): Promise<void> {
+  async getAllLent(): Promise<Lent[]> {
+    const result = await this.lentRepository.find({
+      relations: {
+        user: true,
+        cabinet: true,
+      },
+    });
+    return result;
+  }
+
+  async deleteLentByLentId(
+    lent_id: number,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
     await this.lentRepository
       .createQueryBuilder(this.deleteLentByLentId.name, queryRunner)
       .delete()
@@ -177,15 +192,16 @@ export class lentRepository implements ILentRepository {
   }
 
   async addLentLog(lent: Lent, queryRunner?: QueryRunner): Promise<void> {
-    await this.lentLogRepository.createQueryBuilder(this.addLentLog.name, queryRunner)
-    .insert()
-    .into(LentLog)
-    .values({
-      log_user_id: lent.lent_user_id,
-      log_cabinet_id: lent.lent_cabinet_id,
-      lent_time: lent.lent_time,
-      return_time: new Date(),
-    })
-    .execute();
+    await this.lentLogRepository
+      .createQueryBuilder(this.addLentLog.name, queryRunner)
+      .insert()
+      .into(LentLog)
+      .values({
+        log_user_id: lent.lent_user_id,
+        log_cabinet_id: lent.lent_cabinet_id,
+        lent_time: lent.lent_time,
+        return_time: new Date(),
+      })
+      .execute();
   }
 }
