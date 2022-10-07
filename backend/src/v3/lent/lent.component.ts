@@ -139,7 +139,7 @@ export class LentTools {
           await this.lentService.updateLentCabinetMemo('', user, queryRunner);
         }
         break;
-      case CabinetStatusType.BANNED:
+      case CabinetStatusType.BANNED || CabinetStatusType.EXPIRED:
         const today = new Date();
         const expire_time = lent.expire_time;
         await this.banService.blockingUser(
@@ -147,9 +147,7 @@ export class LentTools {
           today.getDate() - expire_time.getDate(),
           queryRunner,
         );
-        break;
-      case CabinetStatusType.EXPIRED:
-        if (lent_user_cnt - 1 === 0) {
+        if (CabinetStatusType.EXPIRED && lent_user_cnt - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.cabinet.cabinet_id,
             CabinetStatusType.AVAILABLE,

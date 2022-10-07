@@ -12,7 +12,7 @@ const Main = (): JSX.Element => {
   const user = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const token = getCookie("accessToken");
+  const token = getCookie("access_token");
 
   useEffect(() => {
     if (token) {
