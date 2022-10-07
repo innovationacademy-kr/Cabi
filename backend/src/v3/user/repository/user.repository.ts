@@ -35,7 +35,7 @@ export class UserRepository implements IUserRepository {
       cabinet_num: result.Lent.cabinet.cabinet_num,
       lent_type: result.Lent.cabinet.lent_type,
       cabinet_title: result.Lent.cabinet.title,
-      cabinet_memo: result.Lent.cabinet.memo,
+      cabinet_memo: Buffer.from(result.Lent.cabinet.memo, 'base64').toString('utf8'),
       max_user: result.Lent.cabinet.max_user,
       status: result.Lent.cabinet.status,
     };

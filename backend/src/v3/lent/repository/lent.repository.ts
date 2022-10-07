@@ -145,7 +145,7 @@ export class lentRepository implements ILentRepository {
       .createQueryBuilder(this.updateLentCabinetMemo.name, queryRunner)
       .update('cabinet')
       .set({
-        memo: cabinet_memo,
+        memo: Buffer.from(cabinet_memo, 'utf8').toString('base64'),
       })
       .where({
         cabinet_id: cabinet_id,
