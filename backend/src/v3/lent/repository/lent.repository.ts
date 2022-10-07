@@ -165,6 +165,16 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
+  async getAllLent(): Promise<Lent[]> {
+    const result = await this.lentRepository.find({
+      relations: {
+        user: true,
+        cabinet: true,
+      },
+    });
+    return result;
+  }
+
   async deleteLentByLentId(lent_id: number, queryRunner?: QueryRunner): Promise<void> {
     await this.lentRepository
       .createQueryBuilder(this.deleteLentByLentId.name, queryRunner)

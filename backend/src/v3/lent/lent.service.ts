@@ -139,9 +139,9 @@ export class LentService {
     );
   }
 
-  async returnLentCabinet(user: UserSessionDto): Promise<void> {
+  async returnCabinet(user: UserSessionDto): Promise<void> {
     this.logger.debug(
-      `Called ${LentService.name} ${this.returnLentCabinet.name}`,
+      `Called ${LentService.name} ${this.returnCabinet.name}`,
     );
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -156,7 +156,7 @@ export class LentService {
         );
       }
       // 2. 현재 대여 상태에 따라 케이스 처리
-      await this.lentTools.returnStateTransition(lent.cabinet, user, queryRunner);
+      await this.lentTools.returnStateTransition(lent, user, queryRunner);
       // 3. Lent Table에서 값 제거.
       await this.lentRepository.deleteLentByLentId(lent.lent_id, queryRunner);
       // 4. Lent Log Table에서 값 추가.

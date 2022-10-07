@@ -191,9 +191,9 @@ export class LentMockController {
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
   // @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async returnLentCabinet(): Promise<void> {
+  async returnCabinet(): Promise<void> {
     try {
-      return await this.lentService.returnLentCabinet(user);
+      return await this.lentService.returnCabinet(user);
     } catch (err) {
       this.logger.error(err);
       if (err instanceof HttpException) {

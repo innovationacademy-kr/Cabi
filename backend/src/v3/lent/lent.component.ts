@@ -3,9 +3,11 @@ import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Cabinet from 'src/entities/cabinet.entity';
+import Lent from 'src/entities/lent.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { QueryRunner } from 'typeorm';
+import { BanService } from '../ban/ban.service';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { LentService } from './lent.service';
 import { ILentRepository } from './repository/lent.repository.interface';
@@ -19,6 +21,7 @@ export class LentTools {
     private cabinetInfoService: CabinetInfoService,
     @Inject(forwardRef(() => LentService))
     private lentService: LentService,
+    private banService: BanService,
   ) {}
 
   /**
@@ -105,26 +108,26 @@ export class LentTools {
     }
   }
 
-  async returnStateTransition(cabinet: Cabinet, user: UserSessionDto, queryRunner?: QueryRunner): Promise<void> {
+  async returnStateTransition(lent: Lent, user: UserSessionDto, queryRunner?: QueryRunner): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
-    switch (cabinet.status) {
+    switch (lent.cabinet.status) {
       case CabinetStatusType.AVAILABLE:
         break;
       case CabinetStatusType.SET_EXPIRE_FULL:
         await this.cabinetInfoService.updateCabinetStatus(
-          cabinet.cabinet_id,
+          lent.cabinet.cabinet_id,
           CabinetStatusType.SET_EXPIRE_AVAILABLE,
           queryRunner,
         );
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
-          cabinet.cabinet_id,
+          lent.cabinet.cabinet_id,
         );
         if (lent_user_cnt - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
-            cabinet.cabinet_id,
+            lent.cabinet.cabinet_id,
             CabinetStatusType.AVAILABLE,
             queryRunner,
           );
@@ -132,6 +135,33 @@ export class LentTools {
           await this.lentService.updateLentCabinetMemo('', user, queryRunner);
         }
         break;
+      case CabinetStatusType.BANNED:
+        const today = new Date();
+        const expire_time = lent.expire_time;
+        await this.banService.blockingUser(lent, expire_time.getDate() - today.getDate(), queryRunner);
+        break;
+      case CabinetStatusType.EXPIRED:
+        if (lent_user_cnt - 1 === 0) {
+          await this.cabinetInfoService.updateCabinetStatus(lent.cabinet.cabinet_id, CabinetStatusType.AVAILABLE, queryRunner);
+        }
+        break ;
     }
+  }
+
+  async getAllLent(): Promise<LentDto[]> {
+    this.logger.debug(`Called ${LentTools.name} ${this.getAllLent.name}`);
+    const lents = await this.lentRepository.getAllLent();
+    const result: LentDto[] = [];
+    for await (const lent of lents) {
+      result.push({
+        user_id: lent.user.user_id,
+        intra_id: lent.user.intra_id,
+        lent_id: lent.lent_id,
+        lent_time: lent.lent_time,
+        expire_time: lent.expire_time,
+        is_expired: false,
+      });
+    }
+    return result;
   }
 }

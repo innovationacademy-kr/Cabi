@@ -182,9 +182,9 @@ export class LentController {
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard)
-  async returnLentCabinet(@User() user: UserSessionDto): Promise<void> {
+  async returnCabinet(@User() user: UserSessionDto): Promise<void> {
     try {
-      return await this.lentService.returnLentCabinet(user);
+      return await this.lentService.returnCabinet(user);
     } catch (err) {
       this.logger.error(err);
       if (err instanceof HttpException) {

@@ -58,7 +58,7 @@ export class BlackholeService {
       const myLent = await this.userService.checkUserBorrowed(user);
       if (myLent.cabinet_id !== -1) {
         this.logger.warn(`Return ${user.intra_id}'s cabinet`);
-        await this.lentService.returnLentCabinet(user);
+        await this.lentService.returnCabinet(user);
         await this.cabinetService.updateCabinetStatus(myLent.cabinet_id, CabinetStatusType.BANNED);
       }
       // FIXME:
