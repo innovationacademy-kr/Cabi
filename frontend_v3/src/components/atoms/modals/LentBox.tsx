@@ -8,7 +8,8 @@ import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
 import { axiosLentId } from "../../../network/axios/axios.custom";
 import CheckButton from "../buttons/CheckButton";
-import { UserDto } from "../../../types/dto/user.dto";
+import { LentDto } from "../../../types/dto/lent.dto";
+import CabinetStatus from "../../../types/enum/cabinet.status.enum";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setUserCabinet } from "../../../redux/slices/userSlice";
 
@@ -73,9 +74,10 @@ interface LentBoxProps {
   cabinet_title: string | null;
   cabinet_number: number;
   cabinet_id: number;
-  lender: UserDto[];
+  lender: LentDto[];
   cabinet_type: string;
   isLentAble: boolean;
+  status: CabinetStatus;
 }
 
 const LentBox = (props: LentBoxProps): JSX.Element => {
@@ -87,6 +89,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     lender,
     cabinet_type,
     cabinet_id,
+    status,
   } = props;
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
@@ -99,7 +102,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     axiosLentId(cabinet_id)
       .then(() => {
         dispatch(setUserCabinet(cabinet_id));
-        navigate("/Lent");
+        navigate("/lent");
       })
       .catch((error) => {
         alert(error.response.data.message);
@@ -108,7 +111,6 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   };
 
   const sharedCabinetMessage: string[] = [
-    "대여기간은 3인이 모두 공유하는 순간부터 +45일 입니다.",
     "대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.",
     "'내 사물함' 페이지의 메모 내용은 공유 인원끼리 공유됩니다.",
     "이용 중 귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.",
@@ -117,6 +119,17 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     "대여기간은 +30일 입니다.",
     "이용 중 귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.",
   ];
+  if (status === CabinetStatus.SET_EXPIRE_AVAILABLE && lender?.length > 0) {
+    sharedCabinetMessage.unshift(
+      `대여기간은 ${lender[0].expire_time
+        .toString()
+        .substring(0, 10)}까지 입니다.`
+    );
+  } else {
+    sharedCabinetMessage.unshift(
+      "대여기간은 3인이 모두 공유하는 순간부터 +45일 입니다."
+    );
+  }
 
   const LentAble: JSX.Element = (
     <Box sx={BoxStyle}>

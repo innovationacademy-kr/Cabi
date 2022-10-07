@@ -14,6 +14,8 @@ const Content = styled.div`
   background-color: white;
 `;
 
+const UserInfoDiv = styled.div``;
+
 interface LentInfoProps {
   cabinet_data: MyCabinetInfoResponseDto | null;
 }
@@ -29,6 +31,7 @@ const LentInfo = (): JSX.Element => {
     axiosMyLentInfo()
       .then((response) => {
         setMyLentInfo(response.data);
+        console.log(response.data);
       })
       .then(() => console.log(myLentInfo))
       .catch((error) => {
@@ -40,10 +43,17 @@ const LentInfo = (): JSX.Element => {
   const cabinetInfo = (): JSX.Element => {
     return (
       <>
-        <h2>
+        <h2 style={{ marginBottom: "0.4rem" }}>
           {myLentInfo?.location} {myLentInfo?.floor}F {myLentInfo?.cabinet_num}
         </h2>
-        <p>{/* lent_info.expire_time */}</p>
+        {myLentInfo?.lent_info?.[0].expire_time ? (
+          <p style={{ marginTop: 0, marginBottom: "2rem" }}>
+            ~{" "}
+            {myLentInfo?.lent_info?.[0].expire_time.toString().substring(0, 10)}
+          </p>
+        ) : (
+          <p />
+        )}
       </>
     );
   };
@@ -51,7 +61,11 @@ const LentInfo = (): JSX.Element => {
   const userInfo = (): JSX.Element[] | null => {
     if (myLentInfo?.lent_info) {
       return myLentInfo.lent_info.map((user: LentDto) => {
-        return <p key={user.user_id}>{user.intra_id}</p>;
+        return (
+          <p style={{ margin: 0 }} key={user.user_id}>
+            📌 {user.intra_id}
+          </p>
+        );
       });
     }
     return null;
@@ -68,6 +82,10 @@ const LentInfo = (): JSX.Element => {
         contentType="memo"
         currentContent={myLentInfo?.cabinet_memo}
       />
+      {/* TODO: gyuwlee
+      개인사물함인 경우 보이지 않게 바꾸기 */}
+      함께 사용중인 카뎃들
+      <hr />
       {userInfo()}
     </Content>
   );
