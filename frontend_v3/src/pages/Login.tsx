@@ -15,12 +15,14 @@ const Login = (): JSX.Element => {
 
   console.log(user.intra_id);
   useEffect(() => {
-    const token = getCookie("accessToken");
+    const token = getCookie("access_token");
     if (!token) {
       dispatch(userInfoInitialize());
     }
-    if (!(user.intra_id === "default")) {
+    if (token && !(user.intra_id === "default")) {
       navigate("/main");
+    } else {
+      navigate("/");
     }
   }, []);
 

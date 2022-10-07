@@ -50,9 +50,8 @@ const Carousel = (props: CarouselProps): JSX.Element => {
   const [tochedY, setTochedY] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideRef = useRef<HTMLInputElement>(null);
-  // TODO: hybae
-  // axios response.data에서 슬라이드가 몇 개로 나눠져야하는지 판단해서 값 대입
-  const lastSlide = slideCount || 1; // slideCount에 1 더해지지 않은 상태 입니다.
+
+  const lastSlide = slideCount || 0;
 
   useEffect(() => {
     setCurrentSlide(0);
@@ -63,7 +62,7 @@ const Carousel = (props: CarouselProps): JSX.Element => {
       slideRef.current.style.transition = "transform 0.5s ease-in-out";
       slideRef.current.style.transform = `translateX(-${
         (currentSlide * 100) / (lastSlide + 1)
-      }%)`; // 백틱을 사용하여 슬라이드로 이동하는 에니메이션을 만듭니다.
+      }%)`;
     }
   }, [currentSlide]);
 

@@ -35,7 +35,7 @@ export class JWTSignGuard implements CanActivate {
     }
     const token = this.jwtService.sign(user);
     this.logger.debug(`generete ${user.intra_id}'s token`);
-    response.cookie('accessToken', token);
+    response.cookie('access_token', token);
     return true;
   }
 }
