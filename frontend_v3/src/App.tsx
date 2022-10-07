@@ -21,7 +21,7 @@ function App(): JSX.Element {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/main" element={<Main />} />
-            <Route path="/Lent" element={<Lent />} />
+            <Route path="/lent" element={<Lent />} />
             <Route path="/*" element={<Login />} />
           </Routes>
         </Section>
