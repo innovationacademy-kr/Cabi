@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, ParseIntPipe, PreconditionFailedException } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
 import { CabinetInfoService } from "../cabinet/cabinet.info.service";
@@ -19,22 +19,25 @@ export class ExpiredChecker {
     async getExpiredDays(expire_time: Date): Promise<number> {
         this.logger.debug(`Called ${ExpiredChecker.name} ${this.getExpiredDays.name}`);
         const today = new Date();
-        return (today.getDate() - expire_time.getDate());
+        const diffDatePerSec = today.getTime() - expire_time.getTime();
+        const days = Math.floor(diffDatePerSec / 1000 / 60 / 60 / 24);
+        return (days);
     }
 
     @Cron(CronExpression.EVERY_DAY_AT_9PM)
-    public checkExpiredLent() {
-        const lentList = await this.lentTools.getAllLent();
+    async checkExpiredLent() {
+        this.logger.debug(`Called ${ExpiredChecker.name} ${this.checkExpiredLent.name}`);
+        const lentList = await Promise.all(await this.lentTools.getAllLent());
         lentList.forEach(async (lent) => {
             const days = await this.getExpiredDays(lent.expire_time);
             if (days >= 0) {
                 if (days > 0) 
-                    await this.cabinetInfoService.updateCabinetStatus(lent.cabinet_id, CabinetStatusType.EXPIRED);
+                    await this.cabinetInfoService.updateCabinetStatus(lent.lent_cabinet_id, CabinetStatusType.EXPIRED);
                 else if (days == 15) {
-                    await this.cabinetInfoService.updateCabinetStatus(lent.cabinet_id, CabinetStatusType.BANNED);
-                    await this.lentService.returnLentCabinet(lent.user_id);
+                    await this.cabinetInfoService.updateCabinetStatus(lent.lent_cabinet_id, CabinetStatusType.BANNED);
+                    await this.lentService.returnCabinet({user_id: lent.lent_user_id, intra_id: lent.user.intra_id});
                 }
-                this.emailsender.mailing(lent.intra_id, days);
+                this.emailsender.mailing(lent.user.intra_id, days);
             }
         })
     }
