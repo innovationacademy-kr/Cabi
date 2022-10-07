@@ -11,9 +11,7 @@ export class UserRepository implements IUserRepository {
   ) {}
 
   // NOTE: lent_info 안에 현재 user(user_id)만 나오는 문제가 있어 함수를 수정합니다.
-  async getCabinetByUserId(
-    userId: number,
-  ): Promise<CabinetExtendDto | null> {
+  async getCabinetByUserId(userId: number): Promise<CabinetExtendDto | null> {
     const result = await this.userRepository.findOne({
       relations: {
         Lent: {
@@ -27,6 +25,10 @@ export class UserRepository implements IUserRepository {
     if (result === null || result.Lent === null) {
       return null;
     }
+    let cabinet_memo = result.Lent.cabinet.memo;
+    if (cabinet_memo !== null) {
+      cabinet_memo = Buffer.from(cabinet_memo, 'base64').toString('utf8');
+    }
     return {
       location: result.Lent.cabinet.location,
       floor: result.Lent.cabinet.floor,
@@ -35,7 +37,7 @@ export class UserRepository implements IUserRepository {
       cabinet_num: result.Lent.cabinet.cabinet_num,
       lent_type: result.Lent.cabinet.lent_type,
       cabinet_title: result.Lent.cabinet.title,
-      cabinet_memo: result.Lent.cabinet.memo,
+      cabinet_memo: cabinet_memo,
       max_user: result.Lent.cabinet.max_user,
       status: result.Lent.cabinet.status,
     };
@@ -53,13 +55,18 @@ export class UserRepository implements IUserRepository {
     return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
   }
 
-  async updateUserState(user_id: number, state: UserStateType, queryRunner?: QueryRunner): Promise<void> {
-    await this.userRepository.createQueryBuilder(this.updateUserState.name, queryRunner)
-    .update(User)
-    .set({
-      state: state,
-    })
-    .where('user_id = :user_id', { user_id: user_id })
-    .execute();
+  async updateUserState(
+    user_id: number,
+    state: UserStateType,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
+    await this.userRepository
+      .createQueryBuilder(this.updateUserState.name, queryRunner)
+      .update(User)
+      .set({
+        state: state,
+      })
+      .where('user_id = :user_id', { user_id: user_id })
+      .execute();
   }
 }

@@ -20,8 +20,12 @@ export class UserService {
     userId: number,
   ): Promise<MyCabinetInfoResponseDto | null> {
     this.logger.debug(`Called ${this.getCabinetByUserId.name}`);
-    const cabinetExtendDto = await this.userRepository.getCabinetByUserId(userId);
-    const lent_info = await this.cabinetInfoService.getLentUsers(cabinetExtendDto.cabinet_id);
+    const cabinetExtendDto = await this.userRepository.getCabinetByUserId(
+      userId,
+    );
+    const lent_info = await this.cabinetInfoService.getLentUsers(
+      cabinetExtendDto.cabinet_id,
+    );
     return {
       ...cabinetExtendDto,
       lent_info,
@@ -40,7 +44,11 @@ export class UserService {
     };
   }
 
-  async updateUserState(user_id: number, state: UserStateType, queryRunner?: QueryRunner): Promise<void> {
+  async updateUserState(
+    user_id: number,
+    state: UserStateType,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
     this.logger.debug(`Called ${this.updateUserState.name}`);
     await this.userRepository.updateUserState(user_id, state, queryRunner);
   }

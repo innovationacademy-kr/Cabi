@@ -24,5 +24,9 @@ export interface IUserRepository {
    * @param user_id
    * @param state
    */
-  updateUserState(user_id: number, state: UserStateType, queryRunner?: QueryRunner): Promise<void>;
+  updateUserState(
+    user_id: number,
+    state: UserStateType,
+    queryRunner?: QueryRunner,
+  ): Promise<void>;
 }
