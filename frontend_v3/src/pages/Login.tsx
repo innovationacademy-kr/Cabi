@@ -19,8 +19,10 @@ const Login = (): JSX.Element => {
     if (!token) {
       dispatch(userInfoInitialize());
     }
-    if (!(user.intra_id === "default")) {
+    if (token && !(user.intra_id === "default")) {
       navigate("/main");
+    } else {
+      navigate("/");
     }
   }, []);
 
