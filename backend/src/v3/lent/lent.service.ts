@@ -140,9 +140,7 @@ export class LentService {
   }
 
   async returnCabinet(user: UserSessionDto): Promise<void> {
-    this.logger.debug(
-      `Called ${LentService.name} ${this.returnCabinet.name}`,
-    );
+    this.logger.debug(`Called ${LentService.name} ${this.returnCabinet.name}`);
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();

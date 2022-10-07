@@ -59,7 +59,10 @@ export class BlackholeService {
       if (myLent.cabinet_id !== -1) {
         this.logger.warn(`Return ${user.intra_id}'s cabinet`);
         await this.lentService.returnCabinet(user);
-        await this.cabinetService.updateCabinetStatus(myLent.cabinet_id, CabinetStatusType.BANNED);
+        await this.cabinetService.updateCabinetStatus(
+          myLent.cabinet_id,
+          CabinetStatusType.BANNED,
+        );
       }
       // FIXME:
       // 인트라에서 유저의 계정이 만료되면 해당 유저가 가지고 있던 user_id와 intra_id가 다른 유저에게 재할당될 수 있습니다.

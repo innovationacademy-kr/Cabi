@@ -36,7 +36,10 @@ export class BanService {
    * @param user_id
    * @param lent_time
    */
-  async blockingDropOffUser(lent: Lent, queryRunner?: QueryRunner): Promise<void> {
+  async blockingDropOffUser(
+    lent: Lent,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
     this.logger.debug(
       `Called ${BanService.name} ${this.blockingDropOffUser.name}`,
     );
@@ -53,7 +56,11 @@ export class BanService {
    * @param user_id
    * @param ban_day
    */
-  async blockingUser(lent: Lent, ban_day: number, queryRunner?: QueryRunner): Promise<void> {
+  async blockingUser(
+    lent: Lent,
+    ban_day: number,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
     this.logger.debug(`Called ${BanService.name} ${this.blockingUser.name}`);
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
     await this.banRepository.addToBanLogByUserId(lent, ban_day, queryRunner);

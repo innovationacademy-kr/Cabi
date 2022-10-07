@@ -11,9 +11,7 @@ export class UserRepository implements IUserRepository {
   ) {}
 
   // NOTE: lent_info 안에 현재 user(user_id)만 나오는 문제가 있어 함수를 수정합니다.
-  async getCabinetByUserId(
-    userId: number,
-  ): Promise<CabinetExtendDto | null> {
+  async getCabinetByUserId(userId: number): Promise<CabinetExtendDto | null> {
     const result = await this.userRepository.findOne({
       relations: {
         Lent: {
@@ -57,13 +55,18 @@ export class UserRepository implements IUserRepository {
     return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
   }
 
-  async updateUserState(user_id: number, state: UserStateType, queryRunner?: QueryRunner): Promise<void> {
-    await this.userRepository.createQueryBuilder(this.updateUserState.name, queryRunner)
-    .update(User)
-    .set({
-      state: state,
-    })
-    .where('user_id = :user_id', { user_id: user_id })
-    .execute();
+  async updateUserState(
+    user_id: number,
+    state: UserStateType,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
+    await this.userRepository
+      .createQueryBuilder(this.updateUserState.name, queryRunner)
+      .update(User)
+      .set({
+        state: state,
+      })
+      .where('user_id = :user_id', { user_id: user_id })
+      .execute();
   }
 }

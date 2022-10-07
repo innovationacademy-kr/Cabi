@@ -108,7 +108,11 @@ export class LentTools {
     }
   }
 
-  async returnStateTransition(lent: Lent, user: UserSessionDto, queryRunner?: QueryRunner): Promise<void> {
+  async returnStateTransition(
+    lent: Lent,
+    user: UserSessionDto,
+    queryRunner?: QueryRunner,
+  ): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
@@ -138,13 +142,21 @@ export class LentTools {
       case CabinetStatusType.BANNED:
         const today = new Date();
         const expire_time = lent.expire_time;
-        await this.banService.blockingUser(lent, today.getDate() - expire_time.getDate(), queryRunner);
+        await this.banService.blockingUser(
+          lent,
+          today.getDate() - expire_time.getDate(),
+          queryRunner,
+        );
         break;
       case CabinetStatusType.EXPIRED:
         if (lent_user_cnt - 1 === 0) {
-          await this.cabinetInfoService.updateCabinetStatus(lent.cabinet.cabinet_id, CabinetStatusType.AVAILABLE, queryRunner);
+          await this.cabinetInfoService.updateCabinetStatus(
+            lent.cabinet.cabinet_id,
+            CabinetStatusType.AVAILABLE,
+            queryRunner,
+          );
         }
-        break ;
+        break;
     }
   }
 
