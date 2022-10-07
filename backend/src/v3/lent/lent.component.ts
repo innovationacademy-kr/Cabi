@@ -159,20 +159,21 @@ export class LentTools {
     }
   }
 
-  async getAllLent(): Promise<LentDto[]> {
+  async getAllLent(): Promise<Lent[]> {
     this.logger.debug(`Called ${LentTools.name} ${this.getAllLent.name}`);
-    const lents = await this.lentRepository.getAllLent();
-    const result: LentDto[] = [];
-    for await (const lent of lents) {
-      result.push({
-        user_id: lent.user.user_id,
-        intra_id: lent.user.intra_id,
-        lent_id: lent.lent_id,
-        lent_time: lent.lent_time,
-        expire_time: lent.expire_time,
-        is_expired: false,
-      });
-    }
-    return result;
+    return await this.lentRepository.getAllLent();
+  //   const result: LentDto[] = [];
+  //   for await (const lent of lents) {
+  //     result.push({
+  //       user_id: lent.user.user_id,
+  //       intra_id: lent.user.intra_id,
+  //       lent_id: lent.lent_id,
+  //       lent_time: lent.lent_time,
+  //       expire_time: lent.expire_time,
+  //       is_expired: false,
+  //     });
+  //   }
+  //   return result;
+  // }
   }
 }
