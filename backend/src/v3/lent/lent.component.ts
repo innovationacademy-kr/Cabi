@@ -2,7 +2,6 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
-import Cabinet from 'src/entities/cabinet.entity';
 import Lent from 'src/entities/lent.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
@@ -139,7 +138,8 @@ export class LentTools {
           await this.lentService.updateLentCabinetMemo('', user, queryRunner);
         }
         break;
-      case CabinetStatusType.BANNED: case CabinetStatusType.EXPIRED:
+      case CabinetStatusType.BANNED:
+      case CabinetStatusType.EXPIRED:
         const today = new Date();
         const expire_time = lent.expire_time;
         console.log(today.getDate() - expire_time.getDate());
@@ -162,18 +162,18 @@ export class LentTools {
   async getAllLent(): Promise<Lent[]> {
     this.logger.debug(`Called ${LentTools.name} ${this.getAllLent.name}`);
     return await this.lentRepository.getAllLent();
-  //   const result: LentDto[] = [];
-  //   for await (const lent of lents) {
-  //     result.push({
-  //       user_id: lent.user.user_id,
-  //       intra_id: lent.user.intra_id,
-  //       lent_id: lent.lent_id,
-  //       lent_time: lent.lent_time,
-  //       expire_time: lent.expire_time,
-  //       is_expired: false,
-  //     });
-  //   }
-  //   return result;
-  // }
+    //   const result: LentDto[] = [];
+    //   for await (const lent of lents) {
+    //     result.push({
+    //       user_id: lent.user.user_id,
+    //       intra_id: lent.user.intra_id,
+    //       lent_id: lent.lent_id,
+    //       lent_time: lent.lent_time,
+    //       expire_time: lent.expire_time,
+    //       is_expired: false,
+    //     });
+    //   }
+    //   return result;
+    // }
   }
 }

@@ -39,7 +39,7 @@ export class EmailSender {
     let file;
     // TODO: 메일 보내는 날짜에 대해 논의하면 좋을 것 같습니다.
     if (days === 0) {
-      subject = '42CABI 사물함 대여 기간 만료 예정 안내'
+      subject = '42CABI 사물함 대여 기간 만료 예정 안내';
       file = 'soonoverdue.hbs';
     } else if (days === 7) {
       file = 'overdue.hbs';
