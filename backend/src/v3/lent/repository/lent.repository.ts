@@ -140,12 +140,14 @@ export class lentRepository implements ILentRepository {
   ): Promise<void> {
     if (cabinet_memo === '') {
       cabinet_memo = null;
+    } else {
+      cabinet_memo = Buffer.from(cabinet_memo, 'utf8').toString('base64');
     }
     await this.lentRepository
       .createQueryBuilder(this.updateLentCabinetMemo.name, queryRunner)
       .update('cabinet')
       .set({
-        memo: Buffer.from(cabinet_memo, 'utf8').toString('base64'),
+        memo: cabinet_memo,
       })
       .where({
         cabinet_id: cabinet_id,

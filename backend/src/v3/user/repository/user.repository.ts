@@ -27,6 +27,10 @@ export class UserRepository implements IUserRepository {
     if (result === null || result.Lent === null) {
       return null;
     }
+    let cabinet_memo = result.Lent.cabinet.memo;
+    if (cabinet_memo !== null) {
+      cabinet_memo = Buffer.from(cabinet_memo, 'base64').toString('utf8');
+    }
     return {
       location: result.Lent.cabinet.location,
       floor: result.Lent.cabinet.floor,
@@ -35,7 +39,7 @@ export class UserRepository implements IUserRepository {
       cabinet_num: result.Lent.cabinet.cabinet_num,
       lent_type: result.Lent.cabinet.lent_type,
       cabinet_title: result.Lent.cabinet.title,
-      cabinet_memo: Buffer.from(result.Lent.cabinet.memo, 'base64').toString('utf8'),
+      cabinet_memo: cabinet_memo,
       max_user: result.Lent.cabinet.max_user,
       status: result.Lent.cabinet.status,
     };
