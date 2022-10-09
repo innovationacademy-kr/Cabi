@@ -42,6 +42,7 @@ frontend_v3/yarn.lock
 
 #db credentials
 backend/database/credentials/*
+credentials
 
 #docker mariadb volume
 aria_log_control
