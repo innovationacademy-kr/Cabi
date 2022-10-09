@@ -148,7 +148,7 @@ export class LentTools {
           await this.expiredChecker.getExpiredDays(lent.expire_time),
           queryRunner,
         );
-        if (CabinetStatusType.EXPIRED && lent_user_cnt - 1 === 0) {
+        if (lent.cabinet.status === CabinetStatusType.EXPIRED && lent_user_cnt - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.cabinet.cabinet_id,
             CabinetStatusType.AVAILABLE,
