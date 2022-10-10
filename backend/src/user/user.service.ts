@@ -43,10 +43,7 @@ export class UserService {
     };
   }
 
-  async updateUserState(
-    user_id: number,
-    state: UserStateType,
-  ): Promise<void> {
+  async updateUserState(user_id: number, state: UserStateType): Promise<void> {
     this.logger.debug(`Called ${this.updateUserState.name}`);
     await this.userRepository.updateUserState(user_id, state);
   }

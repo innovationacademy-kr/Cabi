@@ -45,10 +45,7 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
-  async setExpireTime(
-    lent_id: number,
-    expire_time: Date,
-  ): Promise<void> {
+  async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
     await this.lentRepository
       .createQueryBuilder(this.setExpireTime.name)
       .update(Lent)
@@ -173,9 +170,7 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
-  async deleteLentByLentId(
-    lent_id: number,
-  ): Promise<void> {
+  async deleteLentByLentId(lent_id: number): Promise<void> {
     await this.lentRepository
       .createQueryBuilder(this.deleteLentByLentId.name)
       .delete()

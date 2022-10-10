@@ -23,10 +23,7 @@ export interface ILentRepository {
    * @param expire_time
    * @return void
    */
-  setExpireTime(
-    lent_id: number,
-    expire_time: Date,
-  ): Promise<void>;
+  setExpireTime(lent_id: number, expire_time: Date): Promise<void>;
 
   /**
    * 특정 user_id로 해당 캐비넷 대여를 시도합니다.
@@ -35,10 +32,7 @@ export interface ILentRepository {
    * @param cabinet_id
    * @return void
    */
-  lentCabinet(
-    user: UserSessionDto,
-    cabinet_id: number,
-  ): Promise<LentDto>;
+  lentCabinet(user: UserSessionDto, cabinet_id: number): Promise<LentDto>;
 
   /**
    * 해당 user_id로 대여중인 Cabinet id를 반환합니다.

@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import Lent from 'src/entities/lent.entity';
 import { Repository } from 'typeorm';
-import BanLog from '../../../entities/ban.log.entity';
+import BanLog from '../../entities/ban.log.entity';
 import { IBanRepository } from './ban.repository.interface';
 
 export class BanRepository implements IBanRepository {
@@ -21,10 +21,7 @@ export class BanRepository implements IBanRepository {
     return result ? result.unbanned_date : null;
   }
 
-  async addToBanLogByUserId(
-    lent: Lent,
-    ban_day: number,
-  ): Promise<void> {
+  async addToBanLogByUserId(lent: Lent, ban_day: number): Promise<void> {
     const banned_date = new Date();
     const unbanned_date = new Date(banned_date.getTime());
     unbanned_date.setDate(banned_date.getDate() + ban_day);

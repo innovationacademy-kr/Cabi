@@ -13,8 +13,5 @@ export interface IBanRepository {
    * @param lent
    * @param ban_day
    */
-  addToBanLogByUserId(
-    lent: Lent,
-    ban_day: number,
-  ): Promise<void>;
+  addToBanLogByUserId(lent: Lent, ban_day: number): Promise<void>;
 }

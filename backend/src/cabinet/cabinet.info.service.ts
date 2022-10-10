@@ -12,7 +12,7 @@ import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.sect
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { SpaceDataDto } from 'src/dto/space.data.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
-import { ICabinetInfoRepository } from './repository/interface.cabinet.info.repository';
+import { ICabinetInfoRepository } from './repository/cabinet.info.interface.repository';
 
 @Injectable()
 export class CabinetInfoService {
@@ -88,10 +88,7 @@ export class CabinetInfoService {
     this.logger.debug(
       `Called ${CabinetInfoService.name} ${this.updateCabinetStatus.name}`,
     );
-    await this.cabinetInfoRepository.updateCabinetStatus(
-      cabinet_id,
-      status,
-    );
+    await this.cabinetInfoRepository.updateCabinetStatus(cabinet_id, status);
   }
 
   async getLentUsers(cabinet_id: number): Promise<LentDto[]> {

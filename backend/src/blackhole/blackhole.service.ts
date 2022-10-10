@@ -11,11 +11,11 @@ import { AxiosRequestConfig } from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { IBlackholeRepository } from './repository/blackhole.repository';
-import { CabinetInfoService } from 'src/v3/cabinet/cabinet.info.service';
+import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import { UserDto } from 'src/dto/user.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
-import { UserService } from 'src/v3/user/user.service';
-import { LentService } from 'src/v3/lent/lent.service';
+import { UserService } from 'src/user/user.service';
+import { LentService } from 'src/lent/lent.service';
 
 @Injectable()
 export class BlackholeService {

@@ -6,7 +6,7 @@ import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.sect
 import Cabinet from 'src/entities/cabinet.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { Repository } from 'typeorm';
-import { ICabinetInfoRepository } from './interface.cabinet.info.repository';
+import { ICabinetInfoRepository } from './cabinet.info.interface.repository';
 
 export class CabinetInfoRepository implements ICabinetInfoRepository {
   constructor(
