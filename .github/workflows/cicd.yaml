@@ -69,6 +69,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
+          script_stop: true
           script: |
             source $HOME/.bash_profile
             echo "해당 리포지토리로 이동"
@@ -80,7 +81,7 @@ jobs:
             npm run build:fe_v3
             npm run build
             echo "env 파일 복사"
-            cp 42cabi-dev.env $HOME/git/42cabi-dev/backend/.env
+            cp $HOME/42cabi-dev.env $HOME/git/42cabi-dev/backend/.env
             echo "앱 배포 (reload)"
             pm2 reload 42cabi-dev
 
@@ -97,6 +98,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
+          script_stop: true
           script: |
             source $HOME/.bash_profile
             echo "해당 리포지토리로 이동"
@@ -108,6 +110,6 @@ jobs:
             npm run build:fe_v3
             npm run build
             echo "env 파일 복사"
-            cp 42cabi-main.env $HOME/git/42cabi-main/backend/.env
+            cp $HOME/42cabi-main.env $HOME/git/42cabi-main/backend/.env
             echo "앱 배포 (reload)"
             pm2 reload 42cabi-main
