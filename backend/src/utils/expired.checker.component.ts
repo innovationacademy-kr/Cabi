@@ -68,6 +68,8 @@ export class ExpiredChecker {
     );
     const lentList = await Promise.all(await this.lentTools.getAllLent());
     lentList.forEach(async (lent: Lent) => {
+      if (lent.expire_time === null)
+        return ;
       await this.checkExpiredCabinetEach(lent);
     });
   }
