@@ -58,15 +58,21 @@ const LentInfo = (): JSX.Element => {
     );
   };
 
-  const userInfo = (): JSX.Element[] | null => {
-    if (myLentInfo?.lent_info) {
-      return myLentInfo.lent_info.map((user: LentDto) => {
-        return (
-          <p style={{ margin: 0 }} key={user.user_id}>
-            📌 {user.intra_id}
-          </p>
-        );
-      });
+  const userInfo = (): JSX.Element | null => {
+    if (myLentInfo?.lent_info && myLentInfo?.lent_type === "SHARE") {
+      return (
+        <UserInfoDiv>
+          <p style={{ margin: 0 }}>함께 사용중인 카뎃들</p>
+          <hr />
+          {myLentInfo.lent_info.map((user: LentDto) => {
+            return (
+              <p style={{ margin: 0 }} key={user.user_id}>
+                📌 {user.intra_id}
+              </p>
+            );
+          })}
+        </UserInfoDiv>
+      );
     }
     return null;
   };
@@ -77,15 +83,13 @@ const LentInfo = (): JSX.Element => {
       <LentTextField
         contentType="title"
         currentContent={myLentInfo?.cabinet_title}
+        cabinetType={myLentInfo?.lent_type}
       />
       <LentTextField
         contentType="memo"
         currentContent={myLentInfo?.cabinet_memo}
+        cabinetType={myLentInfo?.lent_type}
       />
-      {/* TODO: gyuwlee
-      개인사물함인 경우 보이지 않게 바꾸기 */}
-      함께 사용중인 카뎃들
-      <hr />
       {userInfo()}
     </Content>
   );

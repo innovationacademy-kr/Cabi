@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import EditButton from "../buttons/EditButton";
 
-// TODO: gyuwlee(?)
-// 본 테스트 필드 제거하고, Organism 단위로 텍스트 입력 필드 구현
-// 근데 이것도 제대로 작동하긴 합니당
-
 const Container = styled.div`
   display: flex;
   width: 70%;
@@ -35,10 +31,11 @@ const TextDiv = styled.div`
 interface LentTextFieldProps {
   contentType: "title" | "memo";
   currentContent: string | undefined;
+  cabinetType: string | undefined;
 }
 
-const LentTextField = (props: LentTextFieldProps): JSX.Element => {
-  const { contentType, currentContent } = props;
+const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
+  const { contentType, currentContent, cabinetType } = props;
   const [textValue, setTextValue] = useState<string>(
     currentContent || contentType === "title"
       ? "방 제목을 입력해주세요"
@@ -67,9 +64,12 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element => {
     setInputValue(e.target.value);
   };
 
-  return (
+  const isPrivateAndTitle: boolean =
+    cabinetType === "PRIVATE" && contentType === "title";
+
+  return isPrivateAndTitle ? null : (
     <>
-      {contentType === "title" ? "방 제목" : "비밀스러운 메모장"}
+      <p>{contentType === "title" ? "방 제목" : "비밀스러운 메모장"}</p>
       <Container className="Container" style={{ marginBottom: "2rem" }}>
         <TextDiv className="textDiv">
           {isToggle === false ? (
