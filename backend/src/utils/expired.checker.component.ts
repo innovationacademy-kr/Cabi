@@ -40,11 +40,12 @@ export class ExpiredChecker {
   async checkExpiredCabinetEach(lent: Lent) {
     const days = await this.getExpiredDays(lent.expire_time);
     if (days >= 0) {
-      if (days > 0 && days < 15)
+      if (days > 0 && days < 15) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
           CabinetStatusType.EXPIRED,
         );
+      }
       else if (days >= 15) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
