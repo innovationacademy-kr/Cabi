@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import User from 'src/entities/user.entity';
 import UserStateType from 'src/enums/user.state.type.enum';
-import { QueryRunner, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { IUserRepository } from './user.repository.interface';
 
 export class UserRepository implements IUserRepository {
@@ -58,10 +58,9 @@ export class UserRepository implements IUserRepository {
   async updateUserState(
     user_id: number,
     state: UserStateType,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.userRepository
-      .createQueryBuilder(this.updateUserState.name, queryRunner)
+      .createQueryBuilder(this.updateUserState.name)
       .update(User)
       .set({
         state: state,

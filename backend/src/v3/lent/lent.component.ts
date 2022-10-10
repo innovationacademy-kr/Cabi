@@ -5,12 +5,12 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
-import { QueryRunner } from 'typeorm';
 import { BanService } from '../ban/ban.service';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ExpiredChecker } from '../utils/expired.checker.component';
 import { LentService } from './lent.service';
 import { ILentRepository } from './repository/lent.repository.interface';
+import { Transactional, Propagation, runOnTransactionComplete } from 'typeorm-transactional';
 
 @Injectable()
 export class LentTools {
@@ -30,12 +30,13 @@ export class LentTools {
    * 처음으로 풀방이 되면 해당 사물함 이용자들의 만료시간을 설정해주는 함수.
    * @param lent_list
    * @param lent_type
-   * @param queryRunner
    */
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+  })
   async setExpireTimeAll(
     lent_list: LentDto[],
     lent_type: LentType,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     this.logger.debug(`Called ${LentTools.name} ${this.setExpireTimeAll.name}`);
     const expire_time = new Date();
@@ -46,14 +47,17 @@ export class LentTools {
       expire_time.setDate(last_lent_time.getDate() + 45);
     }
     for await (const lent of lent_list) {
-      this.lentRepository.setExpireTime(lent.lent_id, expire_time, queryRunner);
+      this.lentRepository.setExpireTime(lent.lent_id, expire_time);
     }
+    runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+  })
   async lentStateTransition(
     user: UserSessionDto,
     cabinet: CabinetInfoResponseDto,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.lentStateTransition.name}`,
@@ -67,7 +71,6 @@ export class LentTools {
         const new_lent = await this.lentRepository.lentCabinet(
           user,
           cabinet.cabinet_id,
-          queryRunner,
         );
         cabinet.lent_info.push(new_lent);
         if (lent_user_cnt + 1 === cabinet.max_user) {
@@ -75,13 +78,11 @@ export class LentTools {
           await this.setExpireTimeAll(
             cabinet.lent_info,
             cabinet.lent_type,
-            queryRunner,
           );
           // 상태를 SET_EXPIRE_FULL로 변경
           await this.cabinetInfoService.updateCabinetStatus(
             cabinet.cabinet_id,
             CabinetStatusType.SET_EXPIRE_FULL,
-            queryRunner,
           );
         }
         break;
@@ -89,31 +90,31 @@ export class LentTools {
         const new_lent = await this.lentRepository.lentCabinet(
           user,
           cabinet.cabinet_id,
-          queryRunner,
         );
         // 기존 유저의 만료시간으로 만료시간 설정
         await this.lentRepository.setExpireTime(
           new_lent.lent_id,
           cabinet.lent_info[0].expire_time,
-          queryRunner,
         );
         // 해당 대여로 풀방이 되면 상태 변경
         if (lent_user_cnt + 1 === cabinet.max_user) {
           await this.cabinetInfoService.updateCabinetStatus(
             cabinet.cabinet_id,
             CabinetStatusType.SET_EXPIRE_FULL,
-            queryRunner,
           );
         }
         break;
       }
     }
+    runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+  })
   async returnStateTransition(
     lent: Lent,
     user: UserSessionDto,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
@@ -128,17 +129,15 @@ export class LentTools {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.cabinet.cabinet_id,
           CabinetStatusType.SET_EXPIRE_AVAILABLE,
-          queryRunner,
         );
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         if (lent_user_cnt - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.cabinet.cabinet_id,
             CabinetStatusType.AVAILABLE,
-            queryRunner,
           );
-          await this.lentService.updateLentCabinetTitle('', user, queryRunner);
-          await this.lentService.updateLentCabinetMemo('', user, queryRunner);
+          await this.lentService.updateLentCabinetTitle('', user);
+          await this.lentService.updateLentCabinetMemo('', user);
         }
         break;
       case CabinetStatusType.BANNED:
@@ -146,34 +145,20 @@ export class LentTools {
         await this.banService.blockingUser(
           lent,
           await this.expiredChecker.getExpiredDays(lent.expire_time),
-          queryRunner,
         );
         if (lent.cabinet.status === CabinetStatusType.EXPIRED && lent_user_cnt - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.cabinet.cabinet_id,
             CabinetStatusType.AVAILABLE,
-            queryRunner,
           );
         }
         break;
     }
+    runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
   async getAllLent(): Promise<Lent[]> {
     this.logger.debug(`Called ${LentTools.name} ${this.getAllLent.name}`);
     return await this.lentRepository.getAllLent();
-    //   const result: LentDto[] = [];
-    //   for await (const lent of lents) {
-    //     result.push({
-    //       user_id: lent.user.user_id,
-    //       intra_id: lent.user.intra_id,
-    //       lent_id: lent.lent_id,
-    //       lent_time: lent.lent_time,
-    //       expire_time: lent.expire_time,
-    //       is_expired: false,
-    //     });
-    //   }
-    //   return result;
-    // }
   }
 }

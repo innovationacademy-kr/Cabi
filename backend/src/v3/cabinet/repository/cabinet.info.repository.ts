@@ -5,7 +5,7 @@ import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.d
 import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import Cabinet from 'src/entities/cabinet.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
-import { QueryRunner, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ICabinetInfoRepository } from './interface.cabinet.info.repository';
 
 export class CabinetInfoRepository implements ICabinetInfoRepository {
@@ -134,10 +134,9 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
   async updateCabinetStatus(
     cabinet_id: number,
     status: CabinetStatusType,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.cabinetInfoRepository
-      .createQueryBuilder(this.updateCabinetStatus.name, queryRunner)
+      .createQueryBuilder(this.updateCabinetStatus.name)
       .update()
       .set({
         status,
@@ -146,12 +145,5 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
         cabinet_id,
       })
       .execute();
-    // const cabinet = await this.cabinetInfoRepository.findOne({
-    //   where: {
-    //     cabinet_id,
-    //   },
-    // });
-    // cabinet.status = status;
-    // await this.cabinetInfoRepository.save(cabinet);
   }
 }

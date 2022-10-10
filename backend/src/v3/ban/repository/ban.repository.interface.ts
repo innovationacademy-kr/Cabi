@@ -1,5 +1,4 @@
 import Lent from 'src/entities/lent.entity';
-import { QueryRunner } from 'typeorm';
 
 export interface IBanRepository {
   /**
@@ -17,6 +16,5 @@ export interface IBanRepository {
   addToBanLogByUserId(
     lent: Lent,
     ban_day: number,
-    queryRunner?: QueryRunner,
   ): Promise<void>;
 }

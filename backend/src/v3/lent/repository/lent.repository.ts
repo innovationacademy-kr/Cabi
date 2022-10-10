@@ -3,7 +3,7 @@ import { LentDto } from 'src/dto/lent.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
-import { QueryRunner, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ILentRepository } from './lent.repository.interface';
 
 export class lentRepository implements ILentRepository {
@@ -48,10 +48,9 @@ export class lentRepository implements ILentRepository {
   async setExpireTime(
     lent_id: number,
     expire_time: Date,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.lentRepository
-      .createQueryBuilder(this.setExpireTime.name, queryRunner)
+      .createQueryBuilder(this.setExpireTime.name)
       .update(Lent)
       .set({
         expire_time: expire_time,
@@ -65,12 +64,11 @@ export class lentRepository implements ILentRepository {
   async lentCabinet(
     user: UserSessionDto,
     cabinet_id: number,
-    queryRunner?: QueryRunner,
   ): Promise<LentDto> {
     const lent_time = new Date();
     const expire_time: Date | null = null;
     const result = await this.lentRepository
-      .createQueryBuilder(this.lentCabinet.name, queryRunner)
+      .createQueryBuilder(this.lentCabinet.name)
       .insert()
       .into(Lent)
       .values({
@@ -116,13 +114,12 @@ export class lentRepository implements ILentRepository {
   async updateLentCabinetTitle(
     cabinet_title: string | null,
     cabinet_id: number,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     if (cabinet_title === '') {
       cabinet_title = null;
     }
     await this.lentRepository
-      .createQueryBuilder(this.updateLentCabinetTitle.name, queryRunner)
+      .createQueryBuilder(this.updateLentCabinetTitle.name)
       .update('cabinet')
       .set({
         title: cabinet_title,
@@ -136,7 +133,6 @@ export class lentRepository implements ILentRepository {
   async updateLentCabinetMemo(
     cabinet_memo: string | null,
     cabinet_id: number,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     if (cabinet_memo === '') {
       cabinet_memo = null;
@@ -144,7 +140,7 @@ export class lentRepository implements ILentRepository {
       cabinet_memo = Buffer.from(cabinet_memo, 'utf8').toString('base64');
     }
     await this.lentRepository
-      .createQueryBuilder(this.updateLentCabinetMemo.name, queryRunner)
+      .createQueryBuilder(this.updateLentCabinetMemo.name)
       .update('cabinet')
       .set({
         memo: cabinet_memo,
@@ -179,10 +175,9 @@ export class lentRepository implements ILentRepository {
 
   async deleteLentByLentId(
     lent_id: number,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     await this.lentRepository
-      .createQueryBuilder(this.deleteLentByLentId.name, queryRunner)
+      .createQueryBuilder(this.deleteLentByLentId.name)
       .delete()
       .from(Lent)
       .where({
@@ -191,9 +186,9 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
-  async addLentLog(lent: Lent, queryRunner?: QueryRunner): Promise<void> {
+  async addLentLog(lent: Lent): Promise<void> {
     await this.lentLogRepository
-      .createQueryBuilder(this.addLentLog.name, queryRunner)
+      .createQueryBuilder(this.addLentLog.name)
       .insert()
       .into(LentLog)
       .values({

@@ -1,7 +1,6 @@
 import { LentDto } from 'src/dto/lent.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
-import { QueryRunner } from 'typeorm';
 
 export interface ILentRepository {
   /**
@@ -27,7 +26,6 @@ export interface ILentRepository {
   setExpireTime(
     lent_id: number,
     expire_time: Date,
-    queryRunner?: QueryRunner,
   ): Promise<void>;
 
   /**
@@ -40,7 +38,6 @@ export interface ILentRepository {
   lentCabinet(
     user: UserSessionDto,
     cabinet_id: number,
-    queryRunner?: QueryRunner,
   ): Promise<LentDto>;
 
   /**
@@ -60,7 +57,6 @@ export interface ILentRepository {
   updateLentCabinetTitle(
     cabinet_title: string | null,
     cabinet_id: number,
-    queryRunner?: QueryRunner,
   ): Promise<void>;
 
   /**
@@ -72,7 +68,6 @@ export interface ILentRepository {
   updateLentCabinetMemo(
     cabinet_memo: string | null,
     cabinet_id: number,
-    queryRunner?: QueryRunner,
   ): Promise<void>;
 
   /**
@@ -94,12 +89,12 @@ export interface ILentRepository {
    * @param user_id
    * @return void
    */
-  deleteLentByLentId(lent_id: number, queryRunner?: QueryRunner): Promise<void>;
+  deleteLentByLentId(lent_id: number): Promise<void>;
 
   /**
    * 기존 lent 정보를 lent log에 추가합니다.
    * @param Lent
    * @return void
    */
-  addLentLog(lent: Lent, queryRunner?: QueryRunner): Promise<void>;
+  addLentLog(lent: Lent): Promise<void>;
 }
