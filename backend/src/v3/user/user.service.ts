@@ -3,7 +3,6 @@ import { UserLentResponseDto } from 'src/dto/response/lent.user.response.dto';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserDto } from 'src/dto/user.dto';
 import UserStateType from 'src/enums/user.state.type.enum';
-import { QueryRunner } from 'typeorm';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { IUserRepository } from './repository/user.repository.interface';
 
@@ -47,9 +46,8 @@ export class UserService {
   async updateUserState(
     user_id: number,
     state: UserStateType,
-    queryRunner?: QueryRunner,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateUserState.name}`);
-    await this.userRepository.updateUserState(user_id, state, queryRunner);
+    await this.userRepository.updateUserState(user_id, state);
   }
 }

@@ -1,6 +1,5 @@
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import UserStateType from 'src/enums/user.state.type.enum';
-import { QueryRunner } from 'typeorm';
 
 export interface IUserRepository {
   /**
@@ -27,6 +26,5 @@ export interface IUserRepository {
   updateUserState(
     user_id: number,
     state: UserStateType,
-    queryRunner?: QueryRunner,
   ): Promise<void>;
 }
