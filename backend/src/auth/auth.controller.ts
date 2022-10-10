@@ -80,7 +80,7 @@ export class AuthController {
   logout(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log(`${user.intra_id} logged out`);
     // NOTE: 토큰을 쿠키에 저장하지 않는다면 다른 로그아웃 방식을 고안해야 함. (세션을 블랙리스트 캐시에 추가하거나...)
-    res.clearCookie('accessToken');
+    res.clearCookie('access_token');
     res.send();
   }
 }

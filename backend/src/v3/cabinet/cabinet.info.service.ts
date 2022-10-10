@@ -97,7 +97,7 @@ export class CabinetInfoService {
     );
   }
 
-  async getLentUsers(cabinet_id: number): Promise <LentDto[]> {
+  async getLentUsers(cabinet_id: number): Promise<LentDto[]> {
     this.logger.debug(
       `Called ${CabinetInfoService.name} ${this.getLentUsers.name}`,
     );
