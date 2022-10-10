@@ -9,9 +9,12 @@ import { BlackholeModule } from './blackhole/blackhole.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import TypeOrmConfigService from './config/typeorm.config';
-import { V3Module } from './v3/v3.module';
 import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
+import { CabinetModule } from './cabinet/cabinet.module';
+import { LentModule } from './lent/lent.module';
+import { UserModule } from './user/user.module';
+import { UtilsModule } from './utils/utils.module';
 
 @Module({
   imports: [
@@ -27,7 +30,7 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
           throw new Error('No options');
         }
         return addTransactionalDataSource(new DataSource(options));
-      }
+      },
     }),
     AuthModule,
     EventModule,
@@ -37,7 +40,10 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
       exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
       // serveRoot: '../img'
     }),
-    V3Module,
+    CabinetModule,
+    LentModule,
+    UserModule,
+    UtilsModule,
   ],
   controllers: [],
   providers: [SessionMiddleware],

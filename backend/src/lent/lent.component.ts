@@ -10,7 +10,11 @@ import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ExpiredChecker } from '../utils/expired.checker.component';
 import { LentService } from './lent.service';
 import { ILentRepository } from './repository/lent.repository.interface';
-import { Transactional, Propagation, runOnTransactionComplete } from 'typeorm-transactional';
+import {
+  Transactional,
+  Propagation,
+  runOnTransactionComplete,
+} from 'typeorm-transactional';
 
 @Injectable()
 export class LentTools {
@@ -75,10 +79,7 @@ export class LentTools {
         cabinet.lent_info.push(new_lent);
         if (lent_user_cnt + 1 === cabinet.max_user) {
           // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
-          await this.setExpireTimeAll(
-            cabinet.lent_info,
-            cabinet.lent_type,
-          );
+          await this.setExpireTimeAll(cabinet.lent_info, cabinet.lent_type);
           // 상태를 SET_EXPIRE_FULL로 변경
           await this.cabinetInfoService.updateCabinetStatus(
             cabinet.cabinet_id,
@@ -112,10 +113,7 @@ export class LentTools {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async returnStateTransition(
-    lent: Lent,
-    user: UserSessionDto,
-  ): Promise<void> {
+  async returnStateTransition(lent: Lent, user: UserSessionDto): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
@@ -146,7 +144,10 @@ export class LentTools {
           lent,
           await this.expiredChecker.getExpiredDays(lent.expire_time),
         );
-        if (lent.cabinet.status === CabinetStatusType.EXPIRED && lent_user_cnt - 1 === 0) {
+        if (
+          lent.cabinet.status === CabinetStatusType.EXPIRED &&
+          lent_user_cnt - 1 === 0
+        ) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.cabinet.cabinet_id,
             CabinetStatusType.AVAILABLE,

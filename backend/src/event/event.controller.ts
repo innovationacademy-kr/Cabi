@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { JwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
 import { User } from '../decorator/user.decorator';
-import { BanCheckGuard } from '../v3/ban/guard/ban-check.guard';
+import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { EventInfoDto } from './dto/event.info.dto';
 import { EventService } from './evnet.service';
 

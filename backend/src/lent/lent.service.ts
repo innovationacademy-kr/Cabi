@@ -15,7 +15,11 @@ import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ILentRepository } from './repository/lent.repository.interface';
 import { BanService } from '../ban/ban.service';
 import { LentTools } from './lent.component';
-import { Transactional, Propagation, runOnTransactionComplete } from 'typeorm-transactional';
+import {
+  Transactional,
+  Propagation,
+  runOnTransactionComplete,
+} from 'typeorm-transactional';
 
 @Injectable()
 export class LentService {

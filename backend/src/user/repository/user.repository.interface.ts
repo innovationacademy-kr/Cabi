@@ -23,8 +23,5 @@ export interface IUserRepository {
    * @param user_id
    * @param state
    */
-  updateUserState(
-    user_id: number,
-    state: UserStateType,
-  ): Promise<void>;
+  updateUserState(user_id: number, state: UserStateType): Promise<void>;
 }

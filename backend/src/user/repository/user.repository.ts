@@ -55,10 +55,7 @@ export class UserRepository implements IUserRepository {
     return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
   }
 
-  async updateUserState(
-    user_id: number,
-    state: UserStateType,
-  ): Promise<void> {
+  async updateUserState(user_id: number, state: UserStateType): Promise<void> {
     await this.userRepository
       .createQueryBuilder(this.updateUserState.name)
       .update(User)

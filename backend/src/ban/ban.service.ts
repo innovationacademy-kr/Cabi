@@ -3,7 +3,11 @@ import Lent from 'src/entities/lent.entity';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { UserService } from '../user/user.service';
 import { IBanRepository } from './repository/ban.repository.interface';
-import { Transactional, Propagation, runOnTransactionComplete } from 'typeorm-transactional';
+import {
+  Transactional,
+  Propagation,
+  runOnTransactionComplete,
+} from 'typeorm-transactional';
 
 @Injectable()
 export class BanService {
@@ -39,9 +43,7 @@ export class BanService {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async blockingDropOffUser(
-    lent: Lent,
-  ): Promise<void> {
+  async blockingDropOffUser(lent: Lent): Promise<void> {
     this.logger.debug(
       `Called ${BanService.name} ${this.blockingDropOffUser.name}`,
     );
@@ -62,10 +64,7 @@ export class BanService {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async blockingUser(
-    lent: Lent,
-    ban_day: number,
-  ): Promise<void> {
+  async blockingUser(lent: Lent, ban_day: number): Promise<void> {
     this.logger.debug(`Called ${BanService.name} ${this.blockingUser.name}`);
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
     await this.banRepository.addToBanLogByUserId(lent, ban_day);
