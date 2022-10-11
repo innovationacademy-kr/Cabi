@@ -55,7 +55,8 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
   const setCabinetColor = (): string => {
     if (cabinet_id === user.cabinet_id) return cabinetColor.myCabinet;
     switch (status) {
-      case CabinetStatus.AVAILABLE || CabinetStatus.SET_EXPIRE_AVAILABLE:
+      case CabinetStatus.AVAILABLE:
+      case CabinetStatus.SET_EXPIRE_AVAILABLE:
         return cabinetColor.emptyCabinet;
       case CabinetStatus.SET_EXPIRE_FULL:
         return cabinetColor.lentedCabinet;
