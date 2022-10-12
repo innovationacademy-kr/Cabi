@@ -40,6 +40,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     floor: number,
   ): Promise<CabinetsPerSectionResponseDto[]> {
     const cabinets = await this.cabinetInfoRepository.find({
+      relations: ['lent', 'lent.user'],
       where: {
         location,
         floor,
@@ -47,11 +48,23 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     });
 
     const sections = await this.getSectionInfo(location, floor);
-    const cabinetInfoDto = await Promise.all(
-      cabinets.map((cabinet) =>
-        this.getCabinetResponseInfo(cabinet.cabinet_id),
-      ),
-    );
+    const cabinetInfoDto = cabinets.map((cabinet) => ({
+      cabinet_id: cabinet.cabinet_id,
+      cabinet_num: cabinet.cabinet_num,
+      lent_type: cabinet.lent_type,
+      cabinet_title: cabinet.title,
+      max_user: cabinet.max_user,
+      status: cabinet.status,
+      section: cabinet.section,
+      lent_info: cabinet.lent.map((lent) => ({
+        user_id: lent.user.user_id,
+        intra_id: lent.user.intra_id,
+        lent_id: lent.lent_id,
+        lent_time: lent.lent_time,
+        expire_time: lent.expire_time,
+        is_expired: new Date() > lent.expire_time,
+      })),
+    }));
 
     const rtn = sections.map((section) => ({
       section,
