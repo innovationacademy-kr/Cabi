@@ -7,6 +7,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { CabinetModule } from 'src/cabinet/cabinet.module';
 import { LentModule } from 'src/lent/lent.module';
 import { UserModule } from 'src/user/user.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 const repo = {
   provide: IBlackholeRepository,
@@ -14,7 +15,10 @@ const repo = {
 };
 
 @Module({
-  imports: [AuthModule, CabinetModule, HttpModule, UserModule, LentModule],
+  imports: [
+    AuthModule, CabinetModule, HttpModule, UserModule, LentModule,
+    // EventEmitterModule,
+  ],
   providers: [BlackholeService, repo],
   // exports: [BlackholeService]
 })

@@ -17,6 +17,7 @@ import { UserDto } from 'src/dto/user.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { UserService } from 'src/user/user.service';
 import { LentService } from 'src/lent/lent.service';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class BlackholeService
@@ -214,7 +215,6 @@ export class BlackholeService
     await this.postOauthToken().catch((err) => {
       this.logger.error(err);
     });
-    console.log(users);
     for (const user of users) {
       if (user.user_id > 0) {
         await this.validateBlackholedUser(user)
@@ -232,5 +232,22 @@ export class BlackholeService
       }
     }
     this.logger.debug(`Current Timer list: \n ${this.schedulerRegistry.getTimeouts()}`);
+  }
+
+  @OnEvent('user.created')
+  async validateBlackholeNewUser(user: UserDto) {
+    await this.validateBlackholedUser(user)
+        .catch(async (err) => {
+          if (err.status === HttpStatus.NOT_FOUND) {
+            this.logger.error(
+              `${user.intra_id} is already expired or not exists in 42 intra`,
+            );
+            await this.updateBlackholedUser(user);
+          }
+          else {
+            this.logger.error(err);
+          }
+        });
+    this.logger.debug(`New Timer: \n ${this.schedulerRegistry.getTimeout(user.intra_id)}`);
   }
 }
