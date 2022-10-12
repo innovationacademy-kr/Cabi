@@ -30,7 +30,7 @@ const GuideModal = (props: GuideModalProps): JSX.Element => {
         alert("🚨 대여 완료 된 사물합입니다 🚨");
         break;
       case CabinetStatus.EXPIRED:
-        alert("🚨 대여 완료 된 사물합입니다 🚨");
+        alert("🚨 연체된 사물함입니다 🚨");
         break;
       default:
         setOpen(true);
