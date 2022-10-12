@@ -15,11 +15,15 @@ export interface IBanRepository {
    * @param ban_day
    * @param is_penalty
    */
-  addToBanLogByUserId(lent: Lent, ban_day: number, is_penalty: boolean): Promise<void>;
+  addToBanLogByUserId(
+    lent: Lent,
+    ban_day: number,
+    is_penalty: boolean,
+  ): Promise<void>;
 
   /**
    * user_id를 받아 유저의 ban log들을 반환.
-   * @param user_id 
+   * @param user_id
    */
   getBanLogByUserId(user_id: number): Promise<BanLog[]>;
 }

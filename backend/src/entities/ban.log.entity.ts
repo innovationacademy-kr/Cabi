@@ -44,7 +44,7 @@ export default class BanLog {
     type: 'boolean',
   })
   is_penalty: boolean;
-  
+
   @ManyToOne(() => User, (user) => user.user_id)
   @JoinColumn({
     name: 'ban_user_id',

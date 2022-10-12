@@ -1,5 +1,5 @@
 import { MailerModule } from '@nestjs-modules/mailer';
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BanModule } from 'src/ban/ban.module';

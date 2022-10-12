@@ -64,7 +64,11 @@ export class BanService {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async blockingUser(lent: Lent, ban_day: number, is_penalty: boolean): Promise<void> {
+  async blockingUser(
+    lent: Lent,
+    ban_day: number,
+    is_penalty: boolean,
+  ): Promise<void> {
     this.logger.debug(`Called ${BanService.name} ${this.blockingUser.name}`);
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
     await this.banRepository.addToBanLogByUserId(lent, ban_day, is_penalty);
@@ -78,14 +82,12 @@ export class BanService {
 
   /**
    * 날짜 차이 계산
-   * @param begin 
-   * @param end 
+   * @param begin
+   * @param end
    * @returns days
    */
   async calDateDiff(begin: Date, end: Date): Promise<number> {
-    this.logger.debug(
-      `Called ${BanService.name} ${this.calDateDiff.name}`,
-    );
+    this.logger.debug(`Called ${BanService.name} ${this.calDateDiff.name}`);
     const diffDatePerSec = end.getTime() - begin.getTime();
     const days = Math.floor(diffDatePerSec / 1000 / 60 / 60 / 24);
     return days;
@@ -95,14 +97,17 @@ export class BanService {
    * 유저의 누적 연체일을 계산
    * @param user_id
    */
-    async addOverdueDays(user_id: number): Promise<number> {
-      this.logger.debug(`Called ${BanService.name} ${this.addOverdueDays.name}`);
-      const banLog = await this.banRepository.getBanLogByUserId(user_id);
-      let accumulate = 0;
-      for (const log of banLog) {
-        if (log.is_penalty == false)
-          accumulate += await this.calDateDiff(log.banned_date, log.unbanned_date);
-      } 
-      return accumulate;
+  async addOverdueDays(user_id: number): Promise<number> {
+    this.logger.debug(`Called ${BanService.name} ${this.addOverdueDays.name}`);
+    const banLog = await this.banRepository.getBanLogByUserId(user_id);
+    let accumulate = 0;
+    for (const log of banLog) {
+      if (log.is_penalty == false)
+        accumulate += await this.calDateDiff(
+          log.banned_date,
+          log.unbanned_date,
+        );
     }
+    return accumulate;
+  }
 }

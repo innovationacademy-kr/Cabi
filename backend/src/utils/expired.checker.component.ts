@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
@@ -28,15 +28,17 @@ export class ExpiredChecker {
     propagation: Propagation.REQUIRED,
   })
   async checkExpiredCabinetEach(lent: Lent) {
-    const days = await this.banService.calDateDiff(lent.expire_time, new Date());
+    const days = await this.banService.calDateDiff(
+      lent.expire_time,
+      new Date(),
+    );
     if (days >= 0) {
       if (days > 0 && days < 15) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
           CabinetStatusType.EXPIRED,
         );
-      }
-      else if (days >= 15) {
+      } else if (days >= 15) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
           CabinetStatusType.BANNED,
@@ -58,8 +60,7 @@ export class ExpiredChecker {
     );
     const lentList = await Promise.all(await this.lentTools.getAllLent());
     lentList.forEach(async (lent: Lent) => {
-      if (lent.expire_time === null)
-        return ;
+      if (lent.expire_time === null) return;
       await this.checkExpiredCabinetEach(lent);
     });
   }
