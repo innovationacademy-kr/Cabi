@@ -23,8 +23,8 @@ const CheckButton = (props: CheckButtonProps): JSX.Element => {
           border: 0,
           outline: 0,
         },
-        "margin-left": "0.25rem",
-        "margin-right": "0.25rem",
+        marginLeft: "0.25rem",
+        marginRight: "0.25rem",
       }}
     >
       {content}
