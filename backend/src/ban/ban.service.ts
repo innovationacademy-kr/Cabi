@@ -98,11 +98,11 @@ export class BanService {
     async addOverdueDays(user_id: number): Promise<number> {
       this.logger.debug(`Called ${BanService.name} ${this.addOverdueDays.name}`);
       const banLog = await this.banRepository.getBanLogByUserId(user_id);
-      let expiredDays = 0;
+      let accumulate = 0;
       for (const log of banLog) {
         if (log.is_penalty == false)
-          expiredDays += await this.calDateDiff(log.banned_date, log.unbanned_date);
+          accumulate += await this.calDateDiff(log.banned_date, log.unbanned_date);
       } 
-      return expiredDays;
+      return accumulate;
     }
 }
