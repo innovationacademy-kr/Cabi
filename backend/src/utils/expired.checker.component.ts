@@ -11,34 +11,24 @@ import {
   runOnTransactionComplete,
 } from 'typeorm-transactional';
 import Lent from 'src/entities/lent.entity';
+import { BanService } from 'src/ban/ban.service';
 
 @Injectable()
 export class ExpiredChecker {
   private logger = new Logger(ExpiredChecker.name);
   constructor(
-    @Inject(forwardRef(() => LentTools))
     private readonly lentTools: LentTools,
-    @Inject(forwardRef(() => LentService))
     private readonly lentService: LentService,
     private readonly emailsender: EmailSender,
     private cabinetInfoService: CabinetInfoService,
+    private banService: BanService,
   ) {}
-
-  async getExpiredDays(expire_time: Date): Promise<number> {
-    this.logger.debug(
-      `Called ${ExpiredChecker.name} ${this.getExpiredDays.name}`,
-    );
-    const today = new Date();
-    const diffDatePerSec = today.getTime() - expire_time.getTime();
-    const days = Math.floor(diffDatePerSec / 1000 / 60 / 60 / 24);
-    return days;
-  }
 
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
   async checkExpiredCabinetEach(lent: Lent) {
-    const days = await this.getExpiredDays(lent.expire_time);
+    const days = await this.banService.calDateDiff(lent.expire_time, new Date());
     if (days >= 0) {
       if (days > 0 && days < 15) {
         await this.cabinetInfoService.updateCabinetStatus(

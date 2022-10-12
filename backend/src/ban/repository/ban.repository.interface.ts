@@ -1,3 +1,4 @@
+import BanLog from 'src/entities/ban.log.entity';
 import Lent from 'src/entities/lent.entity';
 
 export interface IBanRepository {
@@ -14,4 +15,10 @@ export interface IBanRepository {
    * @param ban_day
    */
   addToBanLogByUserId(lent: Lent, ban_day: number): Promise<void>;
+
+  /**
+   * user_id를 받아 유저의 ban log들을 반환.
+   * @param user_id 
+   */
+  getBanLogByUserId(user_id: number): Promise<BanLog[]>;
 }

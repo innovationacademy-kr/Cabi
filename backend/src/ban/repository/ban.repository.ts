@@ -37,4 +37,12 @@ export class BanRepository implements IBanRepository {
       })
       .execute();
   }
+
+  async getBanLogByUserId(user_id: number): Promise<BanLog[]> {
+    return await this.banLogRepository.find({
+      where: {
+        ban_user_id: user_id,
+      },
+    });
+  }
 }

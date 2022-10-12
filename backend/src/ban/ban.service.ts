@@ -75,4 +75,28 @@ export class BanService {
     );
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
+
+  async calDateDiff(begin: Date, end: Date): Promise<number> {
+    this.logger.debug(
+      `Called ${BanService.name} ${this.calDateDiff.name}`,
+    );
+    const diffDatePerSec = end.getTime() - begin.getTime();
+    const days = Math.floor(diffDatePerSec / 1000 / 60 / 60 / 24);
+    return days;
+  }
+
+  /**
+   * 유저의 누적 연체일을 계산
+   * @param user_id
+   */
+    async addOverdueDays(user_id: number): Promise<number> {
+      this.logger.debug(`Called ${BanService.name} ${this.addOverdueDays.name}`);
+      const banLog = await this.banRepository.getBanLogByUserId(user_id);
+      let expiredDays = 0;
+      for (const log of banLog) {
+        if (log.is_penalty == false)
+          expiredDays += await this.calDateDiff(log.banned_date, log.unbanned_date);
+      } 
+      return expiredDays;
+    }
 }

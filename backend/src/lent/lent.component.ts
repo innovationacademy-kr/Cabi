@@ -7,7 +7,6 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { BanService } from '../ban/ban.service';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
-import { ExpiredChecker } from '../utils/expired.checker.component';
 import { LentService } from './lent.service';
 import { ILentRepository } from './repository/lent.repository.interface';
 import {
@@ -26,8 +25,6 @@ export class LentTools {
     @Inject(forwardRef(() => LentService))
     private lentService: LentService,
     private banService: BanService,
-    @Inject(forwardRef(() => ExpiredChecker))
-    private expiredChecker: ExpiredChecker,
   ) {}
 
   /**
@@ -142,7 +139,7 @@ export class LentTools {
       case CabinetStatusType.EXPIRED:
         await this.banService.blockingUser(
           lent,
-          await this.expiredChecker.getExpiredDays(lent.expire_time),
+          await this.banService.calDateDiff(lent.expire_time, new Date()),
         );
         if (
           lent.cabinet.status === CabinetStatusType.EXPIRED &&
