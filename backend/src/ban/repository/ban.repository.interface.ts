@@ -13,8 +13,9 @@ export interface IBanRepository {
    * Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
    * @param lent
    * @param ban_day
+   * @param is_penalty
    */
-  addToBanLogByUserId(lent: Lent, ban_day: number): Promise<void>;
+  addToBanLogByUserId(lent: Lent, ban_day: number, is_penalty: boolean): Promise<void>;
 
   /**
    * user_id를 받아 유저의 ban log들을 반환.

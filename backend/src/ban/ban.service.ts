@@ -51,7 +51,7 @@ export class BanService {
     const target = new Date(lent.lent_time.getTime());
     target.setDate(target.getDate() + 3);
     if (now < target) {
-      await this.blockingUser(lent, 3);
+      await this.blockingUser(lent, 3, true);
     }
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
@@ -64,10 +64,10 @@ export class BanService {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async blockingUser(lent: Lent, ban_day: number): Promise<void> {
+  async blockingUser(lent: Lent, ban_day: number, is_penalty: boolean): Promise<void> {
     this.logger.debug(`Called ${BanService.name} ${this.blockingUser.name}`);
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
-    await this.banRepository.addToBanLogByUserId(lent, ban_day);
+    await this.banRepository.addToBanLogByUserId(lent, ban_day, is_penalty);
     // 2. 해당 user의 state를 BAN으로 변경.
     await this.userService.updateUserState(
       lent.lent_user_id,
@@ -76,6 +76,12 @@ export class BanService {
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
+  /**
+   * 날짜 차이 계산
+   * @param begin 
+   * @param end 
+   * @returns days
+   */
   async calDateDiff(begin: Date, end: Date): Promise<number> {
     this.logger.debug(
       `Called ${BanService.name} ${this.calDateDiff.name}`,

@@ -137,9 +137,12 @@ export class LentTools {
         break;
       case CabinetStatusType.BANNED:
       case CabinetStatusType.EXPIRED:
+        const overdue = await this.banService.calDateDiff(lent.expire_time, new Date());
+        const cumulative = await this.banService.addOverdueDays(user.user_id);
         await this.banService.blockingUser(
           lent,
-          await this.banService.calDateDiff(lent.expire_time, new Date()),
+          overdue + cumulative,
+          false,
         );
         if (
           lent.cabinet.status === CabinetStatusType.EXPIRED &&
