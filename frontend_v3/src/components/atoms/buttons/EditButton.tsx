@@ -48,25 +48,25 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
     setTextValue,
     setInputValue,
   } = props;
+  const originalInputValue = inputValue;
+  const originalTextValue = textValue;
   const handleEditButtonClick = (): void => {
     setIsToggle(true);
   };
   const handleSaveButtonClick = (): void => {
     setIsToggle(false);
+    if (inputValue === "") setTextValue("방 제목을 입력해주세요");
+    else setTextValue(inputValue);
     if (contentType === "title") {
       const cabinet_title = inputValue;
-      axiosUpdateCabinetTitle({ cabinet_title })
-        .then(() => {
-          if (inputValue === "") setTextValue("방 제목을 입력해주세요");
-          else setTextValue(inputValue);
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("🚨 수정에 실패했습니다 🚨");
-          setInputValue(textValue);
-        });
+      axiosUpdateCabinetTitle({ cabinet_title }).catch((error) => {
+        console.error(error);
+        alert("🚨 수정에 실패했습니다 🚨");
+        setTextValue(originalTextValue);
+      });
     } else {
       const cabinet_memo = inputValue;
+      setTextValue(inputValue);
       axiosUpdateCabinetMemo({ cabinet_memo })
         .then(() => {
           if (inputValue === "") setTextValue("필요한 내용을 메모해주세요");
@@ -75,7 +75,7 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
         .catch((error) => {
           console.error(error);
           alert("🚨 수정에 실패했습니다 🚨");
-          setInputValue(textValue);
+          setTextValue(originalTextValue);
         });
     }
   };
