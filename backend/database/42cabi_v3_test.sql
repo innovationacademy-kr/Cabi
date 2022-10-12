@@ -28,6 +28,7 @@ CREATE TABLE `ban_log` (
   `ban_cabinet_id` int(11) NOT NULL COMMENT '사물함ID',
   `banned_date` datetime NOT NULL COMMENT '차단된 날짜',
   `unbanned_date` datetime NOT NULL COMMENT '차단해제된 시간',
+  `is_penalty` tinyint(1) default 0 null comment '반납 패널티로 인한 ban', 
   PRIMARY KEY (`ban_log_id`),
   UNIQUE KEY `ban_id` (`ban_log_id`),
   KEY `ban_cabinet_id` (`ban_cabinet_id`),
