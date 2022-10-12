@@ -19,9 +19,22 @@ const GuideModal = (props: GuideModalProps): JSX.Element => {
 
   const handleOpen = (): void => {
     if (box.props.cabinet_id === user?.cabinet_id) navigate("/lent");
-    if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
-      alert("🚨 사용 불가능한 사물함입니다 🚨");
-    else setOpen(true);
+    switch (status) {
+      case CabinetStatus.BANNED:
+        alert("🚨 사용 불가능한 사물함입니다 🚨");
+        break;
+      case CabinetStatus.BROKEN:
+        alert("🚨 고장난 사물함입니다 🚨");
+        break;
+      case CabinetStatus.SET_EXPIRE_FULL:
+        alert("🚨 대여 완료 된 사물합입니다 🚨");
+        break;
+      case CabinetStatus.EXPIRED:
+        alert("🚨 대여 완료 된 사물합입니다 🚨");
+        break;
+      default:
+        setOpen(true);
+    }
   };
   const handleClose = (): void => setOpen(false);
 
