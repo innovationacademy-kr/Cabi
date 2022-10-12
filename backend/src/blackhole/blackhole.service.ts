@@ -209,6 +209,7 @@ export class BlackholeService
   // 서버가 처음 구동되면 모든 유저에 대해 블랙홀에 빠졌는지 확인 작업을 수행.
   async blackholeTimerTrigger() {
     this.logger.debug(`Called ${BlackholeService.name} ${this.blackholeTimerTrigger.name}`);
+    // TODO: getAllUser는 UserService를 통해 가져오도록 수정 필요.
     const users: UserDto[] = await this.blackholeRepository.getAllUser();
     await this.postOauthToken().catch((err) => {
       this.logger.error(err);
