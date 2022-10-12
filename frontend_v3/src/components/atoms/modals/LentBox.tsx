@@ -76,14 +76,12 @@ interface LentBoxProps {
   cabinet_id: number;
   lender: LentDto[];
   cabinet_type: string;
-  isLentAble: boolean;
   status: CabinetStatus;
 }
 
 const LentBox = (props: LentBoxProps): JSX.Element => {
   const {
     handleClose,
-    isLentAble,
     cabinet_number,
     cabinet_title,
     lender,
@@ -210,31 +208,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     </Box>
   );
 
-  const LentUnableContent = "현재 대여가 불가능한 사물함입니다";
-  const LentUnable: JSX.Element = (
-    <Box sx={BoxStyle}>
-      <Typography
-        id="modal-modal-title"
-        variant="h6"
-        component="h2"
-        align="center"
-      >
-        {LentUnableContent}
-      </Typography>
-      <div style={CenterAlignStyle}>
-        <CheckButton
-          color="primary"
-          variant="contained"
-          content="확인"
-          onClick={handleClose}
-        />
-      </div>
-    </Box>
-  );
-
-  return (
-    <LentBoxContainer>{isLentAble ? LentAble : LentUnable}</LentBoxContainer>
-  );
+  return <LentBoxContainer>{LentAble}</LentBoxContainer>;
 };
 
 LentBox.defaultProps = {
