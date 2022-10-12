@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPenToSquare,
   faCircleCheck,
+  faCircleXmark,
 } from "@fortawesome/free-regular-svg-icons";
 import styled from "@emotion/styled";
 import {
@@ -14,8 +15,9 @@ const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2rem;
-  height: 2rem;
+  width: 50%;
+  height: 100%;
+  margin: 0.1rem;
   padding: 0;
   background-color: transparent;
   &,
@@ -77,15 +79,31 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
         });
     }
   };
+  const handleCancelButtonClick = (): void => {
+    setIsToggle(false);
+    if (textValue === "필요한 내용을 메모해주세요") setInputValue("");
+    else setInputValue(textValue);
+  };
 
   return isToggle === false ? (
     <Button onClick={handleEditButtonClick}>
       <FontAwesomeIcon icon={faPenToSquare} />
     </Button>
   ) : (
-    <Button onClick={handleSaveButtonClick}>
-      <FontAwesomeIcon icon={faCircleCheck} />
-    </Button>
+    <>
+      <Button onClick={handleCancelButtonClick}>
+        <FontAwesomeIcon
+          icon={faCircleXmark}
+          style={{ height: "1.5rem", width: "1.5rem" }}
+        />
+      </Button>
+      <Button onClick={handleSaveButtonClick}>
+        <FontAwesomeIcon
+          icon={faCircleCheck}
+          style={{ height: "1.5rem", width: "1.5rem" }}
+        />
+      </Button>
+    </>
   );
 };
 
