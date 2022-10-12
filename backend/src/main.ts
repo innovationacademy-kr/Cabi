@@ -24,6 +24,7 @@ async function bootstrap() {
     app.enableCors();
   }
   app.use(helmet());
+  app.enableShutdownHooks();
   await app.listen(port);
 }
 bootstrap();
