@@ -53,7 +53,11 @@ export class UserService {
     return await this.userRepository.getMinUserId();
   }
 
-  async updateUserInfo(user_id: number, new_user: UserDto, new_state: UserStateType): Promise<void> {
+  async updateUserInfo(
+    user_id: number,
+    new_user: UserDto,
+    new_state: UserStateType,
+  ): Promise<void> {
     this.logger.debug(`Called ${this.updateUserInfo.name}`);
     await this.updateUserState(user_id, new_state);
     await this.userRepository.updateUserInfo(user_id, new_user);

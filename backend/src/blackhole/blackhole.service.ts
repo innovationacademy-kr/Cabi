@@ -19,9 +19,7 @@ import UserStateType from 'src/enums/user.state.type.enum';
 import { BlackholeTools } from './blackhole.component';
 
 @Injectable()
-export class BlackholeService
-  implements OnApplicationBootstrap {
-
+export class BlackholeService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     this.blackholeTimerTrigger();
   }
@@ -54,26 +52,28 @@ export class BlackholeService
     };
   }
 
-   /**
+  /**
    * Intra에 Post 요청을 보내 API 사용을 위한 Oauth token을 발급한다.
    * @return void
    */
-    async postOauthToken(): Promise<void> {
-      this.logger.debug(`Called ${BlackholeService.name} ${this.postOauthToken.name}`);
-      const url = 'https://api.intra.42.fr/oauth/token';
-      await firstValueFrom(
-        this.httpService
+  async postOauthToken(): Promise<void> {
+    this.logger.debug(
+      `Called ${BlackholeService.name} ${this.postOauthToken.name}`,
+    );
+    const url = 'https://api.intra.42.fr/oauth/token';
+    await firstValueFrom(
+      this.httpService
         .post(url, null, this.postConfig)
         .pipe(map((res) => res.data)),
-        )
-        .then((data) => {
+    )
+      .then((data) => {
         this.token = data.access_token;
         this.logger.log(`Issued new token ${this.token}`);
-        })
-        .catch((err) => {
+      })
+      .catch((err) => {
         throw new HttpException('postOauthToken', err.response.status);
-        });
-      }
+      });
+  }
 
   /**
    * 블랙홀에 빠진 유저의 정보를 업데이트한다.
@@ -82,7 +82,9 @@ export class BlackholeService
    * @return void
    */
   async updateBlackholedUser(user: UserDto): Promise<void> {
-    this.logger.debug(`Called ${BlackholeService.name} ${this.updateBlackholedUser.name}`);
+    this.logger.debug(
+      `Called ${BlackholeService.name} ${this.updateBlackholedUser.name}`,
+    );
 
     const min_user_id = await this.userService.getMinUserId();
     let new_user_id = -2;
@@ -93,8 +95,11 @@ export class BlackholeService
     const new_user: UserDto = {
       user_id: new_user_id,
       intra_id: new_intra_id,
-    }
-    await this.userService.updateUserInfo(user.user_id, new_user, UserStateType.BLACKHOLED,
+    };
+    await this.userService.updateUserInfo(
+      user.user_id,
+      new_user,
+      UserStateType.BLACKHOLED,
     );
 
     const myLent = await this.userService.checkUserBorrowed(new_user);
@@ -118,7 +123,9 @@ export class BlackholeService
    * @return void
    */
   async validateBlackholedUser(user: UserDto): Promise<void> {
-    this.logger.debug(`Called ${BlackholeService.name} ${this.validateBlackholedUser.name}`);
+    this.logger.debug(
+      `Called ${BlackholeService.name} ${this.validateBlackholedUser.name}`,
+    );
     const url = `https://api.intra.42.fr/v2/users/${user.intra_id}`;
     const headersRequest = {
       'Content-Type': 'application/json',
@@ -129,7 +136,7 @@ export class BlackholeService
       this.httpService
         .get(url, { headers: headersRequest })
         .pipe(map((res) => res.data)),
-      )
+    )
       .then(async (data) => {
         this.logger.log(`id: ${user.user_id}, intra_id: ${user.intra_id}`);
         // 스태프는 판별하지 않음.
@@ -147,8 +154,10 @@ export class BlackholeService
         const today = new Date();
         // Member는 판별하지 않음.
         if (!LearnerBlackhole) {
-          this.logger.log(`${user.intra_id} is Member, doesn't have blackhole date`);
-          return ;
+          this.logger.log(
+            `${user.intra_id} is Member, doesn't have blackhole date`,
+          );
+          return;
         }
         const blackhole_date = new Date(LearnerBlackhole);
         this.logger.log(`Blackhole_day: ${blackhole_date}`);
@@ -173,7 +182,9 @@ export class BlackholeService
    * 서버가 처음 구동되면 모든 유저에 대해 블랙홀에 빠졌는지 확인 작업을 수행.
    */
   async blackholeTimerTrigger() {
-    this.logger.debug(`Called ${BlackholeService.name} ${this.blackholeTimerTrigger.name}`);
+    this.logger.debug(
+      `Called ${BlackholeService.name} ${this.blackholeTimerTrigger.name}`,
+    );
     const users: UserDto[] = await this.userService.getAllUser();
     await this.postOauthToken().catch((err) => {
       this.logger.error(err);
@@ -181,15 +192,13 @@ export class BlackholeService
 
     for (const user of users) {
       if (user.user_id > 0) {
-        await this.validateBlackholedUser(user)
-        .catch(async (err) => {
+        await this.validateBlackholedUser(user).catch(async (err) => {
           if (err.status === HttpStatus.NOT_FOUND) {
             this.logger.error(
               `${user.intra_id} is already expired or not exists in 42 intra`,
             );
             await this.updateBlackholedUser(user);
-          }
-          else {
+          } else {
             this.logger.error(err);
           }
         });
@@ -197,6 +206,8 @@ export class BlackholeService
         this.blackholeTools.addBlackholedUserTimer(user);
       }
     }
-    this.logger.debug(`Current Timer list: \n ${this.schedulerRegistry.getTimeouts()}`);
+    this.logger.debug(
+      `Current Timer list: \n ${this.schedulerRegistry.getTimeouts()}`,
+    );
   }
 }

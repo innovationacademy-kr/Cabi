@@ -8,7 +8,6 @@ import { AuthService } from './auth.service';
 import { AuthRepository } from './repository/auth.repository';
 import User from 'src/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 
 const repo = {
   provide: 'IAuthRepository',

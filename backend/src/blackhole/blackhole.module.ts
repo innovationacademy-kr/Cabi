@@ -5,13 +5,10 @@ import { AuthModule } from 'src/auth/auth.module';
 import { CabinetModule } from 'src/cabinet/cabinet.module';
 import { LentModule } from 'src/lent/lent.module';
 import { UserModule } from 'src/user/user.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BlackholeTools } from './blackhole.component';
 
 @Module({
-  imports: [
-    AuthModule, CabinetModule, HttpModule, UserModule, LentModule,
-  ],
+  imports: [AuthModule, CabinetModule, HttpModule, UserModule, LentModule],
   providers: [BlackholeService, BlackholeTools],
 })
 export class BlackholeModule {}

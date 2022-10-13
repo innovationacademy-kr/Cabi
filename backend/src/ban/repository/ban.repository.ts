@@ -1,5 +1,4 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
 import { Repository } from 'typeorm';
 import BanLog from '../../entities/ban.log.entity';

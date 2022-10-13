@@ -1,4 +1,3 @@
-import { UserDto } from 'src/dto/user.dto';
 import BanLog from 'src/entities/ban.log.entity';
 import Lent from 'src/entities/lent.entity';
 

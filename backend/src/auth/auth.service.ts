@@ -12,11 +12,7 @@ export class AuthService {
 
   async addUserIfNotExists(user: UserDto): Promise<boolean> {
     const find = await this.authRepository.addUserIfNotExists(user);
-    if (!find)
-    this.eventEmitter.emit(
-      'user.created',
-      user,
-    );
+    if (!find) this.eventEmitter.emit('user.created', user);
     return find;
   }
 

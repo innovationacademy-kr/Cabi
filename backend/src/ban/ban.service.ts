@@ -8,7 +8,6 @@ import {
   Propagation,
   runOnTransactionComplete,
 } from 'typeorm-transactional';
-import { UserDto } from 'src/dto/user.dto';
 
 @Injectable()
 export class BanService {

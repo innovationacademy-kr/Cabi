@@ -1,7 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import { UserDto } from 'src/dto/user.dto';
-import Lent from 'src/entities/lent.entity';
 import User from 'src/entities/user.entity';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
@@ -81,14 +80,14 @@ export class UserRepository implements IUserRepository {
 
   async updateUserInfo(user_id: number, new_user: UserDto): Promise<void> {
     await this.userRepository
-    .createQueryBuilder(this.updateUserInfo.name)
-    .update(User)
-    .set({
-      user_id: new_user.user_id,
-      intra_id: new_user.intra_id,
-    })
-    .where('user_id = :user_id', { user_id: user_id })
-    .execute();
+      .createQueryBuilder(this.updateUserInfo.name)
+      .update(User)
+      .set({
+        user_id: new_user.user_id,
+        intra_id: new_user.intra_id,
+      })
+      .where('user_id = :user_id', { user_id: user_id })
+      .execute();
   }
 
   async getAllUser(): Promise<UserDto[]> {
@@ -102,11 +101,12 @@ export class UserRepository implements IUserRepository {
   }
 
   async deleteUser(user: UserDto): Promise<void> {
-    await this.userRepository.createQueryBuilder(this.deleteUser.name)
-    .delete()
-    .where({
-      user_id: user.user_id,
-    })
-    .execute();
+    await this.userRepository
+      .createQueryBuilder(this.deleteUser.name)
+      .delete()
+      .where({
+        user_id: user.user_id,
+      })
+      .execute();
   }
 }
