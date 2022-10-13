@@ -1,4 +1,5 @@
 import {
+  forwardRef,
   HttpException,
   HttpStatus,
   Inject,
@@ -10,15 +11,12 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
 import { AxiosRequestConfig } from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { Cron, SchedulerRegistry, Timeout } from '@nestjs/schedule';
-import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { UserDto } from 'src/dto/user.dto';
-import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { UserService } from 'src/user/user.service';
 import { LentService } from 'src/lent/lent.service';
-import { OnEvent } from '@nestjs/event-emitter';
-import { BanService } from 'src/ban/ban.service';
 import UserStateType from 'src/enums/user.state.type.enum';
+import { BlackholeTools } from './blackhole.component';
 
 @Injectable()
 export class BlackholeService
@@ -37,10 +35,10 @@ export class BlackholeService
   constructor(
     private readonly httpService: HttpService,
     @Inject(ConfigService) private configService: ConfigService,
-    private cabinetService: CabinetInfoService,
+    @Inject(forwardRef(() => BlackholeTools))
+    private blackholeTools: BlackholeTools,
     private userService: UserService,
     private lentService: LentService,
-    private banService: BanService,
     private schedulerRegistry: SchedulerRegistry,
   ) {
     this.logger = new Logger(BlackholeService.name);
@@ -56,6 +54,26 @@ export class BlackholeService
     };
   }
 
+   /**
+   * Intra에 Post 요청을 보내 API 사용을 위한 Oauth token을 발급한다.
+   * @return void
+   */
+    async postOauthToken(): Promise<void> {
+      const url = 'https://api.intra.42.fr/oauth/token';
+      await firstValueFrom(
+        this.httpService
+        .post(url, null, this.postConfig)
+        .pipe(map((res) => res.data)),
+        )
+        .then((data) => {
+        this.token = data.access_token;
+        this.logger.log(`Issued new token ${this.token}`);
+        })
+        .catch((err) => {
+        throw new HttpException('postOauthToken', err.response.status);
+        });
+      }
+
   /**
    * 블랙홀에 빠진 유저의 정보를 업데이트한다.
    *
@@ -63,48 +81,24 @@ export class BlackholeService
    * @return void
    */
   async updateBlackholedUser(user: UserDto): Promise<void> {
-    try {
-      const myLent = await this.userService.checkUserBorrowed(user);
-      if (myLent.cabinet_id !== -1) {
-        this.logger.warn(`Return ${user.intra_id}'s cabinet`);
-        await this.lentService.returnCabinet(user);
-      }
-      const min_user_id = await this.userService.getMinUserId();
-      let new_user_id = -2;
-      if (min_user_id < -1) {
-        new_user_id = min_user_id - 1;
-      }
-      const new_intra_id = '[BLACKHOLED]' + user.intra_id;
-      await this.userService.updateUserInfo(user.user_id, {
-        user_id: new_user_id,
-        intra_id: new_intra_id,
-      },
-      UserStateType.BLACKHOLED,
-      );
-      this.addBlackholedUserTimer(user);
-    } catch (err) {
-      this.logger.error(err);
+    const myLent = await this.userService.checkUserBorrowed(user);
+    if (myLent.cabinet_id !== -1) {
+      this.logger.warn(`Return ${user.intra_id}'s cabinet`);
+      await this.lentService.returnCabinet(user);
     }
-  }
-
-  /**
-   * Intra에 Post 요청을 보내 API 사용을 위한 Oauth token을 발급한다.
-   * @return void
-   */
-  async postOauthToken(): Promise<void> {
-    const url = 'https://api.intra.42.fr/oauth/token';
-    await firstValueFrom(
-      this.httpService
-        .post(url, null, this.postConfig)
-        .pipe(map((res) => res.data)),
-      )
-      .then((data) => {
-        this.token = data.access_token;
-        this.logger.log(`Issued new token ${this.token}`);
-      })
-      .catch((err) => {
-        throw new HttpException('postOauthToken', err.response.status);
-      });
+    const min_user_id = await this.userService.getMinUserId();
+    let new_user_id = -2;
+    if (min_user_id < -1) {
+      new_user_id = min_user_id - 1;
+    }
+    const new_intra_id = '[BLACKHOLED]' + user.intra_id;
+    await this.userService.updateUserInfo(user.user_id, {
+      user_id: new_user_id,
+      intra_id: new_intra_id,
+    },
+    UserStateType.BLACKHOLED,
+    );
+    this.blackholeTools.addBlackholedUserTimer(user);
   }
 
   /**
@@ -159,57 +153,15 @@ export class BlackholeService
         // 블랙홀에 빠졌다면 해당 유저 정보를 업데이트.
         if (time_diff >= 0) {
           this.logger.log(`${user.intra_id} not yet fall into a blackhole`);
-          await this.addBlackholeTimer(user, blackhole_date);
+          await this.blackholeTools.addBlackholeTimer(user, blackhole_date);
         } else {
           this.logger.log(`${user.intra_id} already fell into a blackhole`);
           await this.updateBlackholedUser(user);
         }
       })
       .catch((err) => {
-        this.logger.error(err);
+        throw err;
       });
-  }
-
-  setTimeoutDate(intra_id: string, date: Date, callback) {
-    const now = (new Date()).getTime();
-    const then = date.getTime();
-    const diff = Math.max((then - now), 0);
-    let timeout: NodeJS.Timeout;
-    try {
-      this.schedulerRegistry.deleteTimeout(intra_id);
-    } catch (err) {}
-    if (diff > 0x7FFFFFFF) { // setTimeout limit is MAX_INT32=(2^31-1)
-      timeout = setTimeout(() => {
-        this.setTimeoutDate(intra_id, date, callback);
-      }, 0x7FFFFFFF);
-    } else {
-      timeout = setTimeout(callback, diff);
-    }
-    this.schedulerRegistry.addTimeout(intra_id, timeout);
-  }
-
-  // Today - Blackhole_date후 fired될 Timer등록.
-  // Timer가 fired 되면 콜백으로 validateBlackholedUser를 수행.
-  async addBlackholeTimer(user: UserDto, blackhole_date: Date) {
-    const callback = async () => {
-      this.logger.debug(`Blackhole timer for ${user.intra_id} fired!`);
-      await this.postOauthToken().catch((err) => {
-        this.logger.error(err);
-      });
-      await this.validateBlackholedUser(user)
-      .catch(async (err) => {
-          if (err.status === HttpStatus.NOT_FOUND) {
-            this.logger.error(
-              `${user.intra_id} is already expired or not exists in 42 intra`,
-            );
-            await this.updateBlackholedUser(user);
-          }
-          else {
-            this.logger.error(err);
-          }
-      });
-    };
-    this.setTimeoutDate(user.intra_id, blackhole_date, callback);
   }
 
   /**
@@ -221,6 +173,7 @@ export class BlackholeService
     await this.postOauthToken().catch((err) => {
       this.logger.error(err);
     });
+
     for (const user of users) {
       if (user.user_id > 0) {
         await this.validateBlackholedUser(user)
@@ -236,43 +189,9 @@ export class BlackholeService
           }
         });
       } else {
-        this.addBlackholedUserTimer(user);
+        this.blackholeTools.addBlackholedUserTimer(user);
       }
     }
     this.logger.debug(`Current Timer list: \n ${this.schedulerRegistry.getTimeouts()}`);
-  }
-
-  @OnEvent('user.created')
-  /**
-   * 유저가 생성되면 해당 유저의 블랙홀 타이머를 등록.
-   */
-  async validateBlackholeForNewUser(user: UserDto) {
-    await this.validateBlackholeForNewUser(user)
-        .catch(async (err) => {
-          if (err.status === HttpStatus.NOT_FOUND) {
-            this.logger.error(
-              `${user.intra_id} is already expired or not exists in 42 intra`,
-            );
-            await this.updateBlackholedUser(user);
-          }
-          else {
-            this.logger.error(err);
-          }
-        });
-    this.logger.debug(`New Timer: \n ${this.schedulerRegistry.getTimeout(user.intra_id)}`);
-  }
-
-  /**
-   * 블랙홀에 빠진 유저가 30일이 지나면 DB에서 삭제될 수 있도록 타이머를 설정합니다.
-   * @param user
-   */
-  async addBlackholedUserTimer(user: UserDto) {
-    const callback = async () => {
-      this.logger.debug(`BlackholedUser timer for ${user.intra_id} fired!`);
-      await this.userService.deleteUser(user);
-    };
-    const fired_date = new Date();
-    fired_date.setDate(fired_date.getDate() + 30);
-    this.setTimeoutDate(user.intra_id, fired_date, callback);
   }
 }

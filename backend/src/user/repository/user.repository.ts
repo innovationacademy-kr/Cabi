@@ -86,7 +86,7 @@ export class UserRepository implements IUserRepository {
       intra_id: new_user.intra_id,
     })
     .where('user_id = :user_id', { user_id: user_id })
-    .relation('BanLog')
+    // .relation('BanLog')
     .execute();
   }
 

@@ -34,8 +34,8 @@ import { LentService } from './lent.service';
 // mock up user here
 const user: UserSessionDto = {
   // TESTER 1
-  user_id: 85330,
-  intra_id: 'sichoi',
+  // user_id: 85330,
+  // intra_id: 'sichoi',
   // TESTER 2
   // user_id: 76317,
   // intra_id: 'joopark',
@@ -45,6 +45,9 @@ const user: UserSessionDto = {
   // TESTER 4
   // user_id: 69106,
   // intra_id: 'hyoon',
+  // TESTER 5
+  user_id: 424242,
+  intra_id: 'yoyoo',
   iat: 0,
   ext: 9999999999999,
 };
