@@ -21,7 +21,11 @@ export class BanRepository implements IBanRepository {
     return result ? result.unbanned_date : null;
   }
 
-  async addToBanLogByUserId(lent: Lent, ban_day: number): Promise<void> {
+  async addToBanLogByUserId(
+    lent: Lent,
+    ban_day: number,
+    is_penalty: boolean,
+  ): Promise<void> {
     const banned_date = new Date();
     const unbanned_date = new Date(banned_date.getTime());
     unbanned_date.setDate(banned_date.getDate() + ban_day);
@@ -34,7 +38,16 @@ export class BanRepository implements IBanRepository {
         ban_cabinet_id: lent.lent_cabinet_id,
         banned_date,
         unbanned_date,
+        is_penalty,
       })
       .execute();
+  }
+
+  async getBanLogByUserId(user_id: number): Promise<BanLog[]> {
+    return await this.banLogRepository.find({
+      where: {
+        ban_user_id: user_id,
+      },
+    });
   }
 }
