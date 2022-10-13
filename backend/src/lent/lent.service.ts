@@ -165,6 +165,7 @@ export class LentService {
             lent.cabinet.cabinet_id,
             CabinetStatusType.BANNED,
           );
+          lent.cabinet.status = CabinetStatusType.BANNED;
         }
       }
       // 3. 현재 대여 상태에 따라 케이스 처리

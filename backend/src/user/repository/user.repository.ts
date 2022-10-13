@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import { UserDto } from 'src/dto/user.dto';
+import Lent from 'src/entities/lent.entity';
 import User from 'src/entities/user.entity';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
@@ -53,6 +54,7 @@ export class UserRepository implements IUserRepository {
         user_id: userId,
       },
     });
+    console.log(result);
     return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
   }
 
@@ -86,7 +88,6 @@ export class UserRepository implements IUserRepository {
       intra_id: new_user.intra_id,
     })
     .where('user_id = :user_id', { user_id: user_id })
-    // .relation('BanLog')
     .execute();
   }
 

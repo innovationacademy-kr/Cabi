@@ -45,7 +45,7 @@ export class UserService {
 
   async updateUserState(user_id: number, state: UserStateType): Promise<void> {
     this.logger.debug(`Called ${this.updateUserState.name}`);
-    await this.userRepository.updateUserState(user_id, state);
+    this.userRepository.updateUserState(user_id, state);
   }
 
   async getMinUserId(): Promise<number> {
@@ -56,7 +56,7 @@ export class UserService {
   async updateUserInfo(user_id: number, new_user: UserDto, new_state: UserStateType): Promise<void> {
     this.logger.debug(`Called ${this.updateUserInfo.name}`);
     await this.updateUserState(user_id, new_state);
-    return await this.userRepository.updateUserInfo(user_id, new_user);
+    await this.userRepository.updateUserInfo(user_id, new_user);
   }
 
   async getAllUser(): Promise<UserDto[]> {
@@ -66,6 +66,6 @@ export class UserService {
 
   async deleteUser(user: UserDto): Promise<void> {
     this.logger.debug(`Called ${this.deleteUser.name}`);
-    return await this.userRepository.deleteUser(user);
+    await this.userRepository.deleteUser(user);
   }
 }

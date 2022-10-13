@@ -83,24 +83,26 @@ export class BlackholeService
    */
   async updateBlackholedUser(user: UserDto): Promise<void> {
     this.logger.debug(`Called ${BlackholeService.name} ${this.updateBlackholedUser.name}`);
-    const myLent = await this.userService.checkUserBorrowed(user);
-    if (myLent.cabinet_id !== -1) {
-      this.logger.warn(`Return ${user.intra_id}'s cabinet`);
-      await this.lentService.returnCabinet(user);
-    }
+
     const min_user_id = await this.userService.getMinUserId();
     let new_user_id = -2;
     if (min_user_id < -1) {
       new_user_id = min_user_id - 1;
     }
     const new_intra_id = '[BLACKHOLED]' + user.intra_id;
-    await this.userService.updateUserInfo(user.user_id, {
+    const new_user: UserDto = {
       user_id: new_user_id,
       intra_id: new_intra_id,
-    },
-    UserStateType.BLACKHOLED,
+    }
+    await this.userService.updateUserInfo(user.user_id, new_user, UserStateType.BLACKHOLED,
     );
-    this.blackholeTools.addBlackholedUserTimer(user);
+
+    const myLent = await this.userService.checkUserBorrowed(new_user);
+    if (myLent.cabinet_id !== -1) {
+      this.logger.warn(`Return ${user.intra_id}'s cabinet`);
+      await this.lentService.returnCabinet(new_user);
+    }
+    this.blackholeTools.addBlackholedUserTimer(new_user);
   }
 
   /**
