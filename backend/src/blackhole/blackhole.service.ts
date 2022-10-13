@@ -11,7 +11,6 @@ import { firstValueFrom, map } from 'rxjs';
 import { AxiosRequestConfig } from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { Cron, SchedulerRegistry, Timeout } from '@nestjs/schedule';
-import { IBlackholeRepository } from './repository/blackhole.repository';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import { UserDto } from 'src/dto/user.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
@@ -36,7 +35,6 @@ export class BlackholeService
   private logger: Logger;
 
   constructor(
-    private blackholeRepository: IBlackholeRepository,
     private readonly httpService: HttpService,
     @Inject(ConfigService) private configService: ConfigService,
     private cabinetService: CabinetInfoService,
