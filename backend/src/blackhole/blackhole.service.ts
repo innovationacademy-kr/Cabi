@@ -10,7 +10,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
 import { AxiosRequestConfig } from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { SchedulerRegistry } from '@nestjs/schedule';
+import { Cron, SchedulerRegistry, Timeout } from '@nestjs/schedule';
 import { IBlackholeRepository } from './repository/blackhole.repository';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import { UserDto } from 'src/dto/user.dto';
@@ -18,6 +18,8 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { UserService } from 'src/user/user.service';
 import { LentService } from 'src/lent/lent.service';
 import { OnEvent } from '@nestjs/event-emitter';
+import { BanService } from 'src/ban/ban.service';
+import UserStateType from 'src/enums/user.state.type.enum';
 
 @Injectable()
 export class BlackholeService
@@ -37,9 +39,10 @@ export class BlackholeService
     private blackholeRepository: IBlackholeRepository,
     private readonly httpService: HttpService,
     @Inject(ConfigService) private configService: ConfigService,
-    private readonly cabinetService: CabinetInfoService,
-    private readonly userService: UserService,
-    private readonly lentService: LentService,
+    private cabinetService: CabinetInfoService,
+    private userService: UserService,
+    private lentService: LentService,
+    private banService: BanService,
     private schedulerRegistry: SchedulerRegistry,
   ) {
     this.logger = new Logger(BlackholeService.name);
@@ -67,16 +70,20 @@ export class BlackholeService
       if (myLent.cabinet_id !== -1) {
         this.logger.warn(`Return ${user.intra_id}'s cabinet`);
         await this.lentService.returnCabinet(user);
-        await this.cabinetService.updateCabinetStatus(
-          myLent.cabinet_id,
-          CabinetStatusType.BANNED,
-        );
       }
-      // FIXME: V3에 맞게 수정 필요.
-      // await this.blackholeRepository.updateBlackholedUser(
-      //   user.user_id,
-      //   user.intra_id,
-      // );
+      const min_user_id = await this.userService.getMinUserId();
+      let new_user_id = -2;
+      if (min_user_id < -1) {
+        new_user_id = min_user_id - 1;
+      }
+      const new_intra_id = '[BLACKHOLED]' + user.intra_id;
+      await this.userService.updateUserInfo(user.user_id, {
+        user_id: new_user_id,
+        intra_id: new_intra_id,
+      },
+      UserStateType.BLACKHOLED,
+      );
+      this.addBlackholedUserTimer(user);
     } catch (err) {
       this.logger.error(err);
     }
@@ -207,11 +214,12 @@ export class BlackholeService
     this.setTimeoutDate(user.intra_id, blackhole_date, callback);
   }
 
-  // 서버가 처음 구동되면 모든 유저에 대해 블랙홀에 빠졌는지 확인 작업을 수행.
+  /**
+   * 서버가 처음 구동되면 모든 유저에 대해 블랙홀에 빠졌는지 확인 작업을 수행.
+   */
   async blackholeTimerTrigger() {
     this.logger.debug(`Called ${BlackholeService.name} ${this.blackholeTimerTrigger.name}`);
-    // TODO: getAllUser는 UserService를 통해 가져오도록 수정 필요.
-    const users: UserDto[] = await this.blackholeRepository.getAllUser();
+    const users: UserDto[] = await this.userService.getAllUser();
     await this.postOauthToken().catch((err) => {
       this.logger.error(err);
     });
@@ -229,14 +237,19 @@ export class BlackholeService
             this.logger.error(err);
           }
         });
+      } else {
+        this.addBlackholedUserTimer(user);
       }
     }
     this.logger.debug(`Current Timer list: \n ${this.schedulerRegistry.getTimeouts()}`);
   }
 
   @OnEvent('user.created')
-  async validateBlackholeNewUser(user: UserDto) {
-    await this.validateBlackholedUser(user)
+  /**
+   * 유저가 생성되면 해당 유저의 블랙홀 타이머를 등록.
+   */
+  async validateBlackholeForNewUser(user: UserDto) {
+    await this.validateBlackholeForNewUser(user)
         .catch(async (err) => {
           if (err.status === HttpStatus.NOT_FOUND) {
             this.logger.error(
@@ -249,5 +262,19 @@ export class BlackholeService
           }
         });
     this.logger.debug(`New Timer: \n ${this.schedulerRegistry.getTimeout(user.intra_id)}`);
+  }
+
+  /**
+   * 블랙홀에 빠진 유저가 30일이 지나면 DB에서 삭제될 수 있도록 타이머를 설정합니다.
+   * @param user
+   */
+  async addBlackholedUserTimer(user: UserDto) {
+    const callback = async () => {
+      this.logger.debug(`BlackholedUser timer for ${user.intra_id} fired!`);
+      await this.userService.deleteUser(user);
+    };
+    const fired_date = new Date();
+    fired_date.setDate(fired_date.getDate() + 30);
+    this.setTimeoutDate(user.intra_id, fired_date, callback);
   }
 }

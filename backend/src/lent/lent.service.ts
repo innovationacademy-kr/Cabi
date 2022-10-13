@@ -157,14 +157,24 @@ export class LentService {
           HttpStatus.FORBIDDEN,
         );
       }
-      // 2. 현재 대여 상태에 따라 케이스 처리
+      // 2. 블랙홀에 빠진 유저의 반납 처리인 경우
+      // 개인 사물함을 사용하고 있었다면 강제 반납 처리 -> BANNED로 변경.
+      if (user.user_id < -1) {
+        if (lent.cabinet.lent_type === LentType.PRIVATE) {
+          await this.cabinetInfoService.updateCabinetStatus(
+            lent.cabinet.cabinet_id,
+            CabinetStatusType.BANNED,
+          );
+        }
+      }
+      // 3. 현재 대여 상태에 따라 케이스 처리
       await this.lentTools.returnStateTransition(lent, user);
-      // 3. Lent Table에서 값 제거.
+      // 4. Lent Table에서 값 제거.
       await this.lentRepository.deleteLentByLentId(lent.lent_id);
-      // 4. Lent Log Table에서 값 추가.
+      // 5. Lent Log Table에서 값 추가.
       await this.lentRepository.addLentLog(lent);
-      // 5. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
-      if (lent.cabinet.lent_type === LentType.SHARE) {
+      // 6. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
+      if (lent.cabinet.lent_type === LentType.SHARE && !(user.user_id < -1)) {
         await this.banService.blockingDropOffUser(lent);
       }
     } catch (err) {

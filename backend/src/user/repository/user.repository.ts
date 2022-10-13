@@ -1,5 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
+import { UserDto } from 'src/dto/user.dto';
 import User from 'src/entities/user.entity';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
@@ -64,5 +65,47 @@ export class UserRepository implements IUserRepository {
       })
       .where('user_id = :user_id', { user_id: user_id })
       .execute();
+  }
+
+  async getMinUserId(): Promise<number> {
+    const result = await this.userRepository
+      .createQueryBuilder(this.getMinUserId.name)
+      .select('user_id')
+      .orderBy('user_id', 'ASC')
+      .limit(1)
+      .getRawOne();
+    return result ? result.user_id : -1;
+  }
+
+  async updateUserInfo(user_id: number, new_user: UserDto): Promise<void> {
+    await this.userRepository
+    .createQueryBuilder(this.updateUserInfo.name)
+    .update(User)
+    .set({
+      user_id: new_user.user_id,
+      intra_id: new_user.intra_id,
+    })
+    .where('user_id = :user_id', { user_id: user_id })
+    .relation('BanLog')
+    .execute();
+  }
+
+  async getAllUser(): Promise<UserDto[]> {
+    const result = await this.userRepository.find();
+    return result.map((user) => {
+      return {
+        user_id: user.user_id,
+        intra_id: user.intra_id,
+      };
+    });
+  }
+
+  async deleteUser(user: UserDto): Promise<void> {
+    await this.userRepository.createQueryBuilder(this.deleteUser.name)
+    .delete()
+    .where({
+      user_id: user.user_id,
+    })
+    .execute();
   }
 }

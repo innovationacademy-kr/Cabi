@@ -20,11 +20,4 @@ export abstract class IBlackholeRepository {
     user_id: number,
     intra_id: string,
   ): Promise<void>;
-
-  /**
-   * DB에 존재하는 모든 사용자를 가져옵니다.
-   *
-   * @return UserDto[]
-   */
-  abstract getAllUser(): Promise<UserDto[]>;
 }

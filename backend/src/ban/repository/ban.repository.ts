@@ -1,4 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
 import { Repository } from 'typeorm';
 import BanLog from '../../entities/ban.log.entity';
@@ -50,4 +51,17 @@ export class BanRepository implements IBanRepository {
       },
     });
   }
+
+  // async updateBanLogOfBlackholedUser(user: UserDto, new_user_id: number): Promise<void> {
+  //   await this.banLogRepository
+  //   .createQueryBuilder(this.updateBanLogOfBlackholedUser.name)
+  //   .update(BanLog)
+  //   .set({
+
+  //   })
+  //   .where({
+
+  //   })
+  //   .execute();
+  // }
 }

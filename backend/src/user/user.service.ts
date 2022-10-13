@@ -47,4 +47,22 @@ export class UserService {
     this.logger.debug(`Called ${this.updateUserState.name}`);
     await this.userRepository.updateUserState(user_id, state);
   }
+
+  async getMinUserId(): Promise<number> {
+    return await this.userRepository.getMinUserId();
+  }
+
+  async updateUserInfo(user_id: number, new_user: UserDto, new_state: UserStateType): Promise<void> {
+    this.logger.debug(`Called ${this.updateUserInfo.name}`);
+    await this.updateUserState(user_id, new_state);
+    return await this.userRepository.updateUserInfo(user_id, new_user);
+  }
+
+  async getAllUser(): Promise<UserDto[]> {
+    return await this.userRepository.getAllUser();
+  }
+
+  async deleteUser(user: UserDto): Promise<void> {
+    return await this.userRepository.deleteUser(user);
+  }
 }

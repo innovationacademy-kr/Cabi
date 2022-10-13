@@ -8,6 +8,7 @@ import {
   Propagation,
   runOnTransactionComplete,
 } from 'typeorm-transactional';
+import { UserDto } from 'src/dto/user.dto';
 
 @Injectable()
 export class BanService {
@@ -110,4 +111,15 @@ export class BanService {
     }
     return accumulate;
   }
+
+  // /**
+  //  * 블랙홀에 빠진 유저의 user_id를 기존 min_user_id -1만큼 user_id로 설정.
+  //  * @param user
+  //  */
+  // async updateBanLogOfBlackholedUser(user: UserDto, new_user_id): Promise<void> {
+  //   this.logger.debug(
+  //     `Called ${BanService.name} ${this.updateBanLogOfBlackholedUser.name}`,
+  //   );
+  //   await this.banRepository.updateBanLogOfBlackholedUser(user, new_user_id);
+  // }
 }
