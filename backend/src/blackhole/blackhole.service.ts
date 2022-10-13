@@ -59,6 +59,7 @@ export class BlackholeService
    * @return void
    */
     async postOauthToken(): Promise<void> {
+      this.logger.debug(`Called ${BlackholeService.name} ${this.postOauthToken.name}`);
       const url = 'https://api.intra.42.fr/oauth/token';
       await firstValueFrom(
         this.httpService
@@ -81,6 +82,7 @@ export class BlackholeService
    * @return void
    */
   async updateBlackholedUser(user: UserDto): Promise<void> {
+    this.logger.debug(`Called ${BlackholeService.name} ${this.updateBlackholedUser.name}`);
     const myLent = await this.userService.checkUserBorrowed(user);
     if (myLent.cabinet_id !== -1) {
       this.logger.warn(`Return ${user.intra_id}'s cabinet`);
@@ -114,6 +116,7 @@ export class BlackholeService
    * @return void
    */
   async validateBlackholedUser(user: UserDto): Promise<void> {
+    this.logger.debug(`Called ${BlackholeService.name} ${this.validateBlackholedUser.name}`);
     const url = `https://api.intra.42.fr/v2/users/${user.intra_id}`;
     const headersRequest = {
       'Content-Type': 'application/json',

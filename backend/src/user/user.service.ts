@@ -49,6 +49,7 @@ export class UserService {
   }
 
   async getMinUserId(): Promise<number> {
+    this.logger.debug(`Called ${this.getMinUserId.name}`);
     return await this.userRepository.getMinUserId();
   }
 
@@ -59,10 +60,12 @@ export class UserService {
   }
 
   async getAllUser(): Promise<UserDto[]> {
+    this.logger.debug(`Called ${this.getAllUser.name}`);
     return await this.userRepository.getAllUser();
   }
 
   async deleteUser(user: UserDto): Promise<void> {
+    this.logger.debug(`Called ${this.deleteUser.name}`);
     return await this.userRepository.deleteUser(user);
   }
 }
