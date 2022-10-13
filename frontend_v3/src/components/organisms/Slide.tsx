@@ -33,6 +33,7 @@ const Slide = (props: SlideProps): JSX.Element => {
           // LentBox 와 CabinetBoxButton에서 불필요한 props 제거
           <GuideModal
             key={index}
+            status={item.status}
             box={
               <LentBox
                 key={index}
@@ -42,10 +43,6 @@ const Slide = (props: SlideProps): JSX.Element => {
                 cabinet_id={item.cabinet_id}
                 lender={item.lent_info}
                 status={item.status}
-                isLentAble={
-                  item.status === CabinetStatus.AVAILABLE ||
-                  item.status === CabinetStatus.SET_EXPIRE_AVAILABLE
-                }
               />
             }
             button={
@@ -54,6 +51,7 @@ const Slide = (props: SlideProps): JSX.Element => {
                 cabinet_type={item.lent_type}
                 cabinet_number={item.cabinet_num}
                 cabinet_id={item.cabinet_id}
+                cabinet_title={item.cabinet_title}
                 lender={item.lent_info}
                 status={item.status}
               />

@@ -40,6 +40,7 @@ const CabinetInfoText = styled.div`
 interface CabinetBoxButtonProps {
   cabinet_type: CabinetType;
   cabinet_number: number;
+  cabinet_title: string | null;
   cabinet_id: number;
   lender: LentDto[];
   status: CabinetStatus;
@@ -49,7 +50,14 @@ interface CabinetBoxButtonProps {
 // 핸들러 추가
 // line 64: 로그인 기능 추가 후 적용
 const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
-  const { cabinet_type, cabinet_number, cabinet_id, lender, status } = props;
+  const {
+    cabinet_type,
+    cabinet_number,
+    cabinet_title,
+    cabinet_id,
+    lender,
+    status,
+  } = props;
   const user = useAppSelector((state) => state.user);
 
   const setCabinetColor = (): string => {
@@ -80,7 +88,7 @@ const CabinetBoxButton = (props: CabinetBoxButtonProps): JSX.Element => {
       case CabinetType.SHARE:
         return `[${lender.length} / 3]`;
       case CabinetType.CIRCLE:
-        return lender.length === 0 ? "" : lender[0].intra_id;
+        return cabinet_title || "CIRCLE";
       default:
         return "";
     }
