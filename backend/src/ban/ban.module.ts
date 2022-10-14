@@ -12,7 +12,11 @@ const repo = {
 };
 
 @Module({
-  imports: [forwardRef(() => UserModule), TypeOrmModule.forFeature([BanLog]), CabinetModule],
+  imports: [
+    forwardRef(() => UserModule),
+    TypeOrmModule.forFeature([BanLog]),
+    CabinetModule,
+  ],
   providers: [BanService, repo],
   exports: [BanService],
 })

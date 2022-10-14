@@ -31,11 +31,17 @@ export class BanService {
   async isBlocked(user_id: number, cabinet_id: number): Promise<boolean> {
     this.logger.debug(`Called ${BanService.name} ${this.isBlocked.name}`);
     this.logger.debug(`isBlocked : ${user_id}`);
-    const cabinet = cabinet_id === undefined ? undefined : await this.cabinetInfoService.getCabinetInfo(cabinet_id);
+    const cabinet =
+      cabinet_id === undefined
+        ? undefined
+        : await this.cabinetInfoService.getCabinetInfo(cabinet_id);
     const bannedTime = await this.banRepository.getUnbanedDate(user_id);
     if (bannedTime && bannedTime > new Date()) {
       if (cabinet !== undefined)
-        if (cabinet.lent_type === LentType.PRIVATE && await this.banRepository.getIsPenalty(user_id) === true)
+        if (
+          cabinet.lent_type === LentType.PRIVATE &&
+          (await this.banRepository.getIsPenalty(user_id)) === true
+        )
           return false;
       return true;
     }

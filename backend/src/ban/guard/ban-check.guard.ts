@@ -37,7 +37,7 @@ export class BanCheckGuard implements CanActivate {
       return false;
     }
     let cabinetId = undefined;
-    if (request.params.cabinet_id !== undefined )
+    if (request.params.cabinet_id !== undefined)
       cabinetId = parseInt(request.params.cabinet_id);
     const ban = await this.banService.isBlocked(user.user_id, cabinetId);
     return ban;

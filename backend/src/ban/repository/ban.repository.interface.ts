@@ -11,7 +11,7 @@ export interface IBanRepository {
 
   /**
    * Penalty로 차단 된 사용자인지 확인합니다.
-   * @param user_id 
+   * @param user_id
    */
   getIsPenalty(user_id: number): Promise<boolean>;
 
