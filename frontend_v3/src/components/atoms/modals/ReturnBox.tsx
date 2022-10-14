@@ -9,6 +9,7 @@ import { useAppDispatch } from "../../../redux/hooks";
 import { LentDto } from "../../../types/dto/lent.dto";
 
 const BoxStyle = {
+  wordBreak: "keep-all",
   position: "fixed" as const,
   top: "50%",
   left: "50%",
@@ -50,7 +51,6 @@ interface ReturnBoxProps {
 
 const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
   const { handleClose, lentType, lentUser } = props;
-  console.log(lentUser);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -85,7 +85,7 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
           </HighlightBox>
           <Typography align="left">
             공유사물함 대여 후 3일(72시간) 이내에 반납 시, 3일(72시간) 동안
-            사물함 대여가 불가합니다.
+            공유사물함 대여가 불가합니다.
           </Typography>
           <hr />
         </>
