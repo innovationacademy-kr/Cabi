@@ -17,28 +17,26 @@ const Content = styled.div`
 const UserInfoDiv = styled.div``;
 
 interface LentInfoProps {
-  cabinet_data: MyCabinetInfoResponseDto | null;
+  myLentInfo: MyCabinetInfoResponseDto | null;
 }
 
-const LentInfo = (): JSX.Element => {
-  const [myLentInfo, setMyLentInfo] = useState<MyCabinetInfoResponseDto | null>(
-    null
-  );
-  useEffect(() => {
-    // TODO (seuan)
-    // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
-    // if (cabinetId === -1) navigate("/main");
-    axiosMyLentInfo()
-      .then((response) => {
-        setMyLentInfo(response.data);
-        console.log(response.data);
-      })
-      .then(() => console.log(myLentInfo))
-      .catch((error) => {
-        console.error(error);
-        // navigate("/main");
-      });
-  }, []);
+const LentInfo = (props: LentInfoProps): JSX.Element => {
+  const { myLentInfo } = props;
+  // useEffect(() => {
+  //   // TODO (seuan)
+  //   // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
+  //   // if (cabinetId === -1) navigate("/main");
+  //   axiosMyLentInfo()
+  //     .then((response) => {
+  //       setMyLentInfo(response.data);
+  //       console.log(response.data);
+  //     })
+  //     .then(() => console.log(myLentInfo))
+  //     .catch((error) => {
+  //       console.error(error);
+  //       // navigate("/main");
+  //     });
+  // }, []);
 
   const cabinetInfo = (): JSX.Element => {
     return (
