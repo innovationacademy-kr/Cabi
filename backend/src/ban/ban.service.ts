@@ -8,6 +8,8 @@ import {
   Propagation,
   runOnTransactionComplete,
 } from 'typeorm-transactional';
+import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
+import LentType from 'src/enums/lent.type.enum';
 
 @Injectable()
 export class BanService {
@@ -17,6 +19,7 @@ export class BanService {
     @Inject('IBanRepository')
     private banRepository: IBanRepository,
     private userService: UserService,
+    private cabinetInfoService: CabinetInfoService,
   ) {}
 
   /**
@@ -25,11 +28,15 @@ export class BanService {
    * @param user_id 유저 ID
    * @return boolean
    */
-  async isBlocked(user_id: number): Promise<boolean> {
+  async isBlocked(user_id: number, cabinet_id: number): Promise<boolean> {
     this.logger.debug(`Called ${BanService.name} ${this.isBlocked.name}`);
     this.logger.debug(`isBlocked : ${user_id}`);
+    const cabinet = cabinet_id === undefined ? undefined : await this.cabinetInfoService.getCabinetInfo(cabinet_id);
     const bannedTime = await this.banRepository.getUnbanedDate(user_id);
     if (bannedTime && bannedTime > new Date()) {
+      if (cabinet !== undefined)
+        if (cabinet.lent_type === LentType.PRIVATE && await this.banRepository.getIsPenalty(user_id) === true)
+          return false;
       return true;
     }
     return false;

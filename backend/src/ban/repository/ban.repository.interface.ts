@@ -10,6 +10,12 @@ export interface IBanRepository {
   getUnbanedDate(user_id: number): Promise<Date | null>;
 
   /**
+   * Penalty로 차단 된 사용자인지 확인합니다.
+   * @param user_id 
+   */
+  getIsPenalty(user_id: number): Promise<boolean>;
+
+  /**
    * Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
    * @param lent
    * @param ban_day
