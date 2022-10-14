@@ -10,7 +10,7 @@ export interface IBanRepository {
   getUnbanedDate(user_id: number): Promise<Date | null>;
 
   /**
-   * Penalty로 차단 된 사용자인지 확인합니다.
+   * Penalty로 차단된 사용자인지 확인.
    * @param user_id
    */
   getIsPenalty(user_id: number): Promise<boolean>;
