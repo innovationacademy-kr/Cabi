@@ -17,6 +17,7 @@ import { UserService } from 'src/user/user.service';
 import { LentService } from 'src/lent/lent.service';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { BlackholeTools } from './blackhole.component';
+import { Propagation, runOnTransactionComplete, Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class BlackholeService implements OnApplicationBootstrap {
@@ -81,6 +82,9 @@ export class BlackholeService implements OnApplicationBootstrap {
    * @Param intra_id: UserDto
    * @return void
    */
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+  })
   async updateBlackholedUser(user: UserDto): Promise<void> {
     this.logger.debug(
       `Called ${BlackholeService.name} ${this.updateBlackholedUser.name}`,
@@ -107,6 +111,7 @@ export class BlackholeService implements OnApplicationBootstrap {
       this.logger.warn(`Return ${user.intra_id}'s cabinet`);
       await this.lentService.returnCabinet(new_user);
     }
+    runOnTransactionComplete((err) => err && this.logger.error(err));
     this.blackholeTools.addBlackholedUserTimer(new_user);
   }
 

@@ -11,6 +11,7 @@ import { UserService } from 'src/user/user.service';
 import { BlackholeService } from './blackhole.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import { runOnTransactionComplete } from 'typeorm-transactional';
 
 @Injectable()
 export class BlackholeTools {
@@ -63,6 +64,7 @@ export class BlackholeTools {
           }
         });
     };
+    runOnTransactionComplete((err) => err && this.logger.error(err));
     this.setTimeoutDate(user.intra_id, blackhole_date, callback);
   }
 
