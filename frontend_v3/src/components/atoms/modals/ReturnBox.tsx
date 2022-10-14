@@ -80,7 +80,8 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
               {user.intra_id} 님의 대여일:{" "}
             </Typography>
             <Typography color="red" align="center">
-              {user.lent_time.toString().substring(0, 10)}
+              {user.lent_time.toString().substring(0, 10)}{" "}
+              {user.lent_time.toString().substring(11, 16)}
             </Typography>
           </HighlightBox>
           <Typography align="left">
