@@ -64,7 +64,6 @@ export class BlackholeTools {
           }
         });
     };
-    runOnTransactionComplete((err) => err && this.logger.error(err));
     this.setTimeoutDate(user.intra_id, blackhole_date, callback);
   }
 
