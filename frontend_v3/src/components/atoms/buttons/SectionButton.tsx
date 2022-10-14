@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTab } from "@mui/base";
+import { useState } from "react";
 
 const Button = styled.button`
   display: inline-flex;
@@ -15,8 +17,8 @@ const Button = styled.button`
 
 interface SectionButtonProps {
   index: number;
-  isClicked: boolean;
   setCurrentSlide: React.Dispatch<React.SetStateAction<number>>;
+  currentSlide: number;
 }
 
 // TODO: hybae
@@ -26,18 +28,19 @@ const nonClickedColor = "#c0c0c0";
 const clickedColor = "#6767aa";
 
 const SectionButton = (props: SectionButtonProps): JSX.Element => {
-  const { index, isClicked, setCurrentSlide } = props;
-
+  const { index, setCurrentSlide, currentSlide } = props;
   const clickHandler = (): void => {
     setCurrentSlide(index);
   };
 
   return (
-    <Button
-      onClick={clickHandler}
-      color={isClicked ? clickedColor : nonClickedColor}
-    >
-      <FontAwesomeIcon icon={faMinus} />
+    <Button onClick={clickHandler}>
+      <FontAwesomeIcon
+        icon={faMinus}
+        style={{
+          color: index === currentSlide ? clickedColor : nonClickedColor,
+        }}
+      />
     </Button>
   );
 };

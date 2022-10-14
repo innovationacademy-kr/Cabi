@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import SlideContainer from "./SlideContainer";
 import SlideButton from "../atoms/buttons/SlideButton";
 import SectionButton from "../atoms/buttons/SectionButton";
+import SectionNameButton from "../atoms/buttons/SectionNameButton";
 import { CabinetInfoByLocationFloorDto } from "../../types/dto/cabinet.dto";
 
 const CarouselComponent = styled.div`
@@ -17,6 +18,11 @@ const CarouselArea = styled.div`
   height: 100%;
   margin: 0;
   overflow: hidden;
+`;
+
+const SectionNameArea = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const SectionButtonArea = styled.div`
@@ -118,7 +124,7 @@ const Carousel = (props: CarouselProps): JSX.Element => {
         <SectionButton
           key={i}
           index={i}
-          isClicked={false}
+          currentSlide={currentSlide}
           setCurrentSlide={setCurrentSlide}
         />
       );
@@ -128,6 +134,13 @@ const Carousel = (props: CarouselProps): JSX.Element => {
 
   return (
     <CarouselComponent>
+      <SectionNameArea>
+        <SectionNameButton
+          sections={sections}
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+        />
+      </SectionNameArea>
       <SectionButtonArea>{renderSectionButtons()}</SectionButtonArea>
       <RowDiv>
         <SlideButton
