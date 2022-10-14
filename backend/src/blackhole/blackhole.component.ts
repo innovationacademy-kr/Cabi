@@ -10,6 +10,7 @@ import { UserDto } from 'src/dto/user.dto';
 import { UserService } from 'src/user/user.service';
 import { BlackholeService } from './blackhole.service';
 import { OnEvent } from '@nestjs/event-emitter';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 @Injectable()
 export class BlackholeTools {
@@ -49,7 +50,7 @@ export class BlackholeTools {
         this.logger.error(err);
       });
       await this.blackholeService
-        .validateBlackholedUser(user)
+        .requestValidateBlackholedUser(user)
         .catch(async (err) => {
           if (err.status === HttpStatus.NOT_FOUND) {
             this.logger.error(
@@ -83,8 +84,12 @@ export class BlackholeTools {
   /**
    * 유저가 생성되면 해당 유저의 블랙홀 타이머를 등록.
    */
-  async validateBlackholeForNewUser(user: UserDto) {
-    await this.validateBlackholeForNewUser(user).catch(async (err) => {
+  async validateBlackholeForNewUser(user: UserSessionDto) {
+    let data = {
+      'staff?': user.staff,
+      blackholed_at: user.blackholed_at,
+    };
+    await this.blackholeService.validateBlackholedUser(user, data).catch(async (err) => {
       if (err.status === HttpStatus.NOT_FOUND) {
         this.logger.error(
           `${user.intra_id} is already expired or not exists in 42 intra`,
@@ -95,7 +100,7 @@ export class BlackholeTools {
       }
     });
     this.logger.debug(
-      `New Timer: \n ${this.schedulerRegistry.getTimeout(user.intra_id)}`,
+      `New Timer: ${user.intra_id} set!`,
     );
   }
 }

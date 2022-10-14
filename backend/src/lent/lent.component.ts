@@ -14,6 +14,7 @@ import {
   Propagation,
   runOnTransactionComplete,
 } from 'typeorm-transactional';
+import { UserDto } from 'src/dto/user.dto';
 
 @Injectable()
 export class LentTools {
@@ -57,7 +58,7 @@ export class LentTools {
     propagation: Propagation.REQUIRED,
   })
   async lentStateTransition(
-    user: UserSessionDto,
+    user: UserDto,
     cabinet: CabinetInfoResponseDto,
   ): Promise<void> {
     this.logger.debug(
@@ -110,7 +111,7 @@ export class LentTools {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async returnStateTransition(lent: Lent, user: UserSessionDto): Promise<void> {
+  async returnStateTransition(lent: Lent, user: UserDto): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );

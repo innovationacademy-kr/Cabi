@@ -13,7 +13,9 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
  */
 @Injectable()
 export class FtStrategy extends PassportStrategy(Strategy, '42') {
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    ) {
     super({
       clientID: configService.get<string>('ftAuth.clientid'),
       clientSecret: configService.get<string>('ftAuth.secret'),
@@ -23,6 +25,8 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
         userId: 'id',
         email: 'email',
         login: 'login',
+        cursus_users: 'cursus_users',
+        staff: 'staff?',
       },
     });
   }
@@ -34,10 +38,15 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
    * cb(null, user); 콜백함수는 res 객체의 user라는 필드로 user의 객체를 넘깁니다.
    */
   async validate(req, access_token, refreshToken, profile, cb) {
+    if (!profile.staff && !profile.cursus_users[1]) {
+      cb(null, undefined);
+    }
     const user: UserSessionDto = {
       user_id: profile.userId,
       email: profile.email,
       intra_id: profile.login,
+      blackholed_at: profile.cursus_users[1].blackholed_at,
+      staff: profile.staff,
     };
     cb(null, user);
   }

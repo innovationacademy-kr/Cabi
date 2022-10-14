@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UserDto } from 'src/dto/user.dto';
 import { IAuthRepository } from './repository/auth.repository.interface';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +11,7 @@ export class AuthService {
     private eventEmitter: EventEmitter2,
   ) {}
 
-  async addUserIfNotExists(user: UserDto): Promise<boolean> {
+  async addUserIfNotExists(user: UserSessionDto): Promise<boolean> {
     const find = await this.authRepository.addUserIfNotExists(user);
     if (!find) this.eventEmitter.emit('user.created', user);
     return find;

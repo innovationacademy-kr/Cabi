@@ -110,6 +110,41 @@ export class BlackholeService implements OnApplicationBootstrap {
     this.blackholeTools.addBlackholedUserTimer(new_user);
   }
 
+  async validateBlackholedUser(user: UserDto, data: any) :Promise<void> {
+    // 스태프는 판별하지 않음.
+    if (data['staff?'] === true) {
+      this.logger.warn(`${user.intra_id} is staff`);
+      return ;
+    }
+    let LearnerBlackhole: string | Date;
+    if (data.blackholed_at) {
+      LearnerBlackhole = data.blackholed_at;
+    } else {
+      LearnerBlackhole = data.cursus_users[1].blackholed_at;
+    }
+    const today = new Date();
+    // Member는 판별하지 않음.
+    if (!LearnerBlackhole) {
+      this.logger.log(
+        `${user.intra_id} is Member, doesn't have blackhole date`,
+      );
+      return ;
+    }
+    const blackhole_date = new Date(LearnerBlackhole);
+    this.logger.log(`Blackhole_day: ${blackhole_date}`);
+    this.logger.log(`Today: ${today}`);
+    const time_diff = blackhole_date.getTime() - today.getTime();
+    // 블랙홀에 빠지지 않았으면 Timer를 다시 등록.
+    // 블랙홀에 빠졌다면 해당 유저 정보를 업데이트.
+    if (time_diff >= 0) {
+      this.logger.log(`${user.intra_id} not yet fall into a blackhole`);
+      await this.blackholeTools.addBlackholeTimer(user, blackhole_date);
+      return ;
+    } else {
+      this.logger.log(`${user.intra_id} already fell into a blackhole`);
+      await this.updateBlackholedUser(user);
+    }
+  }
   /**
    * 블랙홀에 빠진 유저인지 아닌지를 검증한다.
    * staff? 값이 true이면 Staff이므로 삭제하지 않는다.
@@ -122,7 +157,7 @@ export class BlackholeService implements OnApplicationBootstrap {
    * @Param intra_id: UserDto
    * @return void
    */
-  async validateBlackholedUser(user: UserDto): Promise<void> {
+  async requestValidateBlackholedUser(user: UserDto): Promise<void> {
     this.logger.debug(
       `Called ${BlackholeService.name} ${this.validateBlackholedUser.name}`,
     );
@@ -139,39 +174,7 @@ export class BlackholeService implements OnApplicationBootstrap {
     )
       .then(async (data) => {
         this.logger.log(`id: ${user.user_id}, intra_id: ${user.intra_id}`);
-        // 스태프는 판별하지 않음.
-        if (data['staff?'] === true) {
-          this.logger.warn(`${user.intra_id} is staff`);
-          return;
-        }
-        // 카뎃이 아닌 경우는 강제 반납 및 삭제 처리.
-        if (!data.cursus_users[1]) {
-          this.logger.warn(`${user.intra_id} is not Cadet`);
-          this.updateBlackholedUser(user);
-          return;
-        }
-        const LearnerBlackhole: string = data.cursus_users[1].blackholed_at;
-        const today = new Date();
-        // Member는 판별하지 않음.
-        if (!LearnerBlackhole) {
-          this.logger.log(
-            `${user.intra_id} is Member, doesn't have blackhole date`,
-          );
-          return;
-        }
-        const blackhole_date = new Date(LearnerBlackhole);
-        this.logger.log(`Blackhole_day: ${blackhole_date}`);
-        this.logger.log(`Today: ${today}`);
-        const time_diff = blackhole_date.getTime() - today.getTime();
-        // 블랙홀에 빠지지 않았으면 Timer를 다시 등록.
-        // 블랙홀에 빠졌다면 해당 유저 정보를 업데이트.
-        if (time_diff >= 0) {
-          this.logger.log(`${user.intra_id} not yet fall into a blackhole`);
-          await this.blackholeTools.addBlackholeTimer(user, blackhole_date);
-        } else {
-          this.logger.log(`${user.intra_id} already fell into a blackhole`);
-          await this.updateBlackholedUser(user);
-        }
+        await this.validateBlackholedUser(user, data);
       })
       .catch((err) => {
         throw err;
@@ -192,7 +195,7 @@ export class BlackholeService implements OnApplicationBootstrap {
 
     for (const user of users) {
       if (user.user_id > 0) {
-        await this.validateBlackholedUser(user).catch(async (err) => {
+        await this.requestValidateBlackholedUser(user).catch(async (err) => {
           if (err.status === HttpStatus.NOT_FOUND) {
             this.logger.error(
               `${user.intra_id} is already expired or not exists in 42 intra`,

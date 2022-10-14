@@ -20,6 +20,7 @@ import {
   Propagation,
   runOnTransactionComplete,
 } from 'typeorm-transactional';
+import { UserDto } from 'src/dto/user.dto';
 
 @Injectable()
 export class LentService {
@@ -36,7 +37,7 @@ export class LentService {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async lentCabinet(cabinet_id: number, user: UserSessionDto): Promise<void> {
+  async lentCabinet(cabinet_id: number, user: UserDto): Promise<void> {
     try {
       this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
       // 1. 해당 유저가 대여중인 사물함이 있는지 확인
@@ -92,7 +93,7 @@ export class LentService {
   })
   async updateLentCabinetTitle(
     cabinet_title: string,
-    user: UserSessionDto,
+    user: UserDto,
   ): Promise<void> {
     this.logger.debug(
       `Called ${LentService.name} ${this.updateLentCabinetTitle.name}`,
@@ -120,7 +121,7 @@ export class LentService {
   })
   async updateLentCabinetMemo(
     cabinet_memo: string,
-    user: UserSessionDto,
+    user: UserDto,
   ): Promise<void> {
     this.logger.debug(
       `Called ${LentService.name} ${this.updateLentCabinetMemo.name}`,
@@ -146,7 +147,7 @@ export class LentService {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async returnCabinet(user: UserSessionDto): Promise<void> {
+  async returnCabinet(user: UserDto): Promise<void> {
     this.logger.debug(`Called ${LentService.name} ${this.returnCabinet.name}`);
     try {
       // 1. 해당 유저가 대여중인 lent 정보를 가져옴.
