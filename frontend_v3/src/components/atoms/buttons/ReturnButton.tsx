@@ -4,16 +4,14 @@ import { axiosV3Return } from "../../../network/axios/axios.custom";
 import { setUserCabinet } from "../../../redux/slices/userSlice";
 import { useAppDispatch } from "../../../redux/hooks";
 
-const Button = styled.button`
-  position: absolute;
+const Button = styled.div`
   display: flex;
-  color: #6667ab;
-  font-size: 1.2rem;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  width: 50%;
-  height: 3rem;
-  padding: 0.5rem;
+  font-size: 1rem;
+  width: 12rem;
+  height: 2rem;
   border: 0.2rem #6667ab solid;
   border-radius: 1rem;
   background-color: transparent;
@@ -28,18 +26,7 @@ const ReturnButton = (props: ReturnButtonProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleClick = (): void => {
-    axiosV3Return()
-      .then((response) => {
-        dispatch(setUserCabinet(-1));
-        navigate("/main");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  return <Button onClick={handleClick}>{button_title}</Button>;
+  return <Button className="ReturnButton">{button_title}</Button>;
 };
 
 export default ReturnButton;
