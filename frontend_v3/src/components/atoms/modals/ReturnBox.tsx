@@ -26,7 +26,7 @@ const BoxStyle = {
 const HighlightBox = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 0.5rem;
-  height: 10rem;
+  height: 6rem;
   padding: 0.75rem;
   box-sizing: border-box;
   justify-content: center;
@@ -71,20 +71,24 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
   return (
     <Box sx={BoxStyle} className="ReturnBox">
       {lentType === "SHARE" && (
-        <HighlightBox>
-          <Typography color="red" align="center">
-            🚨 주의 🚨
-          </Typography>
-          <Typography color="red" align="center">
-            {user.intra_id} 님의 대여일:{" "}
-            {user.lent_time.toString().substring(0, 10)}
-          </Typography>
-          <hr />
+        <>
+          <HighlightBox>
+            <Typography color="red" align="center">
+              🚨 주의 🚨
+            </Typography>
+            <Typography color="red" align="center">
+              {user.intra_id} 님의 대여일:{" "}
+            </Typography>
+            <Typography color="red" align="center">
+              {user.lent_time.toString().substring(0, 10)}
+            </Typography>
+          </HighlightBox>
           <Typography align="left">
             공유사물함 대여 후 3일(72시간) 이내에 반납 시, 3일(72시간) 동안
             사물함 대여가 불가합니다.
           </Typography>
-        </HighlightBox>
+          <hr />
+        </>
       )}
       <Typography
         id="modal-modal-title"
