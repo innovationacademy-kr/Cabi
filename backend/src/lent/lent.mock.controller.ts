@@ -29,7 +29,6 @@ import {
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserDto } from 'src/dto/user.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
 import { LentService } from './lent.service';
 
 // mock up user here

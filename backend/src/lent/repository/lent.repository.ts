@@ -1,7 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { LentDto } from 'src/dto/lent.dto';
 import { UserDto } from 'src/dto/user.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
 import { Repository } from 'typeorm';
@@ -59,10 +58,7 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
-  async lentCabinet(
-    user: UserDto,
-    cabinet_id: number,
-  ): Promise<LentDto> {
+  async lentCabinet(user: UserDto, cabinet_id: number): Promise<LentDto> {
     const lent_time = new Date();
     const expire_time: Date | null = null;
     const result = await this.lentRepository

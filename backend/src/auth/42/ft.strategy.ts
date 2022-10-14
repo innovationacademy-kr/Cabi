@@ -13,9 +13,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
  */
 @Injectable()
 export class FtStrategy extends PassportStrategy(Strategy, '42') {
-  constructor(
-    private readonly configService: ConfigService,
-    ) {
+  constructor(private readonly configService: ConfigService) {
     super({
       clientID: configService.get<string>('ftAuth.clientid'),
       clientSecret: configService.get<string>('ftAuth.secret'),

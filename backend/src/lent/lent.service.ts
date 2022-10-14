@@ -7,7 +7,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';

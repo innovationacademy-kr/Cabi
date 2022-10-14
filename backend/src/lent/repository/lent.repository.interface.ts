@@ -1,6 +1,5 @@
 import { LentDto } from 'src/dto/lent.dto';
 import { UserDto } from 'src/dto/user.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 
 export interface ILentRepository {

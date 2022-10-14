@@ -17,7 +17,11 @@ import { UserService } from 'src/user/user.service';
 import { LentService } from 'src/lent/lent.service';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { BlackholeTools } from './blackhole.component';
-import { Propagation, runOnTransactionComplete, Transactional } from 'typeorm-transactional';
+import {
+  Propagation,
+  runOnTransactionComplete,
+  Transactional,
+} from 'typeorm-transactional';
 
 @Injectable()
 export class BlackholeService implements OnApplicationBootstrap {
@@ -115,11 +119,11 @@ export class BlackholeService implements OnApplicationBootstrap {
     this.blackholeTools.addBlackholedUserTimer(new_user);
   }
 
-  async validateBlackholedUser(user: UserDto, data: any) :Promise<void> {
+  async validateBlackholedUser(user: UserDto, data: any): Promise<void> {
     // 스태프는 판별하지 않음.
     if (data['staff?'] === true) {
       this.logger.warn(`${user.intra_id} is staff`);
-      return ;
+      return;
     }
     let LearnerBlackhole: string | Date;
     if (data.blackholed_at) {
@@ -133,7 +137,7 @@ export class BlackholeService implements OnApplicationBootstrap {
       this.logger.log(
         `${user.intra_id} is Member, doesn't have blackhole date`,
       );
-      return ;
+      return;
     }
     const blackhole_date = new Date(LearnerBlackhole);
     this.logger.log(`Blackhole_day: ${blackhole_date}`);
@@ -144,7 +148,7 @@ export class BlackholeService implements OnApplicationBootstrap {
     if (time_diff >= 0) {
       this.logger.log(`${user.intra_id} not yet fall into a blackhole`);
       await this.blackholeTools.addBlackholeTimer(user, blackhole_date);
-      return ;
+      return;
     } else {
       this.logger.log(`${user.intra_id} already fell into a blackhole`);
       await this.updateBlackholedUser(user);
