@@ -35,7 +35,8 @@ const MenuButton = (): JSX.Element => {
   };
 
   const handleMyCabinet = (): void => {
-    if (!(user.cabinet_id === -1)) navigate("/lent");
+    if (window.location.pathname === "/lent") navigate("/main");
+    else navigate("/lent");
   };
 
   const handleReport = (): void => {
@@ -66,7 +67,9 @@ const MenuButton = (): JSX.Element => {
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         {user?.cabinet_id !== -1 && (
-          <MenuItem onClick={handleMyCabinet}>내 사물함</MenuItem>
+          <MenuItem onClick={handleMyCabinet}>
+            {window.location.pathname === "/lent" ? "전체 사물함" : "내 사물함"}
+          </MenuItem>
         )}
         <MenuItem onClick={handleReport}>슬랙문의</MenuItem>
         <MenuItem onClick={handleCircle}>사물함 신청</MenuItem>
