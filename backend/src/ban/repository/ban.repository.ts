@@ -21,6 +21,21 @@ export class BanRepository implements IBanRepository {
     return result ? result.unbanned_date : null;
   }
 
+  async getIsPenalty(user_id: number): Promise<boolean> {
+    const result = await this.banLogRepository.findOne({
+      select: {
+        is_penalty: true,
+      },
+      where: {
+        ban_user_id: user_id,
+      },
+      order: {
+        unbanned_date: 'DESC',
+      },
+    });
+    return result ? result.is_penalty : false;
+  }
+
   async addToBanLogByUserId(
     lent: Lent,
     ban_day: number,

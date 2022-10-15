@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CabinetModule } from 'src/cabinet/cabinet.module';
 import BanLog from '../entities/ban.log.entity';
 import { UserModule } from '../user/user.module';
 import { BanService } from './ban.service';
@@ -11,7 +12,11 @@ const repo = {
 };
 
 @Module({
-  imports: [forwardRef(() => UserModule), TypeOrmModule.forFeature([BanLog])],
+  imports: [
+    forwardRef(() => UserModule),
+    TypeOrmModule.forFeature([BanLog]),
+    CabinetModule,
+  ],
   providers: [BanService, repo],
   exports: [BanService],
 })
