@@ -33,7 +33,7 @@ export class BanRepository implements IBanRepository {
         unbanned_date: 'DESC',
       },
     });
-    return result.is_penalty;
+    return result ? result.is_penalty : false;
   }
 
   async addToBanLogByUserId(
