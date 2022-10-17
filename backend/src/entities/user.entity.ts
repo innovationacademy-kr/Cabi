@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import BanLog from './ban.log.entity';
 import Lent from './lent.entity';
-import LentLog from './lent.log.entity';
 
 @Entity('user')
 export default class User {

@@ -1,9 +1,7 @@
 import LentType from 'src/enums/lent.type.enum';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import BanLog from './ban.log.entity';
 import Lent from './lent.entity';
-import LentLog from './lent.log.entity';
 
 @Entity('cabinet')
 export default class Cabinet {

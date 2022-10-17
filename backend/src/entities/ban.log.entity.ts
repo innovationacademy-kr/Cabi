@@ -5,7 +5,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import Cabinet from './cabinet.entity';
 import User from './user.entity';
 
 @Entity('ban_log')

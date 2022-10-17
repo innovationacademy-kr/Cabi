@@ -15,7 +15,6 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { UserDto } from 'src/dto/user.dto';
 import { UserService } from 'src/user/user.service';
 import { LentService } from 'src/lent/lent.service';
-import UserStateType from 'src/enums/user.state.type.enum';
 import { BlackholeTools } from './blackhole.component';
 import {
   Propagation,
