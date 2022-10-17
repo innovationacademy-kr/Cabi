@@ -149,6 +149,7 @@ export class lentRepository implements ILentRepository {
     const result = await this.lentRepository.findOne({
       relations: {
         cabinet: true,
+        user: true,
       },
       where: {
         lent_user_id: user_id,
@@ -186,7 +187,7 @@ export class lentRepository implements ILentRepository {
       .values({
         log_user_id: lent.user.user_id,
         log_intra_id: lent.user.intra_id,
-        log_cabinet_id: lent.lent_cabinet_id,
+        log_cabinet_id: lent.cabinet.cabinet_id,
         lent_time: lent.lent_time,
         return_time: new Date(),
       })
