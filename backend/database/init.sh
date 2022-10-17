@@ -49,7 +49,7 @@ else
 fi
 
 # Import sample data
-if [ -d "/database/credentials" ]
+if [ "$(ls -A /database/credentials)" ]
 then
 	search_dir=/database/credentials
 	echo "Import credential data..."
