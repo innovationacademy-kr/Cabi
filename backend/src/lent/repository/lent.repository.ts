@@ -184,7 +184,8 @@ export class lentRepository implements ILentRepository {
       .insert()
       .into(LentLog)
       .values({
-        log_user_id: lent.lent_user_id,
+        log_user_id: lent.user.user_id,
+        log_intra_id: lent.user.intra_id,
         log_cabinet_id: lent.lent_cabinet_id,
         lent_time: lent.lent_time,
         return_time: new Date(),
