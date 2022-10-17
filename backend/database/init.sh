@@ -59,7 +59,7 @@ then
 		mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE < $entry
 	done
 else
-	echo -e "${RED} credentials directory doesn't exist!! RUN - mkdir -p database/credentials  ${RESET}"
+	echo -e "${RED} There is no sample data! ${RESET}"
 fi
 
 service mysql stop
