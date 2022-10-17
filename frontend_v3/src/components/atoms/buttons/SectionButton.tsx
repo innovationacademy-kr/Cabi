@@ -1,8 +1,6 @@
 import styled from "@emotion/styled";
 import { faMinus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTab } from "@mui/base";
-import { useState } from "react";
 
 const Button = styled.button`
   display: inline-flex;
