@@ -1,4 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
+import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import { UserDto } from 'src/dto/user.dto';
 import User from 'src/entities/user.entity';
@@ -68,28 +69,6 @@ export class UserRepository implements IUserRepository {
       .execute();
   }
 
-  async getMinUserId(): Promise<number> {
-    const result = await this.userRepository
-      .createQueryBuilder(this.getMinUserId.name)
-      .select('user_id')
-      .orderBy('user_id', 'ASC')
-      .limit(1)
-      .getRawOne();
-    return result ? result.user_id : -1;
-  }
-
-  async updateUserInfo(user_id: number, new_user: UserDto): Promise<void> {
-    await this.userRepository
-      .createQueryBuilder(this.updateUserInfo.name)
-      .update(User)
-      .set({
-        user_id: new_user.user_id,
-        intra_id: new_user.intra_id,
-      })
-      .where('user_id = :user_id', { user_id: user_id })
-      .execute();
-  }
-
   async getAllUser(): Promise<UserDto[]> {
     const result = await this.userRepository.find();
     return result.map((user) => {
@@ -100,12 +79,37 @@ export class UserRepository implements IUserRepository {
     });
   }
 
-  async deleteUser(user: UserDto): Promise<void> {
+  async getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null> {
+    const result = await this.userRepository.findOne({
+      relations: {
+        Lent: {
+          cabinet: true,
+        },
+      },
+      where: {
+        user_id: user_id,
+      },
+    });
+    if (result === null || result.Lent === null) {
+      return null;
+    }
+    return {
+      cabinet_id: result.Lent.cabinet.cabinet_id,
+      cabinet_num: result.Lent.cabinet.cabinet_num,
+      lent_type: result.Lent.cabinet.lent_type,
+      cabinet_title: result.Lent.cabinet.title,
+      max_user: result.Lent.cabinet.max_user,
+      status: result.Lent.cabinet.status,
+      section: result.Lent.cabinet.section,
+    };
+  }
+
+  async deleteUserById(user_id: number): Promise<void> {
     await this.userRepository
-      .createQueryBuilder(this.deleteUser.name)
+      .createQueryBuilder(this.deleteUserById.name)
       .delete()
       .where({
-        user_id: user.user_id,
+        user_id: user_id,
       })
       .execute();
   }

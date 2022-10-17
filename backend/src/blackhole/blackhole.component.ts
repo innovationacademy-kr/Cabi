@@ -56,28 +56,13 @@ export class BlackholeTools {
             this.logger.error(
               `${user.intra_id} is already expired or not exists in 42 intra`,
             );
-            await this.blackholeService.updateBlackholedUser(user);
-            await this.userService.deleteUser(user);
+            await this.blackholeService.deleteBlackholedUser(user);
           } else {
             this.logger.error(err);
           }
         });
     };
     this.setTimeoutDate(user.intra_id, blackhole_date, callback);
-  }
-
-  /**
-   * 블랙홀에 빠진 유저가 30일이 지나면 DB에서 삭제될 수 있도록 타이머를 설정합니다.
-   * @param user
-   */
-  async addBlackholedUserTimer(user: UserDto) {
-    const callback = async () => {
-      this.logger.debug(`BlackholedUser timer for ${user.intra_id} fired!`);
-      await this.userService.deleteUser(user);
-    };
-    const fired_date = new Date();
-    fired_date.setDate(fired_date.getDate() + 30);
-    this.setTimeoutDate(user.intra_id, fired_date, callback);
   }
 
   @OnEvent('user.created')
@@ -96,7 +81,7 @@ export class BlackholeTools {
           this.logger.error(
             `${user.intra_id} is already expired or not exists in 42 intra`,
           );
-          await this.blackholeService.updateBlackholedUser(user);
+          await this.blackholeService.deleteBlackholedUser(user);
         } else {
           this.logger.error(err);
         }

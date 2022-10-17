@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { CabinetDto } from 'src/dto/cabinet.dto';
 import { UserLentResponseDto } from 'src/dto/response/lent.user.response.dto';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserDto } from 'src/dto/user.dto';
@@ -48,28 +49,18 @@ export class UserService {
     this.userRepository.updateUserState(user_id, state);
   }
 
-  async getMinUserId(): Promise<number> {
-    this.logger.debug(`Called ${this.getMinUserId.name}`);
-    return await this.userRepository.getMinUserId();
-  }
-
-  async updateUserInfo(
-    user_id: number,
-    new_user: UserDto,
-    new_state: UserStateType,
-  ): Promise<void> {
-    this.logger.debug(`Called ${this.updateUserInfo.name}`);
-    await this.updateUserState(user_id, new_state);
-    await this.userRepository.updateUserInfo(user_id, new_user);
-  }
-
   async getAllUser(): Promise<UserDto[]> {
     this.logger.debug(`Called ${this.getAllUser.name}`);
     return await this.userRepository.getAllUser();
   }
 
-  async deleteUser(user: UserDto): Promise<void> {
-    this.logger.debug(`Called ${this.deleteUser.name}`);
-    await this.userRepository.deleteUser(user);
+  async getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null> {
+    this.logger.debug(`Called ${this.getCabinetDtoByUserId.name}`);
+    return await this.userRepository.getCabinetDtoByUserId(user_id);
+  }
+
+  async deleteUserById(user_id: number): Promise<void> {
+    this.logger.debug(`Called ${this.deleteUserById.name}`);
+    await this.userRepository.deleteUserById(user_id);
   }
 }
