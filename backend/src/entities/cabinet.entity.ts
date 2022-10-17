@@ -83,10 +83,4 @@ export default class Cabinet {
 
   @OneToMany(() => Lent, (lent) => lent.cabinet)
   lent: Lent[];
-
-  @OneToMany(() => BanLog, (banLog) => banLog.cabinet)
-  BanLog: BanLog[];
-
-  @OneToMany(() => LentLog, (lentLog) => lentLog.cabinet)
-  LentLog: LentLog[];
 }

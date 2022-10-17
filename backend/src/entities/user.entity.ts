@@ -60,7 +60,4 @@ export default class User {
 
   @OneToOne(() => Lent, (lent) => lent.user)
   Lent: Lent | null;
-
-  @OneToMany(() => LentLog, (lentLog) => lentLog.user)
-  LentLog: LentLog[];
 }
