@@ -127,7 +127,6 @@ CREATE TABLE `lent_log` (
   `return_time` datetime DEFAULT NULL COMMENT '반납일',
   PRIMARY KEY (`log_id`),
   UNIQUE KEY `log_id` (`log_id`),
-  UNIQUE KEY `log_intra_id` (`log_intra_id`),
   KEY `log_cabinet_id` (`log_cabinet_id`),
   KEY `log_user_id` (`log_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='과거 대여 이력';
