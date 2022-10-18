@@ -45,7 +45,7 @@ const LentInfo = (props: LentInfoProps): JSX.Element => {
           {myLentInfo?.location} {myLentInfo?.floor}F {myLentInfo?.cabinet_num}
         </h2>
         {myLentInfo?.lent_info?.[0].expire_time ? (
-          <p style={{ marginTop: 0, marginBottom: "2rem" }}>
+          <p style={{ marginTop: 0, marginBottom: "1rem" }}>
             ~{" "}
             {myLentInfo?.lent_info?.[0].expire_time.toString().substring(0, 10)}
           </p>

@@ -87,7 +87,9 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
 
   return isPrivateAndTitle ? null : (
     <>
-      <p>{contentType === "title" ? "방 제목" : "비밀스러운 메모장"}</p>
+      <p style={{ margin: 0 }}>
+        {contentType === "title" ? "방 제목" : "비밀스러운 메모장"}
+      </p>
       <Container className="Container" style={{ marginBottom: "2rem" }}>
         <TextDiv className="textDiv" isToggle={isToggle}>
           {isToggle === false ? (

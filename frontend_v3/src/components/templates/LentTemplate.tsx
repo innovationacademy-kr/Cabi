@@ -7,6 +7,7 @@ import HomeButton from "../atoms/buttons/HomeButton";
 import MenuButton from "../atoms/buttons/MenuButton";
 import ReturnButton from "../atoms/buttons/ReturnButton";
 import LentInfo from "../organisms/LentInfo";
+import { LentDto } from "../../types/dto/lent.dto";
 import { axiosMyLentInfo } from "../../network/axios/axios.custom";
 import { MyCabinetInfoResponseDto } from "../../types/dto/cabinet.dto";
 import { useAppSelector } from "../../redux/hooks";
@@ -55,21 +56,27 @@ const LentReturnSection = styled.div`
 `;
 
 const LentTemplate = (): JSX.Element => {
-  const navigate = useNavigate();
-  const cabinetId = useAppSelector((state) => state.user.cabinet_id);
+  const userInfo = useAppSelector((state) => state.user);
   const [myLentInfo, setMyLentInfo] = useState<MyCabinetInfoResponseDto | null>(
     null
   );
+  const [lentUser, setLentUser] = useState<LentDto[]>([]);
+
   useEffect(() => {
     // TODO (seuan)
     // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
     // if (cabinetId === -1) navigate("/main");
     axiosMyLentInfo()
       .then((response) => {
+        console.log(userInfo);
+        setLentUser(
+          response.data.lent_info.filter(
+            (user: LentDto) => user.intra_id === userInfo.intra_id
+          )
+        );
+        console.log(lentUser);
         setMyLentInfo(response.data);
-        console.log(response.data);
       })
-      .then(() => console.log(myLentInfo))
       .catch((error) => {
         console.error(error);
         // navigate("/main");
@@ -87,7 +94,9 @@ const LentTemplate = (): JSX.Element => {
       </LentInfoSection>
       <LentReturnSection>
         <GuideModal
-          box={<ReturnBox lentType={myLentInfo?.lent_type} />}
+          box={
+            <ReturnBox lentType={myLentInfo?.lent_type} lentUser={lentUser} />
+          }
           button={<ReturnButton button_title="반 납 하 기" />}
         />
       </LentReturnSection>

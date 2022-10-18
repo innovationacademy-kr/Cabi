@@ -6,8 +6,10 @@ import CheckButton from "../buttons/CheckButton";
 import { axiosV3Return } from "../../../network/axios/axios.custom";
 import { setUserCabinet } from "../../../redux/slices/userSlice";
 import { useAppDispatch } from "../../../redux/hooks";
+import { LentDto } from "../../../types/dto/lent.dto";
 
 const BoxStyle = {
+  wordBreak: "keep-all",
   position: "fixed" as const,
   top: "50%",
   left: "50%",
@@ -19,21 +21,19 @@ const BoxStyle = {
   borderRadius: "1rem",
   outline: 0,
   boxShadow: 16,
-  p: 4,
+  p: 3,
 };
 
 const HighlightBox = styled.div`
-  display: flex;
-  flex-direction: column;
   border: 1px solid #e0e0e0;
   border-radius: 0.5rem;
-  height: 7rem;
-  padding: 0.5rem;
+  height: 6rem;
+  padding: 0.75rem;
+  box-sizing: border-box;
   justify-content: center;
   background-color: #fafafa;
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
-  overflow: auto;
 `;
 
 const ButtonArea = styled.div`
@@ -46,13 +46,15 @@ interface ReturnBoxProps {
   // eslint-disable-next-line react/require-default-props
   handleClose: () => void;
   lentType: string | undefined;
+  lentUser: LentDto[];
 }
 
 const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
-  const { handleClose, lentType } = props;
+  const { handleClose, lentType, lentUser } = props;
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const user = lentUser[0];
 
   const handleReturn = () => {
     axiosV3Return()
@@ -69,15 +71,25 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
   return (
     <Box sx={BoxStyle} className="ReturnBox">
       {lentType === "SHARE" && (
-        <HighlightBox>
-          <Typography color="red" align="center">
-            🚨 주의 🚨
-          </Typography>
+        <>
+          <HighlightBox>
+            <Typography color="red" align="center">
+              🚨 주의 🚨
+            </Typography>
+            <Typography color="red" align="center">
+              {user.intra_id} 님의 대여일:{" "}
+            </Typography>
+            <Typography color="red" align="center">
+              {user.lent_time.toString().substring(0, 10)}{" "}
+              {user.lent_time.toString().substring(11, 16)}
+            </Typography>
+          </HighlightBox>
           <Typography align="left">
             공유사물함 대여 후 3일(72시간) 이내에 반납 시, 3일(72시간) 동안
-            사물함 대여가 불가합니다.
+            공유사물함 대여가 불가합니다.
           </Typography>
-        </HighlightBox>
+          <hr />
+        </>
       )}
       <Typography
         id="modal-modal-title"
