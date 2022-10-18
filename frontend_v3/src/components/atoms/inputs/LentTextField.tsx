@@ -51,11 +51,8 @@ interface LentTextFieldProps {
 
 const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
   const { contentType, currentContent, cabinetType } = props;
-  const [textValue, setTextValue] = useState<string>(
-    currentContent || contentType === "title"
-      ? "방 제목을 입력해주세요"
-      : "필요한 내용을 메모해주세요"
-  );
+  console.log(currentContent);
+  const [textValue, setTextValue] = useState<string>("");
   const [inputValue, setInputValue] = useState(currentContent ? textValue : "");
   const [isToggle, setIsToggle] = useState(false);
 
@@ -70,7 +67,7 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
           : "필요한 내용을 메모해주세요"
       );
     }
-  }, []);
+  }, [currentContent]);
 
   useEffect(() => {
     if (textValue === "필요한 내용을 메모해주세요") {
