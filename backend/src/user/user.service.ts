@@ -46,7 +46,7 @@ export class UserService {
 
   async updateUserState(user_id: number, state: UserStateType): Promise<void> {
     this.logger.debug(`Called ${this.updateUserState.name}`);
-    this.userRepository.updateUserState(user_id, state);
+    await this.userRepository.updateUserState(user_id, state);
   }
 
   async getAllUser(): Promise<UserDto[]> {
