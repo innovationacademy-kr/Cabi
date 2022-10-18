@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import styled from "@emotion/styled";
+import dayjs from "dayjs";
 import { Typography } from "@mui/material";
 import CheckButton from "../buttons/CheckButton";
 import { axiosV3Return } from "../../../network/axios/axios.custom";
@@ -55,6 +56,7 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = lentUser[0];
+  const lentTime = dayjs(user.lent_time).format("YYYY년 MM월 DD일 HH시 mm분");
 
   const handleReturn = () => {
     axiosV3Return()
@@ -80,8 +82,7 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
               {user.intra_id} 님의 대여일:{" "}
             </Typography>
             <Typography color="red" align="center">
-              {user.lent_time.toString().substring(0, 10)}{" "}
-              {user.lent_time.toString().substring(11, 16)}
+              {lentTime}
             </Typography>
           </HighlightBox>
           <Typography align="left">
