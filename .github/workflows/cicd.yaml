@@ -73,10 +73,11 @@ jobs:
           script: |
             source $HOME/.bash_profile
             echo "해당 리포지토리로 이동"
-            cd $HOME/git/42cabi-dev/backend
+            cd $HOME/git/42cabi-dev
             echo "리포지토리 pull"
             git pull origin dev
             echo "앱 빌드"
+            cd $HOME/git/42cabi-dev/backend
             npm install
             npm run build:fe_v3
             npm run build
@@ -102,10 +103,11 @@ jobs:
           script: |
             source $HOME/.bash_profile
             echo "해당 리포지토리로 이동"
-            cd $HOME/git/42cabi-main/backend
+            cd $HOME/git/42cabi-main
             echo "리포지토리 pull"
             git pull origin main
             echo "앱 빌드"
+            cd $HOME/git/42cabi-dev/backend
             npm install
             npm run build:fe_v3
             npm run build
