@@ -26,7 +26,6 @@ const repo = {
       }),
       inject: [ConfigService],
     }),
-    // EventEmitterModule,
   ],
   providers: [FtStrategy, JwtStrategy, AuthService, repo],
   controllers: [AuthController],

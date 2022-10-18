@@ -50,17 +50,4 @@ export class BanRepository implements IBanRepository {
       },
     });
   }
-
-  // async updateBanLogOfBlackholedUser(user: UserDto, new_user_id: number): Promise<void> {
-  //   await this.banLogRepository
-  //   .createQueryBuilder(this.updateBanLogOfBlackholedUser.name)
-  //   .update(BanLog)
-  //   .set({
-
-  //   })
-  //   .where({
-
-  //   })
-  //   .execute();
-  // }
 }

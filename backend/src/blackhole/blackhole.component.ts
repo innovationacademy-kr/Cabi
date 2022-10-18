@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { UserDto } from 'src/dto/user.dto';
-import { UserService } from 'src/user/user.service';
 import { BlackholeService } from './blackhole.service';
 import { OnEvent } from '@nestjs/event-emitter';
 import { UserSessionDto } from 'src/dto/user.session.dto';
@@ -18,7 +17,6 @@ export class BlackholeTools {
   constructor(
     @Inject(forwardRef(() => BlackholeService))
     private blackholeService: BlackholeService,
-    private userService: UserService,
     private schedulerRegistry: SchedulerRegistry,
   ) {}
 

@@ -26,11 +26,4 @@ export interface IBanRepository {
    * @param user_id
    */
   getBanLogByUserId(user_id: number): Promise<BanLog[]>;
-
-  // /**
-  //  * Blackhole에 빠진 유저의 BanLog를 업데이트합니다.
-  //  * @param user
-  //  * @param new_user_id
-  //  */
-  // updateBanLogOfBlackholedUser(user: UserDto, new_user_id: number): Promise<void>;
 }
