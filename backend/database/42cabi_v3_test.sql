@@ -28,11 +28,12 @@ CREATE TABLE `ban_log` (
   `ban_cabinet_id` int(11) NOT NULL COMMENT '사물함ID',
   `banned_date` datetime NOT NULL COMMENT '차단된 날짜',
   `unbanned_date` datetime NOT NULL COMMENT '차단해제된 시간',
-  `is_penalty` tinyint(1) default 0 null comment '반납 패널티로 인한 ban', 
+  `is_penalty` tinyint(1) DEFAULT 0 NOT NULL comment '반납 패널티로 인한 ban',
   PRIMARY KEY (`ban_log_id`),
   UNIQUE KEY `ban_id` (`ban_log_id`),
   KEY `ban_cabinet_id` (`ban_cabinet_id`),
-  KEY `ban_user_id` (`ban_user_id`)
+  KEY `ban_user_id` (`ban_user_id`),
+  CONSTRAINT `ban_user_id` FOREIGN KEY (`ban_user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='차단 로그';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -119,9 +120,10 @@ DROP TABLE IF EXISTS `lent_log`;
 CREATE TABLE `lent_log` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '로그ID',
   `log_user_id` int(11) NOT NULL COMMENT '유저ID',
+  `log_intra_id` varchar(32) NOT NULL COMMENT '유저의 intra_id',
   `log_cabinet_id` int(11) NOT NULL COMMENT '사물함ID',
-  `lent_time` datetime NOT NULL COMMENT '대여일',
-  `return_time` datetime NOT NULL COMMENT '반납일',
+  `lent_time` datetime DEFAULT NULL COMMENT '대여일',
+  `return_time` datetime DEFAULT NULL COMMENT '반납일',
   PRIMARY KEY (`log_id`),
   UNIQUE KEY `log_id` (`log_id`),
   KEY `log_cabinet_id` (`log_cabinet_id`),

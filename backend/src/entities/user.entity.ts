@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import BanLog from './ban.log.entity';
 import Lent from './lent.entity';
-import LentLog from './lent.log.entity';
 
 @Entity('user')
 export default class User {
@@ -60,7 +59,4 @@ export default class User {
 
   @OneToOne(() => Lent, (lent) => lent.user)
   Lent: Lent | null;
-
-  @OneToMany(() => LentLog, (lentLog) => lentLog.user)
-  LentLog: LentLog[];
 }

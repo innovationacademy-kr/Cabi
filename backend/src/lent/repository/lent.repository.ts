@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { LentDto } from 'src/dto/lent.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
+import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
 import { Repository } from 'typeorm';
@@ -58,10 +58,7 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
-  async lentCabinet(
-    user: UserSessionDto,
-    cabinet_id: number,
-  ): Promise<LentDto> {
+  async lentCabinet(user: UserDto, cabinet_id: number): Promise<LentDto> {
     const lent_time = new Date();
     const expire_time: Date | null = null;
     const result = await this.lentRepository
@@ -152,6 +149,7 @@ export class lentRepository implements ILentRepository {
     const result = await this.lentRepository.findOne({
       relations: {
         cabinet: true,
+        user: true,
       },
       where: {
         lent_user_id: user_id,
@@ -187,8 +185,9 @@ export class lentRepository implements ILentRepository {
       .insert()
       .into(LentLog)
       .values({
-        log_user_id: lent.lent_user_id,
-        log_cabinet_id: lent.lent_cabinet_id,
+        log_user_id: lent.user.user_id,
+        log_intra_id: lent.user.intra_id,
+        log_cabinet_id: lent.cabinet.cabinet_id,
         lent_time: lent.lent_time,
         return_time: new Date(),
       })

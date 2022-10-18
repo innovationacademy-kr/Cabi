@@ -1,5 +1,5 @@
 import { LentDto } from 'src/dto/lent.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
+import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
 
 export interface ILentRepository {
@@ -32,7 +32,7 @@ export interface ILentRepository {
    * @param cabinet_id
    * @return void
    */
-  lentCabinet(user: UserSessionDto, cabinet_id: number): Promise<LentDto>;
+  lentCabinet(user: UserDto, cabinet_id: number): Promise<LentDto>;
 
   /**
    * 해당 user_id로 대여중인 Cabinet id를 반환합니다.

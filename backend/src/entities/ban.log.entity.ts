@@ -5,7 +5,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import Cabinet from './cabinet.entity';
 import User from './user.entity';
 
 @Entity('ban_log')
@@ -50,10 +49,4 @@ export default class BanLog {
     name: 'ban_user_id',
   })
   user: User;
-
-  @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
-  @JoinColumn({
-    name: 'ban_cabinet_id',
-  })
-  cabinet: Cabinet;
 }

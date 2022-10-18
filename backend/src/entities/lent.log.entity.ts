@@ -1,12 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import Cabinet from './cabinet.entity';
-import User from './user.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('lent_log')
 export default class LentLog {
@@ -20,6 +12,14 @@ export default class LentLog {
     type: 'int',
   })
   log_user_id: number;
+
+  @Column({
+    name: 'log_intra_id',
+    unique: true,
+    type: 'varchar',
+    length: 32,
+  })
+  log_intra_id: string;
 
   @Column({
     name: 'log_cabinet_id',
@@ -38,16 +38,4 @@ export default class LentLog {
     type: 'datetime',
   })
   return_time: Date;
-
-  @ManyToOne(() => User, (user) => user.user_id)
-  @JoinColumn({
-    name: 'log_user_id',
-  })
-  user: User;
-
-  @ManyToOne(() => Cabinet, (cabinet) => cabinet.cabinet_id)
-  @JoinColumn({
-    name: 'log_cabinet_id',
-  })
-  cabinet: Cabinet;
 }

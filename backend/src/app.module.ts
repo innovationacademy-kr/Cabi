@@ -15,6 +15,7 @@ import { CabinetModule } from './cabinet/cabinet.module';
 import { LentModule } from './lent/lent.module';
 import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { UtilsModule } from './utils/utils.module';
       exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
       // serveRoot: '../img'
     }),
+    EventEmitterModule.forRoot(),
     CabinetModule,
     LentModule,
     UserModule,

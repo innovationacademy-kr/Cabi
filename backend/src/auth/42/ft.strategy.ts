@@ -23,6 +23,8 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
         userId: 'id',
         email: 'email',
         login: 'login',
+        cursus_users: 'cursus_users',
+        staff: 'staff?',
       },
     });
   }
@@ -34,10 +36,19 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
    * cb(null, user); 콜백함수는 res 객체의 user라는 필드로 user의 객체를 넘깁니다.
    */
   async validate(req, access_token, refreshToken, profile, cb) {
+    if (!profile.staff && !profile.cursus_users[1]) {
+      cb(null, undefined);
+    }
+    let blackholed_at: Date = undefined;
+    if (profile.cursus_users[1]) {
+      blackholed_at = profile.cursus_users[1].blackholed_at;
+    }
     const user: UserSessionDto = {
       user_id: profile.userId,
       email: profile.email,
       intra_id: profile.login,
+      blackholed_at: blackholed_at,
+      staff: profile.staff,
     };
     cb(null, user);
   }

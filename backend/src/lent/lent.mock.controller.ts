@@ -28,14 +28,14 @@ import {
 } from '@nestjs/swagger';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
+import { UserDto } from 'src/dto/user.dto';
 import { LentService } from './lent.service';
 
 // mock up user here
-const user: UserSessionDto = {
+const user: UserDto = {
   // TESTER 1
-  user_id: 85330,
-  intra_id: 'sichoi',
+  // user_id: 85330,
+  // intra_id: 'sichoi',
   // TESTER 2
   // user_id: 76317,
   // intra_id: 'joopark',
@@ -45,8 +45,9 @@ const user: UserSessionDto = {
   // TESTER 4
   // user_id: 69106,
   // intra_id: 'hyoon',
-  iat: 0,
-  ext: 9999999999999,
+  // TESTER 5
+  user_id: 424242,
+  intra_id: 'yoyoo',
 };
 
 @ApiTags('(V3) Lent for Mock Up data')

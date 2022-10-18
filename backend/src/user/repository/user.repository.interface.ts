@@ -1,4 +1,6 @@
+import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
+import { UserDto } from 'src/dto/user.dto';
 import UserStateType from 'src/enums/user.state.type.enum';
 
 export interface IUserRepository {
@@ -24,4 +26,24 @@ export interface IUserRepository {
    * @param state
    */
   updateUserState(user_id: number, state: UserStateType): Promise<void>;
+
+  /**
+   * DB에 존재하는 모든 사용자를 가져옵니다.
+   *
+   * @return UserDto[]
+   */
+  getAllUser(): Promise<UserDto[]>;
+
+  /**
+   * 특정 유저가 대여한 사물함 정보를 CabinetDto로 가져옵니다.
+   * @param user_id
+   * @return CabinetDto | null
+   */
+  getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null>;
+
+  /**
+   * 해당 유저를 DB에서 제거합니다.
+   * @param user_id
+   */
+  deleteUserById(user_id: number): Promise<void>;
 }

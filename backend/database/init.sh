@@ -49,7 +49,7 @@ else
 fi
 
 # Import sample data
-if [ -d "/database/credentials" ]
+if [ "$(ls -A /database/credentials)" ]
 then
 	search_dir=/database/credentials
 	echo "Import credential data..."
@@ -59,7 +59,7 @@ then
 		mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE < $entry
 	done
 else
-	echo -e "${RED} credentials directory doesn't exist!! RUN - mkdir -p database/credentials  ${RESET}"
+	echo -e "${RED} There is no sample data! ${RESET}"
 fi
 
 service mysql stop

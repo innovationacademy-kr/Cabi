@@ -1,7 +1,6 @@
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
-import { UserSessionDto } from 'src/dto/user.session.dto';
 import Lent from 'src/entities/lent.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
@@ -14,6 +13,7 @@ import {
   Propagation,
   runOnTransactionComplete,
 } from 'typeorm-transactional';
+import { UserDto } from 'src/dto/user.dto';
 
 @Injectable()
 export class LentTools {
@@ -57,7 +57,7 @@ export class LentTools {
     propagation: Propagation.REQUIRED,
   })
   async lentStateTransition(
-    user: UserSessionDto,
+    user: UserDto,
     cabinet: CabinetInfoResponseDto,
   ): Promise<void> {
     this.logger.debug(
@@ -110,7 +110,7 @@ export class LentTools {
   @Transactional({
     propagation: Propagation.REQUIRED,
   })
-  async returnStateTransition(lent: Lent, user: UserSessionDto): Promise<void> {
+  async returnStateTransition(lent: Lent, user: UserDto): Promise<void> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
