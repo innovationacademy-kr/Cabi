@@ -54,7 +54,6 @@ export class UserRepository implements IUserRepository {
         user_id: userId,
       },
     });
-    console.log(result);
     return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
   }
 
