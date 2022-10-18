@@ -28,7 +28,10 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 @Injectable()
 export class BlackholeService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
-    this.blackholeTimerTrigger();
+    const is_local = Boolean(this.configService.get<string>('is_local'));
+    if (!is_local) {
+      this.blackholeTimerTrigger();
+    }
   }
 
   private client_id: string;
