@@ -170,8 +170,9 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
         <>
           <p style={{ margin: 0 }}>대여자 목록 : </p>
           <LenderBox>
-            {lender.map((item) => (
+            {lender.map((item, i) => (
               <p
+                key={i}
                 style={{
                   marginTop: 0,
                   marginBottom: 0,
