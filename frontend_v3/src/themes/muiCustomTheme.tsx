@@ -14,6 +14,9 @@ const muiCustomTheme = createTheme({
     secondary: {
       main: "#6c757d",
     },
+    info: {
+      main: "#a3a4ce",
+    },
   },
 });
 
