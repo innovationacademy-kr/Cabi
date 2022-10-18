@@ -52,7 +52,7 @@ export class MyLentInfoController {
   async getMyLentInfo(
     @User() user: UserSessionDto,
   ): Promise<MyCabinetInfoResponseDto> {
-    this.logger.log(`call getMyLentInfo by ${user.intra_id}`);
+    this.logger.debug(`call getMyLentInfo by ${user.intra_id}`);
     const result = await this.userService.getCabinetByUserId(user.user_id);
     if (result === null) {
       throw new HttpException('', HttpStatus.NO_CONTENT);

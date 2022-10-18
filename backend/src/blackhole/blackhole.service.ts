@@ -129,7 +129,7 @@ export class BlackholeService implements OnApplicationBootstrap {
   async validateBlackholedUser(user: UserDto, data: any): Promise<void> {
     // 스태프는 판별하지 않음.
     if (data['staff?'] === true) {
-      this.logger.warn(`${user.intra_id} is staff`);
+      this.logger.log(`${user.intra_id} is staff`);
       return;
     }
     let LearnerBlackhole: string | Date;

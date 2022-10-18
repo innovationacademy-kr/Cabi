@@ -75,6 +75,7 @@ export class LentController {
     @User() user: UserSessionDto,
   ): Promise<void> {
     try {
+      this.logger.debug(`Called ${this.lentCabinet.name}`);
       return await this.lentService.lentCabinet(cabinet_id, user);
     } catch (err) {
       this.logger.error(err);
@@ -112,6 +113,7 @@ export class LentController {
     @User() user: UserSessionDto,
   ): Promise<void> {
     try {
+      this.logger.debug(`Called ${this.updateLentCabinetTitle.name}`);
       return await this.lentService.updateLentCabinetTitle(
         updateCabinetTitleRequestDto.cabinet_title,
         user,
@@ -154,6 +156,7 @@ export class LentController {
     @User() user: UserSessionDto,
   ): Promise<void> {
     try {
+      this.logger.debug(`Called ${this.updateLentCabinetMemo.name}`);
       return await this.lentService.updateLentCabinetMemo(
         updateCabinetMemoRequestDto.cabinet_memo,
         user,
@@ -186,6 +189,7 @@ export class LentController {
   @UseGuards(JwtAuthGuard)
   async returnCabinet(@User() user: UserSessionDto): Promise<void> {
     try {
+      this.logger.debug(`Called ${this.returnCabinet.name}`);
       return await this.lentService.returnCabinet(user);
     } catch (err) {
       this.logger.error(err);

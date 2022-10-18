@@ -39,7 +39,7 @@ export class MyInfoController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async getMyInfo(@User() user: UserSessionDto): Promise<UserLentResponseDto> {
-    this.logger.log(`call getMyInfo by ${user.intra_id}`);
+    this.logger.debug(`call getMyInfo by ${user.intra_id}`);
     const result = await this.userService.checkUserBorrowed(user);
     return result;
   }

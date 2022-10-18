@@ -20,7 +20,7 @@ export class EventController {
   })
   @Get('list')
   async getList(@User() user: UserSessionDto): Promise<EventInfoDto[]> {
-    this.logger.log('call getList');
+    this.logger.debug(`Called ${this.getList.name}`);
     return await this.eventService.getEventInfo(user.intra_id);
   }
 
@@ -33,7 +33,7 @@ export class EventController {
   async postLent(
     @User() user: UserSessionDto,
   ): Promise<string | { status: boolean }> {
-    this.logger.log('call postList');
+    this.logger.debug(`Called ${this.postLent.name}`);
     if ((await this.eventService.checkEventLimit()) === true) {
       await this.eventService.insertEventInfo(user.intra_id);
       return 'ok';
@@ -47,7 +47,7 @@ export class EventController {
   })
   @Post('return')
   async postReturn(@User() user: UserSessionDto) {
-    this.logger.log('call postReturn');
+    this.logger.debug(`Called ${this.postReturn.name}`);
     await this.eventService.updateEventInfo(user.intra_id);
   }
 
@@ -57,7 +57,7 @@ export class EventController {
   })
   @Get('winner')
   async getWinner(@User() user: UserSessionDto) {
-    this.logger.log('call getWinner');
+    this.logger.debug(`Called ${this.getWinner.name}`);
     await this.eventService.checkEventInfo(user.intra_id);
   }
 }
