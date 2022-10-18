@@ -18,7 +18,11 @@ const GuideModal = (props: GuideModalProps): JSX.Element => {
   const user = useAppSelector((state) => state.user);
 
   const handleOpen = (): void => {
-    if (box.props.cabinet_id === user?.cabinet_id) navigate("/lent");
+    console.log(`${box.props.cabinet_id} === ${user?.cabinet_id}`);
+    if (box.props.cabinet_id === user?.cabinet_id) {
+      navigate("/lent");
+      return;
+    }
     switch (status) {
       case CabinetStatus.BANNED:
         alert("🚨 사용 불가능한 사물함입니다 🚨");
