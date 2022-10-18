@@ -23,6 +23,7 @@ const CarouselArea = styled.div`
 const SectionNameArea = styled.div`
   display: flex;
   align-items: center;
+  height: 2rem;
 `;
 
 const SectionButtonArea = styled.div`
@@ -35,7 +36,7 @@ const SectionButtonArea = styled.div`
 
 const RowDiv = styled.div`
   display: flex;
-  height: calc(100% - 3rem);
+  height: calc(100% - 4rem);
   flex-direction: row;
   align-items: center;
 `;

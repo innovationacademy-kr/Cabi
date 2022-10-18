@@ -2,6 +2,10 @@ import { faMapLocation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "@emotion/styled";
 
+const Wrapper = styled.div`
+  padding-top: 1rem;
+`;
+
 const Button = styled.button`
   background-color: transparent;
   padding: 0.3rem;
@@ -19,12 +23,12 @@ const SectionNameButton = (props: SectionNameButtonProps): JSX.Element => {
     setCurrentSlide(0);
   };
   return (
-    <>
+    <Wrapper>
       {currentSlide === 0 ? "Map" : sections[currentSlide - 1]}
       <Button onClick={handleClick}>
         <FontAwesomeIcon icon={faMapLocation} />
       </Button>
-    </>
+    </Wrapper>
   );
 };
 
