@@ -31,7 +31,7 @@ const SectionButtonArea = styled.div`
   flex-direction: row;
   justify-content: between-space;
   align-items: center;
-  height: 1rem;
+  height: 2rem;
 `;
 
 const RowDiv = styled.div`

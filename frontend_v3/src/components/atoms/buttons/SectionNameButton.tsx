@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 
 const Wrapper = styled.div`
   padding-top: 1rem;
+  padding-bottom: 0.5rem;
 `;
 
 const Button = styled.button`
