@@ -1,26 +1,26 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { lentCabinetInfoDto } from 'src/cabinet/dto/cabinet-lent-info.dto';
-import { UserDto } from 'src/user/dto/user.dto';
-import { UserSessionDto } from './dto/user.session.dto';
-import { IAuthRepository } from './repository/auth.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { UserDto } from 'src/dto/user.dto';
+import { IAuthRepository } from './repository/auth.repository.interface';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserSessionDto } from 'src/dto/user.session.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private authRepository: IAuthRepository) {}
+  constructor(
+    @Inject('IAuthRepository') private authRepository: IAuthRepository,
+    private eventEmitter: EventEmitter2,
+    @Inject(ConfigService) private configService: ConfigService,
+  ) {}
 
-  async checkUser(user: UserSessionDto): Promise<lentCabinetInfoDto> {
-    try {
-      return this.authRepository.checkUser(user);
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+  async addUserIfNotExists(user: UserSessionDto): Promise<boolean> {
+    const find = await this.authRepository.addUserIfNotExists(user);
+    const is_local = Boolean(this.configService.get<string>('is_local'));
+    if (!find && !is_local) this.eventEmitter.emit('user.created', user);
+    return find;
   }
 
-  async getAllUser(): Promise<UserDto[]> {
-    try {
-      return this.authRepository.getAllUser();
-    } catch (e) {
-      throw new InternalServerErrorException();
-    }
+  async checkUserBorrowed(user: UserDto): Promise<boolean> {
+    return this.authRepository.checkUserBorrowed(user);
   }
 }

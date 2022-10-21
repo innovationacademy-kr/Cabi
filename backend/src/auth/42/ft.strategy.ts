@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
-import { UserSessionDto } from '../dto/user.session.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 /**
  * passport-42 Strategy
@@ -23,7 +23,8 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
         userId: 'id',
         email: 'email',
         login: 'login',
-        phone: 'phone',
+        cursus_users: 'cursus_users',
+        staff: 'staff?',
       },
     });
   }
@@ -34,12 +35,20 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
    * profile을 전부 콜백함수에 인자로 넘기면 너무 비대하므로 필드를 선택적으로 넘깁니다.
    * cb(null, user); 콜백함수는 res 객체의 user라는 필드로 user의 객체를 넘깁니다.
    */
-  async validate(req, accessToken, refreshToken, profile, cb) {
+  async validate(req, access_token, refreshToken, profile, cb) {
+    if (!profile.staff && !profile.cursus_users[1]) {
+      cb(null, undefined);
+    }
+    let blackholed_at: Date = undefined;
+    if (profile.cursus_users[1]) {
+      blackholed_at = profile.cursus_users[1].blackholed_at;
+    }
     const user: UserSessionDto = {
       user_id: profile.userId,
       email: profile.email,
       intra_id: profile.login,
-      phone: profile.phone === 'hidden' ? undefined : profile.phone,
+      blackholed_at: blackholed_at,
+      staff: profile.staff,
     };
     cb(null, user);
   }

@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 const extracter = (req) => {
   let token = null;
   if (req && req.cookies) {
-    token = req.cookies['accessToken'];
+    token = req.cookies['access_token'];
   }
   return token;
 };

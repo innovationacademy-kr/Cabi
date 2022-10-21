@@ -1,14 +1,22 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CabinetModule } from 'src/cabinet/cabinet.module';
+import BanLog from '../entities/ban.log.entity';
+import { UserModule } from '../user/user.module';
 import { BanService } from './ban.service';
-import { IBanRepository } from './repository/ban.repository';
-import { RawqueryBanRepository } from './repository/rawquery.ban.repository';
+import { BanRepository } from './repository/ban.repository';
 
 const repo = {
-  provide: IBanRepository,
-  useClass: RawqueryBanRepository,
+  provide: 'IBanRepository',
+  useClass: BanRepository,
 };
 
 @Module({
+  imports: [
+    forwardRef(() => UserModule),
+    TypeOrmModule.forFeature([BanLog]),
+    CabinetModule,
+  ],
   providers: [BanService, repo],
   exports: [BanService],
 })

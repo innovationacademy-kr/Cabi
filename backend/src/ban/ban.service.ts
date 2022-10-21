@@ -1,97 +1,126 @@
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import Lent from 'src/entities/lent.entity';
+import UserStateType from 'src/enums/user.state.type.enum';
+import { UserService } from '../user/user.service';
+import { IBanRepository } from './repository/ban.repository.interface';
 import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
-import { overUserInfoDto } from './dto/overUserInfo.dto';
-import { banUserAddInfoDto } from './dto/banUserAddInfo.dto';
-import { IBanRepository } from './repository/ban.repository';
+  Transactional,
+  Propagation,
+  runOnTransactionComplete,
+} from 'typeorm-transactional';
+import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
+import LentType from 'src/enums/lent.type.enum';
 
 @Injectable()
 export class BanService {
   private logger = new Logger(BanService.name);
-  constructor(private banRepository: IBanRepository) {}
+
+  constructor(
+    @Inject('IBanRepository')
+    private banRepository: IBanRepository,
+    private userService: UserService,
+    private cabinetInfoService: CabinetInfoService,
+  ) {}
 
   /**
-   * n일 이상 연체자 조회
-   * FIXME: v1의 banModel.ts
-   * @param days 연체일
-   * @return userInfo 리스트 or undefined
+   * 해당 유저가 현재시간 기준으로 밴 당했는지 확인함.
+   *
+   * @param user_id 유저 ID
+   * @return boolean
    */
-  async getOverUser(days: number): Promise<overUserInfoDto[] | undefined> {
-    try {
-      return await this.banRepository.getOverUser(days);
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err);
+  async isBlocked(user_id: number, cabinet_id: number): Promise<boolean> {
+    this.logger.debug(`Called ${BanService.name} ${this.isBlocked.name}`);
+    this.logger.debug(`isBlocked : ${user_id}`);
+    const cabinet =
+      cabinet_id === undefined
+        ? undefined
+        : await this.cabinetInfoService.getCabinetInfo(cabinet_id);
+    const bannedTime = await this.banRepository.getUnbanedDate(user_id);
+    if (bannedTime && bannedTime > new Date()) {
+      if (cabinet !== undefined)
+        if (
+          cabinet.lent_type === LentType.PRIVATE &&
+          (await this.banRepository.getIsPenalty(user_id)) === true
+        )
+          return false;
+      return true;
     }
+    return false;
   }
 
   /**
-	* 유저 권한 ban(1) 으로 변경
-	* FIXME: v1의 banModel.ts
-	FIXME: 현재 유저의 auth를 ban으로 바꾸는 용도로만 쓰여 ban service에 있지만
-	 *		공유 사물함 기능이 추가 되면 다른 용도로도 쓰일 수 있으므로 auth service로 이동 필요.
-	* @param userId 유저 PK
-	*/
-  async updateUserAuth(userId: number): Promise<void> {
-    try {
-      return await this.banRepository.updateUserAuth(userId);
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err);
+   * 공유사물함을 대여 후 72시간 이내 중도 이탈한 유저에게 패널티 부여.
+   * @param user_id
+   * @param lent_time
+   */
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+  })
+  async blockingDropOffUser(lent: Lent): Promise<void> {
+    this.logger.debug(
+      `Called ${BanService.name} ${this.blockingDropOffUser.name}`,
+    );
+    const now = new Date();
+    const target = new Date(lent.lent_time.getTime());
+    target.setDate(target.getDate() + 3);
+    if (now < target) {
+      await this.blockingUser(lent, 3, true);
     }
+    runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
   /**
-   * 캐비넷 activation 변경
-   * FIXME: v1의 banModel.ts
-   * FIXME: 현재 강제 반납 사물함 비활성화 처리로만 쓰여 ban service에 있지만
-   * 		 공유 사물함 기능이 추가 되면 다른 용도로도 쓰일 수 있으므로 cabinet service로 이동 필요.
-   * @param cabinetId 캐비넷 PK
-   * @param activation 캐비넷 상태 값
+   * 해당 유저에게 ban_day만큼 밴을 부가.
+   * @param user_id
+   * @param ban_day
    */
-  async updateCabinetActivation(
-    cabinetId: number,
-    activation: number,
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+  })
+  async blockingUser(
+    lent: Lent,
+    ban_day: number,
+    is_penalty: boolean,
   ): Promise<void> {
-    try {
-      return await this.banRepository.updateCabinetActivation(
-        cabinetId,
-        activation,
-      );
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err);
-    }
+    this.logger.debug(`Called ${BanService.name} ${this.blockingUser.name}`);
+    // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
+    await this.banRepository.addToBanLogByUserId(lent, ban_day, is_penalty);
+    // 2. 해당 user의 state를 BAN으로 변경.
+    await this.userService.updateUserState(
+      lent.lent_user_id,
+      UserStateType.BANNED,
+    );
+    runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
   /**
-   * banUser 추가
-   * FIXME: v1의 banModel.ts
-   * @param banUser 추가될 유저 정보
+   * 날짜 차이 계산
+   * @param begin
+   * @param end
+   * @returns days
    */
-  async addBanUser(banUser: banUserAddInfoDto) {
-    try {
-      return await this.banRepository.addBanUser(banUser);
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err);
-    }
+  async calDateDiff(begin: Date, end: Date): Promise<number> {
+    this.logger.debug(`Called ${BanService.name} ${this.calDateDiff.name}`);
+    const diffDatePerSec = end.getTime() - begin.getTime();
+    const days = Math.floor(diffDatePerSec / 1000 / 60 / 60 / 24);
+    return days;
   }
 
   /**
-   * 해당 유저가 Ban처리 되어있는지 확인
-   * FIXME: v1의 queryModel.ts
-   * FIXME: 정확히 어떤 타입을 return 하는지 명시 필요.
-   * @param user_id 추가될 유저의 id
+   * 유저의 누적 연체일을 계산
+   * @param user_id
    */
-  async checkBannedUserList(user_id: number) {
-    try {
-      return await this.banRepository.checkBannedUserList(user_id);
-    } catch (err) {
-      this.logger.error(err);
-      throw new InternalServerErrorException(err);
+  async addOverdueDays(user_id: number): Promise<number> {
+    this.logger.debug(`Called ${BanService.name} ${this.addOverdueDays.name}`);
+    const banLog = await this.banRepository.getBanLogByUserId(user_id);
+    let accumulate = 0;
+    for (const log of banLog) {
+      if (log.is_penalty == false)
+        accumulate += await this.calDateDiff(
+          log.banned_date,
+          log.unbanned_date,
+        );
     }
+    return accumulate;
   }
 }

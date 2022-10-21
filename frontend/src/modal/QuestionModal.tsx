@@ -25,7 +25,7 @@ export default function QuestionModal() {
                 <br />
               </li>
               <li className="py-1">
-                대여기간은 대여한 날로 부터 +30일 입니다.
+                대여기간은 대여한 날로 부터 +21일 입니다.
                 <br />
               </li>
               <li className="py-1">

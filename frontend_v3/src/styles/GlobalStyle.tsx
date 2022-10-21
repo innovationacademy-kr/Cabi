@@ -1,16 +1,29 @@
 import { Global, css } from "@emotion/react";
 
 const style = css`
+  @font-face {
+    font-family: "EliceDigitalBaeum_Regular";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/EliceDigitalBaeum_Regular.woff")
+      format("woff");
+    font-weight: normal;
+    font-style: normal;
+  }
+
   html {
-    font-size: 16px;
-    max-width: 480px;
+    font-size: 1rem;
+    max-width: 30rem;
     margin: auto;
   }
 
   body {
-    font-family: "EliceDigitalBaeum_Regular";
-    padding: 0;
+    background: -webkit-linear-gradient(to bottom, #6667ab, #6c337d);
+    background: linear-gradient(to bottom, #6667ab, #6c337d);
+    justify-content: center;
+    box-sizing: border-box;
+    height: 100vh;
     margin: 0;
+    padding: 0 1rem;
+    font-family: "EliceDigitalBaeum_Regular";
   }
 `;
 

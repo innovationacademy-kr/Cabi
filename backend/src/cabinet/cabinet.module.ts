@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from 'src/auth/auth.module';
-import { BanModule } from 'src/ban/ban.module';
-import { CabinetController } from './cabinet.controller';
-import { CabinetService } from './cabinet.service';
-import { ICabinetRepository } from './repository/cabinet.repository';
-import { RawqueryCabinetRepository } from './repository/rawquery.cabinet.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import Cabinet from 'src/entities/cabinet.entity';
+import { CabinetController } from './cabinet.info.controller';
+import { CabinetInfoService } from './cabinet.info.service';
+import { CabinetInfoRepository } from './repository/cabinet.info.repository';
 
 const repo = {
-  provide: ICabinetRepository,
-  useClass: RawqueryCabinetRepository,
+  provide: 'ICabinetInfoRepository',
+  useClass: CabinetInfoRepository,
 };
 
 @Module({
-  imports: [AuthModule, BanModule],
-  exports: [CabinetService],
+  imports: [TypeOrmModule.forFeature([Cabinet])],
+  exports: [CabinetInfoService],
   controllers: [CabinetController],
-  providers: [CabinetService, repo],
+  providers: [CabinetInfoService, repo],
 })
 export class CabinetModule {}

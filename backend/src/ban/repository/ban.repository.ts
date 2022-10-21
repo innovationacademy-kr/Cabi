@@ -1,41 +1,68 @@
-import { banUserAddInfoDto } from '../dto/banUserAddInfo.dto';
-import { overUserInfoDto } from '../dto/overUserInfo.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import Lent from 'src/entities/lent.entity';
+import { Repository } from 'typeorm';
+import BanLog from '../../entities/ban.log.entity';
+import { IBanRepository } from './ban.repository.interface';
 
-export abstract class IBanRepository {
-  /**
-   * n일 이상 연체자 조회
-   * @param days 연체일
-   * @return userInfoDto 리스트 or undefined
-   */
-  abstract getOverUser(days: number): Promise<overUserInfoDto[] | undefined>;
+export class BanRepository implements IBanRepository {
+  constructor(
+    @InjectRepository(BanLog) private banLogRepository: Repository<BanLog>,
+  ) {}
 
-  /**
-   * 유저 권한 ban(1) 으로 변경
-   * @param userId 유저 PK
-   */
-  abstract updateUserAuth(userId: number): Promise<void>;
+  async getUnbanedDate(user_id: number): Promise<Date | null> {
+    const result = await this.banLogRepository.findOne({
+      where: {
+        ban_user_id: user_id,
+      },
+      order: {
+        unbanned_date: 'DESC',
+      },
+    });
+    return result ? result.unbanned_date : null;
+  }
 
-  /**
-   * 캐비넷 activation 변경
-   * @param cabinetId 캐비넷 PK
-   * @param activation 캐비넷 상태 값
-   */
-  abstract updateCabinetActivation(
-    cabinetId: number,
-    activation: number,
-  ): Promise<void>;
+  async getIsPenalty(user_id: number): Promise<boolean> {
+    const result = await this.banLogRepository.findOne({
+      select: {
+        is_penalty: true,
+      },
+      where: {
+        ban_user_id: user_id,
+      },
+      order: {
+        unbanned_date: 'DESC',
+      },
+    });
+    return result ? result.is_penalty : false;
+  }
 
-  /**
-   * banUser 추가
-   * @param banUser 추가될 유저 정보
-   */
-  abstract addBanUser(banUser: banUserAddInfoDto): Promise<void>;
+  async addToBanLogByUserId(
+    lent: Lent,
+    ban_day: number,
+    is_penalty: boolean,
+  ): Promise<void> {
+    const banned_date = new Date();
+    const unbanned_date = new Date(banned_date.getTime());
+    unbanned_date.setDate(banned_date.getDate() + ban_day);
+    await this.banLogRepository
+      .createQueryBuilder(this.addToBanLogByUserId.name)
+      .insert()
+      .into(BanLog)
+      .values({
+        ban_user_id: lent.lent_user_id,
+        ban_cabinet_id: lent.lent_cabinet_id,
+        banned_date,
+        unbanned_date,
+        is_penalty,
+      })
+      .execute();
+  }
 
-  /**
-   * 해당 유저가 Ban처리 되어있는지 확인
-   *
-   * @param user_id 추가될 유저의 id
-   * @return ban 되어있을 경우 1, 아니면 0
-   */
-  abstract checkBannedUserList(user_id: number): Promise<number>;
+  async getBanLogByUserId(user_id: number): Promise<BanLog[]> {
+    return await this.banLogRepository.find({
+      where: {
+        ban_user_id: user_id,
+      },
+    });
+  }
 }
