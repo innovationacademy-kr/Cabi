@@ -18,6 +18,7 @@ import {
   Transactional,
   Propagation,
   runOnTransactionComplete,
+  IsolationLevel,
 } from 'typeorm-transactional';
 import { UserDto } from 'src/dto/user.dto';
 
@@ -145,6 +146,7 @@ export class LentService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.READ_COMMITTED,
   })
   async returnCabinet(user: UserDto): Promise<void> {
     this.logger.debug(`Called ${LentService.name} ${this.returnCabinet.name}`);
