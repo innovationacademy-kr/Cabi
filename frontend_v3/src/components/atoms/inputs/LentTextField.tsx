@@ -51,13 +51,11 @@ interface LentTextFieldProps {
 
 const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
   const { contentType, currentContent, cabinetType } = props;
-  console.log(currentContent);
   const [textValue, setTextValue] = useState<string>("");
   const [inputValue, setInputValue] = useState(currentContent ? textValue : "");
   const [isToggle, setIsToggle] = useState(false);
 
   useEffect(() => {
-    console.log(currentContent);
     if (currentContent) {
       setTextValue(currentContent);
     } else {

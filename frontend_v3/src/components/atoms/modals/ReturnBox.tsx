@@ -121,9 +121,7 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
 
 ReturnBox.defaultProps = {
   // eslint-disable-next-line react/default-props-match-prop-types
-  handleClose: () => {
-    console.log("closed");
-  },
+  handleClose: (): void => {},
 };
 
 export default ReturnBox;

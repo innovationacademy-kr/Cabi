@@ -22,21 +22,6 @@ interface LentInfoProps {
 
 const LentInfo = (props: LentInfoProps): JSX.Element => {
   const { myLentInfo } = props;
-  // useEffect(() => {
-  //   // TODO (seuan)
-  //   // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
-  //   // if (cabinetId === -1) navigate("/main");
-  //   axiosMyLentInfo()
-  //     .then((response) => {
-  //       setMyLentInfo(response.data);
-  //       console.log(response.data);
-  //     })
-  //     .then(() => console.log(myLentInfo))
-  //     .catch((error) => {
-  //       console.error(error);
-  //       // navigate("/main");
-  //     });
-  // }, []);
 
   const cabinetInfo = (): JSX.Element => {
     return (

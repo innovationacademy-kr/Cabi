@@ -68,13 +68,11 @@ const LentTemplate = (): JSX.Element => {
     // if (cabinetId === -1) navigate("/main");
     axiosMyLentInfo()
       .then((response) => {
-        console.log(userInfo);
         setLentUser(
           response.data.lent_info.filter(
             (user: LentDto) => user.intra_id === userInfo.intra_id
           )
         );
-        console.log(lentUser);
         setMyLentInfo(response.data);
       })
       .catch((error) => {

@@ -35,6 +35,7 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react/no-array-index-key": 0,
     "no-param-reassign": 0,
+    "@typescript-eslint/no-empty-function": 0,
     camelcase: 0,
     "import/extensions": [
       "off",

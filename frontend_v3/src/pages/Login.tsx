@@ -13,7 +13,6 @@ const Login = (): JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  console.log(user.intra_id);
   useEffect(() => {
     const token = getCookie("access_token");
     if (!token) {

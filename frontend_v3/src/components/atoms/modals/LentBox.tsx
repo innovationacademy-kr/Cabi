@@ -214,9 +214,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
 
 LentBox.defaultProps = {
   // eslint-disable-next-line react/default-props-match-prop-types
-  handleClose: () => {
-    console.log("closed");
-  },
+  handleClose: (): void => {},
 };
 
 export default LentBox;

@@ -18,7 +18,6 @@ const GuideModal = (props: GuideModalProps): JSX.Element => {
   const user = useAppSelector((state) => state.user);
 
   const handleOpen = (): void => {
-    console.log(`${box.props.cabinet_id} === ${user?.cabinet_id}`);
     if (box.props.cabinet_id === user?.cabinet_id) {
       navigate("/lent");
       return;
