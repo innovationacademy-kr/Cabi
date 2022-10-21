@@ -13,7 +13,6 @@ export class EmailSender {
     this.emailTest = configService.get<boolean>('email.test');
   }
 
-  // TODO: 일단 원래 기능 그대로 가져왔으나 어디서 호출하고 어떻게 쓰이냐에 따라 수정해야할 것 같습니다!
   public sendEmail(intra_id: string, subject: string, file: string): void {
     const emailFrom = this.configService.get<string>('email.from');
     this.mailerService

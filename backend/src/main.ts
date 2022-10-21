@@ -4,10 +4,14 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { initializeTransactionalContext } from 'typeorm-transactional';
+import { LogLevel } from '@nestjs/common';
 
 async function bootstrap() {
   initializeTransactionalContext();
-  const app = await NestFactory.create(AppModule);
+  const log_level:LogLevel[] = process.env.TEST === 'false' ? ['error', 'log'] : ['error', 'log', 'debug']
+  const app = await NestFactory.create(AppModule, {
+    logger: log_level
+  });
   // for URI Versioning
   app.enableVersioning();
   const swaggerConfig = new DocumentBuilder()

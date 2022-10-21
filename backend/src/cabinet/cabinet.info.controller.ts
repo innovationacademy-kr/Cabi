@@ -28,7 +28,6 @@ export class CabinetController {
 
   constructor(private cabinetService: CabinetInfoService) {}
 
-  // TODO: AuthGuard 처리는 기능 구현을 해보고 추가할 지 말지 결정하는 걸로 하겠습니다.
   @ApiOperation({
     summary: 'space 정보 호출',
     description: 'cabi에 존재하는 건물/층 정보를 받아옵니다.',
@@ -41,7 +40,7 @@ export class CabinetController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
-    this.logger.log('getSpaceInfo');
+    this.logger.debug(`Called ${this.getSpaceInfo.name}`);
     const cabinetInfo = await this.cabinetService.getSpaceInfo();
     return cabinetInfo;
   }
@@ -64,7 +63,7 @@ export class CabinetController {
     @Param('location') location: string,
     @Param('floor', ParseIntPipe) floor: number,
   ): Promise<CabinetsPerSectionResponseDto[]> {
-    this.logger.log('getCabinetInfoByParam');
+    this.logger.debug(`Called ${this.getCabinetsInfoByParam.name}`);
     return await this.cabinetService.getCabinetInfoByParam(location, floor);
   }
 
@@ -85,7 +84,7 @@ export class CabinetController {
   async getCabinetInfoById(
     @Param('cabinet_id', ParseIntPipe) cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {
-    this.logger.log('getCabinetInfoById');
+    this.logger.debug(`Called ${this.getCabinetInfoById.name}`);
     return await this.cabinetService.getCabinetResponseInfo(cabinetId);
   }
 }
