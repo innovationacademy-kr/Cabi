@@ -41,7 +41,7 @@ const LentModal = (props: LentModalProps): JSX.Element => {
   return (
     <ModalBox typeof={cabinet_type} results={lender.length}>
       <p>[{cabinet_number}]번 사물함을 대여합니다.</p>
-      <p>대여기간은 +30일 입니다.</p>
+      <p>대여기간은 +21일 입니다.</p>
       <p>이용 중 귀중품 분실에 책임지지 않습니다.</p>
       {cabinet_type === "SHARE" && (
         <>

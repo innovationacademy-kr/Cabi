@@ -77,7 +77,7 @@ export default function LentModal(props: LentModalProps) {
           <div className="modal-body">
             <p className="alretMessage">
               {" "}
-              대여기간은 +30일 입니다.<br></br> 이용 중 귀중품 분실에 책임지지
+              대여기간은 +21일 입니다.<br></br> 이용 중 귀중품 분실에 책임지지
               않습니다.
             </p>
             <p className="agreeMessage">

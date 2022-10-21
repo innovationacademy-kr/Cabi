@@ -43,9 +43,9 @@ export class LentTools {
     const expire_time = new Date();
     const last_lent_time = lent_list[lent_list.length - 1].lent_time;
     if (lent_type === LentType.PRIVATE) {
-      expire_time.setDate(last_lent_time.getDate() + 30);
+      expire_time.setDate(last_lent_time.getDate() + 21);
     } else {
-      expire_time.setDate(last_lent_time.getDate() + 45);
+      expire_time.setDate(last_lent_time.getDate() + 42);
     }
     for await (const lent of lent_list) {
       this.lentRepository.setExpireTime(lent.lent_id, expire_time);
