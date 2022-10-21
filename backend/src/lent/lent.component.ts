@@ -119,6 +119,10 @@ export class LentTools {
     );
     switch (lent.cabinet.status) {
       case CabinetStatusType.AVAILABLE:
+        if (lent_user_cnt - 1 === 0) {
+          await this.lentService.updateLentCabinetTitle('', user);
+          await this.lentService.updateLentCabinetMemo('', user);
+        }
         break;
       case CabinetStatusType.SET_EXPIRE_FULL:
         await this.cabinetInfoService.updateCabinetStatus(
