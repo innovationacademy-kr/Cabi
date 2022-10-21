@@ -54,6 +54,13 @@ export default class User {
   })
   last_login: Date;
 
+  @Column({
+    name: 'blackhole_date',
+    nullable: true,
+    type: 'datetime',
+  })
+  blackhole_date: Date | null;
+
   @OneToMany(() => BanLog, (banLog) => banLog.user)
   BanLog: BanLog[];
 
