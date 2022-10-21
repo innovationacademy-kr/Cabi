@@ -114,7 +114,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     "이용 중 귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.",
   ];
   const personalCabinetMessage: string[] = [
-    "대여기간은 +30일 입니다.",
+    "대여기간은 +21일 입니다.",
     "이용 중 귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.",
   ];
   if (status === CabinetStatus.SET_EXPIRE_AVAILABLE && lender?.length > 0) {
