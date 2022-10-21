@@ -69,7 +69,7 @@ export class LentController {
   })
   @Post('/:cabinet_id')
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  @UseGuards(JwtAuthGuard)
   async lentCabinet(
     @Param('cabinet_id') cabinet_id: number,
     @User() user: UserSessionDto,
@@ -106,7 +106,7 @@ export class LentController {
   })
   @Patch('/update_cabinet_title')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard, BanCheckGuard)
+  @UseGuards(JwtAuthGuard)
   async updateLentCabinetTitle(
     @Body(new ValidationPipe())
     updateCabinetTitleRequestDto: UpdateCabinetTitleRequestDto,
