@@ -125,7 +125,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
     );
   } else {
     sharedCabinetMessage.unshift(
-      "대여기간은 3인이 모두 공유하는 순간부터 +45일 입니다."
+      "대여기간은 3인이 모두 공유하는 순간부터 +42일 입니다."
     );
   }
 
