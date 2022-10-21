@@ -12,7 +12,7 @@ const Section = styled.section`
 `;
 
 function App(): JSX.Element {
-  gaTracker();
+  // gaTracker();
   return (
     <BrowserRouter>
       <>
