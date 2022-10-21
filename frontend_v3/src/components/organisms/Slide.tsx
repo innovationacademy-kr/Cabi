@@ -34,6 +34,7 @@ const Slide = (props: SlideProps): JSX.Element => {
           <GuideModal
             key={index}
             status={item.status}
+            type={item.lent_type}
             box={
               <LentBox
                 key={index}
