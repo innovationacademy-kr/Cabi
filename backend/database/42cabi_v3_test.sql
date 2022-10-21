@@ -154,6 +154,7 @@ CREATE TABLE `user` (
   `email` varchar(128) DEFAULT NULL COMMENT '이메일',
   `first_login` datetime DEFAULT NULL COMMENT '첫 로그인 시간',
   `last_login` datetime DEFAULT NULL COMMENT '마지막 로그인 시간',
+  `blackhole_date` datetime DEFAULT NULL COMMENT '블랙홀 빠지는 날짜',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `intra_id` (`intra_id`),
   UNIQUE KEY `email` (`email`)
