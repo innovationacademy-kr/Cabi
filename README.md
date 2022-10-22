@@ -64,8 +64,8 @@
 | [🧑‍✈️ jaesjeon](https://github.com/Oris482) | [🐶 jiwchoi](https://github.com/jiwon-choi) | [🐯 joopark](https://github.com/joohongpark) | [🐻 seuan](https://github.com/aseungbo) | [😺 sichoi](https://github.com/sichoi42) |
 | ----------------------------------------- | ------------------------------------------- | -------------------------------------------- | --------------------------------------- | ---------------------------------------- |
 
-| [🍎 skim](https://github.com/subin195-09) | [🍪 spark](https://github.com/Hyunja27) | [🪀 yoyoo](https://github.com/Yoowatney) | [🎒 yubchoi](https://github.com/yubinquitous) | <img src="https://img.shields.io/badge/42Seoul-000000?style=flat-square&logo=42&logoColor=white" /> |
-| ----------------------------------------- | --------------------------------------- | ---------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| [🍎 skim](https://github.com/subin195-09) | [🍪 spark](https://github.com/Hyunja27) | [🪀 yoyoo](https://github.com/Yoowatney) | [🎒 yubchoi](https://github.com/yubinquitous) | <a href="https://github.com/innovationacademy-kr"><img src="https://img.shields.io/badge/42Seoul-000000?style=flat-square&logo=42&logoColor=white" /></a> |
+| ----------------------------------------- | --------------------------------------- | ---------------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 </div>
 <br/>
