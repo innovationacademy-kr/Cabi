@@ -1,9 +1,12 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { LentDto } from 'src/dto/lent.dto';
+import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
 import { UserDto } from 'src/dto/user.dto';
+import Cabinet from 'src/entities/cabinet.entity';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
 import { Repository } from 'typeorm';
+import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
 import { ILentRepository } from './lent.repository.interface';
 
 export class lentRepository implements ILentRepository {
@@ -12,17 +15,18 @@ export class lentRepository implements ILentRepository {
     private lentRepository: Repository<Lent>,
     @InjectRepository(LentLog)
     private lentLogRepository: Repository<LentLog>,
+    @InjectRepository(Cabinet)
+    private cabinetLogRepository: Repository<Cabinet>,
   ) {}
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getIsLent(user_id: number): Promise<boolean> {
     const result = await this.lentRepository.findOne({
-      relations: {
-        user: true,
-      },
       where: {
-        user: {
-          user_id: user_id,
-        },
+        lent_user_id: user_id,
       },
     });
     if (!result) {
@@ -31,6 +35,7 @@ export class lentRepository implements ILentRepository {
     return true;
   }
 
+  //TODO: lent component 수정 후 사용되지 않는 함수입니다.
   async getLentUserCnt(cabinet_id: number): Promise<number> {
     const result: number = await this.lentRepository.count({
       relations: {
@@ -45,9 +50,13 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
     await this.lentRepository
-      .createQueryBuilder(this.setExpireTime.name)
+      .createQueryBuilder()
       .update(Lent)
       .set({
         expire_time: expire_time,
@@ -58,6 +67,27 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
+  async setExpireTimeAll(cabinet_id: number, expire_time: Date): Promise<void> {
+    await this.lentRepository
+      .createQueryBuilder()
+      .update(Lent)
+      .set({
+        expire_time: expire_time,
+      })
+      .where({
+        lent_cabinet_id: cabinet_id,
+      })
+      .execute();
+  }
+
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async lentCabinet(user: UserDto, cabinet_id: number): Promise<LentDto> {
     const lent_time = new Date();
     const expire_time: Date | null = null;
@@ -94,9 +124,7 @@ export class lentRepository implements ILentRepository {
         },
       },
       where: {
-        user: {
-          user_id: user_id,
-        },
+        lent_user_id: user_id,
       },
     });
     if (result === null) {
@@ -192,5 +220,24 @@ export class lentRepository implements ILentRepository {
         return_time: new Date(),
       })
       .execute();
+  }
+
+  async getSimpleCabinetData(cabinet_id: number) : Promise<SimpleCabinetDataDto> {
+    const result = await this.cabinetLogRepository
+      .createQueryBuilder('c')
+      .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])
+      .leftJoin(Lent, 'l', 'l.lent_cabinet_id = c.cabinet_id')
+      .addSelect('l.expire_time', 'expire_time')
+      .addSelect('l.lent_id', 'lent_id')
+      .where('c.cabinet_id = :cabinet_id', { cabinet_id })
+      .execute();
+
+    return {
+      status: result[0].cabinet_status,
+      lent_type: result[0].c_lent_type,
+      lent_count: result[0].lent_id === null ? 0 : result.length,
+      expire_time: result[0].lent_id === null ? undefined : result[0].expire_time,
+      max_user: result[0].c_max_user,
+    }
   }
 }
