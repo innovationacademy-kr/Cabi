@@ -33,11 +33,11 @@
 
 - **1,000명 이상의 카뎃들**에게 더 양질의 서비스를 제공하기 위해 **42Cabi 팀**은 아래와 같이 고민했습니다:
 
-#### 💾 Back-end
+#### [Back-end](https://github.com/innovationacademy-kr/42cabi/tree/dev/backend)
 
 - 적어주시죠
 
-#### 🖥 Front-end
+#### [Front-end](https://github.com/innovationacademy-kr/42cabi/tree/dev/frontend_v3)
 
 - 적어주시죠
 
