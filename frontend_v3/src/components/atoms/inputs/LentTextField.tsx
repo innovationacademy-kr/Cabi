@@ -95,6 +95,7 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
               value={inputValue}
               onChange={handleChange}
               style={{ width: "100%" }}
+              maxLength={14}
             />
           )}
         </TextDiv>

@@ -35,8 +35,10 @@ const LentNavSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
-  height: 10%;
+  height: 5%;
+  max-height: 2rem;
+  padding: 0.5rem 0.7rem 0 0.7rem;
+  margin-bottom: 1rem;
 `;
 
 const LentInfoSection = styled.div`
@@ -83,7 +85,7 @@ const LentTemplate = (): JSX.Element => {
 
   return (
     <LentSection id="test">
-      <LentNavSection>
+      <LentNavSection className="LentNavSection">
         <HomeButton />
         <MenuButton />
       </LentNavSection>
