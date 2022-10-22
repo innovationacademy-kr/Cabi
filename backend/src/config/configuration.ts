@@ -1,6 +1,7 @@
 export default () => ({
   port: process.env.PORT,
   is_local: process.env.LOCAL,
+  test: process.env.TEST,
   database: {
     host: process.env.HOST,
     user: process.env.DB_USER,
@@ -19,7 +20,6 @@ export default () => ({
     callbackuri: process.env.CALLBACK_URL,
   },
   email: {
-    test: process.env.TEST,
     host: process.env.MAIL_HOST,
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,

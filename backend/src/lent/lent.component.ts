@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { LentDto } from 'src/dto/lent.dto';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import Lent from 'src/entities/lent.entity';
@@ -12,8 +12,10 @@ import {
   Transactional,
   Propagation,
   runOnTransactionComplete,
+  IsolationLevel,
 } from 'typeorm-transactional';
 import { UserDto } from 'src/dto/user.dto';
+import LentExceptionType from 'src/enums/lent.exception.enum';
 
 @Injectable()
 export class LentTools {
@@ -32,8 +34,9 @@ export class LentTools {
    * @param lent_list
    * @param lent_type
    */
-  @Transactional({
+   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async setExpireTimeAll(
     lent_list: LentDto[],
@@ -55,56 +58,82 @@ export class LentTools {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async lentStateTransition(
     user: UserDto,
-    cabinet: CabinetInfoResponseDto,
-  ): Promise<void> {
+    cabinet_id: number,
+  ): Promise<LentExceptionType> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.lentStateTransition.name}`,
     );
 
-    const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
-      cabinet.cabinet_id,
-    );
+    // 대여하고 있는 유저들의 대여 정보를 포함하는 cabinet 정보를 가져옴.
+    // 가져오는 정보 : 캐비넷 상태, 캐비넷 대여타입, 캐비넷을 빌린 사람들의 인원 수
+    const cabinet: CabinetInfoResponseDto =
+    await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id);
+
+    // 사물함을 대여중인 유저의 수를 가져옴.
+    const lent_user_cnt: number = cabinet.lent_info ? cabinet.lent_info.length: 0;
+
+    let excepction_type = LentExceptionType.LENT_SUCCESS;
     switch (cabinet.status) {
       case CabinetStatusType.AVAILABLE:
+      case CabinetStatusType.SET_EXPIRE_AVAILABLE:
+        // 동아리 사물함인지 확인
+        if (cabinet.lent_type === LentType.CIRCLE) {
+          excepction_type = LentExceptionType.LENT_CIRCLE;
+          break ;
+        }
+        // 유저가 대여한 사물함 확인
+        if (await this.lentRepository.getIsLent(user.user_id)) {
+          excepction_type = LentExceptionType.ALREADY_LENT;
+          break ;
+        }
+        // 대여 처리
         const new_lent = await this.lentRepository.lentCabinet(
           user,
           cabinet.cabinet_id,
         );
+
         cabinet.lent_info.push(new_lent);
         if (lent_user_cnt + 1 === cabinet.max_user) {
-          // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
-          await this.setExpireTimeAll(cabinet.lent_info, cabinet.lent_type);
+          if (cabinet.status === CabinetStatusType.AVAILABLE) {
+            // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
+            await this.setExpireTimeAll(cabinet.lent_info, cabinet.lent_type);
+          } else {
+            // 기존 유저의 만료시간으로 만료시간 설정
+            await this.lentRepository.setExpireTime(
+              new_lent.lent_id,
+              cabinet.lent_info[0].expire_time,
+            );
+          }
           // 상태를 SET_EXPIRE_FULL로 변경
           await this.cabinetInfoService.updateCabinetStatus(
             cabinet.cabinet_id,
             CabinetStatusType.SET_EXPIRE_FULL,
           );
         }
+        break ;
+
+      case CabinetStatusType.SET_EXPIRE_FULL:
+        excepction_type = LentExceptionType.LENT_FULL;
+        break ;
+
+      case CabinetStatusType.EXPIRED:
+        excepction_type = LentExceptionType.LENT_EXPIRED;
         break;
-      case CabinetStatusType.SET_EXPIRE_AVAILABLE: {
-        const new_lent = await this.lentRepository.lentCabinet(
-          user,
-          cabinet.cabinet_id,
-        );
-        // 기존 유저의 만료시간으로 만료시간 설정
-        await this.lentRepository.setExpireTime(
-          new_lent.lent_id,
-          cabinet.lent_info[0].expire_time,
-        );
-        // 해당 대여로 풀방이 되면 상태 변경
-        if (lent_user_cnt + 1 === cabinet.max_user) {
-          await this.cabinetInfoService.updateCabinetStatus(
-            cabinet.cabinet_id,
-            CabinetStatusType.SET_EXPIRE_FULL,
-          );
-        }
+
+      case CabinetStatusType.BROKEN:
+        excepction_type = LentExceptionType.LENT_BROKEN;
         break;
-      }
+
+      case CabinetStatusType.BANNED:
+        excepction_type = LentExceptionType.LENT_BANNED;
+        break;
     }
     runOnTransactionComplete((err) => err && this.logger.error(err));
+    return excepction_type;
   }
 
   @Transactional({

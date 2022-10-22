@@ -4,6 +4,7 @@ import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
 import { Repository } from 'typeorm';
+import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
 import { ILentRepository } from './lent.repository.interface';
 
 export class lentRepository implements ILentRepository {
@@ -14,15 +15,14 @@ export class lentRepository implements ILentRepository {
     private lentLogRepository: Repository<LentLog>,
   ) {}
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getIsLent(user_id: number): Promise<boolean> {
     const result = await this.lentRepository.findOne({
-      relations: {
-        user: true,
-      },
       where: {
-        user: {
-          user_id: user_id,
-        },
+        lent_user_id: user_id,
       },
     });
     if (!result) {
@@ -31,6 +31,7 @@ export class lentRepository implements ILentRepository {
     return true;
   }
 
+  //TODO: lent component 수정 후 사용되지 않는 함수입니다.
   async getLentUserCnt(cabinet_id: number): Promise<number> {
     const result: number = await this.lentRepository.count({
       relations: {
@@ -45,6 +46,10 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
     await this.lentRepository
       .createQueryBuilder(this.setExpireTime.name)
@@ -58,6 +63,10 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async lentCabinet(user: UserDto, cabinet_id: number): Promise<LentDto> {
     const lent_time = new Date();
     const expire_time: Date | null = null;
@@ -94,9 +103,7 @@ export class lentRepository implements ILentRepository {
         },
       },
       where: {
-        user: {
-          user_id: user_id,
-        },
+        lent_user_id: user_id,
       },
     });
     if (result === null) {

@@ -12,6 +12,7 @@ import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.sect
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { SpaceDataDto } from 'src/dto/space.data.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
 import { ICabinetInfoRepository } from './repository/cabinet.info.interface.repository';
 
 @Injectable()
@@ -58,6 +59,10 @@ export class CabinetInfoService {
     return cabinetInfo;
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getCabinetResponseInfo(
     cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {
@@ -81,6 +86,10 @@ export class CabinetInfoService {
     return await this.cabinetInfoRepository.getCabinetInfo(cabinetId);
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async updateCabinetStatus(
     cabinet_id: number,
     status: CabinetStatusType,
