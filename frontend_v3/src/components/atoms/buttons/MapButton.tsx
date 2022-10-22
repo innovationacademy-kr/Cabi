@@ -12,6 +12,9 @@ type ButtonProps = {
 const Button = styled.button<ButtonProps>`
   display: flex;
   font-size: 0.8rem;
+  @media (max-width: 281px) {
+    font-size: 0.6rem;
+  }
   justify-content: center;
   align-items: center;
   grid-column-start: ${(props): string => `${props.x + 1}`};

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import FormGroup from "@mui/material/FormGroup";
@@ -14,6 +15,22 @@ import { useAppDispatch } from "../../../redux/hooks";
 import { setUserCabinet } from "../../../redux/slices/userSlice";
 
 const LentBoxContainer = styled.div``;
+
+const theme = createTheme();
+
+theme.typography.h6 = {
+  fontSize: "1.2rem",
+  "@media (max-width:281px)": {
+    fontSize: "0.9rem",
+  },
+};
+
+theme.typography.body2 = {
+  fontSize: "1rem",
+  "@media (max-width:281px)": {
+    fontSize: "0.9rem",
+  },
+};
 
 const BoxStyle = {
   position: "fixed" as const,
@@ -45,6 +62,9 @@ const ScrollBox = styled.div`
   background-color: #fafafa;
   margin-bottom: 1rem;
   margin-top: 1rem;
+  @media (max-width: 281px) {
+    font-size: 1rem;
+  }
 `;
 
 const LenderBox = styled.div`
@@ -131,65 +151,72 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
 
   const LentAble: JSX.Element = (
     <Box sx={BoxStyle}>
-      <Typography
-        id="modal-modal-title"
-        variant="h6"
-        component="h2"
-        align="center"
-      >
-        [{cabinet_number}]번 사물함을 대여합니다.
-      </Typography>
-      <hr />
-      <Typography
-        id="modal-modal-title"
-        align="center"
-        variant="h6"
-        component="h3"
-      >
-        {cabinet_title}
-      </Typography>
-      <ScrollBox>
-        {/* TODO: gyuwlee
+      <ThemeProvider theme={theme}>
+        <Typography
+          id="modal-modal-title"
+          variant="h6"
+          component="h2"
+          align="center"
+        >
+          [{cabinet_number}]번 사물함을 대여합니다.
+        </Typography>
+        <hr />
+        <Typography
+          id="modal-modal-title"
+          align="center"
+          variant="h6"
+          component="h3"
+        >
+          {cabinet_title}
+        </Typography>
+        <ScrollBox>
+          {/* TODO: gyuwlee
         산재해 있는 style 태그 변수화 필요 */}
-        <strong style={{ color: "red" }}>📌 이용 시 주의사항 📌</strong>
-        {(cabinet_type === "SHARE"
-          ? sharedCabinetMessage
-          : personalCabinetMessage
-        ).map((message: string, i: number) => (
-          <Typography
-            key={i}
-            id="modal-modal-description"
-            sx={{ mt: 2 }}
-            align="left"
-          >
-            {message}
+          <strong style={{ color: "red" }}>📌 이용 시 주의사항 📌</strong>
+          {(cabinet_type === "SHARE"
+            ? sharedCabinetMessage
+            : personalCabinetMessage
+          ).map((message: string, i: number) => (
+            <Typography
+              key={i}
+              id="modal-modal-description"
+              sx={{ mt: 2, wordBreak: "keep-all" }}
+              align="left"
+              variant="h6"
+            >
+              {message}
+            </Typography>
+          ))}
+        </ScrollBox>
+        {cabinet_type === "SHARE" && lender?.length > 0 && (
+          <Typography variant="h6">
+            <p style={{ margin: 0 }}>대여자 목록 : </p>
+            <LenderBox>
+              {lender.map((item, i) => (
+                <p
+                  key={i}
+                  style={{
+                    marginTop: 0,
+                    marginBottom: 0,
+                    marginRight: "0.8rem",
+                  }}
+                >
+                  {item.intra_id}
+                </p>
+              ))}
+            </LenderBox>
           </Typography>
-        ))}
-      </ScrollBox>
-      {cabinet_type === "SHARE" && lender?.length > 0 && (
-        <>
-          <p style={{ margin: 0 }}>대여자 목록 : </p>
-          <LenderBox>
-            {lender.map((item, i) => (
-              <p
-                key={i}
-                style={{
-                  marginTop: 0,
-                  marginBottom: 0,
-                  marginRight: "0.8rem",
-                }}
-              >
-                {item.intra_id}
-              </p>
-            ))}
-          </LenderBox>
-        </>
-      )}
+        )}
+      </ThemeProvider>
       <FormGroup sx={CenterAlignStyle}>
-        <FormControlLabel
-          control={<Checkbox onClick={handleCheckClick} />}
-          label="알겠습니다. 대여할게요!"
-        />
+        <ThemeProvider theme={theme}>
+          <FormControlLabel
+            control={<Checkbox onClick={handleCheckClick} />}
+            label={
+              <Typography variant="body2">알겠습니다. 대여할게요!</Typography>
+            }
+          />
+        </ThemeProvider>
         <div>
           <CheckButton
             color="secondary"
