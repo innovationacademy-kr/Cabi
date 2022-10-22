@@ -91,7 +91,6 @@ export class LentTools {
           user,
           cabinet_id,
         );
-        console.log(cabinet);
         if (cabinet.lent_count + 1 === cabinet.max_user) {
           if (cabinet.status === CabinetStatusType.AVAILABLE) {
             // 해당 대여로 처음으로 풀방이 되면 만료시간 설정

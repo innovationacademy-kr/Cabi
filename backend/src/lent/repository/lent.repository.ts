@@ -228,14 +228,15 @@ export class lentRepository implements ILentRepository {
       .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])
       .leftJoin(Lent, 'l', 'l.lent_cabinet_id = c.cabinet_id')
       .addSelect('l.expire_time', 'expire_time')
+      .addSelect('l.lent_id', 'lent_id')
       .where('c.cabinet_id = :cabinet_id', { cabinet_id })
       .execute();
 
     return {
       status: result[0].cabinet_status,
       lent_type: result[0].c_lent_type,
-      lent_count: result[0].expire_time === null ? 0 : result.length,
-      expire_time: result[0].expire_time === null ? undefined : result[0].expire_time,
+      lent_count: result[0].lent_id === null ? 0 : result.length,
+      expire_time: result[0].lent_id === null ? undefined : result[0].expire_time,
       max_user: result[0].c_max_user,
     }
   }
