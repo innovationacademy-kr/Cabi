@@ -81,7 +81,11 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
   };
   const handleCancelButtonClick = (): void => {
     setIsToggle(false);
-    if (textValue === "필요한 내용을 메모해주세요") setInputValue("");
+    if (
+      textValue === "필요한 내용을 메모해주세요" ||
+      textValue === "방 제목을 입력해주세요"
+    )
+      setInputValue("");
     else setInputValue(textValue);
   };
 

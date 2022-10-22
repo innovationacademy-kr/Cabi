@@ -68,7 +68,10 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
   }, [currentContent]);
 
   useEffect(() => {
-    if (textValue === "필요한 내용을 메모해주세요") {
+    if (
+      textValue === "필요한 내용을 메모해주세요" ||
+      textValue === "방 제목을 입력해주세요"
+    ) {
       setInputValue("");
     } else setInputValue(textValue);
   }, [textValue]);
