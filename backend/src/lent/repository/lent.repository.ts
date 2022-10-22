@@ -1,6 +1,8 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { LentDto } from 'src/dto/lent.dto';
+import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
 import { UserDto } from 'src/dto/user.dto';
+import Cabinet from 'src/entities/cabinet.entity';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
 import { Repository } from 'typeorm';
@@ -13,6 +15,8 @@ export class lentRepository implements ILentRepository {
     private lentRepository: Repository<Lent>,
     @InjectRepository(LentLog)
     private lentLogRepository: Repository<LentLog>,
+    @InjectRepository(Cabinet)
+    private cabinetLogRepository: Repository<Cabinet>,
   ) {}
 
   @Transactional({
@@ -52,13 +56,30 @@ export class lentRepository implements ILentRepository {
   })
   async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
     await this.lentRepository
-      .createQueryBuilder(this.setExpireTime.name)
+      .createQueryBuilder()
       .update(Lent)
       .set({
         expire_time: expire_time,
       })
       .where({
         lent_id: lent_id,
+      })
+      .execute();
+  }
+
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
+  async setExpireTimeAll(cabinet_id: number, expire_time: Date): Promise<void> {
+    await this.lentRepository
+      .createQueryBuilder()
+      .update(Lent)
+      .set({
+        expire_time: expire_time,
+      })
+      .where({
+        lent_cabinet_id: cabinet_id,
       })
       .execute();
   }
@@ -199,5 +220,23 @@ export class lentRepository implements ILentRepository {
         return_time: new Date(),
       })
       .execute();
+  }
+
+  async getSimpleCabinetData(cabinet_id: number) : Promise<SimpleCabinetDataDto> {
+    const result = await this.cabinetLogRepository
+      .createQueryBuilder('c')
+      .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])
+      .leftJoin(Lent, 'l', 'l.lent_cabinet_id = c.cabinet_id')
+      .addSelect('l.expire_time', 'expire_time')
+      .where('c.cabinet_id = :cabinet_id', { cabinet_id })
+      .execute();
+
+    return {
+      status: result[0].cabinet_status,
+      lent_type: result[0].c_lent_type,
+      lent_count: result[0].expire_time === null ? 0 : result.length,
+      expire_time: result[0].expire_time === null ? undefined : result[0].expire_time,
+      max_user: result[0].c_max_user,
+    }
   }
 }

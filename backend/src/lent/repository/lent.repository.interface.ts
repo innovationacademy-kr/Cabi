@@ -1,4 +1,5 @@
 import { LentDto } from 'src/dto/lent.dto';
+import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
 import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
 
@@ -18,12 +19,20 @@ export interface ILentRepository {
   getLentUserCnt(cabinet_id: number): Promise<number>;
 
   /**
-   * lent_id에 대응하는 lent의 expire_time을 설정합니다.
+   * lent_id에 해당하는 row를 expire_time을 설정합니다.
    * @param lent_id
    * @param expire_time
    * @return void
    */
   setExpireTime(lent_id: number, expire_time: Date): Promise<void>;
+
+  /**
+   * cabinet_id 대응하는 lent들의 expire_time을 설정합니다.
+   * @param cabinet_id
+   * @param expire_time
+   * @return void
+   */
+  setExpireTimeAll(cabinet_id: number, expire_time: Date): Promise<void>;
 
   /**
    * 특정 user_id로 해당 캐비넷 대여를 시도합니다.
@@ -91,4 +100,11 @@ export interface ILentRepository {
    * @return void
    */
   addLentLog(lent: Lent): Promise<void>;
+
+  /**
+   * 사물함을 빌리기 전 사물함에 대한 최소한의 정보를 가져옴.
+   * @param cabinet_id
+   * @return SimpleCabinetDataDto
+   **/
+  getSimpleCabinetData(cabinet_id: number): Promise<SimpleCabinetDataDto>;
 }

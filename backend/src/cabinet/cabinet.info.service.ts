@@ -59,10 +59,6 @@ export class CabinetInfoService {
     return cabinetInfo;
   }
 
-  @Transactional({
-    propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
-  })
   async getCabinetResponseInfo(
     cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {

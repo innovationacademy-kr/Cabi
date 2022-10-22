@@ -95,10 +95,6 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     return section.map((s) => s.cabinet_section);
   }
 
-  @Transactional({
-    propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
-  })
   async getCabinetResponseInfo(
     cabinet_id: number,
   ): Promise<CabinetInfoResponseDto> {
