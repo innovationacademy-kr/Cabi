@@ -36,7 +36,7 @@ export class LentService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.READ_COMMITTED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async lentCabinet(cabinet_id: number, user: UserDto): Promise<void> {
     try {
