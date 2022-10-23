@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import GuideModal from "../atoms/modals/GuideModal";
 import ReturnBox from "../atoms/modals/ReturnBox";
 import HomeButton from "../atoms/buttons/HomeButton";
@@ -10,7 +10,7 @@ import LentInfo from "../organisms/LentInfo";
 import { LentDto } from "../../types/dto/lent.dto";
 import { axiosMyLentInfo } from "../../network/axios/axios.custom";
 import { MyCabinetInfoResponseDto } from "../../types/dto/cabinet.dto";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { setUserCabinet } from "../../redux/slices/userSlice";
 
 // const LentSection = styled.section`
@@ -66,12 +66,13 @@ const LentTemplate = (): JSX.Element => {
   const [lentUser, setLentUser] = useState<LentDto[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     axiosMyLentInfo()
       .then((response) => {
         if (response.status === 204) {
-          setUserCabinet(-1);
+          dispatch(setUserCabinet(-1));
           navigate("/");
           return;
         }
