@@ -19,7 +19,9 @@ export class BetatestRepository implements IBetatestRepository {
         if (find.length === 0) {
           return false;
         }
-        await transactionalEntityManager.delete(BanLog, user_id);
+        await transactionalEntityManager.delete(BanLog, {
+          ban_user_id: user_id,
+        });
         return true;
       },
     );
