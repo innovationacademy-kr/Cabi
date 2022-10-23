@@ -10,7 +10,7 @@ export class EmailSender {
     @Inject(ConfigService) private configService: ConfigService,
     private readonly mailerService: MailerService,
   ) {
-    this.emailTest = Boolean(configService.get<boolean>('test'));
+    this.emailTest = configService.get<boolean>('test');
   }
 
   public sendEmail(intra_id: string, subject: string, file: string): void {
@@ -36,6 +36,8 @@ export class EmailSender {
   public mailing(intra_id: string, days: number) {
     let subject = '42CABI 사물함 연체 알림';
     let file;
+    console.log(days);
+    console.log(this.emailTest);
     // TODO: 메일 보내는 날짜에 대해 논의하면 좋을 것 같습니다.
     if (days === 0) {
       subject = '42CABI 사물함 대여 기간 만료 예정 안내';

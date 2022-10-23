@@ -1,11 +1,11 @@
 export default () => ({
-  port: process.env.PORT,
-  is_local: process.env.LOCAL,
-  test: process.env.TEST,
+  port: parseInt(process.env.PORT, 10),
+  is_local: process.env.LOCAL === 'true',
+  test: process.env.TEST === 'true',
   database: {
     host: process.env.HOST,
     user: process.env.DB_USER,
-    port: process.env.DB_PORT,
+    port: parseInt(process.env.DB_PORT, 10),
     password: process.env.DB_PASSWORD,
     database: process.env.DATABASE,
     databaseV2: process.env.DATABASE_V2,

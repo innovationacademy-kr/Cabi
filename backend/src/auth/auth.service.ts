@@ -15,7 +15,7 @@ export class AuthService {
 
   async addUserIfNotExists(user: UserSessionDto): Promise<boolean> {
     const find = await this.authRepository.addUserIfNotExists(user);
-    const is_local = Boolean(this.configService.get<string>('is_local'));
+    const is_local = this.configService.get<boolean>('is_local');
     if (!find && !is_local) this.eventEmitter.emit('user.created', user);
     return find;
   }
