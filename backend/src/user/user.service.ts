@@ -1,5 +1,6 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
 import { CabinetDto } from 'src/dto/cabinet.dto';
+import { Cache } from 'cache-manager';
 import { UserLentResponseDto } from 'src/dto/response/lent.user.response.dto';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserDto } from 'src/dto/user.dto';
@@ -13,6 +14,7 @@ export class UserService {
 
   constructor(
     @Inject('IUserRepository') private userRepository: IUserRepository,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly cabinetInfoService: CabinetInfoService,
   ) {}
 
@@ -64,6 +66,7 @@ export class UserService {
 
   async deleteUserById(user_id: number): Promise<void> {
     this.logger.debug(`Called ${this.deleteUserById.name}`);
+    await this.cacheManager.del(`user-${user_id}`);
     await this.userRepository.deleteUserById(user_id);
   }
 }

@@ -2,6 +2,7 @@ import { Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from '../auth.service';
 
 // 쿠키에서 추출하는 방식에서 다른 방식으로 변경하면 ExtractJwt에 정의된 메소드 사용하기
 const extracter = (req) => {
@@ -19,7 +20,10 @@ const extracter = (req) => {
  */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private authService: AuthService,
+  ) {
     super({
       jwtFromRequest: extracter,
       secretOrKey: configService.get<string>('jwt.secret'),
@@ -27,6 +31,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: any) {
+    const exist = await this.authService.checkUserExists(payload.user_id);
+    if (!exist) {
+      return false;
+    }
     // 검증이 필요없다 판단함
     return payload;
   }

@@ -16,4 +16,12 @@ export interface IAuthRepository {
    * @return 빌림 여부
    */
   checkUserBorrowed(user: UserDto): Promise<boolean>;
+
+  /**
+   * 유저가 존재하는지 여부만 확인합니다.
+   *
+   * @param user_id 확인할 유저의 고유 ID
+   * @return 존재 여부
+   */
+  checkUserExists(user_id: number): Promise<boolean>;
 }
