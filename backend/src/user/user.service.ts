@@ -23,6 +23,9 @@ export class UserService {
     const cabinetExtendDto = await this.userRepository.getCabinetByUserId(
       userId,
     );
+    if (!cabinetExtendDto) {
+      return null;
+    }
     const lent_info = await this.cabinetInfoService.getLentUsers(
       cabinetExtendDto.cabinet_id,
     );
