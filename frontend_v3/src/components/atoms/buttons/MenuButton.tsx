@@ -80,7 +80,6 @@ const MenuButton = (): JSX.Element => {
         } else {
           alert("페널티가 정상적으로 해제 되었습니다.");
         }
-        navigate("/");
       })
       .catch((error) => {
         alert(
