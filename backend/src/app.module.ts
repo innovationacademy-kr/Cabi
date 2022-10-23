@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  CacheModule,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
@@ -48,6 +53,9 @@ import { BetatestModule } from './betatest/betatest.module';
     UserModule,
     UtilsModule,
     BetatestModule,
+    CacheModule.register({
+      isGlobal: true,
+    }),
   ],
   controllers: [],
   providers: [SessionMiddleware],
