@@ -6,6 +6,9 @@ import Spinner from "../atoms/Spinner";
 const FirstSlide = styled.div`
   display: flex;
   width: 270px;
+  @media (max-width: 281px) {
+    width: 195px;
+  }
   height: 100%;
   padding: 0;
   margin: 0;

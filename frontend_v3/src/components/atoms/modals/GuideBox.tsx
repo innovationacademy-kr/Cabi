@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material";
 import CheckButton from "../buttons/CheckButton";
 
 const boxStyle = {
@@ -15,14 +16,28 @@ const boxStyle = {
   boxShadow: 16,
   p: 4,
   color: "text.primary",
+  "@media (max-width: 281px)": {
+    padding: "20px",
+  },
 };
 
 const descriptionStyle = {
   mb: 2,
   fontWeight: "500",
+  "@media (max-width: 281px)": {
+    fontSize: "0.75rem",
+  },
   margin: "0.3rem",
   whiteSpace: "pre-line",
   wordBreak: "keep-all",
+};
+
+const theme = createTheme();
+
+theme.typography.h5 = {
+  "@media (max-width: 281px)": {
+    fontSize: "1rem",
+  },
 };
 
 interface GuideBoxProps {
@@ -47,14 +62,16 @@ const GuideBox = (props: GuideBoxProps): JSX.Element => {
   const { handleClose } = props;
   return (
     <Box sx={boxStyle}>
-      <Typography
-        id="modal-modal-title"
-        variant="h5"
-        component="h2"
-        sx={{ mb: 1, fontWeight: "bold" }}
-      >
-        🗄 42cabi 이용 안내서
-      </Typography>
+      <ThemeProvider theme={theme}>
+        <Typography
+          id="modal-modal-title"
+          variant="h5"
+          component="h2"
+          sx={{ mb: 1, fontWeight: "bold" }}
+        >
+          🗄 42cabi 이용 안내서
+        </Typography>
+      </ThemeProvider>
       {descriptionList.map((msg, idx) => (
         <Typography
           key={idx}
@@ -65,7 +82,6 @@ const GuideBox = (props: GuideBoxProps): JSX.Element => {
           {msg}
         </Typography>
       ))}
-
       <Typography id="modal-modal-footer" align="center">
         <CheckButton
           color="primary"

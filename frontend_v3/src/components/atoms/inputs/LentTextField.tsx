@@ -28,6 +28,9 @@ const TextDiv = styled.div<divProps>`
   justify-content: center;
   align-items: center;
   overflow: auto;
+  @media (max-width: 281px) {
+    font-size: 0.7rem;
+  }
   &::-webkit-scrollbar {
     display: none;
   }

@@ -21,7 +21,11 @@ const style = css`
     justify-content: center;
     box-sizing: border-box;
     height: 100vh;
+    max-height: 60rem;
     margin: 0;
+    @media (min-height: 60rem) {
+      margin-top: calc((100vh - 60rem) / 2);
+    }
     padding: 0 1rem;
     font-family: "EliceDigitalBaeum_Regular";
   }

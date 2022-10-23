@@ -15,6 +15,9 @@ const CarouselComponent = styled.div`
 `;
 const CarouselArea = styled.div`
   width: 270px;
+  @media (max-width: 281px) {
+    width: 195px;
+  }
   height: 100%;
   margin: 0;
   overflow: hidden;
