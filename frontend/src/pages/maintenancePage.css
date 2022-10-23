@@ -1,0 +1,44 @@
+Body {
+  background: -webkit-linear-gradient(to bottom, #6667ab, #6c337d);
+  background: linear-gradient(to bottom, #6667ab, #6c337d);
+  padding: 3%;
+  justify-content: center;
+  font-family: "EliceDigitalBaeum_Regular";
+  height: 100vh;
+  margin: 0;
+}
+
+#container {
+  height: 95%;
+  margin-top: 10px;
+  padding: 10px 10px 10px 10px;
+  background: #ffffffec;
+  border-radius: 1em;
+  justify-content: center;
+  background-size: 30px 100px;
+  min-height: 80vh;
+}
+
+p {
+  color: white;
+  font-size: 13px;
+  text-align: center;
+}
+
+@font-face {
+  font-family: "EliceDigitalBaeum_Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/EliceDigitalBaeum_Regular.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+.App {
+  height: 100%;
+  margin: 0;
+}

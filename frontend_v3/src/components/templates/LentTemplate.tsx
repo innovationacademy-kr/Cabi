@@ -63,6 +63,7 @@ const LentTemplate = (): JSX.Element => {
     null
   );
   const [lentUser, setLentUser] = useState<LentDto[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
 
   useEffect(() => {
     // TODO (seuan)
@@ -76,6 +77,7 @@ const LentTemplate = (): JSX.Element => {
           )
         );
         setMyLentInfo(response.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error(error);
@@ -89,17 +91,24 @@ const LentTemplate = (): JSX.Element => {
         <HomeButton />
         <MenuButton />
       </LentNavSection>
-      <LentInfoSection>
-        <LentInfo myLentInfo={myLentInfo} />
-      </LentInfoSection>
-      <LentReturnSection>
-        <GuideModal
-          box={
-            <ReturnBox lentType={myLentInfo?.lent_type} lentUser={lentUser} />
-          }
-          button={<ReturnButton button_title="반 납 하 기" />}
-        />
-      </LentReturnSection>
+      {!isLoading && (
+        <>
+          <LentInfoSection>
+            <LentInfo myLentInfo={myLentInfo} />
+          </LentInfoSection>
+          <LentReturnSection>
+            <GuideModal
+              box={
+                <ReturnBox
+                  lentType={myLentInfo?.lent_type}
+                  lentUser={lentUser}
+                />
+              }
+              button={<ReturnButton button_title="반 납 하 기" />}
+            />
+          </LentReturnSection>
+        </>
+      )}
     </LentSection>
   );
 };
