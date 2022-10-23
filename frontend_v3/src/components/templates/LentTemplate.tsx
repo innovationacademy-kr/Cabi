@@ -10,7 +10,8 @@ import LentInfo from "../organisms/LentInfo";
 import { LentDto } from "../../types/dto/lent.dto";
 import { axiosMyLentInfo } from "../../network/axios/axios.custom";
 import { MyCabinetInfoResponseDto } from "../../types/dto/cabinet.dto";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { setUserCabinet } from "../../redux/slices/userSlice";
 
 // const LentSection = styled.section`
 //   position: absolute;
@@ -63,14 +64,18 @@ const LentTemplate = (): JSX.Element => {
     null
   );
   const [lentUser, setLentUser] = useState<LentDto[]>([]);
-  const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // TODO (seuan)
-    // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
-    // if (cabinetId === -1) navigate("/main");
     axiosMyLentInfo()
       .then((response) => {
+        if (response.status === 204) {
+          dispatch(setUserCabinet(-1));
+          navigate("/");
+          return;
+        }
         setLentUser(
           response.data.lent_info.filter(
             (user: LentDto) => user.intra_id === userInfo.intra_id
@@ -81,7 +86,6 @@ const LentTemplate = (): JSX.Element => {
       })
       .catch((error) => {
         console.error(error);
-        // navigate("/main");
       });
   }, []);
 
