@@ -26,7 +26,7 @@ export default class MailerConfigService implements MailerOptionsFactory {
         },
       },
       template: {
-        dir: path.join(__dirname, '../v3/utils/templates/'),
+        dir: path.join(__dirname, '../utils/templates/'),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
