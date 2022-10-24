@@ -31,7 +31,8 @@ export class AuthService {
     const exist = await this.cacheManager.get<boolean>(`user-${user_id}`);
     if (exist === undefined) {
       const result = await this.authRepository.checkUserExists(user_id);
-      return await this.cacheManager.set(`user-${user_id}`, result, { ttl: 0 });
+      await this.cacheManager.set(`user-${user_id}`, result, { ttl: 0 });
+      return result;
     }
     return exist;
   }
