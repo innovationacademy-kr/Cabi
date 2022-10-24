@@ -76,7 +76,8 @@ export default function TestModal(props: TestModalProps) {
           수 있습니다.
         </Typography>
         <Typography gutterBottom>
-          - 대여기간은 대여한 날로 부터 +21일 입니다.
+          - 대여기간은 대여한 날로 부터 +$
+          {import.meta.env.VITE_PRIVATE_LENT_PERIOD}일 입니다.
         </Typography>
         <Typography gutterBottom>
           - 반납 시 두고가는 소지품이 없는 지 확인해주세요!
