@@ -56,7 +56,7 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = lentUser[0];
-  const lentTime = dayjs(user.lent_time).format("YYYY년 MM월 DD일 HH시 mm분");
+  const lentTime = dayjs(user.lent_time).format("YYYY/MM/DD HH:mm");
 
   const handleReturn = () => {
     axiosV3Return()

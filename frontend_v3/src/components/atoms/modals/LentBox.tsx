@@ -145,7 +145,7 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   if (status === CabinetStatus.SET_EXPIRE_AVAILABLE && lender?.length > 0) {
     sharedCabinetMessage.unshift(
       `대여기간은 ${dayjs(lender[0].expire_time).format(
-        "YYYY년 MM월 DD일 HH시 mm분"
+        "YYYY/MM/DD HH:mm"
       )}까지 입니다.`
     );
   } else {
