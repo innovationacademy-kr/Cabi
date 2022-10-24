@@ -10,6 +10,7 @@ import {
 } from 'typeorm-transactional';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import LentType from 'src/enums/lent.type.enum';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class BanService {
@@ -20,7 +21,8 @@ export class BanService {
     private banRepository: IBanRepository,
     private userService: UserService,
     private cabinetInfoService: CabinetInfoService,
-  ) {}
+    @Inject(ConfigService) private configService: ConfigService,
+  ) {};
 
   /**
    * 해당 유저가 현재시간 기준으로 밴 당했는지 확인함.
@@ -62,9 +64,9 @@ export class BanService {
     );
     const now = new Date();
     const target = new Date(lent.lent_time.getTime());
-    target.setDate(target.getDate() + 3);
+    target.setDate(target.getDate() + this.configService.get<number>('penalty_day_share'));
     if (now < target) {
-      await this.blockingUser(lent, 3, true);
+      await this.blockingUser(lent, this.configService.get<number>('penalty_day_share'), true);
     }
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
