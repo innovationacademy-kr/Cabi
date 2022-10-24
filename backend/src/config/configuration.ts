@@ -41,4 +41,5 @@ export default () => ({
     forcedreturn: parseInt(process.env.EXPIRE_TERM_FORCEDRETURN, 10),
   },
   penalty_day_share: parseInt(process.env.PENALTY_DAY_SHARE, 10),
+  is_v3: process.env.IS_V3 === 'true',
 });

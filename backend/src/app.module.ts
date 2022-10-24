@@ -4,7 +4,7 @@ import {
   Module,
   NestModule,
 } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
@@ -42,10 +42,17 @@ import { BetatestModule } from './betatest/betatest.module';
     AuthModule,
     EventModule,
     BlackholeModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../', 'frontend_v3/dist/'),
-      exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
-      // serveRoot: '../img'
+    // ServeStaticModule.forRoot({
+    //   // rootPath: join(__dirname, `../../', ${this.configService.get<number>('is_v3')} ? 'frontend_v3/dist/' : 'frontend/dist/`),
+    //   exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+    //   // serveRoot: '../img'
+    // }),
+    ServeStaticModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => [{
+        rootPath: join(__dirname, '../../', `${configService.get<number>('is_v3') ? 'frontend_v3/dist/' : 'frontend/dist/'}`),
+        exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+      }],
     }),
     EventEmitterModule.forRoot(),
     CabinetModule,
