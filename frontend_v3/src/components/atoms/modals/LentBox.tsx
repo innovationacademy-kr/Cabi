@@ -7,6 +7,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
+import dayjs from "dayjs";
 import { axiosLentId } from "../../../network/axios/axios.custom";
 import CheckButton from "../buttons/CheckButton";
 import { LentDto } from "../../../types/dto/lent.dto";
@@ -129,23 +130,29 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   };
 
   const sharedCabinetMessage: string[] = [
-    "대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.",
+    `대여 후 ${
+      import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD
+    }시간 이내 취소(반납) 시, ${
+      import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY
+    }시간의 대여 불가 패널티가 적용됩니다.`,
     "'내 사물함' 페이지의 메모 내용은 공유 인원끼리 공유됩니다.",
     "이용 중 귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.",
   ];
   const personalCabinetMessage: string[] = [
-    "대여기간은 +21일 입니다.",
+    `대여기간은 +${import.meta.env.VITE_PRIVATE_LENT_PERIOD}일 입니다.`,
     "이용 중 귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.",
   ];
   if (status === CabinetStatus.SET_EXPIRE_AVAILABLE && lender?.length > 0) {
     sharedCabinetMessage.unshift(
-      `대여기간은 ${lender[0].expire_time
-        .toString()
-        .substring(0, 10)}까지 입니다.`
+      `대여기간은 ${dayjs(lender[0].expire_time).format(
+        "YYYY/MM/DD HH:mm"
+      )}까지 입니다.`
     );
   } else {
     sharedCabinetMessage.unshift(
-      "대여기간은 3인이 모두 공유하는 순간부터 +42일 입니다."
+      `대여기간은 3인이 모두 공유하는 순간부터 +${
+        import.meta.env.VITE_SHARE_LENT_PERIOD
+      }일 입니다.`
     );
   }
 

@@ -37,14 +37,14 @@ export class EmailSender {
     let subject = '42CABI 사물함 연체 알림';
     let file;
     // TODO: 메일 보내는 날짜에 대해 논의하면 좋을 것 같습니다.
-    if (days === 0) {
+    if (days === this.configService.get<number>('expire_term.soonoverdue')) {
       subject = '42CABI 사물함 대여 기간 만료 예정 안내';
       file = 'soonoverdue.hbs';
-    } else if (days === 7) {
+    } else if (days === this.configService.get<number>('expire_term.overdue')) {
       file = 'overdue.hbs';
-    } else if (days === 14) {
+    } else if (days === this.configService.get<number>('expire_term.lastoverdue')) {
       file = 'lastoverdue.hbs';
-    } else if (days === 15) {
+    } else if (days === this.configService.get<number>('expire_term.forcedreturn')) {
       subject = '42CABI 강제 반납 안내';
       file = 'forcedreturn.hbs';
     }

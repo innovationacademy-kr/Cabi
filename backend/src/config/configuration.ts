@@ -30,4 +30,16 @@ export default () => ({
       ciphers: process.env.MAIL_TLS_CIPHERS,
     },
   },
+  lent_term: {
+    private: parseInt(process.env.LENT_TERM_PRIVATE, 10),
+    share: parseInt(process.env.LENT_TERM_SHARE, 10),
+  },
+  expire_term: {
+    soonoverdue: parseInt(process.env.EXPIRE_TERM_SOONOVERDUE, 10),
+    overdue: parseInt(process.env.EXPIRE_TERM_OVERDUE, 10),
+    lastoverdue: parseInt(process.env.EXPIRE_TERM_LASTOVERDUE, 10),
+    forcedreturn: parseInt(process.env.EXPIRE_TERM_FORCEDRETURN, 10),
+  },
+  penalty_day_share: parseInt(process.env.PENALTY_DAY_SHARE, 10),
+  is_v3: process.env.IS_V3 === 'true',
 });
