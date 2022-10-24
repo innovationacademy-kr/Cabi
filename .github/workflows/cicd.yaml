@@ -107,7 +107,7 @@ jobs:
             echo "리포지토리 pull"
             git pull origin main
             echo "앱 빌드"
-            cd $HOME/git/42cabi-dev/backend
+            cd $HOME/git/42cabi-main/backend
             npm install
             npm run build:fe_v3
             npm run build
