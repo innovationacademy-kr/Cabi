@@ -24,7 +24,7 @@ export default function Footer() {
           <a
             className="textLink"
             target="_blank"
-            href="https://www.notion.so/hyunja/42cabi-5fc66d1a6b0a4c48862b2e66e7cf1397"
+            href="https://hyunja.notion.site/42Cabi-04d8a4beba5d46a9bed5ba565e47c45c"
           >
             {" "}
             |&nbsp;Notion
