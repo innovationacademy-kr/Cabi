@@ -6,6 +6,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import styled from "@emotion/styled";
+import dayjs from "dayjs";
 import { axiosLentId } from "../../../network/axios/axios.custom";
 import CheckButton from "../buttons/CheckButton";
 import { LentDto } from "../../../types/dto/lent.dto";
@@ -119,9 +120,9 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
   ];
   if (status === CabinetStatus.SET_EXPIRE_AVAILABLE && lender?.length > 0) {
     sharedCabinetMessage.unshift(
-      `대여기간은 ${lender[0].expire_time
-        .toString()
-        .substring(0, 10)}까지 입니다.`
+      `대여기간은 ${dayjs(lender[0].expire_time).format(
+        "YYYY년 MM월 DD일 HH시 mm분"
+      )}까지 입니다.`
     );
   } else {
     sharedCabinetMessage.unshift(
