@@ -9,6 +9,9 @@ const SlideContainerComponent = styled.div`
   flex-wrap: wrap;
   flex-direction: row;
   width: ${(props) => (props.results ? `${props.results * 270}px` : `270px`)};
+  @media (max-width: 281px) {
+    width: ${(props) => (props.results ? `${props.results * 195}px` : `195px`)};
+  }
   height: 100%;
   margin: 0;
 `;

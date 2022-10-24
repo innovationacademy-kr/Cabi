@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
@@ -12,6 +12,7 @@ import {
 } from 'typeorm-transactional';
 import Lent from 'src/entities/lent.entity';
 import { BanService } from 'src/ban/ban.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ExpiredChecker {
@@ -22,6 +23,7 @@ export class ExpiredChecker {
     private readonly emailsender: EmailSender,
     private cabinetInfoService: CabinetInfoService,
     private banService: BanService,
+    @Inject(ConfigService) private configService: ConfigService,
   ) {}
 
   @Transactional({
@@ -33,12 +35,12 @@ export class ExpiredChecker {
       new Date(),
     );
     if (days >= 0) {
-      if (days > 0 && days < 15) {
+      if (days >= 0 && days < this.configService.get<number>('expire_term.forcedreturn')) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
           CabinetStatusType.EXPIRED,
         );
-      } else if (days >= 15) {
+      } else if (days >= this.configService.get<number>('expire_term.forcedreturn')) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
           CabinetStatusType.BANNED,

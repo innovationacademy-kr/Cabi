@@ -16,6 +16,11 @@ const Cabinet = styled.div`
   padding: 0;
   margin: 0;
   border: 1px solid #dee2e6;
+  @media (max-width: 281px) {
+    width: 63px;
+    height: 63px;
+    font-size: 0.6rem;
+  }
   border-radius: 0;
   outline: 0;
   background: ${(props): string => props.color || "white"};

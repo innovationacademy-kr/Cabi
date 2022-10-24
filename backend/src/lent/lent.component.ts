@@ -17,6 +17,7 @@ import {
 import { UserDto } from 'src/dto/user.dto';
 import LentExceptionType from 'src/enums/lent.exception.enum';
 import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class LentTools {
@@ -28,6 +29,7 @@ export class LentTools {
     @Inject(forwardRef(() => LentService))
     private lentService: LentService,
     private banService: BanService,
+    @Inject(ConfigService) private configService: ConfigService,
   ) {}
 
   /**
@@ -48,9 +50,9 @@ export class LentTools {
     this.logger.debug(`Called ${LentTools.name} ${this.setExpireTimeAll.name}`);
     const expire_time = new Date();
     if (lent_type === LentType.PRIVATE) {
-      expire_time.setDate(last_lent_time.getDate() + 21);
+      expire_time.setDate(last_lent_time.getDate() + this.configService.get<number>('lent_term.private'));
     } else {
-      expire_time.setDate(last_lent_time.getDate() + 42);
+      expire_time.setDate(last_lent_time.getDate() + this.configService.get<number>('lent_term.share'));
     }
     await this.lentRepository.setExpireTimeAll(cabinet_id, expire_time);
     runOnTransactionComplete((err) => err && this.logger.error(err));

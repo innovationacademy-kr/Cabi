@@ -55,6 +55,7 @@ export class lentRepository implements ILentRepository {
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
+    expire_time.setHours(23, 59, 59, 999);
     await this.lentRepository
       .createQueryBuilder()
       .update(Lent)
@@ -72,6 +73,7 @@ export class lentRepository implements ILentRepository {
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async setExpireTimeAll(cabinet_id: number, expire_time: Date): Promise<void> {
+    expire_time.setHours(23, 59, 59, 999);
     await this.lentRepository
       .createQueryBuilder()
       .update(Lent)

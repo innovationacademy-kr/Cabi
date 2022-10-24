@@ -40,4 +40,13 @@ export class AuthRepository implements IAuthRepository {
     });
     return result.Lent !== null;
   }
+
+  async checkUserExists(user_id: number): Promise<boolean> {
+    const result = await this.userRepository
+      .createQueryBuilder('u')
+      .select(['u.user_id'])
+      .where('u.user_id = :user_id', { user_id })
+      .execute();
+    return result.length !== 0;
+  }
 }

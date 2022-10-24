@@ -23,7 +23,7 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, swaggerDocument);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('port');
-  const is_local = Boolean(configService.get<string>('is_local'));
+  const is_local = configService.get<boolean>('is_local');
   if (is_local === true) {
     app.enableCors();
   }

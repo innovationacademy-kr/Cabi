@@ -28,6 +28,9 @@ const TextDiv = styled.div<divProps>`
   justify-content: center;
   align-items: center;
   overflow: auto;
+  @media (max-width: 281px) {
+    font-size: 0.7rem;
+  }
   &::-webkit-scrollbar {
     display: none;
   }
@@ -98,7 +101,7 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
               value={inputValue}
               onChange={handleChange}
               style={{ width: "100%" }}
-              maxLength={14}
+              maxLength={13}
             />
           )}
         </TextDiv>

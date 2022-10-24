@@ -3,7 +3,7 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "assets": ["v3/utils/templates/**/*"],
+    "assets": ["utils/templates/**/*"],
     "watchAssets": true
   }
 }

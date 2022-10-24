@@ -2,9 +2,10 @@ import styled from "@emotion/styled";
 import { PropsWithChildren } from "react";
 
 const ContentSection = styled.section`
-  height: 90vh;
+  height: 88vh;
   width: 90vw;
   max-width: 25rem;
+  max-height: 50rem;
   text-align: center;
 `;
 
