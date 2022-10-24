@@ -10,7 +10,8 @@ import LentInfo from "../organisms/LentInfo";
 import { LentDto } from "../../types/dto/lent.dto";
 import { axiosMyLentInfo } from "../../network/axios/axios.custom";
 import { MyCabinetInfoResponseDto } from "../../types/dto/cabinet.dto";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { setUserCabinet } from "../../redux/slices/userSlice";
 
 // const LentSection = styled.section`
 //   position: absolute;
@@ -35,8 +36,10 @@ const LentNavSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
-  height: 10%;
+  height: 5%;
+  max-height: 2rem;
+  padding: 0.5rem 0.7rem 0 0.7rem;
+  margin-bottom: 1rem;
 `;
 
 const LentInfoSection = styled.div`
@@ -61,43 +64,55 @@ const LentTemplate = (): JSX.Element => {
     null
   );
   const [lentUser, setLentUser] = useState<LentDto[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // TODO (seuan)
-    // 대여, 반납 후 cabinetId에 대한 state 적용이 완료된 후 사용할 것.
-    // if (cabinetId === -1) navigate("/main");
     axiosMyLentInfo()
       .then((response) => {
+        if (response.status === 204) {
+          dispatch(setUserCabinet(-1));
+          navigate("/");
+          return;
+        }
         setLentUser(
           response.data.lent_info.filter(
             (user: LentDto) => user.intra_id === userInfo.intra_id
           )
         );
         setMyLentInfo(response.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error(error);
-        // navigate("/main");
       });
   }, []);
 
   return (
     <LentSection id="test">
-      <LentNavSection>
+      <LentNavSection className="LentNavSection">
         <HomeButton />
         <MenuButton />
       </LentNavSection>
-      <LentInfoSection>
-        <LentInfo myLentInfo={myLentInfo} />
-      </LentInfoSection>
-      <LentReturnSection>
-        <GuideModal
-          box={
-            <ReturnBox lentType={myLentInfo?.lent_type} lentUser={lentUser} />
-          }
-          button={<ReturnButton button_title="반 납 하 기" />}
-        />
-      </LentReturnSection>
+      {!isLoading && (
+        <>
+          <LentInfoSection>
+            <LentInfo myLentInfo={myLentInfo} />
+          </LentInfoSection>
+          <LentReturnSection>
+            <GuideModal
+              box={
+                <ReturnBox
+                  lentType={myLentInfo?.lent_type}
+                  lentUser={lentUser}
+                />
+              }
+              button={<ReturnButton button_title="반 납 하 기" />}
+            />
+          </LentReturnSection>
+        </>
+      )}
     </LentSection>
   );
 };

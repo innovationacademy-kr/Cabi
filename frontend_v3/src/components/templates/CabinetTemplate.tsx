@@ -90,7 +90,7 @@ const CabinetTemplate = (): JSX.Element => {
 
   return (
     <MainSection>
-      <MainNavSection>
+      <MainNavSection className="MainNavSection">
         <HomeButton />
         <LocationButton
           locations={

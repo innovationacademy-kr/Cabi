@@ -21,6 +21,7 @@ import {
   IsolationLevel,
 } from 'typeorm-transactional';
 import { UserDto } from 'src/dto/user.dto';
+import LentExceptionType from 'src/enums/lent.exception.enum';
 
 @Injectable()
 export class LentService {
@@ -34,56 +35,43 @@ export class LentService {
     private lentTools: LentTools,
   ) {}
 
-  @Transactional({
-    propagation: Propagation.REQUIRED,
-  })
   async lentCabinet(cabinet_id: number, user: UserDto): Promise<void> {
+    this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
     try {
-      this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
-      // 1. 해당 유저가 대여중인 사물함이 있는지 확인
-      const is_lent: boolean = await this.lentRepository.getIsLent(
-        user.user_id,
-      );
-      if (is_lent) {
-        throw new HttpException(
-          `🚨 이미 대여중인 사물함이 있습니다 🚨`,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
-      // 2. 고장이나 ban 사물함인지 확인
-      const cabinet: CabinetInfoResponseDto =
-        await this.cabinetInfoService.getCabinetResponseInfo(cabinet_id);
-      if (
-        cabinet.status === CabinetStatusType.BROKEN ||
-        cabinet.status === CabinetStatusType.BANNED
-      ) {
-        const message =
-          cabinet.status === CabinetStatusType.BROKEN
-            ? '🚨 해당 사물함은 고장난 사물함입니다 🚨'
-            : '🚨 해당 사물함은 비활성화된 사물함입니다 🚨';
-        throw new HttpException(message, HttpStatus.FORBIDDEN);
-      }
-
-      // 3. 잔여 자리가 있는지 확인
-      if (cabinet.status === CabinetStatusType.SET_EXPIRE_FULL) {
-        throw new HttpException(
-          `🚨 해당 사물함에 잔여 자리가 없습니다 🚨`,
+      const excepction_type = await this.lentTools.lentStateTransition(user, cabinet_id);
+      switch (excepction_type) {
+        case LentExceptionType.LENT_CIRCLE:
+          throw new HttpException(
+            `🚨 해당 사물함은 동아리 전용 사물함입니다 🚨`,
+            HttpStatus.I_AM_A_TEAPOT,
+          );
+        case LentExceptionType.ALREADY_LENT:
+          throw new HttpException(
+            `🚨 이미 대여중인 사물함이 있습니다 🚨`,
+            HttpStatus.BAD_REQUEST,
+          );
+          case LentExceptionType.LENT_FULL:
+            throw new HttpException(
+              `🚨 해당 사물함에 잔여 자리가 없습니다 🚨`,
+              HttpStatus.CONFLICT,
+              );
+          case LentExceptionType.LENT_EXPIRED:
+            throw new HttpException(
+          `🚨 연체된 사물함은 대여할 수 없습니다. 🚨`,
           HttpStatus.CONFLICT,
-        );
+            );
+          case LentExceptionType.LENT_BROKEN:
+            throw new HttpException(
+              `🚨 고장난 사물함은 대여할 수 없습니다. 🚨`,
+              HttpStatus.CONFLICT,
+            );
+          case LentExceptionType.LENT_BANNED:
+            throw new HttpException(
+              '🚨 해당 사물함은 비활성화된 사물함입니다 🚨',
+              HttpStatus.CONFLICT,
+            );
       }
-
-      // 4. 동아리 사물함인지 확인
-      if (cabinet.lent_type === LentType.CIRCLE) {
-        throw new HttpException(
-          `🚨 해당 사물함은 동아리 전용 사물함입니다 🚨`,
-          HttpStatus.I_AM_A_TEAPOT,
-        );
-      }
-      // 4. 현재 대여 상태에 따라 케이스 처리
-      await this.lentTools.lentStateTransition(user, cabinet);
     } catch (err) {
-      runOnTransactionComplete((err) => err && this.logger.error(err));
       throw err;
     }
   }

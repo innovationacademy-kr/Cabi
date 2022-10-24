@@ -1,5 +1,10 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import {
+  CacheModule,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
@@ -16,6 +21,7 @@ import { LentModule } from './lent/lent.module';
 import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { BetatestModule } from './betatest/betatest.module';
 
 @Module({
   imports: [
@@ -36,16 +42,27 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     AuthModule,
     EventModule,
     BlackholeModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../', 'frontend_v3/dist/'),
-      exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
-      // serveRoot: '../img'
+    // ServeStaticModule.forRoot({
+    //   // rootPath: join(__dirname, `../../', ${this.configService.get<number>('is_v3')} ? 'frontend_v3/dist/' : 'frontend/dist/`),
+    //   exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+    //   // serveRoot: '../img'
+    // }),
+    ServeStaticModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => [{
+        rootPath: join(__dirname, '../../', `${configService.get<boolean>('is_v3') ? 'frontend_v3/dist/' : 'frontend/dist/'}`),
+        exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+      }],
     }),
     EventEmitterModule.forRoot(),
     CabinetModule,
     LentModule,
     UserModule,
     UtilsModule,
+    BetatestModule,
+    CacheModule.register({
+      isGlobal: true,
+    }),
   ],
   controllers: [],
   providers: [SessionMiddleware],

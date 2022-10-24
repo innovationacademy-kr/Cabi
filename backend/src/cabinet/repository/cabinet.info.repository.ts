@@ -6,6 +6,7 @@ import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.sect
 import Cabinet from 'src/entities/cabinet.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { Repository } from 'typeorm';
+import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
 import { ICabinetInfoRepository } from './cabinet.info.interface.repository';
 
 export class CabinetInfoRepository implements ICabinetInfoRepository {
@@ -97,11 +98,34 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
   async getCabinetResponseInfo(
     cabinet_id: number,
   ): Promise<CabinetInfoResponseDto> {
-    const cabinetInfo = await this.getCabinetInfo(cabinet_id);
-    const lentInfo = await this.getLentUsers(cabinet_id);
+    const result = await this.cabinetInfoRepository.findOne({
+      relations: {
+        lent: {
+          user: true,
+        },
+      },
+      where: {
+        cabinet_id,
+      },
+    });
     return {
-      ...cabinetInfo,
-      lent_info: lentInfo,
+      cabinet_id: result.cabinet_id,
+      cabinet_num: result.cabinet_num,
+      lent_type: result.lent_type,
+      cabinet_title: result.title,
+      max_user: result.max_user,
+      status: result.status,
+      section: result.section,
+      lent_info: result.lent
+        ? result.lent.map((l) => ({
+            user_id: l.user.user_id,
+            intra_id: l.user.intra_id,
+            lent_id: l.lent_id,
+            lent_time: l.lent_time,
+            expire_time: l.expire_time,
+            is_expired: false,
+          }))
+        : [],
     };
   }
 
@@ -149,6 +173,10 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
     return lentDto;
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async updateCabinetStatus(
     cabinet_id: number,
     status: CabinetStatusType,

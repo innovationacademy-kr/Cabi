@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { BanService } from '../ban.service';
+import * as dayjs from "dayjs";
 
 /**
  * 사용자가 밴당했는지 확인합니다. 밴 당했을 경우 Forbidden 예외를 발생시킵니다.
@@ -24,17 +25,17 @@ export class BanCheckGuard implements CanActivate {
     if (result) {
       this.logger.debug('현재 차단당한 상태입니다.');
       throw new ForbiddenException(
-        '🚨 페널티로 인해 현재 사물함 대여가 불가능합니다 🚨',
+        '🚨 페널티로 인해 현재 사물함 대여가 불가능합니다 🚨' + '\n' + dayjs(result).format("YYYY/MM/DD HH:mm") + '까지 차단됩니다.',
       );
     }
     return true;
   }
 
-  private async banCheck(request: Request): Promise<boolean> {
+  private async banCheck(request: Request): Promise<Date> {
     const user = request.user as UserSessionDto | undefined;
     if (user === undefined) {
       this.logger.debug(`can't find UserSession`);
-      return false;
+      return undefined;
     }
     let cabinetId = undefined;
     if (request.params.cabinet_id !== undefined)

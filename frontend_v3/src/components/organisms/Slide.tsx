@@ -12,6 +12,9 @@ const SlideComponent = styled.div`
   align-content: flex-start;
   overflow: hidden auto;
   width: 270px;
+  @media (max-width: 281px) {
+    width: 195px;
+  }
   height: 100%;
   margin: auto;
   &::-webkit-scrollbar {

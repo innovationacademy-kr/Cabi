@@ -10,6 +10,7 @@ import {
 } from 'typeorm-transactional';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import LentType from 'src/enums/lent.type.enum';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class BanService {
@@ -20,7 +21,8 @@ export class BanService {
     private banRepository: IBanRepository,
     private userService: UserService,
     private cabinetInfoService: CabinetInfoService,
-  ) {}
+    @Inject(ConfigService) private configService: ConfigService,
+  ) {};
 
   /**
    * 해당 유저가 현재시간 기준으로 밴 당했는지 확인함.
@@ -28,24 +30,24 @@ export class BanService {
    * @param user_id 유저 ID
    * @return boolean
    */
-  async isBlocked(user_id: number, cabinet_id: number): Promise<boolean> {
+  async isBlocked(user_id: number, cabinet_id: number): Promise<Date> {
     this.logger.debug(`Called ${BanService.name} ${this.isBlocked.name}`);
     this.logger.debug(`isBlocked : ${user_id}`);
     const cabinet =
       cabinet_id === undefined
         ? undefined
         : await this.cabinetInfoService.getCabinetInfo(cabinet_id);
-    const bannedTime = await this.banRepository.getUnbanedDate(user_id);
-    if (bannedTime && bannedTime > new Date()) {
+    const unbannedTime = await this.banRepository.getUnbanedDate(user_id);
+    if (unbannedTime && unbannedTime > new Date()) {
       if (cabinet !== undefined)
         if (
           cabinet.lent_type === LentType.PRIVATE &&
           (await this.banRepository.getIsPenalty(user_id)) === true
         )
-          return false;
-      return true;
+          return undefined;
+      return unbannedTime;
     }
-    return false;
+    return undefined;
   }
 
   /**
@@ -62,9 +64,9 @@ export class BanService {
     );
     const now = new Date();
     const target = new Date(lent.lent_time.getTime());
-    target.setDate(target.getDate() + 3);
+    target.setDate(target.getDate() + this.configService.get<number>('penalty_day_share'));
     if (now < target) {
-      await this.blockingUser(lent, 3, true);
+      await this.blockingUser(lent, this.configService.get<number>('penalty_day_share'), true);
     }
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }

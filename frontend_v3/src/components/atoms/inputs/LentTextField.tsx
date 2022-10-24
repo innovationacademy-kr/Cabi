@@ -28,6 +28,9 @@ const TextDiv = styled.div<divProps>`
   justify-content: center;
   align-items: center;
   overflow: auto;
+  @media (max-width: 281px) {
+    font-size: 0.7rem;
+  }
   &::-webkit-scrollbar {
     display: none;
   }
@@ -68,7 +71,10 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
   }, [currentContent]);
 
   useEffect(() => {
-    if (textValue === "필요한 내용을 메모해주세요") {
+    if (
+      textValue === "필요한 내용을 메모해주세요" ||
+      textValue === "방 제목을 입력해주세요"
+    ) {
       setInputValue("");
     } else setInputValue(textValue);
   }, [textValue]);
@@ -95,6 +101,7 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
               value={inputValue}
               onChange={handleChange}
               style={{ width: "100%" }}
+              maxLength={13}
             />
           )}
         </TextDiv>

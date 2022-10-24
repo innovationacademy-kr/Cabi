@@ -50,6 +50,7 @@ const user: UserDto = {
   intra_id: 'yoyoo',
 };
 
+
 @ApiTags('(V3) Lent for Mock Up data')
 @Controller({
   version: '3',
@@ -58,6 +59,41 @@ const user: UserDto = {
 export class LentMockController {
   private logger = new Logger(LentMockController.name);
   constructor(private lentService: LentService) {}
+
+  @Post('/all/:cabinet_id')
+  @HttpCode(HttpStatus.CREATED)
+  async lentCabinetAll(@Param('cabinet_id') cabinet_id: number) {
+    const users: UserDto[] = [
+      {
+        // TESTER 1
+        user_id: 85330,
+        intra_id: 'sichoi',
+      },
+      {
+        // TESTER 2
+        user_id: 76317,
+        intra_id: 'joopark',
+      },
+      {
+        // TESTER 3
+        user_id: 110819,
+        intra_id: 'eunbikim',
+      },
+      {
+        // TESTER 4
+        user_id: 69106,
+        intra_id: 'hyoon',
+      },
+      {
+        // TESTER 5
+        user_id: 424242,
+        intra_id: 'yoyoo',
+      }
+    ];
+    for (const user of users) {
+      this.lentService.lentCabinet(cabinet_id, user);
+    }
+}
 
   @ApiOperation({
     summary: '특정 캐비넷 대여 시도',

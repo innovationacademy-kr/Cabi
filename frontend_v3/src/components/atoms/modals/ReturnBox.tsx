@@ -56,7 +56,7 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = lentUser[0];
-  const lentTime = dayjs(user.lent_time).format("YYYY년 MM월 DD일 HH시 mm분");
+  const lentTime = dayjs(user.lent_time).format("YYYY/MM/DD HH:mm");
 
   const handleReturn = () => {
     axiosV3Return()
@@ -86,7 +86,9 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
             </Typography>
           </HighlightBox>
           <Typography align="left">
-            공유사물함 대여 후 3일(72시간) 이내에 반납 시, 3일(72시간) 동안
+            공유사물함 대여 후 {import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD}
+            시간 이내에 반납 시,{" "}
+            {import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY}시간 동안
             공유사물함 대여가 불가합니다.
           </Typography>
           <hr />

@@ -10,6 +10,7 @@ import LentLog from 'src/entities/lent.log.entity';
 import { BanModule } from '../ban/ban.module';
 import { LentMockController } from './lent.mock.controller';
 import { LentTools } from './lent.component';
+import Cabinet from 'src/entities/cabinet.entity';
 
 const repo = {
   provide: 'ILentRepository',
@@ -21,7 +22,7 @@ const repo = {
     CabinetModule,
     AuthModule,
     BanModule,
-    TypeOrmModule.forFeature([Lent, LentLog]),
+    TypeOrmModule.forFeature([Lent, LentLog, Cabinet]),
   ],
   controllers: [LentController, LentMockController],
   providers: [LentService, repo, LentTools],
