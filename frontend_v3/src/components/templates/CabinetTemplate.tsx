@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+import { useCookies } from "react-cookie";
 import HomeButton from "../atoms/buttons/HomeButton";
 import LocationButton from "../atoms/buttons/LocationButton";
 import MenuButton from "../atoms/buttons/MenuButton";
@@ -63,9 +64,15 @@ const CabinetTemplate = (): JSX.Element => {
   const [sectionNames, setSectionNaems] = useState<string[]>([]);
   const [infoByLocationFloor, setInfoByLocationFloor] =
     useState<CabinetInfoByLocationFloorDto[]>();
+  const [, , removeCookie] = useCookies(["access_token"]);
+
   useEffect(() => {
     axiosLocationFloor()
       .then((response) => {
+        if (response.status === 401) {
+          removeCookie("access_token");
+          return;
+        }
         setLocationFloor(response.data.space_data);
       })
       .catch((error) => {
@@ -76,6 +83,10 @@ const CabinetTemplate = (): JSX.Element => {
   useEffect(() => {
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
+        if (response.status === 401) {
+          removeCookie("access_token");
+          return;
+        }
         setInfoByLocationFloor(response.data);
         setSectionNaems(
           response.data.map(
