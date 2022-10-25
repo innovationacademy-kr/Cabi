@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 import HomeButton from "../atoms/buttons/HomeButton";
 import LocationButton from "../atoms/buttons/LocationButton";
 import MenuButton from "../atoms/buttons/MenuButton";
@@ -65,12 +66,14 @@ const CabinetTemplate = (): JSX.Element => {
   const [infoByLocationFloor, setInfoByLocationFloor] =
     useState<CabinetInfoByLocationFloorDto[]>();
   const [, , removeCookie] = useCookies(["access_token"]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axiosLocationFloor()
       .then((response) => {
         if (response.status === 401) {
           removeCookie("access_token");
+          navigate("/");
           return;
         }
         setLocationFloor(response.data.space_data);
@@ -85,6 +88,7 @@ const CabinetTemplate = (): JSX.Element => {
       .then((response) => {
         if (response.status === 401) {
           removeCookie("access_token");
+          navigate("/");
           return;
         }
         setInfoByLocationFloor(response.data);
