@@ -71,16 +71,10 @@ const CabinetTemplate = (): JSX.Element => {
   useEffect(() => {
     axiosLocationFloor()
       .then((response) => {
-        if (response.status === 401) {
-          removeCookie("access_token");
-          alert(error.response.data.message);
-          navigate("/");
-          return;
-        }
         setLocationFloor(response.data.space_data);
       })
       .catch((error) => {
-        if (error.status === 401) {
+        if (error.response.status === 401) {
           removeCookie("access_token");
           alert(error.response.data.message);
           navigate("/");
@@ -101,8 +95,9 @@ const CabinetTemplate = (): JSX.Element => {
         );
       })
       .catch((error) => {
-        if (error.status === 401) {
+        if (error.response.status === 401) {
           removeCookie("access_token");
+          alert(error.response.data.message);
           navigate("/");
           return;
         }
