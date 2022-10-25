@@ -73,12 +73,19 @@ const CabinetTemplate = (): JSX.Element => {
       .then((response) => {
         if (response.status === 401) {
           removeCookie("access_token");
+          alert(error.response.data.message);
           navigate("/");
           return;
         }
         setLocationFloor(response.data.space_data);
       })
       .catch((error) => {
+        if (error.status === 401) {
+          removeCookie("access_token");
+          alert(error.response.data.message);
+          navigate("/");
+          return;
+        }
         console.error(error);
       });
   }, []);
@@ -86,11 +93,6 @@ const CabinetTemplate = (): JSX.Element => {
   useEffect(() => {
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
-        if (response.status === 401) {
-          removeCookie("access_token");
-          navigate("/");
-          return;
-        }
         setInfoByLocationFloor(response.data);
         setSectionNaems(
           response.data.map(
@@ -99,6 +101,11 @@ const CabinetTemplate = (): JSX.Element => {
         );
       })
       .catch((error) => {
+        if (error.status === 401) {
+          removeCookie("access_token");
+          navigate("/");
+          return;
+        }
         console.error(error);
       });
   }, [currentLocation, currentFloor]);
