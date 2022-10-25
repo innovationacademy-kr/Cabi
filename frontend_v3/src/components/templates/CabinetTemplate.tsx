@@ -76,7 +76,6 @@ const CabinetTemplate = (): JSX.Element => {
       .catch((error) => {
         if (error.response.status === 401) {
           removeCookie("access_token");
-          alert(error.response.data.message);
           navigate("/");
           return;
         }
@@ -97,7 +96,6 @@ const CabinetTemplate = (): JSX.Element => {
       .catch((error) => {
         if (error.response.status === 401) {
           removeCookie("access_token");
-          alert(error.response.data.message);
           navigate("/");
           return;
         }
