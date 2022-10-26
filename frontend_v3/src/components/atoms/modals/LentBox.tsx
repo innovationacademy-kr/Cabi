@@ -124,7 +124,9 @@ const LentBox = (props: LentBoxProps): JSX.Element => {
         navigate("/lent");
       })
       .catch((error) => {
-        alert(error.response.data.message);
+        if (error.response.status !== 401) {
+          alert(error.response.data.message);
+        }
       });
     handleClose();
   };
