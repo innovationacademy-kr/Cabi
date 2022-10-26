@@ -45,11 +45,89 @@
 
 ## 🛠 기술 스택
 
-<div align="center">
+<div>
   
-| Front | Back | Infra |
-| :---: | :---: | :---: |
-| <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white"/> <img src="https://img.shields.io/badge/Redux-764ABC?style=flat-square&logo=Redux&logoColor=white"/> <img src="https://img.shields.io/badge/styled--components-DB7093?style=flat-square&logo=styled-components&logoColor=white"/> <img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=ESLint&logoColor=white"/> <img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat-square&logo=Prettier&logoColor=white"/> <img src="https://img.shields.io/badge/Storybook-FF4785?style=flat-square&logo=Storybook&logoColor=white"/> | <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white"/> <img src="https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=NestJS&logoColor=white"/> <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=MariaDB&logoColor=white"/> <img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=ESLint&logoColor=white"/> <img src="https://img.shields.io/badge/TypeORM-C21325?style=flat-square&logoColor=white"/> <img src="https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white"/> <img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=Swagger&logoColor=white"/> <img src="https://img.shields.io/badge/Passport-34E27A?style=flat-square&logo=Passport&logoColor=white"/> | <img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=NGINX&logoColor=white"/> <img src="https://img.shields.io/badge/PM2-2B037A?style=flat-square&logo=PM2&logoColor=white"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/> <img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=Vite&logoColor=white"/> <img src="https://img.shields.io/badge/Docker--compose-2496ED?style=flat-square&logo=Docker&logoColor=white"/> <img src="https://img.shields.io/badge/Github Actions-2088FF?style=flat-square&logo=Github Actions&logoColor=white"/> |
+<table border="1">
+  <th align="center">분야</th>
+  <th align="center">기술스택</th>
+  <th align="center">선정이유</th>
+  <tr>
+    <td rowspan="3" align="center">Common</td>
+    <td>TypeScript</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>ESLint</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>Prettier</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td rowspan="5" align="center">Front-End</td>
+    <td>React</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>Redux</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>styled-components</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>Vite</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>material-UI</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td rowspan="5" align="center">Back-End</td>
+    <td>NestJS</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>MariaDB</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>TypeORM</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>Swagger</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>Passport</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td rowspan="5" align="center">Infra</td>
+    <td>nginx</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>AWS</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>PM2</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>Docker-compose</td>
+    <td>^^</td>
+  </tr>
+  <tr>
+    <td>Github Actions</td>
+    <td>^^</td>
+  </tr>
+</table>
 
 </div>
 <br/>
