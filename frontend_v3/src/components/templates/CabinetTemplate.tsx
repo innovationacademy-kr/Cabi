@@ -69,21 +69,6 @@ const CabinetTemplate = (): JSX.Element => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosLocationFloor()
-      .then((response) => {
-        setLocationFloor(response.data.space_data);
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          removeCookie("access_token");
-          navigate("/");
-          return;
-        }
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setInfoByLocationFloor(response.data);
@@ -93,12 +78,18 @@ const CabinetTemplate = (): JSX.Element => {
           )
         );
       })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          removeCookie("access_token");
-          navigate("/");
-          return;
+      .then(() => {
+        if (!locationFloor) {
+          axiosLocationFloor()
+            .then((response) => {
+              setLocationFloor(response.data.space_data);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         }
+      })
+      .catch((error) => {
         console.error(error);
       });
   }, [currentLocation, currentFloor]);

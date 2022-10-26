@@ -8,9 +8,10 @@ import { LogLevel } from '@nestjs/common';
 
 async function bootstrap() {
   initializeTransactionalContext();
-  const log_level:LogLevel[] = process.env.TEST === 'false' ? ['error', 'log'] : ['error', 'log', 'debug']
+  const log_level: LogLevel[] =
+    process.env.TEST === 'false' ? ['error', 'log'] : ['error', 'log', 'debug'];
   const app = await NestFactory.create(AppModule, {
-    logger: log_level
+    logger: log_level,
   });
   // for URI Versioning
   app.enableVersioning();
@@ -27,7 +28,7 @@ async function bootstrap() {
   if (is_local === true) {
     app.enableCors();
   }
-  app.use(helmet());
+  app.use(helmet({ contentSecurityPolicy: false }));
   await app.listen(port);
 }
 bootstrap();

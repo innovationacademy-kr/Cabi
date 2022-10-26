@@ -5,7 +5,7 @@ import FooterTemplate from "../components/templates/FooterTemplate";
 import ContentTemplate from "../components/templates/ContentTemplate";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { axiosMyInfo } from "../network/axios/axios.custom";
-import { userAll } from "../redux/slices/userSlice";
+import { setUserCabinet, userAll } from "../redux/slices/userSlice";
 import { getCookie } from "../network/react-cookie/cookie";
 
 const Main = (): JSX.Element => {
@@ -21,6 +21,14 @@ const Main = (): JSX.Element => {
           .then((response) => {
             dispatch(userAll(response.data));
             if (response.data.cabinet_id !== -1) navigate("/lent");
+          })
+          .catch((error) => {
+            navigate("/");
+          });
+      } else {
+        axiosMyInfo()
+          .then((response) => {
+            dispatch(setUserCabinet(response.data.cabinet_id));
           })
           .catch((error) => {
             navigate("/");
