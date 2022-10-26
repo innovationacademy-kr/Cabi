@@ -38,7 +38,7 @@
 
 #### [Back-end](https://github.com/innovationacademy-kr/42cabi/tree/dev/backend)
 
-- 적어주시죠
+- 잠시만요
 
 #### [Front-end](https://github.com/innovationacademy-kr/42cabi/tree/dev/frontend_v3)
 
