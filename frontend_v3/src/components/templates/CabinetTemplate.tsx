@@ -75,8 +75,6 @@ const CabinetTemplate = (): JSX.Element => {
       })
       .catch((error) => {
         if (error.response.status === 401) {
-          removeCookie("access_token");
-          navigate("/");
           return;
         }
         console.error(error);
