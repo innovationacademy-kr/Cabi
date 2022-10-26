@@ -1,6 +1,8 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { UserSessionDto } from 'src/dto/user.session.dto';
 
 /**
  * passport-jwt의 기본 인증을 사용합니다.
@@ -8,10 +10,14 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
  */
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-
   handleRequest<TUser = any>(err: any, user: any): TUser {
     if (err || !user) {
-      throw err || new UnauthorizedException('🚨 로그인 정보가 만료되었습니다. 🥲 🚨\n다시 로그인해주세요.');
+      throw (
+        err ||
+        new UnauthorizedException(
+          '🚨 로그인 정보가 만료되었습니다. 🥲 🚨\n다시 로그인해주세요.',
+        )
+      );
     }
     return user;
   }
