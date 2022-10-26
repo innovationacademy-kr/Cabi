@@ -42,7 +42,7 @@
 
 #### [Front-end](https://github.com/innovationacademy-kr/42cabi/tree/dev/frontend_v3)
 
-- 적어주시죠
+- 작성 ing...
 
 <br/>
 
