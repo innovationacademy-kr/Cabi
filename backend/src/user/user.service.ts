@@ -7,6 +7,7 @@ import { UserDto } from 'src/dto/user.dto';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { IUserRepository } from './repository/user.repository.interface';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 @Injectable()
 export class UserService {
@@ -54,7 +55,7 @@ export class UserService {
     await this.userRepository.updateUserState(user_id, state);
   }
 
-  async getAllUser(): Promise<UserDto[]> {
+  async getAllUser(): Promise<UserSessionDto[]> {
     this.logger.debug(`Called ${this.getAllUser.name}`);
     return await this.userRepository.getAllUser();
   }
@@ -68,5 +69,10 @@ export class UserService {
     this.logger.debug(`Called ${this.deleteUserById.name}`);
     await this.cacheManager.del(`user-${user_id}`);
     await this.userRepository.deleteUserById(user_id);
+  }
+
+  async updateBlackholeDate(user_id: number, blackhole_date?: Date): Promise<void> {
+    this.logger.debug(`Called ${this.updateBlackholeDate.name}`);
+    await this.userRepository.updateBlackholeDate(user_id, blackhole_date);
   }
 }

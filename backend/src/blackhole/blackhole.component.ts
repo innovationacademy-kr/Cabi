@@ -67,23 +67,13 @@ export class BlackholeTools {
   /**
    * 유저가 생성되면 해당 유저의 블랙홀 타이머를 등록.
    */
-  async validateBlackholeForNewUser(user: UserSessionDto) {
-    const data = {
-      'staff?': user.staff,
-      blackholed_at: user.blackholed_at,
-    };
-    await this.blackholeService
-      .validateBlackholedUser(user, data)
-      .catch(async (err) => {
-        if (err.status === HttpStatus.NOT_FOUND) {
-          this.logger.error(
-            `${user.intra_id} is already expired or not exists in 42 intra`,
-          );
-          await this.blackholeService.deleteBlackholedUser(user);
-        } else {
-          this.logger.error(err);
-        }
-      });
-    this.logger.debug(`New Timer: ${user.intra_id} set!`);
+  async addBlackholeTimerNewUser(user: UserSessionDto) {
+    if (user.staff === true || user.blackholed_at === null) {
+      const fire_date = new Date();
+      fire_date.setDate(fire_date.getDate() + 90);
+      await this.addBlackholeTimer(user, fire_date);
+    } else {
+      await this.addBlackholeTimer(user, user.blackholed_at);
+    }
   }
 }

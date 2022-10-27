@@ -17,6 +17,7 @@ import { UserService } from 'src/user/user.service';
 import { LentService } from 'src/lent/lent.service';
 import { BlackholeTools } from './blackhole.component';
 import {
+  IsolationLevel,
   Propagation,
   runOnTransactionComplete,
   Transactional,
@@ -24,12 +25,13 @@ import {
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 @Injectable()
 export class BlackholeService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     const is_local = this.configService.get<boolean>('is_local');
-    if (!is_local) {
+    if (is_local === false) {
       this.blackholeTimerTrigger();
     }
   }
@@ -82,7 +84,7 @@ export class BlackholeService implements OnApplicationBootstrap {
         this.logger.log(`Issued new token ${this.token}`);
       })
       .catch((err) => {
-        throw new HttpException('postOauthToken', err.response.status);
+        throw err;
       });
   }
 
@@ -94,6 +96,7 @@ export class BlackholeService implements OnApplicationBootstrap {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.READ_COMMITTED,
   })
   async deleteBlackholedUser(user: UserDto): Promise<void> {
     this.logger.debug(
@@ -110,7 +113,7 @@ export class BlackholeService implements OnApplicationBootstrap {
       }
       await this.lentService.returnCabinet(user);
     }
-    this.userService.deleteUserById(user.user_id);
+    await this.userService.deleteUserById(user.user_id);
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
@@ -127,35 +130,36 @@ export class BlackholeService implements OnApplicationBootstrap {
    * @return void
    */
   async validateBlackholedUser(user: UserDto, data: any): Promise<void> {
+    const today = new Date();
+    const fire_date = new Date();
     // 스태프는 판별하지 않음.
     if (data['staff?'] === true) {
       this.logger.log(`${user.intra_id} is staff`);
-      return;
+      fire_date.setDate(today.getDate() + 90);
+      await this.blackholeTools.addBlackholeTimer(user, fire_date);
+      await this.userService.updateBlackholeDate(user.user_id, null);
+      return ;
     }
-    let LearnerBlackhole: string | Date;
-    if (data.blackholed_at) {
-      LearnerBlackhole = data.blackholed_at;
-    } else {
-      LearnerBlackhole = data.cursus_users[1].blackholed_at;
-    }
-    const today = new Date();
+    const LearnerBlackhole = data.cursus_users[1].blackholed_at;
     // Member는 판별하지 않음.
     if (!LearnerBlackhole) {
       this.logger.log(
         `${user.intra_id} is Member, doesn't have blackhole date`,
       );
+      fire_date.setDate(today.getDate() + 90);
+      await this.blackholeTools.addBlackholeTimer(user, fire_date);
+      await this.userService.updateBlackholeDate(user.user_id, null);
       return;
     }
     const blackhole_date = new Date(LearnerBlackhole);
     this.logger.log(`Blackhole_day: ${blackhole_date}`);
     this.logger.log(`Today: ${today}`);
-    const time_diff = blackhole_date.getTime() - today.getTime();
-    // 블랙홀에 빠지지 않았으면 Timer를 다시 등록.
-    // 블랙홀에 빠졌다면 해당 유저 정보를 업데이트.
-    if (time_diff >= 0) {
+    // 블랙홀에 빠지지 않았으면 Timer를 다시 등록, blackhole_date 필드 업데이트.
+    // 블랙홀에 빠졌다면 해당 유저 강제 반납/삭제 처리.
+    if (blackhole_date.getTime() - today.getTime() > 0) {
       this.logger.log(`${user.intra_id} not yet fall into a blackhole`);
       await this.blackholeTools.addBlackholeTimer(user, blackhole_date);
-      return;
+      await this.userService.updateBlackholeDate(user.user_id, blackhole_date);
     } else {
       this.logger.log(`${user.intra_id} already fell into a blackhole`);
       await this.deleteBlackholedUser(user);
@@ -191,19 +195,30 @@ export class BlackholeService implements OnApplicationBootstrap {
   }
 
   /**
-   * 서버가 처음 구동되면 모든 유저에 대해 블랙홀에 빠졌는지 확인 작업을 수행.
+   * 서버가 처음 구동되면 DB에 저장된 다음 동작을 수행한다.
+   * 1. 블랙홀 필드가 null인 사용자는 15일 뒤에 동작하는 타이머를 등록.
+   * 2. 블랙홀 필드가 null이 아니고, 블랙홀 필드의 날짜 > 오늘 날짜라면 블랙홀 필드의 날짜를 기준으로 타이머를 등록.
+   * 3. 그 외에 경우에는 intra에 새 블랙홀 날짜를 받아와 다시 검증.
    */
   async blackholeTimerTrigger() {
     this.logger.debug(
       `Called ${BlackholeService.name} ${this.blackholeTimerTrigger.name}`,
     );
-    const users: UserDto[] = await this.userService.getAllUser();
-    await this.postOauthToken().catch((err) => {
-      this.logger.error(err);
-    });
+    const users: UserSessionDto[] = await this.userService.getAllUser();
 
     for (const user of users) {
-      await this.requestValidateBlackholedUser(user).catch(async (err) => {
+      try {
+        if (user.blackholed_at === null) {
+          const fire_date = new Date();
+          fire_date.setDate(fire_date.getDate() + 15);
+          this.blackholeTools.addBlackholeTimer(user, fire_date);
+        } else if (user.blackholed_at.getTime() - new Date().getTime() > 0) {
+          this.blackholeTools.addBlackholeTimer(user, user.blackholed_at);
+        } else {
+          await this.postOauthToken();
+          await this.requestValidateBlackholedUser(user);
+        }
+      } catch (err) {
         if (err.status === HttpStatus.NOT_FOUND) {
           this.logger.error(
             `${user.intra_id} is already expired or not exists in 42 intra`,
@@ -212,7 +227,7 @@ export class BlackholeService implements OnApplicationBootstrap {
         } else {
           this.logger.error(err);
         }
-      });
+      }
     }
     this.logger.debug(
       `Current Timer list: \n ${this.schedulerRegistry.getTimeouts()}`,
