@@ -2,6 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import { UserDto } from 'src/dto/user.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import User from 'src/entities/user.entity';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
@@ -68,12 +69,13 @@ export class UserRepository implements IUserRepository {
       .execute();
   }
 
-  async getAllUser(): Promise<UserDto[]> {
+  async getAllUser(): Promise<UserSessionDto[]> {
     const result = await this.userRepository.find();
     return result.map((user) => {
       return {
         user_id: user.user_id,
         intra_id: user.intra_id,
+        blackholed_at: user.blackhole_date,
       };
     });
   }
@@ -111,5 +113,17 @@ export class UserRepository implements IUserRepository {
         user_id: user_id,
       })
       .execute();
+  }
+
+  async updateBlackholeDate(user_id: number, blackhole_date: Date): Promise<void> {
+    await this.userRepository.createQueryBuilder()
+    .update(User)
+    .set({
+      blackhole_date: blackhole_date,
+    })
+    .where({
+      user_id: user_id,
+    })
+    .execute();
   }
 }
