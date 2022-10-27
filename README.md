@@ -82,11 +82,11 @@
   </tr>
   <tr>
     <td>Vite</td>
-    <td>^^</td>
+    <td>esbuild를 통한 빠른 번들링과 HMR을 통한 생산성 향상</td>
   </tr>
   <tr>
     <td>material-UI</td>
-    <td>^^</td>
+    <td>안드로이드 시스템에서 검증된 신뢰성과 리액트와의 호환성을 바탕으로 생산성 향상</td>
   </tr>
   <tr>
     <td rowspan="5" align="center">Back-End</td>
