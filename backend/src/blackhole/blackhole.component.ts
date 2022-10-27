@@ -42,6 +42,7 @@ export class BlackholeTools {
   // Today - Blackhole_date후 fired될 Timer등록.
   // Timer가 fired 되면 콜백으로 validateBlackholedUser를 수행.
   async addBlackholeTimer(user: UserDto, blackhole_date: Date) {
+    this.logger.log(`new timer that fired on ${blackhole_date} set!`);
     const callback = async () => {
       this.logger.debug(`Blackhole timer for ${user.intra_id} fired!`);
       await this.blackholeService.postOauthToken().catch((err) => {

@@ -133,7 +133,17 @@ export class BlackholeService implements OnApplicationBootstrap {
     const today = new Date();
     const fire_date = new Date();
     // 스태프는 판별하지 않음.
+    let is_staff = false;
     if (data['staff?'] === true) {
+      is_staff = true;
+    } else if (data.groups.length !== 0) {
+      for (const group of data.groups) {
+        if (group.name === 'STAFF' || group.name === 'pedago') {
+          is_staff = true;
+        }
+      }
+    }
+    if (is_staff) {
       this.logger.log(`${user.intra_id} is staff`);
       fire_date.setDate(today.getDate() + 90);
       await this.blackholeTools.addBlackholeTimer(user, fire_date);
