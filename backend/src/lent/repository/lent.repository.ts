@@ -61,11 +61,12 @@ export class lentRepository implements ILentRepository {
     //   },
     // });
 
-    const result: number = await this.lentRepository.createQueryBuilder()
-    .innerJoin("Lent.cabinet","cabinet")
-    .where("cabinet.cabinet_id = :cabinet_id", { cabinet_id : cabinet_id })
-    .setLock("pessimistic_write")
-    .getCount();
+    const result: number = await this.lentRepository
+      .createQueryBuilder()
+      .innerJoin('Lent.cabinet', 'cabinet')
+      .where('cabinet.cabinet_id = :cabinet_id', { cabinet_id: cabinet_id })
+      .setLock('pessimistic_write')
+      .getCount();
     return result;
   }
 
@@ -209,12 +210,13 @@ export class lentRepository implements ILentRepository {
     //   },
     // });
 
-    const result = await this.lentRepository.createQueryBuilder()
-    .leftJoinAndSelect("Lent.cabinet","cabinet")
-    .leftJoinAndSelect("Lent.user","user")
-    .setLock("pessimistic_write")
-    .where("lent_user_id = :user_id", {user_id: user_id})
-    .getOne()
+    const result = await this.lentRepository
+      .createQueryBuilder()
+      .leftJoinAndSelect('Lent.cabinet', 'cabinet')
+      .leftJoinAndSelect('Lent.user', 'user')
+      .setLock('pessimistic_write')
+      .where('lent_user_id = :user_id', { user_id: user_id })
+      .getOne();
 
     return result;
   }
