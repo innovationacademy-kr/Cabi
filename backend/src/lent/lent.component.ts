@@ -1,6 +1,4 @@
-import { forwardRef, HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
-import { LentDto } from 'src/dto/lent.dto';
-import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import Lent from 'src/entities/lent.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
@@ -16,7 +14,6 @@ import {
 } from 'typeorm-transactional';
 import { UserDto } from 'src/dto/user.dto';
 import LentExceptionType from 'src/enums/lent.exception.enum';
-import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -38,7 +35,7 @@ export class LentTools {
    * @param last_lent_time
    * @param lent_type
    */
-   @Transactional({
+  @Transactional({
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
@@ -50,9 +47,15 @@ export class LentTools {
     this.logger.debug(`Called ${LentTools.name} ${this.setExpireTimeAll.name}`);
     const expire_time = new Date();
     if (lent_type === LentType.PRIVATE) {
-      expire_time.setDate(last_lent_time.getDate() + this.configService.get<number>('lent_term.private'));
+      expire_time.setDate(
+        last_lent_time.getDate() +
+          this.configService.get<number>('lent_term.private'),
+      );
     } else {
-      expire_time.setDate(last_lent_time.getDate() + this.configService.get<number>('lent_term.share'));
+      expire_time.setDate(
+        last_lent_time.getDate() +
+          this.configService.get<number>('lent_term.share'),
+      );
     }
     await this.lentRepository.setExpireTimeAll(cabinet_id, expire_time);
     runOnTransactionComplete((err) => err && this.logger.error(err));
@@ -81,12 +84,12 @@ export class LentTools {
         // 동아리 사물함인지 확인
         if (cabinet.lent_type === LentType.CIRCLE) {
           excepction_type = LentExceptionType.LENT_CIRCLE;
-          break ;
+          break;
         }
         // 유저가 대여한 사물함 확인
         if (await this.lentRepository.getIsLent(user.user_id)) {
           excepction_type = LentExceptionType.ALREADY_LENT;
-          break ;
+          break;
         }
         // 대여 처리
         const new_lent = await this.lentRepository.lentCabinet(
@@ -96,7 +99,11 @@ export class LentTools {
         if (cabinet.lent_count + 1 === cabinet.max_user) {
           if (cabinet.status === CabinetStatusType.AVAILABLE) {
             // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
-            await this.setExpireTimeAll(cabinet_id, new_lent.lent_time, cabinet.lent_type);
+            await this.setExpireTimeAll(
+              cabinet_id,
+              new_lent.lent_time,
+              cabinet.lent_type,
+            );
           } else {
             // 기존 유저의 만료시간으로 만료시간 설정
             await this.lentRepository.setExpireTime(
@@ -110,11 +117,11 @@ export class LentTools {
             CabinetStatusType.SET_EXPIRE_FULL,
           );
         }
-        break ;
+        break;
 
       case CabinetStatusType.SET_EXPIRE_FULL:
         excepction_type = LentExceptionType.LENT_FULL;
-        break ;
+        break;
 
       case CabinetStatusType.EXPIRED:
         excepction_type = LentExceptionType.LENT_EXPIRED;

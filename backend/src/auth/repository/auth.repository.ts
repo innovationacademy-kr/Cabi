@@ -10,7 +10,10 @@ export class AuthRepository implements IAuthRepository {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async addUserIfNotExists(user: UserDto, blackhole_date?: Date): Promise<boolean> {
+  async addUserIfNotExists(
+    user: UserDto,
+    blackhole_date?: Date,
+  ): Promise<boolean> {
     const find = await this.userRepository.findOne({
       where: {
         user_id: user.user_id,

@@ -50,7 +50,6 @@ const user: UserDto = {
   intra_id: 'yoyoo',
 };
 
-
 @ApiTags('(V3) Lent for Mock Up data')
 @Controller({
   version: '3',
@@ -88,12 +87,12 @@ export class LentMockController {
         // TESTER 5
         user_id: 424242,
         intra_id: 'yoyoo',
-      }
+      },
     ];
     for (const user of users) {
       this.lentService.lentCabinet(cabinet_id, user);
     }
-}
+  }
 
   @ApiOperation({
     summary: '특정 캐비넷 대여 시도',

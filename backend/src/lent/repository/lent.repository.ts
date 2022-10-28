@@ -6,7 +6,11 @@ import Cabinet from 'src/entities/cabinet.entity';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
 import { Repository } from 'typeorm';
-import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
+import {
+  IsolationLevel,
+  Propagation,
+  Transactional,
+} from 'typeorm-transactional';
 import { ILentRepository } from './lent.repository.interface';
 
 export class lentRepository implements ILentRepository {
@@ -224,7 +228,9 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
-  async getSimpleCabinetData(cabinet_id: number) : Promise<SimpleCabinetDataDto> {
+  async getSimpleCabinetData(
+    cabinet_id: number,
+  ): Promise<SimpleCabinetDataDto> {
     const result = await this.cabinetLogRepository
       .createQueryBuilder('c')
       .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])
@@ -238,8 +244,9 @@ export class lentRepository implements ILentRepository {
       status: result[0].cabinet_status,
       lent_type: result[0].c_lent_type,
       lent_count: result[0].lent_id === null ? 0 : result.length,
-      expire_time: result[0].lent_id === null ? undefined : result[0].expire_time,
+      expire_time:
+        result[0].lent_id === null ? undefined : result[0].expire_time,
       max_user: result[0].c_max_user,
-    }
+    };
   }
 }

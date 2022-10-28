@@ -1,5 +1,5 @@
-import CabinetStatusType from "src/enums/cabinet.status.type.enum";
-import LentType from "src/enums/lent.type.enum";
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import LentType from 'src/enums/lent.type.enum';
 
 /**
  * 캐비넷을 대여하기 전 캐비넷에 대한 최소 정보

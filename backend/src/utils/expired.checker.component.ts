@@ -35,12 +35,17 @@ export class ExpiredChecker {
       new Date(),
     );
     if (days >= 0) {
-      if (days >= 0 && days < this.configService.get<number>('expire_term.forcedreturn')) {
+      if (
+        days >= 0 &&
+        days < this.configService.get<number>('expire_term.forcedreturn')
+      ) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
           CabinetStatusType.EXPIRED,
         );
-      } else if (days >= this.configService.get<number>('expire_term.forcedreturn')) {
+      } else if (
+        days >= this.configService.get<number>('expire_term.forcedreturn')
+      ) {
         await this.cabinetInfoService.updateCabinetStatus(
           lent.lent_cabinet_id,
           CabinetStatusType.BANNED,
