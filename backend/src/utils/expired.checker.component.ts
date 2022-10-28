@@ -9,6 +9,7 @@ import {
   Transactional,
   Propagation,
   runOnTransactionComplete,
+  IsolationLevel,
 } from 'typeorm-transactional';
 import Lent from 'src/entities/lent.entity';
 import { BanService } from 'src/ban/ban.service';
@@ -28,6 +29,7 @@ export class ExpiredChecker {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async checkExpiredCabinetEach(lent: Lent) {
     const days = await this.banService.calDateDiff(

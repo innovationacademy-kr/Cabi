@@ -8,6 +8,7 @@ import UserStateType from 'src/enums/user.state.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { IUserRepository } from './repository/user.repository.interface';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class UserService {
@@ -60,11 +61,19 @@ export class UserService {
     return await this.userRepository.getAllUser();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null> {
     this.logger.debug(`Called ${this.getCabinetDtoByUserId.name}`);
     return await this.userRepository.getCabinetDtoByUserId(user_id);
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async deleteUserById(user_id: number): Promise<void> {
     this.logger.debug(`Called ${this.deleteUserById.name}`);
     await this.cacheManager.del(`user-${user_id}`);
