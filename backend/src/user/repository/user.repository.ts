@@ -3,9 +3,12 @@ import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import User from 'src/entities/user.entity';
-import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
-import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
+import {
+  IsolationLevel,
+  Propagation,
+  Transactional,
+} from 'typeorm-transactional';
 import { IUserRepository } from './user.repository.interface';
 
 export class UserRepository implements IUserRepository {
@@ -56,17 +59,6 @@ export class UserRepository implements IUserRepository {
       },
     });
     return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
-  }
-
-  async updateUserState(user_id: number, state: UserStateType): Promise<void> {
-    await this.userRepository
-      .createQueryBuilder(this.updateUserState.name)
-      .update(User)
-      .set({
-        state: state,
-      })
-      .where('user_id = :user_id', { user_id: user_id })
-      .execute();
   }
 
   async getAllUser(): Promise<UserSessionDto[]> {

@@ -1,7 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserDto } from 'src/dto/user.dto';
 import User from 'src/entities/user.entity';
-import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
 import { IAuthRepository } from './auth.repository.interface';
 
@@ -23,7 +22,6 @@ export class AuthRepository implements IAuthRepository {
       await this.userRepository.save({
         user_id: user.user_id,
         intra_id: user.intra_id,
-        state: UserStateType.NORMAL,
         email: user.email,
         first_login: new Date(),
         last_login: new Date(),
