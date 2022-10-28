@@ -56,8 +56,9 @@ export class BanService {
    * @param user_id
    * @param lent_time
    */
-  @Transactional({
+   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async blockingDropOffUser(lent: Lent): Promise<void> {
     this.logger.debug(
