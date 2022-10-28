@@ -23,7 +23,7 @@ export class BanService {
     private userService: UserService,
     private cabinetInfoService: CabinetInfoService,
     @Inject(ConfigService) private configService: ConfigService,
-  ) {};
+  ) {}
 
   /**
    * 해당 유저가 현재시간 기준으로 밴 당했는지 확인함.
@@ -66,9 +66,15 @@ export class BanService {
     );
     const now = new Date();
     const target = new Date(lent.lent_time.getTime());
-    target.setDate(target.getDate() + this.configService.get<number>('penalty_day_share'));
+    target.setDate(
+      target.getDate() + this.configService.get<number>('penalty_day_share'),
+    );
     if (now < target) {
-      await this.blockingUser(lent, this.configService.get<number>('penalty_day_share'), true);
+      await this.blockingUser(
+        lent,
+        this.configService.get<number>('penalty_day_share'),
+        true,
+      );
     }
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }

@@ -42,9 +42,13 @@ export class EmailSender {
       file = 'soonoverdue.hbs';
     } else if (days === this.configService.get<number>('expire_term.overdue')) {
       file = 'overdue.hbs';
-    } else if (days === this.configService.get<number>('expire_term.lastoverdue')) {
+    } else if (
+      days === this.configService.get<number>('expire_term.lastoverdue')
+    ) {
       file = 'lastoverdue.hbs';
-    } else if (days === this.configService.get<number>('expire_term.forcedreturn')) {
+    } else if (
+      days === this.configService.get<number>('expire_term.forcedreturn')
+    ) {
       subject = '42CABI 강제 반납 안내';
       file = 'forcedreturn.hbs';
     }

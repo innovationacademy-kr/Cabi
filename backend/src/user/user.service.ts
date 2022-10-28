@@ -80,7 +80,10 @@ export class UserService {
     await this.userRepository.deleteUserById(user_id);
   }
 
-  async updateBlackholeDate(user_id: number, blackhole_date?: Date): Promise<void> {
+  async updateBlackholeDate(
+    user_id: number,
+    blackhole_date?: Date,
+  ): Promise<void> {
     this.logger.debug(`Called ${this.updateBlackholeDate.name}`);
     await this.userRepository.updateBlackholeDate(user_id, blackhole_date);
   }

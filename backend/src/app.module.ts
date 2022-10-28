@@ -49,10 +49,20 @@ import { BetatestModule } from './betatest/betatest.module';
     // }),
     ServeStaticModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => [{
-        rootPath: join(__dirname, '../../', `${configService.get<boolean>('is_v3') ? 'frontend_v3/dist/' : 'frontend/dist/'}`),
-        exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
-      }],
+      useFactory: (configService: ConfigService) => [
+        {
+          rootPath: join(
+            __dirname,
+            '../../',
+            `${
+              configService.get<boolean>('is_v3')
+                ? 'frontend_v3/dist/'
+                : 'frontend/dist/'
+            }`,
+          ),
+          exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+        },
+      ],
     }),
     EventEmitterModule.forRoot(),
     CabinetModule,

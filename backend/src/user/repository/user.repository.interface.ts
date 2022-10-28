@@ -1,6 +1,5 @@
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
-import { UserDto } from 'src/dto/user.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import UserStateType from 'src/enums/user.state.type.enum';
 

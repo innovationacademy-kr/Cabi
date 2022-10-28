@@ -1,6 +1,5 @@
 import {
   forwardRef,
-  HttpException,
   HttpStatus,
   Inject,
   Injectable,
@@ -148,7 +147,7 @@ export class BlackholeService implements OnApplicationBootstrap {
       fire_date.setDate(today.getDate() + 90);
       await this.blackholeTools.addBlackholeTimer(user, fire_date);
       await this.userService.updateBlackholeDate(user.user_id, null);
-      return ;
+      return;
     }
     const LearnerBlackhole = data.cursus_users[1].blackholed_at;
     // Member는 판별하지 않음.
