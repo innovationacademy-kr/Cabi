@@ -1,7 +1,6 @@
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
-import { UserDto } from 'src/dto/user.dto';
-import UserStateType from 'src/enums/user.state.type.enum';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 
 export interface IUserRepository {
   /**
@@ -21,18 +20,11 @@ export interface IUserRepository {
   checkUserBorrowed(userId: number): Promise<number>;
 
   /**
-   * 유저의 상태를 업데이트합니다.
-   * @param user_id
-   * @param state
-   */
-  updateUserState(user_id: number, state: UserStateType): Promise<void>;
-
-  /**
    * DB에 존재하는 모든 사용자를 가져옵니다.
    *
    * @return UserDto[]
    */
-  getAllUser(): Promise<UserDto[]>;
+  getAllUser(): Promise<UserSessionDto[]>;
 
   /**
    * 특정 유저가 대여한 사물함 정보를 CabinetDto로 가져옵니다.
@@ -46,4 +38,10 @@ export interface IUserRepository {
    * @param user_id
    */
   deleteUserById(user_id: number): Promise<void>;
+
+  /**
+   * 해당 유저의 blackhole_date를 업데이트합니다.
+   * @param user_id
+   */
+  updateBlackholeDate(user_id: number, blackhole_date: Date): Promise<void>;
 }

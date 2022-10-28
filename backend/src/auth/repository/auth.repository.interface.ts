@@ -7,7 +7,7 @@ export interface IAuthRepository {
    * @param user 추가될 유저
    * @return boolean 존재했다면 true, 존재하지 않았다면 false
    */
-  addUserIfNotExists(user: UserDto): Promise<boolean>;
+  addUserIfNotExists(user: UserDto, blackhole_date?: Date): Promise<boolean>;
 
   /**
    * 유저가 사물함을 빌렸는지 확인합니다.

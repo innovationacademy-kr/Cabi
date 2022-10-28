@@ -39,9 +39,12 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
     if (!profile.staff && !profile.cursus_users[1]) {
       cb(null, undefined);
     }
-    let blackholed_at: Date = undefined;
+    let blackholed_at: Date;
     if (profile.cursus_users[1]) {
       blackholed_at = profile.cursus_users[1].blackholed_at;
+      if (blackholed_at !== null) {
+        blackholed_at = new Date(blackholed_at);
+      }
     }
     const user: UserSessionDto = {
       user_id: profile.userId,

@@ -6,9 +6,7 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import Lent from 'src/entities/lent.entity';
-import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ILentRepository } from './repository/lent.repository.interface';
@@ -38,7 +36,10 @@ export class LentService {
   async lentCabinet(cabinet_id: number, user: UserDto): Promise<void> {
     this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
     try {
-      const excepction_type = await this.lentTools.lentStateTransition(user, cabinet_id);
+      const excepction_type = await this.lentTools.lentStateTransition(
+        user,
+        cabinet_id,
+      );
       switch (excepction_type) {
         case LentExceptionType.LENT_CIRCLE:
           throw new HttpException(
@@ -50,26 +51,26 @@ export class LentService {
             `🚨 이미 대여중인 사물함이 있습니다 🚨`,
             HttpStatus.BAD_REQUEST,
           );
-          case LentExceptionType.LENT_FULL:
-            throw new HttpException(
-              `🚨 해당 사물함에 잔여 자리가 없습니다 🚨`,
-              HttpStatus.CONFLICT,
-              );
-          case LentExceptionType.LENT_EXPIRED:
-            throw new HttpException(
-          `🚨 연체된 사물함은 대여할 수 없습니다. 🚨`,
-          HttpStatus.CONFLICT,
-            );
-          case LentExceptionType.LENT_BROKEN:
-            throw new HttpException(
-              `🚨 고장난 사물함은 대여할 수 없습니다. 🚨`,
-              HttpStatus.CONFLICT,
-            );
-          case LentExceptionType.LENT_BANNED:
-            throw new HttpException(
-              '🚨 해당 사물함은 비활성화된 사물함입니다 🚨',
-              HttpStatus.CONFLICT,
-            );
+        case LentExceptionType.LENT_FULL:
+          throw new HttpException(
+            `🚨 해당 사물함에 잔여 자리가 없습니다 🚨`,
+            HttpStatus.CONFLICT,
+          );
+        case LentExceptionType.LENT_EXPIRED:
+          throw new HttpException(
+            `🚨 연체된 사물함은 대여할 수 없습니다. 🚨`,
+            HttpStatus.CONFLICT,
+          );
+        case LentExceptionType.LENT_BROKEN:
+          throw new HttpException(
+            `🚨 고장난 사물함은 대여할 수 없습니다. 🚨`,
+            HttpStatus.CONFLICT,
+          );
+        case LentExceptionType.LENT_BANNED:
+          throw new HttpException(
+            '🚨 해당 사물함은 비활성화된 사물함입니다 🚨',
+            HttpStatus.CONFLICT,
+          );
       }
     } catch (err) {
       throw err;
@@ -78,6 +79,7 @@ export class LentService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async updateLentCabinetTitle(
     cabinet_title: string,
@@ -106,6 +108,7 @@ export class LentService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async updateLentCabinetMemo(
     cabinet_memo: string,
@@ -134,7 +137,7 @@ export class LentService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.READ_COMMITTED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async returnCabinet(user: UserDto): Promise<void> {
     this.logger.debug(`Called ${LentService.name} ${this.returnCabinet.name}`);

@@ -1,12 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import Lent from 'src/entities/lent.entity';
-import UserStateType from 'src/enums/user.state.type.enum';
 import { UserService } from '../user/user.service';
 import { IBanRepository } from './repository/ban.repository.interface';
 import {
   Transactional,
   Propagation,
   runOnTransactionComplete,
+  IsolationLevel,
 } from 'typeorm-transactional';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import LentType from 'src/enums/lent.type.enum';
@@ -22,7 +22,7 @@ export class BanService {
     private userService: UserService,
     private cabinetInfoService: CabinetInfoService,
     @Inject(ConfigService) private configService: ConfigService,
-  ) {};
+  ) {}
 
   /**
    * 해당 유저가 현재시간 기준으로 밴 당했는지 확인함.
@@ -57,6 +57,7 @@ export class BanService {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async blockingDropOffUser(lent: Lent): Promise<void> {
     this.logger.debug(
@@ -64,9 +65,15 @@ export class BanService {
     );
     const now = new Date();
     const target = new Date(lent.lent_time.getTime());
-    target.setDate(target.getDate() + this.configService.get<number>('penalty_day_share'));
+    target.setDate(
+      target.getDate() + this.configService.get<number>('penalty_day_share'),
+    );
     if (now < target) {
-      await this.blockingUser(lent, this.configService.get<number>('penalty_day_share'), true);
+      await this.blockingUser(
+        lent,
+        this.configService.get<number>('penalty_day_share'),
+        true,
+      );
     }
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
@@ -78,6 +85,7 @@ export class BanService {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async blockingUser(
     lent: Lent,
@@ -87,11 +95,6 @@ export class BanService {
     this.logger.debug(`Called ${BanService.name} ${this.blockingUser.name}`);
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
     await this.banRepository.addToBanLogByUserId(lent, ban_day, is_penalty);
-    // 2. 해당 user의 state를 BAN으로 변경.
-    await this.userService.updateUserState(
-      lent.lent_user_id,
-      UserStateType.BANNED,
-    );
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
@@ -112,6 +115,10 @@ export class BanService {
    * 유저의 누적 연체일을 계산
    * @param user_id
    */
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async addOverdueDays(user_id: number): Promise<number> {
     this.logger.debug(`Called ${BanService.name} ${this.addOverdueDays.name}`);
     const banLog = await this.banRepository.getBanLogByUserId(user_id);

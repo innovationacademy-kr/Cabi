@@ -1,10 +1,14 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
-import { UserDto } from 'src/dto/user.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
 import User from 'src/entities/user.entity';
-import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
+import {
+  IsolationLevel,
+  Propagation,
+  Transactional,
+} from 'typeorm-transactional';
 import { IUserRepository } from './user.repository.interface';
 
 export class UserRepository implements IUserRepository {
@@ -57,27 +61,21 @@ export class UserRepository implements IUserRepository {
     return result && result.Lent ? result.Lent.lent_cabinet_id : -1;
   }
 
-  async updateUserState(user_id: number, state: UserStateType): Promise<void> {
-    await this.userRepository
-      .createQueryBuilder(this.updateUserState.name)
-      .update(User)
-      .set({
-        state: state,
-      })
-      .where('user_id = :user_id', { user_id: user_id })
-      .execute();
-  }
-
-  async getAllUser(): Promise<UserDto[]> {
+  async getAllUser(): Promise<UserSessionDto[]> {
     const result = await this.userRepository.find();
     return result.map((user) => {
       return {
         user_id: user.user_id,
         intra_id: user.intra_id,
+        blackholed_at: user.blackhole_date,
       };
     });
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null> {
     const result = await this.userRepository.findOne({
       relations: {
@@ -103,10 +101,30 @@ export class UserRepository implements IUserRepository {
     };
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async deleteUserById(user_id: number): Promise<void> {
     await this.userRepository
       .createQueryBuilder(this.deleteUserById.name)
       .delete()
+      .where({
+        user_id: user_id,
+      })
+      .execute();
+  }
+
+  async updateBlackholeDate(
+    user_id: number,
+    blackhole_date: Date,
+  ): Promise<void> {
+    await this.userRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({
+        blackhole_date: blackhole_date,
+      })
       .where({
         user_id: user_id,
       })

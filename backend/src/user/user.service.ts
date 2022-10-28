@@ -4,9 +4,14 @@ import { Cache } from 'cache-manager';
 import { UserLentResponseDto } from 'src/dto/response/lent.user.response.dto';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
 import { UserDto } from 'src/dto/user.dto';
-import UserStateType from 'src/enums/user.state.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { IUserRepository } from './repository/user.repository.interface';
+import { UserSessionDto } from 'src/dto/user.session.dto';
+import {
+  IsolationLevel,
+  Propagation,
+  Transactional,
+} from 'typeorm-transactional';
 
 @Injectable()
 export class UserService {
@@ -49,24 +54,35 @@ export class UserService {
     };
   }
 
-  async updateUserState(user_id: number, state: UserStateType): Promise<void> {
-    this.logger.debug(`Called ${this.updateUserState.name}`);
-    await this.userRepository.updateUserState(user_id, state);
-  }
-
-  async getAllUser(): Promise<UserDto[]> {
+  async getAllUser(): Promise<UserSessionDto[]> {
     this.logger.debug(`Called ${this.getAllUser.name}`);
     return await this.userRepository.getAllUser();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null> {
     this.logger.debug(`Called ${this.getCabinetDtoByUserId.name}`);
     return await this.userRepository.getCabinetDtoByUserId(user_id);
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async deleteUserById(user_id: number): Promise<void> {
     this.logger.debug(`Called ${this.deleteUserById.name}`);
     await this.cacheManager.del(`user-${user_id}`);
     await this.userRepository.deleteUserById(user_id);
+  }
+
+  async updateBlackholeDate(
+    user_id: number,
+    blackhole_date?: Date,
+  ): Promise<void> {
+    this.logger.debug(`Called ${this.updateBlackholeDate.name}`);
+    await this.userRepository.updateBlackholeDate(user_id, blackhole_date);
   }
 }

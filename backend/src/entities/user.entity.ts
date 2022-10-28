@@ -1,4 +1,3 @@
-import UserStateType from 'src/enums/user.state.type.enum';
 import {
   Column,
   CreateDateColumn,
@@ -26,14 +25,6 @@ export default class User {
     length: 32,
   })
   intra_id: string;
-
-  @Column({
-    name: 'state',
-    type: 'enum',
-    enum: UserStateType,
-    default: UserStateType.NORMAL,
-  })
-  state: UserStateType;
 
   @Column({
     name: 'email',

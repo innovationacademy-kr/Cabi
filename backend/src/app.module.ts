@@ -49,10 +49,20 @@ import { BetatestModule } from './betatest/betatest.module';
     // }),
     ServeStaticModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => [{
-        rootPath: join(__dirname, '../../', `${configService.get<boolean>('is_v3') ? 'frontend_v3/dist/' : 'frontend/dist/'}`),
-        exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
-      }],
+      useFactory: (configService: ConfigService) => [
+        {
+          rootPath: join(
+            __dirname,
+            '../../',
+            `${
+              configService.get<boolean>('is_v3')
+                ? 'frontend_v3/dist/'
+                : 'frontend/dist/'
+            }`,
+          ),
+          exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+        },
+      ],
     }),
     EventEmitterModule.forRoot(),
     CabinetModule,
@@ -72,6 +82,8 @@ export class AppModule implements NestModule {
 
   configure(consumer: MiddlewareConsumer) {
     // NOTE: JWT 토큰이 쿠키에 저장되기 때문에 모든 경로에 대해 해당 미들웨어 적용
-    consumer.apply(this.sessionMiddleware.cookieParser).forRoutes('*');
+    consumer
+      .apply(this.sessionMiddleware.cookieParser, this.sessionMiddleware.helmet)
+      .forRoutes('*');
   }
 }

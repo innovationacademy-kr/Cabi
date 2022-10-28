@@ -9,7 +9,10 @@ export class AuthRepository implements IAuthRepository {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async addUserIfNotExists(user: UserDto): Promise<boolean> {
+  async addUserIfNotExists(
+    user: UserDto,
+    blackhole_date?: Date,
+  ): Promise<boolean> {
     const find = await this.userRepository.findOne({
       where: {
         user_id: user.user_id,
@@ -19,10 +22,10 @@ export class AuthRepository implements IAuthRepository {
       await this.userRepository.save({
         user_id: user.user_id,
         intra_id: user.intra_id,
-        auth: 0,
         email: user.email,
         first_login: new Date(),
         last_login: new Date(),
+        blackhole_date: blackhole_date,
       });
       return false;
     }
