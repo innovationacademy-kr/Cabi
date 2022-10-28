@@ -134,6 +134,7 @@ export class LentTools {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async returnStateTransition(lent: Lent, user: UserDto): Promise<void> {
     this.logger.debug(

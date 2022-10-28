@@ -36,6 +36,10 @@ export class lentRepository implements ILentRepository {
   }
 
   //TODO: lent component 수정 후 사용되지 않는 함수입니다.
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getLentUserCnt(cabinet_id: number): Promise<number> {
     const result: number = await this.lentRepository.count({
       relations: {
@@ -175,6 +179,10 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getLent(user_id: number): Promise<Lent> {
     const result = await this.lentRepository.findOne({
       relations: {
@@ -224,6 +232,10 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getSimpleCabinetData(cabinet_id: number) : Promise<SimpleCabinetDataDto> {
     const result = await this.cabinetLogRepository
       .createQueryBuilder('c')

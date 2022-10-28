@@ -7,6 +7,7 @@ import {
   Transactional,
   Propagation,
   runOnTransactionComplete,
+  IsolationLevel,
 } from 'typeorm-transactional';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import LentType from 'src/enums/lent.type.enum';
@@ -76,8 +77,9 @@ export class BanService {
    * @param user_id
    * @param ban_day
    */
-  @Transactional({
+   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async blockingUser(
     lent: Lent,
@@ -112,6 +114,10 @@ export class BanService {
    * 유저의 누적 연체일을 계산
    * @param user_id
    */
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async addOverdueDays(user_id: number): Promise<number> {
     this.logger.debug(`Called ${BanService.name} ${this.addOverdueDays.name}`);
     const banLog = await this.banRepository.getBanLogByUserId(user_id);
