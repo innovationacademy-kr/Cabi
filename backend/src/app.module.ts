@@ -82,6 +82,8 @@ export class AppModule implements NestModule {
 
   configure(consumer: MiddlewareConsumer) {
     // NOTE: JWT 토큰이 쿠키에 저장되기 때문에 모든 경로에 대해 해당 미들웨어 적용
-    consumer.apply(this.sessionMiddleware.cookieParser).forRoutes('*');
+    consumer
+      .apply(this.sessionMiddleware.cookieParser, this.sessionMiddleware.helmet)
+      .forRoutes('*');
   }
 }
