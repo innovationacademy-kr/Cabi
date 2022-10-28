@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import Lent from 'src/entities/lent.entity';
 import { Repository } from 'typeorm';
+import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
 import BanLog from '../../entities/ban.log.entity';
 import { IBanRepository } from './ban.repository.interface';
 
@@ -36,6 +37,10 @@ export class BanRepository implements IBanRepository {
     return result ? result.is_penalty : false;
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async addToBanLogByUserId(
     lent: Lent,
     ban_day: number,
