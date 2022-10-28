@@ -65,6 +65,7 @@ CREATE TABLE `cabinet` (
   `min_user` tinyint(4) NOT NULL DEFAULT 0 COMMENT '최소 사용자 수',
   `memo` varchar(64) DEFAULT NULL COMMENT '비밀번호 메모',
   `title` varchar(64) DEFAULT NULL COMMENT '사물함 제목',
+  `status_note` varchar(64) DEFAULT NULL COMMENT '사물함 상태 메모',
   PRIMARY KEY (`cabinet_id`),
   UNIQUE KEY `cabinet_id` (`cabinet_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=345 DEFAULT CHARSET=utf8 COMMENT='사물함 정보';

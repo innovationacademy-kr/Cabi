@@ -79,6 +79,14 @@ export default class Cabinet {
   })
   title: string;
 
+  @Column({
+    name: 'status_note',
+    nullable: true,
+    type: 'varchar',
+    length: 64,
+  })
+  status_note: string;
+
   @OneToMany(() => Lent, (lent) => lent.cabinet)
   lent: Lent[];
 }
