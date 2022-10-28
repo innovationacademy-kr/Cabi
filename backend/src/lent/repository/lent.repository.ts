@@ -239,7 +239,9 @@ export class lentRepository implements ILentRepository {
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async getSimpleCabinetData(cabinet_id: number) : Promise<SimpleCabinetDataDto> {
+  async getSimpleCabinetData(
+    cabinet_id: number,
+  ): Promise<SimpleCabinetDataDto> {
     const result = await this.cabinetLogRepository
       .createQueryBuilder('c')
       .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])

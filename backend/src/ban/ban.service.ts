@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import Lent from 'src/entities/lent.entity';
-import UserStateType from 'src/enums/user.state.type.enum';
 import { UserService } from '../user/user.service';
 import { IBanRepository } from './repository/ban.repository.interface';
 import {
@@ -56,7 +55,7 @@ export class BanService {
    * @param user_id
    * @param lent_time
    */
-   @Transactional({
+  @Transactional({
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
@@ -84,7 +83,7 @@ export class BanService {
    * @param user_id
    * @param ban_day
    */
-   @Transactional({
+  @Transactional({
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
@@ -96,11 +95,6 @@ export class BanService {
     this.logger.debug(`Called ${BanService.name} ${this.blockingUser.name}`);
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
     await this.banRepository.addToBanLogByUserId(lent, ban_day, is_penalty);
-    // 2. 해당 user의 state를 BAN으로 변경.
-    await this.userService.updateUserState(
-      lent.lent_user_id,
-      UserStateType.BANNED,
-    );
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
