@@ -79,6 +79,7 @@ export class LentService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async updateLentCabinetTitle(
     cabinet_title: string,
@@ -107,6 +108,7 @@ export class LentService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async updateLentCabinetMemo(
     cabinet_memo: string,
@@ -135,7 +137,7 @@ export class LentService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.READ_COMMITTED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async returnCabinet(user: UserDto): Promise<void> {
     this.logger.debug(`Called ${LentService.name} ${this.returnCabinet.name}`);

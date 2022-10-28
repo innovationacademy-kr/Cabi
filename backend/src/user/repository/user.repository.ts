@@ -5,6 +5,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import User from 'src/entities/user.entity';
 import UserStateType from 'src/enums/user.state.type.enum';
 import { Repository } from 'typeorm';
+import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
 import { IUserRepository } from './user.repository.interface';
 
 export class UserRepository implements IUserRepository {
@@ -79,6 +80,10 @@ export class UserRepository implements IUserRepository {
     });
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null> {
     const result = await this.userRepository.findOne({
       relations: {
@@ -104,6 +109,10 @@ export class UserRepository implements IUserRepository {
     };
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async deleteUserById(user_id: number): Promise<void> {
     await this.userRepository
       .createQueryBuilder(this.deleteUserById.name)
