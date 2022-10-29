@@ -33,6 +33,12 @@ export class lentRepository implements ILentRepository {
         lent_user_id: user_id,
       },
     });
+    // const result = await this.lentRepository.createQueryBuilder()
+    // .select()
+    // .setLock("pessimistic_write")
+    // .where("lent_user_id = :user_id", { user_id : user_id })
+    // .getOne();
+
     if (!result) {
       return false;
     }
@@ -44,16 +50,23 @@ export class lentRepository implements ILentRepository {
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async getLentUserCnt(cabinet_id: number): Promise<number> {
-    const result: number = await this.lentRepository.count({
-      relations: {
-        cabinet: true,
-      },
-      where: {
-        cabinet: {
-          cabinet_id: cabinet_id,
-        },
-      },
-    });
+    // const result: number = await this.lentRepository.count({
+    //   relations: {
+    //     cabinet: true,
+    //   },
+    //   where: {
+    //     cabinet: {
+    //       cabinet_id: cabinet_id,
+    //     },
+    //   },
+    // });
+
+    const result: number = await this.lentRepository
+      .createQueryBuilder()
+      .innerJoin('Lent.cabinet', 'cabinet')
+      .where('cabinet.cabinet_id = :cabinet_id', { cabinet_id: cabinet_id })
+      .setLock('pessimistic_write')
+      .getCount();
     return result;
   }
 
@@ -187,15 +200,24 @@ export class lentRepository implements ILentRepository {
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async getLent(user_id: number): Promise<Lent> {
-    const result = await this.lentRepository.findOne({
-      relations: {
-        cabinet: true,
-        user: true,
-      },
-      where: {
-        lent_user_id: user_id,
-      },
-    });
+    // const result = await this.lentRepository.findOne({
+    //   relations: {
+    //     cabinet: true,
+    //     user: true,
+    //   },
+    //   where: {
+    //     lent_user_id: user_id,
+    //   },
+    // });
+
+    const result = await this.lentRepository
+      .createQueryBuilder()
+      .leftJoinAndSelect('Lent.cabinet', 'cabinet')
+      .leftJoinAndSelect('Lent.user', 'user')
+      .setLock('pessimistic_write')
+      .where('lent_user_id = :user_id', { user_id: user_id })
+      .getOne();
+
     return result;
   }
 
