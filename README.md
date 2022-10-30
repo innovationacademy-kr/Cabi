@@ -42,7 +42,11 @@
 
 #### [Front-end](https://github.com/innovationacademy-kr/42cabi/tree/dev/frontend_v3)
 
-- 작성 ing...
+- 다양한 환경에서도 이용에 불편함이 없도록 반응형 웹 디자인을 적용했습니다.
+- 사용자들이 쉽게 사물함을 찾을 수 있도록 평면도에 구역을 표시한 페이지를 포함한 캐러셀을 구현했습니다.
+- 사용자들이 서비스를 이용하면서 현재 상태를 쉽게 알 수 있도록 로딩이나 에러 발생 등 상황에 맞는 정보를 줄 수 있도록 처리했습니다.
+- 쉽게 변할 수 있는 정책이나 UI/UX를 빠르게 반영할 수 있도록 하드코딩을 최대한 피하고 props와 환경변수를 이용했습니다.
+- 신규 팀원이 들어와도 지속적으로 유지/보수와 기능 추가가 용이하도록 코딩 컨벤션을 정하고 문서화 작업 및 이슈 관리를 진행했습니다.
 
 <br/>
 
@@ -57,24 +61,24 @@
   <tr>
     <td rowspan="3" align="center">Common</td>
     <td>TypeScript</td>
-    <td>^^</td>
+    <td>컴파일 타임에 에러를 검출하여 서비스 과정에서 발생할 수 있는 오류를 최소화</td>
   </tr>
   <tr>
     <td>ESLint</td>
-    <td>^^</td>
+    <td>코딩 컨벤션에 위배되거나 안티 패턴을 미리 검출하여 에러 발생 요소를 </td>
   </tr>
   <tr>
     <td>Prettier</td>
-    <td>^^</td>
+    <td>기본적인 코딩룰 적용으로 가독성 향상</td>
   </tr>
   <tr>
-    <td rowspan="5" align="center">Front-End</td>
+    <td rowspan="6" align="center">Front-End</td>
     <td>React</td>
-    <td>^^</td>
+    <td>컴포넌트 기반의 UI 구현으로 재사용성을 높이고 상태 관리를 통한 성능 최적화</td>
   </tr>
   <tr>
     <td>Redux</td>
-    <td>^^</td>
+    <td>API 요청 최소화 및 컴포넌트간 공유하는 상태를 효율적으로 관리하여 리렌더링 최적화</td>
   </tr>
   <tr>
     <td>styled-components</td>
@@ -89,13 +93,17 @@
     <td>안드로이드 시스템에서 검증된 신뢰성과 리액트와의 호환성을 바탕으로 생산성 향상</td>
   </tr>
   <tr>
-    <td rowspan="5" align="center">Back-End</td>
-    <td>NestJS</td>
+    <td>Storybook</td>
     <td>^^</td>
   </tr>
   <tr>
+    <td rowspan="5" align="center">Back-End</td>
+    <td>NestJS</td>
+    <td>백엔드에 필요한 기술들인 Ioc, DI, AOP 등이 적용되어 있고, Express.js 프레임워크 대비 낮은 자유도로 협업에 적합</td>
+  </tr>
+  <tr>
     <td>MariaDB</td>
-    <td>^^</td>
+    <td>많이 사용되는 만큼 래퍼런스를 찾기 쉽고, 개발 과정에서 생기는 문제에 대한 해결책을 찾기 용이</td>
   </tr>
   <tr>
     <td>TypeORM</td>
@@ -103,16 +111,16 @@
   </tr>
   <tr>
     <td>Swagger</td>
-    <td>^^</td>
+    <td>프론트엔드 팀원들과 HTTP API 소통을 하기 위해 사용</td>
   </tr>
   <tr>
     <td>Passport</td>
-    <td>^^</td>
+    <td>OAuth2 적용을 위해 사용</td>
   </tr>
   <tr>
     <td rowspan="5" align="center">Infra</td>
     <td>nginx</td>
-    <td>^^</td>
+    <td>로컬 개발 모드에서 리버스 프록시를 이용하여 개발의 편의성을 높이기 위해 사용</td>
   </tr>
   <tr>
     <td>AWS</td>
@@ -120,15 +128,15 @@
   </tr>
   <tr>
     <td>PM2</td>
-    <td>^^</td>
+    <td>프로젝트 배포 시 node 데몬을 관리할 때 사용</td>
   </tr>
   <tr>
     <td>Docker-compose</td>
-    <td>^^</td>
+    <td>로컬 개발 시 동일한 환경에서 쉽게 세팅하기 위해 사용하였으며, MariaDB와 Nginx를 구동할 때 사용</td>
   </tr>
   <tr>
     <td>Github Actions</td>
-    <td>^^</td>
+    <td>CI/CD를 구현해서 검증 및 반복 작업의 자동화로 개발의 편의성 </td>
   </tr>
 </table>
 
