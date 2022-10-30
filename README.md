@@ -107,7 +107,7 @@
   </tr>
   <tr>
     <td>TypeORM</td>
-    <td>^^</td>
+    <td>SQL raw query로 작성하는 것보다 유지 보수 측면에서 유리하고, 추후 다른 DBMS로 쉽게 전환 가능</td>
   </tr>
   <tr>
     <td>Swagger</td>
