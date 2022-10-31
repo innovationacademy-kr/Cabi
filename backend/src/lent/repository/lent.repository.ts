@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { LentDto } from 'src/dto/lent.dto';
 import { ReturnCabinetDataDto } from 'src/dto/return.cabinet.data.dto';
-import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
+import { LentCabinetDataDto } from 'src/dto/lent.cabinet.data.dto';
 import { UserDto } from 'src/dto/user.dto';
 import Cabinet from 'src/entities/cabinet.entity';
 import Lent from 'src/entities/lent.entity';
@@ -24,21 +24,12 @@ export class lentRepository implements ILentRepository {
     private cabinetRepository: Repository<Cabinet>,
   ) {}
 
-  @Transactional({
-    propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
-  })
   async getIsLent(user_id: number): Promise<boolean> {
     const result = await this.lentRepository.findOne({
       where: {
         lent_user_id: user_id,
       },
     });
-    // const result = await this.lentRepository.createQueryBuilder()
-    // .select()
-    // .setLock("pessimistic_write")
-    // .where("lent_user_id = :user_id", { user_id : user_id })
-    // .getOne();
 
     if (!result) {
       return false;
@@ -205,9 +196,9 @@ export class lentRepository implements ILentRepository {
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async getSimpleCabinetData(
+  async getLentCabinetData(
     cabinet_id: number,
-  ): Promise<SimpleCabinetDataDto> {
+  ): Promise<LentCabinetDataDto> {
     const result = await this.cabinetRepository
       .createQueryBuilder('c')
       .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])
@@ -215,6 +206,7 @@ export class lentRepository implements ILentRepository {
       .addSelect('l.expire_time', 'expire_time')
       .addSelect('l.lent_id', 'lent_id')
       .where('c.cabinet_id = :cabinet_id', { cabinet_id })
+      .setLock('pessimistic_write')
       .execute();
 
     return {
