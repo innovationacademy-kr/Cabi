@@ -36,9 +36,9 @@ export class ExpiredChecker {
       lent.expire_time,
       new Date(),
     );
-    if (days >= 0) {
+    if (days >= this.configService.get<number>('expire_term.soonoverdue') ) {
       if (
-        days >= 0 &&
+        days > 0 &&
         days < this.configService.get<number>('expire_term.forcedreturn')
       ) {
         await this.cabinetInfoService.updateCabinetStatus(
@@ -62,7 +62,7 @@ export class ExpiredChecker {
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_9PM)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async checkExpiredLent() {
     this.logger.debug(
       `Called ${ExpiredChecker.name} ${this.checkExpiredLent.name}`,
