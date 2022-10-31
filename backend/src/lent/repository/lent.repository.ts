@@ -177,7 +177,11 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
-  async addLentLog(lent: Lent, user: UserDto, cabinet_id: number): Promise<void> {
+  async addLentLog(
+    lent: Lent,
+    user: UserDto,
+    cabinet_id: number,
+  ): Promise<void> {
     await this.lentLogRepository
       .createQueryBuilder(this.addLentLog.name)
       .insert()
@@ -196,9 +200,7 @@ export class lentRepository implements ILentRepository {
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async getLentCabinetData(
-    cabinet_id: number,
-  ): Promise<LentCabinetDataDto> {
+  async getLentCabinetData(cabinet_id: number): Promise<LentCabinetDataDto> {
     const result = await this.cabinetRepository
       .createQueryBuilder('c')
       .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])
@@ -223,9 +225,10 @@ export class lentRepository implements ILentRepository {
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async getReturnCabinetData(cabinet_id: number): Promise<ReturnCabinetDataDto> {
-    const result = await this.cabinetRepository
-    .find({
+  async getReturnCabinetData(
+    cabinet_id: number,
+  ): Promise<ReturnCabinetDataDto> {
+    const result = await this.cabinetRepository.find({
       relations: {
         lent: true,
       },
@@ -257,14 +260,14 @@ export class lentRepository implements ILentRepository {
   })
   async clearCabinetInfo(cabinet_id: number): Promise<void> {
     await this.cabinetRepository
-    .createQueryBuilder()
-    .update({
-      title: null,
-      memo: null,
-    })
-    .where({
-      cabinet_id: cabinet_id,
-    })
-    .execute();
+      .createQueryBuilder()
+      .update({
+        title: null,
+        memo: null,
+      })
+      .where({
+        cabinet_id: cabinet_id,
+      })
+      .execute();
   }
 }

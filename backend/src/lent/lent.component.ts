@@ -138,18 +138,18 @@ export class LentTools {
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async clearCabinetInfo(cabinet_id: number): Promise<void> {
-    this.logger.debug(
-      `Called ${LentTools.name} ${this.clearCabinetInfo.name}`,
-    );
+    this.logger.debug(`Called ${LentTools.name} ${this.clearCabinetInfo.name}`);
     await this.lentRepository.clearCabinetInfo(cabinet_id);
   }
-
 
   @Transactional({
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async returnStateTransition(cabinet_id: number, user: UserDto): Promise<[Lent, LentType]> {
+  async returnStateTransition(
+    cabinet_id: number,
+    user: UserDto,
+  ): Promise<[Lent, LentType]> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
