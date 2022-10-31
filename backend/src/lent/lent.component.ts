@@ -75,20 +75,14 @@ export class LentTools {
 
     // 대여하고 있는 유저들의 대여 정보를 포함하는 cabinet 정보를 가져옴.
     // 가져오는 정보 : 캐비넷 상태, 캐비넷 대여타입, 캐비넷을 빌린 사람들의 인원 수
-    const cabinet = await this.lentRepository.getSimpleCabinetData(cabinet_id);
-
     let excepction_type = LentExceptionType.LENT_SUCCESS;
+    const cabinet = await this.lentRepository.getLentCabinetData(cabinet_id);
     switch (cabinet.status) {
       case CabinetStatusType.AVAILABLE:
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         // 동아리 사물함인지 확인
         if (cabinet.lent_type === LentType.CIRCLE) {
           excepction_type = LentExceptionType.LENT_CIRCLE;
-          break;
-        }
-        // 유저가 대여한 사물함 확인
-        if (await this.lentRepository.getIsLent(user.user_id)) {
-          excepction_type = LentExceptionType.ALREADY_LENT;
           break;
         }
         // 대여 처리
@@ -143,33 +137,48 @@ export class LentTools {
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async returnStateTransition(lent: Lent, user: UserDto): Promise<void> {
+  async clearCabinetInfo(cabinet_id: number): Promise<void> {
+    this.logger.debug(`Called ${LentTools.name} ${this.clearCabinetInfo.name}`);
+    await this.lentRepository.clearCabinetInfo(cabinet_id);
+  }
+
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
+  async returnStateTransition(
+    cabinet_id: number,
+    user: UserDto,
+  ): Promise<[Lent, LentType]> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
-    const lent_user_cnt: number = await this.lentRepository.getLentUserCnt(
-      lent.cabinet.cabinet_id,
-    );
-    switch (lent.cabinet.status) {
+    // 대여하고 있는 유저들의 대여 정보를 포함하는 cabinet 정보를 가져옴.
+    // 가져오는 정보 : 캐비넷 상태, 캐비넷 대여타입, 캐비넷을 빌린 사람들의 인원 수
+    const cabinet = await this.lentRepository.getReturnCabinetData(cabinet_id);
+    const lent = cabinet.lents.filter(
+      (lent) => lent.lent_user_id === user.user_id,
+    )[0];
+    const lent_count = cabinet.lents.length;
+    // 2. cabinet_status에 따라 처리.
+    switch (cabinet.status) {
       case CabinetStatusType.AVAILABLE:
-        if (lent_user_cnt - 1 === 0) {
-          await this.lentService.updateLentCabinetTitle('', user);
-          await this.lentService.updateLentCabinetMemo('', user);
+        if (lent_count - 1 === 0) {
+          await this.clearCabinetInfo(cabinet_id);
         }
         break;
       case CabinetStatusType.SET_EXPIRE_FULL:
         await this.cabinetInfoService.updateCabinetStatus(
-          lent.cabinet.cabinet_id,
+          cabinet_id,
           CabinetStatusType.SET_EXPIRE_AVAILABLE,
         );
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
-        if (lent_user_cnt - 1 === 0) {
+        if (lent_count - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
-            lent.cabinet.cabinet_id,
+            cabinet_id,
             CabinetStatusType.AVAILABLE,
           );
-          await this.lentService.updateLentCabinetTitle('', user);
-          await this.lentService.updateLentCabinetMemo('', user);
+          await this.clearCabinetInfo(cabinet_id);
         }
         break;
       case CabinetStatusType.BANNED:
@@ -181,17 +190,20 @@ export class LentTools {
         const cumulative = await this.banService.addOverdueDays(user.user_id);
         await this.banService.blockingUser(lent, overdue + cumulative, false);
         if (
-          lent.cabinet.status === CabinetStatusType.EXPIRED &&
-          lent_user_cnt - 1 === 0
+          cabinet.status === CabinetStatusType.EXPIRED &&
+          lent_count - 1 === 0
         ) {
           await this.cabinetInfoService.updateCabinetStatus(
-            lent.cabinet.cabinet_id,
+            cabinet_id,
             CabinetStatusType.AVAILABLE,
           );
         }
         break;
     }
+    // 3. Lent Table에서 값 제거.
+    await this.lentRepository.deleteLentByLentId(lent.lent_id);
     runOnTransactionComplete((err) => err && this.logger.error(err));
+    return [lent, cabinet.lent_type];
   }
 
   async getAllLent(): Promise<Lent[]> {

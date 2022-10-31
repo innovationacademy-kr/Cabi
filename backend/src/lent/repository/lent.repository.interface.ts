@@ -1,5 +1,6 @@
 import { LentDto } from 'src/dto/lent.dto';
-import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
+import { ReturnCabinetDataDto } from 'src/dto/return.cabinet.data.dto';
+import { LentCabinetDataDto } from 'src/dto/lent.cabinet.data.dto';
 import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
 
@@ -10,13 +11,6 @@ export interface ILentRepository {
    * @return boolean
    */
   getIsLent(user_id: number): Promise<boolean>;
-
-  /**
-   * 해당 캐비넷을 대여하고 있는 유저의 수를 반환합니다.
-   * @param cabinet_id
-   * @return number
-   */
-  getLentUserCnt(cabinet_id: number): Promise<number>;
 
   /**
    * lent_id에 해당하는 row를 expire_time을 설정합니다.
@@ -74,13 +68,6 @@ export interface ILentRepository {
   ): Promise<void>;
 
   /**
-   * user_id에 대응하는 lent 정보를 반환합니다.
-   * @param user_id
-   * @return Lent
-   */
-  getLent(user_id: number): Promise<Lent>;
-
-  /**
    * 모든 Lent 정보를 가져옵니다.
    * @return Lent[]
    */
@@ -99,12 +86,25 @@ export interface ILentRepository {
    * @param Lent
    * @return void
    */
-  addLentLog(lent: Lent): Promise<void>;
+  addLentLog(lent: Lent, user: UserDto, cabinet_id: number): Promise<void>;
 
   /**
    * 사물함을 빌리기 전 사물함에 대한 최소한의 정보를 가져옴.
    * @param cabinet_id
-   * @return SimpleCabinetDataDto
+   * @return LentCabinetDataDto
    **/
-  getSimpleCabinetData(cabinet_id: number): Promise<SimpleCabinetDataDto>;
+  getLentCabinetData(cabinet_id: number): Promise<LentCabinetDataDto>;
+
+  /**
+   * 대여중인 사물함을 반납하기 위해 사물함에 대한 정보를 가져옴.
+   * @param cabinet_id
+   * @return ReturnCabinetDataDto
+   **/
+  getReturnCabinetData(cabinet_id: number): Promise<ReturnCabinetDataDto>;
+
+  /**
+   * cabinet title, memo를 null로 설정함.
+   * @param cabinet_id
+   */
+  clearCabinetInfo(cabinet_id: number): Promise<void>;
 }
