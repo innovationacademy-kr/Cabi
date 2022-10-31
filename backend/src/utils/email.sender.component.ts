@@ -51,7 +51,7 @@ export class EmailSender {
       subject = '42CABI 강제 반납 안내';
       file = 'forcedreturn.hbs';
     } else {
-      return ;
+      return;
     }
     //배포 시에만 메일 발송 환경변수 확인
     if (this.emailTest === false) {

@@ -42,7 +42,7 @@ export class ExpiredChecker {
         days > 0 &&
         days < this.configService.get<number>('expire_term.forcedreturn')
       ) {
-        if ( lent.cabinet.status !== CabinetStatusType.EXPIRED ) {
+        if (lent.cabinet.status !== CabinetStatusType.EXPIRED) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.lent_cabinet_id,
             CabinetStatusType.EXPIRED,
