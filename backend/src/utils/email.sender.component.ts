@@ -36,7 +36,6 @@ export class EmailSender {
   public mailing(intra_id: string, days: number) {
     let subject = '42CABI 사물함 연체 알림';
     let file;
-    // TODO: 메일 보내는 날짜에 대해 논의하면 좋을 것 같습니다.
     if (days === this.configService.get<number>('expire_term.soonoverdue')) {
       subject = '42CABI 사물함 대여 기간 만료 예정 안내';
       file = 'soonoverdue.hbs';
@@ -51,6 +50,8 @@ export class EmailSender {
     ) {
       subject = '42CABI 강제 반납 안내';
       file = 'forcedreturn.hbs';
+    } else {
+      return ;
     }
     //배포 시에만 메일 발송 환경변수 확인
     if (this.emailTest === false) {

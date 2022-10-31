@@ -37,14 +37,17 @@ export class ExpiredChecker {
       new Date(),
     );
     if (days >= this.configService.get<number>('expire_term.soonoverdue')) {
+      console.log(days);
       if (
         days > 0 &&
         days < this.configService.get<number>('expire_term.forcedreturn')
       ) {
-        await this.cabinetInfoService.updateCabinetStatus(
-          lent.lent_cabinet_id,
-          CabinetStatusType.EXPIRED,
-        );
+        if ( lent.cabinet.status !== CabinetStatusType.EXPIRED ) {
+          await this.cabinetInfoService.updateCabinetStatus(
+            lent.lent_cabinet_id,
+            CabinetStatusType.EXPIRED,
+          );
+        }
       } else if (
         days >= this.configService.get<number>('expire_term.forcedreturn')
       ) {
