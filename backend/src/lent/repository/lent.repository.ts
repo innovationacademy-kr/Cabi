@@ -303,7 +303,6 @@ export class lentRepository implements ILentRepository {
     if (result.length === 0) {
       return null;
     }
-    console.log(result);
     return {
       status: result[0].status,
       lent_type: result[0].lent_type,
