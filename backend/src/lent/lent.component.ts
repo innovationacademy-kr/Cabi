@@ -190,11 +190,11 @@ export class LentTools {
         const cumulative = await this.banService.addOverdueDays(user.user_id);
         await this.banService.blockingUser(lent, overdue + cumulative, false);
         if (
-          lent.cabinet.status === CabinetStatusType.EXPIRED &&
+          cabinet.status === CabinetStatusType.EXPIRED &&
           lent_count - 1 === 0
         ) {
           await this.cabinetInfoService.updateCabinetStatus(
-            lent.cabinet.cabinet_id,
+            cabinet_id,
             CabinetStatusType.AVAILABLE,
           );
         }
