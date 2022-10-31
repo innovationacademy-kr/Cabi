@@ -106,8 +106,19 @@ export class BanService {
    */
   async calDateDiff(begin: Date, end: Date): Promise<number> {
     this.logger.debug(`Called ${BanService.name} ${this.calDateDiff.name}`);
-    const diffDatePerSec = end.getTime() - begin.getTime();
-    const days = Math.floor(diffDatePerSec / 1000 / 60 / 60 / 24);
+    const endYear = end.getFullYear();
+    const endMonth = end.getMonth();
+    const endDay = end.getDate();
+
+    const beginYear = begin.getFullYear();
+    const beginMonth = begin.getMonth();
+    const beginDay = begin.getDate();
+
+    const newEnd = new Date(endYear, endMonth, endDay);
+    const newBegin = new Date(beginYear, beginMonth, beginDay);
+
+    const diffDatePerSec = newEnd.getTime() - newBegin.getTime();
+    const days = Math.ceil(diffDatePerSec / 1000 / 60 / 60 / 24);
     return days;
   }
 
