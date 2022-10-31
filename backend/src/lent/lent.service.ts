@@ -6,18 +6,11 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import Lent from 'src/entities/lent.entity';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ILentRepository } from './repository/lent.repository.interface';
 import { BanService } from '../ban/ban.service';
 import { LentTools } from './lent.component';
-import {
-  Transactional,
-  Propagation,
-  runOnTransactionComplete,
-  IsolationLevel,
-} from 'typeorm-transactional';
 import { UserDto } from 'src/dto/user.dto';
 import LentExceptionType from 'src/enums/lent.exception.enum';
 
@@ -27,7 +20,6 @@ export class LentService {
   constructor(
     @Inject('ILentRepository')
     private lentRepository: ILentRepository,
-    private cabinetInfoService: CabinetInfoService,
     private banService: BanService,
     @Inject(forwardRef(() => LentTools))
     private lentTools: LentTools,
