@@ -1,6 +1,6 @@
 import { LentDto } from 'src/dto/lent.dto';
 import { ReturnCabinetDataDto } from 'src/dto/return.cabinet.data.dto';
-import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
+import { LentCabinetDataDto } from 'src/dto/lent.cabinet.data.dto';
 import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
 
@@ -91,9 +91,9 @@ export interface ILentRepository {
   /**
    * 사물함을 빌리기 전 사물함에 대한 최소한의 정보를 가져옴.
    * @param cabinet_id
-   * @return SimpleCabinetDataDto
+   * @return LentCabinetDataDto
    **/
-  getSimpleCabinetData(cabinet_id: number): Promise<SimpleCabinetDataDto>;
+  getLentCabinetData(cabinet_id: number): Promise<LentCabinetDataDto>;
 
   /**
    * 대여중인 사물함을 반납하기 위해 사물함에 대한 정보를 가져옴.

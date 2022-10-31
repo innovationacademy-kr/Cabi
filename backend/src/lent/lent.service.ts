@@ -7,7 +7,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import LentType from 'src/enums/lent.type.enum';
-import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { ILentRepository } from './repository/lent.repository.interface';
 import { BanService } from '../ban/ban.service';
 import { LentTools } from './lent.component';
@@ -28,6 +27,13 @@ export class LentService {
   async lentCabinet(cabinet_id: number, user: UserDto): Promise<void> {
     this.logger.debug(`Called ${LentService.name} ${this.lentCabinet.name}`);
     try {
+      // 유저가 대여한 사물함 확인
+      if (await this.lentRepository.getIsLent(user.user_id)) {
+        throw new HttpException(
+          `🚨 이미 대여중인 사물함이 있습니다 🚨`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       const excepction_type = await this.lentTools.lentStateTransition(
         user,
         cabinet_id,
@@ -37,11 +43,6 @@ export class LentService {
           throw new HttpException(
             `🚨 해당 사물함은 동아리 전용 사물함입니다 🚨`,
             HttpStatus.I_AM_A_TEAPOT,
-          );
-        case LentExceptionType.ALREADY_LENT:
-          throw new HttpException(
-            `🚨 이미 대여중인 사물함이 있습니다 🚨`,
-            HttpStatus.BAD_REQUEST,
           );
         case LentExceptionType.LENT_FULL:
           throw new HttpException(
@@ -121,14 +122,19 @@ export class LentService {
     this.logger.debug(`Called ${LentService.name} ${this.returnCabinet.name}`);
     try {
       // 1. 해당 유저가 대여중인 cabinet_id를 가져온다.
-      const cabinet_id = await this.lentRepository.getLentCabinetId(user.user_id);
+      const cabinet_id = await this.lentRepository.getLentCabinetId(
+        user.user_id,
+      );
       if (cabinet_id === null) {
         throw new HttpException(
           `${user.intra_id} doesn't lent cabinet!`,
           HttpStatus.FORBIDDEN,
         );
       }
-      const [lent, lent_type] = await this.lentTools.returnStateTransition(cabinet_id, user);
+      const [lent, lent_type] = await this.lentTools.returnStateTransition(
+        cabinet_id,
+        user,
+      );
       // 4. Lent Log Table에서 값 추가.
       await this.lentRepository.addLentLog(lent, user, cabinet_id);
       // 5. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.

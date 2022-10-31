@@ -75,20 +75,14 @@ export class LentTools {
 
     // 대여하고 있는 유저들의 대여 정보를 포함하는 cabinet 정보를 가져옴.
     // 가져오는 정보 : 캐비넷 상태, 캐비넷 대여타입, 캐비넷을 빌린 사람들의 인원 수
-    const cabinet = await this.lentRepository.getSimpleCabinetData(cabinet_id);
-
     let excepction_type = LentExceptionType.LENT_SUCCESS;
+    const cabinet = await this.lentRepository.getLentCabinetData(cabinet_id);
     switch (cabinet.status) {
       case CabinetStatusType.AVAILABLE:
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         // 동아리 사물함인지 확인
         if (cabinet.lent_type === LentType.CIRCLE) {
           excepction_type = LentExceptionType.LENT_CIRCLE;
-          break;
-        }
-        // 유저가 대여한 사물함 확인
-        if (await this.lentRepository.getIsLent(user.user_id)) {
-          excepction_type = LentExceptionType.ALREADY_LENT;
           break;
         }
         // 대여 처리
@@ -144,18 +138,18 @@ export class LentTools {
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async clearCabinetInfo(cabinet_id: number): Promise<void> {
-    this.logger.debug(
-      `Called ${LentTools.name} ${this.clearCabinetInfo.name}`,
-    );
+    this.logger.debug(`Called ${LentTools.name} ${this.clearCabinetInfo.name}`);
     await this.lentRepository.clearCabinetInfo(cabinet_id);
   }
-
 
   @Transactional({
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async returnStateTransition(cabinet_id: number, user: UserDto): Promise<[Lent, LentType]> {
+  async returnStateTransition(
+    cabinet_id: number,
+    user: UserDto,
+  ): Promise<[Lent, LentType]> {
     this.logger.debug(
       `Called ${LentTools.name} ${this.returnStateTransition.name}`,
     );
