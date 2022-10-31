@@ -114,7 +114,7 @@ export class BanService {
     const beginMonth = begin.getMonth();
     const beginDay = begin.getDate();
 
-    const newEnd = new Date(endYear,endMonth,endDay);
+    const newEnd = new Date(endYear, endMonth, endDay);
     const newBegin = new Date(beginYear, beginMonth, beginDay);
 
     const diffDatePerSec = newEnd.getTime() - newBegin.getTime();

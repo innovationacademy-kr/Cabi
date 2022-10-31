@@ -36,7 +36,7 @@ export class ExpiredChecker {
       lent.expire_time,
       new Date(),
     );
-    if (days >= this.configService.get<number>('expire_term.soonoverdue') ) {
+    if (days >= this.configService.get<number>('expire_term.soonoverdue')) {
       if (
         days > 0 &&
         days < this.configService.get<number>('expire_term.forcedreturn')
