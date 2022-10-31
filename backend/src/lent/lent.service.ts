@@ -77,10 +77,6 @@ export class LentService {
     }
   }
 
-  @Transactional({
-    propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
-  })
   async updateLentCabinetTitle(
     cabinet_title: string,
     user: UserDto,
@@ -103,13 +99,8 @@ export class LentService {
       cabinet_title,
       my_cabinet_id,
     );
-    runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
-  @Transactional({
-    propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
-  })
   async updateLentCabinetMemo(
     cabinet_memo: string,
     user: UserDto,
@@ -132,36 +123,27 @@ export class LentService {
       cabinet_memo,
       my_cabinet_id,
     );
-    runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
-  @Transactional({
-    propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
-  })
   async returnCabinet(user: UserDto): Promise<void> {
     this.logger.debug(`Called ${LentService.name} ${this.returnCabinet.name}`);
     try {
-      // 1. 해당 유저가 대여중인 lent 정보를 가져옴.
-      const lent: Lent = await this.lentRepository.getLent(user.user_id);
-      if (lent === null) {
+      // 1. 해당 유저가 대여중인 cabinet_id를 가져온다.
+      const cabinet_id = await this.lentRepository.getLentCabinetId(user.user_id);
+      if (cabinet_id === null) {
         throw new HttpException(
           `${user.intra_id} doesn't lent cabinet!`,
           HttpStatus.FORBIDDEN,
         );
       }
-      // 2. 현재 대여 상태에 따라 케이스 처리
-      await this.lentTools.returnStateTransition(lent, user);
-      // 3. Lent Table에서 값 제거.
-      await this.lentRepository.deleteLentByLentId(lent.lent_id);
+      const [lent, lent_type] = await this.lentTools.returnStateTransition(cabinet_id, user);
       // 4. Lent Log Table에서 값 추가.
-      await this.lentRepository.addLentLog(lent);
+      await this.lentRepository.addLentLog(lent, user, cabinet_id);
       // 5. 공유 사물함은 72시간 내에 중도 이탈한 경우 해당 사용자에게 72시간 밴을 부여.
-      if (lent.cabinet.lent_type === LentType.SHARE) {
+      if (lent_type === LentType.SHARE) {
         await this.banService.blockingDropOffUser(lent);
       }
     } catch (err) {
-      runOnTransactionComplete((err) => err && this.logger.error(err));
       throw err;
     }
   }

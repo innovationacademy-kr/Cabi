@@ -1,4 +1,5 @@
 import { LentDto } from 'src/dto/lent.dto';
+import { ReturnCabinetDataDto } from 'src/dto/return.cabinet.data.dto';
 import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
 import { UserDto } from 'src/dto/user.dto';
 import Lent from 'src/entities/lent.entity';
@@ -99,7 +100,7 @@ export interface ILentRepository {
    * @param Lent
    * @return void
    */
-  addLentLog(lent: Lent): Promise<void>;
+  addLentLog(lent: Lent, user: UserDto, cabinet_id: number): Promise<void>;
 
   /**
    * 사물함을 빌리기 전 사물함에 대한 최소한의 정보를 가져옴.
@@ -107,4 +108,17 @@ export interface ILentRepository {
    * @return SimpleCabinetDataDto
    **/
   getSimpleCabinetData(cabinet_id: number): Promise<SimpleCabinetDataDto>;
+
+  /**
+   * 대여중인 사물함을 반납하기 위해 사물함에 대한 정보를 가져옴.
+   * @param cabinet_id
+   * @return ReturnCabinetDataDto
+   **/
+  getReturnCabinetData(cabinet_id: number): Promise<ReturnCabinetDataDto>;
+
+  /**
+   * cabinet title, memo를 null로 설정함.
+   * @param cabinet_id
+   */
+  clearCabinetInfo(cabinet_id: number): Promise<void>;
 }
