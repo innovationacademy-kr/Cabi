@@ -1,5 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { LentDto } from 'src/dto/lent.dto';
+import { ReturnCabinetDataDto } from 'src/dto/return.cabinet.data.dto';
 import { SimpleCabinetDataDto } from 'src/dto/simple.cabinet.data.dto';
 import { UserDto } from 'src/dto/user.dto';
 import Cabinet from 'src/entities/cabinet.entity';
@@ -20,7 +21,7 @@ export class lentRepository implements ILentRepository {
     @InjectRepository(LentLog)
     private lentLogRepository: Repository<LentLog>,
     @InjectRepository(Cabinet)
-    private cabinetLogRepository: Repository<Cabinet>,
+    private cabinetRepository: Repository<Cabinet>,
   ) {}
 
   @Transactional({
@@ -136,14 +137,8 @@ export class lentRepository implements ILentRepository {
 
   async getLentCabinetId(user_id: number): Promise<number> {
     const result = await this.lentRepository.findOne({
-      relations: {
-        user: true,
-        cabinet: true,
-      },
       select: {
-        cabinet: {
-          cabinet_id: true,
-        },
+        lent_cabinet_id: true,
       },
       where: {
         lent_user_id: user_id,
@@ -242,15 +237,15 @@ export class lentRepository implements ILentRepository {
       .execute();
   }
 
-  async addLentLog(lent: Lent): Promise<void> {
+  async addLentLog(lent: Lent, user: UserDto, cabinet_id: number): Promise<void> {
     await this.lentLogRepository
       .createQueryBuilder(this.addLentLog.name)
       .insert()
       .into(LentLog)
       .values({
-        log_user_id: lent.user.user_id,
-        log_intra_id: lent.user.intra_id,
-        log_cabinet_id: lent.cabinet.cabinet_id,
+        log_user_id: user.user_id,
+        log_intra_id: user.intra_id,
+        log_cabinet_id: cabinet_id,
         lent_time: lent.lent_time,
         return_time: new Date(),
       })
@@ -264,7 +259,7 @@ export class lentRepository implements ILentRepository {
   async getSimpleCabinetData(
     cabinet_id: number,
   ): Promise<SimpleCabinetDataDto> {
-    const result = await this.cabinetLogRepository
+    const result = await this.cabinetRepository
       .createQueryBuilder('c')
       .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])
       .leftJoin(Lent, 'l', 'l.lent_cabinet_id = c.cabinet_id')
@@ -281,5 +276,55 @@ export class lentRepository implements ILentRepository {
         result[0].lent_id === null ? undefined : result[0].expire_time,
       max_user: result[0].c_max_user,
     };
+  }
+
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
+  async getReturnCabinetData(cabinet_id: number): Promise<ReturnCabinetDataDto> {
+    const result = await this.cabinetRepository
+    .find({
+      relations: {
+        lent: true,
+      },
+      select: {
+        status: true,
+        lent_type: true,
+        lent: true,
+      },
+      where: {
+        cabinet_id: cabinet_id,
+      },
+      lock: {
+        mode: 'pessimistic_write',
+      },
+    });
+    if (result.length === 0) {
+      return null;
+    }
+    console.log(result);
+    return {
+      status: result[0].status,
+      lent_type: result[0].lent_type,
+      lents: result[0].lent,
+    };
+  }
+
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
+  async clearCabinetInfo(cabinet_id: number): Promise<void> {
+    await this.cabinetRepository
+    .createQueryBuilder()
+    .update({
+      title: null,
+      memo: null,
+    })
+    .where({
+      cabinet_id: cabinet_id,
+    })
+    .execute();
   }
 }
