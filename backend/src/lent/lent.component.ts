@@ -165,10 +165,11 @@ export class LentTools {
     const lent = cabinet.lents.filter(
       (lent) => lent.lent_user_id === user.user_id,
     )[0];
+    const lent_count = cabinet.lents.length;
     // 2. cabinet_status에 따라 처리.
     switch (cabinet.status) {
       case CabinetStatusType.AVAILABLE:
-        if (cabinet.lents.length - 1 === 0) {
+        if (lent_count - 1 === 0) {
           await this.clearCabinetInfo(cabinet_id);
         }
         break;
@@ -178,7 +179,7 @@ export class LentTools {
           CabinetStatusType.SET_EXPIRE_AVAILABLE,
         );
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
-        if (cabinet.lents.length - 1 === 0) {
+        if (lent_count - 1 === 0) {
           await this.cabinetInfoService.updateCabinetStatus(
             cabinet_id,
             CabinetStatusType.AVAILABLE,
@@ -196,7 +197,7 @@ export class LentTools {
         await this.banService.blockingUser(lent, overdue + cumulative, false);
         if (
           lent.cabinet.status === CabinetStatusType.EXPIRED &&
-          cabinet.lents.length - 1 === 0
+          lent_count - 1 === 0
         ) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.cabinet.cabinet_id,
