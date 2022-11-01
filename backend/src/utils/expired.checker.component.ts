@@ -64,7 +64,7 @@ export class ExpiredChecker {
     runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async checkExpiredLent() {
     this.logger.debug(
       `Called ${ExpiredChecker.name} ${this.checkExpiredLent.name}`,
