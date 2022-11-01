@@ -41,10 +41,12 @@ export class ExpiredChecker {
         days > 0 &&
         days < this.configService.get<number>('expire_term.forcedreturn')
       ) {
-        await this.cabinetInfoService.updateCabinetStatus(
-          lent.lent_cabinet_id,
-          CabinetStatusType.EXPIRED,
-        );
+        if (lent.cabinet.status !== CabinetStatusType.EXPIRED) {
+          await this.cabinetInfoService.updateCabinetStatus(
+            lent.lent_cabinet_id,
+            CabinetStatusType.EXPIRED,
+          );
+        }
       } else if (
         days >= this.configService.get<number>('expire_term.forcedreturn')
       ) {
@@ -68,9 +70,12 @@ export class ExpiredChecker {
       `Called ${ExpiredChecker.name} ${this.checkExpiredLent.name}`,
     );
     const lentList = await Promise.all(await this.lentTools.getAllLent());
-    lentList.forEach(async (lent: Lent) => {
-      if (lent.expire_time === null) return;
+    for await (const lent of lentList) {
+      if (lent.expire_time === null) continue;
       await this.checkExpiredCabinetEach(lent);
-    });
+      await new Promise((resolve) => {
+        setTimeout(resolve, 2000);
+      });
+    }
   }
 }
