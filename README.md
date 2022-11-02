@@ -82,7 +82,7 @@
   </tr>
   <tr>
     <td>styled-components</td>
-    <td>^^</td>
+    <td>CSS in JS를 통해 컴포넌트와 스타일 간의 의존성을 제거하여 컴포넌트 단위의 재사용성 향상</td>
   </tr>
   <tr>
     <td>Vite</td>
@@ -94,7 +94,7 @@
   </tr>
   <tr>
     <td>Storybook</td>
-    <td>^^</td>
+    <td>공통 UI 컴포넌트 제작 시 컴포넌트를 독립적으로 만들고, 테스트하는 과정을 통한 생산성 향상</td>
   </tr>
   <tr>
     <td rowspan="5" align="center">Back-End</td>
