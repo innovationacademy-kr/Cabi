@@ -22,6 +22,19 @@ interface LentInfoProps {
 
 const LentInfo = (props: LentInfoProps): JSX.Element => {
   const { myLentInfo } = props;
+  const date = new Date();
+  const expireTime = myLentInfo?.lent_info?.[0].expire_time
+    ? new Date(myLentInfo?.lent_info?.[0].expire_time)
+    : null;
+  const remainTime = expireTime
+    ? Math.floor(
+        (expireTime.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+      )
+    : null;
+  const remainTimeString =
+    remainTime !== null && remainTime < 0
+      ? `반납일이 ${-remainTime}일 지났습니다.`
+      : `반납일이 ${remainTime}일 남았습니다.`;
 
   const cabinetInfo = (): JSX.Element => {
     return (
@@ -29,13 +42,13 @@ const LentInfo = (props: LentInfoProps): JSX.Element => {
         <h2 style={{ marginBottom: "0.4rem" }}>
           {myLentInfo?.location} {myLentInfo?.floor}F {myLentInfo?.cabinet_num}
         </h2>
-        {myLentInfo?.lent_info?.[0].expire_time ? (
+        {expireTime && (
           <p style={{ marginTop: 0, marginBottom: "1rem" }}>
             ~{" "}
             {myLentInfo?.lent_info?.[0].expire_time.toString().substring(0, 10)}
+            <br />
+            {remainTimeString}
           </p>
-        ) : (
-          <p />
         )}
       </>
     );
