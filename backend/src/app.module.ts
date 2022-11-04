@@ -21,7 +21,7 @@ import { LentModule } from './lent/lent.module';
 import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { BetatestModule } from './betatest/betatest.module';
+// import { BetatestModule } from './betatest/betatest.module';
 
 @Module({
   imports: [
@@ -69,7 +69,7 @@ import { BetatestModule } from './betatest/betatest.module';
     LentModule,
     UserModule,
     UtilsModule,
-    BetatestModule,
+    // BetatestModule,
     CacheModule.register({
       isGlobal: true,
     }),
