@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { axiosLogout } from "../../../network/axios/axios.custom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { userInfoInitialize } from "../../../redux/slices/userSlice";
-import instance from "../../../network/axios/axios.instance";
 
 const Button = styled.button`
   display: flex;
@@ -61,35 +60,6 @@ const MenuButton = (): JSX.Element => {
       });
   };
 
-  // 베타테스트용 페널티 해제 메뉴
-  const axiosRemovePenaltyURL = "/v3/api/betatest/deletebanlog";
-  const axiosRemovePenalty = async (): Promise<any> => {
-    try {
-      const response = await instance.delete(axiosRemovePenaltyURL);
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const handleRemovePenalty = (): void => {
-    axiosRemovePenalty()
-      .then((response) => {
-        if (response.status === 204) {
-          alert("패널티가 없습니다. 대여가 안될 시에는 문의 부탁드립니다.");
-        } else {
-          alert("페널티가 정상적으로 해제 되었습니다.");
-        }
-      })
-      .catch((error) => {
-        alert(
-          "오류가 발생했습니다. 지속적으로 문제 발생 시 꼭 제보 부탁드립니다!"
-        );
-        console.error(error);
-      });
-  };
-  // 여기까지 배포 시 삭제 필수!
-
   return (
     <div>
       <Button onClick={handleClick}>
@@ -104,8 +74,6 @@ const MenuButton = (): JSX.Element => {
         <MenuItem onClick={handleReport}>슬랙문의</MenuItem>
         <MenuItem onClick={handleCircle}>사물함 신청</MenuItem>
         <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
-        {/* 배포 시 삭제 필수! */}
-        <MenuItem onClick={handleRemovePenalty}>정지 해제</MenuItem>
       </Menu>
     </div>
   );
