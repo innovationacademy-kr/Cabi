@@ -166,6 +166,10 @@ export class lentRepository implements ILentRepository {
     return result;
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async deleteLentByLentId(lent_id: number): Promise<void> {
     await this.lentRepository
       .createQueryBuilder(this.deleteLentByLentId.name)
