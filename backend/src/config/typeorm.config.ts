@@ -7,7 +7,7 @@ export default class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions | Promise<TypeOrmModuleOptions> {
-    const log = this.configService.get<boolean>('test');
+    const log = this.configService.get<boolean>('debug.log');
 
     return {
       type: 'mysql',
