@@ -8,7 +8,9 @@ import { LogLevel } from '@nestjs/common';
 async function bootstrap() {
   initializeTransactionalContext();
   const log_level: LogLevel[] =
-    process.env.TEST === 'false' ? ['error', 'log'] : ['error', 'log', 'debug'];
+    process.env.DEBUG_LOG === 'false'
+      ? ['error', 'log']
+      : ['error', 'log', 'debug'];
   const app = await NestFactory.create(AppModule, {
     logger: log_level,
   });
