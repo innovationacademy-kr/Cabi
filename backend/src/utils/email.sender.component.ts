@@ -10,7 +10,7 @@ export class EmailSender {
     @Inject(ConfigService) private configService: ConfigService,
     private readonly mailerService: MailerService,
   ) {
-    this.emailTest = configService.get<boolean>('test');
+    this.emailTest = configService.get<boolean>('debug.mail_send');
   }
 
   public sendEmail(intra_id: string, subject: string, file: string): void {

@@ -1,7 +1,10 @@
 export default () => ({
   port: parseInt(process.env.PORT, 10),
   is_local: process.env.LOCAL === 'true',
-  test: process.env.TEST === 'true',
+  debug: {
+    mail_send: process.env.MAIL_SEND === 'true' ? true : false,
+    log: process.env.DEBUG_LOG === 'true' ? true : false,
+  },
   database: {
     host: process.env.HOST,
     user: process.env.DB_USER,
