@@ -57,7 +57,7 @@ export class LentController {
   })
   @ApiForbiddenResponse({
     description:
-      '임시 밴 사물함이나 고장 사물함을 대여 시도한 경우, 403 Forbidden을 응답합니다.',
+      '임시 밴 사물함이나 연체 사물함 혹은 고장 사물함을 대여 시도한 경우, 403 Forbidden을 응답합니다.',
   })
   @ApiResponse({
     status: HttpStatus.I_AM_A_TEAPOT,
@@ -96,10 +96,7 @@ export class LentController {
     description: 'Patch 성공 시, 200 Ok를 응답합니다.',
   })
   @ApiForbiddenResponse({
-    description: '사물함을 빌리지 않았는데 호출할 때',
-  })
-  @ApiBadRequestResponse({
-    description: '요청 필드가 비어있을 때',
+    description: '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
   })
   @ApiUnauthorizedResponse({
     description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
@@ -139,10 +136,7 @@ export class LentController {
     description: 'Patch 성공 시, 200 Ok를 응답합니다.',
   })
   @ApiForbiddenResponse({
-    description: '사물함을 빌리지 않았는데 호출할 때',
-  })
-  @ApiBadRequestResponse({
-    description: '요청 필드가 비어있을 때',
+    description: '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
   })
   @ApiUnauthorizedResponse({
     description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
@@ -166,7 +160,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(err.message);
+        throw new InternalServerErrorException(`🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`);
       }
     }
   }
@@ -179,10 +173,7 @@ export class LentController {
     description: 'Delete 성공 시, 204 No_Content를 응답합니다.',
   })
   @ApiForbiddenResponse({
-    description: '사물함을 빌리지 않았는데 호출할 때 ',
-  })
-  @ApiInternalServerErrorResponse({
-    description: '쿼리 수행 에러 등 기타 서버 문제 발생 시',
+    description: '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -196,7 +187,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(err.message);
+        throw new InternalServerErrorException(`🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`);
       }
     }
   }
