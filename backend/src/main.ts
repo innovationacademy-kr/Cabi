@@ -15,9 +15,9 @@ async function bootstrap() {
   // for URI Versioning
   app.enableVersioning();
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('42cabi v2 API')
-    .setDescription('42cabi v2 API 명세')
-    .setVersion('2.0')
+    .setTitle('42cabi v3 API')
+    .setDescription('42cabi v3 API 명세')
+    .setVersion('3.0')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, swaggerDocument);
