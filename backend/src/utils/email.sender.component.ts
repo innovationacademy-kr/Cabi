@@ -5,12 +5,12 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class EmailSender {
   private logger = new Logger(EmailSender.name);
-  private emailTest: boolean;
+  private mail_send: boolean;
   constructor(
     @Inject(ConfigService) private configService: ConfigService,
     private readonly mailerService: MailerService,
   ) {
-    this.emailTest = configService.get<boolean>('debug.mail_send');
+    this.mail_send = configService.get<boolean>('debug.mail_send');
   }
 
   public sendEmail(intra_id: string, subject: string, file: string): void {
@@ -54,7 +54,7 @@ export class EmailSender {
       return;
     }
     //배포 시에만 메일 발송 환경변수 확인
-    if (this.emailTest === false) {
+    if (this.mail_send === true) {
       this.sendEmail(intra_id, subject, file);
     } else {
       this.logger.debug(`[TESTING] [${subject}], sentTo: ${intra_id}`);
