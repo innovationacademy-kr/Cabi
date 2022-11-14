@@ -95,7 +95,6 @@ export class BanService {
     this.logger.debug(`Called ${BanService.name} ${this.blockingUser.name}`);
     // 1. Today + ban_day 만큼 unbanned_date주어 ban_log 테이블에 값 추가.
     await this.banRepository.addToBanLogByUserId(lent, ban_day, is_penalty);
-    runOnTransactionComplete((err) => err && this.logger.error(err));
   }
 
   /**

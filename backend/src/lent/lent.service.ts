@@ -52,17 +52,17 @@ export class LentService {
         case LentExceptionType.LENT_EXPIRED:
           throw new HttpException(
             `🚨 연체된 사물함은 대여할 수 없습니다. 🚨`,
-            HttpStatus.CONFLICT,
+            HttpStatus.FORBIDDEN,
           );
         case LentExceptionType.LENT_BROKEN:
           throw new HttpException(
             `🚨 고장난 사물함은 대여할 수 없습니다. 🚨`,
-            HttpStatus.CONFLICT,
+            HttpStatus.FORBIDDEN,
           );
         case LentExceptionType.LENT_BANNED:
           throw new HttpException(
             '🚨 해당 사물함은 비활성화된 사물함입니다 🚨',
-            HttpStatus.CONFLICT,
+            HttpStatus.FORBIDDEN,
           );
       }
     } catch (err) {
