@@ -25,7 +25,7 @@ const Button = styled.button`
   &:hover {
     border: 0;
     outline: 0;
-  }
+  }lue
 `;
 
 interface EditButtonProps {
@@ -35,7 +35,8 @@ interface EditButtonProps {
   inputValue: string;
   textValue: string;
   setTextValue: Dispatch<SetStateAction<string>>;
-  setInputValue: Dispatch<SetStateAction<string>>;
+  setInputValue: React.Dispatch<React.SetStateAction<object>>;
+  resetInputValue: () => void;
 }
 
 const EditButton = (props: EditButtonProps): JSX.Element => {
@@ -47,12 +48,15 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
     contentType,
     setTextValue,
     setInputValue,
+    resetInputValue,
   } = props;
-  const originalInputValue = inputValue;
+
   const originalTextValue = textValue;
+
   const handleEditButtonClick = (): void => {
     setIsToggle(true);
   };
+
   const handleSaveButtonClick = (): void => {
     setIsToggle(false);
     if (inputValue === "") setTextValue("방 제목을 입력해주세요");
@@ -85,8 +89,8 @@ const EditButton = (props: EditButtonProps): JSX.Element => {
       textValue === "필요한 내용을 메모해주세요" ||
       textValue === "방 제목을 입력해주세요"
     )
-      setInputValue("");
-    else setInputValue(textValue);
+      resetInputValue();
+    else setInputValue({ text: textValue });
   };
 
   return isToggle === false ? (

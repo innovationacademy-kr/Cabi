@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import EditButton from "../buttons/EditButton";
+import useInput from "../../../hooks/useInput";
 
 type divProps = {
   isToggle: boolean;
@@ -46,42 +47,47 @@ const ButtonDiv = styled.div<divProps>`
   align-items: center;
 `;
 
+type inputType = {
+  text: string;
+};
+
+const initialState: inputType = {
+  text: "",
+};
+
 interface LentTextFieldProps {
   contentType: "title" | "memo";
   currentContent: string | undefined;
   cabinetType: string | undefined;
 }
 
+const defaultText: string[] = [
+  "방 제목을 입력해주세요",
+  "필요한 내용을 메모해주세요",
+];
+
 const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
   const { contentType, currentContent, cabinetType } = props;
   const [textValue, setTextValue] = useState<string>("");
-  const [inputValue, setInputValue] = useState(currentContent ? textValue : "");
   const [isToggle, setIsToggle] = useState(false);
+  const [input, setInput, onChange, resetInput] = useInput(initialState);
+  const { text } = input;
 
   useEffect(() => {
     if (currentContent) {
       setTextValue(currentContent);
     } else {
-      setTextValue(
-        contentType === "title"
-          ? "방 제목을 입력해주세요"
-          : "필요한 내용을 메모해주세요"
-      );
+      setTextValue(contentType === "title" ? defaultText[0] : defaultText[1]);
     }
   }, [currentContent]);
 
   useEffect(() => {
-    if (
-      textValue === "필요한 내용을 메모해주세요" ||
-      textValue === "방 제목을 입력해주세요"
-    ) {
-      setInputValue("");
-    } else setInputValue(textValue);
+    if (defaultText.includes(textValue)) {
+      resetInput();
+    } else {
+      setInput({ text: textValue });
+    }
   }, [textValue]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setInputValue(e.target.value);
-  };
 
   const isPrivateAndTitle: boolean =
     cabinetType === "PRIVATE" && contentType === "title";
@@ -98,8 +104,9 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
           ) : (
             <input
               type="text"
-              value={inputValue}
-              onChange={handleChange}
+              name="text"
+              value={text}
+              onChange={(e) => onChange(e)}
               style={{ width: "100%" }}
               maxLength={13}
             />
@@ -110,10 +117,11 @@ const LentTextField = (props: LentTextFieldProps): JSX.Element | null => {
             isToggle={isToggle}
             setIsToggle={setIsToggle}
             contentType={contentType}
-            inputValue={inputValue}
+            inputValue={text}
             textValue={textValue}
             setTextValue={setTextValue}
-            setInputValue={setInputValue}
+            setInputValue={setInput}
+            resetInputValue={resetInput}
           />
         </ButtonDiv>
       </Container>
