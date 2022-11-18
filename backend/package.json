@@ -9,7 +9,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "build:fe": "npm i --prefix ../frontend && npm run build --prefix ../frontend && cp -r ../frontend/img ../frontend/dist",
-    "build:fe_v3": "npm i --prefix ../frontend_v3 && npm run build --prefix ../frontend_v3 && cp -r ../frontend_v3/img ../frontend_v3/dist",
+    "build:fe_v3": "npm i --prefix ../frontend_v3 && npm run build --prefix ../frontend_v3 && cp -r ../frontend_v3/img ../frontend_v3/dist && mv ../frontend_v3/dist deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "export PORT=2424 && nest start --watch",
