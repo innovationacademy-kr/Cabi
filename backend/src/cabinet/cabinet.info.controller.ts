@@ -18,7 +18,7 @@ import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.sect
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { CabinetInfoService } from './cabinet.info.service';
 
-@ApiTags('(V3) Cabinet')
+@ApiTags('Cabinet')
 @Controller({
   version: '3',
   path: 'api/cabinet_info',

@@ -35,7 +35,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { LentService } from './lent.service';
 
-@ApiTags('(V3) Lent')
+@ApiTags('Lent')
 @Controller({
   version: '3',
   path: '/api/lent',

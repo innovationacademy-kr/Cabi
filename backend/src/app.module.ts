@@ -9,7 +9,6 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 import { join } from 'path';
-import { EventModule } from './event/event.module';
 import { BlackholeModule } from './blackhole/blackhole.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -40,7 +39,6 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       },
     }),
     AuthModule,
-    EventModule,
     BlackholeModule,
     ServeStaticModule.forRootAsync({
       inject: [ConfigService],
