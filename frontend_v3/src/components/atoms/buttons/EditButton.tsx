@@ -25,7 +25,7 @@ const Button = styled.button`
   &:hover {
     border: 0;
     outline: 0;
-  }lue
+  },
 `;
 
 interface EditButtonProps {
