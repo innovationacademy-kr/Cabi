@@ -20,7 +20,7 @@ import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.respo
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { UserService } from './user.service';
 
-@ApiTags('(V3) User')
+@ApiTags('User')
 @Controller({
   version: '3',
   path: 'api/my_lent_info',

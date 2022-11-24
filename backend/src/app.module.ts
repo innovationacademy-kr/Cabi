@@ -9,7 +9,6 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { SessionMiddleware } from './middleware/session-middleware';
 import { join } from 'path';
-import { EventModule } from './event/event.module';
 import { BlackholeModule } from './blackhole/blackhole.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -40,26 +39,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       },
     }),
     AuthModule,
-    EventModule,
     BlackholeModule,
-    // ServeStaticModule.forRoot({
-    //   // rootPath: join(__dirname, `../../', ${this.configService.get<number>('is_v3')} ? 'frontend_v3/dist/' : 'frontend/dist/`),
-    //   exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
-    //   // serveRoot: '../img'
-    // }),
     ServeStaticModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => [
+      useFactory: () => [
         {
-          rootPath: join(
-            __dirname,
-            '../../',
-            `${
-              configService.get<boolean>('is_v3')
-                ? 'frontend_v3/dist/'
-                : 'frontend/dist/'
-            }`,
-          ),
+          rootPath: join(__dirname, '../', 'deploy'),
           exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
         },
       ],
