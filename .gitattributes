@@ -1,0 +1,15 @@
+# Auto detect text files and perform LF normalization
+*        text=auto
+
+*.html   text diff=html
+*.css    text
+*.js     text
+*.ts     text
+*.sql    text
+*.sh     text diff=bash
+*.conf   text
+*.json   text
+*.md     text
+
+# 추후 spring으로 포팅시에 java 파일을 LF로 변환되도록 설정
+*.java   text diff=java
