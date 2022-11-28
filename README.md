@@ -123,13 +123,9 @@
     <td>OAuth2 적용을 위해 사용</td>
   </tr>
   <tr>
-    <td rowspan="5" align="center">Infra</td>
+    <td rowspan="4" align="center">Infra</td>
     <td>nginx</td>
     <td>로컬 개발 모드에서 리버스 프록시를 이용하여 개발의 편의성을 높이기 위해 사용</td>
-  </tr>
-  <tr>
-    <td>AWS</td>
-    <td>^^</td>
   </tr>
   <tr>
     <td>PM2</td>
