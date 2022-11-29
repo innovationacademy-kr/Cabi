@@ -1,6 +1,5 @@
 import {
   CacheModule,
-  DynamicModule,
   MiddlewareConsumer,
   Module,
   NestModule,
