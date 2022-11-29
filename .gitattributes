@@ -1,0 +1,49 @@
+# Auto detect text files and perform LF normalization
+*        text=auto
+
+# Force the following filetypes to have unix eols, so Windows does not break them
+*.* text eol=lf
+
+*.html   text diff=html
+*.css    text
+*.js     text
+*.ts     text
+*.sql    text
+*.sh     text diff=bash
+*.conf   text
+*.json   text
+*.md     text
+
+# 추후 spring으로 포팅시에 java 파일을 LF로 변환되도록 설정
+*.java   text diff=java
+
+# These files are binary and should be left untouched
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.flv binary
+*.fla binary
+*.swf binary
+*.gz binary
+*.zip binary
+*.7z binary
+*.ttf binary
+*.eot binary
+*.woff binary
+*.pyc binary
+*.pdf binary
+*.ez binary
+*.bz2 binary
+*.swp binary
+*.cur binary
+*.wav binary
+*.webp binary
+*.woff2 binary
+
+# related link https://gist.github.com/dpalomar/ebc64d6f56cfc25a3e5c20fe7cdfbd4f
