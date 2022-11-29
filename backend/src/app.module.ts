@@ -1,5 +1,6 @@
 import {
   CacheModule,
+  DynamicModule,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -20,7 +21,7 @@ import { LentModule } from './lent/lent.module';
 import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-// import { BetatestModule } from './betatest/betatest.module';
+import { BetatestModule } from './betatest/betatest.module';
 
 @Module({
   imports: [
@@ -54,13 +55,15 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     LentModule,
     UserModule,
     UtilsModule,
-    // BetatestModule,
     CacheModule.register({
       isGlobal: true,
     }),
+    // import if UNBAN_API=true
+    ...(process.env.UNBAN_API === 'true' ? [BetatestModule] : []),
   ],
   controllers: [],
   providers: [SessionMiddleware],
+
 })
 export class AppModule implements NestModule {
   constructor(public sessionMiddleware: SessionMiddleware) {}
