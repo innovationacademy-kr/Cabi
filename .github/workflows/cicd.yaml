@@ -16,7 +16,7 @@ jobs:
         with:
           path: ${{ github.workspace }}/backend/node_modules
           key: npm-packages-${{ hashFiles('**/backend/package-lock.json') }}
-        id: cache 
+        id: cache
       - name: 종속 모듈들 설치
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix backend
@@ -43,7 +43,7 @@ jobs:
         with:
           path: ${{ github.workspace }}/frontend_v3/node_modules
           key: npm-packages-${{ hashFiles('**/frontend_v3/package-lock.json') }}
-        id: cache 
+        id: cache
       - name: 종속 모듈들 설치
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install --prefix frontend_v3
@@ -65,9 +65,9 @@ jobs:
       - name: 리모트 쉘 접속
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.HOST_DEV }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.KEY_NEW }}
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
@@ -80,6 +80,8 @@ jobs:
             cd $HOME/git/42cabi-dev/backend
             npm install
             npm run build:fe_v3
+            npm run deploy:dev
+            npm run invalidate:dev
             npm run build
             echo "env 파일 복사"
             cp $HOME/42cabi-dev.env $HOME/git/42cabi-dev/backend/.env
@@ -110,6 +112,8 @@ jobs:
             cd $HOME/git/42cabi-main/backend
             npm install
             npm run build:fe_v3
+            npm run deploy:main
+            npm run invalidate:main
             npm run build
             echo "env 파일 복사"
             cp $HOME/42cabi-main.env $HOME/git/42cabi-main/backend/.env
