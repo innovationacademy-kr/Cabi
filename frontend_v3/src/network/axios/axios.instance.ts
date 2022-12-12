@@ -3,7 +3,7 @@ import { removeCookie } from "../react-cookie/cookie";
 
 const instance = axios.create({
   // baseURL: window.location.origin,
-  baseURL: import.meta.env.VITE_DEV_HOST,
+  baseURL: import.meta.env.VITE_BE_HOST,
   withCredentials: true,
 });
 
