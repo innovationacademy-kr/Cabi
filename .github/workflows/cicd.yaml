@@ -97,9 +97,9 @@ jobs:
       - name: 리모트 쉘 접속
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.HOST_MAIN }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.KEY_NEW }}
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
