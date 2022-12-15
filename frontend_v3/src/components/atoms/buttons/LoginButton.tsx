@@ -11,7 +11,7 @@ const Button = style.a`
 `;
 
 const LoginButton = (): JSX.Element => {
-  const url = `https://${import.meta.env.VITE_BE_HOST}/auth/login`;
+  const url = `${import.meta.env.VITE_BE_HOST}/auth/login`;
   return <Button onClick={(): void => window.location.replace(url)}>L O G I N</Button>;
 };
 

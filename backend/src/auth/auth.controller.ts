@@ -71,8 +71,9 @@ export class AuthController {
     return res.redirect(
       `https://${this.configService.get<string>(
         'fe_host',
-      )}/?access_token=${token}`,
+      )}/main?access_token=${token}`,
     );
+
   }
 
   @ApiOperation({
