@@ -13,19 +13,19 @@ export class SessionMiddleware {
     @Inject(ConfigService) private configService: ConfigService,
     ) {
     this.cookieParser = cookieParser();
-    this.helmet = helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", configService.get<string>('fe_host')],
-          styleSrc: ["'self'", configService.get<string>('fe_host')],
-          imgSrc: ["'self'", configService.get<string>('fe_host')],
-          fontSrc: ["'self'", configService.get<string>('fe_host')],
-          connectSrc: ["'self'", configService.get<string>('fe_host')],
-          objectSrc: ["'none'"],
-          upgradeInsecureRequests: [],
-        },
-      },
-    });
+    // this.helmet = helmet({
+    //   contentSecurityPolicy: {
+    //     directives: {
+    //       defaultSrc: ["'self'"],
+    //       scriptSrc: ["'self'", configService.get<string>('fe_host')],
+    //       styleSrc: ["'self'", configService.get<string>('fe_host')],
+    //       imgSrc: ["'self'", configService.get<string>('fe_host')],
+    //       fontSrc: ["'self'", configService.get<string>('fe_host')],
+    //       connectSrc: ["'self'", configService.get<string>('fe_host')],
+    //       objectSrc: ["'none'"],
+    //       upgradeInsecureRequests: [],
+    //     },
+    //   },
+    // });
   }
 }

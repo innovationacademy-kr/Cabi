@@ -67,7 +67,6 @@ export class AuthController {
     this.logger.log('Login -> callback');
     const token = this.jwtService.sign(user);
     this.logger.debug(`generete ${user.intra_id}'s token`);
-    res.cookie('access_token', token);
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
     await this.authService.addUserIfNotExists(user);
     return res.redirect(`https://${this.configService.get<string>('fe_host')}/?access_token=${token}`);
