@@ -5,13 +5,13 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
 
 // 쿠키에서 추출하는 방식에서 다른 방식으로 변경하면 ExtractJwt에 정의된 메소드 사용하기
-const extracter = (req) => {
-  let token = null;
-  if (req && req.cookies) {
-    token = req.cookies['access_token'];
-  }
-  return token;
-};
+// const extracter = (req) => {
+//   let token = null;
+//   if (req && req.cookies) {
+//     token = req.cookies['access_token'];
+//   }
+//   return token;
+// };
 
 /**
  * passport-jwt Strategy
