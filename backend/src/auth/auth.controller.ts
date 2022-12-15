@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Inject,
   Logger,
   Res,
   UseGuards,
@@ -21,12 +22,18 @@ import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
 import { User } from '../decorator/user.decorator';
 import { AuthService } from './auth.service';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   private logger = new Logger(AuthController.name);
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private jwtService: JwtService,
+    @Inject(ConfigService) private configService: ConfigService,
+    ) {}
 
   @ApiOperation({
     summary: 'intra 로그인에 대한 요청입니다.',
@@ -55,12 +62,14 @@ export class AuthController {
     description: '토큰 에러, 키 에러, 기타 에러 발생 시',
   })
   @Get('login/callback')
-  @UseGuards(FtGuard, JWTSignGuard)
+  @UseGuards(FtGuard)
   async loginCallback(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log('Login -> callback');
+    const token = this.jwtService.sign(user);
+    this.logger.debug(`generete ${user.intra_id}'s token`);
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
     await this.authService.addUserIfNotExists(user);
-    return res.redirect('/main');
+    return res.redirect(`https://${this.configService.get<string>('fe_host')}/?access_token=${token}`);
   }
 
   @ApiOperation({
