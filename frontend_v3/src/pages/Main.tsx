@@ -23,7 +23,7 @@ const Main = (): JSX.Element => {
             if (response.data.cabinet_id !== -1) navigate("/lent");
           })
           .catch((error) => {
-            navigate("/");
+            // navigate("/");
           });
       } else {
         axiosMyInfo()
@@ -31,11 +31,11 @@ const Main = (): JSX.Element => {
             dispatch(setUserCabinet(response.data.cabinet_id));
           })
           .catch((error) => {
-            navigate("/");
+            // navigate("/");
           });
       }
     } else {
-      navigate("/");
+      // navigate("/");
     }
   }, []);
 
