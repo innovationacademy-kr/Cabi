@@ -1,4 +1,5 @@
 export default () => ({
+  fe_host: process.env.FE_HOST,
   port: parseInt(process.env.PORT, 10),
   is_local: process.env.LOCAL === 'true',
   debug: {

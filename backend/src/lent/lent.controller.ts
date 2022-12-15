@@ -19,7 +19,6 @@ import {
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
-  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
@@ -96,7 +95,8 @@ export class LentController {
     description: 'Patch 성공 시, 200 Ok를 응답합니다.',
   })
   @ApiForbiddenResponse({
-    description: '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
+    description:
+      '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
   })
   @ApiUnauthorizedResponse({
     description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
@@ -136,7 +136,8 @@ export class LentController {
     description: 'Patch 성공 시, 200 Ok를 응답합니다.',
   })
   @ApiForbiddenResponse({
-    description: '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
+    description:
+      '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
   })
   @ApiUnauthorizedResponse({
     description: '로그아웃 상태거나 밴 된 사용자거나 JWT 세션이 만료됨',
@@ -160,7 +161,9 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(`🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`);
+        throw new InternalServerErrorException(
+          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
+        );
       }
     }
   }
@@ -173,7 +176,8 @@ export class LentController {
     description: 'Delete 성공 시, 204 No_Content를 응답합니다.',
   })
   @ApiForbiddenResponse({
-    description: '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
+    description:
+      '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -187,7 +191,9 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(`🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`);
+        throw new InternalServerErrorException(
+          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
+        );
       }
     }
   }

@@ -62,7 +62,6 @@ import { BetatestModule } from './betatest/betatest.module';
   ],
   controllers: [],
   providers: [SessionMiddleware],
-
 })
 export class AppModule implements NestModule {
   constructor(public sessionMiddleware: SessionMiddleware) {}

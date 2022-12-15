@@ -1,9 +1,23 @@
 import axios from "axios";
-import { removeCookie } from "../react-cookie/cookie";
+import { getCookie, removeCookie } from "../react-cookie/cookie";
+
+axios.defaults.withCredentials = true;
 
 const instance = axios.create({
-  baseURL: window.location.origin,
+  // baseURL: window.location.origin,
+  baseURL: import.meta.env.VITE_BE_HOST,
+  withCredentials: true,
 });
+
+instance.interceptors.request.use(
+  async config => {
+    const token = getCookie('access_token');
+    config.headers = {
+      'Authorization': `Bearer ${token}`,
+    }
+    return config;
+  }
+);
 
 instance.interceptors.response.use(
   (response) => {
