@@ -25,7 +25,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, swaggerDocument);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('port');
-  const is_local = configService.get<boolean>('is_local');
   app.enableCors({
     origin: 'https://' + process.env.FE_HOST,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
