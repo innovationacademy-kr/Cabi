@@ -1,0 +1,32 @@
+name: "기능 추가"
+description: 기능 추가 Issue 작성 양식입니다.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        작성 예시 : "[FE/BE/COMMON] 블랙홀 무한 연장기능 추가"
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 작업 설명
+      description: 어떠한 기능을 추가하시는 건지 적어주세요.
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 접근 방법
+      description: 고려하신 방법이나, 접근에 대해서 설명해주세요.
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: system-info
+    attributes:
+      label: 대체 방안 (선택 사항)
+      description: 상기한 방법 외에 다른 대안이 있다면 적어주세요. 
+      render: shell
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: false
