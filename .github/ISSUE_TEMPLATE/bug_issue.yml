@@ -1,0 +1,46 @@
+name: "Bug Issue Template"
+description: Bug Issue 작성 기본 양식입니다.
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        "이렇게 쓰세요~"
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 버그 설명
+      description: 어떠한 버그가 발생했는지 명확하게 적어주세요.
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 재현 방법
+      description: 버그가 재현되는 상황을 설명해주세요.
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대했던 정상 동작
+      description: 기대했던 정상적인 동작에 대해서 설명해주세요.
+      placeholder: 설명을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: system-info
+    attributes:
+      label: 시스템 환경 (선택 사항)
+      description: 현재 버그가 발생한 시스템 환경을 적어주세요. 
+      render: shell
+      placeholder: OS, 브라우저 등을 적어주세요.
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 추가 건의사항
+      description: Cabi에 바라시는 점이나, 하시고 싶은 말씀을 적어주세요.
