@@ -4,7 +4,6 @@ labels: ['bug']
 body:
   - type: markdown
     attributes:
-      placeholder: 제목 
       value: |
         작성 예시 : "[FE/BE/COMMON] 메인에서 휴먼 이슈 발생"
   - type: textarea
