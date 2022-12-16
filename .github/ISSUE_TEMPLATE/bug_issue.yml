@@ -1,16 +1,17 @@
-name: "Bug Issue Template"
+name: "버그 제보"
 description: Bug Issue 작성 기본 양식입니다.
 labels: ['bug']
 body:
   - type: markdown
     attributes:
+      placeholder: 제목 
       value: |
-        "이렇게 쓰세요~"
+        작성 예시 : "[FE/BE/COMMON] 메인에서 휴먼 이슈 발생"
   - type: textarea
     id: bug-description
     attributes:
       label: 버그 설명
-      description: 어떠한 버그가 발생했는지 명확하게 적어주세요.
+      description: 버그가 언제/어떻게 발생했는지 명확하게 적어주세요.
       placeholder: 설명을 적어주세요.
     validations:
       required: true
