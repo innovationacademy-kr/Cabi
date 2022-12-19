@@ -25,7 +25,7 @@ export const SectionPaginationContainer = () => {
   const currentPositionName = floor.toString() + "층 - " + currentSectionName;
 
   const paginationIdxBar = sectionList.map((sectionName, idx) => (
-    <IndexRectangle
+    <IndexRectangleStyled
       key={sectionName}
       bgColor={sectionName === currentSectionName ? "#9747FF" : "#D9D9D9"}
       onClick={() => setCurrentSectionIdx(idx)}
@@ -45,13 +45,13 @@ export const SectionPaginationContainer = () => {
   return (
     <SectionPaginationStyled>
       <SectionBarStyled>
-        <MoveSectionButtons
+        <MoveSectionButtonStyled
           src={LeftSectionButton}
           rotate={false}
           onClick={moveToLeftSection}
         />
         {currentPositionName}
-        <MoveSectionButtons
+        <MoveSectionButtonStyled
           src={LeftSectionButton}
           rotate={true}
           onClick={moveToRightSection}
@@ -81,7 +81,7 @@ const SectionBarStyled = styled.div`
   align-items: center;
 `;
 
-const MoveSectionButtons = styled.img<{ rotate: boolean }>`
+const MoveSectionButtonStyled = styled.img<{ rotate: boolean }>`
   opacity: 70%;
   cursor: pointer;
   transform: rotate(${(props) => (props.rotate ? "180deg" : "0")});
@@ -96,7 +96,7 @@ const SectionIndexStyled = styled.div`
   justify-content: center;
 `;
 
-const IndexRectangle = styled.div<{ bgColor: string }>`
+const IndexRectangleStyled = styled.div<{ bgColor: string }>`
   width: 15px;
   height: 8px;
   border-radius: 2px;
