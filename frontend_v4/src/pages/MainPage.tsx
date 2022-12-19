@@ -1,7 +1,9 @@
+import TopNavContainer from "@/containers/TopNavContainer";
+
 const MainPage = () => {
   return (
     <div>
-      <h1>Main Page</h1>
+      <TopNavContainer />
     </div>
   );
 };
