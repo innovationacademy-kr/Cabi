@@ -1,35 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  /* color variable */
+  --black: #000000;
+  --white: #ffffff;
+  --main-color: #9747ff;
+  --lightpurple-color: #b18cff;
+  --line-color: #bcbcbc;
+
+  /* cabinet color variable */
+  --mine: #47ffa7;
+  --delay: #ff4e4e;
+  --empty: #d9d9d9;
+  --lent: var(--main-color);
+  --broken: #3c3c3c;
+  --ban: #3c3c3c;
+
+  /* font variable */
+  --main-font: "Noto Sans KR", sans-serif;
+  --location-font: "Do Hyeon", sans-serif;
+
+  /* default setting */
+  font-family: "Noto Sans KR", Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--main-color);
+  background-color: #ffffff;
 
-  font-synthesis: none;
+  /* font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%; */
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  color: var(--main-color);
 }
 
+a:hover {
+  opacity: 0.9;
+}
+
+html,
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  /* user-select: none; */
+  /* overflow: hidden; */
 }
 
 h1 {
@@ -38,33 +59,73 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  border: none;
+  background-color: var(--main-color);
+  color: var(--white);
+  width: 200px;
+  height: 60px;
+  font-size: 1.125rem;
+  text-align: center;
+  font-family: var(--main-font);
+  border-radius: 6px;
+  font-weight: 300;
 }
 
-@media (prefers-color-scheme: light) {
+button:hover {
+  opacity: 0.9;
+}
+
+img {
+  -webkit-user-drag: none;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
+  object-fit: cover;
+}
+
+input {
+  color: var(--black);
+  text-align: center;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  background: none;
+}
+
+.text_nowrap {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: var(--main-color);
+    background-color: #242424;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+.blind {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.clear::after {
+  display: block;
+  clear: both;
+  content: "";
 }
