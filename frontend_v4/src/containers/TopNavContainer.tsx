@@ -10,18 +10,22 @@ const TopNavContainer = () => {
         </div>
         <LocationSelectBoxStyled>새롬관</LocationSelectBoxStyled>
       </LogoStyled>
+      <MapButtonStyled>
+        <img src="src/assets/images/map.svg" alt="" />
+      </MapButtonStyled>
     </TopNavContainerStyled>
   );
 };
 
 const TopNavContainerStyled = styled.nav`
+  width: 100%;
+  height: 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--main-color);
   padding: 0 20px;
   color: var(--white);
-  height: 80px;
 `;
 
 const LogoStyled = styled.div`
@@ -38,6 +42,10 @@ const LocationSelectBoxStyled = styled.div`
   font-family: var(--location-font);
   background: url(src/assets/images/select.svg) no-repeat 100% 50%;
   width: 80px;
+  cursor: pointer;
+`;
+
+const MapButtonStyled = styled.div`
   cursor: pointer;
 `;
 
