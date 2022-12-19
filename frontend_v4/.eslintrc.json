@@ -9,7 +9,8 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "airbnb",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:eslint-import-resolver-alias"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -53,6 +54,9 @@
     "import/resolver": {
       "node": {
         "extensions": [".ts", ".tsx", ".js", ".jsx"]
+      },
+      "alias": {
+        "map": [["@", "./src"]]
       }
     }
   }
