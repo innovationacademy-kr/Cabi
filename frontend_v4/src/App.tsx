@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import reactLogo from "@/assets/react.svg";
 import "./App.css";
+import ModalContainer from "./containers/ModalContainer";
 
 function App(): React.ReactElement {
   const [count, setCount] = useState(0);
@@ -15,6 +16,7 @@ function App(): React.ReactElement {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+      <ModalContainer type="confirm" title="안녕하세요" detail="헬로우 유하!" confirmMessage="대여 할게요~!"/>
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={(): void => setCount((count) => count + 1)}>
