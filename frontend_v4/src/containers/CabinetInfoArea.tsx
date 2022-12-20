@@ -78,7 +78,7 @@ const CabinetInfoArea = () => {
       return "var(--empty)";
     if (selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL)
       return "var(--lent)";
-    return "black";
+    return "UNDEFINED_COLOR";
   };
 
   const getCabinetLogoByType = (selectedCabinetType: string) => {
@@ -89,32 +89,20 @@ const CabinetInfoArea = () => {
   };
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo) => {
-    if (selectedCabinetInfo.max_user === 1) {
+    let userNameList: string = "";
+    for (let i = 0; i < selectedCabinetInfo.max_user; i++) {
       const userName =
-        selectedCabinetInfo.lent_info.length !== 0
-          ? selectedCabinetInfo.lent_info[0].intra_id
+        i < selectedCabinetInfo.lent_info.length
+          ? selectedCabinetInfo.lent_info[i].intra_id
           : "-";
-      return (
-        <TextStyled fontSize="16px" fontColor="black">
-          {userName}
-        </TextStyled>
-      );
-    } else {
-      let usersNameList: string = "";
-      for (let i = 0; i < selectedCabinetInfo.max_user; i++) {
-        const userName =
-          i < selectedCabinetInfo.lent_info.length
-            ? selectedCabinetInfo.lent_info[i].intra_id
-            : "-";
-        usersNameList += userName;
-        if (i !== selectedCabinetInfo.max_user - 1) usersNameList += "\n";
-      }
-      return (
-        <TextStyled fontSize="16px" fontColor="black">
-          {usersNameList}
-        </TextStyled>
-      );
+      userNameList += userName;
+      if (i !== selectedCabinetInfo.max_user - 1) userNameList += "\n";
     }
+    return (
+      <TextStyled fontSize="16px" fontColor="black">
+        {userNameList}
+      </TextStyled>
+    );
   };
 
   if (!isCabinetSelected)
