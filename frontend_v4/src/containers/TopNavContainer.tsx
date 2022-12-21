@@ -67,7 +67,7 @@ const TopNavContainerStyled = styled.nav`
   justify-content: space-between;
   align-items: center;
   background-color: var(--main-color);
-  padding: 0 20px;
+  padding: 0 28px;
   color: var(--white);
 `;
 
@@ -111,7 +111,7 @@ const LocationListStyled = styled.ul<{ clicked: boolean }>`
   left: -15px;
   padding: 5px 10px;
   background: var(--white);
-  opacity: 0.8;
+  opacity: 0.9;
   border-radius: 4px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   display: ${(props) => (props.clicked ? "block" : "none")};
@@ -120,11 +120,13 @@ const LocationListStyled = styled.ul<{ clicked: boolean }>`
 const LocationListItemStyled = styled.li`
   width: 80px;
   height: 40px;
-  color: var(--main-color);
+  color: var(--black);
+  font-size: 1.25rem;
+  font-family: var(--main-font);
   line-height: 40px;
   text-indent: 5px;
   &:hover {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 `;
 
