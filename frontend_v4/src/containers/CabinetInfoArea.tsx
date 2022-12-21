@@ -9,7 +9,7 @@ import privateLogo from "@/assets/images/privateCabinetType.svg";
 import shareLogo from "@/assets/images/shareCabinetType.svg";
 import circleLogo from "@/assets/images/circleCabinetType.svg";
 
-const CabinetInfoArea = () => {
+const CabinetInfoArea = (): JSX.Element => {
   /*
     require props
     1. is cabinet selected
@@ -58,7 +58,7 @@ const CabinetInfoArea = () => {
   };
   /* ----------------------------- */
 
-  const getCabinetColorByState = (selectedCabinetInfo: CabinetInfo) => {
+  const getCabinetColorByState = (selectedCabinetInfo: CabinetInfo): string => {
     if (
       myCabinetIdx !== null &&
       selectedCabinetInfo.cabinet_id === myCabinetIdx
@@ -80,14 +80,16 @@ const CabinetInfoArea = () => {
     return "UNDEFINED_COLOR";
   };
 
-  const getCabinetLogoByType = (selectedCabinetType: string) => {
+  const getCabinetLogoByType = (selectedCabinetType: string): string => {
     if (selectedCabinetType === CabinetType.PRIVATE) return privateLogo;
     if (selectedCabinetType === CabinetType.SHARE) return shareLogo;
     if (selectedCabinetType === CabinetType.CIRCLE) return circleLogo;
     return "UNDEFINED_LOGO";
   };
 
-  const getCabinetUserList = (selectedCabinetInfo: CabinetInfo) => {
+  const getCabinetUserList = (
+    selectedCabinetInfo: CabinetInfo
+  ): JSX.Element => {
     let userNameList: string = "";
     for (let i = 0; i < selectedCabinetInfo.max_user; i++) {
       const userName =
@@ -98,7 +100,7 @@ const CabinetInfoArea = () => {
       if (i !== selectedCabinetInfo.max_user - 1) userNameList += "\n";
     }
     return (
-      <TextStyled fontSize="16px" fontColor="black">
+      <TextStyled fontSize="1rem" fontColor="black">
         {userNameList}
       </TextStyled>
     );
@@ -108,7 +110,7 @@ const CabinetInfoArea = () => {
     return (
       <FlexDirectionColumnStyled>
         <CabiLogoStyled src={cabiLogo} />
-        <TextStyled fontSize="18px" fontColor="#7b7b7b ">
+        <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
           사물함을 <br />
           선택해주세요
         </TextStyled>
@@ -117,7 +119,7 @@ const CabinetInfoArea = () => {
 
   return (
     <FlexDirectionColumnStyled>
-      <TextStyled fontSize="16px" fontColor="#7b7b7b ">
+      <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
         {selectedCabinetFloor.toString() + "F - " + selectedCabinetInfo.section}
       </TextStyled>
       <CabinetRectangleStyled
@@ -140,7 +142,7 @@ const CabinetInfoArea = () => {
 export default CabinetInfoArea;
 
 const FlexDirectionColumnStyled = styled.div`
-  height: 700px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -179,6 +181,5 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 20%;
   margin-top: 40px;
 `;
