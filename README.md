@@ -168,7 +168,7 @@
 
 
 
-| [🍒 hyoon](https://github.com/kamg2218) | [🍏 hyospark](https://github.com/kyoshong) |  [🙉inshin](https://github.com/42inshin) | [🧑‍✈️ jaesjeon](https://github.com/Oris482) |  [🐶 jiwchoi](https://github.com/jiwon-choi) |
+| [🍒 hyoon](https://github.com/kamg2218) | [🍏 hyospark](https://github.com/kyoshong) |  [🙉 inshin](https://github.com/42inshin) | [🧑‍✈️ jaesjeon](https://github.com/Oris482) |  [🐶 jiwchoi](https://github.com/jiwon-choi) |
 | ----------------------------------------- | ---------------------------------------- | ------------------------------------------ | --------------------------------------- | ------------------------------------------ |
 
 | [🐯 joopark](https://github.com/joohongpark) | [🚀sanan](https://github.com/Ssuamje) | [🐻 seuan](https://github.com/aseungbo) |  [🤑seycho](https://github.com/SeyoungCho)  | [😺 sichoi](https://github.com/sichoi42)  |
