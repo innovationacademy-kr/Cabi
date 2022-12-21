@@ -33,9 +33,9 @@ const TopNavContainer = () => {
   return (
     <TopNavContainerStyled>
       <LogoStyled>
-        <div>
+        <LogoDivStyled>
           <img src="src/assets/images/logo.svg" alt="" />
-        </div>
+        </LogoDivStyled>
         <LocationSelectBoxStyled>
           <span onClick={() => setLocationClicked(!locationClicked)}>
             {locationName}
@@ -76,6 +76,11 @@ const LogoStyled = styled.div`
   flex-direction: row;
   align-items: center;
   cursor: pointer;
+`;
+
+const LogoDivStyled = styled.div`
+  width: 35px;
+  height: 35px;
 `;
 
 const LocationSelectBoxStyled = styled.span`
