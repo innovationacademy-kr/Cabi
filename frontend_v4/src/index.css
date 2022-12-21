@@ -10,11 +10,11 @@
 
   /* cabinet color variable */
   --mine: #47ffa7;
-  --delay: #ff4e4e;
-  --empty: #d9d9d9;
-  --lent: var(--main-color);
+  --expired: #ff4e4e;
+  --available: #d9d9d9;
+  --full: var(--main-color);
   --broken: #3c3c3c;
-  --ban: #3c3c3c;
+  --banned: #3c3c3c;
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;

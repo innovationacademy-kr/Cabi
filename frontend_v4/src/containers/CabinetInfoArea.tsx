@@ -66,18 +66,17 @@ const CabinetInfoArea = () => {
       return "var(--mine)";
     if (selectedCabinetInfo.status === CabinetStatus.BROKEN)
       return "var(--broken)";
-    if (
-      selectedCabinetInfo.status === CabinetStatus.EXPIRED ||
-      selectedCabinetInfo.status === CabinetStatus.BANNED
-    )
-      return "var(--delay)";
+    if (selectedCabinetInfo.status === CabinetStatus.BANNED)
+      return "var(--banned)";
+    if (selectedCabinetInfo.status === CabinetStatus.EXPIRED)
+      return "var(--expired)";
     if (
       selectedCabinetInfo.status === CabinetStatus.AVAILABLE ||
       selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_AVAILABLE
     )
-      return "var(--empty)";
+      return "var(--available)";
     if (selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL)
-      return "var(--lent)";
+      return "var(--full)";
     return "UNDEFINED_COLOR";
   };
 
