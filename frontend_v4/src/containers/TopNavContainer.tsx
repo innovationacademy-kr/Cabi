@@ -40,18 +40,16 @@ const TopNavContainer = () => {
           <span onClick={() => setLocationClicked(!locationClicked)}>
             {locationName}
           </span>
-          {locationClicked && (
-            <LocationListStyled>
-              {locations.map((location, index) => (
-                <LocationListItem
-                  location={location}
-                  key={index}
-                  onUpdate={setLocationName}
-                  onClose={setLocationClicked}
-                />
-              ))}
-            </LocationListStyled>
-          )}
+          <LocationListStyled clicked={locationClicked}>
+            {locations.map((location, index) => (
+              <LocationListItem
+                location={location}
+                key={index}
+                onUpdate={setLocationName}
+                onClose={setLocationClicked}
+              />
+            ))}
+          </LocationListStyled>
         </LocationSelectBoxStyled>
       </LogoStyled>
       <MapButtonStyled>
@@ -64,6 +62,7 @@ const TopNavContainer = () => {
 const TopNavContainerStyled = styled.nav`
   width: 100%;
   height: 80px;
+  min-height: 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -106,7 +105,7 @@ const LocationSelectBoxStyled = styled.span`
   }
 `;
 
-const LocationListStyled = styled.ul`
+const LocationListStyled = styled.ul<{ clicked: boolean }>`
   position: absolute;
   top: 30px;
   left: -15px;
@@ -115,6 +114,7 @@ const LocationListStyled = styled.ul`
   opacity: 0.8;
   border-radius: 4px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  display: ${(props) => (props.clicked ? "block" : "none")};
 `;
 
 const LocationListItemStyled = styled.li`
