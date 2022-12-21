@@ -1,6 +1,12 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const naviToMain = () => {
+    navigate("/home");
+  };
+
   return (
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
@@ -31,7 +37,7 @@ const LoginPage = () => {
             <CardTitleStyled>42Cabi</CardTitleStyled>
             <CardSubTitleStyled>여러분의 일상을 가볍게</CardSubTitleStyled>
           </CardTitleBoxStyled>
-          <button>L O G I N</button>
+          <button onClick={naviToMain}>L O G I N</button>
         </LoginCardStyled>
       </RightSectionStyled>
     </LoginPageStyled>
