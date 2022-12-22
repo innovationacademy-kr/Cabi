@@ -1,11 +1,10 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class DateCalculator {
-    private logger = new Logger(DateCalculator.name);
-    constructor() {}
+  private logger = new Logger(DateCalculator.name);
 
-    /**
+  /**
    * 날짜 차이 계산
    * @param begin
    * @param end
@@ -28,5 +27,4 @@ export class DateCalculator {
     const days = Math.ceil(diffDatePerSec / 1000 / 60 / 60 / 24);
     return days;
   }
-
 }
