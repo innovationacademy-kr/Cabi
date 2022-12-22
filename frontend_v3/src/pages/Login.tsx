@@ -19,9 +19,7 @@ const Login = (): JSX.Element => {
       dispatch(userInfoInitialize());
     }
     if (token && !(user.intra_id === "default")) {
-      removeCookie("access_token");
-    } else {
-      navigate("/");
+      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
     }
   }, []);
 
