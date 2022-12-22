@@ -1,11 +1,11 @@
 import { MailerModule } from '@nestjs-modules/mailer';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { BanModule } from 'src/ban/ban.module';
 import MailerConfigService from 'src/config/mailer.config';
 import { LentModule } from 'src/lent/lent.module';
 import { CabinetModule } from '../cabinet/cabinet.module';
+import { DateCalculator } from './date.calculator.component';
 import { EmailSender } from './email.sender.component';
 import { ExpiredChecker } from './expired.checker.component';
 
@@ -17,11 +17,10 @@ import { ExpiredChecker } from './expired.checker.component';
       useClass: MailerConfigService,
     }),
     CabinetModule,
-    LentModule,
-    BanModule,
+    forwardRef(() => LentModule),
   ],
 
-  providers: [EmailSender, ExpiredChecker],
-  exports: [EmailSender],
+  providers: [EmailSender, ExpiredChecker, DateCalculator],
+  exports: [EmailSender, DateCalculator],
 })
 export class UtilsModule {}
