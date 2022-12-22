@@ -6,6 +6,7 @@ import { BanModule } from 'src/ban/ban.module';
 import MailerConfigService from 'src/config/mailer.config';
 import { LentModule } from 'src/lent/lent.module';
 import { CabinetModule } from '../cabinet/cabinet.module';
+import { DateCalculator } from './date.calculator.component';
 import { EmailSender } from './email.sender.component';
 import { ExpiredChecker } from './expired.checker.component';
 
@@ -21,7 +22,7 @@ import { ExpiredChecker } from './expired.checker.component';
     BanModule,
   ],
 
-  providers: [EmailSender, ExpiredChecker],
-  exports: [EmailSender],
+  providers: [EmailSender, ExpiredChecker, DateCalculator],
+  exports: [EmailSender, DateCalculator],
 })
 export class UtilsModule {}
