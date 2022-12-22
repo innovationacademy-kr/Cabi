@@ -23,6 +23,7 @@ import { AuthService } from './auth.service';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -61,19 +62,14 @@ export class AuthController {
     description: '토큰 에러, 키 에러, 기타 에러 발생 시',
   })
   @Get('login/callback')
-  @UseGuards(FtGuard)
+  @UseGuards(FtGuard, JWTSignGuard)
   async loginCallback(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log('Login -> callback');
-    const token = this.jwtService.sign(user);
-    this.logger.debug(`generete ${user.intra_id}'s token`);
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
     await this.authService.addUserIfNotExists(user);
     return res.redirect(
-      `https://${this.configService.get<string>(
-        'fe_host',
-      )}/main?access_token=${token}`,
+      `${this.configService.get<string>('fe_host')}/main`,
     );
-
   }
 
   @ApiOperation({

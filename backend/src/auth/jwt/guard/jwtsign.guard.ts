@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import { CookieOptions, Request, Response } from 'express';
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   Logger,
 } from '@nestjs/common';
@@ -17,7 +18,9 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 export class JWTSignGuard implements CanActivate {
   private logger = new Logger(JWTSignGuard.name);
 
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    ) {}
 
   canActivate(
     context: ExecutionContext,
@@ -34,8 +37,15 @@ export class JWTSignGuard implements CanActivate {
       return false;
     }
     const token = this.jwtService.sign(user);
+    const expires = new Date(this.jwtService.decode(token)['exp'] * 1000);
+    const domain = 'cabi.42seoul.io';
+    const cookieOptions: CookieOptions = {
+      expires,
+      httpOnly: false,
+      domain,
+    };
     this.logger.debug(`generete ${user.intra_id}'s token`);
-    response.cookie('access_token', token);
+    response.cookie('access_token', token, cookieOptions);
     return true;
   }
 }
