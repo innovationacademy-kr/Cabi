@@ -1,8 +1,0 @@
-@media only screen and (max-width: 768px) {
-  #loginPage > .leftLoginPage {
-    display: none;
-  }
-  #loginPage > .rightLoginPage {
-    width: 100%;
-  }
-}
