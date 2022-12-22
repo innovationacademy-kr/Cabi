@@ -11,7 +11,6 @@ const ButtonContainer = (props: ButtonInterface) => {
     return <ButtonContainerStyled theme={props.theme}>{props.text}</ButtonContainerStyled>
 }
 
-
 const ButtonContainerStyled = styled.button`
     width : 200px;
     height : 60px;
