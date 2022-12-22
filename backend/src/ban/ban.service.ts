@@ -11,6 +11,7 @@ import {
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import LentType from 'src/enums/lent.type.enum';
 import { ConfigService } from '@nestjs/config';
+import { DateCalculator } from 'src/utils/date.calculator.component';
 
 @Injectable()
 export class BanService {
@@ -21,6 +22,7 @@ export class BanService {
     private banRepository: IBanRepository,
     private userService: UserService,
     private cabinetInfoService: CabinetInfoService,
+    private dateCalculator: DateCalculator,
     @Inject(ConfigService) private configService: ConfigService,
   ) {}
 
@@ -98,30 +100,6 @@ export class BanService {
   }
 
   /**
-   * 날짜 차이 계산
-   * @param begin
-   * @param end
-   * @returns days
-   */
-  async calDateDiff(begin: Date, end: Date): Promise<number> {
-    this.logger.debug(`Called ${BanService.name} ${this.calDateDiff.name}`);
-    const endYear = end.getFullYear();
-    const endMonth = end.getMonth();
-    const endDay = end.getDate();
-
-    const beginYear = begin.getFullYear();
-    const beginMonth = begin.getMonth();
-    const beginDay = begin.getDate();
-
-    const newEnd = new Date(endYear, endMonth, endDay);
-    const newBegin = new Date(beginYear, beginMonth, beginDay);
-
-    const diffDatePerSec = newEnd.getTime() - newBegin.getTime();
-    const days = Math.ceil(diffDatePerSec / 1000 / 60 / 60 / 24);
-    return days;
-  }
-
-  /**
    * 유저의 누적 연체일을 계산
    * @param user_id
    */
@@ -135,7 +113,7 @@ export class BanService {
     let accumulate = 0;
     for (const log of banLog) {
       if (log.is_penalty == false)
-        accumulate += await this.calDateDiff(
+        accumulate += await this.dateCalculator.calDateDiff(
           log.banned_date,
           log.unbanned_date,
         );
