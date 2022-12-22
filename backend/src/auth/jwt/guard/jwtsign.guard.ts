@@ -39,11 +39,11 @@ export class JWTSignGuard implements CanActivate {
       return false;
     }
     const token = this.jwtService.sign(user);
-    const expires = new Date(this.jwtService.decode(token)['exp'] * 1000);
     this.logger.debug(`generete ${user.intra_id}'s token`);
     if (this.configService.get<boolean>('is_local') === true) {
       response.cookie('access_token', token);
     } else {
+      const expires = new Date(this.jwtService.decode(token)['exp'] * 1000);
       const cookieOptions: CookieOptions = {
         expires,
         httpOnly: false,
