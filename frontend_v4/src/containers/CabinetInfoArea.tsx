@@ -9,8 +9,18 @@ import privateLogo from "@/assets/images/privateCabinetType.svg";
 import shareLogo from "@/assets/images/shareCabinetType.svg";
 import circleLogo from "@/assets/images/circleCabinetType.svg";
 
-const CabinetInfoArea = (): JSX.Element => {
-  /*
+export interface ISelectedCabinetInfo {
+  floor: number;
+  section: string;
+  cabinetNum: number;
+  cabinetColor: string;
+  cabinetLogo: string;
+  userNameList: string;
+  belowText: string;
+  belowTextColor: string;
+}
+
+/* 
     require props
     1. is cabinet selected
     2. selected cabinet info
@@ -23,90 +33,107 @@ const CabinetInfoArea = (): JSX.Element => {
             a. PRIVATE
             b. SHARE
             c. CIRCLE
-    */
 
-  /* Dummy data */
-  let myCabinetIdx: number | null = 25;
-  let isCabinetSelected: boolean = true;
-  let selectedCabinetFloor: number = 2;
-  let selectedCabinetInfo: CabinetInfo = {
-    cabinet_id: 24,
-    cabinet_num: 42,
-    lent_type: CabinetType.SHARE,
-    cabinet_title: null,
-    max_user: 3,
-    status: CabinetStatus.AVAILABLE,
+ component will pass props like below(or null when select nothing)
+ const CabinetInfoDummy: ISelectedCabinetInfo = {
+    floor: 2,
     section: "Oasis",
-    lent_info: [
-      {
-        user_id: 12345,
-        intra_id: "jaesjeon",
-        lent_id: 321,
-        lent_time: new Date(),
-        expire_time: new Date(),
-        is_expired: false,
-      },
-      {
-        user_id: 13579,
-        intra_id: "inshin",
-        lent_id: 327,
-        lent_time: new Date(),
-        expire_time: new Date(),
-        is_expired: false,
-      },
-    ],
+    cabinetNum: 42,
+    cabinetColor: "var(--available)",
+    cabinetLogo: "/src/assets/images/shareCabinetType.svg",
+    userNameList: "jaesjeon\ninshin\n-",
+    belowText: "16일 남았습니다.\n2022-12-22",
+    belowTextColor: "black",
   };
-  /* ----------------------------- */
+*/
 
-  const getCabinetColorByState = (selectedCabinetInfo: CabinetInfo): string => {
-    if (
-      myCabinetIdx !== null &&
-      selectedCabinetInfo.cabinet_id === myCabinetIdx
-    )
-      return "var(--mine)";
-    if (selectedCabinetInfo.status === CabinetStatus.BROKEN)
-      return "var(--broken)";
-    if (selectedCabinetInfo.status === CabinetStatus.BANNED)
-      return "var(--banned)";
-    if (selectedCabinetInfo.status === CabinetStatus.EXPIRED)
-      return "var(--expired)";
-    if (
-      selectedCabinetInfo.status === CabinetStatus.AVAILABLE ||
-      selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_AVAILABLE
-    )
-      return "var(--available)";
-    if (selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL)
-      return "var(--full)";
-    return "UNDEFINED_COLOR";
-  };
+const CabinetInfoArea: React.FC<{
+  selectedCabinetInfo: ISelectedCabinetInfo | null;
+}> = (props) => {
+  /* functional part: to components */
 
-  const getCabinetLogoByType = (selectedCabinetType: string): string => {
-    if (selectedCabinetType === CabinetType.PRIVATE) return privateLogo;
-    if (selectedCabinetType === CabinetType.SHARE) return shareLogo;
-    if (selectedCabinetType === CabinetType.CIRCLE) return circleLogo;
-    return "UNDEFINED_LOGO";
-  };
+  //* Dummy data *//
+  // let myCabinetIdx: number | null = 25;
+  // let isCabinetSelected: boolean = true;
+  // let selectedCabinetFloor: number = 2;
+  // let selectedCabinetInfo: CabinetInfo = {
+  //   cabinet_id: 24,
+  //   cabinet_num: 42,
+  //   lent_type: CabinetType.SHARE,
+  //   cabinet_title: null,
+  //   max_user: 3,
+  //   status: CabinetStatus.AVAILABLE,
+  //   section: "Oasis",
+  //   lent_info: [
+  //     {
+  //       user_id: 12345,
+  //       intra_id: "jaesjeon",
+  //       lent_id: 321,
+  //       lent_time: new Date(),
+  //       expire_time: new Date(),
+  //       is_expired: false,
+  //     },
+  //     {
+  //       user_id: 13579,
+  //       intra_id: "inshin",
+  //       lent_id: 327,
+  //       lent_time: new Date(),
+  //       expire_time: new Date(),
+  //       is_expired: false,
+  //     },
+  //   ],
+  // };
+  //* ----------------------------- *//
 
-  const getCabinetUserList = (
-    selectedCabinetInfo: CabinetInfo
-  ): JSX.Element => {
-    let userNameList: string = "";
-    for (let i = 0; i < selectedCabinetInfo.max_user; i++) {
-      const userName =
-        i < selectedCabinetInfo.lent_info.length
-          ? selectedCabinetInfo.lent_info[i].intra_id
-          : "-";
-      userNameList += userName;
-      if (i !== selectedCabinetInfo.max_user - 1) userNameList += "\n";
-    }
-    return (
-      <TextStyled fontSize="1rem" fontColor="black">
-        {userNameList}
-      </TextStyled>
-    );
-  };
+  // const getCabinetColorByState = (selectedCabinetInfo: CabinetInfo): string => {
+  //   if (
+  //     myCabinetIdx !== null &&
+  //     selectedCabinetInfo.cabinet_id === myCabinetIdx
+  //   )
+  //     return "var(--mine)";
+  //   if (selectedCabinetInfo.status === CabinetStatus.BROKEN)
+  //     return "var(--broken)";
+  //   if (selectedCabinetInfo.status === CabinetStatus.BANNED)
+  //     return "var(--banned)";
+  //   if (selectedCabinetInfo.status === CabinetStatus.EXPIRED)
+  //     return "var(--expired)";
+  //   if (
+  //     selectedCabinetInfo.status === CabinetStatus.AVAILABLE ||
+  //     selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_AVAILABLE
+  //   )
+  //     return "var(--available)";
+  //   if (selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL)
+  //     return "var(--full)";
+  //   return "UNDEFINED_COLOR";
+  // };
 
-  if (!isCabinetSelected)
+  // const getCabinetLogoByType = (selectedCabinetType: string): string => {
+  //   if (selectedCabinetType === CabinetType.PRIVATE) return privateLogo;
+  //   if (selectedCabinetType === CabinetType.SHARE) return shareLogo;
+  //   if (selectedCabinetType === CabinetType.CIRCLE) return circleLogo;
+  //   return "UNDEFINED_LOGO";
+  // };
+
+  // const getCabinetUserList = (
+  //   selectedCabinetInfo: CabinetInfo
+  // ): string => {
+  //   let userNameList: string = "";
+  //   for (let i = 0; i < selectedCabinetInfo.max_user; i++) {
+  //     const userName =
+  //       i < selectedCabinetInfo.lent_info.length
+  //         ? selectedCabinetInfo.lent_info[i].intra_id
+  //         : "-";
+  //     userNameList += userName;
+  //     if (i !== selectedCabinetInfo.max_user - 1) userNameList += "\n";
+  //   }
+  //   return userNameList;
+  // };
+
+  /* -------------------------------------- */
+
+  const { selectedCabinetInfo } = props;
+
+  if (selectedCabinetInfo === null)
     return (
       <FlexDirectionColumnStyled>
         <CabiLogoStyled src={cabiLogo} />
@@ -120,21 +147,22 @@ const CabinetInfoArea = (): JSX.Element => {
   return (
     <FlexDirectionColumnStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-        {selectedCabinetFloor.toString() + "F - " + selectedCabinetInfo.section}
+        {selectedCabinetInfo.floor + "F - " + selectedCabinetInfo.section}
       </TextStyled>
-      <CabinetRectangleStyled
-        bgColor={getCabinetColorByState(selectedCabinetInfo)}
-      >
-        {selectedCabinetInfo.cabinet_num}
+      <CabinetRectangleStyled bgColor={selectedCabinetInfo.cabinetColor}>
+        {selectedCabinetInfo.cabinetNum}
       </CabinetRectangleStyled>
-      <CabiLogoStyled
-        src={getCabinetLogoByType(selectedCabinetInfo.lent_type)}
-      />
-      {getCabinetUserList(selectedCabinetInfo)}
+      <CabiLogoStyled src={selectedCabinetInfo.cabinetLogo} />
+      <TextStyled fontSize="1rem" fontColor="black">
+        {selectedCabinetInfo.userNameList}
+      </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         <button>대여</button>
         <button>취소</button>
       </CabinetInfoButtonsContainerStyled>
+      <CabinetLentDateInfoStyled textColor={selectedCabinetInfo.belowTextColor}>
+        {selectedCabinetInfo.belowText}
+      </CabinetLentDateInfoStyled>
     </FlexDirectionColumnStyled>
   );
 };
@@ -182,4 +210,14 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   flex-direction: column;
   justify-content: space-between;
   margin-top: 40px;
+`;
+
+const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
+  margin-top: 35px;
+  color: ${(props) => props.textColor};
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 28px;
+  white-space: pre-line;
+  text-align: center;
 `;
