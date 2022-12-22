@@ -9,6 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import { ConfigService } from '@nestjs/config';
 
 /**
  * (사전에 인증받았다고 가정한) 사용자 정보를 이용해 JWT 토큰을 발급하여 쿠키에 삽입합니다.
@@ -20,6 +21,7 @@ export class JWTSignGuard implements CanActivate {
 
   constructor(
     private jwtService: JwtService,
+    @Inject(ConfigService) private configService: ConfigService,
     ) {}
 
   canActivate(
@@ -38,14 +40,17 @@ export class JWTSignGuard implements CanActivate {
     }
     const token = this.jwtService.sign(user);
     const expires = new Date(this.jwtService.decode(token)['exp'] * 1000);
-    const domain = 'cabi.42seoul.io';
-    const cookieOptions: CookieOptions = {
-      expires,
-      httpOnly: false,
-      domain,
-    };
     this.logger.debug(`generete ${user.intra_id}'s token`);
-    response.cookie('access_token', token, cookieOptions);
+    if (this.configService.get<boolean>('is_local') === true) {
+      response.cookie('access_token', token);
+    } else {
+      const cookieOptions: CookieOptions = {
+        expires,
+        httpOnly: false,
+        domain: 'cabi.42seoul.io',
+      };
+      response.cookie('access_token', token, cookieOptions);
+    }
     return true;
   }
 }
