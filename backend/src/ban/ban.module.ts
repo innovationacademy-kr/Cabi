@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CabinetModule } from 'src/cabinet/cabinet.module';
+import { UtilsModule } from 'src/utils/utils.module';
 import BanLog from '../entities/ban.log.entity';
 import { UserModule } from '../user/user.module';
 import { BanService } from './ban.service';
@@ -16,6 +17,7 @@ const repo = {
     forwardRef(() => UserModule),
     TypeOrmModule.forFeature([BanLog]),
     CabinetModule,
+    UtilsModule,
   ],
   providers: [BanService, repo],
   exports: [BanService],

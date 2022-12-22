@@ -1,7 +1,7 @@
 export default () => ({
   fe_host: process.env.FE_HOST,
   port: parseInt(process.env.PORT, 10),
-  is_local: process.env.LOCAL === 'true',
+  is_local: process.env.LOCAL === 'true' ? true : false,
   debug: {
     mail_send: process.env.MAIL_SEND === 'true' ? true : false,
     log: process.env.DEBUG_LOG === 'true' ? true : false,
