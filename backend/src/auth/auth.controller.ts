@@ -73,7 +73,6 @@ export class AuthController {
         'fe_host',
       )}/main?access_token=${token}`,
     );
-
   }
 
   @ApiOperation({

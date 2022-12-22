@@ -12,8 +12,8 @@ import {
   IsolationLevel,
 } from 'typeorm-transactional';
 import Lent from 'src/entities/lent.entity';
-import { BanService } from 'src/ban/ban.service';
 import { ConfigService } from '@nestjs/config';
+import { DateCalculator } from './date.calculator.component';
 
 @Injectable()
 export class ExpiredChecker {
@@ -23,7 +23,7 @@ export class ExpiredChecker {
     private readonly lentService: LentService,
     private readonly emailsender: EmailSender,
     private cabinetInfoService: CabinetInfoService,
-    private banService: BanService,
+    private dateCalculator: DateCalculator,
     @Inject(ConfigService) private configService: ConfigService,
   ) {}
 
@@ -32,7 +32,7 @@ export class ExpiredChecker {
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async checkExpiredCabinetEach(lent: Lent) {
-    const days = await this.banService.calDateDiff(
+    const days = await this.dateCalculator.calDateDiff(
       lent.expire_time,
       new Date(),
     );

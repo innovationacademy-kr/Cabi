@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import { CabinetModule } from '../cabinet/cabinet.module';
@@ -10,6 +10,7 @@ import LentLog from 'src/entities/lent.log.entity';
 import { BanModule } from '../ban/ban.module';
 import { LentTools } from './lent.component';
 import Cabinet from 'src/entities/cabinet.entity';
+import { UtilsModule } from 'src/utils/utils.module';
 
 const repo = {
   provide: 'ILentRepository',
@@ -20,7 +21,8 @@ const repo = {
   imports: [
     CabinetModule,
     AuthModule,
-    BanModule,
+    forwardRef(() => BanModule),
+    UtilsModule,
     TypeOrmModule.forFeature([Lent, LentLog, Cabinet]),
   ],
   controllers: [LentController],
