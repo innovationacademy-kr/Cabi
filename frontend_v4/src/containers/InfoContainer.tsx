@@ -68,9 +68,6 @@ const InfoContainer = () => {
 
 const MediaStyled = styled.div`
   @media screen and (max-width: 1300px) {
-    #infoWrap {
-      padding: 70px 0;
-    }
     #infoWrap > .titleContainer {
       width: 90%;
       max-width: 600px;
@@ -104,7 +101,7 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 140px 0 70px;
+  padding: 70px 0;
 `;
 
 const TitleContainerStyled = styled.div`
@@ -141,11 +138,11 @@ const InfoSectionStyled = styled.section`
   width: 90%;
   max-width: 1500px;
   .article {
-    width: 400px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 110px;
+    margin-bottom: 70px;
   }
   .article > div {
     width: 58px;
