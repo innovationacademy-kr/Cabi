@@ -98,6 +98,12 @@ const CabinetListItemStyled = styled.div<{
   flex-direction: column;
   justify-content: space-between;
   padding: 10px 10px 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
 `;
 
 const CabinetIconNumberWrapperStyled = styled.div`
