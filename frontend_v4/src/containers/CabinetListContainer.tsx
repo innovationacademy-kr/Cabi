@@ -4,17 +4,17 @@ import CabinetListItemContainer from "./CabinetListItemContainer";
 
 interface CabinetListInterface {
   colNum: number;
-  cabinet_info: CabinetInfo[];
+  cabinetInfo: CabinetInfo[];
 }
 
 const CabinetListContainer = ({
   colNum,
-  cabinet_info,
+  cabinetInfo,
 }: CabinetListInterface): JSX.Element => {
   return (
     <CabinetListContainerStyled colNum={colNum}>
-      {cabinet_info.map((cabinet) => (
-        <CabinetListItemContainer {...cabinet} />
+      {cabinetInfo.map((cabinet, index) => (
+        <CabinetListItemContainer {...cabinet} key={index} />
       ))}
     </CabinetListContainerStyled>
   );
