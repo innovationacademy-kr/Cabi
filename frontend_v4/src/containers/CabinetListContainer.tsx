@@ -3,16 +3,16 @@ import styled from "styled-components";
 import CabinetListItemContainer from "./CabinetListItemContainer";
 
 interface CabinetListInterface {
-  col_num: number;
+  colNum: number;
   cabinet_info: CabinetInfo[];
 }
 
 const CabinetListContainer = ({
-  col_num,
+  colNum,
   cabinet_info,
 }: CabinetListInterface): JSX.Element => {
   return (
-    <CabinetListContainerStyled col_num={col_num}>
+    <CabinetListContainerStyled colNum={colNum}>
       {cabinet_info.map((cabinet) => (
         <CabinetListItemContainer {...cabinet} />
       ))}
@@ -21,7 +21,7 @@ const CabinetListContainer = ({
 };
 
 const CabinetListContainerStyled = styled.div<{
-  col_num: number;
+  colNum: number;
 }>`
   display: flex;
   flex-wrap: wrap;
@@ -29,7 +29,7 @@ const CabinetListContainerStyled = styled.div<{
   margin: auto;
   overflow: hidden;
   min-width: 360px;
-  max-width: ${(props) => props.col_num * 90}px;
+  max-width: ${(props) => props.colNum * 90}px;
 `;
 
 export default CabinetListContainer;
