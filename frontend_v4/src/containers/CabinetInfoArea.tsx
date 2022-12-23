@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import ButtonContainer from "./ButtonContainer";
 import { LentDto } from "@/types/dto/lent.dto";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
@@ -157,8 +158,8 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
-        <button>대여</button>
-        <button>취소</button>
+        <ButtonContainer onClick={() => {}} text="대여" theme="dark" />
+        <ButtonContainer onClick={() => {}} text="취소" theme="white" />
       </CabinetInfoButtonsContainerStyled>
       <CabinetLentDateInfoStyled textColor={selectedCabinetInfo.belowTextColor}>
         {selectedCabinetInfo.belowText}
@@ -197,7 +198,7 @@ const CabinetRectangleStyled = styled.div<{ bgColor: string }>`
   height: 80px;
   border-radius: 10px;
   margin-top: 15px;
-  margin-bottom: 100px;
+  margin-bottom: 60px;
   background-color: ${(props) => props.bgColor};
   font-size: 32px;
   line-height: 80px;
