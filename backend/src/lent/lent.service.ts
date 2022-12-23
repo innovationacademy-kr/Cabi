@@ -44,6 +44,11 @@ export class LentService {
             `🚨 해당 사물함은 동아리 전용 사물함입니다 🚨`,
             HttpStatus.I_AM_A_TEAPOT,
           );
+        case LentExceptionType.LENT_UNDER_PENALTY_DAY_SHARE:
+          throw new HttpException(
+            `🚨 만료기한이 얼마남지 않은 공유 사물함은 대여할 수 없습니다 🚨`,
+            HttpStatus.FORBIDDEN,
+          );
         case LentExceptionType.LENT_FULL:
           throw new HttpException(
             `🚨 해당 사물함에 잔여 자리가 없습니다 🚨`,
@@ -51,12 +56,12 @@ export class LentService {
           );
         case LentExceptionType.LENT_EXPIRED:
           throw new HttpException(
-            `🚨 연체된 사물함은 대여할 수 없습니다. 🚨`,
+            `🚨 연체된 사물함은 대여할 수 없습니다 🚨`,
             HttpStatus.FORBIDDEN,
           );
         case LentExceptionType.LENT_BROKEN:
           throw new HttpException(
-            `🚨 고장난 사물함은 대여할 수 없습니다. 🚨`,
+            `🚨 고장난 사물함은 대여할 수 없습니다 🚨`,
             HttpStatus.FORBIDDEN,
           );
         case LentExceptionType.LENT_BANNED:

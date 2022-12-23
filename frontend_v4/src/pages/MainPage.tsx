@@ -170,6 +170,7 @@ const CABINETS: CabinetInfo[] = [
   },
 ];
 
+
 const MainPage = () => {
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
   const [colNum, setColNum] = useState<number>(4);
@@ -206,9 +207,9 @@ const MainPage = () => {
             <CabinetListContainer colNum={colNum} cabinetInfo={CABINETS} />
           </CabinetListWrapperStyled>
         </MainStyled>
-        <DetailInfoContainerStyled>
+        {/* <DetailInfoContainerStyled>
           사물함 상세 정보 위치
-        </DetailInfoContainerStyled>
+        </DetailInfoContainerStyled> */}
       </WrapperStyled>
     </>
   );
@@ -224,7 +225,7 @@ const WrapperStyled = styled.div`
 const MainStyled = styled.main`
   width: 100%;
   height: 100%;
-  background: var(--white);
+  overflow-x: hidden;
 `;
 
 const DetailInfoContainerStyled = styled.div`

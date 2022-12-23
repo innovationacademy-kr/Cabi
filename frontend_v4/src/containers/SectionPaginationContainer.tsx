@@ -47,13 +47,12 @@ export const SectionPaginationContainer = () => {
       <SectionBarStyled>
         <MoveSectionButtonStyled
           src={LeftSectionButton}
-          rotate={false}
           onClick={moveToLeftSection}
         />
-        {currentPositionName}
+        <SectionNameTextStyled>{currentPositionName}</SectionNameTextStyled>
         <MoveSectionButtonStyled
           src={LeftSectionButton}
-          rotate={true}
+          needRotate
           onClick={moveToRightSection}
         />
       </SectionBarStyled>
@@ -63,31 +62,41 @@ export const SectionPaginationContainer = () => {
 };
 
 const SectionPaginationStyled = styled.div`
-  width: 100%;
+  min-width: 360px;
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
 const SectionBarStyled = styled.div`
-  width: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin: 10px 5%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 `;
 
-const MoveSectionButtonStyled = styled.img<{ rotate: boolean }>`
+const MoveSectionButtonStyled = styled.img<{ needRotate?: boolean }>`
+  width: 24px;
+  height: 24px;
+  margin: 0px 15px;
   opacity: 70%;
   cursor: pointer;
-  transform: rotate(${(props) => (props.rotate ? "180deg" : "0")});
+  transform: rotate(${(props) => (props.needRotate ? "180deg" : "0")});
+  transition: all 0.2s;
   &:hover {
     opacity: 100%;
+    transform: rotate(${(props) => (props.needRotate ? "180deg" : "0")})
+      scale(1.3);
   }
+`;
+
+const SectionNameTextStyled = styled.div`
+  min-width: 220px;
+  font-size: 1rem;
+  text-align: center;
+  color: var(--gray-color);
 `;
 
 const SectionIndexStyled = styled.div`
@@ -100,8 +109,12 @@ const IndexRectangleStyled = styled.div<{ bgColor: string }>`
   width: 15px;
   height: 8px;
   border-radius: 2px;
-  margin-left: 3px;
-  margin-right: 3px;
+  margin: 0px 3px;
   background: ${(props) => props.bgColor};
   cursor: pointer;
+  transition: all 0.2s;
+  &:hover {
+    transform: scale(1.3);
+    background-color: var(--lightpurple-color);
+  }
 `;
