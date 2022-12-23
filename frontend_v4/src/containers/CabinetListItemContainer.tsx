@@ -64,7 +64,7 @@ const cabinetIconSrcMap = {
 const cabinetFilterMap = {
   [CabinetStatus.AVAILABLE]: "none",
   [CabinetStatus.SET_EXPIRE_FULL]: "brightness(100)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "brightness(100)",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "none",
   [CabinetStatus.EXPIRED]: "brightness(100)",
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
@@ -73,7 +73,7 @@ const cabinetFilterMap = {
 const cabinetLabelColorMap = {
   [CabinetStatus.AVAILABLE]: "var(--black)",
   [CabinetStatus.SET_EXPIRE_FULL]: "var(--white)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--white)",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--black)",
   [CabinetStatus.EXPIRED]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
