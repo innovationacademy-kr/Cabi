@@ -63,7 +63,7 @@ export const SectionPaginationContainer = () => {
 
 const SectionPaginationStyled = styled.div`
   min-width: 360px;
-  margin-top: 25px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
