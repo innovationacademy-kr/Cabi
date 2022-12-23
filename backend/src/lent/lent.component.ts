@@ -15,6 +15,7 @@ import {
 import { UserDto } from 'src/dto/user.dto';
 import LentExceptionType from 'src/enums/lent.exception.enum';
 import { ConfigService } from '@nestjs/config';
+import { DateCalculator } from 'src/utils/date.calculator.component';
 
 @Injectable()
 export class LentTools {
@@ -25,6 +26,8 @@ export class LentTools {
     private cabinetInfoService: CabinetInfoService,
     @Inject(forwardRef(() => LentService))
     private lentService: LentService,
+    @Inject(forwardRef(() => DateCalculator))
+    private dateCalculator: DateCalculator,
     private banService: BanService,
     @Inject(ConfigService) private configService: ConfigService,
   ) {}
@@ -182,7 +185,7 @@ export class LentTools {
         break;
       case CabinetStatusType.BANNED:
       case CabinetStatusType.EXPIRED:
-        const overdue = await this.banService.calDateDiff(
+        const overdue = await this.dateCalculator.calDateDiff(
           lent.expire_time,
           new Date(),
         );

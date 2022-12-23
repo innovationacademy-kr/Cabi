@@ -9,6 +9,7 @@ import { axiosLogout } from "../../../network/axios/axios.custom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { userInfoInitialize } from "../../../redux/slices/userSlice";
 import instance from "../../../network/axios/axios.instance";
+import { removeCookie } from "../../../network/react-cookie/cookie";
 
 const Button = styled.button`
   display: flex;
@@ -53,7 +54,7 @@ const MenuButton = (): JSX.Element => {
   const handleLogout = (): void => {
     axiosLogout()
       .then((response) => {
-        dispatch(userInfoInitialize());
+        removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
         navigate("/");
       })
       .catch((error) => {
