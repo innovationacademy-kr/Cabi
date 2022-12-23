@@ -47,12 +47,12 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
 };
 
 const cabinetStatusColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--empty)",
-  [CabinetStatus.SET_EXPIRE_FULL]: "var(--lent)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--delay)",
-  [CabinetStatus.EXPIRED]: "var(--delay)",
+  [CabinetStatus.AVAILABLE]: "var(--available)",
+  [CabinetStatus.SET_EXPIRE_FULL]: "var(--full)",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--available)",
+  [CabinetStatus.EXPIRED]: "var(--expired)",
   [CabinetStatus.BROKEN]: "var(--broken)",
-  [CabinetStatus.BANNED]: "var(--ban)",
+  [CabinetStatus.BANNED]: "var(--banned)",
 };
 
 const cabinetIconSrcMap = {
