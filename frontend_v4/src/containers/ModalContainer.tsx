@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const ModalContainer = () => {
-    return <ModalConatinerStyled />
-} 
+  return <ModalConatinerStyled />;
+};
 
 const ModalConatinerStyled = styled.div`
-    width : 360px;
-    height : 500px;
-    display : flex;
-`
+  width: 360px;
+  height: 500px;
+  display: flex;
+`;
