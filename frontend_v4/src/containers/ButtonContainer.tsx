@@ -23,7 +23,10 @@ const ButtonContainerStyled = styled.button`
   align-items: center;
   background: ${(props) => (props.theme === "dark" ? "#9747FF" : "white")};
   color: ${(props) => (props.theme === "dark" ? "white" : "#9747FF")};
+  border: ${(props) =>
+    props.theme === "dark" ? "1px solid white" : "1px solid #9747FF"};
   border-radius: 10px;
+  margin-bottom: 15px;
 `;
 
 export default ButtonContainer;

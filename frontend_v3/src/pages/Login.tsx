@@ -5,7 +5,7 @@ import LoginTemplate from "../components/templates/LoginTemplate";
 import FooterTemplate from "../components/templates/FooterTemplate";
 import ContentTemplate from "../components/templates/ContentTemplate";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
-import { getCookie } from "../network/react-cookie/cookie";
+import { getCookie, removeCookie } from "../network/react-cookie/cookie";
 import { userInfoInitialize } from "../redux/slices/userSlice";
 
 const Login = (): JSX.Element => {
@@ -19,9 +19,7 @@ const Login = (): JSX.Element => {
       dispatch(userInfoInitialize());
     }
     if (token && !(user.intra_id === "default")) {
-      navigate("/main");
-    } else {
-      navigate("/");
+      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
     }
   }, []);
 
