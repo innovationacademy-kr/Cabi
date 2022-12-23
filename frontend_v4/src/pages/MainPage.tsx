@@ -7,6 +7,9 @@ import CabinetListContainer from "@/containers/CabinetListContainer";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import { SectionPaginationContainer } from "@/containers/SectionPaginationContainer";
+import CabinetInfoArea, {
+  ISelectedCabinetInfo,
+} from "@/containers/CabinetInfoArea";
 
 const CABINETS: CabinetInfo[] = [
   {
@@ -170,6 +173,16 @@ const CABINETS: CabinetInfo[] = [
   },
 ];
 
+const CabinetInfoDummy: ISelectedCabinetInfo = {
+  floor: 2,
+  section: "Oasis",
+  cabinetNum: 42,
+  cabinetColor: "var(--available)",
+  cabinetLogo: "/src/assets/images/shareCabinetType.svg",
+  userNameList: "jaesjeon\ninshin\n-",
+  belowText: "16일 남았습니다.\n2022-12-22",
+  belowTextColor: "black",
+};
 
 const MainPage = () => {
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
@@ -207,9 +220,9 @@ const MainPage = () => {
             <CabinetListContainer colNum={colNum} cabinetInfo={CABINETS} />
           </CabinetListWrapperStyled>
         </MainStyled>
-        {/* <DetailInfoContainerStyled>
-          사물함 상세 정보 위치
-        </DetailInfoContainerStyled> */}
+        <DetailInfoContainerStyled>
+          <CabinetInfoArea selectedCabinetInfo={CabinetInfoDummy} />
+        </DetailInfoContainerStyled>
       </WrapperStyled>
     </>
   );
@@ -226,10 +239,13 @@ const MainStyled = styled.main`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  padding-top: 30px;
 `;
 
 const DetailInfoContainerStyled = styled.div`
   min-width: 330px;
+  padding-top: 45px;
+  border-left: 1px solid var(--line-color);
 `;
 
 const CabinetListWrapperStyled = styled.div`
