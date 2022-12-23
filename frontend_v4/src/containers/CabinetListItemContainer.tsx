@@ -12,7 +12,7 @@ const MY_INFO: UserDto = {
 
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   let cabinetLabelText = "";
-  if (props.status !== "BANNED") {
+  if (props.status !== "BANNED" && props.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
     if (props.lent_type === "PRIVATE")
       cabinetLabelText = props.lent_info[0].intra_id;
@@ -26,12 +26,19 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   }
   return (
     <CabinetListItemStyled status={props.status} cabinet_id={props.cabinet_id}>
-      <CabinetIconContainerStyled status={props.status}>
-        <CabinetIconStyled type={props.lent_type} />
-      </CabinetIconContainerStyled>
-      <CabinetNumberStyled status={props.status} cabinet_id={props.cabinet_id}>
-        {props.cabinet_num}
-      </CabinetNumberStyled>
+      <CabinetIconNumberWrapperStyled>
+        <CabinetIconContainerStyled
+          lent_type={props.lent_type}
+          cabinet_id={props.cabinet_id}
+          status={props.status}
+        />
+        <CabinetNumberStyled
+          status={props.status}
+          cabinet_id={props.cabinet_id}
+        >
+          {props.cabinet_num}
+        </CabinetNumberStyled>
+      </CabinetIconNumberWrapperStyled>
       <CabinetLabelStyled status={props.status} cabinet_id={props.cabinet_id}>
         {cabinetLabelText}
       </CabinetLabelStyled>
@@ -49,9 +56,18 @@ const cabinetStatusColorMap = {
 };
 
 const cabinetIconSrcMap = {
-  [CabinetType.PRIVATE]: "@/assets/images/soloIcon.svg",
+  [CabinetType.PRIVATE]: "src/assets/images/soloIcon.svg",
   [CabinetType.SHARE]: "src/assets/images/groupIcon.svg",
   [CabinetType.CIRCLE]: "src/assets/images/clubIcon.svg",
+};
+
+const cabinetFilterMap = {
+  [CabinetStatus.AVAILABLE]: "none",
+  [CabinetStatus.SET_EXPIRE_FULL]: "brightness(100)",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "brightness(100)",
+  [CabinetStatus.EXPIRED]: "brightness(100)",
+  [CabinetStatus.BROKEN]: "brightness(100)",
+  [CabinetStatus.BANNED]: "brightness(100)",
 };
 
 const cabinetLabelColorMap = {
@@ -78,16 +94,21 @@ const CabinetListItemStyled = styled.div<{
   height: 80px;
   margin: 5px;
   border-radius: 10px;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 10px 16px;
+`;
+
+const CabinetIconNumberWrapperStyled = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const CabinetLabelStyled = styled.p<{
   status: CabinetStatus;
   cabinet_id: number;
 }>`
-  position: absolute;
-  top: 44px;
-  left: 10px;
   font-size: 14px;
   color: ${(props) => cabinetLabelColorMap[props.status]};
   ${(props) =>
@@ -101,9 +122,6 @@ const CabinetNumberStyled = styled.p<{
   status: CabinetStatus;
   cabinet_id: number;
 }>`
-  position: absolute;
-  top: 10px;
-  right: 10px;
   font-size: 14px;
   color: ${(props) => cabinetLabelColorMap[props.status]};
   ${(props) =>
@@ -113,19 +131,21 @@ const CabinetNumberStyled = styled.p<{
     `}
 `;
 
-const CabinetIconContainerStyled = styled.div<{ status: string }>`
-  position: absolute;
+const CabinetIconContainerStyled = styled.div<{
+  lent_type: CabinetType;
+  status: CabinetStatus;
+  cabinet_id: number;
+}>`
   width: 16px;
   height: 16px;
-  top: 10px;
-  left: 10px;
-`;
-
-const CabinetIconStyled = styled.img.attrs({
-  src: cabinetIconSrcMap.CIRCLE,
-})<{ type: CabinetType }>`
-  src: ${(props) => cabinetIconSrcMap[props.type]};
-  object-fit: cover;
+  background-image: url(${(props) => cabinetIconSrcMap[props.lent_type]});
+  background-size: contain;
+  filter: ${(props) => cabinetFilterMap[props.status]}
+    ${(props) =>
+      props.cabinet_id === MY_INFO.cabinet_id &&
+      css`
+        filter: none;
+      `};
 `;
 
 export default CabinetListItemContainer;

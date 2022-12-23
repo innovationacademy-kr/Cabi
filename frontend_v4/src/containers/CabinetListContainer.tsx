@@ -20,18 +20,15 @@ const CabinetListContainer = ({
   );
 };
 
-// display:flex;
-// flex-wrap: wrap;
-// justify-content: flex-start;
-// margin: auto;
 const CabinetListContainerStyled = styled.div<{
   col_num: number;
 }>`
-  display: inline-block;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: auto;
   overflow: hidden;
-
   min-width: 360px;
-  width: ${(props) => props.col_num};
   max-width: ${(props) => props.col_num * 90}px;
 `;
 
