@@ -1,19 +1,32 @@
+import { CabinetInfo } from '@/types/dto/cabinet.dto';
 import styled from 'styled-components';
+import CabinetListItemContainer from './CabinetListItemContainer';
 
 interface CabinetListInterface{
-    colNum: number,
+    col_num: number,
+    cabinet_info: CabinetInfo[]
 };
 
-const CabinetListContainer = ({colNum}: CabinetListInterface): JSX.Element => {
+
+const CabinetListContainer = ({col_num, cabinet_info}: CabinetListInterface): JSX.Element => {
     return (
-        <CabinetListContainerStyled colNum={colNum}>
+        <CabinetListContainerStyled col_num={col_num}>
+            {cabinet_info.map(cabinet =>(
+                <CabinetListItemContainer {...cabinet} />
+            ))}
         </CabinetListContainerStyled>
     );
 };
 
-const CabinetListContainerStyled = styled.div`
-    display: flex;
-    width: ${({colNum}: CabinetListInterface) => colNum * 90 - 10}px;
+// display:flex;
+// flex-wrap: wrap;
+// justify-content: flex-start;
+// margin: auto;
+const CabinetListContainerStyled = styled.div<{col_num: number}>`
+    display: inline-block;
+    overflow:hidden;
+
+    max-width: ${(props) => props.col_num * 90}px;
 `
 
 export default CabinetListContainer;
