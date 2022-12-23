@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import CabinetColorTable from "@/components/CabinetColorTable";
 
 const floorSection = [
   "End of Cluster1",
@@ -15,6 +16,7 @@ const LeftNavOptionContainer = () => {
       {floorSection.map((section: string, index: number) => (
         <FloorSectionStyled key={index}>{section}</FloorSectionStyled>
       ))}
+      <CabinetColorTable />
     </LeftNavOptionStyled>
   );
 };
@@ -25,6 +27,7 @@ const LeftNavOptionStyled = styled.div`
   padding: 32px 10px;
   border-right: 1px solid var(--line-color);
   font-weight: 300;
+  position: relative;
 `;
 
 const FloorSectionStyled = styled.div`
