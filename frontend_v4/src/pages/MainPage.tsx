@@ -203,7 +203,7 @@ const MainPage = () => {
         <MainStyled>
           <SectionPaginationContainer />
           <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
-            <CabinetListContainer col_num={colNum} cabinet_info={CABINETS} />
+            <CabinetListContainer colNum={colNum} cabinetInfo={CABINETS} />
           </CabinetListWrapperStyled>
         </MainStyled>
         <DetailInfoContainerStyled>
