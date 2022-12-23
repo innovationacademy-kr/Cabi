@@ -87,6 +87,25 @@ export class LentTools {
           excepction_type = LentExceptionType.LENT_CIRCLE;
           break;
         }
+        if (cabinet.lent_type === LentType.SHARE) {
+          if (cabinet.status === CabinetStatusType.SET_EXPIRE_AVAILABLE) {
+            // 만료시간이 PENALTY_DAY_SHARE + 2 이하로 남은 경우 excepction_type을 LENT_UNDER_PENALTY_DAY_SHARE로 설정.
+            const now = new Date();
+            const expire_time = cabinet.expire_time;
+            const diff = await this.dateCalculator.calDateDiff(
+              now,
+              expire_time,
+            );
+
+            if (
+              diff <=
+              this.configService.get<number>('penalty_day_share') + 2
+            ) {
+              excepction_type = LentExceptionType.LENT_UNDER_PENALTY_DAY_SHARE;
+              break;
+            }
+          }
+        }
         // 대여 처리
         const new_lent = await this.lentRepository.lentCabinet(
           user,
