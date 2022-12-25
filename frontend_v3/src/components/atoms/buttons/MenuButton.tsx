@@ -52,14 +52,12 @@ const MenuButton = (): JSX.Element => {
   };
 
   const handleLogout = (): void => {
-    axiosLogout()
-      .then((response) => {
-        removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (import.meta.env.VITE_IS_LOCAL === "true") {
+      removeCookie("access_token");
+    } else {
+      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
+    }
+    navigate("/");
   };
 
   // 베타테스트용 페널티 해제 메뉴
