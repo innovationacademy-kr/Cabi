@@ -2,13 +2,14 @@ import React from "react";
 import styled from "styled-components";
 
 interface ITopNavButton {
+  onClick: React.MouseEventHandler<HTMLDivElement>;
   imgSrc: string;
   disable?: boolean;
 }
 
-const TopNavButton: React.FC<ITopNavButton> = (props) => {
+const TopNavButton = (props: ITopNavButton) => {
   return (
-    <TopNavButtonStyled disable={props.disable}>
+    <TopNavButtonStyled onClick={props.onClick} disable={props.disable}>
       <img src={props.imgSrc} alt="" />
     </TopNavButtonStyled>
   );
