@@ -10,6 +10,7 @@ import { SectionPaginationContainer } from "@/containers/SectionPaginationContai
 import CabinetInfoArea, {
   ISelectedCabinetInfo,
 } from "@/containers/CabinetInfoArea";
+import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 
 const CABINETS: CabinetInfo[] = [
   {
@@ -214,6 +215,7 @@ const MainPage = () => {
       <TopNavContainer />
       <WrapperStyled>
         <LeftNavContainer />
+        <LeftNavOptionContainer />
         <MainStyled>
           <SectionPaginationContainer />
           <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
