@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { ReturnController } from './Return.controller';
+import { ReturnController } from './return.controller';
 
 @Module({
   controllers: [ReturnController],

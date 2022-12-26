@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from 'src/auth/auth.module';
-import { CabinetController } from './Cabinet.controller';
+import { CabinetController } from './cabinet.controller';
 
 @Module({
   controllers: [CabinetController],
