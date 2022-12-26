@@ -20,8 +20,6 @@ const Login = (): JSX.Element => {
     }
     if (token && !(user.intra_id === "default")) {
       navigate("/main");
-    } else {
-      navigate("/");
     }
   }, []);
 
