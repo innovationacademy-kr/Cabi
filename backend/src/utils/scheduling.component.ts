@@ -13,7 +13,7 @@ export class Scheduling {
     private readonly lentTools: LentTools,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async checkLents() {
     this.logger.debug(`Called ${ExpiredChecker.name} ${this.checkLents.name}`);
     const lentList = await this.lentTools.getAllLent();
