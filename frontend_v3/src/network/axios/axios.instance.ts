@@ -26,7 +26,11 @@ instance.interceptors.response.use(
   (error) => {
     // access_token unauthorized
     if (error.response?.status === 401) {
-      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
+      if (import.meta.env.VITE_IS_LOCAL === "true") {
+        removeCookie("access_token");
+      } else {
+        removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
+      }
       alert(error.response.data.message);
       window.location.href = "/";
     }
