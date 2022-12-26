@@ -16,7 +16,7 @@ import { DateCalculator } from './date.calculator.component';
 @Injectable()
 export class LeaveAbsence {
   private logger = new Logger(LeaveAbsence.name);
-  private clinetId: string;
+  private clientId: string;
   private clientSecret: string;
   private token: string;
   private postConfig: AxiosRequestConfig;
@@ -27,13 +27,13 @@ export class LeaveAbsence {
     @Inject(ConfigService) private configService: ConfigService,
     @Inject(DateCalculator) private readonly dateCalculator: DateCalculator,
   ) {
-    this.clinetId = this.configService.get<string>('ftAuth.clientid');
+    this.clientId = this.configService.get<string>('ftAuth.clientid');
     this.clientSecret = this.configService.get<string>('ftAuth.secret');
     this.token = null;
     this.postConfig = {
       params: {
         grant_type: 'client_credentials',
-        client_id: `${this.clinetId}`,
+        client_id: `${this.clientId}`,
         client_secret: `${this.clientSecret}`,
       },
     };
