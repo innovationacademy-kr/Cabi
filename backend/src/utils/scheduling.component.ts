@@ -16,7 +16,7 @@ export class Scheduling {
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async checkLents() {
     this.logger.debug(`Called ${ExpiredChecker.name} ${this.checkLents.name}`);
-    const lentList = await this.lentTools.getAllLent();
+    const lentList = await Promise.all(await this.lentTools.getAllLent());
     for await (const lent of lentList) {
       if (lent.expire_time === null) continue;
       await this.expiredChecker.checkExpiredCabinetEach(lent);
