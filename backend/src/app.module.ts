@@ -40,15 +40,6 @@ import { BetatestModule } from './betatest/betatest.module';
     }),
     AuthModule,
     BlackholeModule,
-    ServeStaticModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: () => [
-        {
-          rootPath: join(__dirname, '../', 'deploy'),
-          exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
-        },
-      ],
-    }),
     EventEmitterModule.forRoot(),
     CabinetModule,
     LentModule,
@@ -57,6 +48,19 @@ import { BetatestModule } from './betatest/betatest.module';
     CacheModule.register({
       isGlobal: true,
     }),
+    ...(process.env.LOCAL === 'true'
+      ? [
+          ServeStaticModule.forRootAsync({
+            inject: [ConfigService],
+            useFactory: () => [
+              {
+                rootPath: join(__dirname, '../', 'deploy'),
+                exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+              },
+            ],
+          }),
+        ]
+      : []),
     // import if UNBAN_API=true
     ...(process.env.UNBAN_API === 'true' ? [BetatestModule] : []),
   ],
