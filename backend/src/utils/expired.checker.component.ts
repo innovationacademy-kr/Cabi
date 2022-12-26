@@ -1,8 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
-import { LentTools } from '../lent/lent.component';
 import { LentService } from '../lent/lent.service';
 import { EmailSender } from './email.sender.component';
 import {
@@ -14,7 +12,6 @@ import {
 import Lent from 'src/entities/lent.entity';
 import { ConfigService } from '@nestjs/config';
 import { DateCalculator } from './date.calculator.component';
-import { LeaveAbsence } from './leave.absence.component';
 
 @Injectable()
 export class ExpiredChecker {
