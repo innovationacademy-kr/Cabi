@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import TopNavButton from "@/components/TopNavButton";
 
 const locations = ["새롬관", "서초", "강남"];
 
@@ -52,9 +53,10 @@ const TopNavContainer = () => {
           </LocationListStyled>
         </LocationSelectBoxStyled>
       </LogoStyled>
-      <MapButtonStyled>
-        <img src="src/assets/images/map.svg" alt="" />
-      </MapButtonStyled>
+      <NaviButtonsStyled>
+        <TopNavButton imgSrc="src/assets/images/myCabinetIcon.svg" />
+        <TopNavButton imgSrc="src/assets/images/map.svg" />
+      </NaviButtonsStyled>
     </TopNavContainerStyled>
   );
 };
@@ -135,8 +137,13 @@ const LocationListItemStyled = styled.li`
   }
 `;
 
-const MapButtonStyled = styled.div`
-  cursor: pointer;
+const NaviButtonsStyled = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  & > div:last-child {
+    margin-right: 0;
+  }
 `;
 
 export default TopNavContainer;
