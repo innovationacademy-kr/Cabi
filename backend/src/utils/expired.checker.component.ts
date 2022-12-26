@@ -14,12 +14,12 @@ import {
 import Lent from 'src/entities/lent.entity';
 import { ConfigService } from '@nestjs/config';
 import { DateCalculator } from './date.calculator.component';
+import { LeaveAbsence } from './leave.absence.component';
 
 @Injectable()
 export class ExpiredChecker {
   private logger = new Logger(ExpiredChecker.name);
   constructor(
-    private readonly lentTools: LentTools,
     private readonly lentService: LentService,
     private readonly emailsender: EmailSender,
     private cabinetInfoService: CabinetInfoService,
@@ -62,20 +62,5 @@ export class ExpiredChecker {
       this.emailsender.mailing(lent.user.intra_id, days);
     }
     runOnTransactionComplete((err) => err && this.logger.error(err));
-  }
-
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  async checkExpiredLent() {
-    this.logger.debug(
-      `Called ${ExpiredChecker.name} ${this.checkExpiredLent.name}`,
-    );
-    const lentList = await Promise.all(await this.lentTools.getAllLent());
-    for await (const lent of lentList) {
-      if (lent.expire_time === null) continue;
-      await this.checkExpiredCabinetEach(lent);
-      await new Promise((resolve) => {
-        setTimeout(resolve, 2000);
-      });
-    }
   }
 }

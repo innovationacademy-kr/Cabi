@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { forwardRef, HttpException, Inject, Injectable, Logger } from "@nestjs/common";
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AxiosRequestConfig } from "axios";
 import { firstValueFrom, map } from "rxjs";
@@ -48,6 +48,9 @@ export class LeaveAbsence {
       }
 
     async returnLeaveAbsenceStudent(user: UserDto): Promise<void> {
+        await this.postOauthToken().catch((err) => {
+            this.logger.error(err);
+        });
         const url = `https://api.intra.42.fr/v2/users/${user.intra_id}`;
         const headersRequest = {
             Authorization: `Bearer ${this.token}`,
@@ -64,6 +67,9 @@ export class LeaveAbsence {
             }
 		} catch(err) {
             throw new HttpException(err.response.data, err.response.status);
+            // TODO: http status code가 404(Not found)면, 유저 정보를 지우는 로직 추가
+            // TODO: http status code가 401(Unauthorized)면, token을 refresh하는 로직 추가
+            // TODO: http status code가 429 (Too Many Requests)면, 해결 방법 어떻게 할까요?
         }
     }
 }
