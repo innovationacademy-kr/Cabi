@@ -8,6 +8,7 @@ import { CabinetModule } from '../cabinet/cabinet.module';
 import { DateCalculator } from './date.calculator.component';
 import { EmailSender } from './email.sender.component';
 import { ExpiredChecker } from './expired.checker.component';
+import { LeaveAbsence } from './leave.absence.component';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { ExpiredChecker } from './expired.checker.component';
     forwardRef(() => LentModule),
   ],
 
-  providers: [EmailSender, ExpiredChecker, DateCalculator],
+  providers: [EmailSender, ExpiredChecker, DateCalculator, LeaveAbsence],
   exports: [EmailSender, DateCalculator],
 })
 export class UtilsModule {}
