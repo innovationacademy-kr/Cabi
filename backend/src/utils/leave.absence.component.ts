@@ -1,8 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import {
-  forwardRef,
   HttpException,
-  HttpStatus,
   Inject,
   Injectable,
   Logger,
@@ -11,7 +9,9 @@ import { ConfigService } from '@nestjs/config';
 import { AxiosRequestConfig } from 'axios';
 import { firstValueFrom, map } from 'rxjs';
 import { UserDto } from 'src/dto/user.dto';
+import Lent from 'src/entities/lent.entity';
 import { LentService } from 'src/lent/lent.service';
+import { DateCalculator } from './date.calculator.component';
 
 @Injectable()
 export class LeaveAbsence {
@@ -25,6 +25,7 @@ export class LeaveAbsence {
     private readonly httpService: HttpService,
     @Inject(LentService) private readonly lentService: LentService,
     @Inject(ConfigService) private configService: ConfigService,
+    @Inject(DateCalculator) private readonly dateCalculator: DateCalculator,
   ) {
     this.clinetId = this.configService.get<string>('ftAuth.clientid');
     this.clientSecret = this.configService.get<string>('ftAuth.secret');
@@ -54,6 +55,19 @@ export class LeaveAbsence {
       });
   }
 
+  //TODO: 연체자를 확인하는 로직이 중복되므로 다시 생각을 해봐야할 것 같습니다.
+  async isExpired(lent: Lent): Promise<void> {
+    const days = await this.dateCalculator.calDateDiff(
+      lent.expire_time,
+      new Date(),
+    );
+    if (days >= 0)
+      await this.returnLeaveAbsenceStudent({
+        user_id: lent.lent_user_id,
+        intra_id: lent.user.intra_id,
+      });
+  }
+
   async returnLeaveAbsenceStudent(user: UserDto): Promise<void> {
     await this.postOauthToken().catch((err) => {
       this.logger.error(err);
@@ -68,7 +82,7 @@ export class LeaveAbsence {
           .get(url, { headers: headersRequest })
           .pipe(map((res) => res.data)),
       );
-      if (data['active?'] === 'false') {
+      if (data['active?'] === false) {
         this.logger.log(`User ${user.intra_id} is leave of absence`);
         await this.lentService.returnCabinet(user);
       }
