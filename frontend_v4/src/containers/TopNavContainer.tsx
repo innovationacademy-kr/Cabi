@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import TopNavButtonsContainer from "./TopNavButtonsContainer";
 
 const locations = ["새롬관", "서초", "강남"];
 
@@ -52,9 +53,7 @@ const TopNavContainer = () => {
           </LocationListStyled>
         </LocationSelectBoxStyled>
       </LogoStyled>
-      <MapButtonStyled>
-        <img src="src/assets/images/map.svg" alt="" />
-      </MapButtonStyled>
+      <TopNavButtonsContainer />
     </TopNavContainerStyled>
   );
 };
@@ -133,10 +132,6 @@ const LocationListItemStyled = styled.li`
   &:hover {
     opacity: 0.8;
   }
-`;
-
-const MapButtonStyled = styled.div`
-  cursor: pointer;
 `;
 
 export default TopNavContainer;
