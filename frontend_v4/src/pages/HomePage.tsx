@@ -3,8 +3,10 @@ import TopNavContainer from "@/containers/TopNavContainer";
 import InfoContainer from "@/containers/InfoContainer";
 import LeftNavContainer from "@/containers/LeftNavContainer";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
+import LoadingModal from "@/components/LoadingModal";
 
 const HomePage = () => {
+  const loading = false;
   return (
     <>
       <TopNavContainer />
@@ -12,7 +14,7 @@ const HomePage = () => {
         <LeftNavContainer />
         <LeftNavOptionContainer style={{ display: "none" }} />
         <MainStyled>
-          <InfoContainer />
+          {loading ? <LoadingModal /> : <InfoContainer />}
         </MainStyled>
       </WapperStyled>
     </>
@@ -30,7 +32,6 @@ const MainStyled = styled.main`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  padding-top: 30px;
 `;
 
 export default HomePage;
