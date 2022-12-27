@@ -11,6 +11,11 @@ import CabinetInfoArea, {
   ISelectedCabinetInfo,
 } from "@/containers/CabinetInfoArea";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
+import { axiosMyInfo } from "@/api/axios/axios.custom";
+import { getCookie } from "@/api/react_cookie/cookies";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "@/recoil/atoms";
+import { UserDto } from "@/types/dto/user.dto";
 
 const CABINETS: CabinetInfo[] = [
   {
@@ -190,7 +195,8 @@ const MainPage = () => {
   const [colNum, setColNum] = useState<number>(4);
   // .env에서 가져올 실제 col_num 값입니다.
   const maxColNum = 7;
-
+  const token = getCookie("access_token");
+  const [user, setUser] = useRecoilState<UserDto>(userInfoState);
   const setColNumByDivWidth = () => {
     if (CabinetListWrapperRef.current !== null)
       setColNum(
@@ -210,6 +216,31 @@ const MainPage = () => {
     };
   }, [CabinetListWrapperRef.current]);
 
+  useEffect(() => {
+    if (token) {
+      if (user.intra_id === "default") {
+        axiosMyInfo()
+          .then((response) => {
+            setUser(response.data);
+            //if (response.data.cabinet_id !== -1) navigate("/lent");
+          })
+          .catch((error) => {
+            //navigate("/");
+          });
+      } else {
+        axiosMyInfo()
+          .then((response) => {
+            //dispatch(setUserCabinet(response.data.cabinet_id));
+            setUser({ ...user, cabinet_id: response.data.cabinet_id });
+          })
+          .catch((error) => {
+            //navigate("/");
+          });
+      }
+    } else {
+      //navigate("/");
+    }
+  }, []);
   return (
     <>
       <TopNavContainer />
