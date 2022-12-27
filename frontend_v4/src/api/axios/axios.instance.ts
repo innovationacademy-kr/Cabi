@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCookie, removeCookie } from "../react-cookie/cookie";
+import { getCookie, removeCookie } from "@/api/react_cookie/cookies";
 
 axios.defaults.withCredentials = true;
 
