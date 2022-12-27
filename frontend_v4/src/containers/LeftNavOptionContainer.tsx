@@ -10,9 +10,9 @@ const floorSection = [
   "End of Cluster 2",
 ];
 
-const LeftNavOptionContainer = () => {
+const LeftNavOptionContainer = (props: { style?: React.CSSProperties }) => {
   return (
-    <LeftNavOptionStyled>
+    <LeftNavOptionStyled style={props.style}>
       {floorSection.map((section: string, index: number) => (
         <FloorSectionStyled key={index}>{section}</FloorSectionStyled>
       ))}
