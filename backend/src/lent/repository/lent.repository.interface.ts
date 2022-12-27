@@ -35,7 +35,11 @@ export interface ILentRepository {
    * @param cabinet_id
    * @return void
    */
-  lentCabinet(user: UserDto, cabinet_id: number): Promise<LentDto>;
+  lentCabinet(
+    user: UserDto,
+    cabinet_id: number,
+    lent_id: number,
+  ): Promise<LentDto>;
 
   /**
    * 해당 user_id로 대여중인 Cabinet id를 반환합니다.

@@ -29,7 +29,7 @@ export class ExpiredChecker {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async checkExpiredCabinetEach(lent: Lent) {
     const days = await this.dateCalculator.calDateDiff(

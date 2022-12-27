@@ -59,7 +59,7 @@ export class BanService {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async blockingDropOffUser(lent: Lent): Promise<void> {
     this.logger.debug(
@@ -87,7 +87,7 @@ export class BanService {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async blockingUser(
     lent: Lent,
@@ -105,7 +105,7 @@ export class BanService {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async addOverdueDays(user_id: number): Promise<number> {
     this.logger.debug(`Called ${BanService.name} ${this.addOverdueDays.name}`);

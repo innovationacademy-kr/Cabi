@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -26,11 +27,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { InjectDataSource } from '@nestjs/typeorm';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/decorator/user.decorator';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import { DataSource, QueryFailedError } from 'typeorm';
 import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { LentService } from './lent.service';
 
@@ -80,6 +83,37 @@ export class LentController {
       this.logger.error(err);
       if (err instanceof HttpException) {
         throw err;
+      } else if (err instanceof QueryFailedError) {
+        //pk중복일때 이 에러발생
+        throw new InternalServerErrorException('한번 더 요청해주세요?');
+      } else {
+        throw new InternalServerErrorException(err.message);
+      }
+    }
+  }
+
+  // 가드 때문에 curl 요청보내기 번거로워져서 가드를 제거한 임시 컨트롤러(테스트 끝나면 지울 예정)
+  @Post('/temp/:user_id/:cabinet_id')
+  @HttpCode(HttpStatus.CREATED)
+  // @UseGuards(JwtAuthGuard, BanCheckGuard)
+  async tempLentCabinet(
+    @Param('cabinet_id') cabinet_id: number,
+    @Param('user_id') user_id: number,
+  ): Promise<void> {
+    try {
+      const tempUser = {
+        user_id,
+        intra_id: 'huchoi',
+      };
+      this.logger.debug(`Called ${this.lentCabinet.name}`);
+      return await this.lentService.lentCabinet(cabinet_id, tempUser);
+    } catch (err) {
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      } else if (err instanceof QueryFailedError) {
+        //pk중복일때 QueryFailedError 에러발생
+        throw new InternalServerErrorException('한번 더 요청해주세요?');
       } else {
         throw new InternalServerErrorException(err.message);
       }

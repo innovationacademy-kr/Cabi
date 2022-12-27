@@ -74,7 +74,7 @@ export class UserRepository implements IUserRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null> {
     const result = await this.userRepository.findOne({
@@ -103,7 +103,7 @@ export class UserRepository implements IUserRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async deleteUserById(user_id: number): Promise<void> {
     await this.userRepository

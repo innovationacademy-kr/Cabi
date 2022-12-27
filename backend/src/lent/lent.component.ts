@@ -40,7 +40,7 @@ export class LentTools {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async setExpireTimeAll(
     cabinet_id: number,
@@ -65,7 +65,7 @@ export class LentTools {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async lentStateTransition(
     user: UserDto,
@@ -110,6 +110,7 @@ export class LentTools {
         const new_lent = await this.lentRepository.lentCabinet(
           user,
           cabinet_id,
+          cabinet.new_lent_id,
         );
         if (cabinet.lent_count + 1 === cabinet.max_user) {
           if (cabinet.status === CabinetStatusType.AVAILABLE) {
@@ -156,7 +157,7 @@ export class LentTools {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async clearCabinetInfo(cabinet_id: number): Promise<void> {
     this.logger.debug(`Called ${LentTools.name} ${this.clearCabinetInfo.name}`);
@@ -165,7 +166,7 @@ export class LentTools {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async returnStateTransition(
     cabinet_id: number,
@@ -177,6 +178,7 @@ export class LentTools {
     // 대여하고 있는 유저들의 대여 정보를 포함하는 cabinet 정보를 가져옴.
     // 가져오는 정보 : 캐비넷 상태, 캐비넷 대여타입, 캐비넷을 빌린 사람들의 인원 수
     const cabinet = await this.lentRepository.getReturnCabinetData(cabinet_id);
+    // getReturnCabinetData() 함수가 null을 반환하면 어떻게 처리하는지 여쭤보기
     const lent = cabinet.lents.filter(
       (lent) => lent.lent_user_id === user.user_id,
     )[0];
