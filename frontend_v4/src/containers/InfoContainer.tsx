@@ -161,7 +161,7 @@ const InfoSectionStyled = styled.section`
     text-align: center;
   }
   .redColor {
-    color: var(--delay);
+    color: var(--expired);
     font-weight: 700;
   }
   .article > p > span {

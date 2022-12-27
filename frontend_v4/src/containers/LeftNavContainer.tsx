@@ -1,16 +1,21 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const floors = ["2층", "3층", "4층", "5층"];
 
 const LeftNavContainer = () => {
+  const navigator = useNavigate();
+
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
-          <TopBtnStyled>Home</TopBtnStyled>
+          <TopBtnStyled onClick={() => navigator("/home")}>Home</TopBtnStyled>
           {floors.map((floor, index) => (
-            <TopBtnStyled key={index}>{floor}</TopBtnStyled>
+            <TopBtnStyled onClick={() => navigator("/main")} key={index}>
+              {floor}
+            </TopBtnStyled>
           ))}
         </TopBtnsStyled>
       </TopSectionStyled>
