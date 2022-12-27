@@ -1,20 +1,27 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { currentFloorState } from "@/recoil/atoms";
 
-const floors = ["2층", "3층", "4층", "5층"];
+const floors = [2, 3, 4, 5];
 
 const LeftNavContainer = () => {
+  const [, setFloor] = useRecoilState<number>(currentFloorState);
   const navigator = useNavigate();
-
+  const { pathname } = useLocation();
+  const onClick = (floor: number) => {
+    setFloor(floor);
+    if (pathname == "/home") navigator("/main");
+  };
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
           <TopBtnStyled onClick={() => navigator("/home")}>Home</TopBtnStyled>
           {floors.map((floor, index) => (
-            <TopBtnStyled onClick={() => navigator("/main")} key={index}>
-              {floor}
+            <TopBtnStyled onClick={() => onClick(floor)} key={index}>
+              {floor + "층"}
             </TopBtnStyled>
           ))}
         </TopBtnsStyled>

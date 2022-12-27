@@ -2,7 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import TopNavContainer from "@/containers/TopNavContainer";
 import LeftNavContainer from "@/containers/LeftNavContainer";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import {
+  CabinetInfo,
+  CabinetInfoByLocationFloorDto,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
 import CabinetListContainer from "@/containers/CabinetListContainer";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
@@ -11,11 +15,21 @@ import CabinetInfoArea, {
   ISelectedCabinetInfo,
 } from "@/containers/CabinetInfoArea";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
-import { axiosMyInfo } from "@/api/axios/axios.custom";
+import {
+  axiosCabinetByLocationFloor,
+  axiosMyInfo,
+  axiosMyLentInfo,
+} from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
 import { useRecoilState } from "recoil";
-import { userInfoState } from "@/recoil/atoms";
+import {
+  currentFloorDataState,
+  currentFloorState,
+  myLentInfoState,
+  userInfoState,
+} from "@/recoil/atoms";
 import { UserDto } from "@/types/dto/user.dto";
+import { useNavigate } from "react-router";
 
 const CABINETS: CabinetInfo[] = [
   {
@@ -191,12 +205,19 @@ const CabinetInfoDummy: ISelectedCabinetInfo = {
 };
 
 const MainPage = () => {
+  const navigator = useNavigate();
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
   const [colNum, setColNum] = useState<number>(4);
   // .env에서 가져올 실제 col_num 값입니다.
   const maxColNum = 7;
   const token = getCookie("access_token");
   const [user, setUser] = useRecoilState<UserDto>(userInfoState);
+  const [myLentInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myLentInfoState);
+  const [currentFloor, setCurrentFloor] =
+    useRecoilState<number>(currentFloorState);
+  const [currentFloorData, setCurrentFloorData] =
+    useRecoilState<CabinetInfoByLocationFloorDto>(currentFloorDataState);
   const setColNumByDivWidth = () => {
     if (CabinetListWrapperRef.current !== null)
       setColNum(
@@ -217,34 +238,42 @@ const MainPage = () => {
   }, [CabinetListWrapperRef.current]);
 
   useEffect(() => {
-    if (token) {
-      if (user.intra_id === "default") {
-        axiosMyInfo()
-          .then((response) => {
-            setUser(response.data);
-            //if (response.data.cabinet_id !== -1) navigate("/lent");
-          })
-          .catch((error) => {
-            //navigate("/");
-          });
-      } else {
-        axiosMyInfo()
-          .then((response) => {
-            //dispatch(setUserCabinet(response.data.cabinet_id));
-            setUser({ ...user, cabinet_id: response.data.cabinet_id });
-          })
-          .catch((error) => {
-            //navigate("/");
-          });
-      }
+    if (!token) navigator("/");
+    if (user.intra_id === "default") {
+      axiosMyInfo()
+        .then((response) => {
+          setUser(response.data);
+          //if (response.data.cabinet_id !== -1) navigate("/lent");
+        })
+        .catch((error) => {
+          //navigate("/");
+        });
+      axiosMyLentInfo().then((response) => {
+        setMyLentInfo(response.data);
+      });
     } else {
-      //navigate("/");
+      axiosMyInfo()
+        .then((response) => {
+          //dispatch(setUserCabinet(response.data.cabinet_id));
+          setUser({ ...user, cabinet_id: response.data.cabinet_id });
+        })
+        .catch((error) => {
+          //navigate("/");
+        });
     }
+    axiosCabinetByLocationFloor("새롬관", currentFloor)
+      .then((response) => {
+        console.log(response.data);
+        setCurrentFloorData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
   return (
     <>
       <TopNavContainer />
-      <WrapperStyled>
+      <WrapperStyled onClick={() => console.log(myLentInfo)}>
         <LeftNavContainer />
         <LeftNavOptionContainer />
         <MainStyled>
