@@ -210,6 +210,30 @@ const MainPage = () => {
     };
   }, [CabinetListWrapperRef.current]);
 
+  useEffect(() => {
+    if (token) {
+      if (user.intra_id === "default") {
+        axiosMyInfo()
+          .then((response) => {
+            dispatch(userAll(response.data));
+            if (response.data.cabinet_id !== -1) navigate("/lent");
+          })
+          .catch((error) => {
+            navigate("/");
+          });
+      } else {
+        axiosMyInfo()
+          .then((response) => {
+            dispatch(setUserCabinet(response.data.cabinet_id));
+          })
+          .catch((error) => {
+            navigate("/");
+          });
+      }
+    } else {
+      navigate("/");
+    }
+  }, []);
   return (
     <>
       <TopNavContainer />
