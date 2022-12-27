@@ -11,72 +11,10 @@ export const axiosLogout = async (): Promise<any> => {
   }
 };
 
-const axiosExtensionUrl = "/api/extension";
-export const axiosExtension = async (): Promise<any> => {
-  try {
-    const response = await instance.post(axiosExtensionUrl);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosLentUrl = "/api/lent";
-export const axiosLent = async (cabinet_id: number): Promise<any> => {
-  try {
-    const response = await instance.post(axiosLentUrl, {
-      cabinet_id,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosReturnUrl = "/api/return";
-export const axiosReturn = async (lent_id: number): Promise<any> => {
-  try {
-    const response = await instance.post(axiosReturnUrl, { lent_id });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const axiosMyInfoURL = "/api/my_info";
 export const axiosMyInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosLentInfoURL = "/api/lent_info";
-export const axiosLentInfo = async (): Promise<any> => {
-  try {
-    const response = await instance.post(axiosLentInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosCabinetInfoURL = "/api/cabinet";
-export const axiosCabinetInfo = async (): Promise<any> => {
-  try {
-    const response = await instance.post(axiosCabinetInfoURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosReturnInfoURL = "/api/return_info";
-export const axiosReturnInfo = async (): Promise<any> => {
-  try {
-    const response = await instance.post(axiosReturnInfoURL);
     return response;
   } catch (error) {
     throw error;
@@ -171,10 +109,10 @@ export const axiosMyLentInfo = async (): Promise<any> => {
   }
 };
 
-const axiosV3ReturnURL = "/api/lent/return";
-export const axiosV3Return = async (): Promise<any> => {
+const axiosReturnURL = "/api/lent/return";
+export const axiosReturn = async (): Promise<any> => {
   try {
-    const response = await instance.delete(axiosV3ReturnURL);
+    const response = await instance.delete(axiosReturnURL);
     return response;
   } catch (error) {
     throw error;
