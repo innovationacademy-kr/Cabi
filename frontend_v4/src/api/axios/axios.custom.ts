@@ -165,7 +165,6 @@ const axiosMyLentInfoURL = "/v3/api/my_lent_info";
 export const axiosMyLentInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyLentInfoURL);
-    console.log(response);
     return response;
   } catch (error) {
     throw error;

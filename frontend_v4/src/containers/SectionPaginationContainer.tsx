@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { currentFloorState } from "@/recoil/atoms";
+import { currentFloorSectionInfo } from "@/recoil/selectors";
 import styled from "styled-components";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 
-export const SectionPaginationContainer = () => {
+export const SectionPaginationContainer = (): JSX.Element => {
   /* 
     require props 
     1. Current floor
@@ -10,14 +13,16 @@ export const SectionPaginationContainer = () => {
     2. Current section name
     3. Current section index
     */
-  const floor = 2;
-  const sectionList = [
-    "End of Cluster1",
-    "Cluster1 - OA",
-    "Cluster1 - Terrace",
-    "Oasis",
-    "End of Cluster2",
-  ];
+  // const floor = 2;
+  // const sectionList = [
+  //   "End of Cluster1",
+  //   "Cluster1 - OA",
+  //   "Cluster1 - Terrace",
+  //   "Oasis",
+  //   "End of Cluster2",
+  // ];
+  const floor = useRecoilValue<number>(currentFloorState);
+  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionInfo);
   const sectionCount = sectionList.length;
 
   const [currentSectionIdx, setCurrentSectionIdx] = useState<number>(0);
@@ -41,6 +46,9 @@ export const SectionPaginationContainer = () => {
     if (currentSectionIdx == sectionCount - 1) return setCurrentSectionIdx(0);
     setCurrentSectionIdx(currentSectionIdx + 1);
   };
+
+  const isLoaded = floor !== -1 && sectionCount !== 0;
+  if (isLoaded === false) return <></>;
 
   return (
     <SectionPaginationStyled>

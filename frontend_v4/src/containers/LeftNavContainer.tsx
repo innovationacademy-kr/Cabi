@@ -1,19 +1,48 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
-import { currentFloorState } from "@/recoil/atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  currentFloorState,
+  currentFloorDataState,
+  currentSectionState,
+} from "@/recoil/atoms";
+import { currentLocationFloorInfo } from "@/recoil/selectors";
+import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
+import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 
-const floors = [2, 3, 4, 5];
+// const floors = [2, 3, 4, 5];
 
 const LeftNavContainer = () => {
-  const [, setFloor] = useRecoilState<number>(currentFloorState);
+  const floors = useRecoilValue<Array<number>>(currentLocationFloorInfo);
+  const [currentFloor, setCurrentFloor] =
+    useRecoilState<number>(currentFloorState);
+  const setCurrentFloorData = useSetRecoilState<
+    CabinetInfoByLocationFloorDto[]
+  >(currentFloorDataState);
+  const [currentSection, setCurrentSection] =
+    useRecoilState<string>(currentSectionState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (currentFloor === -1) return;
+
+    axiosCabinetByLocationFloor("새롬관", currentFloor)
+      .then((response) => {
+        setCurrentFloorData(response.data);
+        setCurrentSection(response.data[0].section);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [currentFloor]);
+
   const onClick = (floor: number) => {
-    setFloor(floor);
+    setCurrentFloor(floor);
     if (pathname == "/home") navigator("/main");
   };
+
   return (
     <LeftNavStyled>
       <TopSectionStyled>

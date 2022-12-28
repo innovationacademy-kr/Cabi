@@ -5,6 +5,7 @@ import LeftNavContainer from "@/containers/LeftNavContainer";
 import {
   CabinetInfo,
   CabinetInfoByLocationFloorDto,
+  CabinetLocationFloorDto,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
 import CabinetListContainer from "@/containers/CabinetListContainer";
@@ -16,182 +17,190 @@ import CabinetInfoArea, {
 } from "@/containers/CabinetInfoArea";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import {
-  axiosCabinetByLocationFloor,
+  axiosLocationFloor,
   axiosMyInfo,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
-import { useRecoilState } from "recoil";
 import {
-  currentFloorDataState,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+  useResetRecoilState,
+} from "recoil";
+import {
+  currentLocationDataState,
   currentFloorState,
+  currentSectionState,
+  currentFloorDataState,
   myLentInfoState,
   userInfoState,
 } from "@/recoil/atoms";
+import { currentSectionCabinetInfo } from "@/recoil/selectors";
 import { UserDto } from "@/types/dto/user.dto";
 import { useNavigate } from "react-router";
 
-const CABINETS: CabinetInfo[] = [
-  {
-    cabinet_id: 97,
-    cabinet_num: 37,
-    lent_type: CabinetType.SHARE,
-    cabinet_title: null,
-    max_user: 3,
-    status: CabinetStatus.AVAILABLE,
-    section: "Cluster 1 - Terrace",
-    lent_info: [],
-  },
-  {
-    cabinet_id: 98,
-    cabinet_num: 38,
-    lent_type: CabinetType.SHARE,
-    cabinet_title: null,
-    max_user: 3,
-    status: CabinetStatus.AVAILABLE,
-    section: "Cluster 1 - Terrace",
-    lent_info: [
-      {
-        user_id: 80460,
-        intra_id: "jwoo",
-        lent_id: 934,
-        lent_time: new Date("2022-11-10T15:02:42.000Z"),
-        expire_time: new Date("2022-12-10T15:02:42.000Z"),
-        is_expired: true,
-      },
-    ],
-  },
-  {
-    cabinet_id: 99,
-    cabinet_num: 39,
-    lent_type: CabinetType.SHARE,
-    cabinet_title: "함지와 형님들",
-    max_user: 3,
-    status: CabinetStatus.SET_EXPIRE_FULL,
-    section: "Cluster 1 - Terrace",
-    lent_info: [
-      {
-        user_id: 131666,
-        intra_id: "dongyoki",
-        lent_id: 1461,
-        lent_time: new Date("2022-12-19T02:42:03.000Z"),
-        expire_time: new Date("2023-01-31T14:59:59.000Z"),
-        is_expired: false,
-      },
-      {
-        user_id: 131623,
-        intra_id: "jihham",
-        lent_id: 1462,
-        lent_time: new Date("2022-12-19T02:42:31.000Z"),
-        expire_time: new Date("2023-01-31T14:59:59.000Z"),
-        is_expired: false,
-      },
-      {
-        user_id: 131622,
-        intra_id: "gkwon",
-        lent_id: 1463,
-        lent_time: new Date("2022-12-19T02:42:32.000Z"),
-        expire_time: new Date("2023-01-31T14:59:59.000Z"),
-        is_expired: false,
-      },
-    ],
-  },
-  {
-    cabinet_id: 113,
-    cabinet_num: 53,
-    lent_type: CabinetType.PRIVATE,
-    cabinet_title: null,
-    max_user: 1,
-    status: CabinetStatus.SET_EXPIRE_AVAILABLE,
-    section: "Cluster 1 - Terrace",
-    lent_info: [
-      {
-        user_id: 110679,
-        intra_id: "hyeyukim",
-        lent_id: 1281,
-        lent_time: new Date("2022-12-07T22:43:19.000Z"),
-        expire_time: new Date("2022-12-30T14:59:59.000Z"),
-        is_expired: false,
-      },
-    ],
-  },
-  {
-    cabinet_id: 114,
-    cabinet_num: 54,
-    lent_type: CabinetType.PRIVATE,
-    cabinet_title: null,
-    max_user: 1,
-    status: CabinetStatus.SET_EXPIRE_FULL,
-    section: "Cluster 1 - Terrace",
-    lent_info: [
-      {
-        user_id: 110902,
-        intra_id: "sooyang",
-        lent_id: 1391,
-        lent_time: new Date("2022-12-17T01:30:51.000Z"),
-        expire_time: new Date("2023-01-08T14:59:59.000Z"),
-        is_expired: false,
-      },
-    ],
-  },
-  {
-    cabinet_id: 115,
-    cabinet_num: 55,
-    lent_type: CabinetType.CIRCLE,
-    cabinet_title: "42cabi",
-    max_user: 1,
-    status: CabinetStatus.SET_EXPIRE_FULL,
-    section: "Cluster 1 - Terrace",
-    lent_info: [
-      {
-        user_id: 110902,
-        intra_id: "sooyang",
-        lent_id: 1391,
-        lent_time: new Date("2022-12-17T01:30:51.000Z"),
-        expire_time: new Date("2023-01-08T14:59:59.000Z"),
-        is_expired: false,
-      },
-    ],
-  },
-  {
-    cabinet_id: 116,
-    cabinet_num: 56,
-    lent_type: CabinetType.CIRCLE,
-    cabinet_title: "42checkIn",
-    max_user: 1,
-    status: CabinetStatus.BROKEN,
-    section: "Cluster 1 - Terrace",
-    lent_info: [
-      {
-        user_id: 110902,
-        intra_id: "sooyang",
-        lent_id: 1391,
-        lent_time: new Date("2022-12-17T01:30:51.000Z"),
-        expire_time: new Date("2023-01-08T14:59:59.000Z"),
-        is_expired: false,
-      },
-    ],
-  },
-  {
-    cabinet_id: 117,
-    cabinet_num: 57,
-    lent_type: CabinetType.PRIVATE,
-    cabinet_title: "42checkIn",
-    max_user: 1,
-    status: CabinetStatus.BANNED,
-    section: "Cluster 1 - Terrace",
-    lent_info: [
-      {
-        user_id: 110902,
-        intra_id: "sooyang",
-        lent_id: 1391,
-        lent_time: new Date("2022-12-17T01:30:51.000Z"),
-        expire_time: new Date("2023-01-08T14:59:59.000Z"),
-        is_expired: false,
-      },
-    ],
-  },
-];
+// const CABINETS: CabinetInfo[] = [
+//   {
+//     cabinet_id: 97,
+//     cabinet_num: 37,
+//     lent_type: CabinetType.SHARE,
+//     cabinet_title: null,
+//     max_user: 3,
+//     status: CabinetStatus.AVAILABLE,
+//     section: "Cluster 1 - Terrace",
+//     lent_info: [],
+//   },
+//   {
+//     cabinet_id: 98,
+//     cabinet_num: 38,
+//     lent_type: CabinetType.SHARE,
+//     cabinet_title: null,
+//     max_user: 3,
+//     status: CabinetStatus.AVAILABLE,
+//     section: "Cluster 1 - Terrace",
+//     lent_info: [
+//       {
+//         user_id: 80460,
+//         intra_id: "jwoo",
+//         lent_id: 934,
+//         lent_time: new Date("2022-11-10T15:02:42.000Z"),
+//         expire_time: new Date("2022-12-10T15:02:42.000Z"),
+//         is_expired: true,
+//       },
+//     ],
+//   },
+//   {
+//     cabinet_id: 99,
+//     cabinet_num: 39,
+//     lent_type: CabinetType.SHARE,
+//     cabinet_title: "함지와 형님들",
+//     max_user: 3,
+//     status: CabinetStatus.SET_EXPIRE_FULL,
+//     section: "Cluster 1 - Terrace",
+//     lent_info: [
+//       {
+//         user_id: 131666,
+//         intra_id: "dongyoki",
+//         lent_id: 1461,
+//         lent_time: new Date("2022-12-19T02:42:03.000Z"),
+//         expire_time: new Date("2023-01-31T14:59:59.000Z"),
+//         is_expired: false,
+//       },
+//       {
+//         user_id: 131623,
+//         intra_id: "jihham",
+//         lent_id: 1462,
+//         lent_time: new Date("2022-12-19T02:42:31.000Z"),
+//         expire_time: new Date("2023-01-31T14:59:59.000Z"),
+//         is_expired: false,
+//       },
+//       {
+//         user_id: 131622,
+//         intra_id: "gkwon",
+//         lent_id: 1463,
+//         lent_time: new Date("2022-12-19T02:42:32.000Z"),
+//         expire_time: new Date("2023-01-31T14:59:59.000Z"),
+//         is_expired: false,
+//       },
+//     ],
+//   },
+//   {
+//     cabinet_id: 113,
+//     cabinet_num: 53,
+//     lent_type: CabinetType.PRIVATE,
+//     cabinet_title: null,
+//     max_user: 1,
+//     status: CabinetStatus.SET_EXPIRE_AVAILABLE,
+//     section: "Cluster 1 - Terrace",
+//     lent_info: [
+//       {
+//         user_id: 110679,
+//         intra_id: "hyeyukim",
+//         lent_id: 1281,
+//         lent_time: new Date("2022-12-07T22:43:19.000Z"),
+//         expire_time: new Date("2022-12-30T14:59:59.000Z"),
+//         is_expired: false,
+//       },
+//     ],
+//   },
+//   {
+//     cabinet_id: 114,
+//     cabinet_num: 54,
+//     lent_type: CabinetType.PRIVATE,
+//     cabinet_title: null,
+//     max_user: 1,
+//     status: CabinetStatus.SET_EXPIRE_FULL,
+//     section: "Cluster 1 - Terrace",
+//     lent_info: [
+//       {
+//         user_id: 110902,
+//         intra_id: "sooyang",
+//         lent_id: 1391,
+//         lent_time: new Date("2022-12-17T01:30:51.000Z"),
+//         expire_time: new Date("2023-01-08T14:59:59.000Z"),
+//         is_expired: false,
+//       },
+//     ],
+//   },
+//   {
+//     cabinet_id: 115,
+//     cabinet_num: 55,
+//     lent_type: CabinetType.CIRCLE,
+//     cabinet_title: "42cabi",
+//     max_user: 1,
+//     status: CabinetStatus.SET_EXPIRE_FULL,
+//     section: "Cluster 1 - Terrace",
+//     lent_info: [
+//       {
+//         user_id: 110902,
+//         intra_id: "sooyang",
+//         lent_id: 1391,
+//         lent_time: new Date("2022-12-17T01:30:51.000Z"),
+//         expire_time: new Date("2023-01-08T14:59:59.000Z"),
+//         is_expired: false,
+//       },
+//     ],
+//   },
+//   {
+//     cabinet_id: 116,
+//     cabinet_num: 56,
+//     lent_type: CabinetType.CIRCLE,
+//     cabinet_title: "42checkIn",
+//     max_user: 1,
+//     status: CabinetStatus.BROKEN,
+//     section: "Cluster 1 - Terrace",
+//     lent_info: [
+//       {
+//         user_id: 110902,
+//         intra_id: "sooyang",
+//         lent_id: 1391,
+//         lent_time: new Date("2022-12-17T01:30:51.000Z"),
+//         expire_time: new Date("2023-01-08T14:59:59.000Z"),
+//         is_expired: false,
+//       },
+//     ],
+//   },
+//   {
+//     cabinet_id: 117,
+//     cabinet_num: 57,
+//     lent_type: CabinetType.PRIVATE,
+//     cabinet_title: "42checkIn",
+//     max_user: 1,
+//     status: CabinetStatus.BANNED,
+//     section: "Cluster 1 - Terrace",
+//     lent_info: [
+//       {
+//         user_id: 110902,
+//         intra_id: "sooyang",
+//         lent_id: 1391,
+//         lent_time: new Date("2022-12-17T01:30:51.000Z"),
+//         expire_time: new Date("2023-01-08T14:59:59.000Z"),
+//         is_expired: false,
+//       },
+//     ],
+//   },
+// ];
 
 const CabinetInfoDummy: ISelectedCabinetInfo = {
   floor: 2,
@@ -211,13 +220,14 @@ const MainPage = () => {
   // .env에서 가져올 실제 col_num 값입니다.
   const maxColNum = 7;
   const token = getCookie("access_token");
-  const [user, setUser] = useRecoilState<UserDto>(userInfoState);
+  const [currentLocationData, setCurrentLocationData] = useRecoilState<
+    CabinetLocationFloorDto[]
+  >(currentLocationDataState);
+  const setUser = useSetRecoilState<UserDto>(userInfoState);
   const [myLentInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myLentInfoState);
-  const [currentFloor, setCurrentFloor] =
-    useRecoilState<number>(currentFloorState);
-  const [currentFloorData, setCurrentFloorData] =
-    useRecoilState<CabinetInfoByLocationFloorDto>(currentFloorDataState);
+  const setCurrentFloor = useSetRecoilState<number>(currentFloorState);
+  const setCurrentSection = useSetRecoilState<string>(currentSectionState);
   const setColNumByDivWidth = () => {
     if (CabinetListWrapperRef.current !== null)
       setColNum(
@@ -239,41 +249,53 @@ const MainPage = () => {
 
   useEffect(() => {
     if (!token) navigator("/");
-    if (user.intra_id === "default") {
-      axiosMyInfo()
-        .then((response) => {
-          setUser(response.data);
-          //if (response.data.cabinet_id !== -1) navigate("/lent");
-        })
-        .catch((error) => {
-          //navigate("/");
-        });
-      axiosMyLentInfo().then((response) => {
-        setMyLentInfo(response.data);
-      });
-    } else {
-      axiosMyInfo()
-        .then((response) => {
-          //dispatch(setUserCabinet(response.data.cabinet_id));
-          setUser({ ...user, cabinet_id: response.data.cabinet_id });
-        })
-        .catch((error) => {
-          //navigate("/");
-        });
-    }
-    axiosCabinetByLocationFloor("새롬관", currentFloor)
+
+    const getLocationData = async () => {
+      try {
+        const locationFloorData = await axiosLocationFloor();
+        setCurrentLocationData(locationFloorData.data.space_data);
+      } catch (error) {
+        console.log(error);
+        // navigator("/");
+      }
+    };
+    getLocationData();
+    axiosMyInfo()
       .then((response) => {
-        console.log(response.data);
-        setCurrentFloorData(response.data);
+        setUser(response.data);
+        //if (response.data.cabinet_id !== -1) navigate("/lent");
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
+        //navigate("/");
+      });
+    axiosMyLentInfo()
+      .then((response) => {
+        if (response.status === 204) useResetRecoilState(myLentInfoState);
+        else if (response.data) setMyLentInfo(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }, []);
+
+  useEffect(() => {
+    if (myLentInfo === undefined) return;
+
+    if (myLentInfo.cabinet_id !== -1) {
+      setCurrentFloor(myLentInfo.floor);
+      setCurrentSection(myLentInfo.section);
+    } else {
+      setCurrentFloor(currentLocationData[0].floors[0]);
+    }
+  }, [myLentInfo]);
+
+  const CABINETS = useRecoilValue<CabinetInfo[]>(currentSectionCabinetInfo);
+
   return (
     <>
       <TopNavContainer />
-      <WrapperStyled onClick={() => console.log(myLentInfo)}>
+      <WrapperStyled>
         <LeftNavContainer />
         <LeftNavOptionContainer />
         <MainStyled>

@@ -15,7 +15,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   if (props.status !== "BANNED" && props.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
     if (props.lent_type === "PRIVATE")
-      cabinetLabelText = props.lent_info[0].intra_id;
+      cabinetLabelText = props.lent_info[0]?.intra_id;
     else if (props.lent_type === "SHARE")
       cabinetLabelText = props.lent_info.length + " / " + props.max_user;
     else if (props.lent_type === "CIRCLE")
