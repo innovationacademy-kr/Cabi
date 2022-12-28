@@ -50,8 +50,25 @@ jobs:
         run: npm run build --prefix backend
       # - name: 단위 테스트 체크
       #   run: npm run test --prefix backend
-      # - name: 통합 테스트 체크
-      #   run: npm run test:e2e --prefix backend
+      - name: E2E 테스트
+        env:
+          HOST: localhost
+          DB_USER: test_user
+          DB_PORT: 3306
+          DATABASE: test_db
+          DB_PASSWORD: test_password
+          ROOT_PASSWORD: test_password
+          FORTYTWO_APP_ID: 1234
+          FORTYTWO_APP_SECRET: 1234
+          CALLBACK_URL: /auth/login/callback
+          COOKIE_KEY: secret
+          JWT_SECRETKEY: SecretKey
+          JWT_ALGORITHM: HS256
+          JWT_EXPIREIN: 28d
+          JWT_ISSUER: 42cabi
+          MAIL_SEND: false
+          DEBUG_LOG: true
+        run: npm run test:e2e --prefix backend
 
   frontend-CI:
     runs-on: ubuntu-latest
