@@ -4,9 +4,33 @@ on: [push]
 jobs:
   backend-CI:
     runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb
+        env:
+          MARIADB_DATABASE: test_db
+          MARIADB_USER: test_user
+          MARIADB_PASSWORD: test_password
+          MARIADB_ROOT_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -P 3306 -ptest_password | grep 'mysqld is alive' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
+      - name: DB에 샘플 데이터 삽입
+        run: >-
+          mysql --force
+          --host="127.0.0.1"
+          --port="3306"
+          --database="test_db"
+          --user="test_user"
+          --password="test_password"
+          < "backend/database/42cabi_v3_test.sql"
       - name: Node.js 16.x Version
         uses: actions/setup-node@v1
         with:
