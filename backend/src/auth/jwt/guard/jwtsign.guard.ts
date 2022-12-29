@@ -22,7 +22,7 @@ export class JWTSignGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     @Inject(ConfigService) private configService: ConfigService,
-    ) {}
+  ) {}
 
   canActivate(
     context: ExecutionContext,

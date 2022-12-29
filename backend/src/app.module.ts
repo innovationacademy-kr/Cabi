@@ -21,6 +21,7 @@ import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BetatestModule } from './betatest/betatest.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { BetatestModule } from './betatest/betatest.module';
       : []),
     // import if UNBAN_API=true
     ...(process.env.UNBAN_API === 'true' ? [BetatestModule] : []),
+    AdminModule,
   ],
   controllers: [],
   providers: [SessionMiddleware],
