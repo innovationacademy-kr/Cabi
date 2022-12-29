@@ -21,14 +21,12 @@ const LeftNavContainer = () => {
   const setCurrentFloorData = useSetRecoilState<
     CabinetInfoByLocationFloorDto[]
   >(currentFloorCabinetState);
-  const [currentSection, setCurrentSection] = useRecoilState<string>(
-    currentSectionNameState
-  );
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (currentFloor === -1) return;
+    if (currentFloor === undefined) return;
 
     axiosCabinetByLocationFloor("새롬관", currentFloor)
       .then((response) => {

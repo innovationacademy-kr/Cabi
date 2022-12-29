@@ -50,7 +50,7 @@ export const currentLocationNameState = atom<string>({
 
 export const currentFloorNumberState = atom<number>({
   key: "CurrentFloor",
-  default: -1,
+  default: undefined,
 });
 
 export const currentSectionNameState = atom<string>({
@@ -58,7 +58,17 @@ export const currentSectionNameState = atom<string>({
   default: undefined,
 });
 
+export const currentCabinetIdState = atom<number>({
+  key: "CurrentCabinetId",
+  default: undefined,
+});
+
 export const currentFloorCabinetState = atom<CabinetInfoByLocationFloorDto[]>({
   key: "CurrentFloorData",
   default: [],
+});
+
+export const targetCabinetInfoState = atom<CabinetInfo>({
+  key: "TargetCabinetInfo",
+  default: undefined,
 });

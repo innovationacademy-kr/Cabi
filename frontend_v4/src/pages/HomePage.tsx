@@ -29,14 +29,11 @@ import {
 const HomePage = () => {
   const navigator = useNavigate();
   const token = getCookie("access_token");
-  const [currentLocationData, setCurrentLocationData] = useRecoilState<
-    CabinetLocationFloorDto[]
-  >(locationsFloorState);
+  const setCurrentLocationData =
+    useSetRecoilState<CabinetLocationFloorDto[]>(locationsFloorState);
   const setUser = useSetRecoilState<UserDto>(userState);
-  const [myLentInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
-  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
 
   useEffect(() => {
     if (!token) navigator("/");
@@ -62,8 +59,9 @@ const HomePage = () => {
       });
     axiosMyLentInfo()
       .then((response) => {
-        if (response.status === 204) useResetRecoilState(myCabinetInfoState);
-        else if (response.data) setMyLentInfo(response.data);
+        // if (response.status === 204) useResetRecoilState(myCabinetInfoState);
+        // else if (response.data) setMyLentInfo(response.data);
+        if (response.data) setMyLentInfo(response.data);
       })
       .catch((error) => {
         console.log(error);
