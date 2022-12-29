@@ -11,7 +11,7 @@ import CabinetInfoArea, {
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 
 import { useRecoilValue } from "recoil";
-import { currentSectionCabinetInfo } from "@/recoil/selectors";
+import { currentSectionCabinetState } from "@/recoil/selectors";
 
 const CabinetInfoDummy: ISelectedCabinetInfo = {
   floor: 2,
@@ -48,7 +48,7 @@ const MainPage = () => {
     };
   }, [CabinetListWrapperRef.current]);
 
-  const CABINETS = useRecoilValue<CabinetInfo[]>(currentSectionCabinetInfo);
+  const CABINETS = useRecoilValue<CabinetInfo[]>(currentSectionCabinetState);
 
   return (
     <>

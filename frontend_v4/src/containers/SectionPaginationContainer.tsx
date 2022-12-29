@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { currentFloorState } from "@/recoil/atoms";
-import { currentFloorSectionInfo } from "@/recoil/selectors";
+import { currentFloorNumberState } from "@/recoil/atoms";
+import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 
@@ -21,8 +21,8 @@ export const SectionPaginationContainer = (): JSX.Element => {
   //   "Oasis",
   //   "End of Cluster2",
   // ];
-  const floor = useRecoilValue<number>(currentFloorState);
-  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionInfo);
+  const floor = useRecoilValue<number>(currentFloorNumberState);
+  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
   const sectionCount = sectionList.length;
 
   const [currentSectionIdx, setCurrentSectionIdx] = useState<number>(0);
