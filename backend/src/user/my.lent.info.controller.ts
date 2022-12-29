@@ -21,10 +21,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
-@Controller({
-  version: '3',
-  path: 'api/my_lent_info',
-})
+@Controller('api/my_lent_info')
 export class MyLentInfoController {
   private logger = new Logger(MyLentInfoController.name);
 

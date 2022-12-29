@@ -19,10 +19,7 @@ import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { CabinetInfoService } from './cabinet.info.service';
 
 @ApiTags('Cabinet')
-@Controller({
-  version: '3',
-  path: 'api/cabinet_info',
-})
+@Controller('api/cabinet_info')
 export class CabinetController {
   private logger = new Logger(CabinetController.name);
 
