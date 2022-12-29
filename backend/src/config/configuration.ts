@@ -12,6 +12,7 @@ export default () => ({
     port: parseInt(process.env.DB_PORT, 10),
     password: process.env.DB_PASSWORD,
     database: process.env.DATABASE,
+    database_v4: process.env.DATABASE_V4,
   },
   jwt: {
     secret: process.env.JWT_SECRETKEY,
