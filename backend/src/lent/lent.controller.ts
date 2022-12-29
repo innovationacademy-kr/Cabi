@@ -35,10 +35,7 @@ import { BanCheckGuard } from '../ban/guard/ban-check.guard';
 import { LentService } from './lent.service';
 
 @ApiTags('Lent')
-@Controller({
-  version: '3',
-  path: '/api/lent',
-})
+@Controller('/api/lent')
 export class LentController {
   private logger = new Logger(LentController.name);
   constructor(private lentService: LentService) {}

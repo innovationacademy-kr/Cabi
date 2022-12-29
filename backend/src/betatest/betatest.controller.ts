@@ -19,10 +19,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import { BetatestService } from './betatest.service';
 
 @ApiTags('베타 테스트용 API (실배포시 구동 X)')
-@Controller({
-  version: '3',
-  path: 'api/betatest',
-})
+@Controller('api/betatest')
 export class BetatestController {
   private logger = new Logger(BetatestController.name);
 

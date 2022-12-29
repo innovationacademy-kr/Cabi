@@ -1,4 +1,5 @@
 import { MailerModule } from '@nestjs-modules/mailer';
+import { HttpModule } from '@nestjs/axios';
 import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -8,6 +9,8 @@ import { CabinetModule } from '../cabinet/cabinet.module';
 import { DateCalculator } from './date.calculator.component';
 import { EmailSender } from './email.sender.component';
 import { ExpiredChecker } from './expired.checker.component';
+import { LeaveAbsence } from './leave.absence.component';
+import { Scheduling } from './scheduling.component';
 
 @Module({
   imports: [
@@ -17,10 +20,17 @@ import { ExpiredChecker } from './expired.checker.component';
       useClass: MailerConfigService,
     }),
     CabinetModule,
+    HttpModule,
     forwardRef(() => LentModule),
   ],
 
-  providers: [EmailSender, ExpiredChecker, DateCalculator],
+  providers: [
+    EmailSender,
+    ExpiredChecker,
+    DateCalculator,
+    LeaveAbsence,
+    Scheduling,
+  ],
   exports: [EmailSender, DateCalculator],
 })
 export class UtilsModule {}

@@ -61,7 +61,7 @@ const MenuButton = (): JSX.Element => {
   };
 
   // 베타테스트용 페널티 해제 메뉴
-  const axiosRemovePenaltyURL = "/v3/api/betatest/deletebanlog";
+  const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";
   const axiosRemovePenalty = async (): Promise<any> => {
     try {
       const response = await instance.delete(axiosRemovePenaltyURL);

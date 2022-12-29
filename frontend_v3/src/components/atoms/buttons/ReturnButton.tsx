@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import { axiosV3Return } from "../../../network/axios/axios.custom";
 import { setUserCabinet } from "../../../redux/slices/userSlice";
 import { useAppDispatch } from "../../../redux/hooks";
 

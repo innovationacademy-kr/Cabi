@@ -13,10 +13,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
-@Controller({
-  version: '3',
-  path: 'api/my_info',
-})
+@Controller('api/my_info')
 export class MyInfoController {
   private logger = new Logger(MyInfoController.name);
 

@@ -5,6 +5,7 @@ import TopNavContainer from "@/containers/TopNavContainer";
 import InfoContainer from "@/containers/InfoContainer";
 import LeftNavContainer from "@/containers/LeftNavContainer";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
+import LoadingModal from "@/components/LoadingModal";
 
 import { getCookie } from "@/api/react_cookie/cookies";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
@@ -115,7 +116,7 @@ const HomePage = () => {
         <LeftNavContainer />
         <LeftNavOptionContainer style={{ display: "none" }} />
         <MainStyled>
-          <InfoContainer />
+          {loading ? <LoadingModal /> : <InfoContainer />}
         </MainStyled>
         {toggleCabinetInfo && (
           <CabinetInfoArea selectedCabinetInfo={CabinetInfoDummy} />
@@ -137,7 +138,6 @@ const MainStyled = styled.main`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  padding-top: 30px;
 `;
 
 export default HomePage;
