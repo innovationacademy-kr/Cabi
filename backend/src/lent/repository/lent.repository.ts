@@ -6,13 +6,14 @@ import { UserDto } from 'src/dto/user.dto';
 import Cabinet from 'src/entities/cabinet.entity';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import {
   IsolationLevel,
   Propagation,
   Transactional,
 } from 'typeorm-transactional';
 import { ILentRepository } from './lent.repository.interface';
+import { ConfigService } from '@nestjs/config';
 
 export class lentRepository implements ILentRepository {
   constructor(
@@ -273,5 +274,18 @@ export class lentRepository implements ILentRepository {
         cabinet_id: cabinet_id,
       })
       .execute();
+  }
+
+  async getExpiredLent(baseDate: Date): Promise<Lent[]> {
+    const result = await this.lentRepository.find({
+      relations: {
+        user: true,
+        cabinet: true,
+      },
+      where: {
+        expire_time: LessThan(baseDate),
+      },
+    });
+    return result;
   }
 }

@@ -231,4 +231,11 @@ export class LentTools {
     this.logger.debug(`Called ${LentTools.name} ${this.getAllLent.name}`);
     return await this.lentRepository.getAllLent();
   }
+
+  async getExpiredLent(): Promise<Lent[]> {
+    this.logger.debug(`Called ${LentTools.name} ${this.getExpiredLent.name}`);
+    let baseDate = new Date();
+    baseDate.setDate(baseDate.getDate() + this.configService.get<number>('expire_time.soonoverdue'));
+    return await this.lentRepository.getExpiredLent(baseDate);
+  }
 }
