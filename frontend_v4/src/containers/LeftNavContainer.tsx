@@ -3,25 +3,27 @@ import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  currentFloorState,
-  currentFloorDataState,
-  currentSectionState,
+  currentFloorNumberState,
+  currentFloorCabinetState,
+  currentSectionNameState,
 } from "@/recoil/atoms";
-import { currentLocationFloorInfo } from "@/recoil/selectors";
+import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
 import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 
 // const floors = [2, 3, 4, 5];
 
 const LeftNavContainer = () => {
-  const floors = useRecoilValue<Array<number>>(currentLocationFloorInfo);
-  const [currentFloor, setCurrentFloor] =
-    useRecoilState<number>(currentFloorState);
+  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const [currentFloor, setCurrentFloor] = useRecoilState<number>(
+    currentFloorNumberState
+  );
   const setCurrentFloorData = useSetRecoilState<
     CabinetInfoByLocationFloorDto[]
-  >(currentFloorDataState);
-  const [currentSection, setCurrentSection] =
-    useRecoilState<string>(currentSectionState);
+  >(currentFloorCabinetState);
+  const [currentSection, setCurrentSection] = useRecoilState<string>(
+    currentSectionNameState
+  );
   const navigator = useNavigate();
   const { pathname } = useLocation();
 

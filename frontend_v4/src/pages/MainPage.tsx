@@ -29,14 +29,14 @@ import {
   useResetRecoilState,
 } from "recoil";
 import {
-  currentLocationDataState,
-  currentFloorState,
-  currentSectionState,
-  currentFloorDataState,
-  myLentInfoState,
-  userInfoState,
+  locationsFloorState,
+  currentFloorNumberState,
+  currentSectionNameState,
+  currentFloorCabinetState,
+  myCabinetInfoState,
+  userState,
 } from "@/recoil/atoms";
-import { currentSectionCabinetInfo } from "@/recoil/selectors";
+import { currentSectionCabinetState } from "@/recoil/selectors";
 import { UserDto } from "@/types/dto/user.dto";
 import { useNavigate } from "react-router";
 
@@ -220,14 +220,13 @@ const MainPage = () => {
   // .env에서 가져올 실제 col_num 값입니다.
   const maxColNum = 7;
   const token = getCookie("access_token");
-  const [currentLocationData, setCurrentLocationData] = useRecoilState<
-    CabinetLocationFloorDto[]
-  >(currentLocationDataState);
-  const setUser = useSetRecoilState<UserDto>(userInfoState);
+  const [currentLocationData, setCurrentLocationData] =
+    useRecoilState<CabinetLocationFloorDto[]>(locationsFloorState);
+  const setUser = useSetRecoilState<UserDto>(userState);
   const [myLentInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myLentInfoState);
-  const setCurrentFloor = useSetRecoilState<number>(currentFloorState);
-  const setCurrentSection = useSetRecoilState<string>(currentSectionState);
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
   const setColNumByDivWidth = () => {
     if (CabinetListWrapperRef.current !== null)
       setColNum(
@@ -271,7 +270,7 @@ const MainPage = () => {
       });
     axiosMyLentInfo()
       .then((response) => {
-        if (response.status === 204) useResetRecoilState(myLentInfoState);
+        if (response.status === 204) useResetRecoilState(myCabinetInfoState);
         else if (response.data) setMyLentInfo(response.data);
       })
       .catch((error) => {
@@ -290,7 +289,7 @@ const MainPage = () => {
     }
   }, [myLentInfo]);
 
-  const CABINETS = useRecoilValue<CabinetInfo[]>(currentSectionCabinetInfo);
+  const CABINETS = useRecoilValue<CabinetInfo[]>(currentSectionCabinetState);
 
   return (
     <>

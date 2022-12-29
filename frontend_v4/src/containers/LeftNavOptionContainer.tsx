@@ -1,9 +1,9 @@
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { currentFloorSectionInfo } from "@/recoil/selectors";
+import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import CabinetColorTable from "@/components/CabinetColorTable";
-import { currentSectionState } from "@/recoil/atoms";
+import { currentSectionNameState } from "@/recoil/atoms";
 
 // const floorSection = [
 //   "End of Cluster1",
@@ -14,8 +14,10 @@ import { currentSectionState } from "@/recoil/atoms";
 // ];
 
 const LeftNavOptionContainer = (props: { style?: React.CSSProperties }) => {
-  const floorSection = useRecoilValue<Array<string>>(currentFloorSectionInfo);
-  const setCurrentFloorSection = useSetRecoilState<string>(currentSectionState);
+  const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const setCurrentFloorSection = useSetRecoilState<string>(
+    currentSectionNameState
+  );
 
   const onClick = (section: string) => {
     setCurrentFloorSection(section);

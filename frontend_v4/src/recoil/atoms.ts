@@ -8,7 +8,7 @@ import {
 import { atom } from "recoil";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 
-export const userInfoState = atom<UserDto>({
+export const userState = atom<UserDto>({
   key: "UserInfo",
   default: {
     cabinet_id: -1,
@@ -17,11 +17,11 @@ export const userInfoState = atom<UserDto>({
   },
 });
 
-export const myLentInfoState = atom<MyCabinetInfoResponseDto>({
+export const myCabinetInfoState = atom<MyCabinetInfoResponseDto>({
   key: "MyLentInfo",
   default: undefined,
 });
-// export const myLentInfoState = atom<MyCabinetInfoResponseDto>({
+// export const myCabinetInfoState = atom<MyCabinetInfoResponseDto>({
 //   key: "MyLentInfo",
 //   default: {
 //     status: CabinetStatus.AVAILABLE,
@@ -38,27 +38,27 @@ export const myLentInfoState = atom<MyCabinetInfoResponseDto>({
 //   },
 // });
 
-export const currentLocationDataState = atom<CabinetLocationFloorDto[]>({
+export const locationsFloorState = atom<CabinetLocationFloorDto[]>({
   key: "CurrentLocationData",
   default: [],
 });
 
-export const currentLocationState = atom<string>({
+export const currentLocationNameState = atom<string>({
   key: "CurrentLocation",
   default: "새롬관",
 });
 
-export const currentFloorState = atom<number>({
+export const currentFloorNumberState = atom<number>({
   key: "CurrentFloor",
   default: -1,
 });
 
-export const currentSectionState = atom<string>({
+export const currentSectionNameState = atom<string>({
   key: "CurrentSection",
   default: undefined,
 });
 
-export const currentFloorDataState = atom<CabinetInfoByLocationFloorDto[]>({
+export const currentFloorCabinetState = atom<CabinetInfoByLocationFloorDto[]>({
   key: "CurrentFloorData",
   default: [],
 });

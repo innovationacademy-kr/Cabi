@@ -1,17 +1,17 @@
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { selector } from "recoil";
 import {
-  currentLocationDataState,
-  currentLocationState,
-  currentFloorDataState,
-  currentSectionState,
+  locationsFloorState,
+  currentLocationNameState,
+  currentFloorCabinetState,
+  currentSectionNameState,
 } from "./atoms";
 
-export const currentLocationFloorInfo = selector<Array<number>>({
+export const currentLocationFloorState = selector<Array<number>>({
   key: "CurrentLocationFloor",
   get: ({ get }) => {
-    const currentLocationData = get(currentLocationDataState);
-    const currentLocation = get(currentLocationState);
+    const currentLocationData = get(locationsFloorState);
+    const currentLocation = get(currentLocationNameState);
 
     const currentLocationIndex = currentLocationData.findIndex((building) => {
       return building.location === currentLocation;
@@ -21,20 +21,20 @@ export const currentLocationFloorInfo = selector<Array<number>>({
   },
 });
 
-export const currentFloorSectionInfo = selector<Array<string>>({
+export const currentFloorSectionState = selector<Array<string>>({
   key: "CurrentFloorSection",
   get: ({ get }) => {
-    const currentFloorData = get(currentFloorDataState);
+    const currentFloorData = get(currentFloorCabinetState);
 
     return currentFloorData.map((floor) => floor.section);
   },
 });
 
-export const currentSectionCabinetInfo = selector<CabinetInfo[]>({
+export const currentSectionCabinetState = selector<CabinetInfo[]>({
   key: "CurrentSectionCabinet",
   get: ({ get }) => {
-    const currentFloorData = get(currentFloorDataState);
-    const currentSection = get(currentSectionState);
+    const currentFloorData = get(currentFloorCabinetState);
+    const currentSection = get(currentSectionNameState);
 
     const currentSectionIndex = currentFloorData.findIndex((floor) => {
       return floor.section === currentSection;
