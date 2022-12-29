@@ -17,7 +17,7 @@ const InfoContainer = () => {
         <InfoSectionStyled className="section">
           <article className="article">
             <div>
-              <img src="src/assets/images/single_circle.svg" alt="" />
+              <img src="src/assets/images/privateIcon.svg" alt="" />
             </div>
             <h3>개인 사물함</h3>
             <p>
@@ -28,7 +28,7 @@ const InfoContainer = () => {
           </article>
           <article className="article">
             <div>
-              <img src="src/assets/images/group_circle.svg" alt="" />
+              <img src="src/assets/images/shareIcon.svg" alt="" />
             </div>
             <h3>공유 사물함</h3>
             <p>
@@ -46,7 +46,7 @@ const InfoContainer = () => {
           </article>
           <article className="article">
             <div>
-              <img src="src/assets/images/club_circle.svg" alt="" />
+              <img src="src/assets/images/circleIcon.svg" alt="" />
             </div>
             <h3>동아리 사물함</h3>
             <p>
@@ -147,8 +147,16 @@ const InfoSectionStyled = styled.section`
   .article > div {
     width: 58px;
     height: 58px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(113, 46, 255, 0.1);
+    border-radius: 50%;
   }
-
+  .article > div > img {
+    width: 24px;
+    height: 24px;
+  }
   .article > h3 {
     font-size: 1.5rem;
     margin: 15px 0;
