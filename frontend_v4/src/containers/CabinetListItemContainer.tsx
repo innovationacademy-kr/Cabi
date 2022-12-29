@@ -62,18 +62,18 @@ const cabinetIconSrcMap = {
 };
 
 const cabinetFilterMap = {
-  [CabinetStatus.AVAILABLE]: "none",
-  [CabinetStatus.SET_EXPIRE_FULL]: "brightness(100)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "none",
+  [CabinetStatus.AVAILABLE]: "brightness(100)",
+  [CabinetStatus.SET_EXPIRE_FULL]: "none",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "brightness(100)",
   [CabinetStatus.EXPIRED]: "brightness(100)",
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
 };
 
 const cabinetLabelColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--black)",
-  [CabinetStatus.SET_EXPIRE_FULL]: "var(--white)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--black)",
+  [CabinetStatus.AVAILABLE]: "var(--white)",
+  [CabinetStatus.SET_EXPIRE_FULL]: "var(--black)",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--white)",
   [CabinetStatus.EXPIRED]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
