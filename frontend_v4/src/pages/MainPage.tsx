@@ -184,7 +184,7 @@ const CabinetInfoDummy: ISelectedCabinetInfo = {
   section: "Oasis",
   cabinetNum: 42,
   cabinetColor: "var(--available)",
-  cabinetLogo: "/src/assets/images/shareCabinetType.svg",
+  cabinetLogo: "/src/assets/images/shareIcon.svg",
   userNameList: "jaesjeon\ninshin\n-",
   belowText: "16일 남았습니다.\n2022-12-22",
   belowTextColor: "black",

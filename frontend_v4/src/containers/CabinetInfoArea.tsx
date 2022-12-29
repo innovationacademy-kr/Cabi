@@ -6,9 +6,9 @@ import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import cabiLogo from "@/assets/images/logo.svg";
-import privateLogo from "@/assets/images/privateCabinetType.svg";
-import shareLogo from "@/assets/images/shareCabinetType.svg";
-import circleLogo from "@/assets/images/circleCabinetType.svg";
+import privateLogo from "@/assets/images/privateIcon.svg";
+import shareLogo from "@/assets/images/shareIcon.svg";
+import circleLogo from "@/assets/images/circleIcon.svg";
 
 export interface ISelectedCabinetInfo {
   floor: number;
