@@ -8,11 +8,12 @@ import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import { getCookie } from "@/api/react_cookie/cookies";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import {
-  currentFloorState,
-  currentLocationDataState,
-  currentSectionState,
-  myLentInfoState,
-  userInfoState,
+  locationsFloorState,
+  currentFloorNumberState,
+  currentSectionNameState,
+  currentFloorCabinetState,
+  myCabinetInfoState,
+  userState,
 } from "@/recoil/atoms";
 import {
   CabinetLocationFloorDto,
@@ -30,12 +31,12 @@ const HomePage = () => {
   const token = getCookie("access_token");
   const [currentLocationData, setCurrentLocationData] = useRecoilState<
     CabinetLocationFloorDto[]
-  >(currentLocationDataState);
-  const setUser = useSetRecoilState<UserDto>(userInfoState);
+  >(locationsFloorState);
+  const setUser = useSetRecoilState<UserDto>(userState);
   const [myLentInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myLentInfoState);
-  const setCurrentFloor = useSetRecoilState<number>(currentFloorState);
-  const setCurrentSection = useSetRecoilState<string>(currentSectionState);
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
 
   useEffect(() => {
     if (!token) navigator("/");
@@ -61,7 +62,7 @@ const HomePage = () => {
       });
     axiosMyLentInfo()
       .then((response) => {
-        if (response.status === 204) useResetRecoilState(myLentInfoState);
+        if (response.status === 204) useResetRecoilState(myCabinetInfoState);
         else if (response.data) setMyLentInfo(response.data);
       })
       .catch((error) => {
