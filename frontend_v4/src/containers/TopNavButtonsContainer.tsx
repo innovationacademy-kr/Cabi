@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import TopNavButton from "@/components/TopNavButton";
 
-const TopNavButtonsContainer = () => {
+const TopNavButtonsContainer = ({ clickCabinetInfo }: any) => {
   return (
     <NaviButtonsStyled>
       <TopNavButton
-        onClick={() => {}}
+        onClick={clickCabinetInfo}
         imgSrc="src/assets/images/myCabinetIcon.svg"
       />
       <TopNavButton onClick={() => {}} imgSrc="src/assets/images/map.svg" />

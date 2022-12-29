@@ -125,13 +125,15 @@ const HeaderStyled = styled.div`
 `;
 
 const MapInfoContainerStyled = styled.div`
+  position: absolute;
+  right: 0;
   width: 330px;
-  /* height : 100%; */
-  height: 840px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   background: var(--white);
+  box-shadow: 0 0 15px 1px gray;
 `;
 
 export default MapInfoContainer;

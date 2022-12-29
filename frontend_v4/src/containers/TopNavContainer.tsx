@@ -27,7 +27,7 @@ const LocationListItem: React.FC<ILocationListItem> = ({
   );
 };
 
-const TopNavContainer = () => {
+const TopNavContainer = ({ clickCabinetInfo }: any) => {
   const [locationName, setLocationName] = useState("새롬관");
   const [locationClicked, setLocationClicked] = useState(false);
 
@@ -53,7 +53,7 @@ const TopNavContainer = () => {
           </LocationListStyled>
         </LocationSelectBoxStyled>
       </LogoStyled>
-      <TopNavButtonsContainer />
+      <TopNavButtonsContainer clickCabinetInfo={clickCabinetInfo} />
     </TopNavContainerStyled>
   );
 };

@@ -88,6 +88,7 @@ const ItemStyled = styled.div<{ info: IFloorMapInfo }>`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+  letter-spacing: -0.05rem;
   grid-column-start: ${({ info }) => info.colStart};
   grid-column-end: ${({ info }) => info.colEnd};
   grid-row-start: ${({ info }) => info.rowStart};

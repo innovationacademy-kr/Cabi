@@ -171,11 +171,16 @@ const CabinetInfoArea: React.FC<{
 export default CabinetInfoArea;
 
 const FlexDirectionColumnStyled = styled.div`
+  position: absolute;
+  right: 0;
   height: 100%;
+  width: 330px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
+  background: var(--white);
+  box-shadow: 0px 0px 15px 1px gray;
 `;
 
 const CabiLogoStyled = styled.img`
