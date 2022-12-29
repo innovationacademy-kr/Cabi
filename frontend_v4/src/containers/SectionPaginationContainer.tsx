@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { currentFloorNumberState } from "@/recoil/atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
@@ -29,6 +32,10 @@ export const SectionPaginationContainer = (): JSX.Element => {
   const currentSectionName = sectionList.at(currentSectionIdx);
   const currentPositionName = floor.toString() + "층 - " + currentSectionName;
 
+  const setCurrentFloorSection = useSetRecoilState<string>(
+    currentSectionNameState
+  );
+
   const paginationIdxBar = sectionList.map((sectionName, idx) => (
     <IndexRectangleStyled
       key={sectionName}
@@ -38,13 +45,23 @@ export const SectionPaginationContainer = (): JSX.Element => {
   ));
 
   const moveToLeftSection = () => {
-    if (currentSectionIdx == 0) return setCurrentSectionIdx(sectionCount - 1);
-    setCurrentSectionIdx(currentSectionIdx - 1);
+    if (currentSectionIdx == 0) {
+      setCurrentSectionIdx(sectionList.length - 1);
+      setCurrentFloorSection(sectionList[sectionList.length - 1]);
+    } else {
+      setCurrentSectionIdx(currentSectionIdx - 1);
+      setCurrentFloorSection(sectionList[currentSectionIdx - 1]);
+    }
   };
 
   const moveToRightSection = () => {
-    if (currentSectionIdx == sectionCount - 1) return setCurrentSectionIdx(0);
-    setCurrentSectionIdx(currentSectionIdx + 1);
+    if (currentSectionIdx == sectionList.length - 1) {
+      setCurrentSectionIdx(0);
+      setCurrentFloorSection(sectionList[0]);
+    } else {
+      setCurrentSectionIdx(currentSectionIdx + 1);
+      setCurrentFloorSection(sectionList[currentSectionIdx + 1]);
+    }
   };
 
   const isLoaded = floor !== -1 && sectionCount !== 0;

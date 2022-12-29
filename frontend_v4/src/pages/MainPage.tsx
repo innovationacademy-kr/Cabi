@@ -12,6 +12,13 @@ import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 
 import { useRecoilValue } from "recoil";
 import { currentSectionCabinetState } from "@/recoil/selectors";
+import {
+  currentFloorNumberState,
+  toggleCabinetInfoState,
+  toggleMapInfoState,
+} from "@/recoil/atoms";
+import MapInfoContainer from "@/containers/MapInfoContainer";
+import { useNavigate } from "react-router-dom";
 
 const CabinetInfoDummy: ISelectedCabinetInfo = {
   floor: 2,
@@ -26,7 +33,11 @@ const CabinetInfoDummy: ISelectedCabinetInfo = {
 
 const MainPage = () => {
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
+  const toggleMapInfo = useRecoilValue(toggleMapInfoState);
+  const toggleCabinetInfo = useRecoilValue(toggleCabinetInfoState);
   const [colNum, setColNum] = useState<number>(4);
+  const currentFloor = useRecoilValue(currentFloorNumberState);
+  const navigate = useNavigate();
   // .env에서 가져올 실제 col_num 값입니다.
   const maxColNum = 7;
 
@@ -41,6 +52,7 @@ const MainPage = () => {
   };
 
   useEffect(() => {
+    if (currentFloor == -1) navigate("/home");
     if (CabinetListWrapperRef.current !== null) setColNumByDivWidth();
     window.addEventListener("resize", setColNumByDivWidth);
     return () => {
@@ -62,9 +74,10 @@ const MainPage = () => {
             <CabinetListContainer colNum={colNum} cabinetInfo={CABINETS} />
           </CabinetListWrapperStyled>
         </MainStyled>
-        <DetailInfoContainerStyled>
+        {toggleCabinetInfo && (
           <CabinetInfoArea selectedCabinetInfo={CabinetInfoDummy} />
-        </DetailInfoContainerStyled>
+        )}
+        {toggleMapInfo && <MapInfoContainer />}
       </WrapperStyled>
     </>
   );

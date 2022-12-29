@@ -133,7 +133,6 @@ const CabinetInfoArea: React.FC<{
   /* -------------------------------------- */
 
   const { selectedCabinetInfo } = props;
-
   if (selectedCabinetInfo === null)
     return (
       <FlexDirectionColumnStyled>

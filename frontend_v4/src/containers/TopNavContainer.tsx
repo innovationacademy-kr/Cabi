@@ -1,4 +1,7 @@
+import { currentFloorNumberState } from "@/recoil/atoms";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import TopNavButtonsContainer from "./TopNavButtonsContainer";
 
@@ -27,14 +30,19 @@ const LocationListItem: React.FC<ILocationListItem> = ({
   );
 };
 
-const TopNavContainer = ({ clickCabinetInfo }: any) => {
+const TopNavContainer = () => {
   const [locationName, setLocationName] = useState("새롬관");
   const [locationClicked, setLocationClicked] = useState(false);
-
+  const setCurrentFloor = useSetRecoilState(currentFloorNumberState);
+  const navigate = useNavigate();
+  const onClickLogo = () => {
+    setCurrentFloor(-1);
+    navigate("/home");
+  };
   return (
     <TopNavContainerStyled>
       <LogoStyled>
-        <LogoDivStyled>
+        <LogoDivStyled onClick={onClickLogo}>
           <img src="src/assets/images/logo.svg" alt="" />
         </LogoDivStyled>
         <LocationSelectBoxStyled>
@@ -53,7 +61,7 @@ const TopNavContainer = ({ clickCabinetInfo }: any) => {
           </LocationListStyled>
         </LocationSelectBoxStyled>
       </LogoStyled>
-      <TopNavButtonsContainer clickCabinetInfo={clickCabinetInfo} />
+      <TopNavButtonsContainer />
     </TopNavContainerStyled>
   );
 };

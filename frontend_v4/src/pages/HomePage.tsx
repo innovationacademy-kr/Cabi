@@ -15,6 +15,8 @@ import {
   currentFloorCabinetState,
   myCabinetInfoState,
   userState,
+  toggleCabinetInfoState,
+  toggleMapInfoState,
 } from "@/recoil/atoms";
 import {
   CabinetLocationFloorDto,
@@ -33,7 +35,7 @@ import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import { ISelectedCabinetInfo } from "@/containers/CabinetInfoArea";
-import { useState } from "react";
+import { useRecoilValue } from "recoil";
 import MapInfoContainer from "@/containers/MapInfoContainer";
 
 let myCabinetIdx: number | null = 25;
@@ -78,15 +80,8 @@ let selectedCabinetInfo: CabinetInfo = {
 };
 
 const HomePage = () => {
-  const [cabinetInfo, toggleCabinetInfo] = useState(false);
-  const [mapInfo, toggleMapInfo] = useState(true);
-  const clickCabinetInfo = () => {
-    toggleCabinetInfo(!cabinetInfo);
-  };
-  const clickMapInfo = () => {
-    toggleMapInfo(!mapInfo);
-  };
-
+  const toggleCabinetInfo = useRecoilValue(toggleCabinetInfoState);
+  const toggleMapInfo = useRecoilValue(toggleMapInfoState);
   const navigator = useNavigate();
   const token = getCookie("access_token");
   const [currentLocationData, setCurrentLocationData] =
@@ -94,8 +89,6 @@ const HomePage = () => {
   const setUser = useSetRecoilState<UserDto>(userState);
   const [myLentInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
-  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
 
   useEffect(() => {
     if (!token) navigator("/");
@@ -131,17 +124,17 @@ const HomePage = () => {
 
   return (
     <>
-      <TopNavContainer clickCabinetInfo={clickCabinetInfo} />
+      <TopNavContainer />
       <WapperStyled>
         <LeftNavContainer />
         <LeftNavOptionContainer style={{ display: "none" }} />
         <MainStyled>
           <InfoContainer />
         </MainStyled>
-        {cabinetInfo && (
+        {toggleCabinetInfo && (
           <CabinetInfoArea selectedCabinetInfo={CabinetInfoDummy} />
         )}
-        {mapInfo && <MapInfoContainer />}
+        {toggleMapInfo && <MapInfoContainer />}
       </WapperStyled>
     </>
   );

@@ -6,6 +6,8 @@ import {
   currentFloorNumberState,
   currentFloorCabinetState,
   currentSectionNameState,
+  toggleMapInfoState,
+  toggleCabinetInfoState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
@@ -21,9 +23,9 @@ const LeftNavContainer = () => {
   const setCurrentFloorData = useSetRecoilState<
     CabinetInfoByLocationFloorDto[]
   >(currentFloorCabinetState);
-  const [currentSection, setCurrentSection] = useRecoilState<string>(
-    currentSectionNameState
-  );
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
+  const toggleMapInfo = useSetRecoilState(toggleMapInfoState);
+  const toggleCabinetInfo = useSetRecoilState(toggleCabinetInfoState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
 
@@ -45,13 +47,29 @@ const LeftNavContainer = () => {
     if (pathname == "/home") navigator("/main");
   };
 
+  const onClickHomeButton = () => {
+    toggleMapInfo(() => false);
+    toggleCabinetInfo(() => false);
+    setCurrentFloor(-1);
+    navigator("/home");
+  };
+
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
-          <TopBtnStyled onClick={() => navigator("/home")}>Home</TopBtnStyled>
+          <TopBtnStyled
+            className={pathname == "/home" ? "leftNavButtonActive" : ""}
+            onClick={onClickHomeButton}
+          >
+            Home
+          </TopBtnStyled>
           {floors.map((floor, index) => (
-            <TopBtnStyled onClick={() => onClick(floor)} key={index}>
+            <TopBtnStyled
+              className={floor === currentFloor ? "leftNavButtonActive" : ""}
+              onClick={() => onClick(floor)}
+              key={index}
+            >
               {floor + "층"}
             </TopBtnStyled>
           ))}

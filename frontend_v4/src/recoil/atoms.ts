@@ -62,3 +62,13 @@ export const currentFloorCabinetState = atom<CabinetInfoByLocationFloorDto[]>({
   key: "CurrentFloorData",
   default: [],
 });
+
+export const toggleMapInfoState = atom<boolean>({
+  key: "ToggleMapInfo",
+  default: false,
+});
+
+export const toggleCabinetInfoState = atom<boolean>({
+  key: "ToggleCabinetInfo",
+  default: false,
+});
