@@ -1,8 +1,32 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNavContainer from "@/containers/TopNavContainer";
 import InfoContainer from "@/containers/InfoContainer";
 import LeftNavContainer from "@/containers/LeftNavContainer";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
+
+import { getCookie } from "@/api/react_cookie/cookies";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import {
+  locationsFloorState,
+  currentFloorNumberState,
+  currentSectionNameState,
+  currentFloorCabinetState,
+  myCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
+import {
+  CabinetLocationFloorDto,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
+import { UserDto } from "@/types/dto/user.dto";
+import {
+  axiosLocationFloor,
+  axiosMyInfo,
+  axiosMyLentInfo,
+} from "@/api/axios/axios.custom";
+
 import CabinetInfoArea from "@/containers/CabinetInfoArea";
 
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -62,6 +86,49 @@ const HomePage = () => {
   const clickMapInfo = () => {
     toggleMapInfo(!mapInfo);
   };
+
+  const navigator = useNavigate();
+  const token = getCookie("access_token");
+  const [currentLocationData, setCurrentLocationData] =
+    useRecoilState<CabinetLocationFloorDto[]>(locationsFloorState);
+  const setUser = useSetRecoilState<UserDto>(userState);
+  const [myLentInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
+
+  useEffect(() => {
+    if (!token) navigator("/");
+
+    const getLocationData = async () => {
+      try {
+        const locationFloorData = await axiosLocationFloor();
+        setCurrentLocationData(locationFloorData.data.space_data);
+      } catch (error) {
+        console.log(error);
+        // navigator("/");
+      }
+    };
+    getLocationData();
+    axiosMyInfo()
+      .then((response) => {
+        setUser(response.data);
+        //if (response.data.cabinet_id !== -1) navigate("/lent");
+      })
+      .catch((error) => {
+        console.log(error);
+        //navigate("/");
+      });
+    axiosMyLentInfo()
+      .then((response) => {
+        if (response.status === 204) useResetRecoilState(myCabinetInfoState);
+        else if (response.data) setMyLentInfo(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <>
       <TopNavContainer clickCabinetInfo={clickCabinetInfo} />
