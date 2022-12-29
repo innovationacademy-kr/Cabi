@@ -107,17 +107,19 @@ input {
   box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
 }
 
-.text_nowrap {
-  white-space: nowrap;
+.textNowrap {
   text-overflow: ellipsis;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-.no-scrollbar {
+.noScrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.no-scrollbar::-webkit-scrollbar {
+.noScrollbar::-webkit-scrollbar {
   display: none;
 }
 

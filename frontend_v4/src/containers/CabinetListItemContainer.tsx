@@ -39,7 +39,11 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
           {props.cabinet_num}
         </CabinetNumberStyled>
       </CabinetIconNumberWrapperStyled>
-      <CabinetLabelStyled status={props.status} cabinet_id={props.cabinet_id}>
+      <CabinetLabelStyled
+        className="textNowrap"
+        status={props.status}
+        cabinet_id={props.cabinet_id}
+      >
         {cabinetLabelText}
       </CabinetLabelStyled>
     </CabinetListItemStyled>
@@ -97,7 +101,7 @@ const CabinetListItemStyled = styled.div<{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px 10px 16px;
+  padding: 8px 8px 14px;
   transition: all 0.2s;
   cursor: pointer;
   &:hover {
@@ -115,7 +119,9 @@ const CabinetLabelStyled = styled.p<{
   status: CabinetStatus;
   cabinet_id: number;
 }>`
-  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+  letter-spacing: -0.02rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
   ${(props) =>
     props.cabinet_id === MY_INFO.cabinet_id &&
@@ -128,7 +134,7 @@ const CabinetNumberStyled = styled.p<{
   status: CabinetStatus;
   cabinet_id: number;
 }>`
-  font-size: 14px;
+  font-size: 0.875rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
   ${(props) =>
     props.cabinet_id === MY_INFO.cabinet_id &&
