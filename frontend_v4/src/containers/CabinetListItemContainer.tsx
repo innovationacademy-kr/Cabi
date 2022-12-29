@@ -39,7 +39,11 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
           {props.cabinet_num}
         </CabinetNumberStyled>
       </CabinetIconNumberWrapperStyled>
-      <CabinetLabelStyled status={props.status} cabinet_id={props.cabinet_id}>
+      <CabinetLabelStyled
+        className="textNowrap"
+        status={props.status}
+        cabinet_id={props.cabinet_id}
+      >
         {cabinetLabelText}
       </CabinetLabelStyled>
     </CabinetListItemStyled>
@@ -62,18 +66,18 @@ const cabinetIconSrcMap = {
 };
 
 const cabinetFilterMap = {
-  [CabinetStatus.AVAILABLE]: "none",
-  [CabinetStatus.SET_EXPIRE_FULL]: "brightness(100)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "none",
+  [CabinetStatus.AVAILABLE]: "brightness(100)",
+  [CabinetStatus.SET_EXPIRE_FULL]: "none",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "brightness(100)",
   [CabinetStatus.EXPIRED]: "brightness(100)",
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
 };
 
 const cabinetLabelColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--black)",
-  [CabinetStatus.SET_EXPIRE_FULL]: "var(--white)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--black)",
+  [CabinetStatus.AVAILABLE]: "var(--white)",
+  [CabinetStatus.SET_EXPIRE_FULL]: "var(--black)",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--white)",
   [CabinetStatus.EXPIRED]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
@@ -97,7 +101,7 @@ const CabinetListItemStyled = styled.div<{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px 10px 16px;
+  padding: 8px 8px 14px;
   transition: all 0.2s;
   cursor: pointer;
   &:hover {
@@ -115,7 +119,9 @@ const CabinetLabelStyled = styled.p<{
   status: CabinetStatus;
   cabinet_id: number;
 }>`
-  font-size: 14px;
+  font-size: 0.875rem;
+  line-height: 1.125rem;
+  letter-spacing: -0.02rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
   ${(props) =>
     props.cabinet_id === MY_INFO.cabinet_id &&
@@ -128,7 +134,7 @@ const CabinetNumberStyled = styled.p<{
   status: CabinetStatus;
   cabinet_id: number;
 }>`
-  font-size: 14px;
+  font-size: 0.875rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
   ${(props) =>
     props.cabinet_id === MY_INFO.cabinet_id &&

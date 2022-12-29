@@ -12,8 +12,8 @@
   /* cabinet color variable */
   --mine: #47ffa7;
   --expired: #ff4e4e;
-  --available: #d9d9d9;
-  --full: var(--main-color);
+  --available: var(--main-color);
+  --full: #d9d9d9;
   --broken: #3c3c3c;
   --banned: #3c3c3c;
 
@@ -107,17 +107,19 @@ input {
   box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
 }
 
-.text_nowrap {
-  white-space: nowrap;
+.textNowrap {
   text-overflow: ellipsis;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-.no-scrollbar {
+.noScrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.no-scrollbar::-webkit-scrollbar {
+.noScrollbar::-webkit-scrollbar {
   display: none;
 }
 
