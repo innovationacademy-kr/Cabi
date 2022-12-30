@@ -4,7 +4,7 @@ import styled from "styled-components";
 import TopNavContainer from "@/containers/TopNavContainer";
 import LeftNavContainer from "@/containers/LeftNavContainer";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import { SectionPaginationContainer } from "@/containers/SectionPaginationContainer";
+import SectionPagination from "@/components/SectionPagination";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import CabinetInfoArea from "@/components/CabinetInfoArea";
 import { useRecoilValue } from "recoil";
@@ -51,7 +51,7 @@ const MainPage = () => {
         <LeftNavContainer />
         <LeftNavOptionContainer />
         <MainStyled>
-          <SectionPaginationContainer />
+          <SectionPagination />
           <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
             <CabinetList colNum={colNum} />
           </CabinetListWrapperStyled>
