@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+  useResetRecoilState,
+} from "recoil";
 import {
   currentFloorNumberState,
   currentFloorCabinetState,
@@ -20,6 +25,7 @@ const LeftNavContainer = () => {
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
   );
+  const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const setCurrentFloorData = useSetRecoilState<
     CabinetInfoByLocationFloorDto[]
   >(currentFloorCabinetState);
@@ -50,7 +56,7 @@ const LeftNavContainer = () => {
   const onClickHomeButton = () => {
     toggleMapInfo(() => false);
     toggleCabinetInfo(() => false);
-    setCurrentFloor(-1);
+    resetCurrentFloor();
     navigator("/home");
   };
 
