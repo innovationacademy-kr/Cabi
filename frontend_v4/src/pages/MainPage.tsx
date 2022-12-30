@@ -1,11 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNavContainer from "@/containers/TopNavContainer";
-import LeftNavContainer from "@/containers/LeftNavContainer";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import LeftNavAreaContainer from "@/containers/LeftNavAreaContainer";
 import { SectionPaginationContainer } from "@/containers/SectionPaginationContainer";
-import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import CabinetInfoArea from "@/components/CabinetInfoArea";
 import { useRecoilValue } from "recoil";
 import CabinetList from "@/components/CabinetList";
@@ -48,8 +46,7 @@ const MainPage = () => {
     <>
       <TopNavContainer />
       <WrapperStyled>
-        <LeftNavContainer />
-        <LeftNavOptionContainer />
+        <LeftNavAreaContainer />
         <MainStyled>
           <SectionPaginationContainer />
           <CabinetListWrapperStyled ref={CabinetListWrapperRef}>

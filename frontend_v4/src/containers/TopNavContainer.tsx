@@ -1,7 +1,8 @@
-import { currentFloorNumberState } from "@/recoil/atoms";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useResetRecoilState } from "recoil";
+
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { currentFloorNumberState, toggleNavState } from "@/recoil/atoms";
 
 import styled from "styled-components";
 import TopNavButtonsContainer from "./TopNavButtonsContainer";
@@ -34,14 +35,20 @@ const LocationListItem: React.FC<ILocationListItem> = ({
 const TopNavContainer = () => {
   const [locationName, setLocationName] = useState("새롬관");
   const [locationClicked, setLocationClicked] = useState(false);
-  const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
-  const navigate = useNavigate();
+  const [toggleNav, setToggleNav] = useRecoilState(toggleNavState);
+  // const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
+  // const navigate = useNavigate();
   const onClickLogo = () => {
-    resetCurrentFloor();
-    navigate("/home");
+    // resetCurrentFloor();
+    // navigate("/home");
+    if (window.innerWidth < 768) {
+      setToggleNav(!toggleNav);
+    } else {
+      setToggleNav(false);
+    }
   };
   return (
-    <TopNavContainerStyled>
+    <TopNavContainerStyled id="topNavWrap">
       <LogoStyled>
         <LogoDivStyled onClick={onClickLogo}>
           <img src="src/assets/images/logo.svg" alt="" />
@@ -77,6 +84,7 @@ const TopNavContainerStyled = styled.nav`
   background-color: var(--main-color);
   padding: 0 28px;
   color: var(--white);
+  z-index: 10;
 `;
 
 const LogoStyled = styled.div`

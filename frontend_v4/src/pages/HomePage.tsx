@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNavContainer from "@/containers/TopNavContainer";
 import InfoContainer from "@/containers/InfoContainer";
-import LeftNavContainer from "@/containers/LeftNavContainer";
-import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
+import LeftNavAreaContainer from "@/containers/LeftNavAreaContainer";
 import LoadingModal from "@/components/LoadingModal";
+import "@/assets/css/homePage.css";
 
 import { getCookie } from "@/api/react_cookie/cookies";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
@@ -67,8 +67,7 @@ const HomePage = () => {
     <>
       <TopNavContainer />
       <WapperStyled>
-        <LeftNavContainer />
-        <LeftNavOptionContainer style={{ display: "none" }} />
+        <LeftNavAreaContainer style={{ display: "none" }} />
         <MainStyled>
           {loading ? <LoadingModal /> : <InfoContainer />}
         </MainStyled>
