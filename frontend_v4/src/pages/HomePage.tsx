@@ -34,6 +34,7 @@ const HomePage = () => {
   const setUser = useSetRecoilState<UserDto>(userState);
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const resetMyLentInfo = useResetRecoilState(myCabinetInfoState);
 
   useEffect(() => {
     if (!token) navigator("/");
@@ -59,9 +60,8 @@ const HomePage = () => {
       });
     axiosMyLentInfo()
       .then((response) => {
-        // if (response.status === 204) useResetRecoilState(myCabinetInfoState);
-        // else if (response.data) setMyLentInfo(response.data);
-        if (response.data) setMyLentInfo(response.data);
+        if (response.status === 204) resetMyLentInfo();
+        else if (response.data) setMyLentInfo(response.data);
       })
       .catch((error) => {
         console.log(error);

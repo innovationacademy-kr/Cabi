@@ -5,8 +5,6 @@ import CabinetInfoAreaContainer, {
 } from "@/containers/CabinetInfoAreaContainer";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import CabinetType from "@/types/enum/cabinet.type.enum";
-import { LentDto } from "@/types/dto/lent.dto";
 
 const CabinetInfoArea = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
@@ -18,6 +16,14 @@ const CabinetInfoArea = (): JSX.Element => {
       : false;
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
+    // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
+    if (
+      selectedCabinetInfo.lent_type === "CIRCLE" &&
+      selectedCabinetInfo.cabinet_title
+    )
+      return selectedCabinetInfo.cabinet_title;
+
+    // 그 외에는 유저리스트 반환
     let userNameList: string = "";
     for (let i = 0; i < selectedCabinetInfo.max_user; i++) {
       const userName =
@@ -33,12 +39,15 @@ const CabinetInfoArea = (): JSX.Element => {
   const getDetailMessage = (
     selectedCabinetInfo: CabinetInfo
   ): string | null => {
+    // 밴, 고장 사물함
     if (
       selectedCabinetInfo.status === CabinetStatus.BANNED ||
       selectedCabinetInfo.status === CabinetStatus.BROKEN
     )
       return "사용 불가";
+    // 동아리 사물함
     else if (selectedCabinetInfo.lent_type === "CIRCLE") return "동아리 사물함";
+    // 사용 중 사물함
     else if (
       selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
       selectedCabinetInfo.status === CabinetStatus.EXPIRED
@@ -53,6 +62,7 @@ const CabinetInfoArea = (): JSX.Element => {
           ? `반납일이 ${-remainTime}일 지났습니다.`
           : `반납일이 ${remainTime}일 남았습니다.`;
       return remainTimeString;
+      // 빈 사물함
     } else return null;
   };
 
