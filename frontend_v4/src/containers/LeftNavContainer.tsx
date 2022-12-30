@@ -1,20 +1,76 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  currentFloorNumberState,
+  currentFloorCabinetState,
+  currentSectionNameState,
+  toggleMapInfoState,
+  toggleCabinetInfoState,
+} from "@/recoil/atoms";
+import { currentLocationFloorState } from "@/recoil/selectors";
+import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
+import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 
-const floors = ["2층", "3층", "4층", "5층"];
+// const floors = [2, 3, 4, 5];
 
 const LeftNavContainer = () => {
+  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const [currentFloor, setCurrentFloor] = useRecoilState<number>(
+    currentFloorNumberState
+  );
+  const setCurrentFloorData = useSetRecoilState<
+    CabinetInfoByLocationFloorDto[]
+  >(currentFloorCabinetState);
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
+  const toggleMapInfo = useSetRecoilState(toggleMapInfoState);
+  const toggleCabinetInfo = useSetRecoilState(toggleCabinetInfoState);
   const navigator = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (currentFloor === undefined) return;
+
+    axiosCabinetByLocationFloor("새롬관", currentFloor)
+      .then((response) => {
+        setCurrentFloorData(response.data);
+        setCurrentSection(response.data[0].section);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [currentFloor]);
+
+  const onClick = (floor: number) => {
+    setCurrentFloor(floor);
+    if (pathname == "/home") navigator("/main");
+  };
+
+  const onClickHomeButton = () => {
+    toggleMapInfo(() => false);
+    toggleCabinetInfo(() => false);
+    setCurrentFloor(-1);
+    navigator("/home");
+  };
 
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
-          <TopBtnStyled onClick={() => navigator("/home")}>Home</TopBtnStyled>
+          <TopBtnStyled
+            className={pathname == "/home" ? "leftNavButtonActive" : ""}
+            onClick={onClickHomeButton}
+          >
+            Home
+          </TopBtnStyled>
           {floors.map((floor, index) => (
-            <TopBtnStyled onClick={() => navigator("/main")} key={index}>
-              {floor}
+            <TopBtnStyled
+              className={floor === currentFloor ? "leftNavButtonActive" : ""}
+              onClick={() => onClick(floor)}
+              key={index}
+            >
+              {floor + "층"}
             </TopBtnStyled>
           ))}
         </TopBtnsStyled>
