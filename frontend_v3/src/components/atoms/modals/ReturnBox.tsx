@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import dayjs from "dayjs";
 import { Typography } from "@mui/material";
 import CheckButton from "../buttons/CheckButton";
-import { axiosV3Return } from "../../../network/axios/axios.custom";
+import { axiosReturn } from "../../../network/axios/axios.custom";
 import { setUserCabinet } from "../../../redux/slices/userSlice";
 import { useAppDispatch } from "../../../redux/hooks";
 import { LentDto } from "../../../types/dto/lent.dto";
@@ -59,7 +59,7 @@ const ReturnBox = (props: ReturnBoxProps): JSX.Element => {
   const lentTime = dayjs(user.lent_time).format("YYYY/MM/DD HH:mm");
 
   const handleReturn = () => {
-    axiosV3Return()
+    axiosReturn()
       .then((response) => {
         dispatch(setUserCabinet(-1));
         navigate("/main");

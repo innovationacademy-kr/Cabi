@@ -138,6 +138,11 @@ input {
   content: "";
 }
 
+.leftNavButtonActive {
+  background: var(--main-color);
+  color: var(--white) !important;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: var(--main-color);

@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import CabinetColorTable from "@/components/CabinetColorTable";
@@ -15,18 +15,24 @@ import { currentSectionNameState } from "@/recoil/atoms";
 
 const LeftNavOptionContainer = (props: { style?: React.CSSProperties }) => {
   const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
-  const setCurrentFloorSection = useSetRecoilState<string>(
+  const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
     currentSectionNameState
   );
 
-  const onClick = (section: string) => {
+  const onClickSection = (section: string) => {
     setCurrentFloorSection(section);
   };
 
   return (
     <LeftNavOptionStyled style={props.style}>
       {floorSection.map((section: string, index: number) => (
-        <FloorSectionStyled key={index} onClick={() => onClick(section)}>
+        <FloorSectionStyled
+          className={
+            currentFloorSection === section ? "leftNavButtonActive" : ""
+          }
+          key={index}
+          onClick={() => onClickSection(section)}
+        >
           {section}
         </FloorSectionStyled>
       ))}

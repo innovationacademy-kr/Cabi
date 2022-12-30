@@ -5,15 +5,16 @@ import TopNavContainer from "@/containers/TopNavContainer";
 import InfoContainer from "@/containers/InfoContainer";
 import LeftNavContainer from "@/containers/LeftNavContainer";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
+import LoadingModal from "@/components/LoadingModal";
+
 import { getCookie } from "@/api/react_cookie/cookies";
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
 import {
   locationsFloorState,
-  currentFloorNumberState,
-  currentSectionNameState,
-  currentFloorCabinetState,
   myCabinetInfoState,
   userState,
+  toggleCabinetInfoState,
+  toggleMapInfoState,
 } from "@/recoil/atoms";
 import {
   CabinetLocationFloorDto,
@@ -26,7 +27,14 @@ import {
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 
+import CabinetInfoArea from "@/components/CabinetInfoArea";
+
+import { useRecoilValue } from "recoil";
+import MapInfoContainer from "@/containers/MapInfoContainer";
+
 const HomePage = () => {
+  const toggleCabinetInfo = useRecoilValue(toggleCabinetInfoState);
+  const toggleMapInfo = useRecoilValue(toggleMapInfoState);
   const navigator = useNavigate();
   const token = getCookie("access_token");
   const setCurrentLocationData =
@@ -35,37 +43,24 @@ const HomePage = () => {
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const resetMyLentInfo = useResetRecoilState(myCabinetInfoState);
+  let loading: boolean = false;
 
   useEffect(() => {
     if (!token) navigator("/");
-
-    const getLocationData = async () => {
+    async function getData() {
       try {
+        const { data: myInfo } = await axiosMyInfo();
+        const { data: myLentInfo } = await axiosMyLentInfo();
         const locationFloorData = await axiosLocationFloor();
+
+        setUser(myInfo);
+        setMyLentInfo(myLentInfo);
         setCurrentLocationData(locationFloorData.data.space_data);
       } catch (error) {
-        console.log(error);
-        // navigator("/");
+        console.error(error);
       }
-    };
-    getLocationData();
-    axiosMyInfo()
-      .then((response) => {
-        setUser(response.data);
-        //if (response.data.cabinet_id !== -1) navigate("/lent");
-      })
-      .catch((error) => {
-        console.log(error);
-        //navigate("/");
-      });
-    axiosMyLentInfo()
-      .then((response) => {
-        if (response.status === 204) resetMyLentInfo();
-        else if (response.data) setMyLentInfo(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }
+    getData();
   }, []);
 
   return (
@@ -75,8 +70,10 @@ const HomePage = () => {
         <LeftNavContainer />
         <LeftNavOptionContainer style={{ display: "none" }} />
         <MainStyled>
-          <InfoContainer />
+          {loading ? <LoadingModal /> : <InfoContainer />}
         </MainStyled>
+        {toggleCabinetInfo && <CabinetInfoArea />}
+        {toggleMapInfo && <MapInfoContainer />}
       </WapperStyled>
     </>
   );
@@ -93,7 +90,6 @@ const MainStyled = styled.main`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  padding-top: 30px;
 `;
 
 export default HomePage;
