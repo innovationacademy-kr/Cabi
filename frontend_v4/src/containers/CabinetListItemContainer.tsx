@@ -56,9 +56,9 @@ const cabinetStatusColorMap = {
 };
 
 const cabinetIconSrcMap = {
-  [CabinetType.PRIVATE]: "src/assets/images/soloIcon.svg",
-  [CabinetType.SHARE]: "src/assets/images/groupIcon.svg",
-  [CabinetType.CIRCLE]: "src/assets/images/clubIcon.svg",
+  [CabinetType.PRIVATE]: "src/assets/images/privateIcon.svg",
+  [CabinetType.SHARE]: "src/assets/images/shareIcon.svg",
+  [CabinetType.CIRCLE]: "src/assets/images/circleIcon.svg",
 };
 
 const cabinetFilterMap = {
