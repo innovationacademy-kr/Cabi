@@ -234,8 +234,10 @@ export class LentTools {
 
   async getExpiredLent(): Promise<Lent[]> {
     this.logger.debug(`Called ${LentTools.name} ${this.getExpiredLent.name}`);
-    let baseDate = new Date();
-    baseDate.setDate(baseDate.getDate() + this.configService.get<number>('expire_time.soonoverdue'));
+    const baseDate = new Date();
+    const soonOverDue =
+      this.configService.get<number>('expire_term.soonoverdue') - 1;
+    baseDate.setDate(baseDate.getDate() + Math.abs(soonOverDue)); // soonOverDue일 이후 만료된 것들을 가져오기 위해 기준 날짜 설정.
     return await this.lentRepository.getExpiredLent(baseDate);
   }
 }
