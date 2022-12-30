@@ -1,3 +1,4 @@
+import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { selector } from "recoil";
 import {
@@ -5,7 +6,9 @@ import {
   currentLocationNameState,
   currentFloorCabinetState,
   currentSectionNameState,
+  currentCabinetIdState,
 } from "./atoms";
+import axios, { AxiosResponse } from "axios";
 
 export const currentLocationFloorState = selector<Array<number>>({
   key: "CurrentLocationFloor",
@@ -43,3 +46,21 @@ export const currentSectionCabinetState = selector<CabinetInfo[]>({
     return currentFloorData[currentSectionIndex].cabinets;
   },
 });
+
+// export const targetCabinetInfoSelectorState = selector<CabinetInfo | undefined>(
+//   {
+//     key: "TargetCabinetSelectorInfo",
+//     get: async ({ get }) => {
+//       const currentCabinetId = get(currentCabinetIdState);
+
+//       if (currentCabinetId === undefined) return;
+//       try {
+//         const cabinetInfoResponse: AxiosResponse<CabinetInfo> =
+//           await axiosCabinetById(currentCabinetId);
+//         return cabinetInfoResponse.data;
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     },
+//   }
+// );

@@ -30,7 +30,7 @@ const LeftNavContainer = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (currentFloor === -1) return;
+    if (currentFloor === undefined) return;
 
     axiosCabinetByLocationFloor("새롬관", currentFloor)
       .then((response) => {

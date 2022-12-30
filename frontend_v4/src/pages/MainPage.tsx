@@ -1,35 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNavContainer from "@/containers/TopNavContainer";
 import LeftNavContainer from "@/containers/LeftNavContainer";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import CabinetListContainer from "@/containers/CabinetListContainer";
 import { SectionPaginationContainer } from "@/containers/SectionPaginationContainer";
-import CabinetInfoArea, {
-  ISelectedCabinetInfo,
-} from "@/containers/CabinetInfoArea";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
-
+import CabinetInfoArea from "@/components/CabinetInfoArea";
 import { useRecoilValue } from "recoil";
-import { currentSectionCabinetState } from "@/recoil/selectors";
+import CabinetList from "@/components/CabinetList";
 import {
   currentFloorNumberState,
   toggleCabinetInfoState,
   toggleMapInfoState,
 } from "@/recoil/atoms";
-import MapInfoContainer from "@/containers/MapInfoContainer";
-import { useNavigate } from "react-router-dom";
-
-const CabinetInfoDummy: ISelectedCabinetInfo = {
-  floor: 2,
-  section: "Oasis",
-  cabinetNum: 42,
-  cabinetColor: "var(--available)",
-  cabinetLogo: "/src/assets/images/shareIcon.svg",
-  userNameList: "jaesjeon\ninshin\n-",
-  belowText: "16일 남았습니다.\n2022-12-22",
-  belowTextColor: "black",
-};
 
 const MainPage = () => {
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
@@ -60,8 +44,6 @@ const MainPage = () => {
     };
   }, [CabinetListWrapperRef.current]);
 
-  const CABINETS = useRecoilValue<CabinetInfo[]>(currentSectionCabinetState);
-
   return (
     <>
       <TopNavContainer />
@@ -71,13 +53,12 @@ const MainPage = () => {
         <MainStyled>
           <SectionPaginationContainer />
           <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
-            <CabinetListContainer colNum={colNum} cabinetInfo={CABINETS} />
+            <CabinetList colNum={colNum} />
           </CabinetListWrapperStyled>
         </MainStyled>
-        {toggleCabinetInfo && (
-          <CabinetInfoArea selectedCabinetInfo={CabinetInfoDummy} />
-        )}
-        {toggleMapInfo && <MapInfoContainer />}
+        <DetailInfoContainerStyled>
+          <CabinetInfoArea />
+        </DetailInfoContainerStyled>
       </WrapperStyled>
     </>
   );

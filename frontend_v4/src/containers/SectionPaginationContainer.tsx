@@ -30,7 +30,7 @@ export const SectionPaginationContainer = (): JSX.Element => {
 
   const [currentSectionIdx, setCurrentSectionIdx] = useState<number>(0);
   const currentSectionName = sectionList.at(currentSectionIdx);
-  const currentPositionName = floor.toString() + "층 - " + currentSectionName;
+  const currentPositionName = floor?.toString() + "층 - " + currentSectionName;
 
   const setCurrentFloorSection = useSetRecoilState<string>(
     currentSectionNameState
