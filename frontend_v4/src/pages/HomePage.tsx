@@ -93,34 +93,20 @@ const HomePage = () => {
 
   useEffect(() => {
     if (!token) navigator("/");
-
-    const getLocationData = async () => {
+    async function getData() {
       try {
+        const { data: myInfo } = await axiosMyInfo();
+        const { data: myLentInfo } = await axiosMyLentInfo();
         const locationFloorData = await axiosLocationFloor();
+
+        setUser(myInfo);
+        setMyLentInfo(myLentInfo);
         setCurrentLocationData(locationFloorData.data.space_data);
       } catch (error) {
-        console.log(error);
-        // navigator("/");
+        console.error(error);
       }
-    };
-    getLocationData();
-    axiosMyInfo()
-      .then((response) => {
-        setUser(response.data);
-        //if (response.data.cabinet_id !== -1) navigate("/lent");
-      })
-      .catch((error) => {
-        console.log(error);
-        //navigate("/");
-      });
-    axiosMyLentInfo()
-      .then((response) => {
-        if (response.status === 204) useResetRecoilState(myCabinetInfoState);
-        else if (response.data) setMyLentInfo(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }
+    getData();
   }, []);
 
   return (
