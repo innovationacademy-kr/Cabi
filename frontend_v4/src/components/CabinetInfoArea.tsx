@@ -6,7 +6,9 @@ import CabinetInfoAreaContainer, {
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 
-const CabinetInfoArea = (): JSX.Element => {
+const CabinetInfoArea = (props: {
+  style: React.CSSProperties;
+}): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);

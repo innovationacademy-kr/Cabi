@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNavContainer from "@/containers/TopNavContainer";
@@ -72,7 +72,17 @@ const HomePage = () => {
         <MainStyled>
           {loading ? <LoadingModal /> : <InfoContainer />}
         </MainStyled>
-        {toggleCabinetInfo && <CabinetInfoArea />}
+        {toggleCabinetInfo && (
+          <CabinetInfoArea
+            style={{
+              position: "absolute",
+              width: "300px",
+              background: "white",
+              right: 0,
+              boxShadow: "0px 0px 5px grey",
+            }}
+          />
+        )}
         {toggleMapInfo && <MapInfoContainer />}
       </WapperStyled>
     </>

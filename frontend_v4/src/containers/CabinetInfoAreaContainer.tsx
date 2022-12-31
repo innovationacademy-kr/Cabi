@@ -18,22 +18,23 @@ export interface ISelectedCabinetInfo {
   detailMessageColor: string;
 }
 
-const CabinetInfoAreaContainer: React.FC<{
-  selectedCabinetInfo: ISelectedCabinetInfo | null;
-}> = (props) => {
-  const { selectedCabinetInfo } = props;
+const NotSelectedContainer = () => {
+  return (
+    <NotSelectedStyled>
+      <CabiLogoStyled src={cabiLogo} />
+      <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
+        사물함을 <br />
+        선택해주세요
+      </TextStyled>
+    </NotSelectedStyled>
+  );
+};
 
-  if (selectedCabinetInfo === null)
-    return (
-      <NotSelectedStyled>
-        <CabiLogoStyled src={cabiLogo} />
-        <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
-          사물함을 <br />
-          선택해주세요
-        </TextStyled>
-      </NotSelectedStyled>
-    );
-
+const SelectedContainer = ({
+  selectedCabinetInfo,
+}: {
+  selectedCabinetInfo: ISelectedCabinetInfo;
+}) => {
   return (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
@@ -67,6 +68,17 @@ const CabinetInfoAreaContainer: React.FC<{
   );
 };
 
+const CabinetInfoAreaContainer: React.FC<{
+  selectedCabinetInfo: ISelectedCabinetInfo | null;
+}> = (props) => {
+  const { selectedCabinetInfo } = props;
+  return selectedCabinetInfo ? (
+    <SelectedContainer selectedCabinetInfo={selectedCabinetInfo} />
+  ) : (
+    <NotSelectedContainer />
+  );
+};
+
 export default CabinetInfoAreaContainer;
 
 const cabinetStatusColorMap = {
@@ -95,6 +107,11 @@ const cabinetLabelColorMap = {
 
 const NotSelectedStyled = styled.div`
   height: 100%;
+  width: 300px;
+  position: absolute;
+  right: 0;
+  background: var(--white);
+  box-shadow: 0px 0px 10px 1px gray;
   display: flex;
   flex-direction: column;
   justify-content: center;
