@@ -10,17 +10,27 @@ import {
 } from "./atoms";
 import axios, { AxiosResponse } from "axios";
 
+export const locationsState = selector<Array<string>>({
+  key: "Locations",
+  get: ({ get }) => {
+    const locationsFloorData = get(locationsFloorState);
+
+    const locationsArray = locationsFloorData.map((data) => data.location);
+    return locationsArray;
+  },
+});
+
 export const currentLocationFloorState = selector<Array<number>>({
   key: "CurrentLocationFloor",
   get: ({ get }) => {
-    const currentLocationData = get(locationsFloorState);
+    const locationsFloorData = get(locationsFloorState);
     const currentLocation = get(currentLocationNameState);
 
-    const currentLocationIndex = currentLocationData.findIndex((building) => {
+    const currentLocationIndex = locationsFloorData.findIndex((building) => {
       return building.location === currentLocation;
     });
     if (currentLocationIndex === -1) return [];
-    return currentLocationData[currentLocationIndex].floors;
+    return locationsFloorData[currentLocationIndex].floors;
   },
 });
 
