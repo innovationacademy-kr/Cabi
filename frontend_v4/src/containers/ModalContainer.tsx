@@ -3,6 +3,7 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import errorIcon from "@/assets/images/errorIcon.svg";
 import ButtonContainer from "./ButtonContainer";
 import exitButton from "@/assets/images/exitButton.svg";
+import { MouseEventHandler } from "react";
 
 export interface ModalInterface {
   type: string; //"confirm" : 진행 가능한 모달(메모, 대여, 반납 등에 사용) "erorr": 진행 불가능한 모달(문구와 닫기버튼만 존재)
@@ -14,7 +15,7 @@ export interface ModalInterface {
 
 interface ModalContainerInterface {
   modalObj: ModalInterface;
-  onClose: React.MouseEventHandler;
+  onClose: MouseEventHandler;
 }
 
 const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {

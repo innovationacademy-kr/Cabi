@@ -108,9 +108,9 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
     )
       setShowModal(true);
   };
-  const handleCloseModal = () => {
+  const handleCloseModal = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
     setShowModal(false);
-    console.log(showModal);
   };
   return (
     <CabinetListItemStyled

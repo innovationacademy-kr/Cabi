@@ -1,9 +1,10 @@
 import ModalContainer from "@/containers/ModalContainer";
 import { ModalInterface } from "@/containers/ModalContainer";
+import { MouseEventHandler } from "react";
 
 const Modal = (props: {
   modalObj: ModalInterface;
-  onClose: React.MouseEventHandler;
+  onClose: MouseEventHandler;
 }) => {
   return <ModalContainer {...props} />;
 };
