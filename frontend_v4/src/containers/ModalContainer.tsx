@@ -4,46 +4,58 @@ import errorIcon from "@/assets/images/errorIcon.svg";
 import ButtonContainer from "./ButtonContainer";
 import exitButton from "@/assets/images/exitButton.svg";
 
-interface ModalInterface {
+export interface ModalInterface {
   type: string; //"confirm" : 진행 가능한 모달(메모, 대여, 반납 등에 사용) "erorr": 진행 불가능한 모달(문구와 닫기버튼만 존재)
   title: string | null; //모달 제목
   detail: string | null; //안내문구 (confirm 타입 모달만 가짐)
   confirmMessage: string; //확인 버튼의 텍스트
+  onClickProceed: () => void | null;
 }
 
-const ModalContainer = (props: ModalInterface) => {
+interface ModalContainerInterface {
+  modalObj: ModalInterface;
+  onClose: React.MouseEventHandler;
+}
+
+const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
+  const { type, title, detail, confirmMessage, onClickProceed } = modalObj;
   return (
-    <BackgroundStyled>
-      <ModalConatinerStyled type={props.type}>
-        <CloseButtonStyled type={props.type} src={exitButton} />
+    <>
+      <BackgroundStyled />
+      <ModalConatinerStyled type={type}>
+        <div onClick={onClose}>
+          <CloseButtonStyled type={type} src={exitButton} />
+        </div>
         <img
-          src={props.type === "confirm" ? checkIcon : errorIcon}
+          src={type === "confirm" ? checkIcon : errorIcon}
           style={{ width: "70px", marginBottom: "20px" }}
         />
-        <H2Styled>{props.title}</H2Styled>
-        <DetailStyled>{props.detail}</DetailStyled>
-        {props.type === "confirm" ? (
-          <ButtonContainer onClick={(e: any) => e} text="취소" theme="white" />
+        <H2Styled>{title}</H2Styled>
+        <DetailStyled>{detail}</DetailStyled>
+        {type === "confirm" ? (
+          <ButtonContainer onClick={onClose} text="취소" theme="white" />
         ) : null}
-        {props.type === "confirm" ? (
+        {type === "confirm" ? (
           <ButtonContainer
-            onClick={(e: any) => e}
-            text={props.confirmMessage}
+            onClick={onClickProceed}
+            text={confirmMessage}
             theme="dark"
           />
         ) : null}
       </ModalConatinerStyled>
-    </BackgroundStyled>
+    </>
   );
 };
 
 const ModalConatinerStyled = styled.div<{ type: string }>`
-  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
   width: 360px;
   background: white;
-  color: black;
+  z-index: 1000;
   border-radius: 10px;
-  display: flex;
+  transform: translate(-50%, -50%);
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
@@ -59,20 +71,18 @@ const DetailStyled = styled.p`
 const H2Styled = styled.h2`
   font-weight: 600;
   font-size: 1.5rem;
-  margin-bottom: 30px;
+  margin: 0 30px 30px 30px;
+  white-space: break-spaces;
 `;
 
 const BackgroundStyled = styled.div`
-  position: absolute;
-  left: 0;
+  position: fixed;
   top: 0;
-  width: 100vw;
-  height: 100vh;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
+  zindex: 1000;
 `;
 
 const CloseButtonStyled = styled.img<{ type: string }>`

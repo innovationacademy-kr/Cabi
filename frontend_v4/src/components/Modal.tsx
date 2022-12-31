@@ -1,12 +1,11 @@
 import ModalContainer from "@/containers/ModalContainer";
+import { ModalInterface } from "@/containers/ModalContainer";
 
-interface ModalProps {
-  type: string;
-  title: string | null;
-  detail: string | null;
-  confirmMessage: string;
-}
-
-export const Modal = (props: ModalProps) => {
+const Modal = (props: {
+  modalObj: ModalInterface;
+  onClose: React.MouseEventHandler;
+}) => {
   return <ModalContainer {...props} />;
 };
+
+export default Modal;
