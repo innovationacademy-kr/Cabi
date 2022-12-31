@@ -18,9 +18,9 @@ export interface ISelectedCabinetInfo {
   detailMessageColor: string;
 }
 
-const NotSelectedContainer = () => {
+const NotSelectedContainer = ({ path }: { path: string }) => {
   return (
-    <NotSelectedStyled>
+    <NotSelectedStyled path={path}>
       <CabiLogoStyled src={cabiLogo} />
       <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
         사물함을 <br />
@@ -31,12 +31,14 @@ const NotSelectedContainer = () => {
 };
 
 const SelectedContainer = ({
+  path,
   selectedCabinetInfo,
 }: {
+  path: string;
   selectedCabinetInfo: ISelectedCabinetInfo;
 }) => {
   return (
-    <CabinetDetailAreaStyled>
+    <CabinetDetailAreaStyled path={path}>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
         {selectedCabinetInfo.floor + "F - " + selectedCabinetInfo.section}
       </TextStyled>
@@ -68,14 +70,17 @@ const SelectedContainer = ({
   );
 };
 
-const CabinetInfoAreaContainer: React.FC<{
+const CabinetInfoAreaContainer = ({
+  selectedCabinetInfo,
+  path,
+}: {
   selectedCabinetInfo: ISelectedCabinetInfo | null;
-}> = (props) => {
-  const { selectedCabinetInfo } = props;
+  path: string;
+}) => {
   return selectedCabinetInfo ? (
-    <SelectedContainer selectedCabinetInfo={selectedCabinetInfo} />
+    <SelectedContainer path={path} selectedCabinetInfo={selectedCabinetInfo} />
   ) : (
-    <NotSelectedContainer />
+    <NotSelectedContainer path={path} />
   );
 };
 
@@ -105,11 +110,18 @@ const cabinetLabelColorMap = {
   [CabinetStatus.BANNED]: "var(--white)",
 };
 
-const NotSelectedStyled = styled.div`
+const NotSelectedStyled = styled.div<{ path: string }>`
   height: 100%;
   width: 300px;
-  position: absolute;
-  right: 0;
+  ${({ path }) =>
+    path === "/home"
+      ? css`
+          position: absolute;
+          right: 0;
+        `
+      : css`
+          min-width: 330px;
+        `}
   background: var(--white);
   box-shadow: 0px 0px 10px 1px gray;
   display: flex;
@@ -118,9 +130,18 @@ const NotSelectedStyled = styled.div`
   align-items: center;
 `;
 
-const CabinetDetailAreaStyled = styled.div`
+const CabinetDetailAreaStyled = styled.div<{ path: string }>`
   height: 100%;
   display: flex;
+  ${({ path }) =>
+    path === "/home"
+      ? css`
+          position: absolute;
+          right: 0;
+        `
+      : css`
+          min-width: 330px;
+        `}
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;

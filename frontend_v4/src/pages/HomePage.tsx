@@ -72,17 +72,7 @@ const HomePage = () => {
         <MainStyled>
           {loading ? <LoadingModal /> : <InfoContainer />}
         </MainStyled>
-        {toggleCabinetInfo && (
-          <CabinetInfoArea
-            style={{
-              position: "absolute",
-              width: "300px",
-              background: "white",
-              right: 0,
-              boxShadow: "0px 0px 5px grey",
-            }}
-          />
-        )}
+        {toggleCabinetInfo && <CabinetInfoArea />}
         {toggleMapInfo && <MapInfoContainer />}
       </WapperStyled>
     </>

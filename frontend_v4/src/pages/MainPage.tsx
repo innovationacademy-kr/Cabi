@@ -56,9 +56,7 @@ const MainPage = () => {
             <CabinetList colNum={colNum} />
           </CabinetListWrapperStyled>
         </MainStyled>
-        <DetailInfoContainerStyled>
-          <CabinetInfoArea />
-        </DetailInfoContainerStyled>
+        <CabinetInfoArea />
       </WrapperStyled>
     </>
   );

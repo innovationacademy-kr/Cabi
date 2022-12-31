@@ -5,10 +5,9 @@ import CabinetInfoAreaContainer, {
 } from "@/containers/CabinetInfoAreaContainer";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import { useLocation } from "react-router-dom";
 
-const CabinetInfoArea = (props: {
-  style: React.CSSProperties;
-}): JSX.Element => {
+const CabinetInfoArea = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -16,7 +15,7 @@ const CabinetInfoArea = (props: {
     targetCabinetInfo && myCabinetInfo
       ? myCabinetInfo.cabinet_id === targetCabinetInfo.cabinet_id
       : false;
-
+  const { pathname } = useLocation();
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
     if (
@@ -83,7 +82,12 @@ const CabinetInfoArea = (props: {
         detailMessageColor: "var(--black)",
       }
     : null;
-  return <CabinetInfoAreaContainer selectedCabinetInfo={cabinetViewData} />;
+  return (
+    <CabinetInfoAreaContainer
+      path={pathname}
+      selectedCabinetInfo={cabinetViewData}
+    />
+  );
 };
 
 export default CabinetInfoArea;
