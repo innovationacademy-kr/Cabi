@@ -62,7 +62,6 @@ const FloorSectionStyled = styled.div`
   text-indent: 20px;
   color: var(--gray-color);
   margin: 2px 0;
-  transition: all 0.2s;
   cursor: pointer;
   &:hover {
     background-color: var(--main-color);

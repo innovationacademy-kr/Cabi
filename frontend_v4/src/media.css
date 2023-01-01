@@ -26,4 +26,24 @@
   #leftNavBg.on {
     transform: translateX(0%);
   }
+
+  /* cabinetDetailArea(rightSection) */
+  #cabinetDetailArea {
+    position: fixed;
+    top: 80px;
+    right: 0;
+    height: calc(100% - 80px);
+    z-index: 9;
+    transform: translateX(120%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 0 40px 0 var(--bg-shadow);
+  }
+  #cabinetDetailArea.on {
+    transform: translateX(0%);
+  }
+}
+
+/* mapInfo */
+#mapInfo.on {
+  transform: translateX(0%);
 }

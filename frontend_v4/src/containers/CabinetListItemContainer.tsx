@@ -9,6 +9,7 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import styled, { css } from "styled-components";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
+import useDetailInfo from "@/hooks/useDetailInfo";
 
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -31,6 +32,9 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
   }
+
+  const { openCabinet } = useDetailInfo();
+
   const selectCabinetOnClick = (cabinetId: number) => {
     setCurrentCabinetId(cabinetId);
     async function getData(cabinetId: number) {
@@ -50,6 +54,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       isMine={isMine}
       onClick={() => {
         selectCabinetOnClick(props.cabinet_id);
+        openCabinet();
       }}
     >
       <CabinetIconNumberWrapperStyled>

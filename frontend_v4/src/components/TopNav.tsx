@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import {
-  locationsFloorState,
-  currentLocationNameState,
-  toggleNavState,
-  isMobileState,
-} from "@/recoil/atoms";
+import { locationsFloorState, currentLocationNameState } from "@/recoil/atoms";
 import { locationsState } from "@/recoil/selectors";
 import { axiosLocationFloor } from "@/api/axios/axios.custom";
 import TopNavContainer from "@/containers/TopNavContainer";
+import useLeftNav from "@/hooks/useLeftNav";
 
 const TopNav = () => {
   const [locationClicked, setLocationClicked] = useState(false);
@@ -17,23 +13,10 @@ const TopNav = () => {
     currentLocationNameState
   );
   const locationsList = useRecoilValue<Array<string>>(locationsState);
-  const [toggleNav, setToggleNav] = useRecoilState(toggleNavState);
-  const isMobile = useRecoilValue<boolean>(isMobileState);
+  const { clickLeftNav } = useLeftNav();
 
   const onClickLogo = () => {
-    if (isMobile) {
-      if (toggleNav == false) {
-        document.getElementById("leftNavBg")!.classList.add("on");
-        document.getElementById("leftNavWrap")!.classList.add("on");
-        setToggleNav(true);
-      } else {
-        document.getElementById("leftNavBg")!.classList.remove("on");
-        document.getElementById("leftNavWrap")!.classList.remove("on");
-        setToggleNav(false);
-      }
-    } else {
-      setToggleNav(false);
-    }
+    clickLeftNav();
   };
 
   useEffect(() => {

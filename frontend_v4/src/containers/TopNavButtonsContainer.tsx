@@ -1,26 +1,19 @@
 import styled from "styled-components";
 import TopNavButton from "@/components/TopNavButton";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { toggleCabinetInfoState, toggleMapInfoState } from "@/recoil/atoms";
+import useDetailInfo from "@/hooks/useDetailInfo";
 
 const TopNavButtonsContainer = () => {
-  const toggleCabinetInfo = useSetRecoilState(toggleCabinetInfoState);
-  const toggleMapInfo = useSetRecoilState(toggleMapInfoState);
-  const clickCabinetInfo = () => {
-    toggleCabinetInfo((toggle) => !toggle);
-    toggleMapInfo(() => false);
-  };
-  const clickMapInfo = () => {
-    toggleMapInfo((toggle) => !toggle);
-    toggleCabinetInfo(() => false);
-  };
+  const { clickCabinet, clickMap } = useDetailInfo();
+
   return (
     <NaviButtonsStyled>
       <TopNavButton
-        onClick={clickCabinetInfo}
+        onClick={clickCabinet}
         imgSrc="src/assets/images/myCabinetIcon.svg"
       />
-      <TopNavButton onClick={clickMapInfo} imgSrc="src/assets/images/map.svg" />
+      <TopNavButton onClick={clickMap} imgSrc="src/assets/images/map.svg" />
     </NaviButtonsStyled>
   );
 };

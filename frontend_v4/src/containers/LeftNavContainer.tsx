@@ -135,7 +135,6 @@ const TopBtnStyled = styled.li`
   margin-bottom: 30px;
   border-radius: 10px;
   color: var(--gray-color);
-  transition: all 0.2s;
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;
