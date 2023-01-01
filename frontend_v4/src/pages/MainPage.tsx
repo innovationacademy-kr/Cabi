@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNav from "@/components/TopNav";
 import LeftNavContainer from "@/containers/LeftNavContainer";
-import { SectionPaginationContainer } from "@/containers/SectionPaginationContainer";
+import SectionPagination from "@/components/SectionPagination";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import CabinetInfoArea from "@/components/CabinetInfoArea";
 import { useRecoilValue } from "recoil";
@@ -44,7 +44,7 @@ const MainPage = () => {
         <LeftNavContainer />
         <LeftNavOptionContainer />
         <MainStyled>
-          <SectionPaginationContainer />
+          <SectionPagination />
           <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
             <CabinetList colNum={colNum} />
           </CabinetListWrapperStyled>
