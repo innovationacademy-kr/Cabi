@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import { locationsFloorState, currentLocationNameState } from "@/recoil/atoms";
+import {
+  locationsFloorState,
+  currentLocationNameState,
+  toggleNavState,
+  isMobileState,
+} from "@/recoil/atoms";
 import { locationsState } from "@/recoil/selectors";
 import { axiosLocationFloor } from "@/api/axios/axios.custom";
 import TopNavContainer from "@/containers/TopNavContainer";
@@ -13,10 +17,23 @@ const TopNav = () => {
     currentLocationNameState
   );
   const locationsList = useRecoilValue<Array<string>>(locationsState);
-  const navigate = useNavigate();
+  const [toggleNav, setToggleNav] = useRecoilState(toggleNavState);
+  const isMobile = useRecoilValue<boolean>(isMobileState);
 
   const onClickLogo = () => {
-    navigate("/home");
+    if (isMobile) {
+      if (toggleNav == false) {
+        document.getElementById("leftNavBg")!.classList.add("on");
+        document.getElementById("leftNavWrap")!.classList.add("on");
+        setToggleNav(true);
+      } else {
+        document.getElementById("leftNavBg")!.classList.remove("on");
+        document.getElementById("leftNavWrap")!.classList.remove("on");
+        setToggleNav(false);
+      }
+    } else {
+      setToggleNav(false);
+    }
   };
 
   useEffect(() => {

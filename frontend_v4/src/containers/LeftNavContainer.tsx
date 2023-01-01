@@ -17,6 +17,7 @@ import {
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
 import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
+import useLeftNav from "@/hooks/useLeftNav";
 
 // const floors = [2, 3, 4, 5];
 
@@ -34,6 +35,7 @@ const LeftNavContainer = () => {
   const toggleCabinetInfo = useSetRecoilState(toggleCabinetInfoState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
+  const { closeLeftNav } = useLeftNav();
 
   useEffect(() => {
     if (currentFloor === undefined) return;
@@ -50,13 +52,17 @@ const LeftNavContainer = () => {
 
   const onClick = (floor: number) => {
     setCurrentFloor(floor);
-    if (pathname == "/home") navigator("/main");
+    if (pathname == "/home") {
+      closeLeftNav();
+      navigator("/main");
+    }
   };
 
   const onClickHomeButton = () => {
     toggleMapInfo(() => false);
     toggleCabinetInfo(() => false);
     resetCurrentFloor();
+    closeLeftNav();
     navigator("/home");
   };
 
@@ -129,6 +135,7 @@ const TopBtnStyled = styled.li`
   margin-bottom: 30px;
   border-radius: 10px;
   color: var(--gray-color);
+  transition: all 0.2s;
   cursor: pointer;
   &:last-child {
     margin-bottom: 0;

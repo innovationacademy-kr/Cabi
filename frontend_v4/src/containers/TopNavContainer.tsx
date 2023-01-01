@@ -44,7 +44,7 @@ const TopNavContainer: React.FC<{
   } = props;
 
   return (
-    <TopNavContainerStyled>
+    <TopNavContainerStyled id="topNavWrap">
       <LogoStyled>
         <LogoDivStyled onClick={onClickLogo}>
           <img src="src/assets/images/logo.svg" alt="" />
@@ -80,6 +80,7 @@ const TopNavContainerStyled = styled.nav`
   background-color: var(--main-color);
   padding: 0 28px;
   color: var(--white);
+  z-index: 10;
 `;
 
 const LogoStyled = styled.div`

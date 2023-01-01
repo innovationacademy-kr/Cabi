@@ -125,7 +125,7 @@ const CabinetListItemStyled = styled.div<{
   flex-direction: column;
   justify-content: space-between;
   padding: 8px 8px 14px;
-  transition: all 0.2s;
+  transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
   &:hover {
     opacity: 0.9;
