@@ -21,6 +21,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   );
   const [showModal, setShowModal] = useState<boolean>(false);
   const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
+
   let cabinetLabelText = "";
   const modalPropsMap = {
     [CabinetStatus.AVAILABLE]: {
@@ -118,7 +119,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       isMine={isMine}
       onClick={() => {
         selectCabinetOnClick(props.cabinet_id);
-        handleOpenModal();
+        if (!isMine) handleOpenModal();
       }}
     >
       <CabinetIconNumberWrapperStyled>

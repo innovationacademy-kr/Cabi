@@ -3,19 +3,19 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import errorIcon from "@/assets/images/errorIcon.svg";
 import ButtonContainer from "./ButtonContainer";
 import exitButton from "@/assets/images/exitButton.svg";
-import { MouseEventHandler } from "react";
+import React from "react";
 
 export interface ModalInterface {
   type: string; //"confirm" : 진행 가능한 모달(메모, 대여, 반납 등에 사용) "erorr": 진행 불가능한 모달(문구와 닫기버튼만 존재)
   title: string | null; //모달 제목
-  detail: string | null; //안내문구 (confirm 타입 모달만 가짐)
+  detail: string | null | JSX.Element; //안내문구 (confirm 타입 모달만 가짐)
   confirmMessage: string; //확인 버튼의 텍스트
   onClickProceed: () => void | null;
 }
 
 interface ModalContainerInterface {
   modalObj: ModalInterface;
-  onClose: MouseEventHandler;
+  onClose: React.MouseEventHandler;
 }
 
 const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
@@ -32,17 +32,24 @@ const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
           style={{ width: "70px", marginBottom: "20px" }}
         />
         <H2Styled>{title}</H2Styled>
-        <DetailStyled>{detail}</DetailStyled>
-        {type === "confirm" ? (
-          <ButtonContainer onClick={onClose} text="취소" theme="white" />
-        ) : null}
-        {type === "confirm" ? (
-          <ButtonContainer
-            onClick={onClickProceed}
-            text={confirmMessage}
-            theme="dark"
-          />
-        ) : null}
+        {React.isValidElement(detail) ? (
+          detail
+        ) : (
+          <DetailStyled>{detail}</DetailStyled>
+        )}
+
+        <ButtonWrapperStyled>
+          {type === "confirm" ? (
+            <ButtonContainer onClick={onClose} text="취소" theme="white" />
+          ) : null}
+          {type === "confirm" ? (
+            <ButtonContainer
+              onClick={onClickProceed}
+              text={confirmMessage}
+              theme="dark"
+            />
+          ) : null}
+        </ButtonWrapperStyled>
       </ModalConatinerStyled>
     </>
   );
@@ -65,8 +72,10 @@ const ModalConatinerStyled = styled.div<{ type: string }>`
   padding-bottom: ${({ type }) => (type === "error" ? 0 : "10px")};
 `;
 
-const DetailStyled = styled.p`
-  margin-bottom: 30px;
+export const DetailStyled = styled.p`
+  margin: 0 30px 30px 30px;
+  line-height: 1.2em;
+  white-space: break-spaces;
 `;
 
 const H2Styled = styled.h2`
@@ -97,6 +106,12 @@ const CloseButtonStyled = styled.img<{ type: string }>`
   &: hover {
     opacity: 0.8;
   }
+`;
+
+const ButtonWrapperStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export default ModalContainer;

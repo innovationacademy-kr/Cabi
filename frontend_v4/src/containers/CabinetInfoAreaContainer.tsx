@@ -6,6 +6,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import cabiLogo from "@/assets/images/logo.svg";
 import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
+import { DetailStyled } from "./ModalContainer";
 
 export interface ISelectedCabinetInfo {
   floor: number;
@@ -25,14 +26,27 @@ const CabinetInfoAreaContainer: React.FC<{
 }> = (props) => {
   const { selectedCabinetInfo } = props;
   const [showModal, setShowModal] = useState<boolean>(false);
+  let expireDate = new Date();
+  const addDays = selectedCabinetInfo?.lentType === "SHARE" ? 41 : 20;
+  expireDate.setDate(expireDate.getDate() + addDays);
+  const padTo2Digits = (num: number) => {
+    return num.toString().padStart(2, "0");
+  };
+  const formatDate = (date: Date) => {
+    return [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join("/");
+  };
+  const formattedExpireDate = formatDate(expireDate);
   const returnCabinetModalProps = {
     type: "confirm",
-    title: "반납 시 주의 사항",
-    detail: `대여기간은 ${
-      Date.now() + 21
-    } 23:59까지 입니다. 대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.“메모 내용”은 공유 인원끼리 공유됩니다.귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`,
+    title: "사물함 반납하기",
+    detail: "정말 반납하시겠습니까?",
     confirmMessage: "네, 반납할게요",
     onClickProceed: () => {
+      // 사물함 반납 api호출
       alert("반납이 완료되었습니다");
     },
   };
@@ -40,11 +54,22 @@ const CabinetInfoAreaContainer: React.FC<{
     [CabinetStatus.AVAILABLE]: {
       type: "confirm",
       title: "이용 시 주의 사항",
-      detail: `대여기간은 ${
-        Date.now() + 21
-      } 23:59까지 입니다. 대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.“메모 내용”은 공유 인원끼리 공유됩니다.귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`,
+      detail: (
+        <DetailStyled>
+          대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
+          <br />
+          대여 후 72시간 이내 취소(반납) 시,
+          <br /> 72시간의 대여 불가 패널티가 적용됩니다.
+          <br />
+          “메모 내용”은 공유 인원끼리 공유됩니다.
+          <br />
+          귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
+          <br />
+        </DetailStyled>
+      ),
       confirmMessage: "네, 대여할게요",
       onClickProceed: () => {
+        //사물함 대여 api호출
         alert("대여가 완료되었습니다");
       },
     },
@@ -58,11 +83,22 @@ const CabinetInfoAreaContainer: React.FC<{
     [CabinetStatus.SET_EXPIRE_AVAILABLE]: {
       type: "confirm",
       title: "이용 시 주의 사항",
-      detail: `대여기간은 ${
-        Date.now() + 42
-      } 23:59까지 입니다. 대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.“메모 내용”은 공유 인원끼리 공유됩니다.귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`,
+      detail: (
+        <p>
+          대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
+          <br />
+          대여 후 72시간 이내 취소(반납) 시,
+          <br /> 72시간의 대여 불가 패널티가 적용됩니다.
+          <br />
+          “메모 내용”은 공유 인원끼리 공유됩니다.
+          <br />
+          귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
+          <br />
+        </p>
+      ),
       confirmMessage: "네, 대여할게요",
       onClickProceed: () => {
+        //사물함 대여 api호출
         alert("대여가 완료되었습니다");
       },
     },
