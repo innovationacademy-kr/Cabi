@@ -1,3 +1,4 @@
+import React from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import {
   currentFloorNumberState,
@@ -41,18 +42,24 @@ const SectionPagination = (): JSX.Element => {
     }
   };
 
-  const isLoaded = floor !== undefined && sectionList !== undefined;
-  if (isLoaded === false) return <></>;
+  const isLoaded =
+    floor !== undefined &&
+    sectionList !== undefined &&
+    currentSectionName !== undefined;
 
   return (
-    <SectionPaginationContainer
-      currentSectionName={currentSectionName}
-      currentPositionName={currentPositionName}
-      sectionList={sectionList}
-      changeSectionOnClickIdxButton={changeSectionOnClickIdxButton}
-      moveToLeftSection={moveToLeftSection}
-      moveToRightSection={moveToRightSection}
-    />
+    <React.Fragment>
+      {isLoaded && (
+        <SectionPaginationContainer
+          currentSectionName={currentSectionName}
+          currentPositionName={currentPositionName}
+          sectionList={sectionList}
+          changeSectionOnClickIdxButton={changeSectionOnClickIdxButton}
+          moveToLeftSection={moveToLeftSection}
+          moveToRightSection={moveToRightSection}
+        />
+      )}
+    </React.Fragment>
   );
 };
 
