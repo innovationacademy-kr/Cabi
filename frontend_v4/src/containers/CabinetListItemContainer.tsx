@@ -33,7 +33,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
     cabinetLabelText = "사용불가";
   }
 
-  const { openCabinet } = useDetailInfo();
+  const { openCabinet, closeMap } = useDetailInfo();
 
   const selectCabinetOnClick = (cabinetId: number) => {
     setCurrentCabinetId(cabinetId);
@@ -55,6 +55,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       onClick={() => {
         selectCabinetOnClick(props.cabinet_id);
         openCabinet();
+        closeMap();
       }}
     >
       <CabinetIconNumberWrapperStyled>
