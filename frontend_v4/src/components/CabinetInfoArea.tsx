@@ -68,9 +68,8 @@ const CabinetInfoArea = (): JSX.Element => {
 
   const cabinetViewData: ISelectedCabinetInfo | null = targetCabinetInfo
     ? {
-        // TODO: API 수정되면 실제 값으로 변경 - floor, section
-        floor: 2,
-        section: "Oasis",
+        floor: targetCabinetInfo.floor,
+        section: targetCabinetInfo.section,
         isMine: isMyCabinet,
         cabinetNum: targetCabinetInfo.cabinet_num,
         status: targetCabinetInfo.status,

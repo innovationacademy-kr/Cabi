@@ -31,6 +31,8 @@ export interface CabinetInfo {
   max_user: number;
   status: CabinetStatus;
   section: string;
+  location: string;
+  floor: number;
   lent_info: LentDto[];
 }
 
