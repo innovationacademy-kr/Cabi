@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNav from "@/components/TopNav";
-import InfoContainer from "@/containers/InfoContainer";
+import HomeInfo from "@/components/HomeInfo";
 import LeftNavContainer from "@/containers/LeftNavContainer";
 import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import LoadingModal from "@/components/LoadingModal";
@@ -56,9 +56,7 @@ const HomePage = () => {
       <WapperStyled>
         <LeftNavContainer />
         <LeftNavOptionContainer style={{ display: "none" }} />
-        <MainStyled>
-          {loading ? <LoadingModal /> : <InfoContainer />}
-        </MainStyled>
+        <MainStyled>{loading ? <LoadingModal /> : <HomeInfo />}</MainStyled>
         {toggleCabinetInfo && <CabinetInfoArea />}
         {toggleMapInfo && <MapInfoContainer />}
       </WapperStyled>
