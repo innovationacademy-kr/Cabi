@@ -1,7 +1,10 @@
-import React from "react";
 import styled from "styled-components";
 
-const InfoContainer = () => {
+const InfoContainer = ({
+  lentStartHandler,
+}: {
+  lentStartHandler: React.MouseEventHandler;
+}) => {
   return (
     <MediaStyled>
       <WrapperStyled id="infoWrap">
@@ -60,7 +63,7 @@ const InfoContainer = () => {
             </p>
           </article>
         </InfoSectionStyled>
-        <button>대여 시작하기</button>
+        <button onClick={lentStartHandler}>시작하기</button>
       </WrapperStyled>
     </MediaStyled>
   );
