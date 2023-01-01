@@ -1,34 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import { locationsFloorState, currentLocationNameState } from "@/recoil/atoms";
+import {
+  locationsFloorState,
+  currentLocationNameState,
+  myCabinetInfoState,
+} from "@/recoil/atoms";
 import { locationsState } from "@/recoil/selectors";
-import { axiosLocationFloor } from "@/api/axios/axios.custom";
+import { axiosLocationFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import TopNavContainer from "@/containers/TopNavContainer";
 
-const TopNav = () => {
+const TopNav: React.FC<{
+  setIsLoading: React.Dispatch<SetStateAction<boolean>>;
+}> = (props) => {
   const [locationClicked, setLocationClicked] = useState(false);
-  const setLocationsFloor = useSetRecoilState(locationsFloorState);
   const [currentLocationName, setCurrentLocationName] = useRecoilState(
     currentLocationNameState
   );
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const setLocationsFloor = useSetRecoilState(locationsFloorState);
   const locationsList = useRecoilValue<Array<string>>(locationsState);
   const navigate = useNavigate();
+  const { setIsLoading } = props;
 
   const onClickLogo = () => {
     navigate("/home");
   };
 
   useEffect(() => {
+    /* test timeout */
+    function setTimeoutPromise(delay: number) {
+      return new Promise((resolve) => setTimeout(resolve, delay));
+    }
+    /* ------------ */
     const getLocationsData = async () => {
       try {
+        await setTimeoutPromise(1000);
         const locationsFloorData = await axiosLocationFloor();
+
         setLocationsFloor(locationsFloorData.data.space_data);
       } catch (error) {
         console.log(error);
       }
     };
-    getLocationsData();
+    async function getMyLentInfo() {
+      try {
+        const { data: myLentInfo } = await axiosMyLentInfo();
+
+        setMyLentInfo(myLentInfo);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    Promise.all([getLocationsData(), getMyLentInfo()]).then(() =>
+      setIsLoading(false)
+    );
   }, []);
 
   useEffect(() => {

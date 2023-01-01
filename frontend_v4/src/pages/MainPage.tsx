@@ -1,10 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import TopNav from "@/components/TopNav";
-import LeftNavContainer from "@/containers/LeftNavContainer";
 import SectionPagination from "@/components/SectionPagination";
-import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import CabinetInfoArea from "@/components/CabinetInfoArea";
 import { useRecoilValue } from "recoil";
 import CabinetList from "@/components/CabinetList";
@@ -39,30 +36,18 @@ const MainPage = () => {
 
   return (
     <>
-      <TopNav />
-      <WrapperStyled>
-        <LeftNavContainer />
-        <LeftNavOptionContainer />
-        <MainStyled>
-          <SectionPagination />
-          <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
-            <CabinetList colNum={colNum} />
-          </CabinetListWrapperStyled>
-        </MainStyled>
-        <DetailInfoContainerStyled>
-          <CabinetInfoArea />
-        </DetailInfoContainerStyled>
-      </WrapperStyled>
+      <MainStyled>
+        <SectionPagination />
+        <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
+          <CabinetList colNum={colNum} />
+        </CabinetListWrapperStyled>
+      </MainStyled>
+      <DetailInfoContainerStyled>
+        <CabinetInfoArea />
+      </DetailInfoContainerStyled>
     </>
   );
 };
-
-const WrapperStyled = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  overflow: hidden;
-`;
 
 const MainStyled = styled.main`
   width: 100%;

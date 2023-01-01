@@ -13,7 +13,7 @@ import { currentSectionNameState } from "@/recoil/atoms";
 //   "End of Cluster 2",
 // ];
 
-const LeftNavOptionContainer = (props: { style?: React.CSSProperties }) => {
+const LeftNavOptionContainer = (props: { isVisible: boolean }) => {
   const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
   const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
     currentSectionNameState
@@ -24,7 +24,7 @@ const LeftNavOptionContainer = (props: { style?: React.CSSProperties }) => {
   };
 
   return (
-    <LeftNavOptionStyled style={props.style}>
+    <LeftNavOptionStyled isVisible={props.isVisible}>
       {floorSection.map((section: string, index: number) => (
         <FloorSectionStyled
           className={
@@ -41,7 +41,8 @@ const LeftNavOptionContainer = (props: { style?: React.CSSProperties }) => {
   );
 };
 
-const LeftNavOptionStyled = styled.div`
+const LeftNavOptionStyled = styled.div<{ isVisible: boolean }>`
+  display: ${(props) => (props.isVisible ? "block" : "none")};
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
