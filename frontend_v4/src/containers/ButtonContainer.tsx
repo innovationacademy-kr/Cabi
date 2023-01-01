@@ -9,7 +9,7 @@ interface ButtonInterface {
 
 const ButtonContainer = (props: ButtonInterface) => {
   return (
-    <ButtonContainerStyled theme={props.theme}>
+    <ButtonContainerStyled theme={props.theme} onClick={props.onClick}>
       {props.text}
     </ButtonContainerStyled>
   );
