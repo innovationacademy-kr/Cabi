@@ -9,9 +9,13 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import styled, { css } from "styled-components";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
+
 import { useState } from "react";
 import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
+
+import useDetailInfo from "@/hooks/useDetailInfo";
+
 
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -88,6 +92,8 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
     cabinetLabelText = "사용불가";
   }
 
+  const { openCabinet, closeMap } = useDetailInfo();
+
   const selectCabinetOnClick = (cabinetId: number) => {
     setCurrentCabinetId(cabinetId);
     async function getData(cabinetId: number) {
@@ -120,6 +126,8 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       onClick={() => {
         selectCabinetOnClick(props.cabinet_id);
         if (!isMine) handleOpenModal();
+        openCabinet();
+        closeMap();
       }}
     >
       <CabinetIconNumberWrapperStyled>
@@ -203,7 +211,7 @@ const CabinetListItemStyled = styled.div<{
   flex-direction: column;
   justify-content: space-between;
   padding: 8px 8px 14px;
-  transition: all 0.2s;
+  transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
   &:hover {
     opacity: 0.9;

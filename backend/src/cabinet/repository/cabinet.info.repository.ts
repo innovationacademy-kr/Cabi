@@ -60,6 +60,8 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       cabinet_title: cabinet.title,
       max_user: cabinet.max_user,
       status: cabinet.status,
+      location: cabinet.location,
+      floor: cabinet.floor,
       section: cabinet.section,
       lent_info: cabinet.lent.map((lent) => ({
         user_id: lent.user.user_id,
@@ -119,6 +121,8 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       cabinet_title: result.title,
       max_user: result.max_user,
       status: result.status,
+      location: result.location,
+      floor: result.floor,
       section: result.section,
       lent_info: result.lent
         ? result.lent.map((l) => ({

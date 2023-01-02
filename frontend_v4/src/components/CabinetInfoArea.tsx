@@ -5,6 +5,7 @@ import CabinetInfoAreaContainer, {
 } from "@/containers/CabinetInfoAreaContainer";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import useDetailInfo from "@/hooks/useDetailInfo";
 
 const CabinetInfoArea = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
@@ -68,9 +69,8 @@ const CabinetInfoArea = (): JSX.Element => {
 
   const cabinetViewData: ISelectedCabinetInfo | null = targetCabinetInfo
     ? {
-        // TODO: API 수정되면 실제 값으로 변경 - floor, section
-        floor: 2,
-        section: "Oasis",
+        floor: targetCabinetInfo.floor,
+        section: targetCabinetInfo.section,
         isMine: isMyCabinet,
         cabinetNum: targetCabinetInfo.cabinet_num,
         status: targetCabinetInfo.status,
@@ -81,7 +81,9 @@ const CabinetInfoArea = (): JSX.Element => {
         detailMessageColor: "var(--black)",
       }
     : null;
-  return <CabinetInfoAreaContainer selectedCabinetInfo={cabinetViewData} />;
+
+  const {closeCabinet} = useDetailInfo();
+  return <CabinetInfoAreaContainer selectedCabinetInfo={cabinetViewData} closeCabinet={closeCabinet} />;
 };
 
 export default CabinetInfoArea;

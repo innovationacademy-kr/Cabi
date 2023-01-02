@@ -1,16 +1,11 @@
-import { currentFloorNumberState } from "@/recoil/atoms";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useResetRecoilState } from "recoil";
-
+import React from "react";
+import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 import TopNavButtonsContainer from "./TopNavButtonsContainer";
 
-const locations = ["새롬관", "서초", "강남"];
-
 interface ILocationListItem {
   location: string;
-  onUpdate: React.Dispatch<string>;
+  onUpdate: SetterOrUpdater<string>;
   onClose: React.Dispatch<boolean>;
 }
 
@@ -31,31 +26,39 @@ const LocationListItem: React.FC<ILocationListItem> = ({
   );
 };
 
-const TopNavContainer = () => {
-  const [locationName, setLocationName] = useState("새롬관");
-  const [locationClicked, setLocationClicked] = useState(false);
-  const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
-  const navigate = useNavigate();
-  const onClickLogo = () => {
-    resetCurrentFloor();
-    navigate("/home");
-  };
+const TopNavContainer: React.FC<{
+  currentLocationName: string;
+  locationsList: Array<string>;
+  locationClicked: boolean;
+  setLocationClicked: React.Dispatch<boolean>;
+  onClickLogo: React.MouseEventHandler;
+  setCurrentLocationName: SetterOrUpdater<string>;
+}> = (props) => {
+  const {
+    currentLocationName,
+    locationsList,
+    locationClicked,
+    setLocationClicked,
+    onClickLogo,
+    setCurrentLocationName,
+  } = props;
+
   return (
-    <TopNavContainerStyled>
+    <TopNavContainerStyled id="topNavWrap">
       <LogoStyled>
         <LogoDivStyled onClick={onClickLogo}>
           <img src="src/assets/images/logo.svg" alt="" />
         </LogoDivStyled>
         <LocationSelectBoxStyled>
           <span onClick={() => setLocationClicked(!locationClicked)}>
-            {locationName}
+            {currentLocationName}
           </span>
           <LocationListStyled clicked={locationClicked}>
-            {locations.map((location, index) => (
+            {locationsList.map((location, index) => (
               <LocationListItem
                 location={location}
                 key={index}
-                onUpdate={setLocationName}
+                onUpdate={setCurrentLocationName}
                 onClose={setLocationClicked}
               />
             ))}
@@ -77,6 +80,7 @@ const TopNavContainerStyled = styled.nav`
   background-color: var(--main-color);
   padding: 0 28px;
   color: var(--white);
+  z-index: 10;
 `;
 
 const LogoStyled = styled.div`
@@ -127,6 +131,7 @@ const LocationListStyled = styled.ul<{ clicked: boolean }>`
   opacity: 0.9;
   border-radius: 4px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  z-index: 100;
   display: ${(props) => (props.clicked ? "block" : "none")};
 `;
 

@@ -45,7 +45,7 @@ export const locationsFloorState = atom<CabinetLocationFloorDto[]>({
 
 export const currentLocationNameState = atom<string>({
   key: "CurrentLocation",
-  default: "새롬관",
+  default: undefined,
 });
 
 export const currentFloorNumberState = atom<number>({
@@ -80,5 +80,10 @@ export const toggleMapInfoState = atom<boolean>({
 
 export const toggleCabinetInfoState = atom<boolean>({
   key: "ToggleCabinetInfo",
+  default: false,
+});
+
+export const toggleNavState = atom<boolean>({
+  key: "ToggleNav",
   default: false,
 });

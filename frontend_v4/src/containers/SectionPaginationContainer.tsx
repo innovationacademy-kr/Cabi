@@ -1,71 +1,29 @@
-import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  currentFloorNumberState,
-  currentSectionNameState,
-} from "@/recoil/atoms";
-import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 
-export const SectionPaginationContainer = (): JSX.Element => {
-  /* 
-    require props 
-    1. Current floor
-    1. Section list
-    2. Current section name
-    3. Current section index
-    */
-  // const floor = 2;
-  // const sectionList = [
-  //   "End of Cluster1",
-  //   "Cluster1 - OA",
-  //   "Cluster1 - Terrace",
-  //   "Oasis",
-  //   "End of Cluster2",
-  // ];
-  const floor = useRecoilValue<number>(currentFloorNumberState);
-  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
-  const sectionCount = sectionList.length;
-
-  const [currentSectionIdx, setCurrentSectionIdx] = useState<number>(0);
-  const currentSectionName = sectionList.at(currentSectionIdx);
-  const currentPositionName = floor?.toString() + "층 - " + currentSectionName;
-
-  const setCurrentFloorSection = useSetRecoilState<string>(
-    currentSectionNameState
-  );
-
+const SectionPaginationContainer: React.FC<{
+  currentSectionName: string;
+  currentPositionName: string;
+  sectionList: Array<string>;
+  changeSectionOnClickIdxButton: (idx: number) => void;
+  moveToLeftSection: React.MouseEventHandler;
+  moveToRightSection: React.MouseEventHandler;
+}> = (props) => {
+  const {
+    currentSectionName,
+    currentPositionName,
+    sectionList,
+    changeSectionOnClickIdxButton,
+    moveToLeftSection,
+    moveToRightSection,
+  } = props;
   const paginationIdxBar = sectionList.map((sectionName, idx) => (
     <IndexRectangleStyled
       key={sectionName}
       bgColor={sectionName === currentSectionName ? "#9747FF" : "#D9D9D9"}
-      onClick={() => setCurrentSectionIdx(idx)}
+      onClick={() => changeSectionOnClickIdxButton(idx)}
     />
   ));
-
-  const moveToLeftSection = () => {
-    if (currentSectionIdx == 0) {
-      setCurrentSectionIdx(sectionList.length - 1);
-      setCurrentFloorSection(sectionList[sectionList.length - 1]);
-    } else {
-      setCurrentSectionIdx(currentSectionIdx - 1);
-      setCurrentFloorSection(sectionList[currentSectionIdx - 1]);
-    }
-  };
-
-  const moveToRightSection = () => {
-    if (currentSectionIdx == sectionList.length - 1) {
-      setCurrentSectionIdx(0);
-      setCurrentFloorSection(sectionList[0]);
-    } else {
-      setCurrentSectionIdx(currentSectionIdx + 1);
-      setCurrentFloorSection(sectionList[currentSectionIdx + 1]);
-    }
-  };
-
-  const isLoaded = floor !== -1 && sectionCount !== 0;
-  if (isLoaded === false) return <></>;
 
   return (
     <SectionPaginationStyled>
@@ -85,6 +43,8 @@ export const SectionPaginationContainer = (): JSX.Element => {
     </SectionPaginationStyled>
   );
 };
+
+export default SectionPaginationContainer;
 
 const SectionPaginationStyled = styled.div`
   min-width: 360px;

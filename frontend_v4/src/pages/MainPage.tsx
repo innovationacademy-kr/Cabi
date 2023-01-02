@@ -1,26 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import TopNavContainer from "@/containers/TopNavContainer";
-import LeftNavContainer from "@/containers/LeftNavContainer";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import { SectionPaginationContainer } from "@/containers/SectionPaginationContainer";
-import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
+import TopNav from "@/components/TopNav";
+import LeftNavAreaContainer from "@/containers/LeftNavAreaContainer";
+import SectionPagination from "@/components/SectionPagination";
 import CabinetInfoArea from "@/components/CabinetInfoArea";
+import MapInfoContainer from "@/containers/MapInfoContainer";
 import { useRecoilValue } from "recoil";
 import CabinetList from "@/components/CabinetList";
-import {
-  currentFloorNumberState,
-  toggleCabinetInfoState,
-  toggleMapInfoState,
-} from "@/recoil/atoms";
+import { toggleCabinetInfoState, toggleMapInfoState } from "@/recoil/atoms";
 
 const MainPage = () => {
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
   const toggleMapInfo = useRecoilValue(toggleMapInfoState);
   const toggleCabinetInfo = useRecoilValue(toggleCabinetInfoState);
   const [colNum, setColNum] = useState<number>(4);
-  const currentFloor = useRecoilValue(currentFloorNumberState);
   const navigate = useNavigate();
   // .env에서 가져올 실제 col_num 값입니다.
   const maxColNum = 7;
@@ -36,7 +30,6 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    if (currentFloor == -1) navigate("/home");
     if (CabinetListWrapperRef.current !== null) setColNumByDivWidth();
     window.addEventListener("resize", setColNumByDivWidth);
     return () => {
@@ -46,19 +39,22 @@ const MainPage = () => {
 
   return (
     <>
-      <TopNavContainer />
+      <TopNav />
       <WrapperStyled>
-        <LeftNavContainer />
-        <LeftNavOptionContainer />
+        <LeftNavAreaContainer />
         <MainStyled>
-          <SectionPaginationContainer />
+          <SectionPagination />
           <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
             <CabinetList colNum={colNum} />
           </CabinetListWrapperStyled>
         </MainStyled>
-        <DetailInfoContainerStyled>
+        <DetailInfoContainerStyled
+          id="cabinetDetailArea"
+          className={toggleCabinetInfo ? "on" : ""}
+        >
           <CabinetInfoArea />
         </DetailInfoContainerStyled>
+        <MapInfoContainer/>
       </WrapperStyled>
     </>
   );
@@ -82,6 +78,7 @@ const DetailInfoContainerStyled = styled.div`
   min-width: 330px;
   padding-top: 45px;
   border-left: 1px solid var(--line-color);
+  background-color: var(--white);
 `;
 
 const CabinetListWrapperStyled = styled.div`
