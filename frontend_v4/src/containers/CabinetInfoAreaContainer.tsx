@@ -154,8 +154,6 @@ const CabinetInfoAreaContainer: React.FC<{
         </TextStyled>
       </NotSelectedStyled>
     );
-  if (selectedCabinetInfo.userNameList === "haryu")
-    selectedCabinetInfo.isMine = true;
   return (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
