@@ -1,11 +1,9 @@
 import styled from "styled-components";
-import checkIcon from "@/assets/images/checkIcon.svg";
-import errorIcon from "@/assets/images/errorIcon.svg";
 import ButtonContainer from "./ButtonContainer";
-import exitButton from "@/assets/images/exitButton.svg";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 export interface MemoModalInterface {
+  cabinetType: string;
   cabinetTitle: string;
   cabinetMemo: string;
 }
@@ -17,28 +15,70 @@ const MemoModalContainer = ({
   memoModalObj,
   onClose,
 }: MemoModalContainerInterface) => {
-  const { cabinetTitle, cabinetMemo } = memoModalObj;
+  const { cabinetType, cabinetTitle, cabinetMemo } = memoModalObj;
   const [mode, setMode] = useState<string>("read");
+  const newTitle = useRef<HTMLInputElement>(null);
+  const newMemo = useRef<HTMLInputElement>(null);
+  const handleClickWriteMode = (e: any) => {
+    setMode("write");
+  };
+  const handleClickSave = (e: React.MouseEvent) => {
+    //사물함 제목, 사물함 비밀메모 update api 호출
+    onClose(e);
+  };
   return (
     <>
-      <BackgroundStyled />
+      <BackgroundStyled onClick={onClose} />
       <ModalContainerStyled type={"confirm"}>
-        <div>
-          <WriteModeButtonStyled mode={mode}>수정하기</WriteModeButtonStyled>
-        </div>
-        <H2Styled>{"메모관리"}</H2Styled>
+        <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
+          수정하기
+        </WriteModeButtonStyled>
+        <H2Styled>메모 관리</H2Styled>
         <ContentSectionStyled>
-          <ContentItemWrapperStyled>
-            <ContentItemTitleStyled>사물함 이름</ContentItemTitleStyled>
-            <ContentItemInputStyled content={cabinetTitle} />
-          </ContentItemWrapperStyled>
-          <ContentItemWrapperStyled>
-            <ContentItemTitleStyled>비밀 메모</ContentItemTitleStyled>
-            <ContentItemInputStyled content={cabinetMemo} />
-          </ContentItemWrapperStyled>
+          <ContentItemSectionStyled>
+            <ContentItemWrapperStyled isVisible={cabinetType === "SHARE"}>
+              <ContentItemTitleStyled>사물함 이름</ContentItemTitleStyled>
+              <ContentItemInputStyled
+                placeholder={cabinetTitle}
+                mode={mode}
+                defaultValue={mode === "write" ? cabinetTitle : undefined}
+                readOnly={mode === "read" ? true : false}
+                ref={newTitle}
+              />
+            </ContentItemWrapperStyled>
+            <ContentItemWrapperStyled isVisible={true}>
+              <ContentItemTitleStyled>비밀 메모</ContentItemTitleStyled>
+              <ContentItemInputStyled
+                placeholder={cabinetMemo}
+                mode={mode}
+                defaultValue={mode === "write" ? cabinetMemo : undefined}
+                readOnly={mode === "read" ? true : false}
+                ref={newMemo}
+              />
+            </ContentItemWrapperStyled>
+          </ContentItemSectionStyled>
         </ContentSectionStyled>
-        <ButtonWrapperStyled>
-          <ButtonContainer onClick={onClose} text="취소" theme="white" />
+        <ButtonWrapperStyled mode={mode}>
+          {mode === "write" && (
+            <ButtonContainer
+              onClick={handleClickSave}
+              text="저장"
+              theme="dark"
+            />
+          )}
+          <ButtonContainer
+            onClick={
+              mode === "read"
+                ? onClose
+                : () => {
+                    setMode("read");
+                    newTitle.current!.value = cabinetTitle;
+                    newMemo.current!.value = cabinetMemo;
+                  }
+            }
+            text={mode === "read" ? "닫기" : "취소"}
+            theme="white"
+          />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
     </>
@@ -58,8 +98,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   justify-content: space-around;
   align-items: center;
   text-align: center;
-  padding: 30px 0 10px 0;
-  padding-bottom: ${({ type }) => (type === "error" ? 0 : "10px")};
+  padding: 40px;
 `;
 
 export const DetailStyled = styled.p`
@@ -71,23 +110,50 @@ export const DetailStyled = styled.p`
 const H2Styled = styled.h2`
   font-weight: 600;
   font-size: 1.5rem;
-  margin: 0 30px 30px 30px;
+  margin: 0 30px 25px 0px;
   white-space: break-spaces;
+  text-align: start;
 `;
 
-const ContentSectionStyled = styled.div`
+const ContentSectionStyled = styled.section`
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 `;
 
-const ContentItemWrapperStyled = styled.div`
-  display: block;
+const ContentItemSectionStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
-const ContentItemTitleStyled = styled.h3``;
-const ContentItemInputStyled = styled.input<{ content: string }>`
-  placeholder: ${({ content }) => content};
+const ContentItemWrapperStyled = styled.div<{ isVisible: boolean }>`
+  display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 25px;
+`;
+
+const ContentItemTitleStyled = styled.h3`
+  font-size: 18px;
+  margin-bottom: 8px;
+`;
+const ContentItemInputStyled = styled.input<{
+  mode: string;
+}>`
+  border: 1px solid var(--line-color);
+  width: 100%;
+  height: 60px;
+  border-radius: 10px;
+  text-align: start;
+  text-indent: 20px;
+  font-size: 18px;
+  color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
+  &::placeholder {
+    color: ${({ mode }) =>
+      mode === "read" ? "var(--main-color)" : "var(--line-color)"};
+  }
 `;
 
 const BackgroundStyled = styled.div`
@@ -103,11 +169,19 @@ const BackgroundStyled = styled.div`
 const WriteModeButtonStyled = styled.button<{ mode: string }>`
   display: ${({ mode }) => (mode === "read" ? "block" : "none")};
   position: absolute;
+  left: 74.44%;
+  right: 11.11%;
+  top: 8%;
+  bottom: 88.6%;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  width: max-content;
+  height: auto;
   border: none;
   outline: none;
   background: none;
-  top: 30px;
-  right: 30px;
   cursor: pointer;
   text-decoration: underline;
   color: var(--main-color);
@@ -116,10 +190,11 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   }
 `;
 
-const ButtonWrapperStyled = styled.div`
+const ButtonWrapperStyled = styled.div<{ mode: string }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: ${({ mode }) => (mode === "read" ? "75px" : "0")};
 `;
 
 export default MemoModalContainer;

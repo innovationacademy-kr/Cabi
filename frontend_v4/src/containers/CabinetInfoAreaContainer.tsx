@@ -8,7 +8,6 @@ import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
 import { DetailStyled } from "./ModalContainer";
 import MemoModal from "@/components/MemoModal";
-import { MemoModalInterface } from "./MemoModalContainer";
 
 export interface ISelectedCabinetInfo {
   floor: number;
@@ -46,7 +45,12 @@ const CabinetInfoAreaContainer: React.FC<{
   const returnCabinetModalProps = {
     type: "confirm",
     title: "사물함 반납하기",
-    detail: "정말 반납하시겠습니까?",
+    detail: (
+      <DetailStyled>
+        대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
+        <br /> 지금 반납 하시겠습니까?
+      </DetailStyled>
+    ),
     confirmMessage: "네, 반납할게요",
     onClickProceed: () => {
       // 사물함 반납 api호출
@@ -131,14 +135,12 @@ const CabinetInfoAreaContainer: React.FC<{
     setShowReturnModal(true);
   };
   const handleCloseReturnModal = (e: { stopPropagation: () => void }) => {
-    e.stopPropagation();
     setShowReturnModal(false);
   };
   const handleOpenMemoModal = () => {
     setShowMemoModal(true);
   };
   const handleCloseMemoModal = (e: { stopPropagation: () => void }) => {
-    e.stopPropagation();
     setShowMemoModal(false);
   };
 

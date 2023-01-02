@@ -1,6 +1,4 @@
-import MemoModalContainer, {
-  MemoModalInterface,
-} from "@/containers/MemoModalContainer";
+import MemoModalContainer from "@/containers/MemoModalContainer";
 import { myCabinetInfoState } from "@/recoil/atoms";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import React from "react";
@@ -10,6 +8,7 @@ const MemoModal = (props: { onClose: React.MouseEventHandler<Element> }) => {
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const memoModalProps = {
+    cabinetType: myCabinetInfo.lent_type,
     cabinetTitle: myCabinetInfo.cabinet_title,
     cabinetMemo: myCabinetInfo.cabinet_memo,
   };
