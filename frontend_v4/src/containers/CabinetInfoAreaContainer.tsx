@@ -26,7 +26,6 @@ const CabinetInfoAreaContainer: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   closeCabinet: () => void;
 }> = (props) => {
-
   const { selectedCabinetInfo, closeCabinet } = props;
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
@@ -146,7 +145,6 @@ const CabinetInfoAreaContainer: React.FC<{
     setShowMemoModal(false);
   };
 
-
   if (selectedCabinetInfo === null)
     return (
       <NotSelectedStyled>
@@ -168,12 +166,14 @@ const CabinetInfoAreaContainer: React.FC<{
       >
         {selectedCabinetInfo.cabinetNum}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled title={selectedCabinetInfo.lentType} cabinetType={selectedCabinetInfo.lentType} />
+      <CabinetTypeIconStyled
+        title={selectedCabinetInfo.lentType}
+        cabinetType={selectedCabinetInfo.lentType}
+      />
       <TextStyled fontSize="1rem" fontColor="black">
         {selectedCabinetInfo.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
-
         {selectedCabinetInfo.isMine ? (
           <>
             <ButtonContainer
@@ -198,17 +198,16 @@ const CabinetInfoAreaContainer: React.FC<{
             <ButtonContainer onClick={closeCabinet} text="취소" theme="white" />
           </>
         )}
-
       </CabinetInfoButtonsContainerStyled>
-      <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo.expireDate
-          ? `~ ${selectedCabinetInfo.expireDate.toString().substring(0, 10)}`
-          : null}
-      </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled
         textColor={selectedCabinetInfo.detailMessageColor}
       >
         {selectedCabinetInfo.detailMessage}
+      </CabinetLentDateInfoStyled>
+      <CabinetLentDateInfoStyled textColor="var(--black)">
+        {selectedCabinetInfo.expireDate
+          ? `${selectedCabinetInfo.expireDate.toString().substring(0, 10)}`
+          : null}
       </CabinetLentDateInfoStyled>
       {showReturnModal && (
         <ModalPortal>
@@ -321,11 +320,10 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-top: 40px;
+  margin: 40px 0;
 `;
 
 const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
-  margin-top: 35px;
   color: ${(props) => props.textColor};
   font-size: 1rem;
   font-weight: 700;
