@@ -32,7 +32,7 @@ const LeftNavContainer = () => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
   const { closeLeftNav } = useLeftNav();
-  const { closeDetailInfo } = useDetailInfo();
+  const { closeMap, closeDetailInfo } = useDetailInfo();
 
   useEffect(() => {
     if (currentFloor === undefined) return;
@@ -52,6 +52,7 @@ const LeftNavContainer = () => {
     if (pathname == "/home") {
       closeLeftNav();
       navigator("/main");
+      closeMap();
     }
   };
 

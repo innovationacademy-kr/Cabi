@@ -1,5 +1,16 @@
+import {
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
+import {
+  currentFloorSectionState,
+  currentLocationFloorState,
+} from "@/recoil/selectors";
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import useDetailInfo from "@/hooks/useDetailInfo";
 
 /*
     클러스터 사물함 위치 더미 데이터
@@ -12,50 +23,146 @@ import styled from "styled-components";
     name     : 사물함 이름 정보
     type     : 사물함과 엘레베이터 타입 구분자
 */
-const data: IFloorMapInfo[] = [
-  {
-    colStart: 1,
-    colEnd: 3,
-    rowStart: 1,
-    rowEnd: 2,
-    name: `End of Clustor 6`,
-    type: "cabinet",
-  },
-  {
-    colStart: 1,
-    colEnd: 3,
-    rowStart: 3,
-    rowEnd: 4,
-    name: `Oasis`,
-    type: "cabinet",
-  },
-  {
-    colStart: 1,
-    colEnd: 2,
-    rowStart: 4,
-    rowEnd: 5,
-    name: `E/V`,
-    type: "elevator",
-  },
-  {
-    colStart: 4,
-    colEnd: 6,
-    rowStart: 6,
-    rowEnd: 7,
-    name: `Cluster 5
-        -
-        OA`,
-    type: "cabinet",
-  },
-  {
-    colStart: 4,
-    colEnd: 6,
-    rowStart: 8,
-    rowEnd: 9,
-    name: `End of Clustor 5`,
-    type: "cabinet",
-  },
-];
+
+interface IFloorSectionInfo {
+  [index: string]: IFloorMapInfo[];
+}
+const data: IFloorSectionInfo = {
+  "2": [
+    {
+      colStart: 1,
+      colEnd: 3,
+      rowStart: 1,
+      rowEnd: 2,
+      name: "End of Cluster 2",
+      type: "cabinet",
+    },
+    {
+      colStart: 1,
+      colEnd: 3,
+      rowStart: 3,
+      rowEnd: 4,
+      name: `Oasis`,
+      type: "cabinet",
+    },
+    {
+      colStart: 1,
+      colEnd: 2,
+      rowStart: 4,
+      rowEnd: 5,
+      name: `E/V`,
+      type: "elevator",
+    },
+    {
+      colStart: 4,
+      colEnd: 6,
+      rowStart: 6,
+      rowEnd: 7,
+      name: "Cluster 1 - OA",
+      type: "cabinet",
+    },
+    {
+      colStart: 4,
+      colEnd: 6,
+      rowStart: 8,
+      rowEnd: 9,
+      name: `End of Cluster 1`,
+      type: "cabinet",
+    },
+    {
+      colStart: 1,
+      colEnd: 2,
+      rowStart: 6,
+      rowEnd: 9,
+      name: "Cluster 1 - Terrace",
+      type: "cabinet",
+    },
+  ],
+  "4": [
+    {
+      colStart: 1,
+      colEnd: 3,
+      rowStart: 1,
+      rowEnd: 2,
+      name: `End of Cluster 4`,
+      type: "cabinet",
+    },
+    {
+      colStart: 1,
+      colEnd: 3,
+      rowStart: 3,
+      rowEnd: 4,
+      name: `Oasis`,
+      type: "cabinet",
+    },
+    {
+      colStart: 1,
+      colEnd: 2,
+      rowStart: 4,
+      rowEnd: 5,
+      name: `E/V`,
+      type: "elevator",
+    },
+    {
+      colStart: 4,
+      colEnd: 6,
+      rowStart: 6,
+      rowEnd: 7,
+      name: `Cluster 3 - OA`,
+      type: "cabinet",
+    },
+    {
+      colStart: 4,
+      colEnd: 6,
+      rowStart: 8,
+      rowEnd: 9,
+      name: `End of Cluster 3`,
+      type: "cabinet",
+    },
+  ],
+  "5": [
+    {
+      colStart: 1,
+      colEnd: 3,
+      rowStart: 1,
+      rowEnd: 2,
+      name: `End of Cluster 6`,
+      type: "cabinet",
+    },
+    {
+      colStart: 1,
+      colEnd: 3,
+      rowStart: 3,
+      rowEnd: 4,
+      name: `Oasis`,
+      type: "cabinet",
+    },
+    {
+      colStart: 1,
+      colEnd: 2,
+      rowStart: 4,
+      rowEnd: 5,
+      name: `E/V`,
+      type: "elevator",
+    },
+    {
+      colStart: 4,
+      colEnd: 6,
+      rowStart: 6,
+      rowEnd: 7,
+      name: "Cluster 5 - OA",
+      type: "cabinet",
+    },
+    {
+      colStart: 4,
+      colEnd: 6,
+      rowStart: 8,
+      rowEnd: 9,
+      name: "End of Cluster 5",
+      type: "cabinet",
+    },
+  ],
+};
 
 interface IFloorMapInfo {
   rowStart: number;
@@ -67,20 +174,52 @@ interface IFloorMapInfo {
 }
 
 const MapGridContainer = () => {
+  const floor = useRecoilValue(currentFloorNumberState);
+  const setSection = useSetRecoilState(currentSectionNameState);
+  const selectSection = (section: string) => {
+    setSection(section);
+  };
   return (
     <MapGridStyled>
-      {data.map((value, idx) => (
-        <MapItem key={idx} info={value} />
+      {data[floor ? floor : 2].map((value: any, idx: any) => (
+        <MapItem
+          key={idx}
+          floor={floor}
+          info={value}
+          selectSection={selectSection}
+        />
       ))}
     </MapGridStyled>
   );
 };
 
-const MapItem: React.FC<{ info: IFloorMapInfo }> = (props) => {
-  return <ItemStyled info={props.info}>{props.info.name}</ItemStyled>;
+const MapItem: React.FC<{
+  floor: number;
+  info: IFloorMapInfo;
+  selectSection: Function;
+}> = ({ floor, info, selectSection }) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const setCurrentFloor = useSetRecoilState(currentFloorNumberState);
+  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const { closeMap } = useDetailInfo();
+  const onClick = () => {
+    if (pathname === "/home") navigate("/main");
+    setCurrentFloor(floor ? floor : floors[0]);
+    selectSection(info.name);
+    closeMap();
+  };
+  return (
+    <ItemStyled onClick={onClick} info={info}>
+      {info.name}
+    </ItemStyled>
+  );
 };
 
-const ItemStyled = styled.div<{ info: IFloorMapInfo }>`
+const ItemStyled = styled.div<{
+  onClick: React.MouseEventHandler;
+  info: IFloorMapInfo;
+}>`
   font-size: 0.8rem;
   cursor: pointer;
   color: white;

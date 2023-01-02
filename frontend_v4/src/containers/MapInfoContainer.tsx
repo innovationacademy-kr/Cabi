@@ -1,42 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import exitButton from "@/assets/images/exitButton.svg";
 import MapGridContainer from "./MapGridContainer";
-import { useState } from "react";
 import useDetailInfo from "@/hooks/useDetailInfo";
+import { currentFloorNumberState, toggleMapSelectState } from "@/recoil/atoms";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useLocation, useNavigate } from "react-router-dom";
+import { currentLocationFloorState } from "@/recoil/selectors";
 
-const floorInfo = ["2층", "3층", "4층", "5층"];
-
-const FloorSelectContainer = () => {
-  return (
-    <SelectStyled name="floor">
-      <option defaultValue="2층" value="2층">
-        2층
-      </option>
-      <option value="3층">3층</option>
-      <option value="4층">4층</option>
-    </SelectStyled>
+const SelectContainer = ({ floorInfo }: { floorInfo: number[] }) => {
+  const [toggle, setToggle] = useRecoilState(toggleMapSelectState);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [currentFloor, setCurrentFloor] = useRecoilState(
+    currentFloorNumberState
   );
-};
-
-const SelectContainer = ({
-  floorInfo,
-  currentFloor,
-}: {
-  floorInfo: string[];
-  currentFloor: string;
-}) => {
-  /*
-   */
-  const [toggle, setToggle] = useState<boolean>(false);
-  const onClick = () => {
+  const openSelect = () => {
     setToggle(!toggle);
+  };
+
+  const selectFloor = (info: string) => {
+    const floor = parseInt(info);
+    if (pathname === "/home") navigate("/main");
+    openSelect();
+    if (floor === currentFloor) return;
+    setCurrentFloor(floor);
   };
 
   return (
     <div style={{ position: "relative" }}>
-      <CurrentFloorStyled onClick={onClick}>{currentFloor}</CurrentFloorStyled>
-      {toggle && <OptionsContainer floorInfo={floorInfo} />}
+      <CurrentFloorStyled onClick={openSelect}>
+        {`${currentFloor ? currentFloor : floorInfo[0]}층`}
+      </CurrentFloorStyled>
+      {toggle && (
+        <OptionsContainer selectFloor={selectFloor} floorInfo={floorInfo} />
+      )}
     </div>
   );
 };
@@ -65,6 +63,7 @@ const OptionsContainerStyled = styled.div`
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  z-index: 99;
 `;
 
 const OptionStyled = styled.div`
@@ -79,11 +78,16 @@ const OptionStyled = styled.div`
   cursor: pointer;
 `;
 
-const OptionsContainer: React.FC<{ floorInfo: string[] }> = (props) => {
+const OptionsContainer: React.FC<{
+  selectFloor: Function;
+  floorInfo: number[];
+}> = ({ floorInfo, selectFloor }) => {
   return (
     <OptionsContainerStyled>
-      {props.floorInfo.map((info, idx) => (
-        <OptionStyled key={idx}>{info}</OptionStyled>
+      {floorInfo.map((info, idx) => (
+        <OptionStyled onClick={() => selectFloor(info)} key={idx}>
+          {info}층
+        </OptionStyled>
       ))}
     </OptionsContainerStyled>
   );
@@ -91,7 +95,7 @@ const OptionsContainer: React.FC<{ floorInfo: string[] }> = (props) => {
 
 const MapInfoContainer = () => {
   const { closeMap } = useDetailInfo();
-
+  const floorInfo = useRecoilValue(currentLocationFloorState);
   return (
     <MapInfoContainerStyled id="mapInfo">
       <HeaderStyled>
@@ -102,7 +106,7 @@ const MapInfoContainer = () => {
           style={{ width: "24px", cursor: "pointer" }}
         />
       </HeaderStyled>
-      <SelectContainer floorInfo={floorInfo} currentFloor="2층" />
+      <SelectContainer floorInfo={floorInfo} />
       <MapGridContainer />
     </MapInfoContainerStyled>
   );
@@ -139,6 +143,7 @@ const MapInfoContainerStyled = styled.div`
   top: 80px;
   right: 0;
   min-width: 330px;
+  width: 330px;
   height: calc(100% - 80px);
   z-index: 9;
   transform: translateX(120%);
