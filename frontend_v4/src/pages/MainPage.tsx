@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNav from "@/components/TopNav";
-import LeftNavContainer from "@/containers/LeftNavContainer";
+import LeftNavAreaContainer from "@/containers/LeftNavAreaContainer";
 import SectionPagination from "@/components/SectionPagination";
-import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import CabinetInfoArea from "@/components/CabinetInfoArea";
+import MapInfoContainer from "@/containers/MapInfoContainer";
 import { useRecoilValue } from "recoil";
 import CabinetList from "@/components/CabinetList";
 import { toggleCabinetInfoState, toggleMapInfoState } from "@/recoil/atoms";
@@ -41,17 +41,20 @@ const MainPage = () => {
     <>
       <TopNav />
       <WrapperStyled>
-        <LeftNavContainer />
-        <LeftNavOptionContainer />
+        <LeftNavAreaContainer />
         <MainStyled>
           <SectionPagination />
           <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
             <CabinetList colNum={colNum} />
           </CabinetListWrapperStyled>
         </MainStyled>
-        <DetailInfoContainerStyled>
+        <DetailInfoContainerStyled
+          id="cabinetDetailArea"
+          className={toggleCabinetInfo ? "on" : ""}
+        >
           <CabinetInfoArea />
         </DetailInfoContainerStyled>
+        <MapInfoContainer/>
       </WrapperStyled>
     </>
   );
@@ -75,6 +78,7 @@ const DetailInfoContainerStyled = styled.div`
   min-width: 330px;
   padding-top: 45px;
   border-left: 1px solid var(--line-color);
+  background-color: var(--white);
 `;
 
 const CabinetListWrapperStyled = styled.div`

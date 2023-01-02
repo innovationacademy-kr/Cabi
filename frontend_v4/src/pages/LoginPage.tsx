@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import "@/assets/css/loginPage.css";
 
 const LoginPage = () => {
   const url = `${import.meta.env.VITE_BE_HOST}/auth/login`;

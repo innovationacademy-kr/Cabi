@@ -20,8 +20,9 @@ export interface ISelectedCabinetInfo {
 
 const CabinetInfoAreaContainer: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
+  closeCabinet: () => void;
 }> = (props) => {
-  const { selectedCabinetInfo } = props;
+  const { selectedCabinetInfo, closeCabinet } = props;
 
   if (selectedCabinetInfo === null)
     return (
@@ -45,13 +46,13 @@ const CabinetInfoAreaContainer: React.FC<{
       >
         {selectedCabinetInfo.cabinetNum}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled cabinetType={selectedCabinetInfo.lentType} />
+      <CabinetTypeIconStyled title={selectedCabinetInfo.lentType} cabinetType={selectedCabinetInfo.lentType} />
       <TextStyled fontSize="1rem" fontColor="black">
         {selectedCabinetInfo.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         <ButtonContainer onClick={() => {}} text="대여" theme="dark" />
-        <ButtonContainer onClick={() => {}} text="취소" theme="white" />
+        <ButtonContainer onClick={closeCabinet} text="취소" theme="white" />
       </CabinetInfoButtonsContainerStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
         {selectedCabinetInfo.expireDate
@@ -116,8 +117,8 @@ const CabiLogoStyled = styled.img`
 `;
 
 const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
-  width: 35px;
-  height: 35px;
+  width: 24px;
+  height: 24px;
   margin-bottom: 10px;
   background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
   background-size: contain;

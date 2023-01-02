@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TopNav from "@/components/TopNav";
+import LeftNavAreaContainer from "@/containers/LeftNavAreaContainer";
 import HomeInfo from "@/components/HomeInfo";
-import LeftNavContainer from "@/containers/LeftNavContainer";
-import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
 import LoadingModal from "@/components/LoadingModal";
+import "@/assets/css/homePage.css";
 
 import { getCookie } from "@/api/react_cookie/cookies";
 import { useSetRecoilState } from "recoil";
@@ -54,11 +54,15 @@ const HomePage = () => {
     <>
       <TopNav />
       <WapperStyled>
-        <LeftNavContainer />
-        <LeftNavOptionContainer style={{ display: "none" }} />
+        <LeftNavAreaContainer style={{ display: "none" }} />
         <MainStyled>{loading ? <LoadingModal /> : <HomeInfo />}</MainStyled>
-        {toggleCabinetInfo && <CabinetInfoArea />}
-        {toggleMapInfo && <MapInfoContainer />}
+        <DetailInfoContainerStyled
+          id="cabinetDetailArea"
+          className={toggleCabinetInfo ? "on" : ""}
+        >
+          <CabinetInfoArea />
+        </DetailInfoContainerStyled>
+        <MapInfoContainer />
       </WapperStyled>
     </>
   );
@@ -75,6 +79,24 @@ const MainStyled = styled.main`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+`;
+
+const DetailInfoContainerStyled = styled.div`
+  min-width: 330px;
+  padding-top: 45px;
+  border-left: 1px solid var(--line-color);
+  background-color: var(--white);
+  position: fixed;
+  top: 80px;
+  right: 0;
+  height: calc(100% - 80px);
+  z-index: 9;
+  transform: translateX(120%);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 40px 0 var(--bg-shadow);
+  &.on {
+    transform: translateX(0%);
+  }
 `;
 
 export default HomePage;

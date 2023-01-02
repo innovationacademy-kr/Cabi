@@ -5,7 +5,7 @@ import styled from "styled-components";
     클러스터 사물함 위치 더미 데이터
     grid col : 가로 , grid row : 세로
 
-    colStart : grid 가로 시작 위치 1부터 시작 
+    colStart : grid 가로 시작 위치 1부터 시작
     colEnd   : grid 가로 마지막 위치
     rowStart : grid 세로 시작 위치 2부터 시작
     rowEnd   : grid 세로 마지막 위치
@@ -95,16 +95,21 @@ const ItemStyled = styled.div<{ info: IFloorMapInfo }>`
   grid-row-end: ${({ info }) => info.rowEnd};
   background: ${({ info }) =>
     info.type === "cabinet" ? "#9747ff" : "#bcb9b9"};
+  &:hover {
+    opacity: ${({ info }) => (info.type === "cabinet" ? 0.9 : 1)};
+  }
 `;
 
 const MapGridStyled = styled.div`
   width: 80%;
-  height: 580px;
+  max-height: 580px;
+  height: 65%;
   background: #e7e7e7;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(8, 1fr);
   gap: 0px;
+  border-radius: 10px;
 `;
 
 export default MapGridContainer;

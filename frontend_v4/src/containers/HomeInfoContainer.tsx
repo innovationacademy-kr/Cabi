@@ -6,98 +6,66 @@ const InfoContainer = ({
   lentStartHandler: React.MouseEventHandler;
 }) => {
   return (
-    <MediaStyled>
-      <WrapperStyled id="infoWrap">
-        <TitleContainerStyled className="titleContainer">
-          <div className="logo">
-            <img src="src/assets/images/logo.svg" alt="" />
+    <WrapperStyled id="infoWrap">
+      <TitleContainerStyled className="titleContainer">
+        <div className="logo">
+          <img src="src/assets/images/logo.svg" alt="" />
+        </div>
+        <h1 className="title">
+          42Cabi <span>이용 안내서</span>
+        </h1>
+        <p className="subtitle">캐비닛 대여 전 알아둘 3가지</p>
+      </TitleContainerStyled>
+      <InfoSectionStyled className="section">
+        <article className="article">
+          <div>
+            <img src="src/assets/images/privateIcon.svg" alt="" />
           </div>
-          <h1 className="title">
-            42Cabi <span>이용 안내서</span>
-          </h1>
-          <p className="subtitle">캐비닛 대여 전 알아둘 3가지</p>
-        </TitleContainerStyled>
-        <InfoSectionStyled className="section">
-          <article className="article">
-            <div>
-              <img src="src/assets/images/privateIcon.svg" alt="" />
-            </div>
-            <h3>개인 사물함</h3>
-            <p>
-              <span>1인</span>이 1개의 사물함을 사용합니다.
-              <br />
-              최대 <span>21일간</span> 대여할 수 있습니다.
-            </p>
-          </article>
-          <article className="article">
-            <div>
-              <img src="src/assets/images/shareIcon.svg" alt="" />
-            </div>
-            <h3>공유 사물함</h3>
-            <p>
-              1개의 사물함을 최대 <span>3인</span>이 사용합니다.
-              <br />
-              <span>42일간</span> 대여할 수 있습니다.
-              <br />
-              사물함 제목과 메모는 대여자들끼리 공유됩니다.
-              <br />
-              대여 후 <span className="redColor">72시간</span> 내 반납 시,
-              <br />
-              72시간 동안 공유 사물함 대여가
-              <span className="redColor"> 불가능</span>합니다.
-            </p>
-          </article>
-          <article className="article">
-            <div>
-              <img src="src/assets/images/circleIcon.svg" alt="" />
-            </div>
-            <h3>동아리 사물함</h3>
-            <p>
-              새로운 기수가 들어올 때 갱신됩니다.
-              <br />
-              사물함 대여는 슬랙 캐비닛 채널로 문의주세요.
-              <br />
-              상세 페이지가 제공되지 않습니다.
-              <br />
-              비밀번호는 동아리 내에서 공유하여 이용하세요.
-            </p>
-          </article>
-        </InfoSectionStyled>
-        <button onClick={lentStartHandler}>시작하기</button>
-      </WrapperStyled>
-    </MediaStyled>
+          <h3>개인 사물함</h3>
+          <p>
+            <span>1인</span>이 1개의 사물함을 사용합니다.
+            <br />
+            최대 <span>21일간</span> 대여할 수 있습니다.
+          </p>
+        </article>
+        <article className="article">
+          <div>
+            <img src="src/assets/images/shareIcon.svg" alt="" />
+          </div>
+          <h3>공유 사물함</h3>
+          <p>
+            1개의 사물함을 최대 <span>3인</span>이 사용합니다.
+            <br />
+            <span>42일간</span> 대여할 수 있습니다.
+            <br />
+            사물함 제목과 메모는 대여자들끼리 공유됩니다.
+            <br />
+            대여 후 <span className="redColor">72시간</span> 내 반납 시,
+            <br />
+            72시간 동안 공유 사물함 대여가
+            <span className="redColor"> 불가능</span>합니다.
+          </p>
+        </article>
+        <article className="article">
+          <div>
+            <img src="src/assets/images/circleIcon.svg" alt="" />
+          </div>
+          <h3>동아리 사물함</h3>
+          <p>
+            새로운 기수가 들어올 때 갱신됩니다.
+            <br />
+            사물함 대여는 슬랙 캐비닛 채널로 문의주세요.
+            <br />
+            상세 페이지가 제공되지 않습니다.
+            <br />
+            비밀번호는 동아리 내에서 공유하여 이용하세요.
+          </p>
+        </article>
+      </InfoSectionStyled>
+      <button>대여 시작하기</button>
+    </WrapperStyled>
   );
 };
-
-const MediaStyled = styled.div`
-  @media screen and (max-width: 1300px) {
-    #infoWrap > .titleContainer {
-      width: 90%;
-      max-width: 600px;
-    }
-
-    #infoWrap .section {
-      flex-direction: column;
-      align-items: center;
-    }
-    #infoWrap .article {
-      width: 100%;
-    }
-  }
-
-  @media screen and (max-width: 425px) {
-    #infoWrap .title {
-      font-size: 2rem;
-    }
-    #infoWrap .subtitle {
-      font-size: 1.25rem;
-    }
-    #infoWrap .article > p {
-      font-size: 0.875rem;
-      letter-spacing: -0.02rem;
-    }
-  }
-`;
 
 const WrapperStyled = styled.div`
   display: flex;

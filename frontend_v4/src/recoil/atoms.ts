@@ -82,3 +82,8 @@ export const toggleCabinetInfoState = atom<boolean>({
   key: "ToggleCabinetInfo",
   default: false,
 });
+
+export const toggleNavState = atom<boolean>({
+  key: "ToggleNav",
+  default: false,
+});

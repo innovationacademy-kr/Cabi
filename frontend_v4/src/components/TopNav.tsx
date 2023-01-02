@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { locationsFloorState, currentLocationNameState } from "@/recoil/atoms";
 import { locationsState } from "@/recoil/selectors";
 import { axiosLocationFloor } from "@/api/axios/axios.custom";
 import TopNavContainer from "@/containers/TopNavContainer";
+import useLeftNav from "@/hooks/useLeftNav";
 
 const TopNav = () => {
   const [locationClicked, setLocationClicked] = useState(false);
@@ -13,10 +13,10 @@ const TopNav = () => {
     currentLocationNameState
   );
   const locationsList = useRecoilValue<Array<string>>(locationsState);
-  const navigate = useNavigate();
+  const { clickLeftNav } = useLeftNav();
 
   const onClickLogo = () => {
-    navigate("/home");
+    clickLeftNav();
   };
 
   useEffect(() => {
