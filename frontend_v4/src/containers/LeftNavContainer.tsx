@@ -11,8 +11,6 @@ import {
   currentFloorNumberState,
   currentFloorCabinetState,
   currentSectionNameState,
-  toggleMapInfoState,
-  toggleCabinetInfoState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
@@ -20,6 +18,7 @@ import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 import useLeftNav from "@/hooks/useLeftNav";
 import { removeCookie } from "@/api/react_cookie/cookies";
 import useDetailInfo from "@/hooks/useDetailInfo";
+
 const LeftNavContainer = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
@@ -30,12 +29,10 @@ const LeftNavContainer = () => {
     CabinetInfoByLocationFloorDto[]
   >(currentFloorCabinetState);
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
-  const toggleMapInfo = useSetRecoilState(toggleMapInfoState);
-  const toggleCabinetInfo = useSetRecoilState(toggleCabinetInfoState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
   const { closeLeftNav } = useLeftNav();
-  const { closeMap } = useDetailInfo();
+  const { closeMap, closeDetailInfo } = useDetailInfo();
 
   useEffect(() => {
     if (currentFloor === undefined) return;
@@ -60,8 +57,7 @@ const LeftNavContainer = () => {
   };
 
   const onClickHomeButton = () => {
-    toggleMapInfo(() => false);
-    toggleCabinetInfo(() => false);
+    closeDetailInfo();
     resetCurrentFloor();
     closeLeftNav();
     navigator("/home");
