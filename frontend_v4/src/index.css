@@ -85,6 +85,11 @@ button:hover {
   opacity: 0.9;
 }
 
+button:disabled {
+  cursor: wait;
+  opacity: 0.9;
+}
+
 img {
   -webkit-user-drag: none;
   max-width: 100%;

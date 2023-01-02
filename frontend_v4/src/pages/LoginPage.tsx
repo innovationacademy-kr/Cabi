@@ -1,8 +1,12 @@
+import { useState } from "react";
 import styled from "styled-components";
 import "@/assets/css/loginPage.css";
+import LoadingModal from "@/components/LoadingModal";
 
 const LoginPage = () => {
   const url = `${import.meta.env.VITE_BE_HOST}/auth/login`;
+  const [isClicked, setIsClicked] = useState(false);
+
   return (
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
@@ -33,8 +37,14 @@ const LoginPage = () => {
             <CardTitleStyled>42Cabi</CardTitleStyled>
             <CardSubTitleStyled>여러분의 일상을 가볍게</CardSubTitleStyled>
           </CardTitleBoxStyled>
-          <button onClick={(): void => window.location.replace(url)}>
-            L O G I N
+          <button
+            onClick={() => {
+              window.location.replace(url);
+              setIsClicked(true);
+            }}
+            disabled={isClicked}
+          >
+            {isClicked ? <LoadingModal></LoadingModal> : "L O G I N"}
           </button>
         </LoginCardStyled>
       </RightSectionStyled>
