@@ -3,7 +3,7 @@ import LeftNavContainer from "./LeftNavContainer";
 import LeftNavOptionContainer from "./LeftNavOptionContainer";
 import useLeftNav from "@/hooks/useLeftNav";
 
-const LeftNavAreaContainer = ({ style }: { style?: React.CSSProperties }) => {
+const LeftNavAreaContainer: React.FC<{ isVisible: boolean }> = (props) => {
   const { closeLeftNav } = useLeftNav();
 
   return (
@@ -11,7 +11,9 @@ const LeftNavAreaContainer = ({ style }: { style?: React.CSSProperties }) => {
       <LeftNavBgStyled onClick={closeLeftNav} id="leftNavBg"></LeftNavBgStyled>
       <LeftNavWrapStyled id="leftNavWrap">
         <LeftNavContainer></LeftNavContainer>
-        <LeftNavOptionContainer style={style}></LeftNavOptionContainer>
+        <LeftNavOptionContainer
+          isVisible={props.isVisible}
+        ></LeftNavOptionContainer>
       </LeftNavWrapStyled>
     </>
   );

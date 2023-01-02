@@ -1,21 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import TopNav from "@/components/TopNav";
-import LeftNavAreaContainer from "@/containers/LeftNavAreaContainer";
 import SectionPagination from "@/components/SectionPagination";
-import CabinetInfoArea from "@/components/CabinetInfoArea";
-import MapInfoContainer from "@/containers/MapInfoContainer";
-import { useRecoilValue } from "recoil";
 import CabinetList from "@/components/CabinetList";
-import { toggleCabinetInfoState, toggleMapInfoState } from "@/recoil/atoms";
 
 const MainPage = () => {
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
-  const toggleMapInfo = useRecoilValue(toggleMapInfoState);
-  const toggleCabinetInfo = useRecoilValue(toggleCabinetInfoState);
   const [colNum, setColNum] = useState<number>(4);
-  const navigate = useNavigate();
   // .env에서 가져올 실제 col_num 값입니다.
   const maxColNum = 7;
 
@@ -45,13 +35,6 @@ const MainPage = () => {
           <CabinetList colNum={colNum} />
         </CabinetListWrapperStyled>
       </MainStyled>
-      <DetailInfoContainerStyled
-        id="cabinetDetailArea"
-        className={toggleCabinetInfo ? "on" : ""}
-      >
-        <CabinetInfoArea />
-      </DetailInfoContainerStyled>
-      <MapInfoContainer />
     </>
   );
 };
@@ -60,14 +43,6 @@ const MainStyled = styled.main`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  padding-top: 30px;
-`;
-
-const DetailInfoContainerStyled = styled.div`
-  min-width: 330px;
-  padding-top: 45px;
-  border-left: 1px solid var(--line-color);
-  background-color: var(--white);
 `;
 
 const CabinetListWrapperStyled = styled.div`
