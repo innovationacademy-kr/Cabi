@@ -3,7 +3,8 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import CabinetColorTable from "@/components/CabinetColorTable";
-import { currentSectionNameState } from "@/recoil/atoms";
+import { currentSectionNameState, toggleNavState } from "@/recoil/atoms";
+import useLeftNav from "@/hooks/useLeftNav";
 
 // const floorSection = [
 //   "End of Cluster1",
@@ -19,7 +20,10 @@ const LeftNavOptionContainer = (props: { isVisible: boolean }) => {
     currentSectionNameState
   );
 
+  const { closeLeftNav } = useLeftNav();
+
   const onClickSection = (section: string) => {
+    closeLeftNav();
     setCurrentFloorSection(section);
   };
 

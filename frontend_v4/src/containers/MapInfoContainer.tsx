@@ -3,6 +3,7 @@ import styled from "styled-components";
 import exitButton from "@/assets/images/exitButton.svg";
 import MapGridContainer from "./MapGridContainer";
 import { useState } from "react";
+import useDetailInfo from "@/hooks/useDetailInfo";
 
 const floorInfo = ["2층", "3층", "4층", "5층"];
 
@@ -41,16 +42,19 @@ const SelectContainer = ({
 };
 
 const CurrentFloorStyled = styled.div`
-  background: var(--main-color);
+  background: url("src/assets/images/select.svg") var(--main-color) no-repeat
+    80% 55%;
   color: white;
   cursor: pointer;
   width: 65px;
   height: 35px;
+  line-height: 35px;
+  text-indent: 12px;
   border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin-bottom: 50px;
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 const OptionsContainerStyled = styled.div`
@@ -59,7 +63,7 @@ const OptionsContainerStyled = styled.div`
   top: 40px;
   background: white;
   border-radius: 10px;
-  box-shadow: 0px 0px 10px 1px gray;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
 `;
 
@@ -86,11 +90,17 @@ const OptionsContainer: React.FC<{ floorInfo: string[] }> = (props) => {
 };
 
 const MapInfoContainer = () => {
+  const { closeMap } = useDetailInfo();
+
   return (
-    <MapInfoContainerStyled>
+    <MapInfoContainerStyled id="mapInfo">
       <HeaderStyled>
         <H2Styled>지도</H2Styled>
-        <img src={exitButton} style={{ width: "24px", cursor: "pointer" }} />
+        <img
+          onClick={closeMap}
+          src={exitButton}
+          style={{ width: "24px", cursor: "pointer" }}
+        />
       </HeaderStyled>
       <SelectContainer floorInfo={floorInfo} currentFloor="2층" />
       <MapGridContainer />
@@ -125,15 +135,19 @@ const HeaderStyled = styled.div`
 `;
 
 const MapInfoContainerStyled = styled.div`
-  position: absolute;
+  position: fixed;
+  top: 80px;
   right: 0;
-  width: 330px;
-  height: 100%;
+  min-width: 330px;
+  height: calc(100% - 80px);
+  z-index: 9;
+  transform: translateX(120%);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 40px 0 var(--bg-shadow);
   display: flex;
   flex-direction: column;
   align-items: center;
   background: var(--white);
-  box-shadow: 0 0 15px 1px gray;
 `;
 
 export default MapInfoContainer;

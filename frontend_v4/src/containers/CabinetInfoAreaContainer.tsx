@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import ButtonContainer from "./ButtonContainer";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import cabiLogo from "@/assets/images/logo.svg";
+import Modal from "@/components/Modal";
+import ModalPortal from "@/components/ModalPortal";
+import { DetailStyled } from "./ModalContainer";
+import MemoModal from "@/components/MemoModal";
 
 export interface ISelectedCabinetInfo {
   floor: number;
@@ -20,8 +24,128 @@ export interface ISelectedCabinetInfo {
 
 const CabinetInfoAreaContainer: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
+  closeCabinet: () => void;
 }> = (props) => {
-  const { selectedCabinetInfo } = props;
+
+  const { selectedCabinetInfo, closeCabinet } = props;
+  const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
+  const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
+  let expireDate = new Date();
+  const addDays = selectedCabinetInfo?.lentType === "SHARE" ? 41 : 20;
+  expireDate.setDate(expireDate.getDate() + addDays);
+  const padTo2Digits = (num: number) => {
+    return num.toString().padStart(2, "0");
+  };
+  const formatDate = (date: Date) => {
+    return [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join("/");
+  };
+  const formattedExpireDate = formatDate(expireDate);
+  const returnCabinetModalProps = {
+    type: "confirm",
+    title: "사물함 반납하기",
+    detail: (
+      <DetailStyled>
+        대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
+        <br /> 지금 반납 하시겠습니까?
+      </DetailStyled>
+    ),
+    confirmMessage: "네, 반납할게요",
+    onClickProceed: () => {
+      // 사물함 반납 api호출
+      alert("반납이 완료되었습니다");
+    },
+  };
+  const modalPropsMap = {
+    [CabinetStatus.AVAILABLE]: {
+      type: "confirm",
+      title: "이용 시 주의 사항",
+      detail: (
+        <DetailStyled>
+          대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
+          <br />
+          대여 후 72시간 이내 취소(반납) 시,
+          <br /> 72시간의 대여 불가 패널티가 적용됩니다.
+          <br />
+          “메모 내용”은 공유 인원끼리 공유됩니다.
+          <br />
+          귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
+          <br />
+        </DetailStyled>
+      ),
+      confirmMessage: "네, 대여할게요",
+      onClickProceed: () => {
+        //사물함 대여 api호출
+        alert("대여가 완료되었습니다");
+      },
+    },
+    [CabinetStatus.SET_EXPIRE_FULL]: {
+      type: "error",
+      title: "이미 사용 중인 사물함입니다",
+      detail: null,
+      confirmMessage: "",
+      onClickProceed: () => {},
+    },
+    [CabinetStatus.SET_EXPIRE_AVAILABLE]: {
+      type: "confirm",
+      title: "이용 시 주의 사항",
+      detail: (
+        <p>
+          대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
+          <br />
+          대여 후 72시간 이내 취소(반납) 시,
+          <br /> 72시간의 대여 불가 패널티가 적용됩니다.
+          <br />
+          “메모 내용”은 공유 인원끼리 공유됩니다.
+          <br />
+          귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
+          <br />
+        </p>
+      ),
+      confirmMessage: "네, 대여할게요",
+      onClickProceed: () => {
+        //사물함 대여 api호출
+        alert("대여가 완료되었습니다");
+      },
+    },
+    [CabinetStatus.EXPIRED]: {
+      type: "error",
+      title: `반납이 지연되고 있어\n현재 대여가 불가합니다`,
+      detail: null,
+      confirmMessage: "",
+      onClickProceed: () => {},
+    },
+    [CabinetStatus.BROKEN]: {
+      type: "error",
+      title: "사용이 불가한 사물함입니다",
+      detail: null,
+      confirmMessage: "",
+      onClickProceed: () => {},
+    },
+    [CabinetStatus.BANNED]: {
+      type: "error",
+      title: "사용이 불가한 사물함입니다",
+      detail: null,
+      confirmMessage: "",
+      onClickProceed: () => {},
+    },
+  };
+  const handleOpenReturnModal = () => {
+    setShowReturnModal(true);
+  };
+  const handleCloseReturnModal = (e: { stopPropagation: () => void }) => {
+    setShowReturnModal(false);
+  };
+  const handleOpenMemoModal = () => {
+    setShowMemoModal(true);
+  };
+  const handleCloseMemoModal = (e: { stopPropagation: () => void }) => {
+    setShowMemoModal(false);
+  };
+
 
   if (selectedCabinetInfo === null)
     return (
@@ -33,7 +157,6 @@ const CabinetInfoAreaContainer: React.FC<{
         </TextStyled>
       </NotSelectedStyled>
     );
-
   return (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
@@ -45,13 +168,37 @@ const CabinetInfoAreaContainer: React.FC<{
       >
         {selectedCabinetInfo.cabinetNum}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled cabinetType={selectedCabinetInfo.lentType} />
+      <CabinetTypeIconStyled title={selectedCabinetInfo.lentType} cabinetType={selectedCabinetInfo.lentType} />
       <TextStyled fontSize="1rem" fontColor="black">
         {selectedCabinetInfo.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
-        <ButtonContainer onClick={() => {}} text="대여" theme="dark" />
-        <ButtonContainer onClick={() => {}} text="취소" theme="white" />
+
+        {selectedCabinetInfo.isMine ? (
+          <>
+            <ButtonContainer
+              onClick={handleOpenReturnModal}
+              text="반납"
+              theme="dark"
+            />
+            <ButtonContainer
+              onClick={handleOpenMemoModal}
+              text="메모관리"
+              theme="white"
+            />
+            <ButtonContainer onClick={closeCabinet} text="취소" theme="white" />
+          </>
+        ) : (
+          <>
+            <ButtonContainer
+              onClick={handleOpenReturnModal}
+              text="대여"
+              theme="dark"
+            />
+            <ButtonContainer onClick={closeCabinet} text="취소" theme="white" />
+          </>
+        )}
+
       </CabinetInfoButtonsContainerStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
         {selectedCabinetInfo.expireDate
@@ -63,6 +210,23 @@ const CabinetInfoAreaContainer: React.FC<{
       >
         {selectedCabinetInfo.detailMessage}
       </CabinetLentDateInfoStyled>
+      {showReturnModal && (
+        <ModalPortal>
+          <Modal
+            modalObj={
+              selectedCabinetInfo.isMine
+                ? returnCabinetModalProps
+                : modalPropsMap[selectedCabinetInfo.status]
+            }
+            onClose={handleCloseReturnModal}
+          />
+        </ModalPortal>
+      )}
+      {showMemoModal && (
+        <ModalPortal>
+          <MemoModal onClose={handleCloseMemoModal} />
+        </ModalPortal>
+      )}
     </CabinetDetailAreaStyled>
   );
 };
@@ -116,8 +280,8 @@ const CabiLogoStyled = styled.img`
 `;
 
 const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
-  width: 35px;
-  height: 35px;
+  width: 24px;
+  height: 24px;
   margin-bottom: 10px;
   background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
   background-size: contain;

@@ -1,5 +1,4 @@
 import React, { SetStateAction, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import {
   locationsFloorState,
@@ -10,6 +9,7 @@ import { locationsState } from "@/recoil/selectors";
 import { axiosLocationFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import TopNavContainer from "@/containers/TopNavContainer";
+import useLeftNav from "@/hooks/useLeftNav";
 
 const TopNav: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
@@ -22,11 +22,11 @@ const TopNav: React.FC<{
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const setLocationsFloor = useSetRecoilState(locationsFloorState);
   const locationsList = useRecoilValue<Array<string>>(locationsState);
-  const navigate = useNavigate();
   const { setIsLoading } = props;
+  const { clickLeftNav } = useLeftNav();
 
   const onClickLogo = () => {
-    navigate("/home");
+    clickLeftNav();
   };
 
   useEffect(() => {

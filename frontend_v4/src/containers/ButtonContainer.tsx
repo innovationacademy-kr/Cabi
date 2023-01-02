@@ -9,14 +9,15 @@ interface ButtonInterface {
 
 const ButtonContainer = (props: ButtonInterface) => {
   return (
-    <ButtonContainerStyled theme={props.theme}>
+
+    <ButtonContainerStyled onClick={props.onClick} theme={props.theme}>
       {props.text}
     </ButtonContainerStyled>
   );
 };
 
 const ButtonContainerStyled = styled.button`
-  width: 200px;
+  width: 240px;
   height: 60px;
   display: flex;
   justify-content: center;
@@ -27,6 +28,9 @@ const ButtonContainerStyled = styled.button`
     props.theme === "dark" ? "1px solid white" : "1px solid #9747FF"};
   border-radius: 10px;
   margin-bottom: 15px;
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 export default ButtonContainer;

@@ -17,8 +17,8 @@ import {
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
 import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
-
-// const floors = [2, 3, 4, 5];
+import useLeftNav from "@/hooks/useLeftNav";
+import { removeCookie } from "@/api/react_cookie/cookies";
 
 const LeftNavContainer = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
@@ -34,6 +34,7 @@ const LeftNavContainer = () => {
   const toggleCabinetInfo = useSetRecoilState(toggleCabinetInfoState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
+  const { closeLeftNav } = useLeftNav();
 
   useEffect(() => {
     if (currentFloor === undefined) return;
@@ -50,14 +51,27 @@ const LeftNavContainer = () => {
 
   const onClick = (floor: number) => {
     setCurrentFloor(floor);
-    if (pathname == "/home") navigator("/main");
+    if (pathname == "/home") {
+      closeLeftNav();
+      navigator("/main");
+    }
   };
 
   const onClickHomeButton = () => {
     toggleMapInfo(() => false);
     toggleCabinetInfo(() => false);
     resetCurrentFloor();
+    closeLeftNav();
     navigator("/home");
+  };
+
+  const handleLogout = (): void => {
+    if (import.meta.env.VITE_IS_LOCAL === "true") {
+      removeCookie("access_token");
+    } else {
+      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
+    }
+    navigator("/");
   };
 
   return (
@@ -91,7 +105,10 @@ const LeftNavContainer = () => {
             <div></div>
             Log
           </BottomBtnStyled>
-          <BottomBtnStyled src={"src/assets/images/close-square.svg"}>
+          <BottomBtnStyled
+            onClick={handleLogout}
+            src={"src/assets/images/close-square.svg"}
+          >
             <div></div>
             Logout
           </BottomBtnStyled>

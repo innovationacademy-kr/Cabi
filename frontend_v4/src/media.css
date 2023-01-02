@@ -1,8 +1,49 @@
-@media only screen and (max-width: 768px) {
-  #loginPage > .leftLoginPage {
-    display: none;
+@media only screen and (max-width: 1040px) {
+  /* left navigation */
+  #leftNavWrap {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    background-color: var(--white);
+    height: calc(100% - 80px);
+    z-index: 9;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
   }
-  #loginPage > .rightLoginPage {
+  #leftNavWrap.on {
+    transform: translateX(0%);
+  }
+
+  #leftNavBg {
+    display: block;
+    position: fixed;
     width: 100%;
+    height: 100%;
+    background-color: var(--bg-shadow);
+    transform: translateX(-100%);
+    z-index: 9;
   }
+  #leftNavBg.on {
+    transform: translateX(0%);
+  }
+
+  /* cabinetDetailArea(rightSection) */
+  #cabinetDetailArea {
+    position: fixed;
+    top: 80px;
+    right: 0;
+    height: calc(100% - 80px);
+    z-index: 9;
+    transform: translateX(120%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 0 40px 0 var(--bg-shadow);
+  }
+  #cabinetDetailArea.on {
+    transform: translateX(0%);
+  }
+}
+
+/* mapInfo */
+#mapInfo.on {
+  transform: translateX(0%);
 }
