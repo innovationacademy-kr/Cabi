@@ -22,7 +22,7 @@ const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
   return (
     <>
       <BackgroundStyled onClick={onClose} />
-      <ModalConatinerStyled type={type}>
+      <ModalContainerStyled type={type}>
         <img
           src={type === "confirm" ? checkIcon : errorIcon}
           style={{ width: "70px", marginBottom: "20px" }}
@@ -40,12 +40,12 @@ const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
             />
           </ButtonWrapperStyled>
         )}
-      </ModalConatinerStyled>
+      </ModalContainerStyled>
     </>
   );
 };
 
-const ModalConatinerStyled = styled.div<{ type: string }>`
+const ModalContainerStyled = styled.div<{ type: string }>`
   position: fixed;
   top: 50%;
   left: 50%;
