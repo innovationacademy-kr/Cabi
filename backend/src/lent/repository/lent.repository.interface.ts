@@ -107,4 +107,10 @@ export interface ILentRepository {
    * @param cabinet_id
    */
   clearCabinetInfo(cabinet_id: number): Promise<void>;
+
+  /**
+   * 연체될 대여 정보들만 가져 옴
+   * @return Lent[]
+   */
+  getExpiredLent(baseDate: Date): Promise<Lent[]>;
 }

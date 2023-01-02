@@ -10,8 +10,8 @@ const useDetailInfo = () => {
   const [toggleMyCabinet, toggleMyCabinetState] = useRecoilState(
     toggleCabinetInfoState
   );
-  const [toggleMap, toggleMapState] = useRecoilState(toggleMapInfoState);
   const offMapSelect = useSetRecoilState(toggleMapSelectState);
+  const [toggleMap, setToggleMap] = useRecoilState(toggleMapInfoState);
   const [toggleNav, setToggleNav] = useRecoilState(toggleNavState);
 
   const leftNavBg = document.getElementById("leftNavBg");
@@ -40,14 +40,16 @@ const useDetailInfo = () => {
   const openMap = () => {
     if (toggleMap == false) {
       mapInfo!.classList.add("on");
-      toggleMapState(true);
+      setToggleMap(true);
     }
   };
 
   const closeMap = () => {
-    mapInfo!.classList.remove("on");
-    toggleMapState(false);
-    offMapSelect(false);
+    if (toggleMap == true) {
+      mapInfo!.classList.remove("on");
+      setToggleMap(false);
+      offMapSelect(false);
+    }
   };
 
   const clickCabinet = () => {

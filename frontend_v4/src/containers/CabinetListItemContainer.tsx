@@ -9,7 +9,13 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import styled, { css } from "styled-components";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
+
+import { useState } from "react";
+import Modal from "@/components/Modal";
+import ModalPortal from "@/components/ModalPortal";
+
 import useDetailInfo from "@/hooks/useDetailInfo";
+
 
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -17,9 +23,62 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
+  const [showModal, setShowModal] = useState<boolean>(false);
   const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
 
   let cabinetLabelText = "";
+  const modalPropsMap = {
+    [CabinetStatus.AVAILABLE]: {
+      type: "confirm",
+      title: "이용 시 주의 사항",
+      detail: `대여기간은 ${
+        Date.now() + 21
+      } 23:59까지 입니다. 대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.“메모 내용”은 공유 인원끼리 공유됩니다.귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`,
+      confirmMessage: "네, 대여할게요",
+      onClickProceed: () => {
+        alert("대여가 완료되었습니다");
+      },
+    },
+    [CabinetStatus.SET_EXPIRE_FULL]: {
+      type: "error",
+      title: "이미 사용 중인 사물함입니다",
+      detail: null,
+      confirmMessage: "",
+      onClickProceed: () => {},
+    },
+    [CabinetStatus.SET_EXPIRE_AVAILABLE]: {
+      type: "confirm",
+      title: "이용 시 주의 사항",
+      detail: `대여기간은 ${
+        Date.now() + 42
+      } 23:59까지 입니다. 대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.“메모 내용”은 공유 인원끼리 공유됩니다.귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`,
+      confirmMessage: "네, 대여할게요",
+      onClickProceed: () => {
+        alert("대여가 완료되었습니다");
+      },
+    },
+    [CabinetStatus.EXPIRED]: {
+      type: "error",
+      title: `반납이 지연되고 있어\n현재 대여가 불가합니다`,
+      detail: null,
+      confirmMessage: "",
+      onClickProceed: () => {},
+    },
+    [CabinetStatus.BROKEN]: {
+      type: "error",
+      title: "사용이 불가한 사물함입니다",
+      detail: null,
+      confirmMessage: "",
+      onClickProceed: () => {},
+    },
+    [CabinetStatus.BANNED]: {
+      type: "error",
+      title: "사용이 불가한 사물함입니다",
+      detail: null,
+      confirmMessage: "",
+      onClickProceed: () => {},
+    },
+  };
   if (props.status !== "BANNED" && props.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
     if (props.lent_type === "PRIVATE")
@@ -47,13 +106,26 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
     }
     getData(cabinetId);
   };
-
+  const handleOpenModal = () => {
+    if (
+      props.status === "BANNED" ||
+      props.status === "BROKEN" ||
+      props.status === "SET_EXPIRE_FULL" ||
+      props.status === "EXPIRED"
+    )
+      setShowModal(true);
+  };
+  const handleCloseModal = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    setShowModal(false);
+  };
   return (
     <CabinetListItemStyled
       status={props.status}
       isMine={isMine}
       onClick={() => {
         selectCabinetOnClick(props.cabinet_id);
+        if (!isMine) handleOpenModal();
         openCabinet();
         closeMap();
       }}
@@ -75,6 +147,14 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       >
         {cabinetLabelText}
       </CabinetLabelStyled>
+      {showModal && (
+        <ModalPortal>
+          <Modal
+            modalObj={modalPropsMap[props.status]}
+            onClose={handleCloseModal}
+          />
+        </ModalPortal>
+      )}
     </CabinetListItemStyled>
   );
 };

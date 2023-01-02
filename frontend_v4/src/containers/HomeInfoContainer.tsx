@@ -62,7 +62,7 @@ const InfoContainer = ({
           </p>
         </article>
       </InfoSectionStyled>
-      <button>대여 시작하기</button>
+      <button onClick={lentStartHandler}>시작하기</button>
     </WrapperStyled>
   );
 };
