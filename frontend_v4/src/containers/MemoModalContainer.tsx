@@ -163,7 +163,7 @@ const BackgroundStyled = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
-  zindex: 1000;
+  z-index: 1000;
 `;
 
 const WriteModeButtonStyled = styled.button<{ mode: string }>`
