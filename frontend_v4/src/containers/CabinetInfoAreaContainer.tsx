@@ -7,6 +7,8 @@ import cabiLogo from "@/assets/images/logo.svg";
 import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
 import { DetailStyled } from "./ModalContainer";
+import MemoModal from "@/components/MemoModal";
+import { MemoModalInterface } from "./MemoModalContainer";
 
 export interface ISelectedCabinetInfo {
   floor: number;
@@ -25,7 +27,8 @@ const CabinetInfoAreaContainer: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
 }> = (props) => {
   const { selectedCabinetInfo } = props;
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
+  const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
   let expireDate = new Date();
   const addDays = selectedCabinetInfo?.lentType === "SHARE" ? 41 : 20;
   expireDate.setDate(expireDate.getDate() + addDays);
@@ -124,11 +127,19 @@ const CabinetInfoAreaContainer: React.FC<{
       onClickProceed: () => {},
     },
   };
-  const handleOpenModal = () => {
-    setShowModal(true);
+  const handleOpenReturnModal = () => {
+    setShowReturnModal(true);
   };
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseReturnModal = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    setShowReturnModal(false);
+  };
+  const handleOpenMemoModal = () => {
+    setShowMemoModal(true);
+  };
+  const handleCloseMemoModal = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    setShowMemoModal(false);
   };
 
   if (selectedCabinetInfo === null)
@@ -141,7 +152,8 @@ const CabinetInfoAreaContainer: React.FC<{
         </TextStyled>
       </NotSelectedStyled>
     );
-
+  if (selectedCabinetInfo.userNameList === "haryu")
+    selectedCabinetInfo.isMine = true;
   return (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
@@ -161,17 +173,21 @@ const CabinetInfoAreaContainer: React.FC<{
         {selectedCabinetInfo.isMine ? (
           <>
             <ButtonContainer
-              onClick={handleOpenModal}
+              onClick={handleOpenReturnModal}
               text="반납"
               theme="dark"
             />
-            <ButtonContainer onClick={() => {}} text="메모관리" theme="white" />
+            <ButtonContainer
+              onClick={handleOpenMemoModal}
+              text="메모관리"
+              theme="white"
+            />
             <ButtonContainer onClick={() => {}} text="취소" theme="white" />
           </>
         ) : (
           <>
             <ButtonContainer
-              onClick={handleOpenModal}
+              onClick={handleOpenReturnModal}
               text="대여"
               theme="dark"
             />
@@ -189,7 +205,7 @@ const CabinetInfoAreaContainer: React.FC<{
       >
         {selectedCabinetInfo.detailMessage}
       </CabinetLentDateInfoStyled>
-      {showModal && (
+      {showReturnModal && (
         <ModalPortal>
           <Modal
             modalObj={
@@ -197,8 +213,13 @@ const CabinetInfoAreaContainer: React.FC<{
                 ? returnCabinetModalProps
                 : modalPropsMap[selectedCabinetInfo.status]
             }
-            onClose={handleCloseModal}
+            onClose={handleCloseReturnModal}
           />
+        </ModalPortal>
+      )}
+      {showMemoModal && (
+        <ModalPortal>
+          <MemoModal onClose={handleCloseMemoModal} />
         </ModalPortal>
       )}
     </CabinetDetailAreaStyled>
