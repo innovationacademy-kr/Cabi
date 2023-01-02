@@ -1,66 +1,98 @@
-import styled from 'styled-components';
-import checkIcon from '@/assets/images/checkIcon.svg';
-import errorIcon from '@/assets/images/errorIcon.svg';
-import ButtonContainer from './ButtonContainer';
+import styled from "styled-components";
+import checkIcon from "@/assets/images/checkIcon.svg";
+import errorIcon from "@/assets/images/errorIcon.svg";
+import ButtonContainer from "./ButtonContainer";
+import React from "react";
 
-interface ModalInterface {
-    type : string;
-    title : string | null;
-    detail : string | null;
-    confirmMessage : string;
+export interface ModalInterface {
+  type: string; //"confirm" : 진행 가능한 모달(메모, 대여, 반납 등에 사용) "erorr": 진행 불가능한 모달(문구와 닫기버튼만 존재)
+  title: string | null; //모달 제목
+  detail: string | null | JSX.Element; //안내문구 (confirm 타입 모달만 가짐)
+  confirmMessage: string; //확인 버튼의 텍스트
+  onClickProceed: () => void | null;
 }
 
-const ModalContainer = (props : ModalInterface) => {
-    return  <BackgroundStyled>
-                <ModalConatinerStyled type={props.type}>
-                        <img src={props.type === "confirm" ? checkIcon : errorIcon} style={{width :'70px', marginBottom : '20px'}}/>
-                        <H2Styled>{props.title}</H2Styled>
-                        <DetailStyled>{props.detail}</DetailStyled>
-                        {props.type === "confirm"
-                            ? <ButtonContainer onClick={(e : any)=>e} text="취소" theme="white"/> 
-                            : null}
-                        {props.type === "confirm"
-                            ? <ButtonContainer onClick={(e : any)=>e} text={props.confirmMessage} theme="dark"/> 
-                            : null}
-                    </ ModalConatinerStyled>
-            </BackgroundStyled>
+interface ModalContainerInterface {
+  modalObj: ModalInterface;
+  onClose: React.MouseEventHandler;
 }
 
-const ModalConatinerStyled = styled.div<{ type : string }>`
-    width : 360px;
-    background : white;
-    color : black;
-    border-radius : 10px;
-    display : flex;
-    flex-direction : column;
-    justify-content : space-around;
-    align-items : center;
-    text-align : center;
-    padding : 30px 0 10px 0;
-    padding-bottom : ${({ type }) => type === 'error' ? 0 : "10px"}
-`
+const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
+  const { type, title, detail, confirmMessage, onClickProceed } = modalObj;
+  return (
+    <>
+      <BackgroundStyled onClick={onClose} />
+      <ModalConatinerStyled type={type}>
+        <img
+          src={type === "confirm" ? checkIcon : errorIcon}
+          style={{ width: "70px", marginBottom: "20px" }}
+        />
+        <H2Styled>{title}</H2Styled>
+        {detail}
+        {type === "confirm" && (
+          <ButtonWrapperStyled>
+            <ButtonContainer onClick={onClose} text="취소" theme="white" />
 
-const DetailStyled = styled.p`
-    margin-bottom: 30px;
-`
+            <ButtonContainer
+              onClick={onClickProceed}
+              text={confirmMessage}
+              theme="dark"
+            />
+          </ButtonWrapperStyled>
+        )}
+      </ModalConatinerStyled>
+    </>
+  );
+};
+
+const ModalConatinerStyled = styled.div<{ type: string }>`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 360px;
+  background: white;
+  z-index: 1000;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  padding: 40px 30px;
+`;
+
+export const DetailStyled = styled.p`
+  //margin-bottom: 30px;
+  margin-top: 30px;
+  letter-spacing: -0.02rem;
+  line-height: 1.5rem;
+  font-size: 14px;
+  font-weight: 300;
+  white-space: break-spaces;
+`;
 
 const H2Styled = styled.h2`
-    font-weight : 600;
-    font-size : 1.5rem;
-    margin-bottom : 30px;
-`
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  white-space: break-spaces;
+`;
 
 const BackgroundStyled = styled.div`
-    position : absolute;
-    left : 0;
-    top : 0;
-    width : 100vw;
-    height : 100vh;
-    background : rgba(0, 0, 0, .4);
-    display : flex;
-    justify-content : center;
-    align-items : center;
-    z-index : 10;
-`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  zindex: 1000;
+`;
+
+const ButtonWrapperStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+`;
 
 export default ModalContainer;
