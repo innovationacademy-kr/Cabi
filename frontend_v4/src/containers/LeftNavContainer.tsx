@@ -51,8 +51,8 @@ const LeftNavContainer = () => {
     setCurrentFloor(floor);
     if (pathname == "/home") {
       closeLeftNav();
-      navigator("/main");
       closeMap();
+      navigator("/main");
     }
   };
 
@@ -69,7 +69,8 @@ const LeftNavContainer = () => {
     } else {
       removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
     }
-    navigator("/");
+
+    navigator("/login");
   };
 
   return (
