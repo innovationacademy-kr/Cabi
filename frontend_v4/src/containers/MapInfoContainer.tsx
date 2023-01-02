@@ -1,29 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import exitButton from "@/assets/images/exitButton.svg";
 import MapGridContainer from "./MapGridContainer";
 import useDetailInfo from "@/hooks/useDetailInfo";
-import { currentFloorNumberState, toggleMapSelectState } from "@/recoil/atoms";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { toggleMapSelectState } from "@/recoil/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { currentLocationFloorState } from "@/recoil/selectors";
 
-const SelectContainer = ({ floorInfo }: { floorInfo: number[] }) => {
+const SelectContainer = ({
+  floor,
+  setFloor,
+  floorInfo,
+}: {
+  floor: number;
+  setFloor: React.Dispatch<React.SetStateAction<number>>;
+  floorInfo: number[];
+}) => {
   const [toggle, setToggle] = useRecoilState(toggleMapSelectState);
-  const [currentFloor, setCurrentFloor] = useRecoilState(
-    currentFloorNumberState
-  );
 
   const selectFloor = (info: string) => {
-    const floor = parseInt(info);
+    const floorInfo = parseInt(info);
     setToggle(!toggle);
-    if (floor === currentFloor) return;
-    setCurrentFloor(floor);
+    setFloor(floorInfo);
   };
 
   return (
     <div style={{ position: "relative" }}>
       <CurrentFloorStyled onClick={() => setToggle(!toggle)}>
-        {`${currentFloor ? currentFloor : floorInfo[0]}층`}
+        {`${floor}층`}
       </CurrentFloorStyled>
       {toggle && (
         <OptionsContainer selectFloor={selectFloor} floorInfo={floorInfo} />
@@ -89,6 +93,7 @@ const OptionsContainer: React.FC<{
 const MapInfoContainer = () => {
   const { closeMap } = useDetailInfo();
   const floorInfo = useRecoilValue(currentLocationFloorState);
+  const [floor, setFloor] = useState(floorInfo[0]);
   return (
     <MapInfoContainerStyled id="mapInfo">
       <HeaderStyled>
@@ -99,8 +104,12 @@ const MapInfoContainer = () => {
           style={{ width: "24px", cursor: "pointer" }}
         />
       </HeaderStyled>
-      <SelectContainer floorInfo={floorInfo} />
-      <MapGridContainer />
+      <SelectContainer
+        floor={floor}
+        setFloor={setFloor}
+        floorInfo={floorInfo}
+      />
+      <MapGridContainer floor={floor} />
     </MapInfoContainerStyled>
   );
 };

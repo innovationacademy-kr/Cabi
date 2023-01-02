@@ -170,22 +170,22 @@ interface IFloorMapInfo {
   type: string;
 }
 
-const MapGridContainer = () => {
-  const floor = useRecoilValue(currentFloorNumberState);
+const MapGridContainer = ({ floor }: { floor: number }) => {
   const setSection = useSetRecoilState(currentSectionNameState);
   const selectSection = (section: string) => {
     setSection(section);
   };
   return (
     <MapGridStyled>
-      {data[floor ? floor : 2].map((value: any, idx: any) => (
-        <MapItem
-          key={idx}
-          floor={floor}
-          info={value}
-          selectSection={selectSection}
-        />
-      ))}
+      {floor &&
+        data[floor].map((value: any, idx: any) => (
+          <MapItem
+            key={idx}
+            floor={floor}
+            info={value}
+            selectSection={selectSection}
+          />
+        ))}
     </MapGridStyled>
   );
 };
