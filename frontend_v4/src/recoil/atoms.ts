@@ -78,6 +78,11 @@ export const toggleMapInfoState = atom<boolean>({
   default: false,
 });
 
+export const toggleMapSelectState = atom<boolean>({
+  key: "ToggleMapSelect",
+  default: false,
+});
+
 export const toggleCabinetInfoState = atom<boolean>({
   key: "ToggleCabinetInfo",
   default: false,

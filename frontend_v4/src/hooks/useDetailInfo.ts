@@ -1,15 +1,17 @@
 import {
   toggleCabinetInfoState,
   toggleMapInfoState,
+  toggleMapSelectState,
   toggleNavState,
 } from "@/recoil/atoms";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 const useDetailInfo = () => {
   const [toggleMyCabinet, toggleMyCabinetState] = useRecoilState(
     toggleCabinetInfoState
   );
   const [toggleMap, toggleMapState] = useRecoilState(toggleMapInfoState);
+  const offMapSelect = useSetRecoilState(toggleMapSelectState);
   const [toggleNav, setToggleNav] = useRecoilState(toggleNavState);
 
   const leftNavBg = document.getElementById("leftNavBg");
@@ -43,10 +45,9 @@ const useDetailInfo = () => {
   };
 
   const closeMap = () => {
-    if (toggleMap == true) {
-      mapInfo!.classList.remove("on");
-      toggleMapState(false);
-    }
+    mapInfo!.classList.remove("on");
+    toggleMapState(false);
+    offMapSelect(false);
   };
 
   const clickCabinet = () => {

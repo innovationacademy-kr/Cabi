@@ -19,7 +19,7 @@ import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
 import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 import useLeftNav from "@/hooks/useLeftNav";
 import { removeCookie } from "@/api/react_cookie/cookies";
-
+import useDetailInfo from "@/hooks/useDetailInfo";
 const LeftNavContainer = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
@@ -35,6 +35,7 @@ const LeftNavContainer = () => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
   const { closeLeftNav } = useLeftNav();
+  const { closeMap } = useDetailInfo();
 
   useEffect(() => {
     if (currentFloor === undefined) return;
@@ -54,6 +55,7 @@ const LeftNavContainer = () => {
     if (pathname == "/home") {
       closeLeftNav();
       navigator("/main");
+      closeMap();
     }
   };
 
