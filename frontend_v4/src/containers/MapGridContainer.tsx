@@ -2,10 +2,15 @@ import {
   currentFloorNumberState,
   currentSectionNameState,
 } from "@/recoil/atoms";
-import { currentFloorSectionState } from "@/recoil/selectors";
+import {
+  currentFloorSectionState,
+  currentLocationFloorState,
+} from "@/recoil/selectors";
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import useDetailInfo from "@/hooks/useDetailInfo";
 
 /*
     클러스터 사물함 위치 더미 데이터
@@ -169,7 +174,6 @@ interface IFloorMapInfo {
 }
 
 const MapGridContainer = () => {
-  const sectionList = useRecoilValue(currentFloorSectionState);
   const floor = useRecoilValue(currentFloorNumberState);
   const setSection = useSetRecoilState(currentSectionNameState);
   const selectSection = (section: string) => {
@@ -178,18 +182,35 @@ const MapGridContainer = () => {
   return (
     <MapGridStyled>
       {data[floor ? floor : 2].map((value: any, idx: any) => (
-        <MapItem key={idx} info={value} selectSection={selectSection} />
+        <MapItem
+          key={idx}
+          floor={floor}
+          info={value}
+          selectSection={selectSection}
+        />
       ))}
     </MapGridStyled>
   );
 };
 
-const MapItem: React.FC<{ info: IFloorMapInfo; selectSection: Function }> = ({
-  info,
-  selectSection,
-}) => {
+const MapItem: React.FC<{
+  floor: number;
+  info: IFloorMapInfo;
+  selectSection: Function;
+}> = ({ floor, info, selectSection }) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const setCurrentFloor = useSetRecoilState(currentFloorNumberState);
+  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const { closeMap } = useDetailInfo();
+  const onClick = () => {
+    if (pathname === "/home") navigate("/main");
+    setCurrentFloor(floor ? floor : floors[0]);
+    selectSection(info.name);
+    closeMap();
+  };
   return (
-    <ItemStyled onClick={() => selectSection(info.name)} info={info}>
+    <ItemStyled onClick={onClick} info={info}>
       {info.name}
     </ItemStyled>
   );
