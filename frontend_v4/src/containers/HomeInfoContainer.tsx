@@ -1,7 +1,10 @@
-import React from "react";
 import styled from "styled-components";
 
-const InfoContainer = () => {
+const InfoContainer = ({
+  lentStartHandler,
+}: {
+  lentStartHandler: React.MouseEventHandler;
+}) => {
   return (
     <WrapperStyled id="infoWrap">
       <TitleContainerStyled className="titleContainer">
