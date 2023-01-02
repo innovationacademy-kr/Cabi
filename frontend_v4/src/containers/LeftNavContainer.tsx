@@ -88,7 +88,11 @@ const LeftNavContainer = () => {
           </TopBtnStyled>
           {floors.map((floor, index) => (
             <TopBtnStyled
-              className={floor === currentFloor ? "leftNavButtonActive" : ""}
+              className={
+                floor === currentFloor && pathname === "/main"
+                  ? "leftNavButtonActive"
+                  : ""
+              }
               onClick={() => onClick(floor)}
               key={index}
             >

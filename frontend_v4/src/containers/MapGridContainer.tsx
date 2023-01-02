@@ -2,10 +2,7 @@ import {
   currentFloorNumberState,
   currentSectionNameState,
 } from "@/recoil/atoms";
-import {
-  currentFloorSectionState,
-  currentLocationFloorState,
-} from "@/recoil/selectors";
+import { currentLocationFloorState } from "@/recoil/selectors";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";

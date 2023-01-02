@@ -1,35 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import exitButton from "@/assets/images/exitButton.svg";
 import MapGridContainer from "./MapGridContainer";
 import useDetailInfo from "@/hooks/useDetailInfo";
 import { currentFloorNumberState, toggleMapSelectState } from "@/recoil/atoms";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { useLocation, useNavigate } from "react-router-dom";
 import { currentLocationFloorState } from "@/recoil/selectors";
 
 const SelectContainer = ({ floorInfo }: { floorInfo: number[] }) => {
   const [toggle, setToggle] = useRecoilState(toggleMapSelectState);
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
   const [currentFloor, setCurrentFloor] = useRecoilState(
     currentFloorNumberState
   );
-  const openSelect = () => {
-    setToggle(!toggle);
-  };
 
   const selectFloor = (info: string) => {
     const floor = parseInt(info);
-    if (pathname === "/home") navigate("/main");
-    openSelect();
+    setToggle(!toggle);
     if (floor === currentFloor) return;
     setCurrentFloor(floor);
   };
 
   return (
     <div style={{ position: "relative" }}>
-      <CurrentFloorStyled onClick={openSelect}>
+      <CurrentFloorStyled onClick={() => setToggle(!toggle)}>
         {`${currentFloor ? currentFloor : floorInfo[0]}층`}
       </CurrentFloorStyled>
       {toggle && (
