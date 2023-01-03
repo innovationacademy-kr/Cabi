@@ -4,6 +4,7 @@ import Layout from "./Layout";
 import LoginPage from "@/pages/LoginPage";
 import HomePage from "@/pages/HomePage";
 import MainPage from "@/pages/MainPage";
+import NotFoundPage from "@/pages/NotFoundPage";
 
 function App(): React.ReactElement {
   return (
@@ -14,8 +15,7 @@ function App(): React.ReactElement {
           <Route path="main" element={<MainPage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
-        // TODO: Not found page 만들어 넣기
-        <Route path="/*" element={<div>404</div>} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
