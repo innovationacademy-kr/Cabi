@@ -15,16 +15,16 @@ const NotFoundPage = () => {
         요청하신 페이지가 사라졌거나,{" "}
         <span>잘못된 경로를 이용하셨습니다 :(</span>
       </ContentStyled>
-      <button className="modal" onClick={() => navigate("/login")}>
+      <ButtonStyled onClick={() => navigate("/login")}>
         홈으로 가기
-      </button>
+      </ButtonStyled>
     </NotFoundPageStyled>
   );
 };
 
 const NotFoundPageStyled = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,8 +35,9 @@ const NotFoundPageStyled = styled.div`
 
 const TitleStyled = styled.h1`
   font-size: 5rem;
-  color: #ffbe6d;
+  color: var(--mine);
   font-family: "Do Hyeon", sans-serif;
+  filter: drop-shadow(0 0 0.75rem var(--mine));
 `;
 
 const SubTitleStyled = styled.h2`
@@ -46,7 +47,7 @@ const SubTitleStyled = styled.h2`
 `;
 
 const ContentStyled = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   margin-bottom: 60px;
   font-weight: 300;
 `;
@@ -65,6 +66,10 @@ const CabiImgStyled = styled.div`
   height: 200px;
   margin: 3% 0;
   animation: ${rotate} 0.5s infinite ease alternate;
+`;
+
+const ButtonStyled = styled.button`
+  box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
 `;
 
 export default NotFoundPage;
