@@ -6,7 +6,6 @@ import {
   currentLocationNameState,
   currentFloorCabinetState,
   currentSectionNameState,
-  currentCabinetIdState,
   currentFloorNumberState,
   locationColNumState,
 } from "./atoms";
@@ -85,7 +84,6 @@ export const currentFloorColNumState = selector<ISectionColNum[]>({
       (location) => location.floor === currentFloorNumber
     );
 
-    console.log(currentFloorNumber);
     if (currentFloorIdx === -1) return [];
     return currentLocationColNum[currentFloorIdx].sectionColNum;
   },
@@ -100,7 +98,6 @@ export const currentSectionColNumState = selector<number | undefined>({
       (floor) => floor.section === currentSectionName
     );
 
-    console.log(currentSectionName);
     if (currentSectionIdx === -1) return undefined;
     return currentFloorColNum[currentSectionIdx].colNum;
   },

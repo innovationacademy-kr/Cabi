@@ -23,12 +23,12 @@ const CabinetListContainer = ({
 const CabinetListContainerStyled = styled.div<{
   colNum: number;
 }>`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin: auto;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 90px);
+  grid-auto-flow: row;
+  justify-content: center;
   min-width: 180px;
+  width: 100%;
   max-width: ${(props) => props.colNum * 90}px;
 `;
 
