@@ -179,23 +179,27 @@ const CabinetInfoAreaContainer: React.FC<{
             <ButtonContainer
               onClick={handleOpenReturnModal}
               text="반납"
-              theme="dark"
+              theme="fill"
             />
             <ButtonContainer
               onClick={handleOpenMemoModal}
               text="메모관리"
-              theme="white"
+              theme="line"
             />
-            <ButtonContainer onClick={closeCabinet} text="취소" theme="white" />
+            <ButtonContainer
+              onClick={closeCabinet}
+              text="닫기"
+              theme="grayLine"
+            />
           </>
         ) : (
           <>
             <ButtonContainer
               onClick={handleOpenReturnModal}
               text="대여"
-              theme="dark"
+              theme="fill"
             />
-            <ButtonContainer onClick={closeCabinet} text="취소" theme="white" />
+            <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>
         )}
       </CabinetInfoButtonsContainerStyled>

@@ -25,18 +25,23 @@ const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
       <ModalContainerStyled type={type}>
         <img
           src={type === "confirm" ? checkIcon : errorIcon}
-          style={{ width: "70px", marginBottom: "20px" }}
+          style={
+            type === "confirm"
+              ? { width: "70px", marginBottom: "20px" }
+              : { width: "50px", marginBottom: "20px", cursor: "pointer" }
+          }
+          onClick={type !== "confirm" ? onClose : undefined}
         />
         <H2Styled>{title}</H2Styled>
         {detail}
         {type === "confirm" && (
           <ButtonWrapperStyled>
-            <ButtonContainer onClick={onClose} text="취소" theme="white" />
+            <ButtonContainer onClick={onClose} text="취소" theme="line" />
 
             <ButtonContainer
               onClick={onClickProceed}
               text={confirmMessage}
-              theme="dark"
+              theme="fill"
             />
           </ButtonWrapperStyled>
         )}
@@ -62,8 +67,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
 `;
 
 export const DetailStyled = styled.p`
-  //margin-bottom: 30px;
-  margin-top: 30px;
+  margin-top: 20px;
   letter-spacing: -0.02rem;
   line-height: 1.5rem;
   font-size: 14px;
