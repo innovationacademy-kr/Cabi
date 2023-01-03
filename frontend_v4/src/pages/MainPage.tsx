@@ -2,48 +2,46 @@ import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import SectionPagination from "@/components/SectionPagination";
 import CabinetList from "@/components/CabinetList";
+import { useRecoilValue } from "recoil";
+import { currentSectionColNumState } from "@/recoil/selectors";
 
 const MainPage = () => {
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
-  const [colNum, setColNum] = useState<number>(4);
-  // .env에서 가져올 실제 col_num 값입니다.
-  const maxColNum = 7;
+  const realColNum = useRecoilValue(currentSectionColNumState);
 
-  const setColNumByDivWidth = () => {
-    if (CabinetListWrapperRef.current !== null)
-      setColNum(
-        Math.min(
-          Math.floor(CabinetListWrapperRef.current.offsetWidth / 90),
-          maxColNum
-        )
-      );
-  };
+  // const setColNumByDivWidth = () => {
+  //   if (CabinetListWrapperRef.current !== null)
+  //     setWidthColNum(
+  //       Math.floor(CabinetListWrapperRef.current.offsetWidth / 90)
+  //     );
+  // };
 
-  useEffect(() => {
-    if (CabinetListWrapperRef.current !== null) setColNumByDivWidth();
-    window.addEventListener("resize", setColNumByDivWidth);
-    return () => {
-      window.removeEventListener("resize", setColNumByDivWidth);
-    };
-  }, [CabinetListWrapperRef.current]);
+  // useEffect(() => {
+  //   if (CabinetListWrapperRef.current !== null) setColNumByDivWidth();
+  //   window.addEventListener("resize", setColNumByDivWidth);
+  //   return () => {
+  //     window.removeEventListener("resize", setColNumByDivWidth);
+  //   };
+  // }, [CabinetListWrapperRef.current]);
+
+  // useEffect(() => {
+  //   console.log(realColNum, widthColNum, viewColNum);
+  //   if (realColNum && widthColNum)
+  //     setViewColNum(Math.min(realColNum, widthColNum));
+  //   return () => {
+  //     resetViewColNum();
+  //   };
+  // }, [realColNum, widthColNum]);
 
   return (
     <>
-      <MainStyled>
-        <SectionPagination />
-        <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
-          <CabinetList colNum={colNum} />
-        </CabinetListWrapperStyled>
-      </MainStyled>
+      <SectionPagination />
+      <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
+        {realColNum && <CabinetList colNum={realColNum} />}
+      </CabinetListWrapperStyled>
     </>
   );
 };
-
-const MainStyled = styled.main`
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-`;
 
 const CabinetListWrapperStyled = styled.div`
   display: flex;

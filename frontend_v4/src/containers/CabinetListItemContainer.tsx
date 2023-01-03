@@ -16,7 +16,6 @@ import ModalPortal from "@/components/ModalPortal";
 
 import useDetailInfo from "@/hooks/useDetailInfo";
 
-
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const setCurrentCabinetId = useSetRecoilState<number>(currentCabinetIdState);

@@ -28,7 +28,7 @@ const CabinetListContainerStyled = styled.div<{
   justify-content: flex-start;
   margin: auto;
   overflow: hidden;
-  min-width: 360px;
+  min-width: 180px;
   max-width: ${(props) => props.colNum * 90}px;
 `;
 

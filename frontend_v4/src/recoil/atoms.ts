@@ -6,7 +6,8 @@ import {
   CabinetLocationFloorDto,
 } from "@/types/dto/cabinet.dto";
 import { atom } from "recoil";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import { staticColNumData } from "@/sectionColNumData";
+import { ILocationColNum } from "@/sectionColNumData";
 
 export const userState = atom<UserDto>({
   key: "UserInfo",
@@ -91,4 +92,9 @@ export const toggleCabinetInfoState = atom<boolean>({
 export const toggleNavState = atom<boolean>({
   key: "ToggleNav",
   default: false,
+});
+
+export const locationColNumState = atom<ILocationColNum[]>({
+  key: "LocationColNum",
+  default: staticColNumData,
 });
