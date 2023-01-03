@@ -27,7 +27,7 @@ const SectionPagination = (): JSX.Element => {
   };
 
   const moveToLeftSection = () => {
-    if (currentSectionIdx == 0) {
+    if (currentSectionIdx <= 0) {
       setCurrentSectionName(sectionList[sectionList.length - 1]);
     } else {
       setCurrentSectionName(sectionList[currentSectionIdx - 1]);
@@ -35,7 +35,7 @@ const SectionPagination = (): JSX.Element => {
   };
 
   const moveToRightSection = () => {
-    if (currentSectionIdx == sectionList.length - 1) {
+    if (currentSectionIdx >= sectionList.length - 1) {
       setCurrentSectionName(sectionList[0]);
     } else {
       setCurrentSectionName(sectionList[currentSectionIdx + 1]);
