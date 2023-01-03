@@ -1,4 +1,4 @@
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import CabinetInfoAreaContainer, {
   ISelectedCabinetInfo,
@@ -9,12 +9,14 @@ import useDetailInfo from "@/hooks/useDetailInfo";
 
 const CabinetInfoArea = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
+  const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const isMyCabinet =
     targetCabinetInfo && myCabinetInfo
       ? myCabinetInfo.cabinet_id === targetCabinetInfo.cabinet_id
       : false;
+  const { closeCabinet } = useDetailInfo();
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
@@ -104,11 +106,15 @@ const CabinetInfoArea = (): JSX.Element => {
       }
     : null;
 
-  const { closeCabinet } = useDetailInfo();
+  const handleCancle = () => {
+    resetTargetCabinetInfo();
+    closeCabinet();
+  };
+
   return (
     <CabinetInfoAreaContainer
       selectedCabinetInfo={cabinetViewData}
-      closeCabinet={closeCabinet}
+      closeCabinet={handleCancle}
     />
   );
 };
