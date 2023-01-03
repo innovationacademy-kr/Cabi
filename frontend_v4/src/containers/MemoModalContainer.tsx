@@ -24,7 +24,8 @@ const MemoModalContainer = ({
   };
   const handleClickSave = (e: React.MouseEvent) => {
     //사물함 제목, 사물함 비밀메모 update api 호출
-    onClose(e);
+    // onClose(e);
+    setMode("read");
   };
   return (
     <>
@@ -63,7 +64,7 @@ const MemoModalContainer = ({
             <ButtonContainer
               onClick={handleClickSave}
               text="저장"
-              theme="dark"
+              theme="fill"
             />
           )}
           <ButtonContainer
@@ -77,7 +78,7 @@ const MemoModalContainer = ({
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
-            theme="white"
+            theme={mode === "read" ? "grayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>

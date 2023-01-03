@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface ButtonInterface {
   onClick(event: React.MouseEvent<HTMLButtonElement>): void;
@@ -9,7 +9,6 @@ interface ButtonInterface {
 
 const ButtonContainer = (props: ButtonInterface) => {
   return (
-
     <ButtonContainerStyled onClick={props.onClick} theme={props.theme}>
       {props.text}
     </ButtonContainerStyled>
@@ -22,15 +21,31 @@ const ButtonContainerStyled = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${(props) => (props.theme === "dark" ? "#9747FF" : "white")};
-  color: ${(props) => (props.theme === "dark" ? "white" : "#9747FF")};
-  border: ${(props) =>
-    props.theme === "dark" ? "1px solid white" : "1px solid #9747FF"};
   border-radius: 10px;
   margin-bottom: 15px;
   &:last-child {
     margin-bottom: 0;
   }
+  ${(props) =>
+    props.theme === "fill" &&
+    css`
+      background: var(--main-color);
+      color: var(--white);
+    `}
+  ${(props) =>
+    props.theme === "line" &&
+    css`
+      background: var(--white);
+      color: var(--main-color);
+      border: 1px solid var(--main-color);
+    `}
+  ${(props) =>
+    props.theme === "grayLine" &&
+    css`
+      background: var(--white);
+      color: var(--line-color);
+      border: 1px solid var(--line-color);
+    `}
 `;
 
 export default ButtonContainer;
