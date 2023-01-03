@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import TopNavButton from "@/components/TopNavButton";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { toggleCabinetInfoState, toggleMapInfoState } from "@/recoil/atoms";
 import useDetailInfo from "@/hooks/useDetailInfo";
 
 const TopNavButtonsContainer = () => {

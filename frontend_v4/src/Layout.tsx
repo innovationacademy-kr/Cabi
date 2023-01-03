@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { toggleCabinetInfoState, userState } from "@/recoil/atoms";
+import { useSetRecoilState } from "recoil";
+import {  userState } from "@/recoil/atoms";
 import TopNav from "@/components/TopNav";
 import LeftNavAreaContainer from "./containers/LeftNavAreaContainer";
 import LoadingModal from "@/components/LoadingModal";
@@ -16,7 +16,6 @@ import MapInfoContainer from "./containers/MapInfoContainer";
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
-  const toggleCabinetInfo = useRecoilValue(toggleCabinetInfoState);
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
   const location = useLocation();
@@ -60,7 +59,6 @@ const Layout = (): JSX.Element => {
           </MainStyled>
           <DetailInfoContainerStyled
             id="cabinetDetailArea"
-            className={toggleCabinetInfo ? "on" : ""}
             isHomePage={isHomePage}
           >
             <CabinetInfoArea />

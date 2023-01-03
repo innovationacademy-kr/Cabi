@@ -1,34 +1,17 @@
-import {
-  toggleCabinetInfoState,
-  toggleMapInfoState,
-  toggleMapSelectState,
-  toggleNavState,
-} from "@/recoil/atoms";
-import { useRecoilState, useSetRecoilState } from "recoil";
-
 const useDetailInfo = () => {
-  const [toggleMyCabinet, toggleMyCabinetState] = useRecoilState(
-    toggleCabinetInfoState
-  );
-  const offMapSelect = useSetRecoilState(toggleMapSelectState);
-  const [toggleMap, setToggleMap] = useRecoilState(toggleMapInfoState);
-  const [toggleNav, setToggleNav] = useRecoilState(toggleNavState);
-
   const leftNavBg = document.getElementById("leftNavBg");
   const leftNavWrap = document.getElementById("leftNavWrap");
   const mapInfo = document.getElementById("mapInfo");
   const cabinetDetailArea = document.getElementById("cabinetDetailArea");
+  const mapFloorOptionBox = document.getElementById("mapFloorOptionBox");
 
   const closeLeftNav = () => {
-    if (toggleNav == true) {
-      leftNavBg!.classList.remove("on");
-      leftNavWrap!.classList.remove("on");
-      setToggleNav(false);
-    }
+    leftNavBg?.classList.remove("on");
+    leftNavWrap?.classList.remove("on");
   };
 
   const clickMap = () => {
-    if (toggleMap == true) {
+    if (mapInfo?.classList.contains("on") == true) {
       closeMap();
     } else {
       openMap();
@@ -38,42 +21,26 @@ const useDetailInfo = () => {
   };
 
   const openMap = () => {
-    if (toggleMap == false) {
-      mapInfo!.classList.add("on");
-      setToggleMap(true);
-    }
+    mapInfo?.classList.add("on");
   };
 
   const closeMap = () => {
-    if (toggleMap == true) {
-      mapInfo!.classList.remove("on");
-      setToggleMap(false);
-      offMapSelect(false);
-    }
+    mapInfo?.classList.remove("on");
+    mapFloorOptionBox?.classList.remove("on");
   };
 
   const clickCabinet = () => {
-    if (toggleMyCabinet == true) {
-      closeCabinet();
-    } else {
-      openCabinet();
-    }
+    cabinetDetailArea?.classList.toggle("on");
     closeMap();
     closeLeftNav();
   };
 
   const openCabinet = () => {
-    if (toggleMyCabinet == false) {
-      cabinetDetailArea!.classList.add("on");
-      toggleMyCabinetState(true);
-    }
+    cabinetDetailArea?.classList.add("on");
   };
 
   const closeCabinet = () => {
-    if (toggleMyCabinet == true) {
-      cabinetDetailArea!.classList.remove("on");
-      toggleMyCabinetState(false);
-    }
+    cabinetDetailArea?.classList.remove("on");
   };
 
   const closeDetailInfo = () => {
