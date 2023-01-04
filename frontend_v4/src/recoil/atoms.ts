@@ -1,3 +1,4 @@
+import { recoilPersist } from "recoil-persist";
 import { UserDto } from "@/types/dto/user.dto";
 import {
   CabinetInfo,
@@ -8,6 +9,8 @@ import {
 import { atom } from "recoil";
 import { staticColNumData } from "@/sectionColNumData";
 import { ILocationColNum } from "@/sectionColNumData";
+
+const { persistAtom } = recoilPersist();
 
 export const userState = atom<UserDto>({
   key: "UserInfo",
@@ -47,16 +50,19 @@ export const locationsFloorState = atom<CabinetLocationFloorDto[]>({
 export const currentLocationNameState = atom<string>({
   key: "CurrentLocation",
   default: undefined,
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const currentFloorNumberState = atom<number>({
   key: "CurrentFloor",
   default: undefined,
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const currentSectionNameState = atom<string>({
   key: "CurrentSection",
   default: undefined,
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const currentCabinetIdState = atom<number>({

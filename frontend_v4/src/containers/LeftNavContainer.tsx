@@ -11,6 +11,7 @@ import {
   currentFloorNumberState,
   currentFloorCabinetState,
   currentSectionNameState,
+  currentLocationNameState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
@@ -24,7 +25,10 @@ const LeftNavContainer = () => {
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
   );
+  const currentLocation = useRecoilValue<string>(currentLocationNameState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
+  const resetCurrentSection = useResetRecoilState(currentSectionNameState);
+  const resetLocation = useResetRecoilState(currentLocationNameState);
   const setCurrentFloorData = useSetRecoilState<
     CabinetInfoByLocationFloorDto[]
   >(currentFloorCabinetState);
@@ -36,8 +40,7 @@ const LeftNavContainer = () => {
 
   useEffect(() => {
     if (currentFloor === undefined) return;
-
-    axiosCabinetByLocationFloor("새롬관", currentFloor)
+    axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
         setCurrentSection(response.data[0].section);
@@ -45,13 +48,12 @@ const LeftNavContainer = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [currentFloor]);
+  }, [currentLocation, currentFloor]);
 
-  const onClick = (floor: number) => {
+  const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
     if (pathname == "/home") {
-      closeLeftNav();
-      closeMap();
+      closeDetailInfo();
       navigator("/main");
     }
   };
@@ -59,17 +61,20 @@ const LeftNavContainer = () => {
   const onClickHomeButton = () => {
     closeDetailInfo();
     resetCurrentFloor();
+    resetCurrentSection();
     closeLeftNav();
     navigator("/home");
   };
 
-  const handleLogout = (): void => {
+  const onClickLogoutButton = (): void => {
     if (import.meta.env.VITE_IS_LOCAL === "true") {
       removeCookie("access_token");
     } else {
       removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
     }
-
+    resetLocation();
+    resetCurrentFloor();
+    resetCurrentSection();
     navigator("/login");
   };
 
@@ -86,7 +91,7 @@ const LeftNavContainer = () => {
           {floors.map((floor, index) => (
             <TopBtnStyled
               className={floor === currentFloor ? "leftNavButtonActive" : ""}
-              onClick={() => onClick(floor)}
+              onClick={() => onClickFloorButton(floor)}
               key={index}
             >
               {floor + "층"}
@@ -105,7 +110,7 @@ const LeftNavContainer = () => {
             Log
           </BottomBtnStyled>
           <BottomBtnStyled
-            onClick={handleLogout}
+            onClick={onClickLogoutButton}
             src={"src/assets/images/close-square.svg"}
           >
             <div></div>
