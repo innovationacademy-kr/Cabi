@@ -12,6 +12,8 @@ import {
   currentFloorCabinetState,
   currentSectionNameState,
   currentLocationNameState,
+  userState,
+  isMyCabinetIdChangedState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
@@ -20,6 +22,7 @@ import useLeftNav from "@/hooks/useLeftNav";
 import { removeCookie } from "@/api/react_cookie/cookies";
 import useDetailInfo from "@/hooks/useDetailInfo";
 import useIsMount from "@/hooks/useIsMount";
+import { UserDto } from "@/types/dto/user.dto";
 
 const LeftNavContainer = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
@@ -27,6 +30,7 @@ const LeftNavContainer = () => {
     currentFloorNumberState
   );
   const currentLocation = useRecoilValue<string>(currentLocationNameState);
+  const myInfo = useRecoilValue<UserDto>(userState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
   const resetLocation = useResetRecoilState(currentLocationNameState);
@@ -39,6 +43,9 @@ const LeftNavContainer = () => {
   const { closeLeftNav } = useLeftNav();
   const { closeMap, closeDetailInfo } = useDetailInfo();
   const isMount = useIsMount();
+  const [isMyCabinetIdChanged, setIsMyCabinetIdChanged] = useRecoilState(
+    isMyCabinetIdChangedState
+  );
 
   // 층을 클릭할 때,
   useEffect(() => {
@@ -46,7 +53,7 @@ const LeftNavContainer = () => {
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
-        if (isMount) {
+        if (isMount || isMyCabinetIdChanged) {
           const recoilPersist = localStorage.getItem("recoil-persist");
           let recoilPersistObj;
           if (recoilPersist) recoilPersistObj = JSON.parse(recoilPersist);
@@ -55,6 +62,7 @@ const LeftNavContainer = () => {
               ? recoilPersistObj.CurrentSection
               : response.data[0].section
           );
+          setIsMyCabinetIdChanged(false);
         } else {
           setCurrentSection(response.data[0].section);
         }
@@ -62,7 +70,7 @@ const LeftNavContainer = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [currentLocation, currentFloor]);
+  }, [currentLocation, currentFloor, myInfo.cabinet_id]);
 
   useEffect(() => {}, [currentLocation, currentFloor]);
 

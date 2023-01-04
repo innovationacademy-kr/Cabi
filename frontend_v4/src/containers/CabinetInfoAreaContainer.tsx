@@ -9,6 +9,7 @@ import ModalPortal from "@/components/ModalPortal";
 import { DetailStyled } from "./ModalContainer";
 import MemoModal from "@/components/MemoModal";
 import {
+  axiosCabinetById,
   axiosLentId,
   axiosMyLentInfo,
   axiosReturn,
@@ -16,6 +17,7 @@ import {
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
+  isMyCabinetIdChangedState,
   myCabinetInfoState,
   targetCabinetInfoState,
   userState,
@@ -44,8 +46,10 @@ const CabinetInfoAreaContainer: React.FC<{
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
+  const setIsMyCabinetIdChanged = useSetRecoilState(isMyCabinetIdChangedState);
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
   let expireDate = new Date();
   const addDays = selectedCabinetInfo?.lentType === "SHARE" ? 41 : 20;
   expireDate.setDate(expireDate.getDate() + addDays);
@@ -76,6 +80,14 @@ const CabinetInfoAreaContainer: React.FC<{
         await axiosReturn();
         //userCabinetId 세팅
         setMyInfo({ ...myInfo, cabinet_id: -1 });
+        setIsMyCabinetIdChanged(true);
+        // 캐비닛 상세정보 바꾸는 곳
+        try {
+          const { data } = await axiosCabinetById(currentCabinetId);
+          setTargetCabinetInfo(data);
+        } catch (error) {
+          console.log(error);
+        }
         //userLentInfo 세팅
         try {
           const { data: myLentInfo } = await axiosMyLentInfo();
@@ -115,10 +127,19 @@ const CabinetInfoAreaContainer: React.FC<{
           await axiosLentId(currentCabinetId);
           //userCabinetId 세팅
           setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
-          //userLentInfo 세팅
+          setIsMyCabinetIdChanged(true);
+
+          // 캐비닛 상세정보 바꾸는 곳
+          try {
+            const { data } = await axiosCabinetById(currentCabinetId);
+            setTargetCabinetInfo(data);
+          } catch (error) {
+            console.log(error);
+          }
+
+          // 내 대여정보 바꾸는 곳
           try {
             const { data: myLentInfo } = await axiosMyLentInfo();
-
             setMyLentInfo(myLentInfo);
           } catch (error) {
             console.error(error);
@@ -161,10 +182,19 @@ const CabinetInfoAreaContainer: React.FC<{
           await axiosLentId(currentCabinetId);
           //userCabinetId 세팅
           setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
+          setIsMyCabinetIdChanged(true);
+
+          // 캐비닛 상세정보 바꾸는 곳
+          try {
+            const { data } = await axiosCabinetById(currentCabinetId);
+            setTargetCabinetInfo(data);
+          } catch (error) {
+            console.log(error);
+          }
+
           //userLentInfo 세팅
           try {
             const { data: myLentInfo } = await axiosMyLentInfo();
-
             setMyLentInfo(myLentInfo);
           } catch (error) {
             console.error(error);
