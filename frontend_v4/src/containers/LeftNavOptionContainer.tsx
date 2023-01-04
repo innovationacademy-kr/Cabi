@@ -3,7 +3,7 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import CabinetColorTable from "@/components/CabinetColorTable";
-import { currentSectionNameState, toggleNavState } from "@/recoil/atoms";
+import { currentSectionNameState } from "@/recoil/atoms";
 import useLeftNav from "@/hooks/useLeftNav";
 
 // const floorSection = [

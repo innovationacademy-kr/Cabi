@@ -3,8 +3,7 @@ import styled from "styled-components";
 import exitButton from "@/assets/images/exitButton.svg";
 import MapGridContainer from "./MapGridContainer";
 import useDetailInfo from "@/hooks/useDetailInfo";
-import { toggleMapSelectState } from "@/recoil/atoms";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { currentLocationFloorState } from "@/recoil/selectors";
 
 const SelectContainer = ({
@@ -16,22 +15,22 @@ const SelectContainer = ({
   setFloor: React.Dispatch<React.SetStateAction<number>>;
   floorInfo: number[];
 }) => {
-  const [toggle, setToggle] = useRecoilState(toggleMapSelectState);
+  const onClickFloorOption = () => {
+    document.getElementById("mapFloorOptionBox")?.classList.toggle("on");
+  };
 
   const selectFloor = (info: string) => {
     const floorInfo = parseInt(info);
-    setToggle(!toggle);
+    onClickFloorOption();
     setFloor(floorInfo);
   };
 
   return (
     <div style={{ position: "relative" }}>
-      <CurrentFloorStyled onClick={() => setToggle(!toggle)}>
+      <CurrentFloorStyled onClick={onClickFloorOption}>
         {`${floor}층`}
       </CurrentFloorStyled>
-      {toggle && (
-        <OptionsContainer selectFloor={selectFloor} floorInfo={floorInfo} />
-      )}
+      <OptionsContainer selectFloor={selectFloor} floorInfo={floorInfo} />
     </div>
   );
 };
@@ -61,6 +60,10 @@ const OptionsContainerStyled = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
   z-index: 99;
+  display: none;
+  &.on {
+    display: block;
+  }
 `;
 
 const OptionStyled = styled.div`
@@ -80,7 +83,7 @@ const OptionsContainer: React.FC<{
   floorInfo: number[];
 }> = ({ floorInfo, selectFloor }) => {
   return (
-    <OptionsContainerStyled>
+    <OptionsContainerStyled id="mapFloorOptionBox">
       {floorInfo.map((info, idx) => (
         <OptionStyled onClick={() => selectFloor(info)} key={idx}>
           {info}층

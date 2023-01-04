@@ -79,28 +79,3 @@ export const targetCabinetInfoState = atom<CabinetInfo>({
   key: "TargetCabinetInfo",
   default: undefined,
 });
-
-export const toggleMapInfoState = atom<boolean>({
-  key: "ToggleMapInfo",
-  default: false,
-});
-
-export const toggleMapSelectState = atom<boolean>({
-  key: "ToggleMapSelect",
-  default: false,
-});
-
-export const toggleCabinetInfoState = atom<boolean>({
-  key: "ToggleCabinetInfo",
-  default: false,
-});
-
-export const toggleNavState = atom<boolean>({
-  key: "ToggleNav",
-  default: false,
-});
-
-export const locationColNumState = atom<ILocationColNum[]>({
-  key: "LocationColNum",
-  default: staticColNumData,
-});
