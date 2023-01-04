@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { currentFloorNumberState } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import "@/assets/css/homePage.css";
 
-const HomeInfo = () => {
+const HomePage = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
   const navigator = useNavigate();
@@ -18,4 +19,4 @@ const HomeInfo = () => {
   return <HomeInfoContainer lentStartHandler={lentStartHandler} />;
 };
 
-export default HomeInfo;
+export default HomePage;
