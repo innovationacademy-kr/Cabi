@@ -39,7 +39,10 @@ const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
             <ButtonContainer onClick={onClose} text="취소" theme="line" />
 
             <ButtonContainer
-              onClick={onClickProceed}
+              onClick={(e) => {
+                onClickProceed();
+                onClose(e);
+              }}
               text={confirmMessage}
               theme="fill"
             />

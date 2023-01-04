@@ -1,10 +1,10 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  myCabinetInfoState,
   currentCabinetIdState,
   targetCabinetInfoState,
+  userState,
 } from "@/recoil/atoms";
-import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import styled, { css } from "styled-components";
@@ -15,9 +15,10 @@ import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
 
 import useDetailInfo from "@/hooks/useDetailInfo";
+import { UserDto } from "@/types/dto/user.dto";
 
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
-  const MY_INFO = useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const MY_INFO = useRecoilValue<UserDto>(userState);
   const setCurrentCabinetId = useSetRecoilState<number>(currentCabinetIdState);
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState

@@ -8,6 +8,14 @@ import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
 import { DetailStyled } from "./ModalContainer";
 import MemoModal from "@/components/MemoModal";
+import { axiosLentId, axiosMyLentInfo } from "@/api/axios/axios.custom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  currentCabinetIdState,
+  myCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 
 export interface ISelectedCabinetInfo {
   floor: number;
@@ -29,6 +37,10 @@ const CabinetInfoAreaContainer: React.FC<{
   const { selectedCabinetInfo, closeCabinet } = props;
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
+  const currentCabinetId = useRecoilValue(currentCabinetIdState);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   let expireDate = new Date();
   const addDays = selectedCabinetInfo?.lentType === "SHARE" ? 41 : 20;
   expireDate.setDate(expireDate.getDate() + addDays);
@@ -76,9 +88,26 @@ const CabinetInfoAreaContainer: React.FC<{
         </DetailStyled>
       ),
       confirmMessage: "네, 대여할게요",
-      onClickProceed: () => {
+      onClickProceed: async () => {
         //사물함 대여 api호출
-        alert("대여가 완료되었습니다");
+        try {
+          await axiosLentId(currentCabinetId);
+          //userCabinetId 세팅
+          setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
+          //userLentInfo 세팅
+          try {
+            const { data: myLentInfo } = await axiosMyLentInfo();
+
+            setMyLentInfo(myLentInfo);
+          } catch (error) {
+            console.error(error);
+          }
+        } catch (error: any) {
+          if (error.response.status !== 401) {
+            alert(error.response.data.message);
+          }
+          console.log(error);
+        }
       },
     },
     [CabinetStatus.SET_EXPIRE_FULL]: {
@@ -105,9 +134,26 @@ const CabinetInfoAreaContainer: React.FC<{
         </p>
       ),
       confirmMessage: "네, 대여할게요",
-      onClickProceed: () => {
+      onClickProceed: async () => {
         //사물함 대여 api호출
-        alert("대여가 완료되었습니다");
+        try {
+          await axiosLentId(currentCabinetId);
+          //userCabinetId 세팅
+          setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
+          //userLentInfo 세팅
+          try {
+            const { data: myLentInfo } = await axiosMyLentInfo();
+
+            setMyLentInfo(myLentInfo);
+          } catch (error) {
+            console.error(error);
+          }
+        } catch (error: any) {
+          if (error.response.status !== 401) {
+            alert(error.response.data.message);
+          }
+          console.log(error);
+        }
       },
     },
     [CabinetStatus.EXPIRED]: {
