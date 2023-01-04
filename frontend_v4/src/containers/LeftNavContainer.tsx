@@ -19,6 +19,7 @@ import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 import useLeftNav from "@/hooks/useLeftNav";
 import { removeCookie } from "@/api/react_cookie/cookies";
 import useDetailInfo from "@/hooks/useDetailInfo";
+import useIsMount from "@/hooks/useIsMount";
 
 const LeftNavContainer = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
@@ -37,18 +38,33 @@ const LeftNavContainer = () => {
   const { pathname } = useLocation();
   const { closeLeftNav } = useLeftNav();
   const { closeMap, closeDetailInfo } = useDetailInfo();
+  const isMount = useIsMount();
 
+  // 층을 클릭할 때,
   useEffect(() => {
     if (currentFloor === undefined) return;
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
-        setCurrentSection(response.data[0].section);
+        if (isMount) {
+          const recoilPersist = localStorage.getItem("recoil-persist");
+          let recoilPersistObj;
+          if (recoilPersist) recoilPersistObj = JSON.parse(recoilPersist);
+          setCurrentSection(
+            Object.keys(recoilPersistObj).includes("CurrentSection")
+              ? recoilPersistObj.CurrentSection
+              : response.data[0].section
+          );
+        } else {
+          setCurrentSection(response.data[0].section);
+        }
       })
       .catch((error) => {
         console.error(error);
       });
   }, [currentLocation, currentFloor]);
+
+  useEffect(() => {}, [currentLocation, currentFloor]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
