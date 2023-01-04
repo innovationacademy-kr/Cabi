@@ -6,8 +6,10 @@ import {
   currentLocationNameState,
   currentFloorCabinetState,
   currentSectionNameState,
-  currentCabinetIdState,
+  currentFloorNumberState,
+  locationColNumState,
 } from "./atoms";
+import { IFloorSectionColNum, ISectionColNum } from "@/sectionColNumData";
 import axios, { AxiosResponse } from "axios";
 
 export const locationsState = selector<Array<string>>({
@@ -56,6 +58,72 @@ export const currentSectionCabinetState = selector<CabinetInfo[]>({
     return currentFloorData[currentSectionIndex].cabinets;
   },
 });
+
+/* colNum selector test */
+
+export const currentLocationColNumState = selector<IFloorSectionColNum[]>({
+  key: "CurrentLocationColNum",
+  get: ({ get }) => {
+    const locationColNum = get(locationColNumState);
+    const currentLocationName = get(currentLocationNameState);
+    const currentLocationIdx = locationColNum.findIndex(
+      (building) => building.location === currentLocationName
+    );
+
+    if (currentLocationIdx === -1) return [];
+    return locationColNum[currentLocationIdx].floorColNum;
+  },
+});
+
+export const currentFloorColNumState = selector<ISectionColNum[]>({
+  key: "CurrentFloorSectionColNum",
+  get: ({ get }) => {
+    const currentLocationColNum = get(currentLocationColNumState);
+    const currentFloorNumber = get(currentFloorNumberState);
+    const currentFloorIdx = currentLocationColNum.findIndex(
+      (location) => location.floor === currentFloorNumber
+    );
+
+    if (currentFloorIdx === -1) return [];
+    return currentLocationColNum[currentFloorIdx].sectionColNum;
+  },
+});
+
+export const currentSectionColNumState = selector<number | undefined>({
+  key: "CurrentSectionColNum",
+  get: ({ get }) => {
+    const currentFloorColNum = get(currentFloorColNumState);
+    const currentSectionName = get(currentSectionNameState);
+    const currentSectionIdx = currentFloorColNum.findIndex(
+      (floor) => floor.section === currentSectionName
+    );
+
+    if (currentSectionIdx === -1) return undefined;
+    return currentFloorColNum[currentSectionIdx].colNum;
+  },
+});
+
+// 한 번에 처리
+
+// export const currentSectionColNumState = selector<number | undefined>({
+//   key: "CurrentSectionColNum",
+//   get: ({ get }) => {
+//     const locationColNum = get(locationColNumState);
+//     const currentLocationName = get(currentLocationNameState);
+//     const currentFloorNumber = get(currentFloorNumberState);
+//     const currentSectionName = get(currentSectionNameState);
+
+//     return locationColNum
+//       .find((building) => building.location === currentLocationName)
+//       ?.floorColNum.find(
+//         (location) => location.floor === currentFloorNumber
+//       )
+//       ?.sectionColNum.find((floor) => floor.section === currentSectionName)
+//       ?.colNum;
+//   },
+// });
+
+/* ---------------------- */
 
 // export const targetCabinetInfoSelectorState = selector<CabinetInfo | undefined>(
 //   {

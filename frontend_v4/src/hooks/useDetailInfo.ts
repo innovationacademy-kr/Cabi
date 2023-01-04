@@ -41,6 +41,7 @@ const useDetailInfo = () => {
 
   const closeCabinet = () => {
     cabinetDetailArea?.classList.remove("on");
+
   };
 
   const closeDetailInfo = () => {

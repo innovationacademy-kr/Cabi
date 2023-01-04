@@ -16,7 +16,6 @@ import ModalPortal from "@/components/ModalPortal";
 
 import useDetailInfo from "@/hooks/useDetailInfo";
 
-
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const setCurrentCabinetId = useSetRecoilState<number>(currentCabinetIdState);
@@ -94,7 +93,14 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
 
   const { openCabinet, closeMap } = useDetailInfo();
 
-  const selectCabinetOnClick = (cabinetId: number) => {
+  const selectCabinetOnClick = (status: CabinetStatus, cabinetId: number) => {
+    if (
+      !isMine &&
+      status !== CabinetStatus.AVAILABLE &&
+      status !== CabinetStatus.SET_EXPIRE_AVAILABLE
+    )
+      return handleOpenModal();
+
     setCurrentCabinetId(cabinetId);
     async function getData(cabinetId: number) {
       try {
@@ -105,6 +111,8 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       }
     }
     getData(cabinetId);
+    openCabinet();
+    closeMap();
   };
   const handleOpenModal = () => {
     if (
@@ -124,10 +132,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       status={props.status}
       isMine={isMine}
       onClick={() => {
-        selectCabinetOnClick(props.cabinet_id);
-        if (!isMine) handleOpenModal();
-        openCabinet();
-        closeMap();
+        selectCabinetOnClick(props.status, props.cabinet_id);
       }}
     >
       <CabinetIconNumberWrapperStyled>
