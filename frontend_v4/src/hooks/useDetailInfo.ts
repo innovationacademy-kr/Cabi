@@ -7,7 +7,7 @@ import {
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 const useDetailInfo = () => {
-  const [toggleMyCabinet, toggleMyCabinetState] = useRecoilState(
+  const [toggleMyCabinet, setToggleMyCabinet] = useRecoilState(
     toggleCabinetInfoState
   );
   const offMapSelect = useSetRecoilState(toggleMapSelectState);
@@ -65,14 +65,14 @@ const useDetailInfo = () => {
   const openCabinet = () => {
     if (toggleMyCabinet == false) {
       cabinetDetailArea!.classList.add("on");
-      toggleMyCabinetState(true);
+      setToggleMyCabinet(true);
     }
   };
 
   const closeCabinet = () => {
     if (toggleMyCabinet == true) {
       cabinetDetailArea!.classList.remove("on");
-      toggleMyCabinetState(false);
+      setToggleMyCabinet(false);
     }
   };
 
