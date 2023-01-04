@@ -9,7 +9,7 @@ export interface ModalInterface {
   title: string | null; //모달 제목
   detail: string | null | JSX.Element; //안내문구 (confirm 타입 모달만 가짐)
   confirmMessage: string; //확인 버튼의 텍스트
-  onClickProceed: () => void | null;
+  onClickProceed: () => (void | Promise<any>) | null;
 }
 
 interface ModalContainerInterface {
@@ -39,7 +39,10 @@ const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
             <ButtonContainer onClick={onClose} text="취소" theme="line" />
 
             <ButtonContainer
-              onClick={onClickProceed}
+              onClick={(e) => {
+                onClickProceed();
+                onClose(e);
+              }}
               text={confirmMessage}
               theme="fill"
             />

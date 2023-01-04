@@ -34,8 +34,8 @@ const TopNavButtonsContainer = () => {
     if (myInfo.cabinet_id === -1) {
       return;
     }
+    setTargetCabinetInfoToMyCabinet();
     if (currentCabinetId !== myInfo.cabinet_id) {
-      setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
       clickCabinet();

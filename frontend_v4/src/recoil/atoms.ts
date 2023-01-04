@@ -79,3 +79,8 @@ export const targetCabinetInfoState = atom<CabinetInfo>({
   key: "TargetCabinetInfo",
   default: undefined,
 });
+
+export const locationColNumState = atom<ILocationColNum[]>({
+  key: "LocationColNum",
+  default: staticColNumData,
+});
