@@ -12,6 +12,8 @@ import {
   currentFloorCabinetState,
   currentSectionNameState,
   currentLocationNameState,
+  userState,
+  isMyCabinetIdChangedState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
@@ -19,6 +21,8 @@ import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 import useLeftNav from "@/hooks/useLeftNav";
 import { removeCookie } from "@/api/react_cookie/cookies";
 import useDetailInfo from "@/hooks/useDetailInfo";
+import useIsMount from "@/hooks/useIsMount";
+import { UserDto } from "@/types/dto/user.dto";
 
 const LeftNavContainer = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
@@ -26,6 +30,7 @@ const LeftNavContainer = () => {
     currentFloorNumberState
   );
   const currentLocation = useRecoilValue<string>(currentLocationNameState);
+  const myInfo = useRecoilValue<UserDto>(userState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
   const resetLocation = useResetRecoilState(currentLocationNameState);
@@ -37,18 +42,37 @@ const LeftNavContainer = () => {
   const { pathname } = useLocation();
   const { closeLeftNav } = useLeftNav();
   const { closeMap, closeDetailInfo } = useDetailInfo();
+  const isMount = useIsMount();
+  const [isMyCabinetIdChanged, setIsMyCabinetIdChanged] = useRecoilState(
+    isMyCabinetIdChangedState
+  );
 
+  // 층을 클릭할 때,
   useEffect(() => {
     if (currentFloor === undefined) return;
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
-        setCurrentSection(response.data[0].section);
+        if (isMount || isMyCabinetIdChanged) {
+          const recoilPersist = localStorage.getItem("recoil-persist");
+          let recoilPersistObj;
+          if (recoilPersist) recoilPersistObj = JSON.parse(recoilPersist);
+          setCurrentSection(
+            Object.keys(recoilPersistObj).includes("CurrentSection")
+              ? recoilPersistObj.CurrentSection
+              : response.data[0].section
+          );
+          setIsMyCabinetIdChanged(false);
+        } else {
+          setCurrentSection(response.data[0].section);
+        }
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [currentLocation, currentFloor]);
+  }, [currentLocation, currentFloor, myInfo.cabinet_id]);
+
+  useEffect(() => {}, [currentLocation, currentFloor]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);

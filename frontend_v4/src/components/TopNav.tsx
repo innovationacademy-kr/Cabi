@@ -37,7 +37,7 @@ const TopNav: React.FC<{
     /* ------------ */
     const getLocationsData = async () => {
       try {
-        await setTimeoutPromise(1000);
+        await setTimeoutPromise(500);
         const locationsFloorData = await axiosLocationFloor();
 
         setLocationsFloor(locationsFloorData.data.space_data);

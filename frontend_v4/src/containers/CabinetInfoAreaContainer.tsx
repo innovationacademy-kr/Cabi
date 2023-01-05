@@ -8,6 +8,21 @@ import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
 import { DetailStyled } from "./ModalContainer";
 import MemoModal from "@/components/MemoModal";
+import {
+  axiosCabinetById,
+  axiosLentId,
+  axiosMyLentInfo,
+  axiosReturn,
+} from "@/api/axios/axios.custom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  currentCabinetIdState,
+  isMyCabinetIdChangedState,
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 
 export interface ISelectedCabinetInfo {
   floor: number;
@@ -29,6 +44,12 @@ const CabinetInfoAreaContainer: React.FC<{
   const { selectedCabinetInfo, closeCabinet } = props;
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
+  const currentCabinetId = useRecoilValue(currentCabinetIdState);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
+  const setIsMyCabinetIdChanged = useSetRecoilState(isMyCabinetIdChangedState);
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
   let expireDate = new Date();
   const addDays = selectedCabinetInfo?.lentType === "SHARE" ? 41 : 20;
   expireDate.setDate(expireDate.getDate() + addDays);
@@ -53,9 +74,33 @@ const CabinetInfoAreaContainer: React.FC<{
       </DetailStyled>
     ),
     confirmMessage: "네, 반납할게요",
-    onClickProceed: () => {
-      // 사물함 반납 api호출
-      alert("반납이 완료되었습니다");
+    onClickProceed: async () => {
+      //사물함 반납 api호출
+      try {
+        await axiosReturn();
+        //userCabinetId 세팅
+        setMyInfo({ ...myInfo, cabinet_id: -1 });
+        setIsMyCabinetIdChanged(true);
+        // 캐비닛 상세정보 바꾸는 곳
+        try {
+          const { data } = await axiosCabinetById(currentCabinetId);
+          setTargetCabinetInfo(data);
+        } catch (error) {
+          console.log(error);
+        }
+        //userLentInfo 세팅
+        try {
+          const { data: myLentInfo } = await axiosMyLentInfo();
+          setMyLentInfo(myLentInfo);
+        } catch (error) {
+          console.error(error);
+        }
+      } catch (error: any) {
+        if (error.response.status !== 401) {
+          alert(error.response.data.message);
+        }
+        console.log(error);
+      }
     },
   };
   const modalPropsMap = {
@@ -76,9 +121,35 @@ const CabinetInfoAreaContainer: React.FC<{
         </DetailStyled>
       ),
       confirmMessage: "네, 대여할게요",
-      onClickProceed: () => {
+      onClickProceed: async () => {
         //사물함 대여 api호출
-        alert("대여가 완료되었습니다");
+        try {
+          await axiosLentId(currentCabinetId);
+          //userCabinetId 세팅
+          setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
+          setIsMyCabinetIdChanged(true);
+
+          // 캐비닛 상세정보 바꾸는 곳
+          try {
+            const { data } = await axiosCabinetById(currentCabinetId);
+            setTargetCabinetInfo(data);
+          } catch (error) {
+            console.log(error);
+          }
+
+          // 내 대여정보 바꾸는 곳
+          try {
+            const { data: myLentInfo } = await axiosMyLentInfo();
+            setMyLentInfo(myLentInfo);
+          } catch (error) {
+            console.error(error);
+          }
+        } catch (error: any) {
+          if (error.response.status !== 401) {
+            alert(error.response.data.message);
+          }
+          console.log(error);
+        }
       },
     },
     [CabinetStatus.SET_EXPIRE_FULL]: {
@@ -105,9 +176,35 @@ const CabinetInfoAreaContainer: React.FC<{
         </p>
       ),
       confirmMessage: "네, 대여할게요",
-      onClickProceed: () => {
+      onClickProceed: async () => {
         //사물함 대여 api호출
-        alert("대여가 완료되었습니다");
+        try {
+          await axiosLentId(currentCabinetId);
+          //userCabinetId 세팅
+          setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
+          setIsMyCabinetIdChanged(true);
+
+          // 캐비닛 상세정보 바꾸는 곳
+          try {
+            const { data } = await axiosCabinetById(currentCabinetId);
+            setTargetCabinetInfo(data);
+          } catch (error) {
+            console.log(error);
+          }
+
+          //userLentInfo 세팅
+          try {
+            const { data: myLentInfo } = await axiosMyLentInfo();
+            setMyLentInfo(myLentInfo);
+          } catch (error) {
+            console.error(error);
+          }
+        } catch (error: any) {
+          if (error.response.status !== 401) {
+            alert(error.response.data.message);
+          }
+          console.log(error);
+        }
       },
     },
     [CabinetStatus.EXPIRED]: {
