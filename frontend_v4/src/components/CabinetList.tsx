@@ -5,6 +5,7 @@ import {
   currentSectionColNumState,
 } from "@/recoil/selectors";
 import CabinetListContainer from "@/containers/CabinetListContainer";
+import RealViewNotification from "./RealViewNotification";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 
 const CabinetList = (): JSX.Element => {
@@ -13,6 +14,7 @@ const CabinetList = (): JSX.Element => {
 
   return (
     <React.Fragment>
+      <RealViewNotification colNum={colNum} />
       {colNum && (
         <CabinetListContainer colNum={colNum} cabinetInfo={CABINETS} />
       )}
