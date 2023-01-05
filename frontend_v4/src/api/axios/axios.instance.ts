@@ -29,8 +29,8 @@ instance.interceptors.response.use(
       } else {
         removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
       }
+      window.location.href = "/login";
       alert(error.response.data.message);
-      window.location.href = "/";
     }
     return Promise.reject(error);
   }
