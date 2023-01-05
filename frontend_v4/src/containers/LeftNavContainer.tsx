@@ -40,14 +40,11 @@ const LeftNavContainer = () => {
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
-  const { closeLeftNav } = useLeftNav();
-  const { closeMap, closeDetailInfo } = useDetailInfo();
   const isMount = useIsMount();
   const [isMyCabinetIdChanged, setIsMyCabinetIdChanged] = useRecoilState(
     isMyCabinetIdChangedState
   );
 
-  // 층을 클릭할 때,
   useEffect(() => {
     if (currentFloor === undefined) return;
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
@@ -72,21 +69,14 @@ const LeftNavContainer = () => {
       });
   }, [currentLocation, currentFloor, myInfo.cabinet_id]);
 
-  useEffect(() => {}, [currentLocation, currentFloor]);
-
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
     if (pathname == "/home") {
-      closeDetailInfo();
       navigator("/main");
     }
   };
 
   const onClickHomeButton = () => {
-    closeDetailInfo();
-    resetCurrentFloor();
-    resetCurrentSection();
-    closeLeftNav();
     navigator("/home");
   };
 
