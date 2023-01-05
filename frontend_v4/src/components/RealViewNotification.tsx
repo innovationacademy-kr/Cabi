@@ -1,26 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 
-const RealViewNotification: React.FC<{ colNum: number | undefined }> = (
-  props
-) => {
+const RealViewNotification: React.FC<{ colNum: number }> = (props) => {
   const [hasEnoughWidth, setHasEnoughWidth] = useState<boolean>(true);
   const tooltipCardRef = useRef<HTMLDivElement>(null);
   const toolTipMessage =
     "보시는 화면은 실제 사물함 위치와 다를 수 있습니다.\n화면을 축소하시면 실제 위치를 확인하실 수 있습니다.";
 
   const checkEnoughWidth = () => {
-    if (!props.colNum || tooltipCardRef.current === null) return;
+    if (!props.colNum || !tooltipCardRef.current) return;
 
     const requireWidth = props.colNum * 90;
-    if (tooltipCardRef.current.offsetWidth >= requireWidth)
-      setHasEnoughWidth(true);
-    else setHasEnoughWidth(false);
+    setHasEnoughWidth(tooltipCardRef.current.offsetWidth >= requireWidth);
   };
 
   useEffect(() => {
-    if (tooltipCardRef.current !== null) checkEnoughWidth();
+    if (!tooltipCardRef.current) return;
 
+    checkEnoughWidth();
     window.addEventListener("resize", checkEnoughWidth);
     return () => {
       window.removeEventListener("resize", checkEnoughWidth);
