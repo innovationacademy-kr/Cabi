@@ -15,9 +15,7 @@ const NotFoundPage = () => {
         요청하신 페이지가 사라졌거나,{" "}
         <span>잘못된 경로를 이용하셨습니다 :(</span>
       </ContentStyled>
-      <ButtonStyled onClick={() => navigate("/login")}>
-        홈으로 가기
-      </ButtonStyled>
+      <ButtonStyled onClick={() => navigate("/")}>홈으로 가기</ButtonStyled>
     </NotFoundPageStyled>
   );
 };
