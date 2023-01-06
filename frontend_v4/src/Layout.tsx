@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import {  userState } from "@/recoil/atoms";
+import { userState } from "@/recoil/atoms";
 import TopNav from "@/components/TopNav";
 import LeftNavAreaContainer from "./containers/LeftNavAreaContainer";
 import LoadingModal from "@/components/LoadingModal";
@@ -12,6 +12,7 @@ import { UserDto } from "@/types/dto/user.dto";
 import styled, { css } from "styled-components";
 import CabinetInfoArea from "./components/CabinetInfoArea";
 import MapInfoContainer from "./containers/MapInfoContainer";
+import LentLog from "./components/LentLog";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -61,7 +62,8 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isHomePage={isHomePage}
           >
-            <CabinetInfoArea />
+            <LentLog />
+            {/* <CabinetInfoArea /> */}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
         </WrapperStyled>
