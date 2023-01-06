@@ -106,6 +106,7 @@ input {
   font-size: 1rem;
   outline: none;
   background: none;
+  box-sizing: border-box;
 }
 
 .modal {
