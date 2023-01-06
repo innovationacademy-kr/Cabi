@@ -173,10 +173,8 @@ const BackgroundStyled = styled.div`
 const WriteModeButtonStyled = styled.button<{ mode: string }>`
   display: ${({ mode }) => (mode === "read" ? "block" : "none")};
   position: absolute;
-  left: 74.44%;
-  right: 11.11%;
-  top: 8%;
-  bottom: 88.6%;
+  right: 40px;
+  padding: 0;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
