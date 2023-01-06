@@ -7,7 +7,12 @@ import cabiLogo from "@/assets/images/logo.svg";
 import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
 import MemoModal from "@/components/MemoModal";
-import { modalPropsMap } from "@/maps";
+import {
+  cabinetIconSrcMap,
+  cabinetLabelColorMap,
+  cabinetStatusColorMap,
+  modalPropsMap,
+} from "@/maps";
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
@@ -132,30 +137,6 @@ const CabinetInfoAreaContainer: React.FC<{
 };
 
 export default CabinetInfoAreaContainer;
-
-const cabinetStatusColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--available)",
-  [CabinetStatus.SET_EXPIRE_FULL]: "var(--full)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--available)",
-  [CabinetStatus.EXPIRED]: "var(--expired)",
-  [CabinetStatus.BROKEN]: "var(--broken)",
-  [CabinetStatus.BANNED]: "var(--banned)",
-};
-
-const cabinetIconSrcMap = {
-  [CabinetType.PRIVATE]: "src/assets/images/privateIcon.svg",
-  [CabinetType.SHARE]: "src/assets/images/shareIcon.svg",
-  [CabinetType.CIRCLE]: "src/assets/images/circleIcon.svg",
-};
-
-const cabinetLabelColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--white)",
-  [CabinetStatus.SET_EXPIRE_FULL]: "var(--black)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--white)",
-  [CabinetStatus.EXPIRED]: "var(--white)",
-  [CabinetStatus.BROKEN]: "var(--white)",
-  [CabinetStatus.BANNED]: "var(--white)",
-};
 
 const NotSelectedStyled = styled.div`
   height: 100%;
