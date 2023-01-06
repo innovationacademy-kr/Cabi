@@ -8,9 +8,8 @@ import {
 } from './common.transaction';
 import { IsolationLevel } from 'src/enums/isolation.enum';
 import { runInNewHookContext } from './hooks.transaction';
-import { ConnectionOptionsReader, EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { TransactionalError } from 'typeorm-transactional';
-import { TYPEORM_DATA_SOURCE_NAME_PREFIX } from './constant.transaction';
 
 export interface WrapInTransactionOptions {
   /**

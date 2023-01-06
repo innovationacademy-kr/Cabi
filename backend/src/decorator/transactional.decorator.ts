@@ -7,7 +7,7 @@ export function Transactional(
   options?: WrapInTransactionOptions,
 ): MethodDecorator {
   return (
-    target: Object,
+    target: any,
     propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<unknown>,
   ) => {
