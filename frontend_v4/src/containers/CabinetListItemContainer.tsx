@@ -226,7 +226,10 @@ const CabinetListItemStyled = styled.div<{
   ${({ isSelected }) =>
     isSelected &&
     css`
+      opacity: 0.9;
       transform: scale(1.05);
+      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
+        0px 4px 4px rgba(0, 0, 0, 0.25);
     `}
   &:hover {
     opacity: 0.9;
