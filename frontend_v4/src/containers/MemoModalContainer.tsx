@@ -23,7 +23,14 @@ const MemoModalContainer = ({
   const newMemo = useRef<HTMLInputElement>(null);
   const handleClickWriteMode = (e: any) => {
     setMode("write");
+    if (cabinetType === "PRIVATE" && newMemo.current) {
+      newMemo.current.focus();
+      newMemo.current.select();
+    } else if (newTitle.current) {
+      newTitle.current.focus();
+    }
   };
+
   const handleClickSave = (e: React.MouseEvent) => {
     //사물함 제목, 사물함 비밀메모 update api 호출
     // onClose(e);
@@ -40,14 +47,17 @@ const MemoModalContainer = ({
         <H2Styled>메모 관리</H2Styled>
         <ContentSectionStyled>
           <ContentItemSectionStyled>
-            <ContentItemWrapperStyled isVisible={cabinetType === "SHARE"}>
+            <ContentItemWrapperStyled isVisible={cabinetType !== "PRIVATE"}>
               <ContentItemTitleStyled>사물함 이름</ContentItemTitleStyled>
               <ContentItemInputStyled
                 placeholder={cabinetTitle}
                 mode={mode}
-                defaultValue={mode === "write" ? cabinetTitle : undefined}
+                defaultValue={cabinetTitle}
                 readOnly={mode === "read" ? true : false}
                 ref={newTitle}
+                onFocus={(e) => {
+                  e.currentTarget.select();
+                }}
               />
             </ContentItemWrapperStyled>
             <ContentItemWrapperStyled isVisible={true}>
@@ -55,9 +65,12 @@ const MemoModalContainer = ({
               <ContentItemInputStyled
                 placeholder={cabinetMemo}
                 mode={mode}
-                defaultValue={mode === "write" ? cabinetMemo : undefined}
+                defaultValue={cabinetMemo}
                 readOnly={mode === "read" ? true : false}
                 ref={newMemo}
+                onFocus={(e) => {
+                  e.currentTarget.select();
+                }}
               />
             </ContentItemWrapperStyled>
           </ContentItemSectionStyled>
