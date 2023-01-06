@@ -7,18 +7,23 @@ import React from "react";
 export interface ModalInterface {
   type: string; //"confirm" : 진행 가능한 모달(메모, 대여, 반납 등에 사용) "erorr": 진행 불가능한 모달(문구와 닫기버튼만 존재)
   title: string | null; //모달 제목
-  detail: string | null | JSX.Element; //안내문구 (confirm 타입 모달만 가짐)
   confirmMessage: string; //확인 버튼의 텍스트
-  onClickProceed: () => (void | Promise<any>) | null;
 }
 
 interface ModalContainerInterface {
   modalObj: ModalInterface;
   onClose: React.MouseEventHandler;
+  onClickProceed: (() => Promise<void>) | null;
+  detail: string | null;
 }
 
-const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
-  const { type, title, detail, confirmMessage, onClickProceed } = modalObj;
+const ModalContainer = ({
+  modalObj,
+  onClose,
+  onClickProceed,
+  detail,
+}: ModalContainerInterface) => {
+  const { type, title, confirmMessage } = modalObj;
   return (
     <>
       <BackgroundStyled onClick={onClose} />
@@ -33,14 +38,15 @@ const ModalContainer = ({ modalObj, onClose }: ModalContainerInterface) => {
           onClick={type !== "confirm" ? onClose : undefined}
         />
         <H2Styled>{title}</H2Styled>
-        {detail}
+        {type === "confirm" && (
+          <DetailStyled dangerouslySetInnerHTML={{ __html: detail! }} />
+        )}
         {type === "confirm" && (
           <ButtonWrapperStyled>
             <ButtonContainer onClick={onClose} text="취소" theme="line" />
-
             <ButtonContainer
               onClick={(e) => {
-                onClickProceed();
+                onClickProceed!();
                 onClose(e);
               }}
               text={confirmMessage}
@@ -66,7 +72,7 @@ const ModalContainerStyled = styled.div<{ type: string }>`
   justify-content: space-around;
   align-items: center;
   text-align: center;
-  padding: 40px 30px;
+  padding: 40px 20px;
 `;
 
 export const DetailStyled = styled.p`

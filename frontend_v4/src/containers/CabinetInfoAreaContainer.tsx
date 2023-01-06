@@ -6,24 +6,8 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import cabiLogo from "@/assets/images/logo.svg";
 import Modal from "@/components/Modal";
 import ModalPortal from "@/components/ModalPortal";
-import { DetailStyled } from "./ModalContainer";
 import MemoModal from "@/components/MemoModal";
-import {
-  axiosCabinetById,
-  axiosLentId,
-  axiosMyLentInfo,
-  axiosReturn,
-} from "@/api/axios/axios.custom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  currentCabinetIdState,
-  isMyCabinetIdChangedState,
-  myCabinetInfoState,
-  targetCabinetInfoState,
-  userState,
-} from "@/recoil/atoms";
-import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
-
+import { modalPropsMap } from "@/maps";
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
@@ -44,201 +28,17 @@ const CabinetInfoAreaContainer: React.FC<{
   const { selectedCabinetInfo, closeCabinet } = props;
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
-  const currentCabinetId = useRecoilValue(currentCabinetIdState);
-  const [myInfo, setMyInfo] = useRecoilState(userState);
-  const setIsMyCabinetIdChanged = useSetRecoilState(isMyCabinetIdChangedState);
-  const setMyLentInfo =
-    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
-  let expireDate = new Date();
-  const addDays = selectedCabinetInfo?.lentType === "SHARE" ? 41 : 20;
-  expireDate.setDate(expireDate.getDate() + addDays);
-  const padTo2Digits = (num: number) => {
-    return num.toString().padStart(2, "0");
-  };
-  const formatDate = (date: Date) => {
-    return [
-      date.getFullYear(),
-      padTo2Digits(date.getMonth() + 1),
-      padTo2Digits(date.getDate()),
-    ].join("/");
-  };
-  const formattedExpireDate = formatDate(expireDate);
-  const returnCabinetModalProps = {
-    type: "confirm",
-    title: "사물함 반납하기",
-    detail: (
-      <DetailStyled>
-        대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
-        <br /> 지금 반납 하시겠습니까?
-      </DetailStyled>
-    ),
-    confirmMessage: "네, 반납할게요",
-    onClickProceed: async () => {
-      //사물함 반납 api호출
-      try {
-        await axiosReturn();
-        //userCabinetId 세팅
-        setMyInfo({ ...myInfo, cabinet_id: -1 });
-        setIsMyCabinetIdChanged(true);
-        // 캐비닛 상세정보 바꾸는 곳
-        try {
-          const { data } = await axiosCabinetById(currentCabinetId);
-          setTargetCabinetInfo(data);
-        } catch (error) {
-          console.log(error);
-        }
-        //userLentInfo 세팅
-        try {
-          const { data: myLentInfo } = await axiosMyLentInfo();
-          setMyLentInfo(myLentInfo);
-        } catch (error) {
-          console.error(error);
-        }
-      } catch (error: any) {
-        if (error.response.status !== 401) {
-          alert(error.response.data.message);
-        }
-        console.log(error);
-      }
-    },
-  };
-  const modalPropsMap = {
-    [CabinetStatus.AVAILABLE]: {
-      type: "confirm",
-      title: "이용 시 주의 사항",
-      detail: (
-        <DetailStyled>
-          대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
-          <br />
-          대여 후 72시간 이내 취소(반납) 시,
-          <br /> 72시간의 대여 불가 패널티가 적용됩니다.
-          <br />
-          “메모 내용”은 공유 인원끼리 공유됩니다.
-          <br />
-          귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
-          <br />
-        </DetailStyled>
-      ),
-      confirmMessage: "네, 대여할게요",
-      onClickProceed: async () => {
-        //사물함 대여 api호출
-        try {
-          await axiosLentId(currentCabinetId);
-          //userCabinetId 세팅
-          setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
-          setIsMyCabinetIdChanged(true);
 
-          // 캐비닛 상세정보 바꾸는 곳
-          try {
-            const { data } = await axiosCabinetById(currentCabinetId);
-            setTargetCabinetInfo(data);
-          } catch (error) {
-            console.log(error);
-          }
-
-          // 내 대여정보 바꾸는 곳
-          try {
-            const { data: myLentInfo } = await axiosMyLentInfo();
-            setMyLentInfo(myLentInfo);
-          } catch (error) {
-            console.error(error);
-          }
-        } catch (error: any) {
-          if (error.response.status !== 401) {
-            alert(error.response.data.message);
-          }
-          console.log(error);
-        }
-      },
-    },
-    [CabinetStatus.SET_EXPIRE_FULL]: {
-      type: "error",
-      title: "이미 사용 중인 사물함입니다",
-      detail: null,
-      confirmMessage: "",
-      onClickProceed: () => {},
-    },
-    [CabinetStatus.SET_EXPIRE_AVAILABLE]: {
-      type: "confirm",
-      title: "이용 시 주의 사항",
-      detail: (
-        <p>
-          대여기간은 <strong>{formattedExpireDate} 23:59</strong>까지 입니다.
-          <br />
-          대여 후 72시간 이내 취소(반납) 시,
-          <br /> 72시간의 대여 불가 패널티가 적용됩니다.
-          <br />
-          “메모 내용”은 공유 인원끼리 공유됩니다.
-          <br />
-          귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
-          <br />
-        </p>
-      ),
-      confirmMessage: "네, 대여할게요",
-      onClickProceed: async () => {
-        //사물함 대여 api호출
-        try {
-          await axiosLentId(currentCabinetId);
-          //userCabinetId 세팅
-          setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
-          setIsMyCabinetIdChanged(true);
-
-          // 캐비닛 상세정보 바꾸는 곳
-          try {
-            const { data } = await axiosCabinetById(currentCabinetId);
-            setTargetCabinetInfo(data);
-          } catch (error) {
-            console.log(error);
-          }
-
-          //userLentInfo 세팅
-          try {
-            const { data: myLentInfo } = await axiosMyLentInfo();
-            setMyLentInfo(myLentInfo);
-          } catch (error) {
-            console.error(error);
-          }
-        } catch (error: any) {
-          if (error.response.status !== 401) {
-            alert(error.response.data.message);
-          }
-          console.log(error);
-        }
-      },
-    },
-    [CabinetStatus.EXPIRED]: {
-      type: "error",
-      title: `반납이 지연되고 있어\n현재 대여가 불가합니다`,
-      detail: null,
-      confirmMessage: "",
-      onClickProceed: () => {},
-    },
-    [CabinetStatus.BROKEN]: {
-      type: "error",
-      title: "사용이 불가한 사물함입니다",
-      detail: null,
-      confirmMessage: "",
-      onClickProceed: () => {},
-    },
-    [CabinetStatus.BANNED]: {
-      type: "error",
-      title: "사용이 불가한 사물함입니다",
-      detail: null,
-      confirmMessage: "",
-      onClickProceed: () => {},
-    },
-  };
   const handleOpenReturnModal = () => {
     setShowReturnModal(true);
   };
-  const handleCloseReturnModal = (e: { stopPropagation: () => void }) => {
+  const handleCloseReturnModal = () => {
     setShowReturnModal(false);
   };
   const handleOpenMemoModal = () => {
     setShowMemoModal(true);
   };
-  const handleCloseMemoModal = (e: { stopPropagation: () => void }) => {
+  const handleCloseMemoModal = () => {
     setShowMemoModal(false);
   };
 
@@ -315,7 +115,7 @@ const CabinetInfoAreaContainer: React.FC<{
           <Modal
             modalObj={
               selectedCabinetInfo.isMine
-                ? returnCabinetModalProps
+                ? modalPropsMap["return"]
                 : modalPropsMap[selectedCabinetInfo.status]
             }
             onClose={handleCloseReturnModal}
