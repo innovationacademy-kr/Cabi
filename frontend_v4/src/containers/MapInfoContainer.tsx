@@ -5,7 +5,7 @@ import MapGridContainer from "./MapGridContainer";
 import useDetailInfo from "@/hooks/useDetailInfo";
 import { useRecoilValue } from "recoil";
 import { currentLocationFloorState } from "@/recoil/selectors";
-import MapFloorSelect from "@/components/MapSelect";
+import MapFloorSelect from "@/components/MapFloorSelect";
 
 const MapInfoContainer = () => {
   const { closeMap } = useDetailInfo();
