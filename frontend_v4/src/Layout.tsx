@@ -62,8 +62,8 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isHomePage={isHomePage}
           >
-            <LentLog />
-            {/* <CabinetInfoArea /> */}
+            {/* <LentLog /> */}
+            <CabinetInfoArea />
           </DetailInfoContainerStyled>
           <MapInfoContainer />
         </WrapperStyled>
