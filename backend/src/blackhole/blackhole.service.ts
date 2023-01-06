@@ -15,12 +15,10 @@ import { UserDto } from 'src/dto/user.dto';
 import { UserService } from 'src/user/user.service';
 import { LentService } from 'src/lent/lent.service';
 import { BlackholeTools } from './blackhole.component';
-import {
-  IsolationLevel,
-  Propagation,
-  runOnTransactionComplete,
-  Transactional,
-} from 'typeorm-transactional';
+import { Transactional } from 'src/decorator/transactional.decorator';
+import { Propagation } from 'src/enums/propagation.enum';
+import { IsolationLevel } from 'src/enums/isolation.enum';
+import { runOnTransactionComplete } from 'src/transaction/hooks.transaction';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';

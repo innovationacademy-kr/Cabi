@@ -6,12 +6,10 @@ import { BanService } from '../ban/ban.service';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { LentService } from './lent.service';
 import { ILentRepository } from './repository/lent.repository.interface';
-import {
-  Transactional,
-  Propagation,
-  runOnTransactionComplete,
-  IsolationLevel,
-} from 'typeorm-transactional';
+import { Transactional } from 'src/decorator/transactional.decorator';
+import { Propagation } from 'src/enums/propagation.enum';
+import { IsolationLevel } from 'src/enums/isolation.enum';
+import { runOnTransactionComplete } from 'src/transaction/hooks.transaction';
 import { UserDto } from 'src/dto/user.dto';
 import LentExceptionType from 'src/enums/lent.exception.enum';
 import { ConfigService } from '@nestjs/config';

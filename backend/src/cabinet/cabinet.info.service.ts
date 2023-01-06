@@ -12,11 +12,9 @@ import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.sect
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { SpaceDataDto } from 'src/dto/space.data.dto';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
-import {
-  IsolationLevel,
-  Propagation,
-  Transactional,
-} from 'typeorm-transactional';
+import { Transactional } from 'src/decorator/transactional.decorator';
+import { Propagation } from 'src/enums/propagation.enum';
+import { IsolationLevel } from 'src/enums/isolation.enum';
 import { ICabinetInfoRepository } from './repository/cabinet.info.interface.repository';
 
 @Injectable()

@@ -14,7 +14,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import TypeOrmConfigService from './config/typeorm.config';
 import { DataSource } from 'typeorm';
-import { addTransactionalDataSource } from 'typeorm-transactional';
 import { CabinetModule } from './cabinet/cabinet.module';
 import { LentModule } from './lent/lent.module';
 import { UserModule } from './user/user.module';
@@ -22,6 +21,7 @@ import { UtilsModule } from './utils/utils.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BetatestModule } from './betatest/betatest.module';
 import { AdminModule } from './admin/admin.module';
+import { addTransactionalDataSource } from './transaction/common.transaction';
 
 @Module({
   imports: [

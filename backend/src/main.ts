@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
-import { initializeTransactionalContext } from 'typeorm-transactional';
 import { LogLevel } from '@nestjs/common';
+import { initializeTransactionalContext } from './transaction/common.transaction';
 
 async function bootstrap() {
   initializeTransactionalContext();

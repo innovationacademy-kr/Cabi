@@ -2,16 +2,14 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import Lent from 'src/entities/lent.entity';
 import { UserService } from '../user/user.service';
 import { IBanRepository } from './repository/ban.repository.interface';
-import {
-  Transactional,
-  Propagation,
-  runOnTransactionComplete,
-  IsolationLevel,
-} from 'typeorm-transactional';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import LentType from 'src/enums/lent.type.enum';
 import { ConfigService } from '@nestjs/config';
 import { DateCalculator } from 'src/utils/date.calculator.component';
+import { Transactional } from 'src/decorator/transactional.decorator';
+import { Propagation } from 'src/enums/propagation.enum';
+import { IsolationLevel } from 'src/enums/isolation.enum';
+import { runOnTransactionComplete } from 'src/transaction/hooks.transaction';
 
 @Injectable()
 export class BanService {

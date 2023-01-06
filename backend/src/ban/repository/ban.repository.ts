@@ -1,13 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import Lent from 'src/entities/lent.entity';
 import { Repository } from 'typeorm';
-import {
-  IsolationLevel,
-  Propagation,
-  Transactional,
-} from 'typeorm-transactional';
 import BanLog from '../../entities/ban.log.entity';
 import { IBanRepository } from './ban.repository.interface';
+import { Transactional } from 'src/decorator/transactional.decorator';
+import { Propagation } from 'src/enums/propagation.enum';
+import { IsolationLevel } from 'src/enums/isolation.enum';
 
 export class BanRepository implements IBanRepository {
   constructor(

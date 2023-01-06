@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { BanService } from '../ban.service';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
 /**
  * 사용자가 밴당했는지 확인합니다. 밴 당했을 경우 Forbidden 예외를 발생시킵니다.

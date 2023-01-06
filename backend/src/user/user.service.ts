@@ -7,11 +7,9 @@ import { UserDto } from 'src/dto/user.dto';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
 import { IUserRepository } from './repository/user.repository.interface';
 import { UserSessionDto } from 'src/dto/user.session.dto';
-import {
-  IsolationLevel,
-  Propagation,
-  Transactional,
-} from 'typeorm-transactional';
+import { Transactional } from 'src/decorator/transactional.decorator';
+import { Propagation } from 'src/enums/propagation.enum';
+import { IsolationLevel } from 'src/enums/isolation.enum';
 
 @Injectable()
 export class UserService {
