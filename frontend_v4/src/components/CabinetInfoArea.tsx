@@ -1,5 +1,9 @@
 import { useRecoilValue, useResetRecoilState } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  currentCabinetIdState,
+  myCabinetInfoState,
+  targetCabinetInfoState,
+} from "@/recoil/atoms";
 import CabinetInfoAreaContainer, {
   ISelectedCabinetInfo,
 } from "@/containers/CabinetInfoAreaContainer";
@@ -10,6 +14,7 @@ import useDetailInfo from "@/hooks/useDetailInfo";
 const CabinetInfoArea = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
+  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const isMyCabinet =
@@ -108,6 +113,7 @@ const CabinetInfoArea = (): JSX.Element => {
 
   const handleCancle = () => {
     resetTargetCabinetInfo();
+    resetCurrentCabinetId();
     closeCabinet();
   };
 

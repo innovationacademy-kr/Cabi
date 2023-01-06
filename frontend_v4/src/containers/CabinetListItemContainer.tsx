@@ -1,4 +1,4 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   targetCabinetInfoState,
@@ -19,7 +19,9 @@ import { UserDto } from "@/types/dto/user.dto";
 
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<UserDto>(userState);
-  const setCurrentCabinetId = useSetRecoilState<number>(currentCabinetIdState);
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
+    currentCabinetIdState
+  );
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
@@ -132,6 +134,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
     <CabinetListItemStyled
       status={props.status}
       isMine={isMine}
+      isSelected={currentCabinetId === props.cabinet_id}
       onClick={() => {
         selectCabinetOnClick(props.status, props.cabinet_id);
       }}
@@ -201,6 +204,7 @@ const cabinetLabelColorMap = {
 const CabinetListItemStyled = styled.div<{
   status: CabinetStatus;
   isMine: boolean;
+  isSelected: boolean;
 }>`
   position: relative;
   background-color: ${(props) => cabinetStatusColorMap[props.status]};
@@ -219,6 +223,14 @@ const CabinetListItemStyled = styled.div<{
   padding: 8px 8px 14px;
   transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      opacity: 0.9;
+      transform: scale(1.05);
+      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
+        0px 4px 4px rgba(0, 0, 0, 0.25);
+    `}
   &:hover {
     opacity: 0.9;
     transform: scale(1.05);
