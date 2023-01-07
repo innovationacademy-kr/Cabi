@@ -1,37 +1,42 @@
-import styled from "styled-components";
-import TopNavContainer from "@/containers/TopNavContainer";
-import InfoContainer from "@/containers/InfoContainer";
-import LeftNavContainer from "@/containers/LeftNavContainer";
-import LeftNavOptionContainer from "@/containers/LeftNavOptionContainer";
-import LoadingModal from "@/components/LoadingModal";
+import React, { useEffect } from "react";
+import HomeInfoContainer from "@/containers/HomeInfoContainer";
+import { useNavigate } from "react-router-dom";
+import {
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
+import { currentLocationFloorState } from "@/recoil/selectors";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import "@/assets/css/homePage.css";
+import useLeftNav from "@/hooks/useLeftNav";
+import useDetailInfo from "@/hooks/useDetailInfo";
 
 const HomePage = () => {
-  const loading = false;
-  return (
-    <>
-      <TopNavContainer />
-      <WapperStyled>
-        <LeftNavContainer />
-        <LeftNavOptionContainer style={{ display: "none" }} />
-        <MainStyled>
-          {loading ? <LoadingModal /> : <InfoContainer />}
-        </MainStyled>
-      </WapperStyled>
-    </>
-  );
+  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
+  const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
+  const resetCurrentSection = useResetRecoilState(currentSectionNameState);
+  const { closeLeftNav } = useLeftNav();
+  const { closeDetailInfo } = useDetailInfo();
+  const navigator = useNavigate();
+
+  useEffect(() => {
+    closeDetailInfo();
+    closeLeftNav();
+    resetCurrentFloor();
+    resetCurrentSection();
+
+    return () => {
+      closeDetailInfo();
+    };
+  }, []);
+
+  const lentStartHandler = () => {
+    setCurrentFloor(floors[0]);
+    navigator("/main");
+  };
+
+  return <HomeInfoContainer lentStartHandler={lentStartHandler} />;
 };
-
-const WapperStyled = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  overflow: hidden;
-`;
-
-const MainStyled = styled.main`
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-`;
 
 export default HomePage;

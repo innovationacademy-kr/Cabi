@@ -1,14 +1,54 @@
 import styled from "styled-components";
 import TopNavButton from "@/components/TopNavButton";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  currentCabinetIdState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
+import useDetailInfo from "@/hooks/useDetailInfo";
+import { axiosCabinetById } from "@/api/axios/axios.custom";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 
 const TopNavButtonsContainer = () => {
+  const { clickCabinet, clickMap, openCabinet, closeCabinet } = useDetailInfo();
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
+    currentCabinetIdState
+  );
+  const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
+    targetCabinetInfoState
+  );
+  const myInfo = useRecoilValue(userState);
+
+  async function setTargetCabinetInfoToMyCabinet() {
+    setCurrentCabinetId(myInfo.cabinet_id);
+    try {
+      const { data } = await axiosCabinetById(myInfo.cabinet_id);
+      setTargetCabinetInfo(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const clickMyCabinet = () => {
+    if (myInfo.cabinet_id === -1) {
+      return;
+    }
+    setTargetCabinetInfoToMyCabinet();
+    if (currentCabinetId !== myInfo.cabinet_id) {
+      openCabinet();
+    } else {
+      clickCabinet();
+    }
+  };
   return (
     <NaviButtonsStyled>
       <TopNavButton
-        onClick={() => {}}
+        disable={myInfo.cabinet_id === -1}
+        onClick={clickMyCabinet}
         imgSrc="src/assets/images/myCabinetIcon.svg"
       />
-      <TopNavButton onClick={() => {}} imgSrc="src/assets/images/map.svg" />
+      <TopNavButton onClick={clickMap} imgSrc="src/assets/images/map.svg" />
     </NaviButtonsStyled>
   );
 };

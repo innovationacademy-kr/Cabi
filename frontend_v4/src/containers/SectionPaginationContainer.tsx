@@ -1,46 +1,29 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 
-export const SectionPaginationContainer = () => {
-  /* 
-    require props 
-    1. Current floor
-    1. Section list
-    2. Current section name
-    3. Current section index
-    */
-  const floor = 2;
-  const sectionList = [
-    "End of Cluster1",
-    "Cluster1 - OA",
-    "Cluster1 - Terrace",
-    "Oasis",
-    "End of Cluster2",
-  ];
-  const sectionCount = sectionList.length;
-
-  const [currentSectionIdx, setCurrentSectionIdx] = useState<number>(0);
-  const currentSectionName = sectionList.at(currentSectionIdx);
-  const currentPositionName = floor.toString() + "층 - " + currentSectionName;
-
+const SectionPaginationContainer: React.FC<{
+  currentSectionName: string;
+  currentPositionName: string;
+  sectionList: Array<string>;
+  changeSectionOnClickIdxButton: (idx: number) => void;
+  moveToLeftSection: React.MouseEventHandler;
+  moveToRightSection: React.MouseEventHandler;
+}> = (props) => {
+  const {
+    currentSectionName,
+    currentPositionName,
+    sectionList,
+    changeSectionOnClickIdxButton,
+    moveToLeftSection,
+    moveToRightSection,
+  } = props;
   const paginationIdxBar = sectionList.map((sectionName, idx) => (
     <IndexRectangleStyled
       key={sectionName}
       bgColor={sectionName === currentSectionName ? "#9747FF" : "#D9D9D9"}
-      onClick={() => setCurrentSectionIdx(idx)}
+      onClick={() => changeSectionOnClickIdxButton(idx)}
     />
   ));
-
-  const moveToLeftSection = () => {
-    if (currentSectionIdx == 0) return setCurrentSectionIdx(sectionCount - 1);
-    setCurrentSectionIdx(currentSectionIdx - 1);
-  };
-
-  const moveToRightSection = () => {
-    if (currentSectionIdx == sectionCount - 1) return setCurrentSectionIdx(0);
-    setCurrentSectionIdx(currentSectionIdx + 1);
-  };
 
   return (
     <SectionPaginationStyled>
@@ -61,9 +44,11 @@ export const SectionPaginationContainer = () => {
   );
 };
 
+export default SectionPaginationContainer;
+
 const SectionPaginationStyled = styled.div`
   min-width: 360px;
-  margin-bottom: 30px;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;

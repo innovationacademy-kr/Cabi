@@ -6,7 +6,7 @@ import { UserDto } from 'src/dto/user.dto';
 import Cabinet from 'src/entities/cabinet.entity';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
-import { Repository } from 'typeorm';
+import { LessThanOrEqual, Repository } from 'typeorm';
 import { Transactional } from 'src/decorator/transactional.decorator';
 import { Propagation } from 'src/enums/propagation.enum';
 import { IsolationLevel } from 'src/enums/isolation.enum';
@@ -271,5 +271,18 @@ export class lentRepository implements ILentRepository {
         cabinet_id: cabinet_id,
       })
       .execute();
+  }
+
+  async getExpiredLent(baseDate: Date): Promise<Lent[]> {
+    const result = await this.lentRepository.find({
+      relations: {
+        user: true,
+        cabinet: true,
+      },
+      where: {
+        expire_time: LessThanOrEqual(baseDate),
+      },
+    });
+    return result;
   }
 }

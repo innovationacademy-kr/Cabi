@@ -1,20 +1,114 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-
-const floors = ["2층", "3층", "4층", "5층"];
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+  useResetRecoilState,
+} from "recoil";
+import {
+  currentFloorNumberState,
+  currentFloorCabinetState,
+  currentSectionNameState,
+  currentLocationNameState,
+  userState,
+  isMyCabinetIdChangedState,
+} from "@/recoil/atoms";
+import { currentLocationFloorState } from "@/recoil/selectors";
+import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
+import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
+import useLeftNav from "@/hooks/useLeftNav";
+import { removeCookie } from "@/api/react_cookie/cookies";
+import useDetailInfo from "@/hooks/useDetailInfo";
+import useIsMount from "@/hooks/useIsMount";
+import { UserDto } from "@/types/dto/user.dto";
 
 const LeftNavContainer = () => {
+  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const [currentFloor, setCurrentFloor] = useRecoilState<number>(
+    currentFloorNumberState
+  );
+  const currentLocation = useRecoilValue<string>(currentLocationNameState);
+  const myInfo = useRecoilValue<UserDto>(userState);
+  const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
+  const resetCurrentSection = useResetRecoilState(currentSectionNameState);
+  const resetLocation = useResetRecoilState(currentLocationNameState);
+  const setCurrentFloorData = useSetRecoilState<
+    CabinetInfoByLocationFloorDto[]
+  >(currentFloorCabinetState);
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
   const navigator = useNavigate();
+  const { pathname } = useLocation();
+  const isMount = useIsMount();
+  const [isMyCabinetIdChanged, setIsMyCabinetIdChanged] = useRecoilState(
+    isMyCabinetIdChangedState
+  );
+
+  useEffect(() => {
+    if (currentFloor === undefined) return;
+    axiosCabinetByLocationFloor(currentLocation, currentFloor)
+      .then((response) => {
+        setCurrentFloorData(response.data);
+        if (isMount || isMyCabinetIdChanged) {
+          const recoilPersist = localStorage.getItem("recoil-persist");
+          let recoilPersistObj;
+          if (recoilPersist) recoilPersistObj = JSON.parse(recoilPersist);
+          setCurrentSection(
+            Object.keys(recoilPersistObj).includes("CurrentSection")
+              ? recoilPersistObj.CurrentSection
+              : response.data[0].section
+          );
+          setIsMyCabinetIdChanged(false);
+        } else {
+          setCurrentSection(response.data[0].section);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [currentLocation, currentFloor, myInfo.cabinet_id]);
+
+  const onClickFloorButton = (floor: number) => {
+    setCurrentFloor(floor);
+    if (pathname == "/home") {
+      navigator("/main");
+    }
+  };
+
+  const onClickHomeButton = () => {
+    navigator("/home");
+  };
+
+  const onClickLogoutButton = (): void => {
+    if (import.meta.env.VITE_IS_LOCAL === "true") {
+      removeCookie("access_token");
+    } else {
+      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
+    }
+    resetLocation();
+    resetCurrentFloor();
+    resetCurrentSection();
+    navigator("/login");
+  };
 
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
-          <TopBtnStyled onClick={() => navigator("/home")}>Home</TopBtnStyled>
+          <TopBtnStyled
+            className={pathname == "/home" ? "leftNavButtonActive" : ""}
+            onClick={onClickHomeButton}
+          >
+            Home
+          </TopBtnStyled>
           {floors.map((floor, index) => (
-            <TopBtnStyled onClick={() => navigator("/main")} key={index}>
-              {floor}
+            <TopBtnStyled
+              className={floor === currentFloor ? "leftNavButtonActive" : ""}
+              onClick={() => onClickFloorButton(floor)}
+              key={index}
+            >
+              {floor + "층"}
             </TopBtnStyled>
           ))}
         </TopBtnsStyled>
@@ -29,7 +123,10 @@ const LeftNavContainer = () => {
             <div></div>
             Log
           </BottomBtnStyled>
-          <BottomBtnStyled src={"src/assets/images/close-square.svg"}>
+          <BottomBtnStyled
+            onClick={onClickLogoutButton}
+            src={"src/assets/images/close-square.svg"}
+          >
             <div></div>
             Logout
           </BottomBtnStyled>

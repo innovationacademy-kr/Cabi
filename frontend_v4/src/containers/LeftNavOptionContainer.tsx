@@ -1,27 +1,52 @@
 import React from "react";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import CabinetColorTable from "@/components/CabinetColorTable";
+import { currentSectionNameState } from "@/recoil/atoms";
+import useLeftNav from "@/hooks/useLeftNav";
 
-const floorSection = [
-  "End of Cluster1",
-  "Cluster 1 - OA",
-  "Cluster 1 - Terrace",
-  "Oasis",
-  "End of Cluster 2",
-];
+// const floorSection = [
+//   "End of Cluster1",
+//   "Cluster 1 - OA",
+//   "Cluster 1 - Terrace",
+//   "Oasis",
+//   "End of Cluster 2",
+// ];
 
-const LeftNavOptionContainer = (props: { style?: React.CSSProperties }) => {
+const LeftNavOptionContainer = (props: { isVisible: boolean }) => {
+  const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
+    currentSectionNameState
+  );
+
+  const { closeLeftNav } = useLeftNav();
+
+  const onClickSection = (section: string) => {
+    closeLeftNav();
+    setCurrentFloorSection(section);
+  };
+
   return (
-    <LeftNavOptionStyled style={props.style}>
+    <LeftNavOptionStyled isVisible={props.isVisible}>
       {floorSection.map((section: string, index: number) => (
-        <FloorSectionStyled key={index}>{section}</FloorSectionStyled>
+        <FloorSectionStyled
+          className={
+            currentFloorSection === section ? "leftNavButtonActive" : ""
+          }
+          key={index}
+          onClick={() => onClickSection(section)}
+        >
+          {section}
+        </FloorSectionStyled>
       ))}
       <CabinetColorTable />
     </LeftNavOptionStyled>
   );
 };
 
-const LeftNavOptionStyled = styled.div`
+const LeftNavOptionStyled = styled.div<{ isVisible: boolean }>`
+  display: ${(props) => (props.isVisible ? "block" : "none")};
   min-width: 240px;
   height: 100%;
   padding: 32px 10px;
