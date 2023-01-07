@@ -5,7 +5,7 @@ import {
   getTransactionalOptions,
   setHookInContext,
 } from './common.transaction';
-import EventEmitter from 'events';
+import * as EventEmitter from 'events';
 
 export const createEventEmitterInNewContext = (context: Namespace) => {
   const options = getTransactionalOptions();

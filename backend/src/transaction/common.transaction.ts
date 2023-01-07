@@ -7,7 +7,7 @@ import {
   TYPEORM_DATA_SOURCE_NAME,
 } from './constant.transaction';
 import { DataSource, EntityManager, Repository } from 'typeorm';
-import EventEmitter from 'events';
+import * as EventEmitter from 'events';
 import { isDataSource } from './utils.transaction';
 import { TypeOrmUpdatedPatchError } from './errors.transaction';
 
