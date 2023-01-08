@@ -36,9 +36,9 @@ export default RealViewNotification;
 
 const ToolTipIcon = styled.div<{ hasEnoughWidth: boolean }>`
   display: ${(props) => (props.hasEnoughWidth ? "none" : "block")};
-  background-image: url("src/assets/images/cautionSign.png");
-  width: 32px;
-  height: 32px;
+  background-image: url("src/assets/images/cautionSign.svg");
+  width: 24px;
+  height: 24px;
   margin: 0px auto;
   opacity: 0.6;
   cursor: pointer;
@@ -66,7 +66,7 @@ const TooltipBox = styled.div`
 const TooltipCard = styled.div`
   position: relative;
   width: 100%;
-  height: 32px;
+  height: 24px;
   margin: 10px 0px;
   justify-content: center;
   & ${ToolTipIcon}:hover + ${TooltipBox} {
