@@ -67,7 +67,6 @@ const TooltipCard = styled.div`
   position: relative;
   width: 100%;
   height: 24px;
-  margin: 10px 0px;
   justify-content: center;
   & ${ToolTipIcon}:hover + ${TooltipBox} {
     visibility: visible;
