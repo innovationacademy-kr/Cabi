@@ -4,6 +4,7 @@ import {
   HttpCode,
   Inject,
   Logger,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -24,6 +25,8 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { GoogleOAuthGuard } from 'src/auth/google/guard/google.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -43,10 +46,21 @@ export class AuthController {
   @ApiFoundResponse({
     description: '42 OAuth 페이지로 리다이렉트',
   })
+  // @Get('login')
+  // @UseGuards(FtGuard)
+  // login() {
+  //   this.logger.log('Login'); // NOTE: can't reach this point
+  // }
   @Get('login')
-  @UseGuards(FtGuard)
-  login() {
-    this.logger.log('Login'); // NOTE: can't reach this point
+  @UseGuards(GoogleOAuthGuard)
+  async loginGoogle(@Req() req) {
+    this.logger.log('Logged in Google OAuth!');
+  }
+
+  @Get('google-redirect')
+  @UseGuards(GoogleOAuthGuard)
+  async googleAuthRedirect(@Req() req) {
+    return this.authService.googleLogin(req);
   }
 
   @ApiOperation({
