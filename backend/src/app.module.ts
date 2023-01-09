@@ -22,6 +22,7 @@ import { UtilsModule } from './utils/utils.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BetatestModule } from './betatest/betatest.module';
 import { AdminModule } from './admin/admin.module';
+import { LogModule } from 'src/admin/log/log.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { AdminModule } from './admin/admin.module';
     EventEmitterModule.forRoot(),
     CabinetModule,
     LentModule,
+    LogModule,
     UserModule,
     UtilsModule,
     CacheModule.register({
