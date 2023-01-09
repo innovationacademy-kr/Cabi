@@ -41,7 +41,7 @@ export class JWTSignGuard implements CanActivate {
     const token = this.jwtService.sign(user);
     this.logger.debug(`generete ${user.email}'s token`);
     if (this.configService.get<boolean>('is_local') === true) {
-      response.cookie('access_token', token);
+      response.cookie('admin_access_token', token);
     } else {
       const expires = new Date(this.jwtService.decode(token)['exp'] * 1000);
       const cookieOptions: CookieOptions = {
@@ -49,7 +49,7 @@ export class JWTSignGuard implements CanActivate {
         httpOnly: false,
         domain: 'cabi.42seoul.io',
       };
-      response.cookie('access_token', token, cookieOptions);
+      response.cookie('admin_access_token', token, cookieOptions);
     }
     return true;
   }

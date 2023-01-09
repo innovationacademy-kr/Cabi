@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthController } from './auth.controller';
+import { AdminAuthController } from './auth.controller';
 import { JwtStrategy } from './jwt/jwt.strategy';
-import { AuthRepository } from './repository/auth.repository';
+import { AdminAuthRepository } from './repository/auth.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoogleStrategy } from 'src/admin/auth/google/google.strategy';
 import AdminUser from 'src/entities/admin.user.entity';
-import { AuthService } from './auth.service';
+import { AdminAuthService } from './auth.service';
 
 const repo = {
-  provide: 'IAuthRepository',
-  useClass: AuthRepository,
+  provide: 'IAdminAuthRepository',
+  useClass: AdminAuthRepository,
 };
 
 @Module({
@@ -27,8 +27,8 @@ const repo = {
       inject: [ConfigService],
     }),
   ],
-  providers: [JwtStrategy, AuthService, repo, GoogleStrategy],
-  controllers: [AuthController],
-  exports: [AuthService],
+  providers: [JwtStrategy, AdminAuthService, repo, GoogleStrategy],
+  controllers: [AdminAuthController],
+  exports: [AdminAuthService],
 })
-export class AuthModule {}
+export class AdminAuthModule {}

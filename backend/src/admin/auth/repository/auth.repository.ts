@@ -2,9 +2,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
 import AdminUser from 'src/entities/admin.user.entity';
 import { Repository } from 'typeorm';
-import { IAuthRepository } from './auth.repository.interface';
+import { IAdminAuthRepository } from './auth.repository.interface';
 
-export class AuthRepository implements IAuthRepository {
+export class AdminAuthRepository implements IAdminAuthRepository {
   constructor(
     @InjectRepository(AdminUser) private adminUserRepository: Repository<AdminUser>,
   ) {}

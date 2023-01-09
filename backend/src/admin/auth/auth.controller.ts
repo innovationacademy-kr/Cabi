@@ -18,36 +18,36 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from './auth.service';
 import { User } from '../../decorator/user.decorator';
 import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { GoogleOAuthGuard } from 'src/admin/auth/google/guard/google.guard';
 import { AdminUserDto } from '../dto/admin.user.dto';
+import { AdminAuthService } from './auth.service';
 
 @ApiTags('Auth')
-@Controller('admin/auth')
-export class AuthController {
-  private logger = new Logger(AuthController.name);
+@Controller('/api/admin/auth')
+export class AdminAuthController {
+  private logger = new Logger(AdminAuthController.name);
   constructor(
-    private authService: AuthService,
+    private adminAuthService: AdminAuthService,
     @Inject(ConfigService) private configService: ConfigService,
   ) {}
 
   @ApiOperation({
-    summary: 'intra 로그인에 대한 요청입니다.',
+    summary: '구글 로그인에 대한 요청입니다.',
     description:
-      '로그인을 하고자 할 때 해당 URI로 접근해야 합니다. 접근하면 자동으로 42 OAuth 인증을 수행하며 인증이 완료되면 auth/login/callback 으로 리다이렉트 해줍니다.',
+      '로그인을 하고자 할 때 해당 URI로 접근해야 합니다. 접근하면 자동으로 google OAuth 인증을 수행하며 인증이 완료되면 auth/login/callback 으로 리다이렉트 해줍니다.',
   })
   @ApiFoundResponse({
-    description: '42 OAuth 페이지로 리다이렉트',
+    description: 'google OAuth 페이지로 리다이렉트',
   })
-  @Get('login')
+  @Get('/login')
   @UseGuards(GoogleOAuthGuard)
   async loginGoogle(@Req() req) {
     this.logger.log('Logged in Google OAuth!');
   }
-
+  
   @ApiOperation({
     summary: 'intra 로그인 시도 후 처리에 대한 요청입니다.',
     description:
@@ -65,7 +65,7 @@ export class AuthController {
   async loginCallback(@Res() res: Response, @User() admin_user: AdminUserDto) {
     this.logger.log('Login -> callback');
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
-    await this.authService.addUserIfNotExists(admin_user);
+    await this.adminAuthService.addUserIfNotExists(admin_user);
     return res.redirect(`${this.configService.get<string>('fe_host')}/home`);
   }
 

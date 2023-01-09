@@ -1,6 +1,6 @@
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
 
-export interface IAuthRepository {
+export interface IAdminAuthRepository {
   /**
    * 유저가 존재하는지 확인하고 유저가 존재하지 않으면 유저를 추가합니다.
    *
