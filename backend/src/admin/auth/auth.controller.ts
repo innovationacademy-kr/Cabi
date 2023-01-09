@@ -8,9 +8,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from './jwt/guard/jwtauth.guard';
 import { Response } from 'express';
-import { FtGuard } from './42/guard/ft.guard';
 import {
   ApiFoundResponse,
   ApiInternalServerErrorResponse,
@@ -19,20 +17,20 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from '../decorator/user.decorator';
-import { AuthService } from './auth.service';
-import { UserSessionDto } from 'src/dto/user.session.dto';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { AuthService } from './auth.service';
+import { User } from '../../decorator/user.decorator';
 import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
+import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
+import { GoogleOAuthGuard } from 'src/admin/auth/google/guard/google.guard';
+import { AdminUserDto } from '../dto/admin.user.dto';
 
 @ApiTags('Auth')
-@Controller('auth')
+@Controller('admin/auth')
 export class AuthController {
   private logger = new Logger(AuthController.name);
   constructor(
     private authService: AuthService,
-    private jwtService: JwtService,
     @Inject(ConfigService) private configService: ConfigService,
   ) {}
 
@@ -45,9 +43,9 @@ export class AuthController {
     description: '42 OAuth 페이지로 리다이렉트',
   })
   @Get('login')
-  @UseGuards(FtGuard)
-  login() {
-    this.logger.log('Login'); // NOTE: can't reach this point
+  @UseGuards(GoogleOAuthGuard)
+  async loginGoogle(@Req() req) {
+    this.logger.log('Logged in Google OAuth!');
   }
 
   @ApiOperation({
@@ -63,11 +61,11 @@ export class AuthController {
     description: '토큰 에러, 키 에러, 기타 에러 발생 시',
   })
   @Get('login/callback')
-  @UseGuards(FtGuard, JWTSignGuard)
-  async loginCallback(@Res() res: Response, @User() user: UserSessionDto) {
+  @UseGuards(GoogleOAuthGuard, JWTSignGuard)
+  async loginCallback(@Res() res: Response, @User() admin_user: AdminUserDto) {
     this.logger.log('Login -> callback');
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
-    await this.authService.addUserIfNotExists(user);
+    await this.authService.addUserIfNotExists(admin_user);
     return res.redirect(`${this.configService.get<string>('fe_host')}/home`);
   }
 
@@ -85,8 +83,8 @@ export class AuthController {
   @Get('logout')
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
-  logout(@Res() res: Response, @User() user: UserSessionDto) {
-    this.logger.log(`${user.intra_id} logged out`);
+  logout(@Res() res: Response, @User() admin_user: AdminUserDto) {
+    this.logger.log(`${admin_user.email} logged out`);
     // NOTE: 토큰을 쿠키에 저장하지 않는다면 다른 로그아웃 방식을 고안해야 함. (세션을 블랙리스트 캐시에 추가하거나...)
     res.clearCookie('access_token');
     res.send();

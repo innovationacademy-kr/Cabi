@@ -15,17 +15,6 @@ export class AuthService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async googleLogin(req) {
-    console.log('trying login with google!');
-    if (!req.user) {
-      return 'No user from google';
-    }
-    return {
-      message: 'User information from google',
-      user: req.user,
-    };
-  }
-
   async addUserIfNotExists(user: UserSessionDto): Promise<boolean> {
     const find = await this.authRepository.addUserIfNotExists(
       user,

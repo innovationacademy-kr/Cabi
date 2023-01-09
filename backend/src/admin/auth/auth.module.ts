@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { FtStrategy } from './42/ft.strategy';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt/jwt.strategy';
-import { AuthService } from './auth.service';
 import { AuthRepository } from './repository/auth.repository';
-import User from 'src/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoogleStrategy } from 'src/admin/auth/google/google.strategy';
+import AdminUser from 'src/entities/admin.user.entity';
+import { AuthService } from './auth.service';
 
 const repo = {
   provide: 'IAuthRepository',
@@ -17,7 +16,7 @@ const repo = {
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([AdminUser]),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('jwt.secret'),
@@ -28,7 +27,7 @@ const repo = {
       inject: [ConfigService],
     }),
   ],
-  providers: [FtStrategy, JwtStrategy, AuthService, repo],
+  providers: [JwtStrategy, AuthService, repo, GoogleStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })
