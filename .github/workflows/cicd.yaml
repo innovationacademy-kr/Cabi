@@ -60,6 +60,9 @@ jobs:
           ROOT_PASSWORD: test_password
           FORTYTWO_APP_ID: 1234
           FORTYTWO_APP_SECRET: 1234
+          ADMIN_GOOGLE_CLIENT_ID: 1234
+          ADMIN_GOOGLE_CLIENT_SECRET: 1234
+          ADMIN_GOOGLE_CLIENT_CALLBACK: http://localhost/api/admin/auth/login/callback
           CALLBACK_URL: /auth/login/callback
           COOKIE_KEY: secret
           JWT_SECRETKEY: SecretKey
