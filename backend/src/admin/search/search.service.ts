@@ -27,6 +27,9 @@ export class SearchService {
     page: number,
     length: number,
   ): Promise<UserInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${SearchService.name} ${this.searchByIntraId.name}`,
+    );
     return await this.searchRepository.searchByIntraId(intraId, page, length);
   }
 
@@ -44,6 +47,9 @@ export class SearchService {
     page: number,
     length: number,
   ): Promise<CabinetInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${SearchService.name} ${this.searchByLentType.name}`,
+    );
     return await this.searchRepository.searchByLentType(lentType, page, length);
   }
 
@@ -57,6 +63,9 @@ export class SearchService {
   async searchByCabinetNumber(
     visibleNum: number,
   ): Promise<CabinetInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${SearchService.name} ${this.searchByCabinetNumber.name}`,
+    );
     return await this.searchRepository.searchByCabinetNumber(visibleNum);
   }
 
@@ -72,6 +81,9 @@ export class SearchService {
     page: number,
     length: number,
   ): Promise<CabinetInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${SearchService.name} ${this.searchByBannedCabinet.name}`,
+    );
     return await this.searchRepository.searchByBannedCabinet(page, length);
   }
 
@@ -87,6 +99,9 @@ export class SearchService {
     page: number,
     length: number,
   ): Promise<BrokenCabinetInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${SearchService.name} ${this.searchByBrokenCabinet.name}`,
+    );
     return await this.searchRepository.searchByBrokenCabinet(page, length);
   }
 
@@ -102,6 +117,9 @@ export class SearchService {
     page: number,
     length: number,
   ): Promise<BlockedUserInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${SearchService.name} ${this.searchByBanUser.name}`,
+    );
     return await this.searchRepository.searchByBanUser(page, length);
   }
 }

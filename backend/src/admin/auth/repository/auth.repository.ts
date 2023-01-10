@@ -7,12 +7,11 @@ import { IAdminAuthRepository } from './auth.repository.interface';
 
 export class AdminAuthRepository implements IAdminAuthRepository {
   constructor(
-    @InjectRepository(AdminUser) private adminUserRepository: Repository<AdminUser>,
+    @InjectRepository(AdminUser)
+    private adminUserRepository: Repository<AdminUser>,
   ) {}
 
-  async addUserIfNotExists(
-    admin_user: AdminUserDto
-  ): Promise<boolean> {
+  async addUserIfNotExists(admin_user: AdminUserDto): Promise<boolean> {
     const find = await this.adminUserRepository.findOne({
       where: {
         email: admin_user.email,
@@ -38,11 +37,14 @@ export class AdminAuthRepository implements IAdminAuthRepository {
   }
 
   async getAdminUserRole(email: string): Promise<AdminUserRole> {
-    const result = await this.adminUserRepository
-    .createQueryBuilder('au')
-    .select(['au.role'])
-    .where('au.email = :email', { email })
-    .execute();
-    return result;
+    const result = await this.adminUserRepository.findOne({
+      select: {
+        role: true,
+      },
+      where: {
+        email,
+      },
+    });
+    return result ? result.role : AdminUserRole.AUTHORIZE_WAITING;
   }
 }

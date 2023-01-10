@@ -31,7 +31,7 @@ import { SearchService } from './search.service';
   description: '로그아웃 상태',
 })
 @Controller('/api/admin/search')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class SearchController {
   private logger = new Logger(SearchController.name);
   constructor(private readonly searchService: SearchService) {}

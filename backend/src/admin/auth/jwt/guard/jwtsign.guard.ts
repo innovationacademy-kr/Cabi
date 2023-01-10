@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
 import { AdminAuthService } from '../../auth.service';
+import AdminUserRole from 'src/admin/enums/admin.user.role.enum';
 
 /**
  * (사전에 인증받았다고 가정한) 사용자 정보를 이용해 JWT 토큰을 발급하여 쿠키에 삽입합니다.
@@ -34,12 +35,20 @@ export class JWTSignGuard implements CanActivate {
     return this.generateJWTToken(req, res);
   }
 
-  private generateJWTToken(request: Request, response: Response): boolean {
+  private async generateJWTToken(
+    request: Request,
+    response: Response,
+  ): Promise<boolean> {
     const user = request.user as AdminUserDto | undefined;
     if (user === undefined) {
       this.logger.debug(`can't generate JWTToken`);
       return false;
     }
+    const role = await this.adminAuthService.getAdminUserRole(user.email);
+    if (role === AdminUserRole.AUTHORIZE_WAITING) {
+      return false;
+    }
+    user.role = role;
     const token = this.jwtService.sign(user);
     this.logger.debug(`generete ${user.email}'s token`);
     if (this.configService.get<boolean>('is_local') === true) {
