@@ -3,6 +3,7 @@ import { Cache } from 'cache-manager';
 import { IAdminAuthRepository } from './repository/auth.repository.interface';
 import { ConfigService } from '@nestjs/config';
 import { AdminUserDto } from '../dto/admin.user.dto';
+import AdminUserRole from 'src/admin/enums/admin.user.role.enum';
 
 @Injectable()
 export class AdminAuthService {
@@ -28,5 +29,10 @@ export class AdminAuthService {
       return result;
     }
     return exist;
+  }
+
+  async getAdminUserRole(email: string): Promise<AdminUserRole> {
+    const result = await this.adminAuthRepository.getAdminUserRole(email);
+    return result;
   }
 }
