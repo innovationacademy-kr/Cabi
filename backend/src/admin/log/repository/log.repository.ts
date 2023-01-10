@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { LogPagenationDto } from 'src/admin/log/dto/log.pagenation.dto';
+import { LogPagenationDto } from 'src/admin/dto/log.pagenation.dto';
 import { ILogRepository } from 'src/admin/log/repository/log.interface.repository';
 import Cabinet from 'src/entities/cabinet.entity';
 import LentLog from 'src/entities/lent.log.entity';

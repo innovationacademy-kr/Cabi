@@ -4,7 +4,7 @@ import {
     Injectable,
     Logger,
   } from '@nestjs/common';
-  import { LogPagenationDto } from './dto/log.pagenation.dto';
+  import { LogPagenationDto } from '../dto/log.pagenation.dto';
   import { ILogRepository } from 'src/admin/log/repository/log.interface.repository';
   
   @Injectable()

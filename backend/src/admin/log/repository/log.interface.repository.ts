@@ -1,4 +1,4 @@
-import { LogPagenationDto } from "src/admin/log/dto/log.pagenation.dto";
+import { LogPagenationDto } from "src/admin/dto/log.pagenation.dto";
 
 export interface ILogRepository {
     /**

@@ -1,6 +1,6 @@
 import { Controller, Get, Logger, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LogPagenationDto } from 'src/admin/log/dto/log.pagenation.dto';
+import { LogPagenationDto } from 'src/admin/dto/log.pagenation.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 
 @ApiTags('(Admin) Log')
