@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
+import { AdminAuthService } from '../../auth.service';
 
 /**
  * (사전에 인증받았다고 가정한) 사용자 정보를 이용해 JWT 토큰을 발급하여 쿠키에 삽입합니다.
@@ -22,6 +23,7 @@ export class JWTSignGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     @Inject(ConfigService) private configService: ConfigService,
+    private readonly adminAuthService: AdminAuthService,
   ) {}
 
   canActivate(
