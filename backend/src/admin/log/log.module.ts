@@ -17,4 +17,4 @@ const repo = {
   exports: [LogService],
   // User에서 MyLentLog를 보기 위해 LogService를 Export 합니다.
 })
-export class LogModule {}
+export class AdminLogModule {}

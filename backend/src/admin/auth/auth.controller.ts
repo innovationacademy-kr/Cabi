@@ -19,8 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../../decorator/user.decorator';
-import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
-import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
+import { JWTSignGuard } from 'src/admin/auth/jwt/guard/jwtsign.guard';
+import { JwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { GoogleOAuthGuard } from 'src/admin/auth/google/guard/google.guard';
 import { AdminUserDto } from '../dto/admin.user.dto';
 import { AdminAuthService } from './auth.service';
