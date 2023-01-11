@@ -3,7 +3,9 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Inject,
   Logger,
+  Param,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -14,6 +16,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { LogPagenationDto } from 'src/admin/dto/log.pagenation.dto';
+import { AdminLogService } from 'src/admin/log/log.service';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/decorator/user.decorator';
 import { MyCabinetInfoResponseDto } from 'src/dto/response/my.cabinet.info.response.dto';
@@ -25,7 +29,9 @@ import { UserService } from './user.service';
 export class MyLentInfoController {
   private logger = new Logger(MyLentInfoController.name);
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private adminLogService: AdminLogService) {}
 
   @ApiOperation({
     summary: '자기 자신의 대여 정보를 가져옴.',
@@ -54,6 +60,18 @@ export class MyLentInfoController {
     if (result === null) {
       throw new HttpException('', HttpStatus.NO_CONTENT);
     }
+    return result;
+  }
+
+  @Get('log/:index/:length')
+  @UseGuards(JwtAuthGuard)
+  async getMyLentLog(
+    @User() user: UserSessionDto,
+    @Param('index') index: number,
+    @Param('length') length: number
+  ): Promise<LogPagenationDto> {
+    this.logger.debug(`call getMyLentLog by ${user.intra_id}`);
+    const result = await this.adminLogService.getLentLogByUserId(user.user_id, index, length);
     return result;
   }
 }

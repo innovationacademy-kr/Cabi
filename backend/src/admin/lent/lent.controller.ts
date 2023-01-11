@@ -1,12 +1,12 @@
 import { Controller, Get, Inject, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminLentService } from 'src/admin/lent/lent.service';
-import { JwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
+import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { LentService } from 'src/lent/lent.service';
 
 @ApiTags('(Admin) Lent')
 @Controller('/api/admin/lent')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AdminJwtAuthGuard)
 export class LentController {
   private logger = new Logger(LentController.name);
   constructor(

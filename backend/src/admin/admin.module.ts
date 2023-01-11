@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
+import { AdminCabinetModule } from "src/admin/cabinet/cabinet.module";
 import { AdminLentModule } from "src/admin/lent/lent.module";
 import { AdminLogModule } from "src/admin/log/log.module";
-import { AdminAuthModule } from "./auth/auth.module";
-import { CabinetModule } from "./cabinet/cabinet.module";
+import { AdminAuthModule } from "src/admin/auth/auth.module";
 import { ReturnModule } from "./return/return.module";
 import { SearchModule } from "./search/search.module";
 
@@ -11,7 +11,7 @@ import { SearchModule } from "./search/search.module";
     AdminAuthModule,
     AdminLentModule,
     AdminLogModule,
-    CabinetModule,
+    AdminCabinetModule,
     ReturnModule,
     SearchModule,
   ],

@@ -19,8 +19,8 @@ import {
 } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../../decorator/user.decorator';
-import { JWTSignGuard } from 'src/admin/auth/jwt/guard/jwtsign.guard';
-import { JwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
+import { AdminJWTSignGuard } from './jwt/guard/jwtsign.guard';
+import { AdminJwtAuthGuard } from './jwt/guard/jwtauth.guard';
 import { GoogleOAuthGuard } from 'src/admin/auth/google/guard/google.guard';
 import { AdminUserDto } from '../dto/admin.user.dto';
 import { AdminAuthService } from './auth.service';
@@ -61,7 +61,7 @@ export class AdminAuthController {
     description: '토큰 에러, 키 에러, 기타 에러 발생 시',
   })
   @Get('login/callback')
-  @UseGuards(GoogleOAuthGuard, JWTSignGuard)
+  @UseGuards(GoogleOAuthGuard, AdminJWTSignGuard)
   async loginCallback(@Res() res: Response, @User() admin_user: AdminUserDto) {
     this.logger.log('Login -> callback');
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
@@ -81,7 +81,7 @@ export class AdminAuthController {
     description: '이미 로그아웃 상태거나 JWT 세션이 만료됨',
   })
   @Get('logout')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminJwtAuthGuard)
   @HttpCode(204)
   logout(@Res() res: Response, @User() admin_user: AdminUserDto) {
     this.logger.log(`${admin_user.email} logged out`);

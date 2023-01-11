@@ -1,5 +1,5 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { LentInfoDto } from "src/admin/dto/lent-info.dto";
+import { LentInfoDto } from "src/admin/dto/lent.info.dto";
 import { OverdueInfoDto } from "src/admin/dto/overdue-info.dto";
 import { ILentRepository } from "src/admin/lent/repository/lent.repository.interface";
 import Lent from "src/entities/lent.entity";

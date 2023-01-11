@@ -35,7 +35,7 @@ async getLentLogByUserId(
         'c.section',
         'c.floor',
       ])
-      .where('ll.log_user_id = :user_id', { userId })
+      .where('ll.log_user_id = :user_id', { user_id: userId })
       .limit(length)
       .offset(index)
       .orderBy('ll.lent_time', 'ASC')

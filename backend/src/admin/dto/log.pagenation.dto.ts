@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CabinetLentLogDto } from './cabinet-lent-log.dto';
+import { CabinetLentLogDto } from './cabinet.lent.log.dto';
 
 export class LogPagenationDto {
   @ApiProperty({
