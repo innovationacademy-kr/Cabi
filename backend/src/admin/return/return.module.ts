@@ -12,6 +12,7 @@ import LentLog from 'src/entities/lent.log.entity';
 import { LentModule } from 'src/lent/lent.module';
 import { UserModule } from 'src/user/user.module';
 import { DateCalculator } from 'src/utils/date.calculator.component';
+import { UtilsModule } from 'src/utils/utils.module';
 import { AdminReturnController } from './return.controller';
 
 const adminReturnRepo = {
@@ -28,6 +29,7 @@ const adminReturnRepo = {
     LentModule,
     AdminCabinetModule,
     BanModule,
+    UtilsModule,
     TypeOrmModule.forFeature([Cabinet, Lent, LentLog])
   ],
 })
