@@ -3,6 +3,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminLentService } from 'src/admin/lent/lent.service';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { LentService } from 'src/lent/lent.service';
+import { OverdueInfoDto } from 'src/admin/dto/overdue-info.dto';
+import { LentInfoResponseDto } from 'src/admin/dto/lent.info.response.dto';
 
 @ApiTags('(Admin) Lent')
 @Controller('/api/admin/lent')
@@ -15,14 +17,16 @@ export class AdminLentController {
 
   @Get('/')
   @ApiOperation({})
-  async getLentInfo(): Promise<void> {
+  async getLentInfo(): Promise<LentInfoResponseDto> {
     this.logger.debug(`Called ${this.getLentInfo.name}`);
+    return await this.adminLentService.getLentUserInfo();
   }
 
   @Get('/overdue')
   @ApiOperation({})
-  async getLentOverdueInfo(): Promise<void> {
+  async getLentOverdueInfo(): Promise<OverdueInfoDto[]> {
     this.logger.debug(`Called ${this.getLentOverdueInfo.name}`);
+    return await this.adminLentService.getLentOverdue();
   }
 
   @Post('/cabinet/:cabinetId/:userId')

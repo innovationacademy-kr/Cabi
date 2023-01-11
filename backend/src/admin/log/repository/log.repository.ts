@@ -81,7 +81,7 @@ async getLentLogByUserId(
         'c.section',
         'c.floor',
       ])
-      .where('ll.log_cabinet_id = :cabinet_id', { cabinetId })
+      .where('ll.log_cabinet_id = :cabinet_id', { cabinet_id: cabinetId })
       .limit(length)
       .offset(index)
       .orderBy('ll.lent_time', 'ASC')

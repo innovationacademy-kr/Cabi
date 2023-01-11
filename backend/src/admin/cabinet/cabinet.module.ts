@@ -22,5 +22,6 @@ const mainCabinetInfoRepo = {
   controllers: [AdminCabinetController],
   providers: [AdminCabinetService, adminCabinetRepo, mainCabinetInfoRepo],
   imports: [AuthModule, CabinetModule, TypeOrmModule.forFeature([Cabinet])],
+  exports: [AdminCabinetService, adminCabinetRepo, mainCabinetInfoRepo],
 })
 export class AdminCabinetModule {}

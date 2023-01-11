@@ -120,4 +120,8 @@ export class BanService {
     }
     return accumulate;
   }
+ // admin return에서 사용되는 함수가 의존하므로 추가하였습니다.
+  async calDateDiff(begin: Date, end: Date): Promise<number> {
+    return await this.dateCalculator.calDateDiff(begin, end);
+  }
 }

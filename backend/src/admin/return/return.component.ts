@@ -5,7 +5,6 @@ import { BanService } from "src/ban/ban.service";
 import { UserDto } from "src/dto/user.dto";
 import Lent from "src/entities/lent.entity";
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
-import { DateCalculator } from "src/utils/date.calculator.component";
 import { IsolationLevel, Propagation, runOnTransactionComplete, Transactional } from "typeorm-transactional";
 
 @Injectable()
@@ -16,7 +15,6 @@ export class ReturnTools {
     private adminReturnRepository: IAdminReturnRepository,
     private adminCabinetService: AdminCabinetService,
     private banService: BanService,
-    private dateCalculator: DateCalculator,
   ) {}
 
   @Transactional({
@@ -73,7 +71,7 @@ export class ReturnTools {
         break;
       case CabinetStatusType.BANNED:
       case CabinetStatusType.EXPIRED:
-        const overdue = await this.dateCalculator.calDateDiff(
+        const overdue = await this.banService.calDateDiff(
           lent.expire_time,
           new Date(),
         );
