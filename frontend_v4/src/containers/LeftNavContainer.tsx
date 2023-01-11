@@ -13,7 +13,7 @@ import {
   currentSectionNameState,
   currentLocationNameState,
   userState,
-  isMyCabinetIdChangedState,
+  isCurrentSectionRenderState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
@@ -41,8 +41,8 @@ const LeftNavContainer = () => {
   const navigator = useNavigate();
   const { pathname } = useLocation();
   const isMount = useIsMount();
-  const [isMyCabinetIdChanged, setIsMyCabinetIdChanged] = useRecoilState(
-    isMyCabinetIdChangedState
+  const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
+    isCurrentSectionRenderState
   );
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const LeftNavContainer = () => {
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
-        if (isMount || isMyCabinetIdChanged) {
+        if (isMount || isCurrentSectionRender) {
           const recoilPersist = localStorage.getItem("recoil-persist");
           let recoilPersistObj;
           if (recoilPersist) recoilPersistObj = JSON.parse(recoilPersist);
@@ -59,7 +59,7 @@ const LeftNavContainer = () => {
               ? recoilPersistObj.CurrentSection
               : response.data[0].section
           );
-          setIsMyCabinetIdChanged(false);
+          setIsCurrentSectionRender(false);
         } else {
           setCurrentSection(response.data[0].section);
         }

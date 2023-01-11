@@ -1,6 +1,7 @@
 import {
   currentFloorNumberState,
   currentSectionNameState,
+  isCurrentSectionRenderState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import React from "react";
@@ -172,7 +173,12 @@ interface IFloorMapInfo {
 
 const MapGridContainer = ({ floor }: { floor: number }) => {
   const setSection = useSetRecoilState(currentSectionNameState);
+  const setIsCurrentSectionRender = useSetRecoilState(
+    isCurrentSectionRenderState
+  );
+
   const selectSection = (section: string) => {
+    setIsCurrentSectionRender(true);
     setSection(section);
   };
   return (

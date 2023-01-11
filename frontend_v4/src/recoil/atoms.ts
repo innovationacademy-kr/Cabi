@@ -85,7 +85,7 @@ export const locationColNumState = atom<ILocationColNum[]>({
   default: staticColNumData,
 });
 
-export const isMyCabinetIdChangedState = atom<boolean>({
-  key: "isMyCabinetIdChanged",
+export const isCurrentSectionRenderState = atom<boolean>({
+  key: "isCurrentSectionRender",
   default: false,
 });
