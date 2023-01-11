@@ -120,6 +120,7 @@ const CabinetInfoArea = (): JSX.Element => {
   return (
     <CabinetInfoAreaContainer
       selectedCabinetInfo={cabinetViewData}
+      alreadyLent={!!myCabinetInfo}
       closeCabinet={handleCancle}
     />
   );

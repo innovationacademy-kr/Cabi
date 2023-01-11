@@ -28,9 +28,10 @@ export interface ISelectedCabinetInfo {
 
 const CabinetInfoAreaContainer: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
+  alreadyLent: boolean;
   closeCabinet: () => void;
 }> = (props) => {
-  const { selectedCabinetInfo, closeCabinet } = props;
+  const { selectedCabinetInfo, alreadyLent, closeCabinet } = props;
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
 
@@ -99,7 +100,8 @@ const CabinetInfoAreaContainer: React.FC<{
             <ButtonContainer
               onClick={handleOpenReturnModal}
               text="대여"
-              theme="fill"
+              theme={alreadyLent ? "lightGrayLine" : "fill"}
+              disabled={alreadyLent}
             />
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>

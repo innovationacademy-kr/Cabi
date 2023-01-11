@@ -5,11 +5,16 @@ interface ButtonInterface {
   onClick(event: React.MouseEvent<HTMLButtonElement>): void;
   text: string;
   theme: string;
+  disabled?: boolean;
 }
 
 const ButtonContainer = (props: ButtonInterface) => {
   return (
-    <ButtonContainerStyled onClick={props.onClick} theme={props.theme}>
+    <ButtonContainerStyled
+      onClick={props.onClick}
+      theme={props.theme}
+      disabled={props.disabled}
+    >
       {props.text}
     </ButtonContainerStyled>
   );
@@ -23,6 +28,9 @@ const ButtonContainerStyled = styled.button`
   align-items: center;
   border-radius: 10px;
   margin-bottom: 15px;
+  &:disabled {
+    cursor: not-allowed;
+  }
   &:last-child {
     margin-bottom: 0;
   }
@@ -40,11 +48,18 @@ const ButtonContainerStyled = styled.button`
       border: 1px solid var(--main-color);
     `}
   ${(props) =>
-    props.theme === "grayLine" &&
+    props.theme === "lightGrayLine" &&
     css`
       background: var(--white);
       color: var(--line-color);
       border: 1px solid var(--line-color);
+    `}
+  ${(props) =>
+    props.theme === "grayLine" &&
+    css`
+      background: var(--white);
+      color: var(--gray-color);
+      border: 1px solid var(--gray-color);
     `}
 `;
 
