@@ -16,7 +16,7 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNoConten
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
-import { JwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
+import { AdminJwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
 import { CabinetFloorDto } from '../dto/cabinet.floor.dto';
 import { CabinetInfoResponseDto } from '../dto/cabinet.info.response.dto';
 import { CabinetStatusNoteRequestDto } from '../dto/cabinet.status.note.request.dto';
@@ -26,7 +26,7 @@ import { CabinetService } from './cabinet.service';
 @ApiTags('(Admin) Cabinet')
 @ApiBearerAuth()
 @Controller('/api/admin/cabinet')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AdminJwtAuthGuard)
 export class CabinetController {
   constructor(
     private adminCabinetService: CabinetService,

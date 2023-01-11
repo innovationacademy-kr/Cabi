@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AdminAuthController } from './auth.controller';
-import { JwtStrategy } from './jwt/jwt.strategy';
+import { AdminJwtStrategy } from './jwt/jwt.strategy';
 import { AdminAuthRepository } from './repository/auth.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoogleStrategy } from 'src/admin/auth/google/google.strategy';
@@ -27,7 +27,7 @@ const repo = {
       inject: [ConfigService],
     }),
   ],
-  providers: [JwtStrategy, AdminAuthService, repo, GoogleStrategy],
+  providers: [AdminJwtStrategy, AdminAuthService, repo, GoogleStrategy],
   controllers: [AdminAuthController],
   exports: [AdminAuthService],
 })

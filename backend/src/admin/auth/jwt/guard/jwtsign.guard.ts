@@ -16,8 +16,8 @@ import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
  * passport-jwt와는 독립적인 Guard입니다.
  */
 @Injectable()
-export class JWTSignGuard implements CanActivate {
-  private logger = new Logger(JWTSignGuard.name);
+export class AdminJWTSignGuard implements CanActivate {
+  private logger = new Logger(AdminJWTSignGuard.name);
 
   constructor(
     private jwtService: JwtService,
