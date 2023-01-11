@@ -31,7 +31,8 @@ export class MyLentInfoController {
 
   constructor(
     private userService: UserService,
-    private adminLogService: AdminLogService) {}
+    private adminLogService: AdminLogService,
+  ) {}
 
   @ApiOperation({
     summary: '자기 자신의 대여 정보를 가져옴.',
@@ -63,15 +64,19 @@ export class MyLentInfoController {
     return result;
   }
 
-  @Get('log/:index/:length')
+  @Get('log/:page/:length')
   @UseGuards(JwtAuthGuard)
   async getMyLentLog(
     @User() user: UserSessionDto,
-    @Param('index') index: number,
-    @Param('length') length: number
+    @Param('page') page: number,
+    @Param('length') length: number,
   ): Promise<LogPagenationDto> {
     this.logger.debug(`call getMyLentLog by ${user.intra_id}`);
-    const result = await this.adminLogService.getLentLogByUserId(user.user_id, index, length);
+    const result = await this.adminLogService.getLentLogByUserId(
+      user.user_id,
+      page,
+      length,
+    );
     return result;
   }
 }
