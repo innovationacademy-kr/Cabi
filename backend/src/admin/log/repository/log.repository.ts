@@ -6,19 +6,18 @@ import LentLog from 'src/entities/lent.log.entity';
 import { Repository } from 'typeorm';
 
 export class AdminLogRepository implements IAdminLogRepository {
-    constructor(
-      @InjectRepository(LentLog)
-      private LogRepository: Repository<LentLog>,
-    ) {}
+  constructor(
+    @InjectRepository(LentLog)
+    private LogRepository: Repository<LentLog>,
+  ) {}
 
-async getLentLogByUserId(
+  async getLentLogByUserId(
     userId: number,
-    index: number,
+    page: number,
     length: number,
   ): Promise<LogPagenationDto> {
     // lent_log 테이블과 cabinet 테이블을 조인함.
-    const result = await this.LogRepository
-      .createQueryBuilder('ll')
+    const result = await this.LogRepository.createQueryBuilder('ll')
       .select([
         'll.log_user_id',
         'll.log_intra_id',
@@ -37,7 +36,7 @@ async getLentLogByUserId(
       ])
       .where('ll.log_user_id = :user_id', { user_id: userId })
       .limit(length)
-      .offset(index)
+      .skip(page * length)
       .orderBy('ll.lent_time', 'ASC')
       .execute();
     const rtn = {
@@ -59,12 +58,11 @@ async getLentLogByUserId(
 
   async getLentLogByCabinetId(
     cabinetId: number,
-    index: number,
+    page: number,
     length: number,
   ): Promise<LogPagenationDto> {
     // lent_log 테이블과 cabinet 테이블을 조인함.
-    const result = await this.LogRepository
-      .createQueryBuilder('ll')
+    const result = await this.LogRepository.createQueryBuilder('ll')
       .select([
         'll.log_user_id',
         'll.log_intra_id',
@@ -83,7 +81,7 @@ async getLentLogByUserId(
       ])
       .where('ll.log_cabinet_id = :cabinet_id', { cabinet_id: cabinetId })
       .limit(length)
-      .offset(index)
+      .skip(page * length)
       .orderBy('ll.lent_time', 'ASC')
       .execute();
     const rtn = {
