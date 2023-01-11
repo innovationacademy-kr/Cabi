@@ -1,22 +1,23 @@
 import { Controller, Delete, Get, Logger, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
+import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
+
 
 @ApiTags('(Admin) Return')
 @Controller('/api/admin/return')
-@UseGuards(JwtAuthGuard)
-export class ReturnController {
-  private logger = new Logger(ReturnController.name);
+@UseGuards(AdminJwtAuthGuard)
+export class AdminReturnController {
+  private logger = new Logger(AdminReturnController.name);
 
-  @Get('/user/:userId')
-  @ApiOperation({})
-  async getLentLogByUserId(
-    @Param('userId') userId: string,
-    @Query('index') index: number,
-    @Query('length') length: number,
-  ): Promise<void> {
-    this.logger.debug(`Called ${this.getLentLogByUserId.name}`);
-  }
+  // @Get('/user/:userId')
+  // @ApiOperation({})
+  // async getLentLogByUserId(
+  //   @Param('userId') userId: string,
+  //   @Query('index') index: number,
+  //   @Query('length') length: number,
+  // ): Promise<void> {
+  //   this.logger.debug(`Called ${this.getLentLogByUserId.name}`);
+  // } *어드민 log 모듈에 이미 있는 중복되는 api이므로 주석처리 하였습니다. - 확인 후 삭제요망*
 
   @Delete('/cabinet/:cabinetId')
   @ApiOperation({})
