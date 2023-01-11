@@ -69,7 +69,7 @@ export class AdminReturnService {
         );
       }
       for await (const user_id of users) {
-        await this.returnCabinetByCabinetId(user_id);
+        await this.returnUserCabinetByUserId(user_id);
       }
     } catch (err) {
       throw err;
@@ -107,6 +107,33 @@ export class AdminReturnService {
     }
   }
 
-
+  async returnCabinetBundle(users: number[], cabinets: number[]): Promise<void> {
+    this.logger.debug(`Called ${AdminReturnService.name} ${this.returnCabinetBundle.name}`);
+    const user_failures = [];
+    const cabinets_failures = [];
+    if (users) {
+      for await (const user_id of users) {
+        await this.returnUserCabinetByUserId(user_id).catch(() => {
+          user_failures.push(user_id);
+        });
+      }
+    }
+    if (cabinets) {
+      for await (const cabinet_id of cabinets) {
+        await this.returnCabinetByCabinetId(cabinet_id).catch(() => {
+          cabinets_failures.push(cabinet_id);
+        });
+      }
+    }
+    if (!(user_failures.length === 0 && cabinets_failures.length === 0)) {
+      throw new HttpException(
+        {
+          user_failures: user_failures,
+          cabinet_failures: cabinets_failures,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 
 }

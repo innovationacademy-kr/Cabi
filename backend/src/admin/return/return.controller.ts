@@ -26,11 +26,16 @@ export class AdminReturnController {
     @Param('userId') userId: number,
   ): Promise<void> {
     this.logger.debug(`Called ${this.returnCabinetByUserId.name}`);
+    return await this.adminReturnService.returnCabinetByUserId(userId);
   }
 
   @Delete('/bundle/cabinet')
   @ApiOperation({})
-  async returnCabinetBundle(): Promise<void> {
+  async returnCabinetBundle(
+    users: number[], 
+    cabinets: number[]
+  ): Promise<void> {
     this.logger.debug(`Called ${this.returnCabinetBundle.name}`);
+    return await this.adminReturnService.returnCabinetBundle(users, cabinets);
   }
 }
