@@ -16,6 +16,13 @@ import ModalPortal from "@/components/ModalPortal";
 
 import useDetailInfo from "@/hooks/useDetailInfo";
 import { UserDto } from "@/types/dto/user.dto";
+import {
+  cabinetFilterMap,
+  cabinetIconSrcMap,
+  cabinetLabelColorMap,
+  cabinetStatusColorMap,
+  modalPropsMap,
+} from "@/maps";
 
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<UserDto>(userState);
@@ -29,58 +36,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
 
   let cabinetLabelText = "";
-  const modalPropsMap = {
-    [CabinetStatus.AVAILABLE]: {
-      type: "confirm",
-      title: "이용 시 주의 사항",
-      detail: `대여기간은 ${
-        Date.now() + 21
-      } 23:59까지 입니다. 대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.“메모 내용”은 공유 인원끼리 공유됩니다.귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`,
-      confirmMessage: "네, 대여할게요",
-      onClickProceed: () => {
-        alert("대여가 완료되었습니다");
-      },
-    },
-    [CabinetStatus.SET_EXPIRE_FULL]: {
-      type: "error",
-      title: "이미 사용 중인 사물함입니다",
-      detail: null,
-      confirmMessage: "",
-      onClickProceed: () => {},
-    },
-    [CabinetStatus.SET_EXPIRE_AVAILABLE]: {
-      type: "confirm",
-      title: "이용 시 주의 사항",
-      detail: `대여기간은 ${
-        Date.now() + 42
-      } 23:59까지 입니다. 대여 후 72시간 이내 취소(반납) 시, 72시간의 대여 불가 패널티가 적용됩니다.“메모 내용”은 공유 인원끼리 공유됩니다.귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`,
-      confirmMessage: "네, 대여할게요",
-      onClickProceed: () => {
-        alert("대여가 완료되었습니다");
-      },
-    },
-    [CabinetStatus.EXPIRED]: {
-      type: "error",
-      title: `반납이 지연되고 있어\n현재 대여가 불가합니다`,
-      detail: null,
-      confirmMessage: "",
-      onClickProceed: () => {},
-    },
-    [CabinetStatus.BROKEN]: {
-      type: "error",
-      title: "사용이 불가한 사물함입니다",
-      detail: null,
-      confirmMessage: "",
-      onClickProceed: () => {},
-    },
-    [CabinetStatus.BANNED]: {
-      type: "error",
-      title: "사용이 불가한 사물함입니다",
-      detail: null,
-      confirmMessage: "",
-      onClickProceed: () => {},
-    },
-  };
+
   if (props.status !== "BANNED" && props.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
     if (props.lent_type === "PRIVATE")
@@ -166,39 +122,6 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       )}
     </CabinetListItemStyled>
   );
-};
-
-const cabinetStatusColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--available)",
-  [CabinetStatus.SET_EXPIRE_FULL]: "var(--full)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--available)",
-  [CabinetStatus.EXPIRED]: "var(--expired)",
-  [CabinetStatus.BROKEN]: "var(--broken)",
-  [CabinetStatus.BANNED]: "var(--banned)",
-};
-
-const cabinetIconSrcMap = {
-  [CabinetType.PRIVATE]: "src/assets/images/privateIcon.svg",
-  [CabinetType.SHARE]: "src/assets/images/shareIcon.svg",
-  [CabinetType.CIRCLE]: "src/assets/images/circleIcon.svg",
-};
-
-const cabinetFilterMap = {
-  [CabinetStatus.AVAILABLE]: "brightness(100)",
-  [CabinetStatus.SET_EXPIRE_FULL]: "none",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "brightness(100)",
-  [CabinetStatus.EXPIRED]: "brightness(100)",
-  [CabinetStatus.BROKEN]: "brightness(100)",
-  [CabinetStatus.BANNED]: "brightness(100)",
-};
-
-const cabinetLabelColorMap = {
-  [CabinetStatus.AVAILABLE]: "var(--white)",
-  [CabinetStatus.SET_EXPIRE_FULL]: "var(--black)",
-  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--white)",
-  [CabinetStatus.EXPIRED]: "var(--white)",
-  [CabinetStatus.BROKEN]: "var(--white)",
-  [CabinetStatus.BANNED]: "var(--white)",
 };
 
 const CabinetListItemStyled = styled.div<{
