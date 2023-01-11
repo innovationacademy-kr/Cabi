@@ -85,4 +85,10 @@ export class UserService {
     this.logger.debug(`Called ${this.updateBlackholeDate.name}`);
     await this.userRepository.updateBlackholeDate(user_id, blackhole_date);
   }
+
+  // admin의 return 모듈의 returnUserCabinetByUserId 함수가 의존하는 메서드여서 추가하였습니다.
+  async getUserIfExist(user_id: number): Promise<UserDto> {
+    this.logger.debug(`Called ${UserService.name} ${this.getUserIfExist.name}`);
+    return await this.userRepository.getUserIfExist(user_id);
+  }
 }

@@ -138,6 +138,23 @@ export class AdminCabinetService {
     await this.adminCabinetRepository.updateCabinetTitle(cabinet_id, title);
   }
 
+  // admin의 return 모듈의 returnUserCabinetByUserId 함수가 의존하는 메서드여서 추가하였습니다.
+  async updateCabinetStatus(
+    cabinet_id: number,
+    status: CabinetStatusType,
+  ): Promise<void> {
+    this.logger.debug(
+      `Called ${AdminCabinetService.name} ${this.updateCabinetStatus.name}`,
+    );
+    if ((await this.isCabinetExist(cabinet_id)) === false) {
+      throw new HttpException(
+        '🚨 존재하지 않는 사물함입니다 🚨',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    await this.adminCabinetRepository.updateCabinetStatus(cabinet_id, status);
+  }
+
   async isCabinetExist(cabinetId: number): Promise<boolean> {
     this.logger.debug(
       `Called ${AdminCabinetService.name} ${this.isCabinetExist.name}`,

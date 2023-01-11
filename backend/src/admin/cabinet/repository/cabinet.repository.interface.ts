@@ -1,3 +1,4 @@
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetFloorDto } from '../../dto/cabinet.floor.dto';
 
@@ -45,6 +46,14 @@ export interface IAdminCabinetRepository {
    * @param title
    */
   updateCabinetTitle(cabinetId: number, title: string): Promise<void>;
+
+  /**
+   * 특정 사물함의 title을 변경합니다.
+   *
+   * @param cabinetId
+   * @param status
+   */
+  updateCabinetStatus(cabinet_id: number, status: CabinetStatusType): Promise<void>;
 
   /**
    * cabinet이 대여중인 상태인지 확인합니다.

@@ -1,5 +1,6 @@
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
+import { UserDto } from 'src/dto/user.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 
 export interface IUserRepository {
@@ -44,4 +45,10 @@ export interface IUserRepository {
    * @param user_id
    */
   updateBlackholeDate(user_id: number, blackhole_date: Date): Promise<void>;
+  
+  /**
+   * 유저가 존재한다면 UserDto를, 존재하지 않는다면 Null을 반환합니다.
+   * @param user_id
+   */
+  getUserIfExist(user_id: number): Promise<UserDto>
 }

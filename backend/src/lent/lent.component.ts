@@ -240,4 +240,9 @@ export class LentTools {
     baseDate.setDate(baseDate.getDate() + Math.abs(soonOverDue)); // soonOverDue일 이후 만료된 것들을 가져오기 위해 기준 날짜 설정.
     return await this.lentRepository.getExpiredLent(baseDate);
   }
+
+  // admin의 return 모듈의 returnUserCabinetByUserId 함수가 의존하는 메서드여서 추가하였습니다.
+  async getLentCabinetId(user_id: number): Promise<number> {
+    return await this.lentRepository.getLentCabinetId(user_id);
+  }
 }

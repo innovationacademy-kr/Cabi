@@ -117,6 +117,19 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
       .execute();
   }
 
+  async updateCabinetStatus(cabinet_id: number, status: CabinetStatusType): Promise<void> {
+    await this.cabinetRepository
+      .createQueryBuilder(this.updateCabinetStatus.name)
+      .update()
+      .set({
+        status,
+      })
+      .where({
+        cabinet_id,
+      })
+      .execute();
+  }
+
   async isCabinetExist(cabinetId: number): Promise<boolean> {
     const result = await this.cabinetRepository.findOne({
       where: {
