@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ICabinetInfoRepository } from 'src/cabinet/repository/cabinet.info.interface.repository';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
@@ -55,10 +61,7 @@ export class CabinetService {
     await this.cabinetRepository.updateLentType(cabinetId, lentType);
   }
 
-  async updateStatusNote(
-    cabinetId: number,
-    statusNote: string,
-  ): Promise<void> {
+  async updateStatusNote(cabinetId: number, statusNote: string): Promise<void> {
     this.logger.debug(
       `Called ${CabinetService.name} ${this.updateStatusNote.name}`,
     );

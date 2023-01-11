@@ -12,7 +12,15 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
@@ -20,7 +28,6 @@ import { AdminJwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
 import { CabinetFloorDto } from '../dto/cabinet.floor.dto';
 import { CabinetInfoResponseDto } from '../dto/cabinet.info.response.dto';
 import { CabinetStatusNoteRequestDto } from '../dto/cabinet.status.note.request.dto';
-import { CabinetTitleRequestDto } from '../dto/cabinet.title.request.dto';
 import { CabinetService } from './cabinet.service';
 
 @ApiTags('(Admin) Cabinet')
@@ -31,16 +38,17 @@ export class CabinetController {
   constructor(
     private adminCabinetService: CabinetService,
     private cabinetInfoService: CabinetInfoService,
-    ) {}
+  ) {}
   private logger = new Logger(CabinetController.name);
 
   @ApiOperation({
     summary: '각 층의 사물함 정보',
-    description: '각 층에 있는 사물함의 상태별 개수 정보를 반환합니다.'
+    description: '각 층에 있는 사물함의 상태별 개수 정보를 반환합니다.',
   })
   @ApiOkResponse({
     type: CabinetFloorDto,
-    description: '각 층의 사물함의 상태별로 개수를 세어 CabinetFloorDto 형식으로 반환합니다'
+    description:
+      '각 층의 사물함의 상태별로 개수를 세어 CabinetFloorDto 형식으로 반환합니다',
   })
   @Get('/count/floor')
   @ApiOperation({})
@@ -126,7 +134,10 @@ export class CabinetController {
     @Body(new ValidationPipe()) statusNote: CabinetStatusNoteRequestDto,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetStatusNoteByCabinetId.name}`);
-    await this.adminCabinetService.updateStatusNote(cabinetId, statusNote.status_note)
+    await this.adminCabinetService.updateStatusNote(
+      cabinetId,
+      statusNote.status_note,
+    );
   }
 
   @ApiOperation({

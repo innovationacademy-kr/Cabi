@@ -91,10 +91,7 @@ export class CabinetRepository implements ICabinetRepository {
     return result.lent.length === 0 ? false : true;
   }
 
-  async updateStatusNote(
-    cabinetId: number,
-    statusNote: string,
-  ): Promise<void> {
+  async updateStatusNote(cabinetId: number, statusNote: string): Promise<void> {
     await this.cabinetRepository
       .createQueryBuilder(this.updateLentType.name)
       .update()

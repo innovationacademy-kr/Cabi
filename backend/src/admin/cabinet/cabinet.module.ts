@@ -8,7 +8,6 @@ import { CabinetRepository } from './repository/cabinet.repository';
 import { CabinetModule } from 'src/cabinet/cabinet.module';
 import { CabinetInfoRepository } from 'src/cabinet/repository/cabinet.info.repository';
 
-
 const adminRepo = {
   provide: 'ICabinetRepository',
   useClass: CabinetRepository,
@@ -17,7 +16,7 @@ const adminRepo = {
 const mainRepo = {
   provide: 'ICabinetInfoRepository',
   useClass: CabinetInfoRepository,
-}
+};
 
 @Module({
   controllers: [CabinetController],

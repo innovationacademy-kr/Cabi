@@ -7,7 +7,7 @@ export interface ICabinetRepository {
    *
    * @returns CabinetFloorDto[]
    */
-   getCabinetCountFloor(): Promise<CabinetFloorDto[]>;
+  getCabinetCountFloor(): Promise<CabinetFloorDto[]>;
 
   /**
    * section별로 lent된 cabinetid list를 가져옵니다.
@@ -28,9 +28,9 @@ export interface ICabinetRepository {
    * @param cabinetId
    * @param lentType
    */
-   updateLentType(cabinetId: number, lentType: LentType): Promise<void>;
+  updateLentType(cabinetId: number, lentType: LentType): Promise<void>;
 
-   /**
+  /**
    * 특정 사물함의 StatusNote를 변경합니다.
    *
    * @param cabinetId
@@ -44,16 +44,16 @@ export interface ICabinetRepository {
    * @param cabinetId
    * @param title
    */
-   updateCabinetTitle(cabinetId: number, title: string): Promise<void>;
+  updateCabinetTitle(cabinetId: number, title: string): Promise<void>;
 
-   /**
+  /**
    * cabinet이 대여중인 상태인지 확인합니다.
    *
    * @param cabinetId
    */
   cabinetIsLent(cabinetId: number): Promise<boolean>;
-  
-   /**
+
+  /**
    * 인자로 받은 id의 사물함이 존재하는지 확인합니다.
    *
    * @param cabinetId
