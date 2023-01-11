@@ -20,7 +20,7 @@ export class AdminReturnRepository implements IAdminReturnRepository {
       isolationLevel: IsolationLevel.SERIALIZABLE,
     })
     async getReturnCabinetData(
-      cabinet_id: number,
+      cabinetId: number,
     ): Promise<ReturnCabinetDataDto> {
       const result = await this.cabinetRepository.find({
         relations: {
@@ -32,7 +32,7 @@ export class AdminReturnRepository implements IAdminReturnRepository {
           lent: true,
         },
         where: {
-          cabinet_id: cabinet_id,
+          cabinet_id: cabinetId,
         },
         lock: {
           mode: 'pessimistic_write',
@@ -52,7 +52,7 @@ export class AdminReturnRepository implements IAdminReturnRepository {
       propagation: Propagation.REQUIRED,
       isolationLevel: IsolationLevel.SERIALIZABLE,
     })
-    async clearCabinetInfo(cabinet_id: number): Promise<void> {
+    async clearCabinetInfo(cabinetId: number): Promise<void> {
       await this.cabinetRepository
         .createQueryBuilder()
         .update({
@@ -60,7 +60,7 @@ export class AdminReturnRepository implements IAdminReturnRepository {
           memo: null,
         })
         .where({
-          cabinet_id: cabinet_id,
+          cabinet_id: cabinetId,
         })
         .execute();
     }
@@ -69,13 +69,13 @@ export class AdminReturnRepository implements IAdminReturnRepository {
       propagation: Propagation.REQUIRED,
       isolationLevel: IsolationLevel.SERIALIZABLE,
     })
-    async deleteLentByLentId(lent_id: number): Promise<void> {
+    async deleteLentByLentId(lentId: number): Promise<void> {
       await this.lentRepository
         .createQueryBuilder(this.deleteLentByLentId.name)
         .delete()
         .from(Lent)
         .where({
-          lent_id: lent_id,
+          lent_id: lentId,
         })
         .execute();
     }
@@ -83,7 +83,7 @@ export class AdminReturnRepository implements IAdminReturnRepository {
     async addLentLog(
       lent: Lent,
       user: UserDto,
-      cabinet_id: number,
+      cabinetId: number,
     ): Promise<void> {
       await this.lentLogRepository
         .createQueryBuilder(this.addLentLog.name)
@@ -92,20 +92,20 @@ export class AdminReturnRepository implements IAdminReturnRepository {
         .values({
           log_user_id: user.user_id,
           log_intra_id: user.intra_id,
-          log_cabinet_id: cabinet_id,
+          log_cabinet_id: cabinetId,
           lent_time: lent.lent_time,
           return_time: new Date(),
         })
         .execute();
     }
   
-    async getUsersByCabinetId(cabinet_id: number): Promise<number[]> {
+    async getUsersByCabinetId(cabinetId: number): Promise<number[]> {
       const result = await this.lentRepository.find({
         select: {
           lent_user_id: true,
         },
         where: {
-          lent_cabinet_id: cabinet_id,
+          lent_cabinet_id: cabinetId,
         },
       });
       if (result.length === 0) {

@@ -125,34 +125,33 @@ export class AdminCabinetService {
     return result;
   }
 
-  async updateCabinetTitle(cabinet_id: number, title: string): Promise<void> {
+  async updateCabinetTitle(cabinetId: number, title: string): Promise<void> {
     this.logger.debug(
       `Called ${AdminCabinetService.name} ${this.updateCabinetTitle.name}`,
     );
-    if ((await this.isCabinetExist(cabinet_id)) === false) {
+    if ((await this.isCabinetExist(cabinetId)) === false) {
       throw new HttpException(
         '🚨 존재하지 않는 사물함입니다 🚨',
         HttpStatus.BAD_REQUEST,
       );
     }
-    await this.adminCabinetRepository.updateCabinetTitle(cabinet_id, title);
+    await this.adminCabinetRepository.updateCabinetTitle(cabinetId, title);
   }
 
-  // admin의 return 모듈의 returnUserCabinetByUserId 함수가 의존하는 메서드여서 추가하였습니다.
   async updateCabinetStatus(
-    cabinet_id: number,
+    cabinetId: number,
     status: CabinetStatusType,
   ): Promise<void> {
     this.logger.debug(
       `Called ${AdminCabinetService.name} ${this.updateCabinetStatus.name}`,
     );
-    if ((await this.isCabinetExist(cabinet_id)) === false) {
+    if ((await this.isCabinetExist(cabinetId)) === false) {
       throw new HttpException(
         '🚨 존재하지 않는 사물함입니다 🚨',
         HttpStatus.BAD_REQUEST,
       );
     }
-    await this.adminCabinetRepository.updateCabinetStatus(cabinet_id, status);
+    await this.adminCabinetRepository.updateCabinetStatus(cabinetId, status);
   }
 
   async isCabinetExist(cabinetId: number): Promise<boolean> {

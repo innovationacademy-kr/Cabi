@@ -21,11 +21,11 @@ export class ReturnTools {
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async clearCabinetInfo(cabinet_id: number): Promise<void> {
+  async clearCabinetInfo(cabinetId: number): Promise<void> {
     this.logger.debug(
       `Called ${ReturnTools.name} ${this.clearCabinetInfo.name}`,
     );
-    await this.adminReturnRepository.clearCabinetInfo(cabinet_id);
+    await this.adminReturnRepository.clearCabinetInfo(cabinetId);
   }
 
   @Transactional({
@@ -33,7 +33,7 @@ export class ReturnTools {
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
   async returnStateTransition(
-    cabinet_id: number,
+    cabinetId: number,
     user: UserDto,
   ): Promise<Lent> {
     this.logger.debug(
@@ -42,7 +42,7 @@ export class ReturnTools {
     // 대여하고 있는 유저들의 대여 정보를 포함하는 cabinet 정보를 가져옴.
     // 가져오는 정보 : 캐비넷 상태, 캐비넷 대여타입, 캐비넷을 빌린 사람들의 인원 수
     const cabinet = await this.adminReturnRepository.getReturnCabinetData(
-      cabinet_id,
+      cabinetId,
     );
     const lent = cabinet.lents.filter(
       (lent) => lent.lent_user_id === user.user_id,
@@ -52,21 +52,21 @@ export class ReturnTools {
     switch (cabinet.status) {
       case CabinetStatusType.AVAILABLE:
         if (lent_count - 1 === 0) {
-          await this.clearCabinetInfo(cabinet_id);
+          await this.clearCabinetInfo(cabinetId);
         }
         break;
       case CabinetStatusType.SET_EXPIRE_FULL:
         await this.adminCabinetService.updateCabinetStatus(
-          cabinet_id,
+          cabinetId,
           CabinetStatusType.SET_EXPIRE_AVAILABLE,
         );
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         if (lent_count - 1 === 0) {
           await this.adminCabinetService.updateCabinetStatus(
-            cabinet_id,
+            cabinetId,
             CabinetStatusType.AVAILABLE,
           );
-          await this.clearCabinetInfo(cabinet_id);
+          await this.clearCabinetInfo(cabinetId);
         }
         break;
       case CabinetStatusType.BANNED:
@@ -82,7 +82,7 @@ export class ReturnTools {
           lent_count - 1 === 0
         ) {
           await this.adminCabinetService.updateCabinetStatus(
-            cabinet_id,
+            cabinetId,
             CabinetStatusType.AVAILABLE,
           );
         }

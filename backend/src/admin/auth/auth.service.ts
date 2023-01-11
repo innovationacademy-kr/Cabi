@@ -15,12 +15,12 @@ export class AdminAuthService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async addUserIfNotExists(admin_user: AdminUserDto): Promise<boolean> {
+  async addUserIfNotExists(adminUser: AdminUserDto): Promise<boolean> {
     this.logger.debug(
       `Called ${AdminAuthService.name} ${this.addUserIfNotExists.name}`,
     );
-    const find = await this.adminAuthRepository.addUserIfNotExists(admin_user);
-    await this.cacheManager.set(`user-${admin_user.email}`, true, { ttl: 0 });
+    const find = await this.adminAuthRepository.addUserIfNotExists(adminUser);
+    await this.cacheManager.set(`user-${adminUser.email}`, true, { ttl: 0 });
     return find;
   }
 

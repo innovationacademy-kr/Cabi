@@ -63,10 +63,10 @@ export class AdminAuthController {
   })
   @Get('login/callback')
   @UseGuards(GoogleOAuthGuard, AdminJWTSignGuard)
-  async loginCallback(@Res() res: Response, @User() admin_user: AdminUserDto) {
+  async loginCallback(@Res() res: Response, @User() adminUser: AdminUserDto) {
     this.logger.log('Login -> callback');
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
-    await this.adminAuthService.addUserIfNotExists(admin_user);
+    await this.adminAuthService.addUserIfNotExists(adminUser);
     return res.redirect(`${this.configService.get<string>('fe_host')}/home`);
   }
 
@@ -84,8 +84,8 @@ export class AdminAuthController {
   @Get('logout')
   @UseGuards(AdminJwtAuthGuard)
   @HttpCode(204)
-  logout(@Res() res: Response, @User() admin_user: AdminUserDto) {
-    this.logger.log(`${admin_user.email} logged out`);
+  logout(@Res() res: Response, @User() adminUser: AdminUserDto) {
+    this.logger.log(`${adminUser.email} logged out`);
     // NOTE: 토큰을 쿠키에 저장하지 않는다면 다른 로그아웃 방식을 고안해야 함. (세션을 블랙리스트 캐시에 추가하거나...)
     res.clearCookie('access_token');
     res.send();

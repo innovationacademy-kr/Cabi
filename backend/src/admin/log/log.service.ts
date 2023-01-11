@@ -26,11 +26,11 @@ import {
      * @throw HTTPError
      */
     async getLentLogByUserId(
-      user_id: number,
+      userId: number,
       index: number,
       length: number,
     ): Promise<LogPagenationDto> {
-      const result = await this.adminLogRepository.getLentLogByUserId(user_id, index, length);
+      const result = await this.adminLogRepository.getLentLogByUserId(userId, index, length);
       if (index !== 0 && length !== 0 && result.total_length === 0) {
         throw new BadRequestException('No Log Error');
       }
@@ -47,12 +47,12 @@ import {
      * @throw HTTPError
      */
     async getLentLogByCabinetId(
-      cabinet_id: number,
+      cabinetId: number,
       index: number,
       length: number,
     ): Promise<LogPagenationDto> {
       const result = await this.adminLogRepository.getLentLogByCabinetId(
-        cabinet_id,
+        cabinetId,
         index,
         length,
       );

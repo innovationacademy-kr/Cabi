@@ -8,7 +8,7 @@ export interface IAdminAuthRepository {
    * @param admin_user 추가될 어드민
    * @return boolean 존재했다면 true, 존재하지 않았다면 false
    */
-  addUserIfNotExists(admin_user: AdminUserDto): Promise<boolean>;
+  addUserIfNotExists(adminUser: AdminUserDto): Promise<boolean>;
 
   /**
    * 어드민이 존재하는지 여부만 확인합니다.

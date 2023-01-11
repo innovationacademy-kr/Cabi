@@ -11,16 +11,16 @@ export class AdminAuthRepository implements IAdminAuthRepository {
     private adminUserRepository: Repository<AdminUser>,
   ) {}
 
-  async addUserIfNotExists(admin_user: AdminUserDto): Promise<boolean> {
+  async addUserIfNotExists(adminUser: AdminUserDto): Promise<boolean> {
     const find = await this.adminUserRepository.findOne({
       where: {
-        email: admin_user.email,
+        email: adminUser.email,
       },
     });
     if (!find) {
       await this.adminUserRepository.save({
-        email: admin_user.email,
-        role: admin_user.role,
+        email: adminUser.email,
+        role: adminUser.role,
       });
       return false;
     }

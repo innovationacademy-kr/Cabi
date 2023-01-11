@@ -18,13 +18,13 @@ export class AdminReturnService {
     private adminCabinetService: AdminCabinetService,
   ) {}
 
-  async returnUserCabinetByUserId(user_id: number): Promise<void> {
+  async returnUserCabinetByUserId(userId: number): Promise<void> {
     this.logger.debug(
       `Called ${AdminReturnService.name} ${this.returnUserCabinetByUserId.name}`,
     );
     try {
       // 유저가 존재하는지 확인
-      const user = await this.userService.getUserIfExist(user_id);
+      const user = await this.userService.getUserIfExist(userId);
       if (!user) {
         throw new HttpException(
           `🚨 해당 유저가 존재하지 않습니다. 🚨`,
@@ -32,57 +32,57 @@ export class AdminReturnService {
         );
       }
       // 1. 해당 유저가 대여중인 cabinet_id를 가져온다.
-      const cabinet_id = await this.lentTools.getLentCabinetId(user.user_id);
-      if (cabinet_id === null) {
+      const cabinetId = await this.lentTools.getLentCabinetId(user.user_id);
+      if (cabinetId === null) {
         throw new HttpException(
           `🚨 해당 유저가 대여중인 사물함이 없습니다. 🚨`,
           HttpStatus.BAD_REQUEST,
         );
       }
       const lent = await this.returnTools.returnStateTransition(
-        cabinet_id,
+        cabinetId,
         user,
       );
-      await this.adminReturnRepository.addLentLog(lent, user, cabinet_id);
+      await this.adminReturnRepository.addLentLog(lent, user, cabinetId);
     } catch (err) {
       throw err;
     }
   }
 
-  async returnCabinetByCabinetId(cabinet_id: number): Promise<void> {
+  async returnCabinetByCabinetId(cabinetId: number): Promise<void> {
     this.logger.debug(
       `Called ${AdminReturnService.name} ${this.returnCabinetByCabinetId.name}`,
     );
     try {
       // 캐비넷이 존재하는지 확인
-      if (!(await this.adminCabinetService.isCabinetExist(cabinet_id))) {
+      if (!(await this.adminCabinetService.isCabinetExist(cabinetId))) {
         throw new HttpException(
           `🚨 해당 캐비넷이 존재하지 않습니다. 🚨`,
           HttpStatus.BAD_REQUEST,
         );
       }
-      const users = await this.adminReturnRepository.getUsersByCabinetId(cabinet_id);
+      const users = await this.adminReturnRepository.getUsersByCabinetId(cabinetId);
       if (users === null) {
         throw new HttpException(
           `🚨 해당 캐비넷을 대여중인 유저가 없습니다. 🚨`,
           HttpStatus.BAD_REQUEST,
         );
       }
-      for await (const user_id of users) {
-        await this.returnUserCabinetByUserId(user_id);
+      for await (const userId of users) {
+        await this.returnUserCabinetByUserId(userId);
       }
     } catch (err) {
       throw err;
     }
   }
 
-  async returnCabinetByUserId(user_id: number): Promise<void> {
+  async returnCabinetByUserId(userId: number): Promise<void> {
     this.logger.debug(
       `Called ${AdminReturnService.name} ${this.returnCabinetByUserId.name}`,
     );
     try {
       // 유저가 존재하는지 확인
-      const user = await this.userService.getUserIfExist(user_id);
+      const user = await this.userService.getUserIfExist(userId);
       if (!user) {
         throw new HttpException(
           `🚨 해당 유저가 존재하지 않습니다. 🚨`,
@@ -90,18 +90,18 @@ export class AdminReturnService {
         );
       }
       // 1. 해당 유저가 대여중인 cabinet_id를 가져온다.
-      const cabinet_id = await this.lentTools.getLentCabinetId(user.user_id);
-      if (cabinet_id === null) {
+      const cabinetId = await this.lentTools.getLentCabinetId(user.user_id);
+      if (cabinetId === null) {
         throw new HttpException(
           `🚨 해당 유저가 대여중인 사물함이 없습니다. 🚨`,
           HttpStatus.BAD_REQUEST,
         );
       }
       const lent = await this.returnTools.returnStateTransition(
-        cabinet_id,
+        cabinetId,
         user,
       );
-      await this.adminReturnRepository.addLentLog(lent, user, cabinet_id);
+      await this.adminReturnRepository.addLentLog(lent, user, cabinetId);
     } catch (err) {
       throw err;
     }
@@ -109,27 +109,27 @@ export class AdminReturnService {
 
   async returnCabinetBundle(users: number[], cabinets: number[]): Promise<void> {
     this.logger.debug(`Called ${AdminReturnService.name} ${this.returnCabinetBundle.name}`);
-    const user_failures = [];
-    const cabinets_failures = [];
+    const userFailures = [];
+    const cabinetsFailures = [];
     if (users) {
-      for await (const user_id of users) {
-        await this.returnUserCabinetByUserId(user_id).catch(() => {
-          user_failures.push(user_id);
+      for await (const userId of users) {
+        await this.returnUserCabinetByUserId(userId).catch(() => {
+          userFailures.push(userId);
         });
       }
     }
     if (cabinets) {
-      for await (const cabinet_id of cabinets) {
-        await this.returnCabinetByCabinetId(cabinet_id).catch(() => {
-          cabinets_failures.push(cabinet_id);
+      for await (const cabinetId of cabinets) {
+        await this.returnCabinetByCabinetId(cabinetId).catch(() => {
+          cabinetsFailures.push(cabinetId);
         });
       }
     }
-    if (!(user_failures.length === 0 && cabinets_failures.length === 0)) {
+    if (!(userFailures.length === 0 && cabinetsFailures.length === 0)) {
       throw new HttpException(
         {
-          user_failures: user_failures,
-          cabinet_failures: cabinets_failures,
+          user_failures: userFailures,
+          cabinet_failures: cabinetsFailures,
         },
         HttpStatus.BAD_REQUEST,
       );
