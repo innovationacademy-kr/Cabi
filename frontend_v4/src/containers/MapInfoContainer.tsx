@@ -48,7 +48,7 @@ const MapInfoContainerStyled = styled.div`
   min-width: 330px;
   width: 330px;
   height: calc(100% - 80px);
-  z-index: 9;
+  z-index: 10;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
   box-shadow: 0 0 40px 0 var(--bg-shadow);
