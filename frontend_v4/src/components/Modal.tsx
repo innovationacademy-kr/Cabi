@@ -8,7 +8,7 @@ import ModalContainer from "@/containers/ModalContainer";
 import { ModalInterface } from "@/containers/ModalContainer";
 import {
   currentCabinetIdState,
-  isMyCabinetIdChangedState,
+  isCurrentSectionRenderState,
   myCabinetInfoState,
   targetCabinetInfoState,
   userState,
@@ -28,7 +28,9 @@ const Modal = (props: {
   const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
     targetCabinetInfoState
   );
-  const setIsMyCabinetIdChanged = useSetRecoilState(isMyCabinetIdChangedState);
+  const setIsCurrentSectionRender = useSetRecoilState(
+    isCurrentSectionRenderState
+  );
   let expireDate = new Date();
   const addDays = targetCabinetInfo?.lent_type === "SHARE" ? 41 : 20;
   expireDate.setDate(expireDate.getDate() + addDays);
@@ -59,7 +61,7 @@ const Modal = (props: {
       await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
-      setIsMyCabinetIdChanged(true);
+      setIsCurrentSectionRender(true);
 
       // 캐비닛 상세정보 바꾸는 곳
       try {
@@ -87,7 +89,7 @@ const Modal = (props: {
       await axiosReturn();
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinet_id: -1 });
-      setIsMyCabinetIdChanged(true);
+      setIsCurrentSectionRender(true);
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
