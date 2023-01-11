@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import AdminUserRole from "src/admin/enums/admin.user.role.enum";
 
 export class AdminUserDto {
     @ApiProperty({
@@ -12,5 +13,5 @@ export class AdminUserDto {
         description: '관리자 권한 수준',
         example: '0',
     })
-    role: number;
+    role: AdminUserRole;
 }
