@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminLentService } from 'src/admin/lent/lent.service';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { LentService } from 'src/lent/lent.service';
-import { OverdueInfoDto } from 'src/admin/dto/overdue-info.dto';
+import { OverdueInfoDto } from 'src/admin/dto/overdue.info.dto';
 import { LentInfoResponseDto } from 'src/admin/dto/lent.info.response.dto';
 
 @ApiTags('(Admin) Lent')

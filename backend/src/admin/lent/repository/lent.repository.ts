@@ -1,6 +1,6 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { LentInfoDto } from "src/admin/dto/lent.info.dto";
-import { OverdueInfoDto } from "src/admin/dto/overdue-info.dto";
+import { OverdueInfoDto } from "src/admin/dto/overdue.info.dto";
 import { IAdminLentRepository } from "src/admin/lent/repository/lent.repository.interface";
 import Lent from "src/entities/lent.entity";
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
