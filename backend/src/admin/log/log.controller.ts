@@ -1,12 +1,13 @@
-import { Controller, Get, Inject, Logger, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { LogPagenationDto } from 'src/admin/dto/log.pagenation.dto';
 import { AdminLogService } from 'src/admin/log/log.service';
-import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
+
 
 @ApiTags('(Admin) Log')
 @Controller('/api/admin/log')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AdminJwtAuthGuard)
 export class AdminLogController {
   private logger = new Logger(AdminLogController.name);
   constructor(private adminLogService: AdminLogService){}
