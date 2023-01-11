@@ -25,7 +25,10 @@ const InfoContainer = ({
           <p>
             <span>1인</span>이 1개의 사물함을 사용합니다.
             <br />
-            최대 <span>21일간</span> 대여할 수 있습니다.
+            최대 <span>
+              {import.meta.env.VITE_PRIVATE_LENT_PERIOD}일간
+            </span>{" "}
+            대여할 수 있습니다.
           </p>
         </article>
         <article className="article">
@@ -36,13 +39,19 @@ const InfoContainer = ({
           <p>
             1개의 사물함을 최대 <span>3인</span>이 사용합니다.
             <br />
-            <span>42일간</span> 대여할 수 있습니다.
+            <span>{import.meta.env.VITE_SHARE_LENT_PERIOD}일간</span> 대여할 수
+            있습니다.
             <br />
             사물함 제목과 메모는 대여자들끼리 공유됩니다.
             <br />
-            대여 후 <span className="redColor">72시간</span> 내 반납 시,
+            대여 후{" "}
+            <span className="redColor">
+              {import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD}시간
+            </span>{" "}
+            내 반납 시,
             <br />
-            72시간 동안 공유 사물함 대여가
+            {import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY}시간 동안 공유
+            사물함 대여가
             <span className="redColor"> 불가능</span>합니다.
           </p>
         </article>

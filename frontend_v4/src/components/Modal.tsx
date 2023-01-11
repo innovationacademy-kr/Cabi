@@ -32,8 +32,11 @@ const Modal = (props: {
     isCurrentSectionRenderState
   );
   let expireDate = new Date();
-  const addDays = targetCabinetInfo?.lent_type === "SHARE" ? 41 : 20;
-  expireDate.setDate(expireDate.getDate() + addDays);
+  const addDays: number =
+    targetCabinetInfo?.lent_type === "SHARE"
+      ? import.meta.env.VITE_SHARE_LENT_PERIOD
+      : import.meta.env.VITE_PRIVATE_LENT_PERIOD;
+  expireDate.setDate(expireDate.getDate() + addDays / 1);
   const padTo2Digits = (num: number) => {
     return num.toString().padStart(2, "0");
   };
@@ -45,13 +48,21 @@ const Modal = (props: {
     ].join("/");
   };
   const formattedExpireDate = formatDate(expireDate);
-  const lentDetail = `
+  const privateLentDetail = `
     대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
-    대여 후 72시간 이내 취소(반납) 시,
-    72시간의 대여 불가 패널티가 적용됩니다.
-    “메모 내용”은 공유 인원끼리 공유됩니다.
     귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
   `;
+  const shareLentDetail = `
+    대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
+    대여 후 ${
+      import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD
+    }시간 이내 취소(반납) 시,
+    ${
+      import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY
+    }시간의 대여 불가 패널티가 적용됩니다.
+    “메모 내용”은 공유 인원끼리 공유됩니다.
+    귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
+`;
   const returnDetail = `
     대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
     지금 반납 하시겠습니까?
@@ -124,7 +135,9 @@ const Modal = (props: {
       }
       detail={
         confirmMessage.includes("대여")
-          ? lentDetail
+          ? targetCabinetInfo.lent_type === "PRIVATE"
+            ? privateLentDetail
+            : shareLentDetail
           : confirmMessage.includes("반납")
           ? returnDetail
           : null
