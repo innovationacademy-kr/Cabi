@@ -42,22 +42,6 @@ export class AdminCabinetController {
   private logger = new Logger(AdminCabinetController.name);
 
   @ApiOperation({
-    summary: '각 층의 사물함 정보',
-    description: '각 층에 있는 사물함의 상태별 개수 정보를 반환합니다.',
-  })
-  @ApiOkResponse({
-    type: CabinetFloorDto,
-    description:
-      '각 층의 사물함의 상태별로 개수를 세어 CabinetFloorDto 형식으로 반환합니다',
-  })
-  @Get('/count/floor')
-  @ApiOperation({})
-  async getCabinetCountEachFloor(): Promise<CabinetFloorDto[]> {
-    this.logger.debug(`Called ${this.getCabinetCountEachFloor.name}`);
-    return await this.adminCabinetService.getCabinetCountFloor();
-  }
-
-  @ApiOperation({
     summary: '사물함 정보 호출',
     description: 'cabinet_id를 받아 특정 사물함의 상세정보를 받아옵니다.',
   })
@@ -89,8 +73,8 @@ export class AdminCabinetController {
   })
   @Patch('/status/:cabinetId/:status')
   async updateCabinetStatusByCabinetId(
-    @Param('cabinetId') cabinetId: number,
-    @Param('status') status: CabinetStatusType,
+    @Param('cabinetId', ParseIntPipe) cabinetId: number,
+    @Param('status', new ParseEnumPipe(CabinetStatusType)) status: CabinetStatusType,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetStatusByCabinetId.name}`);
     await this.cabinetInfoService.updateCabinetStatus(cabinetId, status);
@@ -111,8 +95,8 @@ export class AdminCabinetController {
   })
   @Patch('/lentType/:cabinetId/:lentType')
   async updateCabinetLentTypeByCabinetId(
-    @Param('cabinetId') cabinetId: number,
-    @Param('lentType') lentType: LentType,
+    @Param('cabinetId', ParseIntPipe) cabinetId: number,
+    @Param('lentType', new ParseEnumPipe(LentType)) lentType: LentType,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetLentTypeByCabinetId.name}`);
     await this.adminCabinetService.updateLentType(cabinetId, lentType);

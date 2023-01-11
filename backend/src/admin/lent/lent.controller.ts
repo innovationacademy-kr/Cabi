@@ -42,7 +42,6 @@ export class AdminLentController {
       intra_id: intraId
     }
     this.logger.debug(`Called ${this.postLentCabinet.name}`);
-    return this.lentService.lentCabinet(cabinetId, user);
+    return await this.lentService.lentCabinet(cabinetId, user);
   }
-  // Main의 lentCabinet 함수를 이용하였습니다.
 }
