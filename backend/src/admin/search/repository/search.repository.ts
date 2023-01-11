@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { ISearchRepository } from './search.repository.interface';
+import { IAdminSearchRepository } from './search.repository.interface';
 import Cabinet from 'src/entities/cabinet.entity';
 import BanLog from 'src/entities/ban.log.entity';
 import { Like, MoreThan, Repository } from 'typeorm';
@@ -11,7 +11,7 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { BrokenCabinetInfoPagenationDto } from 'src/admin/dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from 'src/admin/dto/blocked.user.info.pagenation.dto';
 
-export class SearchRepository implements ISearchRepository {
+export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Cabinet) private cabinetRepository: Repository<Cabinet>,

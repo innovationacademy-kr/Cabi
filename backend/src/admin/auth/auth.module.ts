@@ -9,7 +9,7 @@ import { GoogleStrategy } from 'src/admin/auth/google/google.strategy';
 import AdminUser from 'src/entities/admin.user.entity';
 import { AdminAuthService } from './auth.service';
 
-const repo = {
+const adminAuthRepo = {
   provide: 'IAdminAuthRepository',
   useClass: AdminAuthRepository,
 };
@@ -27,7 +27,7 @@ const repo = {
       inject: [ConfigService],
     }),
   ],
-  providers: [AdminJwtStrategy, AdminAuthService, repo, GoogleStrategy],
+  providers: [AdminJwtStrategy, AdminAuthService, adminAuthRepo, GoogleStrategy],
   controllers: [AdminAuthController],
   exports: [AdminAuthService],
 })

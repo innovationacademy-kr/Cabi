@@ -4,7 +4,7 @@ import { CabinetInfoPagenationDto } from 'src/admin/dto/cabinet.info.pagenation.
 import { UserInfoPagenationDto } from 'src/admin/dto/user.info.pagenation.dto';
 import LentType from 'src/enums/lent.type.enum';
 
-export interface ISearchRepository {
+export interface IAdminSearchRepository {
   /**
    * 인트라 아이디에 대한 검색결과를 가지고 옵니다.
    *

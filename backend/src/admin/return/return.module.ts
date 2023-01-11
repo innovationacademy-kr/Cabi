@@ -8,4 +8,4 @@ import { AdminReturnController } from './return.controller';
   providers: [],
   imports: [AuthModule],
 })
-export class ReturnModule {}
+export class AdminReturnModule {}

@@ -8,19 +8,19 @@ import { AdminCabinetRepository } from './repository/cabinet.repository';
 import { CabinetModule } from 'src/cabinet/cabinet.module';
 import { CabinetInfoRepository } from 'src/cabinet/repository/cabinet.info.repository';
 
-const adminRepo = {
+const adminCabinetRepo = {
   provide: 'IAdminCabinetRepository',
   useClass: AdminCabinetRepository,
 };
 
-const mainRepo = {
+const mainCabinetInfoRepo = {
   provide: 'ICabinetInfoRepository',
   useClass: CabinetInfoRepository,
 };
 
 @Module({
   controllers: [AdminCabinetController],
-  providers: [AdminCabinetService, adminRepo, mainRepo],
+  providers: [AdminCabinetService, adminCabinetRepo, mainCabinetInfoRepo],
   imports: [AuthModule, CabinetModule, TypeOrmModule.forFeature([Cabinet])],
 })
 export class AdminCabinetModule {}

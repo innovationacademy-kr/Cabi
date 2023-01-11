@@ -4,13 +4,14 @@ import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoPagenationDto } from '../dto/cabinet.info.pagenation.dto';
 import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
-import { ISearchRepository } from './repository/search.repository.interface';
+import { IAdminSearchRepository } from './repository/search.repository.interface';
 
 @Injectable()
-export class SearchService {
-  private logger = new Logger(SearchService.name);
+export class AdminSearchService {
+  private logger = new Logger(AdminSearchService.name);
   constructor(
-    @Inject('ISearchRepository') private searchRepository: ISearchRepository,
+    @Inject('IAdminSearchRepository')
+    private adminSearchRepository: IAdminSearchRepository,
   ) {}
 
   /**
@@ -28,9 +29,9 @@ export class SearchService {
     length: number,
   ): Promise<UserInfoPagenationDto> {
     this.logger.debug(
-      `Called ${SearchService.name} ${this.searchByIntraId.name}`,
+      `Called ${AdminSearchService.name} ${this.searchByIntraId.name}`,
     );
-    return await this.searchRepository.searchByIntraId(intraId, page, length);
+    return await this.adminSearchRepository.searchByIntraId(intraId, page, length);
   }
 
   /**
@@ -48,9 +49,9 @@ export class SearchService {
     length: number,
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(
-      `Called ${SearchService.name} ${this.searchByLentType.name}`,
+      `Called ${AdminSearchService.name} ${this.searchByLentType.name}`,
     );
-    return await this.searchRepository.searchByLentType(lentType, page, length);
+    return await this.adminSearchRepository.searchByLentType(lentType, page, length);
   }
 
   /**
@@ -64,9 +65,9 @@ export class SearchService {
     visibleNum: number,
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(
-      `Called ${SearchService.name} ${this.searchByCabinetNumber.name}`,
+      `Called ${AdminSearchService.name} ${this.searchByCabinetNumber.name}`,
     );
-    return await this.searchRepository.searchByCabinetNumber(visibleNum);
+    return await this.adminSearchRepository.searchByCabinetNumber(visibleNum);
   }
 
   /**
@@ -82,9 +83,9 @@ export class SearchService {
     length: number,
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(
-      `Called ${SearchService.name} ${this.searchByBannedCabinet.name}`,
+      `Called ${AdminSearchService.name} ${this.searchByBannedCabinet.name}`,
     );
-    return await this.searchRepository.searchByBannedCabinet(page, length);
+    return await this.adminSearchRepository.searchByBannedCabinet(page, length);
   }
 
   /**
@@ -100,9 +101,9 @@ export class SearchService {
     length: number,
   ): Promise<BrokenCabinetInfoPagenationDto> {
     this.logger.debug(
-      `Called ${SearchService.name} ${this.searchByBrokenCabinet.name}`,
+      `Called ${AdminSearchService.name} ${this.searchByBrokenCabinet.name}`,
     );
-    return await this.searchRepository.searchByBrokenCabinet(page, length);
+    return await this.adminSearchRepository.searchByBrokenCabinet(page, length);
   }
 
   /**
@@ -118,8 +119,8 @@ export class SearchService {
     length: number,
   ): Promise<BlockedUserInfoPagenationDto> {
     this.logger.debug(
-      `Called ${SearchService.name} ${this.searchByBanUser.name}`,
+      `Called ${AdminSearchService.name} ${this.searchByBanUser.name}`,
     );
-    return await this.searchRepository.searchByBanUser(page, length);
+    return await this.adminSearchRepository.searchByBanUser(page, length);
   }
 }

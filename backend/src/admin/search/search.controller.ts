@@ -23,7 +23,7 @@ import { CabinetInfoPagenationDto } from '../dto/cabinet.info.pagenation.dto';
 import { UserInfoPagenationDto } from '../dto/user.info.pagenation.dto';
 import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
-import { SearchService } from './search.service';
+import { AdminSearchService } from './search.service';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 
 @ApiTags('(Admin) Search')
@@ -35,7 +35,7 @@ import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 @UseGuards(AdminJwtAuthGuard)
 export class SearchController {
   private logger = new Logger(SearchController.name);
-  constructor(private readonly searchService: SearchService) {}
+  constructor(private readonly adminSearchService: AdminSearchService) {}
 
   @ApiOperation({
     summary: '인트라 아이디 검색',
@@ -62,7 +62,7 @@ export class SearchController {
   ): Promise<UserInfoPagenationDto> {
     this.logger.debug(`Called ${this.getUserListByIntraId.name}`);
     try {
-      return await this.searchService.searchByIntraId(intraId, page, length);
+      return await this.adminSearchService.searchByIntraId(intraId, page, length);
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -99,7 +99,7 @@ export class SearchController {
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(`Called ${this.getCabinetListByLentType.name}`);
     try {
-      return await this.searchService.searchByLentType(lentType, page, length);
+      return await this.adminSearchService.searchByLentType(lentType, page, length);
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -124,7 +124,7 @@ export class SearchController {
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(`Called ${this.getCabinetListByVisibleNum.name}`);
     try {
-      return await this.searchService.searchByCabinetNumber(visibleNum);
+      return await this.adminSearchService.searchByCabinetNumber(visibleNum);
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -155,7 +155,7 @@ export class SearchController {
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(`Called ${this.getBannedCabinetList.name}`);
     try {
-      return await this.searchService.searchByBannedCabinet(page, length);
+      return await this.adminSearchService.searchByBannedCabinet(page, length);
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -186,7 +186,7 @@ export class SearchController {
   ): Promise<BrokenCabinetInfoPagenationDto> {
     this.logger.debug(`Called ${this.getBrokenCabinetList.name}`);
     try {
-      return await this.searchService.searchByBrokenCabinet(page, length);
+      return await this.adminSearchService.searchByBrokenCabinet(page, length);
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -216,7 +216,7 @@ export class SearchController {
   ): Promise<BlockedUserInfoPagenationDto> {
     this.logger.debug(`Called ${this.getBannedUserList.name}`);
     try {
-      return await this.searchService.searchByBanUser(page, length);
+      return await this.adminSearchService.searchByBanUser(page, length);
     } catch (err) {
       this.logger.error(err);
       throw err;
