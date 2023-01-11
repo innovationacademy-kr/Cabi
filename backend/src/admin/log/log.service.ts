@@ -3,18 +3,17 @@ import {
     Inject,
     Injectable,
     Logger,
-    NotFoundException,
   } from '@nestjs/common';
   import { LogPagenationDto } from '../dto/log.pagenation.dto';
-  import { ILogRepository } from 'src/admin/log/repository/log.interface.repository';
+  import { IAdminLogRepository } from 'src/admin/log/repository/log.interface.repository';
   
   @Injectable()
   export class AdminLogService {
     private logger = new Logger(AdminLogService.name);
   
     constructor(
-      @Inject('ILogRepository')
-      private logRepository: ILogRepository,
+      @Inject('IAdminLogRepository')
+      private adminLogRepository: IAdminLogRepository,
     ) {}
   
     /**
@@ -31,7 +30,7 @@ import {
       index: number,
       length: number,
     ): Promise<LogPagenationDto> {
-      const result = await this.logRepository.getLentLogByUserId(user_id, index, length);
+      const result = await this.adminLogRepository.getLentLogByUserId(user_id, index, length);
       if (index !== 0 && length !== 0 && result.total_length === 0) {
         throw new BadRequestException('No Log Error');
       }
@@ -52,7 +51,7 @@ import {
       index: number,
       length: number,
     ): Promise<LogPagenationDto> {
-      const result = await this.logRepository.getLentLogByCabinetId(
+      const result = await this.adminLogRepository.getLentLogByCabinetId(
         cabinet_id,
         index,
         length,

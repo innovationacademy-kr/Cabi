@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Logger, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminLentService } from 'src/admin/lent/lent.service';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
@@ -7,11 +7,11 @@ import { LentService } from 'src/lent/lent.service';
 @ApiTags('(Admin) Lent')
 @Controller('/api/admin/lent')
 @UseGuards(AdminJwtAuthGuard)
-export class LentController {
-  private logger = new Logger(LentController.name);
+export class AdminLentController {
+  private logger = new Logger(AdminLentController.name);
   constructor(
-    private lentService: AdminLentService,
-    private mainLentService: LentService) {}
+    private adminLentService: AdminLentService,
+    private lentService: LentService) {}
 
   @Get('/')
   @ApiOperation({})
@@ -38,7 +38,7 @@ export class LentController {
       intra_id: intraId
     }
     this.logger.debug(`Called ${this.postLentCabinet.name}`);
-    return this.mainLentService.lentCabinet(cabinetId, user);
+    return this.lentService.lentCabinet(cabinetId, user);
   }
   // Main의 lentCabinet 함수를 이용하였습니다.
 }

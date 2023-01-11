@@ -1,20 +1,20 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { LentInfoDto } from "src/admin/dto/lent.info.dto";
 import { OverdueInfoDto } from "src/admin/dto/overdue-info.dto";
-import { ILentRepository } from "src/admin/lent/repository/lent.repository.interface";
+import { IAdminLentRepository } from "src/admin/lent/repository/lent.repository.interface";
 import Lent from "src/entities/lent.entity";
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
 import { Repository } from "typeorm";
 
 
-export class LentRepository implements ILentRepository {
+export class AdminLentRepository implements IAdminLentRepository {
   constructor(
     @InjectRepository(Lent)
-    private lentRepository: Repository<Lent>,
+    private adminLentRepository: Repository<Lent>,
   ) {}
 
   async getLentInfo(): Promise<LentInfoDto[]> {
-    const lockerRentalUser = await this.lentRepository.find({
+    const lockerRentalUser = await this.adminLentRepository.find({
       relations: {
         user: true,
       },
@@ -46,7 +46,7 @@ export class LentRepository implements ILentRepository {
   }
 
   async getLentOverdue(): Promise<OverdueInfoDto[]> {
-    const results = await this.lentRepository.find({
+    const results = await this.adminLentRepository.find({
       relations: {
         user: true,
         cabinet: true,

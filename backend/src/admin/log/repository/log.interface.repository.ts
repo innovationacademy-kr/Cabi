@@ -1,6 +1,6 @@
 import { LogPagenationDto } from "src/admin/dto/log.pagenation.dto";
 
-export interface ILogRepository {
+export interface IAdminLogRepository {
     /**
      * 유저 ID로 렌트 기록을 가져옵니다.
      *
