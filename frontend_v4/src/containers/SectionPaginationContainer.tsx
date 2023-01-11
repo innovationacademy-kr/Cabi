@@ -48,10 +48,15 @@ export default SectionPaginationContainer;
 
 const SectionPaginationStyled = styled.div`
   min-width: 360px;
-  margin-top: 40px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 10;
 `;
 
 const SectionBarStyled = styled.div`
