@@ -17,13 +17,14 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
+
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoPagenationDto } from '../dto/cabinet.info.pagenation.dto';
 import { UserInfoPagenationDto } from '../dto/user.info.pagenation.dto';
 import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
 import { SearchService } from './search.service';
+import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 
 @ApiTags('(Admin) Search')
 @ApiBearerAuth()
@@ -31,7 +32,7 @@ import { SearchService } from './search.service';
   description: '로그아웃 상태',
 })
 @Controller('/api/admin/search')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AdminJwtAuthGuard)
 export class SearchController {
   private logger = new Logger(SearchController.name);
   constructor(private readonly searchService: SearchService) {}

@@ -9,22 +9,22 @@ import { ICabinetInfoRepository } from 'src/cabinet/repository/cabinet.info.inte
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetFloorDto } from '../dto/cabinet.floor.dto';
-import { ICabinetRepository } from './repository/cabinet.repository.interface';
+import { IAdminCabinetRepository } from './repository/cabinet.repository.interface';
 
 @Injectable()
-export class CabinetService {
-  private logger = new Logger(CabinetService.name);
+export class AdminCabinetService {
+  private logger = new Logger(AdminCabinetService.name);
 
   constructor(
-    @Inject('ICabinetRepository')
-    private cabinetRepository: ICabinetRepository,
+    @Inject('IAdminCabinetRepository')
+    private adminCabinetRepository: IAdminCabinetRepository,
     @Inject('ICabinetInfoRepository')
     private cabinetInfoRepository: ICabinetInfoRepository,
   ) {}
 
   async getCabinetCountFloor(): Promise<CabinetFloorDto[]> {
     this.logger.debug('call getCabinetCountFloor');
-    const result = await this.cabinetRepository.getCabinetCountFloor();
+    const result = await this.adminCabinetRepository.getCabinetCountFloor();
     return result;
   }
 
@@ -34,7 +34,7 @@ export class CabinetService {
     section: string,
   ): Promise<number[]> {
     this.logger.debug(`Called ${this.getCabinetIdBySection.name}`);
-    return await this.cabinetRepository.getCabinetIdBySection(
+    return await this.adminCabinetRepository.getCabinetIdBySection(
       location,
       floor,
       section,
@@ -43,9 +43,9 @@ export class CabinetService {
 
   async updateLentType(cabinetId: number, lentType: LentType): Promise<void> {
     this.logger.debug(
-      `Called ${CabinetService.name} ${this.updateLentType.name}`,
+      `Called ${AdminCabinetService.name} ${this.updateLentType.name}`,
     );
-    const isLent = await this.cabinetRepository.cabinetIsLent(cabinetId);
+    const isLent = await this.adminCabinetRepository.cabinetIsLent(cabinetId);
     if (isLent === true) {
       throw new HttpException(
         '🚨 대여자가 있는 사물함입니다 🚨',
@@ -58,12 +58,12 @@ export class CabinetService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    await this.cabinetRepository.updateLentType(cabinetId, lentType);
+    await this.adminCabinetRepository.updateLentType(cabinetId, lentType);
   }
 
   async updateStatusNote(cabinetId: number, statusNote: string): Promise<void> {
     this.logger.debug(
-      `Called ${CabinetService.name} ${this.updateStatusNote.name}`,
+      `Called ${AdminCabinetService.name} ${this.updateStatusNote.name}`,
     );
     if ((await this.isCabinetExist(cabinetId)) === false) {
       throw new HttpException(
@@ -71,7 +71,7 @@ export class CabinetService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    await this.cabinetRepository.updateStatusNote(cabinetId, statusNote);
+    await this.adminCabinetRepository.updateStatusNote(cabinetId, statusNote);
   }
 
   async updateCabinetStatusByBundle(
@@ -79,7 +79,7 @@ export class CabinetService {
     bundle: number[],
   ): Promise<number[]> {
     this.logger.debug(
-      `Called ${CabinetService.name} ${this.updateCabinetStatusByBundle.name}`,
+      `Called ${AdminCabinetService.name} ${this.updateCabinetStatusByBundle.name}`,
     );
     const result = [];
     for (const cabinetId of bundle) {
@@ -102,11 +102,11 @@ export class CabinetService {
     bundle: number[],
   ): Promise<number[]> {
     this.logger.debug(
-      `Called ${CabinetService.name} ${this.updateCabinetStatusByBundle.name}`,
+      `Called ${AdminCabinetService.name} ${this.updateCabinetStatusByBundle.name}`,
     );
     const result = [];
     for (const cabinetId of bundle) {
-      const isLent = await this.cabinetRepository.cabinetIsLent(cabinetId);
+      const isLent = await this.adminCabinetRepository.cabinetIsLent(cabinetId);
       if (isLent === true) {
         result.push(cabinetId);
         continue;
@@ -116,7 +116,7 @@ export class CabinetService {
         continue;
       }
       try {
-        await this.cabinetRepository.updateLentType(cabinetId, lentType);
+        await this.adminCabinetRepository.updateLentType(cabinetId, lentType);
       } catch (e) {
         result.push(cabinetId);
         continue;
@@ -127,7 +127,7 @@ export class CabinetService {
 
   async updateCabinetTitle(cabinet_id: number, title: string): Promise<void> {
     this.logger.debug(
-      `Called ${CabinetService.name} ${this.updateCabinetTitle.name}`,
+      `Called ${AdminCabinetService.name} ${this.updateCabinetTitle.name}`,
     );
     if ((await this.isCabinetExist(cabinet_id)) === false) {
       throw new HttpException(
@@ -135,13 +135,13 @@ export class CabinetService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    await this.cabinetRepository.updateCabinetTitle(cabinet_id, title);
+    await this.adminCabinetRepository.updateCabinetTitle(cabinet_id, title);
   }
 
   async isCabinetExist(cabinetId: number): Promise<boolean> {
     this.logger.debug(
-      `Called ${CabinetService.name} ${this.isCabinetExist.name}`,
+      `Called ${AdminCabinetService.name} ${this.isCabinetExist.name}`,
     );
-    return await this.cabinetRepository.isCabinetExist(cabinetId);
+    return await this.adminCabinetRepository.isCabinetExist(cabinetId);
   }
 }

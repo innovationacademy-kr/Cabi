@@ -1,12 +1,12 @@
 import { CabinetFloorDto } from '../../dto/cabinet.floor.dto';
 import { Repository } from 'typeorm';
-import { ICabinetRepository } from './cabinet.repository.interface';
+import { IAdminCabinetRepository } from './cabinet.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import Cabinet from 'src/entities/cabinet.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 
-export class CabinetRepository implements ICabinetRepository {
+export class AdminCabinetRepository implements IAdminCabinetRepository {
   constructor(
     @InjectRepository(Cabinet)
     private cabinetRepository: Repository<Cabinet>,

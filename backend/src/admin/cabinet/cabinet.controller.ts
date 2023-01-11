@@ -28,18 +28,18 @@ import { AdminJwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
 import { CabinetFloorDto } from '../dto/cabinet.floor.dto';
 import { CabinetInfoResponseDto } from '../dto/cabinet.info.response.dto';
 import { CabinetStatusNoteRequestDto } from '../dto/cabinet.status.note.request.dto';
-import { CabinetService } from './cabinet.service';
+import { AdminCabinetService } from './cabinet.service';
 
 @ApiTags('(Admin) Cabinet')
 @ApiBearerAuth()
 @Controller('/api/admin/cabinet')
 @UseGuards(AdminJwtAuthGuard)
-export class CabinetController {
+export class AdminCabinetController {
   constructor(
-    private adminCabinetService: CabinetService,
+    private adminCabinetService: AdminCabinetService,
     private cabinetInfoService: CabinetInfoService,
   ) {}
-  private logger = new Logger(CabinetController.name);
+  private logger = new Logger(AdminCabinetController.name);
 
   @ApiOperation({
     summary: '각 층의 사물함 정보',
