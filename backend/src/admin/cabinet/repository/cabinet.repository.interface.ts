@@ -53,7 +53,10 @@ export interface IAdminCabinetRepository {
    * @param cabinetId
    * @param status
    */
-  updateCabinetStatus(cabinetId: number, status: CabinetStatusType): Promise<void>;
+  updateCabinetStatus(
+    cabinetId: number,
+    status: CabinetStatusType,
+  ): Promise<void>;
 
   /**
    * cabinet이 대여중인 상태인지 확인합니다.

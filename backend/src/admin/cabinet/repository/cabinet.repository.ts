@@ -117,7 +117,10 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
       .execute();
   }
 
-  async updateCabinetStatus(cabinetId: number, status: CabinetStatusType): Promise<void> {
+  async updateCabinetStatus(
+    cabinetId: number,
+    status: CabinetStatusType,
+  ): Promise<void> {
     await this.cabinetRepository
       .createQueryBuilder(this.updateCabinetStatus.name)
       .update()

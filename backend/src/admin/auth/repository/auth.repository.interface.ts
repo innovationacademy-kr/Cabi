@@ -25,5 +25,4 @@ export interface IAdminAuthRepository {
    * @return 권한 (role == 0 || 1 || 2)
    */
   getAdminUserRole(email: string): Promise<AdminUserRole>;
-
 }

@@ -17,8 +17,8 @@ import { AdminReturnController } from './return.controller';
 
 const adminReturnRepo = {
   provide: 'IAdminReturnRepository',
-  useClass: AdminReturnRepository
-}
+  useClass: AdminReturnRepository,
+};
 
 @Module({
   controllers: [AdminReturnController],
@@ -30,7 +30,7 @@ const adminReturnRepo = {
     AdminCabinetModule,
     BanModule,
     UtilsModule,
-    TypeOrmModule.forFeature([Cabinet, Lent, LentLog])
+    TypeOrmModule.forFeature([Cabinet, Lent, LentLog]),
   ],
 })
 export class AdminReturnModule {}

@@ -10,15 +10,11 @@ import { AdminLentController } from './lent.controller';
 const adminLentRepo = {
   provide: 'IAdminLentRepository',
   useClass: AdminLentRepository,
-}
+};
 @Module({
   controllers: [AdminLentController],
   providers: [adminLentRepo, AdminLentService],
-  imports: [
-    AuthModule,
-    TypeOrmModule.forFeature([Lent]),
-    LentModule,
-    ],
-  exports: []
+  imports: [AuthModule, TypeOrmModule.forFeature([Lent]), LentModule],
+  exports: [],
 })
 export class AdminLentModule {}

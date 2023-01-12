@@ -62,7 +62,11 @@ export class SearchController {
   ): Promise<UserInfoPagenationDto> {
     this.logger.debug(`Called ${this.getUserListByIntraId.name}`);
     try {
-      return await this.adminSearchService.searchByIntraId(intraId, page, length);
+      return await this.adminSearchService.searchByIntraId(
+        intraId,
+        page,
+        length,
+      );
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -99,7 +103,11 @@ export class SearchController {
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(`Called ${this.getCabinetListByLentType.name}`);
     try {
-      return await this.adminSearchService.searchByLentType(lentType, page, length);
+      return await this.adminSearchService.searchByLentType(
+        lentType,
+        page,
+        length,
+      );
     } catch (err) {
       this.logger.error(err);
       throw err;

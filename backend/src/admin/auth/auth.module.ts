@@ -27,7 +27,12 @@ const adminAuthRepo = {
       inject: [ConfigService],
     }),
   ],
-  providers: [AdminJwtStrategy, AdminAuthService, adminAuthRepo, GoogleStrategy],
+  providers: [
+    AdminJwtStrategy,
+    AdminAuthService,
+    adminAuthRepo,
+    GoogleStrategy,
+  ],
   controllers: [AdminAuthController],
   exports: [AdminAuthService],
 })

@@ -22,7 +22,7 @@ const repo = {
     forwardRef(() => BanModule),
     CabinetModule,
     TypeOrmModule.forFeature([User]),
-    AdminLogModule
+    AdminLogModule,
   ],
   controllers: [MyLentInfoController, MyInfoController],
   providers: [UserService, repo, AdminLogService],

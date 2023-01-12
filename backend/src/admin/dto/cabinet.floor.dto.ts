@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * 캐비넷의 층별 사용량을 나타내는 DTO입니다.

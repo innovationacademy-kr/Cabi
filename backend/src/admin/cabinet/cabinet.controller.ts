@@ -74,7 +74,8 @@ export class AdminCabinetController {
   @Patch('/status/:cabinetId/:status')
   async updateCabinetStatusByCabinetId(
     @Param('cabinetId', ParseIntPipe) cabinetId: number,
-    @Param('status', new ParseEnumPipe(CabinetStatusType)) status: CabinetStatusType,
+    @Param('status', new ParseEnumPipe(CabinetStatusType))
+    status: CabinetStatusType,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetStatusByCabinetId.name}`);
     await this.cabinetInfoService.updateCabinetStatus(cabinetId, status);

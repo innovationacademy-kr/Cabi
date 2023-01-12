@@ -3,7 +3,6 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { AdminReturnService } from 'src/admin/return/return.service';
 
-
 @ApiTags('(Admin) Return')
 @Controller('/api/admin/return')
 @UseGuards(AdminJwtAuthGuard)
@@ -22,9 +21,7 @@ export class AdminReturnController {
 
   @Delete('/user/:userId')
   @ApiOperation({})
-  async returnCabinetByUserId(
-    @Param('userId') userId: number,
-  ): Promise<void> {
+  async returnCabinetByUserId(@Param('userId') userId: number): Promise<void> {
     this.logger.debug(`Called ${this.returnCabinetByUserId.name}`);
     return await this.adminReturnService.returnCabinetByUserId(userId);
   }
@@ -32,8 +29,8 @@ export class AdminReturnController {
   @Delete('/bundle/cabinet')
   @ApiOperation({})
   async returnCabinetBundle(
-    users: number[], 
-    cabinets: number[]
+    users: number[],
+    cabinets: number[],
   ): Promise<void> {
     this.logger.debug(`Called ${this.returnCabinetBundle.name}`);
     return await this.adminReturnService.returnCabinetBundle(users, cabinets);

@@ -1,9 +1,15 @@
-import { HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
-import { AdminCabinetService } from "src/admin/cabinet/cabinet.service";
-import { IAdminReturnRepository } from "src/admin/return/repository/return.repository.interface";
-import { ReturnTools } from "src/admin/return/return.component";
-import { LentTools } from "src/lent/lent.component";
-import { UserService } from "src/user/user.service";
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
+import { AdminCabinetService } from 'src/admin/cabinet/cabinet.service';
+import { IAdminReturnRepository } from 'src/admin/return/repository/return.repository.interface';
+import { ReturnTools } from 'src/admin/return/return.component';
+import { LentTools } from 'src/lent/lent.component';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AdminReturnService {
@@ -61,7 +67,9 @@ export class AdminReturnService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      const users = await this.adminReturnRepository.getUsersByCabinetId(cabinetId);
+      const users = await this.adminReturnRepository.getUsersByCabinetId(
+        cabinetId,
+      );
       if (users === null) {
         throw new HttpException(
           `🚨 해당 캐비넷을 대여중인 유저가 없습니다. 🚨`,
@@ -107,8 +115,13 @@ export class AdminReturnService {
     }
   }
 
-  async returnCabinetBundle(users: number[], cabinets: number[]): Promise<void> {
-    this.logger.debug(`Called ${AdminReturnService.name} ${this.returnCabinetBundle.name}`);
+  async returnCabinetBundle(
+    users: number[],
+    cabinets: number[],
+  ): Promise<void> {
+    this.logger.debug(
+      `Called ${AdminReturnService.name} ${this.returnCabinetBundle.name}`,
+    );
     const userFailures = [];
     const cabinetsFailures = [];
     if (users) {
@@ -135,5 +148,4 @@ export class AdminReturnService {
       );
     }
   }
-
 }

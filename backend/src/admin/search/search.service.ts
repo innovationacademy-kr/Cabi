@@ -31,7 +31,11 @@ export class AdminSearchService {
     this.logger.debug(
       `Called ${AdminSearchService.name} ${this.searchByIntraId.name}`,
     );
-    return await this.adminSearchRepository.searchByIntraId(intraId, page, length);
+    return await this.adminSearchRepository.searchByIntraId(
+      intraId,
+      page,
+      length,
+    );
   }
 
   /**
@@ -51,7 +55,11 @@ export class AdminSearchService {
     this.logger.debug(
       `Called ${AdminSearchService.name} ${this.searchByLentType.name}`,
     );
-    return await this.adminSearchRepository.searchByLentType(lentType, page, length);
+    return await this.adminSearchRepository.searchByLentType(
+      lentType,
+      page,
+      length,
+    );
   }
 
   /**

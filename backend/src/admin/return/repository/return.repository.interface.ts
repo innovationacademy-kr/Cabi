@@ -1,6 +1,6 @@
-import { ReturnCabinetDataDto } from "src/dto/return.cabinet.data.dto";
-import { UserDto } from "src/dto/user.dto";
-import Lent from "src/entities/lent.entity";
+import { ReturnCabinetDataDto } from 'src/dto/return.cabinet.data.dto';
+import { UserDto } from 'src/dto/user.dto';
+import Lent from 'src/entities/lent.entity';
 
 export interface IAdminReturnRepository {
   /**
@@ -36,5 +36,4 @@ export interface IAdminReturnRepository {
    * @param cabinetId
    */
   getUsersByCabinetId(cabinetId: number): Promise<number[]>;
-
 }

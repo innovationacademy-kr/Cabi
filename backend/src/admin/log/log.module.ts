@@ -9,7 +9,7 @@ import { AdminLogController } from './log.controller';
 const adminLogRepo = {
   provide: 'IAdminLogRepository',
   useClass: AdminLogRepository,
-}
+};
 @Module({
   controllers: [AdminLogController],
   providers: [AdminLogService, adminLogRepo],

@@ -1,4 +1,11 @@
-import { Controller, Get, Logger, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminLentService } from 'src/admin/lent/lent.service';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
@@ -13,7 +20,8 @@ export class AdminLentController {
   private logger = new Logger(AdminLentController.name);
   constructor(
     private adminLentService: AdminLentService,
-    private lentService: LentService) {}
+    private lentService: LentService,
+  ) {}
 
   @Get('/')
   @ApiOperation({})
@@ -39,8 +47,8 @@ export class AdminLentController {
     const user = {
       cabinet_id: cabinetId,
       user_id: userId,
-      intra_id: intraId
-    }
+      intra_id: intraId,
+    };
     this.logger.debug(`Called ${this.postLentCabinet.name}`);
     return await this.lentService.lentCabinet(cabinetId, user);
   }

@@ -1,12 +1,17 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
-import { AdminCabinetService } from "src/admin/cabinet/cabinet.service";
-import { IAdminReturnRepository } from "src/admin/return/repository/return.repository.interface";
-import { BanService } from "src/ban/ban.service";
-import { UserDto } from "src/dto/user.dto";
-import Lent from "src/entities/lent.entity";
-import CabinetStatusType from "src/enums/cabinet.status.type.enum";
-import { DateCalculator } from "src/utils/date.calculator.component";
-import { IsolationLevel, Propagation, runOnTransactionComplete, Transactional } from "typeorm-transactional";
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { AdminCabinetService } from 'src/admin/cabinet/cabinet.service';
+import { IAdminReturnRepository } from 'src/admin/return/repository/return.repository.interface';
+import { BanService } from 'src/ban/ban.service';
+import { UserDto } from 'src/dto/user.dto';
+import Lent from 'src/entities/lent.entity';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import { DateCalculator } from 'src/utils/date.calculator.component';
+import {
+  IsolationLevel,
+  Propagation,
+  runOnTransactionComplete,
+  Transactional,
+} from 'typeorm-transactional';
 
 @Injectable()
 export class ReturnTools {
@@ -34,10 +39,7 @@ export class ReturnTools {
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
   })
-  async returnStateTransition(
-    cabinetId: number,
-    user: UserDto,
-  ): Promise<Lent> {
+  async returnStateTransition(cabinetId: number, user: UserDto): Promise<Lent> {
     this.logger.debug(
       `Called ${ReturnTools.name} ${this.returnStateTransition.name}`,
     );

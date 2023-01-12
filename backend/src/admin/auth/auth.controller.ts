@@ -48,7 +48,7 @@ export class AdminAuthController {
   async loginGoogle(@Req() req) {
     this.logger.log('Logged in Google OAuth!');
   }
-  
+
   @ApiOperation({
     summary: 'intra 로그인 시도 후 처리에 대한 요청입니다.',
     description:
