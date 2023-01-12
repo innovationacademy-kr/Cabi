@@ -6,7 +6,6 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
@@ -27,12 +26,12 @@ export class AdminJWTSignGuard implements CanActivate {
     private readonly adminAuthService: AdminAuthService,
   ) {}
 
-  canActivate(
+  async canActivate(
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  ): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
-    return this.generateJWTToken(req, res);
+    return await this.generateJWTToken(req, res);
   }
 
   private async generateJWTToken(
@@ -44,6 +43,7 @@ export class AdminJWTSignGuard implements CanActivate {
       this.logger.debug(`can't generate JWTToken`);
       return false;
     }
+    await this.adminAuthService.addUserIfNotExists(user);
     const role = await this.adminAuthService.getAdminUserRole(user.email);
     if (role === AdminUserRole.AUTHORIZE_WAITING) {
       return false;

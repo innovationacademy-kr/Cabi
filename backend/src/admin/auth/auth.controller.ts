@@ -65,8 +65,6 @@ export class AdminAuthController {
   @UseGuards(GoogleOAuthGuard, AdminJWTSignGuard)
   async loginCallback(@Res() res: Response, @User() adminUser: AdminUserDto) {
     this.logger.log('Login -> callback');
-    // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.
-    await this.adminAuthService.addUserIfNotExists(adminUser);
     return res.redirect(`${this.configService.get<string>('fe_host')}/home`);
   }
 
