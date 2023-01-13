@@ -54,10 +54,12 @@ const TopNavButtonGroup = () => {
   };
   return (
     <NaviButtonsStyled>
-      <TopNavButton
-        onClick={axiosRemovePenalty}
-        imgSrc="src/assets/images/happyCcabiWhite.png"
-      />
+      {import.meta.env.VITE_UNBAN === "true" && (
+        <TopNavButton
+          onClick={axiosRemovePenalty}
+          imgSrc="src/assets/images/happyCcabiWhite.png"
+        />
+      )}
       <TopNavButton
         disable={myInfo.cabinet_id === -1}
         onClick={clickMyCabinet}
