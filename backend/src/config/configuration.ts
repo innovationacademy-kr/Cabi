@@ -44,5 +44,10 @@ export default () => ({
     lastoverdue: parseInt(process.env.EXPIRE_TERM_LASTOVERDUE, 10),
     forcedreturn: parseInt(process.env.EXPIRE_TERM_FORCEDRETURN, 10),
   },
+  admin: {
+    clientid: process.env.ADMIN_GOOGLE_CLIENT_ID,
+    secret: process.env.ADMIN_GOOGLE_CLIENT_SECRET,
+    callbackurl: process.env.ADMIN_GOOGLE_CLIENT_CALLBACK,
+  },
   penalty_day_share: parseInt(process.env.PENALTY_DAY_SHARE, 10),
 });

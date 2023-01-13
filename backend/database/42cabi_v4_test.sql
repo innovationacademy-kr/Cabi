@@ -23,10 +23,9 @@ DROP TABLE IF EXISTS `admin_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin_user` (
-  `google_id` varchar(32) NOT NULL COMMENT '구글 아이디',
   `email` varchar(128) NOT NULL COMMENT '구글 이메일',
   `role` tinyint(4) NOT NULL DEFAULT 0 COMMENT '관리자 권한',
-  PRIMARY KEY (`google_id`)
+  PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='관리자 정보';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

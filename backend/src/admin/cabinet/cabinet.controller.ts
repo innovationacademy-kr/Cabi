@@ -1,94 +1,200 @@
 import {
+  Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Logger,
   Param,
+  ParseEnumPipe,
+  ParseIntPipe,
   Patch,
-  Query,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import LentType from 'src/enums/lent.type.enum';
+import { AdminJwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
+import { CabinetFloorDto } from '../dto/cabinet.floor.dto';
+import { CabinetInfoResponseDto } from '../dto/cabinet.info.response.dto';
+import { CabinetStatusNoteRequestDto } from '../dto/cabinet.status.note.request.dto';
+import { AdminCabinetService } from './cabinet.service';
 
 @ApiTags('(Admin) Cabinet')
+@ApiBearerAuth()
 @Controller('/api/admin/cabinet')
-@UseGuards(JwtAuthGuard)
-export class CabinetController {
-  private logger = new Logger(CabinetController.name);
+@UseGuards(AdminJwtAuthGuard)
+export class AdminCabinetController {
+  constructor(
+    private adminCabinetService: AdminCabinetService,
+    private cabinetInfoService: CabinetInfoService,
+  ) {}
+  private logger = new Logger(AdminCabinetController.name);
 
-  @Get('/user/:userId')
-  @ApiOperation({})
-  async getLentLogByUserId(
-    @Param('userId') userId: string,
-    @Query('index') index: number,
-    @Query('length') length: number,
-  ): Promise<void> {
-    this.logger.debug(`Called ${this.getLentLogByUserId.name}`);
-  }
-
-  @Get('/count/floor')
-  @ApiOperation({})
-  async getCabinetCountEachFloor(): Promise<void> {
-    this.logger.debug(`Called ${this.getCabinetCountEachFloor.name}`);
-  }
-
+  @ApiOperation({
+    summary: '사물함 정보 호출',
+    description: 'cabinet_id를 받아 특정 사물함의 상세정보를 받아옵니다.',
+  })
+  @ApiOkResponse({
+    type: CabinetInfoResponseDto,
+    description:
+      '파라미터로 받은 사물함의 정보를 CabinetInfoResponseDto 형식으로 받아옵니다',
+  })
+  @ApiBadRequestResponse({
+    description: '비정상 파라미터',
+  })
   @Get('/:cabinetId')
-  @ApiOperation({})
   async getCabinetInfoByCabinetId(
-    @Param('cabinetId') cabinetId: string,
-  ): Promise<void> {
+    @Param('cabinetId', ParseIntPipe) cabinetId: number,
+  ): Promise<CabinetInfoResponseDto> {
     this.logger.debug(`Called ${this.getCabinetInfoByCabinetId.name}`);
+    return await this.cabinetInfoService.getCabinetResponseInfo(cabinetId);
   }
 
+  @ApiOperation({
+    summary: '사물함 상태 변경',
+    description: 'cabinet_id를 받아 사물함의 상태를 변경합니다.',
+  })
+  @ApiNoContentResponse({
+    description: '성공',
+  })
+  @ApiBadRequestResponse({
+    description: '비정상 상태 및 cabinet_id',
+  })
   @Patch('/status/:cabinetId/:status')
-  @ApiOperation({})
   async updateCabinetStatusByCabinetId(
-    @Param('cabinetId') cabinetId: string,
-    @Param('status') status: string,
+    @Param('cabinetId', ParseIntPipe) cabinetId: number,
+    @Param('status', new ParseEnumPipe(CabinetStatusType))
+    status: CabinetStatusType,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetStatusByCabinetId.name}`);
+    await this.cabinetInfoService.updateCabinetStatus(cabinetId, status);
   }
 
+  @ApiOperation({
+    summary: '사물함 lent_type 변경',
+    description: 'cabinet_id를 받아 사물함의 lent_type을 변경합니다.',
+  })
+  @ApiNoContentResponse({
+    description: '성공',
+  })
+  @ApiBadRequestResponse({
+    description: '비정상 lent_type 및 cabinet_id',
+  })
+  @ApiForbiddenResponse({
+    description: '대여 중인 캐비넷',
+  })
   @Patch('/lentType/:cabinetId/:lentType')
-  @ApiOperation({})
   async updateCabinetLentTypeByCabinetId(
-    @Param('cabinetId') cabinetId: string,
-    @Param('lentType') lentType: string,
+    @Param('cabinetId', ParseIntPipe) cabinetId: number,
+    @Param('lentType', new ParseEnumPipe(LentType)) lentType: LentType,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetLentTypeByCabinetId.name}`);
+    await this.adminCabinetService.updateLentType(cabinetId, lentType);
   }
 
-  @Patch('/statusNote/:cabinetId/:statusNote')
-  @ApiOperation({})
+  @ApiOperation({
+    summary: '사물함 고장 사유 변경',
+    description: 'cabinet_id를 받아 사물함의 고장 사유를 변경합니다.',
+  })
+  @ApiNoContentResponse({
+    description: '성공',
+  })
+  @ApiBadRequestResponse({
+    description: '존재하지 않는 cabinet_id',
+  })
+  @Patch('/statusNote/:cabinetId')
   async updateCabinetStatusNoteByCabinetId(
-    @Param('cabinetId') cabinetId: string,
-    @Param('statusNote') statusNote: string,
+    @Param('cabinetId', ParseIntPipe) cabinetId: number,
+    @Body(new ValidationPipe()) statusNote: CabinetStatusNoteRequestDto,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetStatusNoteByCabinetId.name}`);
+    await this.adminCabinetService.updateStatusNote(
+      cabinetId,
+      statusNote.status_note,
+    );
   }
 
+  @ApiOperation({
+    summary: '특정 사물함들의 상태 변경',
+    description: 'cabinet_id 배열을 받아 사물함들의 상태를 변경합니다.',
+  })
+  @ApiNoContentResponse({
+    description: '성공',
+  })
+  @ApiBadRequestResponse({
+    description: '비정상 상태 및 cabinet_id',
+  })
   @Patch('/bundle/status/:status')
-  @ApiOperation({})
   async updateCabinetBundleStatus(
-    @Param('status') status: string,
+    @Param('status', new ParseEnumPipe(CabinetStatusType))
+    status: CabinetStatusType,
+    @Body() bundle: number[],
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetBundleStatus.name}`);
+    const fail = await this.adminCabinetService.updateCabinetStatusByBundle(
+      status,
+      bundle,
+    );
+    if (fail.length !== 0) {
+      throw new HttpException(fail, HttpStatus.BAD_REQUEST);
+    }
   }
 
+  @ApiOperation({
+    summary: '특정 사물함들의 lent_type 변경',
+    description: 'cabinet_id 배열을 받아 사물함들의 lent_type을 변경합니다.',
+  })
+  @ApiNoContentResponse({
+    description: '성공',
+  })
+  @ApiBadRequestResponse({
+    description: '비정상 lent_type 및 cabinet_id',
+  })
+  @ApiForbiddenResponse({
+    description: '대여 중인 캐비넷',
+  })
   @Patch('/bundle/lentType/:lentType')
-  @ApiOperation({})
   async updateCabinetBundleLentType(
-    @Param('lentType') lentType: string,
+    @Param('lentType', new ParseEnumPipe(LentType)) lentType: LentType,
+    @Body() bundle: number[],
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetBundleLentType.name}`);
+    const fail = await this.adminCabinetService.updateLentTypeByBundle(
+      lentType,
+      bundle,
+    );
+    if (fail.length !== 0) {
+      throw new HttpException(fail, HttpStatus.BAD_REQUEST);
+    }
   }
 
+  @ApiOperation({
+    summary: '사물함 title 변경',
+    description: 'cabinet_id를 받아 사물함의 title을 변경합니다.',
+  })
+  @ApiNoContentResponse({
+    description: '성공',
+  })
+  @ApiBadRequestResponse({
+    description: '존재하지 않는 cabinet_id',
+  })
   @Patch('/:cabinetId/:title')
-  @ApiOperation({})
   async updateCabinetTitleByCabinetId(
-    @Param('cabinetId') cabinetId: string,
+    @Param('cabinetId', ParseIntPipe) cabinetId: number,
     @Param('title') title: string,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetTitleByCabinetId.name}`);
+    await this.adminCabinetService.updateCabinetTitle(cabinetId, title);
   }
 }

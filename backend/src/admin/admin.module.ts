@@ -1,17 +1,19 @@
-import { Module } from "@nestjs/common";
-import { CabinetModule } from "./cabinet/cabinet.module";
-import { LentModule } from "./lent/lent.module";
-import { LogModule } from "./log/log.module";
-import { ReturnModule } from "./return/return.module";
-import { SearchModule } from "./search/search.module";
+import { Module } from '@nestjs/common';
+import { AdminCabinetModule } from 'src/admin/cabinet/cabinet.module';
+import { AdminLentModule } from 'src/admin/lent/lent.module';
+import { AdminLogModule } from 'src/admin/log/log.module';
+import { AdminAuthModule } from 'src/admin/auth/auth.module';
+import { AdminReturnModule } from './return/return.module';
+import { AdminSearchModule } from './search/search.module';
 
 @Module({
   imports: [
-    CabinetModule,
-    LentModule,
-    LogModule,
-    ReturnModule,
-    SearchModule,
+    AdminAuthModule,
+    AdminLentModule,
+    AdminLogModule,
+    AdminCabinetModule,
+    AdminSearchModule,
+    AdminReturnModule,
   ],
   controllers: [],
   providers: [],

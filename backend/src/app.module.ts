@@ -39,6 +39,7 @@ import { AdminModule } from './admin/admin.module';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
+    AdminModule,
     AuthModule,
     BlackholeModule,
     EventEmitterModule.forRoot(),
@@ -64,7 +65,6 @@ import { AdminModule } from './admin/admin.module';
       : []),
     // import if UNBAN_API=true
     ...(process.env.UNBAN_API === 'true' ? [BetatestModule] : []),
-    AdminModule,
   ],
   controllers: [],
   providers: [SessionMiddleware],
