@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Button from "@/components/Common/Button";
 import React, { useRef, useState } from "react";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import ModalPortal from "../ModalPortal";
 
 export interface MemoModalInterface {
   cabinetType: CabinetType;
@@ -43,7 +44,7 @@ const MemoModalContainer = ({
     setMode("read");
   };
   return (
-    <>
+    <ModalPortal>
       <BackgroundStyled onClick={onClose} />
       <ModalContainerStyled type={"confirm"}>
         <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
@@ -101,7 +102,7 @@ const MemoModalContainer = ({
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
-    </>
+    </ModalPortal>
   );
 };
 
