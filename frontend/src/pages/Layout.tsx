@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "@/recoil/atoms";
 import TopNav from "@/components/TopNav/TopNav.container";
 import LeftNav from "@/components/LeftNav/LeftNav";
@@ -12,6 +12,8 @@ import { UserDto } from "@/types/dto/user.dto";
 import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import MapInfo from "@/components/MapInfo/MapInfo";
+import { currentFloorSectionState } from "@/recoil/selectors";
+import { currentSectionNameState } from "@/recoil/atoms";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -44,6 +46,36 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
+  const [touchOffset, setTouchOffset] = useState(0);
+
+  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
+    currentSectionNameState
+  );
+  const currentSectionIdx = sectionList.findIndex(
+    (sectionName) => sectionName === currentSectionName
+  );
+  const moveToLeftSection = () => {
+    if (currentSectionIdx <= 0) {
+      setCurrentSectionName(sectionList[sectionList.length - 1]);
+    } else {
+      setCurrentSectionName(sectionList[currentSectionIdx - 1]);
+    }
+  };
+
+  const moveToRightSection = () => {
+    if (currentSectionIdx >= sectionList.length - 1) {
+      setCurrentSectionName(sectionList[0]);
+    } else {
+      setCurrentSectionName(sectionList[currentSectionIdx + 1]);
+    }
+  };
+
+  const swipeSection = (last: number) => {
+    if (last > touchOffset) moveToLeftSection();
+    else moveToRightSection();
+  };
+
   return isLoginPage ? (
     <Outlet />
   ) : (
@@ -54,7 +86,14 @@ const Layout = (): JSX.Element => {
       ) : (
         <WrapperStyled>
           <LeftNav isVisible={!isHomePage} />
-          <MainStyled>
+          <MainStyled
+            onTouchStart={(e: React.TouchEvent) =>
+              setTouchOffset(e.changedTouches[0].screenX)
+            }
+            onTouchEnd={(e: React.TouchEvent) =>
+              swipeSection(e.changedTouches[0].screenX)
+            }
+          >
             <Outlet />
           </MainStyled>
           <DetailInfoContainerStyled
@@ -84,6 +123,7 @@ const MainStyled = styled.main`
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  user-select: none;
 `;
 
 const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
