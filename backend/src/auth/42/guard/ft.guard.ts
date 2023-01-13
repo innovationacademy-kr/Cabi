@@ -1,8 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-/**
- * passport-42의 기본 인증을 사용합니다. 현재는 커스텀이 불필요하므로 커스텀하지 않습니다.
- */
 @Injectable()
-export class FtGuard extends AuthGuard('42') {}
+export class FtGuard extends AuthGuard('42') {
+    handleRequest<TUser = any>(err: any, user: any): TUser {
+        if (err || !user) {
+          throw (
+            err ||
+            new UnauthorizedException(
+              '🚨 Cabi service is only available in Korea🥲 🚨\nif you need any information, contact us with slack link below\nhttps://42born2code.slack.com/archives/C02V6GE8LD7.',
+            )
+          );
+        }
+        return user;
+      }
+}
