@@ -1,0 +1,27 @@
+import React from "react";
+import Modal from "@/components/Modals/Modal";
+import { IModalContents } from "@/components/Modals/Modal";
+import ModalPortal from "@/components/Modals/ModalPortal";
+import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import errorIcon from "@/assets/images/errorIcon.svg";
+
+const UnavailableModal: React.FC<{
+  status: CabinetStatus | additionalModalType;
+  closeModal: React.MouseEventHandler;
+}> = (props) => {
+  const modalContents: IModalContents = {
+    type: "noBtn",
+    icon: errorIcon,
+    title: modalPropsMap[props.status].title,
+    closeModal: props.closeModal,
+  };
+
+  return (
+    <ModalPortal>
+      <Modal modalContents={modalContents} />;
+    </ModalPortal>
+  );
+};
+
+export default UnavailableModal;

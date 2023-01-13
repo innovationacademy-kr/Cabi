@@ -1,19 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
+import { RecoilRoot } from "recoil";
+
 import App from "./App";
-// import { configureStore } from "@reduxjs/toolkit";
-import { Provider } from "react-redux";
-// import rootReducer from "./status";
-import store from "./redux/store";
+import "./assets/css/reset.css";
+import "./index.css";
+import "./assets/css/media.css";
 
-// const store = configureStore({reducer: rootReducer});
-// store.subscribe(()=>{console.log("subscribe = ", store.getState())});
-
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Provider store={store}>
+    <RecoilRoot>
       <App />
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById("root")
+    </RecoilRoot>
+  </React.StrictMode>
 );
