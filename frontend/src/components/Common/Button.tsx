@@ -21,8 +21,10 @@ const Button = (props: ButtonInterface) => {
 };
 
 const ButtonContainerStyled = styled.button`
-  width: 240px;
+  max-width: 240px;
+  width: 100%;
   height: 60px;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,6 +63,9 @@ const ButtonContainerStyled = styled.button`
       color: var(--gray-color);
       border: 1px solid var(--gray-color);
     `}
+  @media (max-height: 745px) {
+    margin-bottom: 8px;
+  }
 `;
 
 export default Button;
