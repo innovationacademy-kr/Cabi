@@ -1,26 +1,22 @@
-import Lent from "./pages/Lent";
-import Main from "./pages/Main";
-import Return from "./pages/Return";
-import Footer from "./component/Footer";
-import MaintenancePage from "./pages/MaintenancePage";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import GlobalStyle from "./GlobalStyle";
+import Layout from "./Layout";
+import LoginPage from "@/pages/LoginPage";
+import HomePage from "@/pages/HomePage";
+import MainPage from "@/pages/MainPage";
+import NotFoundPage from "@/pages/NotFoundPage";
 
-function App() {
+function App(): React.ReactElement {
   return (
     <BrowserRouter>
-      <div className="App">
-        <GlobalStyle />
-        <section>
-          <Routes>
-            {/* <Route path="/" element={<Main />}></Route>
-            <Route path="/lent" element={<Lent />}></Route>
-            <Route path="/return" element={<Return />}></Route> */}
-            <Route path="/*" element={<MaintenancePage />}></Route>
-          </Routes>
-        </section>
-        <Footer />
-      </div>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="home" element={<HomePage />} />
+          <Route path="main" element={<MainPage />} />
+          <Route path="login" element={<LoginPage />} />
+        </Route>
+        <Route path="/*" element={<NotFoundPage />} />
+      </Routes>
     </BrowserRouter>
   );
 }
