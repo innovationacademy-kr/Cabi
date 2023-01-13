@@ -63,9 +63,11 @@ const FloorSectionStyled = styled.div`
   color: var(--gray-color);
   margin: 2px 0;
   cursor: pointer;
-  &:hover {
-    background-color: var(--main-color);
-    color: var(--white);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--main-color);
+      color: var(--white);
+    }
   }
 `;
 

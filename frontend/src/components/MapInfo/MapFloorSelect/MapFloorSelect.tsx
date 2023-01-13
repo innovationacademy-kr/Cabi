@@ -65,8 +65,10 @@ const CurrentFloorStyled = styled.div`
   text-indent: 12px;
   border-radius: 10px;
   margin-bottom: 50px;
-  &:hover {
-    opacity: 0.9;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+    }
   }
 `;
 
