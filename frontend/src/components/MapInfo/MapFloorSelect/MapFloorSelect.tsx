@@ -44,7 +44,7 @@ const MapFloorSelect = ({ floor, setFloor, floorInfo }: IMapFloorSelect) => {
 
 const OptionStyled = styled.div`
   width: 65px;
-  height: 35px;
+  height: 40px;
   border-bottom: 1px solid #e6e6e6;
   display: flex;
   justify-content: center;
@@ -60,11 +60,11 @@ const CurrentFloorStyled = styled.div`
   color: white;
   cursor: pointer;
   width: 65px;
-  height: 35px;
-  line-height: 35px;
+  height: 40px;
+  line-height: 40px;
   text-indent: 12px;
   border-radius: 10px;
-  margin-bottom: 50px;
+  margin: 30px 0;
   &:hover {
     opacity: 0.9;
   }
@@ -73,7 +73,7 @@ const CurrentFloorStyled = styled.div`
 const OptionsContainerStyled = styled.div`
   position: absolute;
   left: 0;
-  top: 40px;
+  top: 75px;
   background: white;
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);

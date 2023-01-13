@@ -243,9 +243,9 @@ const ItemStyled = styled.div<{
 `;
 
 const MapGridStyled = styled.div`
-  width: 80%;
+  width: 100%;
   max-height: 580px;
-  height: 65%;
+  height: 100%;
   background: #e7e7e7;
   display: grid;
   grid-template-columns: repeat(5, 1fr);

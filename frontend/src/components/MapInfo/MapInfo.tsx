@@ -36,7 +36,6 @@ const HeaderStyled = styled.div`
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  padding: 40px 20px 40px 40px;
   color: black;
   font-weight: bold;
 `;
@@ -48,6 +47,7 @@ const MapInfoContainerStyled = styled.div`
   min-width: 330px;
   width: 330px;
   height: calc(100% - 80px);
+  padding: 40px;
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
