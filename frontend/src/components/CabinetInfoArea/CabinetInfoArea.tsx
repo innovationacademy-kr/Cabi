@@ -217,7 +217,10 @@ const CabinetRectangleStyled = styled.div<{
     `};
   font-size: 32px;
   line-height: 80px;
-  color: ${(props) => cabinetLabelColorMap[props.cabinetStatus]};
+  color: ${(props) =>
+    props.isMine
+      ? cabinetLabelColorMap["MINE"]
+      : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
 `;
 

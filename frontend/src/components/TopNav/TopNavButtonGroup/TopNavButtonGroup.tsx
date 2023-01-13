@@ -9,6 +9,7 @@ import {
 import useDetailInfo from "@/hooks/useDetailInfo";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import instance from "@/api/axios/axios.instance";
 
 const TopNavButtonGroup = () => {
   const { clickCabinet, clickMap, openCabinet, closeCabinet } = useDetailInfo();
@@ -41,8 +42,22 @@ const TopNavButtonGroup = () => {
       clickCabinet();
     }
   };
+  const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";
+  const axiosRemovePenalty = async (): Promise<any> => {
+    try {
+      const response = await instance.delete(axiosRemovePenaltyURL);
+      console.log(response);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
   return (
     <NaviButtonsStyled>
+      <TopNavButton
+        onClick={axiosRemovePenalty}
+        imgSrc="src/assets/images/happyCcabiWhite.png"
+      />
       <TopNavButton
         disable={myInfo.cabinet_id === -1}
         onClick={clickMyCabinet}
