@@ -85,20 +85,20 @@ jobs:
       - name: 종속 모듈들 캐싱
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/frontend_v3/node_modules
-          key: npm-packages-${{ hashFiles('**/frontend_v3/package-lock.json') }}
+          path: ${{ github.workspace }}/frontend/node_modules
+          key: npm-packages-${{ hashFiles('**/frontend/package-lock.json') }}
         id: cache
       - name: 종속 모듈들 설치
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --prefix frontend_v3
+        run: npm install --prefix frontend
       # - name: lint 체크
-      #   run: npm run lint --prefix frontend_v3
+      #   run: npm run lint --prefix frontend
       - name: 빌드 체크
-        run: npm run build --prefix frontend_v3
+        run: npm run build --prefix frontend
       # - name: 단위 테스트 체크
-      #   run: npm run test --prefix frontend_v3
+      #   run: npm run test --prefix frontend
       # - name: 통합 테스트 체크
-      #   run: npm run test:e2e --prefix frontend_v3
+      #   run: npm run test:e2e --prefix frontend
 
   CD-develop:
     name: deploy-develop
@@ -123,7 +123,7 @@ jobs:
             echo "앱 빌드"
             cd $HOME/42cabi_dev/backend
             npm install
-            npm run build:fe_v3
+            npm run build:fe
             npm run deploy:dev
             npm run invalidate:dev
             npm run build
@@ -155,7 +155,7 @@ jobs:
             echo "앱 빌드"
             cd $HOME/42cabi_main/backend
             npm install
-            npm run build:fe_v3
+            npm run build:fe
             npm run deploy:main
             npm run invalidate:main
             npm run build

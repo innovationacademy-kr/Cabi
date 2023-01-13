@@ -1,4 +1,4 @@
-import useDetailInfo from "./useDetailInfo";
+import useDetailInfo from "@/hooks/useDetailInfo";
 
 const useLeftNav = () => {
   const { closeDetailInfo } = useDetailInfo();

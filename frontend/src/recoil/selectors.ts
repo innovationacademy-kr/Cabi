@@ -1,4 +1,3 @@
-import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { selector } from "recoil";
 import {
@@ -8,9 +7,11 @@ import {
   currentSectionNameState,
   currentFloorNumberState,
   locationColNumState,
-} from "./atoms";
-import { IFloorSectionColNum, ISectionColNum } from "@/sectionColNumData";
-import axios, { AxiosResponse } from "axios";
+} from "@/recoil/atoms";
+import {
+  IFloorSectionColNum,
+  ISectionColNum,
+} from "@/assets/data/sectionColNumData";
 
 export const locationsState = selector<Array<string>>({
   key: "Locations",
