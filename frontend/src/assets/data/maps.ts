@@ -19,6 +19,7 @@ export const cabinetLabelColorMap = {
   [CabinetStatus.EXPIRED]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
+  MINE: "var(--black)",
 };
 
 export const cabinetStatusColorMap = {
@@ -28,6 +29,7 @@ export const cabinetStatusColorMap = {
   [CabinetStatus.EXPIRED]: "var(--expired)",
   [CabinetStatus.BROKEN]: "var(--broken)",
   [CabinetStatus.BANNED]: "var(--banned)",
+  MINE: "var(--mine)",
 };
 
 export const modalPropsMap = {
