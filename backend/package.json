@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "build:fe": "npm i --prefix ../frontend && npm run build --prefix ../frontend && cp -r ../frontend/img ../frontend/dist && rm -rf deploy && mv ../frontend_v3/dist deploy",
+    "build:fe": "npm i --prefix ../frontend && npm run build --prefix ../frontend && cp -r ../frontend/src/assets/images ../frontend/dist && rm -rf deploy && mv ../frontend/dist deploy",
     "deploy:dev": "aws s3 sync ./deploy s3://dev.cabi --profile=CABI",
     "deploy:main": "aws s3 sync ./deploy s3://42cabi --profile=CABI",
     "invalidate:dev": "aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'",
