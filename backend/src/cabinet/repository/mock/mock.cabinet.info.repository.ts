@@ -1,11 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { ICabinetInfoRepository } from "src/cabinet/repository/cabinet.info.interface.repository";
+import { LentDto } from "src/dto/lent.dto";
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
 import LentType from "src/enums/lent.type.enum";
 
 @Injectable()
 export class MockCabinetInfoRepository implements ICabinetInfoRepository {
     MockCabinetInfoEntity: any[] = [];
+    MockLentEntity: any[] = [];
 
     constructor () {
         this.MockCabinetInfoEntity.push({
@@ -60,12 +62,39 @@ export class MockCabinetInfoRepository implements ICabinetInfoRepository {
             title: 'Cabi팀 최고4',
             status_note: '난 너를 믿었던 만큼 난 내 친구도 믿었기에',
         });
+        //LentRepository를 Mocking 합니다.
+        this.MockLentEntity.push({
+            user_id: 131541,
+            intra_id: 'sanan',
+            lent_id: 1234,
+            lent_time: '2023-01-13 19:00:00',
+            expire_time: '2023-01-13 20:00:00',
+            is_expired: false,
+        });
+        this.MockLentEntity.push({
+            user_id: 131541,
+            intra_id: 'sanan',
+            lent_id: 4321,
+            lent_time: '2023-01-13 19:00:00',
+            expire_time: '2023-01-13 20:00:00',
+            is_expired: true,
+        });
+        this.MockLentEntity.push({
+            user_id: 424242,
+            intra_id: 'eunbikim',
+            lent_id: 1235,
+            lent_time: '2023-01-13 20:00:00',
+            expire_time: '2023-01-13 21:00:00',
+            is_expired: false,
+        });
+        this.MockLentEntity.push({
+            user_id: 424242,
+            intra_id: 'eunbikim',
+            lent_id: 5321,
+            lent_time: '2023-01-13 20:00:00',
+            expire_time: '2023-01-13 21:00:00',
+            is_expired: true,
+        });
     }
 
-    async getLocation(): Promise<string[]> {
-        const location = this.MockCabinetInfoEntity.find()
-          
-    
-        return location;
-      }
 }
