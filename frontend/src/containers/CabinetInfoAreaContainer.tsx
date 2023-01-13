@@ -4,19 +4,20 @@ import ButtonContainer from "./ButtonContainer";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import cabiLogo from "@/assets/images/logo.svg";
-import Modal from "@/components/Modal";
-import ModalPortal from "@/components/ModalPortal";
-import MemoModal from "@/components/MemoModal";
+import MemoModal from "@/modals/MemoModal";
+import LentModal from "@/modals/LentModal";
+import ReturnModal from "@/modals/ReturnModal";
+import UnavailableModal from "@/modals/UnavailableModal";
 import {
+  additionalModalType,
   cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
-  modalPropsMap,
 } from "@/maps";
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
-  isMine: boolean;
+  cabinetId: number;
   cabinetNum: number;
   status: CabinetStatus;
   lentType: CabinetType;
@@ -28,13 +29,26 @@ export interface ISelectedCabinetInfo {
 
 const CabinetInfoAreaContainer: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
-  alreadyLent: boolean;
+  myCabinetId?: number;
   closeCabinet: () => void;
 }> = (props) => {
-  const { selectedCabinetInfo, alreadyLent, closeCabinet } = props;
+  const { selectedCabinetInfo, myCabinetId, closeCabinet } = props;
+  const [showUnavailableModal, setShowUnavailableModal] =
+    useState<boolean>(false);
+  const [showLentModal, setShowLentModal] = useState<boolean>(false);
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
+  const isMine: boolean = myCabinetId
+    ? selectedCabinetInfo?.cabinetId === myCabinetId
+    : false;
 
+  const handleOpenLentModal = () => {
+    if (myCabinetId) return handleOpenUnavailableModal();
+    setShowLentModal(true);
+  };
+  const handleCloseLentModal = () => {
+    setShowLentModal(false);
+  };
   const handleOpenReturnModal = () => {
     setShowReturnModal(true);
   };
@@ -46,6 +60,12 @@ const CabinetInfoAreaContainer: React.FC<{
   };
   const handleCloseMemoModal = () => {
     setShowMemoModal(false);
+  };
+  const handleOpenUnavailableModal = () => {
+    setShowUnavailableModal(true);
+  };
+  const handleCloseUnavailableModal = () => {
+    setShowUnavailableModal(false);
   };
 
   if (selectedCabinetInfo === null)
@@ -65,7 +85,7 @@ const CabinetInfoAreaContainer: React.FC<{
       </TextStyled>
       <CabinetRectangleStyled
         cabinetStatus={selectedCabinetInfo.status}
-        isMine={selectedCabinetInfo.isMine}
+        isMine={isMine}
       >
         {selectedCabinetInfo.cabinetNum}
       </CabinetRectangleStyled>
@@ -77,7 +97,7 @@ const CabinetInfoAreaContainer: React.FC<{
         {selectedCabinetInfo.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
-        {selectedCabinetInfo.isMine ? (
+        {isMine ? (
           <>
             <ButtonContainer
               onClick={handleOpenReturnModal}
@@ -98,10 +118,9 @@ const CabinetInfoAreaContainer: React.FC<{
         ) : (
           <>
             <ButtonContainer
-              onClick={handleOpenReturnModal}
+              onClick={handleOpenLentModal}
               text="대여"
-              theme={alreadyLent ? "lightGrayLine" : "fill"}
-              disabled={alreadyLent}
+              theme="fill"
             />
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>
@@ -117,23 +136,25 @@ const CabinetInfoAreaContainer: React.FC<{
           ? `${selectedCabinetInfo.expireDate.toString().substring(0, 10)}`
           : null}
       </CabinetLentDateInfoStyled>
+      {showUnavailableModal && (
+        <UnavailableModal
+          status={additionalModalType.MODAL_UNAVAILABLE_ALREADY_LENT}
+          closeModal={handleCloseUnavailableModal}
+        />
+      )}
+      {showLentModal && (
+        <LentModal
+          lentType={selectedCabinetInfo.lentType}
+          closeModal={handleCloseLentModal}
+        />
+      )}
       {showReturnModal && (
-        <ModalPortal>
-          <Modal
-            modalObj={
-              selectedCabinetInfo.isMine
-                ? modalPropsMap["return"]
-                : modalPropsMap[selectedCabinetInfo.status]
-            }
-            onClose={handleCloseReturnModal}
-          />
-        </ModalPortal>
+        <ReturnModal
+          lentType={selectedCabinetInfo.lentType}
+          closeModal={handleCloseReturnModal}
+        />
       )}
-      {showMemoModal && (
-        <ModalPortal>
-          <MemoModal onClose={handleCloseMemoModal} />
-        </ModalPortal>
-      )}
+      {showMemoModal && <MemoModal onClose={handleCloseMemoModal} />}
     </CabinetDetailAreaStyled>
   );
 };

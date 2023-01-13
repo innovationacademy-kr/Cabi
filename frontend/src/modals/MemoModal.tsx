@@ -2,7 +2,7 @@ import {
   axiosUpdateCabinetMemo,
   axiosUpdateCabinetTitle,
 } from "@/api/axios/axios.custom";
-import MemoModalContainer from "@/containers/MemoModalContainer";
+import MemoModalContainer from "@/modals/MemoModalContainer";
 import { myCabinetInfoState } from "@/recoil/atoms";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import React from "react";

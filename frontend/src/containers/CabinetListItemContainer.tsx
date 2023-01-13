@@ -1,27 +1,24 @@
+import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
+import useDetailInfo from "@/hooks/useDetailInfo";
+import UnavailableModal from "@/modals/UnavailableModal";
+import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import styled, { css } from "styled-components";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import styled, { css } from "styled-components";
-import { axiosCabinetById } from "@/api/axios/axios.custom";
 
-import { useState } from "react";
-import Modal from "@/components/Modal";
-import ModalPortal from "@/components/ModalPortal";
-
-import useDetailInfo from "@/hooks/useDetailInfo";
 import { UserDto } from "@/types/dto/user.dto";
 import {
-  cabinetFilterMap,
-  cabinetIconSrcMap,
-  cabinetLabelColorMap,
   cabinetStatusColorMap,
-  modalPropsMap,
+  cabinetLabelColorMap,
+  cabinetIconSrcMap,
+  cabinetFilterMap,
 } from "@/maps";
 
 const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
@@ -32,7 +29,9 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showUnavailableModal, setShowUnavailableModal] =
+    useState<boolean>(false);
+  const { openCabinet, closeMap } = useDetailInfo();
   const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
 
   let cabinetLabelText = "";
@@ -50,7 +49,19 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
     cabinetLabelText = "사용불가";
   }
 
-  const { openCabinet, closeMap } = useDetailInfo();
+  const handleOpenUnavailableModal = () => {
+    if (
+      props.status === "BANNED" ||
+      props.status === "BROKEN" ||
+      props.status === "SET_EXPIRE_FULL" ||
+      props.status === "EXPIRED"
+    )
+      setShowUnavailableModal(true);
+  };
+  const handleCloseUnavailableModal = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    setShowUnavailableModal(false);
+  };
 
   const selectCabinetOnClick = (status: CabinetStatus, cabinetId: number) => {
     if (
@@ -58,7 +69,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       status !== CabinetStatus.AVAILABLE &&
       status !== CabinetStatus.SET_EXPIRE_AVAILABLE
     )
-      return handleOpenModal();
+      return handleOpenUnavailableModal();
 
     setCurrentCabinetId(cabinetId);
     async function getData(cabinetId: number) {
@@ -73,19 +84,7 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
     openCabinet();
     closeMap();
   };
-  const handleOpenModal = () => {
-    if (
-      props.status === "BANNED" ||
-      props.status === "BROKEN" ||
-      props.status === "SET_EXPIRE_FULL" ||
-      props.status === "EXPIRED"
-    )
-      setShowModal(true);
-  };
-  const handleCloseModal = (e: { stopPropagation: () => void }) => {
-    e.stopPropagation();
-    setShowModal(false);
-  };
+
   return (
     <CabinetListItemStyled
       status={props.status}
@@ -112,13 +111,11 @@ const CabinetListItemContainer = (props: CabinetInfo): JSX.Element => {
       >
         {cabinetLabelText}
       </CabinetLabelStyled>
-      {showModal && (
-        <ModalPortal>
-          <Modal
-            modalObj={modalPropsMap[props.status]}
-            onClose={handleCloseModal}
-          />
-        </ModalPortal>
+      {showUnavailableModal && (
+        <UnavailableModal
+          status={props.status}
+          closeModal={handleCloseUnavailableModal}
+        />
       )}
     </CabinetListItemStyled>
   );

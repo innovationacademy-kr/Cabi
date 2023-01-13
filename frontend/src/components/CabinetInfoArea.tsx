@@ -17,10 +17,6 @@ const CabinetInfoArea = (): JSX.Element => {
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const isMyCabinet =
-    targetCabinetInfo && myCabinetInfo
-      ? myCabinetInfo.cabinet_id === targetCabinetInfo.cabinet_id
-      : false;
   const { closeCabinet } = useDetailInfo();
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
@@ -100,7 +96,7 @@ const CabinetInfoArea = (): JSX.Element => {
     ? {
         floor: targetCabinetInfo.floor,
         section: targetCabinetInfo.section,
-        isMine: isMyCabinet,
+        cabinetId: targetCabinetInfo.cabinet_id,
         cabinetNum: targetCabinetInfo.cabinet_num,
         status: targetCabinetInfo.status,
         lentType: targetCabinetInfo.lent_type,
@@ -120,7 +116,7 @@ const CabinetInfoArea = (): JSX.Element => {
   return (
     <CabinetInfoAreaContainer
       selectedCabinetInfo={cabinetViewData}
-      alreadyLent={!!myCabinetInfo}
+      myCabinetId={myCabinetInfo?.cabinet_id}
       closeCabinet={handleCancle}
     />
   );

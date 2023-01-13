@@ -1,6 +1,11 @@
 import CabinetStatus from "./types/enum/cabinet.status.enum";
 import CabinetType from "./types/enum/cabinet.type.enum";
 
+export enum additionalModalType {
+  MODAL_RETURN = "MODAL_RETURN",
+  MODAL_UNAVAILABLE_ALREADY_LENT = "MODAL_UNAVAILABLE_ALREADY_LENT",
+}
+
 export const cabinetIconSrcMap = {
   [CabinetType.PRIVATE]: "src/assets/images/privateIcon.svg",
   [CabinetType.SHARE]: "src/assets/images/shareIcon.svg",
@@ -56,10 +61,15 @@ export const modalPropsMap = {
     title: "사용이 불가한 사물함입니다",
     confirmMessage: "",
   },
-  return: {
+  MODAL_RETURN: {
     type: "confirm",
     title: "사물함 반납하기",
     confirmMessage: "네, 반납할게요",
+  },
+  MODAL_UNAVAILABLE_ALREADY_LENT: {
+    type: "error",
+    title: "이미 대여 중인 사물함이 있습니다.",
+    confirmMessage: "",
   },
 };
 

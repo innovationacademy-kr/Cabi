@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ButtonContainer from "./ButtonContainer";
+import ButtonContainer from "@/containers/ButtonContainer";
 import React, { useRef, useState } from "react";
 
 export interface MemoModalInterface {
