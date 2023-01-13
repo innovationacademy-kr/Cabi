@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import "@/assets/css/loginPage.css";
-import LoadingModal from "@/components/LoadingModal";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 
 const LoginPage = () => {
   const url = `${import.meta.env.VITE_BE_HOST}/auth/login`;
@@ -44,7 +44,7 @@ const LoginPage = () => {
             }}
             disabled={isClicked}
           >
-            {isClicked ? <LoadingModal></LoadingModal> : "L O G I N"}
+            {isClicked ? <LoadingAnimation></LoadingAnimation> : "L O G I N"}
           </button>
         </LoginCardStyled>
       </RightSectionStyled>

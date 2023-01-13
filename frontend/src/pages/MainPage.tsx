@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef } from "react";
 import styled from "styled-components";
-import SectionPagination from "@/components/SectionPagination";
-import CabinetList from "@/components/CabinetList";
+import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 
 const MainPage = () => {
   const CabinetListWrapperRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
-      <SectionPagination />
+      <SectionPaginationContainer />
       <CabinetListWrapperStyled ref={CabinetListWrapperRef}>
-        <CabinetList />
+        <CabinetListContainer />
       </CabinetListWrapperStyled>
     </>
   );

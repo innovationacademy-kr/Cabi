@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import HomeInfoContainer from "@/containers/HomeInfoContainer";
+import { useEffect } from "react";
+import ServiceManual from "@/components/Home/ServiceManual";
 import { useNavigate } from "react-router-dom";
 import {
   currentFloorNumberState,
@@ -36,7 +36,7 @@ const HomePage = () => {
     navigator("/main");
   };
 
-  return <HomeInfoContainer lentStartHandler={lentStartHandler} />;
+  return <ServiceManual lentStartHandler={lentStartHandler} />;
 };
 
 export default HomePage;

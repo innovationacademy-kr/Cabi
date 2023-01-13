@@ -7,8 +7,8 @@ import {
   CabinetLocationFloorDto,
 } from "@/types/dto/cabinet.dto";
 import { atom } from "recoil";
-import { staticColNumData } from "@/sectionColNumData";
-import { ILocationColNum } from "@/sectionColNumData";
+import { staticColNumData } from "@/assets/data/sectionColNumData";
+import { ILocationColNum } from "@/assets/data/sectionColNumData";
 
 const { persistAtom } = recoilPersist();
 
