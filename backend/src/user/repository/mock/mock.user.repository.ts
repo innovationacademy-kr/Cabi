@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { IUserRepository } from '../user.repository.interface';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
+import { UserSessionDto } from 'src/dto/user.session.dto';
+import { CabinetDto } from 'src/dto/cabinet.dto';
+import { UserDto } from 'src/dto/user.dto';
+import LentType from 'src/enums/lent.type.enum';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 
 export class MockUserEntity {
   user_id: number;
@@ -184,5 +189,159 @@ export class MockUserRepository implements IUserRepository {
       last_login: now,
       blackhole_date: 블랙홀에_빠진_사람의_blackhole_date,
     });
+  }
+
+  async getCabinetByUserId(userId: number): Promise<CabinetExtendDto | null> {
+    const user = this.mockUserEntity.find((user) => user.user_id === userId);
+    if (!user) {
+      return null;
+    }
+    // TODO: MockCabinetEntity가 구현되면 멤버 변수로 추가
+    // const cabinet = this.mockCabinetEntity.find(
+    //   (cabinet) => cabinet.user_id === userId,
+    // );
+    // FIXME: MockCabinetEntity가 구현되어 있지 않아 '가짜로 구현하기'를 적용했습니다.
+    // 구현 완료 후 삭제가 필요합니다.
+    const cabinet = {
+      cabinet_id: 1,
+      cabinet_num: 1,
+      lent_type: LentType.PRIVATE,
+      cabinet_title: '가짜 캐비넷 제목',
+      max_user: 1,
+      status: CabinetStatusType.SET_EXPIRE_FULL,
+      location: '가짜 캐비넷 위치',
+      floor: 2,
+      section: '가짜 캐비넷 구역',
+      cabinet_memo: '가짜 캐비넷 메모',
+    };
+
+    if (!cabinet) {
+      return null;
+    }
+    return {
+      cabinet_id: cabinet.cabinet_id,
+      cabinet_num: cabinet.cabinet_num,
+      lent_type: cabinet.lent_type,
+      cabinet_title: cabinet.cabinet_title,
+      max_user: cabinet.max_user,
+      status: cabinet.status,
+      location: cabinet.location,
+      floor: cabinet.floor,
+      section: cabinet.section,
+      cabinet_memo: cabinet.cabinet_memo,
+    };
+  }
+
+  async checkUserBorrowed(userId: number): Promise<number> {
+    const user = this.mockUserEntity.find((user) => user.user_id === userId);
+    if (!user) {
+      return -1;
+    }
+    // TODO: MockLentEntity에서 구현되면 멤버 변수로 추가
+    // const lent = this.mockLentEntity.find((lent) => lent.user_id === userId);
+    // FIXME: MockLentEntity에서 구현되어 있지 않아 '가짜로 구현하기'를 적용했습니다.
+    // 구현 완료 후 삭제가 필요합니다.
+    const lent = {
+      lent_id: 1,
+      lent_user_id: userId,
+      lent_cabinet_id: 1,
+      lent_time: new Date(),
+      expire_time: new Date(),
+    };
+    // mockLentEntity에서 user_id에 해당하는 값을 찾는다. 존재하면 cabinet_id를 반환한다.
+    if (!lent) {
+      return -1;
+    }
+    return lent.lent_cabinet_id;
+  }
+
+  async getAllUser(): Promise<UserSessionDto[]> {
+    return this.mockUserEntity.map((user) => {
+      return {
+        user_id: user.user_id,
+        intra_id: user.intra_id,
+        blackhole_date: user.blackhole_date,
+      };
+    });
+  }
+
+  async getCabinetDtoByUserId(userId: number): Promise<CabinetDto | null> {
+    const user = this.mockUserEntity.find((user) => user.user_id === userId);
+    if (!user) {
+      return null;
+    }
+    // TODO: MockLentEntity에서 구현되면 멤버 변수로 추가
+    // const lent = this.mockLentEntity.find((lent) => lent.user_id === userId);
+    // FIXME: MockLentEntity에서 구현되어 있지 않아 '가짜로 구현하기'를 적용했습니다.
+    // 구현 완료 후 삭제가 필요합니다.
+    const lent = {
+      lent_id: 1,
+      lent_user_id: userId,
+      lent_cabinet_id: 1,
+      lent_time: new Date(),
+      expire_time: new Date(),
+    };
+    // TODO: MockCabinetEntity가 구현되면 멤버 변수로 추가
+    // const cabinet = this.mockCabinetEntity.find(
+    //   (cabinet) => cabinet.cabinet_id === lent.lent_cabinet_id,
+    // );
+    // FIXME: MockCabinetEntity가 구현되어 있지 않아 '가짜로 구현하기'를 적용했습니다.
+    // 구현 완료 후 삭제가 필요합니다.
+    const cabinet = {
+      cabinet_id: 1,
+      cabinet_num: 1,
+      lent_type: LentType.PRIVATE,
+      cabinet_title: '가짜 캐비넷 제목',
+      max_user: 1,
+      status: CabinetStatusType.SET_EXPIRE_FULL,
+      location: '가짜 캐비넷 위치',
+      floor: 2,
+      section: '가짜 캐비넷 구역',
+      cabinet_memo: '가짜 캐비넷 메모',
+    };
+    if (!cabinet) {
+      return null;
+    }
+    return {
+      cabinet_id: cabinet.cabinet_id,
+      cabinet_num: cabinet.cabinet_num,
+      lent_type: cabinet.lent_type,
+      cabinet_title: cabinet.cabinet_title,
+      max_user: cabinet.max_user,
+      status: cabinet.status,
+      section: cabinet.section,
+    };
+  }
+
+  async deleteUserById(userId: number): Promise<void> {
+    const user = this.mockUserEntity.find((user) => user.user_id === userId);
+    if (!user) {
+      return;
+    }
+    this.mockUserEntity = this.mockUserEntity.filter(
+      (user) => user.user_id !== userId,
+    );
+  }
+
+  async updateBlackholeDate(
+    userId: number,
+    blackholeDate: Date,
+  ): Promise<void> {
+    const user = this.mockUserEntity.find((user) => user.user_id === userId);
+    if (!user) {
+      return;
+    }
+    user.blackhole_date = blackholeDate;
+  }
+
+  async getUserIfExist(userId: number): Promise<UserDto> {
+    const user = this.mockUserEntity.find((user) => user.user_id === userId);
+    if (!user) {
+      return null;
+    }
+    return {
+      user_id: user.user_id,
+      intra_id: user.intra_id,
+    };
   }
 }
