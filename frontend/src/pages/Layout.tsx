@@ -72,6 +72,7 @@ const Layout = (): JSX.Element => {
   };
 
   const swipeSection = (last: number) => {
+    if (Math.abs(swipeDistance) < 50) return;
     if (last > touchOffset) moveToLeftSection();
     else moveToRightSection();
   };
