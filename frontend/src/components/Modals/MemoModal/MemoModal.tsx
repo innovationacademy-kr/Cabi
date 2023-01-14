@@ -14,7 +14,7 @@ interface MemoModalContainerInterface {
   onClose: React.MouseEventHandler;
   onSave: (newTitle: string | null, newMemo: string) => void;
 }
-const MemoModalContainer = ({
+const MemoModal = ({
   memoModalObj,
   onClose,
   onSave,
@@ -220,4 +220,4 @@ const ButtonWrapperStyled = styled.div<{ mode: string }>`
   }
 `;
 
-export default MemoModalContainer;
+export default MemoModal;
