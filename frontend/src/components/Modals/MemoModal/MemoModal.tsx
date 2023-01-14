@@ -36,7 +36,7 @@ const MemoModal = ({
   const handleClickSave = (e: React.MouseEvent) => {
     //사물함 제목, 사물함 비밀메모 update api 호출
     // onClose(e);
-    if (cabinetTitle) {
+    if (newTitle) {
       onSave(newTitle.current!.value, newMemo.current!.value);
     } else {
       onSave(null, newMemo.current!.value);
@@ -55,18 +55,17 @@ const MemoModal = ({
           <ContentItemSectionStyled>
             <ContentItemWrapperStyled isVisible={cabinetType !== "PRIVATE"}>
               <ContentItemTitleStyled>사물함 이름</ContentItemTitleStyled>
-              {cabinetTitle && (
-                <ContentItemInputStyled
-                  placeholder={cabinetTitle}
-                  mode={mode}
-                  defaultValue={cabinetTitle}
-                  readOnly={mode === "read" ? true : false}
-                  ref={newTitle}
-                  onFocus={(e) => {
-                    e.currentTarget.select();
-                  }}
-                />
-              )}
+
+              <ContentItemInputStyled
+                placeholder={cabinetTitle ? cabinetTitle : ""}
+                mode={mode}
+                defaultValue={cabinetTitle ? cabinetTitle : ""}
+                readOnly={mode === "read" ? true : false}
+                ref={newTitle}
+                onFocus={(e) => {
+                  e.currentTarget.select();
+                }}
+              />
             </ContentItemWrapperStyled>
             <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>비밀 메모</ContentItemTitleStyled>
