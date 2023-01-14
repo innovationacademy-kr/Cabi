@@ -237,8 +237,10 @@ const ItemStyled = styled.div<{
   grid-row-end: ${({ info }) => info.rowEnd};
   background: ${({ info }) =>
     info.type === "cabinet" ? "#9747ff" : "#bcb9b9"};
-  &:hover {
-    opacity: ${({ info }) => (info.type === "cabinet" ? 0.9 : 1)};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: ${({ info }) => (info.type === "cabinet" ? 0.9 : 1)};
+    }
   }
 `;
 
