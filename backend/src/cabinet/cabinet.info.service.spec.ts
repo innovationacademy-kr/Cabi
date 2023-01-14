@@ -1,22 +1,35 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
 import { CabinetInfoService } from "src/cabinet/cabinet.info.service";
-import { CabinetInfoRepository } from "src/cabinet/repository/cabinet.info.repository";
 import { MockCabinetInfoRepository } from "src/cabinet/repository/mock/mock.cabinet.info.repository";
 import { CabinetDto } from "src/dto/cabinet.dto";
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
 import LentType from "src/enums/lent.type.enum";
 
 const repository = {
-    provide: getRepositoryToken(CabinetInfoRepository),
+    provide: 'ICabinetInfoRepository',
     useClass: MockCabinetInfoRepository,
+}
+
+class MockCabinetInfoService{
+    constructor(
+        public mockCabinetInfoRepository: MockCabinetInfoRepository,
+    ){}
+      async updateCabinetStatus(
+        cabinetId: number,
+        status: CabinetStatusType,
+      ): Promise<void> {
+        await this.mockCabinetInfoRepository.updateCabinetStatus(cabinetId, status);
+      }
+      async getCabinetInfo(cabinetId: number): Promise<CabinetDto> {
+        return await this.mockCabinetInfoRepository.getCabinetInfo(cabinetId);
+      }
 }
 
 describe('CabinetInfoService 테스트', () => {
     let cabinetInfoService: CabinetInfoService;
-
-//테스트 메서드가 실행되기 전 beforeeach가 붙은 메서드에서 테스트에 필요한 객체를 새롭게 생성합니다.
-//테스트 클래스 내 메서드가 동일한 조건에서 실행되는 것을 보장하기 위함입니다.
+    let testService: MockCabinetInfoService;
+    //테스트 메서드가 실행되기 전 beforeeach가 붙은 메서드에서 테스트에 필요한 객체를 새롭게 생성합니다.
+    //테스트 클래스 내 메서드가 동일한 조건에서 실행되는 것을 보장하기 위함입니다.
     beforeEach(async () => {
         const app: TestingModule = await Test.createTestingModule({
             providers: [
@@ -24,8 +37,8 @@ describe('CabinetInfoService 테스트', () => {
                 repository,
             ],
         }).compile();
-
         cabinetInfoService = app.get<CabinetInfoService>(CabinetInfoService);
+        testService = new MockCabinetInfoService(new MockCabinetInfoRepository);
     });
 
     describe('getCabinetInfo', () => {
@@ -33,12 +46,19 @@ describe('CabinetInfoService 테스트', () => {
             const cabinetId = 1;
             const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
             
-            expect(cabinetInfo).toBeDefined();
-            expect(cabinetInfo).toBeInstanceOf(CabinetDto);
-            expect(cabinetInfo.status === CabinetStatusType.AVAILABLE);
-            expect(cabinetInfo.lent_type === LentType.CIRCLE);
-            expect(cabinetInfo.section === 'Oasis');
-            expect(cabinetInfo.cabinet_title === '난 너를 믿었던 만큼 난 내 친구도 믿었기에');
+            expect(cabinetInfo).toStrictEqual({
+                cabinet_id: 1,
+                cabinet_num: 100,
+                location: '새롬관',
+                floor: 1,
+                section: 'Oasis',
+                cabinet_status: CabinetStatusType.AVAILABLE,
+                lent_type: LentType.CIRCLE,
+                max_user: 1,
+                min_user: 0,
+                cabinet_title: 'Cabi팀 최고1',
+                status_note: '난 너를 믿었던 만큼 난 내 친구도 믿었기에',
+            });
         });
 
         test('존재하지 않는 캐비닛 id로 조회', async () => {
@@ -53,10 +73,10 @@ describe('CabinetInfoService 테스트', () => {
         test('캐비닛 id에 해당하는 캐비닛의 상태를 status 인자로 설정', async () => {
             const cabinetId = 2; // BROKEN
             const status = CabinetStatusType.AVAILABLE;
-            const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
 
-            await cabinetInfoService.updateCabinetStatus(cabinetId, status);
-            expect(cabinetInfo.status === CabinetStatusType.AVAILABLE);
+            await testService.updateCabinetStatus(cabinetId, status);
+            expect(testService.mockCabinetInfoRepository.MockCabinetInfoEntity[2]['cabinet_status'])
+            .toBe(CabinetStatusType.AVAILABLE);
         });
     });
 
@@ -66,9 +86,10 @@ describe('CabinetInfoService 테스트', () => {
             const lentUsers = await cabinetInfoService.getLentUsers(cabinetId);
 
             expect(Array.isArray(lentUsers)).toBe(true);
-            expect(typeof lentUsers[0]).toBe('LentDto');
-            expect(lentUsers[0].intra_id).toEqual('sanan' || 'eunbikim');
+            expect(lentUsers[0].intra_id).toEqual('sanan');
+            expect(lentUsers[1].intra_id).toEqual('eunbikim');
             expect(lentUsers[0].expire_time).toEqual('2023-01-13 20:00:00');
+            expect(lentUsers[1].expire_time).toEqual('2023-01-13 20:00:00');
         });
     });
 })
