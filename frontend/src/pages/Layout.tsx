@@ -130,9 +130,11 @@ const MainStyled = styled.main`
 
 const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
   min-width: 330px;
-  padding-top: 45px;
+  padding: 45px 40px 20px;
+  position: relative;
   border-left: 1px solid var(--line-color);
   background-color: var(--white);
+  overflow-y: auto;
   ${(props) =>
     props.isHomePage &&
     css`
