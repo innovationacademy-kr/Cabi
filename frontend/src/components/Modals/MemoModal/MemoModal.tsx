@@ -36,7 +36,7 @@ const MemoModal = ({
   const handleClickSave = (e: React.MouseEvent) => {
     //사물함 제목, 사물함 비밀메모 update api 호출
     // onClose(e);
-    if (newTitle) {
+    if (newTitle.current!.value) {
       onSave(newTitle.current!.value, newMemo.current!.value);
     } else {
       onSave(null, newMemo.current!.value);
