@@ -10,6 +10,7 @@ const repository = {
     useClass: MockCabinetInfoRepository,
 }
 
+//transactional 데코레이팅된 함수를 테스팅하기 위해 사용됩니다.
 class MockCabinetInfoService{
     constructor(
         public mockCabinetInfoRepository: MockCabinetInfoRepository,
@@ -44,6 +45,7 @@ describe('CabinetInfoService 테스트', () => {
     describe('getCabinetInfo', () => {
         test('캐비닛 id로 해당 캐비닛의 CabinetDto 반환', async () => {
             const cabinetId = 1;
+
             const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
             
             expect(cabinetInfo).toStrictEqual({
@@ -63,6 +65,7 @@ describe('CabinetInfoService 테스트', () => {
 
         test('존재하지 않는 캐비닛 id로 조회', async () => {
             const cabinetId = 3306;
+            
             const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
 
             expect(cabinetInfo).toBeUndefined();
@@ -75,6 +78,7 @@ describe('CabinetInfoService 테스트', () => {
             const status = CabinetStatusType.AVAILABLE;
 
             await testService.updateCabinetStatus(cabinetId, status);
+            
             expect(testService.mockCabinetInfoRepository.MockCabinetInfoEntity[2]['cabinet_status'])
             .toBe(CabinetStatusType.AVAILABLE);
         });
@@ -83,8 +87,9 @@ describe('CabinetInfoService 테스트', () => {
     describe('getLentUsers', () => {
         test('해당 캐비닛 id를 가진 캐비닛을 빌렸던 유저들의 LentDto 배열을 반환', async () => {
             const cabinetId = 2; // 'sanan', 'eunbikim'
-            const lentUsers = await cabinetInfoService.getLentUsers(cabinetId);
 
+            const lentUsers = await cabinetInfoService.getLentUsers(cabinetId);
+            
             expect(Array.isArray(lentUsers)).toBe(true);
             expect(lentUsers[0].intra_id).toEqual('sanan');
             expect(lentUsers[1].intra_id).toEqual('eunbikim');
