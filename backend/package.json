@@ -26,7 +26,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "setup-test-db": "npm run teardown-test-db; docker-compose -f src/transaction/test/docker-compose.yaml up -d && sleep 3",
+    "teardown-test-db": "docker-compose -f src/transaction/test/docker-compose.yaml down --remove-orphans -v",
+    "test-transaction": "jest --config ./src/transaction/test/jest.config.js --runInBand",
+    "restart-test-transaction": "npm run setup-test-db && npm run test-transaction"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.8.1",
@@ -58,6 +62,7 @@
     "passport": "^0.6.0",
     "passport-42": "^1.2.6",
     "passport-jwt": "^4.0.0",
+    "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
