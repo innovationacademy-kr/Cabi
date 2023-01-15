@@ -1,45 +1,34 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { CabinetInfoService } from "src/cabinet/cabinet.info.service";
 import { MockCabinetInfoRepository } from "src/cabinet/repository/mock/mock.cabinet.info.repository";
-import { CabinetDto } from "src/dto/cabinet.dto";
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
 import LentType from "src/enums/lent.type.enum";
 
-const repository = {
+// Mocking한 repository를 가져옵니다.
+const mockRepository = {
     provide: 'ICabinetInfoRepository',
     useClass: MockCabinetInfoRepository,
 }
 
-//transactional 데코레이팅된 함수를 테스팅하기 위해 사용됩니다.
-class MockCabinetInfoService{
-    constructor(
-        public mockCabinetInfoRepository: MockCabinetInfoRepository,
-    ){}
-      async updateCabinetStatus(
-        cabinetId: number,
-        status: CabinetStatusType,
-      ): Promise<void> {
-        await this.mockCabinetInfoRepository.updateCabinetStatus(cabinetId, status);
-      }
-      async getCabinetInfo(cabinetId: number): Promise<CabinetDto> {
-        return await this.mockCabinetInfoRepository.getCabinetInfo(cabinetId);
-      }
-}
+// @Transactional 데코레이터를 모킹합니다.
+jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => {},
+    Propagation: {},
+    IsolationLevel: {},
+  }));
 
 describe('CabinetInfoService 테스트', () => {
     let cabinetInfoService: CabinetInfoService;
-    let testService: MockCabinetInfoService;
-    //테스트 메서드가 실행되기 전 beforeeach가 붙은 메서드에서 테스트에 필요한 객체를 새롭게 생성합니다.
-    //테스트 클래스 내 메서드가 동일한 조건에서 실행되는 것을 보장하기 위함입니다.
+
     beforeEach(async () => {
         const app: TestingModule = await Test.createTestingModule({
             providers: [
                 CabinetInfoService,
-                repository,
+                //cabinetInfoService에서 주입하는 repository를 MockCabinetInfoRepository로 설정합니다.
+                mockRepository,
             ],
         }).compile();
         cabinetInfoService = app.get<CabinetInfoService>(CabinetInfoService);
-        testService = new MockCabinetInfoService(new MockCabinetInfoRepository);
     });
 
     describe('getCabinetInfo', () => {
@@ -74,12 +63,12 @@ describe('CabinetInfoService 테스트', () => {
 
     describe('updateCabinetStatus', () => {
         test('캐비닛 id에 해당하는 캐비닛의 상태를 status 인자로 설정', async () => {
-            const cabinetId = 2; // BROKEN
+            const cabinetId = 2;
             const status = CabinetStatusType.AVAILABLE;
 
-            await testService.updateCabinetStatus(cabinetId, status);
+            await cabinetInfoService.updateCabinetStatus(cabinetId, status);
             
-            expect(testService.mockCabinetInfoRepository.MockCabinetInfoEntity[2]['cabinet_status'])
+            expect((await cabinetInfoService.getCabinetInfo(cabinetId))['cabinet_status'])
             .toBe(CabinetStatusType.AVAILABLE);
         });
     });
