@@ -260,7 +260,7 @@ export class MockUserRepository implements IUserRepository {
       return {
         user_id: user.user_id,
         intra_id: user.intra_id,
-        blackhole_date: user.blackhole_date,
+        blackholed_at: user.blackhole_date,
       };
     });
   }
