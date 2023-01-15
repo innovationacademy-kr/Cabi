@@ -7,7 +7,8 @@ import SectionPaginationContainer from "@/components/SectionPagination/SectionPa
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 
 const MainPage = () => {
-  const [touchOffset, setTouchOffset] = useState(0);
+  let touchStartPosX: number;
+
   const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
@@ -33,18 +34,18 @@ const MainPage = () => {
     }
   };
 
-  const swipeSection = (last: number) => {
-    const swipeDistance = Math.round(last - touchOffset);
-    if (Math.abs(swipeDistance) < 50) return;
-    if (last > touchOffset) moveToLeftSection();
+  const swipeSection = (touchEndPosX: number) => {
+    const touchOffset = Math.round(touchEndPosX - touchStartPosX);
+    if (Math.abs(touchOffset) < 50) return;
+    if (touchEndPosX > touchStartPosX) moveToLeftSection();
     else moveToRightSection();
   };
 
   return (
     <WapperStyled
-      onTouchStart={(e: React.TouchEvent) =>
-        setTouchOffset(e.changedTouches[0].screenX)
-      }
+      onTouchStart={(e: React.TouchEvent) => {
+        touchStartPosX = e.changedTouches[0].screenX;
+      }}
       onTouchEnd={(e: React.TouchEvent) =>
         swipeSection(e.changedTouches[0].screenX)
       }
