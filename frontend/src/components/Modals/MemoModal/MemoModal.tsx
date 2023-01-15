@@ -215,6 +215,9 @@ const ButtonWrapperStyled = styled.div<{ mode: string }>`
   flex-direction: column;
   align-items: center;
   margin-top: ${({ mode }) => (mode === "read" ? "75px" : "0")};
+  @media (max-height: 745px) {
+    margin-top: ${({ mode }) => (mode === "read" ? "68px" : "0")};
+  }
 `;
 
 export default MemoModalContainer;

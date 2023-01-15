@@ -39,8 +39,10 @@ const MapFloorSelectStyled = styled.div`
   text-indent: 12px;
   border-radius: 10px;
   margin: 30px 0;
-  &:hover {
-    opacity: 0.9;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+    }
   }
 `;
 
