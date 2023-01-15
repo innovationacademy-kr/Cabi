@@ -105,34 +105,90 @@ export class MockCabinetInfoRepository implements ICabinetInfoRepository {
     }
     
     async getLocation(): Promise<string[]> {
-        const location: string[] = [];
+        const allLocation = this.MockCabinetInfoEntity.map((c) => c.location);
+        const setLocation = new Set(allLocation);
+        const location = [...setLocation];
         return location;
       }
     
       async getFloors(location: string): Promise<number[]> {
-        const floors = [];
-    
-        return floors.map((f) => f.cabinet_floor);
+        let allFloors = this.MockCabinetInfoEntity.filter((c) => {
+            if (c.location === location) {
+                return true;
+            }
+        });
+        allFloors = allFloors.map((c) => c.floor);
+        const setFloors = new Set(allFloors);
+        const floors = [...setFloors];
+        return floors;
       }
         
       async getFloorInfo(
         location: string,
         floor: number,
       ): Promise<CabinetsPerSectionResponseDto[]> {
-        const cabinets = []
-        return cabinets;
+        const sections = await this.getSectionInfo(location, floor);
+        let cabinetId = this.MockCabinetInfoEntity.filter((c) => {
+            if (c.location === location && c.floor === floor)
+                return true;
+            }
+        );
+        cabinetId = cabinetId.map((c) => c.cabinet_id);
+        let cabinetInfoDto = [];
+        for (const id of cabinetId) {
+            cabinetInfoDto.push(await this.getCabinetResponseInfo(id));
         }
+        const rtn = sections.map((section) => ({
+            section,
+            cabinets: cabinetInfoDto.filter((cabinet) => cabinet.section === section),
+          }));
+          for (const section of rtn) {
+            section.cabinets.sort((v1, v2) => v1.cabinet_num - v2.cabinet_num);
+          }
+      
+          rtn.sort(
+            (v1, v2) => v1.cabinets[0].cabinet_num - v2.cabinets[0].cabinet_num,
+          );
+          return rtn;
+    }
 
         async getSectionInfo(location: string, floor: number): Promise<string[]> {
-            const section = [];
-            return section;
+            let allSection = this.MockCabinetInfoEntity.filter((c) => {
+                if (c.location === location && c.floor === floor) {
+                    return true;
+                }
+            });
+            allSection = allSection.map((c) => c.section);
+            const setSection = new Set(allSection);
+            const sections = [...setSection];
+            return sections;
           }
 
           async getCabinetResponseInfo(
             cabinet_id: number,
           ): Promise<CabinetInfoResponseDto> {
-            const result = undefined;
-            return result;
+            const cabinetInfo = this.MockCabinetInfoEntity.find((c) => c.cabinet_id === cabinet_id);
+            const lentInfo = this.MockLentEntity.filter((l) => l.cabinet_id === cabinet_id);
+            const cabinetInfoResponse = {
+                cabinet_id: cabinetInfo.cabinet_id,
+                cabinet_num: cabinetInfo.cabinet_num,
+                lent_type: cabinetInfo.lent_type,
+                cabinet_title: cabinetInfo.title,
+                max_user: cabinetInfo.max_user,
+                status: cabinetInfo.status,
+                location: cabinetInfo.location,
+                floor: cabinetInfo.floor,
+                section: cabinetInfo.section,
+                lent_info: lentInfo ? lentInfo.map((l) => ({
+                    user_id: l.user_id,
+                    intra_id: l.intra_id,
+                    lent_id: l.lent_id,
+                    lent_time: l.lent_time,
+                    expire_time: l.expire_time,
+                    is_expired: new Date() > l.expire_time,
+                })) : [],
+            };
+            return cabinetInfoResponse;
           }
 
 
