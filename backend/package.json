@@ -29,8 +29,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "setup-test-db": "npm run teardown-test-db; docker-compose -f src/transaction/test/docker-compose.yaml up -d && sleep 3",
     "teardown-test-db": "docker-compose -f src/transaction/test/docker-compose.yaml down --remove-orphans -v",
-    "test-transaction": "jest --config ./src/transaction/test/jest.config.js --runInBand",
-    "restart-test-transaction": "npm run setup-test-db && npm run test-transaction"
+    "test-transaction": "npm run setup-test-db && jest --config ./src/transaction/test/jest.config.js --runInBand"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.8.1",
