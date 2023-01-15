@@ -6,9 +6,9 @@ import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.sect
 import Cabinet from 'src/entities/cabinet.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { Repository } from 'typeorm';
-import { Transactional } from 'src/decorator/transactional.decorator';
-import { Propagation } from 'src/enums/propagation.enum';
-import { IsolationLevel } from 'src/enums/isolation.enum';
+import { Transactional } from 'src/transaction/src/transactional.decorator';
+import { Propagation } from 'src/transaction/src/propagation.enum';
+import { IsolationLevel } from 'src/transaction/src/isolation.enum';
 import { ICabinetInfoRepository } from './cabinet.info.interface.repository';
 
 export class CabinetInfoRepository implements ICabinetInfoRepository {

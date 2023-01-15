@@ -7,3 +7,7 @@ export class TypeOrmUpdatedPatchError extends Error {
     );
   }
 }
+
+export class TransactionalError extends Error {
+  public name = 'TransactionalError';
+}

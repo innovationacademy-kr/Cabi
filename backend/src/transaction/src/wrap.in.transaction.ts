@@ -1,4 +1,4 @@
-import { Propagation } from 'src/enums/propagation.enum';
+import { Propagation } from 'src/transaction/src/propagation.enum';
 import {
   DataSourceName,
   getDataSourceByName,
@@ -6,10 +6,10 @@ import {
   getTransactionalContext,
   setEntityManagerByDataSourceName,
 } from './common.transaction';
-import { IsolationLevel } from 'src/enums/isolation.enum';
+import { IsolationLevel } from 'src/transaction/src/isolation.enum';
 import { runInNewHookContext } from './hooks.transaction';
 import { EntityManager } from 'typeorm';
-import { TransactionalError } from 'typeorm-transactional';
+import { TransactionalError } from './errors.transaction';
 
 export interface WrapInTransactionOptions {
   /**

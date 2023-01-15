@@ -1,7 +1,7 @@
 import {
   WrapInTransactionOptions,
   wrapInTransaction,
-} from 'src/transaction/wrap.in.transaction';
+} from 'src/transaction/src/wrap.in.transaction';
 
 export function Transactional(
   options?: WrapInTransactionOptions,

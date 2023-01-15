@@ -4,9 +4,9 @@ import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import User from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
-import { Transactional } from 'src/decorator/transactional.decorator';
-import { Propagation } from 'src/enums/propagation.enum';
-import { IsolationLevel } from 'src/enums/isolation.enum';
+import { Transactional } from 'src/transaction/src/transactional.decorator';
+import { Propagation } from 'src/transaction/src/propagation.enum';
+import { IsolationLevel } from 'src/transaction/src/isolation.enum';
 import { IUserRepository } from './user.repository.interface';
 
 export class UserRepository implements IUserRepository {

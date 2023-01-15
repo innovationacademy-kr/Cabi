@@ -21,7 +21,7 @@ import { UtilsModule } from './utils/utils.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BetatestModule } from './betatest/betatest.module';
 import { AdminModule } from './admin/admin.module';
-import { addTransactionalDataSource } from './transaction/common.transaction';
+import { addTransactionalDataSource } from './transaction/src/common.transaction';
 
 @Module({
   imports: [

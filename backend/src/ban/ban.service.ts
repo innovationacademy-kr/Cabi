@@ -6,10 +6,10 @@ import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import LentType from 'src/enums/lent.type.enum';
 import { ConfigService } from '@nestjs/config';
 import { DateCalculator } from 'src/utils/date.calculator.component';
-import { Transactional } from 'src/decorator/transactional.decorator';
-import { Propagation } from 'src/enums/propagation.enum';
-import { IsolationLevel } from 'src/enums/isolation.enum';
-import { runOnTransactionComplete } from 'src/transaction/hooks.transaction';
+import { Transactional } from 'src/transaction/src/transactional.decorator';
+import { Propagation } from 'src/transaction/src/propagation.enum';
+import { IsolationLevel } from 'src/transaction/src/isolation.enum';
+import { runOnTransactionComplete } from 'src/transaction/src/hooks.transaction';
 
 @Injectable()
 export class BanService {

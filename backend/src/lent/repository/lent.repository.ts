@@ -7,9 +7,9 @@ import Cabinet from 'src/entities/cabinet.entity';
 import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
 import { LessThanOrEqual, Repository } from 'typeorm';
-import { Transactional } from 'src/decorator/transactional.decorator';
-import { Propagation } from 'src/enums/propagation.enum';
-import { IsolationLevel } from 'src/enums/isolation.enum';
+import { Transactional } from 'src/transaction/src/transactional.decorator';
+import { Propagation } from 'src/transaction/src/propagation.enum';
+import { IsolationLevel } from 'src/transaction/src/isolation.enum';
 import { ILentRepository } from './lent.repository.interface';
 
 export class lentRepository implements ILentRepository {

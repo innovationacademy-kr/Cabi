@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { LogLevel } from '@nestjs/common';
-import { initializeTransactionalContext } from './transaction/common.transaction';
+import { initializeTransactionalContext } from './transaction/src/common.transaction';
 
 async function bootstrap() {
   initializeTransactionalContext();
