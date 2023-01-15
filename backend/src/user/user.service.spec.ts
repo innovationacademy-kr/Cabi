@@ -26,7 +26,7 @@ const cabinetInfoService = {
 };
 
 jest.mock('typeorm-transactional' as any, () => ({
-  Transactional: () => () => {},
+  Transactional: () => jest.fn(),
   Propagation: {},
   IsolationLevel: {},
 }));
