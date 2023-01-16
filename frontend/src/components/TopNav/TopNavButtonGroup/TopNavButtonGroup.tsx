@@ -6,14 +6,13 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import instance from "@/api/axios/axios.instance";
 
 const TopNavButtonGroup = () => {
-  const { clickCabinet, clickMap, openCabinet, closeMap, closeLeftNav } =
-    useDetailInfo();
+  const { toggleCabinet, toggleMap, openCabinet } = useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
@@ -39,11 +38,9 @@ const TopNavButtonGroup = () => {
 
     setTargetCabinetInfoToMyCabinet();
     if (currentCabinetId !== myInfo.cabinet_id) {
-      closeMap();
-      closeLeftNav();
       openCabinet();
     } else {
-      clickCabinet();
+      toggleCabinet();
     }
   };
   const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";
@@ -69,7 +66,7 @@ const TopNavButtonGroup = () => {
         onClick={clickMyCabinet}
         imgSrc="src/assets/images/myCabinetIcon.svg"
       />
-      <TopNavButton onClick={clickMap} imgSrc="src/assets/images/map.svg" />
+      <TopNavButton onClick={toggleMap} imgSrc="src/assets/images/map.svg" />
     </NaviButtonsStyled>
   );
 };

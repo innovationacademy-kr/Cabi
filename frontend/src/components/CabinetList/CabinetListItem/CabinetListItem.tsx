@@ -5,7 +5,7 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -31,7 +31,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
   );
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
-  const { openCabinet, closeMap } = useDetailInfo();
+  const { openCabinet } = useMenu();
   const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
 
   let cabinetLabelText = "";
@@ -81,7 +81,6 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
       }
     }
     getData(cabinetId);
-    closeMap();
     openCabinet();
   };
 

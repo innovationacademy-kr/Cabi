@@ -2,13 +2,13 @@ import { useState } from "react";
 import styled from "styled-components";
 import exitButton from "@/assets/images/exitButton.svg";
 import MapGrid from "@/components/MapInfo/MapGrid/MapGrid";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 import { useRecoilValue } from "recoil";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import MapFloorSelect from "@/components/MapInfo/MapFloorSelect/MapFloorSelect";
 
 const MapInfo = () => {
-  const { closeMap } = useDetailInfo();
+  const { closeMap } = useMenu();
   const floorInfo = useRecoilValue(currentLocationFloorState);
   const [floor, setFloor] = useState(floorInfo[0]);
   return (

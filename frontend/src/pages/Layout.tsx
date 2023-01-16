@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useResetRecoilState, useSetRecoilState } from "recoil";
-import {
-  currentCabinetIdState,
-  targetCabinetInfoState,
-  userState,
-} from "@/recoil/atoms";
+import { useSetRecoilState } from "recoil";
+import { userState } from "@/recoil/atoms";
 import TopNav from "@/components/TopNav/TopNav.container";
 import LeftNav from "@/components/LeftNav/LeftNav";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
@@ -16,8 +12,7 @@ import { UserDto } from "@/types/dto/user.dto";
 import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import MapInfo from "@/components/MapInfo/MapInfo";
-import useLeftNav from "@/hooks/useLeftNav";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,22 +45,10 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
-  const { closeLeftNav } = useLeftNav();
-  const { closeDetailInfo } = useDetailInfo();
-
-  const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
-  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const { closeAll } = useMenu();
 
   const handleClickBg = () => {
-    closeLeftNav();
-    if (
-      document.getElementById("cabinetDetailArea")?.classList.contains("on") ==
-      true
-    ) {
-      resetTargetCabinetInfo();
-      resetCurrentCabinetId();
-    }
-    closeDetailInfo();
+    closeAll();
   };
 
   return isLoginPage ? (
