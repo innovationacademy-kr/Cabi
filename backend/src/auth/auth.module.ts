@@ -8,7 +8,6 @@ import { AuthService } from './auth.service';
 import { AuthRepository } from './repository/auth.repository';
 import User from 'src/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GoogleStrategy } from 'src/admin/auth/google/google.strategy';
 
 const repo = {
   provide: 'IAuthRepository',
