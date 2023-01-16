@@ -5,7 +5,7 @@ const useLeftNav = () => {
 
   const clickLeftNav = () => {
     if (
-      document.getElementById("leftNavBg")?.classList.contains("on") == true
+      document.getElementById("leftNavWrap")?.classList.contains("on") == true
     ) {
       closeLeftNav();
     } else {
@@ -14,13 +14,13 @@ const useLeftNav = () => {
   };
 
   const openLeftNav = () => {
-    document.getElementById("leftNavBg")?.classList.add("on");
-    document.getElementById("leftNavWrap")?.classList.add("on");
     closeDetailInfo();
+    document.getElementById("menuBg")?.classList.add("on");
+    document.getElementById("leftNavWrap")?.classList.add("on");
   };
 
   const closeLeftNav = () => {
-    document.getElementById("leftNavBg")?.classList.remove("on");
+    document.getElementById("menuBg")?.classList.remove("on");
     document.getElementById("leftNavWrap")?.classList.remove("on");
   };
   return { openLeftNav, closeLeftNav, clickLeftNav };

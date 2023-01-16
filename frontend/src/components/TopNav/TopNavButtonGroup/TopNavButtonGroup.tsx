@@ -12,7 +12,8 @@ import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import instance from "@/api/axios/axios.instance";
 
 const TopNavButtonGroup = () => {
-  const { clickCabinet, clickMap, openCabinet, closeCabinet } = useDetailInfo();
+  const { clickCabinet, clickMap, openCabinet, closeMap, closeLeftNav } =
+    useDetailInfo();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
@@ -35,8 +36,11 @@ const TopNavButtonGroup = () => {
     if (myInfo.cabinet_id === -1) {
       return;
     }
+
     setTargetCabinetInfoToMyCabinet();
     if (currentCabinetId !== myInfo.cabinet_id) {
+      closeMap();
+      closeLeftNav();
       openCabinet();
     } else {
       clickCabinet();

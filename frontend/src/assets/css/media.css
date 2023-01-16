@@ -9,21 +9,24 @@
     z-index: 9;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
+    box-shadow: 0 0 40px 0 var(--bg-shadow);
   }
   #leftNavWrap.on {
     transform: translateX(0%);
   }
 
-  #leftNavBg {
+  #menuBg {
     display: block;
     position: fixed;
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
     background-color: var(--bg-shadow);
     transform: translateX(-100%);
-    z-index: 9;
+    z-index: 8;
   }
-  #leftNavBg.on {
+  #menuBg.on {
     transform: translateX(0%);
   }
 

@@ -81,8 +81,8 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
       }
     }
     getData(cabinetId);
-    openCabinet();
     closeMap();
+    openCabinet();
   };
 
   return (
