@@ -168,7 +168,7 @@ const CabinetLabelStyled = styled.p<{
   isMine: boolean;
 }>`
   font-size: 0.875rem;
-  line-height: 1.125rem;
+  line-height: 1.25rem;
   letter-spacing: -0.02rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
   ${(props) =>
