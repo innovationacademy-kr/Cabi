@@ -26,9 +26,7 @@ export class AdminJWTSignGuard implements CanActivate {
     private readonly adminAuthService: AdminAuthService,
   ) {}
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
     return await this.generateJWTToken(req, res);

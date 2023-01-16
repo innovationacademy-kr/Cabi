@@ -4,7 +4,6 @@ import {
   HttpCode,
   Inject,
   Logger,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
