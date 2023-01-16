@@ -36,7 +36,9 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
    * cb(null, user); 콜백함수는 res 객체의 user라는 필드로 user의 객체를 넘깁니다.
    */
   async validate(req, access_token, refreshToken, profile, cb) {
-    if (!profile.staff && !profile.cursus_users[1]) {
+    const userEmail = profile.email.split('.');
+    if (!profile.staff && !profile.cursus_users[1] ||
+        userEmail[userEmail.length - 1] !== 'kr') {
       cb(null, undefined);
     }
     let blackholed_at: Date;
