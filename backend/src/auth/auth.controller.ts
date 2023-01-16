@@ -73,12 +73,6 @@ export class AuthController {
     return res.redirect(`${this.configService.get<string>('fe_host')}/home`);
   }
 
-  @Get('login/failure')
-  async loginFailure(@Res() res: Response, @User() user: UserSessionDto) {
-    this.logger.log(`${user.intra_id} has failed login due to region.`);
-    return res.redirect('/login');
-  }
-
   @ApiOperation({
     summary: 'cabi에서 로그아웃을 합니다 (JWT 세션 제거)',
     description:
