@@ -33,6 +33,113 @@ describe('CabinetInfoService 테스트', () => {
     cabinetInfoService = app.get<CabinetInfoService>(CabinetInfoService);
   });
 
+  describe('getSpaceInfo', () => {
+    test('DB에 SpaceInfo가 존재할 때 SpaceInfo를 조회', async () => {
+      const spaceInfo = await cabinetInfoService.getSpaceInfo();
+
+      expect(spaceInfo).toBeDefined();
+      expect(spaceInfo.space_data).toContainEqual({
+        location: '새롬관',
+        floors: [1, 4],
+      });
+      expect(spaceInfo.space_data).toContainEqual({
+        location: '마루관',
+        floors: [2],
+      });
+      expect(spaceInfo.space_data).toContainEqual({
+        location: '강민관',
+        floors: [3],
+      });
+    });
+  });
+
+  describe('getCabinetInfoByParam', () => {
+    test('존재하는 location과 floor로 사물함 조회', async () => {
+      const location = '새롬관';
+      const floor = 1;
+
+      const cabinetInfoByParam = await cabinetInfoService.getCabinetInfoByParam(
+        location,
+        floor,
+      );
+      expect(cabinetInfoByParam).toBeDefined();
+      expect(cabinetInfoByParam[0].section).toBe('Oasis');
+    });
+
+    test('존재하지 않는 location의 사물함 조회', async () => {
+      const location = '카비관';
+      const floor = 1;
+
+      expect(async () => {
+        await cabinetInfoService.getCabinetInfoByParam(location, floor);
+      }).rejects.toThrow();
+      expect(async () => {
+        await cabinetInfoService.getCabinetInfoByParam(location, floor);
+      }).rejects.toThrow('🚨 존재하지 않는 사물함 영역입니다 🚨');
+    });
+
+    test('존재하지 않는 floor의 사물함 조회', async () => {
+      const location = '새롬관';
+      const floor = 99;
+
+      expect(async () => {
+        await cabinetInfoService.getCabinetInfoByParam(location, floor);
+      }).rejects.toThrow();
+      expect(async () => {
+        await cabinetInfoService.getCabinetInfoByParam(location, floor);
+      }).rejects.toThrow('🚨 존재하지 않는 사물함 영역입니다 🚨');
+    });
+  });
+  describe('getCabinetResponseInfo', () => {
+    test('존재하는 사물함 id의 responseinfo 조회', async () => {
+      const cabinetId = 1;
+
+      const cabinetResponseInfo =
+        await cabinetInfoService.getCabinetResponseInfo(cabinetId);
+      expect(cabinetResponseInfo).toBeDefined();
+      expect(cabinetResponseInfo).toEqual({
+        cabinet_id: 1,
+        cabinet_num: 100,
+        lent_type: 'CIRCLE',
+        cabinet_title: undefined,
+        max_user: 1,
+        status: undefined,
+        location: '새롬관',
+        floor: 1,
+        section: 'Oasis',
+        lent_info: [
+          {
+            user_id: 131541,
+            intra_id: 'sanan',
+            lent_id: 1234,
+            lent_time: '2023-01-13 20:00:00',
+            expire_time: '2023-01-13 21:00:00',
+            is_expired: false,
+          },
+          {
+            user_id: 424242,
+            intra_id: 'eunbikim',
+            lent_id: 1235,
+            lent_time: '2023-01-13 20:00:00',
+            expire_time: '2023-01-13 21:00:00',
+            is_expired: false,
+          },
+        ],
+      });
+    });
+
+    test('존재하지 않는 사물함 id의 responseinfo 조회', async () => {
+      const cabinetId = 999;
+
+      expect(async () => {
+        await cabinetInfoService.getCabinetResponseInfo(cabinetId);
+      }).rejects.toThrow();
+      expect(async () => {
+        await cabinetInfoService.getCabinetResponseInfo(cabinetId);
+      }).rejects.toThrow('🚨 존재하지 않는 사물함입니다 🚨');
+    });
+  });
+
   describe('getCabinetInfo', () => {
     test('캐비닛 id로 해당 캐비닛의 CabinetDto 반환', async () => {
       const cabinetId = 1;
