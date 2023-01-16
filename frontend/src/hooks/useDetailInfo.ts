@@ -1,17 +1,11 @@
 const useDetailInfo = () => {
-  const leftNavBg = document.getElementById("leftNavBg");
-  const leftNavWrap = document.getElementById("leftNavWrap");
-  const mapInfo = document.getElementById("mapInfo");
-  const cabinetDetailArea = document.getElementById("cabinetDetailArea");
-  const mapFloorOptionBox = document.getElementById("mapFloorOptionBox");
-
   const closeLeftNav = () => {
-    leftNavBg?.classList.remove("on");
-    leftNavWrap?.classList.remove("on");
+    document.getElementById("leftNavBg")?.classList.remove("on");
+    document.getElementById("leftNavWrap")?.classList.remove("on");
   };
 
   const clickMap = () => {
-    if (mapInfo?.classList.contains("on") == true) {
+    if (document.getElementById("mapInfo")?.classList.contains("on") == true) {
       closeMap();
     } else {
       openMap();
@@ -21,27 +15,26 @@ const useDetailInfo = () => {
   };
 
   const openMap = () => {
-    mapInfo?.classList.add("on");
+    document.getElementById("mapInfo")?.classList.add("on");
   };
 
   const closeMap = () => {
-    mapInfo?.classList.remove("on");
-    mapFloorOptionBox?.classList.remove("on");
+    document.getElementById("mapInfo")?.classList.remove("on");
+    document.getElementById("mapFloorOptionBox")?.classList.remove("on");
   };
 
   const clickCabinet = () => {
-    cabinetDetailArea?.classList.toggle("on");
+    document.getElementById("cabinetDetailArea")?.classList.toggle("on");
     closeMap();
     closeLeftNav();
   };
 
   const openCabinet = () => {
-    cabinetDetailArea?.classList.add("on");
+    document.getElementById("cabinetDetailArea")?.classList.add("on");
   };
 
   const closeCabinet = () => {
-    cabinetDetailArea?.classList.remove("on");
-
+    document.getElementById("cabinetDetailArea")?.classList.remove("on");
   };
 
   const closeDetailInfo = () => {

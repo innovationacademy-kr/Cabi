@@ -2,11 +2,11 @@ import useDetailInfo from "@/hooks/useDetailInfo";
 
 const useLeftNav = () => {
   const { closeDetailInfo } = useDetailInfo();
-  const leftNavBg = document.getElementById("leftNavBg");
-  const leftNavWrap = document.getElementById("leftNavWrap");
 
   const clickLeftNav = () => {
-    if (leftNavBg?.classList.contains("on") == true) {
+    if (
+      document.getElementById("leftNavBg")?.classList.contains("on") == true
+    ) {
       closeLeftNav();
     } else {
       openLeftNav();
@@ -14,14 +14,14 @@ const useLeftNav = () => {
   };
 
   const openLeftNav = () => {
-    leftNavBg?.classList.add("on");
-    leftNavWrap?.classList.add("on");
+    document.getElementById("leftNavBg")?.classList.add("on");
+    document.getElementById("leftNavWrap")?.classList.add("on");
     closeDetailInfo();
   };
 
   const closeLeftNav = () => {
-    leftNavBg?.classList.remove("on");
-    leftNavWrap?.classList.remove("on");
+    document.getElementById("leftNavBg")?.classList.remove("on");
+    document.getElementById("leftNavWrap")?.classList.remove("on");
   };
   return { openLeftNav, closeLeftNav, clickLeftNav };
 };
