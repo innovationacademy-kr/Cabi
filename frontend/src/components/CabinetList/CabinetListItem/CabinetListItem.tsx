@@ -31,7 +31,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
   );
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
-  const { openCabinet } = useMenu();
+  const { openCabinet, closeCabinet } = useMenu();
   const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
 
   let cabinetLabelText = "";
@@ -58,12 +58,17 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     )
       setShowUnavailableModal(true);
   };
+
   const handleCloseUnavailableModal = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     setShowUnavailableModal(false);
   };
 
   const selectCabinetOnClick = (status: CabinetStatus, cabinetId: number) => {
+    if (currentCabinetId === cabinetId) {
+      closeCabinet();
+      return;
+    }
     if (
       !isMine &&
       status !== CabinetStatus.AVAILABLE &&
