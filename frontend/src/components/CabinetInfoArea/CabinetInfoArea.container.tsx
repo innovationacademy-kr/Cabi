@@ -9,7 +9,7 @@ import CabinetInfoArea, {
 } from "@/components/CabinetInfoArea/CabinetInfoArea";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
@@ -17,7 +17,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const { closeCabinet } = useDetailInfo();
+  const { closeCabinet } = useMenu();
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환

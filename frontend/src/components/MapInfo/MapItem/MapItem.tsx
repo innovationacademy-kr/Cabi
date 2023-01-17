@@ -5,7 +5,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { currentFloorNumberState } from "@/recoil/atoms";
 import { ISectionInfo } from "@/assets/data/mapPositionData";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 
 const MapItem: React.FC<{
   floor: number;
@@ -16,7 +16,7 @@ const MapItem: React.FC<{
   const { pathname } = useLocation();
   const setCurrentFloor = useSetRecoilState(currentFloorNumberState);
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
-  const { closeMap } = useDetailInfo();
+  const { closeMap } = useMenu();
   const onClick = () => {
     if (pathname === "/home") navigate("/main");
     setCurrentFloor(floor ? floor : floors[0]);

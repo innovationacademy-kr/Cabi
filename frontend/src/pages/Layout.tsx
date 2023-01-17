@@ -12,6 +12,7 @@ import { UserDto } from "@/types/dto/user.dto";
 import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import MapInfo from "@/components/MapInfo/MapInfo";
+import useMenu from "@/hooks/useMenu";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -44,6 +45,12 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
+  const { closeAll } = useMenu();
+
+  const handleClickBg = () => {
+    closeAll();
+  };
+
   return isLoginPage ? (
     <Outlet />
   ) : (
@@ -55,6 +62,7 @@ const Layout = (): JSX.Element => {
         <WrapperStyled>
           <LeftNav isVisible={!isHomePage} />
           <MainStyled>
+            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
           </MainStyled>
           <DetailInfoContainerStyled
@@ -109,4 +117,8 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
         transform: translateX(0%);
       }
     `}
+`;
+
+const MenuBgStyled = styled.div`
+  position: none;
 `;

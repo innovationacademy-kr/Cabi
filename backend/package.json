@@ -13,6 +13,7 @@
     "deploy:main": "aws s3 sync ./deploy s3://42cabi --profile=CABI",
     "invalidate:dev": "aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'",
     "invalidate:main": "aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'",
+    "all:fe": "npm run build:fe && npm run deploy:dev && npm run invalidate:dev",
     "all:dev": "npm run build && npm run build:fe && npm run deploy:dev && npm run invalidate:dev && pm2 reload cabi_dev",
     "all:main": "npm run build && npm run build:fe && npm run deploy:main && npm run invalidate:main && pm2 reload cabi_main",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
