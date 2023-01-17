@@ -20,8 +20,6 @@ const HomePage = () => {
 
   useEffect(() => {
     closeLeftNav();
-    resetCurrentFloor();
-    resetCurrentSection();
 
     return () => {
       closeAll();
