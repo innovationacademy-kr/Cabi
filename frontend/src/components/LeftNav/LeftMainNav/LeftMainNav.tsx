@@ -70,6 +70,14 @@ const LeftMainNav = () => {
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
     if (pathname == "/home") {
+      if (floor === currentFloor) {
+        axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
+          (response) => {
+            setCurrentFloorData(response.data);
+            setCurrentSection(response.data[0].section);
+          }
+        );
+      }
       navigator("/main");
     }
   };
@@ -102,7 +110,11 @@ const LeftMainNav = () => {
           </TopBtnStyled>
           {floors.map((floor, index) => (
             <TopBtnStyled
-              className={floor === currentFloor ? "leftNavButtonActive" : ""}
+              className={
+                pathname != "/home" && floor === currentFloor
+                  ? "leftNavButtonActive"
+                  : ""
+              }
               onClick={() => onClickFloorButton(floor)}
               key={index}
             >
