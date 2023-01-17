@@ -16,7 +16,8 @@ const useMenu = () => {
   };
 
   const openLeftNav = () => {
-    closeAll();
+    closeCabinet();
+    closeMap();
     document.getElementById("menuBg")?.classList.add("on");
     document.getElementById("leftNavWrap")?.classList.add("on");
   };
@@ -39,7 +40,8 @@ const useMenu = () => {
   };
 
   const openMap = () => {
-    closeAll();
+    closeLeftNav();
+    closeCabinet();
     document.getElementById("mapInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };
@@ -64,7 +66,8 @@ const useMenu = () => {
   };
 
   const openCabinet = () => {
-    closeAll();
+    closeLeftNav();
+    closeMap();
     document.getElementById("cabinetDetailArea")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };

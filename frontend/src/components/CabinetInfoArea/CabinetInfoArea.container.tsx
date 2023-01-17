@@ -107,17 +107,11 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
-  const handleCancle = () => {
-    resetTargetCabinetInfo();
-    resetCurrentCabinetId();
-    closeCabinet();
-  };
-
   return (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}
       myCabinetId={myCabinetInfo?.cabinet_id}
-      closeCabinet={handleCancle}
+      closeCabinet={closeCabinet}
     />
   );
 };
