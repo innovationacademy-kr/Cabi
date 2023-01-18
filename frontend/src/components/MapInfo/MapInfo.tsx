@@ -1,18 +1,29 @@
-import { useState } from "react";
 import styled from "styled-components";
 import exitButton from "@/assets/images/exitButton.svg";
 import MapGrid from "@/components/MapInfo/MapGrid/MapGrid";
-import useMenu from "@/hooks/useMenu";
-import { useRecoilValue } from "recoil";
-import { currentLocationFloorState } from "@/recoil/selectors";
 import MapFloorSelect from "@/components/MapInfo/MapFloorSelect/MapFloorSelect";
 
-const MapInfo = () => {
-  const { closeMap } = useMenu();
-  const floorInfo = useRecoilValue(currentLocationFloorState);
-  const [floor, setFloor] = useState(floorInfo[0]);
+const MapInfo = ({
+  touchStart,
+  touchEnd,
+  floor,
+  setFloor,
+  floorInfo,
+  closeMap,
+}: {
+  touchStart: React.TouchEventHandler;
+  touchEnd: React.TouchEventHandler;
+  floor: number;
+  setFloor: React.Dispatch<React.SetStateAction<number>>;
+  floorInfo: number[];
+  closeMap: React.MouseEventHandler;
+}) => {
   return (
-    <MapInfoContainerStyled id="mapInfo">
+    <MapInfoContainerStyled
+      id="mapInfo"
+      onTouchStart={touchStart}
+      onTouchEnd={touchEnd}
+    >
       <HeaderStyled>
         <H2Styled>지도</H2Styled>
         <img
