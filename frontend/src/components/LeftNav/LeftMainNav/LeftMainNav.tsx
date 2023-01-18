@@ -187,9 +187,11 @@ const TopBtnStyled = styled.li`
   &:last-child {
     margin-bottom: 0;
   }
-  &:hover {
-    color: var(--white);
-    background-color: var(--main-color);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--white);
+      background-color: var(--main-color);
+    }
   }
 `;
 
@@ -229,12 +231,6 @@ const BottomBtnStyled = styled.li<{ src: string }>`
   & a {
     color: var(--gray-color);
   }
-  &:hover {
-    color: var(--main-color);
-  }
-  &:hover a {
-    color: var(--main-color);
-  }
   & div {
     width: 24px;
     height: 24px;
@@ -243,9 +239,17 @@ const BottomBtnStyled = styled.li<{ src: string }>`
     background-image: url(${(props) => props.src});
     background-size: cover;
   }
-  &:hover div {
-    filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)
-      brightness(99%) contrast(107%);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--main-color);
+    }
+    &:hover a {
+      color: var(--main-color);
+    }
+    &:hover div {
+      filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)
+        brightness(99%) contrast(107%);
+    }
   }
 `;
 

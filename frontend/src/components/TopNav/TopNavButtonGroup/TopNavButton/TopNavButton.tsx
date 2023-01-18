@@ -25,8 +25,10 @@ const TopNavButtonStyled = styled.div<{ disable?: boolean }>`
   margin-right: 10px;
   cursor: pointer;
   display: ${({ disable }) => (disable ? "none" : "block")};
-  &:hover {
-    opacity: 0.9;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+    }
   }
 `;
 

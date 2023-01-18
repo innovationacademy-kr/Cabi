@@ -6,13 +6,13 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import instance from "@/api/axios/axios.instance";
 
 const TopNavButtonGroup = () => {
-  const { clickCabinet, clickMap, openCabinet, closeCabinet } = useDetailInfo();
+  const { toggleCabinet, toggleMap, openCabinet } = useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
@@ -35,11 +35,12 @@ const TopNavButtonGroup = () => {
     if (myInfo.cabinet_id === -1) {
       return;
     }
+
     setTargetCabinetInfoToMyCabinet();
     if (currentCabinetId !== myInfo.cabinet_id) {
       openCabinet();
     } else {
-      clickCabinet();
+      toggleCabinet();
     }
   };
   const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";

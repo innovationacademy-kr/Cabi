@@ -8,26 +8,23 @@ import {
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import "@/assets/css/homePage.css";
-import useLeftNav from "@/hooks/useLeftNav";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 
 const HomePage = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
-  const { closeLeftNav } = useLeftNav();
-  const { closeDetailInfo } = useDetailInfo();
+  const { closeLeftNav, closeAll } = useMenu();
   const navigator = useNavigate();
 
   useEffect(() => {
-    closeDetailInfo();
     closeLeftNav();
     resetCurrentFloor();
     resetCurrentSection();
 
     return () => {
-      closeDetailInfo();
+      closeAll();
     };
   }, []);
 

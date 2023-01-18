@@ -75,10 +75,12 @@ const MoveSectionButtonStyled = styled.img<{ needRotate?: boolean }>`
   cursor: pointer;
   transform: rotate(${(props) => (props.needRotate ? "180deg" : "0")});
   transition: all 0.2s;
-  &:hover {
-    opacity: 100%;
-    transform: rotate(${(props) => (props.needRotate ? "180deg" : "0")})
-      scale(1.3);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 100%;
+      transform: rotate(${(props) => (props.needRotate ? "180deg" : "0")})
+        scale(1.3);
+    }
   }
 `;
 
@@ -103,8 +105,10 @@ const IndexRectangleStyled = styled.div<{ bgColor: string }>`
   background: ${(props) => props.bgColor};
   cursor: pointer;
   transition: all 0.2s;
-  &:hover {
-    transform: scale(1.3);
-    background-color: var(--lightpurple-color);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: scale(1.3);
+      background-color: var(--lightpurple-color);
+    }
   }
 `;

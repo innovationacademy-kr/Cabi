@@ -58,6 +58,7 @@ const TooltipBox = styled.div`
   font-size: 0.875rem;
   text-align: center;
   line-height: 1.25rem;
+  letter-spacing: -0.02rem;
   white-space: pre-line;
   z-index: 100;
   transition: visibility 0.5s, color 0.5s, background-color 0.5s, width 0.5s,

@@ -186,9 +186,12 @@ const CabiLogoStyled = styled.img`
 const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
   width: 24px;
   height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   margin-bottom: 10px;
   background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
   background-size: contain;
+  background-repeat: no-repeat;
 `;
 
 const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`
@@ -206,9 +209,10 @@ const CabinetRectangleStyled = styled.div<{
 }>`
   width: 80px;
   height: 80px;
+  line-height: 80px;
   border-radius: 10px;
   margin-top: 15px;
-  margin-bottom: 60px;
+  margin-bottom: 3vh;
   background-color: ${(props) => cabinetStatusColorMap[props.cabinetStatus]};
   ${(props) =>
     props.isMine &&
@@ -216,7 +220,6 @@ const CabinetRectangleStyled = styled.div<{
       background-color: var(--mine);
     `};
   font-size: 32px;
-  line-height: 80px;
   color: ${(props) =>
     props.isMine
       ? cabinetLabelColorMap["MINE"]
@@ -227,8 +230,12 @@ const CabinetRectangleStyled = styled.div<{
 const CabinetInfoButtonsContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  margin: 40px 0;
+  justify-content: flex-start;
+  align-items: center;
+  height: 35%;
+  max-height: 210px;
+  margin: 3vh 0;
+  width: 100%;
 `;
 
 const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`

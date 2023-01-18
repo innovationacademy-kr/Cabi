@@ -28,23 +28,18 @@
   line-height: 24px;
   font-weight: 400;
 
-  color-scheme: light dark;
   color: var(--black);
   background-color: #ffffff;
-
-  /* font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%; */
 }
 
 a {
   color: var(--main-color);
 }
 
-a:hover {
-  opacity: 0.9;
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    opacity: 0.9;
+  }
 }
 
 html,
@@ -81,8 +76,10 @@ button {
   font-weight: 300;
 }
 
-button:hover {
-  opacity: 0.9;
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    opacity: 0.9;
+  }
 }
 
 button:disabled {
@@ -148,11 +145,4 @@ input {
 .leftNavButtonActive {
   background: var(--main-color);
   color: var(--white) !important;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: var(--main-color);
-    background-color: #242424;
-  }
 }

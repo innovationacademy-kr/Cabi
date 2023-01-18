@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Button from "@/components/Common/Button";
 import React, { useRef, useState } from "react";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import ModalPortal from "../ModalPortal";
 
 export interface MemoModalInterface {
   cabinetType: CabinetType;
@@ -13,7 +14,7 @@ interface MemoModalContainerInterface {
   onClose: React.MouseEventHandler;
   onSave: (newTitle: string | null, newMemo: string) => void;
 }
-const MemoModalContainer = ({
+const MemoModal = ({
   memoModalObj,
   onClose,
   onSave,
@@ -35,7 +36,7 @@ const MemoModalContainer = ({
   const handleClickSave = (e: React.MouseEvent) => {
     //사물함 제목, 사물함 비밀메모 update api 호출
     // onClose(e);
-    if (cabinetTitle) {
+    if (cabinetType === "SHARE" && newTitle.current!.value) {
       onSave(newTitle.current!.value, newMemo.current!.value);
     } else {
       onSave(null, newMemo.current!.value);
@@ -43,7 +44,7 @@ const MemoModalContainer = ({
     setMode("read");
   };
   return (
-    <>
+    <ModalPortal>
       <BackgroundStyled onClick={onClose} />
       <ModalContainerStyled type={"confirm"}>
         <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
@@ -54,18 +55,17 @@ const MemoModalContainer = ({
           <ContentItemSectionStyled>
             <ContentItemWrapperStyled isVisible={cabinetType !== "PRIVATE"}>
               <ContentItemTitleStyled>사물함 이름</ContentItemTitleStyled>
-              {cabinetTitle && (
-                <ContentItemInputStyled
-                  placeholder={cabinetTitle}
-                  mode={mode}
-                  defaultValue={cabinetTitle}
-                  readOnly={mode === "read" ? true : false}
-                  ref={newTitle}
-                  onFocus={(e) => {
-                    e.currentTarget.select();
-                  }}
-                />
-              )}
+
+              <ContentItemInputStyled
+                placeholder={cabinetTitle ? cabinetTitle : ""}
+                mode={mode}
+                defaultValue={cabinetTitle ? cabinetTitle : ""}
+                readOnly={mode === "read" ? true : false}
+                ref={newTitle}
+                onFocus={(e) => {
+                  e.currentTarget.select();
+                }}
+              />
             </ContentItemWrapperStyled>
             <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>비밀 메모</ContentItemTitleStyled>
@@ -101,7 +101,7 @@ const MemoModalContainer = ({
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
-    </>
+    </ModalPortal>
   );
 };
 
@@ -214,6 +214,9 @@ const ButtonWrapperStyled = styled.div<{ mode: string }>`
   flex-direction: column;
   align-items: center;
   margin-top: ${({ mode }) => (mode === "read" ? "75px" : "0")};
+  @media (max-height: 745px) {
+    margin-top: ${({ mode }) => (mode === "read" ? "68px" : "0")};
+  }
 `;
 
-export default MemoModalContainer;
+export default MemoModal;

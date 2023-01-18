@@ -31,7 +31,7 @@ const TopNav: React.FC<{
   locationsList: Array<string>;
   locationClicked: boolean;
   setLocationClicked: React.Dispatch<boolean>;
-  onClickLogo: React.MouseEventHandler;
+  onClickLogo: React.MouseEventHandler<HTMLImageElement>;
   setCurrentLocationName: SetterOrUpdater<string>;
 }> = (props) => {
   const {
@@ -50,9 +50,9 @@ const TopNav: React.FC<{
           <img src="/src/assets/images/logo.svg" alt="" />
         </LogoDivStyled>
         <LocationSelectBoxStyled>
-          <span onClick={() => setLocationClicked(!locationClicked)}>
+          <div onClick={() => setLocationClicked(!locationClicked)}>
             {currentLocationName}
-          </span>
+          </div>
           <LocationListStyled clicked={locationClicked}>
             {locationsList.map((location, index) => (
               <LocationListItem
@@ -85,14 +85,13 @@ const TopNavContainerStyled = styled.nav`
 
 const LogoStyled = styled.div`
   display: flex;
-  flex-direction: row;
   align-items: center;
-  cursor: pointer;
 `;
 
 const LogoDivStyled = styled.div`
   width: 35px;
   height: 35px;
+  cursor: pointer;
 `;
 
 const LocationSelectBoxStyled = styled.span`
@@ -101,16 +100,18 @@ const LocationSelectBoxStyled = styled.span`
   font-size: 24px;
   font-family: var(--location-font);
   cursor: pointer;
-  & > span {
+  & > div {
     user-select: none !important;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
   }
-  & > span:hover {
-    opacity: 0.9;
+  @media (hover: hover) and (pointer: fine) {
+    & > div:hover {
+      opacity: 0.9;
+    }
   }
-  & > span::after {
+  & > div::after {
     content: "";
     position: absolute;
     right: -20px;
@@ -133,6 +134,7 @@ const LocationListStyled = styled.ul<{ clicked: boolean }>`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   z-index: 100;
   display: ${(props) => (props.clicked ? "block" : "none")};
+  user-select: none !important;
 `;
 
 const LocationListItemStyled = styled.li`
@@ -143,8 +145,10 @@ const LocationListItemStyled = styled.li`
   font-family: var(--main-font);
   line-height: 40px;
   text-indent: 5px;
-  &:hover {
-    opacity: 0.8;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.8;
+    }
   }
 `;
 
