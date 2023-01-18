@@ -7,9 +7,9 @@ export enum additionalModalType {
 }
 
 export const cabinetIconSrcMap = {
-  [CabinetType.PRIVATE]: "src/assets/images/privateIcon.svg",
-  [CabinetType.SHARE]: "src/assets/images/shareIcon.svg",
-  [CabinetType.CIRCLE]: "src/assets/images/circleIcon.svg",
+  [CabinetType.PRIVATE]: "/src/assets/images/privateIcon.svg",
+  [CabinetType.SHARE]: "/src/assets/images/shareIcon.svg",
+  [CabinetType.CIRCLE]: "/src/assets/images/circleIcon.svg",
 };
 
 export const cabinetLabelColorMap = {

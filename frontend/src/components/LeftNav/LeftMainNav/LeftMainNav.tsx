@@ -113,15 +113,15 @@ const LeftMainNav = () => {
       </TopSectionStyled>
       <BottomSectionStyled>
         <BottomBtnsStyled>
-          <BottomBtnStyled src={"src/assets/images/search.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/search.svg"}>
             <div></div>
             Search
           </BottomBtnStyled>
-          <BottomBtnStyled src={"src/assets/images/log.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/log.svg"}>
             <div></div>
             Log
           </BottomBtnStyled>
-          <BottomBtnStyled src={"src/assets/images/slack.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/slack.svg"}>
             <a
               href="https://42born2code.slack.com/archives/C02V6GE8LD7"
               target="_black"
@@ -130,7 +130,7 @@ const LeftMainNav = () => {
               Contact
             </a>
           </BottomBtnStyled>
-          <BottomBtnStyled src={"src/assets/images/circleIconGray.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/circleIconGray.svg"}>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
               target="_blank"
@@ -142,7 +142,7 @@ const LeftMainNav = () => {
 
           <BottomBtnStyled
             onClick={onClickLogoutButton}
-            src={"src/assets/images/close-square.svg"}
+            src={"/src/assets/images/close-square.svg"}
           >
             <div></div>
             Logout

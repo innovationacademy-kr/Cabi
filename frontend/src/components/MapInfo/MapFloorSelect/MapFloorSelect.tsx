@@ -49,13 +49,13 @@ const OptionStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--white);
+  background: var(--wshite);
   color: black;
   cursor: pointer;
 `;
 
 const CurrentFloorStyled = styled.div`
-  background: url("src/assets/images/select.svg") var(--main-color) no-repeat
+  background: url("/src/assets/images/select.svg") var(--main-color) no-repeat
     80% 55%;
   color: white;
   cursor: pointer;

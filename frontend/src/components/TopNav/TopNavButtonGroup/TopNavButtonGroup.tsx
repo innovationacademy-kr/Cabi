@@ -57,15 +57,15 @@ const TopNavButtonGroup = () => {
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
           onClick={axiosRemovePenalty}
-          imgSrc="src/assets/images/happyCcabiWhite.png"
+          imgSrc="/src/assets/images/happyCcabiWhite.png"
         />
       )}
       <TopNavButton
         disable={myInfo.cabinet_id === -1}
         onClick={clickMyCabinet}
-        imgSrc="src/assets/images/myCabinetIcon.svg"
+        imgSrc="/src/assets/images/myCabinetIcon.svg"
       />
-      <TopNavButton onClick={clickMap} imgSrc="src/assets/images/map.svg" />
+      <TopNavButton onClick={clickMap} imgSrc="/src/assets/images/map.svg" />
     </NaviButtonsStyled>
   );
 };
