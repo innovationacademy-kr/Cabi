@@ -5,20 +5,20 @@ import { useRecoilValue } from "recoil";
 import MapInfo from "./MapInfo";
 
 const MapInfoContainer = () => {
-  const [touchOffset, setTouchOffset] = useState(0);
+  const [touchXpos, setTouchXpos] = useState(0);
   const floorInfo = useRecoilValue(currentLocationFloorState);
   const [floor, setFloor] = useState(floorInfo[0]);
   const touchStart = (e: React.TouchEvent) => {
-    setTouchOffset(e.changedTouches[0].clientX);
+    setTouchXpos(e.changedTouches[0].clientX);
   };
   const { closeMap } = useMenu();
 
   const touchEnd = (e: React.TouchEvent) => {
-    const result = e.changedTouches[0].clientX - touchOffset;
+    const offset = e.changedTouches[0].clientX - touchXpos;
     let index = floorInfo.indexOf(floor);
     if (Math.abs(result) < 50) return;
 
-    if (result > 0) {
+    if (offset > 0) {
       index++;
       if (index === floorInfo.length) index = 0;
     } else {
