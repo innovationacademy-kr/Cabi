@@ -15,6 +15,12 @@ function App(): React.ReactElement {
           <Route path="main" element={<MainPage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
+        {/* admin용 라우터 */}
+        <Route path="/admin/" element={<Layout />}>
+          <Route path="home" element={<HomePage />} />
+          <Route path="main" element={<MainPage />} />
+          <Route path="login" element={<LoginPage />} />
+        </Route>
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

@@ -36,7 +36,7 @@ export default RealViewNotification;
 
 const ToolTipIcon = styled.div<{ hasEnoughWidth: boolean }>`
   display: ${(props) => (props.hasEnoughWidth ? "none" : "block")};
-  background-image: url("src/assets/images/cautionSign.svg");
+  background-image: url("/src/assets/images/cautionSign.svg");
   width: 24px;
   height: 24px;
   margin: 0px auto;
