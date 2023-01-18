@@ -41,6 +41,8 @@ const ColorTableStyled = styled.div`
 const ColorTableItemStyled = styled.div<{ color: string }>`
   padding: 5px 0;
   width: 100%;
+  display: flex;
+  align-items: center;
   & > div {
     display: inline-block;
     width: 18px;
