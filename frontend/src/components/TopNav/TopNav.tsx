@@ -47,7 +47,7 @@ const TopNav: React.FC<{
     <TopNavContainerStyled id="topNavWrap">
       <LogoStyled>
         <LogoDivStyled>
-          <img onClick={onClickLogo} src="src/assets/images/logo.svg" alt="" />
+          <img onClick={onClickLogo} src="/src/assets/images/logo.svg" alt="" />
         </LogoDivStyled>
         <LocationSelectBoxStyled>
           <div onClick={() => setLocationClicked(!locationClicked)}>
@@ -119,7 +119,7 @@ const LocationSelectBoxStyled = styled.span`
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    background: url(src/assets/images/select.svg) no-repeat 100%;
+    background: url(/src/assets/images/select.svg) no-repeat 100%;
   }
 `;
 
