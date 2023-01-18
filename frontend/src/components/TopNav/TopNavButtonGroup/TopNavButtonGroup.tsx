@@ -32,12 +32,9 @@ const TopNavButtonGroup = () => {
   }
 
   const clickMyCabinet = () => {
-    if (myInfo.cabinet_id === -1) {
-      return;
-    }
-
-    setTargetCabinetInfoToMyCabinet();
+    if (myInfo.cabinet_id === -1) return;
     if (currentCabinetId !== myInfo.cabinet_id) {
+      setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
       toggleCabinet();
