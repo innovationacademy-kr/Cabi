@@ -69,10 +69,18 @@ const data: IFloorSectionInfo = {
     },
     {
       colStart: 1,
+      colEnd: 3,
+      rowStart: 5,
+      rowEnd: 6,
+      name: "Cluster - Terrace1",
+      type: "cabinet",
+    },
+    {
+      colStart: 1,
       colEnd: 2,
-      rowStart: 6,
+      rowStart: 7,
       rowEnd: 9,
-      name: "Cluster 1 - Terrace",
+      name: `Cluster - Terrace2`,
       type: "cabinet",
     },
   ],
@@ -223,6 +231,8 @@ const ItemStyled = styled.div<{
   onClick: React.MouseEventHandler;
   info: IFloorMapInfo;
 }>`
+  padding: 5px;
+  text-align: center;
   font-size: 0.8rem;
   cursor: pointer;
   color: white;
