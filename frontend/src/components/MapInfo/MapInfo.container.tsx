@@ -16,7 +16,7 @@ const MapInfoContainer = () => {
   const touchEnd = (e: React.TouchEvent) => {
     const offset = e.changedTouches[0].clientX - touchXpos;
     let index = floorInfo.indexOf(floor);
-    if (Math.abs(result) < 50) return;
+    if (Math.abs(offset) < 50) return;
 
     if (offset > 0) {
       index++;
