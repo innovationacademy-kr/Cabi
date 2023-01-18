@@ -7,7 +7,7 @@ import {
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import "@/assets/css/homePage.css";
 import useMenu from "@/hooks/useMenu";
 
