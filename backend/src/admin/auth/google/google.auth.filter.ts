@@ -4,20 +4,23 @@ import {
     ExceptionFilter,
     ForbiddenException,
     HttpException,
-    Logger,
+    Inject,
   } from '@nestjs/common';
-  import { Request, Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+  import { Response } from 'express';
   
   @Catch(ForbiddenException)
   export class GoogleAuthFilter implements ExceptionFilter {
-    private logger = new Logger(GoogleAuthFilter.name);
+    constructor(
+        @Inject(ConfigService)
+        private configService: ConfigService,
+    ){}
     catch(exception: HttpException, host: ArgumentsHost) {
       const ctx = host.switchToHttp();
       const response = ctx.getResponse<Response>();
-      const request = ctx.getRequest<Request>();
       const status = exception.getStatus();
       
-      response.status(status).redirect('api/admin/auth/login/failure');
+      response.status(status).redirect(`${this.configService.get<string>('FE_HOST')}/admin/login/failure`);
     }
   }
   
