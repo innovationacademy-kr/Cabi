@@ -40,17 +40,18 @@ export class AdminJWTSignGuard implements CanActivate {
   ): Promise<boolean> {
     const user = request.user as AdminUserDto | undefined;
     if (user === undefined) {
-      this.logger.debug(`can't generate JWTToken`);
+      this.logger.debug(`can't generate ${user.email}'s admin_access Token`);
       return false;
     }
     await this.adminAuthService.addUserIfNotExists(user);
     const role = await this.adminAuthService.getAdminUserRole(user.email);
     if (role === AdminUserRole.AUTHORIZE_WAITING) {
+      this.logger.log(`${user.email} has failed to login due to role.`);
       return false;
     }
     user.role = role;
     const token = this.jwtService.sign(user);
-    this.logger.debug(`generete ${user.email}'s token`);
+    this.logger.debug(`generated ${user.email}'s token`);
     if (this.configService.get<boolean>('is_local') === true) {
       response.cookie('admin_access_token', token);
     } else {
