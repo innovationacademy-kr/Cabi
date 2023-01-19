@@ -33,6 +33,8 @@ const MapGrid = ({ floor }: { floor: number }) => {
 
 const MapGridStyled = styled.div`
   width: 100%;
+  padding: 3px;
+  text-align: center;
   max-height: 580px;
   height: 100%;
   background: #e7e7e7;
