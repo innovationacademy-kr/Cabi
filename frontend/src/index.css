@@ -50,6 +50,11 @@ body {
   overflow: hidden;
 }
 
+/* iOS Pinch Zoom disabled */
+body {
+  touch-action: pan-x pan-y;
+}
+
 #root {
   width: 100%;
   height: 100%;
