@@ -40,21 +40,17 @@ const LentModal: React.FC<{
   );
 
   const formattedExpireDate = getExpireDateString(props.lentType);
-  const privateLentDetail = `
-    대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
-    귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
-  `;
-  const shareLentDetail = `
-    대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
-    대여 후 ${
-      import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD
-    }시간 이내 취소(반납) 시,
-    ${
-      import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY
-    }시간의 대여 불가 패널티가 적용됩니다.
-    “메모 내용”은 공유 인원끼리 공유됩니다.
-    귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.
-    `;
+  const privateLentDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
+    귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
+  const shareLentDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
+대여 후 ${
+    import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD
+  }시간 이내 취소(반납) 시,
+${
+  import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY
+}시간의 대여 불가 패널티가 적용됩니다.
+“메모 내용”은 공유 인원끼리 공유됩니다.
+귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
   const tryLentRequest = async (e: React.MouseEvent) => {
     try {
       await axiosLentId(currentCabinetId);
