@@ -6,7 +6,6 @@ const NotFoundPage = () => {
 
   return (
     <ErrorTemplate
-      id="notFoundPage"
       title="404 Not Found"
       subTitle="원하시는 페이지를 찾을 수 없습니다."
       content="요청하신 페이지가 사라졌거나, "
