@@ -59,7 +59,6 @@ const useMenu = () => {
   const closeLent = () => {
     if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
       document.getElementById("lentInfo")?.classList.remove("on");
-      document.getElementById("mapFloorOptionBox")?.classList.remove("on");
       document.getElementById("menuBg")?.classList.remove("on");
     }
   };
@@ -114,6 +113,7 @@ const useMenu = () => {
   const closeAll = () => {
     closeLeftNav();
     closeCabinet();
+    closeLent();
     closeMap();
   };
 

@@ -73,6 +73,8 @@ const PageButtonStyled = styled.div<{
 
 const GoBackButtonStyled = styled.div`
   color: var(--lightpurple-color);
+  font-size: 0.875rem;
+  text-decoration: underline;
   cursor: pointer;
 `;
 
@@ -88,15 +90,16 @@ const ButtonContainerStyled = styled.div`
 `;
 
 const TitleContainer = styled.div`
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  margin-bottom: 30px;
 `;
 
 const TitleStyled = styled.h1`
-  font-size: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
 `;
 
 const LentLogStyled = styled.div`
@@ -104,9 +107,8 @@ const LentLogStyled = styled.div`
   top: 80px;
   right: 0;
   min-width: 330px;
-  width: 30px;
   height: calc(100% - 80px);
-  padding: 40px;
+  padding: 40px 20px;
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;

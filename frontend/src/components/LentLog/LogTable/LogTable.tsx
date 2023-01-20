@@ -42,7 +42,7 @@ const LogTable = ({ data }: { data: LentLogDto[] | undefined }) => {
 };
 
 const LogTableWrapperstyled = styled.div`
-  width: 90%;
+  width: 100%;
   max-width: 800px;
   border-radius: 10px;
   overflow: hidden;

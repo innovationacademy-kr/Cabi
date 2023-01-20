@@ -3,9 +3,11 @@ import styled from "styled-components";
 import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
 import { LentLogDto } from "@/types/dto/lent.dto";
+import useMenu from "@/hooks/useMenu";
 
 const LogPage = () => {
   const [lentLog, setLentLog] = useState<LentLogDto[] | undefined>(undefined);
+  const { toggleLent } = useMenu();
 
   useEffect(() => {
     const getLentLog = async () => {
@@ -22,7 +24,7 @@ const LogPage = () => {
 
   return (
     <WrapperStyled>
-      <TitleStyled>사물함 대여 기록</TitleStyled>
+      <TitleStyled onClick={() => toggleLent()}>사물함 대여 기록</TitleStyled>
       <SubTitleStyled>
         최근 10회의 대여 기록을 확인할 수 있습니다.
       </SubTitleStyled>
@@ -38,7 +40,7 @@ const WrapperStyled = styled.div`
   align-items: center;
   padding: 70px 0;
   @media screen and (max-width: 768px) {
-    padding: 40px 0;
+    padding: 40px 20px;
   }
 `;
 
