@@ -13,7 +13,6 @@ import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import useMenu from "@/hooks/useMenu";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
-import LentLogContainer from "@/components/LentLog/LentLog.container";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -72,7 +71,6 @@ const Layout = (): JSX.Element => {
           >
             <CabinetInfoAreaContainer />
           </DetailInfoContainerStyled>
-          <LentLogContainer />
           <MapInfoContainer />
         </WrapperStyled>
       )}
