@@ -30,7 +30,7 @@ const LogTable = ({ data }: { data: ILogData[] }) => {
 };
 
 const LogTableStyled = styled.table`
-  width: 90%;
+  width: 95%;
   background: var(--white);
   margin: 0 auto;
   margin-top: 50px;

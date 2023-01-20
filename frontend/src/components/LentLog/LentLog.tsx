@@ -1,43 +1,88 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import LogTable from "@/components/LentLog/LogTable/LogTable";
 
-const dummyData = createDummyData();
-
-function createDummyData() {
-  const result = [];
-
-  for (let i = 1; i <= 10; i++) {
-    result.push({
-      loc: "2F - " + i,
-      lent_begin: "23-01-01",
-      lent_end: "23-01-31",
-    });
-  }
-  return result;
+interface ILogData {
+  loc: string;
+  lent_begin: string;
+  lent_end: string;
 }
-const LentLog = () => {
+
+interface ILentLog {
+  closeLent: React.MouseEventHandler;
+  logs: ILogData[];
+  page: number;
+  totalPage: number;
+  onClickPrev: React.MouseEventHandler;
+  onClickNext: React.MouseEventHandler;
+}
+
+const LentLog = ({
+  closeLent,
+  logs,
+  page,
+  totalPage,
+  onClickPrev,
+  onClickNext,
+}: ILentLog) => {
   return (
-    <LentLogStyled>
+    <LentLogStyled id="lentInfo">
       <TitleContainer>
         <TitleStyled>대여 기록</TitleStyled>
-        <Link to="#">뒤로 가기</Link>
+        <GoBackButtonStyled onClick={closeLent}>뒤로 가기</GoBackButtonStyled>
       </TitleContainer>
-      <LogTable data={dummyData} />
+      <LogTable data={logs} />
       <ButtonContainerStyled>
-        <PageButtonStyled>이전</PageButtonStyled>
-        <PageButtonStyled>다음</PageButtonStyled>
+        <PageButtonStyled
+          page={page}
+          totalPage={totalPage}
+          type="prev"
+          onClick={onClickPrev}
+        >
+          이전
+        </PageButtonStyled>
+        <PageButtonStyled
+          page={page}
+          totalPage={totalPage}
+          type="next"
+          onClick={onClickNext}
+        >
+          다음
+        </PageButtonStyled>
       </ButtonContainerStyled>
     </LentLogStyled>
   );
 };
 
-const PageButtonStyled = styled.div`
+const PageButtonStyled = styled.div<{
+  page: number;
+  totalPage: number | undefined;
+  type: string;
+}>`
   cursor: pointer;
   color: var(--main-color);
+  position: absolute;
+  display: ${({ page, totalPage, type }) => {
+    if (type == "prev" && page == 1) return "none";
+    if (type == "next" && page == totalPage) return "none";
+    return "block";
+  }};
+  ${({ type }) =>
+    type === "prev"
+      ? css`
+          left: 0;
+        `
+      : css`
+          right: 0;
+        `}
+`;
+
+const GoBackButtonStyled = styled.div`
+  color: var(--lightpurple-color);
+  cursor: pointer;
 `;
 
 const ButtonContainerStyled = styled.div`
+  position: relative;
   width: 80%;
   height: 50px;
   display: flex;
@@ -60,9 +105,24 @@ const TitleStyled = styled.h1`
 `;
 
 const LentLogStyled = styled.div`
+  position: fixed;
+  top: 80px;
+  right: 0;
+  min-width: 330px;
+  width: 30px;
+  height: calc(100% - 80px);
+  padding: 40px;
+  z-index: 9;
+  transform: translateX(120%);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 40px 0 var(--bg-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background: var(--white);
-  width: 100%;
-  height: 100%;
+  &.on {
+    transform: translateX(0);
+  }
 `;
 
 export default LentLog;

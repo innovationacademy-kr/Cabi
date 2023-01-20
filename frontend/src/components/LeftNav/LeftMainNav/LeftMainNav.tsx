@@ -21,6 +21,7 @@ import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 import { removeCookie } from "@/api/react_cookie/cookies";
 import useIsMount from "@/hooks/useIsMount";
 import { UserDto } from "@/types/dto/user.dto";
+import useMenu from "@/hooks/useMenu";
 
 const LeftMainNav = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
@@ -42,6 +43,7 @@ const LeftMainNav = () => {
   const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
     isCurrentSectionRenderState
   );
+  const { toggleLent } = useMenu();
 
   useEffect(() => {
     if (currentFloor === undefined) return;
@@ -86,6 +88,9 @@ const LeftMainNav = () => {
     navigator("/home");
   };
 
+  const onClickLentLogButton = () => {
+    toggleLent();
+  };
   const onClickLogoutButton = (): void => {
     if (import.meta.env.VITE_IS_LOCAL === "true") {
       removeCookie("access_token");
@@ -129,7 +134,10 @@ const LeftMainNav = () => {
             <div></div>
             Search
           </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/log.svg"}>
+          <BottomBtnStyled
+            src={"/src/assets/images/log.svg"}
+            onClick={onClickLentLogButton}
+          >
             <div></div>
             Log
           </BottomBtnStyled>

@@ -11,9 +11,9 @@ import { axiosMyInfo } from "@/api/axios/axios.custom";
 import { UserDto } from "@/types/dto/user.dto";
 import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
-import MapInfo from "@/components/MapInfo/MapInfo";
 import useMenu from "@/hooks/useMenu";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
+import LentLogContainer from "@/components/LentLog/LentLog.container";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -70,9 +70,9 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isHomePage={isHomePage}
           >
-            {/* <LentLog /> */}
             <CabinetInfoAreaContainer />
           </DetailInfoContainerStyled>
+          <LentLogContainer />
           <MapInfoContainer />
         </WrapperStyled>
       )}

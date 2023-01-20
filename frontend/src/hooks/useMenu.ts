@@ -18,6 +18,7 @@ const useMenu = () => {
   const openLeftNav = () => {
     closeCabinet();
     closeMap();
+    closeLent();
     document.getElementById("menuBg")?.classList.add("on");
     document.getElementById("leftNavWrap")?.classList.add("on");
   };
@@ -39,9 +40,34 @@ const useMenu = () => {
     }
   };
 
+  const toggleLent = () => {
+    if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
+      closeLent();
+    } else {
+      openLent();
+    }
+  };
+
+  const openLent = () => {
+    closeLeftNav();
+    closeCabinet();
+    closeMap();
+    document.getElementById("lentInfo")?.classList.add("on");
+    document.getElementById("menuBg")?.classList.add("on");
+  };
+
+  const closeLent = () => {
+    if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
+      document.getElementById("lentInfo")?.classList.remove("on");
+      document.getElementById("mapFloorOptionBox")?.classList.remove("on");
+      document.getElementById("menuBg")?.classList.remove("on");
+    }
+  };
+
   const openMap = () => {
     closeLeftNav();
     closeCabinet();
+    closeLent();
     document.getElementById("mapInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };
@@ -68,6 +94,7 @@ const useMenu = () => {
   const openCabinet = () => {
     closeLeftNav();
     closeMap();
+    closeLent();
     document.getElementById("cabinetDetailArea")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
   };
@@ -101,6 +128,9 @@ const useMenu = () => {
     openCabinet,
     closeCabinet,
     closeAll,
+    toggleLent,
+    openLent,
+    closeLent,
   };
 };
 
