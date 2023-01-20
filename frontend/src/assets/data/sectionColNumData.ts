@@ -29,12 +29,12 @@ export const staticColNumData: ILocationColNum[] = [
             colNum: 5,
           },
           {
-            section: "Cluster 1 - Terrace2",
-            colNum: 5,
-          },
-          {
             section: "Cluster 1 - Terrace1",
             colNum: 8,
+          },
+          {
+            section: "Cluster 1 - Terrace2",
+            colNum: 5,
           },
           {
             section: "Oasis",
