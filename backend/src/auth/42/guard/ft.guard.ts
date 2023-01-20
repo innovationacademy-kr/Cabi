@@ -6,15 +6,10 @@ import { AuthGuard } from '@nestjs/passport';
  */
 @Injectable()
 export class FtGuard extends AuthGuard('42') {
-    handleRequest<TUser = any>(err: any, user: any): TUser {
-        if (err || !user) {
-          throw (
-            err ||
-            new UnauthorizedException(
-              'Sorry 🥲 Cabi only services in korea.\nfeel free to contact us in slack : #42seoul_club_cabinet',
-            )
-          );
-        }
-        return user;
-      }
+  handleRequest<TUser = any>(err: any, user: any): TUser {
+    if (err || !user) {
+      throw err || new UnauthorizedException();
+    }
+    return user;
+  }
 }
