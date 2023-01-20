@@ -13,21 +13,21 @@ import useMenu from "@/hooks/useMenu";
 //   "End of Cluster 2",
 // ];
 
-const LeftSectionNav = (props: { isVisible: boolean }) => {
-  const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
-  const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
-    currentSectionNameState
-  );
+interface ILeftSectionNav {
+  isVisible: boolean;
+  onClickSection: Function;
+  currentFloorSection: string;
+  floorSection: string[];
+}
 
-  const { closeLeftNav } = useMenu();
-
-  const onClickSection = (section: string) => {
-    closeLeftNav();
-    setCurrentFloorSection(section);
-  };
-
+const LeftSectionNav = ({
+  isVisible,
+  currentFloorSection,
+  onClickSection,
+  floorSection,
+}: ILeftSectionNav) => {
   return (
-    <LeftNavOptionStyled isVisible={props.isVisible}>
+    <LeftNavOptionStyled isVisible={isVisible}>
       {floorSection.map((section: string, index: number) => (
         <FloorSectionStyled
           className={
