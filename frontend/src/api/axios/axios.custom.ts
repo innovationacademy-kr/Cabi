@@ -119,10 +119,12 @@ export const axiosReturn = async (): Promise<any> => {
   }
 };
 
-const axiosMyLentLogURL = "/api/my_lent_info/log/";
+const axiosMyLentLogURL = "api/my_lent_info/log";
 export const axiosMyLentLog = async (page: number): Promise<any> => {
   try {
-    const response = await instance.get(`${axiosMyLentLogURL}${page}/10`);
+    const response = await instance.get(axiosMyLentLogURL, {
+      params: { page: page, length: 10 },
+    });
     return response;
   } catch (error) {
     throw error;
