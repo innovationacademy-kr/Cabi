@@ -4,7 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  Param,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -63,12 +63,12 @@ export class MyLentInfoController {
     return result;
   }
 
-  @Get('log/:page/:length')
+  @Get('log')
   @UseGuards(JwtAuthGuard)
   async getMyLentLog(
     @User() user: UserSessionDto,
-    @Param('page') page: number,
-    @Param('length') length: number,
+    @Query('page') page: number,
+    @Query('length') length: number,
   ): Promise<LogPagenationDto> {
     this.logger.debug(`call getMyLentLog by ${user.intra_id}`);
     const result = await this.adminLogService.getLentLogByUserId(
