@@ -18,7 +18,7 @@ const MapInfoContainer = () => {
     let index = floorInfo.indexOf(floor);
     if (Math.abs(offset) < 50) return;
 
-    if (offset > 0) {
+    if (offset < 0) {
       index++;
       if (index === floorInfo.length) index = 0;
     } else {

@@ -70,7 +70,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       colEnd: 3,
       rowStart: 5,
       rowEnd: 6,
-      name: "Cluster 1 - Terrace1",
+      name: "Cluster 1 - Terrace2",
       type: "cabinet",
     },
     {
@@ -78,7 +78,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       colEnd: 2,
       rowStart: 7,
       rowEnd: 9,
-      name: "Cluster 1 - Terrace2",
+      name: "Cluster 1 - Terrace1",
       type: "cabinet",
     },
   ],
