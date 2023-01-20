@@ -20,7 +20,7 @@ export class MockCabinetInfoRepository implements ICabinetInfoRepository {
       floor: 1,
       section: 'Oasis',
       cabinet_status: CabinetStatusType.AVAILABLE,
-      lent_type: LentType.CIRCLE,
+      lent_type: LentType.CLUB,
       max_user: 1,
       min_user: 0,
       cabinet_title: 'Cabi팀 최고1',
