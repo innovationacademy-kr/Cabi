@@ -57,7 +57,7 @@ const ServiceManual = ({
         </article>
         <article className="article">
           <div>
-            <img src="/src/assets/images/circleIcon.svg" alt="" />
+            <img src="/src/assets/images/clubIcon.svg" alt="" />
           </div>
           <h3>동아리 사물함</h3>
           <p>

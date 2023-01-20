@@ -42,7 +42,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
       cabinetLabelText = props.lent_info[0]?.intra_id;
     else if (props.lent_type === "SHARE")
       cabinetLabelText = props.lent_info.length + " / " + props.max_user;
-    else if (props.lent_type === "CIRCLE")
+    else if (props.lent_type === "CLUB")
       cabinetLabelText = props.cabinet_title ? props.cabinet_title : "";
   } else {
     //사용불가인 경우

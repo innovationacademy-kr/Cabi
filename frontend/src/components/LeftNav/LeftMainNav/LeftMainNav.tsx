@@ -142,13 +142,13 @@ const LeftMainNav = () => {
               Contact
             </a>
           </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/circleIconGray.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/clubIconGray.svg"}>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
               target="_blank"
             >
               <div></div>
-              Circle
+              Club
             </a>
           </BottomBtnStyled>
 
