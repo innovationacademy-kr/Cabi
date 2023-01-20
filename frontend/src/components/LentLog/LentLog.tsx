@@ -1,15 +1,10 @@
 import styled, { css } from "styled-components";
 import LogTable from "@/components/LentLog/LogTable/LogTable";
-
-interface ILogData {
-  loc: string;
-  lent_begin: string;
-  lent_end: string;
-}
+import { LentLogDto } from "@/types/dto/lent.dto";
 
 interface ILentLog {
   closeLent: React.MouseEventHandler;
-  logs: ILogData[];
+  logs: LentLogDto[];
   page: number;
   totalPage: number;
   onClickPrev: React.MouseEventHandler;

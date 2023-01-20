@@ -1,10 +1,11 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
 import LoginPage from "@/pages/LoginPage";
 import HomePage from "@/pages/HomePage";
 import MainPage from "@/pages/MainPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import LogPage from "@/pages/LogPage";
 
 function App(): React.ReactElement {
   return (
@@ -14,6 +15,7 @@ function App(): React.ReactElement {
           <Route path="home" element={<HomePage />} />
           <Route path="main" element={<MainPage />} />
           <Route path="login" element={<LoginPage />} />
+          <Route path="log" element={<LogPage />} />
         </Route>
         {/* admin용 라우터 */}
         <Route path="/admin/" element={<Layout />}>

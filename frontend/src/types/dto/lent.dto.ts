@@ -6,3 +6,15 @@ export interface LentDto {
   expire_time: Date; // 만료 시간
   is_expired: boolean; // 연체 여부
 }
+
+export interface LentLogDto {
+  location: string;
+  floor: number;
+  section: string;
+  cabinet_id: number;
+  cabinet_num: number;
+  intra_id: string;
+  lent_time: Date;
+  return_time: Date;
+  user_id: number;
+}

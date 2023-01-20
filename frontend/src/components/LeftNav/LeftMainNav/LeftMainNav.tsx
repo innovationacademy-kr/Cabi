@@ -71,7 +71,7 @@ const LeftMainNav = () => {
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
-    if (pathname == "/home") {
+    if (pathname != "/main") {
       if (floor === currentFloor) {
         axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
           (response) => {
@@ -89,8 +89,11 @@ const LeftMainNav = () => {
   };
 
   const onClickLentLogButton = () => {
-    toggleLent();
+    resetCurrentFloor();
+    resetCurrentSection();
+    navigator("/log");
   };
+
   const onClickLogoutButton = (): void => {
     if (import.meta.env.VITE_IS_LOCAL === "true") {
       removeCookie("access_token");
