@@ -42,10 +42,8 @@ const ReturnModal: React.FC<{
     "myCabinet",
     myLentInfo.lent_info ? myLentInfo.lent_info[0].expire_time : undefined
   );
-  const returnDetail = `
-    대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
-    지금 반납 하시겠습니까?
-  `;
+  const returnDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
+지금 반납 하시겠습니까?`;
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
       await axiosReturn();
