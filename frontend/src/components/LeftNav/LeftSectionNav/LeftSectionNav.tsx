@@ -1,17 +1,5 @@
-import { useRecoilValue, useRecoilState } from "recoil";
-import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import CabinetColorTable from "@/components/LeftNav/CabinetColorTable/CabinetColorTable";
-import { currentSectionNameState } from "@/recoil/atoms";
-import useMenu from "@/hooks/useMenu";
-
-// const floorSection = [
-//   "End of Cluster1",
-//   "Cluster 1 - OA",
-//   "Cluster 1 - Terrace",
-//   "Oasis",
-//   "End of Cluster 2",
-// ];
 
 interface ILeftSectionNav {
   isVisible: boolean;

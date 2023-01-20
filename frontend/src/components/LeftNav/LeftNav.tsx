@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import LeftMainNavContainer from "./LeftMainNav/LeftMainNav.container";
-import LeftSectionNavContainer from "./LeftSectionNav/LeftSectionNav.container";
+import LeftMainNavContainer from "@/components/LeftNav/LeftMainNav/LeftMainNav.container";
+import LeftSectionNavContainer from "@/components/LeftNav/LeftSectionNav/LeftSectionNav.container";
 
 const LeftNav: React.FC<{ isVisible: boolean }> = (props) => {
   return (

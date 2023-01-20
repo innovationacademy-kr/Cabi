@@ -20,7 +20,7 @@ import {
   useResetRecoilState,
   useSetRecoilState,
 } from "recoil";
-import LeftMainNav from "./LeftMainNav";
+import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
 
 const LeftMainNavContainer = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
