@@ -20,7 +20,7 @@ export class CabinetDto {
 
   @ApiProperty({
     description: '사물함의 종류 (개인, 공유, 동아리)',
-    enum: ['PRIVATE', 'SHARE', 'CIRCLE'],
+    enum: ['PRIVATE', 'SHARE', 'CLUB'],
     example: 'PRIVATE',
   })
   lent_type: LentType; // 사물함의 종류 (개인, 공유, 동아리)

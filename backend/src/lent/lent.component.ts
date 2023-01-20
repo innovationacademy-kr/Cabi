@@ -83,8 +83,8 @@ export class LentTools {
       case CabinetStatusType.AVAILABLE:
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         // 동아리 사물함인지 확인
-        if (cabinet.lent_type === LentType.CIRCLE) {
-          excepction_type = LentExceptionType.LENT_CIRCLE;
+        if (cabinet.lent_type === LentType.CLUB) {
+          excepction_type = LentExceptionType.LENT_CLUB;
           break;
         }
         if (cabinet.lent_type === LentType.SHARE) {
