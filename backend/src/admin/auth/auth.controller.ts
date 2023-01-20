@@ -4,7 +4,6 @@ import {
   HttpCode,
   Inject,
   Logger,
-  Param,
   Req,
   Res,
   UseGuards,
