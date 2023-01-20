@@ -7,6 +7,7 @@ import {
 import CabinetList from "@/components/CabinetList/CabinetList";
 import RealViewNotification from "@/components/CabinetList/RealViewNotification/RealViewNotification";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import EmptySection from "./EmptySection";
 
 const CabinetListContainer = (): JSX.Element => {
   const colNum = useRecoilValue(currentSectionColNumState);
@@ -20,6 +21,7 @@ const CabinetListContainer = (): JSX.Element => {
       {colNum && (
         <CabinetList colNum={colNum} cabinetInfo={currentSectionCabinets} />
       )}
+      {!colNum && <EmptySection />}
     </React.Fragment>
   );
 };
