@@ -3,28 +3,27 @@ import styled from "styled-components";
 import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
 import { LentLogDto } from "@/types/dto/lent.dto";
-import useMenu from "@/hooks/useMenu";
 
 const LogPage = () => {
   const [lentLog, setLentLog] = useState<LentLogDto[] | undefined>(undefined);
-  const { toggleLent } = useMenu();
+
+  const getLentLog = async () => {
+    try {
+      const response = await axiosMyLentLog(0);
+      const lentLogs: LentLogDto[] = response.data.result;
+      setLentLog(lentLogs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const getLentLog = async () => {
-      try {
-        const response = await axiosMyLentLog(1);
-        const lentLogArray: LentLogDto[] = response.data.result;
-        setLentLog(lentLogArray);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getLentLog();
   }, []);
 
   return (
     <WrapperStyled>
-      <TitleStyled onClick={() => toggleLent()}>사물함 대여 기록</TitleStyled>
+      <TitleStyled>사물함 대여 기록</TitleStyled>
       <SubTitleStyled>
         최근 10회의 대여 기록을 확인할 수 있습니다.
       </SubTitleStyled>
