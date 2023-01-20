@@ -3,7 +3,6 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Inject,
   Logger,
   Param,
   UseGuards,

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
@@ -13,6 +13,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
  */
 @Injectable()
 export class FtStrategy extends PassportStrategy(Strategy, '42') {
+  private logger = new Logger(FtStrategy.name);
   constructor(private readonly configService: ConfigService) {
     super({
       clientID: configService.get<string>('ftAuth.clientid'),
@@ -37,8 +38,12 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
    */
   async validate(req, access_token, refreshToken, profile, cb) {
     const userEmail = profile.email.split('.');
-    if (!profile.staff && !profile.cursus_users[1] ||
-        userEmail[userEmail.length - 1] !== 'kr') {
+    const userName = userEmail[0].split('@')[0];
+    if (
+      (!profile.staff && !profile.cursus_users[1]) ||
+      userEmail[userEmail.length - 1] !== 'kr'
+    ) {
+      this.logger.log(`${userName} has failed to login due to region.`);
       cb(null, undefined);
     }
     let blackholed_at: Date;
