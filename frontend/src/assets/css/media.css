@@ -51,25 +51,3 @@
   transform: translateX(0%);
 }
 
-@media screen and (max-width: 768px) {
-  /* 404 notFoundPage  */
-  #notFoundPage > h1 {
-    font-size: 3.25rem;
-  }
-  #notFoundPage > h2 {
-    font-size: 1.5rem;
-  }
-  #notFoundPage > div {
-    width: 160px;
-    height: 160px;
-    margin: 5% 0;
-  }
-  #notFoundPage > p {
-    font-size: 1rem;
-    line-height: 1.5rem;
-    margin-bottom: 30px;
-  }
-  #notFoundPage > p > span {
-    display: block;
-  }
-}

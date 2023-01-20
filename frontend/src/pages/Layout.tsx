@@ -39,7 +39,7 @@ const Layout = (): JSX.Element => {
           setIsValidToken(true);
           if (isRootPath || isLoginPage) navigate("/home");
         } catch (error) {
-          console.log(error);
+          navigate("/login");
         }
       };
       getMyInfo();
