@@ -12,7 +12,7 @@ const CabinetList = ({
   cabinetInfo,
 }: CabinetListInterface): JSX.Element => {
   return (
-    <CabinetListContainerStyled colNum={colNum}>
+    <CabinetListContainerStyled colNum={colNum ? colNum : 4}>
       {cabinetInfo.map((cabinet, index) => (
         <CabinetListItem {...cabinet} key={index} />
       ))}
