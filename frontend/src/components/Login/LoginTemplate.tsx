@@ -3,8 +3,12 @@ import styled from "styled-components";
 import "@/assets/css/loginPage.css";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 
-const LoginPage = () => {
-  const url = `${import.meta.env.VITE_BE_HOST}/auth/login`;
+const LoginTemplate = (props: {
+  url: string;
+  pageTitle: string;
+  pageSubTitle: string;
+}) => {
+  const { url, pageTitle, pageSubTitle } = props;
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -34,8 +38,8 @@ const LoginPage = () => {
             <img src="/src/assets/images/logo.svg" alt="" />
           </CardLogoStyled>
           <CardTitleBoxStyled>
-            <CardTitleStyled>42Cabi</CardTitleStyled>
-            <CardSubTitleStyled>여러분의 일상을 가볍게</CardSubTitleStyled>
+            <CardTitleStyled>{pageTitle}</CardTitleStyled>
+            <CardSubTitleStyled>{pageSubTitle}</CardSubTitleStyled>
           </CardTitleBoxStyled>
           <button
             onClick={() => {
@@ -140,4 +144,4 @@ const CardSubTitleStyled = styled.p`
   color: var(--main-color);
 `;
 
-export default LoginPage;
+export default LoginTemplate;
