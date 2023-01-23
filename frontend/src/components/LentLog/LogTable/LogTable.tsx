@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { LentLogDto } from "@/types/dto/lent.dto";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
   year: "2-digit",
@@ -7,7 +8,15 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-const LogTable = ({ data }: { data: LentLogDto[] | undefined }) => {
+const BAD_REQUEST = 400;
+
+interface IlentLog {
+  lentLog: LentLogDto[] | typeof BAD_REQUEST | undefined;
+}
+
+const LogTable = ({ lentLog }: IlentLog) => {
+  if (lentLog === undefined) return <LoadingAnimation />;
+
   return (
     <LogTableWrapperstyled>
       <LogTableStyled>
@@ -18,23 +27,25 @@ const LogTable = ({ data }: { data: LentLogDto[] | undefined }) => {
             <th>반납일</th>
           </tr>
         </TheadStyled>
-        {data && (
+        {lentLog !== BAD_REQUEST && (
           <TbodyStyled>
-            {data.map(({ floor, cabinet_num, lent_time, return_time }, idx) => (
-              <tr key={idx}>
-                <td>{`${floor}F - ${cabinet_num}번`}</td>
-                <td>
-                  {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
-                </td>
-                <td>
-                  {new Date(return_time).toLocaleString("ko-KR", dateOptions)}
-                </td>
-              </tr>
-            ))}
+            {lentLog.map(
+              ({ floor, cabinet_num, lent_time, return_time }, idx) => (
+                <tr key={idx}>
+                  <td>{`${floor}F - ${cabinet_num}번`}</td>
+                  <td>
+                    {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
+                  </td>
+                  <td>
+                    {new Date(return_time).toLocaleString("ko-KR", dateOptions)}
+                  </td>
+                </tr>
+              )
+            )}
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {!data && (
+      {lentLog === BAD_REQUEST && (
         <EmptyLogStyled>반납처리 된 사물함이 아직 없습니다.</EmptyLogStyled>
       )}
     </LogTableWrapperstyled>

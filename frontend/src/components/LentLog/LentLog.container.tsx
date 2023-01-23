@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 import LentLog from "./LentLog";
 import { LentLogDto } from "@/types/dto/lent.dto";
 
+const BAD_REQUEST = 400;
+
 const LentLogContainer = () => {
   const { closeLent } = useMenu();
-  const [logs, setLogs] = useState<LentLogDto[]>([]);
+  const [logs, setLogs] = useState<
+    LentLogDto[] | typeof BAD_REQUEST | undefined
+  >(undefined);
   const [page, setPage] = useState<number>(-1);
   const [totalPage, setTotalPage] = useState<number>(-1);
   async function getData(page: number) {
@@ -14,8 +18,8 @@ const LentLogContainer = () => {
       const result = await axiosMyLentLog(0);
       setTotalPage(Math.floor(result.data.total_length / 10) + 1);
       setLogs(result.data.result);
-    } catch (e) {
-      throw e;
+    } catch {
+      setLogs(BAD_REQUEST);
     }
   }
   useEffect(() => {

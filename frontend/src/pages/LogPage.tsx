@@ -4,16 +4,24 @@ import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
 import { LentLogDto } from "@/types/dto/lent.dto";
 
+const BAD_REQUEST = 400;
+
 const LogPage = () => {
-  const [lentLog, setLentLog] = useState<LentLogDto[] | undefined>(undefined);
+  const [lentLog, setLentLog] = useState<
+    LentLogDto[] | typeof BAD_REQUEST | undefined
+  >(undefined);
 
   const getLentLog = async () => {
     try {
       const response = await axiosMyLentLog(0);
       const lentLogs: LentLogDto[] = response.data.result;
-      setLentLog(lentLogs);
-    } catch (error) {
-      console.log(error);
+      setTimeout(() => {
+        setLentLog(lentLogs);
+      }, 500);
+    } catch {
+      setTimeout(() => {
+        setLentLog(BAD_REQUEST);
+      }, 500);
     }
   };
 
@@ -27,7 +35,7 @@ const LogPage = () => {
       <SubTitleStyled>
         최근 10회의 대여 기록을 확인할 수 있습니다.
       </SubTitleStyled>
-      <LogTable data={lentLog} />
+      <LogTable lentLog={lentLog} />
     </WrapperStyled>
   );
 };
