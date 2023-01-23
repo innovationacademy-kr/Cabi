@@ -40,9 +40,15 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     //사용불가가 아닌 모든 경우
     if (props.lent_type === "PRIVATE")
       cabinetLabelText = props.lent_info[0]?.intra_id;
-    else if (props.lent_type === "SHARE")
-      cabinetLabelText = props.lent_info.length + " / " + props.max_user;
-    else if (props.lent_type === "CLUB")
+    else if (props.lent_type === "SHARE") {
+      const headcount = props.lent_info.length;
+      const cabinetTitle = props.cabinet_title ?? "FULL";
+
+      cabinetLabelText =
+        headcount === parseInt(import.meta.env.VITE_SHARE_MAX_USER)
+          ? cabinetTitle
+          : headcount + " / " + props.max_user;
+    } else if (props.lent_type === "CLUB")
       cabinetLabelText = props.cabinet_title ? props.cabinet_title : "";
   } else {
     //사용불가인 경우
