@@ -15,7 +15,7 @@ import { AdminDevelopModule } from 'src/admin/develop/develop.module';
     AdminCabinetModule,
     AdminSearchModule,
     AdminReturnModule,
-    AdminDevelopModule,
+    ...(process.env.DEV === 'true' ? [AdminDevelopModule] : []),
   ],
   controllers: [],
   providers: [],
