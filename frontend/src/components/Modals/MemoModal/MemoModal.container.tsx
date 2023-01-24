@@ -3,8 +3,11 @@ import {
   axiosUpdateCabinetTitle,
 } from "@/api/axios/axios.custom";
 import MemoModal from "@/components/Modals/MemoModal/MemoModal";
-import { myCabinetInfoState } from "@/recoil/atoms";
-import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { myCabinetInfoState, currentFloorCabinetState } from "@/recoil/atoms";
+import {
+  CabinetInfoByLocationFloorDto,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
 import React from "react";
 import { useRecoilState } from "recoil";
 
@@ -13,11 +16,30 @@ const MemoModalContainer = (props: {
 }) => {
   const [myCabinetInfo, setMyCabinetInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [currentFloorCabinet, setCurrentFloorCabinet] = useRecoilState(
+    currentFloorCabinetState
+  );
   const memoModalProps = {
     cabinetType: myCabinetInfo.lent_type,
     cabinetTitle: myCabinetInfo.cabinet_title,
     cabinetMemo: myCabinetInfo.cabinet_memo,
   };
+
+  const updateCabinetTitleInList = (newTitle: string | null) => {
+    const updatedCabinetList: CabinetInfoByLocationFloorDto[] = JSON.parse(
+      JSON.stringify(currentFloorCabinet)
+    );
+    const targetSectionCabinetList = updatedCabinetList.find(
+      (floor) => floor.section === myCabinetInfo.section
+    )!.cabinets;
+    let targetCabinet = targetSectionCabinetList.find(
+      (section) => section.cabinet_id === myCabinetInfo.cabinet_id
+    );
+
+    targetCabinet!.cabinet_title = newTitle;
+    setCurrentFloorCabinet(updatedCabinetList);
+  };
+
   const onSaveEditMemo = (newTitle: string | null, newMemo: string) => {
     if (newTitle !== myCabinetInfo.cabinet_title) {
       //수정사항이 있으면
@@ -28,6 +50,8 @@ const MemoModalContainer = (props: {
             cabinet_title: newTitle,
             cabinet_memo: newMemo,
           });
+          // list에서 제목 업데이트
+          updateCabinetTitleInList(newTitle);
         })
         .catch((error) => {
           console.log(error);
