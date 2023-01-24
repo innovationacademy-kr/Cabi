@@ -45,7 +45,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
       const cabinetTitle = props.cabinet_title ?? "FULL";
 
       cabinetLabelText =
-        headcount === parseInt(import.meta.env.VITE_SHARE_MAX_USER)
+        headcount === props.max_user
           ? cabinetTitle
           : headcount + " / " + props.max_user;
     } else if (props.lent_type === "CLUB")
