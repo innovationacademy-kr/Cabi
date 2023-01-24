@@ -6,13 +6,13 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import instance from "@/api/axios/axios.instance";
 
 const TopNavButtonGroup = () => {
-  const { clickCabinet, clickMap, openCabinet, closeCabinet } = useDetailInfo();
+  const { toggleCabinet, toggleMap, openCabinet } = useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
@@ -32,14 +32,12 @@ const TopNavButtonGroup = () => {
   }
 
   const clickMyCabinet = () => {
-    if (myInfo.cabinet_id === -1) {
-      return;
-    }
-    setTargetCabinetInfoToMyCabinet();
+    if (myInfo.cabinet_id === -1) return;
     if (currentCabinetId !== myInfo.cabinet_id) {
+      setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
-      clickCabinet();
+      toggleCabinet();
     }
   };
   const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";
@@ -57,15 +55,15 @@ const TopNavButtonGroup = () => {
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
           onClick={axiosRemovePenalty}
-          imgSrc="src/assets/images/happyCcabiWhite.png"
+          imgSrc="/src/assets/images/happyCcabiWhite.png"
         />
       )}
       <TopNavButton
         disable={myInfo.cabinet_id === -1}
         onClick={clickMyCabinet}
-        imgSrc="src/assets/images/myCabinetIcon.svg"
+        imgSrc="/src/assets/images/myCabinetIcon.svg"
       />
-      <TopNavButton onClick={clickMap} imgSrc="src/assets/images/map.svg" />
+      <TopNavButton onClick={toggleMap} imgSrc="/src/assets/images/map.svg" />
     </NaviButtonsStyled>
   );
 };

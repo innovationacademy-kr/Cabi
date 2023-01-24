@@ -19,11 +19,15 @@ const MemoModalContainer = (props: {
     cabinetMemo: myCabinetInfo.cabinet_memo,
   };
   const onSaveEditMemo = (newTitle: string | null, newMemo: string) => {
-    if (newTitle && newTitle !== myCabinetInfo.cabinet_title) {
+    if (newTitle !== myCabinetInfo.cabinet_title) {
       //수정사항이 있으면
-      axiosUpdateCabinetTitle({ cabinet_title: newTitle })
+      axiosUpdateCabinetTitle({ cabinet_title: newTitle ?? "" })
         .then(() => {
-          setMyCabinetInfo({ ...myCabinetInfo, cabinet_title: newTitle });
+          setMyCabinetInfo({
+            ...myCabinetInfo,
+            cabinet_title: newTitle,
+            cabinet_memo: newMemo,
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -32,7 +36,11 @@ const MemoModalContainer = (props: {
     if (newMemo !== myCabinetInfo.cabinet_memo) {
       axiosUpdateCabinetMemo({ cabinet_memo: newMemo })
         .then(() => {
-          setMyCabinetInfo({ ...myCabinetInfo, cabinet_memo: newMemo });
+          setMyCabinetInfo({
+            ...myCabinetInfo,
+            cabinet_title: newTitle,
+            cabinet_memo: newMemo,
+          });
         })
         .catch((error) => {
           console.log(error);

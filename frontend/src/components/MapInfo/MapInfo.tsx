@@ -1,18 +1,29 @@
-import { useState } from "react";
 import styled from "styled-components";
 import exitButton from "@/assets/images/exitButton.svg";
 import MapGrid from "@/components/MapInfo/MapGrid/MapGrid";
-import useDetailInfo from "@/hooks/useDetailInfo";
-import { useRecoilValue } from "recoil";
-import { currentLocationFloorState } from "@/recoil/selectors";
 import MapFloorSelect from "@/components/MapInfo/MapFloorSelect/MapFloorSelect";
 
-const MapInfo = () => {
-  const { closeMap } = useDetailInfo();
-  const floorInfo = useRecoilValue(currentLocationFloorState);
-  const [floor, setFloor] = useState(floorInfo[0]);
+const MapInfo = ({
+  touchStart,
+  touchEnd,
+  floor,
+  setFloor,
+  floorInfo,
+  closeMap,
+}: {
+  touchStart: React.TouchEventHandler;
+  touchEnd: React.TouchEventHandler;
+  floor: number;
+  setFloor: React.Dispatch<React.SetStateAction<number>>;
+  floorInfo: number[];
+  closeMap: React.MouseEventHandler;
+}) => {
   return (
-    <MapInfoContainerStyled id="mapInfo">
+    <MapInfoContainerStyled
+      id="mapInfo"
+      onTouchStart={touchStart}
+      onTouchEnd={touchEnd}
+    >
       <HeaderStyled>
         <H2Styled>지도</H2Styled>
         <img
@@ -36,7 +47,6 @@ const HeaderStyled = styled.div`
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  padding: 40px 20px 40px 40px;
   color: black;
   font-weight: bold;
 `;
@@ -48,6 +58,7 @@ const MapInfoContainerStyled = styled.div`
   min-width: 330px;
   width: 330px;
   height: calc(100% - 80px);
+  padding: 40px;
   z-index: 9;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { userState } from "@/recoil/atoms";
 import TopNav from "@/components/TopNav/TopNav.container";
 import LeftNav from "@/components/LeftNav/LeftNav";
@@ -12,8 +12,8 @@ import { UserDto } from "@/types/dto/user.dto";
 import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import MapInfo from "@/components/MapInfo/MapInfo";
-import { currentFloorSectionState } from "@/recoil/selectors";
-import { currentSectionNameState } from "@/recoil/atoms";
+import useMenu from "@/hooks/useMenu";
+import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,43 +39,17 @@ const Layout = (): JSX.Element => {
           setIsValidToken(true);
           if (isRootPath || isLoginPage) navigate("/home");
         } catch (error) {
-          console.log(error);
+          navigate("/login");
         }
       };
       getMyInfo();
     }
   }, []);
 
-  const [touchOffset, setTouchOffset] = useState(0);
+  const { closeAll } = useMenu();
 
-  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
-  const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
-    currentSectionNameState
-  );
-  const currentSectionIdx = sectionList.findIndex(
-    (sectionName) => sectionName === currentSectionName
-  );
-  const moveToLeftSection = () => {
-    if (currentSectionIdx <= 0) {
-      setCurrentSectionName(sectionList[sectionList.length - 1]);
-    } else {
-      setCurrentSectionName(sectionList[currentSectionIdx - 1]);
-    }
-  };
-
-  const moveToRightSection = () => {
-    if (currentSectionIdx >= sectionList.length - 1) {
-      setCurrentSectionName(sectionList[0]);
-    } else {
-      setCurrentSectionName(sectionList[currentSectionIdx + 1]);
-    }
-  };
-
-  const swipeSection = (last: number) => {
-    const swipeDistance = Math.round(last - touchOffset);
-    if (Math.abs(swipeDistance) < 50) return;
-    if (last > touchOffset) moveToLeftSection();
-    else moveToRightSection();
+  const handleClickBg = () => {
+    closeAll();
   };
 
   return isLoginPage ? (
@@ -88,14 +62,8 @@ const Layout = (): JSX.Element => {
       ) : (
         <WrapperStyled>
           <LeftNav isVisible={!isHomePage} />
-          <MainStyled
-            onTouchStart={(e: React.TouchEvent) =>
-              setTouchOffset(e.changedTouches[0].screenX)
-            }
-            onTouchEnd={(e: React.TouchEvent) =>
-              swipeSection(e.changedTouches[0].screenX)
-            }
-          >
+          <MainStyled>
+            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
           </MainStyled>
           <DetailInfoContainerStyled
@@ -105,7 +73,7 @@ const Layout = (): JSX.Element => {
             {/* <LentLog /> */}
             <CabinetInfoAreaContainer />
           </DetailInfoContainerStyled>
-          <MapInfo />
+          <MapInfoContainer />
         </WrapperStyled>
       )}
     </React.Fragment>
@@ -150,4 +118,8 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
         transform: translateX(0%);
       }
     `}
+`;
+
+const MenuBgStyled = styled.div`
+  position: none;
 `;

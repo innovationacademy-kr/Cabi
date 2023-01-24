@@ -9,7 +9,7 @@ const ServiceManual = ({
     <WrapperStyled id="infoWrap">
       <TitleContainerStyled className="titleContainer">
         <div className="logo">
-          <img src="src/assets/images/logo.svg" alt="" />
+          <img src="/src/assets/images/logo.svg" alt="" />
         </div>
         <h1 className="title">
           42Cabi <span>이용 안내서</span>
@@ -19,7 +19,7 @@ const ServiceManual = ({
       <InfoSectionStyled className="section">
         <article className="article">
           <div>
-            <img src="src/assets/images/privateIcon.svg" alt="" />
+            <img src="/src/assets/images/privateIcon.svg" alt="" />
           </div>
           <h3>개인 사물함</h3>
           <p>
@@ -33,7 +33,7 @@ const ServiceManual = ({
         </article>
         <article className="article">
           <div>
-            <img src="src/assets/images/shareIcon.svg" alt="" />
+            <img src="/src/assets/images/shareIcon.svg" alt="" />
           </div>
           <h3>공유 사물함</h3>
           <p>
@@ -57,7 +57,7 @@ const ServiceManual = ({
         </article>
         <article className="article">
           <div>
-            <img src="src/assets/images/circleIcon.svg" alt="" />
+            <img src="/src/assets/images/clubIcon.svg" alt="" />
           </div>
           <h3>동아리 사물함</h3>
           <p>

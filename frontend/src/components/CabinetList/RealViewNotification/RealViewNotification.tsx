@@ -4,8 +4,8 @@ import styled from "styled-components";
 const RealViewNotification: React.FC<{ colNum: number }> = (props) => {
   const [hasEnoughWidth, setHasEnoughWidth] = useState<boolean>(true);
   const tooltipCardRef = useRef<HTMLDivElement>(null);
-  const toolTipMessage =
-    "보시는 화면은 실제 사물함 위치와 다를 수 있습니다.\n화면을 축소하시면 실제 위치를 확인하실 수 있습니다.";
+  const toolTipMessage = `보시는 화면은 실제 사물함 위치와 다를 수 있습니다!
+  실제 위치는 넓은 화면에서 확인해주세요.`;
 
   const checkEnoughWidth = () => {
     if (!props.colNum || !tooltipCardRef.current) return;
@@ -36,7 +36,7 @@ export default RealViewNotification;
 
 const ToolTipIcon = styled.div<{ hasEnoughWidth: boolean }>`
   display: ${(props) => (props.hasEnoughWidth ? "none" : "block")};
-  background-image: url("src/assets/images/cautionSign.svg");
+  background-image: url("/src/assets/images/cautionSign.svg");
   width: 24px;
   height: 24px;
   margin: 0px auto;

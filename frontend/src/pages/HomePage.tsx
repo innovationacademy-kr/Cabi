@@ -2,32 +2,32 @@ import { useEffect } from "react";
 import ServiceManual from "@/components/Home/ServiceManual";
 import { useNavigate } from "react-router-dom";
 import {
+  currentCabinetIdState,
   currentFloorNumberState,
-  currentSectionNameState,
+  targetCabinetInfoState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import "@/assets/css/homePage.css";
-import useLeftNav from "@/hooks/useLeftNav";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 
 const HomePage = () => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
-  const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
-  const resetCurrentSection = useResetRecoilState(currentSectionNameState);
-  const { closeLeftNav } = useLeftNav();
-  const { closeDetailInfo } = useDetailInfo();
+  const { closeAll } = useMenu();
   const navigator = useNavigate();
+  const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
+  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
 
   useEffect(() => {
-    closeDetailInfo();
-    closeLeftNav();
-    resetCurrentFloor();
-    resetCurrentSection();
+    closeAll();
+    resetTargetCabinetInfo();
+    resetCurrentCabinetId();
 
     return () => {
-      closeDetailInfo();
+      closeAll();
+      resetTargetCabinetInfo();
+      resetCurrentCabinetId();
     };
   }, []);
 

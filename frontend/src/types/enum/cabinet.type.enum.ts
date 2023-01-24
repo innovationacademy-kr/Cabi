@@ -1,7 +1,7 @@
 enum CabinetType {
   PRIVATE = "PRIVATE",
   SHARE = "SHARE",
-  CIRCLE = "CIRCLE",
+  CLUB = "CLUB",
 }
 
 export default CabinetType;

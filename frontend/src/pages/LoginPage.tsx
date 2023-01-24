@@ -19,7 +19,7 @@ const LoginPage = () => {
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled>
-          <img src="src/assets/images/loginImg.svg" alt="" />
+          <img src="/src/assets/images/loginImg.svg" alt="" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
@@ -31,7 +31,7 @@ const LoginPage = () => {
       <RightSectionStyled className="rightLoginPage">
         <LoginCardStyled className="modal">
           <CardLogoStyled>
-            <img src="src/assets/images/logo.svg" alt="" />
+            <img src="/src/assets/images/logo.svg" alt="" />
           </CardLogoStyled>
           <CardTitleBoxStyled>
             <CardTitleStyled>42Cabi</CardTitleStyled>

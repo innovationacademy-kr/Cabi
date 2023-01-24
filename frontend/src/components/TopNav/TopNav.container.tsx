@@ -9,7 +9,7 @@ import { locationsState } from "@/recoil/selectors";
 import { axiosLocationFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import TopNav from "@/components/TopNav/TopNav";
-import useLeftNav from "@/hooks/useLeftNav";
+import useMenu from "@/hooks/useMenu";
 
 const TopNavContainer: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
@@ -23,10 +23,10 @@ const TopNavContainer: React.FC<{
   const setLocationsFloor = useSetRecoilState(locationsFloorState);
   const locationsList = useRecoilValue<Array<string>>(locationsState);
   const { setIsLoading } = props;
-  const { clickLeftNav } = useLeftNav();
+  const { toggleLeftNav } = useMenu();
 
   const onClickLogo = () => {
-    clickLeftNav();
+    toggleLeftNav();
   };
 
   useEffect(() => {
