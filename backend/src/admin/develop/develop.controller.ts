@@ -1,8 +1,9 @@
-import { Controller, ForbiddenException, Get, Inject, Logger, Query, Res } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Inject, Logger, Query, Res, UseFilters } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
 import { AdminAuthService } from "src/admin/auth/auth.service";
+import { GoogleAuthFilter } from "src/admin/auth/google/google.auth.filter";
 import { AdminDevelopService } from "src/admin/develop/develop.service";
 import AdminUserRole from "src/admin/enums/admin.user.role.enum";
 
@@ -21,6 +22,7 @@ export class AdminDevelopController {
         description: 'email을 param으로 입력하면, 해당 이메일이 존재할 때 role을 1(Admin)으로 설정, 어드민 로그인으로 리다이렉트합니다.',
     }) 
     @Get('/promote')
+    @UseFilters(GoogleAuthFilter)
     async setUserToAdminByEmail(
         @Res() res: Response, 
         @Query('email') email: string
