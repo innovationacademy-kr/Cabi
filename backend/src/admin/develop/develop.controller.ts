@@ -2,6 +2,7 @@ import { Controller, ForbiddenException, Get, Inject, Logger, Query, Res } from 
 import { ConfigService } from "@nestjs/config";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
+import { AdminAuthService } from "src/admin/auth/auth.service";
 import { AdminDevelopService } from "src/admin/develop/develop.service";
 
 @ApiTags('Develop')
@@ -10,6 +11,7 @@ export class AdminDevelopController {
     private logger = new Logger(AdminDevelopController.name);
     constructor(
         private adminDevelopService: AdminDevelopService,
+        private adminAuthService: AdminAuthService,
         @Inject(ConfigService) private configService: ConfigService,
     ) {}
 
@@ -23,11 +25,15 @@ export class AdminDevelopController {
         @Query('email') email: string
         )  {
         if (this.configService.get<boolean>('is_dev') !== true) {
-            this.logger.log(`${email} tried self-promote but failed due to environment.`);
+            this.logger.log(`failed promote ${email} to admin due to environment : not dev.`);
             throw new ForbiddenException('setUserToAdminByEmail API can use only in dev.');
         }
-        this.logger.log(`${email} has self-promoted to admin.`);
+        if (await this.adminAuthService.checkUserExists(email) !== true) {
+            this.logger.log(`failed promote ${email} to admin due to never had tried admin log-in.`);
+            throw new ForbiddenException(`${email} doesn't exist in admin_user table.`);
+        }
         await this.adminDevelopService.setUserToAdminByEmail(email);
+        this.logger.log(`${email} has self-promoted to admin.`);
         return res.redirect(`${this.configService.get<string>('fe_host')}/api/admin/auth/login`);
     }
 }

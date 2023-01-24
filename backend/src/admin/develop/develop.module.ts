@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { AdminAuthModule } from "src/admin/auth/auth.module";
 import { AdminDevelopController } from "src/admin/develop/develop.controller";
 import { AdminDevelopService } from "src/admin/develop/develop.service";
 import { AdminDevelopRepository } from "src/admin/develop/repository/develop.repository";
@@ -15,7 +16,9 @@ const adminDevelopRepo = {
     providers: [adminDevelopRepo, AdminDevelopService],
     imports: [
         TypeOrmModule.forFeature([AdminUser]),
+        AdminAuthModule,
     ],
+    exports: [],
 })
 
 export class AdminDevelopModule {}
