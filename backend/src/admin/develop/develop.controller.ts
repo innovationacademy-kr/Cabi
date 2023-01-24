@@ -4,6 +4,7 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
 import { AdminAuthService } from "src/admin/auth/auth.service";
 import { AdminDevelopService } from "src/admin/develop/develop.service";
+import AdminUserRole from "src/admin/enums/admin.user.role.enum";
 
 @ApiTags('Develop')
 @Controller('/api/admin/develop')
@@ -31,6 +32,10 @@ export class AdminDevelopController {
         if (await this.adminAuthService.checkUserExists(email) !== true) {
             this.logger.log(`failed promote ${email} to admin due to never had tried admin log-in.`);
             throw new ForbiddenException(`${email} doesn't exist in admin_user table.`);
+        }
+        if (await this.adminAuthService.getAdminUserRole(email) === AdminUserRole.ROOT_ADMIN) {
+            this.logger.log(`request failed due to trying to demote root admin.`);
+            throw new ForbiddenException(`can't set ${email}'s role to admin : root admin.`);
         }
         await this.adminDevelopService.setUserToAdminByEmail(email);
         this.logger.log(`${email} has self-promoted to admin.`);
