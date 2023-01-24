@@ -5,6 +5,7 @@ import LoginPage from "@/pages/LoginPage";
 import HomePage from "@/pages/HomePage";
 import MainPage from "@/pages/MainPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import LogPage from "@/pages/LogPage";
 import LoginFailurePage from "@/pages/LoginFailurePage";
 
 function App(): React.ReactElement {
@@ -14,7 +15,8 @@ function App(): React.ReactElement {
         <Route path="/" element={<Layout />}>
           <Route path="home" element={<HomePage />} />
           <Route path="main" element={<MainPage />} />
-          <Route path="login/" element={<LoginPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="log" element={<LogPage />} />
         </Route>
         {/* admin용 라우터 */}
         <Route path="/admin/" element={<Layout />}>

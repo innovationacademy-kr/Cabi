@@ -11,7 +11,6 @@ import { axiosMyInfo } from "@/api/axios/axios.custom";
 import { UserDto } from "@/types/dto/user.dto";
 import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
-import MapInfo from "@/components/MapInfo/MapInfo";
 import useMenu from "@/hooks/useMenu";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 
@@ -25,7 +24,7 @@ const Layout = (): JSX.Element => {
 
   const isRootPath: boolean = location.pathname === "/";
   const isLoginPage: boolean = location.pathname === "/login";
-  const isHomePage: boolean = location.pathname === "/home";
+  const isMainPage: boolean = location.pathname === "/main";
 
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/login");
@@ -61,16 +60,15 @@ const Layout = (): JSX.Element => {
         <LoadingAnimation />
       ) : (
         <WrapperStyled>
-          <LeftNav isVisible={!isHomePage} />
+          <LeftNav isVisible={isMainPage} />
           <MainStyled>
             <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
           </MainStyled>
           <DetailInfoContainerStyled
             id="cabinetDetailArea"
-            isHomePage={isHomePage}
+            isHomePage={!isMainPage}
           >
-            {/* <LentLog /> */}
             <CabinetInfoAreaContainer />
           </DetailInfoContainerStyled>
           <MapInfoContainer />

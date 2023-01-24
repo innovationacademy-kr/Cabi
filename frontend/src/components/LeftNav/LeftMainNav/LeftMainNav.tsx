@@ -7,6 +7,7 @@ interface ILeftMainNav {
   currentFloor: number;
   onClickFloorButton: Function;
   onClickLogoutButton: React.MouseEventHandler;
+  onClickLentLogButton: React.MouseEventHandler;
 }
 
 const LeftMainNav = ({
@@ -16,6 +17,7 @@ const LeftMainNav = ({
   onClickHomeButton,
   onClickFloorButton,
   onClickLogoutButton,
+  onClickLentLogButton,
 }: ILeftMainNav) => {
   return (
     <LeftNavStyled>
@@ -49,7 +51,11 @@ const LeftMainNav = ({
             <div></div>
             Search
           </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/log.svg"}>
+          <BottomBtnStyled
+            className={pathname == "/log" ? "active" : ""}
+            src={"/src/assets/images/log.svg"}
+            onClick={onClickLentLogButton}
+          >
             <div></div>
             Log
           </BottomBtnStyled>
@@ -170,6 +176,16 @@ const BottomBtnStyled = styled.li<{ src: string }>`
     margin-bottom: 4px;
     background-image: url(${(props) => props.src});
     background-size: cover;
+  }
+  &.active {
+    filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)
+      brightness(99%) contrast(107%);
+  }
+  &.active a {
+    color: var(--main-color);
+  }
+  &.active:hover {
+    filter: none;
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {

@@ -69,7 +69,7 @@ const LeftMainNavContainer = () => {
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
-    if (pathname == "/home") {
+    if (pathname != "/main") {
       if (floor === currentFloor) {
         axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
           (response) => {
@@ -84,6 +84,12 @@ const LeftMainNavContainer = () => {
 
   const onClickHomeButton = () => {
     navigator("/home");
+  };
+
+  const onClickLentLogButton = () => {
+    resetCurrentFloor();
+    resetCurrentSection();
+    navigator("/log");
   };
 
   const onClickLogoutButton = (): void => {
@@ -105,6 +111,7 @@ const LeftMainNavContainer = () => {
       onClickHomeButton={onClickHomeButton}
       onClickFloorButton={onClickFloorButton}
       onClickLogoutButton={onClickLogoutButton}
+      onClickLentLogButton={onClickLentLogButton}
     />
   );
 };
