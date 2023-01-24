@@ -11,10 +11,10 @@ export class AdminDevelopRepository implements IAdminDevelopRepository {
         private adminDevelopRepository: Repository<AdminUser>,
     ) {}
 
-    async setUserToAdmin(adminUser: AdminUserDto): Promise<boolean> {
+    async setUserToAdminByEmail(email: string): Promise<boolean> {
         const find = await this.adminDevelopRepository.findOne({
             where: {
-                email: adminUser.email,
+                email: email,
             },
         });
         if (!find) {
@@ -27,7 +27,7 @@ export class AdminDevelopRepository implements IAdminDevelopRepository {
             role: AdminUserRole.ADMIN,   
         })
         .where({
-            email: adminUser.email,
+            email: email,
         })
         .execute();
         return true;

@@ -1,6 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { IAdminDevelopRepository } from "src/admin/develop/repository/develop.repository.interface";
-import { AdminUserDto } from "src/admin/dto/admin.user.dto";
 
 @Injectable()
 export class AdminDevelopService {
@@ -12,10 +11,10 @@ export class AdminDevelopService {
   /**
    * 해당 유저의 role을 1(Admin)로 설정합니다.
    *
-   * @param adminUser 해당 구글 로그인 유저의 email, role
-   * @returns Boolean
+   * @param email 해당 유저의 google email.
+   * @returns boolean
    */
-    async setUserToAdmin(adminUser: AdminUserDto): Promise<boolean> {
-        return await this.adminDevelopRepository.setUserToAdmin(adminUser);
+    async setUserToAdminByEmail(email: string): Promise<boolean> {
+        return await this.adminDevelopRepository.setUserToAdminByEmail(email);
     }
 }
