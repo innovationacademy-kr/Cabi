@@ -2,6 +2,7 @@ import React from "react";
 import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
+import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
 
 interface ILocationListItem {
   location: string;
@@ -33,6 +34,7 @@ const TopNav: React.FC<{
   setLocationClicked: React.Dispatch<boolean>;
   onClickLogo: React.MouseEventHandler<HTMLImageElement>;
   setCurrentLocationName: SetterOrUpdater<string>;
+  isAdmin?: boolean;
 }> = (props) => {
   const {
     currentLocationName,
@@ -41,6 +43,7 @@ const TopNav: React.FC<{
     setLocationClicked,
     onClickLogo,
     setCurrentLocationName,
+    isAdmin,
   } = props;
 
   return (
@@ -65,6 +68,7 @@ const TopNav: React.FC<{
           </LocationListStyled>
         </LocationSelectBoxStyled>
       </LogoStyled>
+      {isAdmin && <SearchBar />}
       <TopNavButtonGroup />
     </TopNavContainerStyled>
   );
