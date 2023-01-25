@@ -7,6 +7,7 @@ import MainPage from "@/pages/MainPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import LogPage from "@/pages/LogPage";
 import LoginFailurePage from "@/pages/LoginFailurePage";
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
 
 function App(): React.ReactElement {
   return (
@@ -19,11 +20,11 @@ function App(): React.ReactElement {
           <Route path="log" element={<LogPage />} />
         </Route>
         {/* admin용 라우터 */}
-        <Route path="/admin/" element={<Layout />}>
+        {/* <Route path="/admin/" element={<Layout />}>
           <Route path="home" element={<HomePage />} />
           <Route path="main" element={<MainPage />} />
-          <Route path="login" element={<LoginPage />} />
-        </Route>
+        </Route> */}
+        <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/login/failure" element={<LoginFailurePage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
