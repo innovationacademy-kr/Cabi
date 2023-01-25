@@ -17,7 +17,13 @@ const Layout = (): JSX.Element => {
   const location = useLocation();
   const token = getCookie("admin_access_token");
 
-  const isRootPath: boolean = location.pathname === "/admin/";
+  const checkPath = () => {
+    if (location.pathname === "/admin") return true;
+    if (location.pathname === "/admin/") return true;
+    if (location.pathname === "/admin/login") return true;
+    return false;
+  };
+
   const isLoginPage: boolean = location.pathname === "/admin/login";
   const isMainPage: boolean = location.pathname === "/admin/main";
 
@@ -26,7 +32,7 @@ const Layout = (): JSX.Element => {
     if (token) {
       setIsLoading(true);
       setIsValidToken(true);
-      if (isRootPath || isLoginPage) navigate("/admin/home");
+      if (checkPath()) navigate("/admin/home");
     }
   }, []);
 
@@ -45,7 +51,7 @@ const Layout = (): JSX.Element => {
         <LoadingAnimation />
       ) : (
         <WrapperStyled>
-          <LeftNav isVisible={isMainPage} />
+          <LeftNav isAdmin={true} isVisible={isMainPage} />
           <MainStyled>
             <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
