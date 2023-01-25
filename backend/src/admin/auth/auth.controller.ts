@@ -67,7 +67,9 @@ export class AdminAuthController {
   @UseFilters(GoogleAuthFilter)
   async loginCallback(@Res() res: Response, @User() adminUser: AdminUserDto) {
     this.logger.log(`${adminUser.email} has logged in.`);
-    return res.redirect(`${this.configService.get<string>('fe_host')}/home`);
+    return res.redirect(
+      `${this.configService.get<string>('fe_host')}/admin/home`,
+    );
   }
 
   @ApiOperation({
