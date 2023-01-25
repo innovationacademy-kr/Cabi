@@ -4,10 +4,12 @@ import Layout from "@/pages/Layout";
 import LoginPage from "@/pages/LoginPage";
 import HomePage from "@/pages/HomePage";
 import MainPage from "@/pages/MainPage";
-import NotFoundPage from "@/pages/NotFoundPage";
-import LogPage from "@/pages/LogPage";
-import LoginFailurePage from "@/pages/LoginFailurePage";
-import AdminLoginPage from "./pages/admin/AdminLoginPage";
+const LogPage = React.lazy(() => import("@/pages/LogPage"));
+const NotFoundPage = React.lazy(() => import("@/pages/NotFoundPage"));
+const LoginFailurePage = React.lazy(() => import("@/pages/LoginFailurePage"));
+const AdminLayout = React.lazy(() => import("@/pages/admin/AdminLayout"));
+const AdminLoginPage = React.lazy(() => import("@/pages/admin/AdminLoginPage"));
+const AdminHomePage = React.lazy(() => import("@/pages/admin/AdminHomePage"));
 
 function App(): React.ReactElement {
   return (
@@ -20,12 +22,13 @@ function App(): React.ReactElement {
           <Route path="log" element={<LogPage />} />
         </Route>
         {/* admin용 라우터 */}
-        {/* <Route path="/admin/" element={<Layout />}>
-          <Route path="home" element={<HomePage />} />
+        <Route path="/admin/" element={<AdminLayout />}>
+          <Route path="login" element={<AdminLoginPage />} />
+          <Route path="home" element={<AdminHomePage />} />
           <Route path="main" element={<MainPage />} />
-        </Route> */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        </Route>
         <Route path="/login/failure" element={<LoginFailurePage />} />
+        <Route path="/admin/login/failure" element={<LoginFailurePage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
