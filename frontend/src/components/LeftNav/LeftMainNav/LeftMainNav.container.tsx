@@ -22,7 +22,7 @@ import {
 } from "recoil";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
 
-const LeftMainNavContainer = () => {
+const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
@@ -69,7 +69,7 @@ const LeftMainNavContainer = () => {
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
-    if (pathname != "/main") {
+    if (pathname != "main") {
       if (floor === currentFloor) {
         axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
           (response) => {
@@ -78,30 +78,37 @@ const LeftMainNavContainer = () => {
           }
         );
       }
-      navigator("/main");
+      navigator("main");
     }
   };
 
   const onClickHomeButton = () => {
-    navigator("/home");
+    navigator("home");
   };
 
   const onClickLentLogButton = () => {
     resetCurrentFloor();
     resetCurrentSection();
-    navigator("/log");
+    navigator("log");
   };
 
   const onClickLogoutButton = (): void => {
+    const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
-      removeCookie("access_token");
+      removeCookie(adminToken + "access_token", {
+        path: "/",
+        domain: "localhost",
+      });
     } else {
-      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
+      removeCookie(adminToken + "access_token", {
+        path: "/",
+        domain: "cabi.42seoul.io",
+      });
     }
     resetLocation();
     resetCurrentFloor();
     resetCurrentSection();
-    navigator("/login");
+    navigator("login");
   };
   return (
     <LeftMainNav
@@ -112,6 +119,7 @@ const LeftMainNavContainer = () => {
       onClickFloorButton={onClickFloorButton}
       onClickLogoutButton={onClickLogoutButton}
       onClickLentLogButton={onClickLentLogButton}
+      isAdmin={isAdmin}
     />
   );
 };

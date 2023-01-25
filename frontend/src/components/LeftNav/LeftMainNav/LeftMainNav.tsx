@@ -8,6 +8,7 @@ interface ILeftMainNav {
   onClickFloorButton: Function;
   onClickLogoutButton: React.MouseEventHandler;
   onClickLentLogButton: React.MouseEventHandler;
+  isAdmin?: boolean;
 }
 
 const LeftMainNav = ({
@@ -18,6 +19,7 @@ const LeftMainNav = ({
   onClickFloorButton,
   onClickLogoutButton,
   onClickLentLogButton,
+  isAdmin,
 }: ILeftMainNav) => {
   return (
     <LeftNavStyled>
@@ -47,10 +49,12 @@ const LeftMainNav = ({
       </TopSectionStyled>
       <BottomSectionStyled>
         <BottomBtnsStyled>
-          <BottomBtnStyled src={"/src/assets/images/search.svg"}>
-            <div></div>
-            Search
-          </BottomBtnStyled>
+          {isAdmin && (
+            <BottomBtnStyled src={"/src/assets/images/search.svg"}>
+              <div></div>
+              Search
+            </BottomBtnStyled>
+          )}
           <BottomBtnStyled
             className={pathname == "/log" ? "active" : ""}
             src={"/src/assets/images/log.svg"}
