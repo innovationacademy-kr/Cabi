@@ -15,14 +15,14 @@ const AdminHomePage = lazy(() => import("@/pages/admin/AdminHomePage"));
 function App(): React.ReactElement {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="home" element={<HomePage />} />
-          <Route path="main" element={<MainPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="log" element={<LogPage />} />
-        </Route>
-        <Suspense fallback={<LoadingAnimation />}>
+      <Suspense fallback={<LoadingAnimation />}>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path="home" element={<HomePage />} />
+            <Route path="main" element={<MainPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="log" element={<LogPage />} />
+          </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
             <Route path="login" element={<AdminLoginPage />} />
@@ -32,8 +32,8 @@ function App(): React.ReactElement {
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route path="/admin/login/failure" element={<LoginFailurePage />} />
           <Route path="/*" element={<NotFoundPage />} />
-        </Suspense>
-      </Routes>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
