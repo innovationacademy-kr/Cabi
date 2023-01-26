@@ -2,7 +2,7 @@
  * lentStateTransition에서 return할 예외사항
  */
 enum LentExceptionType {
-  LENT_CIRCLE = 'LENT_CIRCLE',
+  LENT_CLUB = 'LENT_CLUB',
   LENT_UNDER_PENALTY_DAY_SHARE = 'LENT_UNDER_PENALTY_DAY_SHARE',
   LENT_FULL = 'LENT_FULL',
   LENT_EXPIRED = 'LENT_EXPIRED',

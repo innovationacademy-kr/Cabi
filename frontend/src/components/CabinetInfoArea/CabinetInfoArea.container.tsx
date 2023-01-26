@@ -9,7 +9,7 @@ import CabinetInfoArea, {
 } from "@/components/CabinetInfoArea/CabinetInfoArea";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
@@ -17,12 +17,12 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const { closeCabinet } = useDetailInfo();
+  const { closeCabinet } = useMenu();
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
     if (
-      selectedCabinetInfo.lent_type === "CIRCLE" &&
+      selectedCabinetInfo.lent_type === "CLUB" &&
       selectedCabinetInfo.cabinet_title
     )
       return selectedCabinetInfo.cabinet_title;
@@ -50,7 +50,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     )
       return "사용 불가";
     // 동아리 사물함
-    else if (selectedCabinetInfo.lent_type === "CIRCLE") return "동아리 사물함";
+    else if (selectedCabinetInfo.lent_type === "CLUB") return "동아리 사물함";
     // 사용 중 사물함
     else if (
       selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
@@ -107,17 +107,11 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
-  const handleCancle = () => {
-    resetTargetCabinetInfo();
-    resetCurrentCabinetId();
-    closeCabinet();
-  };
-
   return (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}
       myCabinetId={myCabinetInfo?.cabinet_id}
-      closeCabinet={handleCancle}
+      closeCabinet={closeCabinet}
     />
   );
 };

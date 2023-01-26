@@ -1,95 +1,24 @@
-import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-  useResetRecoilState,
-} from "recoil";
-import {
-  currentFloorNumberState,
-  currentFloorCabinetState,
-  currentSectionNameState,
-  currentLocationNameState,
-  userState,
-  isCurrentSectionRenderState,
-} from "@/recoil/atoms";
-import { currentLocationFloorState } from "@/recoil/selectors";
-import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
-import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
-import { removeCookie } from "@/api/react_cookie/cookies";
-import useIsMount from "@/hooks/useIsMount";
-import { UserDto } from "@/types/dto/user.dto";
 
-const LeftMainNav = () => {
-  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
-  const [currentFloor, setCurrentFloor] = useRecoilState<number>(
-    currentFloorNumberState
-  );
-  const currentLocation = useRecoilValue<string>(currentLocationNameState);
-  const myInfo = useRecoilValue<UserDto>(userState);
-  const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
-  const resetCurrentSection = useResetRecoilState(currentSectionNameState);
-  const resetLocation = useResetRecoilState(currentLocationNameState);
-  const setCurrentFloorData = useSetRecoilState<
-    CabinetInfoByLocationFloorDto[]
-  >(currentFloorCabinetState);
-  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
-  const navigator = useNavigate();
-  const { pathname } = useLocation();
-  const isMount = useIsMount();
-  const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
-    isCurrentSectionRenderState
-  );
+interface ILeftMainNav {
+  pathname: string;
+  onClickHomeButton: React.MouseEventHandler;
+  floors: number[];
+  currentFloor: number;
+  onClickFloorButton: Function;
+  onClickLogoutButton: React.MouseEventHandler;
+  onClickLentLogButton: React.MouseEventHandler;
+}
 
-  useEffect(() => {
-    if (currentFloor === undefined) return;
-    axiosCabinetByLocationFloor(currentLocation, currentFloor)
-      .then((response) => {
-        setCurrentFloorData(response.data);
-        if (isMount || isCurrentSectionRender) {
-          const recoilPersist = localStorage.getItem("recoil-persist");
-          let recoilPersistObj;
-          if (recoilPersist) recoilPersistObj = JSON.parse(recoilPersist);
-          setCurrentSection(
-            Object.keys(recoilPersistObj).includes("CurrentSection")
-              ? recoilPersistObj.CurrentSection
-              : response.data[0].section
-          );
-          setIsCurrentSectionRender(false);
-        } else {
-          setCurrentSection(response.data[0].section);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [currentLocation, currentFloor, myInfo.cabinet_id]);
-
-  const onClickFloorButton = (floor: number) => {
-    setCurrentFloor(floor);
-    if (pathname == "/home") {
-      navigator("/main");
-    }
-  };
-
-  const onClickHomeButton = () => {
-    navigator("/home");
-  };
-
-  const onClickLogoutButton = (): void => {
-    if (import.meta.env.VITE_IS_LOCAL === "true") {
-      removeCookie("access_token");
-    } else {
-      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
-    }
-    resetLocation();
-    resetCurrentFloor();
-    resetCurrentSection();
-    navigator("/login");
-  };
-
+const LeftMainNav = ({
+  pathname,
+  floors,
+  currentFloor,
+  onClickHomeButton,
+  onClickFloorButton,
+  onClickLogoutButton,
+  onClickLentLogButton,
+}: ILeftMainNav) => {
   return (
     <LeftNavStyled>
       <TopSectionStyled>
@@ -100,28 +29,37 @@ const LeftMainNav = () => {
           >
             Home
           </TopBtnStyled>
-          {floors.map((floor, index) => (
-            <TopBtnStyled
-              className={floor === currentFloor ? "leftNavButtonActive" : ""}
-              onClick={() => onClickFloorButton(floor)}
-              key={index}
-            >
-              {floor + "층"}
-            </TopBtnStyled>
-          ))}
+          {floors &&
+            floors.map((floor, index) => (
+              <TopBtnStyled
+                className={
+                  pathname != "/home" && floor === currentFloor
+                    ? "leftNavButtonActive"
+                    : ""
+                }
+                onClick={() => onClickFloorButton(floor)}
+                key={index}
+              >
+                {floor + "층"}
+              </TopBtnStyled>
+            ))}
         </TopBtnsStyled>
       </TopSectionStyled>
       <BottomSectionStyled>
         <BottomBtnsStyled>
-          <BottomBtnStyled src={"src/assets/images/search.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/search.svg"}>
             <div></div>
             Search
           </BottomBtnStyled>
-          <BottomBtnStyled src={"src/assets/images/log.svg"}>
+          <BottomBtnStyled
+            className={pathname == "/log" ? "active" : ""}
+            src={"/src/assets/images/log.svg"}
+            onClick={onClickLentLogButton}
+          >
             <div></div>
             Log
           </BottomBtnStyled>
-          <BottomBtnStyled src={"src/assets/images/slack.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/slack.svg"}>
             <a
               href="https://42born2code.slack.com/archives/C02V6GE8LD7"
               target="_black"
@@ -130,19 +68,19 @@ const LeftMainNav = () => {
               Contact
             </a>
           </BottomBtnStyled>
-          <BottomBtnStyled src={"src/assets/images/circleIconGray.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/clubIconGray.svg"}>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
               target="_blank"
             >
               <div></div>
-              Circle
+              Club
             </a>
           </BottomBtnStyled>
 
           <BottomBtnStyled
             onClick={onClickLogoutButton}
-            src={"src/assets/images/close-square.svg"}
+            src={"/src/assets/images/close-square.svg"}
           >
             <div></div>
             Logout
@@ -238,6 +176,16 @@ const BottomBtnStyled = styled.li<{ src: string }>`
     margin-bottom: 4px;
     background-image: url(${(props) => props.src});
     background-size: cover;
+  }
+  &.active {
+    filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)
+      brightness(99%) contrast(107%);
+  }
+  &.active a {
+    color: var(--main-color);
+  }
+  &.active:hover {
+    filter: none;
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
