@@ -37,7 +37,8 @@ const ServiceManual = ({
           </div>
           <h3>공유 사물함</h3>
           <p>
-            1개의 사물함을 최대 <span>3인</span>이 사용합니다.
+            1개의 사물함을 최대{" "}
+            <span>{import.meta.env.VITE_SHARE_MAX_USER}인</span>이 사용합니다.
             <br />
             <span>{import.meta.env.VITE_SHARE_LENT_PERIOD}일간</span> 대여할 수
             있습니다.
