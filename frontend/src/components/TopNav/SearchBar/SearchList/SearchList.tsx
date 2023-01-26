@@ -1,23 +1,29 @@
 import styled from "styled-components";
+import SearchListItem from "@/components/TopNav/SearchBar/SearchListItem/SearchListItem";
 
 const SearchList = ({
-  isVisible,
   searchList,
+  searchWord,
 }: {
-  isVisible: boolean;
   searchList: any[];
+  searchWord?: string;
 }) => {
   return (
-    <UlStyled isVisible={isVisible}>
-      {searchList.map((item) => {
-        return <LiStyled>{item.intra_id}</LiStyled>;
+    <UlStyled>
+      {searchList.map((item, index: number) => {
+        return (
+          <SearchListItem
+            intraId={item.intra_id}
+            key={index}
+            searchWord={searchWord}
+          />
+        );
       })}
     </UlStyled>
   );
 };
 
-const UlStyled = styled.ul<{ isVisible: boolean }>`
-  display: ${(props) => (props.isVisible ? "block" : "none")};
+const UlStyled = styled.ul`
   position: absolute;
   top: 50px;
   left: 0;
@@ -31,18 +37,6 @@ const UlStyled = styled.ul<{ isVisible: boolean }>`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   opacity: 0.9;
   overflow: hidden;
-`;
-
-const LiStyled = styled.li`
-  padding: 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: var(--main-color);
-      color: var(--white);
-    }
-  }
 `;
 
 export default SearchList;

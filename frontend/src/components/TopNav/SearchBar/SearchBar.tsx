@@ -7,7 +7,6 @@ import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 const SearchBar = () => {
   const navigate = useNavigate();
   const searchInput = useRef<HTMLInputElement>(null);
-  const [hasText, setHasText] = useState(false);
   const [searchList, setSearchList] = useState<any[]>([]);
   const SearchBarButtonHandler = () => {
     navigate("search");
@@ -15,15 +14,13 @@ const SearchBar = () => {
 
   const searchInputHandler = async () => {
     if (searchInput.current) {
-      if (searchInput.current.value.length > 0) {
-        if (!hasText) setHasText(true);
+      if (searchInput.current.value.length <= 0) {
+        setSearchList([]);
+      } else {
         const searchResult = await axiosSearchByIntraId(
           searchInput.current.value
         );
-        console.log(searchResult.data.result);
         setSearchList(searchResult.data.result);
-      } else {
-        if (hasText) setHasText(false);
       }
     }
   };
@@ -37,7 +34,12 @@ const SearchBar = () => {
         onChange={searchInputHandler}
       ></SearchBarStyled>
       <SearchButtonStyled onClick={SearchBarButtonHandler} />
-      <SearchList isVisible={hasText} searchList={searchList} />
+      {searchList.length > 0 && (
+        <SearchList
+          searchList={searchList}
+          searchWord={searchInput.current?.value}
+        />
+      )}
     </SearchBarWrapperStyled>
   );
 };
