@@ -42,14 +42,15 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
       cabinetLabelText = props.lent_info[0]?.intra_id;
     else if (props.lent_type === "SHARE") {
       const headcount = props.lent_info.length;
-      const cabinetTitle = props.cabinet_title ?? "FULL";
+      const cabinetTitle =
+        props.cabinet_title ?? `${props.max_user} / ${props.max_user}`;
 
       cabinetLabelText =
         headcount === props.max_user
           ? cabinetTitle
           : headcount + " / " + props.max_user;
     } else if (props.lent_type === "CLUB")
-      cabinetLabelText = props.cabinet_title ? props.cabinet_title : "";
+      cabinetLabelText = props.cabinet_title ?? "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
