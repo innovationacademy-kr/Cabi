@@ -1,13 +1,31 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import SearchList from "@/components/TopNav/SearchBar/SearchList/SearchList";
+import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 
 const SearchBar = () => {
   const navigate = useNavigate();
   const searchInput = useRef<HTMLInputElement>(null);
-
+  const [hasText, setHasText] = useState(false);
+  const [searchList, setSearchList] = useState<any[]>([]);
   const SearchBarButtonHandler = () => {
     navigate("search");
+  };
+
+  const searchInputHandler = async () => {
+    if (searchInput.current) {
+      if (searchInput.current.value.length > 0) {
+        if (!hasText) setHasText(true);
+        const searchResult = await axiosSearchByIntraId(
+          searchInput.current.value
+        );
+        console.log(searchResult.data.result);
+        setSearchList(searchResult.data.result);
+      } else {
+        if (hasText) setHasText(false);
+      }
+    }
   };
 
   return (
@@ -16,8 +34,10 @@ const SearchBar = () => {
         ref={searchInput}
         type="text"
         placeholder="Search"
+        onChange={searchInputHandler}
       ></SearchBarStyled>
       <SearchButtonStyled onClick={SearchBarButtonHandler} />
+      <SearchList isVisible={hasText} searchList={searchList} />
     </SearchBarWrapperStyled>
   );
 };
