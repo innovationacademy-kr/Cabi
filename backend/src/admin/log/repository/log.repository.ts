@@ -37,7 +37,7 @@ export class AdminLogRepository implements IAdminLogRepository {
       .where('ll.log_user_id = :user_id', { user_id: userId })
       .limit(length)
       .skip(page * length)
-      .orderBy('ll.lent_time', 'ASC')
+      .orderBy('ll.return_time', 'DESC')
       .execute();
     const rtn = {
       result: result.map((r) => ({
@@ -82,7 +82,7 @@ export class AdminLogRepository implements IAdminLogRepository {
       .where('ll.log_cabinet_id = :cabinet_id', { cabinet_id: cabinetId })
       .limit(length)
       .skip(page * length)
-      .orderBy('ll.lent_time', 'ASC')
+      .orderBy('ll.return_time', 'DESC')
       .execute();
     const rtn = {
       result: result.map((r) => ({
