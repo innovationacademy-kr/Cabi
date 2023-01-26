@@ -31,7 +31,9 @@ const MemoModalContainer = (props: {
     );
     const targetSectionCabinetList = updatedCabinetList.find(
       (floor) => floor.section === myCabinetInfo.section
-    )!.cabinets;
+    )?.cabinets;
+    if (targetSectionCabinetList === undefined) return;
+
     let targetCabinet = targetSectionCabinetList.find(
       (section) => section.cabinet_id === myCabinetInfo.cabinet_id
     );
