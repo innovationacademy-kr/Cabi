@@ -21,6 +21,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { CabinetFloorDto } from 'src/admin/dto/cabinet.floor.dto';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
