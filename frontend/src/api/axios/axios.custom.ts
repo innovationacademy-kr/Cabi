@@ -142,3 +142,15 @@ export const axiosGetCabinetState = async (): Promise<any> => {
     throw error;
   }
 };
+
+const axiosSearchByIntraIdURL = "/api/admin/search/intraId/";
+export const axiosSearchByIntraId = async (intraId: string) => {
+  try {
+    const response = await instance.get(axiosSearchByIntraIdURL + intraId, {
+      params: { page: 0, length: 10 },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

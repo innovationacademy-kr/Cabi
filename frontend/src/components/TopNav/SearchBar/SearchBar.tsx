@@ -1,13 +1,28 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import SearchList from "@/components/TopNav/SearchBar/SearchList/SearchList";
+import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
 
 const SearchBar = () => {
   const navigate = useNavigate();
   const searchInput = useRef<HTMLInputElement>(null);
-
+  const [searchList, setSearchList] = useState<any[]>([]);
   const SearchBarButtonHandler = () => {
     navigate("search");
+  };
+
+  const searchInputHandler = async () => {
+    if (searchInput.current) {
+      if (searchInput.current.value.length <= 0) {
+        setSearchList([]);
+      } else {
+        const searchResult = await axiosSearchByIntraId(
+          searchInput.current.value
+        );
+        setSearchList(searchResult.data.result);
+      }
+    }
   };
 
   return (
@@ -16,8 +31,15 @@ const SearchBar = () => {
         ref={searchInput}
         type="text"
         placeholder="Search"
+        onChange={searchInputHandler}
       ></SearchBarStyled>
       <SearchButtonStyled onClick={SearchBarButtonHandler} />
+      {searchList.length > 0 && (
+        <SearchList
+          searchList={searchList}
+          searchWord={searchInput.current?.value}
+        />
+      )}
     </SearchBarWrapperStyled>
   );
 };
