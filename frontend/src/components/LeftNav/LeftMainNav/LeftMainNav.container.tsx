@@ -21,6 +21,7 @@ import {
   useSetRecoilState,
 } from "recoil";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
+import useMenu from "@/hooks/useMenu";
 
 const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
@@ -69,7 +70,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
-    if (pathname != "main") {
+    if (!pathname.includes("main")) {
       if (floor === currentFloor) {
         axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
           (response) => {
@@ -82,14 +83,21 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     }
   };
 
+  const { closeAll } = useMenu();
+
   const onClickHomeButton = () => {
     navigator("home");
+    closeAll();
   };
 
   const onClickLentLogButton = () => {
-    resetCurrentFloor();
-    resetCurrentSection();
     navigator("log");
+    closeAll();
+  };
+
+  const onClickSearchButton = () => {
+    navigator("search");
+    closeAll();
   };
 
   const onClickLogoutButton = (): void => {
@@ -117,8 +125,9 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       currentFloor={currentFloor}
       onClickHomeButton={onClickHomeButton}
       onClickFloorButton={onClickFloorButton}
-      onClickLogoutButton={onClickLogoutButton}
       onClickLentLogButton={onClickLentLogButton}
+      onClickSearchButton={onClickSearchButton}
+      onClickLogoutButton={onClickLogoutButton}
       isAdmin={isAdmin}
     />
   );
