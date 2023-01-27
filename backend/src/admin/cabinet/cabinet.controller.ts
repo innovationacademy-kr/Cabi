@@ -26,6 +26,7 @@ import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { AdminJwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
+import { CabinetFloorDto } from '../dto/cabinet.floor.dto';
 import { CabinetInfoResponseDto } from '../dto/cabinet.info.response.dto';
 import { CabinetStatusNoteRequestDto } from '../dto/cabinet.status.note.request.dto';
 import { AdminCabinetService } from './cabinet.service';

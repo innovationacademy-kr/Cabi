@@ -8,6 +8,8 @@ interface ILeftMainNav {
   onClickFloorButton: Function;
   onClickLogoutButton: React.MouseEventHandler;
   onClickLentLogButton: React.MouseEventHandler;
+  onClickSearchButton: React.MouseEventHandler;
+  isAdmin?: boolean;
 }
 
 const LeftMainNav = ({
@@ -18,13 +20,15 @@ const LeftMainNav = ({
   onClickFloorButton,
   onClickLogoutButton,
   onClickLentLogButton,
+  onClickSearchButton,
+  isAdmin,
 }: ILeftMainNav) => {
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
           <TopBtnStyled
-            className={pathname == "/home" ? "leftNavButtonActive" : ""}
+            className={pathname.includes("home") ? "leftNavButtonActive" : ""}
             onClick={onClickHomeButton}
           >
             Home
@@ -33,7 +37,7 @@ const LeftMainNav = ({
             floors.map((floor, index) => (
               <TopBtnStyled
                 className={
-                  pathname != "/home" && floor === currentFloor
+                  pathname.includes("main") && floor === currentFloor
                     ? "leftNavButtonActive"
                     : ""
                 }
@@ -47,12 +51,18 @@ const LeftMainNav = ({
       </TopSectionStyled>
       <BottomSectionStyled>
         <BottomBtnsStyled>
-          <BottomBtnStyled src={"/src/assets/images/search.svg"}>
-            <div></div>
-            Search
-          </BottomBtnStyled>
+          {isAdmin && (
+            <BottomBtnStyled
+              className={pathname.includes("search") ? "active" : ""}
+              src={"/src/assets/images/search.svg"}
+              onClick={onClickSearchButton}
+            >
+              <div></div>
+              Search
+            </BottomBtnStyled>
+          )}
           <BottomBtnStyled
-            className={pathname == "/log" ? "active" : ""}
+            className={pathname.includes("log") ? "active" : ""}
             src={"/src/assets/images/log.svg"}
             onClick={onClickLentLogButton}
           >

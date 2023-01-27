@@ -119,11 +119,35 @@ export const axiosReturn = async (): Promise<any> => {
   }
 };
 
-const axiosMyLentLogURL = "api/my_lent_info/log";
+const axiosMyLentLogURL = "/api/my_lent_info/log";
 export const axiosMyLentLog = async (page: number): Promise<any> => {
   try {
     const response = await instance.get(axiosMyLentLogURL, {
       params: { page: page, length: 10 },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Admin API
+
+const axiosGetCabinetStateURL = "/api/admin/cabinet/count/floor";
+export const axiosGetCabinetState = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosGetCabinetStateURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosSearchByIntraIdURL = "/api/admin/search/intraId/";
+export const axiosSearchByIntraId = async (intraId: string) => {
+  try {
+    const response = await instance.get(axiosSearchByIntraIdURL + intraId, {
+      params: { page: 0, length: 10 },
     });
     return response;
   } catch (error) {

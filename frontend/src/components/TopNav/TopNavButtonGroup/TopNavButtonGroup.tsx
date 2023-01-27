@@ -10,9 +10,10 @@ import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import instance from "@/api/axios/axios.instance";
+import { useNavigate } from "react-router-dom";
 
-const TopNavButtonGroup = () => {
-  const { toggleCabinet, toggleMap, openCabinet } = useMenu();
+const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
+  const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
@@ -40,6 +41,7 @@ const TopNavButtonGroup = () => {
       toggleCabinet();
     }
   };
+
   const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";
   const axiosRemovePenalty = async (): Promise<any> => {
     try {
@@ -50,12 +52,31 @@ const TopNavButtonGroup = () => {
       throw error;
     }
   };
+
+  const navigator = useNavigate();
+  const clickSearchButton = () => {
+    closeAll();
+    navigator("search");
+  };
+
   return (
     <NaviButtonsStyled>
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
           onClick={axiosRemovePenalty}
           imgSrc="/src/assets/images/happyCcabiWhite.png"
+          width="32px"
+          height="32px"
+        />
+      )}
+      {isAdmin && (
+        <TopNavButton
+          id="searchButton"
+          onClick={clickSearchButton}
+          imgSrc="/src/assets/images/searchWhite.svg"
+          width="28px"
+          height="28px"
+          disable={true}
         />
       )}
       <TopNavButton

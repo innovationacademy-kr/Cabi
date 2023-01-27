@@ -21,8 +21,9 @@ import {
   useSetRecoilState,
 } from "recoil";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
+import useMenu from "@/hooks/useMenu";
 
-const LeftMainNavContainer = () => {
+const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
@@ -69,7 +70,7 @@ const LeftMainNavContainer = () => {
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
-    if (pathname != "/main") {
+    if (!pathname.includes("main")) {
       if (floor === currentFloor) {
         axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
           (response) => {
@@ -78,30 +79,44 @@ const LeftMainNavContainer = () => {
           }
         );
       }
-      navigator("/main");
+      navigator("main");
     }
   };
 
+  const { closeAll } = useMenu();
+
   const onClickHomeButton = () => {
-    navigator("/home");
+    navigator("home");
+    closeAll();
   };
 
   const onClickLentLogButton = () => {
-    resetCurrentFloor();
-    resetCurrentSection();
-    navigator("/log");
+    navigator("log");
+    closeAll();
+  };
+
+  const onClickSearchButton = () => {
+    navigator("search");
+    closeAll();
   };
 
   const onClickLogoutButton = (): void => {
+    const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
-      removeCookie("access_token");
+      removeCookie(adminToken + "access_token", {
+        path: "/",
+        domain: "localhost",
+      });
     } else {
-      removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
+      removeCookie(adminToken + "access_token", {
+        path: "/",
+        domain: "cabi.42seoul.io",
+      });
     }
     resetLocation();
     resetCurrentFloor();
     resetCurrentSection();
-    navigator("/login");
+    navigator("login");
   };
   return (
     <LeftMainNav
@@ -110,8 +125,10 @@ const LeftMainNavContainer = () => {
       currentFloor={currentFloor}
       onClickHomeButton={onClickHomeButton}
       onClickFloorButton={onClickFloorButton}
-      onClickLogoutButton={onClickLogoutButton}
       onClickLentLogButton={onClickLentLogButton}
+      onClickSearchButton={onClickSearchButton}
+      onClickLogoutButton={onClickLogoutButton}
+      isAdmin={isAdmin}
     />
   );
 };

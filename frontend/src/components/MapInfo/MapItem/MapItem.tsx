@@ -18,7 +18,7 @@ const MapItem: React.FC<{
   const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const { closeMap } = useMenu();
   const onClick = () => {
-    if (pathname !== "/main") navigate("/main");
+    if (pathname !== "main") navigate("main");
     setCurrentFloor(floor ? floor : floors[0]);
     selectSection(info.name);
     closeMap();
