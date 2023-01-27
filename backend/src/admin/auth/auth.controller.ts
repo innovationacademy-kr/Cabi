@@ -4,9 +4,9 @@ import {
   HttpCode,
   Inject,
   Logger,
-  Param,
   Req,
   Res,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -25,6 +25,7 @@ import { AdminJwtAuthGuard } from './jwt/guard/jwtauth.guard';
 import { GoogleOAuthGuard } from 'src/admin/auth/google/guard/google.guard';
 import { AdminUserDto } from '../dto/admin.user.dto';
 import { AdminAuthService } from './auth.service';
+import { GoogleAuthFilter } from 'src/admin/auth/google/google.auth.filter';
 
 @ApiTags('Auth')
 @Controller('/api/admin/auth')
@@ -63,8 +64,9 @@ export class AdminAuthController {
   })
   @Get('login/callback')
   @UseGuards(GoogleOAuthGuard, AdminJWTSignGuard)
+  @UseFilters(GoogleAuthFilter)
   async loginCallback(@Res() res: Response, @User() adminUser: AdminUserDto) {
-    this.logger.log('Login -> callback');
+    this.logger.log(`${adminUser.email} has logged in.`);
     return res.redirect(`${this.configService.get<string>('fe_host')}/home`);
   }
 

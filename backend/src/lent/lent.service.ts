@@ -39,7 +39,7 @@ export class LentService {
         cabinet_id,
       );
       switch (excepction_type) {
-        case LentExceptionType.LENT_CIRCLE:
+        case LentExceptionType.LENT_CLUB:
           throw new HttpException(
             `🚨 해당 사물함은 동아리 전용 사물함입니다 🚨`,
             HttpStatus.I_AM_A_TEAPOT,

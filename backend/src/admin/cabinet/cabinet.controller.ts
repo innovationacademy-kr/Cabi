@@ -21,11 +21,11 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { CabinetFloorDto } from 'src/admin/dto/cabinet.floor.dto';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
 import { AdminJwtAuthGuard } from '../auth/jwt/guard/jwtauth.guard';
-import { CabinetFloorDto } from '../dto/cabinet.floor.dto';
 import { CabinetInfoResponseDto } from '../dto/cabinet.info.response.dto';
 import { CabinetStatusNoteRequestDto } from '../dto/cabinet.status.note.request.dto';
 import { AdminCabinetService } from './cabinet.service';
@@ -196,5 +196,14 @@ export class AdminCabinetController {
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetTitleByCabinetId.name}`);
     await this.adminCabinetService.updateCabinetTitle(cabinetId, title);
+  }
+
+  @ApiOperation({
+    summary: '전 층의 사물함 정보를 가져옵니다.',
+  })
+  @Get('/count/floor')
+  async getCabinetCountFloor(): Promise<CabinetFloorDto[]> {
+    this.logger.log(`Called ${this.getCabinetCountFloor.name}`);
+    return await this.adminCabinetService.getCabinetCountFloor();
   }
 }

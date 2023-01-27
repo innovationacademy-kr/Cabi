@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
@@ -13,6 +13,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
  */
 @Injectable()
 export class FtStrategy extends PassportStrategy(Strategy, '42') {
+  private logger = new Logger(FtStrategy.name);
   constructor(private readonly configService: ConfigService) {
     super({
       clientID: configService.get<string>('ftAuth.clientid'),
@@ -36,7 +37,13 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
    * cb(null, user); 콜백함수는 res 객체의 user라는 필드로 user의 객체를 넘깁니다.
    */
   async validate(req, access_token, refreshToken, profile, cb) {
-    if (!profile.staff && !profile.cursus_users[1]) {
+    const userEmail = profile.email.split('.');
+    const userName = userEmail[0].split('@')[0];
+    if (
+      (!profile.staff && !profile.cursus_users[1]) ||
+      userEmail[userEmail.length - 1] !== 'kr'
+    ) {
+      this.logger.log(`${userName} has failed to login due to region.`);
       cb(null, undefined);
     }
     let blackholed_at: Date;

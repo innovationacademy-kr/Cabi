@@ -5,7 +5,7 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import useDetailInfo from "@/hooks/useDetailInfo";
+import useMenu from "@/hooks/useMenu";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -31,7 +31,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
   );
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
-  const { openCabinet, closeMap } = useDetailInfo();
+  const { openCabinet, closeCabinet } = useMenu();
   const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
 
   let cabinetLabelText = "";
@@ -40,10 +40,17 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     //사용불가가 아닌 모든 경우
     if (props.lent_type === "PRIVATE")
       cabinetLabelText = props.lent_info[0]?.intra_id;
-    else if (props.lent_type === "SHARE")
-      cabinetLabelText = props.lent_info.length + " / " + props.max_user;
-    else if (props.lent_type === "CIRCLE")
-      cabinetLabelText = props.cabinet_title ? props.cabinet_title : "";
+    else if (props.lent_type === "SHARE") {
+      const headcount = props.lent_info.length;
+      const cabinetTitle =
+        props.cabinet_title ?? `${props.max_user} / ${props.max_user}`;
+
+      cabinetLabelText =
+        headcount === props.max_user
+          ? cabinetTitle
+          : headcount + " / " + props.max_user;
+    } else if (props.lent_type === "CLUB")
+      cabinetLabelText = props.cabinet_title ?? "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
@@ -58,12 +65,17 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     )
       setShowUnavailableModal(true);
   };
+
   const handleCloseUnavailableModal = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     setShowUnavailableModal(false);
   };
 
   const selectCabinetOnClick = (status: CabinetStatus, cabinetId: number) => {
+    if (currentCabinetId === cabinetId) {
+      closeCabinet();
+      return;
+    }
     if (
       !isMine &&
       status !== CabinetStatus.AVAILABLE &&
@@ -82,7 +94,6 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     }
     getData(cabinetId);
     openCabinet();
-    closeMap();
   };
 
   return (
@@ -169,7 +180,7 @@ const CabinetLabelStyled = styled.p<{
   isMine: boolean;
 }>`
   font-size: 0.875rem;
-  line-height: 1.125rem;
+  line-height: 1.25rem;
   letter-spacing: -0.02rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
   ${(props) =>

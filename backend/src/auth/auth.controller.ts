@@ -4,8 +4,8 @@ import {
   HttpCode,
   Inject,
   Logger,
-  Req,
   Res,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from './jwt/guard/jwtauth.guard';
@@ -25,6 +25,7 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JWTSignGuard } from './jwt/guard/jwtsign.guard';
+import { FtAuthFilter } from 'src/auth/42/ft.auth.filter';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -64,6 +65,7 @@ export class AuthController {
   })
   @Get('login/callback')
   @UseGuards(FtGuard, JWTSignGuard)
+  @UseFilters(FtAuthFilter)
   async loginCallback(@Res() res: Response, @User() user: UserSessionDto) {
     this.logger.log('Login -> callback');
     // NOTE: 42 계정이 존재하면 무조건 로그인 처리를 할것이므로 계정 등록도 여기서 처리합니다.

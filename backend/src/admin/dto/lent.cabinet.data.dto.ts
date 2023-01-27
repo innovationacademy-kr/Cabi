@@ -14,7 +14,7 @@ export class LentCabinetDataDto {
 
   @ApiProperty({
     description: '캐비닛의 타입',
-    example: 'PRIVATE, SHARE, CIRCLE',
+    example: 'PRIVATE, SHARE, CLUB',
   })
   lent_type: LentType; // 사물함의 타입
 

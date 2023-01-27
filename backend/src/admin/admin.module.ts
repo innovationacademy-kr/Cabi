@@ -5,6 +5,7 @@ import { AdminLogModule } from 'src/admin/log/log.module';
 import { AdminAuthModule } from 'src/admin/auth/auth.module';
 import { AdminReturnModule } from './return/return.module';
 import { AdminSearchModule } from './search/search.module';
+import { AdminDevelopModule } from 'src/admin/develop/develop.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AdminSearchModule } from './search/search.module';
     AdminCabinetModule,
     AdminSearchModule,
     AdminReturnModule,
+    ...(process.env.DEV === 'true' ? [AdminDevelopModule] : []),
   ],
   controllers: [],
   providers: [],

@@ -1,33 +1,21 @@
-import { useRecoilValue, useRecoilState } from "recoil";
-import { currentFloorSectionState } from "@/recoil/selectors";
 import styled from "styled-components";
 import CabinetColorTable from "@/components/LeftNav/CabinetColorTable/CabinetColorTable";
-import { currentSectionNameState } from "@/recoil/atoms";
-import useLeftNav from "@/hooks/useLeftNav";
 
-// const floorSection = [
-//   "End of Cluster1",
-//   "Cluster 1 - OA",
-//   "Cluster 1 - Terrace",
-//   "Oasis",
-//   "End of Cluster 2",
-// ];
+interface ILeftSectionNav {
+  isVisible: boolean;
+  onClickSection: Function;
+  currentFloorSection: string;
+  floorSection: string[];
+}
 
-const LeftSectionNav = (props: { isVisible: boolean }) => {
-  const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
-  const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
-    currentSectionNameState
-  );
-
-  const { closeLeftNav } = useLeftNav();
-
-  const onClickSection = (section: string) => {
-    closeLeftNav();
-    setCurrentFloorSection(section);
-  };
-
+const LeftSectionNav = ({
+  isVisible,
+  currentFloorSection,
+  onClickSection,
+  floorSection,
+}: ILeftSectionNav) => {
   return (
-    <LeftNavOptionStyled isVisible={props.isVisible}>
+    <LeftNavOptionStyled isVisible={isVisible}>
       {floorSection.map((section: string, index: number) => (
         <FloorSectionStyled
           className={

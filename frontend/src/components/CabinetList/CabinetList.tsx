@@ -7,12 +7,14 @@ interface CabinetListInterface {
   cabinetInfo: CabinetInfo[];
 }
 
+const DEFAULT_COL_NUM = 4;
+
 const CabinetList = ({
   colNum,
   cabinetInfo,
 }: CabinetListInterface): JSX.Element => {
   return (
-    <CabinetListContainerStyled colNum={colNum}>
+    <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
       {cabinetInfo.map((cabinet, index) => (
         <CabinetListItem {...cabinet} key={index} />
       ))}
