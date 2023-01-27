@@ -26,20 +26,20 @@ const Layout = (): JSX.Element => {
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
 
+  const getMyInfo = async () => {
+    try {
+      const { data: myInfo } = await axiosMyInfo();
+      setUser(myInfo);
+      setIsValidToken(true);
+      if (isRootPath || isLoginPage) navigate("/home");
+    } catch (error) {
+      navigate("/login");
+    }
+  };
+
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/login");
-
-    if (token) {
-      const getMyInfo = async () => {
-        try {
-          const { data: myInfo } = await axiosMyInfo();
-          setUser(myInfo);
-          setIsValidToken(true);
-          if (isRootPath || isLoginPage) navigate("/home");
-        } catch (error) {
-          navigate("/login");
-        }
-      };
+    else if (token) {
       getMyInfo();
     }
   }, []);
