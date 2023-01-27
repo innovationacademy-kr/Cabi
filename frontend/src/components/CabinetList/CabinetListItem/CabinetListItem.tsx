@@ -96,11 +96,22 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     openCabinet();
   };
 
+  const cabinetItemTitleHandler = () => {
+    let lentType;
+    if (props.lent_type === CabinetType.PRIVATE) lentType = "개인";
+    else if (props.lent_type === CabinetType.SHARE) lentType = "공유";
+    else if (props.lent_type === CabinetType.CLUB) lentType = "동아리";
+
+    if (!cabinetLabelText) return `[${lentType}]`;
+    return `[${lentType}] ${cabinetLabelText}`;
+  };
+
   return (
     <CabinetListItemStyled
       status={props.status}
       isMine={isMine}
       isSelected={currentCabinetId === props.cabinet_id}
+      title={cabinetItemTitleHandler()}
       onClick={() => {
         selectCabinetOnClick(props.status, props.cabinet_id);
       }}
