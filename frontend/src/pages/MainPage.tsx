@@ -1,15 +1,34 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { currentFloorSectionState } from "@/recoil/selectors";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import { currentSectionNameState } from "@/recoil/atoms";
+import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import useMenu from "@/hooks/useMenu";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 
 const MainPage = () => {
-  // let touchStartPosX: number;
+
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
+  const { closeAll } = useMenu();
+
+  const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
+  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+
+  useEffect(() => {
+    closeAll();
+    resetTargetCabinetInfo();
+    resetCurrentCabinetId();
+
+    return () => {
+      closeAll();
+      resetTargetCabinetInfo();
+      resetCurrentCabinetId();
+    };
+  }, []);
+  
   const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState

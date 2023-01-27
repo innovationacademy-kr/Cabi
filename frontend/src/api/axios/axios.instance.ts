@@ -10,7 +10,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async (config) => {
-  const token = getCookie("access_token");
+  const token = getCookie("admin_access_token") ?? getCookie("access_token");
   config.headers = {
     Authorization: `Bearer ${token}`,
   };
@@ -25,11 +25,19 @@ instance.interceptors.response.use(
     // access_token unauthorized
     if (error.response?.status === 401) {
       if (import.meta.env.VITE_IS_LOCAL === "true") {
+        removeCookie("admin_access_token", {
+          path: "/",
+          domain: "localhost",
+        });
         removeCookie("access_token");
       } else {
+        removeCookie("admin_access_token", {
+          path: "/",
+          domain: "cabi.42seoul.io",
+        });
         removeCookie("access_token", { path: "/", domain: "cabi.42seoul.io" });
       }
-      window.location.href = "/login";
+      window.location.href = "login";
       alert(error.response.data.message);
     }
     return Promise.reject(error);

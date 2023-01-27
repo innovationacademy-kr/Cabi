@@ -7,6 +7,9 @@ interface ILeftMainNav {
   currentFloor: number;
   onClickFloorButton: Function;
   onClickLogoutButton: React.MouseEventHandler;
+  onClickLentLogButton: React.MouseEventHandler;
+  onClickSearchButton: React.MouseEventHandler;
+  isAdmin?: boolean;
 }
 
 const LeftMainNav = ({
@@ -16,13 +19,16 @@ const LeftMainNav = ({
   onClickHomeButton,
   onClickFloorButton,
   onClickLogoutButton,
+  onClickLentLogButton,
+  onClickSearchButton,
+  isAdmin,
 }: ILeftMainNav) => {
   return (
     <LeftNavStyled>
       <TopSectionStyled>
         <TopBtnsStyled>
           <TopBtnStyled
-            className={pathname == "/home" ? "leftNavButtonActive" : ""}
+            className={pathname.includes("home") ? "leftNavButtonActive" : ""}
             onClick={onClickHomeButton}
           >
             Home
@@ -31,7 +37,7 @@ const LeftMainNav = ({
             floors.map((floor, index) => (
               <TopBtnStyled
                 className={
-                  pathname != "/home" && floor === currentFloor
+                  pathname.includes("main") && floor === currentFloor
                     ? "leftNavButtonActive"
                     : ""
                 }
@@ -45,11 +51,21 @@ const LeftMainNav = ({
       </TopSectionStyled>
       <BottomSectionStyled>
         <BottomBtnsStyled>
-          <BottomBtnStyled src={"/src/assets/images/search.svg"}>
-            <div></div>
-            Search
-          </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/log.svg"}>
+          {isAdmin && (
+            <BottomBtnStyled
+              className={pathname.includes("search") ? "active" : ""}
+              src={"/src/assets/images/search.svg"}
+              onClick={onClickSearchButton}
+            >
+              <div></div>
+              Search
+            </BottomBtnStyled>
+          )}
+          <BottomBtnStyled
+            className={pathname.includes("log") ? "active" : ""}
+            src={"/src/assets/images/log.svg"}
+            onClick={onClickLentLogButton}
+          >
             <div></div>
             Log
           </BottomBtnStyled>
@@ -62,13 +78,13 @@ const LeftMainNav = ({
               Contact
             </a>
           </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/circleIconGray.svg"}>
+          <BottomBtnStyled src={"/src/assets/images/clubIconGray.svg"}>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
               target="_blank"
             >
               <div></div>
-              Circle
+              Club
             </a>
           </BottomBtnStyled>
 
@@ -170,6 +186,16 @@ const BottomBtnStyled = styled.li<{ src: string }>`
     margin-bottom: 4px;
     background-image: url(${(props) => props.src});
     background-size: cover;
+  }
+  &.active {
+    filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)
+      brightness(99%) contrast(107%);
+  }
+  &.active a {
+    color: var(--main-color);
+  }
+  &.active:hover {
+    filter: none;
   }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
