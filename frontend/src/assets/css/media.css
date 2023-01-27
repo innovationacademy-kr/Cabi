@@ -51,3 +51,19 @@
   transform: translateX(0%);
 }
 
+/* search */
+@media (max-width: 768px) {
+  #searchBar {
+    display: none;
+  }
+
+  #searchBar.on {
+    display: block;
+  }
+
+  #searchButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

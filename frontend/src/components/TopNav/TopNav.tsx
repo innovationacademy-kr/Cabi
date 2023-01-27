@@ -69,7 +69,7 @@ const TopNav: React.FC<{
         </LocationSelectBoxStyled>
       </LogoStyled>
       {isAdmin && <SearchBar />}
-      <TopNavButtonGroup />
+      <TopNavButtonGroup isAdmin={isAdmin}/>
     </TopNavContainerStyled>
   );
 };

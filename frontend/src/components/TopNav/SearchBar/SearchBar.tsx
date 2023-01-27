@@ -26,7 +26,7 @@ const SearchBar = () => {
   };
 
   return (
-    <SearchBarWrapperStyled>
+    <SearchBarWrapperStyled id="searchBar">
       <SearchBarStyled
         ref={searchInput}
         type="text"
