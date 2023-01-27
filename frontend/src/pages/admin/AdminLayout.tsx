@@ -11,7 +11,7 @@ import useMenu from "@/hooks/useMenu";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 
 const Layout = (): JSX.Element => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,7 +30,6 @@ const Layout = (): JSX.Element => {
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/admin/login");
     if (token) {
-      setIsLoading(true);
       setIsValidToken(true);
       if (checkPath()) navigate("/admin/home");
     }

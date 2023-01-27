@@ -15,7 +15,7 @@ import useMenu from "@/hooks/useMenu";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 
 const Layout = (): JSX.Element => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
@@ -30,7 +30,6 @@ const Layout = (): JSX.Element => {
     if (!token && !isLoginPage) navigate("/login");
 
     if (token) {
-      setIsLoading(true);
       const getMyInfo = async () => {
         try {
           const { data: myInfo } = await axiosMyInfo();
