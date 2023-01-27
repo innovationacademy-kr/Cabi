@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
@@ -9,6 +9,9 @@ import SectionPaginationContainer from "@/components/SectionPagination/SectionPa
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 
 const MainPage = () => {
+
+  const touchStartPosX = useRef(0);
+  const touchStartPosY = useRef(0);
   const { closeAll } = useMenu();
 
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
@@ -25,9 +28,7 @@ const MainPage = () => {
       resetCurrentCabinetId();
     };
   }, []);
-
-  let touchStartPosX: number;
-
+  
   const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
@@ -53,20 +54,23 @@ const MainPage = () => {
     }
   };
 
-  const swipeSection = (touchEndPosX: number) => {
-    const touchOffset = Math.round(touchEndPosX - touchStartPosX);
-    if (Math.abs(touchOffset) < 50) return;
-    if (touchEndPosX > touchStartPosX) moveToLeftSection();
+  const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
+    const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
+    const touchOffsetY = Math.round(touchEndPosY - touchStartPosY.current);
+
+    if (Math.abs(touchOffsetX) < 100 || Math.abs(touchOffsetY) > 100) return;
+    if (touchEndPosX > touchStartPosX.current) moveToLeftSection();
     else moveToRightSection();
   };
 
   return (
     <WapperStyled
       onTouchStart={(e: React.TouchEvent) => {
-        touchStartPosX = e.changedTouches[0].screenX;
+        touchStartPosX.current = e.changedTouches[0].screenX;
+        touchStartPosY.current = e.changedTouches[0].screenY;
       }}
       onTouchEnd={(e: React.TouchEvent) =>
-        swipeSection(e.changedTouches[0].screenX)
+        swipeSection(e.changedTouches[0].screenX, e.changedTouches[0].screenY)
       }
     >
       <SectionPaginationContainer />
