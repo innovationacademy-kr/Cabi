@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { axiosGetCabinetState } from "@/api/axios/axios.custom";
 import PieChart from "./PieChart";
@@ -10,14 +10,28 @@ const resData = [
   { floor: 5, total: 96, used: 62, overdue: 0, unused: 27, disabled: 7 },
 ];
 
+interface IRentInfo {
+  floor: number;
+  total: number;
+  used: number;
+  overdue: number;
+  unused: number;
+  disabled: number;
+}
+
 const AdminChart = () => {
+  const [rentInfo, setRentInfo] = useState<IRentInfo[]>([]);
   useEffect(() => {
-    axiosGetCabinetState().then((res) => console.log(res));
+    async function getData() {
+      const { data } = await axiosGetCabinetState();
+      setRentInfo(data);
+    }
+    getData();
   }, []);
   return (
     <AdminChartStyled>
-      <BarChart />
-      <PieChart />
+      <BarChart data={rentInfo} />
+      <PieChart data={rentInfo} />
     </AdminChartStyled>
   );
 };

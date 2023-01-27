@@ -15,15 +15,53 @@ const result = resData.map((data) => ({
   ["고장"]: data.disabled,
 }));
 
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of them.
-const BarChart = () => (
+interface IRentInfo {
+  floor: number;
+  total: number;
+  used: number;
+  overdue: number;
+  unused: number;
+  disabled: number;
+}
+
+const convert = (data: IRentInfo[]) =>
+  data.map(
+    ({
+      floor,
+      used,
+      unused,
+      overdue,
+      disabled,
+    }: {
+      floor: number;
+      used: number;
+      unused: number;
+      overdue: number;
+      disabled: number;
+    }) => ({
+      floor: floor + "층",
+      ["사용 중"]: used,
+      ["미사용"]: unused,
+      ["연체 중"]: overdue,
+      ["고장"]: disabled,
+    })
+  );
+
+// 테마를 고치려면 ....
+// 테마 프로퍼티 안에 속성들을 뜯어 봐야합니다 ... ㅠ
+// theme 안에 legends나 axis프로퍼티 레퍼런스를 따라들어가서 nivo theme 객체를 열어봐야합니다.
+
+// 색상 변경은 colors 프롭 안에 내용 수정
+
+const BarChart = ({ data }: { data: IRentInfo[] }) => (
   <BarChartStyled>
     <ResponsiveBar
-      data={result}
+      theme={{
+        legends: { text: { fontSize: "1.5rem" } },
+        axis: { ticks: { text: { fontSize: "1.25rem" } } },
+        labels: { text: { fontSize: "1.5rem" } },
+      }}
+      data={convert(data)}
       keys={["고장", "연체 중", "사용 중", "미사용"]}
       indexBy="floor"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
@@ -31,40 +69,6 @@ const BarChart = () => (
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
       colors={["#595959", "#ff4e4e", "#e2e4e3", "#9747ff"]}
-      defs={[
-        {
-          id: "dots",
-          type: "patternDots",
-          background: "inherit",
-          color: "#38bcb2",
-          size: 4,
-          padding: 1,
-          stagger: true,
-        },
-        {
-          id: "lines",
-          type: "patternLines",
-          background: "inherit",
-          color: "transparent",
-          rotation: -45,
-          lineWidth: 6,
-          spacing: 10,
-        },
-      ]}
-      fill={[
-        {
-          match: {
-            id: "미사용",
-          },
-          id: "lines",
-        },
-        {
-          match: {
-            id: "sandwich",
-          },
-          id: "lines",
-        },
-      ]}
       borderColor={{
         from: "color",
         modifiers: [["darker", 1.6]],
@@ -118,9 +122,9 @@ const BarChart = () => (
         },
       ]}
       role="application"
-      ariaLabel="Nivo bar chart demo"
+      ariaLabel="Admin Bar Chart"
       barAriaLabel={function (e) {
-        return e.id + ": " + e.formattedValue + " in country: " + e.indexValue;
+        return "Admin Bar Chart";
       }}
     />
   </BarChartStyled>

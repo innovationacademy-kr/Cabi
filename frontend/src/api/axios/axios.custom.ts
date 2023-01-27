@@ -133,7 +133,7 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
 
 // Admin API
 
-const axiosGetCabinetStateURL = "/api/cabinet/count/floor";
+const axiosGetCabinetStateURL = "/api/admin/cabinet/count/floor";
 export const axiosGetCabinetState = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosGetCabinetStateURL);

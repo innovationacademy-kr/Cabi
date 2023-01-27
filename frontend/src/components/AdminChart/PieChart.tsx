@@ -6,22 +6,30 @@ import styled from "styled-components";
 // website examples showcase many properties,
 // you'll often use just a few of them.
 
-const resData = [
-  { floor: 2, total: 148, used: 114, overdue: 0, unused: 26, disabled: 8 },
-  { floor: 4, total: 100, used: 73, overdue: 1, unused: 21, disabled: 5 },
-  { floor: 5, total: 96, used: 62, overdue: 0, unused: 27, disabled: 7 },
-];
+interface IRentInfo {
+  floor: number;
+  total: number;
+  used: number;
+  overdue: number;
+  unused: number;
+  disabled: number;
+}
 
-const result = resData.map((data) => ({
-  id: data.floor + "층",
-  label: data.floor + "층",
-  value: data.total,
-}));
+const convert = (data: IRentInfo[]) =>
+  data.map(({ floor, total }: { floor: number; total: number }) => ({
+    id: floor + "층",
+    label: floor + "층",
+    value: total,
+  }));
 
-const PieChart = () => (
+const PieChart = ({ data }: { data: IRentInfo[] }) => (
   <PieChartStyled>
     <ResponsivePie
-      data={result}
+      data={convert(data)}
+      theme={{
+        legends: { text: { fontSize: "1.5rem" } },
+        labels: { text: { fontSize: "1.5rem" } },
+      }}
       margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
       colors={["skyblue", "pink", "lime"]}
       innerRadius={0.5}
