@@ -132,10 +132,11 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
 };
 
 // Admin API
-const axiosLentURL = "/api/admin/lent";
-export const axiosLent = async () => {
+
+const axiosGetCabinetStateURL = "/api/admin/cabinet/count/floor";
+export const axiosGetCabinetState = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosLentURL);
+    const response = await instance.get(axiosGetCabinetStateURL);
     return response;
   } catch (error) {
     throw error;
