@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef } from "react";
 import styled from "styled-components";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -8,8 +8,8 @@ import CabinetListContainer from "@/components/CabinetList/CabinetList.container
 
 const MainPage = () => {
   // let touchStartPosX: number;
-  const [touchStartPosX, setTouchStartPosX] = useState<number>(-1);
-  const [touchStartPosY, setTouchStartPosY] = useState<number>(-1);
+  const touchStartPosX = useRef(0);
+  const touchStartPosY = useRef(0);
   const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
@@ -36,19 +36,19 @@ const MainPage = () => {
   };
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
-    const touchOffsetX = Math.round(touchEndPosX - touchStartPosX);
-    const touchOffsetY = Math.round(touchEndPosY - touchStartPosY);
+    const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
+    const touchOffsetY = Math.round(touchEndPosY - touchStartPosY.current);
 
     if (Math.abs(touchOffsetX) < 100 || Math.abs(touchOffsetY) > 100) return;
-    if (touchEndPosX > touchStartPosX) moveToLeftSection();
+    if (touchEndPosX > touchStartPosX.current) moveToLeftSection();
     else moveToRightSection();
   };
 
   return (
     <WapperStyled
       onTouchStart={(e: React.TouchEvent) => {
-        setTouchStartPosX(e.changedTouches[0].screenX);
-        setTouchStartPosY(e.changedTouches[0].screenY);
+        touchStartPosX.current = e.changedTouches[0].screenX;
+        touchStartPosY.current = e.changedTouches[0].screenY;
       }}
       onTouchEnd={(e: React.TouchEvent) =>
         swipeSection(e.changedTouches[0].screenX, e.changedTouches[0].screenY)
