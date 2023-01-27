@@ -7,7 +7,7 @@ const LoginTemplate = (props: {
   url: string;
   pageTitle: string;
   pageSubTitle: string;
-  imgSrc: string;
+  imgSrc?: string;
 }) => {
   const { url, pageTitle, pageSubTitle, imgSrc } = props;
   const [isClicked, setIsClicked] = useState(false);
