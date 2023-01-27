@@ -25,10 +25,10 @@ export class BanCheckGuard implements CanActivate {
     if (result) {
       this.logger.debug('현재 차단당한 상태입니다.');
       throw new ForbiddenException(
-        '🚨 페널티로 인해 현재 사물함 대여가 불가능합니다 🚨' +
+        '페널티로 인해 대여가 불가능합니다' +
           '\n' +
           dayjs(result).format('YYYY/MM/DD HH:mm') +
-          '까지 차단됩니다.',
+          '까지 차단됩니다',
       );
     }
     return true;

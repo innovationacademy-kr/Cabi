@@ -29,6 +29,7 @@ const ReturnModal: React.FC<{
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
@@ -50,6 +51,7 @@ const ReturnModal: React.FC<{
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinet_id: -1 });
       setIsCurrentSectionRender(true);
+      setModalTitle("반납되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
@@ -66,7 +68,7 @@ const ReturnModal: React.FC<{
       }
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      console.error(error);
+      setModalTitle(error.response.data.message);
     } finally {
       setShowResponseModal(true);
     }
@@ -88,9 +90,15 @@ const ReturnModal: React.FC<{
       {!showResponseModal && <Modal modalContents={returnModalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
-          <FailResponseModal closeModal={props.closeModal} />
+          <FailResponseModal
+            modalTitle={modalTitle}
+            closeModal={props.closeModal}
+          />
         ) : (
-          <SuccessResponseModal closeModal={props.closeModal} />
+          <SuccessResponseModal
+            modalTitle={modalTitle}
+            closeModal={props.closeModal}
+          />
         ))}
     </ModalPortal>
   );

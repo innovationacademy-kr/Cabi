@@ -70,7 +70,7 @@ export const modalPropsMap = {
   },
   MODAL_UNAVAILABLE_ALREADY_LENT: {
     type: "error",
-    title: "이미 대여 중인 사물함이 있습니다.",
+    title: "이미 대여 중인 사물함이 있습니다",
     confirmMessage: "",
   },
 };

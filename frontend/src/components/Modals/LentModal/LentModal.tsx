@@ -30,6 +30,7 @@ const LentModal: React.FC<{
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const setMyLentInfo =
@@ -57,7 +58,7 @@ ${
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
       setIsCurrentSectionRender(true);
-
+      setModalTitle("대여가 완료되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
@@ -73,8 +74,8 @@ ${
         throw error;
       }
     } catch (error: any) {
+      setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
-      console.error(error);
     } finally {
       setShowResponseModal(true);
     }
@@ -95,9 +96,15 @@ ${
       {!showResponseModal && <Modal modalContents={lentModalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
-          <FailResponseModal closeModal={props.closeModal} />
+          <FailResponseModal
+            modalTitle={modalTitle}
+            closeModal={props.closeModal}
+          />
         ) : (
-          <SuccessResponseModal closeModal={props.closeModal} />
+          <SuccessResponseModal
+            modalTitle={modalTitle}
+            closeModal={props.closeModal}
+          />
         ))}
     </ModalPortal>
   );
