@@ -30,7 +30,8 @@ const ServiceManual = ({
             </span>{" "}
             대여할 수 있습니다.
             <br />
-            연체 시 연체되는 <span>일 수만큼 페널티</span>가 부과됩니다.
+            연체 시 연체되는 <span className="redColor">일 수만큼 페널티</span>
+            가 부과됩니다.
           </p>
         </article>
         <article className="article">
@@ -57,7 +58,8 @@ const ServiceManual = ({
             사물함 대여가
             <span className="redColor"> 불가능</span>합니다.
             <br />
-            연체 시 연체되는 <span>일 수만큼 페널티</span>가 부과됩니다.
+            연체 시 연체되는 <span className="redColor">일 수만큼 페널티</span>
+            가 부과됩니다.
           </p>
         </article>
         <article className="article">
@@ -68,7 +70,14 @@ const ServiceManual = ({
           <p>
             새로운 기수가 들어올 때 갱신됩니다.
             <br />
-            사물함 대여는 슬랙 캐비닛 채널로 문의주세요.
+            사물함 대여는{" "}
+            <AtagStyled
+              href="https://42born2code.slack.com/archives/C02V6GE8LD7"
+              target="_black"
+            >
+              슬랙 캐비닛 채널
+            </AtagStyled>
+            로 문의주세요.
             <br />
             상세 페이지가 제공되지 않습니다.
             <br />
@@ -155,11 +164,16 @@ const InfoSectionStyled = styled.section`
   }
   .redColor {
     color: var(--expired);
-    font-weight: 700;
+    /* font-style: oblique; */
   }
   .article > p > span {
     font-weight: 700;
   }
+`;
+
+const AtagStyled = styled.a`
+  text-decoration: underline;
+  font-weight: 700;
 `;
 
 export default ServiceManual;
