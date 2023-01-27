@@ -72,7 +72,8 @@ const LeftMainNav = ({
           <BottomBtnStyled src={"/src/assets/images/slack.svg"}>
             <a
               href="https://42born2code.slack.com/archives/C02V6GE8LD7"
-              target="_black"
+              target="_blank"
+              title="슬랙 캐비닛 채널 새창으로 열기"
             >
               <div></div>
               Contact
@@ -82,6 +83,7 @@ const LeftMainNav = ({
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
               target="_blank"
+              title="동아리 사물함 사용 신청서 새창으로 열기"
             >
               <div></div>
               Club
