@@ -196,4 +196,13 @@ export class AdminCabinetController {
     this.logger.debug(`Called ${this.updateCabinetTitleByCabinetId.name}`);
     await this.adminCabinetService.updateCabinetTitle(cabinetId, title);
   }
+
+  @ApiOperation({
+    summary: '전 층의 사물함 정보를 가져옵니다.',
+  })
+  @Get('/count/floor')
+  async getCabinetCountFloor(): Promise<CabinetFloorDto[]> {
+    this.logger.log(`Called ${this.getCabinetCountFloor.name}`);
+    return await this.adminCabinetService.getCabinetCountFloor();
+  }
 }

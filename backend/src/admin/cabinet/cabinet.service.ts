@@ -23,7 +23,7 @@ export class AdminCabinetService {
   ) {}
 
   async getCabinetCountFloor(): Promise<CabinetFloorDto[]> {
-    this.logger.debug('call getCabinetCountFloor');
+    this.logger.debug(`Called ${this.getCabinetCountFloor.name}`);
     const result = await this.adminCabinetRepository.getCabinetCountFloor();
     return result;
   }
