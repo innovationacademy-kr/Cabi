@@ -29,6 +29,8 @@ const ServiceManual = ({
               {import.meta.env.VITE_PRIVATE_LENT_PERIOD}일간
             </span>{" "}
             대여할 수 있습니다.
+            <br />
+            연체 시 연체되는 <span>일 수만큼 페널티</span>가 부과됩니다.
           </p>
         </article>
         <article className="article">
@@ -54,6 +56,8 @@ const ServiceManual = ({
             {import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY}시간 동안 공유
             사물함 대여가
             <span className="redColor"> 불가능</span>합니다.
+            <br />
+            연체 시 연체되는 <span>일 수만큼 페널티</span>가 부과됩니다.
           </p>
         </article>
         <article className="article">
