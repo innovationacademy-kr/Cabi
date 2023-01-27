@@ -6,19 +6,22 @@ import MapInfo from "./MapInfo";
 
 const MapInfoContainer = () => {
   const [touchXpos, setTouchXpos] = useState(0);
+  const [touchYpos, setTouchYpos] = useState(0);
   const floorInfo = useRecoilValue(currentLocationFloorState);
   const [floor, setFloor] = useState(floorInfo[0]);
   const touchStart = (e: React.TouchEvent) => {
     setTouchXpos(e.changedTouches[0].clientX);
+    setTouchYpos(e.changedTouches[0].clientY);
   };
   const { closeMap } = useMenu();
 
   const touchEnd = (e: React.TouchEvent) => {
-    const offset = e.changedTouches[0].clientX - touchXpos;
+    const offsetX = e.changedTouches[0].clientX - touchXpos;
+    const offsetY = e.changedTouches[0].clientY - touchYpos;
     let index = floorInfo.indexOf(floor);
-    if (Math.abs(offset) < 50) return;
+    if (Math.abs(offsetX) < 100 || Math.abs(offsetY) > 100) return;
 
-    if (offset < 0) {
+    if (offsetX < 0) {
       index++;
       if (index === floorInfo.length) index = 0;
     } else {
