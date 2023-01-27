@@ -38,10 +38,10 @@ const LogTable = ({ lentLog }: IlentLog) => {
                   <td
                     title={`${floor}층 ${section}`}
                   >{`${floor}F - ${cabinet_num}번`}</td>
-                  <td>
+                  <td title={new Date(lent_time).toLocaleString("ko-KR")}>
                     {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
                   </td>
-                  <td>
+                  <td title={new Date(return_time).toLocaleString("ko-KR")}>
                     {new Date(return_time).toLocaleString("ko-KR", dateOptions)}
                   </td>
                 </tr>
