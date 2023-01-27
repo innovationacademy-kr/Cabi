@@ -6,9 +6,14 @@ import { AdminAuthModule } from 'src/admin/auth/auth.module';
 import { AdminReturnModule } from './return/return.module';
 import { AdminSearchModule } from './search/search.module';
 import { AdminDevelopModule } from 'src/admin/develop/develop.module';
+import configuration from 'src/config/configuration';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+	ConfigModule.forRoot({
+		load: [configuration],
+	}),
     AdminAuthModule,
     AdminLentModule,
     AdminLogModule,
