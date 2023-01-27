@@ -13,6 +13,9 @@ const AdminLoginPage = lazy(() => import("@/pages/admin/AdminLoginPage"));
 const AdminHomePage = lazy(() => import("@/pages/admin/AdminHomePage"));
 const AdminLogPage = lazy(() => import("@/pages/admin/AdminLogPage"));
 const SearchPage = lazy(() => import("@/pages/admin/SearchPage"));
+const AdminLoginFailurePage = lazy(
+  () => import("@/pages/admin/AdminLoginFailurePage")
+);
 
 function App(): React.ReactElement {
   return (
@@ -34,7 +37,10 @@ function App(): React.ReactElement {
             <Route path="log" element={<AdminLogPage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
-          <Route path="/admin/login/failure" element={<LoginFailurePage />} />
+          <Route
+            path="/admin/login/failure"
+            element={<AdminLoginFailurePage />}
+          />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
