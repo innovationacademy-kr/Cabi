@@ -27,6 +27,7 @@ const MapInfo = ({
       <HeaderStyled>
         <H2Styled>지도</H2Styled>
         <img
+          className="cabiButton"
           onClick={closeMap}
           src={exitButton}
           style={{ width: "24px", cursor: "pointer" }}

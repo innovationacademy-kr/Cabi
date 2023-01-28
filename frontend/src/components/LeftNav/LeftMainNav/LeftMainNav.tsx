@@ -28,7 +28,11 @@ const LeftMainNav = ({
       <TopSectionStyled>
         <TopBtnsStyled>
           <TopBtnStyled
-            className={pathname.includes("home") ? "leftNavButtonActive" : ""}
+            className={
+              pathname.includes("home")
+                ? "leftNavButtonActive cabiButton"
+                : "cabiButton"
+            }
             onClick={onClickHomeButton}
           >
             Home
@@ -38,8 +42,8 @@ const LeftMainNav = ({
               <TopBtnStyled
                 className={
                   pathname.includes("main") && floor === currentFloor
-                    ? "leftNavButtonActive"
-                    : ""
+                    ? "leftNavButtonActive cabiButton"
+                    : "cabiButton"
                 }
                 onClick={() => onClickFloorButton(floor)}
                 key={index}
@@ -53,7 +57,11 @@ const LeftMainNav = ({
         <BottomBtnsStyled>
           {isAdmin && (
             <BottomBtnStyled
-              className={pathname.includes("search") ? "active" : ""}
+              className={
+                pathname.includes("search")
+                  ? "active cabiButton"
+                  : " cabiButton"
+              }
               src={"/src/assets/images/search.svg"}
               onClick={onClickSearchButton}
             >
@@ -62,7 +70,9 @@ const LeftMainNav = ({
             </BottomBtnStyled>
           )}
           <BottomBtnStyled
-            className={pathname.includes("log") ? "active" : ""}
+            className={
+              pathname.includes("log") ? "active cabiButton" : " cabiButton"
+            }
             src={"/src/assets/images/log.svg"}
             onClick={onClickLentLogButton}
           >
@@ -91,6 +101,7 @@ const LeftMainNav = ({
           </BottomBtnStyled>
 
           <BottomBtnStyled
+            className="cabiButton"
             onClick={onClickLogoutButton}
             src={"/src/assets/images/close-square.svg"}
           >

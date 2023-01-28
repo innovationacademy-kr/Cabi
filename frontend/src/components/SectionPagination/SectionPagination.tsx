@@ -22,6 +22,7 @@ const SectionPagination: React.FC<{
       key={sectionName}
       bgColor={sectionName === currentSectionName ? "#9747FF" : "#D9D9D9"}
       onClick={() => changeSectionOnClickIdxButton(idx)}
+      className="cabiButton"
     />
   ));
 
@@ -31,12 +32,14 @@ const SectionPagination: React.FC<{
         <MoveSectionButtonStyled
           src={LeftSectionButton}
           onClick={moveToLeftSection}
+          className="cabiButton"
         />
         <SectionNameTextStyled>{currentPositionName}</SectionNameTextStyled>
         <MoveSectionButtonStyled
           src={LeftSectionButton}
           needRotate
           onClick={moveToRightSection}
+          className="cabiButton"
         />
       </SectionBarStyled>
       <SectionIndexStyled>{paginationIdxBar}</SectionIndexStyled>
