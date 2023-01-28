@@ -85,4 +85,9 @@ export class UserService {
     this.logger.debug(`Called ${this.updateBlackholeDate.name}`);
     await this.userRepository.updateBlackholeDate(user_id, blackhole_date);
   }
+
+  async getUserIfExist(user_id: number): Promise<UserDto> {
+    this.logger.debug(`Called ${UserService.name} ${this.getUserIfExist.name}`);
+    return await this.userRepository.getUserIfExist(user_id);
+  }
 }

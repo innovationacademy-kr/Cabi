@@ -4,9 +4,33 @@ on: [push]
 jobs:
   backend-CI:
     runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb
+        env:
+          MARIADB_DATABASE: test_db
+          MARIADB_USER: test_user
+          MARIADB_PASSWORD: test_password
+          MARIADB_ROOT_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -P 3306 -ptest_password | grep 'mysqld is alive' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
+      - name: DB에 샘플 데이터 삽입
+        run: >-
+          mysql --force
+          --host="127.0.0.1"
+          --port="3306"
+          --database="test_db"
+          --user="test_user"
+          --password="test_password"
+          < "backend/database/42cabi_v3_test.sql"
       - name: Node.js 16.x Version
         uses: actions/setup-node@v1
         with:
@@ -26,8 +50,28 @@ jobs:
         run: npm run build --prefix backend
       # - name: 단위 테스트 체크
       #   run: npm run test --prefix backend
-      # - name: 통합 테스트 체크
-      #   run: npm run test:e2e --prefix backend
+      - name: E2E 테스트
+        env:
+          HOST: localhost
+          DB_USER: test_user
+          DB_PORT: 3306
+          DATABASE: test_db
+          DB_PASSWORD: test_password
+          ROOT_PASSWORD: test_password
+          FORTYTWO_APP_ID: 1234
+          FORTYTWO_APP_SECRET: 1234
+          ADMIN_GOOGLE_CLIENT_ID: 1234
+          ADMIN_GOOGLE_CLIENT_SECRET: 1234
+          ADMIN_GOOGLE_CLIENT_CALLBACK: http://localhost/api/admin/auth/login/callback
+          CALLBACK_URL: /auth/login/callback
+          COOKIE_KEY: secret
+          JWT_SECRETKEY: SecretKey
+          JWT_ALGORITHM: HS256
+          JWT_EXPIREIN: 28d
+          JWT_ISSUER: 42cabi
+          MAIL_SEND: false
+          DEBUG_LOG: true
+        run: npm run test:e2e --prefix backend
 
   frontend-CI:
     runs-on: ubuntu-latest
@@ -41,20 +85,20 @@ jobs:
       - name: 종속 모듈들 캐싱
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/frontend_v3/node_modules
-          key: npm-packages-${{ hashFiles('**/frontend_v3/package-lock.json') }}
+          path: ${{ github.workspace }}/frontend/node_modules
+          key: npm-packages-${{ hashFiles('**/frontend/package-lock.json') }}
         id: cache
       - name: 종속 모듈들 설치
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --prefix frontend_v3
+        run: npm install --prefix frontend
       # - name: lint 체크
-      #   run: npm run lint --prefix frontend_v3
+      #   run: npm run lint --prefix frontend
       - name: 빌드 체크
-        run: npm run build --prefix frontend_v3
+        run: npm run build --prefix frontend
       # - name: 단위 테스트 체크
-      #   run: npm run test --prefix frontend_v3
+      #   run: npm run test --prefix frontend
       # - name: 통합 테스트 체크
-      #   run: npm run test:e2e --prefix frontend_v3
+      #   run: npm run test:e2e --prefix frontend
 
   CD-develop:
     name: deploy-develop
@@ -79,7 +123,7 @@ jobs:
             echo "앱 빌드"
             cd $HOME/42cabi_dev/backend
             npm install
-            npm run build:fe_v3
+            npm run build:fe
             npm run deploy:dev
             npm run invalidate:dev
             npm run build
@@ -111,7 +155,7 @@ jobs:
             echo "앱 빌드"
             cd $HOME/42cabi_main/backend
             npm install
-            npm run build:fe_v3
+            npm run build:fe
             npm run deploy:main
             npm run invalidate:main
             npm run build

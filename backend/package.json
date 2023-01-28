@@ -1,5 +1,5 @@
 {
-  "name": "42cabi_v3",
+  "name": "42cabi_v4",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -8,14 +8,16 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "build:fe": "npm i --prefix ../frontend && npm run build --prefix ../frontend && cp -r ../frontend/img ../frontend/dist",
-    "build:fe_v3": "npm i --prefix ../frontend_v3 && npm run build --prefix ../frontend_v3 && cp -r ../frontend_v3/img ../frontend_v3/dist && rm -rf deploy && mv ../frontend_v3/dist deploy",
+    "build:fe": "npm i --prefix ../frontend && npm run build --prefix ../frontend && mkdir -p ../frontend/dist/src/assets && cp -r ../frontend/src/assets/images ../frontend/dist/src/assets/ && rm -rf deploy && mv ../frontend/dist deploy",
     "deploy:dev": "aws s3 sync ./deploy s3://dev.cabi --profile=CABI",
     "deploy:main": "aws s3 sync ./deploy s3://42cabi --profile=CABI",
+    "deploy:dev:maintenance": "cp ../maintenance/index.html ./deploy/ && aws s3 sync ./deploy/ s3://dev.cabi --profile=CABI",
+    "deploy:maintenance": "cp ../maintenance/index.html ./deploy/ && aws s3 sync ./deploy/ s3://42cabi --profile=CABI",
     "invalidate:dev": "aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'",
     "invalidate:main": "aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'",
-    "all:dev": "npm run build && npm run build:fe_v3 && npm run deploy:dev && npm run invalidate:dev && pm2 reload cabi_dev",
-    "all:main": "npm run build && npm run build:fe_v3 && npm run deploy:main && npm run invalidate:main && pm2 reload cabi_main",
+    "all:fe": "npm run build:fe && npm run deploy:dev && npm run invalidate:dev",
+    "all:dev": "npm run build && npm run build:fe && npm run deploy:dev && npm run invalidate:dev && pm2 reload cabi_dev",
+    "all:main": "npm run build && npm run build:fe && npm run deploy:main && npm run invalidate:main && pm2 reload cabi_main",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "set PORT=2424 && nest start --watch",
@@ -55,8 +57,10 @@
     "mariadb": "^3.0.1",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.8",
+    "oauth20": "^3.0.0",
     "passport": "^0.6.0",
     "passport-42": "^1.2.6",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -81,7 +85,7 @@
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "28.1.2",
+    "jest": "^28.1.2",
     "prettier": "^2.3.2",
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
@@ -97,7 +101,15 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "roots": [
+      "<rootDir>"
+    ],
+    "modulePaths": [
+      "<rootDir>"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

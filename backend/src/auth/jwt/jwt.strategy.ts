@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from '../auth.service';
+import { AuthService } from 'src/auth/auth.service';
 
 // 쿠키에서 추출하는 방식에서 다른 방식으로 변경하면 ExtractJwt에 정의된 메소드 사용하기
 // const extracter = (req) => {

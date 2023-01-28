@@ -83,8 +83,8 @@ export class LentTools {
       case CabinetStatusType.AVAILABLE:
       case CabinetStatusType.SET_EXPIRE_AVAILABLE:
         // 동아리 사물함인지 확인
-        if (cabinet.lent_type === LentType.CIRCLE) {
-          excepction_type = LentExceptionType.LENT_CIRCLE;
+        if (cabinet.lent_type === LentType.CLUB) {
+          excepction_type = LentExceptionType.LENT_CLUB;
           break;
         }
         if (cabinet.lent_type === LentType.SHARE) {
@@ -230,5 +230,18 @@ export class LentTools {
   async getAllLent(): Promise<Lent[]> {
     this.logger.debug(`Called ${LentTools.name} ${this.getAllLent.name}`);
     return await this.lentRepository.getAllLent();
+  }
+
+  async getExpiredLent(): Promise<Lent[]> {
+    this.logger.debug(`Called ${LentTools.name} ${this.getExpiredLent.name}`);
+    const baseDate = new Date();
+    const soonOverDue =
+      this.configService.get<number>('expire_term.soonoverdue') - 1;
+    baseDate.setDate(baseDate.getDate() + Math.abs(soonOverDue)); // soonOverDue일 이후 만료된 것들을 가져오기 위해 기준 날짜 설정.
+    return await this.lentRepository.getExpiredLent(baseDate);
+  }
+
+  async getLentCabinetId(user_id: number): Promise<number> {
+    return await this.lentRepository.getLentCabinetId(user_id);
   }
 }

@@ -2,6 +2,7 @@ export default () => ({
   fe_host: process.env.FE_HOST,
   port: parseInt(process.env.PORT, 10),
   is_local: process.env.LOCAL === 'true' ? true : false,
+  is_dev: process.env.DEV === 'true' ? true : false,
   debug: {
     mail_send: process.env.MAIL_SEND === 'true' ? true : false,
     log: process.env.DEBUG_LOG === 'true' ? true : false,
@@ -12,6 +13,7 @@ export default () => ({
     port: parseInt(process.env.DB_PORT, 10),
     password: process.env.DB_PASSWORD,
     database: process.env.DATABASE,
+    database_v4: process.env.DATABASE_V4,
   },
   jwt: {
     secret: process.env.JWT_SECRETKEY,
@@ -42,6 +44,11 @@ export default () => ({
     overdue: parseInt(process.env.EXPIRE_TERM_OVERDUE, 10),
     lastoverdue: parseInt(process.env.EXPIRE_TERM_LASTOVERDUE, 10),
     forcedreturn: parseInt(process.env.EXPIRE_TERM_FORCEDRETURN, 10),
+  },
+  admin: {
+    clientid: process.env.ADMIN_GOOGLE_CLIENT_ID,
+    secret: process.env.ADMIN_GOOGLE_CLIENT_SECRET,
+    callbackurl: process.env.ADMIN_GOOGLE_CLIENT_CALLBACK,
   },
   penalty_day_share: parseInt(process.env.PENALTY_DAY_SHARE, 10),
 });

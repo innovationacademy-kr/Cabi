@@ -4,6 +4,6 @@
 enum LentType {
   PRIVATE = 'PRIVATE',
   SHARE = 'SHARE',
-  CIRCLE = 'CIRCLE',
+  CLUB = 'CLUB',
 }
 export default LentType;

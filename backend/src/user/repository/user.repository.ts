@@ -1,6 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CabinetDto } from 'src/dto/cabinet.dto';
 import { CabinetExtendDto } from 'src/dto/cabinet.extend.dto';
+import { UserDto } from 'src/dto/user.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import User from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -129,5 +130,20 @@ export class UserRepository implements IUserRepository {
         user_id: user_id,
       })
       .execute();
+  }
+
+  async getUserIfExist(user_id: number): Promise<UserDto> {
+    const result = await this.userRepository.findOne({
+      where: {
+        user_id: user_id,
+      },
+    });
+    if (!result) {
+      return null;
+    }
+    return {
+      user_id: result.user_id,
+      intra_id: result.intra_id,
+    };
   }
 }

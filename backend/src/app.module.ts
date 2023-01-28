@@ -21,6 +21,7 @@ import { UserModule } from './user/user.module';
 import { UtilsModule } from './utils/utils.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BetatestModule } from './betatest/betatest.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -38,17 +39,9 @@ import { BetatestModule } from './betatest/betatest.module';
         return addTransactionalDataSource(new DataSource(options));
       },
     }),
+    AdminModule,
     AuthModule,
     BlackholeModule,
-    ServeStaticModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: () => [
-        {
-          rootPath: join(__dirname, '../', 'deploy'),
-          exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
-        },
-      ],
-    }),
     EventEmitterModule.forRoot(),
     CabinetModule,
     LentModule,
@@ -57,6 +50,19 @@ import { BetatestModule } from './betatest/betatest.module';
     CacheModule.register({
       isGlobal: true,
     }),
+    ...(process.env.LOCAL === 'true'
+      ? [
+          ServeStaticModule.forRootAsync({
+            inject: [ConfigService],
+            useFactory: () => [
+              {
+                rootPath: join(__dirname, '../', 'deploy'),
+                exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+              },
+            ],
+          }),
+        ]
+      : []),
     // import if UNBAN_API=true
     ...(process.env.UNBAN_API === 'true' ? [BetatestModule] : []),
   ],
