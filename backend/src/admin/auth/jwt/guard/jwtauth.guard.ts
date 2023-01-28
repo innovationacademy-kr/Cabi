@@ -8,7 +8,7 @@ export class AdminJwtAuthGuard extends AuthGuard('admin_jwt') {
       throw (
         err ||
         new UnauthorizedException(
-          '🚨 관리자 로그인 정보가 만료되었습니다. 🥲 🚨\n다시 로그인해주세요.',
+          '로그인 정보가 유효하지 않습니다\n다시 로그인해주세요',
         )
       );
     }

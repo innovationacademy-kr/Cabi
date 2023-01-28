@@ -8,7 +8,7 @@ export class AdminMainAuthGuard extends AuthGuard(['admin_jwt', 'jwt']) {
       throw (
         err ||
         new UnauthorizedException(
-          '🚨 아무런 토큰이 없습니다. 🥲 🚨\n다시 로그인해주세요.',
+          '로그인 정보가 유효하지 않습니다\n다시 로그인해주세요',
         )
       );
     }

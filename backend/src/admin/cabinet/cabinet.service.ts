@@ -48,13 +48,13 @@ export class AdminCabinetService {
     const isLent = await this.adminCabinetRepository.cabinetIsLent(cabinetId);
     if (isLent === true) {
       throw new HttpException(
-        '🚨 대여자가 있는 사물함입니다 🚨',
+        '대여자가 있는 사물함입니다',
         HttpStatus.FORBIDDEN,
       );
     }
     if ((await this.isCabinetExist(cabinetId)) === false) {
       throw new HttpException(
-        '🚨 존재하지 않는 사물함입니다 🚨',
+        '존재하지 않는 사물함입니다',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -67,7 +67,7 @@ export class AdminCabinetService {
     );
     if ((await this.isCabinetExist(cabinetId)) === false) {
       throw new HttpException(
-        '🚨 존재하지 않는 사물함입니다 🚨',
+        '존재하지 않는 사물함입니다',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -131,7 +131,7 @@ export class AdminCabinetService {
     );
     if ((await this.isCabinetExist(cabinetId)) === false) {
       throw new HttpException(
-        '🚨 존재하지 않는 사물함입니다 🚨',
+        '존재하지 않는 사물함입니다',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -147,7 +147,7 @@ export class AdminCabinetService {
     );
     if ((await this.isCabinetExist(cabinetId)) === false) {
       throw new HttpException(
-        '🚨 존재하지 않는 사물함입니다 🚨',
+        '존재하지 않는 사물함입니다',
         HttpStatus.BAD_REQUEST,
       );
     }

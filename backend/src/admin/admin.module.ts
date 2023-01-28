@@ -11,9 +11,9 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-	ConfigModule.forRoot({
-		load: [configuration],
-	}),
+    ConfigModule.forRoot({
+      load: [configuration],
+    }),
     AdminAuthModule,
     AdminLentModule,
     AdminLogModule,
