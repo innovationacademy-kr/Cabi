@@ -13,6 +13,7 @@ interface ITopNavButton {
 const TopNavButton = (props: ITopNavButton) => {
   return (
     <TopNavButtonStyled
+      className="cabiButton"
       id={props.id}
       onClick={props.onClick}
       disable={props.disable}
