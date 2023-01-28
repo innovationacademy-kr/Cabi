@@ -11,8 +11,7 @@ import useMenu from "@/hooks/useMenu";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 
 const Layout = (): JSX.Element => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isValidToken, setIsValidToken] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
   const token = getCookie("admin_access_token");
@@ -29,9 +28,8 @@ const Layout = (): JSX.Element => {
 
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/admin/login");
-    if (token) {
+    else if (token) {
       setIsLoading(true);
-      setIsValidToken(true);
       if (checkPath()) navigate("/admin/home");
     }
   }, []);
@@ -46,7 +44,7 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      {isValidToken && <AdminTopNavContainer setIsLoading={setIsLoading} />}
+      {token && <AdminTopNavContainer setIsLoading={setIsLoading} />}
       {isLoading ? (
         <LoadingAnimation />
       ) : (

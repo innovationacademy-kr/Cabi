@@ -7,12 +7,10 @@ const LeftNav: React.FC<{ isVisible: boolean; isAdmin?: boolean }> = ({
   isVisible,
 }) => {
   return (
-    <>
-      <LeftNavWrapStyled id="leftNavWrap">
-        <LeftMainNavContainer isAdmin={isAdmin} />
-        <LeftSectionNavContainer isVisible={isVisible} />
-      </LeftNavWrapStyled>
-    </>
+    <LeftNavWrapStyled id="leftNavWrap">
+      <LeftMainNavContainer isAdmin={isAdmin} />
+      <LeftSectionNavContainer isVisible={isVisible} />
+    </LeftNavWrapStyled>
   );
 };
 
