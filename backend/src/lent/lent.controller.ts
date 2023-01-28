@@ -31,7 +31,7 @@ import { User } from 'src/decorator/user.decorator';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
-import { BanCheckGuard } from '../ban/guard/ban-check.guard';
+import { BanCheckGuard } from '../ban/guard/ban.check.guard';
 import { LentService } from './lent.service';
 
 @ApiTags('Lent')
@@ -118,7 +118,7 @@ export class LentController {
         throw err;
       } else {
         throw new InternalServerErrorException(
-          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
+          `서버 에러가 발생했습니다`,
         );
       }
     }
@@ -159,7 +159,7 @@ export class LentController {
         throw err;
       } else {
         throw new InternalServerErrorException(
-          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
+          `서버 에러가 발생했습니다`,
         );
       }
     }
@@ -189,7 +189,7 @@ export class LentController {
         throw err;
       } else {
         throw new InternalServerErrorException(
-          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
+          `서버 에러가 발생했습니다`,
         );
       }
     }

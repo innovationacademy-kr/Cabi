@@ -33,7 +33,7 @@ export class AdminReturnService {
       const user = await this.userService.getUserIfExist(userId);
       if (!user) {
         throw new HttpException(
-          `🚨 해당 유저가 존재하지 않습니다. 🚨`,
+          `유저가 존재하지 않습니다`,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -41,7 +41,7 @@ export class AdminReturnService {
       const cabinetId = await this.lentTools.getLentCabinetId(user.user_id);
       if (cabinetId === null) {
         throw new HttpException(
-          `🚨 해당 유저가 대여중인 사물함이 없습니다. 🚨`,
+          `유저가 대여중인 사물함이 없습니다`,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -63,7 +63,7 @@ export class AdminReturnService {
       // 캐비넷이 존재하는지 확인
       if (!(await this.adminCabinetService.isCabinetExist(cabinetId))) {
         throw new HttpException(
-          `🚨 해당 캐비넷이 존재하지 않습니다. 🚨`,
+          `사물함이 존재하지 않습니다`,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -72,7 +72,7 @@ export class AdminReturnService {
       );
       if (users === null) {
         throw new HttpException(
-          `🚨 해당 캐비넷을 대여중인 유저가 없습니다. 🚨`,
+          `대여중인 유저가 없습니다`,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -93,7 +93,7 @@ export class AdminReturnService {
       const user = await this.userService.getUserIfExist(userId);
       if (!user) {
         throw new HttpException(
-          `🚨 해당 유저가 존재하지 않습니다. 🚨`,
+          `유저가 존재하지 않습니다`,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -101,7 +101,7 @@ export class AdminReturnService {
       const cabinetId = await this.lentTools.getLentCabinetId(user.user_id);
       if (cabinetId === null) {
         throw new HttpException(
-          `🚨 해당 유저가 대여중인 사물함이 없습니다. 🚨`,
+          `대여중인 사물함이 없습니다`,
           HttpStatus.BAD_REQUEST,
         );
       }

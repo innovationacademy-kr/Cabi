@@ -36,7 +36,7 @@ export class AdminLogService {
       length,
     );
     if (page !== 0 && length !== 0 && result.total_length === 0) {
-      throw new BadRequestException('No Log Error');
+      throw new BadRequestException('로그가 없습니다');
     }
     return result;
   }
@@ -61,7 +61,7 @@ export class AdminLogService {
       length,
     );
     if (page !== 0 && length !== 0 && result.total_length === 0) {
-      throw new BadRequestException('No Log Error');
+      throw new BadRequestException('로그가 없습니다');
     }
     return result;
   }

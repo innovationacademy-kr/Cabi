@@ -42,7 +42,7 @@ export class AdminDevelopController {
         `failed promote ${email} to admin due to never had tried admin log-in.`,
       );
       throw new ForbiddenException(
-        `${email} doesn't exist in admin_user table.`,
+        `DB에 없는 이메일입니다.`,
       );
     }
     if (
@@ -51,7 +51,7 @@ export class AdminDevelopController {
     ) {
       this.logger.log(`request failed due to trying to demote root admin.`);
       throw new ForbiddenException(
-        `can't set ${email}'s role to admin : root admin.`,
+        `최고관리자는 격하될 수 없습니다`,
       );
     }
     await this.adminDevelopService.setUserToAdminByEmail(email);
