@@ -17,6 +17,15 @@
         --line-color: #bcbcbc;
         --gray-color: #7b7b7b;
         --bg-shadow: rgba(0, 0, 0, 0.4);
+        /* cabinet color variable */
+        --mine: #47ffa7;
+        --expired: #ff4e4e;
+        --available: var(--main-color);
+        --full: #d9d9d9;
+        --broken: #3c3c3c;
+        --banned: #3c3c3c;
+
+        font-family: "Noto Sans KR", Inter, Avenir, Helvetica, Arial, sans-serif;
       }
 
       html,
@@ -68,6 +77,22 @@
         margin: 3% 0;
         animation: rotate 0.5s infinite ease alternate;
       }
+      .button {
+        cursor: pointer;
+        border: none;
+        background-color: var(--main-color);
+        color: var(--white);
+        width: 200px;
+        height: 60px;
+        font-size: 1.125rem;
+        text-align: center;
+        font-family: var(--main-font);
+        border-radius: 6px;
+        font-weight: 300;
+        box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
+        text-decoration: none;
+        line-height: 60px;
+      }
 
       @keyframes rotate {
         from {
@@ -114,6 +139,12 @@
           2023년 1월 28일 15시 00분 <span>~ 2023년 1월 28일 16시 00분</span>
         </div>
       </div>
+      <a
+        class="button"
+        href="https://42born2code.slack.com/archives/C02V6GE8LD7"
+        target="_blank"
+        >슬랙 캐비닛 채널</a
+      >
     </div>
   </body>
 </html>
