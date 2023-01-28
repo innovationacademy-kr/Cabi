@@ -75,7 +75,7 @@ describe('CabinetInfoService 테스트', () => {
       }).rejects.toThrow();
       expect(async () => {
         await cabinetInfoService.getCabinetInfoByParam(location, floor);
-      }).rejects.toThrow('🚨 존재하지 않는 사물함 영역입니다 🚨');
+      }).rejects.toThrow('존재하지 않는 사물함 영역입니다');
     });
 
     test('존재하지 않는 floor의 사물함 조회', async () => {
@@ -87,7 +87,7 @@ describe('CabinetInfoService 테스트', () => {
       }).rejects.toThrow();
       expect(async () => {
         await cabinetInfoService.getCabinetInfoByParam(location, floor);
-      }).rejects.toThrow('🚨 존재하지 않는 사물함 영역입니다 🚨');
+      }).rejects.toThrow('존재하지 않는 사물함 영역입니다');
     });
   });
   describe('getCabinetResponseInfo', () => {
@@ -136,7 +136,7 @@ describe('CabinetInfoService 테스트', () => {
       }).rejects.toThrow();
       expect(async () => {
         await cabinetInfoService.getCabinetResponseInfo(cabinetId);
-      }).rejects.toThrow('🚨 존재하지 않는 사물함입니다 🚨');
+      }).rejects.toThrow('존재하지 않는 사물함입니다');
     });
   });
 
