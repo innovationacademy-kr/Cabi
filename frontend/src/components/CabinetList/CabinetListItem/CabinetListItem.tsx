@@ -112,6 +112,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
       isMine={isMine}
       isSelected={currentCabinetId === props.cabinet_id}
       title={cabinetItemTitleHandler()}
+      className="cabiButton"
       onClick={() => {
         selectCabinetOnClick(props.status, props.cabinet_id);
       }}

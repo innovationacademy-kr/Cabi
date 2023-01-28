@@ -19,7 +19,9 @@ const LeftSectionNav = ({
       {floorSection.map((section: string, index: number) => (
         <FloorSectionStyled
           className={
-            currentFloorSection === section ? "leftNavButtonActive" : ""
+            currentFloorSection === section
+              ? "leftNavButtonActive cabiButton"
+              : "cabiButton"
           }
           key={index}
           onClick={() => onClickSection(section)}
