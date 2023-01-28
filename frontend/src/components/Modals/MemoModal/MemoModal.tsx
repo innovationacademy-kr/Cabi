@@ -9,11 +9,15 @@ export interface MemoModalInterface {
   cabinetTitle: string | null;
   cabinetMemo: string;
 }
+
 interface MemoModalContainerInterface {
   memoModalObj: MemoModalInterface;
   onClose: React.MouseEventHandler;
   onSave: (newTitle: string | null, newMemo: string) => void;
 }
+
+const MAX_INPUT_LENGTH = 14;
+
 const MemoModal = ({
   memoModalObj,
   onClose,
@@ -60,6 +64,7 @@ const MemoModal = ({
                 defaultValue={cabinetTitle ? cabinetTitle : ""}
                 readOnly={mode === "read" ? true : false}
                 ref={newTitle}
+                maxLength={MAX_INPUT_LENGTH}
               />
             </ContentItemWrapperStyled>
             <ContentItemWrapperStyled isVisible={true}>
@@ -70,6 +75,7 @@ const MemoModal = ({
                 defaultValue={cabinetMemo}
                 readOnly={mode === "read" ? true : false}
                 ref={newMemo}
+                maxLength={MAX_INPUT_LENGTH}
               />
             </ContentItemWrapperStyled>
           </ContentItemSectionStyled>

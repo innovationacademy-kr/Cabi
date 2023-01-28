@@ -30,7 +30,7 @@ export class LentService {
       // 유저가 대여한 사물함 확인
       if (await this.lentRepository.getIsLent(user.user_id)) {
         throw new HttpException(
-          `🚨 이미 대여중인 사물함이 있습니다 🚨`,
+          `이미 대여중인 사물함이 있습니다`,
           HttpStatus.BAD_REQUEST,
         );
       }

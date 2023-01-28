@@ -16,10 +16,10 @@ const MapInfoContainer = () => {
   const { closeMap } = useMenu();
 
   const touchEnd = (e: React.TouchEvent) => {
-    const offsetX = e.changedTouches[0].clientX - touchXpos.current;
-    const offsetY = e.changedTouches[0].clientY - touchYpos.current;
+    const offsetX = Math.round(e.changedTouches[0].clientX - touchXpos.current);
+    const offsetY = Math.round(e.changedTouches[0].clientY - touchYpos.current);
     let index = floorInfo.indexOf(floor);
-    if (Math.abs(offsetX) < 100 || Math.abs(offsetY) > 100) return;
+    if (Math.abs(offsetX) < 50 || Math.abs(offsetX) < Math.abs(offsetY)) return;
 
     if (offsetX < 0) {
       index++;

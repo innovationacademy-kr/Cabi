@@ -73,7 +73,8 @@ const ServiceManual = ({
             사물함 대여는{" "}
             <AtagStyled
               href="https://42born2code.slack.com/archives/C02V6GE8LD7"
-              target="_black"
+              target="_blank"
+              title="슬랙 캐비닛 채널 새창으로 열기"
             >
               슬랙 캐비닛 채널
             </AtagStyled>
