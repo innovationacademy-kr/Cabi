@@ -11,6 +11,8 @@
     "build:fe": "npm i --prefix ../frontend && npm run build --prefix ../frontend && mkdir -p ../frontend/dist/src/assets && cp -r ../frontend/src/assets/images ../frontend/dist/src/assets/ && rm -rf deploy && mv ../frontend/dist deploy",
     "deploy:dev": "aws s3 sync ./deploy s3://dev.cabi --profile=CABI",
     "deploy:main": "aws s3 sync ./deploy s3://42cabi --profile=CABI",
+    "deploy:dev:maintenance": "aws s3 sync ./maintenance s3://dev.cabi --profile=CABI",
+    "deploy:maintenance": "aws s3 sync ./maintenance s3://42cabi --profile=CABI",
     "invalidate:dev": "aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'",
     "invalidate:main": "aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'",
     "all:fe": "npm run build:fe && npm run deploy:dev && npm run invalidate:dev",
