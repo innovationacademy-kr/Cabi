@@ -153,6 +153,8 @@ const InfoSectionStyled = styled.section`
     height: 24px;
   }
   .article > h3 {
+    min-width: 200px;
+    text-align: center;
     font-size: 1.5rem;
     margin: 15px 0;
     font-weight: 700;
