@@ -87,10 +87,7 @@ export class LentService {
       user.user_id,
     );
     if (my_cabinet_id === null) {
-      throw new HttpException(
-        `대여한 사물함이 없습니다`,
-        HttpStatus.FORBIDDEN,
-      );
+      throw new HttpException(`대여한 사물함이 없습니다`, HttpStatus.FORBIDDEN);
     }
     // 2. 해당 캐비넷 제목 업데이트
     await this.lentRepository.updateLentCabinetTitle(
@@ -111,10 +108,7 @@ export class LentService {
       user.user_id,
     );
     if (my_cabinet_id === null) {
-      throw new HttpException(
-        `대여한 사물함이 없습니다`,
-        HttpStatus.FORBIDDEN,
-      );
+      throw new HttpException(`대여한 사물함이 없습니다`, HttpStatus.FORBIDDEN);
     }
     // 2. 해당 캐비넷 메모 업데이트
     await this.lentRepository.updateLentCabinetMemo(

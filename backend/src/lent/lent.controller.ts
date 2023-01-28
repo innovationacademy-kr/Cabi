@@ -117,9 +117,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(
-          `서버 에러가 발생했습니다`,
-        );
+        throw new InternalServerErrorException(`서버 에러가 발생했습니다`);
       }
     }
   }
@@ -158,9 +156,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(
-          `서버 에러가 발생했습니다`,
-        );
+        throw new InternalServerErrorException(`서버 에러가 발생했습니다`);
       }
     }
   }
@@ -188,9 +184,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(
-          `서버 에러가 발생했습니다`,
-        );
+        throw new InternalServerErrorException(`서버 에러가 발생했습니다`);
       }
     }
   }
