@@ -79,7 +79,10 @@ const LeftMainNav = ({
             <div></div>
             Log
           </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/slack.svg"}>
+          <BottomBtnStyled
+            src={"/src/assets/images/slack.svg"}
+            className="cabiButton"
+          >
             <a
               href="https://42born2code.slack.com/archives/C02V6GE8LD7"
               target="_blank"
@@ -89,7 +92,10 @@ const LeftMainNav = ({
               Contact
             </a>
           </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/clubIconGray.svg"}>
+          <BottomBtnStyled
+            src={"/src/assets/images/clubIconGray.svg"}
+            className="cabiButton"
+          >
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
               target="_blank"
