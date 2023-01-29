@@ -49,7 +49,7 @@ const TopNav: React.FC<{
 
   return (
     <TopNavContainerStyled id="topNavWrap">
-      <LogoStyled className="offHighlight">
+      <LogoStyled>
         <LogoDivStyled>
           <img
             className="cabiButton"
@@ -58,17 +58,14 @@ const TopNav: React.FC<{
             alt=""
           />
         </LogoDivStyled>
-        <LocationSelectBoxStyled className="offHighlight">
+        <LocationSelectBoxStyled>
           <div
             className="cabiButton"
             onClick={() => setLocationClicked(!locationClicked)}
           >
             {currentLocationName}
           </div>
-          <LocationListStyled
-            clicked={locationClicked}
-            className="offHighlight"
-          >
+          <LocationListStyled clicked={locationClicked}>
             {locationsList.map((location, index) => (
               <LocationListItem
                 location={location}
