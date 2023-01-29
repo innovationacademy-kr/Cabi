@@ -157,7 +157,3 @@ input {
 .cabiButton {
   -webkit-tap-highlight-color: transparent;
 }
-
-.offHighlight {
-  -webkit-tap-highlight-color: transparent;
-}
