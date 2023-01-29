@@ -151,7 +151,3 @@ input {
   background: var(--main-color);
   color: var(--white) !important;
 }
-
-.cabiButton {
-  -webkit-tap-highlight-color: transparent;
-}
