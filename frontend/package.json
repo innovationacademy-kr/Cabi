@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest --reporter verbose"
   },
   "dependencies": {
     "@nivo/bar": "^0.80.0",
