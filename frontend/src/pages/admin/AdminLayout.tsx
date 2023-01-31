@@ -25,6 +25,7 @@ const Layout = (): JSX.Element => {
 
   const isLoginPage: boolean = location.pathname === "/admin/login";
   const isMainPage: boolean = location.pathname === "/admin/main";
+  const isSearchPage: boolean = location.pathname === "/admin/search";
 
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/admin/login");
@@ -56,7 +57,7 @@ const Layout = (): JSX.Element => {
           </MainStyled>
           <DetailInfoContainerStyled
             id="cabinetDetailArea"
-            isHomePage={!isMainPage}
+            isFloat={!isMainPage && !isSearchPage}
           >
             <CabinetInfoAreaContainer />
           </DetailInfoContainerStyled>
@@ -83,7 +84,7 @@ const MainStyled = styled.main`
   user-select: none;
 `;
 
-const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
+const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
   min-width: 330px;
   padding: 45px 40px 20px;
   position: relative;
@@ -91,7 +92,7 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
   background-color: var(--white);
   overflow-y: auto;
   ${(props) =>
-    props.isHomePage &&
+    props.isFloat &&
     css`
       position: fixed;
       top: 80px;

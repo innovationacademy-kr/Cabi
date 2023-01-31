@@ -1,11 +1,16 @@
 import styled from "styled-components";
 import SearchListItem from "@/components/TopNav/SearchBar/SearchListItem/SearchListItem";
 
+interface ISearchListByIntraId {
+  intra_id: string;
+  user_id: number;
+}
+
 const SearchList = ({
   searchList,
   searchWord,
 }: {
-  searchList: any[];
+  searchList: ISearchListByIntraId[];
   searchWord?: string;
 }) => {
   return (
