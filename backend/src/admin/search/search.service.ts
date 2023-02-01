@@ -6,7 +6,6 @@ import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagen
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
 import { IAdminSearchRepository } from './repository/search.repository.interface';
 import { UserCabinetInfoPagenationDto } from '../dto/user.cabinet.info.pagenation.dto';
-import { UserCabinetInfoDto } from '../dto/user.cabinet.info.dto';
 
 @Injectable()
 export class AdminSearchService {
@@ -90,7 +89,6 @@ export class AdminSearchService {
 
   /**
    * 해당 사물함 번호를 가진 사물함 리스트를 반환합니다.
-   * FIXME: location, floor 정보도 제공해주도록 수정해야 합니다.
    * @param visibleNum 사물함 번호
    * @returns CabinetInfoPagenationDto
    * @throw HTTPError
