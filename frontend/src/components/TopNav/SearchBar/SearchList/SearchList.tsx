@@ -1,26 +1,50 @@
 import styled from "styled-components";
 import SearchListItem from "@/components/TopNav/SearchBar/SearchListItem/SearchListItem";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 
 interface ISearchListByIntraId {
   intra_id: string;
   user_id: number;
+  // cabinet_info: CabinetInfo;
 }
-
+/*
+cabinet_id: 87
+cabinet_num : 7
+cabinet_title:null
+lent_type: "PRIVATE"
+max_user: 1
+section: "End of Cluster 1"
+status: "SET_EXPIRE_FULL"
+lent_info: [{…}]
+*/
 const SearchList = ({
-  searchList,
+  searchListById,
+  searchListByNum,
   searchWord,
 }: {
-  searchList: ISearchListByIntraId[];
+  searchListById: ISearchListByIntraId[];
+  searchListByNum: CabinetInfo[];
   searchWord?: string;
 }) => {
+  console.log(searchListByNum);
   return (
     <UlStyled>
-      {searchList.map((item, index: number) => {
+      {searchListById.map((item, index: number) => {
         return (
           <SearchListItem
-            intraId={item.intra_id}
             key={index}
+            inputText={item.intra_id}
             searchWord={searchWord}
+          />
+        );
+      })}
+      {searchListByNum.map((item, index: number) => {
+        return (
+          <SearchListItem
+            key={index}
+            inputText={item.cabinet_num.toString()}
+            searchWord={searchWord}
+            isNum={true}
           />
         );
       })}

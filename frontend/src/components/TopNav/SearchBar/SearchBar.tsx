@@ -2,25 +2,61 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SearchList from "@/components/TopNav/SearchBar/SearchList/SearchList";
-import { axiosSearchByIntraId } from "@/api/axios/axios.custom";
+import {
+  axiosSearchByCabinetNum,
+  axiosSearchByIntraId,
+} from "@/api/axios/axios.custom";
 
 const SearchBar = () => {
   const navigate = useNavigate();
   const searchInput = useRef<HTMLInputElement>(null);
-  const [searchList, setSearchList] = useState<any[]>([]);
+  const [searchListById, setSearchListById] = useState<any[]>([]);
+  const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
+  const totalLength = useRef<number>(0);
+
   const SearchBarButtonHandler = () => {
     navigate("search");
   };
 
+  const debounce = (func: Function, wait: number) => {
+    let timeout: NodeJS.Timeout;
+
+    return function executedFunction(...args: any[]) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
+
   const searchInputHandler = async () => {
     if (searchInput.current) {
-      if (searchInput.current.value.length <= 0) {
-        setSearchList([]);
+      const searchValue = searchInput.current.value;
+
+      if (isNaN(Number(searchValue))) {
+        // intra_ID 검색
+        if (searchValue.length <= 1) {
+          setSearchListById([]);
+          totalLength.current = 0;
+        } else {
+          const searchResult = await axiosSearchByIntraId(searchValue);
+          setSearchListById(searchResult.data.result);
+          totalLength.current = searchResult.data.result.length;
+        }
       } else {
-        const searchResult = await axiosSearchByIntraId(
-          searchInput.current.value
-        );
-        setSearchList(searchResult.data.result);
+        // cabinet_number 검색
+        if (searchValue.length <= 0) {
+          setSearchListByNum([]);
+          totalLength.current = 0;
+        } else {
+          const searchResult = await axiosSearchByCabinetNum(
+            Number(searchValue)
+          );
+          setSearchListByNum(searchResult.data.result);
+          totalLength.current = searchResult.data.result.length;
+        }
       }
     }
   };
@@ -31,12 +67,13 @@ const SearchBar = () => {
         ref={searchInput}
         type="text"
         placeholder="Search"
-        onChange={searchInputHandler}
+        onChange={debounce(searchInputHandler, 300)}
       ></SearchBarStyled>
       <SearchButtonStyled onClick={SearchBarButtonHandler} />
-      {searchList.length > 0 && (
+      {totalLength.current > 0 && (
         <SearchList
-          searchList={searchList}
+          searchListById={searchListById}
+          searchListByNum={searchListByNum}
           searchWord={searchInput.current?.value}
         />
       )}
