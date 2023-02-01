@@ -1,17 +1,24 @@
+import { cabinetIconSrcMap, cabinetStatusColorMap } from "@/assets/data/maps";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import styled from "styled-components";
 
-const SearchItem = () => (
-  <WrapperStyled className="cabiButton">
-    <RectangleStyled color="var(--main-color)">42</RectangleStyled>
-    <TextWrapper>
-      <LocationStyled>2층 - Oasis</LocationStyled>
-      <NameWrapperStyled>
-        <IconStyled src="/src/assets/images/clubIcon.svg" alt="" />
-        <NameStyled>42cabi, seycho, yooh</NameStyled>
-      </NameWrapperStyled>
-    </TextWrapper>
-  </WrapperStyled>
-);
+const SearchItem = (props: CabinetInfo) => {
+  const { floor, section, cabinet_num, status, lent_type, lent_info } = props;
+  return (
+    <WrapperStyled className="cabiButton">
+      <RectangleStyled status={status}>{cabinet_num}</RectangleStyled>
+      <TextWrapper>
+        <LocationStyled>{`${floor} - ${section}`}</LocationStyled>
+        <NameWrapperStyled>
+          <IconStyled lent_type={lent_type} />
+          <NameStyled>42cabi, seycho, yooh</NameStyled>
+        </NameWrapperStyled>
+      </TextWrapper>
+    </WrapperStyled>
+  );
+};
 
 const WrapperStyled = styled.div`
   width: 350px;
@@ -27,11 +34,11 @@ const WrapperStyled = styled.div`
   }
 `;
 
-const RectangleStyled = styled.div<{ color: string }>`
+const RectangleStyled = styled.div<{ status: CabinetStatus }>`
   width: 60px;
   height: 60px;
   border-radius: 10px;
-  background-color: ${(props) => props.color};
+  background-color: ${(props) => cabinetStatusColorMap[props.status]};
   font-size: 32px;
   color: var(--white);
   display: flex;
@@ -52,16 +59,21 @@ const LocationStyled = styled.p`
 `;
 
 const NameWrapperStyled = styled.div`
+  position: relative;
+  height: 28px;
   line-height: 28px;
-  display: block;
+  display: flex;
+  justify-content: flex-start;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 `;
 
-const IconStyled = styled.img`
-  width: 24px;
-  height: 24px;
+const IconStyled = styled.div<{ lent_type: CabinetType }>`
+  width: 18px;
+  height: 28px;
+  background: url(${(props) => cabinetIconSrcMap[props.lent_type]}) no-repeat
+    center center / contain;
 `;
 
 const NameStyled = styled.span`

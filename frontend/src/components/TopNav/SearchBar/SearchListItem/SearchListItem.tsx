@@ -1,13 +1,16 @@
 import styled from "styled-components";
 import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import { useNavigate } from "react-router-dom";
 
 const SearchListItem = (props: {
   key: number;
-  inputText: string;
-  searchWord?: string;
+  inputText?: string;
+  resultText: string;
   isNum?: boolean;
+  searchClear: () => void;
 }) => {
-  const { inputText, searchWord } = props;
+  const { resultText, inputText, isNum, searchClear } = props;
+  const navigate = useNavigate();
 
   const imageHandler = (isCabinet: boolean | undefined) => {
     if (isCabinet) return "/src/assets/images/cabinet.svg";
@@ -15,9 +18,17 @@ const SearchListItem = (props: {
   };
 
   return (
-    <LiStyled>
-      <ImgStyled src={imageHandler(props.isNum)} alt="유저" />
-      <ChangeToHTML origin={inputText} replace={searchWord} />
+    <LiStyled
+      onClick={() => {
+        navigate({
+          pathname: "search",
+          search: `?q=${resultText}`,
+        });
+        searchClear();
+      }}
+    >
+      <ImgStyled src={imageHandler(isNum)} alt="유저" />
+      <ChangeToHTML origin={resultText} replace={inputText} />
     </LiStyled>
   );
 };

@@ -17,24 +17,26 @@ section: "End of Cluster 1"
 status: "SET_EXPIRE_FULL"
 lent_info: [{…}]
 */
-const SearchList = ({
+const SearchBarList = ({
   searchListById,
   searchListByNum,
   searchWord,
+  searchClear,
 }: {
   searchListById: ISearchListByIntraId[];
   searchListByNum: CabinetInfo[];
+  searchClear: () => void;
   searchWord?: string;
 }) => {
-  console.log(searchListByNum);
   return (
     <UlStyled>
       {searchListById.map((item, index: number) => {
         return (
           <SearchListItem
             key={index}
-            inputText={item.intra_id}
-            searchWord={searchWord}
+            inputText={searchWord}
+            resultText={item.intra_id}
+            searchClear={searchClear}
           />
         );
       })}
@@ -42,9 +44,10 @@ const SearchList = ({
         return (
           <SearchListItem
             key={index}
-            inputText={item.cabinet_num.toString()}
-            searchWord={searchWord}
+            inputText={searchWord}
+            resultText={item.cabinet_num.toString()}
             isNum={true}
+            searchClear={searchClear}
           />
         );
       })}
@@ -68,4 +71,4 @@ const UlStyled = styled.ul`
   overflow: hidden;
 `;
 
-export default SearchList;
+export default SearchBarList;

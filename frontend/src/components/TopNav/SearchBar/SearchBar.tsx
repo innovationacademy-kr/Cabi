@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import SearchList from "@/components/TopNav/SearchBar/SearchList/SearchList";
+import SearchBarList from "@/components/TopNav/SearchBar/SearchBarList/SearchBarList";
 import {
   axiosSearchByCabinetNum,
   axiosSearchByIntraId,
@@ -14,8 +14,24 @@ const SearchBar = () => {
   const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
   const totalLength = useRef<number>(0);
 
+  const searchClear = () => {
+    if (searchInput.current) {
+      setSearchListById([]);
+      setSearchListByNum([]);
+      totalLength.current = 0;
+      searchInput.current.value = "";
+    }
+  };
+
   const SearchBarButtonHandler = () => {
-    navigate("search");
+    if (searchInput.current) {
+      if (searchInput.current && searchInput.current.value.length <= 0) return;
+      navigate({
+        pathname: "search",
+        search: `?q=${searchInput.current.value}`,
+      });
+      searchClear();
+    }
   };
 
   const debounce = (func: Function, wait: number) => {
@@ -46,7 +62,7 @@ const SearchBar = () => {
           totalLength.current = searchResult.data.result.length;
         }
       } else {
-        // cabinet_number 검색
+        // cabinetnumber 검색
         if (searchValue.length <= 0) {
           setSearchListByNum([]);
           totalLength.current = 0;
@@ -68,13 +84,19 @@ const SearchBar = () => {
         type="text"
         placeholder="Search"
         onChange={debounce(searchInputHandler, 300)}
+        onKeyUp={(e: any) => {
+          if (e.key === "Enter") {
+            SearchBarButtonHandler();
+          }
+        }}
       ></SearchBarStyled>
       <SearchButtonStyled onClick={SearchBarButtonHandler} />
       {totalLength.current > 0 && (
-        <SearchList
+        <SearchBarList
           searchListById={searchListById}
           searchListByNum={searchListByNum}
           searchWord={searchInput.current?.value}
+          searchClear={searchClear}
         />
       )}
     </SearchBarWrapperStyled>
