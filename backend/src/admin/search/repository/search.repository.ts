@@ -10,6 +10,7 @@ import { CabinetInfoPagenationDto } from 'src/admin/dto/cabinet.info.pagenation.
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { BrokenCabinetInfoPagenationDto } from 'src/admin/dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from 'src/admin/dto/blocked.user.info.pagenation.dto';
+import { UserCabinetInfoPagenationDto } from 'src/admin/dto/user.cabinet.info.pagenation.dto';
 
 export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
@@ -42,6 +43,65 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       })),
       total_length: result[1],
     };
+    return rtn;
+  }
+
+  async searchUserCabinetListByIntraId(
+    intraId: string,
+    page: number,
+    length: number,
+  ): Promise<UserCabinetInfoPagenationDto> {
+    // intraId를 포함하는 유저들을 찾아서 해당 유저가 대여중인 사물함 정보와 해당 사물함을
+    // 대여중인 유저들의 정보를 반환
+    const result = await this.userRepository.findAndCount({
+      relations: [
+        'Lent',
+        'Lent.cabinet',
+        'Lent.cabinet.lent',
+        'Lent.cabinet.lent.user',
+      ],
+      where: {
+        intra_id: Like(`%${intraId}%`),
+      },
+      take: length,
+      skip: page * length,
+    });
+
+    const rtn = {
+      result: result[0].map(
+        (user) =>
+          user.Lent &&
+          user.Lent.cabinet && {
+            userInfo: user.Lent.cabinet.lent.map((lent) => ({
+              user_id: lent.user.user_id,
+              intra_id: lent.user.intra_id,
+            })),
+            cabinetInfo: {
+              cabinet_id: user.Lent.cabinet.cabinet_id,
+              cabinet_num: user.Lent.cabinet.cabinet_num,
+              lent_type: user.Lent.cabinet.lent_type,
+              cabinet_title: user.Lent.cabinet.title,
+              max_user: user.Lent.cabinet.max_user,
+              status: user.Lent.cabinet.status,
+              section: user.Lent.cabinet.section,
+              status_note: user.Lent.cabinet.status_note,
+            },
+          },
+      ),
+      total_length: result[1],
+    };
+    // lent가 있는 값들을 우선적으로 하며, cabinet_num을 오름차순으로 정렬
+    rtn.result.sort((a, b) => {
+      if (a && b) {
+        if (a.cabinetInfo.cabinet_num > b.cabinetInfo.cabinet_num) return 1;
+        else if (a.cabinetInfo.cabinet_num < b.cabinetInfo.cabinet_num)
+          return -1;
+        else return 0;
+      } else if (a) return -1;
+      else if (b) return 1;
+      else return 0;
+    });
+
     return rtn;
   }
 
