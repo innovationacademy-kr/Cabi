@@ -127,6 +127,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
         cabinet_title: cabinet.title,
         max_user: cabinet.max_user,
         status: cabinet.status,
+        location: cabinet.location,
+        floor: cabinet.floor,
         section: cabinet.section,
         lent_info: cabinet.lent.map((lent) => ({
           user_id: lent.user.user_id,
@@ -159,6 +161,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
         cabinet_title: cabinet.title,
         max_user: cabinet.max_user,
         status: cabinet.status,
+        location: cabinet.location,
+        floor: cabinet.floor,
         section: cabinet.section,
         lent_info: cabinet.lent.map((lent) => ({
           user_id: lent.user.user_id,
@@ -194,6 +198,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
         cabinet_title: cabinet.title,
         max_user: cabinet.max_user,
         status: cabinet.status,
+        location: cabinet.location,
+        floor: cabinet.floor,
         section: cabinet.section,
         lent_info: cabinet.lent.map((lent) => ({
           user_id: lent.user.user_id,
