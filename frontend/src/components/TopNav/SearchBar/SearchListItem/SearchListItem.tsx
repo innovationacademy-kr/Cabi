@@ -1,16 +1,34 @@
 import styled from "styled-components";
 import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import { useNavigate } from "react-router-dom";
 
 const SearchListItem = (props: {
-  intraId: string;
   key: number;
-  searchWord?: string;
+  inputText?: string;
+  resultText: string;
+  isNum?: boolean;
+  searchClear: () => void;
 }) => {
-  const { intraId, searchWord } = props;
+  const { resultText, inputText, isNum, searchClear } = props;
+  const navigate = useNavigate();
+
+  const imageHandler = (isCabinet: boolean | undefined) => {
+    if (isCabinet) return "/src/assets/images/cabinet.svg";
+    return "/src/assets/images/privateIcon.svg";
+  };
 
   return (
-    <LiStyled>
-      <ChangeToHTML origin={intraId} replace={searchWord} />
+    <LiStyled
+      onClick={() => {
+        navigate({
+          pathname: "search",
+          search: `?q=${resultText}`,
+        });
+        searchClear();
+      }}
+    >
+      <ImgStyled src={imageHandler(isNum)} alt="유저" />
+      <ChangeToHTML origin={resultText} replace={inputText} />
     </LiStyled>
   );
 };
@@ -30,7 +48,16 @@ const LiStyled = styled.li`
     &:hover strong {
       color: var(--white);
     }
+    &:hover img {
+      filter: invert(100%);
+    }
   }
+`;
+
+const ImgStyled = styled.img`
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
 `;
 
 export default SearchListItem;

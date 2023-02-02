@@ -154,3 +154,13 @@ export const axiosSearchByIntraId = async (intraId: string) => {
     throw error;
   }
 };
+
+const axiosSearchByCabinetNumURL = "/api/admin/search/cabinet/visibleNum/";
+export const axiosSearchByCabinetNum = async (number: number) => {
+  try {
+    const response = await instance.get(axiosSearchByCabinetNumURL + number);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
