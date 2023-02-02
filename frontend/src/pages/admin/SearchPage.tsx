@@ -97,10 +97,9 @@ const SearchPage = () => {
   return (
     <>
       {isLoading && <LoadingAnimation />}
-      <WrapperStyled>
-        {!isLoading &&
-          (searchListByIntraId.length !== 0 ||
-            searchListByNum.length !== 0) && (
+      {!isLoading &&
+        (searchListByIntraId.length !== 0 || searchListByNum.length !== 0) && (
+          <WrapperStyled>
             <ListWrapperStyled>
               {searchListByIntraId.length > 0 &&
                 searchListByIntraId.map((item, index) => (
@@ -116,23 +115,25 @@ const SearchPage = () => {
                   <SearchItemByNum {...item} key={index} />
                 ))}
             </ListWrapperStyled>
-          )}
-        {totalSearchList > 10 && currentPage * 10 < totalSearchList - 10 && (
-          <MoreButtonStyled onClick={handleMoreButton}>더보기</MoreButtonStyled>
+            {totalSearchList > 10 &&
+              currentPage * 10 < totalSearchList - 10 && (
+                <MoreButtonStyled onClick={handleMoreButton}>
+                  더보기
+                </MoreButtonStyled>
+              )}
+          </WrapperStyled>
         )}
-        {!isLoading && !searchParams.get("q") && <SearchDefault />}
-        {!isLoading &&
-          searchParams.get("q") &&
-          searchListByIntraId.length === 0 &&
-          searchListByNum.length === 0 && <NoSearch />}
-      </WrapperStyled>
+      {!isLoading && !searchParams.get("q") && <SearchDefault />}
+      {!isLoading &&
+        searchParams.get("q") &&
+        searchListByIntraId.length === 0 &&
+        searchListByNum.length === 0 && <NoSearch />}
     </>
   );
 };
 
 const WrapperStyled = styled.div`
   padding: 60px 0;
-  height: 100%;
   min-height: 100%;
   display: flex;
   flex-direction: column;
