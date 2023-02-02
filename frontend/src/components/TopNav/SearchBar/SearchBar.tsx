@@ -25,9 +25,13 @@ const SearchBar = () => {
 
   const SearchBarButtonHandler = () => {
     if (searchInput.current) {
-      if (searchInput.current.value.length <= 0) {
+      const searchValue = searchInput.current.value;
+      if (searchValue.length <= 0) {
         searchClear();
         return alert("검색어를 입력해주세요.");
+      } else if (isNaN(Number(searchValue)) && searchValue.length <= 1) {
+        searchClear();
+        return alert("두 글자 이상의 검색어를 입력해주세요.");
       } else {
         navigate({
           pathname: "search",
