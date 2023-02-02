@@ -72,7 +72,7 @@ const SearchBar = () => {
           console.log(searchResult.data.result);
           setSearchListByNum([]);
           setSearchListById(searchResult.data.result);
-          setTotalLength(searchResult.data.result.length);
+          setTotalLength(searchResult.data.total_length);
         }
       } else {
         // cabinetnumber 검색
@@ -85,7 +85,7 @@ const SearchBar = () => {
           );
           setSearchListById([]);
           setSearchListByNum(searchResult.data.result);
-          setTotalLength(searchResult.data.result.length);
+          setTotalLength(searchResult.data.total_length);
         }
       }
     }
@@ -106,12 +106,15 @@ const SearchBar = () => {
       ></SearchBarStyled>
       <SearchButtonStyled onClick={SearchBarButtonHandler} />
       {searchInput.current?.value && totalLength > 0 && (
-        <SearchBarList
-          searchListById={searchListById}
-          searchListByNum={searchListByNum}
-          searchWord={searchInput.current?.value}
-          searchClear={searchClear}
-        />
+        <>
+          <SearchBarList
+            searchListById={searchListById}
+            searchListByNum={searchListByNum}
+            searchWord={searchInput.current?.value}
+            searchClear={searchClear}
+            totalLength={totalLength}
+          />
+        </>
       )}
     </SearchBarWrapperStyled>
   );
