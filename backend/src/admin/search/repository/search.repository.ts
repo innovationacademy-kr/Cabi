@@ -88,13 +88,18 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       ),
       total_length: result[1],
     };
-    // lent가 있는 값들을 우선적으로 하며, cabinet_num을 오름차순으로 정렬
+    // lent가 있는 값들을 우선적으로 하며, cabinet_id를 오름차순으로 정렬
     rtn.result.sort((a, b) => {
       if (a.cabinetInfo && b.cabinetInfo) {
-        if (a.cabinetInfo.cabinet_num > b.cabinetInfo.cabinet_num) return -1;
-        else if (a.cabinetInfo.cabinet_num < b.cabinetInfo.cabinet_num)
+        return a.cabinetInfo.cabinet_id - b.cabinetInfo.cabinet_id;
+      } else if (!a.cabinetInfo && !b.cabinetInfo) {
+        if (a.intra_id < b.intra_id) {
+          return -1;
+        } else if (a.intra_id > b.intra_id) {
           return 1;
-        else return 0;
+        } else {
+          return 0;
+        }
       }
     });
 
