@@ -25,6 +25,7 @@ import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagen
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
 import { AdminSearchService } from './search.service';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
+import { UserCabinetInfoPagenationDto } from '../dto/user.cabinet.info.pagenation.dto';
 
 @ApiTags('(Admin) Search')
 @ApiBearerAuth()
@@ -63,6 +64,42 @@ export class SearchController {
     this.logger.debug(`Called ${this.getUserListByIntraId.name}`);
     try {
       return await this.adminSearchService.searchByIntraId(
+        intraId,
+        page,
+        length,
+      );
+    } catch (err) {
+      this.logger.error(err);
+      throw err;
+    }
+  }
+
+  @ApiOperation({
+    summary: '인트라 아이디 검색',
+    description:
+      'intraId를 포함하는 유저들을 찾아서 대여중인 사물함 정보와 사물함을 대여중인 유저들의 정보를 반환합니다.',
+  })
+  @ApiQuery({
+    name: 'page',
+    description: '(페이지네이션) 가져올 데이터 페이지',
+  })
+  @ApiQuery({
+    name: 'length',
+    description: '(페이지네이션) 가져올 데이터 길이',
+  })
+  @ApiParam({
+    name: 'intraId',
+    description: '인트라 아이디',
+  })
+  @Get(':intraId')
+  async searchUserCabinetListByIntraId(
+    @Param('intraId') intraId: string,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('length', ParseIntPipe) length: number,
+  ): Promise<UserCabinetInfoPagenationDto> {
+    this.logger.debug(`Called ${this.searchUserCabinetListByIntraId.name}`);
+    try {
+      return await this.adminSearchService.searchUserCabinetListByIntraId(
         intraId,
         page,
         length,

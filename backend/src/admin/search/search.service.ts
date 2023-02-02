@@ -5,6 +5,7 @@ import { CabinetInfoPagenationDto } from '../dto/cabinet.info.pagenation.dto';
 import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
 import { IAdminSearchRepository } from './repository/search.repository.interface';
+import { UserCabinetInfoPagenationDto } from '../dto/user.cabinet.info.pagenation.dto';
 
 @Injectable()
 export class AdminSearchService {
@@ -39,6 +40,30 @@ export class AdminSearchService {
   }
 
   /**
+   * intraId를 포함하는 유저들을 찾아서 대여중인 사물함 정보와 사물함을 대여중인 유저들의 정보를 반환합니다.
+   *
+   * @param intraId 인트라 아이디
+   * @param page 가져올 데이터 페이지
+   * @param length 가져올 데이터 길이
+   * @returns UserCabinetInfoPagenationDto
+   * @throw HTTPError
+   */
+  async searchUserCabinetListByIntraId(
+    intraId: string,
+    page: number,
+    length: number,
+  ): Promise<UserCabinetInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${AdminSearchService.name} ${this.searchUserCabinetListByIntraId.name}`,
+    );
+    return await this.adminSearchRepository.searchUserCabinetListByIntraId(
+      intraId,
+      page,
+      length,
+    );
+  }
+
+  /**
    * 특정 캐비넷 타입인 사물함 리스트를 가지고 옵니다.
    *
    * @param lentType 대여 타입
@@ -64,7 +89,6 @@ export class AdminSearchService {
 
   /**
    * 해당 사물함 번호를 가진 사물함 리스트를 반환합니다.
-   *
    * @param visibleNum 사물함 번호
    * @returns CabinetInfoPagenationDto
    * @throw HTTPError
