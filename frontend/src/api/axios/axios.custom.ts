@@ -164,3 +164,21 @@ export const axiosSearchByCabinetNum = async (number: number) => {
     throw error;
   }
 };
+
+const axiosSearchDetailByIntraIdURL = "/api/admin/search/";
+export const axiosSearchDetailByIntraId = async (
+  intraId: string,
+  page: number
+) => {
+  try {
+    const response = await instance.get(
+      axiosSearchDetailByIntraIdURL + intraId,
+      {
+        params: { page: page, length: 10 },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

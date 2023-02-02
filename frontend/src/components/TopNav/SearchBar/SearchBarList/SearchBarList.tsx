@@ -44,6 +44,7 @@ const SearchBarList = ({
         return (
           <SearchListItem
             key={index}
+            floor={item.floor}
             inputText={searchWord}
             resultText={item.cabinet_num.toString()}
             isNum={true}
