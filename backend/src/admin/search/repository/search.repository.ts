@@ -70,36 +70,39 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     const rtn = {
       result: result[0].map(
         (user) =>
-          user.Lent &&
-          user.Lent.cabinet && {
-            userInfo: user.Lent.cabinet.lent.map((lent) => ({
-              user_id: lent.user.user_id,
-              intra_id: lent.user.intra_id,
-            })),
-            cabinetInfo: {
-              cabinet_id: user.Lent.cabinet.cabinet_id,
-              cabinet_num: user.Lent.cabinet.cabinet_num,
-              lent_type: user.Lent.cabinet.lent_type,
-              cabinet_title: user.Lent.cabinet.title,
-              max_user: user.Lent.cabinet.max_user,
-              status: user.Lent.cabinet.status,
-              section: user.Lent.cabinet.section,
-              status_note: user.Lent.cabinet.status_note,
-            },
+          user && {
+            user_id: user.user_id,
+            intra_id: user.intra_id,
+            cabinetInfo: user.Lent &&
+              user.Lent.cabinet && {
+                cabinet_id: user.Lent.cabinet.cabinet_id,
+                cabinet_num: user.Lent.cabinet.cabinet_num,
+                lent_type: user.Lent.cabinet.lent_type,
+                cabinet_title: user.Lent.cabinet.title,
+                max_user: user.Lent.cabinet.max_user,
+                status: user.Lent.cabinet.status,
+                section: user.Lent.cabinet.section,
+                location: user.Lent.cabinet.location,
+                floor: user.Lent.cabinet.floor,
+                status_note: user.Lent.cabinet.status_note,
+              },
           },
       ),
       total_length: result[1],
     };
-    // lent가 있는 값들을 우선적으로 하며, cabinet_num을 오름차순으로 정렬
+    // lent가 있는 값들을 우선적으로 하며, cabinet_id를 오름차순으로 정렬
     rtn.result.sort((a, b) => {
-      if (a && b) {
-        if (a.cabinetInfo.cabinet_num > b.cabinetInfo.cabinet_num) return 1;
-        else if (a.cabinetInfo.cabinet_num < b.cabinetInfo.cabinet_num)
+      if (a.cabinetInfo && b.cabinetInfo) {
+        return a.cabinetInfo.cabinet_id - b.cabinetInfo.cabinet_id;
+      } else if (!a.cabinetInfo && !b.cabinetInfo) {
+        if (a.intra_id < b.intra_id) {
           return -1;
-        else return 0;
-      } else if (a) return -1;
-      else if (b) return 1;
-      else return 0;
+        } else if (a.intra_id > b.intra_id) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
     });
 
     return rtn;
