@@ -22,11 +22,13 @@ const SearchBarList = ({
   searchListByNum,
   searchWord,
   searchClear,
+  totalLength,
 }: {
   searchListById: ISearchListByIntraId[];
   searchListByNum: CabinetInfo[];
   searchClear: () => void;
   searchWord?: string;
+  totalLength: number;
 }) => {
   return (
     <UlStyled>
@@ -44,6 +46,7 @@ const SearchBarList = ({
         return (
           <SearchListItem
             key={index}
+            floor={item.floor}
             inputText={searchWord}
             resultText={item.cabinet_num.toString()}
             isNum={true}
@@ -51,6 +54,7 @@ const SearchBarList = ({
           />
         );
       })}
+      {<TotalStyled>검색 결과: {totalLength}</TotalStyled>}
     </UlStyled>
   );
 };
@@ -69,6 +73,13 @@ const UlStyled = styled.ul`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   opacity: 0.9;
   overflow: hidden;
+`;
+
+const TotalStyled = styled.li`
+  font-size: 0.875rem;
+  color: var(--gray-color);
+  text-align: right;
+  padding: 10px;
 `;
 
 export default SearchBarList;
