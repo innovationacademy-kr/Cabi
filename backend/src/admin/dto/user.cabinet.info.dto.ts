@@ -3,6 +3,7 @@ import { CabinetDto } from './cabinet.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import LentType from 'src/enums/lent.type.enum';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import { CabinetLocationFloorDto } from './cabinet.location.floor.dto';
 
 export class UserCabinetInfoDto {
   @ApiProperty({
@@ -34,7 +35,9 @@ export class UserCabinetInfoDto {
       max_user: 3,
       status: CabinetStatusType.SET_EXPIRE_FULL,
       section: 'Oasis',
+      location: '새롬관',
+      floor: 2,
     },
   })
-  cabinetInfo?: CabinetDto;
+  cabinetInfo?: CabinetLocationFloorDto;
 }

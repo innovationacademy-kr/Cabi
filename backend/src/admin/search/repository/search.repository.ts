@@ -82,6 +82,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
                 max_user: user.Lent.cabinet.max_user,
                 status: user.Lent.cabinet.status,
                 section: user.Lent.cabinet.section,
+                location: user.Lent.cabinet.location,
+                floor: user.Lent.cabinet.floor,
                 status_note: user.Lent.cabinet.status_note,
               },
           },
