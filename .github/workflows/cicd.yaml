@@ -13,7 +13,7 @@ jobs:
           MARIADB_PASSWORD: test_password
           MARIADB_ROOT_PASSWORD: test_password
         ports:
-          - 3306:3306
+          - 3310:3306
         options: >-
           --health-cmd "mysqladmin ping -P 3306 -ptest_password | grep 'mysqld is alive' || exit 1"
           --health-interval 10s
@@ -26,7 +26,7 @@ jobs:
         run: >-
           mysql --force
           --host="127.0.0.1"
-          --port="3306"
+          --port="3310"
           --database="test_db"
           --user="test_user"
           --password="test_password"
