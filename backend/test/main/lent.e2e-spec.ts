@@ -14,6 +14,7 @@ import { initializeTransactionalContext } from 'typeorm-transactional';
  * @param filePath
  */
 async function loadSQL(queryRunner: QueryRunner, filePath: string) {
+  /* eslint-disable */
   const sql = require('fs').readFileSync(filePath, 'utf8');
   const commands = sql.split(';');
 
