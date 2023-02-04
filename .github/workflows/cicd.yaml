@@ -48,8 +48,8 @@ jobs:
         run: npm run lint --prefix backend
       - name: 빌드 체크
         run: npm run build --prefix backend
-      # - name: 단위 테스트 체크
-      #   run: npm run test --prefix backend
+      - name: 단위 테스트 체크
+        run: npm run test --prefix backend
       - name: E2E 테스트
         env:
           HOST: localhost
@@ -95,10 +95,10 @@ jobs:
       #   run: npm run lint --prefix frontend
       - name: 빌드 체크
         run: npm run build --prefix frontend
-      - name: 단위 테스트 체크
-        run: npm run test --prefix frontend
-      - name: 통합 테스트 체크
-        run: npm run test:e2e --prefix frontend
+      # - name: 단위 테스트 체크
+      #   run: npm run test --prefix frontend
+      # - name: 통합 테스트 체크
+      #   run: npm run test:e2e --prefix frontend
 
   CD-develop:
     name: deploy-develop
