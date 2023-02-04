@@ -79,7 +79,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       return "var(--expired)";
     // 사용 중 사물함
     else if (
-      selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
+      (selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL &&
+        selectedCabinetInfo.lent_type !== "CLUB") ||
       selectedCabinetInfo.status === CabinetStatus.EXPIRED
     ) {
       const nowDate = new Date();

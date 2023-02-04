@@ -10,7 +10,13 @@ import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import EmptySection from "@/components/CabinetList/EmptySection/EmptySection";
 import { currentSectionNameState } from "@/recoil/atoms";
 
-const CabinetListContainer = (): JSX.Element => {
+interface ICabinetListContainer {
+  isAdmin: boolean;
+}
+
+const CabinetListContainer = ({
+  isAdmin,
+}: ICabinetListContainer): JSX.Element => {
   const colNum = useRecoilValue(currentSectionColNumState);
   const currentSectionCabinets = useRecoilValue<CabinetInfo[]>(
     currentSectionCabinetState
@@ -22,6 +28,7 @@ const CabinetListContainer = (): JSX.Element => {
       <CabinetList
         colNum={colNum as number}
         cabinetInfo={currentSectionCabinets}
+        isAdmin={isAdmin}
       />
       {currentSectionName == "E/V" && <EmptySection />}
     </React.Fragment>
