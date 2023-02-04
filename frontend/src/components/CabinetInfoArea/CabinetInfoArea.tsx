@@ -121,12 +121,12 @@ const CabinetInfoArea: React.FC<{
             {selectedCabinetInfo.isAdmin ? (
               <>
                 <ButtonContainer
-                  onClick={handleOpenLentModal}
+                  onClick={() => {}} //todo: admin 반납 모달 만들기
                   text="반납"
                   theme="fill"
                 />
                 <ButtonContainer
-                  onClick={handleOpenLentModal}
+                  onClick={() => {}} //todo: 상태관리 모달 만들기
                   text="상태 관리"
                   theme="line"
                 />
