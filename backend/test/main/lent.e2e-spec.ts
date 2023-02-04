@@ -49,7 +49,7 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
               type: 'mysql',
               host: '127.0.0.1',
               username: 'test_user',
-              port: 3306,
+              port: 3310,
               password: 'test_password',
               database: 'test_db',
               entities: ['src/**/*.entity.ts'],
