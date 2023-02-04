@@ -30,7 +30,7 @@ jobs:
           --database="test_db"
           --user="test_user"
           --password="test_password"
-          < "backend/database/42cabi_v3_test.sql"
+          < "backend/test/test_db.sql"
       - name: Node.js 16.x Version
         uses: actions/setup-node@v1
         with:
@@ -95,10 +95,10 @@ jobs:
       #   run: npm run lint --prefix frontend
       - name: 빌드 체크
         run: npm run build --prefix frontend
-      # - name: 단위 테스트 체크
-      #   run: npm run test --prefix frontend
-      # - name: 통합 테스트 체크
-      #   run: npm run test:e2e --prefix frontend
+      - name: 단위 테스트 체크
+        run: npm run test --prefix frontend
+      - name: 통합 테스트 체크
+        run: npm run test:e2e --prefix frontend
 
   CD-develop:
     name: deploy-develop
