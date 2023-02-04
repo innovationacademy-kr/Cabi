@@ -16,7 +16,8 @@ const CabinetList = ({
   cabinetInfo,
   isAdmin,
 }: CabinetListInterface): JSX.Element => {
-  if (isAdmin)
+  if (isAdmin) {
+    console.log(cabinetInfo);
     return (
       <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
         {cabinetInfo.map((cabinet, index) => (
@@ -24,7 +25,7 @@ const CabinetList = ({
         ))}
       </CabinetListContainerStyled>
     );
-  else {
+  } else {
     return (
       <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
         {cabinetInfo.map((cabinet, index) => (

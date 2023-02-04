@@ -25,6 +25,7 @@ export interface ISelectedCabinetInfo {
   expireDate?: Date;
   detailMessage: string | null;
   detailMessageColor: string;
+  isAdmin: boolean;
 }
 
 const CabinetInfoArea: React.FC<{
@@ -117,11 +118,26 @@ const CabinetInfoArea: React.FC<{
           </>
         ) : (
           <>
-            <ButtonContainer
-              onClick={handleOpenLentModal}
-              text="대여"
-              theme="fill"
-            />
+            {selectedCabinetInfo.isAdmin ? (
+              <>
+                <ButtonContainer
+                  onClick={handleOpenLentModal}
+                  text="반납"
+                  theme="fill"
+                />
+                <ButtonContainer
+                  onClick={handleOpenLentModal}
+                  text="상태 관리"
+                  theme="line"
+                />
+              </>
+            ) : (
+              <ButtonContainer
+                onClick={handleOpenLentModal}
+                text="대여"
+                theme="fill"
+              />
+            )}
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>
         )}

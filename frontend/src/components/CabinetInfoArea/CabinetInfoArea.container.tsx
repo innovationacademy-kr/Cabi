@@ -18,6 +18,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet } = useMenu();
+  const isAdmin = document.location.pathname.indexOf("/admin") > -1;
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
@@ -105,6 +106,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         expireDate: targetCabinetInfo.lent_info[0]?.expire_time,
         detailMessage: getDetailMessage(targetCabinetInfo),
         detailMessageColor: getDetailMessageColor(targetCabinetInfo),
+        isAdmin: isAdmin,
       }
     : null;
 
