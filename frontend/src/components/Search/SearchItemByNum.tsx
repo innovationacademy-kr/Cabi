@@ -1,19 +1,29 @@
 import { cabinetIconSrcMap, cabinetStatusColorMap } from "@/assets/data/maps";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { LentDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import styled from "styled-components";
 
-const SearchItem = (props: CabinetInfo) => {
+const handleIntraId = (lent_info: LentDto[]) => {
+  if (lent_info.length === 0) {
+    return "-";
+  } else {
+    const intra_id = lent_info.map((item) => item.intra_id);
+    return intra_id.join(", ");
+  }
+};
+
+const SearchItemByNum = (props: CabinetInfo) => {
   const { floor, section, cabinet_num, status, lent_type, lent_info } = props;
   return (
     <WrapperStyled className="cabiButton">
       <RectangleStyled status={status}>{cabinet_num}</RectangleStyled>
       <TextWrapper>
-        <LocationStyled>{`${floor} - ${section}`}</LocationStyled>
+        <LocationStyled>{`${floor}층 - ${section}`}</LocationStyled>
         <NameWrapperStyled>
           <IconStyled lent_type={lent_type} />
-          <NameStyled>42cabi, seycho, yooh</NameStyled>
+          <NameStyled>{handleIntraId(lent_info)}</NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
     </WrapperStyled>
@@ -39,7 +49,7 @@ const RectangleStyled = styled.div<{ status: CabinetStatus }>`
   height: 60px;
   border-radius: 10px;
   background-color: ${(props) => cabinetStatusColorMap[props.status]};
-  font-size: 32px;
+  font-size: 26px;
   color: var(--white);
   display: flex;
   justify-content: center;
@@ -82,4 +92,4 @@ const NameStyled = styled.span`
   margin-left: 4px;
 `;
 
-export default SearchItem;
+export default SearchItemByNum;

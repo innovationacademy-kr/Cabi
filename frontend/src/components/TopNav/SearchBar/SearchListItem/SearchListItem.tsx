@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 const SearchListItem = (props: {
   key: number;
+  floor?: number;
   inputText?: string;
   resultText: string;
   isNum?: boolean;
   searchClear: () => void;
 }) => {
-  const { resultText, inputText, isNum, searchClear } = props;
+  const { floor, resultText, inputText, isNum, searchClear } = props;
   const navigate = useNavigate();
 
   const imageHandler = (isCabinet: boolean | undefined) => {
@@ -28,6 +29,7 @@ const SearchListItem = (props: {
       }}
     >
       <ImgStyled src={imageHandler(isNum)} alt="유저" />
+      {isNum && <span>{floor}F - </span>}
       <ChangeToHTML origin={resultText} replace={inputText} />
     </LiStyled>
   );
