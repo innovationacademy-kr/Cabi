@@ -1,8 +1,10 @@
 import AdminChart from "@/components/AdminChart/AdminChart";
+import AdminPreview from "@/components/AdminPreview/AdminPreview";
 
 const AdminHome = () => (
   <>
-    <AdminChart />
+    {<AdminPreview />}
+    {/*<AdminChart />*/}
   </>
 );
 

@@ -164,3 +164,24 @@ export const axiosSearchByCabinetNum = async (number: number) => {
     throw error;
   }
 };
+
+const axiosGetActivationListURL =
+  "/api/admin/search/cabinet/banned?page=0&length=10";
+export const axiosGetActivationList = async () => {
+  try {
+    const response = await instance.get(axiosGetActivationListURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetBanListURL = "/api/admin/search/cabinet/broken?page=0&length=10";
+export const axiosGetBanList = async () => {
+  try {
+    const response = await instance.get(axiosGetBanListURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
