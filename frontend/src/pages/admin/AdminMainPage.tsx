@@ -7,6 +7,7 @@ import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
+import MultiSelectButton from "@/components/Common/MultiSelectButton";
 
 const MainPage = () => {
   const touchStartPosX = useRef(0);
@@ -80,6 +81,13 @@ const MainPage = () => {
       }}
     >
       <SectionPaginationContainer />
+      <MultiSelectButton
+        theme="line"
+        text="다중선택모드"
+        onClick={() => {
+          alert("btn clicked!");
+        }}
+      />
       <CabinetListWrapperStyled>
         <CabinetListContainer isAdmin={true} />
       </CabinetListWrapperStyled>
