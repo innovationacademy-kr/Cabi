@@ -8,6 +8,7 @@ import { DataSource } from 'typeorm';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { initTestDB, loadSQL } from '../utils';
+/* eslint-disable */
 const timekeeper = require('timekeeper');
 
 /**

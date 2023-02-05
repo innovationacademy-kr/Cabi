@@ -5,7 +5,6 @@ import { AppModule } from 'src/app.module';
 import { JwtService } from '@nestjs/jwt';
 import TypeOrmConfigService from 'src/config/typeorm.config';
 import { DataSource } from 'typeorm';
-import { UserSessionDto } from 'src/dto/user.session.dto';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { initTestDB, loadSQL } from '../utils';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
@@ -74,11 +73,6 @@ describe('Admin Lent 모듈 테스트 (e2e)', () => {
     await queryRunner.connect();
     await loadSQL(queryRunner, 'test/test_db.sql');
     await queryRunner.release();
-  });
-
-  it('db 연동 테스트', () => {
-    // app이 정상적으로 인스턴스화되는지 확인
-    expect(app).toBeDefined();
   });
 
   describe('/api/admin/lent/:cabinetId/:userId (POST)', () => {
