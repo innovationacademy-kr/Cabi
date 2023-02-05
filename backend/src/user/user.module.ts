@@ -1,5 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AdminLogModule } from 'src/admin/log/log.module';
+import { AdminLogService } from 'src/admin/log/log.service';
 import { AuthModule } from 'src/auth/auth.module';
 import User from 'src/entities/user.entity';
 import { BanModule } from '../ban/ban.module';
@@ -20,9 +22,10 @@ const repo = {
     forwardRef(() => BanModule),
     CabinetModule,
     TypeOrmModule.forFeature([User]),
+    AdminLogModule,
   ],
   controllers: [MyLentInfoController, MyInfoController],
-  providers: [UserService, repo],
+  providers: [UserService, repo, AdminLogService],
   exports: [UserService],
 })
 export class UserModule {}

@@ -1,0 +1,159 @@
+@import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+:root {
+  /* color variable */
+  --black: #181818;
+  --white: #ffffff;
+  --main-color: #9747ff;
+  --lightpurple-color: #b18cff;
+  --line-color: #bcbcbc;
+  --gray-color: #7b7b7b;
+  --bg-shadow: rgba(0, 0, 0, 0.4);
+
+  /* cabinet color variable */
+  --mine: #47ffa7;
+  --expired: #ff4e4e;
+  --available: var(--main-color);
+  --full: #d9d9d9;
+  --broken: #3c3c3c;
+  --banned: #3c3c3c;
+
+  /* font variable */
+  --main-font: "Noto Sans KR", sans-serif;
+  --location-font: "Do Hyeon", sans-serif;
+
+  /* default setting */
+  font-family: "Noto Sans KR", Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: var(--black);
+  background-color: #ffffff;
+}
+
+a {
+  color: var(--main-color);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    opacity: 0.9;
+  }
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* iOS Pinch Zoom disabled */
+body {
+  touch-action: pan-x pan-y;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background-color: var(--main-color);
+  color: var(--white);
+  width: 200px;
+  height: 60px;
+  font-size: 1.125rem;
+  text-align: center;
+  font-family: var(--main-font);
+  border-radius: 6px;
+  font-weight: 300;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    opacity: 0.9;
+  }
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.9;
+}
+
+img {
+  -webkit-user-drag: none;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
+  object-fit: cover;
+}
+
+input {
+  color: var(--black);
+  text-align: center;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  background: none;
+  box-sizing: border-box;
+}
+
+.modal {
+  border-radius: 10px;
+  box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
+}
+
+.textNowrap {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.noScrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.noScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.blind {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.clear::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+.leftNavButtonActive {
+  background: var(--main-color);
+  color: var(--white) !important;
+}
+
+.cabiButton {
+  -webkit-tap-highlight-color: transparent;
+}

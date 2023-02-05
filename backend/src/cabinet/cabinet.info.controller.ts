@@ -17,12 +17,11 @@ import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.d
 import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { CabinetInfoService } from './cabinet.info.service';
+import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
+import { AdminMainAuthGuard } from 'src/auth/jwt/guard/admin.main.jwtauth.guard';
 
 @ApiTags('Cabinet')
-@Controller({
-  version: '3',
-  path: 'api/cabinet_info',
-})
+@Controller('api/cabinet_info')
 export class CabinetController {
   private logger = new Logger(CabinetController.name);
 
@@ -38,7 +37,7 @@ export class CabinetController {
       'cabi에 존재하는 건물/층 정보를 SpaceDataResponseDto 형식으로 받아옵니다.',
   })
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminMainAuthGuard)
   async getSpaceInfo(): Promise<SpaceDataResponseDto> {
     this.logger.debug(`Called ${this.getSpaceInfo.name}`);
     const cabinetInfo = await this.cabinetService.getSpaceInfo();
@@ -58,7 +57,7 @@ export class CabinetController {
     description: '비정상 파라미터',
   })
   @Get('/:location/:floor')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminMainAuthGuard)
   async getCabinetsInfoByParam(
     @Param('location') location: string,
     @Param('floor', ParseIntPipe) floor: number,
@@ -80,7 +79,7 @@ export class CabinetController {
     description: '비정상 파라미터',
   })
   @Get('/:cabinet_id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AdminMainAuthGuard)
   async getCabinetInfoById(
     @Param('cabinet_id', ParseIntPipe) cabinetId: number,
   ): Promise<CabinetInfoResponseDto> {

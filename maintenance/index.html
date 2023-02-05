@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>42Cabi</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@300;400;700&display=swap");
+
+      :root {
+        /* color variable */
+        --black: #181818;
+        --white: #ffffff;
+        --main-color: #9747ff;
+        --lightpurple-color: #b18cff;
+        --line-color: #bcbcbc;
+        --gray-color: #7b7b7b;
+        --bg-shadow: rgba(0, 0, 0, 0.4);
+        /* cabinet color variable */
+        --mine: #47ffa7;
+        --expired: #ff4e4e;
+        --available: var(--main-color);
+        --full: #d9d9d9;
+        --broken: #3c3c3c;
+        --banned: #3c3c3c;
+
+        font-family: "Noto Sans KR", Inter, Avenir, Helvetica, Arial, sans-serif;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background-color: var(--main-color);
+      }
+      .wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .errorTemplate {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: var(--white);
+      }
+      .title {
+        font-size: 5rem;
+        color: var(--mine);
+        font-family: "Do Hyeon", sans-serif;
+        filter: drop-shadow(0 0 0.75rem var(--mine));
+        text-align: center;
+      }
+      .subTitle {
+        font-size: 2rem;
+        margin: 1.5rem 0;
+        font-weight: 700;
+        text-align: center;
+      }
+      .content {
+        font-size: 1.25rem;
+        margin-bottom: 60px;
+        font-weight: 300;
+        text-align: center;
+      }
+
+      .img {
+        width: 200px;
+        height: 200px;
+        margin: 3% 0;
+        animation: rotate 0.5s infinite ease alternate;
+      }
+      img {
+        -webkit-user-drag: none;
+        max-width: 100%;
+        width: 100%;
+        height: 100%;
+        vertical-align: top;
+        object-fit: cover;
+      }
+
+      .button {
+        cursor: pointer;
+        border: none;
+        background-color: var(--main-color);
+        color: var(--white);
+        width: 200px;
+        height: 60px;
+        font-size: 1.125rem;
+        text-align: center;
+        font-family: var(--main-font);
+        border-radius: 6px;
+        font-weight: 300;
+        box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
+        text-decoration: none;
+        line-height: 60px;
+      }
+
+      @keyframes rotate {
+        from {
+          transform: translateY(5%);
+        }
+        to {
+          transform: translateY(-5%) scale(1.1);
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .img {
+          width: 160px;
+          height: 160px;
+          margin: 5% 0;
+        }
+        .content {
+          font-size: 1rem;
+          line-height: 1.5rem;
+          margin-bottom: 30px;
+        }
+        .content > span {
+          display: block;
+        }
+        .subTitle {
+          font-size: 1.5rem;
+        }
+        .title {
+          font-size: 3.25rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="errorTemplate">
+        <div class="title">점검 중</div>
+        <div class="img">
+          <img src="/src/assets/images/sadCcabiWhite.png" alt="" />
+        </div>
+        <div class="subTitle">잠시 후 다시 시도해주세요.</div>
+        <div class="content">
+          <div class="content">
+            점검 시간<br />
+            2023년 1월 28일 16시 00분 <span>~ 2023년 1월 28일 17시 00분</span>
+          </div>
+        </div>
+        <a
+        class="button"
+        href="https://42born2code.slack.com/archives/C02V6GE8LD7"
+        target="_blank"
+        >슬랙 캐비닛 채널</a
+        >
+      </div>
+    </div>
+    </body>
+    </html>

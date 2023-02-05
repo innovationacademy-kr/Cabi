@@ -1,8 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { CabinetInfoService } from '../cabinet/cabinet.info.service';
-import { LentTools } from '../lent/lent.component';
 import { LentService } from '../lent/lent.service';
 import { EmailSender } from './email.sender.component';
 import {
@@ -19,7 +17,6 @@ import { DateCalculator } from './date.calculator.component';
 export class ExpiredChecker {
   private logger = new Logger(ExpiredChecker.name);
   constructor(
-    private readonly lentTools: LentTools,
     private readonly lentService: LentService,
     private readonly emailsender: EmailSender,
     private cabinetInfoService: CabinetInfoService,
@@ -62,20 +59,5 @@ export class ExpiredChecker {
       this.emailsender.mailing(lent.user.intra_id, days);
     }
     runOnTransactionComplete((err) => err && this.logger.error(err));
-  }
-
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  async checkExpiredLent() {
-    this.logger.debug(
-      `Called ${ExpiredChecker.name} ${this.checkExpiredLent.name}`,
-    );
-    const lentList = await Promise.all(await this.lentTools.getAllLent());
-    for await (const lent of lentList) {
-      if (lent.expire_time === null) continue;
-      await this.checkExpiredCabinetEach(lent);
-      await new Promise((resolve) => {
-        setTimeout(resolve, 2000);
-      });
-    }
   }
 }

@@ -33,15 +33,16 @@ import { User } from 'src/decorator/user.decorator';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+<<<<<<< HEAD
 import { DataSource, QueryFailedError } from 'typeorm';
 import { BanCheckGuard } from '../ban/guard/ban-check.guard';
+=======
+import { BanCheckGuard } from '../ban/guard/ban.check.guard';
+>>>>>>> 21b1f8d366e6adfefee04c6949708a40af8eaf0d
 import { LentService } from './lent.service';
 
 @ApiTags('Lent')
-@Controller({
-  version: '3',
-  path: '/api/lent',
-})
+@Controller('/api/lent')
 export class LentController {
   private logger = new Logger(LentController.name);
   constructor(private lentService: LentService) {}
@@ -125,9 +126,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(
-          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
-        );
+        throw new InternalServerErrorException(`서버 에러가 발생했습니다`);
       }
     }
   }
@@ -166,9 +165,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(
-          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
-        );
+        throw new InternalServerErrorException(`서버 에러가 발생했습니다`);
       }
     }
   }
@@ -196,9 +193,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else {
-        throw new InternalServerErrorException(
-          `🚨 Cabi 내부 서버 에러가 발생했습니다 🥲 🚨`,
-        );
+        throw new InternalServerErrorException(`서버 에러가 발생했습니다`);
       }
     }
   }
