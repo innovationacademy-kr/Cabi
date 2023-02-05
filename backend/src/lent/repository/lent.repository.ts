@@ -39,7 +39,7 @@ export class lentRepository implements ILentRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async setExpireTime(lent_id: number, expire_time: Date): Promise<void> {
     expire_time.setHours(23, 59, 59, 999);
@@ -57,7 +57,7 @@ export class lentRepository implements ILentRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async setExpireTimeAll(cabinet_id: number, expire_time: Date): Promise<void> {
     expire_time.setHours(23, 59, 59, 999);
@@ -75,9 +75,13 @@ export class lentRepository implements ILentRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
-  async lentCabinet(user: UserDto, cabinet_id: number): Promise<LentDto> {
+  async lentCabinet(
+    user: UserDto,
+    cabinet_id: number,
+    lent_id: number,
+  ): Promise<LentDto> {
     const lent_time = new Date();
     const expire_time: Date | null = null;
     const result = await this.lentRepository
@@ -85,10 +89,12 @@ export class lentRepository implements ILentRepository {
       .insert()
       .into(Lent)
       .values({
+        lent_id: lent_id,
         lent_user_id: user.user_id,
         lent_cabinet_id: cabinet_id,
         lent_time: lent_time,
-        expire_time: expire_time,
+        // null 들어가면 에러발생해서 임시로 넣어둠
+        expire_time: '9999-12-31',
       })
       .execute();
     return {
@@ -168,7 +174,7 @@ export class lentRepository implements ILentRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async deleteLentByLentId(lent_id: number): Promise<void> {
     await this.lentRepository
@@ -202,20 +208,28 @@ export class lentRepository implements ILentRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async getLentCabinetData(cabinet_id: number): Promise<LentCabinetDataDto> {
     const result = await this.cabinetRepository
       .createQueryBuilder('c')
-      .select(['c.cabinet_status', 'c.lent_type', 'c.max_user'])
+      .select(['c.cabinet_status', 'c.lent_type', 'c.max_user', 'c.cabinet_id'])
       .leftJoin(Lent, 'l', 'l.lent_cabinet_id = c.cabinet_id')
       .addSelect('l.expire_time', 'expire_time')
       .addSelect('l.lent_id', 'lent_id')
       .where('c.cabinet_id = :cabinet_id', { cabinet_id })
-      .setLock('pessimistic_write')
+      // .setLock('pessimistic_write') // 데드락 발생함
       .execute();
-
+    const max_result = await this.lentRepository
+      .createQueryBuilder('l')
+      .select('max(l.lent_id)', 'max_lent_id')
+      .addSelect('count(*)', 'cabinet_count')
+      .execute();
     return {
+      new_lent_id:
+        max_result[0].max_lent_id === null
+          ? 1
+          : max_result[0].max_lent_id + Number(result[0].c_cabinet_id) + 1,
       status: result[0].cabinet_status,
       lent_type: result[0].c_lent_type,
       lent_count: result[0].lent_id === null ? 0 : result.length,
@@ -227,7 +241,7 @@ export class lentRepository implements ILentRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async getReturnCabinetData(
     cabinet_id: number,
@@ -260,7 +274,7 @@ export class lentRepository implements ILentRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async clearCabinetInfo(cabinet_id: number): Promise<void> {
     await this.cabinetRepository
