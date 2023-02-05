@@ -92,34 +92,6 @@ export class LentController {
     }
   }
 
-  // 가드 때문에 curl 요청보내기 번거로워져서 가드를 제거한 임시 컨트롤러(테스트 끝나면 지울 예정)
-  @Post('/temp/:user_id/:cabinet_id')
-  @HttpCode(HttpStatus.CREATED)
-  // @UseGuards(JwtAuthGuard, BanCheckGuard)
-  async tempLentCabinet(
-    @Param('cabinet_id') cabinet_id: number,
-    @Param('user_id') user_id: number,
-  ): Promise<void> {
-    try {
-      const tempUser = {
-        user_id,
-        intra_id: 'huchoi',
-      };
-      this.logger.debug(`Called ${this.lentCabinet.name}`);
-      return await this.lentService.lentCabinet(cabinet_id, tempUser);
-    } catch (err) {
-      this.logger.error(err);
-      if (err instanceof HttpException) {
-        throw err;
-      } else if (err instanceof QueryFailedError) {
-        //pk중복일때 QueryFailedError 에러발생
-        throw new InternalServerErrorException('한번 더 요청해주세요?');
-      } else {
-        throw new InternalServerErrorException(err.message);
-      }
-    }
-  }
-
   @ApiOperation({
     summary: '캐비넷의 제목 업데이트',
     description: '자신이 대여한 캐비넷의 제목을 업데이트합니다.',

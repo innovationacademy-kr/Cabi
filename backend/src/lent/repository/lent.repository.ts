@@ -228,9 +228,8 @@ export class lentRepository implements ILentRepository {
     return {
       new_lent_id:
         max_result[0].max_lent_id === null
-          ? 0
-          : // +1 말고 +cabinet_id 해주는게 더 나음
-            max_result[0].max_lent_id + Number(result[0].c_cabinet_id) + 1,
+          ? 1
+          : max_result[0].max_lent_id + Number(result[0].c_cabinet_id) + 1,
       status: result[0].cabinet_status,
       lent_type: result[0].c_lent_type,
       lent_count: result[0].lent_id === null ? 0 : result.length,
