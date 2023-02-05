@@ -84,8 +84,7 @@ export class LentController {
       if (err instanceof HttpException) {
         throw err;
       } else if (err instanceof QueryFailedError) {
-        //pk중복일때 이 에러발생
-        throw new InternalServerErrorException('한번 더 요청해주세요?');
+        throw new InternalServerErrorException('다시 한번 요청해주세요.');
       } else {
         throw new InternalServerErrorException(err.message);
       }
