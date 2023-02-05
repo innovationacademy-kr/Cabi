@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -27,18 +26,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { InjectDataSource } from '@nestjs/typeorm';
 import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { User } from 'src/decorator/user.decorator';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
-<<<<<<< HEAD
-import { DataSource, QueryFailedError } from 'typeorm';
-import { BanCheckGuard } from '../ban/guard/ban-check.guard';
-=======
+import { QueryFailedError } from 'typeorm';
 import { BanCheckGuard } from '../ban/guard/ban.check.guard';
->>>>>>> 21b1f8d366e6adfefee04c6949708a40af8eaf0d
 import { LentService } from './lent.service';
 
 @ApiTags('Lent')
