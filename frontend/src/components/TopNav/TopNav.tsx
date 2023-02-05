@@ -49,7 +49,7 @@ const TopNav: React.FC<{
 
   return (
     <TopNavContainerStyled id="topNavWrap">
-      <LogoStyled className="cabiButton">
+      <LogoStyled id="topNavLogo" className="cabiButton">
         <LogoDivStyled>
           <img
             className="cabiButton"

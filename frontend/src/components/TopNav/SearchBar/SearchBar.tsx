@@ -95,6 +95,13 @@ const SearchBar = () => {
     }
   };
 
+  const cancelHandler = () => {
+    document.getElementById("searchBar")!.classList.remove("on");
+    document.getElementById("topNavLogo")!.classList.remove("pushOut");
+    document.getElementById("topNavButtonGroup")!.classList.remove("pushOut");
+    document.getElementById("topNavWrap")!.classList.remove("pushOut");
+  };
+
   return (
     <SearchBarWrapperStyled id="searchBar">
       <SearchBarStyled
@@ -120,6 +127,7 @@ const SearchBar = () => {
           />
         </>
       )}
+      <CancelButtonStyled onClick={cancelHandler}>취소</CancelButtonStyled>
     </SearchBarWrapperStyled>
   );
 };
@@ -148,7 +156,16 @@ const SearchButtonStyled = styled.button`
   height: 32px;
   position: absolute;
   top: 4px;
-  right: 14px;
+  left: 256px;
+`;
+
+const CancelButtonStyled = styled.button`
+  width: 60px;
+  height: 32px;
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
 `;
 
 export default SearchBar;
