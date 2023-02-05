@@ -4,26 +4,16 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { JwtService } from '@nestjs/jwt';
 import TypeOrmConfigService from 'src/config/typeorm.config';
-import { DataSource, QueryRunner } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { initializeTransactionalContext } from 'typeorm-transactional';
+import { initTestDB, loadSQL } from '../utils';
 
 /**
- * SQL 파일을 읽어서 쿼리를 실행하는 함수
- * @param queryRunner
- * @param filePath
+ * 실제 테스트에 사용할 DB 이름을 적습니다.
+ * 테스트 파일들이 각각 병렬적으로 실행되므로, DB 이름을 다르게 설정해야 합니다.
  */
-async function loadSQL(queryRunner: QueryRunner, filePath: string) {
-  /* eslint-disable */
-  const sql = require('fs').readFileSync(filePath, 'utf8');
-  const commands = sql.split(';');
-
-  for (const command of commands) {
-    if (command.trim()) {
-      await queryRunner.query(command);
-    }
-  }
-}
+const testDBName = 'test_main_lent';
 
 describe('Main Lent 모듈 테스트 (e2e)', () => {
   let app: INestApplication;
@@ -36,6 +26,7 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
    * TypeOrmConfigService를 override하여 테스트용 DB에 연결되도록 합니다.
    */
   beforeAll(async () => {
+    await initTestDB(testDBName);
     initializeTransactionalContext();
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -51,7 +42,7 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
               username: 'test_user',
               port: 3310,
               password: 'test_password',
-              database: 'test_db',
+              database: testDBName,
               entities: ['src/**/*.entity.ts'],
               synchronize: true,
               dropSchema: true,
@@ -82,11 +73,6 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
     await queryRunner.connect();
     await loadSQL(queryRunner, 'test/test_db.sql');
     await queryRunner.release();
-  });
-
-  it('db 연동 테스트', () => {
-    // app이 정상적으로 인스턴스화되는지 확인
-    expect(app).toBeDefined();
   });
 
   describe('/api/lent/:cabinet_id (POST)', () => {
