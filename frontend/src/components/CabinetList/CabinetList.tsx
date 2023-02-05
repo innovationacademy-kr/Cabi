@@ -7,6 +7,7 @@ interface CabinetListInterface {
   colNum: number;
   cabinetInfo: CabinetInfo[];
   isAdmin: boolean;
+  isMultiSelect: boolean;
 }
 
 const DEFAULT_COL_NUM = 4;
@@ -15,13 +16,17 @@ const CabinetList = ({
   colNum,
   cabinetInfo,
   isAdmin,
+  isMultiSelect,
 }: CabinetListInterface): JSX.Element => {
   if (isAdmin) {
-    console.log(cabinetInfo);
     return (
       <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
         {cabinetInfo.map((cabinet, index) => (
-          <AdminCabinetListItem {...cabinet} key={index} />
+          <AdminCabinetListItem
+            cabinet={cabinet}
+            isMultiSelect={isMultiSelect}
+            key={index}
+          />
         ))}
       </CabinetListContainerStyled>
     );

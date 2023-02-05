@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
@@ -17,7 +17,7 @@ const MainPage = () => {
 
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-
+  const [isMultiSelect, setIsMultiSelect] = useState(false);
   useEffect(() => {
     closeAll();
     resetTargetCabinetInfo();
@@ -69,6 +69,10 @@ const MainPage = () => {
     else moveToRightSection();
   };
 
+  const handleOnClickMultiSelect = () => {
+    setIsMultiSelect(!isMultiSelect);
+  };
+
   return (
     <WapperStyled
       ref={mainWrapperRef}
@@ -82,14 +86,12 @@ const MainPage = () => {
     >
       <SectionPaginationContainer />
       <MultiSelectButton
-        theme="line"
-        text="다중선택모드"
-        onClick={() => {
-          alert("btn clicked!");
-        }}
+        theme={isMultiSelect ? "fill" : "line"}
+        text="다중 선택 모드"
+        onClick={handleOnClickMultiSelect}
       />
       <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={true} />
+        <CabinetListContainer isAdmin={true} isMultiSelect={isMultiSelect} />
       </CabinetListWrapperStyled>
     </WapperStyled>
   );

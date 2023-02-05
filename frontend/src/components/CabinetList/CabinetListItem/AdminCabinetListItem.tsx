@@ -14,7 +14,15 @@ import {
   cabinetFilterMap,
 } from "@/assets/data/maps";
 
-const AdminCabinetListItem = (props: CabinetInfo): JSX.Element => {
+interface IAdminCabinetListItem {
+  cabinet: CabinetInfo;
+  isMultiSelect: boolean;
+}
+
+const AdminCabinetListItem = ({
+  cabinet,
+  isMultiSelect,
+}: IAdminCabinetListItem): JSX.Element => {
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
     currentCabinetIdState
   );
@@ -26,21 +34,21 @@ const AdminCabinetListItem = (props: CabinetInfo): JSX.Element => {
 
   let cabinetLabelText = "";
 
-  if (props.status !== "BANNED" && props.status !== "BROKEN") {
+  if (cabinet.status !== "BANNED" && cabinet.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
-    if (props.lent_type === "PRIVATE")
-      cabinetLabelText = props.lent_info[0]?.intra_id;
-    else if (props.lent_type === "SHARE") {
-      const headcount = props.lent_info.length;
+    if (cabinet.lent_type === "PRIVATE")
+      cabinetLabelText = cabinet.lent_info[0]?.intra_id;
+    else if (cabinet.lent_type === "SHARE") {
+      const headcount = cabinet.lent_info.length;
       const cabinetTitle =
-        props.cabinet_title ?? `${props.max_user} / ${props.max_user}`;
+        cabinet.cabinet_title ?? `${cabinet.max_user} / ${cabinet.max_user}`;
 
       cabinetLabelText =
-        headcount === props.max_user
+        headcount === cabinet.max_user
           ? cabinetTitle
-          : headcount + " / " + props.max_user;
-    } else if (props.lent_type === "CLUB")
-      cabinetLabelText = props.cabinet_title ?? "동아리";
+          : headcount + " / " + cabinet.max_user;
+    } else if (cabinet.lent_type === "CLUB")
+      cabinetLabelText = cabinet.cabinet_title ?? "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
@@ -67,9 +75,9 @@ const AdminCabinetListItem = (props: CabinetInfo): JSX.Element => {
 
   const cabinetItemTitleHandler = () => {
     let lentType;
-    if (props.lent_type === CabinetType.PRIVATE) lentType = "개인";
-    else if (props.lent_type === CabinetType.SHARE) lentType = "공유";
-    else if (props.lent_type === CabinetType.CLUB) lentType = "동아리";
+    if (cabinet.lent_type === CabinetType.PRIVATE) lentType = "개인";
+    else if (cabinet.lent_type === CabinetType.SHARE) lentType = "공유";
+    else if (cabinet.lent_type === CabinetType.CLUB) lentType = "동아리";
 
     if (!cabinetLabelText) return `[${lentType}]`;
     return `[${lentType}] ${cabinetLabelText}`;
@@ -77,28 +85,29 @@ const AdminCabinetListItem = (props: CabinetInfo): JSX.Element => {
 
   return (
     <CabinetListItemStyled
-      status={props.status}
+      status={cabinet.status}
       isMine={false}
-      isSelected={currentCabinetId === props.cabinet_id}
+      isSelected={currentCabinetId === cabinet.cabinet_id}
+      isMultiSelect={isMultiSelect}
       title={cabinetItemTitleHandler()}
       className="cabiButton"
       onClick={() => {
-        selectCabinetOnClick(props.cabinet_id);
+        selectCabinetOnClick(cabinet.cabinet_id);
       }}
     >
       <CabinetIconNumberWrapperStyled>
         <CabinetIconContainerStyled
-          lent_type={props.lent_type}
+          lent_type={cabinet.lent_type}
           isMine={false}
-          status={props.status}
+          status={cabinet.status}
         />
-        <CabinetNumberStyled status={props.status} isMine={false}>
-          {props.cabinet_num}
+        <CabinetNumberStyled status={cabinet.status} isMine={false}>
+          {cabinet.cabinet_num}
         </CabinetNumberStyled>
       </CabinetIconNumberWrapperStyled>
       <CabinetLabelStyled
         className="textNowrap"
-        status={props.status}
+        status={cabinet.status}
         isMine={false}
       >
         {cabinetLabelText}
@@ -111,6 +120,7 @@ const CabinetListItemStyled = styled.div<{
   status: CabinetStatus;
   isMine: boolean;
   isSelected: boolean;
+  isMultiSelect: boolean;
 }>`
   position: relative;
   background-color: ${(props) => cabinetStatusColorMap[props.status]};
@@ -136,6 +146,11 @@ const CabinetListItemStyled = styled.div<{
       transform: scale(1.05);
       box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
         0px 4px 4px rgba(0, 0, 0, 0.25);
+    `}
+  ${({ isMultiSelect }) =>
+    isMultiSelect &&
+    css`
+      opacity: 0.3;
     `}
   @media (hover: hover) and (pointer: fine) {
     &:hover {
