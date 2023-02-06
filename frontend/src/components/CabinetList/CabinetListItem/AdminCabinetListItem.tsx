@@ -1,5 +1,9 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  currentCabinetIdState,
+  targetCabinetInfoState,
+  targetCabinetInfoListState,
+} from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -28,6 +32,9 @@ const AdminCabinetListItem = ({
   );
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
+  );
+  const setTargetCabinetInfoList = useSetRecoilState<CabinetInfo[]>(
+    targetCabinetInfoListState
   );
   const { openCabinet, closeCabinet } = useMenu();
   //  const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
@@ -83,6 +90,25 @@ const AdminCabinetListItem = ({
     return `[${lentType}] ${cabinetLabelText}`;
   };
 
+  const multiSelectCabinet = (cabinetId: number) => {
+    if (currentCabinetId === cabinetId) {
+      closeCabinet();
+      return;
+    }
+
+    setCurrentCabinetId(cabinetId);
+    async function getData(cabinetId: number) {
+      try {
+        const { data } = await axiosCabinetById(cabinetId);
+        setTargetCabinetInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getData(cabinetId);
+    openCabinet();
+  };
+
   return (
     <CabinetListItemStyled
       status={cabinet.status}
@@ -92,7 +118,8 @@ const AdminCabinetListItem = ({
       title={cabinetItemTitleHandler()}
       className="cabiButton"
       onClick={() => {
-        selectCabinetOnClick(cabinet.cabinet_id);
+        if (isMultiSelect) selectCabinetOnClick(cabinet.cabinet_id);
+        else multiSelectCabinet(cabinet.cabinet_id);
       }}
     >
       <CabinetIconNumberWrapperStyled>

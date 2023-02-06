@@ -90,7 +90,7 @@ export const isCurrentSectionRenderState = atom<boolean>({
   default: false,
 });
 
-export const targetCabinetListState = atom<CabinetInfo[]>({
-  key: "TargetCabinetList",
+export const targetCabinetInfoListState = atom<CabinetInfo[]>({
+  key: "TargetCabinetInfoList",
   default: [],
 });
