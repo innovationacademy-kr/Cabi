@@ -1,4 +1,14 @@
-import { Controller, Delete, Logger, Param, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  ParseArrayPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { AdminReturnService } from 'src/admin/return/return.service';
@@ -32,10 +42,29 @@ export class AdminReturnController {
     return await this.adminReturnService.returnCabinetByUserId(userId);
   }
 
+  //FIXME: 하나 이상 반납 처리에 실패한 경우, 400이 응답되고 있습니다.
+  //       하지만 400은 클라이언트의 요청 문법이 잘못되었을 때 사용하는 것이므로
+  //       409를 응답하도록 수정하는게 좋을 것 같습니다.
   @Delete('/bundle/cabinet')
   @ApiOperation({})
   async returnCabinetBundle(
+    @Body(
+      'users',
+      new ParseArrayPipe({
+        optional: true,
+        items: Number,
+        separator: ',',
+      }),
+    )
     users: number[],
+    @Body(
+      'cabinets',
+      new ParseArrayPipe({
+        optional: true,
+        items: Number,
+        separator: ',',
+      }),
+    )
     cabinets: number[],
   ): Promise<void> {
     this.logger.debug(`Called ${this.returnCabinetBundle.name}`);

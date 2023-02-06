@@ -339,6 +339,91 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
         });
       });
     });
+
+    describe('/api/admin/return/bundle/cabinet (DELETE)', () => {
+      describe('일괄 반납에 부분 성공합니다.', () => {
+        it('전체 사물함을 반납합니다.', async () => {
+          // given
+          // 승인받은 관리자 유저
+          const adminUser: AdminUserDto = {
+            email: 'normal@example.com',
+            role: 1,
+          };
+          // 전체 사물함
+          const cabinets: number[] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+          ];
+          const token = jwtService.sign(adminUser);
+
+          // when
+          const response = await request(app.getHttpServer())
+            .delete(`/api/admin/return/bundle/cabinet`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({ cabinets: cabinets });
+          // then
+          // FIXME: 400이 응답되고 있지만, 409를 응답하도록 하는 것이 적절해보임.
+          expect(response.status).toBe(400);
+          expect(response.body.user_failures.length).toBe(0);
+          // cabinet_failures에는 1, 5을 제외한 배열이 들어가야 함.
+          expect(response.body.cabinet_failures.length).toBe(8);
+          expect(response.body.cabinet_failures).toEqual(
+            expect.arrayContaining([1, 2, 3, 5, 6, 7, 12, 15]),
+          );
+        });
+
+        it('전체 유저를 반납합니다.', async () => {
+          // given
+          // 승인받은 관리자 유저
+          const adminUser: AdminUserDto = {
+            email: 'normal@example.com',
+            role: 1,
+          };
+          // 전체 유저
+          const users: number[] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+          ];
+          const token = jwtService.sign(adminUser);
+
+          // when
+          const response = await request(app.getHttpServer())
+            .delete(`/api/admin/return/bundle/cabinet`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({ users: users });
+          // then
+          // FIXME: 400이 응답되고 있지만, 409를 응답하도록 하는 것이 적절해보임.
+          expect(response.status).toBe(400);
+          expect(response.body.cabinet_failures.length).toBe(0);
+          // cabinet_failures에는 1, 5을 제외한 배열이 들어가야 함.
+          expect(response.body.user_failures.length).toBe(6);
+          expect(response.body.user_failures).toEqual(
+            expect.arrayContaining([1, 2, 3, 4, 7, 8]),
+          );
+        });
+
+        describe('일괄 반납에 부분 성공합니다.', () => {
+          it('반납에 성공하게 되는 사물함들만 반납 요청', async () => {
+            // given
+            // 승인받은 관리자 유저
+            const adminUser: AdminUserDto = {
+              email: 'normal@example.com',
+              role: 1,
+            };
+            // 반납에 성공하게 되는 사물함
+            const cabinets: number[] = [4, 8, 9, 10, 11, 13, 14];
+            const token = jwtService.sign(adminUser);
+
+            // when
+            const response = await request(app.getHttpServer())
+              .delete(`/api/admin/return/bundle/cabinet`)
+              .set('Authorization', `Bearer ${token}`)
+              .send({ cabinets: cabinets });
+            // then
+            // FIXME: 204가 응답되어야 하는데, 200이 응답되고 있음.
+            expect(response.status).toBe(200);
+          });
+        });
+      });
+    });
   });
 
   afterAll(async () => {
