@@ -217,6 +217,7 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
             .set('Authorization', `Bearer ${token}`);
 
           // then
+          // FIXME: 400이 응답되고 있지만, 409를 응답하도록 하는 것이 적절해보임.
           expect(response.status).toBe(400);
         });
 
@@ -237,6 +238,7 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
             .set('Authorization', `Bearer ${token}`);
 
           // then
+          // FIXME: 400이 응답되고 있지만, 409를 응답하도록 하는 것이 적절해보임.
           expect(response.status).toBe(400);
         });
       });
@@ -311,6 +313,7 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
             .set('Authorization', `Bearer ${token}`);
 
           // then
+          // FIXME: 400이 응답되고 있지만, 409를 응답하도록 하는 것이 적절해보임.
           expect(response.status).toBe(400);
         });
 
@@ -331,6 +334,7 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
             .set('Authorization', `Bearer ${token}`);
 
           // then
+          // FIXME: 400이 응답되고 있지만, 409를 응답하도록 하는 것이 적절해보임.
           expect(response.status).toBe(400);
         });
       });

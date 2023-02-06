@@ -142,6 +142,7 @@ describe('Admin Lent 모듈 테스트 (e2e)', () => {
 
         // then
         // FIXME: 400이 응답되어야 하는데, 500이 응답됨
+        //        그러나 409를 응답하도록 하는 것이 적절해보임.
         expect(response.status).toBe(500);
       });
 
@@ -165,6 +166,7 @@ describe('Admin Lent 모듈 테스트 (e2e)', () => {
 
         // then
         // FIXME: 400이 응답되어야 하는데, 500이 응답됨
+        // FIXME: 그러나 409를 응답하도록 하는 것이 적절해보임.
         expect(response.status).toBe(500);
       });
     });
@@ -189,6 +191,7 @@ describe('Admin Lent 모듈 테스트 (e2e)', () => {
           .set('Authorization', `Bearer ${token}`);
 
         // then
+        // FIXME: 400이 응답되고 있지만, 409를 응답하도록 하는 것이 적절해보임.
         expect(response.status).toBe(400);
       });
     });
