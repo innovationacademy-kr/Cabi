@@ -12,12 +12,10 @@ import { currentSectionNameState } from "@/recoil/atoms";
 
 interface ICabinetListContainer {
   isAdmin: boolean;
-  isMultiSelect: boolean;
 }
 
 const CabinetListContainer = ({
   isAdmin,
-  isMultiSelect,
 }: ICabinetListContainer): JSX.Element => {
   const colNum = useRecoilValue(currentSectionColNumState);
   const currentSectionCabinets = useRecoilValue<CabinetInfo[]>(
@@ -31,7 +29,6 @@ const CabinetListContainer = ({
         colNum={colNum as number}
         cabinetInfo={currentSectionCabinets}
         isAdmin={isAdmin}
-        isMultiSelect={isMultiSelect}
       />
       {currentSectionName == "E/V" && <EmptySection />}
     </React.Fragment>

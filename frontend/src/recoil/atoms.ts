@@ -90,6 +90,11 @@ export const isCurrentSectionRenderState = atom<boolean>({
   default: false,
 });
 
+export const isMultiSelectState = atom<boolean>({
+  key: "IsMultiSelect",
+  default: false,
+});
+
 export const targetCabinetInfoListState = atom<CabinetInfo[]>({
   key: "TargetCabinetInfoList",
   default: [],

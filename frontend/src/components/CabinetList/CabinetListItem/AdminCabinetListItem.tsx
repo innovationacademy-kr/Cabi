@@ -1,8 +1,9 @@
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   targetCabinetInfoState,
   targetCabinetInfoListState,
+  isMultiSelectState,
 } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
@@ -20,12 +21,10 @@ import {
 
 interface IAdminCabinetListItem {
   cabinet: CabinetInfo;
-  isMultiSelect: boolean;
 }
 
 const AdminCabinetListItem = ({
   cabinet,
-  isMultiSelect,
 }: IAdminCabinetListItem): JSX.Element => {
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
     currentCabinetIdState
@@ -36,6 +35,7 @@ const AdminCabinetListItem = ({
   const setTargetCabinetInfoList = useSetRecoilState<CabinetInfo[]>(
     targetCabinetInfoListState
   );
+  const isMultiSelect = useRecoilValue<boolean>(isMultiSelectState);
   const { openCabinet, closeCabinet } = useMenu();
   //  const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
 
@@ -166,6 +166,11 @@ const CabinetListItemStyled = styled.div<{
   padding: 8px 8px 14px;
   transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
+  ${({ isMultiSelect }) =>
+    isMultiSelect &&
+    css`
+      opacity: 0.3;
+    `}
   ${({ isSelected }) =>
     isSelected &&
     css`
@@ -173,11 +178,6 @@ const CabinetListItemStyled = styled.div<{
       transform: scale(1.05);
       box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
         0px 4px 4px rgba(0, 0, 0, 0.25);
-    `}
-  ${({ isMultiSelect }) =>
-    isMultiSelect &&
-    css`
-      opacity: 0.3;
     `}
   @media (hover: hover) and (pointer: fine) {
     &:hover {

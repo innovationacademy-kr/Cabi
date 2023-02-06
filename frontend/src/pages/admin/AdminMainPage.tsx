@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { currentSectionNameState } from "@/recoil/atoms";
+import { currentSectionNameState, isMultiSelectState } from "@/recoil/atoms";
 import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
@@ -17,7 +17,8 @@ const MainPage = () => {
 
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-  const [isMultiSelect, setIsMultiSelect] = useState(false);
+  const [isMultiSelect, setIsMultiSelect] =
+    useRecoilState<boolean>(isMultiSelectState);
   useEffect(() => {
     closeAll();
     resetTargetCabinetInfo();
@@ -91,7 +92,7 @@ const MainPage = () => {
         onClick={handleOnClickMultiSelect}
       />
       <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={true} isMultiSelect={isMultiSelect} />
+        <CabinetListContainer isAdmin={true} />
       </CabinetListWrapperStyled>
     </WapperStyled>
   );
