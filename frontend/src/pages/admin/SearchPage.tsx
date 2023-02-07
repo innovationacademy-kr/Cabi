@@ -84,9 +84,10 @@ const SearchPage = () => {
   const handleMoreSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
-      currentPage.current++
+      currentPage.current + 1
     );
     console.log(searchResult.data);
+    currentPage.current += 1;
     setSearchListByIntraId((prev) => [...prev, ...searchResult.data.result]);
   };
 
