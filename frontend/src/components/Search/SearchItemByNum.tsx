@@ -1,10 +1,16 @@
-import { cabinetIconSrcMap, cabinetStatusColorMap } from "@/assets/data/maps";
-import { currentCabinetIdState } from "@/recoil/atoms";
+import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
+import {
+  cabinetIconSrcMap,
+  cabinetLabelColorMap,
+  cabinetStatusColorMap,
+} from "@/assets/data/maps";
+import useMenu from "@/hooks/useMenu";
+import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 
 const handleIntraId = (lent_info: LentDto[]) => {
@@ -20,7 +26,10 @@ const SearchItemByNum = (props: CabinetInfo) => {
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
     currentCabinetIdState
   );
-  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
+    targetCabinetInfoState
+  );
+  const { openCabinet, closeCabinet } = useMenu();
 
   const {
     floor,
@@ -34,10 +43,20 @@ const SearchItemByNum = (props: CabinetInfo) => {
 
   const clickHandler = () => {
     if (currentCabinetId === cabinet_id) {
-      resetCurrentCabinetId();
+      closeCabinet();
       return;
     }
     setCurrentCabinetId(cabinet_id);
+    async function getData(cabinetId: number) {
+      try {
+        const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
+        setTargetCabinetInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getData(cabinet_id);
+    openCabinet();
   };
 
   return (
@@ -90,7 +109,8 @@ const RectangleStyled = styled.div<{ status: CabinetStatus }>`
   border-radius: 10px;
   background-color: ${(props) => cabinetStatusColorMap[props.status]};
   font-size: 26px;
-  color: var(--white);
+  color: ${(props) =>
+    props.status ? cabinetLabelColorMap[props.status] : "var(--black)"};
   display: flex;
   justify-content: center;
   align-items: center;

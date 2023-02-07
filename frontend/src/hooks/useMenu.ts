@@ -1,9 +1,14 @@
 import { useResetRecoilState } from "recoil";
-import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  currentCabinetIdState,
+  currentIntraIdState,
+  targetCabinetInfoState,
+} from "@/recoil/atoms";
 
 const useMenu = () => {
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
 
   const toggleLeftNav = () => {
     if (
@@ -105,6 +110,7 @@ const useMenu = () => {
     ) {
       resetTargetCabinetInfo();
       resetCurrentCabinetId();
+      resetCurrentIntraId();
       document.getElementById("cabinetDetailArea")?.classList.remove("on");
       document.getElementById("menuBg")?.classList.remove("on");
     }
