@@ -5,8 +5,18 @@ import { CabinetInfo } from "@/types/dto/cabinet.dto";
 interface ISearchListByIntraId {
   intra_id: string;
   user_id: number;
+  // cabinet_info: CabinetInfo;
 }
-
+/*
+cabinet_id: 87
+cabinet_num : 7
+cabinet_title:null
+lent_type: "PRIVATE"
+max_user: 1
+section: "End of Cluster 1"
+status: "SET_EXPIRE_FULL"
+lent_info: [{…}]
+*/
 const SearchBarList = ({
   searchListById,
   searchListByNum,
