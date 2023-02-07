@@ -5,18 +5,8 @@ import { CabinetInfo } from "@/types/dto/cabinet.dto";
 interface ISearchListByIntraId {
   intra_id: string;
   user_id: number;
-  // cabinet_info: CabinetInfo;
 }
-/*
-cabinet_id: 87
-cabinet_num : 7
-cabinet_title:null
-lent_type: "PRIVATE"
-max_user: 1
-section: "End of Cluster 1"
-status: "SET_EXPIRE_FULL"
-lent_info: [{…}]
-*/
+
 const SearchBarList = ({
   searchListById,
   searchListByNum,
@@ -77,6 +67,9 @@ const UlStyled = styled.ul`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   opacity: 0.9;
   overflow: hidden;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const TotalStyled = styled.li`

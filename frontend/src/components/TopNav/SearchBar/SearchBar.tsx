@@ -26,6 +26,7 @@ const SearchBar = () => {
     setTargetIndex(-1);
     if (searchInput.current) {
       searchInput.current.value = "";
+      setSearchValue("");
     }
   };
 
@@ -102,6 +103,7 @@ const SearchBar = () => {
   };
 
   const cancelHandler = () => {
+    searchClear();
     document.getElementById("searchBar")!.classList.remove("on");
     document.getElementById("topNavLogo")!.classList.remove("pushOut");
     document.getElementById("topNavButtonGroup")!.classList.remove("pushOut");
@@ -129,43 +131,45 @@ const SearchBar = () => {
     }
   }, [targetIndex]);
 
+  const onKeyHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      SearchBarButtonHandler();
+    } else if (e.key == "ArrowUp") {
+      if (totalLength > 0) {
+        setTargetIndex((prev) =>
+          prev > 0
+            ? prev - 1
+            : Math.max(searchListById.length, searchListByNum.length) - 1
+        );
+      }
+    } else if (e.key == "ArrowDown") {
+      if (totalLength > 0) {
+        setTargetIndex((prev) =>
+          prev < Math.max(searchListById.length, searchListByNum.length) - 1
+            ? prev + 1
+            : 0
+        );
+      }
+    }
+  };
+
   return (
-    <SearchBarWrapperStyled ref={searchWrap} id="searchBar">
-      <SearchBarStyled
-        ref={searchInput}
-        type="text"
-        placeholder="Search"
-        onFocus={() => {
-          setIsFocus(true);
-        }}
-        onChange={debounce(searchInputHandler, 300)}
-        onKeyUp={(e: any) => {
-          if (e.key === "Enter") {
-            SearchBarButtonHandler();
-          } else if (e.keyCode == "38") {
-            // up arrow
-            if (totalLength > 0) {
-              setTargetIndex((prev) =>
-                prev > 0
-                  ? prev - 1
-                  : Math.max(searchListById.length, searchListByNum.length) - 1
-              );
-            }
-          } else if (e.keyCode == "40") {
-            // down arrow
-            if (totalLength > 0) {
-              setTargetIndex((prev) =>
-                prev <
-                Math.max(searchListById.length, searchListByNum.length) - 1
-                  ? prev + 1
-                  : 0
-              );
-            }
-          }
-        }}
-      ></SearchBarStyled>
-      <SearchButtonStyled onClick={SearchBarButtonHandler} />
-      {isFocus && searchInput.current?.value && totalLength > 0 && (
+    <SearchBarWrapperStyled id="searchBar">
+      <SearchBarStyled>
+        <SearchBarInputStyled
+          ref={searchInput}
+          type="text"
+          placeholder="Search"
+          onFocus={() => {
+            setIsFocus(true);
+          }}
+          onChange={debounce(searchInputHandler, 300)}
+          onKeyDown={onKeyHandler}
+        ></SearchBarInputStyled>
+        <SearchButtonStyled onClick={SearchBarButtonHandler} />
+      </SearchBarStyled>
+      <CancelButtonStyled onClick={cancelHandler}>취소</CancelButtonStyled>
+      {searchInput.current?.value && totalLength > 0 && (
         <>
           <SearchBarList
             searchListById={searchListById}
@@ -177,7 +181,6 @@ const SearchBar = () => {
           />
         </>
       )}
-      <CancelButtonStyled onClick={cancelHandler}>취소</CancelButtonStyled>
     </SearchBarWrapperStyled>
   );
 };
@@ -186,7 +189,12 @@ const SearchBarWrapperStyled = styled.div`
   position: relative;
 `;
 
-const SearchBarStyled = styled.input`
+const SearchBarStyled = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const SearchBarInputStyled = styled.input`
   width: 300px;
   height: 40px;
   border: 1px solid var(--white);
@@ -206,12 +214,14 @@ const SearchButtonStyled = styled.button`
   height: 32px;
   position: absolute;
   top: 4px;
-  left: 256px;
+  right: 14px;
 `;
 
 const CancelButtonStyled = styled.button`
+  min-width: 60px;
   width: 60px;
-  height: 32px;
+  height: 40px;
+  overflow: hidden;
   display: none;
   @media screen and (max-width: 768px) {
     display: block;
