@@ -6,6 +6,7 @@ import {
   axiosSearchByCabinetNum,
   axiosSearchByIntraId,
 } from "@/api/axios/axios.custom";
+import useOutsideClick from "@/hooks/useOutsideClick";
 
 const SearchBar = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const SearchBar = () => {
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
+  const [isFocus, setIsFocus] = useState<boolean>(true);
 
   const searchClear = () => {
     setSearchListById([]);
@@ -102,12 +104,20 @@ const SearchBar = () => {
     document.getElementById("topNavWrap")!.classList.remove("pushOut");
   };
 
+  const searchWrap = useRef<HTMLDivElement>(null);
+  useOutsideClick(searchWrap, () => {
+    setIsFocus(false);
+  });
+
   return (
-    <SearchBarWrapperStyled id="searchBar">
+    <SearchBarWrapperStyled ref={searchWrap} id="searchBar">
       <SearchBarStyled
         ref={searchInput}
         type="text"
         placeholder="Search"
+        onFocus={() => {
+          setIsFocus(true);
+        }}
         onChange={debounce(searchInputHandler, 300)}
         onKeyUp={(e: any) => {
           if (e.key === "Enter") {
@@ -116,7 +126,7 @@ const SearchBar = () => {
         }}
       ></SearchBarStyled>
       <SearchButtonStyled onClick={SearchBarButtonHandler} />
-      {searchInput.current?.value && totalLength > 0 && (
+      {isFocus && searchInput.current?.value && totalLength > 0 && (
         <>
           <SearchBarList
             searchListById={searchListById}
