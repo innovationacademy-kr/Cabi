@@ -90,7 +90,7 @@ const AdminCabinetListItem = ({
     return `[${lentType}] ${cabinetLabelText}`;
   };
 
-  const multiSelectCabinet = (cabinetId: number) => {
+  const multiSelectCabinetOnClick = (cabinetId: number) => {
     if (currentCabinetId === cabinetId) {
       closeCabinet();
       return;
@@ -119,7 +119,7 @@ const AdminCabinetListItem = ({
       className="cabiButton"
       onClick={() => {
         if (isMultiSelect) selectCabinetOnClick(cabinet.cabinet_id);
-        else multiSelectCabinet(cabinet.cabinet_id);
+        else multiSelectCabinetOnClick(cabinet.cabinet_id);
       }}
     >
       <CabinetIconNumberWrapperStyled>
