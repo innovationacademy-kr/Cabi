@@ -40,7 +40,6 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     async function getData(cabinetId: number) {
       try {
         const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
-        console.log(data);
         setTargetCabinetInfo(data);
       } catch (error) {
         console.log(error);
