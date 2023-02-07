@@ -23,12 +23,14 @@ const SearchBarList = ({
   searchWord,
   searchClear,
   totalLength,
+  targetIndex,
 }: {
   searchListById: ISearchListByIntraId[];
   searchListByNum: CabinetInfo[];
   searchClear: () => void;
   searchWord?: string;
   totalLength: number;
+  targetIndex?: number;
 }) => {
   return (
     <UlStyled>
@@ -39,6 +41,7 @@ const SearchBarList = ({
             inputText={searchWord}
             resultText={item.intra_id}
             searchClear={searchClear}
+            targetIndex={targetIndex === index}
           />
         );
       })}
@@ -51,6 +54,7 @@ const SearchBarList = ({
             resultText={item.cabinet_num.toString()}
             isNum={true}
             searchClear={searchClear}
+            targetIndex={targetIndex === index}
           />
         );
       })}

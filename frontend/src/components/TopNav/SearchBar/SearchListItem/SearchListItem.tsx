@@ -3,14 +3,15 @@ import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToH
 import { useNavigate } from "react-router-dom";
 
 const SearchListItem = (props: {
-  key: number;
   floor?: number;
   inputText?: string;
   resultText: string;
   isNum?: boolean;
   searchClear: () => void;
+  targetIndex?: boolean;
 }) => {
-  const { floor, resultText, inputText, isNum, searchClear } = props;
+  const { floor, resultText, inputText, isNum, searchClear, targetIndex } =
+    props;
   const navigate = useNavigate();
 
   const imageHandler = (isCabinet: boolean | undefined) => {
@@ -20,6 +21,7 @@ const SearchListItem = (props: {
 
   return (
     <LiStyled
+      className={targetIndex ? "active" : ""}
       onClick={() => {
         navigate({
           pathname: "search",
@@ -42,6 +44,18 @@ const LiStyled = styled.li`
   & strong {
     color: var(--main-color);
   }
+
+  &.active {
+    background-color: var(--main-color);
+    color: var(--white);
+  }
+  &.active strong {
+    color: var(--white);
+  }
+  &.active img {
+    filter: invert(100%);
+  }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--main-color);

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SearchBarList from "@/components/TopNav/SearchBar/SearchBarList/SearchBarList";
@@ -10,16 +10,20 @@ import useOutsideClick from "@/hooks/useOutsideClick";
 
 const SearchBar = () => {
   const navigate = useNavigate();
+  const searchWrap = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
   const [isFocus, setIsFocus] = useState<boolean>(true);
+  const [targetIndex, setTargetIndex] = useState<number>(-1);
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const searchClear = () => {
     setSearchListById([]);
     setSearchListByNum([]);
     setTotalLength(0);
+    setTargetIndex(-1);
     if (searchInput.current) {
       searchInput.current.value = "";
     }
@@ -58,14 +62,14 @@ const SearchBar = () => {
   };
 
   const searchInputHandler = async () => {
-    console.log("searchInputHandler");
-
     if (searchInput.current) {
+      setSearchValue(searchInput.current.value);
       const searchValue = searchInput.current.value;
       if (searchValue.length <= 0) {
         setSearchListById([]);
         setSearchListByNum([]);
         setTotalLength(0);
+        setTargetIndex(-1);
         return;
       }
       if (isNaN(Number(searchValue))) {
@@ -73,9 +77,9 @@ const SearchBar = () => {
         if (searchValue.length <= 1) {
           setSearchListById([]);
           setTotalLength(0);
+          setTargetIndex(-1);
         } else {
           const searchResult = await axiosSearchByIntraId(searchValue);
-          console.log(searchResult.data.result);
           setSearchListByNum([]);
           setSearchListById(searchResult.data.result);
           setTotalLength(searchResult.data.total_length);
@@ -104,10 +108,26 @@ const SearchBar = () => {
     document.getElementById("topNavWrap")!.classList.remove("pushOut");
   };
 
-  const searchWrap = useRef<HTMLDivElement>(null);
+  // outside click
   useOutsideClick(searchWrap, () => {
     setIsFocus(false);
   });
+
+  const valueChangeHandler = () => {
+    if (isNaN(Number(searchInput.current!.value))) {
+      return searchListById[targetIndex].intra_id;
+    } else {
+      return searchInput.current!.value;
+    }
+  };
+
+  // searchInput value change
+  useEffect(() => {
+    if (targetIndex !== -1) {
+      searchInput.current!.value = valueChangeHandler();
+      setSearchValue(searchInput.current!.value);
+    }
+  }, [targetIndex]);
 
   return (
     <SearchBarWrapperStyled ref={searchWrap} id="searchBar">
@@ -122,6 +142,25 @@ const SearchBar = () => {
         onKeyUp={(e: any) => {
           if (e.key === "Enter") {
             SearchBarButtonHandler();
+          } else if (e.keyCode == "38") {
+            // up arrow
+            if (totalLength > 0) {
+              setTargetIndex((prev) =>
+                prev > 0
+                  ? prev - 1
+                  : Math.max(searchListById.length, searchListByNum.length) - 1
+              );
+            }
+          } else if (e.keyCode == "40") {
+            // down arrow
+            if (totalLength > 0) {
+              setTargetIndex((prev) =>
+                prev <
+                Math.max(searchListById.length, searchListByNum.length) - 1
+                  ? prev + 1
+                  : 0
+              );
+            }
           }
         }}
       ></SearchBarStyled>
@@ -131,9 +170,10 @@ const SearchBar = () => {
           <SearchBarList
             searchListById={searchListById}
             searchListByNum={searchListByNum}
-            searchWord={searchInput.current?.value}
+            searchWord={searchValue}
             searchClear={searchClear}
             totalLength={totalLength}
+            targetIndex={targetIndex}
           />
         </>
       )}

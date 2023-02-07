@@ -31,7 +31,6 @@ const SearchPage = () => {
 
   // 검색 초기화
   const initialize = () => {
-    console.log("currentPage: " + currentPage);
     setIsLoading(true);
     setSearchListByIntraId([]);
     setSearchListByNum([]);
@@ -46,7 +45,6 @@ const SearchPage = () => {
       searchValue.current,
       currentPage.current
     );
-    console.log(searchResult.data);
     setSearchListByIntraId(searchResult.data.result);
     setTotalSearchList(searchResult.data.total_length);
     setTimeout(() => {
@@ -59,7 +57,6 @@ const SearchPage = () => {
     const searchResult = await axiosSearchByCabinetNum(
       Number(searchValue.current)
     );
-    console.log(searchResult.data);
     setSearchListByNum(searchResult.data.result);
     setTotalSearchList(searchResult.data.total_length);
     setTimeout(() => {
@@ -86,7 +83,6 @@ const SearchPage = () => {
       searchValue.current,
       currentPage.current + 1
     );
-    console.log(searchResult.data);
     currentPage.current += 1;
     setSearchListByIntraId((prev) => [...prev, ...searchResult.data.result]);
   };
