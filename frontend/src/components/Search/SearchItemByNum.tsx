@@ -1,9 +1,11 @@
 import { cabinetIconSrcMap, cabinetStatusColorMap } from "@/assets/data/maps";
+import { currentCabinetIdState } from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import styled from "styled-components";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import styled, { css } from "styled-components";
 
 const handleIntraId = (lent_info: LentDto[]) => {
   if (lent_info.length === 0) {
@@ -15,9 +17,35 @@ const handleIntraId = (lent_info: LentDto[]) => {
 };
 
 const SearchItemByNum = (props: CabinetInfo) => {
-  const { floor, section, cabinet_num, status, lent_type, lent_info } = props;
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
+    currentCabinetIdState
+  );
+  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+
+  const {
+    floor,
+    section,
+    cabinet_id,
+    cabinet_num,
+    status,
+    lent_type,
+    lent_info,
+  } = props;
+
+  const clickHandler = () => {
+    if (currentCabinetId === cabinet_id) {
+      resetCurrentCabinetId();
+      return;
+    }
+    setCurrentCabinetId(cabinet_id);
+  };
+
   return (
-    <WrapperStyled className="cabiButton">
+    <WrapperStyled
+      className="cabiButton"
+      isSelected={currentCabinetId === cabinet_id}
+      onClick={clickHandler}
+    >
       <RectangleStyled status={status}>{cabinet_num}</RectangleStyled>
       <TextWrapper>
         <LocationStyled>{`${floor}층 - ${section}`}</LocationStyled>
@@ -30,7 +58,7 @@ const SearchItemByNum = (props: CabinetInfo) => {
   );
 };
 
-const WrapperStyled = styled.div`
+const WrapperStyled = styled.div<{ isSelected: boolean }>`
   width: 350px;
   height: 110px;
   border-radius: 10px;
@@ -38,9 +66,21 @@ const WrapperStyled = styled.div`
   background-color: var(--lightgary-color);
   display: flex;
   align-items: center;
+  transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
-  &:hover {
-    outline: 2px solid var(--main-color);
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      opacity: 0.9;
+      transform: scale(1.02);
+      box-shadow: inset 4px 4px 4px rgba(0, 0, 0, 0.15),
+        2px 2px 4px rgba(0, 0, 0, 0.15);
+    `}
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
   }
 `;
 

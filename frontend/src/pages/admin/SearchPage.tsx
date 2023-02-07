@@ -11,6 +11,8 @@ import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import NoSearch from "@/components/Search/NoSearch";
 import SearchDefault from "@/components/Search/SearchDefault";
+import { useResetRecoilState } from "recoil";
+import { currentCabinetIdState, currentIntraIdState } from "@/recoil/atoms";
 
 interface ISearchDetail {
   intra_id: string;
@@ -28,6 +30,8 @@ const SearchPage = () => {
   const [totalSearchList, setTotalSearchList] = useState(0);
   const currentPage = useRef(0);
   const searchValue = useRef("");
+  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
 
   // 검색 초기화
   const initialize = () => {
@@ -37,6 +41,8 @@ const SearchPage = () => {
     setTotalSearchList(0);
     currentPage.current = 0;
     searchValue.current = searchParams.get("q") ?? "";
+    resetCurrentCabinetId();
+    resetCurrentIntraId();
   };
 
   // intra_id 검색

@@ -2,8 +2,10 @@ import { cabinetIconSrcMap, cabinetStatusColorMap } from "@/assets/data/maps";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import ChangeToHTML from "../TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { currentIntraIdState } from "@/recoil/atoms";
 
 interface ISearchDetail {
   intra_id: string;
@@ -14,9 +16,24 @@ interface ISearchDetail {
 
 const SearchItemByIntraId = (props: ISearchDetail) => {
   const { intra_id, cabinetInfo, searchValue } = props;
+  const [currentIntraId, setCurrentIntraId] =
+    useRecoilState<string>(currentIntraIdState);
+  const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
+
+  const clickHandler = () => {
+    if (currentIntraId === intra_id) {
+      resetCurrentIntraId();
+      return;
+    }
+    setCurrentIntraId(intra_id);
+  };
 
   return cabinetInfo ? (
-    <WrapperStyled className="cabiButton">
+    <WrapperStyled
+      className="cabiButton"
+      isSelected={currentIntraId === intra_id}
+      onClick={clickHandler}
+    >
       <RectangleStyled status={cabinetInfo.status}>
         {cabinetInfo.cabinet_num}
       </RectangleStyled>
@@ -31,7 +48,11 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       </TextWrapper>
     </WrapperStyled>
   ) : (
-    <WrapperStyled className="cabiButton">
+    <WrapperStyled
+      className="cabiButton"
+      isSelected={currentIntraId === intra_id}
+      onClick={clickHandler}
+    >
       <RectangleStyled>-</RectangleStyled>
       <TextWrapper>
         <LocationStyled>대여 중이 아닌 사용자</LocationStyled>
@@ -46,7 +67,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   );
 };
 
-const WrapperStyled = styled.div`
+const WrapperStyled = styled.div<{ isSelected: boolean }>`
   width: 350px;
   height: 110px;
   border-radius: 10px;
@@ -54,9 +75,21 @@ const WrapperStyled = styled.div`
   background-color: var(--lightgary-color);
   display: flex;
   align-items: center;
+  transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
-  &:hover {
-    outline: 2px solid var(--main-color);
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      opacity: 0.9;
+      transform: scale(1.02);
+      box-shadow: inset 4px 4px 4px rgba(0, 0, 0, 0.15),
+        2px 2px 4px rgba(0, 0, 0, 0.15);
+    `}
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
   }
 `;
 
