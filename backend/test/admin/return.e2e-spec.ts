@@ -8,6 +8,10 @@ import { DataSource } from 'typeorm';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { initTestDB, loadSQL } from '../utils';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
+import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
+import { LentTools } from 'src/lent/lent.component';
+import { BanService } from 'src/ban/ban.service';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 
 /**
  * 실제 테스트에 사용할 DB 이름을 적습니다.
@@ -18,6 +22,9 @@ const testDBName = 'test_admin_return';
 describe('Admin Return 모듈 테스트 (e2e)', () => {
   let app: INestApplication;
   let jwtService: JwtService;
+  let cabinetInfoService: CabinetInfoService;
+  let lentComponent: LentTools;
+  let banService: BanService;
 
   /**
    * 테스트 전에 한 번만 실행되는 함수
@@ -61,6 +68,9 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    cabinetInfoService = app.get(CabinetInfoService);
+    lentComponent = app.get(LentTools);
+    banService = app.get(BanService);
   });
 
   /**
@@ -96,9 +106,9 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
         // then
         // FIXME: 204가 응답되야 하는데 200이 응답됨
         expect(response.status).toBe(200);
-        // TODO: 사물함의 상태가 AVAILABLE로 변경되는지 확인
-        // TODO: lent가 삭제되었는지 확인
-        // TODO: lent_log가 생성되었는지 확인
+        // 사물함의 상태가 AVAILABLE 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
       });
 
       it('SHARE & SET_EXPIRE_FULL 사물함을 반납 시도', async () => {
@@ -120,9 +130,9 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
         // then
         // FIXME: 204가 응답되야 하는데 200이 응답됨
         expect(response.status).toBe(200);
-        // TODO: 사물함의 상태가 AVAILABLE로 변경되는지 확인
-        // TODO: lent가 삭제되었는지 확인
-        // TODO: lent_log가 생성되었는지 확인
+        // 사물함의 상태가 AVAILABLE 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
       });
 
       it('SHARE & SET_EXPIRE_AVAILABLE(대여 중인 사람이 2명) 반납 시도', async () => {
@@ -144,9 +154,9 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
         // then
         // FIXME: 204가 응답되야 하는데 200이 응답됨
         expect(response.status).toBe(200);
-        // TODO: 사물함의 상태가 AVAILABLE로 변경되는지 확인
-        // TODO: lent가 삭제되었는지 확인
-        // TODO: lent_log가 생성되었는지 확인
+        // 사물함의 상태가 AVAILABLE 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
       });
 
       it('PRIVATE & EXPIRED 반납 시도', async () => {
@@ -168,10 +178,9 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
         // then
         // FIXME: 204가 응답되야 하는데 200이 응답됨
         expect(response.status).toBe(200);
-        // TODO: 사물함의 상태가 AVAILABLE로 변경되는지 확인
-        // TODO: lent가 삭제되었는지 확인
-        // TODO: lent_log가 생성되었는지 확인
-        // TODO: ban_log가 생성되었는지 확인
+        // 사물함의 상태가 AVAILABLE 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
       });
 
       it('SHARE & EXPIRED(대여 중인 사람이 1명) 반납 시도', async () => {
@@ -193,10 +202,9 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
         // then
         // FIXME: 204가 응답되야 하는데 200이 응답됨
         expect(response.status).toBe(200);
-        // TODO: 사물함의 상태가 AVAILABLE로 변경되는지 확인
-        // TODO: lent가 삭제되었는지 확인
-        // TODO: lent_log가 생성되었는지 확인
-        // TODO: ban_log가 생성되었는지 확인
+        // 사물함의 상태가 AVAILABLE 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
       });
 
       describe('비정상적인 요청', () => {
@@ -257,6 +265,8 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
           const userId = 5;
           const token = jwtService.sign(adminUser);
 
+          const cabinetId = await lentComponent.getLentCabinetId(userId);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/admin/return/user/${userId}`)
@@ -265,9 +275,13 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
           // then
           // FIXME: 204가 응답되야 하는데 200이 응답됨
           expect(response.status).toBe(200);
-          // TODO: 사물함의 상태가 AVAILABLE로 변경되었는지 확인
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
+          // 사물함의 상태가 AVAILABLE 변경되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(userId))).toBe(true);
         });
 
         it('SHARE & SET_EXPIRE_FULL 반납 시도', async () => {
@@ -281,6 +295,8 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
           const userId = 13;
           const token = jwtService.sign(adminUser);
 
+          const cabinetId = await lentComponent.getLentCabinetId(userId);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/admin/return/user/${userId}`)
@@ -289,9 +305,15 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
           // then
           // FIXME: 204가 응답되야 하는데 200이 응답됨
           expect(response.status).toBe(200);
-          // TODO: 사물함의 상태가 AVAILABLE로 변경되었는지 확인
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
+          // 사물함의 상태가 SET_EXPIRE_AVAILABLE 변경되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(
+            CabinetStatusType.SET_EXPIRE_AVAILABLE,
+          );
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(userId))).toBe(true);
         });
       });
 
