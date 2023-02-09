@@ -9,6 +9,9 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { initTestDB, loadSQL } from '../utils';
 
+/* eslint-disable */
+const timekeeper = require('timekeeper');
+
 /**
  * 실제 테스트에 사용할 DB 이름을 적습니다.
  * 테스트 파일들이 각각 병렬적으로 실행되므로, DB 이름을 다르게 설정해야 합니다.
@@ -166,6 +169,91 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
       });
     });
 
+    describe('비정상적인 요청 - 권한이 없는 경우', () => {
+      it('권한이 없는 유저의 대여 요청인 경우', async () => {
+        // given
+        // PRIVATE & AVAILABLE 사물함
+        const cabinetId = 1;
+        const token = 'invalid_token';
+
+        // when
+        const response = await request(app.getHttpServer())
+          .post(`/api/lent/${cabinetId}`)
+          .set('Authorization', `Bearer ${token}`);
+
+        // then
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('패널티 | 밴인 유저에 대한 테스트', () => {
+      it('공유 사물함 패널티 기간중인 유저의 개인 사물함 대여 요청인 경우', async () => {
+        // given
+        timekeeper.freeze(new Date('2023-01-15T00:00:00Z'));
+        // 대여 중인 사물함 x 이며, 현재 공유사물함 패널티 기간중인 유저
+        const user: UserSessionDto = {
+          user_id: 3,
+          intra_id: 'penaltyuser1',
+        };
+        // PRIVATE & AVAILABLE 사물함
+        const cabinetId = 1;
+        const token = jwtService.sign(user);
+
+        // when
+        const response = await request(app.getHttpServer())
+          .post(`/api/lent/${cabinetId}`)
+          .set('Authorization', `Bearer ${token}`);
+
+        // then
+        expect(response.status).toBe(201);
+        timekeeper.reset();
+      });
+
+      it('공유 사물함 패널티 기간중인 유저의 공유 사물함 대여 요청인 경우', async () => {
+        // given
+        timekeeper.freeze(new Date('2023-01-15T00:00:00Z'));
+        // 대여 중인 사물함 x 이며, 현재 공유사물함 패널티 기간중인 유저
+        const user: UserSessionDto = {
+          user_id: 3,
+          intra_id: 'penaltyuser1',
+        };
+        // SHARE & AVAILABLE 사물함
+        const cabinetId = 5;
+        const token = jwtService.sign(user);
+
+        // when
+        const response = await request(app.getHttpServer())
+          .post(`/api/lent/${cabinetId}`)
+          .set('Authorization', `Bearer ${token}`);
+
+        // then
+        expect(response.status).toBe(403);
+        timekeeper.reset();
+      });
+
+      it('밴이 된 유저의 대여 요청', async () => {
+        // given
+        timekeeper.freeze(new Date('2023-01-15T00:00:00Z'));
+        // 대여 중인 사물함 x 이며, 밴 기간중인 유저
+        const user: UserSessionDto = {
+          user_id: 1,
+          intra_id: 'banuser1',
+        };
+        // SHARE & AVAILABLE 사물함
+        const cabinetId = 5;
+        const token = jwtService.sign(user);
+
+        // when
+        const response = await request(app.getHttpServer())
+          .post(`/api/lent/${cabinetId}`)
+          .set('Authorization', `Bearer ${token}`);
+
+        // then
+        expect(response.status).toBe(403);
+        timekeeper.reset();
+      });
+    });
+
     describe('비정상적인 요청 - 이미 대여중인 사물함이 있는 경우', () => {
       it('PRIVATE & AVAILABLE 사물함을 대여 시도', async () => {
         // given
@@ -309,8 +397,27 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
             .set('Authorization', `Bearer ${token}`);
 
           // then
-          // FIXME: 동아리 사물함 대여 시도 시 418이 응답되어야 하지만, 동아리 사물함의 lent_type을 SET_EXPIRE_FULL로 설정하여 409가 응답됨
           expect(response.status).toBe(409);
+        });
+
+        it('CLUB & AVAILABLE 사물함을 대여 시도', async () => {
+          // given
+          // 대여 중인 사물함 X 이며, ban 기록 없는 유저
+          const user: UserSessionDto = {
+            user_id: 2,
+            intra_id: 'banuser2',
+          };
+          // CLUB & AVAILABLE 사물함
+          const cabinetId = 15;
+          const token = jwtService.sign(user);
+
+          // when
+          const response = await request(app.getHttpServer())
+            .post(`/api/lent/${cabinetId}`)
+            .set('Authorization', `Bearer ${token}`);
+
+          // then
+          expect(response.status).toBe(418);
         });
       });
     });
