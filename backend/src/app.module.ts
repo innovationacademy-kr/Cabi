@@ -57,7 +57,7 @@ import { AdminModule } from './admin/admin.module';
             useFactory: () => [
               {
                 rootPath: join(__dirname, '../', 'deploy'),
-                exclude: ['/api/(.*)', '/v3/(.*)', '/auth/(.*)'],
+                exclude: ['/api/(.*)', '/auth/(.*)'],
               },
             ],
           }),

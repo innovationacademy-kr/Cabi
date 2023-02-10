@@ -39,7 +39,7 @@ lerna-debug.log*
 .env
 
 #yarn.lock
-frontend_v3/yarn.lock
+frontend/yarn.lock
 
 #db credentials
 backend/database/credentials/*

@@ -12,25 +12,33 @@ const SearchBar = () => {
   const searchInput = useRef<HTMLInputElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
-  const totalLength = useRef<number>(0);
+  const [totalLength, setTotalLength] = useState<number>(0);
 
   const searchClear = () => {
+    setSearchListById([]);
+    setSearchListByNum([]);
+    setTotalLength(0);
     if (searchInput.current) {
-      setSearchListById([]);
-      setSearchListByNum([]);
-      totalLength.current = 0;
       searchInput.current.value = "";
     }
   };
 
   const SearchBarButtonHandler = () => {
     if (searchInput.current) {
-      if (searchInput.current && searchInput.current.value.length <= 0) return;
-      navigate({
-        pathname: "search",
-        search: `?q=${searchInput.current.value}`,
-      });
-      searchClear();
+      const searchValue = searchInput.current.value;
+      if (searchValue.length <= 0) {
+        searchClear();
+        return alert("검색어를 입력해주세요.");
+      } else if (isNaN(Number(searchValue)) && searchValue.length <= 1) {
+        searchClear();
+        return alert("두 글자 이상의 검색어를 입력해주세요.");
+      } else {
+        navigate({
+          pathname: "search",
+          search: `?q=${searchInput.current.value}`,
+        });
+        searchClear();
+      }
     }
   };
 
@@ -48,33 +56,50 @@ const SearchBar = () => {
   };
 
   const searchInputHandler = async () => {
+    console.log("searchInputHandler");
+
     if (searchInput.current) {
       const searchValue = searchInput.current.value;
-
+      if (searchValue.length <= 0) {
+        setSearchListById([]);
+        setSearchListByNum([]);
+        setTotalLength(0);
+        return;
+      }
       if (isNaN(Number(searchValue))) {
         // intra_ID 검색
         if (searchValue.length <= 1) {
           setSearchListById([]);
-          totalLength.current = 0;
+          setTotalLength(0);
         } else {
           const searchResult = await axiosSearchByIntraId(searchValue);
+          console.log(searchResult.data.result);
+          setSearchListByNum([]);
           setSearchListById(searchResult.data.result);
-          totalLength.current = searchResult.data.result.length;
+          setTotalLength(searchResult.data.total_length);
         }
       } else {
         // cabinetnumber 검색
         if (searchValue.length <= 0) {
           setSearchListByNum([]);
-          totalLength.current = 0;
+          setTotalLength(0);
         } else {
           const searchResult = await axiosSearchByCabinetNum(
             Number(searchValue)
           );
+          setSearchListById([]);
           setSearchListByNum(searchResult.data.result);
-          totalLength.current = searchResult.data.result.length;
+          setTotalLength(searchResult.data.total_length);
         }
       }
     }
+  };
+
+  const cancelHandler = () => {
+    document.getElementById("searchBar")!.classList.remove("on");
+    document.getElementById("topNavLogo")!.classList.remove("pushOut");
+    document.getElementById("topNavButtonGroup")!.classList.remove("pushOut");
+    document.getElementById("topNavWrap")!.classList.remove("pushOut");
   };
 
   return (
@@ -91,14 +116,18 @@ const SearchBar = () => {
         }}
       ></SearchBarStyled>
       <SearchButtonStyled onClick={SearchBarButtonHandler} />
-      {totalLength.current > 0 && (
-        <SearchBarList
-          searchListById={searchListById}
-          searchListByNum={searchListByNum}
-          searchWord={searchInput.current?.value}
-          searchClear={searchClear}
-        />
+      {searchInput.current?.value && totalLength > 0 && (
+        <>
+          <SearchBarList
+            searchListById={searchListById}
+            searchListByNum={searchListByNum}
+            searchWord={searchInput.current?.value}
+            searchClear={searchClear}
+            totalLength={totalLength}
+          />
+        </>
       )}
+      <CancelButtonStyled onClick={cancelHandler}>취소</CancelButtonStyled>
     </SearchBarWrapperStyled>
   );
 };
@@ -127,7 +156,16 @@ const SearchButtonStyled = styled.button`
   height: 32px;
   position: absolute;
   top: 4px;
-  right: 14px;
+  left: 256px;
+`;
+
+const CancelButtonStyled = styled.button`
+  width: 60px;
+  height: 32px;
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
 `;
 
 export default SearchBar;

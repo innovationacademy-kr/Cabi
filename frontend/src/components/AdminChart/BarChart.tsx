@@ -10,9 +10,9 @@ const resData = [
 const result = resData.map((data) => ({
   floor: data.floor + "층",
   ["사용 중"]: data.used,
-  ["미사용"]: data.unused,
-  ["연체 중"]: data.overdue,
-  ["고장"]: data.disabled,
+  ["사용가능"]: data.unused,
+  ["반납지연"]: data.overdue,
+  ["사용불가"]: data.disabled,
 }));
 
 interface IRentInfo {
@@ -41,9 +41,9 @@ const convert = (data: IRentInfo[]) =>
     }) => ({
       floor: floor + "층",
       ["사용 중"]: used,
-      ["미사용"]: unused,
-      ["연체 중"]: overdue,
-      ["고장"]: disabled,
+      ["사용가능"]: unused,
+      ["반납지연"]: overdue,
+      ["사용불가"]: disabled,
     })
   );
 
@@ -54,70 +54,68 @@ const convert = (data: IRentInfo[]) =>
 // 색상 변경은 colors 프롭 안에 내용 수정
 
 const BarChart = ({ data }: { data: IRentInfo[] }) => (
-  <BarContainerStyled>
-    <BarChartStyled>
-      <ResponsiveBar
-        theme={{
-          legends: { text: { fontSize: "1.5rem" } },
-          axis: { ticks: { text: { fontSize: "1.25rem" } } },
-          labels: { text: { fontSize: "1.5rem" } },
-        }}
-        data={convert(data)}
-        keys={["고장", "연체 중", "사용 중", "미사용"]}
-        indexBy="floor"
-        margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-        padding={0.3}
-        valueScale={{ type: "linear" }}
-        indexScale={{ type: "band", round: true }}
-        colors={["#595959", "#ff4e4e", "#e2e4e3", "#9747ff"]}
-        borderColor={{
-          from: "color",
-          modifiers: [["darker", 1.6]],
-        }}
-        axisTop={null}
-        axisRight={null}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "",
-          legendPosition: "middle",
-          legendOffset: 32,
-        }}
-        axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "",
-          legendPosition: "middle",
-          legendOffset: -40,
-        }}
-        labelSkipWidth={12}
-        labelSkipHeight={12}
-        labelTextColor={{
-          from: "color",
-          modifiers: [["darker", 1.6]],
-        }}
-        legends={[
-          {
-            dataFrom: "keys",
-            anchor: "bottom-right",
-            direction: "column",
-            justify: false,
-            translateX: 120,
-            translateY: 0,
-            itemsSpacing: 2,
-            itemWidth: 100,
-            itemHeight: 20,
-            itemDirection: "left-to-right",
-            itemOpacity: 0.85,
-            symbolSize: 20,
-            effects: [
-              {
-                on: "hover",
-                style: {
-                  itemOpacity: 1,
-                },
+  <BarChartStyled>
+    <ResponsiveBar
+      theme={{
+        legends: { text: { fontSize: "1.5rem" } },
+        axis: { ticks: { text: { fontSize: "1.25rem" } } },
+        labels: { text: { fontSize: "1.5rem" } },
+      }}
+      data={convert(data)}
+      keys={["사용불가", "반납지연", "사용 중", "사용가능"]}
+      indexBy="floor"
+      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+      padding={0.3}
+      valueScale={{ type: "linear" }}
+      indexScale={{ type: "band", round: true }}
+      colors={["#595959", "#ff4e4e", "#e2e4e3", "#9747ff"]}
+      borderColor={{
+        from: "color",
+        modifiers: [["darker", 1.6]],
+      }}
+      axisTop={null}
+      axisRight={null}
+      axisBottom={{
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: "",
+        legendPosition: "middle",
+        legendOffset: 32,
+      }}
+      axisLeft={{
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: "",
+        legendPosition: "middle",
+        legendOffset: -40,
+      }}
+      labelSkipWidth={12}
+      labelSkipHeight={12}
+      labelTextColor={{
+        from: "color",
+        modifiers: [["darker", 1.6]],
+      }}
+      legends={[
+        {
+          dataFrom: "keys",
+          anchor: "bottom-right",
+          direction: "column",
+          justify: false,
+          translateX: 120,
+          translateY: 0,
+          itemsSpacing: 20,
+          itemWidth: 100,
+          itemHeight: 20,
+          itemDirection: "left-to-right",
+          itemOpacity: 0.85,
+          symbolSize: 20,
+          effects: [
+            {
+              on: "hover",
+              style: {
+                itemOpacity: 1,
               },
             ],
           },

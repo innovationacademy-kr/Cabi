@@ -165,21 +165,18 @@ export const axiosSearchByCabinetNum = async (number: number) => {
   }
 };
 
-const axiosGetActivationListURL =
-  "/api/admin/search/cabinet/banned?page=0&length=10";
-export const axiosGetActivationList = async () => {
+const axiosSearchDetailByIntraIdURL = "/api/admin/search/";
+export const axiosSearchDetailByIntraId = async (
+  intraId: string,
+  page: number
+) => {
   try {
-    const response = await instance.get(axiosGetActivationListURL);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosGetBanListURL = "/api/admin/search/cabinet/broken?page=0&length=10";
-export const axiosGetBanList = async () => {
-  try {
-    const response = await instance.get(axiosGetBanListURL);
+    const response = await instance.get(
+      axiosSearchDetailByIntraIdURL + intraId,
+      {
+        params: { page: page, length: 10 },
+      }
+    );
     return response;
   } catch (error) {
     throw error;

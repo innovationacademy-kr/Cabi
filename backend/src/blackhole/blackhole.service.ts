@@ -95,7 +95,7 @@ export class BlackholeService implements OnApplicationBootstrap {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async deleteBlackholedUser(user: UserDto): Promise<void> {
     this.logger.debug(

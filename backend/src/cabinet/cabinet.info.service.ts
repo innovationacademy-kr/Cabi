@@ -88,7 +88,7 @@ export class CabinetInfoService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async updateCabinetStatus(
     cabinet_id: number,
