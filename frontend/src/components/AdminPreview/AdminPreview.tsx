@@ -1,7 +1,3 @@
-import {
-  axiosGetActivationList,
-  axiosGetBanList,
-} from "@/api/axios/axios.custom";
 import { ActivationDto, BanDto } from "@/types/dto/lent.dto";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -43,15 +39,15 @@ const AdminPreview = ({
   const [activationList, setActivationList] = useState<ActivationDto[]>([]);
   const [banList, setBanList] = useState<BanDto[]>([]);
 
-  useEffect(() => {
-    async function getData() {
-      const { data: activationResponse } = await axiosGetActivationList();
-      setActivationList(activationResponse.result);
-      const { data: banResponse } = await axiosGetBanList();
-      setBanList(banResponse.result);
-    }
-    getData();
-  }, []);
+  //useEffect(() => {
+  //  async function getData() {
+  //    const { data: activationResponse } = await axiosGetActivationList();
+  //    setActivationList(activationResponse.result);
+  //    const { data: banResponse } = await axiosGetBanList();
+  //    setBanList(banResponse.result);
+  //  }
+  //  getData();
+  //}, []);
   return (
     <AdminPreviewStyled>
       <AdminScrollStyled>

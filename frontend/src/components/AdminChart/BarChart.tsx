@@ -117,17 +117,17 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
               style: {
                 itemOpacity: 1,
               },
-            ],
-          },
-        ]}
-        role="application"
-        ariaLabel="Admin Bar Chart"
-        barAriaLabel={function (e) {
-          return "Admin Bar Chart";
-        }}
-      />
-    </BarChartStyled>
-  </BarContainerStyled>
+            },
+          ],
+        },
+      ]}
+      role="application"
+      ariaLabel="Admin Bar Chart"
+      barAriaLabel={function (e) {
+        return "Admin Bar Chart";
+      }}
+    />
+  </BarChartStyled>
 );
 
 const BarContainerStyled = styled.div`
