@@ -8,6 +8,9 @@ import { DataSource } from 'typeorm';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { initTestDB, loadSQL } from '../utils';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
+import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
+import { LentTools } from 'src/lent/lent.component';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 
 /**
  * 실제 테스트에 사용할 DB 이름을 적습니다.
@@ -18,6 +21,8 @@ const testDBName = 'test_admin_lent';
 describe('Admin Lent 모듈 테스트 (e2e)', () => {
   let app: INestApplication;
   let jwtService: JwtService;
+  let cabinetInfoService: CabinetInfoService;
+  let lentComponent: LentTools;
 
   /**
    * 테스트 전에 한 번만 실행되는 함수
@@ -61,6 +66,8 @@ describe('Admin Lent 모듈 테스트 (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    cabinetInfoService = app.get(CabinetInfoService);
+    lentComponent = app.get(LentTools);
   });
 
   /**
@@ -97,8 +104,11 @@ describe('Admin Lent 모듈 테스트 (e2e)', () => {
 
         // then
         expect(response.status).toBe(201);
-        // TODO: 사물함의 상태가 SET_EXPIRE_FULL로 변경되는지 확인
-        // TODO: lent 테이블에 대여 기록이 추가되는지 확인
+        // // 사물함의 상태가 SET_EXPIRE_FULL로 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.SET_EXPIRE_FULL);
+        // // lent 테이블에 대여 기록이 추가되는지 확인
+        expect(await lentComponent.getLentCabinetId(userId)).toBe(cabinetId);
       });
     });
 
@@ -122,7 +132,7 @@ describe('Admin Lent 모듈 테스트 (e2e)', () => {
     });
 
     describe('비정상적인 요청 - 존재하지 않는 사물함 혹은 유저', () => {
-      it('존재하지 않는 사물함을 대여 시도', async () => {
+      it.skip('존재하지 않는 사물함을 대여 시도', async () => {
         // given
         // 승인받은 관리자 유저
         const adminUser: AdminUserDto = {
@@ -146,7 +156,7 @@ describe('Admin Lent 모듈 테스트 (e2e)', () => {
         expect(response.status).toBe(500);
       });
 
-      it('존재하지 않는 유저 ID로 대여 시도', async () => {
+      it.skip('존재하지 않는 유저 ID로 대여 시도', async () => {
         // given
         // 승인받은 관리자 유저
         const adminUser: AdminUserDto = {

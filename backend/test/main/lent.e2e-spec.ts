@@ -8,7 +8,10 @@ import { DataSource } from 'typeorm';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { initTestDB, loadSQL } from '../utils';
-
+import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
+import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
+import { LentTools } from 'src/lent/lent.component';
+import { BanService } from 'src/ban/ban.service';
 /* eslint-disable */
 const timekeeper = require('timekeeper');
 
@@ -21,6 +24,9 @@ const testDBName = 'test_main_lent';
 describe('Main Lent 모듈 테스트 (e2e)', () => {
   let app: INestApplication;
   let jwtService: JwtService;
+  let cabinetInfoService: CabinetInfoService;
+  let lentComponent: LentTools;
+  let banService: BanService;
 
   /**
    * 테스트 전에 한 번만 실행되는 함수
@@ -61,9 +67,11 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
         expiresIn: process.env.JWT_EXPIREIN,
       },
     });
-
     app = moduleFixture.createNestApplication();
     await app.init();
+    cabinetInfoService = app.get(CabinetInfoService);
+    lentComponent = app.get(LentTools);
+    banService = app.get(BanService);
   });
 
   /**
@@ -71,11 +79,16 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
    * 테스트용 DB의 샘플 데이터를 초기화합니다.
    */
   beforeEach(async () => {
+    timekeeper.freeze(new Date('2023-01-15T00:00:00Z'));
     const dataSource = app.get(DataSource);
     const queryRunner = dataSource.createQueryRunner();
     await queryRunner.connect();
     await loadSQL(queryRunner, 'test/test_db.sql');
     await queryRunner.release();
+  });
+
+  afterEach(() => {
+    timekeeper.reset();
   });
 
   describe('/api/lent/:cabinet_id (POST)', () => {
@@ -98,8 +111,13 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
         // then
         expect(response.status).toBe(201);
-        // TODO: 사물함의 상태가 SET_EXPIRE_FULL로 변경되는지 확인
-        // TODO: lent 테이블에 대여 기록이 추가되는지 확인
+        // // 사물함의 상태가 SET_EXPIRE_FULL로 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.SET_EXPIRE_FULL);
+        // // lent 테이블에 대여 기록이 추가되는지 확인
+        expect(await lentComponent.getLentCabinetId(user.user_id)).toBe(
+          cabinetId,
+        );
       });
 
       it('SHARE & AVAILABLE 사물함을 대여 시도', async () => {
@@ -120,8 +138,13 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
         // then
         expect(response.status).toBe(201);
-        // TODO: 사물함의 상태가 AVAILABLE로 유지되는지 확인
-        // TODO: lent 테이블에 대여 기록이 추가되는지 확인
+        // // 사물함의 상태가 AVAILABLE 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
+        // // lent 테이블에 대여 기록이 추가되는지 확인
+        expect(await lentComponent.getLentCabinetId(user.user_id)).toBe(
+          cabinetId,
+        );
       });
 
       it('SHARE & SET_EXPIRE_AVAILABLE(대여 중인 사람이 1명) 사물함을 대여 시도', async () => {
@@ -142,8 +165,13 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
         // then
         expect(response.status).toBe(201);
-        // TODO: 사물함의 상태가 SET_EXPIRE_AVAILABLE로 유지되는지 확인
-        // TODO: lent 테이블에 대여 기록이 추가되는지 확인
+        // // 사물함의 상태가 SET_EXPIRE_AVAILABLE로 유지되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.SET_EXPIRE_AVAILABLE);
+        // // lent 테이블에 대여 기록이 추가되는지 확인
+        expect(await lentComponent.getLentCabinetId(user.user_id)).toBe(
+          cabinetId,
+        );
       });
 
       it('SHARE & SET_EXPIRE_AVAILABLE(대여 중인 사람이 2명) 사물함을 대여 시도', async () => {
@@ -164,8 +192,13 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
         // then
         expect(response.status).toBe(201);
-        // TODO: 사물함의 상태가 SET_EXPIRE_FULL로 변경되는지 확인
-        // TODO: lent 테이블에 대여 기록이 추가되는지 확인
+        // // 사물함의 상태가 SET_EXPIRE_FULL로 변경되는지 확인
+        const cabinetInfo = await cabinetInfoService.getCabinetInfo(cabinetId);
+        expect(cabinetInfo.status).toBe(CabinetStatusType.SET_EXPIRE_FULL);
+        // // lent 테이블에 대여 기록이 추가되는지 확인
+        expect(await lentComponent.getLentCabinetId(user.user_id)).toBe(
+          cabinetId,
+        );
       });
     });
 
@@ -189,7 +222,6 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
     describe('패널티 | 밴인 유저에 대한 테스트', () => {
       it('공유 사물함 패널티 기간중인 유저의 개인 사물함 대여 요청인 경우', async () => {
         // given
-        timekeeper.freeze(new Date('2023-01-15T00:00:00Z'));
         // 대여 중인 사물함 x 이며, 현재 공유사물함 패널티 기간중인 유저
         const user: UserSessionDto = {
           user_id: 3,
@@ -206,12 +238,10 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
         // then
         expect(response.status).toBe(201);
-        timekeeper.reset();
       });
 
       it('공유 사물함 패널티 기간중인 유저의 공유 사물함 대여 요청인 경우', async () => {
         // given
-        timekeeper.freeze(new Date('2023-01-15T00:00:00Z'));
         // 대여 중인 사물함 x 이며, 현재 공유사물함 패널티 기간중인 유저
         const user: UserSessionDto = {
           user_id: 3,
@@ -220,7 +250,6 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
         // SHARE & AVAILABLE 사물함
         const cabinetId = 5;
         const token = jwtService.sign(user);
-
         // when
         const response = await request(app.getHttpServer())
           .post(`/api/lent/${cabinetId}`)
@@ -228,12 +257,10 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
         // then
         expect(response.status).toBe(403);
-        timekeeper.reset();
       });
 
       it('밴이 된 유저의 대여 요청', async () => {
         // given
-        timekeeper.freeze(new Date('2023-01-15T00:00:00Z'));
         // 대여 중인 사물함 x 이며, 밴 기간중인 유저
         const user: UserSessionDto = {
           user_id: 1,
@@ -250,7 +277,6 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
         // then
         expect(response.status).toBe(403);
-        timekeeper.reset();
       });
     });
 
@@ -529,6 +555,8 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
           };
           const token = jwtService.sign(user);
 
+          const cabinetId = await lentComponent.getLentCabinetId(user.user_id);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/lent/return`)
@@ -536,9 +564,15 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
           // then
           expect(response.status).toBe(204);
-          // TODO: 사물함의 상태가 AVAILABLE로 변경되었는지 확인
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
+          // // 사물함의 상태가 AVAILABLE로 변경되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(user.user_id))).toBe(
+            true,
+          );
         });
 
         it('SHARE & SET_EXPIRE_FULL 반납 시도', async () => {
@@ -550,6 +584,8 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
           };
           const token = jwtService.sign(user);
 
+          const cabinetId = await lentComponent.getLentCabinetId(user.user_id);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/lent/return`)
@@ -557,9 +593,17 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
           // then
           expect(response.status).toBe(204);
-          // TODO: 사물함의 상태가 SET_EXPIRE_AVAILABLE로 변경되었는지 확인
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
+          // 사물함의 상태가 SET_EXPIRE_AVAILABLE로 변경되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(
+            CabinetStatusType.SET_EXPIRE_AVAILABLE,
+          );
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(user.user_id))).toBe(
+            true,
+          );
         });
 
         it('SHARE & SET_EXPIRE_AVAILABLE(대여 중인 사람이 2명) 반납 시도', async () => {
@@ -571,6 +615,8 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
           };
           const token = jwtService.sign(user);
 
+          const cabinetId = await lentComponent.getLentCabinetId(user.user_id);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/lent/return`)
@@ -578,9 +624,17 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
           // then
           expect(response.status).toBe(204);
-          // TODO: 사물함의 상태가 SET_EXPIRE_AVAILABLE로 유지되는지 확인
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
+          // 사물함의 상태가 SET_EXPIRE_AVAILABLE로 유지되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(
+            CabinetStatusType.SET_EXPIRE_AVAILABLE,
+          );
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(user.user_id))).toBe(
+            true,
+          );
         });
 
         it('SHARE & SET_EXPIRE_AVAILABLE(대여 중인 사람이 1명) 반납 시도', async () => {
@@ -592,6 +646,8 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
           };
           const token = jwtService.sign(user);
 
+          const cabinetId = await lentComponent.getLentCabinetId(user.user_id);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/lent/return`)
@@ -599,9 +655,15 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
           // then
           expect(response.status).toBe(204);
-          // TODO: 사물함의 상태가 AVAILABLE로 변경되는지 확인
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
+          // 사물함의 상태가 AVAILABLE로 변경되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(user.user_id))).toBe(
+            true,
+          );
         });
 
         it('SHARE & AVAILABLE 반납 시도', async () => {
@@ -613,6 +675,8 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
           };
           const token = jwtService.sign(user);
 
+          const cabinetId = await lentComponent.getLentCabinetId(user.user_id);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/lent/return`)
@@ -620,8 +684,15 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
           // then
           expect(response.status).toBe(204);
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
+          // 사물함의 상태가 AVAILABLE로 유지되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(user.user_id))).toBe(
+            true,
+          );
         });
 
         it('PRIVATE & EXPIRED 반납 시도', async () => {
@@ -633,6 +704,8 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
           };
           const token = jwtService.sign(user);
 
+          const cabinetId = await lentComponent.getLentCabinetId(user.user_id);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/lent/return`)
@@ -640,10 +713,16 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
           // then
           expect(response.status).toBe(204);
-          // TODO: 사물함의 상태가 AVAILABLE로 변경되는지 확인
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
-          // TODO: ban_log가 생성되었는지 확인
+          // 사물함의 상태가 AVAILABLE로 변경되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(user.user_id))).toBe(
+            true,
+          );
+          await banService.isBlocked(user.user_id, undefined);
         });
 
         it('SHARE & EXPIRED(대여 중인 사람이 1명) 반납 시도', async () => {
@@ -655,6 +734,8 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
           };
           const token = jwtService.sign(user);
 
+          const cabinetId = await lentComponent.getLentCabinetId(user.user_id);
+
           // when
           const response = await request(app.getHttpServer())
             .delete(`/api/lent/return`)
@@ -662,10 +743,16 @@ describe('Main Lent 모듈 테스트 (e2e)', () => {
 
           // then
           expect(response.status).toBe(204);
-          // TODO: 사물함의 상태가 AVAILABLE로 변경되는지 확인
-          // TODO: lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
-          // TODO: lent_log가 생성되었는지 확인
-          // TODO: ban_log가 생성되었는지 확인
+          // 사물함의 상태가 AVAILABLE로 변경되는지 확인
+          const cabinetInfo = await cabinetInfoService.getCabinetInfo(
+            cabinetId,
+          );
+          expect(cabinetInfo.status).toBe(CabinetStatusType.AVAILABLE);
+          // lent가 삭제되었는지 확인(해당 유저가 대여중인지 확인)
+          expect(!(await lentComponent.getLentCabinetId(user.user_id))).toBe(
+            true,
+          );
+          await banService.isBlocked(user.user_id, undefined);
         });
       });
 
