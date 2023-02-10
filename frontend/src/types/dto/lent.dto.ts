@@ -18,3 +18,15 @@ export interface LentLogDto {
   return_time: Date;
   user_id: number;
 }
+
+export interface ActivationDto {
+  floor: number;
+  cabinet_num: number;
+  note: string | null;
+}
+
+export interface BanDto {
+  cabinet_num: number;
+  floor: number;
+  section: string;
+}

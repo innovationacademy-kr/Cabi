@@ -130,6 +130,16 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
   </BarChartStyled>
 );
 
+const BarContainerStyled = styled.div`
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const BarChartStyled = styled.div`
   width: 500px;
   height: 500px;
