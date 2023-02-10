@@ -21,13 +21,13 @@ const SearchBarList = ({
   searchListById,
   searchListByNum,
   searchWord,
-  searchClear,
+  resetSearchState,
   totalLength,
   targetIndex,
 }: {
   searchListById: ISearchListByIntraId[];
   searchListByNum: CabinetInfo[];
-  searchClear: () => void;
+  resetSearchState: () => void;
   searchWord?: string;
   totalLength: number;
   targetIndex?: number;
@@ -40,7 +40,7 @@ const SearchBarList = ({
             key={index}
             inputText={searchWord}
             resultText={item.intra_id}
-            searchClear={searchClear}
+            resetSearchState={resetSearchState}
             targetIndex={targetIndex === index}
           />
         );
@@ -53,7 +53,7 @@ const SearchBarList = ({
             inputText={searchWord}
             resultText={item.cabinet_num.toString()}
             isNum={true}
-            searchClear={searchClear}
+            resetSearchState={resetSearchState}
             targetIndex={targetIndex === index}
           />
         );

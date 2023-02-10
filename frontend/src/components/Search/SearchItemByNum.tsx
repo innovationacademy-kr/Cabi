@@ -13,7 +13,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 
-const handleIntraId = (lent_info: LentDto[]) => {
+const reformIntraId = (lent_info: LentDto[]) => {
   if (lent_info.length === 0) {
     return "-";
   } else {
@@ -41,7 +41,7 @@ const SearchItemByNum = (props: CabinetInfo) => {
     lent_info,
   } = props;
 
-  const clickHandler = () => {
+  const clickSearchItem = () => {
     if (currentCabinetId === cabinet_id) {
       closeCabinet();
       return;
@@ -63,14 +63,14 @@ const SearchItemByNum = (props: CabinetInfo) => {
     <WrapperStyled
       className="cabiButton"
       isSelected={currentCabinetId === cabinet_id}
-      onClick={clickHandler}
+      onClick={clickSearchItem}
     >
       <RectangleStyled status={status}>{cabinet_num}</RectangleStyled>
       <TextWrapper>
         <LocationStyled>{`${floor}층 - ${section}`}</LocationStyled>
         <NameWrapperStyled>
           <IconStyled lent_type={lent_type} />
-          <NameStyled>{handleIntraId(lent_info)}</NameStyled>
+          <NameStyled>{reformIntraId(lent_info)}</NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
     </WrapperStyled>

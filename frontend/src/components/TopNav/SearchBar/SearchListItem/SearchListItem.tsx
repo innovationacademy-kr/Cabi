@@ -7,14 +7,14 @@ const SearchListItem = (props: {
   inputText?: string;
   resultText: string;
   isNum?: boolean;
-  searchClear: () => void;
+  resetSearchState: () => void;
   targetIndex?: boolean;
 }) => {
-  const { floor, resultText, inputText, isNum, searchClear, targetIndex } =
+  const { floor, resultText, inputText, isNum, resetSearchState, targetIndex } =
     props;
   const navigate = useNavigate();
 
-  const imageHandler = (isCabinet: boolean | undefined) => {
+  const chooseImage = (isCabinet: boolean | undefined) => {
     if (isCabinet) return "/src/assets/images/cabinet.svg";
     return "/src/assets/images/privateIcon.svg";
   };
@@ -27,10 +27,10 @@ const SearchListItem = (props: {
           pathname: "search",
           search: `?q=${resultText}`,
         });
-        searchClear();
+        resetSearchState();
       }}
     >
-      <ImgStyled src={imageHandler(isNum)} alt="유저" />
+      <ImgStyled src={chooseImage(isNum)} alt="유저" />
       {isNum && <span>{floor}F - </span>}
       <ChangeToHTML origin={resultText} replace={inputText} />
     </LiStyled>

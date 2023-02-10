@@ -30,7 +30,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   );
   const { openCabinet, closeCabinet } = useMenu();
 
-  const clickHandler = () => {
+  const clickSearchItem = () => {
     if (currentIntraId === intra_id) {
       resetCurrentIntraId();
       closeCabinet();
@@ -57,7 +57,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     <WrapperStyled
       className="cabiButton"
       isSelected={currentIntraId === intra_id}
-      onClick={clickHandler}
+      onClick={clickSearchItem}
     >
       <RectangleStyled status={cabinetInfo.status}>
         {cabinetInfo.cabinet_num}
@@ -76,7 +76,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     <WrapperStyled
       className="cabiButton"
       isSelected={currentIntraId === intra_id}
-      onClick={clickHandler}
+      onClick={clickSearchItem}
     >
       <RectangleStyled>-</RectangleStyled>
       <TextWrapper>

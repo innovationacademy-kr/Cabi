@@ -19,7 +19,7 @@ const SearchBar = () => {
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
 
-  const searchClear = () => {
+  const resetSearchState = () => {
     setSearchListById([]);
     setSearchListByNum([]);
     setTotalLength(0);
@@ -30,21 +30,21 @@ const SearchBar = () => {
     }
   };
 
-  const SearchBarButtonHandler = () => {
+  const clickSearchButton = () => {
     if (searchInput.current) {
       const searchValue = searchInput.current.value;
       if (searchValue.length <= 0) {
-        searchClear();
+        resetSearchState();
         return alert("검색어를 입력해주세요.");
       } else if (isNaN(Number(searchValue)) && searchValue.length <= 1) {
-        searchClear();
+        resetSearchState();
         return alert("두 글자 이상의 검색어를 입력해주세요.");
       } else {
         navigate({
           pathname: "search",
           search: `?q=${searchInput.current.value}`,
         });
-        searchClear();
+        resetSearchState();
       }
     }
   };
@@ -62,7 +62,7 @@ const SearchBar = () => {
     };
   };
 
-  const searchInputHandler = async () => {
+  const typeSearchInput = async () => {
     if (searchInput.current) {
       setSearchValue(searchInput.current.value);
       const searchValue = searchInput.current.value;
@@ -102,8 +102,8 @@ const SearchBar = () => {
     }
   };
 
-  const cancelHandler = () => {
-    searchClear();
+  const clickCancelButton = () => {
+    resetSearchState();
     document.getElementById("searchBar")!.classList.remove("on");
     document.getElementById("topNavLogo")!.classList.remove("pushOut");
     document.getElementById("topNavButtonGroup")!.classList.remove("pushOut");
@@ -131,9 +131,9 @@ const SearchBar = () => {
     }
   }, [targetIndex]);
 
-  const onKeyHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      SearchBarButtonHandler();
+      clickSearchButton();
     } else if (e.key == "ArrowUp") {
       if (totalLength > 0) {
         setTargetIndex((prev) =>
@@ -163,19 +163,19 @@ const SearchBar = () => {
           onFocus={() => {
             setIsFocus(true);
           }}
-          onChange={debounce(searchInputHandler, 300)}
-          onKeyDown={onKeyHandler}
+          onChange={debounce(typeSearchInput, 300)}
+          onKeyDown={handleInputKey}
         ></SearchBarInputStyled>
-        <SearchButtonStyled onClick={SearchBarButtonHandler} />
+        <SearchButtonStyled onClick={clickSearchButton} />
       </SearchBarStyled>
-      <CancelButtonStyled onClick={cancelHandler}>취소</CancelButtonStyled>
+      <CancelButtonStyled onClick={clickCancelButton}>취소</CancelButtonStyled>
       {isFocus && searchInput.current?.value && totalLength > 0 && (
         <>
           <SearchBarList
             searchListById={searchListById}
             searchListByNum={searchListByNum}
             searchWord={searchValue}
-            searchClear={searchClear}
+            resetSearchState={resetSearchState}
             totalLength={totalLength}
             targetIndex={targetIndex}
           />
