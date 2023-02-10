@@ -35,6 +35,9 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# IDE - WebStrom
+**/*.idea
+
 #env
 .env
 
