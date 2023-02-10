@@ -141,8 +141,10 @@ const BarContainerStyled = styled.div`
 `;
 
 const BarChartStyled = styled.div`
-  width: 500px;
+  max-width: 500px;
+  min-width: 330px;
   height: 500px;
+  width: 50%;
   display: flex;
   justify-content: center;
   align-items: center;

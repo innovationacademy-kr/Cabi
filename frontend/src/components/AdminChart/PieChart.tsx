@@ -85,12 +85,12 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
             direction: "row",
             justify: false,
             translateX: 0,
-            translateY: 56,
-            itemsSpacing: 30,
+            translateY: 0,
+            itemsSpacing: 5,
             itemWidth: 100,
             itemHeight: 18,
             itemTextColor: "#999",
-            itemDirection: "left-to-right",
+            itemDirection: "top-to-bottom",
             itemOpacity: 1,
             symbolSize: 18,
             symbolShape: "circle",
@@ -120,7 +120,8 @@ const PieChartContainerStyled = styled.div`
 `;
 
 const PieChartStyled = styled.div`
-  width: 500px;
+  max-width: 500px;
+  min-width: 330px;
   height: 500px;
   display: flex;
   justify-content: center;
