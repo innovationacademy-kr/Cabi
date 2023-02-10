@@ -12,13 +12,13 @@ import * as request from 'supertest';
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
 import LentType from "src/enums/lent.type.enum";
 
-describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
+describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 	let app: INestApplication;
 	let jwtService: JwtService;
 	let token: string;
 
 	beforeAll(async () =>{
-		await initTestDB('test_admin_cabinet');
+		await initTestDB('test_main_cabinet');
 		initializeTransactionalContext();
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [AppModule],
@@ -34,7 +34,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 					username: 'test_user',
 					port: 3310,
 					password: 'test_password',
-					database: 'test_admin_cabinet',
+					database: 'test_main_cabinet',
 					entities: ['src/**/*.entity.ts'],
 					synchronize: true,
 					dropSchema: true,
@@ -52,18 +52,10 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 		 app = moduleFixture.createNestApplication();
 		 await app.init();
-
-		// given : 권한 있는 관리자의 토큰
-		const adminUser: AdminUserDto = {
-			email: 'normal@example.com',
-			role: AdminUserRole.ADMIN,
-		}
-		token = jwtService.sign(adminUser);
 	});
 
-	it('DB 연동 && 토큰 발급 확인', () => {
+	it('DB 연동 확인', () => {
 		expect(app).toBeDefined();
-		expect(token).toBeDefined();
 	});
 
 	beforeEach(async () => {

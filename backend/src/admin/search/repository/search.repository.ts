@@ -63,8 +63,17 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       where: {
         intra_id: Like(`%${intraId}%`),
       },
-      take: length,
-      skip: page * length,
+      // Lent가 null이 아닌 값들은 Lent.cabinet.floor, Lent.cabinet.cabinet_num로 오름차순 정렬
+      // Lent가 null인 값들은 intra_id로 오름차순 정렬
+      order: {
+        Lent: {
+          cabinet: {
+            floor: 'ASC',
+            cabinet_num: 'ASC',
+          },
+        },
+        intra_id: 'ASC',
+      },
     });
 
     const rtn = {
@@ -90,21 +99,18 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       ),
       total_length: result[1],
     };
-    // lent가 있는 값들을 우선적으로 하며, cabinet_id를 오름차순으로 정렬
+    // rtn에서 cabinetInfo가 null인 값들을 배열의 끝으로 보낸다.
     rtn.result.sort((a, b) => {
-      if (a.cabinetInfo && b.cabinetInfo) {
-        return a.cabinetInfo.cabinet_id - b.cabinetInfo.cabinet_id;
-      } else if (!a.cabinetInfo && !b.cabinetInfo) {
-        if (a.intra_id < b.intra_id) {
-          return -1;
-        } else if (a.intra_id > b.intra_id) {
-          return 1;
-        } else {
-          return 0;
-        }
+      if (a.cabinetInfo === null && b.cabinetInfo !== null) {
+        return 1;
+      } else if (a.cabinetInfo !== null && b.cabinetInfo === null) {
+        return -1;
+      } else {
+        return 0;
       }
     });
-
+    // take length, skip page * length
+    rtn.result = rtn.result.slice(page * length, (page + 1) * length);
     return rtn;
   }
 

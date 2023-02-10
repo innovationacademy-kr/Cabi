@@ -35,11 +35,14 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# IDE - WebStrom
+**/*.idea
+
 #env
 .env
 
 #yarn.lock
-frontend_v3/yarn.lock
+frontend/yarn.lock
 
 #db credentials
 backend/database/credentials/*
