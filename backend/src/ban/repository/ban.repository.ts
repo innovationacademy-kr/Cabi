@@ -43,7 +43,7 @@ export class BanRepository implements IBanRepository {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async addToBanLogByUserId(
     lent: Lent,
