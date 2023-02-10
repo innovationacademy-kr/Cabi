@@ -93,7 +93,7 @@ const SearchPage = () => {
     setSearchListByIntraId((prev) => [...prev, ...searchResult.data.result]);
   };
 
-  const handleMoreButton = () => {
+  const clickMoreButton = () => {
     handleMoreSearchDetailByIntraId();
   };
 
@@ -120,7 +120,7 @@ const SearchPage = () => {
             </ListWrapperStyled>
             {totalSearchList > 10 &&
               currentPage.current * 10 < totalSearchList - 10 && (
-                <MoreButtonStyled onClick={handleMoreButton}>
+                <MoreButtonStyled onClick={clickMoreButton}>
                   더보기
                 </MoreButtonStyled>
               )}
