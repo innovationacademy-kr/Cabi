@@ -8,14 +8,12 @@ services:
     environment:
       MARIADB_DATABASE_HOST: ${HOST}
       MARIADB_DATABASE: ${DATABASE}
-      MARIADB_DATABASE_V4: ${DATABASE_V4}
       MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${ROOT_PASSWORD}
     ports:
-      - "3307:3306"
-    tty:
-      true
+      - '3307:3306'
+    tty: true
   gateway:
     container_name: nginx_gateway
     image: nginx:latest

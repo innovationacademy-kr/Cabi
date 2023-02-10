@@ -26,16 +26,17 @@ const SearchPage = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalSearchList, setTotalSearchList] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const currentPage = useRef(0);
   const searchValue = useRef("");
 
   // 검색 초기화
   const initialize = () => {
+    console.log("currentPage: " + currentPage);
     setIsLoading(true);
     setSearchListByIntraId([]);
     setSearchListByNum([]);
     setTotalSearchList(0);
-    setCurrentPage(0);
+    currentPage.current = 0;
     searchValue.current = searchParams.get("q") ?? "";
   };
 
@@ -43,7 +44,7 @@ const SearchPage = () => {
   const handleSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
-      currentPage
+      currentPage.current
     );
     console.log(searchResult.data);
     setSearchListByIntraId(searchResult.data.result);
@@ -83,11 +84,11 @@ const SearchPage = () => {
   const handleMoreSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
-      currentPage + 1
+      currentPage.current + 1
     );
     console.log(searchResult.data);
+    currentPage.current += 1;
     setSearchListByIntraId((prev) => [...prev, ...searchResult.data.result]);
-    setCurrentPage((prev) => prev + 1);
   };
 
   const handleMoreButton = () => {
@@ -116,7 +117,7 @@ const SearchPage = () => {
                 ))}
             </ListWrapperStyled>
             {totalSearchList > 10 &&
-              currentPage * 10 < totalSearchList - 10 && (
+              currentPage.current * 10 < totalSearchList - 10 && (
                 <MoreButtonStyled onClick={handleMoreButton}>
                   더보기
                 </MoreButtonStyled>
