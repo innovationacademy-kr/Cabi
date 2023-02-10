@@ -154,7 +154,7 @@ const SearchBar = () => {
   };
 
   return (
-    <SearchBarWrapperStyled id="searchBar">
+    <SearchBarWrapperStyled ref={searchWrap} id="searchBar">
       <SearchBarStyled>
         <SearchBarInputStyled
           ref={searchInput}
@@ -169,7 +169,7 @@ const SearchBar = () => {
         <SearchButtonStyled onClick={SearchBarButtonHandler} />
       </SearchBarStyled>
       <CancelButtonStyled onClick={cancelHandler}>취소</CancelButtonStyled>
-      {searchInput.current?.value && totalLength > 0 && (
+      {isFocus && searchInput.current?.value && totalLength > 0 && (
         <>
           <SearchBarList
             searchListById={searchListById}
