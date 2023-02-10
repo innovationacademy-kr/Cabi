@@ -42,6 +42,10 @@ const AdminChartStyled = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    height: 50%;
+  }
 `;
 
 export default AdminChart;

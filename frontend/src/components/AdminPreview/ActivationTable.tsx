@@ -3,7 +3,13 @@ import { useState } from "react";
 import styled from "styled-components";
 import Pagination from "../AdminChart/Pagination";
 
-const ActivationTable = ({ data }: { data: ActivationDto[] }) => {
+const ActivationTable = ({
+  data,
+  clickDetail,
+}: {
+  data: ActivationDto[];
+  clickDetail: React.MouseEventHandler;
+}) => {
   const [curPage, setCurPage] = useState(0);
 
   return (
@@ -25,7 +31,7 @@ const ActivationTable = ({ data }: { data: ActivationDto[] }) => {
           {data
             .slice(curPage * 10 + 0, curPage * 10 + 10)
             .map(({ floor, note, cabinet_num }, idx) => (
-              <tr key={idx}>
+              <tr key={idx} onClick={clickDetail}>
                 <td title={`${floor}층`}>{`${floor}층`}</td>
                 <td title={note || ""}>{note}</td>
                 <td title={cabinet_num.toString()}>{cabinet_num}</td>
@@ -64,8 +70,8 @@ const TableStyled = styled.table`
 
 const TheadStyled = styled.thead`
   width: 100%;
-  height: 50px;
-  line-height: 50px;
+  height: 45px;
+  line-height: 45px;
   background-color: var(--main-color);
   color: var(--white);
 `;
@@ -73,11 +79,11 @@ const TheadStyled = styled.thead`
 const TbodyStyled = styled.tbody`
   & > tr {
     text-align: center;
-    height: 50px;
+    height: 45px;
   }
   & > tr > td {
-    height: 50px;
-    line-height: 50px;
+    height: 45px;
+    line-height: 45px;
   }
   & > tr:nth-child(2n) {
     background: #f9f6ff;
