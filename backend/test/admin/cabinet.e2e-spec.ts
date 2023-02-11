@@ -76,65 +76,80 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 	describe('GET: api/admin/catbinet/:cabinetId', () => {
 		describe('정상적인 요청 - 캐비닛 정보 조회에 성공합니다.', () => {
-			it('PRIVATE 사물함의 정보를 조회합니다', async () => {
-				//given : 개인 사물함의 cabinetId
-				const cabinetIdPrivate = 1;
+			it('있는 사물함의 정보를 조회합니다', async () => {
+				//given : cabinetId
+				const cabinetId = 1;
 
 				//when : 조회 시도
-				const responsePrivate = await request(app.getHttpServer())
-				.get(`/api/admin/cabinet/${cabinetIdPrivate}`)
+				const response = await request(app.getHttpServer())
+				.get(`/api/admin/cabinet/${cabinetId}`)
 				.set('Authorization', `Bearer ${token}`);
 
-				//then : 200
-				expect(responsePrivate.status).toBe(HttpStatus.OK);
+				//then : 200 - OK
+				expect(response.status).toBe(HttpStatus.OK);
 			});
 		});
 
 		describe('비정상적인 요청 - 캐비닛 정보 조회에 실패합니다.', () => {
 			it('없는 사물함의 정보를 조회합니다.', async () => {
 				//given : 없는 사물함의 cabinetId
-				const cabinetIdNoneExist = 3306;
+				const cabinetId = 8080;
 
 				//when : 조회 시도
-				const responseNoneExist = await request(app.getHttpServer())
-				.get(`/api/admin/cabinet/${cabinetIdNoneExist}`)
+				const response = await request(app.getHttpServer())
+				.get(`/api/admin/cabinet/${cabinetId}`)
 				.set('Authorization', `Bearer ${token}`);
 
-				//then : 400
-				expect(responseNoneExist.status).toBe(HttpStatus.BAD_REQUEST);
+				//then : 400 - Bad Request
+				expect(response.status).toBe(HttpStatus.BAD_REQUEST);
 			})
 		});
 	});
 
 	describe('PATCH : api/admin/catbinet/status/:cabinetId/:status', () => {
 		describe('정상적인 요청 - 사물함의 상태를 변경합니다.', () => {
-			it('사물함의 AVAILABLE 상태를 BANNED로 변경합니다.', async () => {
+			it('AVAILABLE 사물함의 상태를 BANNED로 변경합니다.', async () => {
 				//given : AVAILABLE cabinetId
-				const cabinetIdAvailable = 1;
+				const cabinetId = 1;
 				const statusToChange = CabinetStatusType.BANNED;
 
 				//when : 변경 시도
-				const responseAvailable = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/status/${cabinetIdAvailable}/${statusToChange}`)
+				const response = await request(app.getHttpServer())
+				.patch(`/api/admin/cabinet/status/${cabinetId}/${statusToChange}`)
 				.set('Authorization', `Bearer ${token}`);
 
-				//then : 200
-				expect(responseAvailable.status).toBe(HttpStatus.OK);
+				//then : 200 - OK
+				expect(response.status).toBe(HttpStatus.OK);
 			});
 
 			it('BANNED 사물함의 상태를 AVAILABLE로 변경합니다.', async () => {
 				//given : SHARE - BANNED cabinetId
-				const cabinetIdBanned = 7;
+				const cabinetId = 7;
 				const statusToChange = CabinetStatusType.AVAILABLE;
 
 				//when : 변경 시도
-				const responseBanned = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/status/${cabinetIdBanned}/${statusToChange}`)
+				const response = await request(app.getHttpServer())
+				.patch(`/api/admin/cabinet/status/${cabinetId}/${statusToChange}`)
 				.set('Authorization', `Bearer ${token}`);
 
-				//then : 200
-				expect(responseBanned.status).toBe(HttpStatus.OK);
-				//잘 바뀌었는지 확인한다.
+				//then : 200 - OK
+				expect(response.status).toBe(HttpStatus.OK);
+			});
+		});
+
+		describe('비정상적인 요청 - 없는 사물함의 상태를 변경합니다.', () => {
+			it('없는 사물함의 상태를 AVAILABLE로 변경합니다.', async () => {
+				//given : cabinetId
+				const cabinetId = 8080;
+				const statusToChange = CabinetStatusType.AVAILABLE;
+
+				//when : 변경 시도
+				const response = await request(app.getHttpServer())
+				.patch(`/api/admin/cabinet/status/${cabinetId}/${statusToChange}`)
+				.set('Authorization', `Bearer ${token}`);
+
+				//then : 200 - OK -> 400 Bad Request로 변경 필요 예상
+				expect(response.status).toBe(HttpStatus.OK);
 			});
 		});
 	});
@@ -142,7 +157,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 	describe('PATCH : api/admin/cabinet/lentType/:cabinetId/:lentType', () => {
 		describe('정상적인 요청 - 사물함의 대여 타입을 변경합니다.', () => {
 			it('개인 사물함을 공유사물함으로 변경합니다.', async () => {
-				//given : PRIVATE cabinetId
+				//given : cabinetId
 				const cabinetId = 1;
 				const lentType = LentType.SHARE;
 
@@ -157,7 +172,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 			});
 
 			it('공유 사물함을 개인 사물함으로 변경합니다.', async () => {
-				//given : SHARE cabinetId
+				//given : cabinetId
 				const cabinetId = 7;
 				const lentType = LentType.PRIVATE;
 
@@ -169,7 +184,22 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
 				//잘 바뀌었는지 확인한다.
-				
+			});
+		});
+
+		describe('비정상적인 요청 - 없는 사물함의 대여 타입을 변경합니다.', () => {
+			it('없는 사물함의 대여 타입을 변경합니다.', async () => {
+				//given : cabinetId
+				const cabinetId = 8080;
+				const lentType = LentType.SHARE;
+
+				//when : 변경 시도
+				const response = await request(app.getHttpServer())
+				.patch(`/api/admin/cabinet/lentType/${cabinetId}/${lentType}`)
+				.set('Authorization', `Bearer ${token}`);
+
+				//then : 400 - Bad Request
+				expect(response.status).toBe(HttpStatus.BAD_REQUEST);
 			});
 		});
 	});
@@ -177,7 +207,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 	describe('PATCH : api/admin/cabinet/statusNote/:cabinetId', () => {
 		describe('정상적인 요청 - 사물함의 고장 사유를 변경합니다.', () => {
 			it('사물함의 고장 사유를 변경합니다.', async () => {
-				//given : BROKEN cabinetId, statusNote
+				//given : cabinetId, statusNote
 				const cabinetId = 6;
 				const statusNote = 'Got broken by ccabi!';
 
@@ -194,6 +224,27 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
 				//타입이 잘 바뀌었는지 확인한다.
+			});
+		});
+
+		describe('비정상적인 요청 - 없는 사물함의 고장 사유를 변경합니다.', () => {
+			it('없는 사물함의 고장 사유를 변경합니다.', async () => {
+				//given : cabinetId, statusNote
+				const cabinetId = 8080;
+				const statusNote = 'Got broken by ccabi!';
+
+				//when : 변경 시도
+				const body = {
+					status_note: statusNote,
+				};
+
+				const response = await request(app.getHttpServer())
+				.patch(`/api/admin/cabinet/statusNote/${cabinetId}`)
+				.send(body)
+				.set('Authorization', `Bearer ${token}`);
+
+				//then : 400 - Bad Request
+				expect(response.status).toBe(HttpStatus.BAD_REQUEST);
 			});
 		});
 	});
@@ -213,6 +264,24 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
+				//상태가 잘 바뀌었는지 체크한다.
+			});
+		});
+
+		describe('비정상적인 요청 - 없는 cabinetId가 포함된 배열의 상태를 변경합니다.', () => {
+			it('BROKEN, 없는 사물함, EXPIRED인 cabinetId를 AVAILABLE으로 변경합니다.', async () => {
+				//given : BROKEN - 2, noneExist - 8080, EXPIRED - 13
+				const cabinetIdArray = [2, 8080, 13];
+				const status = CabinetStatusType.AVAILABLE;
+
+				//when : 변경 시도
+				const response = await request(app.getHttpServer())
+				.patch(`/api/admin/cabinet/bundle/status/${status}`)
+				.send(cabinetIdArray)
+				.set('Authorization', `Bearer ${token}`);
+
+				//then : 400 - Bad Request
+				expect(response.status).toBe(HttpStatus.BAD_REQUEST);
 				//상태가 잘 바뀌었는지 체크한다.
 			});
 		});
