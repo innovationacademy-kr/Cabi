@@ -8,6 +8,8 @@ import * as request from 'supertest';
 import { DataSource } from "typeorm";
 import { initializeTransactionalContext } from "typeorm-transactional";
 import { UserSessionDto } from "src/dto/user.session.dto";
+import { SpaceDataResponseDto } from "src/dto/response/space.data.response.dto";
+import { SpaceDataDto } from "src/dto/space.data.dto";
 
 describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 	let app: INestApplication;
@@ -78,12 +80,25 @@ describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 				// given : None
 
 				// when : 조회 요청
-				const response = await request(app.getHttpServer())
-				.get('/api/cabinet_info/')
+				const response  = await request(app.getHttpServer())
+				.get(`${route}`)
 				.set('Authorization', `Bearer ${token}`);
+
+				const response2  = await request(app.getHttpServer())
+				.get(`${route}/hello`)
+				.set('Authorization', `Bearer ${token}`);
+
 				
 				// then : 200 - OK
 				expect(response.status).toBe(HttpStatus.OK);
+				expect(response.body).toHaveProperty('space_data');
+				const expectBody = {
+					space_data: [{
+						location: '새롬관',
+						floors: [2, 4, 5],
+					}],
+				}
+				expect(response.body).toStrictEqual(expectBody);
 			});
 		});
 	});
