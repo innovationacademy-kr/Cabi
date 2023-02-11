@@ -13,6 +13,7 @@ describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 	let app: INestApplication;
 	let jwtService: JwtService;
 	let token: string;
+	let route: string;
 
 	beforeAll(async () =>{
 		await initTestDB('test_main_cabinet');
@@ -56,6 +57,7 @@ describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 			intra_id: 'lentuser2',
 		  };
 		token = jwtService.sign(user);
+		route = '/api/cabinet_info';
 	});
 
 	it('DB 연동 확인', () => {
@@ -77,7 +79,7 @@ describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 
 				// when : 조회 요청
 				const response = await request(app.getHttpServer())
-				.get('/api/cabinet_info')
+				.get('/api/cabinet_info/')
 				.set('Authorization', `Bearer ${token}`);
 				
 				// then : 200 - OK
@@ -95,7 +97,7 @@ describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 
 				// when : 조회 요청
 				const response = await request(app.getHttpServer())
-				.get(`/api/cabinet_info/${location}/${floor}`)
+				.get(`${route}/${location}/${floor}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				// then : 200 - OK
@@ -112,7 +114,7 @@ describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 				
 				// when : 조회 요청
 				const response = await request(app.getHttpServer())
-				.get(`/api/cabinet_info/${cabinetId}`)
+				.get(`${route}/${cabinetId}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				// then : 200 - OK

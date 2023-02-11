@@ -16,6 +16,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 	let app: INestApplication;
 	let jwtService: JwtService;
 	let token: string;
+	let route: string;
 
 	beforeAll(async () =>{
 		await initTestDB('test_admin_cabinet');
@@ -59,6 +60,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 			role: AdminUserRole.ADMIN,
 		}
 		token = jwtService.sign(adminUser);
+		route = '/api/admin/cabinet';
 	});
 
 	it('DB 연동 && 토큰 발급 확인', () => {
@@ -82,7 +84,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 조회 시도
 				const response = await request(app.getHttpServer())
-				.get(`/api/admin/cabinet/${cabinetId}`)
+				.get(`${route}/${cabinetId}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200 - OK
@@ -97,7 +99,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 조회 시도
 				const response = await request(app.getHttpServer())
-				.get(`/api/admin/cabinet/${cabinetId}`)
+				.get(`${route}/${cabinetId}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 400 - Bad Request
@@ -115,7 +117,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/status/${cabinetId}/${statusToChange}`)
+				.patch(`${route}/status/${cabinetId}/${statusToChange}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200 - OK
@@ -129,7 +131,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/status/${cabinetId}/${statusToChange}`)
+				.patch(`${route}/status/${cabinetId}/${statusToChange}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200 - OK
@@ -145,7 +147,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/status/${cabinetId}/${statusToChange}`)
+				.patch(`${route}/status/${cabinetId}/${statusToChange}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200 - OK -> 400 Bad Request로 변경 필요 예상
@@ -163,7 +165,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/lentType/${cabinetId}/${lentType}`)
+				.patch(`${route}/lentType/${cabinetId}/${lentType}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200
@@ -178,7 +180,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/lentType/${cabinetId}/${lentType}`)
+				.patch(`${route}/lentType/${cabinetId}/${lentType}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200
@@ -195,7 +197,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/lentType/${cabinetId}/${lentType}`)
+				.patch(`${route}/lentType/${cabinetId}/${lentType}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 400 - Bad Request
@@ -217,7 +219,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 				};
 
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/statusNote/${cabinetId}`)
+				.patch(`${route}/statusNote/${cabinetId}`)
 				.send(body)
 				.set('Authorization', `Bearer ${token}`);
 
@@ -239,7 +241,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 				};
 
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/statusNote/${cabinetId}`)
+				.patch(`${route}/statusNote/${cabinetId}`)
 				.send(body)
 				.set('Authorization', `Bearer ${token}`);
 
@@ -258,7 +260,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/bundle/status/${status}`)
+				.patch(`${route}/bundle/status/${status}`)
 				.send(cabinetIdArray)
 				.set('Authorization', `Bearer ${token}`);
 
@@ -276,7 +278,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/bundle/status/${status}`)
+				.patch(`${route}/bundle/status/${status}`)
 				.send(cabinetIdArray)
 				.set('Authorization', `Bearer ${token}`);
 
@@ -296,7 +298,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/${cabinetId}/${title}`)
+				.patch(`${route}/${cabinetId}/${title}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200
@@ -313,7 +315,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.get(`/api/admin/cabinet/count/floor`)
+				.get(`${route}/count/floor`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200
