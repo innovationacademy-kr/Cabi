@@ -132,6 +132,19 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
 };
 
 // Admin API
+const axiosAdminCabinetInfoByIdURL = "/api/admin/cabinet/";
+export const axiosAdminCabinetInfoByCabinetId = async (
+  cabinetId: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosAdminCabinetInfoByIdURL + cabinetId
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const axiosGetCabinetStateURL = "/api/admin/cabinet/count/floor";
 export const axiosGetCabinetState = async (): Promise<any> => {

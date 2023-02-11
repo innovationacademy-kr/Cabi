@@ -89,3 +89,8 @@ export const isCurrentSectionRenderState = atom<boolean>({
   key: "isCurrentSectionRender",
   default: false,
 });
+
+export const currentIntraIdState = atom<string>({
+  key: "CurrentIntraId",
+  default: undefined,
+});
