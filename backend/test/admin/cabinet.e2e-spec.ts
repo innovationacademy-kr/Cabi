@@ -139,7 +139,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 		});
 	});
 
-	describe('PATCH : api/admin/catbinet/lentType/:cabinetId/:lentType', () => {
+	describe('PATCH : api/admin/cabinet/lentType/:cabinetId/:lentType', () => {
 		describe('정상적인 요청 - 사물함의 대여 타입을 변경합니다.', () => {
 			it('개인 사물함을 공유사물함으로 변경합니다.', async () => {
 				//given : PRIVATE cabinetId
@@ -163,7 +163,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/status/${cabinetId}/${lentType}`)
+				.patch(`/api/admin/cabinet/lentType/${cabinetId}/${lentType}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200
@@ -174,16 +174,21 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 		});
 	});
 
-	describe('PATCH : api/admin/catbinet/statusNote/:cabinetId', () => {
+	describe('PATCH : api/admin/cabinet/statusNote/:cabinetId', () => {
 		describe('정상적인 요청 - 사물함의 고장 사유를 변경합니다.', () => {
-			it('개인 사물함을 공유사물함으로 변경합니다.', async () => {
+			it('사물함의 고장 사유를 변경합니다.', async () => {
 				//given : BROKEN cabinetId, statusNote
 				const cabinetId = 6;
 				const statusNote = 'Got broken by ccabi!';
 
 				//when : 변경 시도
+				const body = {
+					status_note: statusNote,
+				};
+
 				const response = await request(app.getHttpServer())
-				.patch(`/api/admin/cabinet/statusNote/${cabinetId}/${statusNote}`)
+				.patch(`/api/admin/cabinet/statusNote/${cabinetId}`)
+				.send(body)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200
