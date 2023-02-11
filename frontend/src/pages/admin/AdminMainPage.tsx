@@ -7,13 +7,15 @@ import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
+import useMultiSelect from "@/hooks/useMultiSelect";
+import MultiSelectButton from "@/components/Common/MultiSelectButton";
 
 const MainPage = () => {
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
   const { closeAll } = useMenu();
-
+  const { isMultiSelect, toggleMultiSelectMode } = useMultiSelect();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
 
@@ -79,6 +81,11 @@ const MainPage = () => {
       }}
     >
       <SectionPaginationContainer />
+      <MultiSelectButton
+        theme={isMultiSelect ? "fill" : "line"}
+        text="다중 선택 모드"
+        onClick={toggleMultiSelectMode}
+      />
       <CabinetListWrapperStyled>
         <CabinetListContainer isAdmin={true} />
       </CabinetListWrapperStyled>

@@ -1,8 +1,11 @@
-import { useRecoilState, useResetRecoilState } from "recoil";
+import useMenu from "@/hooks/useMenu";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   targetCabinetInfoListState,
   isMultiSelectState,
-} from "./../recoil/atoms";
+  targetCabinetInfoState,
+  currentCabinetIdState,
+} from "@//recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 const useMultiSelect = () => {
   const [targetCabinetInfoList, setTargetCabinetInfoList] = useRecoilState<
@@ -14,14 +17,25 @@ const useMultiSelect = () => {
     targetCabinetInfoListState
   );
   const resetIsMultiSelect = useResetRecoilState(isMultiSelectState);
+  const { closeCabinet } = useMenu();
 
   const openMultiSelectMode = () => {
+    closeCabinet();
     setIsMultiSelect(true);
   };
 
   const closeMultiSelectMode = () => {
     setIsMultiSelect(false);
     resetTargetCabinetInfoList();
+    closeCabinet();
+  };
+
+  const toggleMultiSelectMode = () => {
+    if (isMultiSelect) {
+      closeMultiSelectMode();
+      return;
+    }
+    openMultiSelectMode();
   };
 
   const containsCabinet = (cabinetId: number) => {
@@ -67,6 +81,7 @@ const useMultiSelect = () => {
     resetTargetCabinetInfoList,
     openMultiSelectMode,
     closeMultiSelectMode,
+    toggleMultiSelectMode,
     containsCabinet,
     clickCabinetOnMultiSelectMode,
     containsAllCabinets,

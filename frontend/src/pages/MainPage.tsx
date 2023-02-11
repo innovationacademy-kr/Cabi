@@ -81,7 +81,7 @@ const MainPage = () => {
     >
       <SectionPaginationContainer />
       <CabinetListWrapperStyled>
-        <CabinetListContainer />
+        <CabinetListContainer isAdmin={false} />
       </CabinetListWrapperStyled>
     </WapperStyled>
   );

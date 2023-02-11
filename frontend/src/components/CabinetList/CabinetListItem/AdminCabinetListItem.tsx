@@ -1,10 +1,5 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  currentCabinetIdState,
-  targetCabinetInfoState,
-  targetCabinetInfoListState,
-  isMultiSelectState,
-} from "@/recoil/atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -18,6 +13,7 @@ import {
   cabinetIconSrcMap,
   cabinetFilterMap,
 } from "@/assets/data/maps";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 interface IAdminCabinetListItem {
   cabinet: CabinetInfo;
@@ -32,13 +28,10 @@ const AdminCabinetListItem = ({
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const setTargetCabinetInfoList = useSetRecoilState<CabinetInfo[]>(
-    targetCabinetInfoListState
-  );
-  const isMultiSelect = useRecoilValue<boolean>(isMultiSelectState);
   const { openCabinet, closeCabinet } = useMenu();
   //  const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
-
+  const { isMultiSelect, clickCabinetOnMultiSelectMode, containsCabinet } =
+    useMultiSelect();
   let cabinetLabelText = "";
 
   if (cabinet.status !== "BANNED" && cabinet.status !== "BROKEN") {
@@ -90,36 +83,18 @@ const AdminCabinetListItem = ({
     return `[${lentType}] ${cabinetLabelText}`;
   };
 
-  const multiSelectCabinetOnClick = (cabinetId: number) => {
-    if (currentCabinetId === cabinetId) {
-      closeCabinet();
-      return;
-    }
-
-    setCurrentCabinetId(cabinetId);
-    async function getData(cabinetId: number) {
-      try {
-        const { data } = await axiosCabinetById(cabinetId);
-        setTargetCabinetInfo(data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getData(cabinetId);
-    openCabinet();
-  };
-
   return (
     <CabinetListItemStyled
       status={cabinet.status}
       isMine={false}
       isSelected={currentCabinetId === cabinet.cabinet_id}
       isMultiSelect={isMultiSelect}
+      isMultiSelected={containsCabinet(cabinet.cabinet_id)}
       title={cabinetItemTitleHandler()}
       className="cabiButton"
       onClick={() => {
-        if (isMultiSelect) selectCabinetOnClick(cabinet.cabinet_id);
-        else multiSelectCabinetOnClick(cabinet.cabinet_id);
+        if (isMultiSelect) clickCabinetOnMultiSelectMode(cabinet);
+        else selectCabinetOnClick(cabinet.cabinet_id);
       }}
     >
       <CabinetIconNumberWrapperStyled>
@@ -148,6 +123,7 @@ const CabinetListItemStyled = styled.div<{
   isMine: boolean;
   isSelected: boolean;
   isMultiSelect: boolean;
+  isMultiSelected: boolean;
 }>`
   position: relative;
   background-color: ${(props) => cabinetStatusColorMap[props.status]};
@@ -173,6 +149,14 @@ const CabinetListItemStyled = styled.div<{
     `}
   ${({ isSelected }) =>
     isSelected &&
+    css`
+      opacity: 0.9;
+      transform: scale(1.05);
+      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
+        0px 4px 4px rgba(0, 0, 0, 0.25);
+    `}
+  ${({ isMultiSelected }) =>
+    isMultiSelected &&
     css`
       opacity: 0.9;
       transform: scale(1.05);
