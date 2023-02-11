@@ -89,17 +89,23 @@ export class AdminSearchService {
 
   /**
    * 해당 사물함 번호를 가진 사물함 리스트를 반환합니다.
+   * 선택적으로 특정 층을 지정할 수 있습니다.
    * @param visibleNum 사물함 번호
+   * @param floor 층
    * @returns CabinetInfoPagenationDto
    * @throw HTTPError
    */
   async searchByCabinetNumber(
     visibleNum: number,
+    floor?: number,
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(
       `Called ${AdminSearchService.name} ${this.searchByCabinetNumber.name}`,
     );
-    return await this.adminSearchRepository.searchByCabinetNumber(visibleNum);
+    return await this.adminSearchRepository.searchByCabinetNumber(
+      visibleNum,
+      floor,
+    );
   }
 
   /**

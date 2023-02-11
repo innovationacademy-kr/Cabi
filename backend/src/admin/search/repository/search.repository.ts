@@ -154,11 +154,13 @@ export class AdminSearchRepository implements IAdminSearchRepository {
 
   async searchByCabinetNumber(
     visibleNum: number,
+    floor?: number,
   ): Promise<CabinetInfoPagenationDto> {
     const result = await this.cabinetRepository.find({
       relations: ['lent', 'lent.user'],
       where: {
         cabinet_num: visibleNum,
+        floor: floor,
       },
       order: { cabinet_id: 'ASC' },
     });
