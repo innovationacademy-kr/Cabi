@@ -14,6 +14,9 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { targetCabinetInfoListState } from "@/recoil/atoms";
+import useMultiSelect from "@/hooks/useMultiSelect";
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
@@ -27,13 +30,36 @@ export interface ISelectedCabinetInfo {
   detailMessageColor: string;
   isAdmin: boolean;
 }
+export interface IMultiSelectTargetInfo {
+  targetCabinetInfoList: CabinetInfo[];
+  handleClickReturnAll: any;
+  handleClickChangeStatusAll: any;
+  typeCounts: {
+    AVAILABLE: number;
+    EXPIRED: number;
+    SET_EXPIRE_FULL: number;
+    BROKEN: number;
+  };
+}
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   myCabinetId?: number;
   closeCabinet: () => void;
-}> = (props) => {
-  const { selectedCabinetInfo, myCabinetId, closeCabinet } = props;
+  multiSelectTargetInfo: IMultiSelectTargetInfo | null;
+}> = ({
+  selectedCabinetInfo,
+  myCabinetId,
+  closeCabinet,
+  multiSelectTargetInfo,
+}) => {
+  const {
+    targetCabinetInfoList,
+    handleClickReturnAll,
+    handleClickChangeStatusAll,
+    typeCounts,
+  } = multiSelectTargetInfo ?? {};
+
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const [showLentModal, setShowLentModal] = useState<boolean>(false);
@@ -42,6 +68,7 @@ const CabinetInfoArea: React.FC<{
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
+  const { resetMultiSelectMode } = useMultiSelect();
 
   const handleOpenLentModal = () => {
     if (myCabinetId) return handleOpenUnavailableModal();
@@ -69,7 +96,11 @@ const CabinetInfoArea: React.FC<{
     setShowUnavailableModal(false);
   };
 
-  if (selectedCabinetInfo === null)
+  if (
+    (!multiSelectTargetInfo && selectedCabinetInfo === null) ||
+    (multiSelectTargetInfo && targetCabinetInfoList!.length < 1)
+  )
+    // 아무 사물함도 선택하지 않았을 때, 또는 다중선택 모드 진입후 아무 사물함도 선택하지 않았을 때
     return (
       <NotSelectedStyled>
         <CabiLogoStyled src={cabiLogo} />
@@ -79,23 +110,69 @@ const CabinetInfoArea: React.FC<{
         </TextStyled>
       </NotSelectedStyled>
     );
+  if (multiSelectTargetInfo) {
+    // 다중 선택 모드 진입 후 캐비넷을 하나 이상 선택했을 시
+    const currentFloor = targetCabinetInfoList![0].floor;
+    const currentSection = targetCabinetInfoList![0].section;
+    return (
+      <CabinetDetailAreaStyled>
+        <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
+          {currentFloor + "F - " + currentSection}
+        </TextStyled>
+        <MultiCabinetIconWrapperStyled>
+          <MultiCabinetIconStyled status={CabinetStatus.AVAILABLE}>
+            {typeCounts![CabinetStatus.AVAILABLE]}
+          </MultiCabinetIconStyled>
+          <MultiCabinetIconStyled status={CabinetStatus.EXPIRED}>
+            {typeCounts![CabinetStatus.EXPIRED]}
+          </MultiCabinetIconStyled>
+          <MultiCabinetIconStyled status={CabinetStatus.SET_EXPIRE_FULL}>
+            {typeCounts![CabinetStatus.SET_EXPIRE_FULL]}
+          </MultiCabinetIconStyled>
+          <MultiCabinetIconStyled status={CabinetStatus.BROKEN}>
+            {typeCounts![CabinetStatus.BROKEN]}
+          </MultiCabinetIconStyled>
+        </MultiCabinetIconWrapperStyled>
+        <CabinetInfoButtonsContainerStyled>
+          <ButtonContainer
+            onClick={() => {}} //todo: admin 반납 모달 만들기
+            text="일괄 반납"
+            theme="fill"
+          />
+          <ButtonContainer
+            onClick={() => {}} //todo: 상태관리 모달 만들기
+            text="상태관리"
+            theme="line"
+          />
+          <ButtonContainer
+            onClick={() => {
+              resetMultiSelectMode();
+            }} //todo: 상태관리 모달 만들기
+            text="취소"
+            theme="grayLine"
+          />
+        </CabinetInfoButtonsContainerStyled>
+      </CabinetDetailAreaStyled>
+    );
+  }
+  // 단일 선택 시 보이는 cabinetInfoArea
   return (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-        {selectedCabinetInfo.floor + "F - " + selectedCabinetInfo.section}
+        {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
       </TextStyled>
       <CabinetRectangleStyled
-        cabinetStatus={selectedCabinetInfo.status}
+        cabinetStatus={selectedCabinetInfo!.status}
         isMine={isMine}
       >
-        {selectedCabinetInfo.cabinetNum}
+        {selectedCabinetInfo!.cabinetNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
-        title={selectedCabinetInfo.lentType}
-        cabinetType={selectedCabinetInfo.lentType}
+        title={selectedCabinetInfo!.lentType}
+        cabinetType={selectedCabinetInfo!.lentType}
       />
       <TextStyled fontSize="1rem" fontColor="black">
-        {selectedCabinetInfo.userNameList}
+        {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
@@ -118,7 +195,7 @@ const CabinetInfoArea: React.FC<{
           </>
         ) : (
           <>
-            {selectedCabinetInfo.isAdmin ? (
+            {selectedCabinetInfo!.isAdmin ? (
               <>
                 <ButtonContainer
                   onClick={() => {}} //todo: admin 반납 모달 만들기
@@ -143,13 +220,13 @@ const CabinetInfoArea: React.FC<{
         )}
       </CabinetInfoButtonsContainerStyled>
       <CabinetLentDateInfoStyled
-        textColor={selectedCabinetInfo.detailMessageColor}
+        textColor={selectedCabinetInfo!.detailMessageColor}
       >
-        {selectedCabinetInfo.detailMessage}
+        {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo.expireDate
-          ? `${selectedCabinetInfo.expireDate.toString().substring(0, 10)}`
+        {selectedCabinetInfo!.expireDate
+          ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
           : null}
       </CabinetLentDateInfoStyled>
       {showUnavailableModal && (
@@ -160,13 +237,13 @@ const CabinetInfoArea: React.FC<{
       )}
       {showLentModal && (
         <LentModal
-          lentType={selectedCabinetInfo.lentType}
+          lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseLentModal}
         />
       )}
       {showReturnModal && (
         <ReturnModal
-          lentType={selectedCabinetInfo.lentType}
+          lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseReturnModal}
         />
       )}
@@ -260,4 +337,18 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   line-height: 28px;
   white-space: pre-line;
   text-align: center;
+`;
+
+const MultiCabinetIconWrapperStyled = styled.div`
+  display: flex;
+  width: 90px;
+  height: 90px;
+  margin-top: 15px;
+`;
+
+const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
+  background-color: ${({ status }) => cabinetStatusColorMap[status]};
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
 `;

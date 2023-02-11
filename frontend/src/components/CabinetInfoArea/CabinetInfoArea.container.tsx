@@ -5,11 +5,13 @@ import {
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import CabinetInfoArea, {
+  IMultiSelectTargetInfo,
   ISelectedCabinetInfo,
 } from "@/components/CabinetInfoArea/CabinetInfoArea";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import useMenu from "@/hooks/useMenu";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
@@ -18,6 +20,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet } = useMenu();
+  const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
@@ -110,11 +113,56 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
+  const countTypes = (cabinetList: CabinetInfo[]) => {
+    const counts = {
+      [CabinetStatus.AVAILABLE]: 0,
+      [CabinetStatus.EXPIRED]: 0,
+      [CabinetStatus.SET_EXPIRE_FULL]: 0,
+      [CabinetStatus.BROKEN]: 0,
+    };
+    cabinetList.forEach((cabinet) => {
+      const status = cabinet.status;
+      switch (status) {
+        case CabinetStatus.AVAILABLE:
+          counts["AVAILABLE"]++;
+          break;
+        case CabinetStatus.SET_EXPIRE_AVAILABLE:
+          counts["AVAILABLE"]++;
+          break;
+        case CabinetStatus.SET_EXPIRE_FULL:
+          counts["SET_EXPIRE_FULL"]++;
+          break;
+        case CabinetStatus.EXPIRED:
+          counts["EXPIRED"]++;
+          break;
+        default:
+          counts["BROKEN"]++;
+      }
+    });
+    return counts;
+  };
+  const handleClickReturnAll = () => {
+    alert("returned all!");
+  };
+  const handleClickChangeStatusAll = () => {
+    alert("open change status modal");
+  };
+
+  const multiSelectInfo: IMultiSelectTargetInfo | null = isMultiSelect
+    ? {
+        targetCabinetInfoList: targetCabinetInfoList,
+        handleClickReturnAll: handleClickReturnAll,
+        handleClickChangeStatusAll: handleClickChangeStatusAll,
+        typeCounts: countTypes(targetCabinetInfoList),
+      }
+    : null;
+
   return (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}
       myCabinetId={myCabinetInfo?.cabinet_id}
       closeCabinet={closeCabinet}
+      multiSelectTargetInfo={multiSelectInfo}
     />
   );
 };
