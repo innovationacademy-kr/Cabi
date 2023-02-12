@@ -8,8 +8,7 @@ import * as request from 'supertest';
 import { DataSource } from "typeorm";
 import { initializeTransactionalContext } from "typeorm-transactional";
 import { UserSessionDto } from "src/dto/user.session.dto";
-import { SpaceDataResponseDto } from "src/dto/response/space.data.response.dto";
-import { SpaceDataDto } from "src/dto/space.data.dto";
+import { CabinetsPerSectionResponseDto } from "src/dto/response/cabinet.per.section.response.dto";
 
 describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 	let app: INestApplication;
@@ -108,15 +107,51 @@ describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 			it('존재하는 층의 정보를 조회합니다.', async () => {
 				// given : 건물(encoded), 층
 				const location = encodeURIComponent('새롬관');
-				const floor = 2;
+				const floor = 5;
+
+				// when : 조회 요청
+				const response = await request(app.getHttpServer())
+				.get(`${route}/${location}/${floor}`)
+				.set('Authorization', `Bearer ${token}`);
+				// then : 200 - OK
+				expect(response.status).toBe(HttpStatus.OK);
+				expect(Array.isArray(response.body)).toBe(true);
+				const sections = [];
+				sections.push(response.body.filter(x => x.section === 'Oasis'));
+				sections.push(response.body.filter(x => x.section === 'Cluster 5 - OA'));
+				sections.push(response.body.filter(x => x.section === 'End of Cluster 5'));
+				expect(sections.length).toBe(3);
+				sections.forEach(x => expect(x).toBeDefined);
+			});
+		});
+
+		describe('비정상적인 요청 - 없는 건물/층의 정보를 가져옵니다.', () => {
+			it('존재하지 않는 층의 정보를 조회합니다.', async () => {
+				// given : 건물(encoded), 층
+				const location = encodeURIComponent('새롬관');
+				const floor = 63;
 
 				// when : 조회 요청
 				const response = await request(app.getHttpServer())
 				.get(`${route}/${location}/${floor}`)
 				.set('Authorization', `Bearer ${token}`);
 
-				// then : 200 - OK
-				expect(response.status).toBe(HttpStatus.OK);
+				// then : 400 - Bad Request
+				expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+			});
+
+			it('존재하지 않는 건물의 정보를 조회합니다.', async () => {
+				// given : 건물(encoded), 층
+				const location = encodeURIComponent('영화관');
+				const floor = 1;
+
+				// when : 조회 요청
+				const response = await request(app.getHttpServer())
+				.get(`${route}/${location}/${floor}`)
+				.set('Authorization', `Bearer ${token}`);
+
+				// then : 400 - Bad Request
+				expect(response.status).toBe(HttpStatus.BAD_REQUEST);
 			});
 		});
 	});
@@ -134,6 +169,8 @@ describe('Main Cabinet 모듈 테스트 (e2e)', () => {
 
 				// then : 200 - OK
 				expect(response.status).toBe(HttpStatus.OK);
+				expect(response.body).toHaveProperty('location', '새롬관');
+				expect(response.body).toHaveProperty('floor', 2);
 			});
 		});
 	});
