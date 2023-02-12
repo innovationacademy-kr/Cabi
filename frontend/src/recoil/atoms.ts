@@ -99,3 +99,8 @@ export const targetCabinetInfoListState = atom<CabinetInfo[]>({
   key: "TargetCabinetInfoList",
   default: [],
 });
+
+export const currentIntraIdState = atom<string>({
+  key: "CurrentIntraId",
+  default: undefined,
+});

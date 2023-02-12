@@ -5,6 +5,7 @@ import LentType from 'src/enums/lent.type.enum';
  * 캐비넷을 대여하기 전 캐비넷에 대한 최소 정보
  */
 export class LentCabinetDataDto {
+  new_lent_id?: number; // 현재 lent테이블에서 lent_id의 최댓값보다 큰 값
   status: CabinetStatusType; // 사물함의 상태
   lent_type: LentType; // 사물함의 타입
   lent_count: number; // 해당 케비넷을 대여한 사람의 수

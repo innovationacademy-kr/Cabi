@@ -3,6 +3,7 @@ import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
+import useOutsideClick from "@/hooks/useOutsideClick";
 
 interface ILocationListItem {
   location: string;
@@ -47,9 +48,14 @@ const TopNav: React.FC<{
     isAdmin,
   } = props;
 
+  const locationDom = React.useRef<HTMLElement>(null);
+  useOutsideClick(locationDom, () => {
+    if (locationClicked) setLocationClicked(false);
+  });
+
   return (
     <TopNavContainerStyled id="topNavWrap">
-      <LogoStyled className="cabiButton">
+      <LogoStyled id="topNavLogo" className="cabiButton">
         <LogoDivStyled>
           <img
             className="cabiButton"
@@ -58,7 +64,7 @@ const TopNav: React.FC<{
             alt=""
           />
         </LogoDivStyled>
-        <LocationSelectBoxStyled className="cabiButton">
+        <LocationSelectBoxStyled ref={locationDom} className="cabiButton">
           <div
             className="cabiButton"
             onClick={() => setLocationClicked(!locationClicked)}

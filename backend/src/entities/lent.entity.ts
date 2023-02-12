@@ -4,14 +4,14 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import Cabinet from './cabinet.entity';
 import User from './user.entity';
 
 @Entity('lent')
 export default class Lent {
-  @PrimaryGeneratedColumn({
+  @PrimaryColumn({
     name: 'lent_id',
   })
   lent_id: number;

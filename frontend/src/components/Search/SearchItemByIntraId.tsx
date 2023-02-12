@@ -1,9 +1,17 @@
-import { cabinetIconSrcMap, cabinetStatusColorMap } from "@/assets/data/maps";
+import {
+  cabinetIconSrcMap,
+  cabinetLabelColorMap,
+  cabinetStatusColorMap,
+} from "@/assets/data/maps";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import ChangeToHTML from "../TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import { currentIntraIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import useMenu from "@/hooks/useMenu";
+import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
 
 interface ISearchDetail {
   intra_id: string;
@@ -13,10 +21,44 @@ interface ISearchDetail {
 }
 
 const SearchItemByIntraId = (props: ISearchDetail) => {
-  const { intra_id, cabinetInfo, searchValue } = props;
+  const { intra_id, user_id, cabinetInfo, searchValue } = props;
+  const [currentIntraId, setCurrentIntraId] =
+    useRecoilState<string>(currentIntraIdState);
+  const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
+  const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
+    targetCabinetInfoState
+  );
+  const { openCabinet, closeCabinet } = useMenu();
+
+  const clickSearchItem = () => {
+    if (currentIntraId === intra_id) {
+      resetCurrentIntraId();
+      closeCabinet();
+      return;
+    }
+    setCurrentIntraId(intra_id);
+    async function getData(cabinetId: number) {
+      try {
+        const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
+        setTargetCabinetInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (cabinetInfo) {
+      getData(cabinetInfo.cabinet_id);
+      openCabinet();
+    } else {
+      // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
+    }
+  };
 
   return cabinetInfo ? (
-    <WrapperStyled className="cabiButton">
+    <WrapperStyled
+      className="cabiButton"
+      isSelected={currentIntraId === intra_id}
+      onClick={clickSearchItem}
+    >
       <RectangleStyled status={cabinetInfo.status}>
         {cabinetInfo.cabinet_num}
       </RectangleStyled>
@@ -31,7 +73,11 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       </TextWrapper>
     </WrapperStyled>
   ) : (
-    <WrapperStyled className="cabiButton">
+    <WrapperStyled
+      className="cabiButton"
+      isSelected={currentIntraId === intra_id}
+      onClick={clickSearchItem}
+    >
       <RectangleStyled>-</RectangleStyled>
       <TextWrapper>
         <LocationStyled>대여 중이 아닌 사용자</LocationStyled>
@@ -46,7 +92,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   );
 };
 
-const WrapperStyled = styled.div`
+const WrapperStyled = styled.div<{ isSelected: boolean }>`
   width: 350px;
   height: 110px;
   border-radius: 10px;
@@ -54,9 +100,21 @@ const WrapperStyled = styled.div`
   background-color: var(--lightgary-color);
   display: flex;
   align-items: center;
+  transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
-  &:hover {
-    outline: 2px solid var(--main-color);
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      opacity: 0.9;
+      transform: scale(1.02);
+      box-shadow: inset 4px 4px 4px rgba(0, 0, 0, 0.15),
+        2px 2px 4px rgba(0, 0, 0, 0.15);
+    `}
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
   }
 `;
 
@@ -67,7 +125,8 @@ const RectangleStyled = styled.div<{ status?: CabinetStatus }>`
   background-color: ${(props) =>
     props.status ? cabinetStatusColorMap[props.status] : "var(--full)"};
   font-size: 26px;
-  color: var(--white);
+  color: ${(props) =>
+    props.status ? cabinetLabelColorMap[props.status] : "var(--black)"};
   display: flex;
   justify-content: center;
   align-items: center;

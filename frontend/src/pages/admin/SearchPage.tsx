@@ -11,6 +11,8 @@ import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import NoSearch from "@/components/Search/NoSearch";
 import SearchDefault from "@/components/Search/SearchDefault";
+import { useResetRecoilState } from "recoil";
+import { currentCabinetIdState, currentIntraIdState } from "@/recoil/atoms";
 
 interface ISearchDetail {
   intra_id: string;
@@ -26,8 +28,10 @@ const SearchPage = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalSearchList, setTotalSearchList] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const currentPage = useRef(0);
   const searchValue = useRef("");
+  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
 
   // 검색 초기화
   const initialize = () => {
@@ -35,17 +39,18 @@ const SearchPage = () => {
     setSearchListByIntraId([]);
     setSearchListByNum([]);
     setTotalSearchList(0);
-    setCurrentPage(0);
+    currentPage.current = 0;
     searchValue.current = searchParams.get("q") ?? "";
+    resetCurrentCabinetId();
+    resetCurrentIntraId();
   };
 
   // intra_id 검색
   const handleSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
-      currentPage
+      currentPage.current
     );
-    console.log(searchResult.data);
     setSearchListByIntraId(searchResult.data.result);
     setTotalSearchList(searchResult.data.total_length);
     setTimeout(() => {
@@ -58,7 +63,6 @@ const SearchPage = () => {
     const searchResult = await axiosSearchByCabinetNum(
       Number(searchValue.current)
     );
-    console.log(searchResult.data);
     setSearchListByNum(searchResult.data.result);
     setTotalSearchList(searchResult.data.total_length);
     setTimeout(() => {
@@ -83,14 +87,13 @@ const SearchPage = () => {
   const handleMoreSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
-      currentPage + 1
+      currentPage.current + 1
     );
-    console.log(searchResult.data);
+    currentPage.current += 1;
     setSearchListByIntraId((prev) => [...prev, ...searchResult.data.result]);
-    setCurrentPage((prev) => prev + 1);
   };
 
-  const handleMoreButton = () => {
+  const clickMoreButton = () => {
     handleMoreSearchDetailByIntraId();
   };
 
@@ -116,8 +119,8 @@ const SearchPage = () => {
                 ))}
             </ListWrapperStyled>
             {totalSearchList > 10 &&
-              currentPage * 10 < totalSearchList - 10 && (
-                <MoreButtonStyled onClick={handleMoreButton}>
+              currentPage.current * 10 < totalSearchList - 10 && (
+                <MoreButtonStyled onClick={clickMoreButton}>
                   더보기
                 </MoreButtonStyled>
               )}
