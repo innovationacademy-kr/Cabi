@@ -11,10 +11,13 @@ import { initializeTransactionalContext } from "typeorm-transactional";
 import * as request from 'supertest';
 import CabinetStatusType from "src/enums/cabinet.status.type.enum";
 import LentType from "src/enums/lent.type.enum";
+import { CabinetInfoService } from "src/cabinet/cabinet.info.service";
+import { CabinetFloorDto } from "src/admin/dto/cabinet.floor.dto";
 
 describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 	let app: INestApplication;
 	let jwtService: JwtService;
+	let mainCabinetInfoService: CabinetInfoService;
 	let token: string;
 	let route: string;
 
@@ -45,14 +48,15 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 		 .compile();
 
 		 jwtService = new JwtService({
-			secret: process.env.JWT_SECRETKEY,
-			signOptions: {
-				expiresIn: process.env.JWT_EXPIREIN,
-			},
-		 });
-
-		 app = moduleFixture.createNestApplication();
-		 await app.init();
+			 secret: process.env.JWT_SECRETKEY,
+			 signOptions: {
+				 expiresIn: process.env.JWT_EXPIREIN,
+				},
+			});
+			
+			app = moduleFixture.createNestApplication();
+			await app.init();
+			mainCabinetInfoService = app.get(CabinetInfoService);
 
 		// given : 권한 있는 관리자의 토큰
 		const adminUser: AdminUserDto = {
@@ -89,6 +93,8 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//then : 200 - OK
 				expect(response.status).toBe(HttpStatus.OK);
+				expect(response.body).toHaveProperty('location', '새롬관');
+				expect(response.body).toHaveProperty('floor', 2);
 			});
 		});
 
@@ -122,6 +128,8 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//then : 200 - OK
 				expect(response.status).toBe(HttpStatus.OK);
+				expect((await (mainCabinetInfoService.getCabinetInfo(cabinetId))).status)
+				.toBe(statusToChange);
 			});
 
 			it('BANNED 사물함의 상태를 AVAILABLE로 변경합니다.', async () => {
@@ -136,6 +144,8 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//then : 200 - OK
 				expect(response.status).toBe(HttpStatus.OK);
+				expect((await (mainCabinetInfoService.getCabinetInfo(cabinetId))).status)
+				.toBe(statusToChange);
 			});
 		});
 
@@ -170,7 +180,8 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
-				//잘 바뀌었는지 확인한다.
+				expect((await (mainCabinetInfoService.getCabinetInfo(cabinetId))).lent_type)
+				.toBe(lentType);
 			});
 
 			it('공유 사물함을 개인 사물함으로 변경합니다.', async () => {
@@ -185,7 +196,8 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
-				//잘 바뀌었는지 확인한다.
+				expect((await (mainCabinetInfoService.getCabinetInfo(cabinetId))).lent_type)
+				.toBe(lentType);
 			});
 		});
 
@@ -225,7 +237,8 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
-				//타입이 잘 바뀌었는지 확인한다.
+				// expect(await mainCabinetInfoService.getCabinetInfo(cabinetId)['statusNote'])
+				// .toBe(statusNote); <- admin의 cabinetDto에만 존재하고, 기존에 가져오는 api의 반환값에서 statusNote가 존재하지 않아서 테스트 불가능.
 			});
 		});
 
@@ -256,17 +269,20 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 			it('BROKEN, BANNED, EXPIRED인 사물함들을 AVAILABLE으로 변경합니다.', async () => {
 				//given : BROKEN - 2, BANNED - 3, EXPIRED - 13
 				const cabinetIdArray = [2, 3, 13];
-				const status = CabinetStatusType.AVAILABLE;
+				const statusToChange = CabinetStatusType.AVAILABLE;
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`${route}/bundle/status/${status}`)
+				.patch(`${route}/bundle/status/${statusToChange}`)
 				.send(cabinetIdArray)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
-				//상태가 잘 바뀌었는지 체크한다.
+				cabinetIdArray.forEach(async (cabinetId) => {
+					expect((await (mainCabinetInfoService.getCabinetInfo(cabinetId))).status)
+					.toBe(statusToChange);
+				})
 			});
 		});
 
@@ -284,7 +300,11 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 
 				//then : 400 - Bad Request
 				expect(response.status).toBe(HttpStatus.BAD_REQUEST);
-				//상태가 잘 바뀌었는지 체크한다.
+				expect((await (mainCabinetInfoService.getCabinetInfo(2))).status)
+				// 중간에 잘못된 사물함의 cabinetId가 들어가도, 나머지 사물함들의 상태는 변경 됨.
+				.toBe(CabinetStatusType.AVAILABLE);
+				expect((await (mainCabinetInfoService.getCabinetInfo(13))).status)
+				.toBe(CabinetStatusType.AVAILABLE);
 			});
 		});
 	});
@@ -294,16 +314,17 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 			it('title이 CABI인 사물함을 HELLO_CCABI로 변경합니다.', async () => {
 				//given : cabinetId, title
 				const cabinetId = 12;
-				const title = 'HELLO_CABI';
+				const titleToChange = 'HELLO_CABI';
 
 				//when : 변경 시도
 				const response = await request(app.getHttpServer())
-				.patch(`${route}/${cabinetId}/${title}`)
+				.patch(`${route}/${cabinetId}/${titleToChange}`)
 				.set('Authorization', `Bearer ${token}`);
 
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
-				//title === HELLO_CABI
+				expect((await (mainCabinetInfoService.getCabinetInfo(cabinetId))).cabinet_title)
+				.toBe(titleToChange);
 			});
 		});
 	});
@@ -317,15 +338,20 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
 				const response = await request(app.getHttpServer())
 				.get(`${route}/count/floor`)
 				.set('Authorization', `Bearer ${token}`);
+				let allFloorInfo: CabinetFloorDto[] = response.body;
 
 				//then : 200
 				expect(response.status).toBe(HttpStatus.OK);
-				
-				//15개의 사물함 배열, 각각 ToBeDefined, 형식은 CabinetFloorDto
+				expect(Array.isArray(allFloorInfo)).toBe(true);
+				allFloorInfo.forEach(async (cabinetFloorInfo) => {
+						const keys = Object.keys(cabinetFloorInfo);
+						keys.forEach(async (key) => {
+							expect(key).toBeDefined();
+						});
+					});
+				});
 			});
 		});
-	});
-
 	afterAll(async () => {
 		app.close();
 	  });
