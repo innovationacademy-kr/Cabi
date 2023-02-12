@@ -340,15 +340,20 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
 `;
 
 const MultiCabinetIconWrapperStyled = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 40px 40px;
   width: 90px;
   height: 90px;
   margin-top: 15px;
+  grid-gap: 10px;
 `;
 
 const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: ${({ status }) => cabinetStatusColorMap[status]};
   border-radius: 5px;
-  width: 40px;
-  height: 40px;
+  color: ${({ status }) =>
+    status === CabinetStatus.SET_EXPIRE_FULL ? "black" : "white"};
 `;
