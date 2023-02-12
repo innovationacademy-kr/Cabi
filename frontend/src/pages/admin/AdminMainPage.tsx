@@ -2,7 +2,10 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { currentSectionNameState } from "@/recoil/atoms";
+import {
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
 import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
@@ -15,10 +18,11 @@ const MainPage = () => {
   const touchStartPosY = useRef(0);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
   const { closeAll } = useMenu();
-  const { isMultiSelect, toggleMultiSelectMode } = useMultiSelect();
+  const { isMultiSelect, toggleMultiSelectMode, resetMultiSelectMode } =
+    useMultiSelect();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-
+  const currentFloorNumber = useRecoilValue<number>(currentFloorNumberState);
   useEffect(() => {
     closeAll();
     resetTargetCabinetInfo();
@@ -38,6 +42,10 @@ const MainPage = () => {
   const currentSectionIdx = sectionList.findIndex(
     (sectionName) => sectionName === currentSectionName
   );
+
+  useEffect(() => {
+    resetMultiSelectMode();
+  }, [currentSectionIdx, currentFloorNumber]);
 
   const moveToLeftSection = () => {
     if (currentSectionIdx <= 0) {
