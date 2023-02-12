@@ -18,8 +18,12 @@ const MainPage = () => {
   const touchStartPosY = useRef(0);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
   const { closeAll } = useMenu();
-  const { isMultiSelect, toggleMultiSelectMode, resetMultiSelectMode } =
-    useMultiSelect();
+  const {
+    isMultiSelect,
+    toggleMultiSelectMode,
+    resetMultiSelectMode,
+    handleSelectAll,
+  } = useMultiSelect();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const currentFloorNumber = useRecoilValue<number>(currentFloorNumberState);
