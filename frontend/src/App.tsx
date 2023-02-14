@@ -6,6 +6,7 @@ import HomePage from "@/pages/HomePage";
 import MainPage from "@/pages/MainPage";
 import LoadingAnimation from "./components/Common/LoadingAnimation";
 import LogPage from "@/pages/LogPage";
+import AdminInfo from "./components/AdminChart/AdminInfo";
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
 const AdminLayout = lazy(() => import("@/pages/admin/AdminLayout"));
@@ -31,7 +32,7 @@ function App(): React.ReactElement {
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
             <Route path="login" element={<AdminLoginPage />} />
-            <Route path="home" element={<AdminHomePage />} />
+            <Route path="home" element={<AdminInfo />} />
             <Route path="main" element={<MainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="log" element={<AdminLogPage />} />

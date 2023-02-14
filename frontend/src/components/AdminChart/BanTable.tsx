@@ -3,13 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import Pagination from "../AdminChart/Pagination";
 
-const BanTable = ({
-  data,
-  clickDetail,
-}: {
-  data: BanDto[];
-  clickDetail: React.MouseEventHandler;
-}) => {
+const BanTable = ({ data }: { data: BanDto[] }) => {
   const [curPage, setCurPage] = useState(0);
 
   return (
@@ -31,7 +25,7 @@ const BanTable = ({
           {data
             .slice(curPage * 10 + 0, curPage * 10 + 10)
             .map(({ floor, section, cabinet_num }, idx) => (
-              <tr key={idx} onClick={clickDetail}>
+              <tr key={idx}>
                 <td title={`${floor}층`}>{`${floor}층`}</td>
                 <td title={cabinet_num.toString()}>{cabinet_num}</td>
                 <td title={section || ""}>{section}</td>

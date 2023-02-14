@@ -1,15 +1,9 @@
 import { ActivationDto } from "@/types/dto/lent.dto";
 import { useState } from "react";
 import styled from "styled-components";
-import Pagination from "../AdminChart/Pagination";
+import Pagination from "./Pagination";
 
-const ActivationTable = ({
-  data,
-  clickDetail,
-}: {
-  data: ActivationDto[];
-  clickDetail: React.MouseEventHandler;
-}) => {
+const ActivationTable = ({ data }: { data: ActivationDto[] }) => {
   const [curPage, setCurPage] = useState(0);
 
   return (
@@ -31,7 +25,7 @@ const ActivationTable = ({
           {data
             .slice(curPage * 10 + 0, curPage * 10 + 10)
             .map(({ floor, note, cabinet_num }, idx) => (
-              <tr key={idx} onClick={clickDetail}>
+              <tr key={idx}>
                 <td title={`${floor}층`}>{`${floor}층`}</td>
                 <td title={note || ""}>{note}</td>
                 <td title={cabinet_num.toString()}>{cabinet_num}</td>
