@@ -25,7 +25,7 @@ const RealViewNotification: React.FC<{ colNum: number }> = (props) => {
   }, [tooltipCardRef.current, props.colNum]);
 
   return (
-    <TooltipCard ref={tooltipCardRef}>
+    <TooltipCard ref={tooltipCardRef} hasEnoughWidth={hasEnoughWidth}>
       <ToolTipIcon hasEnoughWidth={hasEnoughWidth} />
       <TooltipBox>{toolTipMessage}</TooltipBox>
     </TooltipCard>
@@ -64,7 +64,8 @@ const TooltipBox = styled.div`
   transition: visibility 0.5s, color 0.5s, background-color 0.5s, width 0.5s,
     padding 0.5s ease-in-out;
 `;
-const TooltipCard = styled.div`
+const TooltipCard = styled.div<{ hasEnoughWidth: boolean }>`
+  display: ${({ hasEnoughWidth }) => (hasEnoughWidth ? "none" : "block")};
   position: relative;
   width: 100%;
   height: 24px;

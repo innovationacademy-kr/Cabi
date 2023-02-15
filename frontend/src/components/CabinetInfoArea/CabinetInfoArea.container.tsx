@@ -5,11 +5,13 @@ import {
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import CabinetInfoArea, {
+  IMultiSelectTargetInfo,
   ISelectedCabinetInfo,
 } from "@/components/CabinetInfoArea/CabinetInfoArea";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import useMenu from "@/hooks/useMenu";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
@@ -18,6 +20,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet } = useMenu();
+  const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
+  const isAdmin = document.location.pathname.indexOf("/admin") > -1;
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
@@ -79,7 +83,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       return "var(--expired)";
     // 사용 중 사물함
     else if (
-      selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
+      (selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL &&
+        selectedCabinetInfo.lent_type !== "CLUB") ||
       selectedCabinetInfo.status === CabinetStatus.EXPIRED
     ) {
       const nowDate = new Date();
@@ -104,6 +109,51 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         expireDate: targetCabinetInfo.lent_info[0]?.expire_time,
         detailMessage: getDetailMessage(targetCabinetInfo),
         detailMessageColor: getDetailMessageColor(targetCabinetInfo),
+        isAdmin: isAdmin,
+      }
+    : null;
+
+  const countTypes = (cabinetList: CabinetInfo[]) => {
+    const counts = {
+      [CabinetStatus.AVAILABLE]: 0,
+      [CabinetStatus.EXPIRED]: 0,
+      [CabinetStatus.SET_EXPIRE_FULL]: 0,
+      [CabinetStatus.BROKEN]: 0,
+    };
+    cabinetList.forEach((cabinet) => {
+      const status = cabinet.status;
+      switch (status) {
+        case CabinetStatus.AVAILABLE:
+          counts["AVAILABLE"]++;
+          break;
+        case CabinetStatus.SET_EXPIRE_AVAILABLE:
+          counts["AVAILABLE"]++;
+          break;
+        case CabinetStatus.SET_EXPIRE_FULL:
+          counts["SET_EXPIRE_FULL"]++;
+          break;
+        case CabinetStatus.EXPIRED:
+          counts["EXPIRED"]++;
+          break;
+        default:
+          counts["BROKEN"]++;
+      }
+    });
+    return counts;
+  };
+  const handleClickReturnAll = () => {
+    alert("returned all!");
+  };
+  const handleClickChangeStatusAll = () => {
+    alert("open change status modal");
+  };
+
+  const multiSelectInfo: IMultiSelectTargetInfo | null = isMultiSelect
+    ? {
+        targetCabinetInfoList: targetCabinetInfoList,
+        handleClickReturnAll: handleClickReturnAll,
+        handleClickChangeStatusAll: handleClickChangeStatusAll,
+        typeCounts: countTypes(targetCabinetInfoList),
       }
     : null;
 
@@ -112,6 +162,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       selectedCabinetInfo={cabinetViewData}
       myCabinetId={myCabinetInfo?.cabinet_id}
       closeCabinet={closeCabinet}
+      multiSelectTargetInfo={multiSelectInfo}
     />
   );
 };
