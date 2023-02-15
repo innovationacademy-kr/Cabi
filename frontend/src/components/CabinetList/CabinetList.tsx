@@ -16,23 +16,17 @@ const CabinetList = ({
   cabinetInfo,
   isAdmin,
 }: CabinetListInterface): JSX.Element => {
-  if (isAdmin) {
-    return (
-      <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
-        {cabinetInfo.map((cabinet, index) => (
-          <AdminCabinetListItem cabinet={cabinet} key={index} />
-        ))}
-      </CabinetListContainerStyled>
-    );
-  } else {
-    return (
-      <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
-        {cabinetInfo.map((cabinet, index) => (
-          <CabinetListItem {...cabinet} key={index} />
-        ))}
-      </CabinetListContainerStyled>
-    );
-  }
+  return (
+    <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
+      {isAdmin
+        ? cabinetInfo.map((cabinet, index) => (
+            <AdminCabinetListItem cabinet={cabinet} key={index} />
+          ))
+        : cabinetInfo.map((cabinet, index) => (
+            <CabinetListItem {...cabinet} key={index} />
+          ))}
+    </CabinetListContainerStyled>
+  );
 };
 
 const CabinetListContainerStyled = styled.div<{

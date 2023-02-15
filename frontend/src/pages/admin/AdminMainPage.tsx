@@ -93,11 +93,13 @@ const MainPage = () => {
       }}
     >
       <SectionPaginationContainer />
-      <MultiSelectButton
-        theme={isMultiSelect ? "fill" : "line"}
-        text="다중 선택 모드"
-        onClick={toggleMultiSelectMode}
-      />
+      <div style={{ marginBottom: `${isMultiSelect ? "0px" : "4px"}` }}>
+        <MultiSelectButton
+          theme={isMultiSelect ? "fill" : "line"}
+          text="다중 선택 모드"
+          onClick={toggleMultiSelectMode}
+        />
+      </div>
       <CabinetListWrapperStyled>
         <CabinetListContainer isAdmin={true} />
       </CabinetListWrapperStyled>

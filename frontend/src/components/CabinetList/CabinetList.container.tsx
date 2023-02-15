@@ -29,7 +29,7 @@ const CabinetListContainer = ({
   return (
     <React.Fragment>
       {isMultiSelect && (
-        <div style={{ marginTop: "4px" }}>
+        <div style={{ marginTop: "4px", marginBottom: "4px" }}>
           <MultiSelectFilterButton
             theme={
               containsAllCabinets(currentSectionCabinets) ? "fill" : "line"
