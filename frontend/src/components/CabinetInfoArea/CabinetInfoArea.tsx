@@ -15,8 +15,8 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import { targetCabinetInfoListState } from "@/recoil/atoms";
 import useMultiSelect from "@/hooks/useMultiSelect";
+import AdminReturnModal from "../Modals/ReturnModal/AdminReturnModal";
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
@@ -65,6 +65,8 @@ const CabinetInfoArea: React.FC<{
   const [showLentModal, setShowLentModal] = useState<boolean>(false);
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
+  const [showAdminReturnModal, setShowAdminReturnModal] =
+    useState<boolean>(false);
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
@@ -94,6 +96,12 @@ const CabinetInfoArea: React.FC<{
   };
   const handleCloseUnavailableModal = () => {
     setShowUnavailableModal(false);
+  };
+  const handleOpenAdminReturnModal = () => {
+    setShowAdminReturnModal(true);
+  };
+  const handleCloseAdminReturnModal = () => {
+    setShowAdminReturnModal(false);
   };
 
   if (
@@ -135,12 +143,12 @@ const CabinetInfoArea: React.FC<{
         </MultiCabinetIconWrapperStyled>
         <CabinetInfoButtonsContainerStyled>
           <ButtonContainer
-            onClick={() => {}} //todo: admin 반납 모달 만들기
+            onClick={() => {}} //todo: admin 일괄 반납 모달 만들기
             text="일괄 반납"
             theme="fill"
           />
           <ButtonContainer
-            onClick={() => {}} //todo: 상태관리 모달 만들기
+            onClick={() => {}} //todo: admin 일괄 상태관리 모달 만들기
             text="상태관리"
             theme="line"
           />
@@ -198,12 +206,12 @@ const CabinetInfoArea: React.FC<{
             {selectedCabinetInfo!.isAdmin ? (
               <>
                 <ButtonContainer
-                  onClick={() => {}} //todo: admin 반납 모달 만들기
+                  onClick={handleOpenAdminReturnModal} //todo: admin 단일 반납 모달 만들기
                   text="반납"
                   theme="fill"
                 />
                 <ButtonContainer
-                  onClick={() => {}} //todo: 상태관리 모달 만들기
+                  onClick={() => {}} //todo: admin 단일 상태관리 모달 만들기
                   text="상태 관리"
                   theme="line"
                 />
@@ -248,6 +256,12 @@ const CabinetInfoArea: React.FC<{
         />
       )}
       {showMemoModal && <MemoModalContainer onClose={handleCloseMemoModal} />}
+      {showAdminReturnModal && (
+        <AdminReturnModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={handleCloseAdminReturnModal}
+        />
+      )}
     </CabinetDetailAreaStyled>
   );
 };
