@@ -56,8 +56,8 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
       <ResponsivePie
         data={convert(data)}
         theme={{
-          legends: { text: { fontSize: "1.2rem" } },
-          labels: { text: { fontSize: "1.2rem" } },
+          legends: { text: { fontSize: "15px" } },
+          labels: { text: { fontSize: "15px" } },
         }}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
         colors={["#d9d9d9", "#ff4e4e", "#9747ff", "#3c3c3c "]}
@@ -87,12 +87,12 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
             translateX: 0,
             translateY: 50,
             itemsSpacing: 5,
-            itemWidth: 100,
+            itemWidth: 70,
             itemHeight: 18,
             itemTextColor: "#999",
             itemDirection: "top-to-bottom",
             itemOpacity: 1,
-            symbolSize: 18,
+            symbolSize: 12,
             symbolShape: "circle",
             effects: [
               {
