@@ -2,6 +2,7 @@ import { ActivationDto, BanDto } from "@/types/dto/lent.dto";
 import { useState } from "react";
 import styled from "styled-components";
 import BarChart from "./Chart/BarChart";
+import LineChart from "./Chart/LineChart";
 import PieChart from "./Chart/PieChart";
 import AdminTable from "./Table/AdminTable";
 const resData = [
@@ -11,33 +12,9 @@ const resData = [
 ];
 
 interface IData {
-  first: string;
-  second: string;
-  third: string;
-}
-
-function createData1() {
-  const result: IData[] = [];
-  for (let i = 0; i < 7; i++) {
-    result.push({
-      first: (Math.floor(Math.random() * 5) + 1).toString(),
-      second: `Position${i + 1}`,
-      third: (i + 1).toString(),
-    });
-  }
-  return result;
-}
-
-function createData2() {
-  const result: IData[] = [];
-  for (let i = 0; i < 8; i++) {
-    result.push({
-      first: (Math.floor(Math.random() * 5) + 1).toString(),
-      second: `Position${i + 1}`,
-      third: (i + 1).toString(),
-    });
-  }
-  return result;
+  first?: string;
+  second?: string;
+  third?: string;
 }
 
 function createData3() {
@@ -52,10 +29,125 @@ function createData3() {
   return result;
 }
 
-const data1 = createData1();
-const data2 = createData2();
-const data3 = createData3();
+const data1 = [
+  {
+    first: "yooh",
+    second: "2F-150",
+    third: "3일",
+  },
+  {
+    first: "sichoi",
+    second: "5F-3",
+    third: "13일",
+  },
+  {
+    first: "sanan",
+    second: "2F-77",
+    third: "1일",
+  },
+  {
+    first: "jaesjeon",
+    second: "4F-23",
+    third: "233일",
+  },
 
+  {
+    first: "eunbikim",
+    second: "4F-54",
+    third: "43일",
+  },
+  {
+    first: "inshin",
+    second: "5F-78",
+    third: "42일",
+  },
+  {
+    first: "seycho",
+    second: "4F-11",
+    third: "21일",
+  },
+  {
+    first: "joopark",
+    second: "2F-46",
+    third: "9일",
+  },
+  {
+    first: "huchoi",
+    second: "5F-10",
+    third: "31일",
+  },
+  {
+    first: "dongglee",
+    second: "2F-5",
+    third: "1일",
+  },
+];
+
+const data2 = [
+  {
+    first: "2F-11",
+    second: "22.11.11",
+  },
+  {
+    first: "4F-15",
+    second: "23.12.11",
+    third: "배터리",
+  },
+];
+
+const data3 = [
+  {
+    first: "yooh",
+    second: "13일",
+    third: "X",
+  },
+  {
+    first: "sichoi",
+    second: "15일",
+    third: "O",
+  },
+  {
+    first: "sanan",
+    second: "2일",
+    third: "X",
+  },
+  {
+    first: "jaesjeon",
+    second: "555일",
+    third: "X",
+  },
+
+  {
+    first: "eunbikim",
+    second: "32일",
+    third: "O",
+  },
+  {
+    first: "inshin",
+    second: "17일",
+    third: "X",
+  },
+  {
+    first: "seycho",
+    second: "2일",
+    third: "O",
+  },
+  {
+    first: "joopark",
+    second: "1일",
+    third: "X",
+  },
+  {
+    first: "huchoi",
+    second: "14일",
+    third: "O",
+  },
+  {
+    first: "dongglee",
+    second: "17일",
+    third: "X",
+  },
+];
 const AdminInfo = () => {
   const [toggle, setToggle] = useState(false);
   const onClick = () => setToggle(!toggle);
@@ -69,7 +161,7 @@ const AdminInfo = () => {
           <PieChart data={resData} />
         </ContainerStyled>
         <ContainerStyled>
-          <BarChart data={resData} />
+          <LineChart data={resData} />
         </ContainerStyled>
       </AdminInfoRowStyled>
       <AdminInfoRowStyled>
@@ -94,9 +186,9 @@ const AdminInfo = () => {
         <ContainerStyled>
           <H2styled>페널티 사용자</H2styled>
           <AdminTable
-            data={data3}
+            data={data3.sort((a, b) => parseInt(b.second) - parseInt(a.second))}
             handleClick={onClick}
-            thInfo={["위치", "번호", "Intra ID"]}
+            thInfo={["Intra ID", "연체 일 수", "반납 여부"]}
             ratio={["33%", "33%", "33%"]}
           />
         </ContainerStyled>

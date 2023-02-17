@@ -6,9 +6,9 @@ import Pagination from "./Pagination";
 const ROW_COUNT = 5;
 
 interface IData {
-  first: string;
-  second: string;
-  third: string;
+  first?: string;
+  second?: string;
+  third?: string;
 }
 const AdminTable = ({
   data,
@@ -22,7 +22,6 @@ const AdminTable = ({
   ratio: string[];
 }) => {
   const [curPage, setCurPage] = useState(0);
-  console.log(data);
   return (
     <TableWrapperstyled>
       <TableBorderStyled>
