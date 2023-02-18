@@ -284,11 +284,11 @@ export class SearchController {
   })
   @ApiOkResponse({
     type: AdminStatisticsDto,
-    description: '현재를 기준으로한 이전일자, 대여 횟수, 반납 횟수를 배열형태로 응답받습니다.',
+    description: '현재를 기준으로한 이전 일자, 대여 횟수, 반납 횟수를 객체로 응답받습니다.',
   })
-  @Get('cabinet/statistics/:date')
+  @Get('cabinet/statistics/')
   async getLentReturnStatisticsByDaysFromNow(
-    @Query('days', ParseIntPipe) days: number,
+    @Query('days') days: number,
   ): Promise<AdminStatisticsDto> {
     this.logger.debug(`Called ${this.getLentReturnStatisticsByDaysFromNow}`);
     try {

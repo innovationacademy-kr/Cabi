@@ -12,14 +12,12 @@ import { BrokenCabinetInfoPagenationDto } from 'src/admin/dto/broken.cabinet.inf
 import { BlockedUserInfoPagenationDto } from 'src/admin/dto/blocked.user.info.pagenation.dto';
 import { UserCabinetInfoPagenationDto } from 'src/admin/dto/user.cabinet.info.pagenation.dto';
 import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
-import Lent from 'src/entities/lent.entity';
 import LentLog from 'src/entities/lent.log.entity';
 
 export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Cabinet) private cabinetRepository: Repository<Cabinet>,
-	@InjectRepository(Lent) private lentRepository: Repository<Lent>,
 	@InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
     @InjectRepository(BanLog) private banLogRepository: Repository<BanLog>,
   ) {}
@@ -285,17 +283,19 @@ export class AdminSearchRepository implements IAdminSearchRepository {
 	days: number,
   ): Promise<AdminStatisticsDto> {
 	const now: Date = new Date();
-	const before: Date = new Date(-24 * 3600 * days * 1000);
-	const lentQuery = await this.lentRepository
+	const before: Date = new Date();
+	before.setDate(now.getDate() - days);
+	console.log(`now = ${now}, before = ${before}`);
+	const lentQuery = await this.lentLogRepository
 	.createQueryBuilder('dateLent')
-	.where('dateLent.lent_time <= : now', { now })
-	.andWhere('dateLent.lent_time >= : before', { before });
+	.where('dateLent.lent_time <= :now', { now: now })
+	.andWhere('dateLent.lent_time >= :before', { before: before });
 	const lentCount = await lentQuery.getCount();
 
 	const returnQuery = await this.lentLogRepository
 	.createQueryBuilder('dateReturn')
-	.where('dateReturn.return_time <= : now', { now })
-	.andWhere('dateReturn.return_time >= : before', { before });
+	.where('dateReturn.return_time <= :now', { now: now })
+	.andWhere('dateReturn.return_time >= :before', { before: before });
 	const returnCount = await returnQuery.getCount();
 
 	const ret = {
