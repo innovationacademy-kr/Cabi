@@ -169,12 +169,12 @@ export class AdminSearchService {
    * @param date 현재를 기준으로 통계를 보고싶은 만큼의 이전일자
    * @returns AdminStatisticsDto
    */
-  async getLentReturnStatisticsByDateFromNow(
-    date: number,
+  async getLentReturnStatisticsByDaysFromNow(
+    days: number,
   ): Promise<AdminStatisticsDto> {
     this.logger.debug(
-      `Called ${AdminSearchService.name} ${this.getLentReturnStatisticsByDateFromNow.name}`,
+      `Called ${AdminSearchService.name} ${this.getLentReturnStatisticsByDaysFromNow.name}`,
     );
-    return await this.adminSearchRepository.getLentReturnStatisticsByDateFromNow(date);
+    return await this.adminSearchRepository.getLentReturnStatisticsByDaysFromNow(days);
   }
 }

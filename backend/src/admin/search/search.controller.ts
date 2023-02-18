@@ -287,12 +287,12 @@ export class SearchController {
     description: '현재를 기준으로한 이전일자, 대여 횟수, 반납 횟수를 배열형태로 응답받습니다.',
   })
   @Get('cabinet/statistics/:date')
-  async getLentReturnStatisticsByDateFromNow(
-    @Query('date', ParseIntPipe) date: number,
+  async getLentReturnStatisticsByDaysFromNow(
+    @Query('days', ParseIntPipe) days: number,
   ): Promise<AdminStatisticsDto> {
-    this.logger.debug(`Called ${this.getLentReturnStatisticsByDateFromNow}`);
+    this.logger.debug(`Called ${this.getLentReturnStatisticsByDaysFromNow}`);
     try {
-      return await this.adminSearchService.getLentReturnStatisticsByDateFromNow(date);
+      return await this.adminSearchService.getLentReturnStatisticsByDaysFromNow(days);
     } catch (err) {
       this.logger.error(err);
       throw err;

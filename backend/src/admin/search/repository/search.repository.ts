@@ -281,25 +281,25 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     return rtn;
   }
 
-  async getLentReturnStatisticsByDateFromNow(
-	date: number,
+  async getLentReturnStatisticsByDaysFromNow(
+	days: number,
   ): Promise<AdminStatisticsDto> {
-	const startDate: Date = new Date();
-	const endDate: Date = new Date(-24 * 3600 * date * 1000);
+	const now: Date = new Date();
+	const before: Date = new Date(-24 * 3600 * days * 1000);
 	const lentQuery = await this.lentRepository
 	.createQueryBuilder('dateLent')
-	.where('dateLent.lent_time >= : startDateLent', { startDate })
-	.andWhere('dateLent.lent_time <= : endDate', { endDate });
+	.where('dateLent.lent_time <= : now', { now })
+	.andWhere('dateLent.lent_time >= : before', { before });
 	const lentCount = await lentQuery.getCount();
 
 	const returnQuery = await this.lentLogRepository
 	.createQueryBuilder('dateReturn')
-	.where('dateReturn.return_time >= : startDateLent', { startDate })
-	.andWhere('dateReturn.return_time <= : endDate', { endDate });
+	.where('dateReturn.return_time <= : now', { now })
+	.andWhere('dateReturn.return_time >= : before', { before });
 	const returnCount = await returnQuery.getCount();
 
 	const ret = {
-		daysFromNow: date,
+		daysFromNow: days,
 		lentCount: lentCount,
 		returnCount: returnCount,
 	};
