@@ -3,6 +3,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
+  numberOfAdminWorkState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import { axiosAdminReturn, axiosCabinetById } from "@/api/axios/axios.custom";
@@ -27,12 +28,16 @@ const AdminReturnModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
+  const setNumberOfAdminWork = useSetRecoilState<number>(
+    numberOfAdminWorkState
+  );
   const returnDetail = "지금 반납 하시겠습니까?";
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
       await axiosAdminReturn(currentCabinetId);
       //userCabinetId 세팅
       setIsCurrentSectionRender(true);
+      setNumberOfAdminWork((prev) => prev + 1);
       setModalTitle("반납되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
       try {
