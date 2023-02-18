@@ -285,7 +285,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
 	date: number,
   ): Promise<AdminStatisticsDto> {
 	const startDate: Date = new Date();
-	const endDate: Date = new Date(-24 * 3600 * 7 * 1000);
+	const endDate: Date = new Date(-24 * 3600 * date * 1000);
 	const lentQuery = await this.lentRepository
 	.createQueryBuilder('dateLent')
 	.where('dateLent.lent_time >= : startDateLent', { startDate })
