@@ -11,11 +11,16 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { BrokenCabinetInfoPagenationDto } from 'src/admin/dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from 'src/admin/dto/blocked.user.info.pagenation.dto';
 import { UserCabinetInfoPagenationDto } from 'src/admin/dto/user.cabinet.info.pagenation.dto';
+import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
+import Lent from 'src/entities/lent.entity';
+import LentLog from 'src/entities/lent.log.entity';
 
 export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Cabinet) private cabinetRepository: Repository<Cabinet>,
+	@InjectRepository(Lent) private lentRepository: Repository<Lent>,
+	@InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
     @InjectRepository(BanLog) private banLogRepository: Repository<BanLog>,
   ) {}
 
@@ -263,5 +268,30 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       total_length: result[1],
     };
     return rtn;
+  }
+
+  async getLentReturnStatisticsByDateFromNow(
+	date: number,
+  ): Promise<AdminStatisticsDto> {
+	const startDate: Date = new Date();
+	const endDate: Date = new Date(-24 * 3600 * 7 * 1000);
+	const lentQuery = await this.lentRepository
+	.createQueryBuilder('dateLent')
+	.where('dateLent.lent_time >= : startDateLent', { startDate })
+	.andWhere('dateLent.lent_time <= : endDate', { endDate });
+	const lentCount = await lentQuery.getCount();
+
+	const returnQuery = await this.lentLogRepository
+	.createQueryBuilder('dateReturn')
+	.where('dateReturn.return_time >= : startDateLent', { startDate })
+	.andWhere('dateReturn.return_time <= : endDate', { endDate });
+	const returnCount = await returnQuery.getCount();
+
+	const ret = {
+		daysFromNow: date,
+		lentCount: lentCount,
+		returnCount: returnCount,
+	};
+	return (ret);
   }
 }

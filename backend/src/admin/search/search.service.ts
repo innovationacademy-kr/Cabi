@@ -6,6 +6,7 @@ import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagen
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
 import { IAdminSearchRepository } from './repository/search.repository.interface';
 import { UserCabinetInfoPagenationDto } from '../dto/user.cabinet.info.pagenation.dto';
+import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
 
 @Injectable()
 export class AdminSearchService {
@@ -154,5 +155,20 @@ export class AdminSearchService {
       `Called ${AdminSearchService.name} ${this.searchByBanUser.name}`,
     );
     return await this.adminSearchRepository.searchByBanUser(page, length);
+  }
+
+  /**
+   * 현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다..
+   *
+   * @param date 현재를 기준으로 통계를 보고싶은 만큼의 이전일자
+   * @returns AdminStatisticsDto
+   */
+  async getLentReturnStatisticsByDateFromNow(
+    date: number,
+  ): Promise<AdminStatisticsDto> {
+    this.logger.debug(
+      `Called ${AdminSearchService.name} ${this.getLentReturnStatisticsByDateFromNow.name}`,
+    );
+    return await this.adminSearchRepository.getLentReturnStatisticsByDateFromNow(date);
   }
 }
