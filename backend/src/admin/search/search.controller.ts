@@ -286,7 +286,7 @@ export class SearchController {
     type: AdminStatisticsDto,
     description: '현재를 기준으로한 이전일자, 대여 횟수, 반납 횟수를 배열형태로 응답받습니다.',
   })
-  @Get('/statistics/:date')
+  @Get('cabinet/statistics/:date')
   async getLentReturnStatisticsByDateFromNow(
     @Query('date', ParseIntPipe) date: number,
   ): Promise<AdminStatisticsDto> {
