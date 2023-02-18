@@ -5,7 +5,7 @@ import {
   isCurrentSectionRenderState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
-import { axiosCabinetById, axiosReturn } from "@/api/axios/axios.custom";
+import { axiosAdminReturn, axiosCabinetById } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
 import {
   SuccessResponseModal,
@@ -30,7 +30,7 @@ const AdminReturnModal: React.FC<{
   const returnDetail = "지금 반납 하시겠습니까?";
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
-      await axiosReturn();
+      await axiosAdminReturn(currentCabinetId);
       //userCabinetId 세팅
       setIsCurrentSectionRender(true);
       setModalTitle("반납되었습니다");
