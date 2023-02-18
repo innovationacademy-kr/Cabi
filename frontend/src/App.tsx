@@ -4,7 +4,7 @@ import Layout from "@/pages/Layout";
 import LoginPage from "@/pages/LoginPage";
 import HomePage from "@/pages/HomePage";
 import MainPage from "@/pages/MainPage";
-import LoadingAnimation from "./components/Common/LoadingAnimation";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LogPage from "@/pages/LogPage";
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
@@ -16,6 +16,7 @@ const SearchPage = lazy(() => import("@/pages/admin/SearchPage"));
 const AdminLoginFailurePage = lazy(
   () => import("@/pages/admin/AdminLoginFailurePage")
 );
+const AdminMainPage = lazy(() => import("@/pages/admin/AdminMainPage"));
 
 function App(): React.ReactElement {
   return (
@@ -32,7 +33,7 @@ function App(): React.ReactElement {
           <Route path="/admin/" element={<AdminLayout />}>
             <Route path="login" element={<AdminLoginPage />} />
             <Route path="home" element={<AdminHomePage />} />
-            <Route path="main" element={<MainPage />} />
+            <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="log" element={<AdminLogPage />} />
           </Route>

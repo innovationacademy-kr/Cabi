@@ -154,7 +154,8 @@ export class SearchController {
 
   @ApiOperation({
     summary: '해당 사물함 번호를 가진 사물함 리스트',
-    description: '해당 사물함 번호를 가진 사물함 리스트를 반환합니다.',
+    description:
+      '해당 사물함 번호를 가진 사물함 리스트를 반환합니다. 선택적으로 특정 층을 지정할 수 있습니다.',
   })
   @ApiParam({
     name: 'visibleNum',
@@ -167,10 +168,14 @@ export class SearchController {
   @Get('/cabinet/visibleNum/:visibleNum')
   async getCabinetListByVisibleNum(
     @Param('visibleNum', ParseIntPipe) visibleNum: number,
+    @Query('floor') floor?: number,
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(`Called ${this.getCabinetListByVisibleNum.name}`);
     try {
-      return await this.adminSearchService.searchByCabinetNumber(visibleNum);
+      return await this.adminSearchService.searchByCabinetNumber(
+        visibleNum,
+        floor,
+      );
     } catch (err) {
       this.logger.error(err);
       throw err;

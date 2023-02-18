@@ -21,12 +21,16 @@ const SearchBarList = ({
   searchListById,
   searchListByNum,
   searchWord,
-  searchClear,
+  resetSearchState,
+  totalLength,
+  targetIndex,
 }: {
   searchListById: ISearchListByIntraId[];
   searchListByNum: CabinetInfo[];
-  searchClear: () => void;
+  resetSearchState: () => void;
   searchWord?: string;
+  totalLength: number;
+  targetIndex?: number;
 }) => {
   return (
     <UlStyled>
@@ -36,7 +40,8 @@ const SearchBarList = ({
             key={index}
             inputText={searchWord}
             resultText={item.intra_id}
-            searchClear={searchClear}
+            resetSearchState={resetSearchState}
+            targetIndex={targetIndex === index}
           />
         );
       })}
@@ -44,13 +49,16 @@ const SearchBarList = ({
         return (
           <SearchListItem
             key={index}
+            floor={item.floor}
             inputText={searchWord}
             resultText={item.cabinet_num.toString()}
             isNum={true}
-            searchClear={searchClear}
+            resetSearchState={resetSearchState}
+            targetIndex={targetIndex === index}
           />
         );
       })}
+      {<TotalStyled>검색 결과: {totalLength}</TotalStyled>}
     </UlStyled>
   );
 };
@@ -69,6 +77,16 @@ const UlStyled = styled.ul`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   opacity: 0.9;
   overflow: hidden;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const TotalStyled = styled.li`
+  font-size: 0.875rem;
+  color: var(--gray-color);
+  text-align: right;
+  padding: 10px;
 `;
 
 export default SearchBarList;

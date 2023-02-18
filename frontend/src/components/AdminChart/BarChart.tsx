@@ -10,9 +10,9 @@ const resData = [
 const result = resData.map((data) => ({
   floor: data.floor + "층",
   ["사용 중"]: data.used,
-  ["미사용"]: data.unused,
-  ["연체 중"]: data.overdue,
-  ["고장"]: data.disabled,
+  ["사용가능"]: data.unused,
+  ["반납지연"]: data.overdue,
+  ["사용불가"]: data.disabled,
 }));
 
 interface IRentInfo {
@@ -41,9 +41,9 @@ const convert = (data: IRentInfo[]) =>
     }) => ({
       floor: floor + "층",
       ["사용 중"]: used,
-      ["미사용"]: unused,
-      ["연체 중"]: overdue,
-      ["고장"]: disabled,
+      ["사용가능"]: unused,
+      ["반납지연"]: overdue,
+      ["사용불가"]: disabled,
     })
   );
 
@@ -62,7 +62,7 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
         labels: { text: { fontSize: "1.5rem" } },
       }}
       data={convert(data)}
-      keys={["고장", "연체 중", "사용 중", "미사용"]}
+      keys={["사용불가", "반납지연", "사용 중", "사용가능"]}
       indexBy="floor"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
@@ -105,7 +105,7 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
           justify: false,
           translateX: 120,
           translateY: 0,
-          itemsSpacing: 2,
+          itemsSpacing: 20,
           itemWidth: 100,
           itemHeight: 20,
           itemDirection: "left-to-right",
@@ -130,9 +130,21 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
   </BarChartStyled>
 );
 
+const BarContainerStyled = styled.div`
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const BarChartStyled = styled.div`
-  width: 500px;
+  max-width: 500px;
+  min-width: 330px;
   height: 500px;
+  width: 50%;
   display: flex;
   justify-content: center;
   align-items: center;

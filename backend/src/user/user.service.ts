@@ -61,7 +61,7 @@ export class UserService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async getCabinetDtoByUserId(user_id: number): Promise<CabinetDto | null> {
     this.logger.debug(`Called ${this.getCabinetDtoByUserId.name}`);
@@ -70,7 +70,7 @@ export class UserService {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async deleteUserById(user_id: number): Promise<void> {
     this.logger.debug(`Called ${this.deleteUserById.name}`);

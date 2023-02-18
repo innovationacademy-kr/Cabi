@@ -68,45 +68,54 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       where: {
         intra_id: Like(`%${intraId}%`),
       },
-      take: length,
-      skip: page * length,
+      // Lent가 null이 아닌 값들은 Lent.cabinet.floor, Lent.cabinet.cabinet_num로 오름차순 정렬
+      // Lent가 null인 값들은 intra_id로 오름차순 정렬
+      order: {
+        Lent: {
+          cabinet: {
+            floor: 'ASC',
+            cabinet_num: 'ASC',
+          },
+        },
+        intra_id: 'ASC',
+      },
     });
 
     const rtn = {
       result: result[0].map(
         (user) =>
-          user.Lent &&
-          user.Lent.cabinet && {
-            userInfo: user.Lent.cabinet.lent.map((lent) => ({
-              user_id: lent.user.user_id,
-              intra_id: lent.user.intra_id,
-            })),
-            cabinetInfo: {
-              cabinet_id: user.Lent.cabinet.cabinet_id,
-              cabinet_num: user.Lent.cabinet.cabinet_num,
-              lent_type: user.Lent.cabinet.lent_type,
-              cabinet_title: user.Lent.cabinet.title,
-              max_user: user.Lent.cabinet.max_user,
-              status: user.Lent.cabinet.status,
-              section: user.Lent.cabinet.section,
-              status_note: user.Lent.cabinet.status_note,
-            },
+          user && {
+            user_id: user.user_id,
+            intra_id: user.intra_id,
+            cabinetInfo: user.Lent &&
+              user.Lent.cabinet && {
+                cabinet_id: user.Lent.cabinet.cabinet_id,
+                cabinet_num: user.Lent.cabinet.cabinet_num,
+                lent_type: user.Lent.cabinet.lent_type,
+                cabinet_title: user.Lent.cabinet.title,
+                max_user: user.Lent.cabinet.max_user,
+                status: user.Lent.cabinet.status,
+                section: user.Lent.cabinet.section,
+                location: user.Lent.cabinet.location,
+                floor: user.Lent.cabinet.floor,
+                status_note: user.Lent.cabinet.status_note,
+              },
           },
       ),
       total_length: result[1],
     };
-    // lent가 있는 값들을 우선적으로 하며, cabinet_num을 오름차순으로 정렬
+    // rtn에서 cabinetInfo가 null인 값들을 배열의 끝으로 보낸다.
     rtn.result.sort((a, b) => {
-      if (a && b) {
-        if (a.cabinetInfo.cabinet_num > b.cabinetInfo.cabinet_num) return 1;
-        else if (a.cabinetInfo.cabinet_num < b.cabinetInfo.cabinet_num)
-          return -1;
-        else return 0;
-      } else if (a) return -1;
-      else if (b) return 1;
-      else return 0;
+      if (a.cabinetInfo === null && b.cabinetInfo !== null) {
+        return 1;
+      } else if (a.cabinetInfo !== null && b.cabinetInfo === null) {
+        return -1;
+      } else {
+        return 0;
+      }
     });
-
+    // take length, skip page * length
+    rtn.result = rtn.result.slice(page * length, (page + 1) * length);
     return rtn;
   }
 
@@ -150,11 +159,13 @@ export class AdminSearchRepository implements IAdminSearchRepository {
 
   async searchByCabinetNumber(
     visibleNum: number,
+    floor?: number,
   ): Promise<CabinetInfoPagenationDto> {
     const result = await this.cabinetRepository.find({
       relations: ['lent', 'lent.user'],
       where: {
         cabinet_num: visibleNum,
+        floor: floor,
       },
       order: { cabinet_id: 'ASC' },
     });
