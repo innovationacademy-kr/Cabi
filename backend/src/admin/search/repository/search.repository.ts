@@ -285,7 +285,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
 	const now: Date = new Date();
 	const before: Date = new Date();
 	before.setDate(now.getDate() - days);
-	console.log(`now = ${now}, before = ${before}`);
+
 	const lentQuery = await this.lentLogRepository
 	.createQueryBuilder('dateLent')
 	.where('dateLent.lent_time <= :now', { now: now })

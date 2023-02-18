@@ -100,7 +100,7 @@ export interface IAdminSearchRepository {
   /**
    * 현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다..
    *
-   * @param date 현재를 기준으로 통계를 보고싶은 만큼의 이전일자
+   * @param days 현재를 기준으로 통계를 보고싶은 만큼의 이전일자
    * @returns AdminStatisticsDto
    * @throw HTTPError
    */

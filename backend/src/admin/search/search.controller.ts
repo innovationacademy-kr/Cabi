@@ -279,7 +279,7 @@ export class SearchController {
     description: '현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다.',
   })
   @ApiQuery({
-    name: 'date',
+    name: 'days',
     description: '현재일자를 기준으로 조회하고 싶은 일자',
   })
   @ApiOkResponse({
