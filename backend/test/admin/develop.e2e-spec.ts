@@ -10,6 +10,8 @@ import { JwtService } from '@nestjs/jwt';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
 import { AdminAuthService } from 'src/admin/auth/auth.service';
 import { AdminDevelopModule } from 'src/admin/develop/develop.module';
+import exp from 'constants';
+import AdminUserRole from 'src/admin/enums/admin.user.role.enum';
 
 const testDBName = 'test_admin_develop';
 const AUTHORIZATION = 'Authorization';
@@ -128,6 +130,7 @@ describe('Admin develop 모듈 테스트 (e2e)', () => {
       });
 
       it('최고관리자 요청 302', async () => {
+        const adminAuthService: AdminAuthService = app.get(AdminAuthService);
         const superUser: AdminUserDto = {
           email: 'super@example.com',
           role: 2,
@@ -138,6 +141,9 @@ describe('Admin develop 모듈 테스트 (e2e)', () => {
           .set(AUTHORIZATION, `${BEARER} ${token}`)
           .query({ email: superUser.email });
         expect(response.status).toBe(302);
+        expect(await adminAuthService.getAdminUserRole(superUser.email)).toBe(
+          AdminUserRole.ROOT_ADMIN,
+        );
       });
 
       it('비어있는 쿼리스트링 302', async () => {
