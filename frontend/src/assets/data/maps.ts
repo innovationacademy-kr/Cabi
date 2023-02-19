@@ -4,6 +4,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
   MODAL_UNAVAILABLE_ALREADY_LENT = "MODAL_UNAVAILABLE_ALREADY_LENT",
+  MODAL_ADMIN_RETURN = "MODAL_ADMIN_RETURN",
 }
 
 export const cabinetIconSrcMap = {
@@ -72,6 +73,11 @@ export const modalPropsMap = {
     type: "error",
     title: "이미 대여 중인 사물함이 있습니다",
     confirmMessage: "",
+  },
+  MODAL_ADMIN_RETURN: {
+    type: "confirm",
+    title: "반납 처리",
+    confirmMessage: "네, 반납할게요",
   },
 };
 

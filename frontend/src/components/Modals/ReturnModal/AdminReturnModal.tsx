@@ -15,6 +15,7 @@ import {
 import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 
 const AdminReturnModal: React.FC<{
   lentType: string;
@@ -31,7 +32,9 @@ const AdminReturnModal: React.FC<{
   const setNumberOfAdminWork = useSetRecoilState<number>(
     numberOfAdminWorkState
   );
-  const returnDetail = "지금 반납 하시겠습니까?";
+  const targetCabinetInfo = useRecoilValue<CabinetInfo>(targetCabinetInfoState);
+  const returnDetail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>
+  해당 사물함을 정말 반납하시겠습니까?`;
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
       await axiosAdminReturn(currentCabinetId);
@@ -57,7 +60,7 @@ const AdminReturnModal: React.FC<{
   const returnModalContents: IModalContents = {
     type: "hasProceedBtn",
     icon: checkIcon,
-    title: modalPropsMap[additionalModalType.MODAL_RETURN].title,
+    title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
     detail: returnDetail,
     proceedBtnText:
       modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
