@@ -22,6 +22,24 @@ export class AdminCabinetService {
     private cabinetInfoRepository: ICabinetInfoRepository,
   ) {}
 
+  async throwIfHasBorrower(cabinetId: number) {
+    if ((await this.adminCabinetRepository.cabinetIsLent(cabinetId)) === true) {
+      throw new HttpException(
+        '대여자가 있는 사물함입니다',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+  }
+
+  async throwIfNotExistedCabinet(cabinetId: number) {
+    if ((await this.isCabinetExist(cabinetId)) === false) {
+      throw new HttpException(
+        '존재하지 않는 사물함입니다',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   async getCabinetCountFloor(): Promise<CabinetFloorDto[]> {
     this.logger.debug(`Called ${this.getCabinetCountFloor.name}`);
     const result = await this.adminCabinetRepository.getCabinetCountFloor();
@@ -45,19 +63,8 @@ export class AdminCabinetService {
     this.logger.debug(
       `Called ${AdminCabinetService.name} ${this.updateLentType.name}`,
     );
-    const isLent = await this.adminCabinetRepository.cabinetIsLent(cabinetId);
-    if (isLent === true) {
-      throw new HttpException(
-        '대여자가 있는 사물함입니다',
-        HttpStatus.FORBIDDEN,
-      );
-    }
-    if ((await this.isCabinetExist(cabinetId)) === false) {
-      throw new HttpException(
-        '존재하지 않는 사물함입니다',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    this.throwIfNotExistedCabinet(cabinetId);
+    this.throwIfHasBorrower(cabinetId);
     await this.adminCabinetRepository.updateLentType(cabinetId, lentType);
   }
 
@@ -65,12 +72,7 @@ export class AdminCabinetService {
     this.logger.debug(
       `Called ${AdminCabinetService.name} ${this.updateStatusNote.name}`,
     );
-    if ((await this.isCabinetExist(cabinetId)) === false) {
-      throw new HttpException(
-        '존재하지 않는 사물함입니다',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    this.throwIfNotExistedCabinet(cabinetId);
     await this.adminCabinetRepository.updateStatusNote(cabinetId, statusNote);
   }
 
@@ -129,12 +131,7 @@ export class AdminCabinetService {
     this.logger.debug(
       `Called ${AdminCabinetService.name} ${this.updateCabinetTitle.name}`,
     );
-    if ((await this.isCabinetExist(cabinetId)) === false) {
-      throw new HttpException(
-        '존재하지 않는 사물함입니다',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    this.throwIfNotExistedCabinet(cabinetId);
     await this.adminCabinetRepository.updateCabinetTitle(cabinetId, title);
   }
 
@@ -145,12 +142,7 @@ export class AdminCabinetService {
     this.logger.debug(
       `Called ${AdminCabinetService.name} ${this.updateCabinetStatus.name}`,
     );
-    if ((await this.isCabinetExist(cabinetId)) === false) {
-      throw new HttpException(
-        '존재하지 않는 사물함입니다',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    this.throwIfNotExistedCabinet(cabinetId);
     await this.adminCabinetRepository.updateCabinetStatus(cabinetId, status);
   }
 
