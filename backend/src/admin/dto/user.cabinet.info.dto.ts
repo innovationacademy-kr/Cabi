@@ -1,11 +1,8 @@
-import { UserDto } from 'src/dto/user.dto';
-import { CabinetDto } from './cabinet.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import LentType from 'src/enums/lent.type.enum';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { CabinetLocationFloorDto } from './cabinet.location.floor.dto';
 import { BlockedUserInfoDto } from './blocked.user.info.dto';
-import { LentDto } from './lent.dto';
 
 export class UserCabinetInfoDto {
   @ApiProperty({
