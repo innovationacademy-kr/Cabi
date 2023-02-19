@@ -87,14 +87,14 @@ export class AdminSearchRepository implements IAdminSearchRepository {
             banned_date:
               user.BanLog &&
               user.BanLog.length > 0 &&
-              user.BanLog[0].unbanned_date > new Date()
-                ? user.BanLog[0].banned_date
+              user.BanLog[user.BanLog.length - 1].unbanned_date > new Date()
+                ? user.BanLog[user.BanLog.length - 1].banned_date
                 : null,
             unbanned_date:
               user.BanLog &&
               user.BanLog.length > 0 &&
-              user.BanLog[0].unbanned_date > new Date()
-                ? user.BanLog[0].unbanned_date
+              user.BanLog[user.BanLog.length - 1].unbanned_date > new Date()
+                ? user.BanLog[user.BanLog.length - 1].unbanned_date
                 : null,
             cabinetInfo: user.Lent &&
               user.Lent.cabinet && {
