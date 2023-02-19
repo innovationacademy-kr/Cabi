@@ -85,10 +85,6 @@ export class AdminCabinetService {
     );
     const result = [];
     for (const cabinetId of bundle) {
-      if ((await this.isCabinetExist(cabinetId)) === false) {
-        result.push(cabinetId);
-        continue;
-      }
       try {
         await this.cabinetInfoRepository.updateCabinetStatus(cabinetId, status);
       } catch (e) {
@@ -143,6 +139,7 @@ export class AdminCabinetService {
       `Called ${AdminCabinetService.name} ${this.updateCabinetStatus.name}`,
     );
     this.throwIfNotExistedCabinet(cabinetId);
+    this.throwIfHasBorrower(cabinetId);
     await this.adminCabinetRepository.updateCabinetStatus(cabinetId, status);
   }
 
