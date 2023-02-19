@@ -256,20 +256,23 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     length: number,
   ): Promise<BlockedUserInfoPagenationDto> {
     const result = await this.banLogRepository.findAndCount({
-      relations: ['user'],
+      relations: ['user', 'user.Lent', 'user.Lent.cabinet'],
       where: {
         unbanned_date: MoreThan(new Date()),
       },
-      order: { ban_log_id: 'ASC' },
+      order: { banned_date: 'ASC' },
       take: length,
       skip: page * length,
     });
+    const currentTime = new Date();
     const rtn = {
       result: result[0].map((ban) => ({
-        user_id: ban.ban_user_id,
         intra_id: ban.user.intra_id,
-        banned_date: ban.banned_date,
-        unbanned_date: ban.unbanned_date,
+        location: ban.user.Lent.cabinet.location,
+        overdueDays: Math.trunc(
+          (currentTime.getTime() - new Date('2023-01-22 23:59:59').getTime()) /
+            (1000 * 3600 * 24),
+        ),
       })),
       total_length: result[1],
     };
