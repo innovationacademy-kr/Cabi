@@ -270,7 +270,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
         intra_id: ban.user.intra_id,
         location: ban.user.Lent.cabinet.location,
         overdueDays: Math.trunc(
-          (currentTime.getTime() - new Date('2023-01-22 23:59:59').getTime()) /
+          (currentTime.getTime() - new Date(ban.banned_date).getTime()) /
             (1000 * 3600 * 24),
         ),
       })),
