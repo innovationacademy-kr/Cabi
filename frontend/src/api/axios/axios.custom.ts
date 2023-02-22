@@ -156,6 +156,16 @@ export const axiosGetCabinetState = async (): Promise<any> => {
   }
 };
 
+const axiosAdminReturnURL = "/api/admin/return/cabinet/";
+export const axiosAdminReturn = async (cabinetId: number): Promise<any> => {
+  try {
+    const response = await instance.delete(axiosAdminReturnURL + cabinetId);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosSearchByIntraIdURL = "/api/admin/search/intraId/";
 export const axiosSearchByIntraId = async (intraId: string) => {
   try {

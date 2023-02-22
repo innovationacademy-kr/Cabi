@@ -55,6 +55,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     // 대여중인 유저들의 정보를 반환
     const result = await this.userRepository.findAndCount({
       relations: [
+        'BanLog',
         'Lent',
         'Lent.cabinet',
         'Lent.cabinet.lent',
@@ -82,6 +83,19 @@ export class AdminSearchRepository implements IAdminSearchRepository {
           user && {
             user_id: user.user_id,
             intra_id: user.intra_id,
+            // BanLog가 존재하며 가장 최근 unbanned_date가 오늘 이후인 경우에만 banned_date, unbanned_date를 반환
+            banned_date:
+              user.BanLog &&
+              user.BanLog.length > 0 &&
+              user.BanLog[user.BanLog.length - 1].unbanned_date > new Date()
+                ? user.BanLog[user.BanLog.length - 1].banned_date
+                : null,
+            unbanned_date:
+              user.BanLog &&
+              user.BanLog.length > 0 &&
+              user.BanLog[user.BanLog.length - 1].unbanned_date > new Date()
+                ? user.BanLog[user.BanLog.length - 1].unbanned_date
+                : null,
             cabinetInfo: user.Lent &&
               user.Lent.cabinet && {
                 cabinet_id: user.Lent.cabinet.cabinet_id,
@@ -94,6 +108,13 @@ export class AdminSearchRepository implements IAdminSearchRepository {
                 location: user.Lent.cabinet.location,
                 floor: user.Lent.cabinet.floor,
                 status_note: user.Lent.cabinet.status_note,
+                lent_info: user.Lent.cabinet.lent.map((lent) => ({
+                  user_id: lent.user.user_id,
+                  intra_id: lent.user.intra_id,
+                  lent_id: lent.lent_id,
+                  lent_time: lent.lent_time,
+                  expire_time: lent.expire_time,
+                })),
               },
           },
       ),
