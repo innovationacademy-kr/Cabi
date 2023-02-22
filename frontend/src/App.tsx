@@ -4,9 +4,8 @@ import Layout from "@/pages/Layout";
 import LoginPage from "@/pages/LoginPage";
 import HomePage from "@/pages/HomePage";
 import MainPage from "@/pages/MainPage";
-import LoadingAnimation from "./components/Common/LoadingAnimation";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LogPage from "@/pages/LogPage";
-import AdminInfo from "./components/AdminInfo/AdminInfo";
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
 const AdminLayout = lazy(() => import("@/pages/admin/AdminLayout"));
@@ -16,6 +15,7 @@ const SearchPage = lazy(() => import("@/pages/admin/SearchPage"));
 const AdminLoginFailurePage = lazy(
   () => import("@/pages/admin/AdminLoginFailurePage")
 );
+const AdminInfo = lazy(() => import("@/components/AdminInfo/AdminInfo"));
 
 function App(): React.ReactElement {
   return (

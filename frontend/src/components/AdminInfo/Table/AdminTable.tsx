@@ -24,6 +24,12 @@ const AdminTable = ({
   const [curPage, setCurPage] = useState(0);
   return (
     <TableWrapperstyled>
+      <Pagination
+        setCurPage={setCurPage}
+        curPage={curPage}
+        totalCount={data.length}
+        rowCount={ROW_COUNT}
+      ></Pagination>
       <TableBorderStyled>
         <TableStyled>
           <colgroup>
@@ -40,7 +46,7 @@ const AdminTable = ({
           </TheadStyled>
 
           <TbodyStyled>
-            {new Array(ROW_COUNT).fill(0).map((info, idx) => {
+            {new Array(ROW_COUNT).fill(0).map((_, idx) => {
               const curIndex = ROW_COUNT * curPage + idx;
               return (
                 <tr key={idx}>
@@ -56,30 +62,15 @@ const AdminTable = ({
                 </tr>
               );
             })}
-            {/*{data
-              .slice(curPage * ROW_COUNT + 0, curPage * ROW_COUNT + ROW_COUNT)
-              .map(({ floor, section, cabinet_num }, idx) => (
-                <tr key={idx}>
-                  <td title={`${floor}층`}>{`${floor}층`}</td>
-                  <td title={cabinet_num.toString()}>{cabinet_num}</td>
-                  <td title={section || ""}>{section}</td>
-                </tr>
-              ))}*/}
           </TbodyStyled>
         </TableStyled>
       </TableBorderStyled>
-      <Pagination
-        setCurPage={setCurPage}
-        curPage={curPage}
-        totalCount={data.length}
-        rowCount={ROW_COUNT}
-      ></Pagination>
     </TableWrapperstyled>
   );
 };
 
 const TableWrapperstyled = styled.div`
-  width: 90%;
+  width: 80%;
   height: 100%;
   margin: 0 auto;
   background: var(--white);
@@ -100,7 +91,7 @@ const TableStyled = styled.table`
 
 const TheadStyled = styled.thead`
   width: 100%;
-  height: 40px;
+  height: 45px;
   line-height: 45px;
   background-color: var(--main-color);
   color: var(--white);
@@ -109,11 +100,11 @@ const TheadStyled = styled.thead`
 const TbodyStyled = styled.tbody`
   & > tr {
     text-align: center;
-    height: 40px;
+    height: 45px;
   }
   & > tr > td {
-    height: 40px;
-    line-height: 40px;
+    height: 45px;
+    line-height: 45px;
   }
   & > tr:nth-child(2n) {
     background: #f9f6ff;

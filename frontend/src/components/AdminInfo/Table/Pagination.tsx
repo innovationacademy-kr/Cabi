@@ -88,11 +88,10 @@ const ButtonStyled = styled.div<{
 
 const PaginationStyled = styled.div`
   width: 100%;
-  height: 80px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 10px;
 `;
 
 export default Pagination;

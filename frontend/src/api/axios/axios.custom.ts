@@ -195,3 +195,28 @@ export const axiosSearchDetailByIntraId = async (
     throw error;
   }
 };
+
+const axiosGetBrokenCabinetListURL =
+  "/api/admin/search/cabinet/broken/?page=0&length=0";
+export const axiosGetBrokenCabinetList = async () => {
+  try {
+    const response = await instance.get(axiosGetBrokenCabinetListURL);
+
+    console.log("broken response : ", response);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetBannedUserListURL =
+  "/api/admin/search/user/banned/?page=0&length=0";
+export const axiosGetBanndUserList = async () => {
+  try {
+    const response = await instance.get(axiosGetBannedUserListURL);
+
+    console.log("banned response : ", response);
+    return response.data.result;
+  } catch (error) {
+    throw error;
+  }
+};

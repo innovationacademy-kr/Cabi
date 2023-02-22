@@ -2,21 +2,31 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { currentSectionNameState } from "@/recoil/atoms";
+import {
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
 import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
+import useMultiSelect from "@/hooks/useMultiSelect";
+import MultiSelectButton from "@/components/Common/MultiSelectButton";
 
 const MainPage = () => {
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
   const { closeAll } = useMenu();
-
+  const {
+    isMultiSelect,
+    toggleMultiSelectMode,
+    resetMultiSelectMode,
+    handleSelectAll,
+  } = useMultiSelect();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
-
+  const currentFloorNumber = useRecoilValue<number>(currentFloorNumberState);
   useEffect(() => {
     closeAll();
     resetTargetCabinetInfo();
@@ -33,10 +43,13 @@ const MainPage = () => {
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
-
   const currentSectionIdx = sectionList.findIndex(
     (sectionName) => sectionName === currentSectionName
   );
+
+  useEffect(() => {
+    resetMultiSelectMode();
+  }, [currentSectionIdx, currentFloorNumber]);
 
   const moveToLeftSection = () => {
     if (currentSectionIdx <= 0) {
@@ -80,8 +93,15 @@ const MainPage = () => {
       }}
     >
       <SectionPaginationContainer />
+      <div style={{ marginBottom: `${isMultiSelect ? "0px" : "4px"}` }}>
+        <MultiSelectButton
+          theme={isMultiSelect ? "fill" : "line"}
+          text="다중 선택 모드"
+          onClick={toggleMultiSelectMode}
+        />
+      </div>
       <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={false} />
+        <CabinetListContainer isAdmin={true} />
       </CabinetListWrapperStyled>
     </WapperStyled>
   );
