@@ -20,6 +20,7 @@ import {
 
 import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoPagenationDto } from '../dto/cabinet.info.pagenation.dto';
+import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
 import { UserInfoPagenationDto } from '../dto/user.info.pagenation.dto';
 import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
@@ -267,6 +268,31 @@ export class SearchController {
     this.logger.debug(`Called ${this.getBannedUserList.name}`);
     try {
       return await this.adminSearchService.searchByBanUser(page, length);
+    } catch (err) {
+      this.logger.error(err);
+      throw err;
+    }
+  }
+
+  @ApiOperation({
+    summary: '기간별 대여/반납 횟수',
+    description: '현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다.',
+  })
+  @ApiQuery({
+    name: 'days',
+    description: '현재일자를 기준으로 조회하고 싶은 일자',
+  })
+  @ApiOkResponse({
+    type: AdminStatisticsDto,
+    description: '현재를 기준으로한 이전 일자, 대여 횟수, 반납 횟수를 객체로 응답받습니다.',
+  })
+  @Get('cabinet/statistics/')
+  async getLentReturnStatisticsByDaysFromNow(
+    @Query('days') days: number,
+  ): Promise<AdminStatisticsDto> {
+    this.logger.debug(`Called ${this.getLentReturnStatisticsByDaysFromNow}`);
+    try {
+      return await this.adminSearchService.getLentReturnStatisticsByDaysFromNow(days);
     } catch (err) {
       this.logger.error(err);
       throw err;

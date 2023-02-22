@@ -11,11 +11,14 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { BrokenCabinetInfoPagenationDto } from 'src/admin/dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from 'src/admin/dto/blocked.user.info.pagenation.dto';
 import { UserCabinetInfoPagenationDto } from 'src/admin/dto/user.cabinet.info.pagenation.dto';
+import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
+import LentLog from 'src/entities/lent.log.entity';
 
 export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Cabinet) private cabinetRepository: Repository<Cabinet>,
+	@InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
     @InjectRepository(BanLog) private banLogRepository: Repository<BanLog>,
   ) {}
 
@@ -297,5 +300,32 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       total_length: result[1],
     };
     return rtn;
+  }
+
+  async getLentReturnStatisticsByDaysFromNow(
+	days: number,
+  ): Promise<AdminStatisticsDto> {
+	const now: Date = new Date();
+	const before: Date = new Date();
+	before.setDate(now.getDate() - days);
+
+	const lentQuery = await this.lentLogRepository
+	.createQueryBuilder('dateLent')
+	.where('dateLent.lent_time <= :now', { now: now })
+	.andWhere('dateLent.lent_time >= :before', { before: before });
+	const lentCount = await lentQuery.getCount();
+
+	const returnQuery = await this.lentLogRepository
+	.createQueryBuilder('dateReturn')
+	.where('dateReturn.return_time <= :now', { now: now })
+	.andWhere('dateReturn.return_time >= :before', { before: before });
+	const returnCount = await returnQuery.getCount();
+
+	const ret = {
+		daysFromNow: days,
+		lentCount: lentCount,
+		returnCount: returnCount,
+	};
+	return (ret);
   }
 }
