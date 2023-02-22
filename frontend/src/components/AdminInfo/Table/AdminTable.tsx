@@ -15,11 +15,13 @@ const AdminTable = ({
   handleClick,
   thInfo,
   ratio,
+  fontSize,
 }: {
   data: IData[];
   handleClick: React.MouseEventHandler;
   thInfo: string[];
   ratio: string[];
+  fontSize?: string[];
 }) => {
   const [curPage, setCurPage] = useState(0);
   return (
@@ -50,13 +52,22 @@ const AdminTable = ({
               const curIndex = ROW_COUNT * curPage + idx;
               return (
                 <tr key={idx}>
-                  <td title={thInfo[0]}>
+                  <td
+                    title={thInfo[0]}
+                    style={{ fontSize: fontSize ? fontSize[0] : "0.9rem" }}
+                  >
                     {curIndex < data.length ? data[curIndex].first : ""}
                   </td>
-                  <td title={thInfo[1]}>
+                  <td
+                    title={thInfo[1]}
+                    style={{ fontSize: fontSize ? fontSize[1] : "0.9rem" }}
+                  >
                     {curIndex < data.length ? data[curIndex].second : ""}
                   </td>
-                  <td title={thInfo[2]}>
+                  <td
+                    title={thInfo[2]}
+                    style={{ fontSize: fontSize ? fontSize[2] : "0.9rem" }}
+                  >
                     {curIndex < data.length ? data[curIndex].third : ""}
                   </td>
                 </tr>
@@ -100,10 +111,10 @@ const TheadStyled = styled.thead`
 const TbodyStyled = styled.tbody`
   & > tr {
     text-align: center;
-    height: 45px;
+    height: 47px;
   }
   & > tr > td {
-    height: 45px;
+    height: 47px;
     line-height: 45px;
   }
   & > tr:nth-child(2n) {

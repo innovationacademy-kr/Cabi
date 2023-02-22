@@ -211,8 +211,7 @@ const axiosGetBrokenCabinetListURL =
 export const axiosGetBrokenCabinetList = async () => {
   try {
     const response = await instance.get(axiosGetBrokenCabinetListURL);
-
-    console.log("broken response : ", response);
+    return response.data.result;
   } catch (error) {
     throw error;
   }
@@ -223,9 +222,17 @@ const axiosGetBannedUserListURL =
 export const axiosGetBanndUserList = async () => {
   try {
     const response = await instance.get(axiosGetBannedUserListURL);
-
-    console.log("banned response : ", response);
     return response.data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetStatisticsURL = "/api/admin/search/cabinet/statistics/?days=7";
+export const axiosGetStatistics = async () => {
+  try {
+    const response = await instance.get(axiosGetStatisticsURL);
+    console.log(response);
   } catch (error) {
     throw error;
   }

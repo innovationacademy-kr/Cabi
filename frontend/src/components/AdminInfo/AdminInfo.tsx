@@ -1,13 +1,17 @@
 import {
   axiosGetBanndUserList,
   axiosGetBrokenCabinetList,
+  axiosGetStatistics,
 } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BarChart from "./Chart/BarChart";
 import LineChart from "./Chart/LineChart";
 import PieChart from "./Chart/PieChart";
-import { handleBannedUserList } from "./convertFunctions";
+import {
+  handleBannedUserList,
+  handleBrokenCabinetList,
+} from "./convertFunctions";
 import AdminTable from "./Table/AdminTable";
 const resData = [
   { floor: 2, total: 148, used: 114, overdue: 0, unused: 26, disabled: 8 },
@@ -87,62 +91,6 @@ const data2 = [
   },
 ];
 
-const data3 = [
-  {
-    first: "yooh",
-    second: "13일",
-    third: "~ 23.02.15",
-  },
-  {
-    first: "sichoi",
-    second: "15일",
-    third: "~ 23.02.15",
-  },
-  {
-    first: "sanan",
-    second: "2일",
-    third: "~ 23.02.15",
-  },
-  {
-    first: "jaesjeon",
-    second: "555일",
-    third: "~ 23.02.15",
-  },
-
-  {
-    first: "eunbikim",
-    second: "32일",
-    third: "~ 23.02.15",
-  },
-  {
-    first: "inshin",
-    second: "17일",
-    third: "~ 23.02.15",
-  },
-  {
-    first: "seycho",
-    second: "2일",
-    third: "~ 23.02.15",
-  },
-  {
-    first: "joopark",
-    second: "1일",
-    third: "~ 23.02.15",
-  },
-  {
-    first: "huchoi",
-    second: "14일",
-    third: "~ 23.02.15",
-  },
-  {
-    first: "dongglee",
-    second: "17일",
-    third: "~ 23.02.15",
-  },
-];
-
-//const convertBrokenList = (raw: Array<any>) => raw.
-
 const AdminInfo = () => {
   const [toggle, setToggle] = useState(false);
   const [brokenCabinetList, setBrokenCabinetList] = useState<IData[]>([]);
@@ -151,9 +99,10 @@ const AdminInfo = () => {
   useEffect(() => {
     async function getData() {
       const bannedUserData = await axiosGetBanndUserList();
-      console.log("bannedUserData", bannedUserData);
-      //const brokenCabinetData = await axiosGetBrokenCabinetList();
+      const brokenCabinetData = await axiosGetBrokenCabinetList();
+      const statisticsData = await axiosGetStatistics();
       setBannedUserList(handleBannedUserList(bannedUserData));
+      setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
     }
     getData();
   }, []);
@@ -192,10 +141,11 @@ const AdminInfo = () => {
       <ContainerStyled>
         <H2styled>고장 사물함</H2styled>
         <AdminTable
-          data={data2}
+          data={brokenCabinetList}
           handleClick={onClick}
           thInfo={["위치 정보", "확인 일자", "사유"]}
-          ratio={["33%", "33%", "33%"]}
+          ratio={["30%", "40%", "30%"]}
+          fontSize={["1rem", "0.8rem", "1rem"]}
         />
       </ContainerStyled>
       <DetailInfoStyled toggle={toggle} />
