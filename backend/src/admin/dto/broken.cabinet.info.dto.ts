@@ -38,4 +38,16 @@ export class BrokenCabinetInfoDto {
     example: 'Oasis',
   })
   section: string; // 사물함의 섹션 종류 (오아시스 등)
+
+  @ApiProperty({
+    description: '사물함의 건물',
+    example: '새롬관',
+  })
+  location: string; // 사물함의 건물
+
+  @ApiProperty({
+    description: '사물함의 층',
+    example: 2,
+  })
+  floor: number; // 사물함의 층
 }

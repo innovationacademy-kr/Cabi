@@ -266,6 +266,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
         note: cabinet.title,
         max_user: cabinet.max_user,
         section: cabinet.section,
+        location: cabinet.location,
+        floor: cabinet.floor,
       })),
       total_length: result[1],
     };
