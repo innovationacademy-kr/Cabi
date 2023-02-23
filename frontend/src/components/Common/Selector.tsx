@@ -1,10 +1,9 @@
-import React from "react";
 import styled from "styled-components";
 import PillButton from "./PillButton";
 
 interface ISelectorProps {
   iconSrc?: string;
-  selectList: string[];
+  selectList: { key: number; value: string }[];
   onClickSelect: any;
 }
 
@@ -17,7 +16,14 @@ const Selector = ({ iconSrc, selectList, onClickSelect }: ISelectorProps) => {
       {selectList &&
         selectList.map((elem) => {
           return (
-            <PillButton theme="line" text={elem} onClick={onClickSelect} />
+            <PillButton
+              key={elem.key}
+              theme="line"
+              text={elem.value}
+              onClickButton={() => {
+                onClickSelect(elem.key);
+              }}
+            />
           );
         })}
     </SelectorWrapperStyled>

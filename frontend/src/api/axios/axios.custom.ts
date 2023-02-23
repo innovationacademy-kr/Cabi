@@ -166,6 +166,16 @@ export const axiosAdminReturn = async (cabinetId: number): Promise<any> => {
   }
 };
 
+const axiosReturnByUserIdURL = "/api/admin/return/user/";
+export const axiosReturnByUserId = async (userId: number): Promise<any> => {
+  try {
+    const response = await instance.delete(axiosReturnByUserIdURL + userId);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosSearchByIntraIdURL = "/api/admin/search/intraId/";
 export const axiosSearchByIntraId = async (intraId: string) => {
   try {

@@ -1,27 +1,38 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 interface IPillButtonProps {
   text: string;
   theme: string;
-  onClick(event: React.MouseEvent<HTMLButtonElement>): void;
+  onClickButton(event: React.MouseEvent<HTMLButtonElement>): void;
 }
 
-const PillButton = ({ text, theme, onClick }: IPillButtonProps) => {
+const PillButton = ({ text, theme, onClickButton }: IPillButtonProps) => {
+  const [isSelected, setIsSelected] = useState(theme === "line" ? false : true);
+  const toggleSelect = () => {
+    setIsSelected(!isSelected);
+  };
   return (
-    <PillButtonContainerStyled theme={theme} onClick={onClick}>
+    <PillButtonContainerStyled
+      isSelected={isSelected}
+      onClick={(e) => {
+        onClickButton(e);
+        toggleSelect();
+      }}
+    >
       {text}
     </PillButtonContainerStyled>
   );
 };
 
 const PillButtonContainerStyled = styled.button<{
-  theme: string;
+  isSelected: boolean;
 }>`
-  background-color: ${({ theme }) =>
-    theme === "fill" ? "var(--main-color)" : "transparent"};
-  border: ${({ theme }) =>
-    theme === "fill" ? "none" : "1px solid var(--line-color)"};
-  color: ${({ theme }) => (theme === "fill" ? "var(--white)" : "var(--black)")};
+  background-color: ${({ isSelected }) =>
+    isSelected ? "var(--main-color)" : "transparent"};
+  border: ${({ isSelected }) =>
+    isSelected ? "1px solid var(--main-color)" : "1px solid var(--line-color)"};
+  color: ${({ isSelected }) => (isSelected ? "var(--white)" : "var(--black)")};
   padding: 2px 10px 4px 10px;
   text-align: center;
   text-decoration: none;
@@ -31,7 +42,7 @@ const PillButtonContainerStyled = styled.button<{
   height: auto;
   cursor: pointer;
   border-radius: 20px;
-  transition: all 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
   &:hover {
     background-color: var(--main-color);
     color: var(--white);

@@ -6,7 +6,11 @@ import {
   numberOfAdminWorkState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
-import { axiosAdminReturn, axiosCabinetById } from "@/api/axios/axios.custom";
+import {
+  axiosAdminReturn,
+  axiosCabinetById,
+  axiosReturnByUserId,
+} from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
 import {
   SuccessResponseModal,
@@ -35,6 +39,7 @@ const AdminReturnModal: React.FC<{
     numberOfAdminWorkState
   );
   const targetCabinetInfo = useRecoilValue<CabinetInfo>(targetCabinetInfoState);
+  const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
   const getReturnDetail = (lentType: CabinetType) => {
     const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>`;
@@ -44,15 +49,25 @@ const AdminReturnModal: React.FC<{
     return detail + `<br>선택한 유저를 반납 처리 하시겠습니까?`;
   };
 
+  const handleSelectUser = (userId: number) => {
+    if (selectedUserIds.includes(userId)) {
+      const idx = selectedUserIds.indexOf(userId);
+      setSelectedUserIds(selectedUserIds.filter((id) => id !== userId));
+    } else {
+      setSelectedUserIds([...selectedUserIds, userId]);
+    }
+  };
+
   const renderSelector = () => (
     <Selector
       iconSrc="/src/assets/images/shareIcon.svg"
       selectList={targetCabinetInfo.lent_info.map((info) => {
-        return info.intra_id;
+        return { key: info.user_id, value: info.intra_id };
       })}
-      onClickSelect={() => {}}
+      onClickSelect={handleSelectUser}
     />
   );
+
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
       await axiosAdminReturn(currentCabinetId);
@@ -75,6 +90,39 @@ const AdminReturnModal: React.FC<{
     }
   };
 
+  const tryShareReturnRequest = async (e: React.MouseEvent) => {
+    const requests = selectedUserIds.map((id) => axiosReturnByUserId(id));
+    if (requests.length === 0) {
+      try {
+        setHasErrorOnResponse(true);
+        setModalTitle("반납할 유저를 선택해야 합니다.");
+      } finally {
+        setShowResponseModal(true);
+      }
+      return;
+    }
+    await Promise.all(requests)
+      .then(async (res) => {
+        setIsCurrentSectionRender(true);
+        setNumberOfAdminWork((prev) => prev + 1);
+        setModalTitle("반납되었습니다");
+        setSelectedUserIds([]);
+        try {
+          const { data } = await axiosCabinetById(currentCabinetId);
+          setTargetCabinetInfo(data);
+        } catch (error) {
+          throw error;
+        }
+      })
+      .catch((error) => {
+        setHasErrorOnResponse(true);
+        setModalTitle(error.response.data.message);
+      })
+      .finally(() => {
+        setShowResponseModal(true);
+      });
+  };
+
   const returnModalContents: IModalContents = {
     type: "hasProceedBtn",
     icon: checkIcon,
@@ -84,7 +132,10 @@ const AdminReturnModal: React.FC<{
       modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
     renderAdditionalComponent:
       props.lentType === CabinetType.SHARE ? renderSelector : undefined,
-    onClickProceed: tryReturnRequest,
+    onClickProceed:
+      props.lentType === CabinetType.SHARE
+        ? tryShareReturnRequest
+        : tryReturnRequest,
     closeModal: props.closeModal,
   };
 
