@@ -303,26 +303,29 @@ export class AdminSearchRepository implements IAdminSearchRepository {
   }
 
   async getLentReturnStatisticsByDaysFromNow(
-	days: number,
+	start: number,
+	end: number,
   ): Promise<AdminStatisticsDto> {
-	const now: Date = new Date();
-	const before: Date = new Date();
-	before.setDate(now.getDate() - days);
+	const startDate: Date = new Date();
+	const endDate: Date = new Date();
+	endDate.setDate(startDate.getDate() - start);
+	endDate.setDate(startDate.getDate() - end);
 
 	const lentQuery = await this.lentLogRepository
 	.createQueryBuilder('dateLent')
-	.where('dateLent.lent_time <= :now', { now: now })
-	.andWhere('dateLent.lent_time >= :before', { before: before });
+	.where('dateLent.lent_time <= :startDate', { startDate: startDate })
+	.andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
 	const lentCount = await lentQuery.getCount();
 
 	const returnQuery = await this.lentLogRepository
 	.createQueryBuilder('dateReturn')
-	.where('dateReturn.return_time <= :now', { now: now })
-	.andWhere('dateReturn.return_time >= :before', { before: before });
+	.where('dateReturn.return_time <= :startDate', { startDate: startDate })
+	.andWhere('dateReturn.return_time >= :endDate', { endDate: endDate });
 	const returnCount = await returnQuery.getCount();
 
 	const ret = {
-		daysFromNow: days,
+		startDate: startDate,
+		endDate: endDate,
 		lentCount: lentCount,
 		returnCount: returnCount,
 	};
