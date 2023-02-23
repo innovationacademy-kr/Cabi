@@ -92,6 +92,9 @@ const PaginationStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and max-width(1200px) {
+    margin-bottom: 5px;
+  }
 `;
 
 export default Pagination;

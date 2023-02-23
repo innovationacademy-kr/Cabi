@@ -228,11 +228,24 @@ export const axiosGetBanndUserList = async () => {
   }
 };
 
-const axiosGetStatisticsURL = "/api/admin/search/cabinet/statistics/?days=7";
-export const axiosGetStatistics = async () => {
+const axiosGetStatisticsURL = "/api/admin/search/cabinet/statistics/?";
+export const axiosGetStatistics = async (start: number, end: number) => {
   try {
-    const response = await instance.get(axiosGetStatisticsURL);
-    console.log(response);
+    const response = await instance.get(
+      `${axiosGetStatisticsURL}start=${start}&end=${end}`
+    );
+    console.log(`${axiosGetStatisticsURL}start=${start}&end=${end}`);
+    console.log(response.data);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetCabinetNumbersPerFloorURL = "/api/admin/cabinet/count/floor";
+export const axiosGetCabinetNumbersPerFloor = async () => {
+  try {
+    const response = await instance.get(axiosGetCabinetNumbersPerFloorURL);
+    return response.data;
   } catch (error) {
     throw error;
   }

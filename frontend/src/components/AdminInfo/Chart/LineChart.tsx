@@ -71,29 +71,6 @@ const dummyData = [
   },
 ];
 
-const convert = (data: IRentInfo[]) =>
-  data.map(
-    ({
-      floor,
-      used,
-      unused,
-      overdue,
-      disabled,
-    }: {
-      floor: number;
-      used: number;
-      unused: number;
-      overdue: number;
-      disabled: number;
-    }) => ({
-      floor: floor + "층",
-      ["사용 중"]: used,
-      ["사용가능"]: unused,
-      ["반납지연"]: overdue,
-      ["사용불가"]: disabled,
-    })
-  );
-
 // 테마를 고치려면 ....
 // 테마 프로퍼티 안에 속성들을 뜯어 봐야합니다 ... ㅠ
 // theme 안에 legends나 axis프로퍼티 레퍼런스를 따라들어가서 nivo theme 객체를 열어봐야합니다.
@@ -135,11 +112,11 @@ const LineChart = ({ data }: { data: IRentInfo[] }) => (
       useMesh={true}
       legends={[
         {
-          anchor: "bottom-right",
-          direction: "column",
+          anchor: "bottom",
+          direction: "row",
           justify: false,
-          translateX: 100,
-          translateY: 0,
+          translateX: 50,
+          translateY: 50,
           itemsSpacing: 0,
           itemDirection: "left-to-right",
           itemWidth: 80,

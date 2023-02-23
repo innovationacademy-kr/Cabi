@@ -1,6 +1,7 @@
 import {
   axiosGetBanndUserList,
   axiosGetBrokenCabinetList,
+  axiosGetCabinetNumbersPerFloor,
   axiosGetStatistics,
 } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
@@ -18,6 +19,15 @@ const resData = [
   { floor: 4, total: 100, used: 73, overdue: 1, unused: 21, disabled: 5 },
   { floor: 5, total: 96, used: 62, overdue: 0, unused: 27, disabled: 7 },
 ];
+
+interface ICabinetNumbersPerFloor {
+  floor: number;
+  total: number;
+  used: number;
+  overdue: number;
+  unused: number;
+  disabled: number;
+}
 
 interface IData {
   first?: string;
@@ -79,30 +89,23 @@ const data1 = [
   },
 ];
 
-const data2 = [
-  {
-    first: "2F-11",
-    second: "22.11.11",
-  },
-  {
-    first: "4F-15",
-    second: "23.12.11",
-    third: "배터리",
-  },
-];
-
 const AdminInfo = () => {
   const [toggle, setToggle] = useState(false);
   const [brokenCabinetList, setBrokenCabinetList] = useState<IData[]>([]);
   const [bannedUserList, setBannedUserList] = useState<IData[]>([]);
+  const [cabinetNumbersPerFloor, setCabinetNumbersPerFloor] = useState<
+    ICabinetNumbersPerFloor[]
+  >([]);
   const onClick = () => setToggle(!toggle);
   useEffect(() => {
     async function getData() {
       const bannedUserData = await axiosGetBanndUserList();
       const brokenCabinetData = await axiosGetBrokenCabinetList();
-      const statisticsData = await axiosGetStatistics();
+      const statisticsData = await axiosGetStatistics(0, 5000);
+      const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
       setBannedUserList(handleBannedUserList(bannedUserData));
       setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
+      setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
     }
     getData();
   }, []);
@@ -110,15 +113,15 @@ const AdminInfo = () => {
     <AdminInfoStyled>
       <ContainerStyled>
         <H2styled>층별 이용 현황</H2styled>
-        <BarChart data={resData} />
+        <BarChart data={cabinetNumbersPerFloor} />
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>사물함 현황</H2styled>
-        <PieChart data={resData} />
+        <PieChart data={cabinetNumbersPerFloor} />
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>월간 이용 현황</H2styled>
-        <LineChart data={resData} />
+        <LineChart data={cabinetNumbersPerFloor} />
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>반납지연 유저</H2styled>
@@ -183,6 +186,26 @@ const ContainerStyled = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  @media screen and (max-width: 1300px) {
+    &:nth-child(1) {
+      order: 6;
+    }
+    &:nth-child(2) {
+      order: 5;
+    }
+    &:nth-child(3) {
+      order: 4;
+    }
+    &:nth-child(4) {
+      order: 3;
+    }
+    &:nth-child(5) {
+      order: 2;
+    }
+    &:nth-child(6) {
+      order: 1;
+    }
+  }
 `;
 
 const AdminInfoStyled = styled.div`
@@ -194,6 +217,19 @@ const AdminInfoStyled = styled.div`
   grid-template-row: repeat(2, 1fr);
   place-items: center;
   overflow: hidden;
+
+  @media screen and (max-width: 1300px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 500px);
+    overflow: scroll;
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(6, 500px);
+    min-width: 500px;
+    overflow: scroll;
+  }
 `;
 
 export default AdminInfo;
