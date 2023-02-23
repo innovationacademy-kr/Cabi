@@ -2,10 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AdminStatisticsDto {
   @ApiProperty({
-    description: '현재일자를 기준으로 조회하고자 하는 일자의 범위',
-    example: '오늘을 포함한 일주일 == 7',
+    description: '검색 시작 날짜',
+    example: '2023-02-22 20:43:24',
   })
-  daysFromNow: number;
+  startDate: Date;
+
+  @ApiProperty({
+    description: '검색 종료 날짜',
+    example: '2023-02-22 20:43:24',
+  })
+  endDate: Date;
 
   @ApiProperty({
     description: '대여 횟수',

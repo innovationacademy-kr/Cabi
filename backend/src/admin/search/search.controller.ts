@@ -288,11 +288,12 @@ export class SearchController {
   })
   @Get('cabinet/statistics/')
   async getLentReturnStatisticsByDaysFromNow(
-    @Query('days') days: number,
+    @Query('start') start: number,
+    @Query('end') end: number,
   ): Promise<AdminStatisticsDto> {
     this.logger.debug(`Called ${this.getLentReturnStatisticsByDaysFromNow}`);
     try {
-      return await this.adminSearchService.getLentReturnStatisticsByDaysFromNow(days);
+      return await this.adminSearchService.getLentReturnStatisticsByDaysFromNow(start, end);
     } catch (err) {
       this.logger.error(err);
       throw err;
