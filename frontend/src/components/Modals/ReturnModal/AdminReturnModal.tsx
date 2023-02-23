@@ -16,9 +16,11 @@ import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import CabinetType from "@/types/enum/cabinet.type.enum";
+import Selector from "@/components/Common/Selector";
 
 const AdminReturnModal: React.FC<{
-  lentType: string;
+  lentType: CabinetType;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
@@ -33,8 +35,24 @@ const AdminReturnModal: React.FC<{
     numberOfAdminWorkState
   );
   const targetCabinetInfo = useRecoilValue<CabinetInfo>(targetCabinetInfoState);
-  const returnDetail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>
-  해당 사물함을 정말 반납하시겠습니까?`;
+
+  const getReturnDetail = (lentType: CabinetType) => {
+    const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>`;
+    if (lentType === CabinetType.PRIVATE) {
+      return detail + `<br>해당 사물함을 정말 반납하시겠습니까?`;
+    }
+    return detail + `<br>선택한 유저를 반납 처리 하시겠습니까?`;
+  };
+
+  const renderSelector = () => (
+    <Selector
+      iconSrc="/src/assets/images/shareIcon.svg"
+      selectList={targetCabinetInfo.lent_info.map((info) => {
+        return info.intra_id;
+      })}
+      onClickSelect={() => {}}
+    />
+  );
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
       await axiosAdminReturn(currentCabinetId);
@@ -61,9 +79,11 @@ const AdminReturnModal: React.FC<{
     type: "hasProceedBtn",
     icon: checkIcon,
     title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
-    detail: returnDetail,
+    detail: getReturnDetail(props.lentType),
     proceedBtnText:
       modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
+    renderAdditionalComponent:
+      props.lentType === CabinetType.SHARE ? renderSelector : undefined,
     onClickProceed: tryReturnRequest,
     closeModal: props.closeModal,
   };
