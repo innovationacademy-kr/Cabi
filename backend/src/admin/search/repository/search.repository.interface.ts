@@ -1,3 +1,4 @@
+import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
 import { BlockedUserInfoPagenationDto } from 'src/admin/dto/blocked.user.info.pagenation.dto';
 import { BrokenCabinetInfoPagenationDto } from 'src/admin/dto/broken.cabinet.info.pagenation.dto';
 import { CabinetInfoPagenationDto } from 'src/admin/dto/cabinet.info.pagenation.dto';
@@ -95,4 +96,16 @@ export interface IAdminSearchRepository {
     page: number,
     length: number,
   ): Promise<BlockedUserInfoPagenationDto>;
+
+  /**
+   * 현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다..
+   *
+   * @param days 현재를 기준으로 통계를 보고싶은 만큼의 이전일자
+   * @returns AdminStatisticsDto
+   * @throw HTTPError
+   */
+   getLentReturnStatisticsByDaysFromNow(
+	  start: number,
+	  end: number,
+	): Promise<AdminStatisticsDto>;
 }

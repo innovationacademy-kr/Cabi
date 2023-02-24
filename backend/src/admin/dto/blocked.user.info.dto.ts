@@ -18,4 +18,5 @@ export class BlockedUserInfoDto {
     example: '100',
   })
   overdueDays: number;
+
 }

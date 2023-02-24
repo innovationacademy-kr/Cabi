@@ -22,4 +22,11 @@ export interface IAdminLogRepository {
     page: number,
     length: number,
   ): Promise<LogPagenationDto>;
+
+  /**
+   * 해당 유저의 최근 ban log를 삭제합니다.
+   *
+   * @param userId
+   */
+  deleteBanLogByUserId(userId: number): Promise<void>;
 }
