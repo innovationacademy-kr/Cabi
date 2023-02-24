@@ -234,8 +234,7 @@ export const axiosGetStatistics = async (start: number, end: number) => {
     const response = await instance.get(
       `${axiosGetStatisticsURL}start=${start}&end=${end}`
     );
-    console.log(`${axiosGetStatisticsURL}start=${start}&end=${end}`);
-    console.log(response.data);
+    return response.data;
   } catch (error) {
     throw error;
   }

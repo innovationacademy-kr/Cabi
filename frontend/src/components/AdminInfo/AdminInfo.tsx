@@ -14,11 +14,6 @@ import {
   handleBrokenCabinetList,
 } from "./convertFunctions";
 import AdminTable from "./Table/AdminTable";
-const resData = [
-  { floor: 2, total: 148, used: 114, overdue: 0, unused: 26, disabled: 8 },
-  { floor: 4, total: 100, used: 73, overdue: 1, unused: 21, disabled: 5 },
-  { floor: 5, total: 96, used: 62, overdue: 0, unused: 27, disabled: 7 },
-];
 
 interface ICabinetNumbersPerFloor {
   floor: number;
@@ -27,6 +22,13 @@ interface ICabinetNumbersPerFloor {
   overdue: number;
   unused: number;
   disabled: number;
+}
+
+interface IMonthlyData {
+  startDate: string;
+  endDate: string;
+  lentCount: number;
+  returnCount: number;
 }
 
 interface IData {
@@ -96,17 +98,27 @@ const AdminInfo = () => {
   const [cabinetNumbersPerFloor, setCabinetNumbersPerFloor] = useState<
     ICabinetNumbersPerFloor[]
   >([]);
+  const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
   const onClick = () => setToggle(!toggle);
+
+  async function getData() {
+    const bannedUserData = await axiosGetBanndUserList();
+    const brokenCabinetData = await axiosGetBrokenCabinetList();
+    const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
+
+    const statisticsData: any[] = [];
+    statisticsData[0] = await axiosGetStatistics(21, 28);
+    statisticsData[1] = await axiosGetStatistics(14, 21);
+    statisticsData[2] = await axiosGetStatistics(7, 14);
+    statisticsData[3] = await axiosGetStatistics(0, 7);
+    setMonthlyData(statisticsData);
+
+    setBannedUserList(handleBannedUserList(bannedUserData));
+    setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
+    setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
+  }
+
   useEffect(() => {
-    async function getData() {
-      const bannedUserData = await axiosGetBanndUserList();
-      const brokenCabinetData = await axiosGetBrokenCabinetList();
-      const statisticsData = await axiosGetStatistics(0, 5000);
-      const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
-      setBannedUserList(handleBannedUserList(bannedUserData));
-      setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
-      setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
-    }
     getData();
   }, []);
   return (
@@ -121,7 +133,7 @@ const AdminInfo = () => {
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>월간 이용 현황</H2styled>
-        <LineChart data={cabinetNumbersPerFloor} />
+        <LineChart data={monthlyData} />
       </ContainerStyled>
       <ContainerStyled>
         <H2styled>반납지연 유저</H2styled>

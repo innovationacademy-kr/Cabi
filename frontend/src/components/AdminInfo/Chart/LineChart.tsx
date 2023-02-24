@@ -1,75 +1,45 @@
 import { ResponsiveLine } from "@nivo/line";
 import styled from "styled-components";
 
-const resData = [
-  { floor: 2, total: 148, used: 114, overdue: 0, unused: 26, disabled: 8 },
-  { floor: 4, total: 100, used: 73, overdue: 1, unused: 21, disabled: 5 },
-  { floor: 5, total: 96, used: 62, overdue: 0, unused: 27, disabled: 7 },
-];
-
-const result = resData.map((data) => ({
-  floor: data.floor + "층",
-  ["사용 중"]: data.used,
-  ["사용가능"]: data.unused,
-  ["반납지연"]: data.overdue,
-  ["사용불가"]: data.disabled,
-}));
-
-interface IRentInfo {
-  floor: number;
-  total: number;
-  used: number;
-  overdue: number;
-  unused: number;
-  disabled: number;
+interface IMonthlyData {
+  startDate: string;
+  endDate: string;
+  lentCount: number;
+  returnCount: number;
 }
 
-const dummyData = [
+interface IChartInfo {
+  x: string;
+  y: number;
+}
+
+interface IChartData {
+  id: string;
+  data: IChartInfo[];
+}
+
+let init: IChartData[] = [
   {
     id: "대여",
-    color: "purple",
-    data: [
-      {
-        x: "1월 4주차",
-        y: 130,
-      },
-      {
-        x: "2월 1주차",
-        y: 94,
-      },
-      {
-        x: "2월 2주차",
-        y: 150,
-      },
-      {
-        x: "2월 3주차",
-        y: 220,
-      },
-    ],
+    data: [],
   },
   {
     id: "반납",
-    color: "red",
-    data: [
-      {
-        x: "1월 4주차",
-        y: 15,
-      },
-      {
-        x: "2월 1주차",
-        y: 20,
-      },
-      {
-        x: "2월 2주차",
-        y: 0,
-      },
-      {
-        x: "2월 3주차",
-        y: 100,
-      },
-    ],
+    data: [],
   },
 ];
+
+const convertData = (data: IMonthlyData[]) =>
+  data.reduce((acc, { startDate, endDate, lentCount, returnCount }, index) => {
+    const end = new Date(startDate);
+    const start = new Date(endDate);
+    const dateInfo = `${start.getMonth() + 1}. ${start.getDate()} ~ ${
+      end.getMonth() + 1
+    }. ${end.getDate()}`;
+    acc[0].data[index] = { x: dateInfo, y: lentCount };
+    acc[1].data[index] = { x: dateInfo, y: returnCount };
+    return acc;
+  }, init);
 
 // 테마를 고치려면 ....
 // 테마 프로퍼티 안에 속성들을 뜯어 봐야합니다 ... ㅠ
@@ -77,11 +47,11 @@ const dummyData = [
 
 // 색상 변경은 colors 프롭 안에 내용 수정
 
-const LineChart = ({ data }: { data: IRentInfo[] }) => (
+const LineChart = ({ data }: { data: IMonthlyData[] }) => (
   <LineChartStyled>
     <ResponsiveLine
-      data={dummyData}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      data={convertData(data)}
+      margin={{ top: 50, right: 60, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -90,7 +60,7 @@ const LineChart = ({ data }: { data: IRentInfo[] }) => (
         stacked: false,
         reverse: false,
       }}
-      curve={"natural"}
+      curve={"linear"}
       colors={["purple", "red"]}
       yFormat=" >0"
       axisRight={null}
@@ -139,7 +109,6 @@ const LineChart = ({ data }: { data: IRentInfo[] }) => (
     />
   </LineChartStyled>
 );
-
 const LineChartStyled = styled.div`
   height: 90%;
   width: 90%;

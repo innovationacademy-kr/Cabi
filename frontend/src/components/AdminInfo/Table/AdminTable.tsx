@@ -1,6 +1,7 @@
 import { BanDto } from "@/types/dto/lent.dto";
 import { useState } from "react";
 import styled from "styled-components";
+import Pagination2 from "./PageNation2";
 import Pagination from "./Pagination";
 
 const ROW_COUNT = 5;
@@ -25,13 +26,13 @@ const AdminTable = ({
 }) => {
   const [curPage, setCurPage] = useState(0);
   return (
-    <TableWrapperstyled>
-      <Pagination
+    <TableWrapperStyled>
+      <Pagination2
         setCurPage={setCurPage}
         curPage={curPage}
         totalCount={data.length}
         rowCount={ROW_COUNT}
-      ></Pagination>
+      ></Pagination2>
       <TableBorderStyled>
         <TableStyled>
           <colgroup>
@@ -76,11 +77,11 @@ const AdminTable = ({
           </TbodyStyled>
         </TableStyled>
       </TableBorderStyled>
-    </TableWrapperstyled>
+    </TableWrapperStyled>
   );
 };
 
-const TableWrapperstyled = styled.div`
+const TableWrapperStyled = styled.div`
   width: 80%;
   height: 100%;
   margin: 0 auto;
@@ -98,6 +99,10 @@ const TableStyled = styled.table`
   background: var(--white);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   overflow: scroll;
+
+  @media screen and (max-width: 1300px) {
+    min-height: 350px;
+  }
 `;
 
 const TheadStyled = styled.thead`
@@ -121,6 +126,12 @@ const TbodyStyled = styled.tbody`
     background: #f9f6ff;
   }
   cursor: pointer;
+
+  @media screen and (max-width: 1300px) {
+    & > tr > td {
+      line-height: 60px;
+    }
+  }
 `;
 
 export default AdminTable;

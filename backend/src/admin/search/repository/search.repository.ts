@@ -18,7 +18,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Cabinet) private cabinetRepository: Repository<Cabinet>,
-	@InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
+    @InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
     @InjectRepository(BanLog) private banLogRepository: Repository<BanLog>,
   ) {}
 
@@ -303,32 +303,32 @@ export class AdminSearchRepository implements IAdminSearchRepository {
   }
 
   async getLentReturnStatisticsByDaysFromNow(
-	start: number,
-	end: number,
+    start: number,
+    end: number,
   ): Promise<AdminStatisticsDto> {
-	const startDate: Date = new Date();
-	const endDate: Date = new Date();
-	endDate.setDate(startDate.getDate() - start);
-	endDate.setDate(startDate.getDate() - end);
+    const startDate: Date = new Date();
+    const endDate: Date = new Date();
+    startDate.setDate(startDate.getDate() - start);
+    endDate.setDate(endDate.getDate() - end);
 
-	const lentQuery = await this.lentLogRepository
-	.createQueryBuilder('dateLent')
-	.where('dateLent.lent_time <= :startDate', { startDate: startDate })
-	.andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
-	const lentCount = await lentQuery.getCount();
+    const lentQuery = await this.lentLogRepository
+      .createQueryBuilder('dateLent')
+      .where('dateLent.lent_time <= :startDate', { startDate: startDate })
+      .andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
+    const lentCount = await lentQuery.getCount();
 
-	const returnQuery = await this.lentLogRepository
-	.createQueryBuilder('dateReturn')
-	.where('dateReturn.return_time <= :startDate', { startDate: startDate })
-	.andWhere('dateReturn.return_time >= :endDate', { endDate: endDate });
-	const returnCount = await returnQuery.getCount();
+    const returnQuery = await this.lentLogRepository
+      .createQueryBuilder('dateReturn')
+      .where('dateReturn.return_time <= :startDate', { startDate: startDate })
+      .andWhere('dateReturn.return_time >= :endDate', { endDate: endDate });
+    const returnCount = await returnQuery.getCount();
 
-	const ret = {
-		startDate: startDate,
-		endDate: endDate,
-		lentCount: lentCount,
-		returnCount: returnCount,
-	};
-	return (ret);
+    const ret = {
+      startDate: startDate,
+      endDate: endDate,
+      lentCount: lentCount,
+      returnCount: returnCount,
+    };
+    return ret;
   }
 }
