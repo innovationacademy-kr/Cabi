@@ -7,6 +7,7 @@ import {
   currentLocationNameState,
   currentSectionNameState,
   isCurrentSectionRenderState,
+  numberOfAdminWorkState,
   userState,
 } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
@@ -37,6 +38,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     CabinetInfoByLocationFloorDto[]
   >(currentFloorCabinetState);
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
+  const numberOfAdminWork = useRecoilValue<number>(numberOfAdminWorkState);
   const navigator = useNavigate();
   const { pathname } = useLocation();
   const isMount = useIsMount();
@@ -66,7 +68,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       .catch((error) => {
         console.error(error);
       });
-  }, [currentLocation, currentFloor, myInfo.cabinet_id]);
+  }, [currentLocation, currentFloor, myInfo.cabinet_id, numberOfAdminWork]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);

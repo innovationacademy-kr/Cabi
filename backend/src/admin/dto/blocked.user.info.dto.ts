@@ -2,20 +2,26 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class BlockedUserInfoDto {
   @ApiProperty({
+    description: '42 고유 ID',
+    example: 12345,
+  })
+  user_id: number; // 42 고유 ID
+
+  @ApiProperty({
     description: '42 로그인 ID',
     example: 'joopark',
   })
   intra_id: string; // 42 로그인 ID
 
   @ApiProperty({
-    description: '캐비닛 위치',
-    example: '1f-100',
+    description: '차단당한 시간',
+    example: new Date(),
   })
-  location: string;
+  banned_date?: Date; // 차단당한 시간
 
   @ApiProperty({
-    description: '연체일 수',
-    example: '100',
+    description: '차단 풀리는 시간',
+    example: new Date(),
   })
-  overdueDays: number;
+  unbanned_date?: Date; // 차단 풀리는 시간
 }

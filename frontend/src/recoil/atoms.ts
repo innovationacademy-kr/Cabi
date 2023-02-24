@@ -104,3 +104,8 @@ export const currentIntraIdState = atom<string>({
   key: "CurrentIntraId",
   default: undefined,
 });
+
+export const numberOfAdminWorkState = atom<number>({
+  key: "NumberOfAdminWork",
+  default: 0,
+});

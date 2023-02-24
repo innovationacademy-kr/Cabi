@@ -1,8 +1,10 @@
 import {
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
+  ParseIntPipe,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -48,5 +50,17 @@ export class AdminLogController {
       length,
     );
     return result;
+  }
+
+  @Delete('/ban/:userId')
+  @ApiOperation({
+    summary: '해당 인트라 아이디에 대해 가장 최근 ban log를 삭제',
+    description: '인트라 아이디에 대한 ban log를 삭제합니다.',
+  })
+  async deleteBanLogByUserId(
+    @Param('userId', new ParseIntPipe()) userId: number,
+  ): Promise<void> {
+    this.logger.debug(`Called ${this.deleteBanLogByUserId.name}`);
+    this.adminLogService.deleteBanLogByUserId(userId);
   }
 }
