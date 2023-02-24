@@ -17,20 +17,11 @@ export class BlockedUserInfoDto {
     description: '차단당한 시간',
     example: new Date(),
   })
-<<<<<<< HEAD
   banned_date?: Date; // 차단당한 시간
-=======
-  location: string;
->>>>>>> f7d890132cc803845ae972d38cecc978501b923c
 
   @ApiProperty({
     description: '차단 풀리는 시간',
     example: new Date(),
   })
-<<<<<<< HEAD
   unbanned_date?: Date; // 차단 풀리는 시간
-=======
-  overdueDays: number;
-
->>>>>>> f7d890132cc803845ae972d38cecc978501b923c
 }
