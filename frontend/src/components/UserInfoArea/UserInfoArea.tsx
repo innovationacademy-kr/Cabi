@@ -88,7 +88,7 @@ const UserInfoArea: React.FC<{
         <CabinetInfoButtonsContainerStyled>
           <ButtonContainer
             onClick={handleOpenBanModal}
-            text="패널티 해제"
+            text="밴 해제"
             theme="fill"
             disabled={selectedUserInfo.isBanned === false}
           />

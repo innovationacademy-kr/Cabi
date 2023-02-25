@@ -82,7 +82,7 @@ export const modalPropsMap = {
   },
   MODAL_BAN: {
     type: "confirm",
-    title: "패널티 해제하기",
+    title: "밴 해제하기",
     confirmMessage: "해제",
   },
 };
