@@ -3,10 +3,12 @@ import {
   currentCabinetIdState,
   currentIntraIdState,
   targetCabinetInfoState,
+  targetUserInfoState,
 } from "@/recoil/atoms";
 
 const useMenu = () => {
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
+  const resetTargetUserInfo = useResetRecoilState(targetUserInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
 
@@ -109,6 +111,7 @@ const useMenu = () => {
       true
     ) {
       resetTargetCabinetInfo();
+      resetTargetUserInfo();
       resetCurrentCabinetId();
       resetCurrentIntraId();
       document.getElementById("cabinetDetailArea")?.classList.remove("on");

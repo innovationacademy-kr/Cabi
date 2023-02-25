@@ -205,3 +205,15 @@ export const axiosSearchDetailByIntraId = async (
     throw error;
   }
 };
+
+const axiosDeleteCurrentBanLogURL = "/api/admin/log/ban/";
+export const axiosDeleteCurrentBanLog = async (userId: number) => {
+  try {
+    const response = await instance.delete(
+      axiosDeleteCurrentBanLogURL + userId.toString()
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

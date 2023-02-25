@@ -9,7 +9,12 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import styled, { css } from "styled-components";
 import ChangeToHTML from "../TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
-import { currentIntraIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  currentIntraIdState,
+  targetCabinetInfoState,
+  selectedTypeOnSearchState,
+  targetUserInfoState,
+} from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
 
@@ -17,17 +22,29 @@ interface ISearchDetail {
   intra_id: string;
   user_id: number;
   cabinetInfo?: CabinetInfo;
+  banned_date?: Date;
+  unbanned_date?: Date;
   searchValue: string;
 }
 
 const SearchItemByIntraId = (props: ISearchDetail) => {
-  const { intra_id, user_id, cabinetInfo, searchValue } = props;
+  const {
+    intra_id,
+    user_id,
+    cabinetInfo,
+    banned_date,
+    unbanned_date,
+    searchValue,
+  } = props;
   const [currentIntraId, setCurrentIntraId] =
     useRecoilState<string>(currentIntraIdState);
   const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
+  const setTargetUserInfo = useSetRecoilState(targetUserInfoState);
+  const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const { openCabinet, closeCabinet } = useMenu();
 
   const clickSearchItem = () => {
@@ -36,6 +53,15 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       closeCabinet();
       return;
     }
+    setTargetUserInfo({
+      intraId: intra_id,
+      userId: user_id,
+      cabinetId: cabinetInfo?.cabinet_id,
+      bannedDate: banned_date,
+      unbannedDate: unbanned_date,
+      cabinetInfo: cabinetInfo,
+    });
+    setSelectedTypeOnSearch("USER");
     setCurrentIntraId(intra_id);
     async function getData(cabinetId: number) {
       try {
@@ -50,6 +76,8 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       openCabinet();
     } else {
       // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
+      resetTargetCabinetInfo();
+      openCabinet();
     }
   };
 

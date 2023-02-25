@@ -31,6 +31,7 @@ const ButtonContainerStyled = styled.button`
   border-radius: 10px;
   margin-bottom: 15px;
   &:disabled {
+    opacity: 0.3;
     cursor: not-allowed;
   }
   &:last-child {

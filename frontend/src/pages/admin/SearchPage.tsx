@@ -6,17 +6,23 @@ import SearchItemByNum from "@/components/Search/SearchItemByNum";
 import SearchItemByIntraId from "@/components/Search/SearchItemByIntraId";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useRouteError, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import NoSearch from "@/components/Search/NoSearch";
 import SearchDefault from "@/components/Search/SearchDefault";
-import { useResetRecoilState } from "recoil";
-import { currentCabinetIdState, currentIntraIdState } from "@/recoil/atoms";
+import { useResetRecoilState, useRecoilValue } from "recoil";
+import {
+  currentCabinetIdState,
+  currentIntraIdState,
+  numberOfAdminWorkState,
+} from "@/recoil/atoms";
 
 interface ISearchDetail {
   intra_id: string;
   user_id: number;
+  bannedDate?: Date;
+  unbannedDate?: Date;
   cabinetInfo?: CabinetInfo;
 }
 
@@ -32,6 +38,7 @@ const SearchPage = () => {
   const searchValue = useRef("");
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
+  const numberOfAdminWork = useRecoilValue(numberOfAdminWorkState);
 
   // 검색 초기화
   const initialize = () => {
@@ -81,7 +88,7 @@ const SearchPage = () => {
         handleSearchByCabinetNum();
       }
     }
-  }, [searchParams]);
+  }, [searchParams, numberOfAdminWork]);
 
   // intra_id 검색 더보기
   const handleMoreSearchDetailByIntraId = async () => {

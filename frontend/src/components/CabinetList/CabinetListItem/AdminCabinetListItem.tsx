@@ -1,5 +1,9 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  currentCabinetIdState,
+  targetCabinetInfoState,
+  selectedTypeOnSearchState,
+} from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -28,6 +32,7 @@ const AdminCabinetListItem = ({
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const { openCabinet, closeCabinet } = useMenu();
   //  const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
   const { isMultiSelect, clickCabinetOnMultiSelectMode, containsCabinet } =
@@ -61,6 +66,7 @@ const AdminCabinetListItem = ({
     }
 
     setCurrentCabinetId(cabinetId);
+    setSelectedTypeOnSearch("CABINET");
     async function getData(cabinetId: number) {
       try {
         const { data } = await axiosCabinetById(cabinetId);

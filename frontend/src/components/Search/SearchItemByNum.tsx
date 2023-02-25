@@ -5,7 +5,11 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import useMenu from "@/hooks/useMenu";
-import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  currentCabinetIdState,
+  targetCabinetInfoState,
+  selectedTypeOnSearchState,
+} from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
@@ -29,6 +33,7 @@ const SearchItemByNum = (props: CabinetInfo) => {
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const { openCabinet, closeCabinet } = useMenu();
 
   const {
@@ -46,6 +51,7 @@ const SearchItemByNum = (props: CabinetInfo) => {
       closeCabinet();
       return;
     }
+    setSelectedTypeOnSearch("CABINET");
     setCurrentCabinetId(cabinet_id);
     async function getData(cabinetId: number) {
       try {
