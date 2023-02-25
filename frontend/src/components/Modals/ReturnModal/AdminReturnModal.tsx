@@ -46,7 +46,7 @@ const AdminReturnModal: React.FC<{
     if (lentType === CabinetType.PRIVATE) {
       return detail + `<br>해당 사물함을 정말 반납하시겠습니까?`;
     }
-    return detail + `<br>선택한 유저를 반납 처리 하시겠습니까?`;
+    return detail + `<br>반납할 유저를 선택해 주세요.`;
   };
 
   const handleSelectUser = (userId: number) => {

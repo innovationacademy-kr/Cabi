@@ -41,6 +41,7 @@ const SelectorWrapperStyled = styled.div`
 const IconWrapperStyled = styled.div`
   width: 24px;
   height: 24px;
+  margin-bottom: 12px;
 `;
 
 export default Selector;
