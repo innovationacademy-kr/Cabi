@@ -104,8 +104,8 @@ export interface IAdminSearchRepository {
    * @returns AdminStatisticsDto
    * @throw HTTPError
    */
-   getLentReturnStatisticsByDaysFromNow(
-	  start: number,
-	  end: number,
-	): Promise<AdminStatisticsDto>;
+  getLentReturnStatisticsByDaysFromNow(
+    start: number,
+    end: number,
+  ): Promise<AdminStatisticsDto>;
 }

@@ -18,6 +18,9 @@ const adminSearchRepo = {
 @Module({
   controllers: [SearchController],
   providers: [AdminSearchService, adminSearchRepo],
-  imports: [AuthModule, TypeOrmModule.forFeature([User, Cabinet, BanLog, Lent, LentLog])],
+  imports: [
+    AuthModule,
+    TypeOrmModule.forFeature([User, Cabinet, BanLog, Lent, LentLog]),
+  ],
 })
 export class AdminSearchModule {}

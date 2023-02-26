@@ -177,6 +177,9 @@ export class AdminSearchService {
     this.logger.debug(
       `Called ${AdminSearchService.name} ${this.getLentReturnStatisticsByDaysFromNow.name}`,
     );
-    return await this.adminSearchRepository.getLentReturnStatisticsByDaysFromNow(start,end);
+    return await this.adminSearchRepository.getLentReturnStatisticsByDaysFromNow(
+      start,
+      end,
+    );
   }
 }
