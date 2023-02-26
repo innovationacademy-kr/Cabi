@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Pagenation = ({
+const Pagination = ({
   setCurPage,
   curPage,
   totalCount,
@@ -59,4 +59,4 @@ const PaginationStyled = styled.div`
   }
 `;
 
-export default Pagenation;
+export default Pagination;

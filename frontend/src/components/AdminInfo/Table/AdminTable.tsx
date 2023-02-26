@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Pagenation from "./Pagenation";
+import Pagination from "./Pagination";
 
 const ROW_COUNT = 5;
 
@@ -25,12 +25,12 @@ const AdminTable = ({
   const [curPage, setCurPage] = useState(0);
   return (
     <TableWrapperStyled>
-      <Pagenation
+      <Pagination
         setCurPage={setCurPage}
         curPage={curPage}
         totalCount={data.length}
         rowCount={ROW_COUNT}
-      ></Pagenation>
+      ></Pagination>
       <TableBorderStyled>
         <TableStyled>
           <colgroup>
