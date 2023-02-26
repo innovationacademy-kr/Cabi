@@ -276,7 +276,8 @@ export class SearchController {
 
   @ApiOperation({
     summary: '기간별 대여/반납 횟수',
-    description: '현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다.',
+    description:
+      '현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다.',
   })
   @ApiQuery({
     name: 'days',
@@ -284,7 +285,8 @@ export class SearchController {
   })
   @ApiOkResponse({
     type: AdminStatisticsDto,
-    description: '현재를 기준으로한 이전 일자, 대여 횟수, 반납 횟수를 객체로 응답받습니다.',
+    description:
+      '현재를 기준으로한 이전 일자, 대여 횟수, 반납 횟수를 객체로 응답받습니다.',
   })
   @Get('cabinet/statistics/')
   async getLentReturnStatisticsByDaysFromNow(
@@ -293,7 +295,10 @@ export class SearchController {
   ): Promise<AdminStatisticsDto> {
     this.logger.debug(`Called ${this.getLentReturnStatisticsByDaysFromNow}`);
     try {
-      return await this.adminSearchService.getLentReturnStatisticsByDaysFromNow(start, end);
+      return await this.adminSearchService.getLentReturnStatisticsByDaysFromNow(
+        start,
+        end,
+      );
     } catch (err) {
       this.logger.error(err);
       throw err;
