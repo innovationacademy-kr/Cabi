@@ -1,4 +1,3 @@
-import { BanDto } from "@/types/dto/lent.dto";
 import { useState } from "react";
 import styled from "styled-components";
 import Pagenation from "./Pagenation";
