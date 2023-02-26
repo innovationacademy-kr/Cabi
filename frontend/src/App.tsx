@@ -10,13 +10,12 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
 const AdminLayout = lazy(() => import("@/pages/admin/AdminLayout"));
 const AdminLoginPage = lazy(() => import("@/pages/admin/AdminLoginPage"));
-const AdminHomePage = lazy(() => import("@/pages/admin/AdminHomePage"));
 const AdminLogPage = lazy(() => import("@/pages/admin/AdminLogPage"));
 const SearchPage = lazy(() => import("@/pages/admin/SearchPage"));
 const AdminLoginFailurePage = lazy(
   () => import("@/pages/admin/AdminLoginFailurePage")
 );
-const AdminMainPage = lazy(() => import("@/pages/admin/AdminMainPage"));
+const AdminInfo = lazy(() => import("@/components/AdminInfo/AdminInfo"));
 
 function App(): React.ReactElement {
   return (
@@ -32,8 +31,8 @@ function App(): React.ReactElement {
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
             <Route path="login" element={<AdminLoginPage />} />
-            <Route path="home" element={<AdminHomePage />} />
-            <Route path="main" element={<AdminMainPage />} />
+            <Route path="home" element={<AdminInfo />} />
+            <Route path="main" element={<MainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="log" element={<AdminLogPage />} />
           </Route>

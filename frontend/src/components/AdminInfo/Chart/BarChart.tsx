@@ -57,9 +57,9 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
   <BarChartStyled>
     <ResponsiveBar
       theme={{
-        legends: { text: { fontSize: "1.5rem" } },
-        axis: { ticks: { text: { fontSize: "1.25rem" } } },
-        labels: { text: { fontSize: "1.5rem" } },
+        legends: { text: { fontSize: "14px" } },
+        axis: { ticks: { text: { fontSize: "14px" } } },
+        labels: { text: { fontSize: "14px" } },
       }}
       data={convert(data)}
       keys={["사용불가", "반납지연", "사용 중", "사용가능"]}
@@ -105,7 +105,7 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
           justify: false,
           translateX: 120,
           translateY: 0,
-          itemsSpacing: 20,
+          itemsSpacing: 5,
           itemWidth: 100,
           itemHeight: 20,
           itemDirection: "left-to-right",
@@ -130,21 +130,9 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
   </BarChartStyled>
 );
 
-const BarContainerStyled = styled.div`
-  @media screen and (max-width: 768px) {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
 const BarChartStyled = styled.div`
-  max-width: 500px;
-  min-width: 330px;
-  height: 500px;
-  width: 50%;
+  height: 90%;
+  width: 90%;
   display: flex;
   justify-content: center;
   align-items: center;

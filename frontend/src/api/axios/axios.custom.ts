@@ -166,6 +166,16 @@ export const axiosAdminReturn = async (cabinetId: number): Promise<any> => {
   }
 };
 
+const axiosReturnByUserIdURL = "/api/admin/return/user/";
+export const axiosReturnByUserId = async (userId: number): Promise<any> => {
+  try {
+    const response = await instance.delete(axiosReturnByUserIdURL + userId);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosSearchByIntraIdURL = "/api/admin/search/intraId/";
 export const axiosSearchByIntraId = async (intraId: string) => {
   try {
@@ -213,6 +223,50 @@ export const axiosDeleteCurrentBanLog = async (userId: number) => {
       axiosDeleteCurrentBanLogURL + userId.toString()
     );
     return response;
+    } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetBrokenCabinetListURL =
+  "/api/admin/search/cabinet/broken/?page=0&length=0";
+export const axiosGetBrokenCabinetList = async () => {
+  try {
+    const response = await instance.get(axiosGetBrokenCabinetListURL);
+    return response.data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetBannedUserListURL =
+  "/api/admin/search/user/banned/?page=0&length=0";
+export const axiosGetBanndUserList = async () => {
+  try {
+    const response = await instance.get(axiosGetBannedUserListURL);
+    return response.data.result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetStatisticsURL = "/api/admin/search/cabinet/statistics/?";
+export const axiosGetStatistics = async (start: number, end: number) => {
+  try {
+    const response = await instance.get(
+      `${axiosGetStatisticsURL}start=${start}&end=${end}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetCabinetNumbersPerFloorURL = "/api/admin/cabinet/count/floor";
+export const axiosGetCabinetNumbersPerFloor = async () => {
+  try {
+    const response = await instance.get(axiosGetCabinetNumbersPerFloorURL);
+    return response.data;
   } catch (error) {
     throw error;
   }

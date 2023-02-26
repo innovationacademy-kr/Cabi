@@ -18,7 +18,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Cabinet) private cabinetRepository: Repository<Cabinet>,
-	@InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
+    @InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
     @InjectRepository(BanLog) private banLogRepository: Repository<BanLog>,
   ) {}
 
@@ -282,20 +282,23 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     length: number,
   ): Promise<BlockedUserInfoPagenationDto> {
     const result = await this.banLogRepository.findAndCount({
-      relations: ['user'],
+      relations: ['user', 'user.Lent', 'user.Lent.cabinet'],
       where: {
         unbanned_date: MoreThan(new Date()),
       },
-      order: { ban_log_id: 'ASC' },
+      order: { banned_date: 'ASC' },
       take: length,
       skip: page * length,
     });
+    const currentTime = new Date();
     const rtn = {
       result: result[0].map((ban) => ({
-        user_id: ban.ban_user_id,
         intra_id: ban.user.intra_id,
-        banned_date: ban.banned_date,
-        unbanned_date: ban.unbanned_date,
+        location: ban.user.Lent.cabinet.location,
+        overdueDays: Math.trunc(
+          (currentTime.getTime() - new Date(ban.banned_date).getTime()) /
+            (1000 * 3600 * 24),
+        ),
       })),
       total_length: result[1],
     };
@@ -303,32 +306,32 @@ export class AdminSearchRepository implements IAdminSearchRepository {
   }
 
   async getLentReturnStatisticsByDaysFromNow(
-	start: number,
-	end: number,
+    start: number,
+    end: number,
   ): Promise<AdminStatisticsDto> {
-	const startDate: Date = new Date();
-	const endDate: Date = new Date();
-	endDate.setDate(startDate.getDate() - start);
-	endDate.setDate(startDate.getDate() - end);
+    const startDate: Date = new Date();
+    const endDate: Date = new Date();
+    endDate.setDate(startDate.getDate() - start);
+    endDate.setDate(startDate.getDate() - end);
 
-	const lentQuery = await this.lentLogRepository
-	.createQueryBuilder('dateLent')
-	.where('dateLent.lent_time <= :startDate', { startDate: startDate })
-	.andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
-	const lentCount = await lentQuery.getCount();
+    const lentQuery = await this.lentLogRepository
+      .createQueryBuilder('dateLent')
+      .where('dateLent.lent_time <= :startDate', { startDate: startDate })
+      .andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
+    const lentCount = await lentQuery.getCount();
 
-	const returnQuery = await this.lentLogRepository
-	.createQueryBuilder('dateReturn')
-	.where('dateReturn.return_time <= :startDate', { startDate: startDate })
-	.andWhere('dateReturn.return_time >= :endDate', { endDate: endDate });
-	const returnCount = await returnQuery.getCount();
+    const returnQuery = await this.lentLogRepository
+      .createQueryBuilder('dateReturn')
+      .where('dateReturn.return_time <= :startDate', { startDate: startDate })
+      .andWhere('dateReturn.return_time >= :endDate', { endDate: endDate });
+    const returnCount = await returnQuery.getCount();
 
-	const ret = {
-		startDate: startDate,
-		endDate: endDate,
-		lentCount: lentCount,
-		returnCount: returnCount,
-	};
-	return (ret);
+    const ret = {
+      startDate: startDate,
+      endDate: endDate,
+      lentCount: lentCount,
+      returnCount: returnCount,
+    };
+    return ret;
   }
 }
