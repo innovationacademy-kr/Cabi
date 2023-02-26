@@ -1,7 +1,7 @@
 import { BanDto } from "@/types/dto/lent.dto";
 import { useState } from "react";
 import styled from "styled-components";
-import Pagination2 from "./PageNation2";
+import Pagination2 from "./PageNation";
 import Pagination from "./Pagination";
 
 const ROW_COUNT = 5;

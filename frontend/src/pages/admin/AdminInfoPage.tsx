@@ -116,7 +116,6 @@ const AdminInfo = () => {
     setBannedUserList(handleBannedUserList(bannedUserData));
     setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
     setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
-    console.log(statisticsData);
   }
 
   useEffect(() => {
