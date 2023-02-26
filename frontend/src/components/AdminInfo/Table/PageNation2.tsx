@@ -30,7 +30,7 @@ const Pagination2 = ({
       </ButtonContainerStyled>
     </PaginationStyled2>
   ) : (
-    <div>none</div>
+    <PaginationStyled2></PaginationStyled2>
   );
 };
 
