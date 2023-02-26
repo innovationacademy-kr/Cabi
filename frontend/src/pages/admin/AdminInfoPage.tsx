@@ -1,5 +1,5 @@
 import {
-  axiosGetBanndUserList,
+  axiosGetBannedUserList,
   axiosGetBrokenCabinetList,
   axiosGetCabinetNumbersPerFloor,
   axiosGetStatistics,
@@ -102,7 +102,7 @@ const AdminInfo = () => {
   const onClick = () => setToggle(!toggle);
 
   async function getData() {
-    const bannedUserData = await axiosGetBanndUserList();
+    const bannedUserData = await axiosGetBannedUserList();
     const brokenCabinetData = await axiosGetBrokenCabinetList();
     const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
 
@@ -116,6 +116,7 @@ const AdminInfo = () => {
     setBannedUserList(handleBannedUserList(bannedUserData));
     setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
     setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
+    console.log(bannedUserData);
   }
 
   useEffect(() => {
