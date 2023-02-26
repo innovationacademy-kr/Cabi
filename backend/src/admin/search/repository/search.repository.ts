@@ -311,8 +311,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
   ): Promise<AdminStatisticsDto> {
     const startDate: Date = new Date();
     const endDate: Date = new Date();
-    endDate.setDate(startDate.getDate() - start);
-    endDate.setDate(startDate.getDate() - end);
+    startDate.setDate(startDate.getDate() - start);
+    endDate.setDate(endDate.getDate() - end);
 
     const lentQuery = await this.lentLogRepository
       .createQueryBuilder('dateLent')

@@ -229,7 +229,7 @@ export const axiosGetBrokenCabinetList = async () => {
 
 const axiosGetBannedUserListURL =
   "/api/admin/search/user/banned/?page=0&length=0";
-export const axiosGetBanndUserList = async () => {
+export const axiosGetBannedUserList = async () => {
   try {
     const response = await instance.get(axiosGetBannedUserListURL);
     return response.data.result;

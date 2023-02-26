@@ -15,7 +15,7 @@ const SearchPage = lazy(() => import("@/pages/admin/SearchPage"));
 const AdminLoginFailurePage = lazy(
   () => import("@/pages/admin/AdminLoginFailurePage")
 );
-const AdminInfo = lazy(() => import("@/components/AdminInfo/AdminInfo"));
+const AdminInfo = lazy(() => import("@/pages/admin/AdminInfoPage"));
 
 function App(): React.ReactElement {
   return (

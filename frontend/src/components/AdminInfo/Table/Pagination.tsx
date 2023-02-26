@@ -1,5 +1,4 @@
-import styled, { css } from "styled-components";
-import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
+import styled from "styled-components";
 
 const Pagination = ({
   setCurPage,
@@ -12,78 +11,41 @@ const Pagination = ({
   totalCount: number;
   rowCount: number;
 }) => {
-  const onClickLeft = () => {
-    if (curPage > 0) {
-      setCurPage(curPage - 1);
-    }
-  };
-  const onClickRight = () => {
-    if (curPage + 1 < Math.ceil(totalCount / 5)) {
-      setCurPage(curPage + 1);
-    }
-  };
+  const onClick = (idx: number) => setCurPage(idx);
+
   return (
     <PaginationStyled>
-      <ButtonStyled
-        dir="left"
-        curPage={curPage}
-        onClick={onClickLeft}
-        rowCount={rowCount}
-      >
-        <ArrowStyled src={LeftSectionButton} />
-      </ButtonStyled>
-      <StatusStyled>
-        <div>{`${totalCount > 0 ? curPage + 1 : 0} / ${Math.ceil(
-          totalCount / 5
-        )}`}</div>
-        <div>{`총 ${totalCount}건`}</div>
-      </StatusStyled>
-      <ButtonStyled
-        dir="right"
-        curPage={curPage}
-        totalCount={totalCount}
-        onClick={onClickRight}
-        rowCount={rowCount}
-      >
-        <ArrowStyled
-          src={LeftSectionButton}
-          style={{ transform: "rotateY(180deg)" }}
-        />
-      </ButtonStyled>
+      <ButtonContainerStyled>
+        {new Array(Math.ceil(totalCount / rowCount))
+          .fill(0)
+          .map((_, idx) =>
+            idx === curPage ? (
+              <ActivaPageButtonStyled key={idx} />
+            ) : (
+              <PageButtonStyled key={idx} onClick={() => onClick(idx)} />
+            )
+          )}
+      </ButtonContainerStyled>
     </PaginationStyled>
   );
 };
 
-const ArrowStyled = styled.img`
-  width: 24px;
-  height: 24px;
-`;
-
-const StatusStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-size: 0.9rem;
-  font-weight: bold;
-  text-align: center;
-  width: 80px;
-`;
-
-const ButtonStyled = styled.div<{
-  dir: string;
-  curPage: number;
-  rowCount: number;
-  totalCount?: number;
-}>`
-  width: 35px;
-  height: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const PageButtonStyled = styled.div`
+  width: 10px;
+  height: 10px;
+  border: 2px solid gray;
+  border-radius: 100%;
+  margin: 0 5px;
   cursor: pointer;
-  margin: 0 3px;
-  font-size: 1.3rem;
-  font-weight: bold;
+`;
+
+const ActivaPageButtonStyled = styled(PageButtonStyled)`
+  background: gray;
+`;
+
+const ButtonContainerStyled = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const PaginationStyled = styled.div`
@@ -92,7 +54,7 @@ const PaginationStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  @media scr                                                     een and max-width(1200px) {
+  @media scr een and max-width(1200px) {
     margin-bottom: 5px;
   }
 `;

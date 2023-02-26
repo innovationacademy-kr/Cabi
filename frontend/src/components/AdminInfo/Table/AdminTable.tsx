@@ -1,7 +1,5 @@
-import { BanDto } from "@/types/dto/lent.dto";
 import { useState } from "react";
 import styled from "styled-components";
-import Pagination2 from "./PageNation2";
 import Pagination from "./Pagination";
 
 const ROW_COUNT = 5;
@@ -27,12 +25,12 @@ const AdminTable = ({
   const [curPage, setCurPage] = useState(0);
   return (
     <TableWrapperStyled>
-      <Pagination2
+      <Pagination
         setCurPage={setCurPage}
         curPage={curPage}
         totalCount={data.length}
         rowCount={ROW_COUNT}
-      ></Pagination2>
+      ></Pagination>
       <TableBorderStyled>
         <TableStyled>
           <colgroup>

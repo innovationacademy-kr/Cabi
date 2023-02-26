@@ -1,19 +1,19 @@
 import {
-  axiosGetBanndUserList,
+  axiosGetBannedUserList,
   axiosGetBrokenCabinetList,
   axiosGetCabinetNumbersPerFloor,
   axiosGetStatistics,
 } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import BarChart from "./Chart/BarChart";
-import LineChart from "./Chart/LineChart";
-import PieChart from "./Chart/PieChart";
+import BarChart from "../../components/AdminInfo/Chart/BarChart";
+import LineChart from "../../components/AdminInfo/Chart/LineChart";
+import PieChart from "../../components/AdminInfo/Chart/PieChart";
 import {
   handleBannedUserList,
   handleBrokenCabinetList,
-} from "./convertFunctions";
-import AdminTable from "./Table/AdminTable";
+} from "../../components/AdminInfo/convertFunctions";
+import AdminTable from "../../components/AdminInfo/Table/AdminTable";
 
 interface ICabinetNumbersPerFloor {
   floor: number;
@@ -102,7 +102,7 @@ const AdminInfo = () => {
   const onClick = () => setToggle(!toggle);
 
   async function getData() {
-    const bannedUserData = await axiosGetBanndUserList();
+    const bannedUserData = await axiosGetBannedUserList();
     const brokenCabinetData = await axiosGetBrokenCabinetList();
     const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
 
