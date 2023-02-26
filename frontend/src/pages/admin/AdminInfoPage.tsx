@@ -6,14 +6,14 @@ import {
 } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import BarChart from "./Chart/BarChart";
-import LineChart from "./Chart/LineChart";
-import PieChart from "./Chart/PieChart";
+import BarChart from "../../components/AdminInfo/Chart/BarChart";
+import LineChart from "../../components/AdminInfo/Chart/LineChart";
+import PieChart from "../../components/AdminInfo/Chart/PieChart";
 import {
   handleBannedUserList,
   handleBrokenCabinetList,
-} from "./convertFunctions";
-import AdminTable from "./Table/AdminTable";
+} from "../../components/AdminInfo/convertFunctions";
+import AdminTable from "../../components/AdminInfo/Table/AdminTable";
 
 interface ICabinetNumbersPerFloor {
   floor: number;
@@ -116,6 +116,7 @@ const AdminInfo = () => {
     setBannedUserList(handleBannedUserList(bannedUserData));
     setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
     setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
+    console.log(statisticsData);
   }
 
   useEffect(() => {

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 
 const Pagination2 = ({
   setCurPage,
@@ -13,31 +12,23 @@ const Pagination2 = ({
   rowCount: number;
 }) => {
   const onClick = (idx: number) => setCurPage(idx);
-  console.log(curPage, totalCount, rowCount);
 
-  return totalCount > rowCount ? (
-    <PaginationStyled2>
+  return (
+    <PaginationStyled>
       <ButtonContainerStyled>
         {new Array(Math.ceil(totalCount / rowCount))
           .fill(0)
           .map((_, idx) =>
             idx === curPage ? (
-              <ActivaPageButtonStyled />
+              <ActivaPageButtonStyled key={idx} />
             ) : (
-              <PageButtonStyled onClick={() => onClick(idx)} />
+              <PageButtonStyled key={idx} onClick={() => onClick(idx)} />
             )
           )}
       </ButtonContainerStyled>
-    </PaginationStyled2>
-  ) : (
-    <PaginationStyled2></PaginationStyled2>
+    </PaginationStyled>
   );
 };
-
-const ArrowStyled = styled.img`
-  width: 24px;
-  height: 24px;
-`;
 
 const PageButtonStyled = styled.div`
   width: 10px;
@@ -57,34 +48,7 @@ const ButtonContainerStyled = styled.div`
   align-items: center;
 `;
 
-const StatusStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-size: 0.9rem;
-  font-weight: bold;
-  text-align: center;
-  width: 80px;
-`;
-
-const ButtonStyled = styled.div<{
-  dir: string;
-  curPage: number;
-  rowCount: number;
-  totalCount?: number;
-}>`
-  width: 35px;
-  height: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  margin: 0 3px;
-  font-size: 1.3rem;
-  font-weight: bold;
-`;
-
-const PaginationStyled2 = styled.div`
+const PaginationStyled = styled.div`
   width: 100%;
   height: 40px;
   display: flex;
