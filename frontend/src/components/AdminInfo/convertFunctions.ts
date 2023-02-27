@@ -42,6 +42,6 @@ export const handleBrokenCabinetList = (data: BrokenCabinetDto[]): IData[] =>
 export const handleOverdueUserList = (data: OverdueUserDto[]): IData[] =>
   data.map(({ intra_id, location, overdueDays }) => ({
     first: intra_id,
-    second: location,
+    second: location.toUpperCase(),
     third: overdueDays.toString(),
   }));
