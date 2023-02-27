@@ -322,7 +322,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     const rtn = {
       result: result[0].map((overdueLent) => ({
         intra_id: overdueLent.user.intra_id,
-        location: overdueLent.cabinet.location,
+        location:
+          overdueLent.cabinet.floor + 'f-' + overdueLent.cabinet.cabinet_num,
         overdueDays: Math.trunc(
           (currentTime.getTime() -
             new Date(overdueLent.expire_time).getTime()) /
