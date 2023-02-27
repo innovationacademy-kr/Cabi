@@ -23,6 +23,7 @@ const AdminTable = ({
   fontSize?: string[];
 }) => {
   const [curPage, setCurPage] = useState(0);
+  const emptyClick = () => {};
   return (
     <TableWrapperStyled>
       <Pagination
@@ -50,7 +51,14 @@ const AdminTable = ({
             {new Array(ROW_COUNT).fill(0).map((_, idx) => {
               const curIndex = ROW_COUNT * curPage + idx;
               return (
-                <tr key={idx}>
+                <tr
+                  key={idx}
+                  onClick={
+                    curIndex < data.length && data[curIndex].first
+                      ? handleClick
+                      : emptyClick
+                  }
+                >
                   <td
                     title={thInfo[0]}
                     style={{ fontSize: fontSize ? fontSize[0] : "0.9rem" }}
@@ -128,6 +136,7 @@ const TbodyStyled = styled.tbody`
   @media screen and (max-width: 1300px) {
     & > tr > td {
       line-height: 60px;
+      height: 61.5px;
     }
   }
 `;

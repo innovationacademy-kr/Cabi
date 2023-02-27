@@ -21,3 +21,25 @@ export interface OverdueUserDto {
   location: string;
   overdueDays: number;
 }
+
+export interface ICabinetNumbersPerFloor {
+  floor: number;
+  total: number;
+  used: number;
+  overdue: number;
+  unused: number;
+  disabled: number;
+}
+
+export interface IMonthlyData {
+  startDate: string;
+  endDate: string;
+  lentCount: number;
+  returnCount: number;
+}
+
+export interface IData {
+  first?: string;
+  second?: string;
+  third?: string;
+}

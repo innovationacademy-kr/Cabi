@@ -1,43 +1,15 @@
+import { useFetchData } from "@/hooks/useFetchData";
 import {
-  axiosGetBannedUserList,
-  axiosGetBrokenCabinetList,
-  axiosGetCabinetNumbersPerFloor,
-  axiosGetOverdueUserList,
-  axiosGetStatistics,
-} from "@/api/axios/axios.custom";
+  ICabinetNumbersPerFloor,
+  IData,
+  IMonthlyData,
+} from "@/types/dto/admin.dto";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BarChart from "../../components/AdminInfo/Chart/BarChart";
 import LineChart from "../../components/AdminInfo/Chart/LineChart";
 import PieChart from "../../components/AdminInfo/Chart/PieChart";
-import {
-  handleBannedUserList,
-  handleBrokenCabinetList,
-  handleOverdueUserList,
-} from "../../components/AdminInfo/convertFunctions";
 import AdminTable from "../../components/AdminInfo/Table/AdminTable";
-
-interface ICabinetNumbersPerFloor {
-  floor: number;
-  total: number;
-  used: number;
-  overdue: number;
-  unused: number;
-  disabled: number;
-}
-
-interface IMonthlyData {
-  startDate: string;
-  endDate: string;
-  lentCount: number;
-  returnCount: number;
-}
-
-interface IData {
-  first?: string;
-  second?: string;
-  third?: string;
-}
 
 const AdminInfo = () => {
   const [toggle, setToggle] = useState(false);
@@ -50,29 +22,18 @@ const AdminInfo = () => {
   const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
   const onClick = () => setToggle(!toggle);
 
-  async function getData() {
-    const bannedUserData = await axiosGetBannedUserList();
-    const brokenCabinetData = await axiosGetBrokenCabinetList();
-    const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
-    const overdueUserData = await axiosGetOverdueUserList();
-
-    const statisticsData: any[] = [];
-    statisticsData[0] = await axiosGetStatistics(21, 28);
-    statisticsData[1] = await axiosGetStatistics(14, 21);
-    statisticsData[2] = await axiosGetStatistics(7, 14);
-    statisticsData[3] = await axiosGetStatistics(0, 7);
-    setMonthlyData(statisticsData);
-    setBannedUserList(handleBannedUserList(bannedUserData));
-    setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
-    setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
-    setOverdueUserList(handleOverdueUserList(overdueUserData));
-  }
-
   useEffect(() => {
-    getData();
+    useFetchData(
+      setMonthlyData,
+      setBannedUserList,
+      setBrokenCabinetList,
+      setCabinetNumbersPerFloor,
+      setOverdueUserList
+    );
   }, []);
   return (
     <AdminInfoStyled>
+      <DetailInfoStyled toggle={toggle}></DetailInfoStyled>
       <ContainerStyled>
         <H2styled>층별 이용 현황</H2styled>
         <BarChart data={cabinetNumbersPerFloor} />
