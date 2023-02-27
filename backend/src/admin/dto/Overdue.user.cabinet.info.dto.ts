@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BlockedUserCabinetInfoDto {
+export class OverdueUserCabinetInfoDto {
   @ApiProperty({
     description: '42 로그인 ID',
     example: 'joopark',

@@ -27,6 +27,7 @@ import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenatio
 import { AdminSearchService } from './search.service';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { UserCabinetInfoPagenationDto } from '../dto/user.cabinet.info.pagenation.dto';
+import { OverdueUserInfoPagenationDto } from '../dto/OverdueUserInfoPagenationDto';
 
 @ApiTags('(Admin) Search')
 @ApiBearerAuth()
@@ -268,6 +269,37 @@ export class SearchController {
     this.logger.debug(`Called ${this.getBannedUserList.name}`);
     try {
       return await this.adminSearchService.searchByBanUser(page, length);
+    } catch (err) {
+      this.logger.error(err);
+      throw err;
+    }
+  }
+
+  @ApiOperation({
+    summary: '연체중인 유저 리스트',
+    description:
+      '연체중인 유저 리스트를 반환합니다. 페이지네이션을 지원합니다.',
+  })
+  @ApiQuery({
+    name: 'page',
+    description: '(페이지네이션) 가져올 데이터 페이지',
+  })
+  @ApiQuery({
+    name: 'length',
+    description: '(페이지네이션) 가져올 데이터 길이',
+  })
+  @ApiOkResponse({
+    type: BlockedUserInfoPagenationDto,
+    description: '연체중인 유저들을 받아옵니다.',
+  })
+  @Get('/user/overdue')
+  async getOverdueUserList(
+    @Query('page') page: number,
+    @Query('length') length: number,
+  ): Promise<OverdueUserInfoPagenationDto> {
+    this.logger.debug(`Called ${this.getBannedUserList.name}`);
+    try {
+      return await this.adminSearchService.searchByOverdueUser(page, length);
     } catch (err) {
       this.logger.error(err);
       throw err;

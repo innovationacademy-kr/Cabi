@@ -7,6 +7,7 @@ import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenatio
 import { IAdminSearchRepository } from './repository/search.repository.interface';
 import { UserCabinetInfoPagenationDto } from '../dto/user.cabinet.info.pagenation.dto';
 import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
+import { OverdueUserInfoPagenationDto } from '../dto/OverdueUserInfoPagenationDto';
 
 @Injectable()
 export class AdminSearchService {
@@ -161,6 +162,16 @@ export class AdminSearchService {
       `Called ${AdminSearchService.name} ${this.searchByBanUser.name}`,
     );
     return await this.adminSearchRepository.searchByBanUser(page, length);
+  }
+
+  async searchByOverdueUser(
+    page: number,
+    length: number,
+  ): Promise<OverdueUserInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${AdminSearchService.name} ${this.searchByBanUser.name}`,
+    );
+    return await this.adminSearchRepository.searchByOverdueUser(page, length);
   }
 
   /**

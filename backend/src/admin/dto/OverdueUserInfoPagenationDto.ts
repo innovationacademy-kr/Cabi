@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { OverdueUserCabinetInfoDto } from './Overdue.user.cabinet.info.dto';
 import { BlockedUserInfoDto } from './blocked.user.info.dto';
 
-export class BlockedUserInfoPagenationDto {
+export class OverdueUserInfoPagenationDto {
   @ApiProperty({
     description: '차단당한 유저 정보 배열',
-    type: [BlockedUserInfoDto],
+    type: [OverdueUserCabinetInfoDto],
   })
-  result: BlockedUserInfoDto[]; // 차단당한 유저 정보 배열
+  result: OverdueUserCabinetInfoDto[]; // 차단당한 유저 정보 배열
 
   @ApiProperty({
     description: 'DB에 저장된 총 결과의 길이',
