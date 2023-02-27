@@ -15,3 +15,9 @@ export interface BrokenCabinetDto {
   note: string | null;
   section: string;
 }
+
+export interface OverdueUserDto {
+  intra_id: string;
+  location: string;
+  overdueDays: number;
+}

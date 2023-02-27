@@ -2,6 +2,7 @@ import {
   axiosGetBannedUserList,
   axiosGetBrokenCabinetList,
   axiosGetCabinetNumbersPerFloor,
+  axiosGetOverdueUserList,
   axiosGetStatistics,
 } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import PieChart from "../../components/AdminInfo/Chart/PieChart";
 import {
   handleBannedUserList,
   handleBrokenCabinetList,
+  handleOverdueUserList,
 } from "../../components/AdminInfo/convertFunctions";
 import AdminTable from "../../components/AdminInfo/Table/AdminTable";
 
@@ -37,62 +39,9 @@ interface IData {
   third?: string;
 }
 
-const data1 = [
-  {
-    first: "yooh",
-    second: "2F-150",
-    third: "3일",
-  },
-  {
-    first: "sichoi",
-    second: "5F-3",
-    third: "13일",
-  },
-  {
-    first: "sanan",
-    second: "2F-77",
-    third: "1일",
-  },
-  {
-    first: "jaesjeon",
-    second: "4F-23",
-    third: "233일",
-  },
-
-  {
-    first: "eunbikim",
-    second: "4F-54",
-    third: "43일",
-  },
-  {
-    first: "inshin",
-    second: "5F-78",
-    third: "42일",
-  },
-  {
-    first: "seycho",
-    second: "4F-11",
-    third: "21일",
-  },
-  {
-    first: "joopark",
-    second: "2F-46",
-    third: "9일",
-  },
-  {
-    first: "huchoi",
-    second: "5F-10",
-    third: "31일",
-  },
-  {
-    first: "dongglee",
-    second: "2F-5",
-    third: "1일",
-  },
-];
-
 const AdminInfo = () => {
   const [toggle, setToggle] = useState(false);
+  const [overdueUserList, setOverdueUserList] = useState<IData[]>([]);
   const [brokenCabinetList, setBrokenCabinetList] = useState<IData[]>([]);
   const [bannedUserList, setBannedUserList] = useState<IData[]>([]);
   const [cabinetNumbersPerFloor, setCabinetNumbersPerFloor] = useState<
@@ -105,6 +54,7 @@ const AdminInfo = () => {
     const bannedUserData = await axiosGetBannedUserList();
     const brokenCabinetData = await axiosGetBrokenCabinetList();
     const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
+    const overdueUserData = await axiosGetOverdueUserList();
 
     const statisticsData: any[] = [];
     statisticsData[0] = await axiosGetStatistics(21, 28);
@@ -112,10 +62,10 @@ const AdminInfo = () => {
     statisticsData[2] = await axiosGetStatistics(7, 14);
     statisticsData[3] = await axiosGetStatistics(0, 7);
     setMonthlyData(statisticsData);
-
     setBannedUserList(handleBannedUserList(bannedUserData));
     setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
     setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
+    setOverdueUserList(handleOverdueUserList(overdueUserData));
   }
 
   useEffect(() => {
@@ -138,7 +88,7 @@ const AdminInfo = () => {
       <ContainerStyled>
         <H2styled>반납지연 유저</H2styled>
         <AdminTable
-          data={data1}
+          data={overdueUserList}
           handleClick={onClick}
           thInfo={["Intra ID", "위치", "연체일"]}
           ratio={["33%", "33%", "33%"]}
