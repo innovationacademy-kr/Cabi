@@ -1,5 +1,5 @@
 import { recoilPersist } from "recoil-persist";
-import { UserDto } from "@/types/dto/user.dto";
+import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import {
   CabinetInfo,
   CabinetInfoByLocationFloorDto,
@@ -108,4 +108,14 @@ export const currentIntraIdState = atom<string>({
 export const numberOfAdminWorkState = atom<number>({
   key: "NumberOfAdminWork",
   default: 0,
+});
+
+export const selectedTypeOnSearchState = atom<string>({
+  key: "SelectedTypeOnSearch",
+  default: "USER",
+});
+
+export const targetUserInfoState = atom<UserInfo>({
+  key: "TargetUserInfo",
+  default: undefined,
 });

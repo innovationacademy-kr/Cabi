@@ -5,6 +5,7 @@ export enum additionalModalType {
   MODAL_RETURN = "MODAL_RETURN",
   MODAL_UNAVAILABLE_ALREADY_LENT = "MODAL_UNAVAILABLE_ALREADY_LENT",
   MODAL_ADMIN_RETURN = "MODAL_ADMIN_RETURN",
+  MODAL_BAN = "MODAL_BAN",
 }
 
 export const cabinetIconSrcMap = {
@@ -78,6 +79,11 @@ export const modalPropsMap = {
     type: "confirm",
     title: "반납 처리",
     confirmMessage: "네, 반납할게요",
+  },
+  MODAL_BAN: {
+    type: "confirm",
+    title: "밴 해제하기",
+    confirmMessage: "해제",
   },
 };
 
