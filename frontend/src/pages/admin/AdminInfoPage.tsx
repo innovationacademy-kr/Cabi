@@ -1,10 +1,13 @@
+import AdminDetailInfo from "@/components/AdminInfo/AdminDetailInfo";
 import { useFetchData } from "@/hooks/useFetchData";
+import { selectAdminDetailState } from "@/recoil/atoms";
 import {
   ICabinetNumbersPerFloor,
   IData,
   IMonthlyData,
 } from "@/types/dto/admin.dto";
 import { useEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import BarChart from "../../components/AdminInfo/Chart/BarChart";
 import LineChart from "../../components/AdminInfo/Chart/LineChart";
@@ -20,7 +23,45 @@ const AdminInfo = () => {
     ICabinetNumbersPerFloor[]
   >([]);
   const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
-  const onClick = () => setToggle(!toggle);
+  const setAdminDetail = useSetRecoilState(selectAdminDetailState);
+
+  const clickBrokenCabinetList = (
+    e: React.MouseEvent<Element>,
+    setToggle: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    const target = e.target as HTMLTableElement;
+    setToggle(true);
+    setAdminDetail({
+      type: "broken",
+      data: target.title,
+    });
+    console.log(target.title);
+  };
+
+  const clickBannedUserList = (
+    e: React.MouseEvent<Element>,
+    setToggle: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    const target = e.target as HTMLTableElement;
+    setToggle(true);
+    setAdminDetail(() => ({
+      type: "broken",
+      data: target.title,
+    }));
+  };
+
+  const clickOverdueUserList = (
+    e: React.MouseEvent<Element>,
+    setToggle: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    const target = e.target as HTMLTableElement;
+    const setAdminDetail = useSetRecoilState(selectAdminDetailState);
+    setToggle(true);
+    setAdminDetail({
+      type: "broken",
+      data: target.title,
+    });
+  };
 
   useEffect(() => {
     useFetchData(
@@ -33,7 +74,6 @@ const AdminInfo = () => {
   }, []);
   return (
     <AdminInfoStyled>
-      <DetailInfoStyled toggle={toggle}></DetailInfoStyled>
       <ContainerStyled>
         <H2styled>층별 이용 현황</H2styled>
         <BarChart data={cabinetNumbersPerFloor} />
@@ -50,7 +90,7 @@ const AdminInfo = () => {
         <H2styled>반납지연 유저</H2styled>
         <AdminTable
           data={overdueUserList}
-          handleClick={onClick}
+          handleClick={(e) => clickOverdueUserList(e, setToggle)}
           thInfo={["Intra ID", "위치", "연체일"]}
           ratio={["33%", "33%", "33%"]}
         />
@@ -59,7 +99,7 @@ const AdminInfo = () => {
         <H2styled>사용정지 유저</H2styled>
         <AdminTable
           data={bannedUserList}
-          handleClick={onClick}
+          handleClick={(e) => clickBannedUserList(e, setToggle)}
           thInfo={["Intra ID", "사용정지 일", "기간"]}
           ratio={["33%", "33%", "33%"]}
         />
@@ -68,13 +108,14 @@ const AdminInfo = () => {
         <H2styled>고장 사물함</H2styled>
         <AdminTable
           data={brokenCabinetList}
-          handleClick={onClick}
+          handleClick={(e) => clickBrokenCabinetList(e, setToggle)}
           thInfo={["위치 정보", "확인 일자", "사유"]}
           ratio={["30%", "40%", "30%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}
         />
       </ContainerStyled>
-      <DetailInfoStyled toggle={toggle} />
+      <BackgroundStyled onClick={() => setToggle(false)} toggle={toggle} />
+      <AdminDetailInfo toggle={toggle} />
     </AdminInfoStyled>
   );
 };
@@ -86,16 +127,14 @@ const H2styled = styled.h2`
   font-weight: bold;
 `;
 
-const DetailInfoStyled = styled.div<{ toggle: boolean }>`
-  min-width: 330px;
-  height: 100%;
+const BackgroundStyled = styled.div<{ toggle: boolean }>`
   position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  left: 0;
   top: 0;
-  right: 0;
-  padding: 45px 40px 20px;
-  border-left: 1px solid var(--line-color);
-  background-color: var(--white);
-  overflow-y: auto;
+  z-index: 2;
   display: ${({ toggle }) => (toggle ? "block" : "none")};
 `;
 

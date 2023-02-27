@@ -58,23 +58,15 @@ const AdminTable = ({
                       ? handleClick
                       : emptyClick
                   }
+                  title={data ? data[curIndex]?.first : ""}
                 >
-                  <td
-                    title={thInfo[0]}
-                    style={{ fontSize: fontSize ? fontSize[0] : "0.9rem" }}
-                  >
+                  <td style={{ fontSize: fontSize ? fontSize[0] : "0.9rem" }}>
                     {curIndex < data.length ? data[curIndex].first : ""}
                   </td>
-                  <td
-                    title={thInfo[1]}
-                    style={{ fontSize: fontSize ? fontSize[1] : "0.9rem" }}
-                  >
+                  <td style={{ fontSize: fontSize ? fontSize[1] : "0.9rem" }}>
                     {curIndex < data.length ? data[curIndex].second : ""}
                   </td>
-                  <td
-                    title={thInfo[2]}
-                    style={{ fontSize: fontSize ? fontSize[2] : "0.9rem" }}
-                  >
+                  <td style={{ fontSize: fontSize ? fontSize[2] : "0.9rem" }}>
                     {curIndex < data.length ? data[curIndex].third : ""}
                   </td>
                 </tr>

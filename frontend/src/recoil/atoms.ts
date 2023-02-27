@@ -119,3 +119,16 @@ export const targetUserInfoState = atom<UserInfo>({
   key: "TargetUserInfo",
   default: undefined,
 });
+
+interface AdminDetailType {
+  type: string;
+  data: string;
+}
+
+export const selectAdminDetailState = atom<AdminDetailType>({
+  key: "AdminDetailInfo",
+  default: {
+    type: "",
+    data: "",
+  },
+});
