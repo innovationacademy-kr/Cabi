@@ -1,4 +1,8 @@
-import { BannedUserDto, BrokenCabinetDto } from "@/types/dto/admin.dto";
+import {
+  BannedUserDto,
+  BrokenCabinetDto,
+  OverdueUserDto,
+} from "@/types/dto/admin.dto";
 
 interface IData {
   first?: string;
@@ -33,4 +37,11 @@ export const handleBrokenCabinetList = (data: BrokenCabinetDto[]): IData[] =>
     first: `${floor}F-${cabinet_num}`,
     second: section,
     third: note || "",
+  }));
+
+export const handleOverdueUserList = (data: OverdueUserDto[]): IData[] =>
+  data.map(({ intra_id, location, overdueDays }) => ({
+    first: intra_id,
+    second: location,
+    third: overdueDays.toString(),
   }));

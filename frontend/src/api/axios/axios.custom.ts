@@ -259,3 +259,14 @@ export const axiosGetCabinetNumbersPerFloor = async () => {
     throw error;
   }
 };
+
+const axiosGetOverdueUserListURL =
+  "api/admin/search/user/overdue?page=0&length=0";
+export const axiosGetOverdueUserList = async () => {
+  try {
+    const response = await instance.get(axiosGetOverdueUserListURL);
+    return response.data.result;
+  } catch (error) {
+    throw error;
+  }
+};
