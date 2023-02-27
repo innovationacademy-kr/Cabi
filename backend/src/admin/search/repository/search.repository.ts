@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IAdminSearchRepository } from './search.repository.interface';
 import Cabinet from 'src/entities/cabinet.entity';
 import BanLog from 'src/entities/ban.log.entity';
-import { Like, MoreThan, Repository } from 'typeorm';
+import { LessThan, Like, MoreThan, Repository } from 'typeorm';
 import User from 'src/entities/user.entity';
 import { UserInfoPagenationDto } from 'src/admin/dto/user.info.pagenation.dto';
 import LentType from 'src/enums/lent.type.enum';
@@ -13,6 +13,8 @@ import { BlockedUserInfoPagenationDto } from 'src/admin/dto/blocked.user.info.pa
 import { UserCabinetInfoPagenationDto } from 'src/admin/dto/user.cabinet.info.pagenation.dto';
 import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
 import LentLog from 'src/entities/lent.log.entity';
+import { OverdueUserInfoPagenationDto } from '../../dto/OverdueUserInfoPagenationDto';
+import Lent from '../../../entities/lent.entity';
 
 export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
@@ -20,6 +22,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     @InjectRepository(Cabinet) private cabinetRepository: Repository<Cabinet>,
     @InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
     @InjectRepository(BanLog) private banLogRepository: Repository<BanLog>,
+    @InjectRepository(Lent) private lentRepository: Repository<Lent>,
   ) {}
 
   async searchByIntraId(
@@ -282,21 +285,47 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     length: number,
   ): Promise<BlockedUserInfoPagenationDto> {
     const result = await this.banLogRepository.findAndCount({
-      relations: ['user', 'user.Lent', 'user.Lent.cabinet'],
+      relations: ['user'],
       where: {
         unbanned_date: MoreThan(new Date()),
       },
-      order: { banned_date: 'ASC' },
+      order: { ban_log_id: 'ASC' },
       take: length,
       skip: page * length,
     });
-    const currentTime = new Date();
     const rtn = {
       result: result[0].map((ban) => ({
+        user_id: ban.ban_user_id,
         intra_id: ban.user.intra_id,
-        location: ban.user.Lent.cabinet.location,
+        banned_date: ban.banned_date,
+        unbanned_date: ban.unbanned_date,
+      })),
+      total_length: result[1],
+    };
+    return rtn;
+  }
+
+  async searchByOverdueUser(
+    page: number,
+    length: number,
+  ): Promise<OverdueUserInfoPagenationDto> {
+    const result = await this.lentRepository.findAndCount({
+      relations: ['user', 'cabinet'],
+      where: {
+        expire_time: LessThan(new Date()),
+      },
+      order: { expire_time: 'ASC' },
+      take: length,
+      skip: length * page,
+    });
+    const currentTime = new Date();
+    const rtn = {
+      result: result[0].map((overdueLent) => ({
+        intra_id: overdueLent.user.intra_id,
+        location: overdueLent.cabinet.location,
         overdueDays: Math.trunc(
-          (currentTime.getTime() - new Date(ban.banned_date).getTime()) /
+          (currentTime.getTime() -
+            new Date(overdueLent.expire_time).getTime()) /
             (1000 * 3600 * 24),
         ),
       })),

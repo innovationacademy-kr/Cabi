@@ -5,6 +5,7 @@ import { CabinetInfoPagenationDto } from 'src/admin/dto/cabinet.info.pagenation.
 import { UserCabinetInfoPagenationDto } from 'src/admin/dto/user.cabinet.info.pagenation.dto';
 import { UserInfoPagenationDto } from 'src/admin/dto/user.info.pagenation.dto';
 import LentType from 'src/enums/lent.type.enum';
+import { OverdueUserInfoPagenationDto } from '../../dto/OverdueUserInfoPagenationDto';
 
 export interface IAdminSearchRepository {
   /**
@@ -97,6 +98,15 @@ export interface IAdminSearchRepository {
     length: number,
   ): Promise<BlockedUserInfoPagenationDto>;
 
+  /**
+   * 연체 중인 유저 리스트를 반환합니다.
+   * @param page 가져올 데이터 페이지
+   * @param length 가져올 데이터 길이
+   */
+  searchByOverdueUser(
+    page: number,
+    length: number,
+  ): Promise<OverdueUserInfoPagenationDto>;
   /**
    * 현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다..
    *
