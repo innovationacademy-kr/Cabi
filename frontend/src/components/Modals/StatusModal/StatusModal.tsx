@@ -5,6 +5,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import ModalPortal from "../ModalPortal";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import Dropdown from "@/components/Common/Dropdown";
+import { cabinetStatusLabelMap, cabinetTypeLabelMap } from "@/assets/data/maps";
 
 export interface StatusModalInterface {
   cabinetType: CabinetType;
@@ -20,27 +21,15 @@ interface StatusModalContainerInterface {
 const MAX_INPUT_LENGTH = 14;
 
 const TYPE_OPTIONS = [
-  { name: "동아리", value: CabinetType.CLUB },
-  { name: "개인", value: CabinetType.PRIVATE },
-  { name: "공유", value: CabinetType.SHARE },
+  { name: "동아리 사물함", value: CabinetType.CLUB },
+  { name: "개인 사물함", value: CabinetType.PRIVATE },
+  { name: "공유 사물함", value: CabinetType.SHARE },
 ];
 
 const STATUS_OPTIONS = [
-  { name: "사뇽 가능", value: CabinetStatus.AVAILABLE },
+  { name: "사용 가능", value: CabinetStatus.AVAILABLE },
   { name: "사용 불가", value: CabinetStatus.BROKEN },
 ];
-
-const TYPE_DROP_DOWN_PROPS = {
-  options: TYPE_OPTIONS,
-  defaultValue: "공유",
-  onChange: () => {},
-};
-
-const STATUS_DROP_DOWN_PROPS = {
-  options: STATUS_OPTIONS,
-  defaultValue: "사용 가능",
-  onChange: () => {},
-};
 
 const StatusModal = ({
   statusModalObj,
@@ -49,30 +38,39 @@ const StatusModal = ({
 }: StatusModalContainerInterface) => {
   const { cabinetType, cabinetStatus } = statusModalObj;
   const [mode, setMode] = useState<string>("read");
-  const newTitle = useRef<HTMLInputElement>(null);
-  const newMemo = useRef<HTMLInputElement>(null);
-  const newTypeRef = useRef(null);
-  const newStatusRef = useRef(null);
+  const [newCabinetType, setNewCabinetType] =
+    useState<CabinetType>(cabinetType);
+  const [newCabinetStatus, setNewCabinetStatus] =
+    useState<CabinetStatus>(cabinetStatus);
   const handleClickWriteMode = (e: any) => {
     setMode("write");
-    if (cabinetType === "PRIVATE" && newMemo.current) {
-      newMemo.current.select();
-    } else if (newTitle.current) {
-      newTitle.current.select();
-    }
   };
 
-  const handleClickSave = (e: React.MouseEvent) => {
-    //사물함 제목, 사물함 비밀메모 update api 호출
-    // onClose(e);
-    document.getElementById("unselect-input")?.focus();
-    if (cabinetType === "SHARE" && newTitle.current!.value) {
-      onSave(newTitle.current!.value, newMemo.current!.value);
-    } else {
-      onSave(null, newMemo.current!.value);
+  const handleDropdownChangeValue = (val: CabinetType | CabinetStatus) => {
+    if (Object.values(CabinetType).includes(val as CabinetType)) {
+      setNewCabinetType(val as CabinetType);
+      return;
     }
-    setMode("read");
+    setNewCabinetStatus(val as CabinetStatus);
   };
+
+  const TYPE_DROP_DOWN_PROPS = {
+    options: TYPE_OPTIONS,
+    defaultValue: cabinetTypeLabelMap[cabinetType],
+    onChangeValue: handleDropdownChangeValue,
+  };
+
+  const STATUS_DROP_DOWN_PROPS = {
+    options: STATUS_OPTIONS,
+    defaultValue: cabinetStatusLabelMap[cabinetStatus],
+    onChangeValue: handleDropdownChangeValue,
+  };
+
+  const handleClickSave = () => {
+    setMode("read");
+    onSave(newCabinetType, newCabinetStatus);
+  };
+
   return (
     <ModalPortal>
       <BackgroundStyled onClick={onClose} />
@@ -85,32 +83,23 @@ const StatusModal = ({
           <ContentItemSectionStyled>
             <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>사물함 타입</ContentItemTitleStyled>
-              {/* <ContentItemInputStyled
-                onKeyUp={(e: any) => {
-                  if (e.key === "Enter") {
-                    handleClickSave(e);
-                  }
-                }}
-                placeholder={cabinetType}
-                mode={mode}
-                defaultValue={cabinetType}
-                ref={newTypeRef}
-              /> */}
-              <Dropdown {...TYPE_DROP_DOWN_PROPS} />
+              {mode === "read" ? (
+                <ContentItemContainerStyled mode={mode}>
+                  <p>{cabinetTypeLabelMap[cabinetType]}</p>
+                </ContentItemContainerStyled>
+              ) : (
+                <Dropdown {...TYPE_DROP_DOWN_PROPS} />
+              )}
             </ContentItemWrapperStyled>
             <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>사물함 상태</ContentItemTitleStyled>
-              <ContentItemInputStyled
-                onKeyUp={(e: any) => {
-                  if (e.key === "Enter") {
-                    handleClickSave(e);
-                  }
-                }}
-                placeholder={cabinetStatus}
-                mode={mode}
-                defaultValue={cabinetStatus}
-                ref={newStatusRef}
-              />
+              {mode === "read" ? (
+                <ContentItemContainerStyled mode={mode}>
+                  <p>{cabinetStatusLabelMap[cabinetStatus]}</p>
+                </ContentItemContainerStyled>
+              ) : (
+                <Dropdown {...STATUS_DROP_DOWN_PROPS} />
+              )}
             </ContentItemWrapperStyled>
           </ContentItemSectionStyled>
         </ContentSectionStyled>
@@ -125,8 +114,6 @@ const StatusModal = ({
                 ? onClose
                 : () => {
                     setMode("read");
-                    if (cabinetType) newTitle.current!.value = cabinetType;
-                    newMemo.current!.value = cabinetStatus;
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
@@ -192,9 +179,9 @@ const ContentItemTitleStyled = styled.h3`
   font-size: 18px;
   margin-bottom: 8px;
 `;
-const ContentItemInputStyled = styled.input<{
-  mode: string;
-}>`
+
+const ContentItemContainerStyled = styled.div<{ mode: string }>`
+  position: relative;
   border: 1px solid var(--line-color);
   width: 100%;
   height: 60px;
@@ -202,11 +189,10 @@ const ContentItemInputStyled = styled.input<{
   text-align: start;
   text-indent: 20px;
   font-size: 18px;
-  cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
-  color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
-  &::placeholder {
-    color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--line-color)"};
+  color: var(--main-color);
+  & p {
+    position: absolute;
+    top: 32%;
   }
 `;
 

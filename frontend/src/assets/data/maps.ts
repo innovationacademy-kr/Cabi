@@ -89,3 +89,18 @@ export const cabinetFilterMap = {
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
 };
+
+export const cabinetStatusLabelMap = {
+  [CabinetStatus.AVAILABLE]: "사용 가능",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "사용 가능",
+  [CabinetStatus.SET_EXPIRE_FULL]: "사용 가능",
+  [CabinetStatus.EXPIRED]: "사용 가능",
+  [CabinetStatus.BANNED]: "사용 불가",
+  [CabinetStatus.BROKEN]: "사용 불가",
+};
+
+export const cabinetTypeLabelMap = {
+  [CabinetType.CLUB]: "동아리 사물함",
+  [CabinetType.PRIVATE]: "개인 사물함",
+  [CabinetType.SHARE]: "공유 사물함",
+};

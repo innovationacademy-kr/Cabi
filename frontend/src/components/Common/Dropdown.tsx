@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled, { css } from "styled-components";
 
 interface IDropdown {
   options: { name: string; value: any }[];
   defaultValue: string;
-  onChange: React.MouseEventHandler<HTMLOptionElement>;
+  onChangeValue?: (param: any) => any;
 }
 
-const Dropdown = ({ options, defaultValue, onChange }: IDropdown) => {
+const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
   const [currentName, setCurrentName] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
@@ -16,8 +16,10 @@ const Dropdown = ({ options, defaultValue, onChange }: IDropdown) => {
         onClick={() => {
           setIsOpen(!isOpen);
         }}
+        isOpen={isOpen}
       >
         <p>{currentName}</p>
+        <img src="/src/assets/images/dropdownChevron.svg" />
       </DropdownSelectionBoxStyled>
       <DropdownItemContainerStyled isVisible={isOpen}>
         {options?.map((option) => {
@@ -27,6 +29,9 @@ const Dropdown = ({ options, defaultValue, onChange }: IDropdown) => {
               onClick={() => {
                 setCurrentName(option.name);
                 setIsOpen(false);
+                if (onChangeValue) {
+                  onChangeValue(option.value);
+                }
               }}
               isSelected={option.name === currentName}
             >
@@ -46,7 +51,7 @@ const DropdownContainerStyled = styled.div`
   position: relative;
 `;
 
-const DropdownSelectionBoxStyled = styled.div`
+const DropdownSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
   position: relative;
   border: 1px solid var(--line-color);
   width: 100%;
@@ -58,7 +63,20 @@ const DropdownSelectionBoxStyled = styled.div`
   color: var(--main-color);
   & p {
     position: absolute;
-    top: 30%;
+    top: 32%;
+  }
+  & img {
+    filter: contrast(0.6);
+    width: 14px;
+    height: 8px;
+    position: relative;
+    top: 45%;
+    left: 80%;
+    ${({ isOpen }) =>
+      isOpen === true &&
+      css`
+        transform: scaleY(-1);
+      `}
   }
 `;
 
@@ -69,7 +87,11 @@ const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
   position: absolute;
   top: 110%;
   z-index: 99;
-  visibility: ${({ isVisible }) => (isVisible ? "" : "hidden")};
+  ${({ isVisible }) =>
+    isVisible !== true &&
+    css`
+      visibility: hidden;
+    `}
   div {
     &: first-child {
 
@@ -88,6 +110,7 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   text-indent: 20px;
   font-size: 18px;
   color: ${({ isSelected }) => (isSelected ? "var(--main-color)" : "black")};
+  cursor: pointer;
   & p {
     position: absolute;
     top: 30%;

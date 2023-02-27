@@ -3,18 +3,15 @@ import {
   axiosUpdateCabinetTitle,
 } from "@/api/axios/axios.custom";
 import {
-  myCabinetInfoState,
   currentFloorCabinetState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
-import {
-  CabinetInfo,
-  CabinetInfoByLocationFloorDto,
-  MyCabinetInfoResponseDto,
-} from "@/types/dto/cabinet.dto";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import React from "react";
 import { useRecoilState } from "recoil";
 import StatusModal from "@/components/Modals/StatusModal/StatusModal";
+import CabinetType from "@/types/enum/cabinet.type.enum";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
 
 const StatusModalContainer = (props: {
   onClose: React.MouseEventHandler<Element>;
@@ -45,7 +42,23 @@ const StatusModalContainer = (props: {
   //     targetCabinet!.cabinet_title = newTitle;
   //     setCurrentFloorCabinet(updatedCabinetList);
   //   };
-
+  const onSaveEditStatus = (
+    newCabinetType: CabinetType,
+    newCabinetStatus: CabinetStatus
+  ) => {
+    //type 수정 사항이 있으면 type변경 api 호출
+    if (newCabinetType !== targetCabinetInfo.lent_type) {
+      console.log(
+        `changed from ${targetCabinetInfo.lent_type} to ${newCabinetType}`
+      );
+    }
+    // status 수정 사항이 있으면 status변경 api호출
+    if (newCabinetStatus !== targetCabinetInfo.status) {
+      console.log(
+        `changed from ${targetCabinetInfo.status} to ${newCabinetStatus}`
+      );
+    }
+  };
   //   const onSaveEditMemo = (newTitle: string | null, newMemo: string) => {
   //     if (newTitle !== myCabinetInfo.cabinet_title) {
   //       //수정사항이 있으면
@@ -81,7 +94,7 @@ const StatusModalContainer = (props: {
     <StatusModal
       statusModalObj={statusModalProps}
       onClose={props.onClose}
-      onSave={() => {}}
+      onSave={onSaveEditStatus}
     />
   );
 };
