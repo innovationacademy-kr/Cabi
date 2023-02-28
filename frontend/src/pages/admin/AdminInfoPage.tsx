@@ -25,42 +25,16 @@ const AdminInfo = () => {
   const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
   const setAdminDetail = useSetRecoilState(selectAdminDetailState);
 
-  const clickBrokenCabinetList = (
+  const onClick = (
     e: React.MouseEvent<Element>,
-    setToggle: React.Dispatch<React.SetStateAction<boolean>>
+    setToggle: React.Dispatch<React.SetStateAction<boolean>>,
+    type: string
   ) => {
     const target = e.currentTarget as HTMLTableElement;
+    const data = JSON.parse(target.dataset.info as string);
+    data.type = type;
+    setAdminDetail(data);
     setToggle(true);
-    setAdminDetail({
-      type: "broken",
-      data: target.title,
-    });
-    console.log(target.title);
-    
-  };
-
-  const clickBannedUserList = (
-    e: React.MouseEvent<Element>,
-    setToggle: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
-    const target = e.currentTarget as HTMLTableElement;
-    setToggle(true);
-    setAdminDetail(() => ({
-      type: "broken",
-      data: target.title,
-    }));
-  };
-
-  const clickOverdueUserList = (
-    e: React.MouseEvent<Element>,
-    setToggle: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
-    const target = e.currentTarget as HTMLTableElement;
-    setToggle(true);
-    setAdminDetail({
-      type: "broken",
-      data: target.title,
-    });
   };
 
   useEffect(() => {
@@ -90,7 +64,7 @@ const AdminInfo = () => {
         <H2styled>반납지연 유저</H2styled>
         <AdminTable
           data={overdueUserList}
-          handleClick={(e) => clickOverdueUserList(e, setToggle)}
+          handleClick={(e) => onClick(e, setToggle, "overdue")}
           thInfo={["Intra ID", "위치", "연체일"]}
           ratio={["33%", "33%", "33%"]}
         />
@@ -99,7 +73,7 @@ const AdminInfo = () => {
         <H2styled>사용정지 유저</H2styled>
         <AdminTable
           data={bannedUserList}
-          handleClick={(e) => clickBannedUserList(e, setToggle)}
+          handleClick={(e) => onClick(e, setToggle, "banned")}
           thInfo={["Intra ID", "사용정지 일", "기간"]}
           ratio={["33%", "33%", "33%"]}
         />
@@ -108,7 +82,7 @@ const AdminInfo = () => {
         <H2styled>고장 사물함</H2styled>
         <AdminTable
           data={brokenCabinetList}
-          handleClick={(e) => clickBrokenCabinetList(e, setToggle)}
+          handleClick={(e) => onClick(e, setToggle, "broken")}
           thInfo={["위치 정보", "확인 일자", "사유"]}
           ratio={["30%", "40%", "30%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}

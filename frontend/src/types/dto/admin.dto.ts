@@ -42,4 +42,5 @@ export interface IData {
   first?: string;
   second?: string;
   third?: string;
+  info: BannedUserDto | BrokenCabinetDto | OverdueUserDto;
 }

@@ -1,14 +1,15 @@
+import {
+  BannedUserDto,
+  BrokenCabinetDto,
+  IData,
+  OverdueUserDto,
+} from "@/types/dto/admin.dto";
 import { useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";
 
 const ROW_COUNT = 5;
 
-interface IData {
-  first?: string;
-  second?: string;
-  third?: string;
-}
 const AdminTable = ({
   data,
   handleClick,
@@ -58,6 +59,7 @@ const AdminTable = ({
                       ? handleClick
                       : emptyClick
                   }
+                  data-info={data ? JSON.stringify(data[curIndex]?.info) : ""}
                   title={data ? data[curIndex]?.first : ""}
                 >
                   <td style={{ fontSize: fontSize ? fontSize[0] : "0.9rem" }}>

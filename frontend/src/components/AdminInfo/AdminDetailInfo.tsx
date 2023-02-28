@@ -7,7 +7,7 @@ import Button from "../Common/Button";
 
 const AdminDetailInfo = ({ toggle }: { toggle: boolean }) => {
   const info = useRecoilValue(selectAdminDetailState);
-
+  console.log(info);
   useEffect(() => {
     async function getData() {}
   }, []);
