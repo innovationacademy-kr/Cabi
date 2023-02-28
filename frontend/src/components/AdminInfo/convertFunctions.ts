@@ -11,22 +11,19 @@ interface IData {
   info: BannedUserDto | BrokenCabinetDto | OverdueUserDto;
 }
 
-const calcLeftDays = (start: Date, end: Date) =>
-  Math.ceil((end.getTime() - start.getTime()) / 1000 / 3600 / 24);
+const calcLeftDays = (end: Date) =>
+  Math.ceil((end.getTime() - new Date().getTime()) / 1000 / 3600 / 24);
 
 const convertDate = (date: Date): string =>
   `~ ${date.getFullYear() % 100}.${
     date.getMonth() >= 9 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1)
-  }.${date.getDay() < 10 ? "0" + date.getDay() : date.getDay()}`;
+  }.${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
 
 export const handleBannedUserList = (data: BannedUserDto[]): IData[] =>
   data
     .map(({ intra_id, banned_date, unbanned_date }, idx, arr) => ({
       first: intra_id,
-      second: calcLeftDays(
-        new Date(banned_date),
-        new Date(unbanned_date)
-      ).toString(),
+      second: calcLeftDays(new Date(unbanned_date)).toString(),
       third: convertDate(new Date(unbanned_date)),
       info: arr[idx],
     }))
