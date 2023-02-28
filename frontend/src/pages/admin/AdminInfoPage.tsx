@@ -29,20 +29,21 @@ const AdminInfo = () => {
     e: React.MouseEvent<Element>,
     setToggle: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
-    const target = e.target as HTMLTableElement;
+    const target = e.currentTarget as HTMLTableElement;
     setToggle(true);
     setAdminDetail({
       type: "broken",
       data: target.title,
     });
     console.log(target.title);
+    
   };
 
   const clickBannedUserList = (
     e: React.MouseEvent<Element>,
     setToggle: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
-    const target = e.target as HTMLTableElement;
+    const target = e.currentTarget as HTMLTableElement;
     setToggle(true);
     setAdminDetail(() => ({
       type: "broken",
@@ -54,8 +55,7 @@ const AdminInfo = () => {
     e: React.MouseEvent<Element>,
     setToggle: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
-    const target = e.target as HTMLTableElement;
-    const setAdminDetail = useSetRecoilState(selectAdminDetailState);
+    const target = e.currentTarget as HTMLTableElement;
     setToggle(true);
     setAdminDetail({
       type: "broken",

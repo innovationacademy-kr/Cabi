@@ -40,4 +40,6 @@ export async function useFetchData(
   setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
   setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
   setOverdueUserList(handleOverdueUserList(overdueUserData));
+  console.log(brokenCabinetData);
+  console.log(bannedUserData);
 }
