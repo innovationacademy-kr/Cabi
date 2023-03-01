@@ -83,7 +83,7 @@ const StatusModal = ({
         <H2Styled>상태 관리</H2Styled>
         <ContentSectionStyled>
           <ContentItemSectionStyled>
-            <ContentItemWrapperStyled isVisible={true} mode={mode}>
+            <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>사물함 타입</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
@@ -93,7 +93,14 @@ const StatusModal = ({
                 <Dropdown {...TYPE_DROP_DOWN_PROPS} />
               )}
             </ContentItemWrapperStyled>
-            <ContentItemWrapperStyled isVisible={true} mode={mode}>
+            <ContentItemWrapperStyled
+              isVisible={true}
+              style={
+                warningNotificationObj.isVisible && mode === "write"
+                  ? { marginBottom: "1px" }
+                  : { marginBottom: "25px" }
+              }
+            >
               <ContentItemTitleStyled>사물함 상태</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
@@ -181,19 +188,11 @@ const ContentItemSectionStyled = styled.div`
 
 const ContentItemWrapperStyled = styled.div<{
   isVisible: boolean;
-  mode: string;
 }>`
   display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 25px;
-  &:last-child {
-    ${({ mode }) =>
-      mode === "write" &&
-      css`
-        margin-bottom: 1px;
-      `}
-  }
 `;
 
 const ContentItemTitleStyled = styled.h3`
