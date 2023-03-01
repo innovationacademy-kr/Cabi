@@ -178,14 +178,14 @@ export const axiosReturnByUserId = async (userId: number): Promise<any> => {
   }
 };
 
-const axiosChangeCabinetTypeURL = "/api/admin/cabinet/lentType/";
-export const axiosChangeCabinetType = async (
+const axiosUpdateCabinetTypeURL = "/api/admin/cabinet/lentType/";
+export const axiosUpdateCabinetType = async (
   cabinetId: number,
   lentType: CabinetType
 ) => {
   try {
     const response = await instance.patch(
-      `${axiosChangeCabinetTypeURL}${cabinetId}/${lentType}`
+      `${axiosUpdateCabinetTypeURL}${cabinetId}/${lentType}`
     );
     return response;
   } catch (error) {
@@ -193,14 +193,14 @@ export const axiosChangeCabinetType = async (
   }
 };
 
-const axiosChangeCabinetStatusURL = "/api/admin/cabinet/status/";
-export const axiosChangeCabinetStatus = async (
+const axiosUpdateCabinetStatusURL = "/api/admin/cabinet/status/";
+export const axiosUpdateCabinetStatus = async (
   cabinetId: number,
   status: CabinetStatus
 ) => {
   try {
     const response = await instance.patch(
-      `${axiosChangeCabinetStatusURL}${cabinetId}/${status}`
+      `${axiosUpdateCabinetStatusURL}${cabinetId}/${status}`
     );
     return response;
   } catch (error) {
