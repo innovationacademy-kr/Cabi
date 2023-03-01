@@ -1,3 +1,5 @@
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import instance from "./axios.instance";
 
 const axiosLogoutUrl = "/auth/logout";
@@ -170,6 +172,36 @@ const axiosReturnByUserIdURL = "/api/admin/return/user/";
 export const axiosReturnByUserId = async (userId: number): Promise<any> => {
   try {
     const response = await instance.delete(axiosReturnByUserIdURL + userId);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosChangeCabinetTypeURL = "/api/admin/cabinet/lentType/";
+export const axiosChangeCabinetType = async (
+  cabinetId: number,
+  lentType: CabinetType
+) => {
+  try {
+    const response = await instance.patch(
+      `${axiosChangeCabinetTypeURL}${cabinetId}/${lentType}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosChangeCabinetStatusURL = "/api/admin/cabinet/status/";
+export const axiosChangeCabinetStatus = async (
+  cabinetId: number,
+  status: CabinetStatus
+) => {
+  try {
+    const response = await instance.patch(
+      `${axiosChangeCabinetStatusURL}${cabinetId}/${status}`
+    );
     return response;
   } catch (error) {
     throw error;
