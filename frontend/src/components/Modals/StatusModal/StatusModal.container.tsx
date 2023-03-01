@@ -31,28 +31,11 @@ const StatusModalContainer = (props: {
     isCurrentSectionRenderState
   );
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
-  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
-  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const statusModalProps = {
     cabinetType: targetCabinetInfo.lent_type,
     cabinetStatus: targetCabinetInfo.status,
   };
-  //   const updateCabinetTitleInList = (newTitle: string | null) => {
-  //     const updatedCabinetList: CabinetInfoByLocationFloorDto[] = JSON.parse(
-  //       JSON.stringify(currentFloorCabinet)
-  //     );
-  //     const targetSectionCabinetList = updatedCabinetList.find(
-  //       (floor) => floor.section === myCabinetInfo.section
-  //     )?.cabinets;
-  //     if (targetSectionCabinetList === undefined) return;
 
-  //     let targetCabinet = targetSectionCabinetList.find(
-  //       (section) => section.cabinet_id === myCabinetInfo.cabinet_id
-  //     );
-
-  //     targetCabinet!.cabinet_title = newTitle;
-  //     setCurrentFloorCabinet(updatedCabinetList);
-  //   };
   const onSaveEditStatus = (
     newCabinetType: CabinetType,
     newCabinetStatus: CabinetStatus
@@ -60,13 +43,13 @@ const StatusModalContainer = (props: {
     const cabinetId = targetCabinetInfo.cabinet_id;
     const cabinetStatus = targetCabinetInfo.status;
     const cabinetType = targetCabinetInfo.lent_type;
+    const isLent = targetCabinetInfo.lent_info.length > 0;
     //type 수정 사항이 있으면 type변경 api 호출
     if (newCabinetType !== cabinetType) {
       console.log(`changed from ${cabinetType} to ${newCabinetType}`);
       axiosUpdateCabinetType(cabinetId, newCabinetType)
         .then(async () => {
           setIsCurrentSectionRender(true);
-
           setNumberOfAdminWork((prev) => prev + 1);
           try {
             const { data } = await axiosCabinetById(currentCabinetId);
@@ -87,7 +70,6 @@ const StatusModalContainer = (props: {
       axiosUpdateCabinetStatus(cabinetId, newCabinetStatus)
         .then(async () => {
           setIsCurrentSectionRender(true);
-
           setNumberOfAdminWork((prev) => prev + 1);
           try {
             const { data } = await axiosCabinetById(currentCabinetId);
@@ -101,37 +83,6 @@ const StatusModalContainer = (props: {
         });
     }
   };
-  //   const onSaveEditMemo = (newTitle: string | null, newMemo: string) => {
-  //     if (newTitle !== myCabinetInfo.cabinet_title) {
-  //       //수정사항이 있으면
-  //       axiosUpdateCabinetTitle({ cabinet_title: newTitle ?? "" })
-  //         .then(() => {
-  //           setMyCabinetInfo({
-  //             ...myCabinetInfo,
-  //             cabinet_title: newTitle,
-  //             cabinet_memo: newMemo,
-  //           });
-  //           // list에서 제목 업데이트
-  //           updateCabinetTitleInList(newTitle);
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         });
-  //     }
-  //     if (newMemo !== myCabinetInfo.cabinet_memo) {
-  //       axiosUpdateCabinetMemo({ cabinet_memo: newMemo })
-  //         .then(() => {
-  //           setMyCabinetInfo({
-  //             ...myCabinetInfo,
-  //             cabinet_title: newTitle,
-  //             cabinet_memo: newMemo,
-  //           });
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         });
-  //     }
-  //   };
   return (
     <StatusModal
       statusModalObj={statusModalProps}

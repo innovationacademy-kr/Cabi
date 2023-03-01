@@ -18,8 +18,6 @@ interface StatusModalContainerInterface {
   onSave: any;
 }
 
-const MAX_INPUT_LENGTH = 14;
-
 const TYPE_OPTIONS = [
   { name: "동아리 사물함", value: CabinetType.CLUB },
   { name: "개인 사물함", value: CabinetType.PRIVATE },
@@ -56,13 +54,13 @@ const StatusModal = ({
 
   const TYPE_DROP_DOWN_PROPS = {
     options: TYPE_OPTIONS,
-    defaultValue: cabinetTypeLabelMap[cabinetType],
+    defaultValue: cabinetTypeLabelMap[newCabinetType],
     onChangeValue: handleDropdownChangeValue,
   };
 
   const STATUS_DROP_DOWN_PROPS = {
     options: STATUS_OPTIONS,
-    defaultValue: cabinetStatusLabelMap[cabinetStatus],
+    defaultValue: cabinetStatusLabelMap[newCabinetStatus],
     onChangeValue: handleDropdownChangeValue,
   };
 
@@ -85,7 +83,7 @@ const StatusModal = ({
               <ContentItemTitleStyled>사물함 타입</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
-                  <p>{cabinetTypeLabelMap[cabinetType]}</p>
+                  <p>{cabinetTypeLabelMap[newCabinetType]}</p>
                 </ContentItemContainerStyled>
               ) : (
                 <Dropdown {...TYPE_DROP_DOWN_PROPS} />
@@ -95,7 +93,7 @@ const StatusModal = ({
               <ContentItemTitleStyled>사물함 상태</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
-                  <p>{cabinetStatusLabelMap[cabinetStatus]}</p>
+                  <p>{cabinetStatusLabelMap[newCabinetStatus]}</p>
                 </ContentItemContainerStyled>
               ) : (
                 <Dropdown {...STATUS_DROP_DOWN_PROPS} />
