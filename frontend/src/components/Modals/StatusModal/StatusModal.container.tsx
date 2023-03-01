@@ -11,7 +11,7 @@ import {
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import React, { useState } from "react";
+import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import StatusModal from "@/components/Modals/StatusModal/StatusModal";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -34,6 +34,11 @@ const StatusModalContainer = (props: {
   const statusModalProps = {
     cabinetType: targetCabinetInfo.lent_type,
     cabinetStatus: targetCabinetInfo.status,
+    warningNotificationObj: {
+      isVisible: targetCabinetInfo.lent_info.length > 0,
+      message: `사물함의 상태 또는 타입을 변경하려면
+		먼저 해당 사물함을 반납해야 합니다.`,
+    },
   };
 
   const onSaveEditStatus = (
@@ -43,10 +48,8 @@ const StatusModalContainer = (props: {
     const cabinetId = targetCabinetInfo.cabinet_id;
     const cabinetStatus = targetCabinetInfo.status;
     const cabinetType = targetCabinetInfo.lent_type;
-    const isLent = targetCabinetInfo.lent_info.length > 0;
     //type 수정 사항이 있으면 type변경 api 호출
     if (newCabinetType !== cabinetType) {
-      console.log(`changed from ${cabinetType} to ${newCabinetType}`);
       axiosUpdateCabinetType(cabinetId, newCabinetType)
         .then(async () => {
           setIsCurrentSectionRender(true);
@@ -64,9 +67,6 @@ const StatusModalContainer = (props: {
     }
     // status 수정 사항이 있으면 status변경 api호출
     if (newCabinetStatus !== cabinetStatus) {
-      console.log(
-        `changed from ${targetCabinetInfo.status} to ${newCabinetStatus}`
-      );
       axiosUpdateCabinetStatus(cabinetId, newCabinetStatus)
         .then(async () => {
           setIsCurrentSectionRender(true);

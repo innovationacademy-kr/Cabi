@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import React, { useRef, useState } from "react";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -6,10 +6,14 @@ import ModalPortal from "../ModalPortal";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import Dropdown from "@/components/Common/Dropdown";
 import { cabinetStatusLabelMap, cabinetTypeLabelMap } from "@/assets/data/maps";
+import WarningNotification, {
+  WarningNotificationProps,
+} from "@/components/Common/WarningNotification";
 
 export interface StatusModalInterface {
   cabinetType: CabinetType;
   cabinetStatus: CabinetStatus;
+  warningNotificationObj: WarningNotificationProps;
 }
 
 interface StatusModalContainerInterface {
@@ -34,7 +38,7 @@ const StatusModal = ({
   onClose,
   onSave,
 }: StatusModalContainerInterface) => {
-  const { cabinetType, cabinetStatus } = statusModalObj;
+  const { cabinetType, cabinetStatus, warningNotificationObj } = statusModalObj;
   const [mode, setMode] = useState<string>("read");
   const [newCabinetType, setNewCabinetType] =
     useState<CabinetType>(cabinetType);
@@ -79,7 +83,7 @@ const StatusModal = ({
         <H2Styled>상태 관리</H2Styled>
         <ContentSectionStyled>
           <ContentItemSectionStyled>
-            <ContentItemWrapperStyled isVisible={true}>
+            <ContentItemWrapperStyled isVisible={true} mode={mode}>
               <ContentItemTitleStyled>사물함 타입</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
@@ -89,7 +93,7 @@ const StatusModal = ({
                 <Dropdown {...TYPE_DROP_DOWN_PROPS} />
               )}
             </ContentItemWrapperStyled>
-            <ContentItemWrapperStyled isVisible={true}>
+            <ContentItemWrapperStyled isVisible={true} mode={mode}>
               <ContentItemTitleStyled>사물함 상태</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
@@ -101,10 +105,17 @@ const StatusModal = ({
             </ContentItemWrapperStyled>
           </ContentItemSectionStyled>
         </ContentSectionStyled>
-        <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
+        {mode === "write" && (
+          <WarningNotification {...warningNotificationObj} />
+        )}
         <ButtonWrapperStyled mode={mode}>
           {mode === "write" && (
-            <Button onClick={handleClickSave} text="저장" theme="fill" />
+            <Button
+              onClick={handleClickSave}
+              text="저장"
+              theme="fill"
+              disabled={warningNotificationObj.isVisible}
+            />
           )}
           <Button
             onClick={
@@ -112,6 +123,8 @@ const StatusModal = ({
                 ? onClose
                 : () => {
                     setMode("read");
+                    setNewCabinetStatus(cabinetStatus);
+                    setNewCabinetType(cabinetType);
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
@@ -166,11 +179,21 @@ const ContentItemSectionStyled = styled.div`
   width: 100%;
 `;
 
-const ContentItemWrapperStyled = styled.div<{ isVisible: boolean }>`
+const ContentItemWrapperStyled = styled.div<{
+  isVisible: boolean;
+  mode: string;
+}>`
   display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 25px;
+  &:last-child {
+    ${({ mode }) =>
+      mode === "write" &&
+      css`
+        margin-bottom: 1px;
+      `}
+  }
 `;
 
 const ContentItemTitleStyled = styled.h3`
