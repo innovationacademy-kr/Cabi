@@ -17,6 +17,7 @@ import {
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import useMultiSelect from "@/hooks/useMultiSelect";
 import AdminReturnModal from "../Modals/ReturnModal/AdminReturnModal";
+import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
@@ -67,6 +68,7 @@ const CabinetInfoArea: React.FC<{
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
   const [showAdminReturnModal, setShowAdminReturnModal] =
     useState<boolean>(false);
+  const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
@@ -102,6 +104,12 @@ const CabinetInfoArea: React.FC<{
   };
   const handleCloseAdminReturnModal = () => {
     setShowAdminReturnModal(false);
+  };
+  const handleOpenStatusModal = () => {
+    setShowStatusModal(true);
+  };
+  const handleCloseStatusModal = () => {
+    setShowStatusModal(false);
   };
 
   if (
@@ -148,7 +156,7 @@ const CabinetInfoArea: React.FC<{
             theme="fill"
           />
           <ButtonContainer
-            onClick={() => {}} //todo: admin 일괄 상태관리 모달 만들기
+            onClick={handleOpenStatusModal} //todo: admin 일괄 상태관리 모달 만들기
             text="상태관리"
             theme="line"
           />
@@ -211,7 +219,7 @@ const CabinetInfoArea: React.FC<{
                   theme="fill"
                 />
                 <ButtonContainer
-                  onClick={() => {}} //todo: admin 단일 상태관리 모달 만들기
+                  onClick={handleOpenStatusModal} //todo: admin 단일 상태관리 모달 만들기
                   text="상태 관리"
                   theme="line"
                 />
@@ -261,6 +269,9 @@ const CabinetInfoArea: React.FC<{
           lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseAdminReturnModal}
         />
+      )}
+      {showStatusModal && (
+        <StatusModalContainer onClose={handleCloseStatusModal} />
       )}
     </CabinetDetailAreaStyled>
   );
