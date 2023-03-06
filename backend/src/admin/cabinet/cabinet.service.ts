@@ -140,7 +140,7 @@ export class AdminCabinetService {
       `Called ${AdminCabinetService.name} ${this.updateCabinetStatus.name}`,
     );
     await this.throwIfNotExistedCabinet(cabinetId);
-    if (status == CabinetStatusType.BROKEN)
+    if (status === CabinetStatusType.BROKEN)
       await this.throwIfHasBorrower(cabinetId);
     await this.adminCabinetRepository.updateCabinetStatus(cabinetId, status);
   }
