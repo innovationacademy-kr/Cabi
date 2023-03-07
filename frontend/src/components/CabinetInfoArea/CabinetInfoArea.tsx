@@ -111,6 +111,15 @@ const CabinetInfoArea: React.FC<{
   const handleCloseStatusModal = () => {
     setShowStatusModal(false);
   };
+  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
+    const returnable = selectedCabinets.find(
+      (cabinet) => cabinet.lent_info.length >= 1
+    );
+    if (returnable !== undefined) {
+      return true;
+    }
+    return false;
+  };
 
   if (
     (!multiSelectTargetInfo && selectedCabinetInfo === null) ||
@@ -151,12 +160,17 @@ const CabinetInfoArea: React.FC<{
         </MultiCabinetIconWrapperStyled>
         <CabinetInfoButtonsContainerStyled>
           <ButtonContainer
-            onClick={() => {}} //todo: admin 일괄 반납 모달 만들기
+            onClick={handleClickReturnAll} //todo: admin 일괄 반납 모달 만들기
             text="일괄 반납"
             theme="fill"
+            disabled={
+              targetCabinetInfoList
+                ? !checkMultiReturn(targetCabinetInfoList)
+                : true
+            }
           />
           <ButtonContainer
-            onClick={handleOpenStatusModal} //todo: admin 일괄 상태관리 모달 만들기
+            onClick={handleClickChangeStatusAll} //todo: admin 일괄 상태관리 모달 만들기
             text="상태관리"
             theme="line"
           />

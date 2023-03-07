@@ -141,9 +141,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     });
     return counts;
   };
-  const handleClickReturnAll = () => {
-    alert("returned all!");
-  };
+  const handleClickReturnAll = () => {};
   const handleClickChangeStatusAll = () => {
     alert("open change status modal");
   };
