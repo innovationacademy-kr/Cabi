@@ -117,6 +117,7 @@ const CabinetInfoArea: React.FC<{
           <ButtonContainer
             onClick={() => {
               resetMultiSelectMode();
+              closeCabinet();
             }} //todo: 상태관리 모달 만들기
             text="취소"
             theme="grayLine"
