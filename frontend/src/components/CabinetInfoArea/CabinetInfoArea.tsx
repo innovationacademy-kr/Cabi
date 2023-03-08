@@ -17,6 +17,7 @@ import {
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import useMultiSelect from "@/hooks/useMultiSelect";
 import AdminReturnModal from "../Modals/ReturnModal/AdminReturnModal";
+import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
@@ -32,8 +33,6 @@ export interface ISelectedCabinetInfo {
 }
 export interface IMultiSelectTargetInfo {
   targetCabinetInfoList: CabinetInfo[];
-  handleClickReturnAll: any;
-  handleClickChangeStatusAll: any;
   typeCounts: {
     AVAILABLE: number;
     EXPIRED: number;
@@ -53,12 +52,7 @@ const CabinetInfoArea: React.FC<{
   closeCabinet,
   multiSelectTargetInfo,
 }) => {
-  const {
-    targetCabinetInfoList,
-    handleClickReturnAll,
-    handleClickChangeStatusAll,
-    typeCounts,
-  } = multiSelectTargetInfo ?? {};
+  const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
 
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
@@ -67,6 +61,7 @@ const CabinetInfoArea: React.FC<{
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
   const [showAdminReturnModal, setShowAdminReturnModal] =
     useState<boolean>(false);
+  const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
@@ -102,6 +97,21 @@ const CabinetInfoArea: React.FC<{
   };
   const handleCloseAdminReturnModal = () => {
     setShowAdminReturnModal(false);
+  };
+  const handleOpenStatusModal = () => {
+    setShowStatusModal(true);
+  };
+  const handleCloseStatusModal = () => {
+    setShowStatusModal(false);
+  };
+  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
+    const returnable = selectedCabinets.find(
+      (cabinet) => cabinet.lent_info.length >= 1
+    );
+    if (returnable !== undefined) {
+      return true;
+    }
+    return false;
   };
 
   if (
@@ -143,12 +153,17 @@ const CabinetInfoArea: React.FC<{
         </MultiCabinetIconWrapperStyled>
         <CabinetInfoButtonsContainerStyled>
           <ButtonContainer
-            onClick={() => {}} //todo: admin 일괄 반납 모달 만들기
+            onClick={handleOpenAdminReturnModal} //todo: admin 일괄 반납 모달 만들기
             text="일괄 반납"
             theme="fill"
+            disabled={
+              targetCabinetInfoList
+                ? !checkMultiReturn(targetCabinetInfoList)
+                : true
+            }
           />
           <ButtonContainer
-            onClick={() => {}} //todo: admin 일괄 상태관리 모달 만들기
+            onClick={handleOpenStatusModal} //todo: admin 일괄 상태관리 모달 만들기
             text="상태관리"
             theme="line"
           />
@@ -211,7 +226,7 @@ const CabinetInfoArea: React.FC<{
                   theme="fill"
                 />
                 <ButtonContainer
-                  onClick={() => {}} //todo: admin 단일 상태관리 모달 만들기
+                  onClick={handleOpenStatusModal} //todo: admin 단일 상태관리 모달 만들기
                   text="상태 관리"
                   theme="line"
                 />
@@ -258,9 +273,13 @@ const CabinetInfoArea: React.FC<{
       {showMemoModal && <MemoModalContainer onClose={handleCloseMemoModal} />}
       {showAdminReturnModal && (
         <AdminReturnModal
+          isMultiSelect={targetCabinetInfoList ? true : false}
           lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseAdminReturnModal}
         />
+      )}
+      {showStatusModal && (
+        <StatusModalContainer onClose={handleCloseStatusModal} />
       )}
     </CabinetDetailAreaStyled>
   );
