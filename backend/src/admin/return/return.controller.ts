@@ -1,4 +1,4 @@
-import { Controller, Delete, Logger, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Logger, Param, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { AdminReturnService } from 'src/admin/return/return.service';
@@ -29,10 +29,9 @@ export class AdminReturnController {
   @Delete('/bundle/cabinet')
   @ApiOperation({})
   async returnCabinetBundle(
-    users: number[],
-    cabinets: number[],
+    @Body() bundle: number[],
   ): Promise<void> {
     this.logger.debug(`Called ${this.returnCabinetBundle.name}`);
-    return await this.adminReturnService.returnCabinetBundle(users, cabinets);
+    return await this.adminReturnService.returnCabinetBundle(bundle);
   }
 }
