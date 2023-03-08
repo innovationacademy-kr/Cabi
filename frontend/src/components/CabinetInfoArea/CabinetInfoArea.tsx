@@ -33,8 +33,6 @@ export interface ISelectedCabinetInfo {
 }
 export interface IMultiSelectTargetInfo {
   targetCabinetInfoList: CabinetInfo[];
-  handleClickReturnAll: any;
-  handleClickChangeStatusAll: any;
   typeCounts: {
     AVAILABLE: number;
     EXPIRED: number;
@@ -54,12 +52,7 @@ const CabinetInfoArea: React.FC<{
   closeCabinet,
   multiSelectTargetInfo,
 }) => {
-  const {
-    targetCabinetInfoList,
-    handleClickReturnAll,
-    handleClickChangeStatusAll,
-    typeCounts,
-  } = multiSelectTargetInfo ?? {};
+  const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
 
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
@@ -160,7 +153,7 @@ const CabinetInfoArea: React.FC<{
         </MultiCabinetIconWrapperStyled>
         <CabinetInfoButtonsContainerStyled>
           <ButtonContainer
-            onClick={handleClickReturnAll} //todo: admin 일괄 반납 모달 만들기
+            onClick={handleOpenAdminReturnModal} //todo: admin 일괄 반납 모달 만들기
             text="일괄 반납"
             theme="fill"
             disabled={
@@ -170,7 +163,7 @@ const CabinetInfoArea: React.FC<{
             }
           />
           <ButtonContainer
-            onClick={handleClickChangeStatusAll} //todo: admin 일괄 상태관리 모달 만들기
+            onClick={handleOpenStatusModal} //todo: admin 일괄 상태관리 모달 만들기
             text="상태관리"
             theme="line"
           />
@@ -280,6 +273,7 @@ const CabinetInfoArea: React.FC<{
       {showMemoModal && <MemoModalContainer onClose={handleCloseMemoModal} />}
       {showAdminReturnModal && (
         <AdminReturnModal
+          isMultiSelect={targetCabinetInfoList ? true : false}
           lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseAdminReturnModal}
         />
