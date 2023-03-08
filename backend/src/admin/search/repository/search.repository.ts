@@ -322,6 +322,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     const rtn = {
       result: result[0].map((overdueLent) => ({
         intra_id: overdueLent.user.intra_id,
+        cabinet_id: overdueLent.lent_cabinet_id,
         location:
           overdueLent.cabinet.floor + 'f-' + overdueLent.cabinet.cabinet_num,
         overdueDays: Math.trunc(
