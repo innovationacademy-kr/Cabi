@@ -15,20 +15,23 @@ import {
   IData,
   IMonthlyData,
 } from "@/types/dto/admin.dto";
+import { SetterOrUpdater } from "recoil";
 
 export async function useFetchData(
   setMonthlyData: React.Dispatch<React.SetStateAction<IMonthlyData[]>>,
   setBannedUserList: React.Dispatch<React.SetStateAction<IData[]>>,
-  setBrokenCabinetList: React.Dispatch<React.SetStateAction<IData[]>>,
+  setBrokenCabinetList: SetterOrUpdater<IData[]>,
   setCabinetNumbersPerFloor: React.Dispatch<
     React.SetStateAction<ICabinetNumbersPerFloor[]>
   >,
-  setOverdueUserList: React.Dispatch<React.SetStateAction<IData[]>>
+  setOverdueUserList: SetterOrUpdater<IData[]>
 ) {
   const bannedUserData = await axiosGetBannedUserList();
   const brokenCabinetData = await axiosGetBrokenCabinetList();
   const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
   const overdueUserData = await axiosGetOverdueUserList();
+
+  console.log(overdueUserData);
 
   const statisticsData: any[] = [];
   statisticsData[0] = await axiosGetStatistics(21, 28);

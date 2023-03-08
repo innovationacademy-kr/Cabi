@@ -1,13 +1,24 @@
+import { axiosCabinetById } from "@/api/axios/axios.custom";
 import AdminDetailInfo from "@/components/AdminInfo/AdminDetailInfo";
 import { useFetchData } from "@/hooks/useFetchData";
-import { selectAdminDetailState } from "@/recoil/atoms";
+import useMenu from "@/hooks/useMenu";
+import {
+  brokenCabinetListState,
+  currentCabinetIdState,
+  overdueCabinetListState,
+  selectAdminDetailState,
+  selectedTypeOnSearchState,
+  targetCabinetInfoState,
+  targetUserInfoState,
+} from "@/recoil/atoms";
 import {
   ICabinetNumbersPerFloor,
   IData,
   IMonthlyData,
 } from "@/types/dto/admin.dto";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import BarChart from "../../components/AdminInfo/Chart/BarChart";
 import LineChart from "../../components/AdminInfo/Chart/LineChart";
@@ -16,24 +27,57 @@ import AdminTable from "../../components/AdminInfo/Table/AdminTable";
 
 const AdminInfo = () => {
   const [toggle, setToggle] = useState(false);
-  const [overdueUserList, setOverdueUserList] = useState<IData[]>([]);
-  const [brokenCabinetList, setBrokenCabinetList] = useState<IData[]>([]);
+  const [overdueUserList, setOverdueUserList] = useRecoilState<IData[]>(
+    overdueCabinetListState
+  );
+  const [brokenCabinetList, setBrokenCabinetList] = useRecoilState<IData[]>(
+    brokenCabinetListState
+  );
   const [bannedUserList, setBannedUserList] = useState<IData[]>([]);
   const [cabinetNumbersPerFloor, setCabinetNumbersPerFloor] = useState<
     ICabinetNumbersPerFloor[]
   >([]);
   const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
   const setAdminDetail = useSetRecoilState(selectAdminDetailState);
-
+  const { openCabinet, closeCabinet } = useMenu();
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
+  const setTargetUserInfo = useSetRecoilState(targetUserInfoState);
+  const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
+    targetCabinetInfoState
+  );
+  const setCurrentCabinetId = useSetRecoilState(currentCabinetIdState);
   const onClick = (
     e: React.MouseEvent<Element>,
     setToggle: React.Dispatch<React.SetStateAction<boolean>>,
     type: string
   ) => {
     const target = e.currentTarget as HTMLTableElement;
-    const data = JSON.parse(target.dataset.info as string);
-    data.type = type;
-    setAdminDetail(data);
+    const str = target.dataset.info;
+    let cabinetId;
+    if (str) cabinetId = JSON.parse(str)?.cabinet_id;
+    openCabinet();
+    getData(cabinetId);
+    setSelectedTypeOnSearch("CABINET");
+    async function getData(cabinetId: number) {
+      try {
+        const { data } = await axiosCabinetById(cabinetId);
+        setCurrentCabinetId(cabinetId);
+        setTargetCabinetInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    //setTargetUserInfo({
+    //  intra_id: "yooh",
+    //  user_id: 1234,
+    //  banned_date: new Date(),
+    //  unbannedDate: new Date(),
+    //  searchValue: "hi",
+    //});
+    //const data = JSON.parse(target.dataset.info as string);
+    //data.type = type;
+    //setAdminDetail(data);
     setToggle(true);
   };
 
@@ -88,8 +132,13 @@ const AdminInfo = () => {
           fontSize={["1rem", "0.8rem", "1rem"]}
         />
       </ContainerStyled>
-      <BackgroundStyled onClick={() => setToggle(false)} toggle={toggle} />
-      <AdminDetailInfo toggle={toggle} />
+      <BackgroundStyled
+        onClick={() => {
+          closeCabinet();
+          setToggle(false);
+        }}
+        toggle={toggle}
+      />
     </AdminInfoStyled>
   );
 };

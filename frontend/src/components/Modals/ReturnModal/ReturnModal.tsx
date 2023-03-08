@@ -4,11 +4,13 @@ import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   myCabinetInfoState,
+  overdueCabinetListState,
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
 import {
   axiosCabinetById,
+  axiosGetOverdueUserList,
   axiosMyLentInfo,
   axiosReturn,
 } from "@/api/axios/axios.custom";
@@ -22,6 +24,7 @@ import { getExpireDateString } from "@/utils";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
+import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
 
 const ReturnModal: React.FC<{
   lentType: string;
@@ -31,6 +34,7 @@ const ReturnModal: React.FC<{
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
+  const setOverdueUserList = useSetRecoilState(overdueCabinetListState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -66,6 +70,7 @@ const ReturnModal: React.FC<{
       } catch (error) {
         throw error;
       }
+  
     } catch (error: any) {
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);

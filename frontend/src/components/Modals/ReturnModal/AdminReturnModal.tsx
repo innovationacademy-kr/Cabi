@@ -4,12 +4,14 @@ import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
+  overdueCabinetListState,
   targetCabinetInfoListState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import {
   axiosAdminReturn,
   axiosCabinetById,
+  axiosGetOverdueUserList,
   axiosReturnByUserId,
 } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
@@ -23,6 +25,7 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import Selector from "@/components/Common/Selector";
+import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
 
 const AdminReturnModal: React.FC<{
   isMultiSelect: boolean;
@@ -34,6 +37,7 @@ const AdminReturnModal: React.FC<{
   const [modalTitle, setModalTitle] = useState<string>("");
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
+  const setOverdueUserList = useSetRecoilState(overdueCabinetListState);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
@@ -98,6 +102,8 @@ const AdminReturnModal: React.FC<{
       setNumberOfAdminWork((prev) => prev + 1);
       setModalTitle("반납되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
+      const overdueUserData = await axiosGetOverdueUserList();
+      setOverdueUserList(handleOverdueUserList(overdueUserData));
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
         setTargetCabinetInfo(data);
@@ -128,6 +134,8 @@ const AdminReturnModal: React.FC<{
         setIsCurrentSectionRender(true);
         setNumberOfAdminWork((prev) => prev + 1);
         setModalTitle("반납되었습니다");
+        const overdueUserData = await axiosGetOverdueUserList();
+        setOverdueUserList(handleOverdueUserList(overdueUserData));
         setSelectedUserIds([]);
         try {
           const { data } = await axiosCabinetById(currentCabinetId);
