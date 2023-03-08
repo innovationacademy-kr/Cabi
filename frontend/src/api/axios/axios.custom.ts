@@ -178,6 +178,22 @@ export const axiosReturnByUserId = async (userId: number): Promise<any> => {
   }
 };
 
+const axiosBundleReturnURL = "/api/admin/return/bundle/cabinet";
+export const axiosBundleReturn = async (
+  cabinetList: number[]
+): Promise<any> => {
+  try {
+    const response = await instance.delete(axiosBundleReturnURL, {
+      data: {
+        bundle: cabinetList,
+      },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosUpdateCabinetTypeURL = "/api/admin/cabinet/lentType/";
 export const axiosUpdateCabinetType = async (
   cabinetId: number,
@@ -255,7 +271,7 @@ export const axiosDeleteCurrentBanLog = async (userId: number) => {
       axiosDeleteCurrentBanLogURL + userId.toString()
     );
     return response;
-    } catch (error) {
+  } catch (error) {
     throw error;
   }
 };
