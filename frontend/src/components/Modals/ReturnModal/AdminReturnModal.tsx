@@ -63,12 +63,11 @@ const AdminReturnModal: React.FC<{
         });
         return cnt;
       };
-      console.log("bundle");
       const currentFloor = targetCabinetInfoList[0].floor;
       const currentSection = targetCabinetInfoList[0].section;
-      const detail = `<strong>${currentFloor}층 ${currentSection} 선택한 ${
+      const detail = `<strong>${currentFloor}층 ${currentSection}</strong><br>선택한 <strong>${
         targetCabinetInfoList.length
-      }개의 사물함 중 ${countReturnable()}개 사물함이 반납 가능합니다.</strong><br>해당 사물함들을 반납 하시겠습니까?`;
+      }</strong>개의 사물함 중 <strong>${countReturnable()}</strong>개 사물함이 반납 가능합니다.<br>해당 사물함들을 반납 하시겠습니까?`;
       return detail;
     }
   };
@@ -148,44 +147,37 @@ const AdminReturnModal: React.FC<{
   const tryBundleReturnRequest = async (e: React.MouseEvent) => {
     alert("returned all!");
   };
-  const returnModalContents: IModalContents = {
-    type: "hasProceedBtn",
-    icon: checkIcon,
-    title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
-    detail: getReturnDetail(props.lentType!),
-    proceedBtnText:
-      modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
-    renderAdditionalComponent:
-      props.lentType === CabinetType.SHARE ? renderSelector : undefined,
-    onClickProceed:
-      props.lentType === CabinetType.SHARE
-        ? tryShareReturnRequest
-        : tryReturnRequest,
-    closeModal: props.closeModal,
-  };
 
-  const bundleReturnModalContents: IModalContents = {
-    type: "hasProceedBtn",
-    icon: checkIcon,
-    title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
-    detail: getBundleReturnDetail(),
-    proceedBtnText:
-      modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].confirmMessage,
-    onClickProceed: tryBundleReturnRequest,
-    closeModal: props.closeModal,
-  };
+  const returnModalContents: IModalContents = props.isMultiSelect
+    ? {
+        type: "hasProceedBtn",
+        icon: checkIcon,
+        title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
+        detail: getBundleReturnDetail(),
+        proceedBtnText:
+          modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].confirmMessage,
+        onClickProceed: tryBundleReturnRequest,
+        closeModal: props.closeModal,
+      }
+    : {
+        type: "hasProceedBtn",
+        icon: checkIcon,
+        title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
+        detail: getReturnDetail(props.lentType!),
+        proceedBtnText:
+          modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
+        renderAdditionalComponent:
+          props.lentType === CabinetType.SHARE ? renderSelector : undefined,
+        onClickProceed:
+          props.lentType === CabinetType.SHARE
+            ? tryShareReturnRequest
+            : tryReturnRequest,
+        closeModal: props.closeModal,
+      };
 
   return (
     <ModalPortal>
-      {!showResponseModal && (
-        <Modal
-          modalContents={
-            props.isMultiSelect
-              ? bundleReturnModalContents
-              : returnModalContents
-          }
-        />
-      )}
+      {!showResponseModal && <Modal modalContents={returnModalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal

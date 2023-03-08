@@ -14,10 +14,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import useMultiSelect from "@/hooks/useMultiSelect";
-import AdminReturnModal from "../Modals/ReturnModal/AdminReturnModal";
-import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
+
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
@@ -31,41 +28,21 @@ export interface ISelectedCabinetInfo {
   detailMessageColor: string;
   isAdmin: boolean;
 }
-export interface IMultiSelectTargetInfo {
-  targetCabinetInfoList: CabinetInfo[];
-  typeCounts: {
-    AVAILABLE: number;
-    EXPIRED: number;
-    SET_EXPIRE_FULL: number;
-    BROKEN: number;
-  };
-}
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   myCabinetId?: number;
   closeCabinet: () => void;
-  multiSelectTargetInfo: IMultiSelectTargetInfo | null;
-}> = ({
-  selectedCabinetInfo,
-  myCabinetId,
-  closeCabinet,
-  multiSelectTargetInfo,
-}) => {
-  const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
-
+}> = ({ selectedCabinetInfo, myCabinetId, closeCabinet }) => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const [showLentModal, setShowLentModal] = useState<boolean>(false);
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
-  const [showAdminReturnModal, setShowAdminReturnModal] =
-    useState<boolean>(false);
-  const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
+  useState<boolean>(false);
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
-  const { resetMultiSelectMode } = useMultiSelect();
 
   const handleOpenLentModal = () => {
     if (myCabinetId) return handleOpenUnavailableModal();
@@ -92,33 +69,9 @@ const CabinetInfoArea: React.FC<{
   const handleCloseUnavailableModal = () => {
     setShowUnavailableModal(false);
   };
-  const handleOpenAdminReturnModal = () => {
-    setShowAdminReturnModal(true);
-  };
-  const handleCloseAdminReturnModal = () => {
-    setShowAdminReturnModal(false);
-  };
-  const handleOpenStatusModal = () => {
-    setShowStatusModal(true);
-  };
-  const handleCloseStatusModal = () => {
-    setShowStatusModal(false);
-  };
-  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
-    const returnable = selectedCabinets.find(
-      (cabinet) => cabinet.lent_info.length >= 1
-    );
-    if (returnable !== undefined) {
-      return true;
-    }
-    return false;
-  };
 
-  if (
-    (!multiSelectTargetInfo && selectedCabinetInfo === null) ||
-    (multiSelectTargetInfo && targetCabinetInfoList!.length < 1)
-  )
-    // 아무 사물함도 선택하지 않았을 때, 또는 다중선택 모드 진입후 아무 사물함도 선택하지 않았을 때
+  if (!selectedCabinetInfo)
+    //아무 사물함도 선택하지 않았을 때
     return (
       <NotSelectedStyled>
         <CabiLogoStyled src={cabiLogo} />
@@ -128,56 +81,6 @@ const CabinetInfoArea: React.FC<{
         </TextStyled>
       </NotSelectedStyled>
     );
-  if (multiSelectTargetInfo) {
-    // 다중 선택 모드 진입 후 캐비넷을 하나 이상 선택했을 시
-    const currentFloor = targetCabinetInfoList![0].floor;
-    const currentSection = targetCabinetInfoList![0].section;
-    return (
-      <CabinetDetailAreaStyled>
-        <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-          {currentFloor + "F - " + currentSection}
-        </TextStyled>
-        <MultiCabinetIconWrapperStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.AVAILABLE}>
-            {typeCounts![CabinetStatus.AVAILABLE]}
-          </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.EXPIRED}>
-            {typeCounts![CabinetStatus.EXPIRED]}
-          </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.SET_EXPIRE_FULL}>
-            {typeCounts![CabinetStatus.SET_EXPIRE_FULL]}
-          </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.BROKEN}>
-            {typeCounts![CabinetStatus.BROKEN]}
-          </MultiCabinetIconStyled>
-        </MultiCabinetIconWrapperStyled>
-        <CabinetInfoButtonsContainerStyled>
-          <ButtonContainer
-            onClick={handleOpenAdminReturnModal} //todo: admin 일괄 반납 모달 만들기
-            text="일괄 반납"
-            theme="fill"
-            disabled={
-              targetCabinetInfoList
-                ? !checkMultiReturn(targetCabinetInfoList)
-                : true
-            }
-          />
-          <ButtonContainer
-            onClick={handleOpenStatusModal} //todo: admin 일괄 상태관리 모달 만들기
-            text="상태관리"
-            theme="line"
-          />
-          <ButtonContainer
-            onClick={() => {
-              resetMultiSelectMode();
-            }} //todo: 상태관리 모달 만들기
-            text="취소"
-            theme="grayLine"
-          />
-        </CabinetInfoButtonsContainerStyled>
-      </CabinetDetailAreaStyled>
-    );
-  }
   // 단일 선택 시 보이는 cabinetInfoArea
   return (
     <CabinetDetailAreaStyled>
@@ -218,26 +121,11 @@ const CabinetInfoArea: React.FC<{
           </>
         ) : (
           <>
-            {selectedCabinetInfo!.isAdmin ? (
-              <>
-                <ButtonContainer
-                  onClick={handleOpenAdminReturnModal} //todo: admin 단일 반납 모달 만들기
-                  text="반납"
-                  theme="fill"
-                />
-                <ButtonContainer
-                  onClick={handleOpenStatusModal} //todo: admin 단일 상태관리 모달 만들기
-                  text="상태 관리"
-                  theme="line"
-                />
-              </>
-            ) : (
-              <ButtonContainer
-                onClick={handleOpenLentModal}
-                text="대여"
-                theme="fill"
-              />
-            )}
+            <ButtonContainer
+              onClick={handleOpenLentModal}
+              text="대여"
+              theme="fill"
+            />
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>
         )}
@@ -271,16 +159,6 @@ const CabinetInfoArea: React.FC<{
         />
       )}
       {showMemoModal && <MemoModalContainer onClose={handleCloseMemoModal} />}
-      {showAdminReturnModal && (
-        <AdminReturnModal
-          isMultiSelect={targetCabinetInfoList ? true : false}
-          lentType={selectedCabinetInfo!.lentType}
-          closeModal={handleCloseAdminReturnModal}
-        />
-      )}
-      {showStatusModal && (
-        <StatusModalContainer onClose={handleCloseStatusModal} />
-      )}
     </CabinetDetailAreaStyled>
   );
 };

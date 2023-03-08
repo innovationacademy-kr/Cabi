@@ -1,22 +1,18 @@
-import { useRecoilValue, useResetRecoilState } from "recoil";
-import {
-  currentCabinetIdState,
-  myCabinetInfoState,
-  targetCabinetInfoState,
-} from "@/recoil/atoms";
+import { useRecoilValue } from "recoil";
+import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import CabinetInfoArea, {
-  IMultiSelectTargetInfo,
   ISelectedCabinetInfo,
 } from "@/components/CabinetInfoArea/CabinetInfoArea";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
+import AdminCabinetInfoArea, {
+  IMultiSelectTargetInfo,
+} from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
-  const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
-  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet } = useMenu();
@@ -149,12 +145,17 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
-  return (
+  return isAdmin ? (
+    <AdminCabinetInfoArea
+      selectedCabinetInfo={cabinetViewData}
+      closeCabinet={closeCabinet}
+      multiSelectTargetInfo={multiSelectInfo}
+    />
+  ) : (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}
       myCabinetId={myCabinetInfo?.cabinet_id}
       closeCabinet={closeCabinet}
-      multiSelectTargetInfo={multiSelectInfo}
     />
   );
 };
