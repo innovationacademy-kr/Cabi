@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CabinetListItem from "@/components/CabinetList/CabinetListItem/CabinetListItem";
 import AdminCabinetListItem from "@/components/CabinetList/CabinetListItem/AdminCabinetListItem";
 import useMultiSelect from "@/hooks/useMultiSelect";
+import useMenu from "@/hooks/useMenu";
 
 interface CabinetListInterface {
   colNum: number;
@@ -18,6 +19,7 @@ const CabinetList = ({
   isAdmin,
 }: CabinetListInterface): JSX.Element => {
   const { isMultiSelect } = useMultiSelect();
+  const { openCabinet } = useMenu();
   return (
     <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
       {isAdmin
@@ -27,7 +29,7 @@ const CabinetList = ({
         : cabinetInfo.map((cabinet, index) => (
             <CabinetListItem {...cabinet} key={index} />
           ))}
-      {isMultiSelect && <AdminToggleButtonStyled />}
+      {isMultiSelect && <AdminToggleButtonStyled onClick={openCabinet} />}
     </CabinetListContainerStyled>
   );
 };
