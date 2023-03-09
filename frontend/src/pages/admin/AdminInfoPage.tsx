@@ -1,12 +1,11 @@
 import { axiosCabinetById } from "@/api/axios/axios.custom";
-import AdminDetailInfo from "@/components/AdminInfo/AdminDetailInfo";
+import { adminHandleCabinet } from "@/hooks/useAdminHooks";
 import { useFetchData } from "@/hooks/useFetchData";
 import useMenu from "@/hooks/useMenu";
 import {
   brokenCabinetListState,
   currentCabinetIdState,
   overdueCabinetListState,
-  selectAdminDetailState,
   selectedTypeOnSearchState,
   targetCabinetInfoState,
   targetUserInfoState,
@@ -38,46 +37,29 @@ const AdminInfo = () => {
     ICabinetNumbersPerFloor[]
   >([]);
   const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
-  const setAdminDetail = useSetRecoilState(selectAdminDetailState);
   const { openCabinet, closeCabinet } = useMenu();
   const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
-  const setTargetUserInfo = useSetRecoilState(targetUserInfoState);
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
   const setCurrentCabinetId = useSetRecoilState(currentCabinetIdState);
+
   const onClick = (
     e: React.MouseEvent<Element>,
     setToggle: React.Dispatch<React.SetStateAction<boolean>>,
     type: string
   ) => {
-    const target = e.currentTarget as HTMLTableElement;
-    const str = target.dataset.info;
-    let cabinetId;
-    if (str) cabinetId = JSON.parse(str)?.cabinet_id;
-    openCabinet();
-    getData(cabinetId);
-    setSelectedTypeOnSearch("CABINET");
-    async function getData(cabinetId: number) {
-      try {
-        const { data } = await axiosCabinetById(cabinetId);
-        setCurrentCabinetId(cabinetId);
-        setTargetCabinetInfo(data);
-      } catch (error) {
-        console.log(error);
-      }
+    console.log(type);
+    if (type === "broken" || type === "overdue") {
+      adminHandleCabinet(
+        e.currentTarget as HTMLTableElement,
+        setSelectedTypeOnSearch,
+        setCurrentCabinetId,
+        setTargetCabinetInfo,
+        openCabinet
+      );
+    } else {
     }
-
-    //setTargetUserInfo({
-    //  intra_id: "yooh",
-    //  user_id: 1234,
-    //  banned_date: new Date(),
-    //  unbannedDate: new Date(),
-    //  searchValue: "hi",
-    //});
-    //const data = JSON.parse(target.dataset.info as string);
-    //data.type = type;
-    //setAdminDetail(data);
     setToggle(true);
   };
 
@@ -171,6 +153,15 @@ const ContainerStyled = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  &:nth-child(4) {
+    padding-bottom: 20px;
+  }
+  &:nth-child(5) {
+    padding-bottom: 20px;
+  }
+  &:nth-child(6) {
+    padding-bottom: 20px;
+  }
   @media screen and (max-width: 1300px) {
     &:nth-child(1) {
       order: 6;
