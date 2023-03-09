@@ -19,7 +19,7 @@ import { SetterOrUpdater } from "recoil";
 
 export async function useFetchData(
   setMonthlyData: React.Dispatch<React.SetStateAction<IMonthlyData[]>>,
-  setBannedUserList: React.Dispatch<React.SetStateAction<IData[]>>,
+  setBannedUserList: SetterOrUpdater<IData[]>,
   setBrokenCabinetList: SetterOrUpdater<IData[]>,
   setCabinetNumbersPerFloor: React.Dispatch<
     React.SetStateAction<ICabinetNumbersPerFloor[]>

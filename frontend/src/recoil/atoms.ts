@@ -143,3 +143,8 @@ export const overdueCabinetListState = atom<IData[]>({
   key: "overdueCabinetList",
   default: [],
 });
+
+export const bannedUserListState = atom<IData[]>({
+  key: "bannedUserList",
+  default: [],
+});

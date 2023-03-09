@@ -2,6 +2,7 @@ import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { useFetchData } from "@/hooks/useFetchData";
 import useMenu from "@/hooks/useMenu";
 import {
+  bannedUserListState,
   brokenCabinetListState,
   currentCabinetIdState,
   overdueCabinetListState,
@@ -31,7 +32,8 @@ const AdminInfo = () => {
   const [brokenCabinetList, setBrokenCabinetList] = useRecoilState<IData[]>(
     brokenCabinetListState
   );
-  const [bannedUserList, setBannedUserList] = useState<IData[]>([]);
+  const [bannedUserList, setBannedUserList] =
+    useRecoilState<IData[]>(bannedUserListState);
   const [cabinetNumbersPerFloor, setCabinetNumbersPerFloor] = useState<
     ICabinetNumbersPerFloor[]
   >([]);
