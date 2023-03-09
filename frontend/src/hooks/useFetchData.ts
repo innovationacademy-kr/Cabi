@@ -30,9 +30,6 @@ export async function useFetchData(
   const brokenCabinetData = await axiosGetBrokenCabinetList();
   const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
   const overdueUserData = await axiosGetOverdueUserList();
-
-  console.log(overdueUserData);
-
   const statisticsData: any[] = [];
   statisticsData[0] = await axiosGetStatistics(21, 28);
   statisticsData[1] = await axiosGetStatistics(14, 21);

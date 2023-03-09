@@ -1,5 +1,4 @@
 import { axiosCabinetById } from "@/api/axios/axios.custom";
-import { adminHandleCabinet } from "@/hooks/useAdminHooks";
 import { useFetchData } from "@/hooks/useFetchData";
 import useMenu from "@/hooks/useMenu";
 import {
@@ -43,22 +42,42 @@ const AdminInfo = () => {
     targetCabinetInfoState
   );
   const setCurrentCabinetId = useSetRecoilState(currentCabinetIdState);
+  const setTargetUserInfo = useSetRecoilState(targetUserInfoState);
 
   const onClick = (
     e: React.MouseEvent<Element>,
     setToggle: React.Dispatch<React.SetStateAction<boolean>>,
     type: string
   ) => {
-    console.log(type);
+    const target = e.currentTarget as HTMLTableElement;
+    const str = target.dataset.info;
+    openCabinet();
     if (type === "broken" || type === "overdue") {
-      adminHandleCabinet(
-        e.currentTarget as HTMLTableElement,
-        setSelectedTypeOnSearch,
-        setCurrentCabinetId,
-        setTargetCabinetInfo,
-        openCabinet
-      );
+      let cabinetId = -1;
+      if (str) cabinetId = JSON.parse(str)?.cabinet_id;
+      getData(cabinetId);
+      setSelectedTypeOnSearch("CABINET");
     } else {
+      setSelectedTypeOnSearch("USER");
+      let result;
+      if (str) {
+        result = JSON.parse(str);
+        setTargetUserInfo({
+          intraId: result.intra_id,
+          userId: result.user_id,
+          bannedDate: result.banned_date,
+          unbannedDate: result.unbanned_date,
+        });
+      }
+    }
+    async function getData(cabinetId: number) {
+      try {
+        const { data } = await axiosCabinetById(cabinetId);
+        setCurrentCabinetId(cabinetId);
+        setTargetCabinetInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
     }
     setToggle(true);
   };
