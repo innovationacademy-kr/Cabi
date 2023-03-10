@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import React, { ReactElement } from "react";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 export interface IModalContents {
   type: string; // hasProceedBtn(모달 외부 클릭이나 취소 버튼으로 끔), noBtn(모달 내/외부 클릭으로 끔)
@@ -28,9 +29,17 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     cancleBtnText,
     closeModal,
   } = props.modalContents;
+  const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
   return (
     <>
-      <BackgroundStyled onClick={closeModal} />
+      <BackgroundStyled
+        onClick={(e) => {
+          closeModal(e);
+          if (isMultiSelect) {
+            closeMultiSelectMode();
+          }
+        }}
+      />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
         {/* {icon && (
           <img src={icon} style={{ width: "70px", marginBottom: "20px" }} />

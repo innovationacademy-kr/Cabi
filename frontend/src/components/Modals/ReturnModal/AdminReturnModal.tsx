@@ -42,13 +42,8 @@ const AdminReturnModal: React.FC<{
   );
   const targetCabinetInfo = useRecoilValue<CabinetInfo>(targetCabinetInfoState);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
-  const {
-    targetCabinetInfoList,
-    closeMultiSelectMode,
-    isMultiSelect,
-    resetTargetCabinetInfoList,
-    setIsMultiSelect,
-  } = useMultiSelect();
+  const { targetCabinetInfoList, isMultiSelect, closeMultiSelectMode } =
+    useMultiSelect();
 
   const getReturnDetail = (lentType: CabinetType) => {
     const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>`;
@@ -161,7 +156,7 @@ const AdminReturnModal: React.FC<{
       setNumberOfAdminWork((prev) => prev + 1);
       //캐비넷 상세정보 바뀌는 곳
       setModalTitle("반납되었습니다");
-      //resetTargetCabinetInfoList();
+      //closeMultiSelectMode();
     } catch (error: any) {
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);
