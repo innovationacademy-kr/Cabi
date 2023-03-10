@@ -1,75 +1,97 @@
+import { axiosCabinetById } from "@/api/axios/axios.custom";
+import { useFetchData } from "@/hooks/useFetchData";
+import useMenu from "@/hooks/useMenu";
 import {
-  axiosGetBannedUserList,
-  axiosGetBrokenCabinetList,
-  axiosGetCabinetNumbersPerFloor,
-  axiosGetOverdueUserList,
-  axiosGetStatistics,
-} from "@/api/axios/axios.custom";
+  bannedUserListState,
+  brokenCabinetListState,
+  currentCabinetIdState,
+  overdueCabinetListState,
+  selectedTypeOnSearchState,
+  targetCabinetInfoState,
+  targetUserInfoState,
+} from "@/recoil/atoms";
+import {
+  ICabinetNumbersPerFloor,
+  IData,
+  IMonthlyData,
+} from "@/types/dto/admin.dto";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import BarChart from "../../components/AdminInfo/Chart/BarChart";
 import LineChart from "../../components/AdminInfo/Chart/LineChart";
 import PieChart from "../../components/AdminInfo/Chart/PieChart";
-import {
-  handleBannedUserList,
-  handleBrokenCabinetList,
-  handleOverdueUserList,
-} from "../../components/AdminInfo/convertFunctions";
 import AdminTable from "../../components/AdminInfo/Table/AdminTable";
-
-interface ICabinetNumbersPerFloor {
-  floor: number;
-  total: number;
-  used: number;
-  overdue: number;
-  unused: number;
-  disabled: number;
-}
-
-interface IMonthlyData {
-  startDate: string;
-  endDate: string;
-  lentCount: number;
-  returnCount: number;
-}
-
-interface IData {
-  first?: string;
-  second?: string;
-  third?: string;
-}
 
 const AdminInfo = () => {
   const [toggle, setToggle] = useState(false);
-  const [overdueUserList, setOverdueUserList] = useState<IData[]>([]);
-  const [brokenCabinetList, setBrokenCabinetList] = useState<IData[]>([]);
-  const [bannedUserList, setBannedUserList] = useState<IData[]>([]);
+  const [overdueUserList, setOverdueUserList] = useRecoilState<IData[]>(
+    overdueCabinetListState
+  );
+  const [brokenCabinetList, setBrokenCabinetList] = useRecoilState<IData[]>(
+    brokenCabinetListState
+  );
+  const [bannedUserList, setBannedUserList] =
+    useRecoilState<IData[]>(bannedUserListState);
   const [cabinetNumbersPerFloor, setCabinetNumbersPerFloor] = useState<
     ICabinetNumbersPerFloor[]
   >([]);
   const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
-  const onClick = () => setToggle(!toggle);
+  const { openCabinet, closeCabinet } = useMenu();
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
+  const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
+    targetCabinetInfoState
+  );
+  const setCurrentCabinetId = useSetRecoilState(currentCabinetIdState);
+  const setTargetUserInfo = useSetRecoilState(targetUserInfoState);
 
-  async function getData() {
-    const bannedUserData = await axiosGetBannedUserList();
-    const brokenCabinetData = await axiosGetBrokenCabinetList();
-    const cabinetNumbersPerFloorData = await axiosGetCabinetNumbersPerFloor();
-    const overdueUserData = await axiosGetOverdueUserList();
-
-    const statisticsData: any[] = [];
-    statisticsData[0] = await axiosGetStatistics(21, 28);
-    statisticsData[1] = await axiosGetStatistics(14, 21);
-    statisticsData[2] = await axiosGetStatistics(7, 14);
-    statisticsData[3] = await axiosGetStatistics(0, 7);
-    setMonthlyData(statisticsData);
-    setBannedUserList(handleBannedUserList(bannedUserData));
-    setBrokenCabinetList(handleBrokenCabinetList(brokenCabinetData));
-    setCabinetNumbersPerFloor(cabinetNumbersPerFloorData);
-    setOverdueUserList(handleOverdueUserList(overdueUserData));
-  }
+  const onClick = (
+    e: React.MouseEvent<Element>,
+    setToggle: React.Dispatch<React.SetStateAction<boolean>>,
+    type: string
+  ) => {
+    const target = e.currentTarget as HTMLTableElement;
+    const str = target.dataset.info;
+    openCabinet();
+    if (type === "broken" || type === "overdue") {
+      let cabinetId = -1;
+      if (str) cabinetId = JSON.parse(str)?.cabinet_id;
+      getData(cabinetId);
+      setSelectedTypeOnSearch("CABINET");
+    } else {
+      setSelectedTypeOnSearch("USER");
+      let result;
+      if (str) {
+        result = JSON.parse(str);
+        setTargetUserInfo({
+          intraId: result.intra_id,
+          userId: result.user_id,
+          bannedDate: result.banned_date,
+          unbannedDate: result.unbanned_date,
+        });
+      }
+    }
+    async function getData(cabinetId: number) {
+      try {
+        const { data } = await axiosCabinetById(cabinetId);
+        setCurrentCabinetId(cabinetId);
+        setTargetCabinetInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    setToggle(true);
+  };
 
   useEffect(() => {
-    getData();
+    useFetchData(
+      setMonthlyData,
+      setBannedUserList,
+      setBrokenCabinetList,
+      setCabinetNumbersPerFloor,
+      setOverdueUserList
+    );
   }, []);
   return (
     <AdminInfoStyled>
@@ -89,7 +111,7 @@ const AdminInfo = () => {
         <H2styled>반납지연 유저</H2styled>
         <AdminTable
           data={overdueUserList}
-          handleClick={onClick}
+          handleClick={(e) => onClick(e, setToggle, "overdue")}
           thInfo={["Intra ID", "위치", "연체일"]}
           ratio={["33%", "33%", "33%"]}
         />
@@ -98,7 +120,7 @@ const AdminInfo = () => {
         <H2styled>사용정지 유저</H2styled>
         <AdminTable
           data={bannedUserList}
-          handleClick={onClick}
+          handleClick={(e) => onClick(e, setToggle, "banned")}
           thInfo={["Intra ID", "사용정지 일", "기간"]}
           ratio={["33%", "33%", "33%"]}
         />
@@ -107,13 +129,19 @@ const AdminInfo = () => {
         <H2styled>고장 사물함</H2styled>
         <AdminTable
           data={brokenCabinetList}
-          handleClick={onClick}
+          handleClick={(e) => onClick(e, setToggle, "broken")}
           thInfo={["위치 정보", "확인 일자", "사유"]}
           ratio={["30%", "40%", "30%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}
         />
       </ContainerStyled>
-      <DetailInfoStyled toggle={toggle} />
+      <BackgroundStyled
+        onClick={() => {
+          closeCabinet();
+          setToggle(false);
+        }}
+        toggle={toggle}
+      />
     </AdminInfoStyled>
   );
 };
@@ -125,16 +153,14 @@ const H2styled = styled.h2`
   font-weight: bold;
 `;
 
-const DetailInfoStyled = styled.div<{ toggle: boolean }>`
-  min-width: 330px;
-  height: 100%;
+const BackgroundStyled = styled.div<{ toggle: boolean }>`
   position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  left: 0;
   top: 0;
-  right: 0;
-  padding: 45px 40px 20px;
-  border-left: 1px solid var(--line-color);
-  background-color: var(--white);
-  overflow-y: auto;
+  z-index: 2;
   display: ${({ toggle }) => (toggle ? "block" : "none")};
 `;
 
@@ -148,6 +174,15 @@ const ContainerStyled = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  &:nth-child(4) {
+    padding-bottom: 20px;
+  }
+  &:nth-child(5) {
+    padding-bottom: 20px;
+  }
+  &:nth-child(6) {
+    padding-bottom: 20px;
+  }
   @media screen and (max-width: 1300px) {
     &:nth-child(1) {
       order: 6;

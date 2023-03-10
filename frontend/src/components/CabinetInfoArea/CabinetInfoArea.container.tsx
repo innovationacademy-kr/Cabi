@@ -141,18 +141,10 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     });
     return counts;
   };
-  const handleClickReturnAll = () => {
-    alert("returned all!");
-  };
-  const handleClickChangeStatusAll = () => {
-    alert("open change status modal");
-  };
 
   const multiSelectInfo: IMultiSelectTargetInfo | null = isMultiSelect
     ? {
         targetCabinetInfoList: targetCabinetInfoList,
-        handleClickReturnAll: handleClickReturnAll,
-        handleClickChangeStatusAll: handleClickChangeStatusAll,
         typeCounts: countTypes(targetCabinetInfoList),
       }
     : null;

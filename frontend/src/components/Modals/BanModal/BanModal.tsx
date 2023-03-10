@@ -4,6 +4,7 @@ import {
   isCurrentSectionRenderState,
   targetUserInfoState,
   numberOfAdminWorkState,
+  bannedUserListState,
 } from "@/recoil/atoms";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
 import {
@@ -13,7 +14,11 @@ import {
 import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
-import { axiosDeleteCurrentBanLog } from "@/api/axios/axios.custom";
+import {
+  axiosDeleteCurrentBanLog,
+  axiosGetBannedUserList,
+} from "@/api/axios/axios.custom";
+import { handleBannedUserList } from "@/components/AdminInfo/convertFunctions";
 
 const BanModal: React.FC<{
   userId: number;
@@ -28,6 +33,7 @@ const BanModal: React.FC<{
   );
   const setTargetUserInfo = useSetRecoilState(targetUserInfoState);
   const setNumberOfAdminWork = useSetRecoilState(numberOfAdminWorkState);
+  const setBannedUserList = useSetRecoilState(bannedUserListState);
 
   const returnDetail = `특별한 사유가 있을 때만 해제가 가능합니다.
   이 기능은 로그에 기록됩니다.
@@ -46,6 +52,9 @@ const BanModal: React.FC<{
       }));
       // SearchPage 데이터 업데이트 플래그
       setNumberOfAdminWork((prev) => prev + 1);
+
+      const bannedUserData = await axiosGetBannedUserList();
+      setBannedUserList(handleBannedUserList(bannedUserData));
     } catch (error: any) {
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);

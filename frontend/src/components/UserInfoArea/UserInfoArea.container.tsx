@@ -11,7 +11,6 @@ import useMenu from "@/hooks/useMenu";
 const UserInfoAreaContainer = (): JSX.Element => {
   const targetUserInfo = useRecoilValue(targetUserInfoState);
   const { closeCabinet } = useMenu();
-
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
     if (

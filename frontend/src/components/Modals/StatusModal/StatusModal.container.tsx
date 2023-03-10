@@ -1,9 +1,11 @@
 import {
   axiosCabinetById,
+  axiosGetBrokenCabinetList,
   axiosUpdateCabinetStatus,
   axiosUpdateCabinetType,
 } from "@/api/axios/axios.custom";
 import {
+  brokenCabinetListState,
   currentCabinetIdState,
   currentFloorCabinetState,
   isCurrentSectionRenderState,
@@ -16,6 +18,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import StatusModal from "@/components/Modals/StatusModal/StatusModal";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import { handleBrokenCabinetList } from "@/components/AdminInfo/convertFunctions";
 
 const StatusModalContainer = (props: {
   onClose: React.MouseEventHandler<Element>;
@@ -31,6 +34,9 @@ const StatusModalContainer = (props: {
     isCurrentSectionRenderState
   );
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
+
+  const setBrokenCabinetList = useSetRecoilState(brokenCabinetListState);
+
   const statusModalProps = {
     cabinetType: targetCabinetInfo.lent_type,
     cabinetStatus: targetCabinetInfo.status,
@@ -74,6 +80,8 @@ const StatusModalContainer = (props: {
           try {
             const { data } = await axiosCabinetById(currentCabinetId);
             setTargetCabinetInfo(data);
+            const cabinetList = await axiosGetBrokenCabinetList();
+            setBrokenCabinetList(handleBrokenCabinetList(cabinetList));
           } catch (error) {
             throw error;
           }

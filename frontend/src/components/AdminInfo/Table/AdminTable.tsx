@@ -1,14 +1,15 @@
+import {
+  BannedUserDto,
+  BrokenCabinetDto,
+  IData,
+  OverdueUserDto,
+} from "src/types/dto/admin.dto";
 import { useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";
 
 const ROW_COUNT = 5;
 
-interface IData {
-  first?: string;
-  second?: string;
-  third?: string;
-}
 const AdminTable = ({
   data,
   handleClick,
@@ -23,6 +24,7 @@ const AdminTable = ({
   fontSize?: string[];
 }) => {
   const [curPage, setCurPage] = useState(0);
+  const emptyClick = () => {};
   return (
     <TableWrapperStyled>
       <Pagination
@@ -50,23 +52,23 @@ const AdminTable = ({
             {new Array(ROW_COUNT).fill(0).map((_, idx) => {
               const curIndex = ROW_COUNT * curPage + idx;
               return (
-                <tr key={idx}>
-                  <td
-                    title={thInfo[0]}
-                    style={{ fontSize: fontSize ? fontSize[0] : "0.9rem" }}
-                  >
+                <tr
+                  key={idx}
+                  onClick={
+                    curIndex < data.length && data[curIndex].first
+                      ? handleClick
+                      : emptyClick
+                  }
+                  data-info={data ? JSON.stringify(data[curIndex]?.info) : ""}
+                  title={data ? data[curIndex]?.first : ""}
+                >
+                  <td style={{ fontSize: fontSize ? fontSize[0] : "0.9rem" }}>
                     {curIndex < data.length ? data[curIndex].first : ""}
                   </td>
-                  <td
-                    title={thInfo[1]}
-                    style={{ fontSize: fontSize ? fontSize[1] : "0.9rem" }}
-                  >
+                  <td style={{ fontSize: fontSize ? fontSize[1] : "0.9rem" }}>
                     {curIndex < data.length ? data[curIndex].second : ""}
                   </td>
-                  <td
-                    title={thInfo[2]}
-                    style={{ fontSize: fontSize ? fontSize[2] : "0.9rem" }}
-                  >
+                  <td style={{ fontSize: fontSize ? fontSize[2] : "0.9rem" }}>
                     {curIndex < data.length ? data[curIndex].third : ""}
                   </td>
                 </tr>
@@ -128,6 +130,7 @@ const TbodyStyled = styled.tbody`
   @media screen and (max-width: 1300px) {
     & > tr > td {
       line-height: 60px;
+      height: 61.5px;
     }
   }
 `;

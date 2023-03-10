@@ -4,11 +4,14 @@ import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
+  overdueCabinetListState,
+  targetCabinetInfoListState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import {
   axiosAdminReturn,
   axiosCabinetById,
+  axiosGetOverdueUserList,
   axiosReturnByUserId,
 } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
@@ -22,9 +25,11 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import Selector from "@/components/Common/Selector";
+import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
 
 const AdminReturnModal: React.FC<{
-  lentType: CabinetType;
+  isMultiSelect: boolean;
+  lentType?: CabinetType;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
@@ -32,6 +37,7 @@ const AdminReturnModal: React.FC<{
   const [modalTitle, setModalTitle] = useState<string>("");
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
+  const setOverdueUserList = useSetRecoilState(overdueCabinetListState);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
@@ -39,6 +45,9 @@ const AdminReturnModal: React.FC<{
     numberOfAdminWorkState
   );
   const targetCabinetInfo = useRecoilValue<CabinetInfo>(targetCabinetInfoState);
+  const targetCabinetInfoList = useRecoilValue<CabinetInfo[]>(
+    targetCabinetInfoListState
+  );
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
   const getReturnDetail = (lentType: CabinetType) => {
@@ -49,9 +58,26 @@ const AdminReturnModal: React.FC<{
     return detail + `<br>반납할 유저를 선택해 주세요.`;
   };
 
+  const getBundleReturnDetail = () => {
+    if (targetCabinetInfoList.length >= 1) {
+      const countReturnable = () => {
+        let cnt = 0;
+        targetCabinetInfoList.forEach((cabinet) => {
+          if (cabinet.lent_info.length >= 1) cnt++;
+        });
+        return cnt;
+      };
+      console.log("bundle");
+      const currentFloor = targetCabinetInfoList[0].floor;
+      const currentSection = targetCabinetInfoList[0].section;
+      const detail = `<strong>${currentFloor}층 ${currentSection} 선택한 ${
+        targetCabinetInfoList.length
+      }개의 사물함 중 ${countReturnable()}개 사물함이 반납 가능합니다.</strong><br>해당 사물함들을 반납 하시겠습니까?`;
+      return detail;
+    }
+  };
   const handleSelectUser = (userId: number) => {
     if (selectedUserIds.includes(userId)) {
-      const idx = selectedUserIds.indexOf(userId);
       setSelectedUserIds(selectedUserIds.filter((id) => id !== userId));
     } else {
       setSelectedUserIds([...selectedUserIds, userId]);
@@ -76,6 +102,8 @@ const AdminReturnModal: React.FC<{
       setNumberOfAdminWork((prev) => prev + 1);
       setModalTitle("반납되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
+      const overdueUserData = await axiosGetOverdueUserList();
+      setOverdueUserList(handleOverdueUserList(overdueUserData));
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
         setTargetCabinetInfo(data);
@@ -106,6 +134,8 @@ const AdminReturnModal: React.FC<{
         setIsCurrentSectionRender(true);
         setNumberOfAdminWork((prev) => prev + 1);
         setModalTitle("반납되었습니다");
+        const overdueUserData = await axiosGetOverdueUserList();
+        setOverdueUserList(handleOverdueUserList(overdueUserData));
         setSelectedUserIds([]);
         try {
           const { data } = await axiosCabinetById(currentCabinetId);
@@ -123,11 +153,14 @@ const AdminReturnModal: React.FC<{
       });
   };
 
+  const tryBundleReturnRequest = async (e: React.MouseEvent) => {
+    alert("returned all!");
+  };
   const returnModalContents: IModalContents = {
     type: "hasProceedBtn",
     icon: checkIcon,
     title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
-    detail: getReturnDetail(props.lentType),
+    detail: getReturnDetail(props.lentType!),
     proceedBtnText:
       modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
     renderAdditionalComponent:
@@ -139,9 +172,28 @@ const AdminReturnModal: React.FC<{
     closeModal: props.closeModal,
   };
 
+  const bundleReturnModalContents: IModalContents = {
+    type: "hasProceedBtn",
+    icon: checkIcon,
+    title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
+    detail: getBundleReturnDetail(),
+    proceedBtnText:
+      modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].confirmMessage,
+    onClickProceed: tryBundleReturnRequest,
+    closeModal: props.closeModal,
+  };
+
   return (
     <ModalPortal>
-      {!showResponseModal && <Modal modalContents={returnModalContents} />}
+      {!showResponseModal && (
+        <Modal
+          modalContents={
+            props.isMultiSelect
+              ? bundleReturnModalContents
+              : returnModalContents
+          }
+        />
+      )}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
