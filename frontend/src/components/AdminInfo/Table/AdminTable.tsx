@@ -3,7 +3,7 @@ import {
   BrokenCabinetDto,
   IData,
   OverdueUserDto,
-} from "@/types/dto/admin.dto";
+} from "src/types/dto/admin.dto";
 import { useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";

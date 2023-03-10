@@ -98,7 +98,6 @@ const useMenu = () => {
   };
 
   const openCabinet = () => {
-    console.log("hi");
     closeLeftNav();
     closeMap();
     closeLent();

@@ -1,4 +1,4 @@
-import { selectAdminDetailState } from "@/recoil/atoms";
+import { selectAdminDetailState } from "src/recoil/atoms";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import Button from "../Common/Button";
