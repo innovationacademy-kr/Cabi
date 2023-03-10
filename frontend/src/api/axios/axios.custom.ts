@@ -184,9 +184,7 @@ export const axiosBundleReturn = async (
 ): Promise<any> => {
   try {
     const response = await instance.delete(axiosBundleReturnURL, {
-      data: {
-        bundle: cabinetList,
-      },
+      data: cabinetList,
     });
     return response;
   } catch (error) {

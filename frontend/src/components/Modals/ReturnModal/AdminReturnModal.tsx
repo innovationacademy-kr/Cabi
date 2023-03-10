@@ -4,11 +4,11 @@ import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
-  targetCabinetInfoListState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import {
   axiosAdminReturn,
+  axiosBundleReturn,
   axiosCabinetById,
   axiosReturnByUserId,
 } from "@/api/axios/axios.custom";
@@ -23,9 +23,9 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import Selector from "@/components/Common/Selector";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 const AdminReturnModal: React.FC<{
-  isMultiSelect: boolean;
   lentType?: CabinetType;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
@@ -41,10 +41,14 @@ const AdminReturnModal: React.FC<{
     numberOfAdminWorkState
   );
   const targetCabinetInfo = useRecoilValue<CabinetInfo>(targetCabinetInfoState);
-  const targetCabinetInfoList = useRecoilValue<CabinetInfo[]>(
-    targetCabinetInfoListState
-  );
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+  const {
+    targetCabinetInfoList,
+    closeMultiSelectMode,
+    isMultiSelect,
+    resetTargetCabinetInfoList,
+    setIsMultiSelect,
+  } = useMultiSelect();
 
   const getReturnDetail = (lentType: CabinetType) => {
     const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>`;
@@ -71,6 +75,7 @@ const AdminReturnModal: React.FC<{
       return detail;
     }
   };
+
   const handleSelectUser = (userId: number) => {
     if (selectedUserIds.includes(userId)) {
       setSelectedUserIds(selectedUserIds.filter((id) => id !== userId));
@@ -145,10 +150,27 @@ const AdminReturnModal: React.FC<{
   };
 
   const tryBundleReturnRequest = async (e: React.MouseEvent) => {
-    alert("returned all!");
+    const returnableCabinetIdList = targetCabinetInfoList
+      .map((cabinet) => {
+        if (cabinet.lent_info.length >= 1) return cabinet.cabinet_id;
+      })
+      .filter((id) => id);
+    try {
+      await axiosBundleReturn(returnableCabinetIdList as number[]);
+      setIsCurrentSectionRender(true);
+      setNumberOfAdminWork((prev) => prev + 1);
+      //캐비넷 상세정보 바뀌는 곳
+      setModalTitle("반납되었습니다");
+      //resetTargetCabinetInfoList();
+    } catch (error: any) {
+      setHasErrorOnResponse(true);
+      setModalTitle(error.response.data.message);
+    } finally {
+      setShowResponseModal(true);
+    }
   };
 
-  const returnModalContents: IModalContents = props.isMultiSelect
+  const returnModalContents: IModalContents = isMultiSelect
     ? {
         type: "hasProceedBtn",
         icon: checkIcon,

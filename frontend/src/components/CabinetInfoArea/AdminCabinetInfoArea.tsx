@@ -25,7 +25,7 @@ export interface IMultiSelectTargetInfo {
   };
 }
 
-const CabinetInfoArea: React.FC<{
+const AdminCabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   myCabinetId?: number;
   closeCabinet: () => void;
@@ -124,10 +124,7 @@ const CabinetInfoArea: React.FC<{
           />
         </CabinetInfoButtonsContainerStyled>
         {showAdminReturnModal && (
-          <AdminReturnModal
-            isMultiSelect={targetCabinetInfoList ? true : false}
-            closeModal={handleCloseAdminReturnModal}
-          />
+          <AdminReturnModal closeModal={handleCloseAdminReturnModal} />
         )}
         {showStatusModal && (
           <StatusModalContainer onClose={handleCloseStatusModal} />
@@ -179,7 +176,6 @@ const CabinetInfoArea: React.FC<{
       </CabinetLentDateInfoStyled>
       {showAdminReturnModal && (
         <AdminReturnModal
-          isMultiSelect={targetCabinetInfoList ? true : false}
           lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseAdminReturnModal}
         />
@@ -191,7 +187,7 @@ const CabinetInfoArea: React.FC<{
   );
 };
 
-export default CabinetInfoArea;
+export default AdminCabinetInfoArea;
 
 const NotSelectedStyled = styled.div`
   height: 100%;
