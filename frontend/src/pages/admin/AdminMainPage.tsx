@@ -1,10 +1,16 @@
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { currentFloorSectionState } from "@/recoil/selectors";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
 import {
   currentFloorNumberState,
   currentSectionNameState,
+  selectedTypeOnSearchState,
 } from "@/recoil/atoms";
 import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
@@ -26,6 +32,7 @@ const MainPage = () => {
   } = useMultiSelect();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const currentFloorNumber = useRecoilValue<number>(currentFloorNumberState);
   useEffect(() => {
     closeAll();
@@ -97,7 +104,10 @@ const MainPage = () => {
         <MultiSelectButton
           theme={isMultiSelect ? "fill" : "line"}
           text="다중 선택 모드"
-          onClick={toggleMultiSelectMode}
+          onClick={() => {
+            toggleMultiSelectMode();
+            setSelectedTypeOnSearch("CABINET");
+          }}
         />
       </div>
       <CabinetListWrapperStyled>
