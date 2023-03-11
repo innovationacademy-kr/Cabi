@@ -25,7 +25,6 @@ import PieChart from "../../components/AdminInfo/Chart/PieChart";
 import AdminTable from "../../components/AdminInfo/Table/AdminTable";
 
 const AdminInfo = () => {
-  const [toggle, setToggle] = useState(false);
   const [overdueUserList, setOverdueUserList] = useRecoilState<IData[]>(
     overdueCabinetListState
   );
@@ -38,7 +37,7 @@ const AdminInfo = () => {
     ICabinetNumbersPerFloor[]
   >([]);
   const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
-  const { openCabinet, closeCabinet } = useMenu();
+  const { openCabinet } = useMenu();
   const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
@@ -46,11 +45,7 @@ const AdminInfo = () => {
   const setCurrentCabinetId = useSetRecoilState(currentCabinetIdState);
   const setTargetUserInfo = useSetRecoilState(targetUserInfoState);
 
-  const onClick = (
-    e: React.MouseEvent<Element>,
-    setToggle: React.Dispatch<React.SetStateAction<boolean>>,
-    type: string
-  ) => {
+  const onClick = (e: React.MouseEvent<Element>, type: string) => {
     const target = e.currentTarget as HTMLTableElement;
     const str = target.dataset.info;
     openCabinet();
@@ -81,7 +76,6 @@ const AdminInfo = () => {
         console.log(error);
       }
     }
-    setToggle(true);
   };
 
   useEffect(() => {
@@ -111,7 +105,7 @@ const AdminInfo = () => {
         <H2styled>반납지연 유저</H2styled>
         <AdminTable
           data={overdueUserList}
-          handleClick={(e) => onClick(e, setToggle, "overdue")}
+          handleClick={(e) => onClick(e, "overdue")}
           thInfo={["Intra ID", "위치", "연체일"]}
           ratio={["33%", "33%", "33%"]}
           ROW_COUNT={5}
@@ -121,7 +115,7 @@ const AdminInfo = () => {
         <H2styled>사용정지 유저</H2styled>
         <AdminTable
           data={bannedUserList}
-          handleClick={(e) => onClick(e, setToggle, "banned")}
+          handleClick={(e) => onClick(e, "banned")}
           thInfo={["Intra ID", "사용정지 일", "기간"]}
           ratio={["33%", "33%", "33%"]}
           ROW_COUNT={5}
@@ -131,20 +125,13 @@ const AdminInfo = () => {
         <H2styled>고장 사물함</H2styled>
         <AdminTable
           data={brokenCabinetList}
-          handleClick={(e) => onClick(e, setToggle, "broken")}
+          handleClick={(e) => onClick(e, "broken")}
           thInfo={["위치 정보", "확인 일자", "사유"]}
           ratio={["30%", "40%", "30%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}
           ROW_COUNT={5}
         />
       </ContainerStyled>
-      <BackgroundStyled
-        onClick={() => {
-          closeCabinet();
-          setToggle(false);
-        }}
-        toggle={toggle}
-      />
     </AdminInfoStyled>
   );
 };
@@ -154,17 +141,6 @@ const H2styled = styled.h2`
   padding-top: 15px;
   text-align: center;
   font-weight: bold;
-`;
-
-const BackgroundStyled = styled.div<{ toggle: boolean }>`
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  left: 0;
-  top: 0;
-  z-index: 2;
-  display: ${({ toggle }) => (toggle ? "block" : "none")};
 `;
 
 const ContainerStyled = styled.div`
