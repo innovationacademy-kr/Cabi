@@ -1,5 +1,6 @@
+import { selectedTypeOnSearchState } from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import {
   targetCabinetInfoListState,
   isMultiSelectState,
@@ -15,6 +16,7 @@ const useMultiSelect = () => {
     targetCabinetInfoListState
   );
   const resetIsMultiSelect = useResetRecoilState(isMultiSelectState);
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const { closeCabinet } = useMenu();
 
   const openMultiSelectMode = () => {
@@ -43,6 +45,7 @@ const useMultiSelect = () => {
   };
 
   const clickCabinetOnMultiSelectMode = (cabinet: CabinetInfo) => {
+    setSelectedTypeOnSearch("CABINET");
     if (!containsCabinet(cabinet.cabinet_id)) {
       setTargetCabinetInfoList([...targetCabinetInfoList, cabinet]);
       return;
@@ -72,6 +75,29 @@ const useMultiSelect = () => {
     resetTargetCabinetInfoList();
   };
 
+  const isSameType = (cabinets: CabinetInfo[]) => {
+    const type = cabinets[0].lent_type;
+    for (const cabinet of cabinets) {
+      if (cabinet.lent_type !== type) return false;
+    }
+    return true;
+  };
+
+  const isSameStatus = (cabinets: CabinetInfo[]) => {
+    const status = cabinets[0].status;
+    for (const cabinet of cabinets) {
+      if (cabinet.status !== status) return false;
+    }
+    return true;
+  };
+
+  const isAllEmpty = (cabinets: CabinetInfo[]) => {
+    for (const cabinet of cabinets) {
+      if (cabinet.lent_info.length !== 0) return false;
+    }
+    return true;
+  };
+
   return {
     isMultiSelect,
     targetCabinetInfoList,
@@ -86,6 +112,9 @@ const useMultiSelect = () => {
     containsAllCabinets,
     handleSelectAll,
     resetMultiSelectMode,
+    isSameType,
+    isSameStatus,
+    isAllEmpty,
   };
 };
 

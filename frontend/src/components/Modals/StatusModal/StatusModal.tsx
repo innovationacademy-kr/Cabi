@@ -1,6 +1,6 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import Button from "@/components/Common/Button";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import ModalPortal from "../ModalPortal";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
@@ -81,6 +81,12 @@ const StatusModal = ({
           수정하기
         </WriteModeButtonStyled>
         <H2Styled>상태 관리</H2Styled>
+        {mode === "write" && (
+          <WarningBoxStyled>
+            <WarningNotification {...warningNotificationObj} />
+          </WarningBoxStyled>
+        )}
+
         <ContentSectionStyled>
           <ContentItemSectionStyled>
             <ContentItemWrapperStyled isVisible={true}>
@@ -93,14 +99,7 @@ const StatusModal = ({
                 <Dropdown {...TYPE_DROP_DOWN_PROPS} />
               )}
             </ContentItemWrapperStyled>
-            <ContentItemWrapperStyled
-              isVisible={true}
-              style={
-                warningNotificationObj.isVisible && mode === "write"
-                  ? { marginBottom: "1px" }
-                  : { marginBottom: "25px" }
-              }
-            >
+            <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>사물함 상태</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
@@ -112,9 +111,6 @@ const StatusModal = ({
             </ContentItemWrapperStyled>
           </ContentItemSectionStyled>
         </ContentSectionStyled>
-        {mode === "write" && (
-          <WarningNotification {...warningNotificationObj} />
-        )}
         <ButtonWrapperStyled mode={mode}>
           {mode === "write" && (
             <Button
@@ -258,4 +254,9 @@ const ButtonWrapperStyled = styled.div<{ mode: string }>`
   }
 `;
 
+const WarningBoxStyled = styled.div`
+  position: absolute;
+  left: 40px;
+  top: 40px;
+`;
 export default StatusModal;

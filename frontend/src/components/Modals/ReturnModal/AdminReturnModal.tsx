@@ -5,11 +5,11 @@ import {
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
   overdueCabinetListState,
-  targetCabinetInfoListState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import {
   axiosAdminReturn,
+  axiosBundleReturn,
   axiosCabinetById,
   axiosGetOverdueUserList,
   axiosReturnByUserId,
@@ -25,10 +25,10 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import Selector from "@/components/Common/Selector";
+import useMultiSelect from "@/hooks/useMultiSelect";
 import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
 
 const AdminReturnModal: React.FC<{
-  isMultiSelect: boolean;
   lentType?: CabinetType;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
@@ -45,10 +45,9 @@ const AdminReturnModal: React.FC<{
     numberOfAdminWorkState
   );
   const targetCabinetInfo = useRecoilValue<CabinetInfo>(targetCabinetInfoState);
-  const targetCabinetInfoList = useRecoilValue<CabinetInfo[]>(
-    targetCabinetInfoListState
-  );
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+  const { targetCabinetInfoList, isMultiSelect, closeMultiSelectMode } =
+    useMultiSelect();
 
   const getReturnDetail = (lentType: CabinetType) => {
     const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>`;
@@ -67,15 +66,15 @@ const AdminReturnModal: React.FC<{
         });
         return cnt;
       };
-      console.log("bundle");
       const currentFloor = targetCabinetInfoList[0].floor;
       const currentSection = targetCabinetInfoList[0].section;
-      const detail = `<strong>${currentFloor}층 ${currentSection} 선택한 ${
+      const detail = `<strong>${currentFloor}층 ${currentSection}</strong><br>선택한 <strong>${
         targetCabinetInfoList.length
-      }개의 사물함 중 ${countReturnable()}개 사물함이 반납 가능합니다.</strong><br>해당 사물함들을 반납 하시겠습니까?`;
+      }</strong>개의 사물함 중 <strong>${countReturnable()}</strong>개 사물함이 반납 가능합니다.<br>해당 사물함들을 반납 하시겠습니까?`;
       return detail;
     }
   };
+
   const handleSelectUser = (userId: number) => {
     if (selectedUserIds.includes(userId)) {
       setSelectedUserIds(selectedUserIds.filter((id) => id !== userId));
@@ -154,46 +153,58 @@ const AdminReturnModal: React.FC<{
   };
 
   const tryBundleReturnRequest = async (e: React.MouseEvent) => {
-    alert("returned all!");
-  };
-  const returnModalContents: IModalContents = {
-    type: "hasProceedBtn",
-    icon: checkIcon,
-    title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
-    detail: getReturnDetail(props.lentType!),
-    proceedBtnText:
-      modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
-    renderAdditionalComponent:
-      props.lentType === CabinetType.SHARE ? renderSelector : undefined,
-    onClickProceed:
-      props.lentType === CabinetType.SHARE
-        ? tryShareReturnRequest
-        : tryReturnRequest,
-    closeModal: props.closeModal,
+    const returnableCabinetIdList = targetCabinetInfoList
+      .map((cabinet) => {
+        if (cabinet.lent_info.length >= 1) return cabinet.cabinet_id;
+      })
+      .filter((id) => id);
+    try {
+      await axiosBundleReturn(returnableCabinetIdList as number[]);
+      setIsCurrentSectionRender(true);
+      setNumberOfAdminWork((prev) => prev + 1);
+      //캐비넷 상세정보 바뀌는 곳
+      setModalTitle("반납되었습니다");
+      const overdueUserData = await axiosGetOverdueUserList();
+      setOverdueUserList(handleOverdueUserList(overdueUserData));
+      //closeMultiSelectMode();
+    } catch (error: any) {
+      setHasErrorOnResponse(true);
+      setModalTitle(error.response.data.message);
+    } finally {
+      setShowResponseModal(true);
+    }
   };
 
-  const bundleReturnModalContents: IModalContents = {
-    type: "hasProceedBtn",
-    icon: checkIcon,
-    title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
-    detail: getBundleReturnDetail(),
-    proceedBtnText:
-      modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].confirmMessage,
-    onClickProceed: tryBundleReturnRequest,
-    closeModal: props.closeModal,
-  };
+  const returnModalContents: IModalContents = isMultiSelect
+    ? {
+        type: "hasProceedBtn",
+        icon: checkIcon,
+        title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
+        detail: getBundleReturnDetail(),
+        proceedBtnText:
+          modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].confirmMessage,
+        onClickProceed: tryBundleReturnRequest,
+        closeModal: props.closeModal,
+      }
+    : {
+        type: "hasProceedBtn",
+        icon: checkIcon,
+        title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
+        detail: getReturnDetail(props.lentType!),
+        proceedBtnText:
+          modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
+        renderAdditionalComponent:
+          props.lentType === CabinetType.SHARE ? renderSelector : undefined,
+        onClickProceed:
+          props.lentType === CabinetType.SHARE
+            ? tryShareReturnRequest
+            : tryReturnRequest,
+        closeModal: props.closeModal,
+      };
 
   return (
     <ModalPortal>
-      {!showResponseModal && (
-        <Modal
-          modalContents={
-            props.isMultiSelect
-              ? bundleReturnModalContents
-              : returnModalContents
-          }
-        />
-      )}
+      {!showResponseModal && <Modal modalContents={returnModalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal

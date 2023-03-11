@@ -178,6 +178,20 @@ export const axiosReturnByUserId = async (userId: number): Promise<any> => {
   }
 };
 
+const axiosBundleReturnURL = "/api/admin/return/bundle/cabinet";
+export const axiosBundleReturn = async (
+  cabinetIdList: number[]
+): Promise<any> => {
+  try {
+    const response = await instance.delete(axiosBundleReturnURL, {
+      data: cabinetIdList,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosUpdateCabinetTypeURL = "/api/admin/cabinet/lentType/";
 export const axiosUpdateCabinetType = async (
   cabinetId: number,
@@ -193,14 +207,46 @@ export const axiosUpdateCabinetType = async (
   }
 };
 
+const axiosBundleUpdateCabinetTypeURL = "/api/admin/cabinet/bundle/lentType/";
+export const axiosBundleUpdateCabinetType = async (
+  cabinetIdList: number[],
+  cabinetType: CabinetType
+): Promise<any> => {
+  try {
+    const response = await instance.patch(
+      `${axiosBundleUpdateCabinetTypeURL}${cabinetType}`,
+      cabinetIdList
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosUpdateCabinetStatusURL = "/api/admin/cabinet/status/";
 export const axiosUpdateCabinetStatus = async (
   cabinetId: number,
   status: CabinetStatus
-) => {
+): Promise<any> => {
   try {
     const response = await instance.patch(
       `${axiosUpdateCabinetStatusURL}${cabinetId}/${status}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosBundleUpdateCabinetStatusURL = "/api/admin/cabinet/bundle/status/";
+export const axiosBundleUpdateCabinetStatus = async (
+  cabinetIdList: number[],
+  cabinetStatus: CabinetStatus
+): Promise<any> => {
+  try {
+    const response = await instance.patch(
+      `${axiosBundleUpdateCabinetStatusURL}${cabinetStatus}`,
+      cabinetIdList
     );
     return response;
   } catch (error) {
@@ -255,7 +301,7 @@ export const axiosDeleteCurrentBanLog = async (userId: number) => {
       axiosDeleteCurrentBanLogURL + userId.toString()
     );
     return response;
-    } catch (error) {
+  } catch (error) {
     throw error;
   }
 };
