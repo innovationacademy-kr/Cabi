@@ -114,6 +114,7 @@ const AdminInfo = () => {
           handleClick={(e) => onClick(e, setToggle, "overdue")}
           thInfo={["Intra ID", "위치", "연체일"]}
           ratio={["33%", "33%", "33%"]}
+          ROW_COUNT={5}
         />
       </ContainerStyled>
       <ContainerStyled>
@@ -123,6 +124,7 @@ const AdminInfo = () => {
           handleClick={(e) => onClick(e, setToggle, "banned")}
           thInfo={["Intra ID", "사용정지 일", "기간"]}
           ratio={["33%", "33%", "33%"]}
+          ROW_COUNT={5}
         />
       </ContainerStyled>
       <ContainerStyled>
@@ -133,6 +135,7 @@ const AdminInfo = () => {
           thInfo={["위치 정보", "확인 일자", "사유"]}
           ratio={["30%", "40%", "30%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}
+          ROW_COUNT={5}
         />
       </ContainerStyled>
       <BackgroundStyled
