@@ -4,11 +4,7 @@ import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
-<<<<<<< HEAD
-=======
   overdueCabinetListState,
-  targetCabinetInfoListState,
->>>>>>> dev
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import {
@@ -29,11 +25,8 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import Selector from "@/components/Common/Selector";
-<<<<<<< HEAD
 import useMultiSelect from "@/hooks/useMultiSelect";
-=======
 import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
->>>>>>> dev
 
 const AdminReturnModal: React.FC<{
   lentType?: CabinetType;
@@ -171,6 +164,8 @@ const AdminReturnModal: React.FC<{
       setNumberOfAdminWork((prev) => prev + 1);
       //캐비넷 상세정보 바뀌는 곳
       setModalTitle("반납되었습니다");
+      const overdueUserData = await axiosGetOverdueUserList();
+      setOverdueUserList(handleOverdueUserList(overdueUserData));
       //closeMultiSelectMode();
     } catch (error: any) {
       setHasErrorOnResponse(true);
