@@ -20,4 +20,4 @@ services:
     ports:
       - '80:80'
     volumes:
-      - ../dev/:/etc/nginx/conf.d/
+      - ~/yooh/dev/:/etc/nginx/conf.d/
