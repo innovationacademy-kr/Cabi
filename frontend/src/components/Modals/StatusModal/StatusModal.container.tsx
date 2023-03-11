@@ -2,10 +2,12 @@ import {
   axiosBundleUpdateCabinetStatus,
   axiosBundleUpdateCabinetType,
   axiosCabinetById,
+  axiosGetBrokenCabinetList,
   axiosUpdateCabinetStatus,
   axiosUpdateCabinetType,
 } from "@/api/axios/axios.custom";
 import {
+  brokenCabinetListState,
   currentCabinetIdState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
@@ -18,6 +20,7 @@ import StatusModal from "@/components/Modals/StatusModal/StatusModal";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import useMultiSelect from "@/hooks/useMultiSelect";
+import { handleBrokenCabinetList } from "@/components/AdminInfo/convertFunctions";
 
 const StatusModalContainer = (props: {
   onClose: React.MouseEventHandler<Element>;
@@ -51,6 +54,7 @@ const StatusModalContainer = (props: {
 먼저 해당 사물함을 반납해야 합니다.`,
           },
         };
+  const setBrokenCabinetList = useSetRecoilState(brokenCabinetListState);
 
   const onSaveEditStatus = (
     newCabinetType: CabinetType,
@@ -85,6 +89,8 @@ const StatusModalContainer = (props: {
           try {
             const { data } = await axiosCabinetById(currentCabinetId);
             setTargetCabinetInfo(data);
+            const cabinetList = await axiosGetBrokenCabinetList();
+            setBrokenCabinetList(handleBrokenCabinetList(cabinetList));
           } catch (error) {
             throw error;
           }
@@ -120,6 +126,12 @@ const StatusModalContainer = (props: {
         .then(async () => {
           setIsCurrentSectionRender(true);
           setNumberOfAdminWork((prev) => prev + 1);
+          try {
+            const cabinetList = await axiosGetBrokenCabinetList();
+            setBrokenCabinetList(handleBrokenCabinetList(cabinetList));
+          } catch (error) {
+            throw error;
+          }
         })
         .catch((error) => {
           console.log(error.message);

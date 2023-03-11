@@ -48,7 +48,6 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const axiosRemovePenalty = async (): Promise<any> => {
     try {
       const response = await instance.delete(axiosRemovePenaltyURL);
-      console.log(response);
       return response;
     } catch (error) {
       throw error;
