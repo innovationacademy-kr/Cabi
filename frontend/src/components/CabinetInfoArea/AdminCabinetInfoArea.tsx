@@ -36,7 +36,7 @@ const AdminCabinetInfoArea: React.FC<{
     useState<boolean>(false);
   const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
 
-  const { resetMultiSelectMode } = useMultiSelect();
+  const { resetMultiSelectMode, isSameStatus, isSameType } = useMultiSelect();
 
   const handleOpenAdminReturnModal = () => {
     setShowAdminReturnModal(true);
@@ -58,6 +58,14 @@ const AdminCabinetInfoArea: React.FC<{
     if (returnable !== undefined) {
       return true;
     }
+    return false;
+  };
+
+  const checkMultiStatus = (selectedCabinets: CabinetInfo[]) => {
+    // 캐비넷 일괄 상태 관리 모달을 열기 위한 조건
+    // 선택된 캐비넷들이 같은 타입, 같은 상태여야 함.
+    if (isSameType(selectedCabinets) && isSameStatus(selectedCabinets))
+      return true;
     return false;
   };
 
@@ -103,16 +111,13 @@ const AdminCabinetInfoArea: React.FC<{
             onClick={handleOpenAdminReturnModal} //todo: admin 일괄 반납 모달 만들기
             text="일괄 반납"
             theme="fill"
-            disabled={
-              targetCabinetInfoList
-                ? !checkMultiReturn(targetCabinetInfoList)
-                : true
-            }
+            disabled={!checkMultiReturn(targetCabinetInfoList!)}
           />
           <ButtonContainer
             onClick={handleOpenStatusModal} //todo: admin 일괄 상태관리 모달 만들기
             text="상태관리"
             theme="line"
+            disabled={!checkMultiStatus(targetCabinetInfoList!)}
           />
           <ButtonContainer
             onClick={() => {

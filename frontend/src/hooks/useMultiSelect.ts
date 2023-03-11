@@ -75,6 +75,29 @@ const useMultiSelect = () => {
     resetTargetCabinetInfoList();
   };
 
+  const isSameType = (cabinets: CabinetInfo[]) => {
+    const type = cabinets[0].lent_type;
+    for (const cabinet of cabinets) {
+      if (cabinet.lent_type !== type) return false;
+    }
+    return true;
+  };
+
+  const isSameStatus = (cabinets: CabinetInfo[]) => {
+    const status = cabinets[0].status;
+    for (const cabinet of cabinets) {
+      if (cabinet.status !== status) return false;
+    }
+    return true;
+  };
+
+  const isAllEmpty = (cabinets: CabinetInfo[]) => {
+    for (const cabinet of cabinets) {
+      if (cabinet.lent_info.length !== 0) return false;
+    }
+    return true;
+  };
+
   return {
     isMultiSelect,
     targetCabinetInfoList,
@@ -89,6 +112,9 @@ const useMultiSelect = () => {
     containsAllCabinets,
     handleSelectAll,
     resetMultiSelectMode,
+    isSameType,
+    isSameStatus,
+    isAllEmpty,
   };
 };
 
