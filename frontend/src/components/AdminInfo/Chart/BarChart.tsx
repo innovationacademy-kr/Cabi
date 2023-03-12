@@ -1,20 +1,6 @@
 import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 
-const resData = [
-  { floor: 2, total: 148, used: 114, overdue: 0, unused: 26, disabled: 8 },
-  { floor: 4, total: 100, used: 73, overdue: 1, unused: 21, disabled: 5 },
-  { floor: 5, total: 96, used: 62, overdue: 0, unused: 27, disabled: 7 },
-];
-
-const result = resData.map((data) => ({
-  floor: data.floor + "층",
-  ["사용 중"]: data.used,
-  ["사용가능"]: data.unused,
-  ["반납지연"]: data.overdue,
-  ["사용불가"]: data.disabled,
-}));
-
 interface IRentInfo {
   floor: number;
   total: number;

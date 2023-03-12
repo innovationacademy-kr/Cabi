@@ -1,14 +1,7 @@
-import {
-  BannedUserDto,
-  BrokenCabinetDto,
-  IData,
-  OverdueUserDto,
-} from "src/types/dto/admin.dto";
+import { IData } from "src/types/dto/admin.dto";
 import { useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";
-
-const ROW_COUNT = 5;
 
 const AdminTable = ({
   data,
@@ -16,12 +9,14 @@ const AdminTable = ({
   thInfo,
   ratio,
   fontSize,
+  ROW_COUNT,
 }: {
   data: IData[];
   handleClick: React.MouseEventHandler;
   thInfo: string[];
   ratio: string[];
   fontSize?: string[];
+  ROW_COUNT: number;
 }) => {
   const [curPage, setCurPage] = useState(0);
   const emptyClick = () => {};
