@@ -40,9 +40,6 @@ const AdminCabinetInfoArea: React.FC<{
 
   const isLented: boolean = selectedCabinetInfo?.userNameList.at(0) !== "-";
 
-  console.log(selectedCabinetInfo);
-  console.log(isLented);
-
   const handleOpenAdminReturnModal = () => {
     setShowAdminReturnModal(true);
   };
