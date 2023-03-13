@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
   overdueCabinetListState,
   targetCabinetInfoState,
+  targetUserInfoState,
 } from "@/recoil/atoms";
 import {
   axiosAdminReturn,
@@ -27,6 +28,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import Selector from "@/components/Common/Selector";
 import useMultiSelect from "@/hooks/useMultiSelect";
 import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
+import { UserInfo } from "@/types/dto/user.dto";
 
 const AdminReturnModal: React.FC<{
   lentType?: CabinetType;
@@ -44,6 +46,8 @@ const AdminReturnModal: React.FC<{
   const setNumberOfAdminWork = useSetRecoilState<number>(
     numberOfAdminWorkState
   );
+  const [targetUserInfo, setTargetUserInfo] =
+    useRecoilState(targetUserInfoState);
   const targetCabinetInfo = useRecoilValue<CabinetInfo>(targetCabinetInfoState);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const { targetCabinetInfoList, isMultiSelect, closeMultiSelectMode } =
@@ -106,6 +110,14 @@ const AdminReturnModal: React.FC<{
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
         setTargetCabinetInfo(data);
+        if (targetUserInfo) {
+          const changedInfo: UserInfo = {
+            ...targetUserInfo,
+            cabinetId: undefined,
+            cabinetInfo: undefined,
+          };
+          setTargetUserInfo(changedInfo);
+        }
       } catch (error) {
         throw error;
       }

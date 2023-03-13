@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { numberOfAdminWorkState } from "@/recoil/atoms";
 import styled, { css } from "styled-components";
 import ButtonContainer from "@/components/Common/Button";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
@@ -6,7 +8,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import cabiLogo from "@/assets/images/logo.svg";
 import BanModal from "@/components/Modals/BanModal/BanModal";
-import ReturnModal from "@/components/Modals/ReturnModal/ReturnModal";
+import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
@@ -39,13 +41,16 @@ const UserInfoArea: React.FC<{
 }> = (props) => {
   const { selectedUserInfo, userLentInfo, closeCabinet } = props;
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
-  const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
+  const [showAdminReturnModal, setShowAdminReturnModal] =
+    useState<boolean>(false);
+  const numberOfAdminWork = useRecoilValue(numberOfAdminWorkState);
+  numberOfAdminWork;
 
-  const handleOpenReturnModal = () => {
-    setShowReturnModal(true);
+  const handleOpenAdminReturnModal = () => {
+    setShowAdminReturnModal(true);
   };
-  const handleCloseReturnModal = () => {
-    setShowReturnModal(false);
+  const handleCloseAdminReturnModal = () => {
+    setShowAdminReturnModal(false);
   };
   const handleOpenBanModal = () => {
     setShowBanModal(true);
@@ -128,15 +133,9 @@ const UserInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         <ButtonContainer
-          onClick={handleOpenReturnModal}
+          onClick={handleOpenAdminReturnModal}
           text="반납"
           theme="fill"
-        />
-        <ButtonContainer
-          onClick={handleOpenBanModal}
-          text="상태 관리"
-          theme="line"
-          disabled={selectedUserInfo.isBanned === false}
         />
         <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
       </CabinetInfoButtonsContainerStyled>
@@ -148,10 +147,10 @@ const UserInfoArea: React.FC<{
           ? `${userLentInfo.expireDate.toString().substring(0, 10)}`
           : null}
       </CabinetLentDateInfoStyled>
-      {showReturnModal && (
-        <ReturnModal
+      {showAdminReturnModal && (
+        <AdminReturnModal
           lentType={userLentInfo.lentType}
-          closeModal={handleCloseReturnModal}
+          closeModal={handleCloseAdminReturnModal}
         />
       )}
     </CabinetDetailAreaStyled>

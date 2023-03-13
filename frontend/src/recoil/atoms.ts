@@ -113,7 +113,7 @@ export const numberOfAdminWorkState = atom<number>({
 
 export const selectedTypeOnSearchState = atom<string>({
   key: "SelectedTypeOnSearch",
-  default: "USER",
+  default: "CABINET",
 });
 
 export const targetUserInfoState = atom<UserInfo>({
