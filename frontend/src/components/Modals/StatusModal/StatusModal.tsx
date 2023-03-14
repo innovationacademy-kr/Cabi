@@ -5,7 +5,11 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import ModalPortal from "../ModalPortal";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import Dropdown from "@/components/Common/Dropdown";
-import { cabinetStatusLabelMap, cabinetTypeLabelMap } from "@/assets/data/maps";
+import {
+  cabinetIconSrcMap,
+  cabinetStatusLabelMap,
+  cabinetTypeLabelMap,
+} from "@/assets/data/maps";
 import WarningNotification, {
   WarningNotificationProps,
 } from "@/components/Common/WarningNotification";
@@ -23,9 +27,21 @@ interface StatusModalContainerInterface {
 }
 
 const TYPE_OPTIONS = [
-  { name: "동아리 사물함", value: CabinetType.CLUB },
-  { name: "개인 사물함", value: CabinetType.PRIVATE },
-  { name: "공유 사물함", value: CabinetType.SHARE },
+  {
+    name: "개인 사물함",
+    value: CabinetType.PRIVATE,
+    imageSrc: cabinetIconSrcMap[CabinetType.PRIVATE],
+  },
+  {
+    name: "공유 사물함",
+    value: CabinetType.SHARE,
+    imageSrc: cabinetIconSrcMap[CabinetType.SHARE],
+  },
+  {
+    name: "동아리 사물함",
+    value: CabinetType.CLUB,
+    imageSrc: cabinetIconSrcMap[CabinetType.CLUB],
+  },
 ];
 
 const STATUS_OPTIONS = [
@@ -59,6 +75,7 @@ const StatusModal = ({
   const TYPE_DROP_DOWN_PROPS = {
     options: TYPE_OPTIONS,
     defaultValue: cabinetTypeLabelMap[newCabinetType],
+    defaultImageSrc: cabinetIconSrcMap[cabinetType],
     onChangeValue: handleDropdownChangeValue,
   };
 
@@ -93,6 +110,9 @@ const StatusModal = ({
               <ContentItemTitleStyled>사물함 타입</ContentItemTitleStyled>
               {mode === "read" ? (
                 <ContentItemContainerStyled mode={mode}>
+                  <div style={{ width: "18px", height: "18px" }}>
+                    <img src={cabinetIconSrcMap[cabinetType]} />
+                  </div>
                   <p>{cabinetTypeLabelMap[newCabinetType]}</p>
                 </ContentItemContainerStyled>
               ) : (
@@ -198,17 +218,18 @@ const ContentItemTitleStyled = styled.h3`
 
 const ContentItemContainerStyled = styled.div<{ mode: string }>`
   position: relative;
+  display: flex;
+  align-items: center;
   border: 1px solid var(--line-color);
   width: 100%;
   height: 60px;
   border-radius: 10px;
   text-align: start;
-  text-indent: 20px;
+  padding-left: 20px;
   font-size: 18px;
   color: var(--main-color);
-  & p {
-    position: absolute;
-    top: 32%;
+  & > p {
+    padding-left: 10px;
   }
 `;
 
