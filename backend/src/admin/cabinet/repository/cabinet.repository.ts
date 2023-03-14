@@ -133,6 +133,22 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
       .execute();
   }
 
+  async updateCabinetMaxUser(
+    cabinetId: number,
+	max_user: number,
+  ): Promise<void> {
+	await this.cabinetRepository
+      .createQueryBuilder(this.updateCabinetMaxUser.name)
+      .update()
+      .set({
+        max_user,
+      })
+      .where({
+        cabinet_id: cabinetId,
+      })
+      .execute();
+  }
+
   async isCabinetExist(cabinetId: number): Promise<boolean> {
     const result = await this.cabinetRepository.findOne({
       where: {
