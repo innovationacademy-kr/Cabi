@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Cabinet from 'src/entities/cabinet.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
+import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
 
 export class AdminCabinetRepository implements IAdminCabinetRepository {
   constructor(
@@ -62,7 +63,11 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
 
     return result.map((c) => c.lent_cabinet_id);
   }
-
+  
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async updateLentType(cabinetId: number, lentType: LentType): Promise<void> {
     await this.cabinetRepository
       .createQueryBuilder(this.updateLentType.name)
@@ -91,6 +96,10 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
     return result.lent.length === 0 ? false : true;
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async updateStatusNote(cabinetId: number, statusNote: string): Promise<void> {
     await this.cabinetRepository
       .createQueryBuilder(this.updateLentType.name)
@@ -104,6 +113,10 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
       .execute();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async updateCabinetTitle(cabinetId: number, title: string): Promise<void> {
     await this.cabinetRepository
       .createQueryBuilder(this.updateCabinetTitle.name)
@@ -117,6 +130,10 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
       .execute();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async updateCabinetStatus(
     cabinetId: number,
     status: CabinetStatusType,
@@ -133,6 +150,10 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
       .execute();
   }
 
+  @Transactional({
+    propagation: Propagation.REQUIRED,
+    isolationLevel: IsolationLevel.SERIALIZABLE,
+  })
   async updateCabinetMaxUser(
     cabinetId: number,
 	max_user: number,
