@@ -37,8 +37,8 @@ export class AdminLogRepository implements IAdminLogRepository {
       ])
       .where('ll.log_user_id = :user_id', { user_id: userId })
       .orderBy('ll.return_time', 'DESC')
-	  .offset((page) * length) // calculate the offset
-	  .limit(length) // set the limit
+	  .offset((page) * length)
+	  .limit(length)
       .execute();
     const rtn = {
       result: result.map((r) => ({
@@ -82,8 +82,8 @@ export class AdminLogRepository implements IAdminLogRepository {
       ])
       .where('ll.log_cabinet_id = :cabinet_id', { cabinet_id: cabinetId })
       .orderBy('ll.return_time', 'DESC')
-	  .offset((page) * length) // calculate the offset
-	  .limit(length) // set the limit
+	  .offset((page) * length)
+	  .limit(length)
       .execute();
     const rtn = {
       result: result.map((r) => ({
