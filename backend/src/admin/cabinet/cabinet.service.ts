@@ -75,6 +75,12 @@ export class AdminCabinetService {
     );
     await this.throwIfNotExistedCabinet(cabinetId);
     await this.throwIfHasBorrower(cabinetId);
+	if (lentType == LentType.PRIVATE)
+		await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 1);
+	if (lentType == LentType.SHARE)
+		await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 3);
+	if (lentType == LentType.CLUB)
+		await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 1);
     await this.adminCabinetRepository.updateLentType(cabinetId, lentType);
   }
 
@@ -115,7 +121,7 @@ export class AdminCabinetService {
     const result = [];
     for (const cabinetId of bundle) {
       try {
-        await this.adminCabinetRepository.updateLentType(cabinetId, lentType);
+        await this.updateLentType(cabinetId, lentType);
       } catch (e) {
         result.push(cabinetId);
         continue;
@@ -143,6 +149,17 @@ export class AdminCabinetService {
     if (status === CabinetStatusType.BROKEN)
       await this.throwIfHasBorrower(cabinetId);
     await this.adminCabinetRepository.updateCabinetStatus(cabinetId, status);
+  }
+
+  async updateCabinetMaxUser(
+    cabinetId: number,
+	maxUser: number,
+  ): Promise<void> {
+    this.logger.debug(
+      `Called ${AdminCabinetService.name} ${this.updateCabinetMaxUser.name}`,
+    );
+    await this.throwIfNotExistedCabinet(cabinetId);
+    await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, maxUser);
   }
 
   async isCabinetExist(cabinetId: number): Promise<boolean> {
