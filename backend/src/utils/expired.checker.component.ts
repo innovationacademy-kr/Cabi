@@ -34,27 +34,13 @@ export class ExpiredChecker {
       new Date(),
     );
     if (days >= this.configService.get<number>('expire_term.soonoverdue')) {
-      if (
-        days > 0 &&
-        days < this.configService.get<number>('expire_term.forcedreturn')
-      ) {
+      if (days > 0) {
         if (lent.cabinet.status !== CabinetStatusType.EXPIRED) {
           await this.cabinetInfoService.updateCabinetStatus(
             lent.lent_cabinet_id,
             CabinetStatusType.EXPIRED,
           );
         }
-      } else if (
-        days >= this.configService.get<number>('expire_term.forcedreturn')
-      ) {
-        await this.cabinetInfoService.updateCabinetStatus(
-          lent.lent_cabinet_id,
-          CabinetStatusType.BANNED,
-        );
-        await this.lentService.returnCabinet({
-          user_id: lent.lent_user_id,
-          intra_id: lent.user.intra_id,
-        });
       }
       this.emailsender.mailing(lent.user.intra_id, days);
     }
