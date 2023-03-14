@@ -121,7 +121,7 @@ export class AdminCabinetService {
     const result = [];
     for (const cabinetId of bundle) {
       try {
-        await this.adminCabinetRepository.updateLentType(cabinetId, lentType);
+        await this.updateLentType(cabinetId, lentType);
       } catch (e) {
         result.push(cabinetId);
         continue;
