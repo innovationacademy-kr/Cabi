@@ -28,7 +28,7 @@ const StatusModalContainer = (props: {
   const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const { targetCabinetInfoList } = useMultiSelect();
+  const { targetCabinetInfoList, setTargetCabinetInfoList } = useMultiSelect();
   const setNumberOfAdminWork = useSetRecoilState(numberOfAdminWorkState);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
@@ -55,6 +55,18 @@ const StatusModalContainer = (props: {
           },
         };
   const setBrokenCabinetList = useSetRecoilState(brokenCabinetListState);
+  const buildNewCabinetInfoList = async () => {
+    return await Promise.all(
+      targetCabinetInfoList.map(async (cabinet) => {
+        try {
+          const { data } = await axiosCabinetById(cabinet.cabinet_id);
+          return data;
+        } catch (error) {
+          console.error(error);
+        }
+      })
+    );
+  };
 
   const onSaveEditStatus = (
     newCabinetType: CabinetType,
@@ -116,6 +128,10 @@ const StatusModalContainer = (props: {
           setIsCurrentSectionRender(true);
           setNumberOfAdminWork((prev) => prev + 1);
         })
+        .then(async () => {
+          const ret = await buildNewCabinetInfoList();
+          setTargetCabinetInfoList(ret);
+        })
         .catch((error) => {
           console.log(error.message);
         });
@@ -132,6 +148,10 @@ const StatusModalContainer = (props: {
           } catch (error) {
             throw error;
           }
+        })
+        .then(async () => {
+          const ret = await buildNewCabinetInfoList();
+          setTargetCabinetInfoList(ret);
         })
         .catch((error) => {
           console.log(error.message);
