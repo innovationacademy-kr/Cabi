@@ -10,6 +10,7 @@ import useMultiSelect from "@/hooks/useMultiSelect";
 import AdminCabinetInfoArea, {
   IMultiSelectTargetInfo,
 } from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
+import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
 
 const calExpiredTime = (expireTime: Date) =>
   Math.floor(
@@ -75,7 +76,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const { closeCabinet } = useMenu();
+  const { closeCabinet, toggleLent } = useMenu();
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
 
@@ -123,11 +124,15 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     : null;
 
   return isAdmin ? (
-    <AdminCabinetInfoArea
-      selectedCabinetInfo={cabinetViewData}
-      closeCabinet={closeCabinet}
-      multiSelectTargetInfo={multiSelectInfo}
-    />
+    <>
+      <AdminCabinetInfoArea
+        selectedCabinetInfo={cabinetViewData}
+        closeCabinet={closeCabinet}
+        multiSelectTargetInfo={multiSelectInfo}
+        openLent={toggleLent}
+      />
+      {cabinetViewData && <AdminCabinetLentLogContainer />}
+    </>
   ) : (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}

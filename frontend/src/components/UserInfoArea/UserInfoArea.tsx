@@ -38,8 +38,9 @@ const UserInfoArea: React.FC<{
   selectedUserInfo?: ISelectedUserInfo;
   userLentInfo?: IUserLentInfo;
   closeCabinet: () => void;
+  openLent: React.MouseEventHandler;
 }> = (props) => {
-  const { selectedUserInfo, userLentInfo, closeCabinet } = props;
+  const { selectedUserInfo, userLentInfo, closeCabinet, openLent } = props;
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
   const [showAdminReturnModal, setShowAdminReturnModal] =
     useState<boolean>(false);
@@ -73,6 +74,7 @@ const UserInfoArea: React.FC<{
   if (userLentInfo === undefined)
     return (
       <CabinetDetailAreaStyled>
+        <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
         <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
           대여 중이 아닌 사용자
         </TextStyled>
@@ -118,6 +120,7 @@ const UserInfoArea: React.FC<{
     );
   return (
     <CabinetDetailAreaStyled>
+      <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
         {userLentInfo.floor + "F - " + userLentInfo.section}
       </TextStyled>
@@ -190,6 +193,20 @@ const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
   background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
   background-size: contain;
   background-repeat: no-repeat;
+`;
+
+const LinkTextStyled = styled.div`
+  position: absolute;
+  top: 3%;
+  right: 6%;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 0.875rem;
+  color: var(--lightpurple-color);
+  text-decoration: underline;
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`

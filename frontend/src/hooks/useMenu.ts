@@ -57,7 +57,7 @@ const useMenu = () => {
 
   const openLent = () => {
     closeLeftNav();
-    closeCabinet();
+    // closeCabinet();
     closeMap();
     document.getElementById("lentInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
@@ -66,7 +66,6 @@ const useMenu = () => {
   const closeLent = () => {
     if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
       document.getElementById("lentInfo")?.classList.remove("on");
-      document.getElementById("menuBg")?.classList.remove("on");
     }
   };
 

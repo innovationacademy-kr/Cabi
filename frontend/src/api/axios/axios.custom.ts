@@ -360,3 +360,39 @@ export const axiosGetOverdueUserList = async () => {
     throw error;
   }
 };
+
+const axiosGetCabinetLentLogURL = "/api/admin/log/cabinet/";
+export const axiosGetCabinetLentLog = async (
+  cabinetId: number,
+  page: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosGetCabinetLentLogURL + cabinetId.toString(),
+      {
+        params: { page: page, length: 10 },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetUserLentLogURL = "/api/admin/log/user/";
+export const axiosGetUserLentLog = async (
+  userId: number,
+  page: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosGetUserLentLogURL + userId.toString(),
+      {
+        params: { page: page, length: 10 },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

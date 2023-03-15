@@ -30,7 +30,13 @@ const AdminCabinetInfoArea: React.FC<{
   myCabinetId?: number;
   closeCabinet: () => void;
   multiSelectTargetInfo: IMultiSelectTargetInfo | null;
-}> = ({ selectedCabinetInfo, closeCabinet, multiSelectTargetInfo }) => {
+  openLent: React.MouseEventHandler;
+}> = ({
+  selectedCabinetInfo,
+  closeCabinet,
+  multiSelectTargetInfo,
+  openLent,
+}) => {
   const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
   const [showAdminReturnModal, setShowAdminReturnModal] =
     useState<boolean>(false);
@@ -142,6 +148,7 @@ const AdminCabinetInfoArea: React.FC<{
   // 단일 선택 시 보이는 cabinetInfoArea
   return (
     <CabinetDetailAreaStyled>
+      <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
         {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
       </TextStyled>
@@ -230,6 +237,20 @@ const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
   background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
   background-size: contain;
   background-repeat: no-repeat;
+`;
+
+const LinkTextStyled = styled.div`
+  position: absolute;
+  top: 3%;
+  right: 6%;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 0.875rem;
+  color: var(--lightpurple-color);
+  text-decoration: underline;
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`

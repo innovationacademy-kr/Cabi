@@ -14,7 +14,7 @@ interface IlentLog {
   lentLog: LentLogDto[] | typeof BAD_REQUEST | undefined;
 }
 
-const LogTable = ({ lentLog }: IlentLog) => {
+const AdminCabinetLogTable = ({ lentLog }: IlentLog) => {
   if (lentLog === undefined) return <LoadingAnimation />;
 
   return (
@@ -22,7 +22,7 @@ const LogTable = ({ lentLog }: IlentLog) => {
       <LogTableStyled>
         <TheadStyled>
           <tr>
-            <th>위치</th>
+            <th>인트라 ID</th>
             <th>대여일</th>
             <th>반납일</th>
           </tr>
@@ -30,14 +30,9 @@ const LogTable = ({ lentLog }: IlentLog) => {
         {lentLog !== BAD_REQUEST && (
           <TbodyStyled>
             {lentLog.map(
-              (
-                { floor, section, cabinet_num, lent_time, return_time },
-                idx
-              ) => (
+              ({ floor, section, intra_id, lent_time, return_time }, idx) => (
                 <tr key={idx}>
-                  <td
-                    title={`${floor}층 ${section}`}
-                  >{`${floor}F - ${cabinet_num}번`}</td>
+                  <td title={`${floor}층 ${section}`}>{intra_id}</td>
                   <td title={new Date(lent_time).toLocaleString("ko-KR")}>
                     {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
                   </td>
@@ -102,4 +97,4 @@ const EmptyLogStyled = styled.div`
   padding: 20px 0;
 `;
 
-export default LogTable;
+export default AdminCabinetLogTable;

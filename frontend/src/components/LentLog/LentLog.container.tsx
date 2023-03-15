@@ -24,18 +24,21 @@ const LentLogContainer = () => {
   }
   useEffect(() => {
     setPage(1);
-    getData(1);
   }, []);
+
+  useEffect(() => {
+    if (page >= 0) {
+      getData(page);
+    }
+  }, [page]);
 
   const onClickPrev = () => {
     if (page == 1) return;
-    setPage(page - 1);
-    getData(page - 1);
+    setPage((prev) => prev - 1);
   };
   const onClickNext = () => {
     if (page == totalPage) return;
-    setPage(page + 1);
-    getData(page + 1);
+    setPage((prev) => prev + 1);
   };
 
   return (
