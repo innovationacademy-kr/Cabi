@@ -101,6 +101,7 @@ const useMultiSelect = () => {
   return {
     isMultiSelect,
     targetCabinetInfoList,
+    setTargetCabinetInfoList,
     setIsMultiSelect,
     resetIsMultiSelect,
     resetTargetCabinetInfoList,
