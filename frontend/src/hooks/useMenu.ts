@@ -57,7 +57,6 @@ const useMenu = () => {
 
   const openLent = () => {
     closeLeftNav();
-    // closeCabinet();
     closeMap();
     document.getElementById("lentInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");

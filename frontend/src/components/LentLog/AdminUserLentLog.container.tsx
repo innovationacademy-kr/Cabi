@@ -15,7 +15,7 @@ const AdminUserLentLogContainer = () => {
   >(undefined);
   const [page, setPage] = useState<number>(-1);
   const [totalPage, setTotalPage] = useState<number>(-1);
-  const [isNeedUpdate, setIsNeedUpdate] = useState<boolean>(false);
+  const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
   const targetUserInfo = useRecoilValue(targetUserInfoState);
   async function getData(page: number) {
     try {
@@ -34,15 +34,15 @@ const AdminUserLentLogContainer = () => {
   }, [targetUserInfo]);
 
   useEffect(() => {
-    if (isNeedUpdate || page > 0) {
-      setIsNeedUpdate(false);
+    if (needsUpdate || page > 0) {
+      setNeedsUpdate(false);
       getData(page);
     }
   }, [page]);
 
   const onClickPrev = () => {
     if (page == 0) return;
-    setIsNeedUpdate(true);
+    setNeedsUpdate(true);
     setPage((prev) => prev - 1);
   };
 
@@ -53,11 +53,13 @@ const AdminUserLentLogContainer = () => {
 
   const closeAndResetLogPage = () => {
     closeLent();
-    setIsNeedUpdate(true);
+    setNeedsUpdate(true);
     setPage(0);
   };
 
-  return targetUserInfo ? (
+  if (!targetUserInfo) return null;
+
+  return (
     <AdminUserLentLog
       closeAndResetLogPage={closeAndResetLogPage}
       logs={logs}
@@ -66,8 +68,6 @@ const AdminUserLentLogContainer = () => {
       onClickPrev={onClickPrev}
       onClickNext={onClickNext}
     />
-  ) : (
-    <></>
   );
 };
 
