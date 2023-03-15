@@ -92,6 +92,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         detailMessage: getDetailMessage(targetCabinetInfo),
         detailMessageColor: getDetailMessageColor(targetCabinetInfo),
         isAdmin: isAdmin,
+        isLented: targetCabinetInfo.lent_info.length !== 0,
       }
     : null;
 

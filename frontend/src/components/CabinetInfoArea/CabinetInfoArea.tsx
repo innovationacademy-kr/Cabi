@@ -27,6 +27,7 @@ export interface ISelectedCabinetInfo {
   detailMessage: string | null;
   detailMessageColor: string;
   isAdmin: boolean;
+  isLented: boolean;
 }
 
 const CabinetInfoArea: React.FC<{

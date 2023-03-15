@@ -38,6 +38,8 @@ const AdminCabinetInfoArea: React.FC<{
 
   const { resetMultiSelectMode, isSameStatus, isSameType } = useMultiSelect();
 
+  const isLented: boolean = selectedCabinetInfo?.userNameList.at(0) !== "-";
+
   const handleOpenAdminReturnModal = () => {
     setShowAdminReturnModal(true);
   };
@@ -161,6 +163,9 @@ const AdminCabinetInfoArea: React.FC<{
           onClick={handleOpenAdminReturnModal} //todo: admin 단일 반납 모달 만들기
           text="반납"
           theme="fill"
+          disabled={
+            selectedCabinetInfo!.lentType === CabinetType.CLUB || !isLented
+          }
         />
         <ButtonContainer
           onClick={handleOpenStatusModal} //todo: admin 단일 상태관리 모달 만들기

@@ -1,5 +1,5 @@
-import { useRecoilValue } from "recoil";
-import { targetUserInfoState } from "@/recoil/atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { targetUserInfoState, currentCabinetIdState } from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import UserInfoArea, {
   ISelectedUserInfo,
@@ -10,6 +10,7 @@ import useMenu from "@/hooks/useMenu";
 
 const UserInfoAreaContainer = (): JSX.Element => {
   const targetUserInfo = useRecoilValue(targetUserInfoState);
+  const setCurrentCabinetId = useSetRecoilState(currentCabinetIdState);
   const { closeCabinet } = useMenu();
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
@@ -84,17 +85,7 @@ const UserInfoAreaContainer = (): JSX.Element => {
     } else return "var(--black)";
   };
 
-  // dummy data
-  // make with targetUserInfo state
-  // const userInfoData: ISelectedUserInfo = {
-  //   intraId: "jaesjeon",
-  //   isBanned: false,
-  // };
-  // const userInfoData: ISelectedUserInfo = {
-  //   intraId: "jaesjeon",
-  //   isBanned: true,
-  //   bannedInfo: "2099-12-31 까지 대여가 불가능합니다.",
-  // };
+  if (targetUserInfo?.cabinetId) setCurrentCabinetId(targetUserInfo.cabinetId);
 
   const userInfoData: ISelectedUserInfo | undefined = targetUserInfo
     ? {
