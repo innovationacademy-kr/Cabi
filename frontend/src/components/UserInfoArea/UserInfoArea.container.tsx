@@ -7,11 +7,12 @@ import UserInfoArea, {
 } from "@/components/UserInfoArea/UserInfoArea";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import useMenu from "@/hooks/useMenu";
+import AdminUserLentLogContainer from "../LentLog/AdminUserLentLog.container";
 
 const UserInfoAreaContainer = (): JSX.Element => {
   const targetUserInfo = useRecoilValue(targetUserInfoState);
   const setCurrentCabinetId = useSetRecoilState(currentCabinetIdState);
-  const { closeCabinet } = useMenu();
+  const { closeCabinet, openLent } = useMenu();
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
     if (
@@ -113,11 +114,15 @@ const UserInfoAreaContainer = (): JSX.Element => {
   // *
 
   return (
-    <UserInfoArea
-      selectedUserInfo={userInfoData}
-      userLentInfo={userViewData}
-      closeCabinet={closeCabinet}
-    />
+    <>
+      <UserInfoArea
+        selectedUserInfo={userInfoData}
+        userLentInfo={userViewData}
+        closeCabinet={closeCabinet}
+        openLent={openLent}
+      />
+      {userInfoData && <AdminUserLentLogContainer />}
+    </>
   );
 };
 
