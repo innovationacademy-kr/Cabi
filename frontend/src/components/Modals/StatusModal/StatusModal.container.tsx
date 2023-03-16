@@ -41,8 +41,14 @@ const StatusModalContainer = (props: {
           cabinetType: targetCabinetInfoList[0].lent_type,
           cabinetStatus: targetCabinetInfoList[0].status,
           warningNotificationObj: {
-            isVisible: false,
-            message: "",
+            isVisible: targetCabinetInfoList.find(
+              (cabinet) => cabinet.lent_info.length >= 1
+            )
+              ? true
+              : false,
+            message: `선택된 사물함중에 사용중인 사물함이 
+포함되어 있습니다.
+사물함의 상태 또는 타입을 변경하려면 해당 사물함을 먼저 반납해주세요.`,
           },
         }
       : {
