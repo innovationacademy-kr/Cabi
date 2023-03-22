@@ -45,6 +45,7 @@ const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
     return "사용 불가";
   // 동아리 사물함
   else if (lent_type === "CLUB") return "동아리 사물함";
+  else if (lent_type === "LONG_TERM") return "장기 대여 사물함";
   // 사용 중 사물함
   else if (
     status === CabinetStatus.SET_EXPIRE_FULL ||
