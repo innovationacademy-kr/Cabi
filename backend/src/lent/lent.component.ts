@@ -69,12 +69,6 @@ export class LentTools {
             this.configService.get<number>('lent_term.share'),
         );
         break;
-      case LentType.LONG_TERM:
-        // 9999-12-31로 설정
-        expire_time.setFullYear(9999);
-        expire_time.setMonth(11);
-        expire_time.setDate(31);
-        break;
     }
     await this.lentRepository.setExpireTimeAll(cabinet_id, expire_time);
   }
@@ -101,6 +95,10 @@ export class LentTools {
         // 동아리 사물함인지 확인
         if (cabinet.lent_type === LentType.CLUB) {
           excepction_type = LentExceptionType.LENT_CLUB;
+          break;
+        }
+        if (cabinet.lent_type === LentType.LONG_TERM) {
+          excepction_type = LentExceptionType.LENT_LONG_TERM;
           break;
         }
         if (cabinet.lent_type === LentType.SHARE) {

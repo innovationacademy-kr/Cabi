@@ -59,7 +59,7 @@ export class LentController {
   @ApiResponse({
     status: HttpStatus.I_AM_A_TEAPOT,
     description:
-      "동아리 사물함을 대여 시도한 경우, 418 I'm a teapot을 응답합니다.",
+      "동아리 사물함이나 장기 대여 사물함을 대여 시도한 경우, 418 I'm a teapot을 응답합니다.",
   })
   @ApiConflictResponse({
     description: '잔여 자리가 없는 경우, 409 Conflict를 응답합니다.',

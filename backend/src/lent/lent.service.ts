@@ -44,6 +44,11 @@ export class LentService {
             `동아리 전용 사물함입니다`,
             HttpStatus.I_AM_A_TEAPOT,
           );
+        case LentExceptionType.LENT_LONG_TERM:
+          throw new HttpException(
+            `장기 대여 사물함입니다`,
+            HttpStatus.I_AM_A_TEAPOT,
+          );
         case LentExceptionType.LENT_UNDER_PENALTY_DAY_SHARE:
           throw new HttpException(
             `만료가 임박한 공유 사물함입니다\n해당 사물함은 대여할 수 없습니다`,
