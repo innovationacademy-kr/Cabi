@@ -49,16 +49,25 @@ export class LentTools {
   ): Promise<void> {
     this.logger.debug(`Called ${LentTools.name} ${this.setExpireTimeAll.name}`);
     const expire_time = new Date();
-    if (lent_type === LentType.PRIVATE) {
-      expire_time.setDate(
-        last_lent_time.getDate() +
-          this.configService.get<number>('lent_term.private'),
-      );
-    } else {
-      expire_time.setDate(
-        last_lent_time.getDate() +
-          this.configService.get<number>('lent_term.share'),
-      );
+    switch (lent_type) {
+      case LentType.PRIVATE:
+        expire_time.setDate(
+          last_lent_time.getDate() +
+            this.configService.get<number>('lent_term.private'),
+        );
+        break;
+      case LentType.SHARE:
+        expire_time.setDate(
+          last_lent_time.getDate() +
+            this.configService.get<number>('lent_term.share'),
+        );
+        break;
+      case LentType.LONG_TERM:
+        // 9999-12-31로 설정
+        expire_time.setFullYear(9999);
+        expire_time.setMonth(11);
+        expire_time.setDate(31);
+        break;
     }
     await this.lentRepository.setExpireTimeAll(cabinet_id, expire_time);
   }
