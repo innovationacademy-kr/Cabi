@@ -173,7 +173,7 @@ export class LentController {
   })
   @ApiForbiddenResponse({
     description:
-      '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
+      '사물함을 빌리지 않았는데 호출할 때, 혹은 장기 대여 사물함을 반납 시도할 때, 403 Forbidden을 응답합니다.',
   })
   @Delete('/return')
   @HttpCode(HttpStatus.NO_CONTENT)
