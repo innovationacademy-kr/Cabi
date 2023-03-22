@@ -61,6 +61,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+  }
+
+  #searchBar.on input {
+    width: 100%;
   }
 
   #searchButton {

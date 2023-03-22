@@ -35,6 +35,7 @@ export class CabinetInfoRepository implements ICabinetInfoRepository {
       .select('cabinet.floor')
       .distinct(true)
       .where('cabinet.location = :location', { location })
+      .orderBy('cabinet.floor')
       .getRawMany();
 
     return floors.map((f) => f.cabinet_floor);

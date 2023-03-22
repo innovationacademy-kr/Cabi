@@ -6,15 +6,23 @@ import SearchItemByNum from "@/components/Search/SearchItemByNum";
 import SearchItemByIntraId from "@/components/Search/SearchItemByIntraId";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useRouteError, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import NoSearch from "@/components/Search/NoSearch";
 import SearchDefault from "@/components/Search/SearchDefault";
+import { useResetRecoilState, useRecoilValue } from "recoil";
+import {
+  currentCabinetIdState,
+  currentIntraIdState,
+  numberOfAdminWorkState,
+} from "@/recoil/atoms";
 
 interface ISearchDetail {
   intra_id: string;
   user_id: number;
+  bannedDate?: Date;
+  unbannedDate?: Date;
   cabinetInfo?: CabinetInfo;
 }
 
@@ -28,16 +36,20 @@ const SearchPage = () => {
   const [totalSearchList, setTotalSearchList] = useState(0);
   const currentPage = useRef(0);
   const searchValue = useRef("");
+  const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
+  const numberOfAdminWork = useRecoilValue(numberOfAdminWorkState);
 
   // 검색 초기화
   const initialize = () => {
-    console.log("currentPage: " + currentPage);
     setIsLoading(true);
     setSearchListByIntraId([]);
     setSearchListByNum([]);
     setTotalSearchList(0);
     currentPage.current = 0;
     searchValue.current = searchParams.get("q") ?? "";
+    resetCurrentCabinetId();
+    resetCurrentIntraId();
   };
 
   // intra_id 검색
@@ -46,7 +58,6 @@ const SearchPage = () => {
       searchValue.current,
       currentPage.current
     );
-    console.log(searchResult.data);
     setSearchListByIntraId(searchResult.data.result);
     setTotalSearchList(searchResult.data.total_length);
     setTimeout(() => {
@@ -59,7 +70,6 @@ const SearchPage = () => {
     const searchResult = await axiosSearchByCabinetNum(
       Number(searchValue.current)
     );
-    console.log(searchResult.data);
     setSearchListByNum(searchResult.data.result);
     setTotalSearchList(searchResult.data.total_length);
     setTimeout(() => {
@@ -78,7 +88,7 @@ const SearchPage = () => {
         handleSearchByCabinetNum();
       }
     }
-  }, [searchParams]);
+  }, [searchParams, numberOfAdminWork]);
 
   // intra_id 검색 더보기
   const handleMoreSearchDetailByIntraId = async () => {
@@ -86,12 +96,11 @@ const SearchPage = () => {
       searchValue.current,
       currentPage.current + 1
     );
-    console.log(searchResult.data);
     currentPage.current += 1;
     setSearchListByIntraId((prev) => [...prev, ...searchResult.data.result]);
   };
 
-  const handleMoreButton = () => {
+  const clickMoreButton = () => {
     handleMoreSearchDetailByIntraId();
   };
 
@@ -118,7 +127,7 @@ const SearchPage = () => {
             </ListWrapperStyled>
             {totalSearchList > 10 &&
               currentPage.current * 10 < totalSearchList - 10 && (
-                <MoreButtonStyled onClick={handleMoreButton}>
+                <MoreButtonStyled onClick={clickMoreButton}>
                   더보기
                 </MoreButtonStyled>
               )}

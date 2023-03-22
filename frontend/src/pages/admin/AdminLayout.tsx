@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { selectedTypeOnSearchState } from "@/recoil/atoms";
 import AdminTopNavContainer from "@/components/TopNav/AdminTopNav.container";
 import LeftNav from "@/components/LeftNav/LeftNav";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
@@ -9,11 +11,13 @@ import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import useMenu from "@/hooks/useMenu";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
+import UserInfoAreaContainer from "@/components/UserInfoArea/UserInfoArea.container";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const selectedTypeOnSearch = useRecoilValue(selectedTypeOnSearchState);
   const token = getCookie("admin_access_token");
 
   const checkPath = () => {
@@ -59,7 +63,11 @@ const Layout = (): JSX.Element => {
             id="cabinetDetailArea"
             isFloat={!isMainPage && !isSearchPage}
           >
-            <CabinetInfoAreaContainer />
+            {selectedTypeOnSearch === "USER" ? (
+              <UserInfoAreaContainer />
+            ) : (
+              <CabinetInfoAreaContainer />
+            )}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
         </WrapperStyled>

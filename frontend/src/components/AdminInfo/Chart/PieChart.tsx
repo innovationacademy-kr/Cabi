@@ -56,8 +56,8 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
       <ResponsivePie
         data={convert(data)}
         theme={{
-          legends: { text: { fontSize: "1.5rem" } },
-          labels: { text: { fontSize: "1.5rem" } },
+          legends: { text: { fontSize: "15px" } },
+          labels: { text: { fontSize: "15px" } },
         }}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
         colors={["#d9d9d9", "#ff4e4e", "#9747ff", "#3c3c3c "]}
@@ -85,14 +85,14 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
             direction: "row",
             justify: false,
             translateX: 0,
-            translateY: 56,
-            itemsSpacing: 30,
-            itemWidth: 100,
+            translateY: 50,
+            itemsSpacing: 5,
+            itemWidth: 70,
             itemHeight: 18,
             itemTextColor: "#999",
-            itemDirection: "left-to-right",
+            itemDirection: "top-to-bottom",
             itemOpacity: 1,
-            symbolSize: 18,
+            symbolSize: 12,
             symbolShape: "circle",
             effects: [
               {
@@ -110,8 +110,8 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
 };
 
 const PieChartStyled = styled.div`
-  width: 500px;
-  height: 500px;
+  height: 90%;
+  width: 90%;
   display: flex;
   justify-content: center;
   align-items: center;

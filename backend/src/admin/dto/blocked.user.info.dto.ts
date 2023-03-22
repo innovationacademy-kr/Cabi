@@ -17,11 +17,11 @@ export class BlockedUserInfoDto {
     description: '차단당한 시간',
     example: new Date(),
   })
-  banned_date: Date; // 차단당한 시간
+  banned_date?: Date; // 차단당한 시간
 
   @ApiProperty({
     description: '차단 풀리는 시간',
     example: new Date(),
   })
-  unbanned_date: Date; // 차단 풀리는 시간
+  unbanned_date?: Date; // 차단 풀리는 시간
 }

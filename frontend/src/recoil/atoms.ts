@@ -1,5 +1,5 @@
 import { recoilPersist } from "recoil-persist";
-import { UserDto } from "@/types/dto/user.dto";
+import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import {
   CabinetInfo,
   CabinetInfoByLocationFloorDto,
@@ -9,6 +9,7 @@ import {
 import { atom } from "recoil";
 import { staticColNumData } from "@/assets/data/sectionColNumData";
 import { ILocationColNum } from "@/assets/data/sectionColNumData";
+import { IData } from "@/types/dto/admin.dto";
 
 const { persistAtom } = recoilPersist();
 
@@ -88,4 +89,62 @@ export const locationColNumState = atom<ILocationColNum[]>({
 export const isCurrentSectionRenderState = atom<boolean>({
   key: "isCurrentSectionRender",
   default: false,
+});
+
+export const isMultiSelectState = atom<boolean>({
+  key: "IsMultiSelect",
+  default: false,
+});
+
+export const targetCabinetInfoListState = atom<CabinetInfo[]>({
+  key: "TargetCabinetInfoList",
+  default: [],
+});
+
+export const currentIntraIdState = atom<string>({
+  key: "CurrentIntraId",
+  default: undefined,
+});
+
+export const numberOfAdminWorkState = atom<number>({
+  key: "NumberOfAdminWork",
+  default: 0,
+});
+
+export const selectedTypeOnSearchState = atom<string>({
+  key: "SelectedTypeOnSearch",
+  default: "CABINET",
+});
+
+export const targetUserInfoState = atom<UserInfo>({
+  key: "TargetUserInfo",
+  default: undefined,
+});
+
+interface AdminDetailType {
+  type: string;
+  data: string;
+}
+
+export const selectAdminDetailState = atom<AdminDetailType>({
+  key: "AdminDetailInfo",
+  default: {
+    type: "",
+    data: "",
+  },
+});
+
+export const brokenCabinetListState = atom<IData[]>({
+  key: "brokenCabinetList",
+  default: [],
+});
+
+export const overdueCabinetListState = atom<IData[]>({
+  key: "overdueCabinetList",
+  default: [],
+});
+
+export const bannedUserListState = atom<IData[]>({
+  key: "bannedUserList",
+  default: [],
 });

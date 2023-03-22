@@ -6,6 +6,8 @@ import { BrokenCabinetInfoPagenationDto } from '../dto/broken.cabinet.info.pagen
 import { BlockedUserInfoPagenationDto } from '../dto/blocked.user.info.pagenation.dto';
 import { IAdminSearchRepository } from './repository/search.repository.interface';
 import { UserCabinetInfoPagenationDto } from '../dto/user.cabinet.info.pagenation.dto';
+import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
+import { OverdueUserInfoPagenationDto } from '../dto/OverdueUserInfoPagenationDto';
 
 @Injectable()
 export class AdminSearchService {
@@ -89,17 +91,23 @@ export class AdminSearchService {
 
   /**
    * 해당 사물함 번호를 가진 사물함 리스트를 반환합니다.
+   * 선택적으로 특정 층을 지정할 수 있습니다.
    * @param visibleNum 사물함 번호
+   * @param floor 층
    * @returns CabinetInfoPagenationDto
    * @throw HTTPError
    */
   async searchByCabinetNumber(
     visibleNum: number,
+    floor?: number,
   ): Promise<CabinetInfoPagenationDto> {
     this.logger.debug(
       `Called ${AdminSearchService.name} ${this.searchByCabinetNumber.name}`,
     );
-    return await this.adminSearchRepository.searchByCabinetNumber(visibleNum);
+    return await this.adminSearchRepository.searchByCabinetNumber(
+      visibleNum,
+      floor,
+    );
   }
 
   /**
@@ -154,5 +162,35 @@ export class AdminSearchService {
       `Called ${AdminSearchService.name} ${this.searchByBanUser.name}`,
     );
     return await this.adminSearchRepository.searchByBanUser(page, length);
+  }
+
+  async searchByOverdueUser(
+    page: number,
+    length: number,
+  ): Promise<OverdueUserInfoPagenationDto> {
+    this.logger.debug(
+      `Called ${AdminSearchService.name} ${this.searchByBanUser.name}`,
+    );
+    return await this.adminSearchRepository.searchByOverdueUser(page, length);
+  }
+
+  /**
+   * 현재일자 기준, 입력한 일자만큼 이전에 일어난 대여, 반납의 횟수를 반환합니다..
+   *
+   * @param start 현재를 기준으로 통계를 보고싶은 만큼의 이전일자(시작)
+   * @param end 현재를 기준으로 통계를 보고싶은 만큼의 이전일자(끝)
+   * @returns AdminStatisticsDto
+   */
+  async getLentReturnStatisticsByDaysFromNow(
+    start: number,
+    end: number,
+  ): Promise<AdminStatisticsDto> {
+    this.logger.debug(
+      `Called ${AdminSearchService.name} ${this.getLentReturnStatisticsByDaysFromNow.name}`,
+    );
+    return await this.adminSearchRepository.getLentReturnStatisticsByDaysFromNow(
+      start,
+      end,
+    );
   }
 }

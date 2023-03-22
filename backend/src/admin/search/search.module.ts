@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import User from 'src/entities/user.entity';
 import Cabinet from 'src/entities/cabinet.entity';
 import BanLog from 'src/entities/ban.log.entity';
+import Lent from 'src/entities/lent.entity';
+import LentLog from 'src/entities/lent.log.entity';
 
 const adminSearchRepo = {
   provide: 'IAdminSearchRepository',
@@ -16,6 +18,9 @@ const adminSearchRepo = {
 @Module({
   controllers: [SearchController],
   providers: [AdminSearchService, adminSearchRepo],
-  imports: [AuthModule, TypeOrmModule.forFeature([User, Cabinet, BanLog])],
+  imports: [
+    AuthModule,
+    TypeOrmModule.forFeature([User, Cabinet, BanLog, Lent, LentLog]),
+  ],
 })
 export class AdminSearchModule {}

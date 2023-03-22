@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
-import React from "react";
+import React, { ReactElement } from "react";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 export interface IModalContents {
   type: string; // hasProceedBtn(모달 외부 클릭이나 취소 버튼으로 끔), noBtn(모달 내/외부 클릭으로 끔)
@@ -8,6 +9,7 @@ export interface IModalContents {
   iconScaleEffect?: boolean; // iconEffect 적용 여부
   title?: string; // 모달 제목
   detail?: string; // 모달 본문
+  renderAdditionalComponent?: () => ReactElement; // 모달에 추가로 띄울 UI를 렌더해주는 함수
   proceedBtnText?: string; // 확인 버튼의 텍스트(기본값: 확인)
   onClickProceed?: ((e: React.MouseEvent) => Promise<void>) | null; // 확인 버튼의 동작함수
   cancleBtnText?: string; // 취소 버튼의 텍스트(기본값: 취소)
@@ -21,14 +23,23 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     iconScaleEffect,
     title,
     detail,
+    renderAdditionalComponent,
     proceedBtnText,
     onClickProceed,
     cancleBtnText,
     closeModal,
   } = props.modalContents;
+  const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
   return (
     <>
-      <BackgroundStyled onClick={closeModal} />
+      <BackgroundStyled
+        onClick={(e) => {
+          closeModal(e);
+          if (isMultiSelect) {
+            closeMultiSelectMode();
+          }
+        }}
+      />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
         {/* {icon && (
           <img src={icon} style={{ width: "70px", marginBottom: "20px" }} />
@@ -40,6 +51,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}
+        {renderAdditionalComponent && renderAdditionalComponent()}
         {type === "hasProceedBtn" && (
           <ButtonWrapperStyled>
             <Button

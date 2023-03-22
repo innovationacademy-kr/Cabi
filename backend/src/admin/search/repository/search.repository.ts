@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IAdminSearchRepository } from './search.repository.interface';
 import Cabinet from 'src/entities/cabinet.entity';
 import BanLog from 'src/entities/ban.log.entity';
-import { Like, MoreThan, Repository } from 'typeorm';
+import { LessThan, Like, MoreThan, Repository } from 'typeorm';
 import User from 'src/entities/user.entity';
 import { UserInfoPagenationDto } from 'src/admin/dto/user.info.pagenation.dto';
 import LentType from 'src/enums/lent.type.enum';
@@ -11,12 +11,18 @@ import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { BrokenCabinetInfoPagenationDto } from 'src/admin/dto/broken.cabinet.info.pagenation.dto';
 import { BlockedUserInfoPagenationDto } from 'src/admin/dto/blocked.user.info.pagenation.dto';
 import { UserCabinetInfoPagenationDto } from 'src/admin/dto/user.cabinet.info.pagenation.dto';
+import { AdminStatisticsDto } from 'src/admin/dto/admin.statstics.dto';
+import LentLog from 'src/entities/lent.log.entity';
+import { OverdueUserInfoPagenationDto } from '../../dto/OverdueUserInfoPagenationDto';
+import Lent from '../../../entities/lent.entity';
 
 export class AdminSearchRepository implements IAdminSearchRepository {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Cabinet) private cabinetRepository: Repository<Cabinet>,
+    @InjectRepository(LentLog) private lentLogRepository: Repository<LentLog>,
     @InjectRepository(BanLog) private banLogRepository: Repository<BanLog>,
+    @InjectRepository(Lent) private lentRepository: Repository<Lent>,
   ) {}
 
   async searchByIntraId(
@@ -55,6 +61,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     // 대여중인 유저들의 정보를 반환
     const result = await this.userRepository.findAndCount({
       relations: [
+        'BanLog',
         'Lent',
         'Lent.cabinet',
         'Lent.cabinet.lent',
@@ -82,6 +89,19 @@ export class AdminSearchRepository implements IAdminSearchRepository {
           user && {
             user_id: user.user_id,
             intra_id: user.intra_id,
+            // BanLog가 존재하며 가장 최근 unbanned_date가 오늘 이후인 경우에만 banned_date, unbanned_date를 반환
+            banned_date:
+              user.BanLog &&
+              user.BanLog.length > 0 &&
+              user.BanLog[user.BanLog.length - 1].unbanned_date > new Date()
+                ? user.BanLog[user.BanLog.length - 1].banned_date
+                : null,
+            unbanned_date:
+              user.BanLog &&
+              user.BanLog.length > 0 &&
+              user.BanLog[user.BanLog.length - 1].unbanned_date > new Date()
+                ? user.BanLog[user.BanLog.length - 1].unbanned_date
+                : null,
             cabinetInfo: user.Lent &&
               user.Lent.cabinet && {
                 cabinet_id: user.Lent.cabinet.cabinet_id,
@@ -94,6 +114,13 @@ export class AdminSearchRepository implements IAdminSearchRepository {
                 location: user.Lent.cabinet.location,
                 floor: user.Lent.cabinet.floor,
                 status_note: user.Lent.cabinet.status_note,
+                lent_info: user.Lent.cabinet.lent.map((lent) => ({
+                  user_id: lent.user.user_id,
+                  intra_id: lent.user.intra_id,
+                  lent_id: lent.lent_id,
+                  lent_time: lent.lent_time,
+                  expire_time: lent.expire_time,
+                })),
               },
           },
       ),
@@ -154,11 +181,13 @@ export class AdminSearchRepository implements IAdminSearchRepository {
 
   async searchByCabinetNumber(
     visibleNum: number,
+    floor?: number,
   ): Promise<CabinetInfoPagenationDto> {
     const result = await this.cabinetRepository.find({
       relations: ['lent', 'lent.user'],
       where: {
         cabinet_num: visibleNum,
+        floor: floor,
       },
       order: { cabinet_id: 'ASC' },
     });
@@ -243,6 +272,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
         note: cabinet.title,
         max_user: cabinet.max_user,
         section: cabinet.section,
+        location: cabinet.location,
+        floor: cabinet.floor,
       })),
       total_length: result[1],
     };
@@ -272,5 +303,66 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       total_length: result[1],
     };
     return rtn;
+  }
+
+  async searchByOverdueUser(
+    page: number,
+    length: number,
+  ): Promise<OverdueUserInfoPagenationDto> {
+    const result = await this.lentRepository.findAndCount({
+      relations: ['user', 'cabinet'],
+      where: {
+        expire_time: LessThan(new Date()),
+      },
+      order: { expire_time: 'ASC' },
+      take: length,
+      skip: length * page,
+    });
+    const currentTime = new Date();
+    const rtn = {
+      result: result[0].map((overdueLent) => ({
+        intra_id: overdueLent.user.intra_id,
+        cabinet_id: overdueLent.lent_cabinet_id,
+        location:
+          overdueLent.cabinet.floor + 'f-' + overdueLent.cabinet.cabinet_num,
+        overdueDays: Math.trunc(
+          (currentTime.getTime() -
+            new Date(overdueLent.expire_time).getTime()) /
+            (1000 * 3600 * 24),
+        ),
+      })),
+      total_length: result[1],
+    };
+    return rtn;
+  }
+
+  async getLentReturnStatisticsByDaysFromNow(
+    start: number,
+    end: number,
+  ): Promise<AdminStatisticsDto> {
+    const startDate: Date = new Date();
+    const endDate: Date = new Date();
+    startDate.setDate(startDate.getDate() - start);
+    endDate.setDate(endDate.getDate() - end);
+
+    const lentQuery = await this.lentLogRepository
+      .createQueryBuilder('dateLent')
+      .where('dateLent.lent_time <= :startDate', { startDate: startDate })
+      .andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
+    const lentCount = await lentQuery.getCount();
+
+    const returnQuery = await this.lentLogRepository
+      .createQueryBuilder('dateReturn')
+      .where('dateReturn.return_time <= :startDate', { startDate: startDate })
+      .andWhere('dateReturn.return_time >= :endDate', { endDate: endDate });
+    const returnCount = await returnQuery.getCount();
+
+    const ret = {
+      startDate: startDate,
+      endDate: endDate,
+      lentCount: lentCount,
+      returnCount: returnCount,
+    };
+    return ret;
   }
 }

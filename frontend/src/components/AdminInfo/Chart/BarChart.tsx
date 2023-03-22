@@ -1,20 +1,6 @@
 import { ResponsiveBar } from "@nivo/bar";
 import styled from "styled-components";
 
-const resData = [
-  { floor: 2, total: 148, used: 114, overdue: 0, unused: 26, disabled: 8 },
-  { floor: 4, total: 100, used: 73, overdue: 1, unused: 21, disabled: 5 },
-  { floor: 5, total: 96, used: 62, overdue: 0, unused: 27, disabled: 7 },
-];
-
-const result = resData.map((data) => ({
-  floor: data.floor + "층",
-  ["사용 중"]: data.used,
-  ["사용가능"]: data.unused,
-  ["반납지연"]: data.overdue,
-  ["사용불가"]: data.disabled,
-}));
-
 interface IRentInfo {
   floor: number;
   total: number;
@@ -57,9 +43,9 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
   <BarChartStyled>
     <ResponsiveBar
       theme={{
-        legends: { text: { fontSize: "1.5rem" } },
-        axis: { ticks: { text: { fontSize: "1.25rem" } } },
-        labels: { text: { fontSize: "1.5rem" } },
+        legends: { text: { fontSize: "14px" } },
+        axis: { ticks: { text: { fontSize: "14px" } } },
+        labels: { text: { fontSize: "14px" } },
       }}
       data={convert(data)}
       keys={["사용불가", "반납지연", "사용 중", "사용가능"]}
@@ -105,7 +91,7 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
           justify: false,
           translateX: 120,
           translateY: 0,
-          itemsSpacing: 20,
+          itemsSpacing: 5,
           itemWidth: 100,
           itemHeight: 20,
           itemDirection: "left-to-right",
@@ -131,8 +117,8 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
 );
 
 const BarChartStyled = styled.div`
-  width: 500px;
-  height: 500px;
+  height: 90%;
+  width: 90%;
   display: flex;
   justify-content: center;
   align-items: center;

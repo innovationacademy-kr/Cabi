@@ -65,4 +65,8 @@ export class AdminLogService {
     }
     return result;
   }
+
+  async deleteBanLogByUserId(userId: number): Promise<void> {
+    await this.adminLogRepository.deleteBanLogByUserId(userId);
+  }
 }

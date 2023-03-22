@@ -1,9 +1,16 @@
 import { useResetRecoilState } from "recoil";
-import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  currentCabinetIdState,
+  currentIntraIdState,
+  targetCabinetInfoState,
+  targetUserInfoState,
+} from "@/recoil/atoms";
 
 const useMenu = () => {
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
+  const resetTargetUserInfo = useResetRecoilState(targetUserInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
 
   const toggleLeftNav = () => {
     if (
@@ -50,7 +57,6 @@ const useMenu = () => {
 
   const openLent = () => {
     closeLeftNav();
-    closeCabinet();
     closeMap();
     document.getElementById("lentInfo")?.classList.add("on");
     document.getElementById("menuBg")?.classList.add("on");
@@ -59,7 +65,6 @@ const useMenu = () => {
   const closeLent = () => {
     if (document.getElementById("lentInfo")?.classList.contains("on") == true) {
       document.getElementById("lentInfo")?.classList.remove("on");
-      document.getElementById("menuBg")?.classList.remove("on");
     }
   };
 
@@ -104,7 +109,9 @@ const useMenu = () => {
       true
     ) {
       resetTargetCabinetInfo();
+      resetTargetUserInfo();
       resetCurrentCabinetId();
+      resetCurrentIntraId();
       document.getElementById("cabinetDetailArea")?.classList.remove("on");
       document.getElementById("menuBg")?.classList.remove("on");
     }

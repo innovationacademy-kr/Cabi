@@ -2,11 +2,8 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Logger,
   Param,
-  ParseArrayPipe,
-  Post,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -47,27 +44,8 @@ export class AdminReturnController {
   //       409를 응답하도록 수정하는게 좋을 것 같습니다.
   @Delete('/bundle/cabinet')
   @ApiOperation({})
-  async returnCabinetBundle(
-    @Body(
-      'users',
-      new ParseArrayPipe({
-        optional: true,
-        items: Number,
-        separator: ',',
-      }),
-    )
-    users: number[],
-    @Body(
-      'cabinets',
-      new ParseArrayPipe({
-        optional: true,
-        items: Number,
-        separator: ',',
-      }),
-    )
-    cabinets: number[],
-  ): Promise<void> {
+  async returnCabinetBundle(@Body() bundle: number[]): Promise<void> {
     this.logger.debug(`Called ${this.returnCabinetBundle.name}`);
-    return await this.adminReturnService.returnCabinetBundle(users, cabinets);
+    return await this.adminReturnService.returnCabinetBundle(bundle);
   }
 }

@@ -1,11 +1,23 @@
-import { cabinetIconSrcMap, cabinetStatusColorMap } from "@/assets/data/maps";
+import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
+import {
+  cabinetIconSrcMap,
+  cabinetLabelColorMap,
+  cabinetStatusColorMap,
+} from "@/assets/data/maps";
+import useMenu from "@/hooks/useMenu";
+import {
+  currentCabinetIdState,
+  targetCabinetInfoState,
+  selectedTypeOnSearchState,
+} from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import styled from "styled-components";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import styled, { css } from "styled-components";
 
-const handleIntraId = (lent_info: LentDto[]) => {
+const reformIntraId = (lent_info: LentDto[]) => {
   if (lent_info.length === 0) {
     return "-";
   } else {
@@ -15,22 +27,63 @@ const handleIntraId = (lent_info: LentDto[]) => {
 };
 
 const SearchItemByNum = (props: CabinetInfo) => {
-  const { floor, section, cabinet_num, status, lent_type, lent_info } = props;
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
+    currentCabinetIdState
+  );
+  const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
+    targetCabinetInfoState
+  );
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
+  const { openCabinet, closeCabinet } = useMenu();
+
+  const {
+    floor,
+    section,
+    cabinet_id,
+    cabinet_num,
+    status,
+    lent_type,
+    lent_info,
+  } = props;
+
+  const clickSearchItem = () => {
+    if (currentCabinetId === cabinet_id) {
+      closeCabinet();
+      return;
+    }
+    setSelectedTypeOnSearch("CABINET");
+    setCurrentCabinetId(cabinet_id);
+    async function getData(cabinetId: number) {
+      try {
+        const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
+        setTargetCabinetInfo(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getData(cabinet_id);
+    openCabinet();
+  };
+
   return (
-    <WrapperStyled className="cabiButton">
+    <WrapperStyled
+      className="cabiButton"
+      isSelected={currentCabinetId === cabinet_id}
+      onClick={clickSearchItem}
+    >
       <RectangleStyled status={status}>{cabinet_num}</RectangleStyled>
       <TextWrapper>
         <LocationStyled>{`${floor}층 - ${section}`}</LocationStyled>
         <NameWrapperStyled>
           <IconStyled lent_type={lent_type} />
-          <NameStyled>{handleIntraId(lent_info)}</NameStyled>
+          <NameStyled>{reformIntraId(lent_info)}</NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
     </WrapperStyled>
   );
 };
 
-const WrapperStyled = styled.div`
+const WrapperStyled = styled.div<{ isSelected: boolean }>`
   width: 350px;
   height: 110px;
   border-radius: 10px;
@@ -38,9 +91,21 @@ const WrapperStyled = styled.div`
   background-color: var(--lightgary-color);
   display: flex;
   align-items: center;
+  transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
-  &:hover {
-    outline: 2px solid var(--main-color);
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      opacity: 0.9;
+      transform: scale(1.02);
+      box-shadow: inset 4px 4px 4px rgba(0, 0, 0, 0.15),
+        2px 2px 4px rgba(0, 0, 0, 0.15);
+    `}
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
   }
 `;
 
@@ -50,7 +115,8 @@ const RectangleStyled = styled.div<{ status: CabinetStatus }>`
   border-radius: 10px;
   background-color: ${(props) => cabinetStatusColorMap[props.status]};
   font-size: 26px;
-  color: var(--white);
+  color: ${(props) =>
+    props.status ? cabinetLabelColorMap[props.status] : "var(--black)"};
   display: flex;
   justify-content: center;
   align-items: center;

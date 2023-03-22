@@ -71,4 +71,15 @@ export interface IAdminCabinetRepository {
    * @param cabinetId
    */
   isCabinetExist(cabinetId: number): Promise<boolean>;
+
+   /**
+   * 특정 사물함의 max_user를 변경합니다.
+   *
+   * @param cabinetId
+   * @param maxUser
+   */
+	updateCabinetMaxUser(
+		cabinetId: number,
+		maxUser: number,
+	  ): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SearchBarList from "@/components/TopNav/SearchBar/SearchBarList/SearchBarList";
@@ -6,38 +6,45 @@ import {
   axiosSearchByCabinetNum,
   axiosSearchByIntraId,
 } from "@/api/axios/axios.custom";
+import useOutsideClick from "@/hooks/useOutsideClick";
 
 const SearchBar = () => {
   const navigate = useNavigate();
+  const searchWrap = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
   const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
+  const [isFocus, setIsFocus] = useState<boolean>(true);
+  const [targetIndex, setTargetIndex] = useState<number>(-1);
+  const [searchValue, setSearchValue] = useState<string>("");
 
-  const searchClear = () => {
+  const resetSearchState = () => {
     setSearchListById([]);
     setSearchListByNum([]);
     setTotalLength(0);
+    setTargetIndex(-1);
     if (searchInput.current) {
       searchInput.current.value = "";
+      setSearchValue("");
     }
   };
 
-  const SearchBarButtonHandler = () => {
+  const clickSearchButton = () => {
     if (searchInput.current) {
       const searchValue = searchInput.current.value;
       if (searchValue.length <= 0) {
-        searchClear();
+        resetSearchState();
         return alert("검색어를 입력해주세요.");
       } else if (isNaN(Number(searchValue)) && searchValue.length <= 1) {
-        searchClear();
+        resetSearchState();
         return alert("두 글자 이상의 검색어를 입력해주세요.");
       } else {
         navigate({
           pathname: "search",
           search: `?q=${searchInput.current.value}`,
         });
-        searchClear();
+        resetSearchState();
       }
     }
   };
@@ -55,15 +62,15 @@ const SearchBar = () => {
     };
   };
 
-  const searchInputHandler = async () => {
-    console.log("searchInputHandler");
-
+  const typeSearchInput = async () => {
     if (searchInput.current) {
+      setSearchValue(searchInput.current.value);
       const searchValue = searchInput.current.value;
       if (searchValue.length <= 0) {
         setSearchListById([]);
         setSearchListByNum([]);
         setTotalLength(0);
+        setTargetIndex(-1);
         return;
       }
       if (isNaN(Number(searchValue))) {
@@ -71,9 +78,9 @@ const SearchBar = () => {
         if (searchValue.length <= 1) {
           setSearchListById([]);
           setTotalLength(0);
+          setTargetIndex(-1);
         } else {
           const searchResult = await axiosSearchByIntraId(searchValue);
-          console.log(searchResult.data.result);
           setSearchListByNum([]);
           setSearchListById(searchResult.data.result);
           setTotalLength(searchResult.data.total_length);
@@ -95,39 +102,85 @@ const SearchBar = () => {
     }
   };
 
-  const cancelHandler = () => {
+  const clickCancelButton = () => {
+    resetSearchState();
     document.getElementById("searchBar")!.classList.remove("on");
     document.getElementById("topNavLogo")!.classList.remove("pushOut");
     document.getElementById("topNavButtonGroup")!.classList.remove("pushOut");
     document.getElementById("topNavWrap")!.classList.remove("pushOut");
   };
 
+  // outside click
+  useOutsideClick(searchWrap, () => {
+    setIsFocus(false);
+  });
+
+  const valueChangeHandler = () => {
+    if (isNaN(Number(searchInput.current!.value))) {
+      return searchListById[targetIndex].intra_id;
+    } else {
+      return searchInput.current!.value;
+    }
+  };
+
+  // searchInput value change
+  useEffect(() => {
+    if (targetIndex !== -1) {
+      searchInput.current!.value = valueChangeHandler();
+      setSearchValue(searchInput.current!.value);
+    }
+  }, [targetIndex]);
+
+  const handleInputKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      clickSearchButton();
+    } else if (e.key == "ArrowUp") {
+      if (totalLength > 0) {
+        setTargetIndex((prev) =>
+          prev > 0
+            ? prev - 1
+            : Math.max(searchListById.length, searchListByNum.length) - 1
+        );
+      }
+    } else if (e.key == "ArrowDown") {
+      if (totalLength > 0) {
+        setTargetIndex((prev) =>
+          prev < Math.max(searchListById.length, searchListByNum.length) - 1
+            ? prev + 1
+            : 0
+        );
+      }
+    }
+  };
+
   return (
-    <SearchBarWrapperStyled id="searchBar">
-      <SearchBarStyled
-        ref={searchInput}
-        type="text"
-        placeholder="Search"
-        onChange={debounce(searchInputHandler, 300)}
-        onKeyUp={(e: any) => {
-          if (e.key === "Enter") {
-            SearchBarButtonHandler();
-          }
-        }}
-      ></SearchBarStyled>
-      <SearchButtonStyled onClick={SearchBarButtonHandler} />
-      {searchInput.current?.value && totalLength > 0 && (
+    <SearchBarWrapperStyled ref={searchWrap} id="searchBar">
+      <SearchBarStyled>
+        <SearchBarInputStyled
+          ref={searchInput}
+          type="text"
+          placeholder="Search"
+          onFocus={() => {
+            setIsFocus(true);
+          }}
+          onChange={debounce(typeSearchInput, 300)}
+          onKeyDown={handleInputKey}
+        ></SearchBarInputStyled>
+        <SearchButtonStyled onClick={clickSearchButton} />
+      </SearchBarStyled>
+      <CancelButtonStyled onClick={clickCancelButton}>취소</CancelButtonStyled>
+      {isFocus && searchInput.current?.value && totalLength > 0 && (
         <>
           <SearchBarList
             searchListById={searchListById}
             searchListByNum={searchListByNum}
-            searchWord={searchInput.current?.value}
-            searchClear={searchClear}
+            searchWord={searchValue}
+            resetSearchState={resetSearchState}
             totalLength={totalLength}
+            targetIndex={targetIndex}
           />
         </>
       )}
-      <CancelButtonStyled onClick={cancelHandler}>취소</CancelButtonStyled>
     </SearchBarWrapperStyled>
   );
 };
@@ -136,7 +189,12 @@ const SearchBarWrapperStyled = styled.div`
   position: relative;
 `;
 
-const SearchBarStyled = styled.input`
+const SearchBarStyled = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const SearchBarInputStyled = styled.input`
   width: 300px;
   height: 40px;
   border: 1px solid var(--white);
@@ -156,12 +214,14 @@ const SearchButtonStyled = styled.button`
   height: 32px;
   position: absolute;
   top: 4px;
-  left: 256px;
+  right: 14px;
 `;
 
 const CancelButtonStyled = styled.button`
+  min-width: 60px;
   width: 60px;
-  height: 32px;
+  height: 40px;
+  overflow: hidden;
   display: none;
   @media screen and (max-width: 768px) {
     display: block;
