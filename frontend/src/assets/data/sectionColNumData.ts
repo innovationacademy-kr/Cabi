@@ -50,16 +50,32 @@ export const staticColNumData: ILocationColNum[] = [
         floor: 3,
         sectionColNum: [
           {
-            section: "Cluster X2 - Aisle1",
-            colNum: 11,
+            section: "Cluster X - 1",
+            colNum: 4,
           },
           {
-            section: "Cluster X2 - Aisle2",
-            colNum: 8,
+            section: "Cluster X - 2",
+            colNum: 4,
           },
           {
-            section: "Cluster X2 - Aisle3",
-            colNum: 8,
+            section: "Cluster X - 3",
+            colNum: 4,
+          },
+          {
+            section: "Cluster X - 4",
+            colNum: 4,
+          },
+          {
+            section: "Cluster X - 5",
+            colNum: 4,
+          },
+          {
+            section: "Cluster X - 6",
+            colNum: 4,
+          },
+          {
+            section: "Cluster X - 7",
+            colNum: 3,
           },
         ],
       },
