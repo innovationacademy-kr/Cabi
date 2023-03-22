@@ -101,6 +101,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     if (props.lent_type === CabinetType.PRIVATE) lentType = "개인";
     else if (props.lent_type === CabinetType.SHARE) lentType = "공유";
     else if (props.lent_type === CabinetType.CLUB) lentType = "동아리";
+    else if (props.lent_type === CabinetType.LONGTERM) lentType = "장기 대여";
 
     if (!cabinetLabelText) return `[${lentType}]`;
     return `[${lentType}] ${cabinetLabelText}`;

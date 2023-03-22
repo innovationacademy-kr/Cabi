@@ -10,6 +10,7 @@ export enum additionalModalType {
 
 export const cabinetIconSrcMap = {
   [CabinetType.PRIVATE]: "/src/assets/images/privateIcon.svg",
+  [CabinetType.LONGTERM]: "/src/assets/images/longTermIcon.svg",
   [CabinetType.SHARE]: "/src/assets/images/shareIcon.svg",
   [CabinetType.CLUB]: "/src/assets/images/clubIcon.svg",
 };
@@ -108,5 +109,6 @@ export const cabinetStatusLabelMap = {
 export const cabinetTypeLabelMap = {
   [CabinetType.CLUB]: "동아리 사물함",
   [CabinetType.PRIVATE]: "개인 사물함",
+  [CabinetType.LONGTERM]: "장기 대여 사물함",
   [CabinetType.SHARE]: "공유 사물함",
 };
