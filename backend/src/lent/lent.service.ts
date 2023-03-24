@@ -41,7 +41,12 @@ export class LentService {
       switch (excepction_type) {
         case LentExceptionType.LENT_CLUB:
           throw new HttpException(
-            `사물함은 동아리 전용 사물함입니다`,
+            `동아리 전용 사물함입니다`,
+            HttpStatus.I_AM_A_TEAPOT,
+          );
+        case LentExceptionType.LENT_LONG_TERM:
+          throw new HttpException(
+            `장기 대여 사물함입니다`,
             HttpStatus.I_AM_A_TEAPOT,
           );
         case LentExceptionType.LENT_UNDER_PENALTY_DAY_SHARE:

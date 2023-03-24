@@ -1,4 +1,11 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import Lent from 'src/entities/lent.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
@@ -49,16 +56,19 @@ export class LentTools {
   ): Promise<void> {
     this.logger.debug(`Called ${LentTools.name} ${this.setExpireTimeAll.name}`);
     const expire_time = new Date();
-    if (lent_type === LentType.PRIVATE) {
-      expire_time.setDate(
-        last_lent_time.getDate() +
-          this.configService.get<number>('lent_term.private'),
-      );
-    } else {
-      expire_time.setDate(
-        last_lent_time.getDate() +
-          this.configService.get<number>('lent_term.share'),
-      );
+    switch (lent_type) {
+      case LentType.PRIVATE:
+        expire_time.setDate(
+          last_lent_time.getDate() +
+            this.configService.get<number>('lent_term.private'),
+        );
+        break;
+      case LentType.SHARE:
+        expire_time.setDate(
+          last_lent_time.getDate() +
+            this.configService.get<number>('lent_term.share'),
+        );
+        break;
     }
     await this.lentRepository.setExpireTimeAll(cabinet_id, expire_time);
   }
@@ -85,6 +95,10 @@ export class LentTools {
         // 동아리 사물함인지 확인
         if (cabinet.lent_type === LentType.CLUB) {
           excepction_type = LentExceptionType.LENT_CLUB;
+          break;
+        }
+        if (cabinet.lent_type === LentType.LONG_TERM) {
+          excepction_type = LentExceptionType.LENT_LONG_TERM;
           break;
         }
         if (cabinet.lent_type === LentType.SHARE) {
@@ -181,6 +195,12 @@ export class LentTools {
     const lent = cabinet.lents.filter(
       (lent) => lent.lent_user_id === user.user_id,
     )[0];
+    if (cabinet.lent_type === LentType.LONG_TERM) {
+      throw new HttpException(
+        `장기 대여 사물함은\n중도 반납하실 수 없습니다.\n다른 유저에게 양도바랍니다.`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
     const lent_count = cabinet.lents.length;
     // 2. cabinet_status에 따라 처리.
     switch (cabinet.status) {
