@@ -35,7 +35,9 @@ const LentModal: React.FC<{
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
+  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
+    targetCabinetInfoState
+  );
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
@@ -43,7 +45,11 @@ const LentModal: React.FC<{
   const formattedExpireDate = getExpireDateString(props.lentType);
   const privateLentDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
     귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
-  const shareLentDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
+  const shareLentDetail = `${
+    targetCabinetInfo.lent_info.length === 2
+      ? `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
+      : ""
+  }
 대여 후 ${
     import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD
   }시간 이내 취소(반납) 시,

@@ -10,7 +10,6 @@ import {
 } from "@/recoil/atoms";
 import {
   axiosCabinetById,
-  axiosGetOverdueUserList,
   axiosMyLentInfo,
   axiosReturn,
 } from "@/api/axios/axios.custom";
@@ -24,7 +23,6 @@ import { getExpireDateString } from "@/utils";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
-import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
 
 const ReturnModal: React.FC<{
   lentType: string;
@@ -34,7 +32,6 @@ const ReturnModal: React.FC<{
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
-  const setOverdueUserList = useSetRecoilState(overdueCabinetListState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -47,7 +44,11 @@ const ReturnModal: React.FC<{
     "myCabinet",
     myLentInfo.lent_info ? myLentInfo.lent_info[0].expire_time : undefined
   );
-  const returnDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
+  const returnDetail = `${
+    formattedExpireDate.split("/")[0] === "9999"
+      ? ""
+      : `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
+  }
 지금 반납 하시겠습니까?`;
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
@@ -70,7 +71,6 @@ const ReturnModal: React.FC<{
       } catch (error) {
         throw error;
       }
-  
     } catch (error: any) {
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);
