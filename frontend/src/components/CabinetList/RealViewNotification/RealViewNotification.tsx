@@ -35,7 +35,6 @@ const RealViewNotification: React.FC<{ colNum: number }> = (props) => {
 export default RealViewNotification;
 
 const ToolTipIcon = styled.div<{ hasEnoughWidth: boolean }>`
-  display: ${(props) => (props.hasEnoughWidth ? "none" : "block")};
   background-image: url("/src/assets/images/cautionSign.svg");
   width: 24px;
   height: 24px;
@@ -65,7 +64,8 @@ const TooltipBox = styled.div`
     padding 0.5s ease-in-out;
 `;
 const TooltipCard = styled.div<{ hasEnoughWidth: boolean }>`
-  display: ${({ hasEnoughWidth }) => (hasEnoughWidth ? "none" : "block")};
+  visibility: ${({ hasEnoughWidth }) =>
+    hasEnoughWidth ? "hidden" : "visible"};
   position: relative;
   width: 100%;
   height: 24px;
