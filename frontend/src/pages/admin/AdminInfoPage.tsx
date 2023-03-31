@@ -126,8 +126,8 @@ const AdminInfo = () => {
         <AdminTable
           data={brokenCabinetList}
           handleClick={(e) => onClick(e, "broken")}
-          thInfo={["위치 정보", "확인 일자", "사유"]}
-          ratio={["30%", "40%", "30%"]}
+          thInfo={["위치 정보", "섹  션", ""]}
+          ratio={["50%", "50%", "0%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}
           ROW_COUNT={5}
         />
