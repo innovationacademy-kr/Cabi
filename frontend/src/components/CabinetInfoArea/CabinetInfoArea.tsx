@@ -77,7 +77,7 @@ const CabinetInfoArea: React.FC<{
       <NotSelectedStyled>
         <CabiLogoStyled src={cabiLogo} />
         <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
-          사물함/유저를 <br />
+          사물함를 <br />
           선택해주세요
         </TextStyled>
       </NotSelectedStyled>

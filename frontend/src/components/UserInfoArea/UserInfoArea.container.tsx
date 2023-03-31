@@ -45,8 +45,6 @@ const UserInfoAreaContainer = (): JSX.Element => {
       return "사용 불가";
     // 동아리 사물함
     else if (selectedCabinetInfo.lent_type === "CLUB") return "동아리 사물함";
-    else if (selectedCabinetInfo.lent_type === "LONG_TERM")
-      return "장기 대여 사물함";
     // 사용 중 사물함
     else if (
       selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
