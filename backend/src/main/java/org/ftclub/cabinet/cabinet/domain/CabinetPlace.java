@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Access(value = AccessType.PROPERTY)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CabinetPlace {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

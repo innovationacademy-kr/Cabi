@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: test_db
+      MARIADB_USER: testuser
+      MARIADB_PASSWORD: userpassword
+    ports:
+      - "3306:3306"

@@ -7,22 +7,20 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Access(value = AccessType.PROPERTY)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BanHistory {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long banHistoryId;
 
-    @Column
     private Long cabinetId;
 
-    @Column @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date bannedAt;
 
-    @Column @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date unbannedAt;
 
-    @Column @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private BanType banType;
 
     @ManyToOne(fetch = FetchType.LAZY)
