@@ -9,29 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Access(value = AccessType.PROPERTY)
-@Table(name = "cabinet")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cabinet {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cabinet_id")
     private Long cabinetId;
 
-    @Column(name = "visible_num")
     private Integer visibleNum;
 
-    @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     private CabinetStatus status;
 
-    @Column(name = "lent_type")
     @Enumerated(value = EnumType.STRING)
     private LentType lentType;
 
-    @Column(name = "max_user")
     private Integer maxUser;
 
-    @Column(name = "status_note", length = 64)
     private String statusNote;
 
     @Embedded Grid grid;

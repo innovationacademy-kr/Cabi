@@ -9,16 +9,15 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Access(value = AccessType.PROPERTY)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LentHistory {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long lentHistoryId;
     @Column(nullable = false) @Temporal(value = TemporalType.TIMESTAMP)
     private Date startAt = null;
-    @Column @Temporal(value = TemporalType.TIMESTAMP)
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date endedAt = null;
-    @Column @Temporal(value = TemporalType.TIMESTAMP)
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date expiredAt = null;
 
     @ManyToOne(fetch = FetchType.LAZY)

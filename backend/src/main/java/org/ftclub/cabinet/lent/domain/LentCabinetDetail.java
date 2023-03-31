@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Access(value = AccessType.PROPERTY)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LentCabinetDetail {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
