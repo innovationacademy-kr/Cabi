@@ -46,7 +46,8 @@ const LentModal: React.FC<{
   const privateLentDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
     귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
   const shareLentDetail = `${
-    targetCabinetInfo.lent_info.length === 2
+    targetCabinetInfo.lent_info.length > 0 &&
+    targetCabinetInfo.lent_info[0].expire_time !== null
       ? `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
       : ""
   }

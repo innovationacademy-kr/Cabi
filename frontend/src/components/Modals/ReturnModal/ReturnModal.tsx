@@ -39,13 +39,12 @@ const ReturnModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-
   const formattedExpireDate = getExpireDateString(
     "myCabinet",
     myLentInfo.lent_info ? myLentInfo.lent_info[0].expire_time : undefined
   );
   const returnDetail = `${
-    formattedExpireDate.split("/")[0] === "9999"
+    myLentInfo && myLentInfo.lent_info[0].expire_time === null
       ? ""
       : `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
   }
