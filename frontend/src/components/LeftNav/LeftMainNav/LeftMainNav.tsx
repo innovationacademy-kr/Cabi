@@ -28,7 +28,11 @@ const LeftMainNav = ({
       <TopSectionStyled>
         <TopBtnsStyled>
           <TopBtnStyled
-            className={pathname.includes("home") ? "leftNavButtonActive" : ""}
+            className={
+              pathname.includes("home")
+                ? "leftNavButtonActive cabiButton"
+                : "cabiButton"
+            }
             onClick={onClickHomeButton}
           >
             Home
@@ -38,8 +42,8 @@ const LeftMainNav = ({
               <TopBtnStyled
                 className={
                   pathname.includes("main") && floor === currentFloor
-                    ? "leftNavButtonActive"
-                    : ""
+                    ? "leftNavButtonActive cabiButton"
+                    : "cabiButton"
                 }
                 onClick={() => onClickFloorButton(floor)}
                 key={index}
@@ -53,7 +57,11 @@ const LeftMainNav = ({
         <BottomBtnsStyled>
           {isAdmin && (
             <BottomBtnStyled
-              className={pathname.includes("search") ? "active" : ""}
+              className={
+                pathname.includes("search")
+                  ? "active cabiButton"
+                  : " cabiButton"
+              }
               src={"/src/assets/images/search.svg"}
               onClick={onClickSearchButton}
             >
@@ -62,14 +70,19 @@ const LeftMainNav = ({
             </BottomBtnStyled>
           )}
           <BottomBtnStyled
-            className={pathname.includes("log") ? "active" : ""}
+            className={
+              pathname.includes("log") ? "active cabiButton" : " cabiButton"
+            }
             src={"/src/assets/images/log.svg"}
             onClick={onClickLentLogButton}
           >
             <div></div>
             Log
           </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/slack.svg"}>
+          <BottomBtnStyled
+            src={"/src/assets/images/slack.svg"}
+            className="cabiButton"
+          >
             <a
               href="https://42born2code.slack.com/archives/C02V6GE8LD7"
               target="_blank"
@@ -79,7 +92,10 @@ const LeftMainNav = ({
               Contact
             </a>
           </BottomBtnStyled>
-          <BottomBtnStyled src={"/src/assets/images/clubIconGray.svg"}>
+          <BottomBtnStyled
+            src={"/src/assets/images/clubIconGray.svg"}
+            className="cabiButton"
+          >
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
               target="_blank"
@@ -91,6 +107,7 @@ const LeftMainNav = ({
           </BottomBtnStyled>
 
           <BottomBtnStyled
+            className="cabiButton"
             onClick={onClickLogoutButton}
             src={"/src/assets/images/close-square.svg"}
           >

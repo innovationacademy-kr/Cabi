@@ -59,6 +59,11 @@ const MemoModal = ({
             <ContentItemWrapperStyled isVisible={cabinetType !== "PRIVATE"}>
               <ContentItemTitleStyled>사물함 이름</ContentItemTitleStyled>
               <ContentItemInputStyled
+                onKeyUp={(e: any) => {
+                  if (e.key === "Enter") {
+                    handleClickSave(e);
+                  }
+                }}
                 placeholder={cabinetTitle ? cabinetTitle : ""}
                 mode={mode}
                 defaultValue={cabinetTitle ? cabinetTitle : ""}
@@ -70,6 +75,11 @@ const MemoModal = ({
             <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>비밀 메모</ContentItemTitleStyled>
               <ContentItemInputStyled
+                onKeyUp={(e: any) => {
+                  if (e.key === "Enter") {
+                    handleClickSave(e);
+                  }
+                }}
                 placeholder={cabinetMemo}
                 mode={mode}
                 defaultValue={cabinetMemo}

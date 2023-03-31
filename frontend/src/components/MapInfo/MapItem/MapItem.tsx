@@ -24,7 +24,7 @@ const MapItem: React.FC<{
     closeMap();
   };
   return (
-    <ItemStyled onClick={onClick} info={info}>
+    <ItemStyled className="cabiButton" onClick={onClick} info={info}>
       {info.name}
     </ItemStyled>
   );

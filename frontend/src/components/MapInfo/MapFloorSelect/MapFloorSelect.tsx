@@ -20,7 +20,7 @@ const MapFloorSelect = ({ floor, setFloor, floorInfo }: IMapFloorSelect) => {
 
   return (
     <div style={{ position: "relative" }}>
-      <MapFloorSelectStyled onClick={onClickFloorOption}>
+      <MapFloorSelectStyled className="cabiButton" onClick={onClickFloorOption}>
         {`${floor}층`}
       </MapFloorSelectStyled>
       <MapFloorSelectOption selectFloor={selectFloor} floorInfo={floorInfo} />

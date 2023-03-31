@@ -17,6 +17,7 @@ const LocationListItem: React.FC<ILocationListItem> = ({
 }) => {
   return (
     <LocationListItemStyled
+      className="cabiButton"
       onClick={() => {
         onUpdate(location);
         onClose(false);
@@ -48,15 +49,23 @@ const TopNav: React.FC<{
 
   return (
     <TopNavContainerStyled id="topNavWrap">
-      <LogoStyled>
+      <LogoStyled className="cabiButton">
         <LogoDivStyled>
-          <img onClick={onClickLogo} src="/src/assets/images/logo.svg" alt="" />
+          <img
+            className="cabiButton"
+            onClick={onClickLogo}
+            src="/src/assets/images/logo.svg"
+            alt=""
+          />
         </LogoDivStyled>
-        <LocationSelectBoxStyled>
-          <div onClick={() => setLocationClicked(!locationClicked)}>
+        <LocationSelectBoxStyled className="cabiButton">
+          <div
+            className="cabiButton"
+            onClick={() => setLocationClicked(!locationClicked)}
+          >
             {currentLocationName}
           </div>
-          <LocationListStyled clicked={locationClicked}>
+          <LocationListStyled clicked={locationClicked} className="cabiButton">
             {locationsList.map((location, index) => (
               <LocationListItem
                 location={location}
@@ -69,7 +78,7 @@ const TopNav: React.FC<{
         </LocationSelectBoxStyled>
       </LogoStyled>
       {isAdmin && <SearchBar />}
-      <TopNavButtonGroup isAdmin={isAdmin}/>
+      <TopNavButtonGroup isAdmin={isAdmin} />
     </TopNavContainerStyled>
   );
 };

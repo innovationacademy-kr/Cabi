@@ -34,6 +34,7 @@
 
 a {
   color: var(--main-color);
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -79,6 +80,7 @@ button {
   font-family: var(--main-font);
   border-radius: 6px;
   font-weight: 300;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -150,4 +152,8 @@ input {
 .leftNavButtonActive {
   background: var(--main-color);
   color: var(--white) !important;
+}
+
+.cabiButton {
+  -webkit-tap-highlight-color: transparent;
 }
