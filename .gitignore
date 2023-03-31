@@ -51,3 +51,7 @@ aria_log.*
 ib_logfile*
 ibdata*
 ibtmp*
+
+#build files
+.gradle
+build
