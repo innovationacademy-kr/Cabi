@@ -1,11 +1,10 @@
-@media screen and (max-width: 1040px) {
+@media screen and (max-width: 1300px) {
   #infoWrap > .titleContainer {
     width: 90%;
     max-width: 600px;
   }
 
   #infoWrap .section {
-    display: flex;
     flex-direction: column;
     align-items: center;
   }

@@ -87,29 +87,6 @@ const ServiceManual = ({
             비밀번호는 동아리 내에서 공유하여 이용하세요.
           </p>
         </article>
-        <article className="article">
-          <div>
-            <img src="/src/assets/images/longTermIcon.svg" alt="" />
-          </div>
-          <h3>장기 대여 사물함</h3>
-          <p>
-            모집 기간에만 대여할 수 있습니다.
-            <br />
-            새로운 기수가 들어올 때 갱신됩니다.
-            <br />
-            사물함 대여는{" "}
-            <AtagStyled
-              href="https://42born2code.slack.com/archives/C02V6GE8LD7"
-              target="_blank"
-              title="슬랙 캐비닛 채널 새창으로 열기"
-            >
-              슬랙 캐비닛 채널
-            </AtagStyled>
-            로 문의주세요.
-            <br />
-            장기 대여 사물함은 <strong>반납</strong>할 수 없습니다.
-          </p>
-        </article>
       </InfoSectionStyled>
       <button onClick={lentStartHandler}>시작하기</button>
     </WrapperStyled>
@@ -152,8 +129,8 @@ const TitleContainerStyled = styled.div`
 `;
 
 const InfoSectionStyled = styled.section`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 50%);
+  display: flex;
+  justify-content: space-between;
   margin-top: 40px;
   width: 90%;
   max-width: 1500px;
