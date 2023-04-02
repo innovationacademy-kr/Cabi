@@ -4,6 +4,6 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class Grid {
-    private Integer row;
-    private Integer col;
+    private Integer grid_row;
+    private Integer grid_col;
 }

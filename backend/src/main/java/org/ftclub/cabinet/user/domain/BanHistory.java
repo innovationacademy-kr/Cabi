@@ -24,7 +24,7 @@ public class BanHistory {
     private BanType banType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "USER_ID")
     private User user;
 
     public BanHistory(Long banHistoryId, Long cabinetId, Date bannedAt, Date unbannedAt, BanType banType, User user) {
