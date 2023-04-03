@@ -21,15 +21,15 @@ public class LentHistory {
     private Date expiredAt = null;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CABINET_ID")
+    @JoinColumn(name = "cabinet_id")
     private Cabinet cabinet;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LENT_CABINET_DETAIL_ID")
+    @JoinColumn(name = "lent_cabinet_detail_id")
     private LentCabinetDetail lentCabinetDetail;
 
     public LentHistory(Date startAt, Date expiredAt, User user, Cabinet cabinet, LentCabinetDetail lentCabinetDetail) {

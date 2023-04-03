@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,12 +11,10 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class
-User {
+public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
     private Long userId;
 
     @Column(unique = true)
