@@ -9,6 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CabinetPlace {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CABINET_PLACE_ID")
     private Long cabinetPlaceId;
 
     @Embedded
