@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.cabinet.domain;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cabinet {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CABINET_ID")
     private Long cabinetId;
 
     private Integer visibleNum;
@@ -29,7 +31,7 @@ public class Cabinet {
     @Embedded Grid grid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cabinet_place_id")
+    @JoinColumn(name = "CABINET_PLACE_ID")
     private CabinetPlace cabinetPlace;
 
     @OneToMany(mappedBy = "cabinet", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -43,4 +45,6 @@ public class Cabinet {
         this.grid = grid;
         this.cabinetPlace = cabinetPlace;
     }
+
+
 }
