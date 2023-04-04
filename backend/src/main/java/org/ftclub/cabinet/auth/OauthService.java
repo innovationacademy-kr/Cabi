@@ -106,18 +106,17 @@ public class OauthService {
 
 		return json.get("access_token").toString();
 	}
-
 	public JSONObject getFtProfile(String token) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.setBearerAuth(token);
-
-		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.exchange(ftApiProperties.getUserInfoUri(), HttpMethod.GET, requestEntity, String.class);
+		headers.setBearerAuth(token);
+		HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
+		ResponseEntity<String> response = restTemplate.exchange(
+				ftApiProperties.getUserInfoUri(),
+				HttpMethod.GET,
+				requestEntity,
+				String.class);
 		JSONObject profile = null;
-
 		if (response.getStatusCode() == HttpStatus.OK) {
 			profile = new JSONObject(response.getBody());
 		} else {
