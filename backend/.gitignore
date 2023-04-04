@@ -1,6 +1,7 @@
 #build files
-.gradle
+/.gradle
 /build
+/src/main/resources
 
 #properties and ymls
 **/application*.yml
