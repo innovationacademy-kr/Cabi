@@ -1,4 +1,4 @@
-package hello.hellospring.author;
+package org.ftclub.cabinet.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -11,10 +11,23 @@ import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtProvider {
+public class TokenProvider {
 	private static final String SECRET = "my_secretisverylongmy_secretisverylongmy_secretisverylongmy_secretisverylongmy_secretisverylongmy_secretisverylongmy_secretisverylongmy_secretisverylongmy_secretisverylong";
 
-	public static String creatToken(String subject, long expiry) {
+//	public static String creatToken(String subject, long expiry) {
+//		//error handling for expiry
+//		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
+//
+//		byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(SECRET);
+//		Key signingKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
+//
+//		return Jwts.builder()
+//				.setSubject(subject)
+//				.signWith(signingKey, signatureAlgorithm)
+//				.setExpiration(new Date(System.currentTimeMillis() + expiry))
+//				.compact();
+//	}
+	public static String createToken(String subject, AdminProfileDto profile) {
 		//error handling for expiry
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 
@@ -24,7 +37,7 @@ public class JwtProvider {
 		return Jwts.builder()
 				.setSubject(subject)
 				.signWith(signingKey, signatureAlgorithm)
-				.setExpiration(new Date(System.currentTimeMillis() + expiry))
+				.setExpiration(new Date(System.currentTimeMillis()))
 				.compact();
 	}
 

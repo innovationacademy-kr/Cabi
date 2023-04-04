@@ -1,4 +1,4 @@
-package hello.hellospring.author;
+package org.ftclub.cabinet.auth;
 
 import org.springframework.stereotype.Component;
 
@@ -7,8 +7,8 @@ public class TokenValidator {
 
 	public static Boolean isTokenValid(String token, String role) {
 		if (role == "USER") {
-			System.out.printf("subject = %s\n", JwtProvider.getSubject(token));
-			if (JwtProvider.getSubject(token).equals("hello!")) {
+			System.out.printf("subject = %s\n", TokenProvider.getSubject(token));
+			if (TokenProvider.getSubject(token).equals("hello!")) {
 				System.out.printf("token is validated!\n", token);
 				return (true);
 			}

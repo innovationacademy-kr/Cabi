@@ -1,9 +1,9 @@
-package hello.hellospring.author;
+package org.ftclub.cabinet.auth;
 
-import hello.hellospring.properties.SiteUrlProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.ftclub.cabinet.config.SiteUrlProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,7 +29,7 @@ public class AuthAspect {
 				.getRequest();
 		HttpServletResponse	response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getResponse();
-		TokenValidator		tokenValidator = new TokenValidator(); // 객체 싱글톤으로 쓰고 싶은데..
+		TokenValidator tokenValidator = new TokenValidator(); // 객체 싱글톤으로 쓰고 싶은데..
 		String				token = null;
 
 		Cookie[] cookies = request.getCookies();
