@@ -51,12 +51,3 @@ aria_log.*
 ib_logfile*
 ibdata*
 ibtmp*
-
-#build files
-.gradle
-backend/build*/
-
-#properties and ymls
-**/application*.yml
-**/application*.yaml
-**/application*.properties

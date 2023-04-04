@@ -1,0 +1,8 @@
+#build files
+.gradle
+/build
+
+#properties and ymls
+**/application*.yml
+**/application*.yaml
+**/application*.properties
