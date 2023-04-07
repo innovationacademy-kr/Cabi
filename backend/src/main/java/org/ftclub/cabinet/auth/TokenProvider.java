@@ -3,6 +3,7 @@ package org.ftclub.cabinet.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.ftclub.cabinet.user.domain.UserRole;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +36,20 @@ public class TokenProvider {
 		if (provider == "google") {
 			claims.put("email", profile.get("email").toString());
 		}
+		if (provider == "ft") {
+			claims.put("intra_id", profile.get("login").toString());
+			claims.put("email", profile.get("email").toString());
+			claims.put("blackholed_at", profile.getJSONArray("cursus_users")
+												.getJSONObject(1)
+												.get("blackholed_at"));
+			claims.put("role", UserRole.USER);
+		}
 		return claims;
 	}
 
 	public static String createToken(String provider, JSONObject profile) {
 		//error handling for expiry
-		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
+		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 		byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(SECRET);
 		Key signingKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());

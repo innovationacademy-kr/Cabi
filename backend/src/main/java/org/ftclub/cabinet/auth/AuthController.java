@@ -22,7 +22,11 @@ public class AuthController {
 	private final OauthService oauthService;
 
 	@Autowired
+	private final AuthService authService;
+
+	@Autowired
 	private final SiteUrlProperties siteUrlProperties;
+
 	@GetMapping("/login")
 	public void login(HttpServletResponse response) throws IOException {
 		oauthService.sendToFtApi(response);
@@ -39,6 +43,8 @@ public class AuthController {
 		cookie.setPath("/");
 		res.addCookie(cookie);
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
+//		System.out.printf("user = %s\n", authService.getUserByName("sanan"));
+		authService.saveTest();
 	}
 
 }
