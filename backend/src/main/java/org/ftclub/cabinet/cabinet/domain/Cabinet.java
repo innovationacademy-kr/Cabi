@@ -10,22 +10,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "CABINET")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cabinet {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CABINET_ID")
     private Long cabinetId;
 
+    @Column(name = "VISIBLE_NUM")
     private Integer visibleNum;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(name = "STATUS", length = 32, nullable = false)
     private CabinetStatus status;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(name = "LENT_TYPE", length = 16, nullable = false)
     private LentType lentType;
 
+    @Column(name = "MAX_USER", nullable = false)
     private Integer maxUser;
 
+    @Column(name = "STATUS_NOTE", length = 64)
     private String statusNote;
 
     @Embedded Grid grid;

@@ -9,31 +9,37 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "LENT_HISTORY")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LentHistory {
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "LENT_HISTORY_ID")
     private Long lentHistoryId;
-    @Column(nullable = false) @Temporal(value = TemporalType.TIMESTAMP)
-    private Date startAt = null;
     @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "STARTED_AT",nullable = false)
+    private Date startedAt;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "ENDED_AT")
     private Date endedAt = null;
     @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "EXPIRED_AT")
     private Date expiredAt = null;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CABINET_ID")
+    @JoinColumn(name = "CABINET_ID", nullable = false)
     private Cabinet cabinet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LENT_CABINET_DETAIL_ID")
     private LentCabinetDetail lentCabinetDetail;
 
-    public LentHistory(Date startAt, Date expiredAt, User user, Cabinet cabinet, LentCabinetDetail lentCabinetDetail) {
-        this.startAt = startAt;
+    public LentHistory(Date startedAt, Date expiredAt, User user, Cabinet cabinet, LentCabinetDetail lentCabinetDetail) {
+        this.startedAt = startedAt;
         this.expiredAt = expiredAt;
         this.user = user;
         this.cabinet = cabinet;
