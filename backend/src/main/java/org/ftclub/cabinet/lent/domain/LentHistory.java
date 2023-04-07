@@ -15,16 +15,6 @@ public class LentHistory {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LENT_HISTORY_ID")
     private Long lentHistoryId;
-    @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "STARTED_AT",nullable = false)
-    private Date startedAt;
-
-    @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "ENDED_AT")
-    private Date endedAt = null;
-    @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "EXPIRED_AT")
-    private Date expiredAt = null;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
@@ -37,6 +27,18 @@ public class LentHistory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LENT_CABINET_DETAIL_ID")
     private LentCabinetDetail lentCabinetDetail;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "STARTED_AT",nullable = false)
+    private Date startedAt;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "EXPIRED_AT")
+    private Date expiredAt = null;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "ENDED_AT")
+    private Date endedAt = null;
 
     public LentHistory(Date startedAt, Date expiredAt, User user, Cabinet cabinet, LentCabinetDetail lentCabinetDetail) {
         this.startedAt = startedAt;
