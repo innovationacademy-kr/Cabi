@@ -61,3 +61,6 @@ build
 application*.yml
 application*.yaml
 application*.properties
+!application-test.yml
+!application-test.yaml
+!application-test.properties
