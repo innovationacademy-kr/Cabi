@@ -1,3 +1,9 @@
 spring:
   profiles:
     active: local
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        globally_quoted_identifiers: true
