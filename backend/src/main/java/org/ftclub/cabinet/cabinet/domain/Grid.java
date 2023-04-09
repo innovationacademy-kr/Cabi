@@ -6,8 +6,8 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Grid {
 
-    @Column(name = "row")
+    @Column(name = "ROW")
     private Integer row;
-    @Column(name = "col")
+    @Column(name = "COL")
     private Integer col;
 }
