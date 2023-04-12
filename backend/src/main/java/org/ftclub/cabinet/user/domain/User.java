@@ -12,21 +12,27 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class
-User {
+public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
     private Long userId;
 
-    @Column(unique = true)
+    @Column(name = "NAME", length = 32, unique = true, nullable = false)
     private String name;
-    @Column(unique = true)
+    @Column(name = "EMAIL", unique = true)
     private String email;
     @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "BLACKHOLED_AT")
     private Date blackholedAt = null;
+
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column(name = "DELETED_AT", length = 32)
+    private Date deletedAt = null;
+
     @Enumerated(value = EnumType.STRING)
+    @Column(name = "ROLE", length = 32, nullable = false)
     private UserRole role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

@@ -5,12 +5,15 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class MapArea {
-    @Column(name = "start_x")
+    @Column(name = "START_X")
     private Integer startX;
-    @Column(name = "end_x")
+
+    @Column(name = "END_X")
     private Integer endX;
-    @Column(name = "start_y")
+
+    @Column(name = "START_Y")
     private Integer startY;
-    @Column(name = "end_y")
+
+    @Column(name = "END_Y")
     private Integer endY;
 }
