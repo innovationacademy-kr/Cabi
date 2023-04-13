@@ -8,15 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "LENT_CABINET_DETAIL")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LentCabinetDetail {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "LENT_CABINET_DETAIL_ID")
     private Long lentCabinetDetailId;
 
-    @Column(length = 64)
+    @Column(name = "TITLE", length = 64)
     private String title;
-    @Column(length = 64)
+
+    @Column(name = "MEMO", length = 64)
     private String memo;
+
     @OneToMany(mappedBy = "lentCabinetDetail", fetch = FetchType.LAZY)
     private List<LentHistory> lentHistoryList = new ArrayList<>();
 
