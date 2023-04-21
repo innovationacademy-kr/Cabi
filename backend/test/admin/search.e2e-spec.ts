@@ -9,10 +9,8 @@ import { initializeTransactionalContext } from 'typeorm-transactional';
 import { initTestDB, loadSQL } from '../utils';
 import { AdminUserDto } from 'src/admin/dto/admin.user.dto';
 import { UserInfoPagenationDto } from 'src/admin/dto/user.info.pagenation.dto';
-import { UserCabinetInfoPagenationDto } from 'src/admin/dto/user.cabinet.info.pagenation.dto';
 import LentType from 'src/enums/lent.type.enum';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
-import { UserCabinetInfoDto } from 'src/admin/dto/user.cabinet.info.dto';
 
 /* eslint-disable */
 const timekeeper = require('timekeeper');

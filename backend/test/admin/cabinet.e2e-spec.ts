@@ -346,7 +346,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
         const response = await request(app.getHttpServer())
           .get(`${route}/count/floor`)
           .set('Authorization', `Bearer ${token}`);
-        let allFloorInfo: CabinetFloorDto[] = response.body;
+        const allFloorInfo: CabinetFloorDto[] = response.body;
 
         //then : 200
         expect(response.status).toBe(HttpStatus.OK);

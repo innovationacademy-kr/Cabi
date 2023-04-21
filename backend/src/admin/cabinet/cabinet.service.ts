@@ -75,12 +75,12 @@ export class AdminCabinetService {
     );
     await this.throwIfNotExistedCabinet(cabinetId);
     await this.throwIfHasBorrower(cabinetId);
-	if (lentType == LentType.PRIVATE)
-		await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 1);
-	if (lentType == LentType.SHARE)
-		await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 3);
-	if (lentType == LentType.CLUB)
-		await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 1);
+    if (lentType == LentType.PRIVATE)
+      await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 1);
+    if (lentType == LentType.SHARE)
+      await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 3);
+    if (lentType == LentType.CLUB)
+      await this.adminCabinetRepository.updateCabinetMaxUser(cabinetId, 1);
     await this.adminCabinetRepository.updateLentType(cabinetId, lentType);
   }
 
@@ -153,7 +153,7 @@ export class AdminCabinetService {
 
   async updateCabinetMaxUser(
     cabinetId: number,
-	maxUser: number,
+    maxUser: number,
   ): Promise<void> {
     this.logger.debug(
       `Called ${AdminCabinetService.name} ${this.updateCabinetMaxUser.name}`,

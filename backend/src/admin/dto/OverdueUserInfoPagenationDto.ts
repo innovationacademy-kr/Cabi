@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OverdueUserCabinetInfoDto } from './Overdue.user.cabinet.info.dto';
-import { BlockedUserInfoDto } from './blocked.user.info.dto';
 
 export class OverdueUserInfoPagenationDto {
   @ApiProperty({
