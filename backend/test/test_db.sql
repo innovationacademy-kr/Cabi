@@ -35,6 +35,7 @@ CREATE TABLE `admin_user` (
 
 LOCK TABLES `admin_user` WRITE;
 /*!40000 ALTER TABLE `admin_user` DISABLE KEYS */;
+INSERT INTO `admin_user` VALUES ('normal@example.com',1),('super@example.com',2),('unauth@example.com',0);
 /*!40000 ALTER TABLE `admin_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +93,7 @@ CREATE TABLE `cabinet` (
   `status_note` varchar(64) DEFAULT NULL COMMENT '사물함 상태 메모',
   PRIMARY KEY (`cabinet_id`),
   UNIQUE KEY `cabinet_id` (`cabinet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='사물함 정보';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='사물함 정보';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +102,7 @@ CREATE TABLE `cabinet` (
 
 LOCK TABLES `cabinet` WRITE;
 /*!40000 ALTER TABLE `cabinet` DISABLE KEYS */;
-INSERT INTO `cabinet` VALUES (1,1,'새롬관',2,'Oasis','AVAILABLE','PRIVATE',3,0,NULL,NULL,NULL),(2,2,'새롬관',2,'End of Cluster 2','BROKEN','PRIVATE',3,0,NULL,NULL,NULL),(3,3,'새롬관',4,'Oasis','BANNED','PRIVATE',3,0,NULL,NULL,NULL),(4,4,'새롬관',4,'End of Cluster 4','SET_EXPIRE_FULL','PRIVATE',3,0,NULL,NULL,NULL),(5,5,'새롬관',2,'Cluster 1 - OA','AVAILABLE','SHARE',3,0,NULL,NULL,NULL),(6,6,'새롬관',2,'End of Cluster 1','BROKEN','SHARE',3,0,NULL,NULL,NULL),(7,7,'새롬관',4,'Cluster 3 - OA','BANNED','SHARE',3,0,NULL,NULL,NULL),(8,8,'새롬관',4,'End of Cluster 3','SET_EXPIRE_FULL','SHARE',3,0,NULL,NULL,NULL),(9,9,'새롬관',5,'Oasis','SET_EXPIRE_AVAILABLE','SHARE',3,0,NULL,NULL,NULL),(10,10,'새롬관',2,'Cluster 1 - OA','AVAILABLE','SHARE',3,0,NULL,NULL,NULL),(11,11,'새롬관',5,'Cluster 5 - OA','SET_EXPIRE_AVAILABLE','SHARE',3,0,NULL,NULL,NULL),(12,12,'새롬관',2,'Cluster 1 - OA','SET_EXPIRE_FULL','CLUB',3,0,NULL,'CABI',NULL),(13,13,'새롬관',5,'End of Cluster 5','EXPIRED','PRIVATE',3,0,NULL,NULL,NULL),(14,14,'새롬관',4,'Cluster 3 - OA','EXPIRED','SHARE',3,0,NULL,NULL,NULL);
+INSERT INTO `cabinet` VALUES (1,1,'새롬관',2,'Oasis','AVAILABLE','PRIVATE',1,0,NULL,NULL,NULL),(2,2,'새롬관',2,'End of Cluster 2','BROKEN','PRIVATE',1,0,NULL,NULL,NULL),(3,3,'새롬관',4,'Oasis','BANNED','PRIVATE',1,0,NULL,NULL,NULL),(4,4,'새롬관',4,'End of Cluster 4','SET_EXPIRE_FULL','PRIVATE',1,0,NULL,NULL,NULL),(5,5,'새롬관',2,'Cluster 1 - OA','AVAILABLE','SHARE',3,0,NULL,NULL,NULL),(6,6,'새롬관',2,'End of Cluster 1','BROKEN','SHARE',3,0,NULL,NULL,NULL),(7,7,'새롬관',4,'Cluster 3 - OA','BANNED','SHARE',3,0,NULL,NULL,NULL),(8,8,'새롬관',4,'End of Cluster 3','SET_EXPIRE_FULL','SHARE',3,0,NULL,NULL,NULL),(9,9,'새롬관',5,'Oasis','SET_EXPIRE_AVAILABLE','SHARE',3,0,NULL,NULL,NULL),(10,10,'새롬관',2,'Cluster 1 - OA','AVAILABLE','SHARE',3,0,NULL,NULL,NULL),(11,11,'새롬관',5,'Cluster 5 - OA','SET_EXPIRE_AVAILABLE','SHARE',3,0,NULL,NULL,NULL),(12,12,'새롬관',2,'Cluster 1 - OA','SET_EXPIRE_FULL','CLUB',3,0,NULL,'CABI',NULL),(13,13,'새롬관',5,'End of Cluster 5','EXPIRED','PRIVATE',1,0,NULL,NULL,NULL),(14,14,'새롬관',4,'Cluster 3 - OA','EXPIRED','SHARE',3,0,NULL,NULL,NULL),(15,15,'새롬관',2,'Cluster 1 - OA','AVAILABLE','CLUB',3,0,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `cabinet` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -207,4 +208,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-04 16:37:24
+-- Dump completed on 2023-02-05 21:01:10
