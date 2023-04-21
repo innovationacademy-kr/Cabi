@@ -104,12 +104,6 @@ export class BlackholeService implements OnApplicationBootstrap {
     const cabinet = await this.userService.getCabinetDtoByUserId(user.user_id);
     if (cabinet) {
       this.logger.warn(`Return ${user.intra_id}'s cabinet`);
-      if (cabinet.lent_type === LentType.PRIVATE) {
-        await this.cabinetInfoService.updateCabinetStatus(
-          cabinet.cabinet_id,
-          CabinetStatusType.BANNED,
-        );
-      }
       await this.lentService.returnCabinet(user);
     }
     await this.userService.deleteUserById(user.user_id);
