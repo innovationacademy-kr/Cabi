@@ -1,18 +1,13 @@
-import { BadRequestException, INestApplication } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../../src/app.module';
 import * as request from 'supertest';
 import TypeOrmConfigService from '../../src/config/typeorm.config';
 import { JwtService } from '@nestjs/jwt';
-import { DataSource, QueryRunner } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { UserSessionDto } from '../../src/dto/user.session.dto';
-import { CabinetExtendDto } from '../../src/dto/cabinet.extend.dto';
-import { LentDto } from '../../src/dto/lent.dto';
-import { LogPagenationDto } from '../../src/admin/dto/log.pagenation.dto';
-import { CabinetLentLogDto } from '../../src/admin/dto/cabinet.lent.log.dto';
-import { log } from 'handlebars';
-import { initTestDB, loadSQL } from "../utils";
+import { initTestDB, loadSQL } from '../utils';
 
 describe('user module e2e test', () => {
   let app: INestApplication;

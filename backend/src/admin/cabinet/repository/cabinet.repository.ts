@@ -5,7 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Cabinet from 'src/entities/cabinet.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
-import { IsolationLevel, Propagation, Transactional } from 'typeorm-transactional';
+import {
+  IsolationLevel,
+  Propagation,
+  Transactional,
+} from 'typeorm-transactional';
 
 export class AdminCabinetRepository implements IAdminCabinetRepository {
   constructor(
@@ -63,7 +67,7 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
 
     return result.map((c) => c.lent_cabinet_id);
   }
-  
+
   @Transactional({
     propagation: Propagation.REQUIRED,
     isolationLevel: IsolationLevel.SERIALIZABLE,
@@ -156,9 +160,9 @@ export class AdminCabinetRepository implements IAdminCabinetRepository {
   })
   async updateCabinetMaxUser(
     cabinetId: number,
-	max_user: number,
+    max_user: number,
   ): Promise<void> {
-	await this.cabinetRepository
+    await this.cabinetRepository
       .createQueryBuilder(this.updateCabinetMaxUser.name)
       .update()
       .set({

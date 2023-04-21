@@ -115,9 +115,7 @@ export class AdminReturnService {
     }
   }
 
-  async returnCabinetBundle(
-    bundle: number[],
-  ): Promise<void> {
+  async returnCabinetBundle(bundle: number[]): Promise<void> {
     this.logger.debug(
       `Called ${AdminReturnService.name} ${this.returnCabinetBundle.name}`,
     );

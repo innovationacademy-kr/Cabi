@@ -12,7 +12,7 @@ export class OverdueUserCabinetInfoDto {
     example: '35',
   })
   cabinet_id: number;
-  
+
   @ApiProperty({
     description: '캐비닛 위치',
     example: '1f-100',
