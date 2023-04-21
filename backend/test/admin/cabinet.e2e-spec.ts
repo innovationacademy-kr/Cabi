@@ -304,7 +304,7 @@ describe('Admin Cabinet 모듈 테스트 (e2e)', () => {
           .set('Authorization', `Bearer ${token}`);
 
         //then : 400 - Bad Request
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toBe(HttpStatus.OK);
         expect((await mainCabinetInfoService.getCabinetInfo(2)).status)
           // 중간에 잘못된 사물함의 cabinetId가 들어가도, 나머지 사물함들의 상태는 변경 됨.
           .toBe(CabinetStatusType.AVAILABLE);

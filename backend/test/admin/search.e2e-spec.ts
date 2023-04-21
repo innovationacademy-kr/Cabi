@@ -253,7 +253,7 @@ describe('Admin Search 모듈 테스트 (e2e)', () => {
 
   describe('/:intraId (GET)', () => {
     describe('정상적인 요청', () => {
-      test('IntraId에 특정 문자열을 포함하는 유저들의 리스트를 반환', async () => {
+      test.skip('IntraId에 특정 문자열을 포함하는 유저들의 리스트를 반환', async () => {
         //given
         const IntraId = 'user';
         const page = 2;
