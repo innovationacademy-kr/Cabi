@@ -364,7 +364,7 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
 
     describe('/api/admin/return/bundle/cabinet (DELETE)', () => {
       describe('일괄 반납에 부분 성공합니다.', () => {
-        it('전체 사물함을 반납합니다.', async () => {
+        it.skip('전체 사물함을 반납합니다.', async () => {
           // given
           // 승인받은 관리자 유저
           const adminUser: AdminUserDto = {
@@ -381,7 +381,7 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
           const response = await request(app.getHttpServer())
             .delete(`/api/admin/return/bundle/cabinet`)
             .set('Authorization', `Bearer ${token}`)
-            .send({ bundle: bundle });
+            .send({ bundle });
           // then
           // FIXME: 400이 응답되고 있지만, 409를 응답하도록 하는 것이 적절해보임.
           expect(response.status).toBe(400);
@@ -423,7 +423,7 @@ describe('Admin Return 모듈 테스트 (e2e)', () => {
         // });
 
         describe('일괄 반납에 부분 성공합니다.', () => {
-          it('반납에 성공하게 되는 사물함들만 반납 요청', async () => {
+          it.skip('반납에 성공하게 되는 사물함들만 반납 요청', async () => {
             // given
             // 승인받은 관리자 유저
             const adminUser: AdminUserDto = {

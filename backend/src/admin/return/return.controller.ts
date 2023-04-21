@@ -44,7 +44,7 @@ export class AdminReturnController {
   //       409를 응답하도록 수정하는게 좋을 것 같습니다.
   @Delete('/bundle/cabinet')
   @ApiOperation({})
-  async returnCabinetBundle(@Body('bundle') bundle: number[]): Promise<void> {
+  async returnCabinetBundle(@Body() bundle: number[]): Promise<void> {
     this.logger.debug(`Called ${this.returnCabinetBundle.name}`);
     return await this.adminReturnService.returnCabinetBundle(bundle);
   }
