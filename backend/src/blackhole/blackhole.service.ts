@@ -21,9 +21,7 @@ import {
   runOnTransactionComplete,
   Transactional,
 } from 'typeorm-transactional';
-import LentType from 'src/enums/lent.type.enum';
 import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
-import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import { UserSessionDto } from 'src/dto/user.session.dto';
 
 @Injectable()
@@ -48,7 +46,6 @@ export class BlackholeService implements OnApplicationBootstrap {
     private blackholeTools: BlackholeTools,
     private userService: UserService,
     private lentService: LentService,
-    private cabinetInfoService: CabinetInfoService,
     private schedulerRegistry: SchedulerRegistry,
   ) {
     this.logger = new Logger(BlackholeService.name);
@@ -95,7 +92,7 @@ export class BlackholeService implements OnApplicationBootstrap {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async deleteBlackholedUser(user: UserDto): Promise<void> {
     this.logger.debug(
@@ -104,12 +101,6 @@ export class BlackholeService implements OnApplicationBootstrap {
     const cabinet = await this.userService.getCabinetDtoByUserId(user.user_id);
     if (cabinet) {
       this.logger.warn(`Return ${user.intra_id}'s cabinet`);
-      if (cabinet.lent_type === LentType.PRIVATE) {
-        await this.cabinetInfoService.updateCabinetStatus(
-          cabinet.cabinet_id,
-          CabinetStatusType.BANNED,
-        );
-      }
       await this.lentService.returnCabinet(user);
     }
     await this.userService.deleteUserById(user.user_id);

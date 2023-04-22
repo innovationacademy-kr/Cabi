@@ -14,6 +14,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+
 export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
@@ -25,19 +26,21 @@ export interface ISelectedCabinetInfo {
   expireDate?: Date;
   detailMessage: string | null;
   detailMessageColor: string;
+  isAdmin: boolean;
+  isLented: boolean;
 }
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   myCabinetId?: number;
   closeCabinet: () => void;
-}> = (props) => {
-  const { selectedCabinetInfo, myCabinetId, closeCabinet } = props;
+}> = ({ selectedCabinetInfo, myCabinetId, closeCabinet }) => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const [showLentModal, setShowLentModal] = useState<boolean>(false);
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
+  useState<boolean>(false);
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
@@ -68,33 +71,35 @@ const CabinetInfoArea: React.FC<{
     setShowUnavailableModal(false);
   };
 
-  if (selectedCabinetInfo === null)
+  if (!selectedCabinetInfo)
+    //아무 사물함도 선택하지 않았을 때
     return (
       <NotSelectedStyled>
         <CabiLogoStyled src={cabiLogo} />
         <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
-          사물함을 <br />
+          사물함를 <br />
           선택해주세요
         </TextStyled>
       </NotSelectedStyled>
     );
+  // 단일 선택 시 보이는 cabinetInfoArea
   return (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-        {selectedCabinetInfo.floor + "F - " + selectedCabinetInfo.section}
+        {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
       </TextStyled>
       <CabinetRectangleStyled
-        cabinetStatus={selectedCabinetInfo.status}
+        cabinetStatus={selectedCabinetInfo!.status}
         isMine={isMine}
       >
-        {selectedCabinetInfo.cabinetNum}
+        {selectedCabinetInfo!.cabinetNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
-        title={selectedCabinetInfo.lentType}
-        cabinetType={selectedCabinetInfo.lentType}
+        title={selectedCabinetInfo!.lentType}
+        cabinetType={selectedCabinetInfo!.lentType}
       />
       <TextStyled fontSize="1rem" fontColor="black">
-        {selectedCabinetInfo.userNameList}
+        {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
@@ -127,13 +132,13 @@ const CabinetInfoArea: React.FC<{
         )}
       </CabinetInfoButtonsContainerStyled>
       <CabinetLentDateInfoStyled
-        textColor={selectedCabinetInfo.detailMessageColor}
+        textColor={selectedCabinetInfo!.detailMessageColor}
       >
-        {selectedCabinetInfo.detailMessage}
+        {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo.expireDate
-          ? `${selectedCabinetInfo.expireDate.toString().substring(0, 10)}`
+        {selectedCabinetInfo!.expireDate
+          ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
           : null}
       </CabinetLentDateInfoStyled>
       {showUnavailableModal && (
@@ -144,13 +149,13 @@ const CabinetInfoArea: React.FC<{
       )}
       {showLentModal && (
         <LentModal
-          lentType={selectedCabinetInfo.lentType}
+          lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseLentModal}
         />
       )}
       {showReturnModal && (
         <ReturnModal
-          lentType={selectedCabinetInfo.lentType}
+          lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseReturnModal}
         />
       )}
@@ -244,4 +249,23 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   line-height: 28px;
   white-space: pre-line;
   text-align: center;
+`;
+
+const MultiCabinetIconWrapperStyled = styled.div`
+  display: grid;
+  grid-template-columns: 40px 40px;
+  width: 90px;
+  height: 90px;
+  margin-top: 15px;
+  grid-gap: 10px;
+`;
+
+const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ status }) => cabinetStatusColorMap[status]};
+  border-radius: 5px;
+  color: ${({ status }) =>
+    status === CabinetStatus.SET_EXPIRE_FULL ? "black" : "white"};
 `;

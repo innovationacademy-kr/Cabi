@@ -43,6 +43,18 @@ export class CabinetInfoDto {
   status: CabinetStatusType; // 사물함의 현재 상태
 
   @ApiProperty({
+    description: '사물함의 사물함 건물',
+    example: '새롬관',
+  })
+  location: string; // 사물함 건물
+
+  @ApiProperty({
+    description: '사물함의 위치 (층)',
+    example: 2,
+  })
+  floor: number; // 사물함의 위치 (층)
+
+  @ApiProperty({
     description: '사물함의 섹션 종류 (오아시스 등)',
     example: 'Oasis',
   })

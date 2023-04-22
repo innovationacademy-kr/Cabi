@@ -58,12 +58,31 @@
   }
 
   #searchBar.on {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  #searchBar.on input {
+    width: 100%;
   }
 
   #searchButton {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  #topNavWrap.pushOut {
+    justify-content: center;
+  }
+
+  #topNavLogo.pushOut {
+    display: none;
+  }
+
+  #topNavButtonGroup.pushOut {
+    display: none;
   }
 }

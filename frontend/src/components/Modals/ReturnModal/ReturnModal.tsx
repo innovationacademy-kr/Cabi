@@ -4,6 +4,7 @@ import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   myCabinetInfoState,
+  overdueCabinetListState,
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
@@ -38,12 +39,15 @@ const ReturnModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-
   const formattedExpireDate = getExpireDateString(
     "myCabinet",
     myLentInfo.lent_info ? myLentInfo.lent_info[0].expire_time : undefined
   );
-  const returnDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
+  const returnDetail = `${
+    myLentInfo && myLentInfo.lent_info[0].expire_time === null
+      ? ""
+      : `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
+  }
 지금 반납 하시겠습니까?`;
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {

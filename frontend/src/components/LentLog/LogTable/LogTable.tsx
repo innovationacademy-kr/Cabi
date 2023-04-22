@@ -98,7 +98,7 @@ const TbodyStyled = styled.tbody`
 const EmptyLogStyled = styled.div`
   width: 100%;
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 1rem;
   padding: 20px 0;
 `;
 

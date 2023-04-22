@@ -78,7 +78,7 @@ export class AdminCabinetController {
     status: CabinetStatusType,
   ): Promise<void> {
     this.logger.debug(`Called ${this.updateCabinetStatusByCabinetId.name}`);
-    await this.cabinetInfoService.updateCabinetStatus(cabinetId, status);
+    await this.adminCabinetService.updateCabinetStatus(cabinetId, status);
   }
 
   @ApiOperation({

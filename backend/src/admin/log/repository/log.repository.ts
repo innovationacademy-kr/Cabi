@@ -1,9 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { LogPagenationDto } from 'src/admin/dto/log.pagenation.dto';
 import { IAdminLogRepository } from 'src/admin/log/repository/log.interface.repository';
+import BanLog from 'src/entities/ban.log.entity';
 import Cabinet from 'src/entities/cabinet.entity';
 import LentLog from 'src/entities/lent.log.entity';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 
 export class AdminLogRepository implements IAdminLogRepository {
   constructor(
@@ -35,9 +36,9 @@ export class AdminLogRepository implements IAdminLogRepository {
         'c.floor',
       ])
       .where('ll.log_user_id = :user_id', { user_id: userId })
-      .limit(length)
-      .skip(page * length)
       .orderBy('ll.return_time', 'DESC')
+      .offset(page * length)
+      .limit(length)
       .execute();
     const rtn = {
       result: result.map((r) => ({
@@ -80,9 +81,9 @@ export class AdminLogRepository implements IAdminLogRepository {
         'c.floor',
       ])
       .where('ll.log_cabinet_id = :cabinet_id', { cabinet_id: cabinetId })
-      .limit(length)
-      .skip(page * length)
       .orderBy('ll.return_time', 'DESC')
+      .offset(page * length)
+      .limit(length)
       .execute();
     const rtn = {
       result: result.map((r) => ({
@@ -99,5 +100,19 @@ export class AdminLogRepository implements IAdminLogRepository {
       total_length: result.length !== 0 ? parseInt(result[0].cnt, 10) : 0,
     };
     return rtn;
+  }
+
+  async deleteBanLogByUserId(userId: number): Promise<void> {
+    const today = new Date();
+    await this.LogRepository.createQueryBuilder('ban_log')
+      .delete()
+      .from(BanLog)
+      .where({
+        ban_user_id: userId,
+      })
+      .andWhere({
+        unbanned_date: MoreThanOrEqual(today),
+      })
+      .execute();
   }
 }

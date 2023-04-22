@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
-const EmptySection = (): JSX.Element => {
+const EmptySection = ({ message }: { message: string }): JSX.Element => {
   return (
     <EmptySectionStyled>
       <CabiImageStyled
         src="/src/assets/images/happyCcabi.png"
         alt="happy cabi"
       />
-      <ContentStyled>여기엔 사물함이 없어요!</ContentStyled>
+      <ContentStyled>{message}</ContentStyled>
     </EmptySectionStyled>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { selectedTypeOnSearchState } from "@/recoil/atoms";
 import AdminTopNavContainer from "@/components/TopNav/AdminTopNav.container";
 import LeftNav from "@/components/LeftNav/LeftNav";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
@@ -9,11 +11,13 @@ import styled, { css } from "styled-components";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import useMenu from "@/hooks/useMenu";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
+import UserInfoAreaContainer from "@/components/UserInfoArea/UserInfoArea.container";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const selectedTypeOnSearch = useRecoilValue(selectedTypeOnSearchState);
   const token = getCookie("admin_access_token");
 
   const checkPath = () => {
@@ -25,6 +29,7 @@ const Layout = (): JSX.Element => {
 
   const isLoginPage: boolean = location.pathname === "/admin/login";
   const isMainPage: boolean = location.pathname === "/admin/main";
+  const isSearchPage: boolean = location.pathname === "/admin/search";
 
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/admin/login");
@@ -56,9 +61,13 @@ const Layout = (): JSX.Element => {
           </MainStyled>
           <DetailInfoContainerStyled
             id="cabinetDetailArea"
-            isHomePage={!isMainPage}
+            isFloat={!isMainPage && !isSearchPage}
           >
-            <CabinetInfoAreaContainer />
+            {selectedTypeOnSearch === "USER" ? (
+              <UserInfoAreaContainer />
+            ) : (
+              <CabinetInfoAreaContainer />
+            )}
           </DetailInfoContainerStyled>
           <MapInfoContainer />
         </WrapperStyled>
@@ -83,7 +92,7 @@ const MainStyled = styled.main`
   user-select: none;
 `;
 
-const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
+const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
   min-width: 330px;
   padding: 45px 40px 20px;
   position: relative;
@@ -91,7 +100,7 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
   background-color: var(--white);
   overflow-y: auto;
   ${(props) =>
-    props.isHomePage &&
+    props.isFloat &&
     css`
       position: fixed;
       top: 80px;

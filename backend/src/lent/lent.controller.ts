@@ -31,6 +31,7 @@ import { User } from 'src/decorator/user.decorator';
 import { UpdateCabinetMemoRequestDto } from 'src/dto/request/update.cabinet.memo.request.dto';
 import { UpdateCabinetTitleRequestDto } from 'src/dto/request/update.cabinet.title.request.dto';
 import { UserSessionDto } from 'src/dto/user.session.dto';
+import { QueryFailedError } from 'typeorm';
 import { BanCheckGuard } from '../ban/guard/ban.check.guard';
 import { LentService } from './lent.service';
 
@@ -77,6 +78,8 @@ export class LentController {
       this.logger.error(err);
       if (err instanceof HttpException) {
         throw err;
+      } else if (err instanceof QueryFailedError) {
+        throw new InternalServerErrorException('다시 한번 요청해주세요.');
       } else {
         throw new InternalServerErrorException(err.message);
       }

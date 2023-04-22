@@ -69,16 +69,18 @@ const LeftMainNav = ({
               Search
             </BottomBtnStyled>
           )}
-          <BottomBtnStyled
-            className={
-              pathname.includes("log") ? "active cabiButton" : " cabiButton"
-            }
-            src={"/src/assets/images/log.svg"}
-            onClick={onClickLentLogButton}
-          >
-            <div></div>
-            Log
-          </BottomBtnStyled>
+          {!isAdmin && (
+            <BottomBtnStyled
+              className={
+                pathname.includes("log") ? "active cabiButton" : " cabiButton"
+              }
+              src={"/src/assets/images/log.svg"}
+              onClick={onClickLentLogButton}
+            >
+              <div></div>
+              Log
+            </BottomBtnStyled>
+          )}
           <BottomBtnStyled
             src={"/src/assets/images/slack.svg"}
             className="cabiButton"

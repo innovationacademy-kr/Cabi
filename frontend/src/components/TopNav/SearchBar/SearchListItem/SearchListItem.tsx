@@ -1,16 +1,38 @@
 import styled from "styled-components";
 import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import { useNavigate } from "react-router-dom";
 
 const SearchListItem = (props: {
-  intraId: string;
-  key: number;
-  searchWord?: string;
+  floor?: number;
+  inputText?: string;
+  resultText: string;
+  isNum?: boolean;
+  resetSearchState: () => void;
+  targetIndex?: boolean;
 }) => {
-  const { intraId, searchWord } = props;
+  const { floor, resultText, inputText, isNum, resetSearchState, targetIndex } =
+    props;
+  const navigate = useNavigate();
+
+  const chooseImage = (isCabinet: boolean | undefined) => {
+    if (isCabinet) return "/src/assets/images/cabinet.svg";
+    return "/src/assets/images/privateIcon.svg";
+  };
 
   return (
-    <LiStyled>
-      <ChangeToHTML origin={intraId} replace={searchWord} />
+    <LiStyled
+      className={targetIndex ? "active" : ""}
+      onClick={() => {
+        navigate({
+          pathname: "search",
+          search: `?q=${resultText}`,
+        });
+        resetSearchState();
+      }}
+    >
+      <ImgStyled src={chooseImage(isNum)} alt="유저" />
+      {isNum && <span>{floor}F - </span>}
+      <ChangeToHTML origin={resultText} replace={inputText} />
     </LiStyled>
   );
 };
@@ -22,6 +44,18 @@ const LiStyled = styled.li`
   & strong {
     color: var(--main-color);
   }
+
+  &.active {
+    background-color: var(--main-color);
+    color: var(--white);
+  }
+  &.active strong {
+    color: var(--white);
+  }
+  &.active img {
+    filter: invert(100%);
+  }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--main-color);
@@ -30,7 +64,16 @@ const LiStyled = styled.li`
     &:hover strong {
       color: var(--white);
     }
+    &:hover img {
+      filter: invert(100%);
+    }
   }
+`;
+
+const ImgStyled = styled.img`
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
 `;
 
 export default SearchListItem;

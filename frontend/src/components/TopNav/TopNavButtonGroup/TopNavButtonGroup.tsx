@@ -10,7 +10,7 @@ import useMenu from "@/hooks/useMenu";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import instance from "@/api/axios/axios.instance";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
@@ -21,6 +21,8 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
     targetCabinetInfoState
   );
   const myInfo = useRecoilValue(userState);
+  const { pathname } = useLocation();
+  const navigator = useNavigate();
 
   async function setTargetCabinetInfoToMyCabinet() {
     setCurrentCabinetId(myInfo.cabinet_id);
@@ -46,21 +48,27 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const axiosRemovePenalty = async (): Promise<any> => {
     try {
       const response = await instance.delete(axiosRemovePenaltyURL);
-      console.log(response);
       return response;
     } catch (error) {
       throw error;
     }
   };
 
-  const navigator = useNavigate();
+  const searchBarOn = () => {
+    document.getElementById("searchBar")!.classList.add("on");
+    document.getElementById("topNavLogo")!.classList.add("pushOut");
+    document.getElementById("topNavButtonGroup")!.classList.add("pushOut");
+    document.getElementById("topNavWrap")!.classList.add("pushOut");
+  };
+
   const clickSearchButton = () => {
+    if (!pathname.includes("search")) navigator("search");
     closeAll();
-    navigator("search");
+    searchBarOn();
   };
 
   return (
-    <NaviButtonsStyled>
+    <NaviButtonsStyled id="topNavButtonGroup">
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
           onClick={axiosRemovePenalty}

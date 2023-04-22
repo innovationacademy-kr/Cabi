@@ -115,33 +115,21 @@ export class AdminReturnService {
     }
   }
 
-  async returnCabinetBundle(
-    users: number[],
-    cabinets: number[],
-  ): Promise<void> {
+  async returnCabinetBundle(bundle: number[]): Promise<void> {
     this.logger.debug(
       `Called ${AdminReturnService.name} ${this.returnCabinetBundle.name}`,
     );
-    const userFailures = [];
     const cabinetsFailures = [];
-    if (users) {
-      for await (const userId of users) {
-        await this.returnUserCabinetByUserId(userId).catch(() => {
-          userFailures.push(userId);
-        });
-      }
-    }
-    if (cabinets) {
-      for await (const cabinetId of cabinets) {
+    if (bundle) {
+      for await (const cabinetId of bundle) {
         await this.returnCabinetByCabinetId(cabinetId).catch(() => {
           cabinetsFailures.push(cabinetId);
         });
       }
     }
-    if (!(userFailures.length === 0 && cabinetsFailures.length === 0)) {
+    if (!(cabinetsFailures.length === 0)) {
       throw new HttpException(
         {
-          user_failures: userFailures,
           cabinet_failures: cabinetsFailures,
         },
         HttpStatus.BAD_REQUEST,

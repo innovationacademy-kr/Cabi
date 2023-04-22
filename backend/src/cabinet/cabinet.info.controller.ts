@@ -12,12 +12,10 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt/guard/jwtauth.guard';
 import { CabinetInfoResponseDto } from 'src/dto/response/cabinet.info.response.dto';
 import { CabinetsPerSectionResponseDto } from 'src/dto/response/cabinet.per.section.response.dto';
 import { SpaceDataResponseDto } from 'src/dto/response/space.data.response.dto';
 import { CabinetInfoService } from './cabinet.info.service';
-import { AdminJwtAuthGuard } from 'src/admin/auth/jwt/guard/jwtauth.guard';
 import { AdminMainAuthGuard } from 'src/auth/jwt/guard/admin.main.jwtauth.guard';
 
 @ApiTags('Cabinet')

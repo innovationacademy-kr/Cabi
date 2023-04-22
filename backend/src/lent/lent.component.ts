@@ -1,4 +1,11 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import Lent from 'src/entities/lent.entity';
 import CabinetStatusType from 'src/enums/cabinet.status.type.enum';
 import LentType from 'src/enums/lent.type.enum';
@@ -40,7 +47,7 @@ export class LentTools {
    */
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async setExpireTimeAll(
     cabinet_id: number,
@@ -65,7 +72,7 @@ export class LentTools {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async lentStateTransition(
     user: UserDto,
@@ -110,6 +117,7 @@ export class LentTools {
         const new_lent = await this.lentRepository.lentCabinet(
           user,
           cabinet_id,
+          cabinet.new_lent_id,
         );
         if (cabinet.lent_count + 1 === cabinet.max_user) {
           if (cabinet.status === CabinetStatusType.AVAILABLE) {
@@ -156,7 +164,7 @@ export class LentTools {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async clearCabinetInfo(cabinet_id: number): Promise<void> {
     this.logger.debug(`Called ${LentTools.name} ${this.clearCabinetInfo.name}`);
@@ -165,7 +173,7 @@ export class LentTools {
 
   @Transactional({
     propagation: Propagation.REQUIRED,
-    isolationLevel: IsolationLevel.SERIALIZABLE,
+    isolationLevel: IsolationLevel.REPEATABLE_READ,
   })
   async returnStateTransition(
     cabinet_id: number,

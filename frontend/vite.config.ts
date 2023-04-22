@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import * as path from "path";
@@ -18,5 +19,14 @@ export default defineConfig({
       host: "localhost",
       path: "/hmr/",
     },
+  },
+  test: {
+    include: [
+      "**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
+      "**/__tests__/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
+    ],
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/setupTest.ts",
   },
 });
