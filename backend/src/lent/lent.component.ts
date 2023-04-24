@@ -98,7 +98,6 @@ export class LentTools {
           if (cabinet.status === CabinetStatusType.SET_EXPIRE_AVAILABLE) {
             // 만료시간이 PENALTY_DAY_SHARE + 2 이하로 남은 경우 excepction_type을 LENT_UNDER_PENALTY_DAY_SHARE로 설정.
             const now = new Date();
-			console.debug(cabinet.expire_time);
             const expire_time = cabinet.expire_time;
             const diff = await this.dateCalculator.calDateDiff(
               now,
