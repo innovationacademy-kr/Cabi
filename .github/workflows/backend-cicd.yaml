@@ -1,10 +1,12 @@
 name: CI/CD
-on: [push]
+on:
+  push:
+    paths:
+      - "backend/**"
 
 jobs:
   backend-CI:
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.modified, 'backend/')"
     services:
       mariadb:
         image: mariadb
