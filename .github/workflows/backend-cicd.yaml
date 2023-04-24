@@ -106,7 +106,7 @@ jobs:
   backend-CD-main:
     name: deploy-main
     runs-on: ubuntu-latest
-    needs: [backend-CI, frontend-CI]
+    needs: [backend-CI]
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - name: 리모트 쉘 접속
