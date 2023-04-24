@@ -141,11 +141,11 @@ export class LentTools {
 				  CabinetStatusType.SET_EXPIRE_FULL,
 				);
 			}
-			else {
+			else if (cabinet.status !== CabinetStatusType.AVAILABLE) {
 				await this.lentRepository.setExpireTime(
 					new_lent.lent_id,
 					cabinet.expire_time,
-				  );
+				);
 			}
 			break;
 		}
