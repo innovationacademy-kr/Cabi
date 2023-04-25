@@ -55,14 +55,14 @@ jobs:
         run: npm install --prefix frontend
 
       - name: 애플리케이션 빌드
-        run: npm run build
+        run: npm run build --prefix frontend
 
       - name: AWS S3에 배포 및 CloudFront 캐시 무효화
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 sync ./deploy s3://dev.cabi --profile=CABI
+          aws s3 sync ./frontend/dist s3://dev.cabi --profile=CABI
           aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'
 
   frontend-CD-main:
@@ -88,12 +88,12 @@ jobs:
         run: npm install --prefix frontend
 
       - name: 애플리케이션 빌드
-        run: npm run build
+        run: npm run build --prefix frontend
 
       - name: AWS S3에 배포 및 CloudFront 캐시 무효화
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 sync ./deploy s3://42cabi --profile=CABI
+          aws s3 sync ./frontend/dist s3://42cabi --profile=CABI
           aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'
