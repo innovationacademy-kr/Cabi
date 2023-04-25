@@ -1,0 +1,99 @@
+name: CI/CD
+on:
+  push:
+    paths:
+      - "frontend/**"
+
+jobs:
+  frontend-CI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v2
+      - name: Node.js 16.x Version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: 종속 모듈들 캐싱
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/frontend/node_modules
+          key: npm-packages-${{ hashFiles('**/frontend/package-lock.json') }}
+        id: cache
+      - name: 종속 모듈들 설치
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install --prefix frontend
+      # - name: lint 체크
+      #   run: npm run lint --prefix frontend
+      - name: 빌드 체크
+        run: npm run build --prefix frontend
+      # - name: 단위 테스트 체크
+      #   run: npm run test --prefix frontend
+      # - name: 통합 테스트 체크
+      #   run: npm run test:e2e --prefix frontend
+
+  frontend-CD-develop:
+    name: deploy-develop
+    runs-on: ubuntu-latest
+    needs: [frontend-CI]
+    if: ${{ github.ref == 'refs/heads/dev' }}
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v2
+      - name: Node.js 16.x Version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: 종속 모듈들 캐싱
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/frontend/node_modules
+          key: npm-packages-${{ hashFiles('**/frontend/package-lock.json') }}
+        id: cache
+      - name: 종속 모듈들 설치
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install --prefix frontend
+
+      - name: 애플리케이션 빌드
+        run: npm run build
+
+      - name: AWS S3에 배포 및 CloudFront 캐시 무효화
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 sync ./deploy s3://dev.cabi --profile=CABI
+          aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'
+
+  frontend-CD-main:
+    name: deploy-main
+    runs-on: ubuntu-latest
+    needs: [frontend-CI]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v2
+      - name: Node.js 16.x Version
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: 종속 모듈들 캐싱
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/frontend/node_modules
+          key: npm-packages-${{ hashFiles('**/frontend/package-lock.json') }}
+        id: cache
+      - name: 종속 모듈들 설치
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install --prefix frontend
+
+      - name: 애플리케이션 빌드
+        run: npm run build
+
+      - name: AWS S3에 배포 및 CloudFront 캐시 무효화
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 sync ./deploy s3://42cabi --profile=CABI
+          aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'
