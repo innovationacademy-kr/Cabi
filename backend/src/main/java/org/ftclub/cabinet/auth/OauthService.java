@@ -99,6 +99,7 @@ public class OauthService {
 		map.add("code", code);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+		// TODO: add try catch
 		ResponseEntity<String> response = restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class);
 		JSONObject json = new JSONObject(response.getBody());
 		return json.get(ftApiProperties.getAccessTokenName()).toString();
@@ -106,8 +107,10 @@ public class OauthService {
 	public JSONObject getFtProfile(String token) {
 		HttpHeaders headers = new HttpHeaders();
 		RestTemplate restTemplate = new RestTemplate();
+
 		headers.setBearerAuth(token);
 		HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
+		// TODO: add try catch
 		ResponseEntity<String> response = restTemplate.exchange(
 				ftApiProperties.getUserInfoUri(),
 				HttpMethod.GET,
@@ -117,6 +120,7 @@ public class OauthService {
 		if (response.getStatusCode() == HttpStatus.OK) {
 			profile = new JSONObject(response.getBody());
 		} else {
+			// TODO: add logger and detail exception
 			System.err.println("Error: " + response.getStatusCode());
 		}
 		return profile;

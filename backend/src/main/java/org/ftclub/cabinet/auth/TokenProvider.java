@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,6 @@ public class TokenProvider {
 	}
 
 	public String createToken(String provider, JSONObject profile) {
-		//error handling for expiry
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 		byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(jwtProperties.getSecret());

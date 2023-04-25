@@ -51,9 +51,4 @@ public class AdminAuthController {
 		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), accessToken, "/");
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
 	}
-
-	@GetMapping("/test")
-	public void authtest(HttpServletResponse response) throws IOException {
-		System.out.printf("REACHED!!!!REACHED!!!!REACHED!!!!REACHED!!!!REACHED!!!!\n");
-	}
 }

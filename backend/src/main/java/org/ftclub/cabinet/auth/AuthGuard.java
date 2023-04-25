@@ -7,5 +7,12 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AdminAuthGuard {
+public @interface AuthGuard {
+	Level level() default Level.USER_ONLY;
+
+	enum Level {
+		USER_ONLY,
+		ADMIN_ONLY,
+		USER_OR_ADMIN
+	}
 }

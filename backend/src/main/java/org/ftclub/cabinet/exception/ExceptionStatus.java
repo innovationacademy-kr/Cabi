@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 @Getter
 public enum ExceptionStatus {
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인 정보가 유효하지 않습니다\\n다시 로그인해주세요"),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다");
 
     ExceptionStatus(HttpStatus status, String message) {
