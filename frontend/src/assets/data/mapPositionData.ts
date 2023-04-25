@@ -97,7 +97,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 7,
       rowEnd: 8,
       name: "Cluster X - 7",
-      type: "closed",
+      type: "cabinet",
     },
     {
       colStart: 4,
@@ -105,7 +105,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 6,
       rowEnd: 7,
       name: "Cluster X - 6",
-      type: "closed",
+      type: "cabinet",
     },
     {
       colStart: 4,
@@ -113,7 +113,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 5,
       rowEnd: 6,
       name: "Cluster X - 5",
-      type: "closed",
+      type: "cabinet",
     },
     {
       colStart: 4,
@@ -121,7 +121,7 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowStart: 4,
       rowEnd: 5,
       name: "Cluster X - 4",
-      type: "closed",
+      type: "cabinet",
     },
     {
       colStart: 4,
