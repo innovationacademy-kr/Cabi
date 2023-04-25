@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.auth;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.config.FtApiProperties;
+import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.SiteUrlProperties;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +21,22 @@ import java.io.IOException;
 public class AuthController {
 
 	@Autowired
+	private final TokenProvider tokenProvider;
+
+	@Autowired
 	private final OauthService oauthService;
 
 	@Autowired
-	private final AuthService authService;
+	private final CookieManager cookieManager;
+
+	@Autowired
+	private final FtApiProperties ftApiProperties;
 
 	@Autowired
 	private final SiteUrlProperties siteUrlProperties;
+
+	@Autowired
+	private final JwtProperties jwtProperties;
 
 	@GetMapping("/login")
 	public void login(HttpServletResponse response) throws IOException {
@@ -35,16 +46,10 @@ public class AuthController {
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletResponse res) throws IOException {
 		String apiToken = oauthService.getFtToken(code);
-		System.out.printf("apitoken = %s\n", apiToken);
 		JSONObject profile = oauthService.getFtProfile(apiToken);
-		System.out.printf("profile = %s\n", profile);
-		String accessToken = TokenProvider.createToken("ft", profile);
-		Cookie cookie = new Cookie("access_token", accessToken);
-		cookie.setPath("/");
-		res.addCookie(cookie);
+		String accessToken = tokenProvider.createToken(ftApiProperties.getName(), profile);
+		cookieManager.setCookie(res, jwtProperties.getMainTokenName(), accessToken, "/");
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
-//		System.out.printf("user = %s\n", authService.getUserByName("sanan"));
-		authService.saveTest();
 	}
 
 }

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 @Getter
 public class FtApiProperties {
 
+	@Value("${oauth2.client.registration.ft.name}")
+	private	String name;
+
 	@Value("${oauth2.client.registration.ft.client-id}")
 	private String clientId;
 
@@ -19,8 +22,11 @@ public class FtApiProperties {
 	@Value("${oauth2.client.registration.ft.redirect-uri}")
 	private String redirectUri;
 
-	@Value("${oauth2.client.registration.ft.authorization-grant-type}")
+	@Value("${oauth2.client.registration.ft.grant-type}")
 	private String grantType;
+
+	@Value("${oauth2.client.registration.ft.access-token-name}")
+	private String accessTokenName;
 
 	@Value("${oauth2.client.registration.provider.ft.token-uri}")
 	private String tokenUri;

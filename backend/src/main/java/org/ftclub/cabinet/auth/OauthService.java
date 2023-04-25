@@ -39,20 +39,20 @@ public class OauthService {
 
 		HttpHeaders headers = new HttpHeaders();
 
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED); // POST PATCH..
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("grant_type", "authorization_code");
 		map.add("client_id", googleApiProperties.getClientId());
 		map.add("client_secret", googleApiProperties.getClientSecret());
 		map.add("redirect_uri", googleApiProperties.getRedirectUri());
-		map.add("code", code); // 이쁘게 만드는 방법이 있을까?
+		map.add("code", code);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
 		ResponseEntity<String> response = restTemplate.postForEntity(googleApiProperties.getTokenUri(), request, String.class);
 		JSONObject json = new JSONObject(response.getBody());
 
-		return json.get("access_token").toString();
+		return json.get(googleApiProperties.getAccessTokenName()).toString();
 	}
 
 
@@ -82,7 +82,6 @@ public class OauthService {
 				ftApiProperties.getRedirectUri(),
 				ftApiProperties.getScope(),
 				ftApiProperties.getGrantType());
-		System.out.printf("%s\n", dir);
 		response.sendRedirect(dir);
 	}
 
@@ -91,20 +90,18 @@ public class OauthService {
 
 		HttpHeaders headers = new HttpHeaders();
 
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED); // POST PATCH..
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("grant_type", "authorization_code");
 		map.add("client_id", ftApiProperties.getClientId());
 		map.add("client_secret", ftApiProperties.getClientSecret());
 		map.add("redirect_uri", ftApiProperties.getRedirectUri());
-		map.add("code", code); // 이쁘게 만드는 방법이 있을까?
+		map.add("code", code);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
 		ResponseEntity<String> response = restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class);
 		JSONObject json = new JSONObject(response.getBody());
-
-		return json.get("access_token").toString();
+		return json.get(ftApiProperties.getAccessTokenName()).toString();
 	}
 	public JSONObject getFtProfile(String token) {
 		HttpHeaders headers = new HttpHeaders();
