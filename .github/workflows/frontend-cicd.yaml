@@ -62,8 +62,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 sync ./frontend/dist s3://dev.cabi --profile=CABI
-          aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'
+          aws s3 sync ./frontend/dist s3://dev.cabi
+          aws cloudfront create-invalidation --distribution-id EWPTW52IH5L5C --paths '/*'
 
   frontend-CD-main:
     name: deploy-main
@@ -95,5 +95,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws s3 sync ./frontend/dist s3://42cabi --profile=CABI
-          aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'
+          aws s3 sync ./frontend/dist s3://42cabi
+          aws cloudfront create-invalidation --distribution-id E12WMB9HCNB1DT --paths '/*'
