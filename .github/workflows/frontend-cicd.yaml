@@ -55,7 +55,8 @@ jobs:
         run: npm install --prefix frontend
 
       - name: 애플리케이션 빌드
-        run: npm run build --prefix frontend
+        run: |
+          npm run build --prefix frontend
           mkdir -p ./frontend/dist/src/assets
           cp -r ./frontend/src/assets/images ./frontend/dist/src/assets/
           rm -rf deploy
@@ -93,7 +94,8 @@ jobs:
         run: npm install --prefix frontend
 
       - name: 애플리케이션 빌드
-        run: npm run build --prefix frontend
+        run: |
+          npm run build --prefix frontend
           mkdir -p ./frontend/dist/src/assets
           cp -r ./frontend/src/assets/images ./frontend/dist/src/assets/
           rm -rf deploy
