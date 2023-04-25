@@ -34,7 +34,7 @@ jobs:
 
   frontend-CD-develop:
     name: deploy-develop
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: [frontend-CI]
     if: ${{ github.ref == 'refs/heads/dev' }}
     steps:
@@ -67,7 +67,7 @@ jobs:
 
   frontend-CD-main:
     name: deploy-main
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: [frontend-CI]
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
