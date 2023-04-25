@@ -2,9 +2,8 @@ package org.ftclub.cabinet.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -27,9 +26,9 @@ public class AuthAspect {
 	@Autowired
 	private final JwtProperties jwtProperties;
 
-	@Around(value="@annotation(authGuard)")
-	public void AuthToken(ProceedingJoinPoint joinPoint, AuthGuard authGuard) throws Throwable {
-		HttpServletRequest	request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+	@Before(value="@annotation(authGuard)")
+	public void AuthToken(AuthGuard authGuard) {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
 
 		switch (authGuard.level()) {
@@ -50,6 +49,5 @@ public class AuthAspect {
 				}
 				break;
 		}
-		joinPoint.proceed();
 	}
 }

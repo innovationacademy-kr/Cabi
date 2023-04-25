@@ -2,6 +2,8 @@ package org.ftclub.cabinet.auth;
 
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -48,11 +50,14 @@ public class OauthService {
 		map.add("code", code);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-		ResponseEntity<String> response = restTemplate.postForEntity(googleApiProperties.getTokenUri(), request, String.class);
-		JSONObject json = new JSONObject(response.getBody());
-
-		return json.get(googleApiProperties.getAccessTokenName()).toString();
+		try {
+			return new JSONObject(
+					restTemplate.postForEntity(googleApiProperties.getTokenUri(), request, String.class).getBody())
+						.get(googleApiProperties.getAccessTokenName())
+						.toString();
+		} catch (Exception e) {
+			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
+		}
 	}
 
 
@@ -64,15 +69,13 @@ public class OauthService {
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.exchange(googleApiProperties.getUserInfoUri(), HttpMethod.GET, requestEntity, String.class);
-		JSONObject profile = null;
-
-		if (response.getStatusCode() == HttpStatus.OK) {
-			profile = new JSONObject(response.getBody());
-		} else {
-			System.err.println("Error: " + response.getStatusCode());
+		try {
+			return new JSONObject(
+						restTemplate.exchange(googleApiProperties.getUserInfoUri(), HttpMethod.GET, requestEntity,  String.class)
+						.getBody());
+		} catch (Exception e) {
+			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
-		return profile;
 	}
 
 	public void sendToFtApi(HttpServletResponse response) throws IOException {
@@ -87,42 +90,38 @@ public class OauthService {
 
 	public String getFtToken(String code) {
 		RestTemplate restTemplate = new RestTemplate();
-
 		HttpHeaders headers = new HttpHeaders();
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 		map.add("grant_type", "authorization_code");
 		map.add("client_id", ftApiProperties.getClientId());
 		map.add("client_secret", ftApiProperties.getClientSecret());
 		map.add("redirect_uri", ftApiProperties.getRedirectUri());
 		map.add("code", code);
-
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-		// TODO: add try catch
-		ResponseEntity<String> response = restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class);
-		JSONObject json = new JSONObject(response.getBody());
-		return json.get(ftApiProperties.getAccessTokenName()).toString();
+		try {
+			return new JSONObject(
+						restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class)
+							.getBody())
+							.get(ftApiProperties.getAccessTokenName()).toString();
+		} catch (Exception e) {
+			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
+		}
 	}
+
 	public JSONObject getFtProfile(String token) {
 		HttpHeaders headers = new HttpHeaders();
 		RestTemplate restTemplate = new RestTemplate();
 
 		headers.setBearerAuth(token);
 		HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
-		// TODO: add try catch
-		ResponseEntity<String> response = restTemplate.exchange(
-				ftApiProperties.getUserInfoUri(),
-				HttpMethod.GET,
-				requestEntity,
-				String.class);
-		JSONObject profile = null;
-		if (response.getStatusCode() == HttpStatus.OK) {
-			profile = new JSONObject(response.getBody());
-		} else {
-			// TODO: add logger and detail exception
-			System.err.println("Error: " + response.getStatusCode());
+		try {
+			return new JSONObject(
+							restTemplate.exchange(ftApiProperties.getUserInfoUri(), HttpMethod.GET, requestEntity, String.class)
+							.getBody());
+		} catch (Exception e) {
+			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
-		return profile;
 	}
 }

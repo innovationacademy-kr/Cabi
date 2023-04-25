@@ -6,9 +6,7 @@ import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpServerErrorException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
@@ -27,15 +25,12 @@ public class TokenValidator {
 		 String authHeader = req.getHeader("Authorization");
 		 if (authHeader == null
 		 ||	authHeader.startsWith("Bearer ") == false) {
-			 System.out.printf("%s is invalid!\n", tokenName);
 			 return false;
 		 }
 		String token = authHeader.substring(7);
 		if (token == null || checkTokenValidity(token) == true) {
-			System.out.printf("%s is invalid!\n", tokenName);
 			return false;
 		}
-		System.out.printf("%s is valid!\n", tokenName);
 		return true;
 	}
 

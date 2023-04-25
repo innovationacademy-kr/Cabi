@@ -22,7 +22,6 @@ public class CabinetController {
     }
 
     @GetMapping("/get")
-//    @AdminAuthGuard
     @AuthGuard(level = USER_OR_ADMIN)
     public String test2() {
         System.out.printf("/get activated\n");
