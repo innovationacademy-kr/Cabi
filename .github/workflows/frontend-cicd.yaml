@@ -56,6 +56,10 @@ jobs:
 
       - name: 애플리케이션 빌드
         run: npm run build --prefix frontend
+          mkdir -p ./frontend/dist/src/assets
+          cp -r ./frontend/src/assets/images ./frontend/dist/src/assets/
+          rm -rf deploy
+          mv ./frontend/dist deploy
 
       - name: AWS S3에 배포 및 CloudFront 캐시 무효화
         env:
@@ -63,7 +67,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ap-northeast-2
         run: |
-          aws s3 sync ./frontend/dist s3://dev.cabi
+          aws s3 sync ./deploy s3://dev.cabi
           aws cloudfront create-invalidation --distribution-id EWPTW52IH5L5C --paths '/*'
 
   frontend-CD-main:
@@ -90,6 +94,10 @@ jobs:
 
       - name: 애플리케이션 빌드
         run: npm run build --prefix frontend
+          mkdir -p ./frontend/dist/src/assets
+          cp -r ./frontend/src/assets/images ./frontend/dist/src/assets/
+          rm -rf deploy
+          mv ./frontend/dist deploy
 
       - name: AWS S3에 배포 및 CloudFront 캐시 무효화
         env:
@@ -97,5 +105,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ap-northeast-2
         run: |
-          aws s3 sync ./frontend/dist s3://42cabi
+          aws s3 sync ./deploy s3://42cabi
           aws cloudfront create-invalidation --distribution-id E12WMB9HCNB1DT --paths '/*'
