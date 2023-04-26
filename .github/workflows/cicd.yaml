@@ -7,7 +7,7 @@ jobs:
     #   echo ${{ github.event.head_commit.modified }}
     #   echo ${{ contains(join(github.event.head_commit.modified, ' '), 'backend/') }}
     # if: ${{ contains(join(github.event.head_commit.modified, ' '), 'backend/') }}
-    if: ${{ contains(github.event.head_commit.modified, 'backend') }}
+    if: ${{ contains(toJson(github.event.changes.removed), 'backend/') }}
     runs-on: ubuntu-latest
     services:
       mariadb:
@@ -145,7 +145,7 @@ jobs:
       - name: 테스트
         run: |
           echo ${{ github.event.head_commit.modified }}
-          echo ${{ contains(github.event.head_commit.modified, 'frontend') }}
+          echo ${{ contains(toJson(github.event.changes.removed), 'frontend/') }}
       - name: 체크아웃
         uses: actions/checkout@v2
       - name: Node.js 16.x Version
