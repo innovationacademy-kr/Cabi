@@ -142,8 +142,10 @@ jobs:
     steps:
       - name: 테스트
         run: |
-          echo ${{ github.event.head_commit.modified }}
-          echo ${{ contains(join(github.event.head_commit.modified, ' '), 'backend/') }}
+          echo ${{ github.event }}
+          echo ${{ github.event.head_commit }}
+          # echo ${{ github.event.head_commit.modified }}
+          # echo ${{ contains(join(github.event.head_commit.modified, ' '), 'backend/') }}
       - name: 체크아웃
         uses: actions/checkout@v2
       - name: Node.js 16.x Version
