@@ -133,9 +133,14 @@ jobs:
             pm2 reload cabi_main
 
   frontend-CI:
-    if: ${{ contains(toJson(github.event.changes), 'frontend/') }}
+    # if: ${{ contains(toJson(github.event.changes), 'frontend/') }}
     runs-on: ubuntu-latest
     steps:
+      - name: GitHub Event
+        run: |
+          cat << 'EOF'
+            ${{ toJSON(github.event) }}
+          EOF
       - name: 체크아웃
         uses: actions/checkout@v2
       - name: Node.js 16.x Version
