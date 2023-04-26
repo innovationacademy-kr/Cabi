@@ -22,9 +22,9 @@ jobs:
           --health-retries 5
     steps:
       - name: 파일 변경 확인
-        run:  |
-        if [ -n "$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep ^frontend/)" ]; then
-        echo "Frontend folder has changed, running job."
+        run: |
+          if [ -n "$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep ^frontend/)" ]; then
+          echo "Frontend folder has changed, running job."
       - name: 체크아웃
         uses: actions/checkout@v2
       - name: DB에 샘플 데이터 삽입
@@ -141,9 +141,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 파일 변경 확인
-        run:  |
-        if [ -n "$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep ^frontend/)" ]; then
-        echo "Frontend folder has changed, running job."
+        run: |
+          if [ -n "$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep ^frontend/)" ]; then
+          echo "Frontend folder has changed, running job."
       - name: GitHub Event
         run: |
           cat << 'EOF'
