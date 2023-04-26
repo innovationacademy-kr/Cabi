@@ -139,7 +139,7 @@ jobs:
       - name: GitHub Event
         run: |
           cat << 'EOF'
-            ${{ toJSON(github.event) }}
+            ${{ toJSON(github) }}
           EOF
       - name: 체크아웃
         uses: actions/checkout@v2
