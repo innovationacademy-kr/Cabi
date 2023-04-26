@@ -24,7 +24,10 @@ jobs:
       - name: 파일 변경 확인
         run: |
           if [ -n "$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep ^frontend/)" ]; then
-          echo "Frontend folder has changed, running job."
+            echo "Backend folder has changed, running job."
+          else
+            echo "Backend folder has not changed, skipping job."
+            exit 0
           fi
       - name: 체크아웃
         uses: actions/checkout@v2
@@ -144,7 +147,10 @@ jobs:
       - name: 파일 변경 확인
         run: |
           if [ -n "$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep ^frontend/)" ]; then
-          echo "Frontend folder has changed, running job."
+            echo "Backend folder has changed, running job."
+          else
+            echo "Backend folder has not changed, skipping job."
+            exit 0
           fi
       - name: GitHub Event
         run: |
