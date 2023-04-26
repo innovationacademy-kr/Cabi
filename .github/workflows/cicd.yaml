@@ -3,6 +3,9 @@ on: [push]
 
 jobs:
   backend-CI:
+    run: |
+      echo ${{ github.event.head_commit.modified }}
+      echo ${{ contains(join(github.event.head_commit.modified, ' '), 'backend/') }}
     if: ${{ contains(join(github.event.head_commit.modified, ' '), 'backend/') }}
     runs-on: ubuntu-latest
     services:
@@ -133,6 +136,7 @@ jobs:
             pm2 reload cabi_main
 
   frontend-CI:
+    run: echo ${{ github.event.head_commit.modified }}
     if: ${{ contains(join(github.event.head_commit.modified, ' '), 'frontend/') }}
     runs-on: ubuntu-latest
     steps:
