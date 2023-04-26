@@ -130,6 +130,12 @@ export class LentService {
           HttpStatus.FORBIDDEN,
         );
       }
+      if (await this.lentTools.isMemoUpdateRequiredReturn(cabinet_id)) {
+        throw  new HttpException(
+          `사물함 반납 시 사물함 메모를 작성해야 합니다`,
+          HttpStatus.I_AM_A_TEAPOT,
+        );
+      }
       const [lent, lent_type] = await this.lentTools.returnStateTransition(
         cabinet_id,
         user,

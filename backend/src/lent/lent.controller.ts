@@ -34,12 +34,13 @@ import { UserSessionDto } from 'src/dto/user.session.dto';
 import { QueryFailedError } from 'typeorm';
 import { BanCheckGuard } from '../ban/guard/ban.check.guard';
 import { LentService } from './lent.service';
+import { CabinetInfoService } from 'src/cabinet/cabinet.info.service';
 
 @ApiTags('Lent')
 @Controller('/api/lent')
 export class LentController {
   private logger = new Logger(LentController.name);
-  constructor(private lentService: LentService) {}
+  constructor(private lentService: LentService, private cabinetService: CabinetInfoService) {}
 
   @ApiOperation({
     summary: '특정 캐비넷 대여 시도',
@@ -181,6 +182,38 @@ export class LentController {
   async returnCabinet(@User() user: UserSessionDto): Promise<void> {
     try {
       this.logger.debug(`Called ${this.returnCabinet.name}`);
+      return await this.lentService.returnCabinet(user);
+    } catch (err) {
+      this.logger.error(err);
+      if (err instanceof HttpException) {
+        throw err;
+      } else {
+        throw new InternalServerErrorException(`서버 에러가 발생했습니다`);
+      }
+    }
+  }
+
+  @ApiOperation({
+    summary: '메모 작성 후 대여한 사물함을 반납',
+    description: '자신이 대여한 캐비넷을 반납합니다.',
+  })
+  @ApiNoContentResponse({
+    description: 'Delete 성공 시, 204 No_Content를 응답합니다.',
+  })
+  @ApiForbiddenResponse({
+    description:
+      '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
+  })
+  @Post('/return-memo')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  async returnCabinetAndUpdateMemo(
+		@User() user: UserSessionDto, 
+		@Body() updateCabinetMemoRequestDto: UpdateCabinetMemoRequestDto
+	): Promise<void> {
+    try {
+      this.logger.debug(`Called ${this.returnCabinet.name}`);
+	  await this.updateLentCabinetMemo(updateCabinetMemoRequestDto, user);
       return await this.lentService.returnCabinet(user);
     } catch (err) {
       this.logger.error(err);

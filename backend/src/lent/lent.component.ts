@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
   forwardRef,
   HttpException,
   HttpStatus,
@@ -259,5 +260,17 @@ export class LentTools {
 
   async getLentCabinetId(user_id: number): Promise<number> {
     return await this.lentRepository.getLentCabinetId(user_id);
+  }
+
+  async isMemoUpdateRequiredReturn(cabinet_id: number): Promise<boolean> {
+	try {
+		const cabinet = await this.lentRepository.getLentCabinetData(cabinet_id);
+    return (cabinet.lent_count === 1 && cabinet.floor === 3);
+	} catch (e) {
+		throw new HttpException(
+		`대여한 사물함이 없습니다`,
+		HttpStatus.FORBIDDEN,
+		);
+	}
   }
 }
