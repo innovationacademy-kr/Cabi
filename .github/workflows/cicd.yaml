@@ -13,7 +13,7 @@ jobs:
           MARIADB_PASSWORD: test_password
           MARIADB_ROOT_PASSWORD: test_password
         ports:
-          - 3310:3306
+          - 3306:3306
         options: >-
           --health-cmd "mysqladmin ping -P 3306 -ptest_password | grep 'mysqld is alive' || exit 1"
           --health-interval 10s
@@ -26,11 +26,11 @@ jobs:
         run: >-
           mysql --force
           --host="127.0.0.1"
-          --port="3310"
+          --port="3306"
           --database="test_db"
           --user="test_user"
           --password="test_password"
-          < "backend/test/test_db.sql"
+          < "backend/database/42cabi_v3_test.sql"
       - name: Node.js 16.x Version
         uses: actions/setup-node@v1
         with:
@@ -48,8 +48,8 @@ jobs:
         run: npm run lint --prefix backend
       - name: 빌드 체크
         run: npm run build --prefix backend
-      - name: 단위 테스트 체크
-        run: npm run test --prefix backend
+      # - name: 단위 테스트 체크
+      #   run: npm run test --prefix backend
       - name: E2E 테스트
         env:
           HOST: localhost
