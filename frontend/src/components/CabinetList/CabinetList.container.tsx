@@ -50,9 +50,6 @@ const CabinetListContainer = ({
       {currentSectionName === "E/V" && (
         <EmptySection message={"여기엔 사물함이 없어요!"} />
       )}
-      {currentSectionName !== "E/V" && currentSectionCabinets.length === 0 && (
-        <EmptySection message={"사물함 오픈 준비중!"} />
-      )}
     </React.Fragment>
   );
 };

@@ -114,33 +114,40 @@ export class LentTools {
           }
         }
         // 대여 처리
-        const new_lent = await this.lentRepository.lentCabinet(
-          user,
-          cabinet_id,
-          cabinet.new_lent_id,
-        );
-        if (cabinet.lent_count + 1 === cabinet.max_user) {
-          if (cabinet.status === CabinetStatusType.AVAILABLE) {
-            // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
-            await this.setExpireTimeAll(
+        if (excepction_type === LentExceptionType.LENT_SUCCESS) {
+          const new_lent = await this.lentRepository.lentCabinet(
+            user,
+            cabinet_id,
+            cabinet.new_lent_id,
+          );
+          if (cabinet.lent_count + 1 === cabinet.max_user) {
+            if (cabinet.status === CabinetStatusType.AVAILABLE) {
+              // 해당 대여로 처음으로 풀방이 되면 만료시간 설정
+              await this.setExpireTimeAll(
+                cabinet_id,
+                new_lent.lent_time,
+                cabinet.lent_type,
+              );
+            } else {
+              // 기존 유저의 만료시간으로 만료시간 설정
+              await this.lentRepository.setExpireTime(
+                new_lent.lent_id,
+                cabinet.expire_time,
+              );
+            }
+            // 상태를 SET_EXPIRE_FULL로 변경
+            await this.cabinetInfoService.updateCabinetStatus(
               cabinet_id,
-              new_lent.lent_time,
-              cabinet.lent_type,
+              CabinetStatusType.SET_EXPIRE_FULL,
             );
-          } else {
-            // 기존 유저의 만료시간으로 만료시간 설정
+          } else if (cabinet.status !== CabinetStatusType.AVAILABLE) {
             await this.lentRepository.setExpireTime(
               new_lent.lent_id,
               cabinet.expire_time,
             );
           }
-          // 상태를 SET_EXPIRE_FULL로 변경
-          await this.cabinetInfoService.updateCabinetStatus(
-            cabinet_id,
-            CabinetStatusType.SET_EXPIRE_FULL,
-          );
+          break;
         }
-        break;
 
       case CabinetStatusType.SET_EXPIRE_FULL:
         excepction_type = LentExceptionType.LENT_FULL;
