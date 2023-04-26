@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   backend-CI:
-    if: ${{ github.event.head_commit.modified | join(' ').contains('backend/') }}
+    if: ${{ join(github.event.head_commit.modified, ' ').contains('backend/') }}
     runs-on: ubuntu-latest
     services:
       mariadb:
@@ -133,7 +133,7 @@ jobs:
             pm2 reload cabi_main
 
   frontend-CI:
-    if: ${{ github.event.head_commit.modified | join(' ').contains('frontend/') }}
+    if: ${{ join(github.event.head_commit.modified, ' ').contains('frontend/') }}
     runs-on: ubuntu-latest
     steps:
       - name: 체크아웃
