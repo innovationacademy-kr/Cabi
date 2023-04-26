@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   backend-CI:
-    if: ${{ contains(github.event.head_commit.modified, 'backend/')) }}
+    if: ${{ contains(github.event.head_commit.modified, 'backend/') }}
     runs-on: ubuntu-latest
     services:
       mariadb:
@@ -78,7 +78,7 @@ jobs:
     name: deploy-develop
     runs-on: ubuntu-latest
     needs: [backend-CI]
-    if: ${{ contains(github.event.head_commit.modified, 'frontend/')) }}
+    if: ${{ github.ref == 'refs/heads/dev' }}
     steps:
       - name: 리모트 쉘 접속
         uses: appleboy/ssh-action@master
@@ -133,7 +133,7 @@ jobs:
             pm2 reload cabi_main
 
   frontend-CI:
-    if: ${{ join(github.event.head_commit.modified, ' ').contains('frontend/') }}
+    if: ${{ contains(github.event.head_commit.modified, 'frontend/') }}
     runs-on: ubuntu-latest
     steps:
       - name: 체크아웃
