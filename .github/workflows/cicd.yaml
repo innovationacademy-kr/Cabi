@@ -25,6 +25,7 @@ jobs:
         run: |
           if [ -n "$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep ^frontend/)" ]; then
           echo "Frontend folder has changed, running job."
+          fi
       - name: 체크아웃
         uses: actions/checkout@v2
       - name: DB에 샘플 데이터 삽입
@@ -144,6 +145,7 @@ jobs:
         run: |
           if [ -n "$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep ^frontend/)" ]; then
           echo "Frontend folder has changed, running job."
+          fi
       - name: GitHub Event
         run: |
           cat << 'EOF'
