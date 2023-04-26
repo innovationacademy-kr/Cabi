@@ -201,7 +201,9 @@ export class LentTools {
     // 2. cabinet_status에 따라 처리.
     switch (cabinet.status) {
       case CabinetStatusType.AVAILABLE:
-        if (lent_count - 1 === 0) {
+
+        if (lent_count - 1 === 0 
+		&& !this.isMemoUpdateRequiredReturn(cabinet_id)) {
           await this.clearCabinetInfo(cabinet_id);
         }
         break;
@@ -216,7 +218,9 @@ export class LentTools {
             cabinet_id,
             CabinetStatusType.AVAILABLE,
           );
-          await this.clearCabinetInfo(cabinet_id);
+          if (!await this.isMemoUpdateRequiredReturn(cabinet_id)) {
+            await this.clearCabinetInfo(cabinet_id);
+          }
         }
         break;
       case CabinetStatusType.BANNED:
