@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -43,11 +44,12 @@ public class AdminAuthController {
 	}
 
 	@GetMapping("/login/callback")
-	public void loginCallback(@RequestParam String code, HttpServletResponse res) throws IOException {
+	public void loginCallback(@RequestParam String code, HttpServletRequest req, HttpServletResponse res) throws IOException {
 		String apiToken = oauthService.getGoogleToken(code);
 		JSONObject profile = oauthService.getGoogleProfile(apiToken);
 		String accessToken = tokenProvider.createToken(googleApiProperties.getName(), profile);
-		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), accessToken, "/");
+		String serverName = req.getServerName();
+		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), accessToken, "/", serverName);
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
 	}
 }

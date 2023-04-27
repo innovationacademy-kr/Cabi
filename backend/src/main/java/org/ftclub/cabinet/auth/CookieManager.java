@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.auth;
 
+import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.config.DomainNameProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
@@ -7,7 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
+@RequiredArgsConstructor
 public class CookieManager {
+
+	@Autowired
+	private final DomainNameProperties domainNameProperties;
 
 	public String getCookie(HttpServletRequest req, String name) {
 		Cookie[] cookies = req.getCookies();
@@ -21,10 +28,16 @@ public class CookieManager {
 		return null;
 	}
 
-	public void setCookie(HttpServletResponse res, String name, String value, String path) {
+	public void setCookie(HttpServletResponse res, String name, String value, String path, String serverName) {
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(60 * 60 * 24 * 28); // 28 days, jwt properties로 설정 가능
 		cookie.setPath(path);
+		if (serverName.equals(domainNameProperties.getLocal())) {
+			cookie.setDomain(domainNameProperties.getLocal());
+		}
+		else {
+			cookie.setDomain(domainNameProperties.getCookieDomain());
+		}
 		res.addCookie(cookie);
 	}
 
