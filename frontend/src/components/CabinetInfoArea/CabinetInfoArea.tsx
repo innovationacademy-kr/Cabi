@@ -14,6 +14,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import PasswordCheckModalContainer from "../Modals/PasswordCheckModal/PasswordCheckModal.container";
 
 export interface ISelectedCabinetInfo {
   floor: number;
@@ -38,9 +39,9 @@ const CabinetInfoArea: React.FC<{
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const [showLentModal, setShowLentModal] = useState<boolean>(false);
-  const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
+  const [showReturnModal, setShowReturnModal] = useState<boolean>(true);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
-  useState<boolean>(false);
+  const [showPasswordCheckModal, setPasswordCheckModal] = useState<boolean>(true);
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
@@ -70,6 +71,9 @@ const CabinetInfoArea: React.FC<{
   const handleCloseUnavailableModal = () => {
     setShowUnavailableModal(false);
   };
+  const handleClosePasswordCheckModal = () => {
+    setPasswordCheckModal(false);
+  }
 
   if (!selectedCabinetInfo)
     //아무 사물함도 선택하지 않았을 때
@@ -158,8 +162,9 @@ const CabinetInfoArea: React.FC<{
           lentType={selectedCabinetInfo!.lentType}
           closeModal={handleCloseReturnModal}
         />
-      )}
+      )} 
       {showMemoModal && <MemoModalContainer onClose={handleCloseMemoModal} />}
+      {showPasswordCheckModal && (<PasswordCheckModalContainer onClose={handleClosePasswordCheckModal} />)}
     </CabinetDetailAreaStyled>
   );
 };
