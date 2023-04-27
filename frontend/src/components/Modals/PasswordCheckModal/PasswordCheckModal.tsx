@@ -16,12 +16,10 @@ export interface IModalContents {
   closeModal: React.MouseEventHandler; // 모달 닫는 함수
 }
 
-export interface IPasswordState {
-  [key:string] : number | null
-}
-
-
-const PasswordCheckModal: React.FC<{ onKeyDown:Function, onChangeInput:Function, passwordState : IPasswordState, modalContents: IModalContents, inputs :React.MutableRefObject<HTMLInputElement[]> }> = ({ onKeyDown, onChangeInput, passwordState, modalContents, inputs}) => {
+const PasswordCheckModal: React.FC<{
+  modalContents: IModalContents;
+  password: string;
+}> = ({ modalContents, password }) => {
   const {
     type,
     icon,
@@ -35,10 +33,6 @@ const PasswordCheckModal: React.FC<{ onKeyDown:Function, onChangeInput:Function,
     closeModal,
   } = modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
-  const assignRef = (index:number) => (el : HTMLInputElement | null) => {
-    if(!el) return;
-    inputs.current[index] = el;
-  };
 
   return (
     <>
@@ -61,50 +55,46 @@ const PasswordCheckModal: React.FC<{ onKeyDown:Function, onChangeInput:Function,
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}
-        <PasswordContainer>
-          {new Array(4).fill(0).map((_, idx) =>  <Input onKeyDown={(e)=>onKeyDown(idx, e)} isEmpty={passwordState[('num' + (idx + 1))]} onChange={(e)=>onChangeInput(idx, e)} maxLength={1} ref={assignRef(idx)} value={passwordState['num' + (idx + 1)]?? ''} name={"num" + (idx + 1)}/>)}
-        </PasswordContainer>
         {renderAdditionalComponent && renderAdditionalComponent()}
-        {type === "hasProceedBtn" && (
-          <ButtonWrapperStyled>
-            <Button
-              onClick={closeModal}
-              text={cancleBtnText || "취소"}
-              theme="line"
-            />
-            <Button
-              onClick={(e) => {
-                onClickProceed!(e);
-              }}
-              text={proceedBtnText || "확인"}
-              theme="fill"
-            />
-          </ButtonWrapperStyled>
-        )}
+        <ButtonWrapperStyled>
+          <Button
+            onClick={closeModal}
+            text={cancleBtnText || "취소"}
+            theme="line"
+          />
+          <Button
+            onClick={(e) => {
+              onClickProceed!(e);
+            }}
+            text={proceedBtnText || "확인"}
+            theme="fill"
+            disabled={password.length < 4}
+          />
+        </ButtonWrapperStyled>
       </ModalStyled>
     </>
   );
 };
 
-const Input = styled.input<{isEmpty : number | null}>`
-  width:20%;
-  height:100%;
-  border-radius:10px;
-  outline:none;
-  border:${({isEmpty}) => isEmpty ? '1px solid var(--main-color)' : '1px solid #dfd0fe'}
-`
+const Input = styled.input<{ isEmpty: number | null }>`
+  width: 20%;
+  height: 100%;
+  border-radius: 10px;
+  outline: none;
+  border: ${({ isEmpty }) =>
+    isEmpty ? "1px solid var(--main-color)" : "1px solid #dfd0fe"};
+`;
 
 const PasswordContainer = styled.div`
-max-width: 240px;
-width: 100%;
-height: 60px;
-margin:0 auto;
-margin-top: 20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-`
+  max-width: 240px;
+  width: 100%;
+  height: 60px;
+  margin: 0 auto;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 const ModalStyled = styled.div`
   position: fixed;

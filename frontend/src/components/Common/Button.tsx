@@ -64,6 +64,7 @@ const ButtonContainerStyled = styled.button`
       color: var(--gray-color);
       border: 1px solid var(--gray-color);
     `}
+
   @media (max-height: 745px) {
     margin-bottom: 8px;
   }
