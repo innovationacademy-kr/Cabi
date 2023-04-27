@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -204,17 +205,17 @@ export class LentController {
     description:
       '사물함을 빌리지 않았는데 호출할 때, 403 Forbidden을 응답합니다.',
   })
-  @Post('/return-memo')
+  @Patch('/return-memo')
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard)
   async returnCabinetAndUpdateMemo(
 		@User() user: UserSessionDto, 
-		@Body() updateCabinetMemoRequestDto: UpdateCabinetMemoRequestDto
+		@Body() memo: UpdateCabinetMemoRequestDto
 	): Promise<void> {
     try {
       this.logger.debug(`Called ${this.returnCabinet.name}`);
-	  await this.updateLentCabinetMemo(updateCabinetMemoRequestDto, user);
-      return await this.lentService.returnCabinet(user);
+	  await this.updateLentCabinetMemo(memo, user);
+      return await this.lentService.returnCabinet(user, true);
     } catch (err) {
       this.logger.error(err);
       if (err instanceof HttpException) {

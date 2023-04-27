@@ -117,7 +117,7 @@ export class LentService {
     );
   }
 
-  async returnCabinet(user: UserDto): Promise<void> {
+  async returnCabinet(user: UserDto, isMemoUpdated: boolean = false ): Promise<void> {
     this.logger.debug(`Called ${LentService.name} ${this.returnCabinet.name}`);
     try {
       // 1. 해당 유저가 대여중인 cabinet_id를 가져온다.
@@ -130,7 +130,8 @@ export class LentService {
           HttpStatus.FORBIDDEN,
         );
       }
-      if (await this.lentTools.isMemoUpdateRequiredReturn(cabinet_id)) {
+      if (await this.lentTools.isMemoUpdateRequiredReturn(cabinet_id)
+		&&	isMemoUpdated == false) {
         throw  new HttpException(
           `사물함 반납 시 사물함 메모를 작성해야 합니다`,
           HttpStatus.I_AM_A_TEAPOT,
