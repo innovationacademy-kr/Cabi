@@ -23,10 +23,12 @@ import { getExpireDateString } from "@/utils";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
+import { AxiosError } from "axios";
 
 const ReturnModal: React.FC<{
   lentType: string;
   closeModal: React.MouseEventHandler;
+  handleOpenPasswordCheckModal: Function;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -71,6 +73,11 @@ const ReturnModal: React.FC<{
         throw error;
       }
     } catch (error: any) {
+      if (error.response.status === 418) {
+        props.closeModal(e);
+        props.handleOpenPasswordCheckModal();
+        return;
+      }
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);
     } finally {

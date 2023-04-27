@@ -26,7 +26,7 @@ const PasswordContainer = ({
     }
     setList([...temp]);
     if (inputRef.current) inputRef.current.focus();
-  });
+  }, [password]);
   return (
     <>
       <PasswordStyled>

@@ -39,9 +39,10 @@ const CabinetInfoArea: React.FC<{
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const [showLentModal, setShowLentModal] = useState<boolean>(false);
-  const [showReturnModal, setShowReturnModal] = useState<boolean>(true);
+  const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
-  const [showPasswordCheckModal, setPasswordCheckModal] = useState<boolean>(true);
+  const [showPasswordCheckModal, setPasswordCheckModal] =
+    useState<boolean>(false);
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
@@ -71,9 +72,12 @@ const CabinetInfoArea: React.FC<{
   const handleCloseUnavailableModal = () => {
     setShowUnavailableModal(false);
   };
+  const handleOpenPasswordCheckModal = () => {
+    setPasswordCheckModal(true);
+  };
   const handleClosePasswordCheckModal = () => {
     setPasswordCheckModal(false);
-  }
+  };
 
   if (!selectedCabinetInfo)
     //아무 사물함도 선택하지 않았을 때
@@ -160,11 +164,14 @@ const CabinetInfoArea: React.FC<{
       {showReturnModal && (
         <ReturnModal
           lentType={selectedCabinetInfo!.lentType}
+          handleOpenPasswordCheckModal={handleOpenPasswordCheckModal}
           closeModal={handleCloseReturnModal}
         />
-      )} 
+      )}
       {showMemoModal && <MemoModalContainer onClose={handleCloseMemoModal} />}
-      {showPasswordCheckModal && (<PasswordCheckModalContainer onClose={handleClosePasswordCheckModal} />)}
+      {showPasswordCheckModal && (
+        <PasswordCheckModalContainer onClose={handleClosePasswordCheckModal} />
+      )}
     </CabinetDetailAreaStyled>
   );
 };

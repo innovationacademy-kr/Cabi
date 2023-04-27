@@ -65,6 +65,11 @@ export const modalPropsMap = {
     title: "사용이 불가한 사물함입니다",
     confirmMessage: "",
   },
+  PASSWORD_CHECK: {
+    type: "confirm",
+    title: "반납 시  비밀번호",
+    confirmMessage: "확인했습니다",
+  },
   MODAL_RETURN: {
     type: "confirm",
     title: "사물함 반납하기",
