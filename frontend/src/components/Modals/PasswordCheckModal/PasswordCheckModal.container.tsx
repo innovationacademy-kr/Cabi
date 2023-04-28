@@ -44,7 +44,10 @@ const PasswordCheckModalContainer: React.FC<{
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regex = /^[0-9]{0,4}$/;
-    if (!regex.test(e.target.value)) return;
+    if (!regex.test(e.target.value)) {
+      e.target.value = password;
+      return;
+    }
     setPassword(e.target.value);
   };
 
