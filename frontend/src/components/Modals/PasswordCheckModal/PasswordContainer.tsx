@@ -15,13 +15,8 @@ const PasswordContainer = ({
   };
 
   useEffect(() => {
-    const temp: string[] = [];
-    let num = Number(password);
-    while (num) {
-      temp.unshift((num % 10) + "");
-      num = Math.floor(num / 10);
-    }
-    while (temp.length < 4) {
+    const temp = [...password.split("")];
+    for (let i = 0; i < 4 - password.length; i++) {
       temp.push("");
     }
     setList([...temp]);
