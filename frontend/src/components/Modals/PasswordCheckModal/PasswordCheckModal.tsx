@@ -45,9 +45,6 @@ const PasswordCheckModal: React.FC<{
         }}
       />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
-        {/* {icon && (
-          <img src={icon} style={{ width: "70px", marginBottom: "20px" }} />
-        )} */}
         {icon && (
           <ModalIconImgStyled src={icon} iconScaleEffect={iconScaleEffect} />
         )}
