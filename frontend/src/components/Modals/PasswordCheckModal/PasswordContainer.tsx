@@ -26,7 +26,12 @@ const PasswordContainer = ({
     <>
       <PasswordStyled>
         {list.map((val, idx) => (
-          <PasswordNumber onClick={onClick} key={idx} val={val}>
+          <PasswordNumber
+            className={idx === 0 && val === "" ? "active" : ""}
+            onClick={onClick}
+            key={idx}
+            val={val}
+          >
             {val}
           </PasswordNumber>
         ))}
@@ -38,7 +43,8 @@ const PasswordContainer = ({
 
 const Input = styled.input`
   height: 0;
-  color: white;
+  color: transparent;
+  caret-color: transparent;
 `;
 
 const PasswordNumber = styled.div<{ val: string }>`
@@ -52,6 +58,9 @@ const PasswordNumber = styled.div<{ val: string }>`
   align-items: center;
   font-size: 2rem;
   color: var(--main-color);
+  &.active {
+    border: 2px solid var(--main-color);
+  }
 `;
 
 const PasswordStyled = styled.div`
