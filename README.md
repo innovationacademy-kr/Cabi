@@ -177,7 +177,7 @@
 | [🍎 skim](https://github.com/subin195-09) | [🍪 spark](https://github.com/Hyunja27) | [✏️yooh](https://github.com/oyhoyhk) | [🪀 yoyoo](https://github.com/Yoowatney) | [🎒 yubchoi](https://github.com/yubinquitous) |
 | ----------------------------------------- | ------------------------------------------- | -------------------------------------------- | --------------------------------------- | ---------------------------------------- |
 
-| [🚀 wchae](https://github.com/enaenen) | [ 🌑daewoole](https://github.com/LeeDaeWook) | [ jpark2](https://github.com/Z1park) | [🎨junsohn](https://github.com/junyoung2015) | [ hyungnoh](https://github.com/YESHYUNGSEOK) |
+| [🚀 wchae](https://github.com/enaenen) | [ 🌑daewoole](https://github.com/LeeDaeWook) | [ jpark2](https://github.com/Z1park) | [🎨 junsohn](https://github.com/junyoung2015) | [ hyungnoh](https://github.com/YESHYUNGSEOK) |
 | ----------------------------------------- | ------------------------------------------- | -------------------------------------------- | --------------------------------------- | ---------------------------------------- |
 
 |  <a href="https://github.com/innovationacademy-kr"><img src="https://img.shields.io/badge/42Seoul-000000?style=flat-square&logo=42&logoColor=white" /></a> | 
