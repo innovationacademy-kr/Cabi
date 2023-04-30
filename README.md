@@ -177,7 +177,7 @@
 | [🍎 skim](https://github.com/subin195-09) | [🍪 spark](https://github.com/Hyunja27) | [✏️yooh](https://github.com/oyhoyhk) | [🪀 yoyoo](https://github.com/Yoowatney) | [🎒 yubchoi](https://github.com/yubinquitous) |
 | ----------------------------------------- | ------------------------------------------- | -------------------------------------------- | --------------------------------------- | ---------------------------------------- |
 
-| [ 🌑 daewoole](https://github.com/LeeDaeWook) | [ hyungnoh](https://github.com/YESHYUNGSEOK) | [ jpark2](https://github.com/Z1park) | [🎨 junsohn](https://github.com/junyoung2015) |[ seong-hui ](https://github.com) | [🚀 wchae](https://github.com/enaenen) |
+| [ 🌑 daewoole](https://github.com/LeeDaeWook) | [🐝 hyungnoh](https://github.com/YESHYUNGSEOK) | [ jpark2](https://github.com/Z1park) | [🎨 junsohn](https://github.com/junyoung2015) |[🤓 seong-hui ](https://github.com/seong-hui) | [🚀 wchae](https://github.com/enaenen) |
 | ----------------------------------------- | ------------------------------------------- | -------------------------------------------- | --------------------------------------- | ---------------------------------------- | ---------------------------------------- |
 
 
