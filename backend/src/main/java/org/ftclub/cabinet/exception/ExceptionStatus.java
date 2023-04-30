@@ -21,7 +21,10 @@ public enum ExceptionStatus {
     LENT_BROKEN(HttpStatus.FORBIDDEN, "고장난 사물함은 대여할 수 없습니다"),
     LENT_BANNED(HttpStatus.FORBIDDEN, "비활성화된 사물함입니다"),
     NO_LENT_CABINET(HttpStatus.FORBIDDEN, "대여한 사물함이 없습니다"),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다"),
+    OAUTH_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "인증 서버와 통신 중 에러가 발생했습니다"),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인 정보가 유효하지 않습니다\\n다시 로그인해주세요"),
+    OVER_MAX_USER(HttpStatus.BAD_REQUEST, "최대 인원을 초과했습니다");
 
     ExceptionStatus(HttpStatus status, String message) {
         this.statusCode = status.value();

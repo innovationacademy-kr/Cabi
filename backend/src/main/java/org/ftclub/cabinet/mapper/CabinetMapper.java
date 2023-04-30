@@ -15,5 +15,4 @@ public interface CabinetMapper {
 
     @InheritInverseConfiguration
     CabinetDto toCabinetDto(Cabinet cabinet);
-
 }

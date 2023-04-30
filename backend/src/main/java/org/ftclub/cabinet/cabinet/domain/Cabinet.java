@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.cabinet.domain;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -14,12 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.Validate;
-import org.ftclub.cabinet.lent.domain.LentHistory;
 
 @Entity
 @Table(name = "CABINET")
@@ -152,7 +148,28 @@ public class Cabinet {
         }
         return sameIdentityAs((Cabinet) other);
     }
+
     public Long getCabinetId() {
         return cabinetId;
+    }
+
+    public void updateStatusByUserCount(Integer userCount) {
+        if (userCount == this.maxUser) {
+            this.status = CabinetStatus.FULL;
+            return;
+        }
+        if (userCount < this.maxUser && this.status == CabinetStatus.FULL) {
+            switch (this.lentType) {
+                case PRIVATE:
+                case CLUB:
+                    this.status = CabinetStatus.AVAILABLE;
+                    break;
+                case SHARE:
+                    this.status = CabinetStatus.LIMITED_AVAILABLE;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
