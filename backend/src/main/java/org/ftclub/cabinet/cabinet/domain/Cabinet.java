@@ -149,10 +149,6 @@ public class Cabinet {
         return sameIdentityAs((Cabinet) other);
     }
 
-    public Long getCabinetId() {
-        return cabinetId;
-    }
-
     public void updateStatusByUserCount(Integer userCount) {
         if (userCount == this.maxUser) {
             this.status = CabinetStatus.FULL;
