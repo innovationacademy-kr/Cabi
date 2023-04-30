@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: oauth
+    include: oauth, local
     default: local
   jpa:
     properties:
