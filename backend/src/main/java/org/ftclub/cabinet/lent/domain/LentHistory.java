@@ -16,13 +16,9 @@ public class LentHistory {
     @Column(name = "LENT_HISTORY_ID")
     private Long lentHistoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CABINET_ID", nullable = false)
-    private Cabinet cabinet;
+    private Long cabinetId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LENT_CABINET_DETAIL_ID")
@@ -40,11 +36,11 @@ public class LentHistory {
     @Column(name = "ENDED_AT")
     private Date endedAt = null;
 
-    public LentHistory(Date startedAt, Date expiredAt, User user, Cabinet cabinet, LentCabinetDetail lentCabinetDetail) {
+    public LentHistory(Date startedAt, Date expiredAt, Long userId, Long cabinetId, LentCabinetDetail lentCabinetDetail) {
         this.startedAt = startedAt;
         this.expiredAt = expiredAt;
-        this.user = user;
-        this.cabinet = cabinet;
+        this.userId = userId;
+        this.cabinetId = cabinetId;
         this.lentCabinetDetail = lentCabinetDetail;
     }
 }
