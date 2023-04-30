@@ -1,7 +1,9 @@
 spring:
+  profiles:
+    include: oauth
   config:
     activate:
-      on-profile: test
+      on-profile: test, oauth, local
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa

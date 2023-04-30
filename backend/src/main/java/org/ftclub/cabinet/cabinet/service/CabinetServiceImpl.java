@@ -44,13 +44,13 @@ public class CabinetServiceImpl implements CabinetService {
 
     @Override
     public BuildingFloorsResponseDto getBuildingFloors() {
-        List<BuildingFloorsDto> lists = new ArrayList<>();
+        List<BuildingFloorsDto> buildingFloors = new ArrayList<>();
         List<String> buildings = cabinetRepository.findAllBuildings();
         for (String building : buildings) {
             List<Integer> floors = cabinetRepository.findAllFloorsByBuilding(building);
-            lists.add(new BuildingFloorsDto(building, floors));
+            buildingFloors.add(new BuildingFloorsDto(building, floors));
         }
-        return new BuildingFloorsResponseDto(lists);
+        return new BuildingFloorsResponseDto(buildingFloors);
     }
 
     @Override
