@@ -36,7 +36,7 @@ public class Cabinet {
 
     @Embedded Grid grid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "CABINET_PLACE_ID")
     private CabinetPlace cabinetPlace;
 
@@ -50,5 +50,7 @@ public class Cabinet {
         this.cabinetPlace = cabinetPlace;
     }
 
-
+    public Long getCabinetId() {
+        return cabinetId;
+    }
 }

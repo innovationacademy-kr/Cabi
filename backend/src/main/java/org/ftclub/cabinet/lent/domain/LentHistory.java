@@ -20,7 +20,7 @@ public class LentHistory {
 
     private Long cabinetId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "LENT_CABINET_DETAIL_ID")
     private LentCabinetDetail lentCabinetDetail;
 

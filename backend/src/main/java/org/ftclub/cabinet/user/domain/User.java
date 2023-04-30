@@ -41,4 +41,8 @@ public class User {
         this.blackholedAt = blackholedAt;
         this.role = userRole;
     }
+
+    public Long getUserId() {
+        return userId;
+    }
 }

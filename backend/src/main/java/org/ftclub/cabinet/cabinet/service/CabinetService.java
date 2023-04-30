@@ -17,7 +17,7 @@ public class CabinetService {
     public void saveMock() {
         CabinetPlace cabinetPlace = new CabinetPlace(new Location(), new CabinetGrid(), new MapArea());
         entityManager.persist(cabinetPlace);
-        Cabinet cabinet1 = new Cabinet(1004, CabinetStatus.AVAILABLE, LentType.PUBLIC, 3, new Grid(), cabinetPlace);
+        Cabinet cabinet1 = new Cabinet(1004, CabinetStatus.AVAILABLE, LentType.PRIVATE, 3, new Grid(), cabinetPlace);
         cabinetRepository.save(cabinet1);
     }
     @Transactional
