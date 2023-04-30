@@ -30,6 +30,12 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+	implementation 'org.json:json:20210307'
+	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	testImplementation 'org.modelmapper:modelmapper:3.1.1'
 	testRuntimeOnly 'com.h2database:h2'
 	//JUnit4 추가
