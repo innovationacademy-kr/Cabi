@@ -29,9 +29,6 @@ export interface ISelectedCabinetInfo {
   isAdmin: boolean;
   isLented: boolean;
 }
-//{selectedCabinetInfo!.expireDate
-//  ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
-//  : null}
 
 const setExprieDate = (date: Date | undefined) => {
   if (!date) return null;
@@ -53,7 +50,6 @@ const CabinetInfoArea: React.FC<{
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
-  console.log("selectedCabinetInfo", selectedCabinetInfo);
 
   const handleOpenLentModal = () => {
     if (myCabinetId) return handleOpenUnavailableModal();
