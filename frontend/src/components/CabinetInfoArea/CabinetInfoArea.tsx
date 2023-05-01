@@ -30,6 +30,12 @@ export interface ISelectedCabinetInfo {
   isLented: boolean;
 }
 
+const setExprieDate = (date: Date | undefined) => {
+  if (!date) return null;
+  if (date.toString().slice(0, 4) === "9999") return null;
+  return date.toString().slice(0, 10);
+};
+
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   myCabinetId?: number;
@@ -137,9 +143,7 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo!.expireDate
-          ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
-          : null}
+        {setExprieDate(selectedCabinetInfo!.expireDate)}
       </CabinetLentDateInfoStyled>
       {showUnavailableModal && (
         <UnavailableModal
