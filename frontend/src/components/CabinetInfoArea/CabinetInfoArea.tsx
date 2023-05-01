@@ -29,6 +29,15 @@ export interface ISelectedCabinetInfo {
   isAdmin: boolean;
   isLented: boolean;
 }
+//{selectedCabinetInfo!.expireDate
+//  ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
+//  : null}
+
+const setExprieDate = (date: Date | undefined) => {
+  if (!date) return null;
+  if (date.toString().slice(0, 4) === "9999") return null;
+  return date.toString().slice(0, 10);
+};
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -44,6 +53,7 @@ const CabinetInfoArea: React.FC<{
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
+  console.log("selectedCabinetInfo", selectedCabinetInfo);
 
   const handleOpenLentModal = () => {
     if (myCabinetId) return handleOpenUnavailableModal();
@@ -137,9 +147,7 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo!.expireDate
-          ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
-          : null}
+        {setExprieDate(selectedCabinetInfo!.expireDate)}
       </CabinetLentDateInfoStyled>
       {showUnavailableModal && (
         <UnavailableModal
