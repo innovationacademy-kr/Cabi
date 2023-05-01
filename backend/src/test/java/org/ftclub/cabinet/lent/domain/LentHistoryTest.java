@@ -5,7 +5,6 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,8 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest()
 @ActiveProfiles("test")
@@ -35,7 +32,7 @@ class LentHistoryTest {
         em.persist(user);
         em.persist(cabinet);
         em.flush();
-        LentHistory lentHistory = new LentHistory(new Date(), new Date(), user.getUserId(), cabinet.getCabinetId(), new LentCabinetDetail());
+        LentHistory lentHistory = new LentHistory(new Date(), new Date(), user.getUserId(), cabinet.getCabinetId());
         em.persist(lentHistory);
         Long userLentCount = lentRepository.userActiveLentCount(user.getUserId());
         Assertions.assertEquals(1, userLentCount);
