@@ -28,6 +28,10 @@ public class Cabinet {
     @Column(name = "CABINET_ID")
     private Long cabinetId;
 
+    @Version
+    @Column(name = "VERSION")
+    private Long version = 1L;
+
     @Column(name = "VISIBLE_NUM")
     private Integer visibleNum;
 
