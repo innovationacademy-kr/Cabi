@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 @Getter
 public class JwtProperties {
 
-	@Value("${jwt.token.secret-key}")
-	private String secret;
+    @Value("${jwt.token.secret-key}")
+    private String secret;
 
-	@Value("${jwt.token.main-token-name}")
-	private String mainTokenName;
+    @Value("${jwt.token.main-token-name}")
+    private String mainTokenName;
 
-	@Value("${jwt.token.admin-token-name}")
-	private String adminTokenName;
+    @Value("${jwt.token.admin-token-name}")
+    private String adminTokenName;
 
-	@Value("${jwt.token.expiry}")
-	private Integer expiry;
+    @Value("${jwt.token.expiry}")
+    private Integer expiry;
 }
