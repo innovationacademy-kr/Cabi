@@ -98,7 +98,7 @@ public class CabinetServiceImpl implements CabinetService {
         Validate.notNull(cabinetId, "cabinetId must not be null");
         Validate.notNull(userCount, "userCount must not be null");
         Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        if (cabinet.maxUser() < userCount) {
+        if (cabinet.getMaxUser() < userCount) {
             throw new ServiceException(ExceptionStatus.OVER_MAX_USER);
         }
         cabinet.updateStatusByUserCount(userCount);

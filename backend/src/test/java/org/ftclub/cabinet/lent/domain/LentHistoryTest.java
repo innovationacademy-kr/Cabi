@@ -41,7 +41,7 @@ class LentHistoryTest {
         em.persist(cabinet);
         em.flush();
         LentHistory lentHistory = new LentHistory(new Date(), new Date(), user.getUserId(),
-                cabinet.cabinetId(), new LentCabinetDetail());
+                cabinet.getCabinetId(), new LentCabinetDetail());
         em.persist(lentHistory);
         Long userLentCount = lentRepository.userActiveLentCount(user.getUserId());
         Assertions.assertEquals(1, userLentCount);

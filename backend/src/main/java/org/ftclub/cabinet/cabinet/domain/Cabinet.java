@@ -14,12 +14,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.Validate;
 
 @Entity
 @Table(name = "CABINET")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Cabinet {
 
     @Id
@@ -61,39 +63,7 @@ public class Cabinet {
         this.grid = grid;
         this.cabinetPlace = cabinetPlace;
     }
-
-    public Long cabinetId() {
-        return cabinetId;
-    }
-
-    public Integer visibleNum() {
-        return visibleNum;
-    }
-
-    public CabinetStatus status() {
-        return status;
-    }
-
-    public LentType lentType() {
-        return lentType;
-    }
-
-    public Integer maxUser() {
-        return maxUser;
-    }
-
-    public String statusNote() {
-        return statusNote;
-    }
-
-    public Grid grid() {
-        return grid;
-    }
-
-    public CabinetPlace cabinetPlace() {
-        return cabinetPlace;
-    }
-
+    
     public boolean isStatus(CabinetStatus cabinetStatus) {
         Validate.notNull(cabinetStatus, "CabinetStatus is required");
         return this.status == cabinetStatus;

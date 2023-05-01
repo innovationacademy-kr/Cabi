@@ -1,19 +1,16 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import javax.transaction.Transactional;
-import org.ftclub.cabinet.CabinetApplication;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
-import org.ftclub.cabinet.dto.CabinetDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes = CabinetApplication.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@ContextConfiguration(classes = CabinetApplication.class)
+@SpringBootTest
 @Transactional
 class CabinetServiceTest {
 
@@ -25,11 +22,13 @@ class CabinetServiceTest {
 
     @Test
     public void 캐비닛_상태_업데이트() {
-        CabinetDto cabinet = cabinetService.getCabinetById(1L);
+        Cabinet cabinet = cabinetRepository.findById(1L).orElseThrow(RuntimeException::new);
         assertThat(cabinet.getStatus()).isEqualTo(CabinetStatus.BROKEN);
         cabinetService.updateCabinetStatus(1L, CabinetStatus.AVAILABLE);
+        cabinet = cabinetRepository.findById(1L).orElseThrow(RuntimeException::new);
         assertThat(cabinet.getStatus()).isEqualTo(CabinetStatus.AVAILABLE);
         cabinetService.updateCabinetStatusByUserCount(1L, 1);
+        cabinet = cabinetRepository.findById(1L).orElseThrow(RuntimeException::new);
         assertThat(cabinet.getStatus()).isEqualTo(CabinetStatus.FULL);
     }
 
