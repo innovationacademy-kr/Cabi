@@ -1,6 +1,7 @@
 spring:
   profiles:
-    active: local
+    include: local
+    active: oauth
   jpa:
     properties:
       hibernate:

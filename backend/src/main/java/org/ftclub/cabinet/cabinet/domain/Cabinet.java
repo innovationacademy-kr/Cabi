@@ -50,12 +50,10 @@ public class Cabinet {
     @Embedded
     Grid grid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "CABINET_PLACE_ID")
     private CabinetPlace cabinetPlace;
 
-    @OneToMany(mappedBy = "cabinet", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LentHistory> lentHistoryList = new ArrayList<>();
 
     public Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
             Grid grid, CabinetPlace cabinetPlace) {
@@ -69,5 +67,8 @@ public class Cabinet {
 
     public CabinetStatus status() {
         return this.status;
+        
+    public Long getCabinetId() {
+        return cabinetId;
     }
 }

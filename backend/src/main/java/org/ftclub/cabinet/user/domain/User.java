@@ -35,13 +35,14 @@ public class User {
     @Column(name = "ROLE", length = 32, nullable = false)
     private UserRole role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LentHistory> lentHistoryList = new ArrayList<>();
-
     public User(String name, String email, Date blackholedAt, UserRole userRole) {
         this.name = name;
         this.email = email;
         this.blackholedAt = blackholedAt;
         this.role = userRole;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 }

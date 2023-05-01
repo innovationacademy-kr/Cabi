@@ -21,8 +21,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class CabinetServiceTest {
 
     @Mock
@@ -44,6 +53,7 @@ class CabinetServiceTest {
     public void testFindAll() {
         Cabinet cabinet = new Cabinet(1, CabinetStatus.AVAILABLE, LentType.PUBLIC, 3, new Grid(),
                 new CabinetPlace(new Location(), new CabinetGrid(), new MapArea()));
+
         // Add expected entities to the list...
 
         when(cabinetRepository.findById(1L)).thenReturn(Optional.of(cabinet));
