@@ -52,6 +52,12 @@ public class Cabinet {
     @JoinColumn(name = "CABINET_PLACE_ID")
     private CabinetPlace cabinetPlace;
 
+    @Column(name = "TITLE", length = 64)
+    private String title;
+
+    @Column(name = "MEMO", length = 64)
+    private String memo;
+
 
     public Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
             Grid grid, CabinetPlace cabinetPlace) {
@@ -61,5 +67,7 @@ public class Cabinet {
         this.maxUser = maxUser;
         this.grid = grid;
         this.cabinetPlace = cabinetPlace;
+        this.title = "";
+        this.memo = "";
     }
 }
