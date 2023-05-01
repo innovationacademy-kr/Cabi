@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
@@ -12,6 +12,7 @@ import {
   axiosCabinetById,
   axiosMyLentInfo,
   axiosReturn,
+  axiosSendCabinetPassword,
 } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
 import {
@@ -19,41 +20,40 @@ import {
   FailResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
-import { getExpireDateString } from "@/utils";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
-import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
+import { modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
-import { AxiosError } from "axios";
+import PasswordCheckModal from "./PasswordCheckModal";
+import PasswordContainer from "./PasswordContainer";
 
-const ReturnModal: React.FC<{
-  lentType: string;
-  closeModal: React.MouseEventHandler;
-  handleOpenPasswordCheckModal: Function;
+const PasswordCheckModalContainer: React.FC<{
+  onClose: () => void;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>("");
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
+  const [modalTitle, setModalTitle] = useState<string>("");
+  const [password, setPassword] = useState("");
   const [myInfo, setMyInfo] = useRecoilState(userState);
-  const [myLentInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  const formattedExpireDate = getExpireDateString(
-    "myCabinet",
-    myLentInfo.lent_info ? myLentInfo.lent_info[0].expire_time : undefined
-  );
-  const returnDetail = `${
-    myLentInfo && myLentInfo.lent_info[0].expire_time === null
-      ? ""
-      : `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
-  }
-지금 반납 하시겠습니까?`;
-  const tryReturnRequest = async (e: React.MouseEvent) => {
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const regex = /^[0-9]{0,4}$/;
+    if (!regex.test(e.target.value)) {
+      e.target.value = password;
+      return;
+    }
+    setPassword(e.target.value);
+  };
+
+  const onSendPassword = async () => {
     try {
-      await axiosReturn();
+      await axiosSendCabinetPassword(password);
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinet_id: -1 });
       setIsCurrentSectionRender(true);
@@ -65,54 +65,55 @@ const ReturnModal: React.FC<{
       } catch (error) {
         throw error;
       }
-      //userLentInfo 세팅
       try {
         const { data: myLentInfo } = await axiosMyLentInfo();
         setMyLentInfo(myLentInfo);
       } catch (error) {
         throw error;
       }
-    } catch (error: any) {
-      if (error.response.status === 418) {
-        props.closeModal(e);
-        props.handleOpenPasswordCheckModal();
-        return;
-      }
-      setHasErrorOnResponse(true);
-      setModalTitle(error.response.data.message);
+    } catch (error) {
+      throw error;
     } finally {
       setShowResponseModal(true);
     }
   };
 
-  const returnModalContents: IModalContents = {
+  const passwordCheckModalContents: IModalContents = {
     type: "hasProceedBtn",
     icon: checkIcon,
-    title: modalPropsMap[additionalModalType.MODAL_RETURN].title,
-    detail: returnDetail,
-    proceedBtnText:
-      modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
-    onClickProceed: tryReturnRequest,
-    closeModal: props.closeModal,
+    title: modalPropsMap["PASSWORD_CHECK"].title,
+    detail: `비밀번호는 <strong>1111</strong>로 초기화해서
+    반납하시는 것을 권장합니다.`,
+    proceedBtnText: modalPropsMap["PASSWORD_CHECK"].confirmMessage,
+    onClickProceed: onSendPassword,
+    renderAdditionalComponent: () => (
+      <PasswordContainer onChange={onChange} password={password} />
+    ),
+    closeModal: props.onClose,
   };
 
   return (
     <ModalPortal>
-      {!showResponseModal && <Modal modalContents={returnModalContents} />}
+      {!showResponseModal && (
+        <PasswordCheckModal
+          password={password}
+          modalContents={passwordCheckModalContents}
+        />
+      )}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
             modalTitle={modalTitle}
-            closeModal={props.closeModal}
+            closeModal={props.onClose}
           />
         ) : (
           <SuccessResponseModal
             modalTitle={modalTitle}
-            closeModal={props.closeModal}
+            closeModal={props.onClose}
           />
         ))}
     </ModalPortal>
   );
 };
 
-export default ReturnModal;
+export default PasswordCheckModalContainer;
