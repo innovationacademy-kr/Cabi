@@ -1,32 +1,33 @@
-package org.ftclub.cabinet.cabinet.service;
+public interface CabinetService {
 
-import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.cabinet.domain.*;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+    //    void createNewCabinet(); optional parameters -> many overloading
+//    void deleteCabinet(); optional parameters -> many overloading
+    // void createNewLocation;
+    CabinetDto getCabinetById(Long cabinetId);
 
-import javax.persistence.EntityManager;
+    BuildingFloorsResponseDto getBuildingFloors();
 
-@Service
-@RequiredArgsConstructor
-public class CabinetService {
-    final private CabinetRepository cabinetRepository;
-    final private EntityManager entityManager;
-    @Transactional
-    public void saveMock() {
-        CabinetPlace cabinetPlace = new CabinetPlace(new Location(), new CabinetGrid(), new MapArea());
-        entityManager.persist(cabinetPlace);
-        Cabinet cabinet1 = new Cabinet(1004, CabinetStatus.AVAILABLE, LentType.PRIVATE, 3, new Grid(), cabinetPlace);
-        cabinetRepository.save(cabinet1);
-    }
-    @Transactional
-    public CabinetDto getShareCabinet(Integer cabinetId) {
-        Cabinet cabinet = cabinetRepository.findById((long) cabinetId).orElseThrow(RuntimeException::new);
-        ModelMapper modelMapper = new ModelMapper();
-        //modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
-        CabinetDto cabinetDto = modelMapper.map(cabinet, CabinetDto.class);
-        return cabinetDto;
-    }
+    CabinetInfoResponseDto getCabinetInfo(Long cabinetId);
+
+    List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor);
+
+    void updateStatus(Long cabinetId, CabinetStatus status);
+
+    void updateStatusByUserCount(Long cabinetId, Integer userCount);
+
+    void updateMemoById(Long cabinetId, String memo);
+
+    void updateTitleById(Long cabinetId, String title);
+
+    void updateLocationById(Long cabinetId, Location location);
+
+    void updateLentTyById(Long cabinetId, LentType lentType);
+
+    void updateGridById(Long cabinetId, Grid grid);
+
+    void updateStatusNoteById(Long cabinetId, String statusNote);
+
+//      void createNewCabinetPlace(params...);
+//      void deleteCabinetPlace(cabinetplaceId);
 
 }
