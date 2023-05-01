@@ -121,6 +121,17 @@ export const axiosReturn = async (): Promise<any> => {
   }
 };
 
+const axiosSendCabinetPasswordURL = "/api/lent/return-memo";
+export const axiosSendCabinetPassword = async (password: string) => {
+  try {
+    const response = await instance.patch(axiosSendCabinetPasswordURL, {
+      cabinet_memo: password,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosMyLentLogURL = "/api/my_lent_info/log";
 export const axiosMyLentLog = async (page: number): Promise<any> => {
   try {

@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
   forwardRef,
   HttpException,
   HttpStatus,
@@ -199,7 +200,9 @@ export class LentTools {
     // 2. cabinet_status에 따라 처리.
     switch (cabinet.status) {
       case CabinetStatusType.AVAILABLE:
-        if (lent_count - 1 === 0) {
+
+        if (lent_count - 1 === 0 
+		&& !this.isMemoUpdateRequiredReturn(cabinet_id)) {
           await this.clearCabinetInfo(cabinet_id);
         }
         break;
@@ -214,7 +217,9 @@ export class LentTools {
             cabinet_id,
             CabinetStatusType.AVAILABLE,
           );
-          await this.clearCabinetInfo(cabinet_id);
+          if (!await this.isMemoUpdateRequiredReturn(cabinet_id)) {
+            await this.clearCabinetInfo(cabinet_id);
+          }
         }
         break;
       case CabinetStatusType.BANNED:
@@ -258,5 +263,17 @@ export class LentTools {
 
   async getLentCabinetId(user_id: number): Promise<number> {
     return await this.lentRepository.getLentCabinetId(user_id);
+  }
+
+  async isMemoUpdateRequiredReturn(cabinet_id: number): Promise<boolean> {
+	try {
+		const cabinet = await this.lentRepository.getLentCabinetData(cabinet_id);
+    return (cabinet.lent_count === 1 && cabinet.floor === 3);
+	} catch (e) {
+		throw new HttpException(
+		`대여한 사물함이 없습니다`,
+		HttpStatus.FORBIDDEN,
+		);
+	}
   }
 }
