@@ -345,13 +345,18 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     startDate.setDate(startDate.getDate() - start);
     endDate.setDate(endDate.getDate() - end);
 
-    const lentQuery = await this.lentLogRepository
+    const lentLog = this.lentLogRepository
       .createQueryBuilder('dateLent')
       .where('dateLent.lent_time <= :startDate', { startDate: startDate })
       .andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
-    const lentCount = await lentQuery.getCount();
+    const lent = this.lentRepository
+    .createQueryBuilder('dateLent')
+    .where('dateLent.lent_time <= :startDate', { startDate: startDate })
+    .andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
+    const lentLogCount = await lentLog.getCount();
+    const lentCount = await lent.getCount();
 
-    const returnQuery = await this.lentLogRepository
+    const returnQuery = this.lentLogRepository
       .createQueryBuilder('dateReturn')
       .where('dateReturn.return_time <= :startDate', { startDate: startDate })
       .andWhere('dateReturn.return_time >= :endDate', { endDate: endDate });
@@ -360,7 +365,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     const ret = {
       startDate: startDate,
       endDate: endDate,
-      lentCount: lentCount,
+      lentCount: lentLogCount + lentCount,
       returnCount: returnCount,
     };
     return ret;
