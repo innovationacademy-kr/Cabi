@@ -90,7 +90,7 @@ public class CabinetServiceImpl implements CabinetService {
     }
 
     @Override
-    public void updateCabinetStatus(Long cabinetId, CabinetStatus status) {
+    public void updateStatus(Long cabinetId, CabinetStatus status) {
         Validate.notNull(cabinetId, "cabinetId must not be null");
         Validate.notNull(status, "status must not be null");
         Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
@@ -98,7 +98,7 @@ public class CabinetServiceImpl implements CabinetService {
     }
 
     @Override
-    public void updateCabinetStatusByUserCount(Long cabinetId, Integer userCount) {
+    public void updateStatusByUserCount(Long cabinetId, Integer userCount) {
         Validate.notNull(cabinetId, "cabinetId must not be null");
         Validate.notNull(userCount, "userCount must not be null");
         Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);

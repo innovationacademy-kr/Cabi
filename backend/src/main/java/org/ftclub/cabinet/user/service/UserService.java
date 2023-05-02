@@ -1,3 +1,12 @@
+package org.ftclub.cabinet.user.service;
+
+import java.util.Date;
+import java.util.List;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.user.domain.UserRole;
+
 public interface UserService {
 
     /* 동아리일 경우 email은 어떻게 할 지? */

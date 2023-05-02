@@ -2,10 +2,12 @@ package org.ftclub.cabinet.cabinet.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import lombok.Getter;
 
 @Embeddable
 @Getter
 public class CabinetGrid {
+
     @Column(name = "HEIGHT")
     private Integer height;
     @Column(name = "WIDTH")

@@ -2,6 +2,7 @@ package org.ftclub.cabinet.cabinet.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import lombok.Getter;
 
 @Embeddable
 @Getter

@@ -69,7 +69,7 @@ class CabinetServiceTest {
         Long brokenId = 1L;
         CabinetDto cabinet = cabinetService.getCabinetById(brokenId);
 
-        cabinetService.updateCabinetStatus(1L, CabinetStatus.AVAILABLE);
+        cabinetService.updateStatus(1L, CabinetStatus.AVAILABLE);
 
         CabinetDto updatedCabinet = cabinetService.getCabinetById(brokenId);
         assertEquals(CabinetStatus.AVAILABLE, updatedCabinet.getStatus());
@@ -80,7 +80,7 @@ class CabinetServiceTest {
         Long brokenId = 1L;
 
         assertThrows(ServiceException.class, () -> {
-            cabinetService.updateCabinetStatusByUserCount(brokenId, 0);
+            cabinetService.updateStatusByUserCount(brokenId, 0);
         });
     }
 
@@ -91,10 +91,10 @@ class CabinetServiceTest {
         Long availableId = 8L;
         Long limitedAvailableId = 16L;
 
-        cabinetService.updateCabinetStatusByUserCount(fullId, 2);
-        cabinetService.updateCabinetStatusByUserCount(overdueId, 0);
-        cabinetService.updateCabinetStatusByUserCount(availableId, 3);
-        cabinetService.updateCabinetStatusByUserCount(limitedAvailableId, 0);
+        cabinetService.updateStatusByUserCount(fullId, 2);
+        cabinetService.updateStatusByUserCount(overdueId, 0);
+        cabinetService.updateStatusByUserCount(availableId, 3);
+        cabinetService.updateStatusByUserCount(limitedAvailableId, 0);
 
         // 3 -> 2
         assertEquals(cabinetService.getCabinetById(fullId).getStatus(),
@@ -115,8 +115,8 @@ class CabinetServiceTest {
         Long fullId = 3L;
         Long availableId = 7L;
 
-        cabinetService.updateCabinetStatusByUserCount(fullId, 0);
-        cabinetService.updateCabinetStatusByUserCount(availableId, 1);
+        cabinetService.updateStatusByUserCount(fullId, 0);
+        cabinetService.updateStatusByUserCount(availableId, 1);
 
         // 1 -> 0
         assertEquals(cabinetService.getCabinetById(fullId).getStatus(),
