@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "BAN_HISTORY")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class BanHistory {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BAN_HISTORY_ID")

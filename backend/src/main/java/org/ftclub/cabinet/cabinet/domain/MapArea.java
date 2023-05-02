@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@Getter
 public class MapArea {
     @Column(name = "START_X")
     private Integer startX;

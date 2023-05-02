@@ -12,6 +12,7 @@ import java.util.Date;
         // table의 column 이름
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class LentHistory {
 
     @Id

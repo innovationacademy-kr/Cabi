@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "CABINET_PLACE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class CabinetPlace {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CABINET_PLACE_ID")
