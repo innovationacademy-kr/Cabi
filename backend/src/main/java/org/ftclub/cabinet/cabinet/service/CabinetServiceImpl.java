@@ -1,26 +1,26 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetRepository;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.lent.domain.LentRepository;
-import org.ftclub.cabinet.mapper.CabinetMapper;
-import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.BuildingFloorsResponseDto;
+import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.domain.LentRepository;
+import org.ftclub.cabinet.mapper.CabinetMapper;
+import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
 
