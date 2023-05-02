@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.Validate;
 
 @Entity
 @Table(name = "CABINET")
@@ -27,6 +28,10 @@ public class Cabinet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CABINET_ID")
     private Long cabinetId;
+
+    @Version
+    @Column(name = "VERSION")
+    private Long version = 1L;
 
     @Column(name = "VISIBLE_NUM")
     private Integer visibleNum;
@@ -52,6 +57,12 @@ public class Cabinet {
     @JoinColumn(name = "CABINET_PLACE_ID")
     private CabinetPlace cabinetPlace;
 
+    @Column(name = "TITLE", length = 64)
+    private String title;
+
+    @Column(name = "MEMO", length = 64)
+    private String memo;
+
 
     public Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
             Grid grid, CabinetPlace cabinetPlace) {
@@ -61,8 +72,10 @@ public class Cabinet {
         this.maxUser = maxUser;
         this.grid = grid;
         this.cabinetPlace = cabinetPlace;
+        this.title = "";
+        this.memo = "";
     }
-    
+
     public boolean isStatus(CabinetStatus cabinetStatus) {
         Validate.notNull(cabinetStatus, "CabinetStatus is required");
         return this.status == cabinetStatus;
@@ -119,21 +132,17 @@ public class Cabinet {
     }
 
     public void updateStatusByUserCount(Integer userCount) {
+        if (userCount == 0) {
+            this.status = CabinetStatus.AVAILABLE;
+            return;
+        }
         if (userCount == this.maxUser) {
             this.status = CabinetStatus.FULL;
             return;
         }
-        if (userCount < this.maxUser && this.status == CabinetStatus.FULL) {
-            switch (this.lentType) {
-                case PRIVATE:
-                case CLUB:
-                    this.status = CabinetStatus.AVAILABLE;
-                    break;
-                case SHARE:
-                    this.status = CabinetStatus.LIMITED_AVAILABLE;
-                    break;
-                default:
-                    break;
+        if (0 < userCount && userCount < this.maxUser) {
+            if (this.status == CabinetStatus.FULL) {
+                this.status = CabinetStatus.LIMITED_AVAILABLE;
             }
         }
     }

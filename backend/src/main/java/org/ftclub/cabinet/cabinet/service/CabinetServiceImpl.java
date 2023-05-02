@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.BuildingFloorsResponseDto;
@@ -39,7 +40,9 @@ public class CabinetServiceImpl implements CabinetService {
     public CabinetDto getCabinetById(Long cabinetId) {
         Validate.notNull(cabinetId, "cabinetId must not not be null");
         Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        return cabinetMapper.toCabinetDto(cabinet);
+        String title = cabinetRepository.findStatusNoteById(cabinetId);
+        Location location = cabinetRepository.findLocationById(cabinetId);
+        return cabinetMapper.toCabinetDto(title, location, cabinet);
     }
 
     @Override
@@ -47,6 +50,7 @@ public class CabinetServiceImpl implements CabinetService {
         List<BuildingFloorsDto> buildingFloors = new ArrayList<>();
         List<String> buildings = cabinetRepository.findAllBuildings();
         for (String building : buildings) {
+            System.out.printf("building: %s\n", building);
             List<Integer> floors = cabinetRepository.findAllFloorsByBuilding(building);
             buildingFloors.add(new BuildingFloorsDto(building, floors));
         }
@@ -56,10 +60,10 @@ public class CabinetServiceImpl implements CabinetService {
     @Override
     public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
         Validate.notNull(cabinetId, "cabinetId must not be null");
-        List<LentHistory> lentHistories = lentRepository.findAllByCabinetId(cabinetId);
+        List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
         List<LentDto> lents = new ArrayList<>();
         for (LentHistory lentHistory : lentHistories) {
-            User user = userRepository.findById(lentHistory.userId())
+            User user = userRepository.findById(lentHistory.getUserId())
                     .orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
             lents.add(lentMapper.toLentDto(user.name(), lentHistory));
         }
@@ -98,8 +102,9 @@ public class CabinetServiceImpl implements CabinetService {
         Validate.notNull(cabinetId, "cabinetId must not be null");
         Validate.notNull(userCount, "userCount must not be null");
         Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        if (cabinet.getMaxUser() < userCount) {
-            throw new ServiceException(ExceptionStatus.OVER_MAX_USER);
+        if (userCount > cabinet.getMaxUser()
+                || cabinet.isStatus(CabinetStatus.BROKEN)) {
+            throw new ServiceException(ExceptionStatus.UNCHANGEABLE_CABINET);
         }
         cabinet.updateStatusByUserCount(userCount);
     }
