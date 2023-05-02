@@ -4,7 +4,7 @@ import static org.ftclub.cabinet.auth.AuthGuard.Level.USER_OR_ADMIN;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.AuthGuard;
-import org.ftclub.cabinet.cabinet.service.CabinetService;
+import org.ftclub.cabinet.cabinet.service.CabinetServiceImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CabinetController {
 
-    private final CabinetService cabinetService;
+    private final CabinetServiceImpl cabinetService;
 
     @GetMapping("/save")
     public String test() {
