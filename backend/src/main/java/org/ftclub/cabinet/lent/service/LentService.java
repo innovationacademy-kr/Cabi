@@ -1,3 +1,5 @@
+package org.ftclub.cabinet.lent.service;
+
 import java.util.List;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;

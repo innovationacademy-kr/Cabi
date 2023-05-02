@@ -5,8 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix="site-url")
+@ConfigurationProperties(prefix = "site-url")
 @Data
 public class SiteUrlProperties {
-	private String feHost;
+
+    private String feHost;
 }

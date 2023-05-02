@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class CabinetFloorStatisticsResponseDto {
+
     private final Integer floor;
     private final Integer total;
     private final Integer used;

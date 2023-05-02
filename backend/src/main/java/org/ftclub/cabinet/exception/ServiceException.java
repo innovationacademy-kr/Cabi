@@ -1,10 +1,7 @@
 package org.ftclub.cabinet.exception;
 
-import lombok.RequiredArgsConstructor;
-
 /**
- * Service에서 throw하는 exception들을 위한 exception
- * 사용 예시:
+ * Service에서 throw하는 exception들을 위한 exception 사용 예시:
  * <pre>
  *     {@code throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);}
  * </pre>
@@ -13,6 +10,7 @@ import lombok.RequiredArgsConstructor;
  * @see org.ftclub.cabinet.exception.ExceptionStatus
  */
 public class ServiceException extends RuntimeException {
+
     final ExceptionStatus status;
 
     /**
