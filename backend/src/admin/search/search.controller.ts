@@ -325,7 +325,7 @@ export class SearchController {
     @Query('start') start: number,
     @Query('end') end: number,
   ): Promise<AdminStatisticsDto> {
-    this.logger.debug(`Called ${this.getLentReturnStatisticsByDaysFromNow.name}`);
+    this.logger.debug(`Called ${this.getLentReturnStatisticsByDaysFromNow}`);
     try {
       return await this.adminSearchService.getLentReturnStatisticsByDaysFromNow(
         start,
