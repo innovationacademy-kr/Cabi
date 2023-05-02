@@ -74,6 +74,8 @@ public class Cabinet {
         this.cabinetPlace = cabinetPlace;
         this.title = "";
         this.memo = "";
+        this.title = "";
+        this.memo = "";
     }
 
     public boolean isStatus(CabinetStatus cabinetStatus) {

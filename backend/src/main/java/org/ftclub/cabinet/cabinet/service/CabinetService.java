@@ -32,9 +32,7 @@ public interface CabinetService {
     void updateTitleById(Long cabinetId, String title);
 
     void updateLocationById(Long cabinetId, Location location);
-
     void updateLentTyById(Long cabinetId, LentType lentType);
-
     void updateGridById(Long cabinetId, Grid grid);
 
     void updateStatusNoteById(Long cabinetId, String statusNote);

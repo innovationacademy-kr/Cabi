@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "CABINET_PLACE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class CabinetPlace {
 
     @Id

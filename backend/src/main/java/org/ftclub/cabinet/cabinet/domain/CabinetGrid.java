@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@Getter
 public class CabinetGrid {
     @Column(name = "HEIGHT")
     private Integer height;

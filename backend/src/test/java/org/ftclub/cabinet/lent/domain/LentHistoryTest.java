@@ -20,6 +20,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import java.util.Date;
+
 @SpringBootTest()
 @ActiveProfiles("test")
 @Transactional
@@ -40,8 +45,7 @@ class LentHistoryTest {
         em.persist(user);
         em.persist(cabinet);
         em.flush();
-        LentHistory lentHistory = new LentHistory(new Date(), new Date(), user.getUserId(),
-                cabinet.getCabinetId(), new LentCabinetDetail());
+        LentHistory lentHistory = new LentHistory(new Date(), new Date(), user.getUserId(), cabinet.getCabinetId());
         em.persist(lentHistory);
         Long userLentCount = lentRepository.userActiveLentCount(user.getUserId());
         Assertions.assertEquals(1, userLentCount);
