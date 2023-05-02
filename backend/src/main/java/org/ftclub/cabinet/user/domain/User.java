@@ -1,21 +1,28 @@
 package org.ftclub.cabinet.user.domain;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.stereotype.Component;
-
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
     private Long userId;
 

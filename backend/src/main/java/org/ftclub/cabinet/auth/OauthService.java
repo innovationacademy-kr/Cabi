@@ -1,38 +1,40 @@
 package org.ftclub.cabinet.auth;
 
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 @Service
+@RequiredArgsConstructor
 public class OauthService {
 
-	@Autowired
 	private ApiUriBuilder apiUriBuilder;
-	@Autowired
+
 	private GoogleApiProperties googleApiProperties;
-	@Autowired
+
 	private FtApiProperties ftApiProperties;
 
 	public void sendToGoogleApi(HttpServletResponse response) throws IOException {
 		response.sendRedirect(
 				apiUriBuilder.buildCodeUri(
-				googleApiProperties.getAuthUri(),
-				googleApiProperties.getClientId(),
-				googleApiProperties.getRedirectUri(),
-				googleApiProperties.getScope(),
-				googleApiProperties.getGrantType())
+						googleApiProperties.getAuthUri(),
+						googleApiProperties.getClientId(),
+						googleApiProperties.getRedirectUri(),
+						googleApiProperties.getScope(),
+						googleApiProperties.getGrantType())
 		);
 	}
 
@@ -52,9 +54,10 @@ public class OauthService {
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		try {
 			return new JSONObject(
-					restTemplate.postForEntity(googleApiProperties.getTokenUri(), request, String.class).getBody())
-						.get(googleApiProperties.getAccessTokenName())
-						.toString();
+					restTemplate.postForEntity(googleApiProperties.getTokenUri(), request,
+							String.class).getBody())
+					.get(googleApiProperties.getAccessTokenName())
+					.toString();
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
@@ -71,8 +74,9 @@ public class OauthService {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
 			return new JSONObject(
-						restTemplate.exchange(googleApiProperties.getUserInfoUri(), HttpMethod.GET, requestEntity,  String.class)
-						.getBody());
+					restTemplate.exchange(googleApiProperties.getUserInfoUri(), HttpMethod.GET,
+									requestEntity, String.class)
+							.getBody());
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
@@ -102,9 +106,9 @@ public class OauthService {
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		try {
 			return new JSONObject(
-						restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class)
+					restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class)
 							.getBody())
-							.get(ftApiProperties.getAccessTokenName()).toString();
+					.get(ftApiProperties.getAccessTokenName()).toString();
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
@@ -118,7 +122,8 @@ public class OauthService {
 		HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
 		try {
 			return new JSONObject(
-							restTemplate.exchange(ftApiProperties.getUserInfoUri(), HttpMethod.GET, requestEntity, String.class)
+					restTemplate.exchange(ftApiProperties.getUserInfoUri(), HttpMethod.GET,
+									requestEntity, String.class)
 							.getBody());
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);

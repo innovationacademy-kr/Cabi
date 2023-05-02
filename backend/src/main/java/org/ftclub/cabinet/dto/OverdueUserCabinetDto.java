@@ -8,6 +8,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 @AllArgsConstructor
 @Getter
 public class OverdueUserCabinetDto {
+
     private final String name;
     private final Long cabinetId;
     @JsonUnwrapped

@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 /**
- * {@link ServiceException}을 위한 enum 클래스
- * 생성할 exception에 대한 정보를 담고있다.
+ * {@link ServiceException}을 위한 enum 클래스 생성할 exception에 대한 정보를 담고있다.
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @RequiredArgsConstructor
@@ -22,6 +21,7 @@ public enum ExceptionStatus {
         this.message = message;
         this.error = status.getReasonPhrase();
     }
+
     final private int statusCode;
     final private String message;
     final private String error;
