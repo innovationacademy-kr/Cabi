@@ -5,6 +5,7 @@ import java.util.List;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserService {
@@ -23,6 +24,8 @@ public interface UserService {
     void updateBlackholedAtById(Long userId);
 
     void banUser(Long userId, int days); // 며칠 벤을 할 지는 BanPolicy에서 계산하는 것으로 결정
+
+    void banUser(Long userId, LentHistory lentHistory);
 
     void unbanUser(Long userId);
 

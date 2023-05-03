@@ -57,4 +57,8 @@ public class BanHistory {
         this.banType = banType;
         this.user = user;
     }
+
+    public BanType getBanType() { return banType; }
+
+    public boolean isBanEnd() { return new Date().before(unbannedAt);}
 }

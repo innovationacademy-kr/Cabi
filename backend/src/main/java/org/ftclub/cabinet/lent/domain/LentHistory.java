@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.lent.domain;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +14,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "LENT_HISTORY", uniqueConstraints = {
@@ -30,8 +30,8 @@ public class LentHistory {
 
     @Version
     @Column(name = "VERSION")
+    @Getter(AccessLevel.NONE)
     private Long version = 1L;
-
 
     @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "STARTED_AT", nullable = false)
@@ -51,11 +51,22 @@ public class LentHistory {
     @Column(name = "CABINET_ID", nullable = false)
     private Long cabinetId;
 
-    public LentHistory(Date startedAt, Date expiredAt, Long userId, Long cabinetId, Long version) {
+    public LentHistory(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
         this.startedAt = startedAt;
         this.expiredAt = expiredAt;
         this.userId = userId;
         this.cabinetId = cabinetId;
-        this.version = version;
+    }
+
+    public boolean isUserIdEqual(Long userId) {
+        return this.userId.equals(userId);
+    }
+
+    public boolean isCabinetIdEqual(Long cabinetId) {
+        return this.cabinetId.equals(cabinetId);
+    }
+
+    public void endLent(Date now) {
+        this.endedAt = now;
     }
 }

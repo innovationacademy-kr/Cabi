@@ -50,5 +50,4 @@ public interface CabinetService {
     void updateGrid(Long cabinetId, Grid grid);
 
     void updateStatusNote(Long cabinetId, String statusNote);
-
 }

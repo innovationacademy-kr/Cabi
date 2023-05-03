@@ -49,11 +49,7 @@ public class User {
         this.role = userRole;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public String name() {
-        return name;
+    public boolean isClub() {
+        return UserRole.CLUB.equals(this.role);
     }
 }

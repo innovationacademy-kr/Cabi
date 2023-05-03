@@ -25,7 +25,7 @@ import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.lent.domain.LentRepository;
+import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;

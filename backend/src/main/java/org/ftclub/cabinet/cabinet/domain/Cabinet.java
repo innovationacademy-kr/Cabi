@@ -151,4 +151,33 @@ public class Cabinet {
             }
         }
     }
+
+    public LentType getLentType() {
+        return lentType;
+    }
+
+    public CabinetStatus getStatus() {
+        /* TODO: 나중에 각 상태별로 따로 is~같은 메서드로 만들어도 될듯 */
+        return this.status;
+    }
+
+    public void updateStatusOnReturning(int lentCount) {
+        switch (this.status) {
+            case FULL:
+            case LIMITED_AVAILABLE:
+                this.status = lentCount - 1 == 0 ? CabinetStatus.AVAILABLE : CabinetStatus.LIMITED_AVAILABLE;
+                break;
+            case OVERDUE:
+                this.status = lentCount - 1 == 0 ? CabinetStatus.AVAILABLE : CabinetStatus.OVERDUE;
+                break;
+        }
+    }
+
+    public boolean isClubCabinet() {
+        return this.lentType == LentType.CLUB;
+    }
+
+    public boolean isShareCabinet() {
+        return this.lentType == LentType.SHARE;
+    }
 }
