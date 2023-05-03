@@ -9,6 +9,7 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class LentExceptionHandlerService {
 
     public User getClubUser(Long userId) {
         User user = getUser(userId);
-        if (!user.isClub())
+        if (!user.isUserRole(UserRole.CLUB))
             throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);
         return user;
     }

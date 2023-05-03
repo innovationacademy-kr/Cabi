@@ -34,17 +34,18 @@ public class LentServiceImpl implements LentService {
         Date now = new Date();
         Cabinet cabinet = lentExceptionHandler.getCabinet(cabinetId);
         User user = lentExceptionHandler.getUser(userId);
-        int userLentCount = lentRepository.countUserActiveLent(userId);
+        int userActiveLentCount = lentRepository.countUserActiveLent(userId);
         LentHistory cabinetActiveLentHistory =
             lentRepository.findFirstByCabinetIdAndEndedAtIsNull(cabinetId).orElse(null);
 
         lentExceptionHandler.handlePolicyStatus(
                 lentPolicy.verifyCabinetForLent(cabinet, cabinetActiveLentHistory, now));
         lentExceptionHandler.handlePolicyStatus(
-                lentPolicy.verifyUserForLent(user, userLentCount));
+                lentPolicy.verifyUserForLent(user, userActiveLentCount));
         Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet.getLentType(), cabinetActiveLentHistory);
         LentHistory result =
                 new LentHistory(now, expirationDate, userId, cabinetId);
+        cabinetService.updateStatusByUserCount(cabinetId, userActiveLentCount + 1);
         lentRepository.save(result);
     }
 
@@ -58,7 +59,7 @@ public class LentServiceImpl implements LentService {
         LentHistory result =
                 new LentHistory(now, expirationDate, userId, cabinetId);
         lentRepository.save(result);
-        cabinetService.enterOneUser(cabinetId);
+        cabinetService.updateStatusByUserCount(cabinetId, 1);
     }
 
     @Override
@@ -108,7 +109,7 @@ public class LentServiceImpl implements LentService {
         LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
         int lentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
         lentHistory.endLent(now);
-        cabinetService.exitOneUser(lentHistory.getCabinetId(), lentCount);
+        cabinetService.updateStatusByUserCount(lentHistory.getCabinetId(), lentCount - 1);
         return lentHistory;
     }
 }

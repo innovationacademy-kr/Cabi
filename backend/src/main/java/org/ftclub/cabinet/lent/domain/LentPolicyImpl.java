@@ -38,7 +38,7 @@ public class LentPolicyImpl implements LentPolicy {
                 days = getDaysForLentTermShare();
                 break;
             case CLUB:
-                days = 9999;
+                days = 9999; // 임의로 적당히 큰 수 넣었습니다.
                 break;
         }
         return DateUtil.addDaysToDate(now, days);
@@ -46,7 +46,7 @@ public class LentPolicyImpl implements LentPolicy {
 
     @Override
     public LentPolicyStatus verifyUserForLent(User user, int userLentCount) {
-        if (user.getUserRole() != UserRole.USER) return LentPolicyStatus.NOT_USER;
+        if (!user.isUserRole(UserRole.USER)) return LentPolicyStatus.NOT_USER;
         if (userLentCount >= 1) return LentPolicyStatus.ALREADY_LENT;
         return LentPolicyStatus.FINE;
     }

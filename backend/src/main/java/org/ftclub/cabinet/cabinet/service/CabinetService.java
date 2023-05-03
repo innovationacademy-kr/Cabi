@@ -12,14 +12,9 @@ import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 
 public interface CabinetService {
 
-    void createCabinet();
-
-    void createCabinetPlace();
-
-    void deleteCabinet();
-
-    void deleteCabinetPlace();
-
+//    void createCabinet();
+//
+//    void createCabinetPlace();
 
     CabinetDto getCabinet(Long cabinetId);
 
@@ -33,21 +28,21 @@ public interface CabinetService {
 
     void updateStatusByUserCount(Long cabinetId, Integer userCount);
 
-    void changeCabinetPlaceByLocation(Long cabinetId, Location location);
-
-    void updateMemo(Long cabinetId, String memo);
-
-    void updateVisibleNum(Long cabinetId, Integer visibleNum);
-
-    void updateTitle(Long cabinetId, String title);
-
-    void updateLocation(Long cabinetId, Location location);
-
-    void updateMaxUser(Long cabinetId, Integer maxUser);
-
-    void updateLentType(Long cabinetId, LentType lentType);
-
-    void updateGrid(Long cabinetId, Grid grid);
-
-    void updateStatusNote(Long cabinetId, String statusNote);
+//    void changeCabinetPlaceByLocation(Long cabinetId, Location location);
+//
+//    void updateMemo(Long cabinetId, String memo);
+//
+//    void updateVisibleNum(Long cabinetId, Integer visibleNum);
+//
+//    void updateTitle(Long cabinetId, String title);
+//
+//    void updateLocation(Long cabinetId, Location location);
+//
+//    void updateMaxUser(Long cabinetId, Integer maxUser);
+//
+//    void updateLentType(Long cabinetId, LentType lentType);
+//
+//    void updateGrid(Long cabinetId, Grid grid);
+//
+//    void updateStatusNote(Long cabinetId, String statusNote);
 }

@@ -9,11 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.ftclub.cabinet.auth.AuthGuard;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetFactory;
-import org.ftclub.cabinet.cabinet.domain.CabinetPlaceFactory;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.Grid;
-import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
@@ -29,6 +25,7 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,29 +40,26 @@ public class CabinetServiceImpl implements CabinetService {
     private final UserRepository userRepository;
     private final CabinetMapper cabinetMapper;
     private final LentMapper lentMapper;
-    private final CabinetFactory cabinetFactory;
-    private final CabinetPlaceFactory cabinetPlaceFactory;
 
-
-    @Override
-    public void createCabinet() {
-        cabinetRepository.save(new Cabinet());
-    }
-
-    @Override
-    public void createCabinetPlace() {
-        cabinetRepository.save(new Cabinet());
-    }
-
-    @Override
-    public void deleteCabinet() {
-        cabinetRepository.save(new Cabinet());
-    }
-
-    @Override
-    public void deleteCabinetPlace() {
-        cabinetRepository.save(new Cabinet());
-    }
+//    @Override
+//    public void createCabinet() {
+//        cabinetRepository.save(new Cabinet());
+//    }
+//
+//    @Override
+//    public void createCabinetPlace() {
+//        cabinetRepository.save(new Cabinet());
+//    }
+//
+//    @Override
+//    public void deleteCabinet() {
+//        cabinetRepository.save(new Cabinet());
+//    }
+//
+//    @Override
+//    public void deleteCabinetPlace() {
+//        cabinetRepository.save(new Cabinet());
+//    }
 
     @Override
     public CabinetDto getCabinet(Long cabinetId) {
@@ -94,7 +88,7 @@ public class CabinetServiceImpl implements CabinetService {
         for (LentHistory lentHistory : lentHistories) {
             User user = userRepository.findById(lentHistory.getUserId())
                     .orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
-            lents.add(lentMapper.toLentDto(user.name(), lentHistory));
+            lents.add(lentMapper.toLentDto(user.getName(), lentHistory));
         }
         return new CabinetInfoResponseDto(lents);
     }
@@ -138,75 +132,75 @@ public class CabinetServiceImpl implements CabinetService {
         cabinet.updateStatusByUserCount(userCount);
     }
 
-    @Override
-    void changeCabinetPlaceByLocation(Long cabinetId, Location location) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(location, "location must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.changePlaceByLocation(location);
-    }
-
-    @Override
-    void updateMemo(Long cabinetId, String memo) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(memo, "memo must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.updateMemo(memo);
-    }
-
-    @Override
-    void updateVisibleNum(Long cabinetId, Integer visibleNum) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(visibleNum, "visibleNum must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.updateVisibleNum(visibleNum);
-    }
-
-    @Override
-    void updateTitle(Long cabinetId, String title) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(title, "title must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.updateTitle(title);
-    }
-
-    @Override
-    void updateLocation(Long cabinetId, Location location) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(location, "location must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.updateLocation(location);
-    }
-
-    @Override
-    void updateMaxUser(Long cabinetId, Integer maxUser) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(maxUser, "maxUser must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.updateMaxUser(maxUser);
-    }
-
-    @Override
-    void updateLentType(Long cabinetId, LentType lentType) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(lentType, "lentType must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.updateLentType(lentType);
-    }
-
-    @Override
-    void updateGrid(Long cabinetId, Grid grid) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(grid, "grid must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.updateGrid(grid);
-    }
-
-    @Override
-    void updateStatusNote(Long cabinetId, String statusNote) {
-        Validate.notNull(cabinetId, "cabinetId must not be null");
-        Validate.notNull(statusNote, "statusNote must not be null");
-        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-        cabinet.updateStatusNote(statusNote);
-    }
+//    @Override
+//    void changeCabinetPlaceByLocation(Long cabinetId, Location location) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(location, "location must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.changePlaceByLocation(location);
+//    }
+//
+//    @Override
+//    void updateMemo(Long cabinetId, String memo) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(memo, "memo must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.updateMemo(memo);
+//    }
+//
+//    @Override
+//    void updateVisibleNum(Long cabinetId, Integer visibleNum) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(visibleNum, "visibleNum must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.updateVisibleNum(visibleNum);
+//    }
+//
+//    @Override
+//    void updateTitle(Long cabinetId, String title) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(title, "title must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.updateTitle(title);
+//    }
+//
+//    @Override
+//    void updateLocation(Long cabinetId, Location location) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(location, "location must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.updateLocation(location);
+//    }
+//
+//    @Override
+//    void updateMaxUser(Long cabinetId, Integer maxUser) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(maxUser, "maxUser must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.updateMaxUser(maxUser);
+//    }
+//
+//    @Override
+//    void updateLentType(Long cabinetId, LentType lentType) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(lentType, "lentType must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.updateLentType(lentType);
+//    }
+//
+//    @Override
+//    void updateGrid(Long cabinetId, Grid grid) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(grid, "grid must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.updateGrid(grid);
+//    }
+//
+//    @Override
+//    void updateStatusNote(Long cabinetId, String statusNote) {
+//        Validate.notNull(cabinetId, "cabinetId must not be null");
+//        Validate.notNull(statusNote, "statusNote must not be null");
+//        Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+//        cabinet.updateStatusNote(statusNote);
+//    }
 }

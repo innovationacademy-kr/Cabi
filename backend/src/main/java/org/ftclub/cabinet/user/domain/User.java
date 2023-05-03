@@ -49,7 +49,7 @@ public class User {
         this.role = userRole;
     }
 
-    public boolean isClub() {
-        return UserRole.CLUB.equals(this.role);
+    public boolean isUserRole(UserRole role) {
+        return role.equals(this.role);
     }
 }

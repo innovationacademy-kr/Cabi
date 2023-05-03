@@ -25,4 +25,9 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 
     @Query("select count(lh) from LentHistory lh where lh.cabinetId = ?1")
     int countCabinetAllLent(Long userId);
+
+    @Query("SELECT lh " +
+            "FROM LentHistory lh " +
+            "WHERE lh.cabinetId = :cabinetId and lh.endedAt = null")
+    List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId);
 }
