@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface LentPolicy {
     Date generateExpirationDate(Date now, LentType lentType, LentHistory lentHistory);
-    LentPolicyStatus verifyUserForLent(User user, int userLentCount);
+    LentPolicyStatus verifyUserForLent(User user, int userActiveLentCount);
     LentPolicyStatus verifyCabinetForLent(Cabinet cabinet, LentHistory cabinetLentHistory, Date now);
     Integer getDaysForLentTermPrivate();
     Integer getDaysForLentTermShare();

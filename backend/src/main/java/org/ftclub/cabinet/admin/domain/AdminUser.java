@@ -33,4 +33,11 @@ public class AdminUser {
     public AdminUser(String email) {
         this.email = email;
     }
+
+    @Override
+    public boolean equals (final Object other) {
+        if (other == this) return true;
+        if (!(other instanceof AdminUser)) return false;
+        return (this.adminUserId.equals(((AdminUser) other).getAdminUserId()));
+    }
 }

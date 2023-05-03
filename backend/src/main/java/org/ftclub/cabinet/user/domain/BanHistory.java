@@ -58,6 +58,13 @@ public class BanHistory {
         this.user = user;
     }
 
+    @Override
+    public boolean equals (final Object other) {
+        if (this == other) return true;
+        if (!(other instanceof BanHistory)) return false;
+        return (this.banHistoryId.equals(((BanHistory) other).banHistoryId));
+    }
+
     public BanType getBanType() { return banType; }
 
     public boolean isBanEnd() { return new Date().before(unbannedAt);}

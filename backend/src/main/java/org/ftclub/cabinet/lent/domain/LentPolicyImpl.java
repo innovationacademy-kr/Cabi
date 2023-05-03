@@ -45,9 +45,9 @@ public class LentPolicyImpl implements LentPolicy {
     }
 
     @Override
-    public LentPolicyStatus verifyUserForLent(User user, int userLentCount) {
+    public LentPolicyStatus verifyUserForLent(User user, int userActiveLentCount) {
         if (!user.isUserRole(UserRole.USER)) return LentPolicyStatus.NOT_USER;
-        if (userLentCount >= 1) return LentPolicyStatus.ALREADY_LENT;
+        if (userActiveLentCount >= 1) return LentPolicyStatus.ALREADY_LENT_USER;
         return LentPolicyStatus.FINE;
     }
 
@@ -58,9 +58,9 @@ public class LentPolicyImpl implements LentPolicy {
             case BROKEN: return LentPolicyStatus.BROKEN_CABINET;
             case OVERDUE: return LentPolicyStatus.OVERDUE_CABINET;
         }
-        if (cabinet.isClubCabinet())
+        if (cabinet.isLentType(LentType.CLUB))
             return LentPolicyStatus.LENT_CLUB;
-        if (cabinet.isShareCabinet()
+        if (cabinet.isLentType(LentType.SHARE)
             && cabinet.getStatus() == CabinetStatus.LIMITED_AVAILABLE) {
             if (cabinetLentHistory == null)
                 return LentPolicyStatus.INTERNAL_ERROR;

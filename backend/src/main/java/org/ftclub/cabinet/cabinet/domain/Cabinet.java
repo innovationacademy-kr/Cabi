@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.Validate;
@@ -77,107 +78,60 @@ public class Cabinet {
         this.cabinetPlace = cabinetPlace;
         this.title = "";
         this.memo = "";
-        this.title = "";
-        this.memo = "";
     }
 
     public boolean isStatus(CabinetStatus cabinetStatus) {
-        Validate.notNull(cabinetStatus, "CabinetStatus is required");
-        return this.status == cabinetStatus;
+        return this.status.equals(cabinetStatus);
     }
 
     public boolean isLentType(LentType lentType) {
-        Validate.notNull(lentType, "LentType is required");
-        return this.lentType == lentType;
+        return this.lentType.equals(lentType);
     }
 
     public boolean isVisibleNum(Integer visibleNum) {
-        Validate.notNull(visibleNum, "VisibleNum is required");
-        return this.visibleNum == visibleNum;
+        return this.visibleNum.equals(visibleNum);
     }
 
     public boolean isCabinetPlace(CabinetPlace cabinetPlace) {
-        Validate.notNull(cabinetPlace, "CabinetPlace is required");
-        return this.cabinetPlace == cabinetPlace;
+        return this.cabinetPlace.equals(cabinetPlace);
     }
 
     public void specifyCabinetPlace(CabinetPlace cabinetPlace) {
-        Validate.notNull(cabinetPlace, "CabinetPlace is required");
         this.cabinetPlace = cabinetPlace;
     }
 
     public void specifyStatus(CabinetStatus cabinetStatus) {
-        Validate.notNull(cabinetStatus, "CabinetStatus is required");
         this.status = cabinetStatus;
     }
 
     public void specifyStatusNote(String statusNote) {
-        Validate.notNull(statusNote, "StatusNote is required");
         this.statusNote = statusNote;
     }
 
     public void specifyLentType(LentType lentType) {
-        Validate.notNull(lentType, "LentType is required");
         this.lentType = lentType;
-    }
-
-    public boolean sameIdentityAs(final Cabinet other) {
-        return other != null && this.cabinetId.equals(other.cabinetId);
     }
 
     @Override
     public boolean equals(final Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof Cabinet)) {
-            return false;
-        }
-        return sameIdentityAs((Cabinet) other);
+        if (this == other) return true;
+        if (!(other instanceof Cabinet)) return false;
+        return this.cabinetId.equals(((Cabinet) other).cabinetId);
     }
 
     public void updateStatusByUserCount(Integer userCount) {
-        if (userCount == 0) {
+        if (userCount.equals(0)) {
             this.status = CabinetStatus.AVAILABLE;
             return;
         }
-        if (userCount == this.maxUser) {
+        if (userCount.equals(this.maxUser)) {
             this.status = CabinetStatus.FULL;
             return;
         }
         if (0 < userCount && userCount < this.maxUser) {
-            if (this.status == CabinetStatus.FULL) {
+            if (this.status.equals(CabinetStatus.FULL)) {
                 this.status = CabinetStatus.LIMITED_AVAILABLE;
             }
         }
-    }
-
-    public LentType getLentType() {
-        return lentType;
-    }
-
-    public CabinetStatus getStatus() {
-        /* TODO: 나중에 각 상태별로 따로 is~같은 메서드로 만들어도 될듯 */
-        return this.status;
-    }
-
-    public void updateStatusOnReturning(int lentCount) {
-        switch (this.status) {
-            case FULL:
-            case LIMITED_AVAILABLE:
-                this.status = lentCount - 1 == 0 ? CabinetStatus.AVAILABLE : CabinetStatus.LIMITED_AVAILABLE;
-                break;
-            case OVERDUE:
-                this.status = lentCount - 1 == 0 ? CabinetStatus.AVAILABLE : CabinetStatus.OVERDUE;
-                break;
-        }
-    }
-
-    public boolean isClubCabinet() {
-        return this.lentType == LentType.CLUB;
-    }
-
-    public boolean isShareCabinet() {
-        return this.lentType == LentType.SHARE;
     }
 }
