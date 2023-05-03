@@ -57,16 +57,15 @@ public class Cabinet {
     @Embedded
     Grid grid;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "CABINET_PLACE_ID")
-    private CabinetPlace cabinetPlace;
-
     @Column(name = "TITLE", length = 64)
     private String title;
 
     @Column(name = "MEMO", length = 64)
     private String memo;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "CABINET_PLACE_ID")
+    private CabinetPlace cabinetPlace;
 
     public Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
             Grid grid, CabinetPlace cabinetPlace) {

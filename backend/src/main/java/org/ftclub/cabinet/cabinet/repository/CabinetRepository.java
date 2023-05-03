@@ -33,6 +33,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
             + "WHERE p.location.section = :section")
     List<Long> findAllCabinetIdsBySection(String section);
 
+
     @Query("SELECT c.statusNote "
             + "FROM Cabinet c ")
     String findStatusNoteById(Long cabinetId);
@@ -42,4 +43,11 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
             + "JOIN c.cabinetPlace p "
             + "WHERE c.cabinetId = :cabinetId")
     Location findLocationById(Long cabinetId);
+
+
+    @Query(value = "SELECT AUTO_INCREMENT "
+            + "FROM information_schema.TABLES "
+            + "WHERE TABLE_SCHEMA = (SELECT DATABASE()) AND TABLE_NAME = 'cabinet'",
+            nativeQuery = true)
+    Long getNextCabinetId();
 }

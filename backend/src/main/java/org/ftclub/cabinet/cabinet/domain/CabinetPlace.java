@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.Validate;
 
 @Entity
 @Table(name = "CABINET_PLACE")
@@ -30,9 +31,25 @@ public class CabinetPlace {
     private MapArea mapArea;
 
     public CabinetPlace(Location location, CabinetGrid cabinetGrid, MapArea mapArea) {
+        Validate.notNull(location, "location must not be null");
+        Validate.notNull(cabinetGrid, "cabinetGrid must not be null");
+        Validate.notNull(mapArea, "mapArea must not be null");
         this.location = location;
         this.cabinetGrid = cabinetGrid;
         this.mapArea = mapArea;
     }
 
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof CabinetPlace)) {
+            return false;
+        }
+        CabinetPlace otherCabinetPlace = (CabinetPlace) other;
+        return location.equals(otherCabinetPlace.location)
+                && cabinetGrid.equals(otherCabinetPlace.cabinetGrid)
+                && mapArea.equals(otherCabinetPlace.mapArea);
+    }
 }

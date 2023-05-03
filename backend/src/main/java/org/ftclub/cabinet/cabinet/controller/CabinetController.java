@@ -21,6 +21,6 @@ public class CabinetController {
     @AuthGuard(level = Level.USER_OR_ADMIN)
     public CabinetDto getCabinetById(
             @PathVariable Long cabinetId) {
-        return cabinetService.getCabinetById(cabinetId);
+        return cabinetService.getCabinet(cabinetId);
     }
 }
