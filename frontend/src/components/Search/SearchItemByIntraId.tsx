@@ -199,10 +199,10 @@ const NameWrapperStyled = styled.div`
 const IconStyled = styled.div<{ lent_type?: CabinetType }>`
   width: 18px;
   height: 28px;
-  background: url(${(props) =>
+  background-image: url((${(props) =>
       props.lent_type
         ? cabinetIconSrcMap[props.lent_type]
-        : cabinetIconSrcMap[CabinetType.PRIVATE]})
+        : cabinetIconSrcMap[CabinetType.PRIVATE]}))
     no-repeat center center / contain;
 `;
 
