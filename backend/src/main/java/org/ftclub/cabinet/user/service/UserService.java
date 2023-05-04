@@ -9,9 +9,9 @@ import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserService {
 
+    /* 동아리일 경우 email은 어떻게 할 지? */
     boolean checkUserExists(String name);
 
-    /* 동아리일 경우 email은 어떻게 할 지? */
     void createUser(String name, String email, Date blackholedAt, UserRole role);
 
     boolean checkAmdinUserExists(String name);
@@ -33,4 +33,5 @@ public interface UserService {
     MyProfileResponseDto getMyProfile(UserSessionDto user);
 
     //List<BlockedUserPaginationDto> getAllBanUsers();
+
 }

@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
+<<<<<<< HEAD
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -26,4 +27,8 @@ public class UserExceptionHandlerService {
 		}
 		return user;
 	}
+=======
+public class UserExceptionHandlerService {
+
+>>>>>>> e1d6a71c ([BE] FEAT : banPolicy 추가 및 기타 userService 메서드 추가 #1038)
 }

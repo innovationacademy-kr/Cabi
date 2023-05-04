@@ -1,6 +1,10 @@
 package org.ftclub.cabinet.cabinet.service;
 
+<<<<<<< HEAD
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+=======
+import java.util.List;
+>>>>>>> e1d6a71c ([BE] FEAT : banPolicy 추가 및 기타 userService 메서드 추가 #1038)
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
