@@ -3,15 +3,15 @@ package org.ftclub.cabinet.lent.service;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 
 public interface LentService {
-    void startLentCabinet(Long userId, Long cabinetId);
+    void startLentCabinet(long userId, long cabinetId);
 
-    void startLentClubCabinet(Long userId, Long cabinetId);
+    void startLentClubCabinet(long userId, long cabinetId);
 
-    void endLentCabinet(Long userId);
+    void endLentCabinet(long userId);
 
-    void terminateLentCabinet(Long userId);
+    void terminateLentCabinet(long userId);
 
-    LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page, Integer length);
+    LentHistoryPaginationDto getAllUserLentHistories(long userId, int page, int length);
 
-    LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page, Integer length);
+    LentHistoryPaginationDto getAllCabinetLentHistories(long cabinetId, int page, int length);
 }
