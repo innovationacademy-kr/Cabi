@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import java.util.Date;
 import java.util.List;
+import org.ftclub.cabinet.admin.domain.AdminRole;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -18,7 +19,7 @@ public interface UserService {
 
     void deleteAdminUser(long adminUserId);
 
-    void updateAdminUserRole(long adminUserId);
+    void updateAdminUserRole(long adminUserId, AdminRole role);
 
     void updateUserBlackholedAtById(long userId, Date newBlackholedAt);
 

@@ -30,7 +30,12 @@ public class AdminUser {
     @Column(name = "ROLE", length = 16, nullable = false)
     private AdminRole role = AdminRole.NONE;
 
-    public AdminUser(String email) {
+    public AdminUser(String email, AdminRole role) {
         this.email = email;
+        this.role = role;
+    }
+
+    public void changeAdminRole(AdminRole role) {
+        this.role = role;
     }
 }
