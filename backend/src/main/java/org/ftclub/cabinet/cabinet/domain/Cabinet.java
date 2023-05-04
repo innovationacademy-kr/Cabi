@@ -15,11 +15,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
+
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.Validate;
 
 @Entity
 @Table(name = "CABINET", uniqueConstraints = {
@@ -69,7 +68,7 @@ public class Cabinet {
     private CabinetPlace cabinetPlace;
 
     public Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
-            Grid grid, CabinetPlace cabinetPlace) {
+                   Grid grid, CabinetPlace cabinetPlace) {
         this.visibleNum = visibleNum;
         this.status = status;
         this.lentType = lentType;
@@ -100,11 +99,19 @@ public class Cabinet {
         this.cabinetPlace = cabinetPlace;
     }
 
+    public void assignVisibleNum(Integer visibleNum) {
+        this.visibleNum = visibleNum;
+    }
+
     public void specifyStatus(CabinetStatus cabinetStatus) {
         this.status = cabinetStatus;
     }
 
-    public void specifyStatusNote(String statusNote) {
+    public void specifyMaxUser(Integer maxUser) {
+        this.maxUser = maxUser;
+    }
+
+    public void writeStatusNote(String statusNote) {
         this.statusNote = statusNote;
     }
 
@@ -112,14 +119,30 @@ public class Cabinet {
         this.lentType = lentType;
     }
 
+    public void writeTitle(String title) {
+        this.title = title;
+    }
+
+    public void coordinateGrid(Grid grid) {
+        this.grid = grid;
+    }
+
+    public void writeMemo(String memo) {
+        this.memo = memo;
+    }
+
     @Override
     public boolean equals(final Object other) {
-        if (this == other) return true;
-        if (!(other instanceof Cabinet)) return false;
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Cabinet)) {
+            return false;
+        }
         return this.cabinetId.equals(((Cabinet) other).cabinetId);
     }
 
-    public void updateStatusByUserCount(Integer userCount) {
+    public void specifyStatusByUserCount(Integer userCount) {
         if (userCount.equals(0)) {
             this.status = CabinetStatus.AVAILABLE;
             return;

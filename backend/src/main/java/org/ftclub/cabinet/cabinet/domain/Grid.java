@@ -10,8 +10,12 @@ import lombok.Getter;
 @Getter
 public class Grid {
 
-    @Column(name = "ROW")
-    private Integer row;
-    @Column(name = "COL")
-    private Integer col;
+	@Column(name = "ROW")
+	private Integer row;
+	@Column(name = "COL")
+	private Integer col;
+
+	public boolean isValidated() {
+		return (this.row > 0 && this.col > 0);
+	}
 }
