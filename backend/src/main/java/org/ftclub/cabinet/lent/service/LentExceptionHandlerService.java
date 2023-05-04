@@ -72,7 +72,7 @@ public class LentExceptionHandlerService {
             case LENT_CLUB:
                 throw new ServiceException(ExceptionStatus.LENT_CLUB);
             case IMMINENT_EXPIRATION:
-                throw new ServiceException(ExceptionStatus.LENT_LONG_TERM);
+                throw new ServiceException(ExceptionStatus.LENT_EXPIRE_IMMINENT);
             case ALREADY_LENT_USER:
                 throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
             default:

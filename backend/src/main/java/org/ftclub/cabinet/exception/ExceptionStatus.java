@@ -15,7 +15,7 @@ public enum ExceptionStatus {
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다"),
     NOT_FOUND_CABINET(HttpStatus.NOT_FOUND, "사물함이 존재하지 않습니다."),
     LENT_CLUB(HttpStatus.I_AM_A_TEAPOT, "동아리 전용 사물함입니다"),
-    LENT_LONG_TERM(HttpStatus.I_AM_A_TEAPOT, "만료가 임박한 공유 사물함입니다\\n해당 사물함은 대여할 수 없습니다"),
+    LENT_EXPIRE_IMMINENT(HttpStatus.I_AM_A_TEAPOT, "만료가 임박한 공유 사물함입니다\\n해당 사물함은 대여할 수 없습니다"),
     LENT_FULL(HttpStatus.CONFLICT, "사물함에 잔여 자리가 없습니다"),
     LENT_EXPIRED(HttpStatus.FORBIDDEN, "연체된 사물함은 대여할 수 없습니다"),
     LENT_BROKEN(HttpStatus.FORBIDDEN, "고장난 사물함은 대여할 수 없습니다"),
