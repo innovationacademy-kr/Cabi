@@ -26,10 +26,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
     private Long userId;
+
     @Column(name = "NAME", length = 32, unique = true, nullable = false)
     private String name;
+
     @Column(name = "EMAIL", unique = true)
     private String email;
+
     @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "BLACKHOLED_AT")
     private Date blackholedAt = null;
