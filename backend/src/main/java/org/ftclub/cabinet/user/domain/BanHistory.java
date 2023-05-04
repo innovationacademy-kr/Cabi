@@ -25,7 +25,7 @@ public class BanHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BAN_HISTORY_ID")
-    private Long banHistoryId;
+    private long banHistoryId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "BANNED_AT", nullable = false)
@@ -53,6 +53,22 @@ public class BanHistory {
     public static BanHistory of(Date bannedAt, Date unbannedAt, BanType banType,
             Long userId) {
         return new BanHistory(bannedAt, unbannedAt, banType, userId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BanHistory banHistory = (BanHistory) o;
+        return Objects.equals(banHistoryId, banHistory.banHistoryId);
+    }
+
+    public boolean isBanEnd() {
+        return new Date().before(unbannedAt);
     }
 
     @Override
