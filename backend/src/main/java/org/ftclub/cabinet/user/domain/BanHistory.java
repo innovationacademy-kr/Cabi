@@ -70,20 +70,4 @@ public class BanHistory {
     public boolean isBanEnd() {
         return new Date().before(unbannedAt);
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        BanHistory banHistory = (BanHistory) o;
-        return Objects.equals(banHistoryId, banHistory.banHistoryId);
-    }
-
-    public boolean isBanEnd() {
-        return new Date().before(unbannedAt);
-    }
 }

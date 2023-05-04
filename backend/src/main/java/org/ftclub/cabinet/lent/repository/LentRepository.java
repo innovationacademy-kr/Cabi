@@ -44,3 +44,4 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
             "WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
     List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId);
 }
+
