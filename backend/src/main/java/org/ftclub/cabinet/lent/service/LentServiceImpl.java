@@ -31,7 +31,7 @@ public class LentServiceImpl implements LentService {
 	private final CabinetService cabinetService;
 
 	@Override
-	public void startLentCabinet(long userId, long cabinetId) {
+	public void startLentCabinet(Long userId, Long cabinetId) {
 		validateAllId(userId, cabinetId);
 		Date now = new Date();
 		Cabinet cabinet = lentExceptionHandler.getCabinet(cabinetId);
@@ -53,7 +53,7 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public void startLentClubCabinet(long userId, long cabinetId) {
+	public void startLentClubCabinet(Long userId, Long cabinetId) {
 		validateAllId(userId, cabinetId);
 		Date now = new Date();
 		Cabinet cabinet = lentExceptionHandler.getClubCabinet(cabinetId);
@@ -67,23 +67,24 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public void endLentCabinet(long userId) {
+	public void endLentCabinet(Long userId) {
 		validateAllId(userId);
 		LentHistory lentHistory = returnCabinet(userId);
 		userService.banUser(userId, lentHistory.getStartedAt(), lentHistory.getEndedAt());
 	}
 
 	@Override
-	public void terminateLentCabinet(long userId) {
+	public void terminateLentCabinet(Long userId) {
 		validateAllId(userId);
 		returnCabinet(userId);
 	}
 
 	@Override
-	public LentHistoryPaginationDto getAllUserLentHistories(long userId, int page, int length) {
+	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
+			Integer length) {
 		validateAllId(userId);
-		Validate.inclusiveBetween(0, Integer.MAX_VALUE, page);
-		Validate.inclusiveBetween(1, Integer.MAX_VALUE, length);
+		Validate.inclusiveBetween(0, Integer.MAX_VALUE, page.intValue());
+		Validate.inclusiveBetween(1, Integer.MAX_VALUE, length.intValue());
 		PageRequest pageable = PageRequest.of(page, length, Sort.by("STARTED_AT"));
 		List<LentHistory> lentHistories = lentRepository.findByUserId(userId, pageable);
 		int totalLength = lentRepository.countUserAllLent(userId);
@@ -91,8 +92,8 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public LentHistoryPaginationDto getAllCabinetLentHistories(long cabinetId, int page,
-			int length) {
+	public LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
+			Integer length) {
 		validateAllId(cabinetId);
 		PageRequest pageable = PageRequest.of(page, length, Sort.by("STARTED_AT"));
 		List<LentHistory> lentHistories = lentRepository.findByCabinetId(cabinetId, pageable);
@@ -115,7 +116,7 @@ public class LentServiceImpl implements LentService {
 		return new LentHistoryPaginationDto(lentHistoryDto, totalLength);
 	}
 
-	private LentHistory returnCabinet(long userId) {
+	private LentHistory returnCabinet(Long userId) {
 		Date now = new Date();
 		lentExceptionHandler.getUser(userId);
 		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
@@ -125,9 +126,9 @@ public class LentServiceImpl implements LentService {
 		return lentHistory;
 	}
 
-	private void validateAllId(long... id) {
-        for (long i : id) {
-            Validate.inclusiveBetween(1, Long.MAX_VALUE, i);
-        }
+	private void validateAllId(Long... id) {
+		for (Long i : id) {
+			Validate.inclusiveBetween(1, Long.MAX_VALUE, i);
+		}
 	}
 }

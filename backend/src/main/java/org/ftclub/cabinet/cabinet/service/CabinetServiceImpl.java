@@ -1,27 +1,25 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import static org.ftclub.cabinet.auth.AuthGuard.Level.USER_OR_ADMIN;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
-import org.ftclub.cabinet.auth.AuthGuard;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.BuildingFloorsResponseDto;
+import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
+import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
-import org.ftclub.cabinet.lent.service.LentExceptionHandlerService;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
@@ -40,11 +38,13 @@ public class CabinetServiceImpl implements CabinetService {
 	private final LentMapper lentMapper;
 
 	@Override
-	public CabinetDto getCabinet(Long cabinetId) {
-		Validate.notNull(cabinetId, "cabinetId must not not be null");
-		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-		Location location = cabinetExceptionHandlerService.getLocation(cabinetId);
-		return cabinetMapper.toCabinetDto(cabinet.getTitle(), location, cabinet);
+	public Cabinet getCabinet(Long cabinetId) {
+		return cabinetExceptionHandlerService.getCabinet(cabinetId);
+	}
+
+	@Override
+	public Location getLocationByCabinetId(Long cabinetId) {
+		return cabinetExceptionHandlerService.getLocation(cabinetId);
 	}
 
 	@Override
