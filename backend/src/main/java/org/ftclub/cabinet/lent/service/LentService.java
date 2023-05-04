@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.util.List;
+import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 
 public interface LentService {
@@ -16,4 +18,6 @@ public interface LentService {
 
 	LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
 			Integer length);
+
+	List<LentDto> getLentDtoList(Long cabinetId);
 }

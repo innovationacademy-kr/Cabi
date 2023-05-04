@@ -11,18 +11,13 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.BuildingFloorsResponseDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
-import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -48,29 +43,13 @@ public class CabinetServiceImpl implements CabinetService {
 	}
 
 	@Override
-	public BuildingFloorsResponseDto getBuildingFloors() {
-		List<BuildingFloorsDto> buildingFloors = new ArrayList<>();
-		List<String> buildings = cabinetExceptionHandlerService.getAllBuildings();
-		for (String building : buildings) {
-			List<Integer> floors = cabinetExceptionHandlerService.getAllFloorsByBuilding(building);
-			buildingFloors.add(cabinetMapper.toBuildingFloorsDto(building, floors));
-		}
-		return cabinetMapper.toBuildingFloorsResponseDto(buildingFloors);
+	public List<String> getAllBuildings() {
+		return cabinetExceptionHandlerService.getAllBuildings();
 	}
 
 	@Override
-	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
-		Validate.notNull(cabinetId, "cabinetId must not be null");
-		// to-do: change to lentExceptionHandlerService
-		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
-		List<LentDto> lents = new ArrayList<>();
-		for (LentHistory lentHistory : lentHistories) {
-			// to-do: change to userExceptionHandlerService
-			User user = userRepository.findById(lentHistory.getUserId())
-					.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
-			lents.add(lentMapper.toLentDto(user.getName(), lentHistory));
-		}
-		return new CabinetInfoResponseDto(lents);
+	public List<Integer> getAllFloorsByBuilding(String building) {
+		return cabinetExceptionHandlerService.getAllFloorsByBuilding(building);
 	}
 
 	@Override

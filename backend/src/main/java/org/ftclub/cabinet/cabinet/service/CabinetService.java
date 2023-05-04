@@ -6,7 +6,6 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.dto.BuildingFloorsResponseDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 
@@ -16,7 +15,9 @@ public interface CabinetService {
 
 	Location getLocationByCabinetId(Long cabinetId);
 
-	BuildingFloorsResponseDto getBuildingFloors();
+	public List<String> getAllBuildings();
+
+	public List<Integer> getAllFloorsByBuilding(String building);
 
 	CabinetInfoResponseDto getCabinetInfo(Long cabinetId);
 

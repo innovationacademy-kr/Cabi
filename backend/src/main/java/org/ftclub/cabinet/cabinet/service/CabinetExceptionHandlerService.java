@@ -50,5 +50,4 @@ public class CabinetExceptionHandlerService {
 		return cabinetRepository.findCabinetPlaceByLocation(location)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
-
 }

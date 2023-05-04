@@ -29,9 +29,9 @@ public class LentExceptionHandlerService {
 
 	public Cabinet getClubCabinet(Long cabinetId) {
 		Cabinet cabinet = getCabinet(cabinetId);
-        if (!cabinet.isLentType(LentType.CLUB)) {
-            throw new ServiceException(ExceptionStatus.NOT_FOUND_CABINET);
-        }
+		if (!cabinet.isLentType(LentType.CLUB)) {
+			throw new ServiceException(ExceptionStatus.NOT_FOUND_CABINET);
+		}
 		return cabinet;
 	}
 
@@ -42,17 +42,17 @@ public class LentExceptionHandlerService {
 
 	public User getClubUser(Long userId) {
 		User user = getUser(userId);
-        if (!user.isUserRole(UserRole.CLUB)) {
-            throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);
-        }
+		if (!user.isUserRole(UserRole.CLUB)) {
+			throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);
+		}
 		return user;
 	}
 
 	public LentHistory getActiveLentHistoryWithUserIdAndCabinetId(Long userId, Long cabinetId) {
 		LentHistory ret = getActiveLentHistoryWithUserId(userId);
-        if (!ret.isCabinetIdEqual(cabinetId)) {
-            throw new ServiceException(ExceptionStatus.NO_LENT_CABINET);
-        }
+		if (!ret.isCabinetIdEqual(cabinetId)) {
+			throw new ServiceException(ExceptionStatus.NO_LENT_CABINET);
+		}
 		return ret;
 	}
 
@@ -89,7 +89,8 @@ public class LentExceptionHandlerService {
 
 	public void checkExistedSpace(Long cabinetId) {
 		Cabinet cabinet = getCabinet(cabinetId);
-		if (lentRepository.countCabinetActiveLent(cabinetId) == cabinet.getMaxUser())
+		if (lentRepository.countCabinetActiveLent(cabinetId) == cabinet.getMaxUser()) {
 			throw new ServiceException(ExceptionStatus.LENT_FULL);
+		}
 	}
 }

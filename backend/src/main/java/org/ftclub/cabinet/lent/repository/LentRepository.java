@@ -19,16 +19,24 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 
 	List<LentHistory> findByCabinetId(Long cabinetId, Pageable pageable);
 
-	@Query("select count(lh) from LentHistory lh where lh.endedAt = null and lh.userId = ?1")
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE Lh.endedAt = null and lh.userId = :userId")
 	int countUserActiveLent(Long userId);
 
-	@Query("select count(lh) from LentHistory lh where lh.endedAt = null and lh.cabinetId = ?1")
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE lh.endedAt = null and lh.cabinetId = :cabinetId")
 	int countCabinetActiveLent(Long cabinetId);
 
-	@Query("select count(lh) from LentHistory lh where lh.userId = ?1")
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE lh.userId = :userId")
 	int countUserAllLent(Long userId);
 
-	@Query("select count(lh) from LentHistory lh where lh.cabinetId = ?1")
+	@Query("SELECT count(lh)" +
+			"FROM LentHistory lh " +
+			"WHERE lh.cabinetId = :userId")
 	int countCabinetAllLent(Long userId);
 
 	@Query("SELECT lh " +
