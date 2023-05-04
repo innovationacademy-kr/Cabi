@@ -14,17 +14,17 @@ public interface UserService {
 
     void createAdminUser(String email);
 
-    void deleteUserById(Long userId);
+    void deleteUser(long userId);
 
-    void deleteAdminUserById(Long adminUserId);
+    void deleteAdminUser(long adminUserId);
 
-    void updateAdminUserRole(Long adminUserId);
+    void updateAdminUserRole(long adminUserId);
 
-    void updateBlackholedAtById(Long userId);
+    void updateUserBlackholedAtById(long userId, Date newBlackholedAt);
 
-    void banUser(Long userId, int days); // 며칠 벤을 할 지는 BanPolicy에서 계산하는 것으로 결정
+    void banUser(long userId, int days); // 며칠 벤을 할 지는 BanPolicy에서 계산하는 것으로 결정
 
-    void unbanUser(Long userId);
+    void unbanUser(long userId);
 
     MyProfileResponseDto getMyProfile(UserSessionDto user);
 

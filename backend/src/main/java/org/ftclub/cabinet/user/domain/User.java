@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.domain;
 
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -24,7 +25,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
-    private Long userId;
+    private long userId;
 
     @Column(name = "NAME", length = 32, unique = true, nullable = false)
     private String name;
@@ -49,7 +50,23 @@ public class User {
         this.role = userRole;
     }
 
-    public Long getUserId() {
-        return userId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    public boolean isUserRole(UserRole role) {
+        return role.equals(this.role);
+    }
+
+    public void changeBlackholedAt(Date blackholedAt) {
+        this.blackholedAt = blackholedAt;
     }
 }
