@@ -106,7 +106,9 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       isSelected={currentIntraId === intra_id}
       onClick={clickSearchItem}
     >
-      <RectangleStyled>-</RectangleStyled>
+      <RectangleStyled banned={!!banned_date}>
+        {banned_date ? "!" : "-"}
+      </RectangleStyled>
       <TextWrapper>
         <LocationStyled>대여 중이 아닌 사용자</LocationStyled>
         <NameWrapperStyled>
@@ -146,15 +148,26 @@ const WrapperStyled = styled.div<{ isSelected: boolean }>`
   }
 `;
 
-const RectangleStyled = styled.div<{ status?: CabinetStatus }>`
+const RectangleStyled = styled.div<{
+  status?: CabinetStatus;
+  banned?: boolean;
+}>`
   width: 60px;
   height: 60px;
   border-radius: 10px;
   background-color: ${(props) =>
-    props.status ? cabinetStatusColorMap[props.status] : "var(--full)"};
+    props.banned
+      ? "var(--expired)"
+      : props.status
+      ? cabinetStatusColorMap[props.status]
+      : "var(--full)"};
   font-size: 26px;
   color: ${(props) =>
-    props.status ? cabinetLabelColorMap[props.status] : "var(--black)"};
+    props.banned
+      ? "var(--white)"
+      : props.status
+      ? cabinetLabelColorMap[props.status]
+      : "var(--black)"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -186,10 +199,10 @@ const NameWrapperStyled = styled.div`
 const IconStyled = styled.div<{ lent_type?: CabinetType }>`
   width: 18px;
   height: 28px;
-  background: url(${(props) =>
+  background-image: url((${(props) =>
       props.lent_type
         ? cabinetIconSrcMap[props.lent_type]
-        : cabinetIconSrcMap[CabinetType.PRIVATE]})
+        : cabinetIconSrcMap[CabinetType.PRIVATE]}))
     no-repeat center center / contain;
 `;
 

@@ -52,6 +52,30 @@ export class AdminSearchRepository implements IAdminSearchRepository {
     return rtn;
   }
 
+  getBannedDate(user: User): Date | null {
+    // banLog가 존재하며 가장 최근 unbanned_date가 오늘 이후인 경우에만 banned_date, unbanned_date를 반환
+    if (this.getUnbannedDate(user) != null) {
+      return user.BanLog.map((banLog) => banLog.banned_date).reduce(
+        (prev, curr) => (prev > curr ? prev : curr),
+        new Date(0),
+      );
+    }
+    return null;
+  }
+
+  getUnbannedDate(user: User): Date | null {
+    // banLog가 존재하며 가장 최근 unbanned_date가 오늘 이후인 경우에만 banned_date, unbanned_date를 반환
+    if (user.BanLog && user.BanLog.length > 0) {
+      const unbannedDate = user.BanLog.map(
+        (banLog) => banLog.unbanned_date,
+      ).reduce((prev, curr) => (prev > curr ? prev : curr), new Date(0));
+      if (unbannedDate > new Date()) {
+        return unbannedDate;
+      }
+    }
+    return null;
+  }
+
   async searchUserCabinetListByIntraId(
     intraId: string,
     page: number,
@@ -90,18 +114,8 @@ export class AdminSearchRepository implements IAdminSearchRepository {
             user_id: user.user_id,
             intra_id: user.intra_id,
             // BanLog가 존재하며 가장 최근 unbanned_date가 오늘 이후인 경우에만 banned_date, unbanned_date를 반환
-            banned_date:
-              user.BanLog &&
-              user.BanLog.length > 0 &&
-              user.BanLog[user.BanLog.length - 1].unbanned_date > new Date()
-                ? user.BanLog[user.BanLog.length - 1].banned_date
-                : null,
-            unbanned_date:
-              user.BanLog &&
-              user.BanLog.length > 0 &&
-              user.BanLog[user.BanLog.length - 1].unbanned_date > new Date()
-                ? user.BanLog[user.BanLog.length - 1].unbanned_date
-                : null,
+            banned_date: this.getBannedDate(user),
+            unbanned_date: this.getUnbannedDate(user),
             cabinetInfo: user.Lent &&
               user.Lent.cabinet && {
                 cabinet_id: user.Lent.cabinet.cabinet_id,
@@ -350,9 +364,9 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       .where('dateLent.lent_time <= :startDate', { startDate: startDate })
       .andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
     const lent = this.lentRepository
-    .createQueryBuilder('dateLent')
-    .where('dateLent.lent_time <= :startDate', { startDate: startDate })
-    .andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
+      .createQueryBuilder('dateLent')
+      .where('dateLent.lent_time <= :startDate', { startDate: startDate })
+      .andWhere('dateLent.lent_time >= :endDate', { endDate: endDate });
     const lentLogCount = await lentLog.getCount();
     const lentCount = await lent.getCount();
 
