@@ -69,7 +69,7 @@ public class LentServiceImpl implements LentService {
     public void endLentCabinet(long userId) {
         validateAllId(userId);
         LentHistory lentHistory = returnCabinet(userId);
-        userService.banUser(userId, lentHistory);
+        userService.banUser(userId, lentHistory.getStartedAt(), lentHistory.getEndedAt());
     }
 
     @Override

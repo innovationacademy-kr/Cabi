@@ -25,7 +25,7 @@ public interface UserService {
 
     void banUser(Long userId, int days); // 며칠 벤을 할 지는 BanPolicy에서 계산하는 것으로 결정
 
-    void banUser(Long userId, LentHistory lentHistory);
+    void banUser(Long userId, Date startAt, Date endedAt);
 
     void unbanUser(Long userId);
 
