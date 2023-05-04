@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.repository;
 
+<<<<<<< HEAD
 import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -43,4 +44,13 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"FROM LentHistory lh " +
 			"WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
 	List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId);
+=======
+import java.util.Optional;
+import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LentRepository extends JpaRepository<LentHistory, Long> {
+
+    Optional<LentHistory> findFirstByUserIdAndEndedAtIsNull(long userId);
+>>>>>>> e1d6a71c ([BE] FEAT : banPolicy 추가 및 기타 userService 메서드 추가 #1038)
 }
