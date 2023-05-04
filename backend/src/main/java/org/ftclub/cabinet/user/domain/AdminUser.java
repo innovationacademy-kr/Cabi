@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.domain;
+package org.ftclub.cabinet.user.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

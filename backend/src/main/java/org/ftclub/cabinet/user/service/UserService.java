@@ -1,17 +1,19 @@
 package org.ftclub.cabinet.user.service;
 
 import java.util.Date;
-import java.util.List;
-import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserService {
 
     /* 동아리일 경우 email은 어떻게 할 지? */
+    boolean checkUserExists(String name);
+
     void createUser(String name, String email, Date blackholedAt, UserRole role);
+
+    boolean checkAmdinUserExists(String name);
 
     void createAdminUser(String email);
 
@@ -23,13 +25,13 @@ public interface UserService {
 
     void updateUserBlackholedAtById(long userId, Date newBlackholedAt);
 
-    void banUser(long userId, int days); // 며칠 벤을 할 지는 BanPolicy에서 계산하는 것으로 결정
+    void banUser(long userId, Date expiredAt, Date endedAt);
 
-    void unbanUser(long userId);
+    //void unbanUser(long userId);
 
     MyProfileResponseDto getMyProfile(UserSessionDto user);
 
-    List<BlockedUserPaginationDto> getAllBanUsers();
+    //List<BlockedUserPaginationDto> getAllBanUsers();
 
     //이거 한글 다 쓴다음에 복붙하면 편하네요 good
     // + API 명세되어있는 값들 리턴하는 메서드들

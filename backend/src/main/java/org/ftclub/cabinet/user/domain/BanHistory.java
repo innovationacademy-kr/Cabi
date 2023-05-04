@@ -6,19 +6,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
 
 @Entity
 @Table(name = "BAN_HISTORY")
@@ -31,9 +28,9 @@ public class BanHistory {
     @Column(name = "BAN_HISTORY_ID")
     private long banHistoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    /*ban history에 cabinetId가 필요한 이유?*/
     @JoinColumn(name = "CABINET_ID", nullable = false)
-    private Cabinet cabinet;
+    private Long cabinetId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "BANNED_AT", nullable = false)
@@ -47,17 +44,16 @@ public class BanHistory {
     @Column(name = "BAN_TYPE", length = 32, nullable = false)
     private BanType banType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    private Long userId;
 
-    public BanHistory(Cabinet cabinet, Date bannedAt, Date unbannedAt,
-            BanType banType, User user) {
-        this.cabinet = cabinet;
+    public BanHistory(Long cabinetId, Date bannedAt, Date unbannedAt,
+            BanType banType, Long userId) {
+        this.cabinetId = cabinetId;
         this.bannedAt = bannedAt;
         this.unbannedAt = unbannedAt;
         this.banType = banType;
-        this.user = user;
+        this.userId = userId;
     }
 
     @Override

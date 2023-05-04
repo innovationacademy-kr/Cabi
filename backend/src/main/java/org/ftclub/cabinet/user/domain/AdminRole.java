@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.domain;
+package org.ftclub.cabinet.user.domain;
 
 
 public enum AdminRole {

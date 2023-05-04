@@ -1,3 +1,5 @@
+package org.ftclub.cabinet.cabinet.service;
+
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;

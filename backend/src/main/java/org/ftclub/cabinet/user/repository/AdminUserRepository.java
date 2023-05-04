@@ -1,9 +1,12 @@
 package org.ftclub.cabinet.user.repository;
 
-import org.ftclub.cabinet.admin.domain.AdminUser;
+import java.util.Optional;
+import org.ftclub.cabinet.user.domain.AdminUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdminUserRepository extends JpaRepository<AdminUser, Long> {
 
     AdminUser getAdminUser(long adminUserId);
+
+    Optional<AdminUser> findByEmail(String email);
 }
