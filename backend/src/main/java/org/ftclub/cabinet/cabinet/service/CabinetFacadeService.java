@@ -2,41 +2,37 @@ package org.ftclub.cabinet.cabinet.service;
 
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.BuildingFloorsResponseDto;
-import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 
 public interface CabinetFacadeService {
 
-	CabinetDto getCabinet(Long cabinetId);
-
-	BuildingFloorsResponseDto getBuildingFloors();
+	List<BuildingFloorsDto> getBuildingFloorsResponse();
 
 	CabinetInfoResponseDto getCabinetInfo(Long cabinetId);
 
 	List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor);
 
-	void updateStatus(Long cabinetId, CabinetStatus status);
+	void updateCabinetStatus(Long cabinetId, CabinetStatus status);
 
-	void updateStatusByUserCount(Long cabinetId, Integer userCount);
+	void updateCabinetLentType(Long cabinetId, LentType lentType);
 
-	void updateMemo(Long cabinetId, String memo);
+	void updateCabinetStatusNote(Long cabinetId, String statusNote);
 
-	void updateVisibleNum(Long cabinetId, Integer visibleNum);
+	void updateCabinetTitle(Long cabinetId, String title);
 
-	void updateTitle(Long cabinetId, String title);
+	void updateCabinetMemo(Long cabinetId, String memo);
 
-	void updateLocationByCabinetPlaceId(Long cabinetId, String building, Integer floor,
-			String section);
+	void updateCabinetGrid(Long cabinetId, Grid grid);
 
-	void updateMaxUser(Long cabinetId, Integer maxUser);
+	void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum);
 
-	void updateLentType(Long cabinetId, LentType lentType);
+	void updateCabinetBundleStatus(List<Long> cabinetIds, CabinetStatus status);
 
-	void updateGrid(Long cabinetId, Integer row, Integer col);
+	void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType);
 
-	void updateStatusNote(Long cabinetId, String statusNote);
 
 }

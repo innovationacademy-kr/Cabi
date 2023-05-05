@@ -25,18 +25,18 @@ public class CabinetPlace {
 	@Embedded
 	private Location location;
 	@Embedded
-	private CabinetGrid cabinetGrid;
+	private Grid grid;
 	@Embedded
 	private MapArea mapArea;
 
-	protected CabinetPlace(Location location, CabinetGrid cabinetGrid, MapArea mapArea) {
+	protected CabinetPlace(Location location, Grid grid, MapArea mapArea) {
 		this.location = location;
-		this.cabinetGrid = cabinetGrid;
+		this.grid = grid;
 		this.mapArea = mapArea;
 	}
 
-	public static CabinetPlace of(Location location, CabinetGrid cabinetGrid, MapArea mapArea) {
-		return new CabinetPlace(location, cabinetGrid, mapArea);
+	public static CabinetPlace of(Location location, Grid grid, MapArea mapArea) {
+		return new CabinetPlace(location, grid, mapArea);
 	}
 
 	@Override

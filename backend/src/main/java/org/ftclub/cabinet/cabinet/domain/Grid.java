@@ -2,8 +2,6 @@ package org.ftclub.cabinet.cabinet.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Embeddable
@@ -15,7 +13,7 @@ public class Grid {
 	@Column(name = "COL")
 	private Integer col;
 
-	public boolean isValidated() {
+	public boolean isPositive() {
 		return (this.row > 0 && this.col > 0);
 	}
 }

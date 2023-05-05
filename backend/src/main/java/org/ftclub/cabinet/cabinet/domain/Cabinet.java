@@ -147,6 +147,11 @@ public class Cabinet {
 		return this.cabinetId.equals(((Cabinet) other).cabinetId);
 	}
 
+	public boolean isStatusUpdatableByUserCount(Integer userCount) {
+		return (this.maxUser <= userCount &&
+				!this.status.equals(CabinetStatus.BROKEN));
+	}
+
 	public void specifyStatusByUserCount(Integer userCount) {
 		if (userCount.equals(0)) {
 			this.status = CabinetStatus.AVAILABLE;
