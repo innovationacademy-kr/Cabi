@@ -2,8 +2,7 @@ package org.ftclub.cabinet.lent.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
+import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -19,21 +18,8 @@ import org.springframework.stereotype.Service;
 public class LentExceptionHandlerService {
 
 	private final LentRepository lentRepository;
-	private final CabinetRepository cabinetRepository;
 	private final UserRepository userRepository;
-
-	public Cabinet getCabinet(Long cabinetId) {
-		return cabinetRepository.findById(cabinetId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-	}
-
-	public Cabinet getClubCabinet(Long cabinetId) {
-		Cabinet cabinet = getCabinet(cabinetId);
-		if (!cabinet.isLentType(LentType.CLUB)) {
-			throw new ServiceException(ExceptionStatus.NOT_FOUND_CABINET);
-		}
-		return cabinet;
-	}
+	private final CabinetExceptionHandlerService cabinetExceptionHandler;
 
 	public User getUser(Long userId) {
 		return userRepository.findById(userId)
@@ -88,7 +74,7 @@ public class LentExceptionHandlerService {
 	}
 
 	public void checkExistedSpace(Long cabinetId) {
-		Cabinet cabinet = getCabinet(cabinetId);
+		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
 		if (lentRepository.countCabinetActiveLent(cabinetId) == cabinet.getMaxUser()) {
 			throw new ServiceException(ExceptionStatus.LENT_FULL);
 		}

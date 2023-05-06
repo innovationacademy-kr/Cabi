@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -19,6 +20,14 @@ public class CabinetExceptionHandlerService {
 	public Cabinet getCabinet(Long cabinetId) {
 		return cabinetRepository.findById(cabinetId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+	}
+
+	public Cabinet getClubCabinet(Long cabinetId) {
+		Cabinet cabinet = getCabinet(cabinetId);
+		if (!cabinet.isLentType(LentType.CLUB)) {
+			throw new ServiceException(ExceptionStatus.NOT_FOUND_CABINET);
+		}
+		return cabinet;
 	}
 
 	public Location getLocation(Long cabinetId) {
