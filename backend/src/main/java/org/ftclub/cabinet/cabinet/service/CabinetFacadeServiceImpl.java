@@ -15,6 +15,8 @@ import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -49,6 +51,9 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 
 	@Override
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
+		if (!cabinetRepository.existsById(cabinetId)) {
+			throw new ServiceException(ExceptionStatus.NOT_FOUND_CABINET);
+		}
 		List<LentDto> lentDtos = new ArrayList<>();
 		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
 		for (LentHistory lentHistory : lentHistories) {
@@ -61,6 +66,9 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor) {
+		if (!cabinetRepository.existsBuildingAndFloor(building, floor) || building.isEmpty()) {
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+		}
 		List<CabinetsPerSectionResponseDto> result = new ArrayList<>();
 		List<String> sections = cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor)
 				.orElseThrow();
@@ -100,8 +108,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 	@Override
-	public void updateCabinetGrid(Long cabinetId, Grid grid) {
-		cabinetService.updateGrid(cabinetId, grid);
+	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
+		cabinetService.updateGrid(cabinetId, new Grid(row, col));
 	}
 
 	@Override

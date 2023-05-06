@@ -65,4 +65,10 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			+ "WHERE p.location.building = :building AND p.location.floor = :floor AND p.location.section = :section")
 	Optional<List<Cabinet>> findAllByBuildingAndFloorAndSection(String building, Integer floor,
 			String section);
+
+	@Query("SELECT COUNT(p.location.building) > 0 " +
+			"FROM Cabinet c " +
+			"JOIN c.cabinetPlace p " +
+			"WHERE p.location.building = :building AND p.location.floor = :floor")
+	boolean existsBuildingAndFloor(String building, Integer floor);
 }

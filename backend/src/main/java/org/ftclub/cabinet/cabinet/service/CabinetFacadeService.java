@@ -2,7 +2,6 @@ package org.ftclub.cabinet.cabinet.service;
 
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
@@ -26,7 +25,7 @@ public interface CabinetFacadeService {
 
 	void updateCabinetMemo(Long cabinetId, String memo);
 
-	void updateCabinetGrid(Long cabinetId, Grid grid);
+	void updateCabinetGrid(Long cabinetId, Integer row, Integer col);
 
 	void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum);
 

@@ -8,6 +8,9 @@ spring:
     username: root
     password: test_password
   jpa:
+    properties:
+      hibernate:
+        show_sql: false
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MariaDB103Dialect

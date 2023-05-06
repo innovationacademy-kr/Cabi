@@ -1,17 +1,19 @@
 package org.ftclub.cabinet.cabinet.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
+import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,28 +30,40 @@ public class CabinetController {
 
 	@GetMapping("/buildings/{building}/floors/{floor}")
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
-			@RequestParam("building") String building,
-			@RequestParam("floor") Integer floor) {
+			@PathVariable("building") String building,
+			@PathVariable("floor") Integer floor) {
+		if (building == null || floor == null) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
 		return cabinetFacadeService.getCabinetsPerSection(building, floor);
 	}
 
 	@GetMapping("/{cabinetId}")
 	public CabinetDto getCabinetInfo(
-			@RequestParam("cabinetId") Long cabinetId) {
+			@PathVariable("cabinetId") Long cabinetId) {
+		if (cabinetId == null) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
 	}
 
-	@PatchMapping("/{cabinetId}/title")
+	@PatchMapping(value = "/{cabinetId}/title")
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody String title) {
-		cabinetFacadeService.updateCabinetTitle(cabinetId, title);
+			@RequestBody HashMap<String, String> body) {
+		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey("title")) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
+		cabinetFacadeService.updateCabinetTitle(cabinetId, body.get("title"));
 	}
 
 	@PatchMapping("/{cabinetId}/memo")
 	public void updateCabinetMemo(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody String memo) {
-		cabinetFacadeService.updateCabinetMemo(cabinetId, memo);
+			@RequestBody HashMap<String, String> body) {
+		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey("memo")) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
+		cabinetFacadeService.updateCabinetMemo(cabinetId, body.get("memo"));
 	}
 }

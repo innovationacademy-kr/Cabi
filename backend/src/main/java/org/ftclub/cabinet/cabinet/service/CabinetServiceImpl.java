@@ -49,7 +49,7 @@ public class CabinetServiceImpl implements CabinetService {
 	@Override
 	public void updateVisibleNum(Long cabinetId, Integer visibleNum) {
 		if (visibleNum < 0) {
-			throw new IllegalArgumentException("Invalid visibleNum");
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.assignVisibleNum(visibleNum);
