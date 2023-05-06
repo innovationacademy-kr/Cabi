@@ -1,23 +1,18 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
-import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-
+// service가 갖는 모든 메서드들을 유닛 테스트 합니다.
 @SpringBootTest
 @Transactional
 class CabinetServiceTest {
@@ -26,52 +21,20 @@ class CabinetServiceTest {
 	private CabinetService cabinetService;
 
 	@Test
-	public void 사물함_Dto_가져오기() {
-		Long brokenId = 1L;
-		CabinetDto cabinet = cabinetService.getCabinet(brokenId);
-
+	public void 사물함_가져오기() {
+		Cabinet cabinet = cabinetService.getCabinet(1L);
 		assertEquals(1L, cabinet.getCabinetId().longValue());
-		assertEquals(CabinetStatus.BROKEN, cabinet.getStatus());
-		assertEquals(1, cabinet.getMaxUser().intValue());
-		assertEquals(LentType.PRIVATE, cabinet.getLentType());
-		assertEquals(1, cabinet.getVisibleNum().intValue());
-		assertEquals(new Location("새롬관", 2, "Oasis"), cabinet.getLocation());
-//        assertEquals(1, cabinet.getTitle());
 	}
-
-	@Test
-	public void 건물_층_가져오기() {
-		List<BuildingFloorsDto> buildingFloors = cabinetService.getBuildingFloors()
-				.getBuildingFloors();
-		//새롬관
-		assertEquals(1, buildingFloors.size());
-		//2, 3, 4, 5층
-		assertArrayEquals(new Integer[]{2, 3, 4, 5},
-				buildingFloors.get(0).getFloors().toArray());
-	}
-
-//	@Test
-//	public void 사물함_정보_가져오기() {
-//		Long fullShareCabinetId = 4L;
-//		CabinetInfoResponseDto cabinetInfo = cabinetFacadeService.getCabinetInfo(fullShareCabinetId);
-//		List<LentDto> lentsOfCabinet = cabinetInfo.getLents();
-//
-//		//3인
-//		//To-Do : 더 구체적인 정보 테스트 필요..
-//		assertEquals(3, lentsOfCabinet.size());
-//		assertEquals(15L, lentsOfCabinet.get(0).getUserId().longValue());
-//		assertEquals("user7", lentsOfCabinet.get(0).getName());
-//	}
 
 	@Test
 	public void 사물함_상태_업데이트() {
 		Long brokenId = 1L;
-		Cabinet cabinet = cabinetService.getCabinet(brokenId);
+		CabinetStatus newStatus = CabinetStatus.AVAILABLE;
 
-		cabinetService.updateStatus(1L, CabinetStatus.AVAILABLE);
+		cabinetService.updateStatus(1L, newStatus);
 
 		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
-		assertEquals(CabinetStatus.AVAILABLE, updatedCabinet.getStatus());
+		assertEquals(newStatus, updatedCabinet.getStatus());
 	}
 
 	@Test
@@ -125,4 +88,77 @@ class CabinetServiceTest {
 				CabinetStatus.FULL);
 	}
 
+	@Test
+	public void 사물함_메모_업데이트() {
+		Long brokenId = 1L;
+		String newMemo = "YOOH 최고존엄 신 그 자체.";
+
+		cabinetService.updateMemo(1L, newMemo);
+
+		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
+		assertEquals(newMemo, updatedCabinet.getMemo());
+	}
+
+	@Test
+	public void 사물함_실물번호_업데이트() {
+		Long brokenId = 1L;
+		cabinetService.updateVisibleNum(1L, 22);
+
+		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
+		assertEquals(22, updatedCabinet.getVisibleNum().intValue());
+	}
+
+	@Test
+	public void 사물함_제목_업데이트() {
+		Long brokenId = 1L;
+		String newTitle = "이것은 입에서 나는 소리가 아니여";
+
+		cabinetService.updateTitle(1L, newTitle);
+
+		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
+		assertEquals(newTitle, updatedCabinet.getTitle());
+	}
+
+	@Test
+	public void 사물함_최대_사용자_수_업데이트() {
+		Long brokenId = 1L;
+		Integer newMaxUser = 42;
+
+		cabinetService.updateMaxUser(1L, newMaxUser);
+
+		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
+		assertEquals(newMaxUser, updatedCabinet.getMaxUser());
+	}
+
+	@Test
+	public void 사물함_좌표_업데이트() {
+		Long brokenId = 1L;
+		Cabinet cabinet = cabinetService.getCabinet(brokenId);
+		Grid newGrid = new Grid(42, 99);
+		cabinetService.updateGrid(1L, newGrid);
+
+		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
+		assertEquals(42, updatedCabinet.getGrid().getRow().intValue());
+		assertEquals(99, updatedCabinet.getGrid().getCol().intValue());
+	}
+
+	@Test
+	public void 사물함_좌표_업데이트_실패() {
+		Grid newGrid = new Grid(-1, -42);
+
+		assertThrows(ServiceException.class, () -> {
+			cabinetService.updateGrid(1L, newGrid);
+		});
+	}
+
+	@Test
+	public void 사물함_상태_노트_업데이트() {
+		Long brokenId = 1L;
+		String newStatusNote = "나는 붕괴됐어요";
+
+		cabinetService.updateStatusNote(1L, newStatusNote);
+
+		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
+		assertEquals(newStatusNote, updatedCabinet.getStatusNote());
+	}
 }

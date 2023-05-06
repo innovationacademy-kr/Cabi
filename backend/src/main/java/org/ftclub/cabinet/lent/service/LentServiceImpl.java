@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -117,7 +118,8 @@ public class LentServiceImpl implements LentService {
 		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
 						lentExceptionHandler.getUser(e.getUserId()),
-						lentExceptionHandler.getCabinet(e.getCabinetId())))
+						lentExceptionHandler.getCabinet(e.getCabinetId()),
+						new Location())) // TODO: 정확한 Location 필요
 				.collect(Collectors.toList());
 		return new LentHistoryPaginationDto(lentHistoryDto, totalLength);
 	}

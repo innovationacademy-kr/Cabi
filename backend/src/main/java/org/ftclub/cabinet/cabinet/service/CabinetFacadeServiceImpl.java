@@ -65,12 +65,14 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<String> sections = cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor)
 				.orElseThrow();
 		for (String section : sections) {
-			List<Cabinet> cabinets = cabinetRepository
-					.findAllByBuildingAndFloorAndSection(building, floor, section).orElseThrow();
-			result.add(cabinetMapper.toCabinetsPerSectionResponseDto(section, cabinets));
+			List<Long> cabinetIds = cabinetRepository.findAllCabinetIdsBySection(section)
+					.orElseThrow();
+			result.add(cabinetMapper.toCabinetsPerSectionResponseDto(section,
+					getCabinetInfoBundle(cabinetIds)));
 		}
 		return result;
 	}
+
 
 	@Override
 	public void updateCabinetStatus(Long cabinetId, CabinetStatus status) {
@@ -125,5 +127,13 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		Cabinet cabinet = cabinetRepository.findById(cabinetId).orElseThrow();
 		Location location = cabinetRepository.findLocationById(cabinetId).orElseThrow();
 		return cabinetMapper.toCabinetDto(location, cabinet);
+	}
+
+	public List<CabinetInfoResponseDto> getCabinetInfoBundle(List<Long> cabinetIds) {
+		List<CabinetInfoResponseDto> result = new ArrayList<>();
+		for (Long cabinetId : cabinetIds) {
+			result.add(getCabinetInfo(cabinetId));
+		}
+		return result;
 	}
 }

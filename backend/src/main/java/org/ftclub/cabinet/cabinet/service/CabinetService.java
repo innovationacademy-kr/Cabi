@@ -18,8 +18,7 @@ public interface CabinetService {
 	void updateVisibleNum(Long cabinetId, Integer visibleNum);
 
 	void updateTitle(Long cabinetId, String title);
-
-
+	
 	void updateMaxUser(Long cabinetId, Integer maxUser);
 
 	void updateLentType(Long cabinetId, LentType lentType);

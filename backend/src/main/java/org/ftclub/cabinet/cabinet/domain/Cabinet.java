@@ -148,7 +148,7 @@ public class Cabinet {
 	}
 
 	public boolean isStatusUpdatableByUserCount(Integer userCount) {
-		return (this.maxUser <= userCount &&
+		return (this.maxUser >= userCount &&
 				!this.status.equals(CabinetStatus.BROKEN));
 	}
 

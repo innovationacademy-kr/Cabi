@@ -59,13 +59,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			+ "WHERE p.location = :location")
 	Optional<CabinetPlace> findCabinetPlaceByLocation(Location location);
 
-	@Query("SELECT p.section"
-			+ "FROM Cabinet c"
-			+ "JOIN c.cabinetPlace p"
-			+ "WHERE p")
-	Optional<List<String>> getAllSectionsByBuildingAndFloor(String building, Integer floor);
-
-	@Query("SELECT Cabinet "
+	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE p.location.building = :building AND p.location.floor = :floor AND p.location.section = :section")

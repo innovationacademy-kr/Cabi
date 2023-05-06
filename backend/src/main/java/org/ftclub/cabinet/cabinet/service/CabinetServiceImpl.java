@@ -70,7 +70,7 @@ public class CabinetServiceImpl implements CabinetService {
 	@Override
 	public void updateLentType(Long cabinetId, LentType lentType) {
 		if (!lentType.isValid()) {
-			throw new IllegalArgumentException("Invalid lentType");
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.specifyLentType(lentType);
@@ -78,8 +78,8 @@ public class CabinetServiceImpl implements CabinetService {
 
 	@Override
 	public void updateGrid(Long cabinetId, Grid grid) {
-		if (!grid.isPositive()) {
-			throw new IllegalArgumentException("Invalid grid");
+		if (!grid.isValid()) {
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.coordinateGrid(grid);

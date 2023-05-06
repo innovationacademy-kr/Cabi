@@ -2,9 +2,13 @@ package org.ftclub.cabinet.cabinet.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Grid {
 
@@ -13,7 +17,7 @@ public class Grid {
 	@Column(name = "COL")
 	private Integer col;
 
-	public boolean isPositive() {
+	public boolean isValid() {
 		return (this.row > 0 && this.col > 0);
 	}
 }

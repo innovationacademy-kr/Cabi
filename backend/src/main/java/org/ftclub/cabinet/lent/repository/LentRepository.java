@@ -21,7 +21,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +
-			"WHERE Lh.endedAt = null and lh.userId = :userId")
+			"WHERE lh.endedAt = null and lh.userId = :userId")
 	int countUserActiveLent(Long userId);
 
 	@Query("SELECT count(lh) " +
