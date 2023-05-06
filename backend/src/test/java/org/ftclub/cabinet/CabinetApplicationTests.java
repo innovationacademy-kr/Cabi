@@ -9,12 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class CabinetApplicationTests {
 
-    @Autowired
+	@Autowired
 	CabinetRepository cabinetRepository;
 
-    @Test
-    void contextLoads() {
-        Assertions.assertTrue(cabinetRepository.findAll().isEmpty());
-    }
+	@Test
+	void contextLoads() {
+		Assertions.assertTrue(!cabinetRepository.findAll().isEmpty());
+	}
 
 }

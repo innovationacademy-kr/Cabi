@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -59,17 +59,17 @@ class CabinetServiceTest {
 		cabinetService.updateStatusByUserCount(limitedAvailableId, 0);
 
 		// 3 -> 2
-		assertEquals(cabinetService.getCabinet(fullId).getStatus(),
-				CabinetStatus.LIMITED_AVAILABLE);
+		assertEquals(CabinetStatus.LIMITED_AVAILABLE,
+				cabinetService.getCabinet(fullId).getStatus());
 		// 0, 1, 2 -> 0
-		assertEquals(cabinetService.getCabinet(overdueId).getStatus(),
-				CabinetStatus.AVAILABLE);
+		assertEquals(CabinetStatus.AVAILABLE,
+				cabinetService.getCabinet(overdueId).getStatus());
 		// 0, 1, 2 -> 3
-		assertEquals(cabinetService.getCabinet(availableId).getStatus(),
-				CabinetStatus.FULL);
+		assertEquals(CabinetStatus.FULL,
+				cabinetService.getCabinet(availableId).getStatus());
 		// 1 -> 0
-		assertEquals(cabinetService.getCabinet(limitedAvailableId).getStatus(),
-				CabinetStatus.AVAILABLE);
+		assertEquals(CabinetStatus.AVAILABLE,
+				cabinetService.getCabinet(limitedAvailableId).getStatus());
 	}
 
 	@Test
@@ -81,11 +81,9 @@ class CabinetServiceTest {
 		cabinetService.updateStatusByUserCount(availableId, 1);
 
 		// 1 -> 0
-		assertEquals(cabinetService.getCabinet(fullId).getStatus(),
-				CabinetStatus.AVAILABLE);
+		assertEquals(CabinetStatus.AVAILABLE, cabinetService.getCabinet(fullId).getStatus());
 		// 0 -> 1
-		assertEquals(cabinetService.getCabinet(availableId).getStatus(),
-				CabinetStatus.FULL);
+		assertEquals(CabinetStatus.FULL, cabinetService.getCabinet(availableId).getStatus());
 	}
 
 	@Test
@@ -102,10 +100,12 @@ class CabinetServiceTest {
 	@Test
 	public void 사물함_실물번호_업데이트() {
 		Long brokenId = 1L;
-		cabinetService.updateVisibleNum(1L, 22);
+		Integer newVisibleNum = 22;
+
+		cabinetService.updateVisibleNum(1L, newVisibleNum);
 
 		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
-		assertEquals(22, updatedCabinet.getVisibleNum().intValue());
+		assertEquals(newVisibleNum, updatedCabinet.getVisibleNum());
 	}
 
 	@Test
@@ -138,8 +138,8 @@ class CabinetServiceTest {
 		cabinetService.updateGrid(1L, newGrid);
 
 		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
-		assertEquals(42, updatedCabinet.getGrid().getRow().intValue());
-		assertEquals(99, updatedCabinet.getGrid().getCol().intValue());
+		assertEquals(newGrid.getRow(), updatedCabinet.getGrid().getRow());
+		assertEquals(newGrid.getCol(), updatedCabinet.getGrid().getCol());
 	}
 
 	@Test
