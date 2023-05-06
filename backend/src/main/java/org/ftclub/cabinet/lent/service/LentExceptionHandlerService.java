@@ -68,6 +68,12 @@ public class LentExceptionHandlerService {
 				throw new ServiceException(ExceptionStatus.LENT_EXPIRE_IMMINENT);
 			case ALREADY_LENT_USER:
 				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
+			case PRIVATE_BANNED_USER:
+				throw new ServiceException(ExceptionStatus.PRIVATE_BANNED_USER);
+			case PUBLIC_BANNED_USER:
+				throw new ServiceException(ExceptionStatus.PUBLIC_BANNED_USER);
+			case BLACKHOLED_USER:
+				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			default:
 				throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
 		}

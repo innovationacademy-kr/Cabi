@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "LENT_HISTORY", uniqueConstraints = {
-		@UniqueConstraint(name = "unique_index", columnNames = {"LENT_HISTORY_ID", "VERSION"})
+		@UniqueConstraint(name = "unique_index", columnNames = {"CABINET_ID", "VERSION"})
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -28,7 +28,6 @@ public class LentHistory {
 	@Column(name = "LENT_HISTORY_ID")
 	private Long lentHistoryId;
 
-	@Version
 	@Column(name = "VERSION")
 	@Getter(AccessLevel.NONE)
 	private Long version = 1L;
@@ -51,17 +50,28 @@ public class LentHistory {
 	@Column(name = "CABINET_ID", nullable = false)
 	private Long cabinetId;
 
-	protected LentHistory(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
+//	protected LentHistory(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
+//		this.version = version;
+//		this.startedAt = startedAt;
+//		this.expiredAt = expiredAt;
+//		this.userId = userId;
+//		this.cabinetId = cabinetId;
+//	}
+
+	protected LentHistory(Long version, Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
+		this.version = version;
 		this.startedAt = startedAt;
 		this.expiredAt = expiredAt;
 		this.userId = userId;
 		this.cabinetId = cabinetId;
 	}
+//	public static LentHistory of(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
+//		return new LentHistory(startedAt, expiredAt, userId, cabinetId);
+//	}
 
-	public static LentHistory of(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
-		return new LentHistory(startedAt, expiredAt, userId, cabinetId);
+	public static LentHistory of(Long version, Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
+		return new LentHistory(version, startedAt, expiredAt, userId, cabinetId);
 	}
-
 	@Override
 	public boolean equals(final Object other) {
         if (this == other) {
@@ -75,6 +85,10 @@ public class LentHistory {
 
 	public boolean isCabinetIdEqual(Long cabinetId) {
 		return this.cabinetId.equals(cabinetId);
+	}
+
+	public void setExpiredAt(Date expiredAt) {
+		this.expiredAt = expiredAt;
 	}
 
 	public void endLent(Date now) {

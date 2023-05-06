@@ -2,6 +2,8 @@ package org.ftclub.cabinet.lent.repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,6 +43,13 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 
 	@Query("SELECT lh " +
 			"FROM LentHistory lh " +
-			"WHERE lh.cabinetId = :cabinetId and lh.endedAt = null")
+			"WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
 	List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId);
+
+	@Query("select max(l.version) from LentHistory l where l.cabinetId = ?1")
+	Long getMaxVersionByCabinet(Long cabinetId);
+
+	List<LentHistory> findAllByCabinetAndEndedAtNull(Cabinet cabinet);
+
+	Optional<LentHistory> findFirstByCabinetOrderByStartAtDesc(Cabinet cabinet);
 }

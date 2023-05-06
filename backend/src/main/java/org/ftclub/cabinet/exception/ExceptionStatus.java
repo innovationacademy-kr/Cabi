@@ -28,7 +28,9 @@ public enum ExceptionStatus {
 	LENT_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 대여중인 사물함이 있습니다"),
 	INVALID_ARGUMENT(HttpStatus.BAD_REQUEST, "유효하지 않은 입력입니다"),
 	INCORRECT_ARGUMENT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다"),
-	;
+    PRIVATE_BANNED_USER(HttpStatus.BAD_REQUEST, "PRIVATE 밴 상태의 유저입니다."),
+    PUBLIC_BANNED_USER(HttpStatus.BAD_REQUEST, "PUBLIC 밴 상태의 유저입니다."),
+    BLACKHOLED_USER(HttpStatus.BAD_REQUEST, "블랙홀 상태의 유저입니다.");
 
 	ExceptionStatus(HttpStatus status, String message) {
 		this.statusCode = status.value();
