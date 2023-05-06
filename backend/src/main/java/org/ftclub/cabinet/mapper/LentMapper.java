@@ -8,8 +8,10 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
+@Component
 public interface LentMapper {
 
 	LentMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(LentMapper.class);
