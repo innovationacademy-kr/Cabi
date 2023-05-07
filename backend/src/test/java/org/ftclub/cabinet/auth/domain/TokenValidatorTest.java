@@ -32,8 +32,6 @@ public class TokenValidatorTest {
 		String invalidToken = tokenProvider.createToken("google",
 				new JSONObject().put("intra_id", "sanan"), DateUtil.stringToDate("2000-01-01"));
 
-		System.out.println("validToken: " + validToken);
-		System.out.println("invalidToken: " + invalidToken);
 		invalidTokenRequest.addHeader("Authorization", "Bearer " + invalidToken);
 		invalidTokenRequest.addHeader("Authorization", "Bearer " + invalidToken);
 		Assert.assertEquals(true,
