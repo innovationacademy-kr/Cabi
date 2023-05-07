@@ -85,7 +85,7 @@ public class LentHistory {
 	}
 
 	public boolean isSetExpiredAt() {
-		return getExpiredAt() == null || getExpiredAt() == DateUtil.getInfinityDate();
+		return !(getExpiredAt() == null || getExpiredAt() == DateUtil.getInfinityDate());
 	}
 
 	public void endLent(Date now) {
