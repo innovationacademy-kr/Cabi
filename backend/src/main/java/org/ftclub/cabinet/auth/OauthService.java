@@ -21,11 +21,11 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class OauthService {
 
-	private ApiUriBuilder apiUriBuilder;
+	private final ApiUriBuilder apiUriBuilder;
 
-	private GoogleApiProperties googleApiProperties;
+	private final GoogleApiProperties googleApiProperties;
 
-	private FtApiProperties ftApiProperties;
+	private final FtApiProperties ftApiProperties;
 
 	public void sendToGoogleApi(HttpServletResponse response) throws IOException {
 		response.sendRedirect(
