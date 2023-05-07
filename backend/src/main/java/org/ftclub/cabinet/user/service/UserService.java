@@ -26,9 +26,13 @@ public interface UserService {
 
     void updateUserBlackholedAtById(Long userId, Date newBlackholedAt);
 
+<<<<<<< HEAD
     void banUser(Long userId, LentType lentType, Date startAt, Date endedAt);
+=======
+    void banUser(Long userId, Date expiredAt, Date endedAt);
+>>>>>>> 6556907b ([BE] FIX: user 모듈 자료형 변경 #1038)
 
-    //void unbanUser(long userId);
+    //void unbanUser(Long userId);
 
     MyProfileResponseDto getMyProfile(UserSessionDto user);
 
