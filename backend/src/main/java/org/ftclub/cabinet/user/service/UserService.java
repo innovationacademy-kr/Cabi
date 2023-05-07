@@ -2,8 +2,6 @@ package org.ftclub.cabinet.user.service;
 
 import java.util.Date;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 
@@ -26,16 +24,16 @@ public interface UserService {
 
     void updateUserBlackholedAtById(Long userId, Date newBlackholedAt);
 
-<<<<<<< HEAD
-    void banUser(Long userId, LentType lentType, Date startAt, Date endedAt);
-=======
-    void banUser(Long userId, Date expiredAt, Date endedAt);
->>>>>>> 6556907b ([BE] FIX: user 모듈 자료형 변경 #1038)
+    void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
 
     //void unbanUser(Long userId);
 
-    MyProfileResponseDto getMyProfile(UserSessionDto user);
+//    MyProfileResponseDto getMyProfile(UserSessionDto user);
 
     //List<BlockedUserPaginationDto> getAllBanUsers();
 
+//    List<UserSessionDto> getAllUser();
+
+    // userService에 있는게 맞는지..
+    Long getAccumulateOverdueDaysByUserId(Long userId);
 }

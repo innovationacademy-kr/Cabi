@@ -1,13 +1,11 @@
 package org.ftclub.cabinet.user.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
@@ -77,10 +75,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserBlackholedAtById(Long userId, Date newBlackholedAt) {
-<<<<<<< HEAD
-=======
-        Validate.notNull(newBlackholedAt, "newBlackholedAt must not be null");
->>>>>>> 6556907b ([BE] FIX: user 모듈 자료형 변경 #1038)
         User user = userRepository.getUser(userId);
         user.changeBlackholedAt(newBlackholedAt);
         userRepository.save(user);
@@ -94,38 +88,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-<<<<<<< HEAD
-    public void banUser(Long userId, LentType lentType, Date startAt, Date endedAt) {
-        int banDays = banPolicy.checkBan(startAt, endedAt);
-=======
-    public void banUser(Long userId, Date expiredAt, Date endedAt) {
-        Validate.notNull(expiredAt, "expiredAt must not be null");
-        Validate.notNull(endedAt, "endedAt must not be null");
-        int banDays = banPolicy.checkBan(expiredAt, endedAt);
->>>>>>> 6556907b ([BE] FIX: user 모듈 자료형 변경 #1038)
-        if (banDays == -1) {
+    public void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt,
+            Date expiredAt) {
+        BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);
+        if (banType == BanType.NONE) {
             return;
         }
-        BanHistory banHistory = BanHistory.of(endedAt, DateUtil.addDaysToDate(endedAt, banDays),
-                BanType.PRIVATE, userId);
+        Date banDate = banPolicy.getBanDate(banType, endedAt, expiredAt);
+        BanHistory banHistory = BanHistory.of(endedAt, DateUtil.addDaysToDate(banDate,
+                        getAccumulateOverdueDaysByUserId(userId).intValue()),
+                banType, userId);
         banHistoryRepository.save(banHistory);
     }
 
 //    void unbanUser(Long userId);
 
-    public MyProfileResponseDto getMyProfile(UserSessionDto user) {
-        Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
-                user.getUserId());
-        Long cabinetId;
-        if (lentHistory.isPresent()) {
-            cabinetId = lentHistory.get().getCabinetId();
-        } else {
-            cabinetId = (long) -1;
+    @Override
+    public Long getAccumulateOverdueDaysByUserId(Long userId) {
+        List<BanHistory> banHistories = banHistoryRepository.findBanHistoriesByUserId(userId);
+        Long accumulateDays = (long) 0;
+        for (BanHistory history : banHistories) {
+            accumulateDays += DateUtil.calculateTwoDateDiffAbs(history.getBannedAt(),
+                    history.getUnbannedAt());
         }
-        return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId);
+        return accumulateDays;
     }
-
-//    public List<BlockedUserPaginationDto> getAllBanUsers() {
-//
-//    }
 }

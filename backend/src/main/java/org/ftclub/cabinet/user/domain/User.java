@@ -26,10 +26,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
     private Long userId;
-<<<<<<< HEAD
-=======
-
->>>>>>> 6556907b ([BE] FIX: user 모듈 자료형 변경 #1038)
     @Column(name = "NAME", length = 32, unique = true, nullable = false)
     private String name;
     @Column(name = "EMAIL", unique = true)
