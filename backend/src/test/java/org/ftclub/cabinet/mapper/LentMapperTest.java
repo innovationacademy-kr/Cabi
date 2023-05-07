@@ -40,9 +40,9 @@ class LentMapperTest {
 	void toLentHistoryDto() {
 		LentHistory lentHistory = LentHistory.of(new Date(), new Date(), 19L, 99L);
 		User user = User.of("testName", "testEmail", new Date(), UserRole.USER);
-		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, new Grid(1, 2),
+		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
 				CabinetPlace.of(null, null, null));
-		Location location = new Location("testBuilding", 99, "testSection");
+		Location location = Location.of("testBuilding", 99, "testSection");
 		LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet,
 				location);
 		assertEquals(lentHistory.getCabinetId(), lentHistoryDto.getCabinetId());

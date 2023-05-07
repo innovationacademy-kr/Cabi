@@ -21,8 +21,8 @@ class CabinetMapperTest {
 
 	@Test
 	void toCabinetDto() {
-		Location location = new Location("testBuilding", 99, "testSection");
-		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, new Grid(1, 2),
+		Location location = Location.of("testBuilding", 99, "testSection");
+		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
 				CabinetPlace.of(null, null, null));
 		CabinetDto cabinetDto = cabinetMapper.toCabinetDto(location, cabinet);
 		assertEquals(cabinet.getCabinetId(), cabinetDto.getCabinetId());
