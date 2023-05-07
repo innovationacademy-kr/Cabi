@@ -1,43 +1,29 @@
-import java.util.List;
+package org.ftclub.cabinet.cabinet.service;
+
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.dto.BuildingFloorsResponseDto;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 
 public interface CabinetService {
 
-    //    void createNewCabinet(); optional parameters -> many overloading
-//    void deleteCabinet(); optional parameters -> many overloading
-    // void createNewLocation;
-    CabinetDto getCabinetById(Long cabinetId);
+	Cabinet getCabinet(Long cabinetId);
 
-    BuildingFloorsResponseDto getBuildingFloors();
+	void updateStatus(Long cabinetId, CabinetStatus status);
 
-    CabinetInfoResponseDto getCabinetInfo(Long cabinetId);
+	void updateStatusByUserCount(Long cabinetId, Integer userCount);
 
-    List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor);
+	void updateMemo(Long cabinetId, String memo);
 
-    void updateStatus(Long cabinetId, CabinetStatus status);
+	void updateVisibleNum(Long cabinetId, Integer visibleNum);
 
-    void updateStatusByUserCount(Long cabinetId, Integer userCount);
+	void updateTitle(Long cabinetId, String title);
+	
+	void updateMaxUser(Long cabinetId, Integer maxUser);
 
-    void updateMemoById(Long cabinetId, String memo);
+	void updateLentType(Long cabinetId, LentType lentType);
 
-    void updateTitleById(Long cabinetId, String title);
+	void updateGrid(Long cabinetId, Grid grid);
 
-    void updateLocationById(Long cabinetId, Location location);
-
-    void updateLentTyById(Long cabinetId, LentType lentType);
-
-    void updateGridById(Long cabinetId, Grid grid);
-
-    void updateStatusNoteById(Long cabinetId, String statusNote);
-
-//      void createNewCabinetPlace(params...);
-//      void deleteCabinetPlace(cabinetplaceId);
-
+	void updateStatusNote(Long cabinetId, String statusNote);
 }

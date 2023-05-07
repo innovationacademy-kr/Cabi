@@ -9,11 +9,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(ServiceException.class)
-    public ResponseEntity<?> serviceExceptionHandler(ServiceException e) {
-        log.info("called ExceptionController for {}", e.status.getError());
-        return ResponseEntity
-                .status(e.status.getStatusCode())
-                .body(e.status);
-    }
+	@ExceptionHandler(ControllerException.class)
+	public ResponseEntity<?> controllerExceptionHandler(ControllerException e) {
+		log.info("called ExceptionController for {}", e.status.getError());
+		return ResponseEntity
+				.status(e.status.getStatusCode())
+				.body(e.status);
+	}
+
+	@ExceptionHandler(ServiceException.class)
+	public ResponseEntity<?> serviceExceptionHandler(ServiceException e) {
+		log.info("called ExceptionController for {}", e.status.getError());
+		return ResponseEntity
+				.status(e.status.getStatusCode())
+				.body(e.status);
+	}
+
 }

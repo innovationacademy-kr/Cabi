@@ -7,11 +7,11 @@ import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 
 public interface LentService {
 
-    void startLentCabinet(Long userId, Long cabinetId);
+	void startLentCabinet(Long userId, Long cabinetId);
 
-    void startLentClubCabinet(Long userId, Long cabinetId);
+	void startLentClubCabinet(Long userId, Long cabinetId);
 
-    void endLentCabinet(Long userId);
+	void endLentCabinet(Long userId);
 
     void terminateLentCabinet(Long userId);
 

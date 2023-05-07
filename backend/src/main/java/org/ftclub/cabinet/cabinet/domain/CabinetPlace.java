@@ -17,21 +17,36 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CabinetPlace {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CABINET_PLACE_ID")
-    private Long cabinetPlaceId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "CABINET_PLACE_ID")
+	private Long cabinetPlaceId;
 
-    @Embedded
-    private Location location;
-    @Embedded
-    private CabinetGrid cabinetGrid;
-    @Embedded
-    private MapArea mapArea;
+	@Embedded
+	private Location location;
+	@Embedded
+	private Grid grid;
+	@Embedded
+	private MapArea mapArea;
 
-    public CabinetPlace(Location location, CabinetGrid cabinetGrid, MapArea mapArea) {
-        this.location = location;
-        this.cabinetGrid = cabinetGrid;
-        this.mapArea = mapArea;
-    }
+	protected CabinetPlace(Location location, Grid grid, MapArea mapArea) {
+		this.location = location;
+		this.grid = grid;
+		this.mapArea = mapArea;
+	}
+
+	public static CabinetPlace of(Location location, Grid grid, MapArea mapArea) {
+		return new CabinetPlace(location, grid, mapArea);
+	}
+
+	@Override
+	public boolean equals(final Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof CabinetPlace)) {
+			return false;
+		}
+		return this.cabinetPlaceId.equals(((CabinetPlace) other).cabinetPlaceId);
+	}
 }

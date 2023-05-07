@@ -9,53 +9,86 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.utils.DateUtil;
 
 @Entity
-@Table(name = "LENT_HISTORY", uniqueConstraints = {
-        @UniqueConstraint(name = "unique_index", columnNames = {"LENT_HISTORY_ID", "VERSION"})
-})
+@Table(name = "LENT_HISTORY")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class LentHistory {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LENT_HISTORY_ID")
-    private Long lentHistoryId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "LENT_HISTORY_ID")
+	private Long lentHistoryId;
 
-    @Version
-    @Column(name = "VERSION")
-    private Long version = 1L;
+	@Version
+	@Getter(AccessLevel.NONE)
+	private Long version = 1L;
 
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "STARTED_AT", nullable = false)
+	private Date startedAt;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "STARTED_AT", nullable = false)
-    private Date startedAt;
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "EXPIRED_AT")
+	private Date expiredAt = null;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "EXPIRED_AT")
-    private Date expiredAt = null;
+	@Temporal(value = TemporalType.TIMESTAMP)
+	@Column(name = "ENDED_AT")
+	private Date endedAt = null;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
-    @Column(name = "ENDED_AT")
-    private Date endedAt = null;
+	@Column(name = "USER_ID", nullable = false)
+	private Long userId;
 
-    @Column(name = "USER_ID", nullable = false)
-    private Long userId;
+	@Column(name = "CABINET_ID", nullable = false)
+	private Long cabinetId;
 
-    @Column(name = "CABINET_ID", nullable = false)
-    private Long cabinetId;
+	protected LentHistory(Date startedAt, Date expiredAt, Long userId,
+			Long cabinetId) {
+		this.startedAt = startedAt;
+		this.expiredAt = expiredAt;
+		this.userId = userId;
+		this.cabinetId = cabinetId;
+	}
 
-    public LentHistory(Date startedAt, Date expiredAt, Long userId, Long cabinetId, Long version) {
-        this.startedAt = startedAt;
-        this.expiredAt = expiredAt;
-        this.userId = userId;
-        this.cabinetId = cabinetId;
-        this.version = version;
-    }
+	public static LentHistory of(Date startedAt, Date expiredAt, Long userId,
+			Long cabinetId) {
+		return new LentHistory(startedAt, expiredAt, userId, cabinetId);
+	}
+
+	public static LentHistory of(Date startedAt, Long userId, Long cabinetId) {
+		return new LentHistory(startedAt, null, userId, cabinetId);
+	}
+
+	@Override
+	public boolean equals(final Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof LentHistory)) {
+			return false;
+		}
+		return (this.lentHistoryId.equals(((LentHistory) other).lentHistoryId));
+	}
+
+	public boolean isCabinetIdEqual(Long cabinetId) {
+		return this.cabinetId.equals(cabinetId);
+	}
+
+	public void setExpiredAt(Date expiredAt) {
+		this.expiredAt = expiredAt;
+	}
+
+	public boolean isSetExpiredAt() {
+		return !(getExpiredAt() == null || getExpiredAt() == DateUtil.getInfinityDate());
+	}
+
+	public void endLent(Date now) {
+		this.endedAt = now;
+	}
 }
