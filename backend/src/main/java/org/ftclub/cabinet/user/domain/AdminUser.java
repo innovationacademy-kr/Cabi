@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.domain;
+package org.ftclub.cabinet.user.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,14 +30,27 @@ public class AdminUser {
     @Column(name = "ROLE", length = 16, nullable = false)
     private AdminRole role = AdminRole.NONE;
 
-    public AdminUser(String email) {
+    protected AdminUser(String email, AdminRole role) {
         this.email = email;
+        this.role = role;
+    }
+
+    public static AdminUser of(String email, AdminRole role) {
+        return new AdminUser(email, role);
     }
 
     @Override
-    public boolean equals (final Object other) {
-        if (other == this) return true;
-        if (!(other instanceof AdminUser)) return false;
+    public boolean equals(final Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof AdminUser)) {
+            return false;
+        }
         return (this.adminUserId.equals(((AdminUser) other).getAdminUserId()));
+    }
+
+    public void changeAdminRole(AdminRole role) {
+        this.role = role;
     }
 }
