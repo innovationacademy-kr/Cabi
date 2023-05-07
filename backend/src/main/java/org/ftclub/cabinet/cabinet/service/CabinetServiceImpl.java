@@ -1,46 +1,93 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetGrid;
-import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
-import org.ftclub.cabinet.cabinet.domain.CabinetRepository;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.cabinet.domain.MapArea;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.modelmapper.ModelMapper;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CabinetServiceImpl {
+@Transactional
+public class CabinetServiceImpl implements CabinetService {
 
-    final private CabinetRepository cabinetRepository;
-    final private EntityManager entityManager;
+	private final CabinetExceptionHandlerService cabinetExceptionHandlerService;
 
-    @Transactional
-    public void saveMock() {
-        CabinetPlace cabinetPlace = new CabinetPlace(new Location(), new CabinetGrid(),
-                new MapArea());
-        entityManager.persist(cabinetPlace);
-        Cabinet cabinet1 = new Cabinet(1004, CabinetStatus.AVAILABLE, LentType.PRIVATE, 3,
-                new Grid(), cabinetPlace);
-        cabinetRepository.save(cabinet1);
-    }
+	@Override
+	public Cabinet getCabinet(Long cabinetId) {
+		return cabinetExceptionHandlerService.getCabinet(cabinetId);
+	}
 
-    @Transactional
-    public CabinetDto getShareCabinet(Integer cabinetId) {
-        Cabinet cabinet = cabinetRepository.findById((long) cabinetId)
-                .orElseThrow(RuntimeException::new);
-        ModelMapper modelMapper = new ModelMapper();
-        //modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
-        CabinetDto cabinetDto = modelMapper.map(cabinet, CabinetDto.class);
-        return cabinetDto;
-    }
+	@Override
+	public void updateStatus(Long cabinetId, CabinetStatus status) {
+		if (!status.isValid()) {
+			throw new IllegalArgumentException("Invalid status");
+		}
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		cabinet.specifyStatus(status);
+	}
 
+	@Override
+	public void updateStatusByUserCount(Long cabinetId, Integer userCount) {
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		if (!cabinet.isStatusUpdatableByUserCount(userCount)) {
+			throw new ServiceException(ExceptionStatus.UNCHANGEABLE_CABINET);
+		}
+		cabinet.specifyStatusByUserCount(userCount);
+	}
+
+	@Override
+	public void updateMemo(Long cabinetId, String memo) {
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		cabinet.writeMemo(memo);
+	}
+
+	@Override
+	public void updateVisibleNum(Long cabinetId, Integer visibleNum) {
+		if (visibleNum < 0) {
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		cabinet.assignVisibleNum(visibleNum);
+	}
+
+	@Override
+	public void updateTitle(Long cabinetId, String title) {
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		cabinet.writeTitle(title);
+	}
+
+	@Override
+	public void updateMaxUser(Long cabinetId, Integer maxUser) {
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		cabinet.specifyMaxUser(maxUser);
+	}
+
+	@Override
+	public void updateLentType(Long cabinetId, LentType lentType) {
+		if (!lentType.isValid()) {
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		cabinet.specifyLentType(lentType);
+	}
+
+	@Override
+	public void updateGrid(Long cabinetId, Grid grid) {
+		if (!grid.isValid()) {
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		cabinet.coordinateGrid(grid);
+	}
+
+	@Override
+	public void updateStatusNote(Long cabinetId, String statusNote) {
+		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
+		cabinet.writeStatusNote(statusNote);
+	}
 }

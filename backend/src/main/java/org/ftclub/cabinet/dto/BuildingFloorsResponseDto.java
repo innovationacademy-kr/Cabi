@@ -8,5 +8,6 @@ import lombok.Getter;
 @Getter
 public class BuildingFloorsResponseDto {
 
-    private final List<BuildingFloorsDto> buildingFloors;
+	private final List<BuildingFloorsDto> result;
+
 }

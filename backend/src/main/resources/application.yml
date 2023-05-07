@@ -1,10 +1,19 @@
 spring:
   profiles:
-    include: local
-    active: oauth
+    include: oauth, local
+    default: local
   jpa:
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         globally_quoted_identifiers: true
+cabinet:
+  lent:
+    term:
+      private: 21
+      share: 42
+  penalty:
+    day:
+      share: 3
+      padding: 2

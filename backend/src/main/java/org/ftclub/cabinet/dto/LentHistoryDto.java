@@ -10,12 +10,12 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 @Getter
 public class LentHistoryDto {
 
-    private final Long userId;
-    private final String name;
-    private final Long cabinetId;
-    private final Integer visibleNum;
-    @JsonUnwrapped
-    private final Location location;
-    private final Date startedAt;
-    private final Date endedAt;
+	private final Long userId;
+	private final String name;
+	private final Long cabinetId;
+	private final Integer visibleNum;
+	@JsonUnwrapped
+	private final Location location;
+	private final Date startedAt;
+	private final Date endedAt;
 }
