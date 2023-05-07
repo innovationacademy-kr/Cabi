@@ -26,13 +26,6 @@ public class BanHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BAN_HISTORY_ID")
     private Long banHistoryId;
-<<<<<<< HEAD
-=======
-
-    /*ban history에 cabinetId가 필요한 이유?*/
-    @JoinColumn(name = "CABINET_ID", nullable = false)
-    private Long cabinetId;
->>>>>>> 6556907b ([BE] FIX: user 모듈 자료형 변경 #1038)
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "BANNED_AT", nullable = false)
