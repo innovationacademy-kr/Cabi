@@ -38,19 +38,19 @@ class LentMapperTest {
 
 	@Test
 	void toLentHistoryDto() {
+		Location location = Location.of("testBuilding", 9, "testSection");
 		LentHistory lentHistory = LentHistory.of(new Date(), new Date(), 19L, 99L);
 		User user = User.of("testName", "testEmail", new Date(), UserRole.USER);
 		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
-				CabinetPlace.of(null, null, null));
-		Location location = Location.of("testBuilding", 99, "testSection");
-		LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet,
-				location);
-		assertEquals(lentHistory.getCabinetId(), lentHistoryDto.getCabinetId());
+				CabinetPlace.of(location, null, null));
+		LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet);
+		assertEquals(cabinet.getCabinetId(), lentHistoryDto.getCabinetId());
 		assertEquals(lentHistory.getUserId(), lentHistoryDto.getUserId());
 		assertEquals(cabinet.getVisibleNum(), lentHistoryDto.getVisibleNum());
 		assertEquals(user.getName(), lentHistoryDto.getName());
 		assertEquals(lentHistory.getStartedAt(), lentHistoryDto.getStartedAt());
 		assertEquals(lentHistory.getEndedAt(), lentHistoryDto.getEndedAt());
+		assertEquals(location, lentHistoryDto.getLocation());
 	}
 
 }

@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.mapper;
 
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -20,6 +19,6 @@ public interface LentMapper {
 
 	@Mapping(target = "userId", source = "lentHistory.userId")
 	@Mapping(target = "cabinetId", source = "cabinet.cabinetId")
-	LentHistoryDto toLentHistoryDto(LentHistory lentHistory, User user, Cabinet cabinet,
-			Location location);
+	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
+	LentHistoryDto toLentHistoryDto(LentHistory lentHistory, User user, Cabinet cabinet);
 }
