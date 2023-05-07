@@ -9,7 +9,7 @@ public class BanPolicyImpl implements BanPolicy {
 
     @Override
     public int checkBan(Date endedAt, Date expiredAt) {
-        long diff = expiredAt.getTime() - endedAt.getTime();
+        Long diff = expiredAt.getTime() - endedAt.getTime();
         if (diff < 0) {
             return DateUtil.calculateTwoDateDiffAbs(endedAt, expiredAt).intValue();
         }
