@@ -77,6 +77,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserBlackholedAtById(Long userId, Date newBlackholedAt) {
+<<<<<<< HEAD
+=======
+        Validate.notNull(newBlackholedAt, "newBlackholedAt must not be null");
+>>>>>>> 6556907b ([BE] FIX: user 모듈 자료형 변경 #1038)
         User user = userRepository.getUser(userId);
         user.changeBlackholedAt(newBlackholedAt);
         userRepository.save(user);
@@ -90,8 +94,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+<<<<<<< HEAD
     public void banUser(Long userId, LentType lentType, Date startAt, Date endedAt) {
         int banDays = banPolicy.checkBan(startAt, endedAt);
+=======
+    public void banUser(Long userId, Date expiredAt, Date endedAt) {
+        Validate.notNull(expiredAt, "expiredAt must not be null");
+        Validate.notNull(endedAt, "endedAt must not be null");
+        int banDays = banPolicy.checkBan(expiredAt, endedAt);
+>>>>>>> 6556907b ([BE] FIX: user 모듈 자료형 변경 #1038)
         if (banDays == -1) {
             return;
         }
@@ -100,7 +111,7 @@ public class UserServiceImpl implements UserService {
         banHistoryRepository.save(banHistory);
     }
 
-//    void unbanUser(long userId);
+//    void unbanUser(Long userId);
 
     public MyProfileResponseDto getMyProfile(UserSessionDto user) {
         Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
