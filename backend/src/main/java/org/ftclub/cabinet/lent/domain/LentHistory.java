@@ -9,15 +9,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "LENT_HISTORY", uniqueConstraints = {
-		@UniqueConstraint(name = "unique_index", columnNames = {"CABINET_ID", "VERSION"})
-})
+@Table(name = "LENT_HISTORY")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class LentHistory {
@@ -27,7 +25,7 @@ public class LentHistory {
 	@Column(name = "LENT_HISTORY_ID")
 	private Long lentHistoryId;
 
-	@Column(name = "VERSION")
+	@Version
 	@Getter(AccessLevel.NONE)
 	private Long version = 1L;
 
@@ -48,14 +46,6 @@ public class LentHistory {
 
 	@Column(name = "CABINET_ID", nullable = false)
 	private Long cabinetId;
-
-//	protected LentHistory(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
-//		this.version = version;
-//		this.startedAt = startedAt;
-//		this.expiredAt = expiredAt;
-//		this.userId = userId;
-//		this.cabinetId = cabinetId;
-//	}
 
 	protected LentHistory(Date startedAt, Date expiredAt, Long userId,
 			Long cabinetId) {
