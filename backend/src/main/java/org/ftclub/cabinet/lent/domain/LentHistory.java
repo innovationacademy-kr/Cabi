@@ -13,6 +13,7 @@ import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.utils.DateUtil;
 
 @Entity
 @Table(name = "LENT_HISTORY")
@@ -81,6 +82,10 @@ public class LentHistory {
 
 	public void setExpiredAt(Date expiredAt) {
 		this.expiredAt = expiredAt;
+	}
+
+	public boolean isSetExpiredAt() {
+		return getExpiredAt() == null || getExpiredAt() == DateUtil.getInfinityDate();
 	}
 
 	public void endLent(Date now) {

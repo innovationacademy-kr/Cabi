@@ -28,23 +28,29 @@ public class LentPolicyImpl implements LentPolicy {
 	private static Integer PENALTY_DAY_PADDING;
 
 	@Override
-	public Date generateExpirationDate(Date now, Cabinet cabinet) {
-		if (cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
-			return DateUtil.stringToDate("9999-12-31");
-		}
-		int days = 0;
+	public Date generateExpirationDate(Date now, Cabinet cabinet,
+			List<LentHistory> activeLentHistories) {
 		switch (cabinet.getLentType()) {
 			case PRIVATE:
-				days = getDaysForLentTermPrivate();
-				break;
+				return DateUtil.addDaysToDate(now, getDaysForLentTermPrivate());
 			case SHARE:
-				days = getDaysForLentTermShare();
-				break;
+				if (cabinet.isStatus(CabinetStatus.AVAILABLE)) {
+					return DateUtil.getInfinityDate();
+				}
+				LentHistory activeLentHistory = activeLentHistories.get(0);
+				if (cabinet.isStatus(CabinetStatus.FULL)) {
+					if (activeLentHistory.isSetExpiredAt()) {
+						return activeLentHistory.getExpiredAt();
+					}
+					return DateUtil.addDaysToDate(now, getDaysForLentTermShare());
+				}
+				if (cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
+					return activeLentHistory.getExpiredAt();
+				}
 			case CLUB:
-				days = 9999; // 임의로 적당히 큰 수 넣었습니다.
-				break;
+				return DateUtil.getInfinityDate();
 		}
-		return DateUtil.addDaysToDate(now, days);
+		throw new IllegalArgumentException("대여 상태가 잘못되었습니다.");
 	}
 
 	@Override

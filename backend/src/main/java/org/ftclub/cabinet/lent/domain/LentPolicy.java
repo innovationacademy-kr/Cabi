@@ -8,7 +8,7 @@ import org.ftclub.cabinet.user.domain.User;
 
 public interface LentPolicy {
 
-	Date generateExpirationDate(Date now, Cabinet cabinet);
+	Date generateExpirationDate(Date now, Cabinet cabinet, List<LentHistory> activeLentHistories);
 
 	void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeHistories,
 			Date expiredAt);
