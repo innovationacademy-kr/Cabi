@@ -2,12 +2,10 @@ package org.ftclub.cabinet.lent.domain;
 
 import java.util.Date;
 import java.util.List;
-
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
@@ -30,15 +28,12 @@ public class LentPolicyImpl implements LentPolicy {
 	private static Integer PENALTY_DAY_PADDING;
 
 	@Override
-	public Date generateExpirationDate(Date now, LentType lentType, LentHistory lentHistory, SetExpiredEnum setExpiredEnum) {
-		if (setExpiredEnum == SetExpiredEnum.SET_INFINITE_EXPIRED) {
+	public Date generateExpirationDate(Date now, Cabinet cabinet) {
+		if (cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
 			return DateUtil.stringToDate("9999-12-31");
 		}
-        if (lentHistory != null) {
-            return lentHistory.getExpiredAt();
-        }
 		int days = 0;
-		switch (lentType) {
+		switch (cabinet.getLentType()) {
 			case PRIVATE:
 				days = getDaysForLentTermPrivate();
 				break;
@@ -53,84 +48,96 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount, List<BanHistory> userActiveBanList) {
-        if (!user.isUserRole(UserRole.USER))
-            return LentPolicyStatus.NOT_USER;
-        if (userActiveLentCount >= 1)
-            return LentPolicyStatus.ALREADY_LENT_USER;
-		if (user.getBlackholedAt().before(new Date()))
-			return LentPolicyStatus.BLACKHOLED_USER;
-		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
-		if (userActiveBanList.size() == 0) return LentPolicyStatus.FINE;
-		else if (cabinet.getLentType() == LentType.PRIVATE) {
-			for (BanHistory banHistory : userActiveBanList) {
-				if (banHistory.getBanType() == BanType.PRIVATE) return LentPolicyStatus.PRIVATE_BANNED_USER;
-			}
-		} else { // cabinet.getStatus() == LentType.PUBLIC
-			for (BanHistory banHistory : userActiveBanList) {
-				if (banHistory.getBanType() == BanType.PRIVATE) return LentPolicyStatus.PRIVATE_BANNED_USER;
-				if (banHistory.getBanType() == BanType.SHARE) return LentPolicyStatus.PUBLIC_BANNED_USER;
-			}
+	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeHistories,
+			Date expiredAt) {
+		for (LentHistory lentHistory : beforeHistories) {
+			lentHistory.setExpiredAt(expiredAt);
 		}
-		return LentPolicyStatus.FINE;
+		curHistory.setExpiredAt(expiredAt);
 	}
 
 	@Override
-	public LentPolicyDto verifyCabinetForLent(Cabinet cabinet, LentHistory cabinetLentHistory, int cabinetActiveLent,
-											  Date now) {
-		LentPolicyDto lentPolicyDto = new LentPolicyDto(SetExpiredEnum.NONE, LentPolicyStatus.FINE);
+	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount,
+			List<BanHistory> userActiveBanList) {
+		if (!user.isUserRole(UserRole.USER)) {
+			return LentPolicyStatus.NOT_USER;
+		}
+		if (userActiveLentCount >= 1) {
+			return LentPolicyStatus.ALREADY_LENT_USER;
+		}
+		if (user.getBlackholedAt().before(new Date())) {
+			return LentPolicyStatus.BLACKHOLED_USER;
+		}
+		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
+		if (userActiveBanList.size() == 0) {
+			return LentPolicyStatus.FINE;
+		}
+		LentPolicyStatus ret = LentPolicyStatus.FINE;
+		for (BanHistory banHistory : userActiveBanList) {
+			switch (banHistory.getBanType()) {
+				case PRIVATE:
+					return LentPolicyStatus.PRIVATE_BANNED_USER;
+				case SHARE:
+					if (cabinet.isLentType(LentType.SHARE)) {
+						ret = LentPolicyStatus.PUBLIC_BANNED_USER;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public LentPolicyStatus verifyCabinetForLent(Cabinet cabinet,
+			List<LentHistory> cabinetLentHistories, Date now) {
 		// 빌릴 수 있는지 검증. 빌릴 수 없으면 return lentPolicyDto;
 		switch (cabinet.getStatus()) {
 			case FULL:
-				lentPolicyDto.setLentPolicyStatus(LentPolicyStatus.FULL_CABINET);
-				return lentPolicyDto;
+				return LentPolicyStatus.FULL_CABINET;
 			case BROKEN:
-				lentPolicyDto.setLentPolicyStatus(LentPolicyStatus.BROKEN_CABINET);
-				return lentPolicyDto;
+				return LentPolicyStatus.BROKEN_CABINET;
 			case OVERDUE:
-				lentPolicyDto.setLentPolicyStatus(LentPolicyStatus.OVERDUE_CABINET);
-				return lentPolicyDto;
+				return LentPolicyStatus.OVERDUE_CABINET;
 		}
-        if (cabinet.isLentType(LentType.CLUB)) {
-			lentPolicyDto.setLentPolicyStatus(LentPolicyStatus.LENT_CLUB);
-			return lentPolicyDto;
-        }
+		if (cabinet.isLentType(LentType.CLUB)) {
+			return LentPolicyStatus.LENT_CLUB;
+		}
 		if (cabinet.isLentType(LentType.SHARE)
-				&& cabinet.getStatus() == CabinetStatus.LIMITED_AVAILABLE) {
-            if (cabinetLentHistory == null) {
-				lentPolicyDto.setLentPolicyStatus(LentPolicyStatus.INTERNAL_ERROR);
-				return lentPolicyDto;
+				&& cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
+			if (cabinetLentHistories.isEmpty()) {
+				return LentPolicyStatus.INTERNAL_ERROR;
 			}
-			Long diffDays = DateUtil.calculateTwoDateDiffAbs(cabinetLentHistory.getExpiredAt(),
-					now);
-            if (diffDays <= getDaysForNearExpiration()) {
-				lentPolicyDto.setLentPolicyStatus(LentPolicyStatus.LENT_UNDER_PENALTY_DAY_SHARE);
-				return lentPolicyDto;
-            }
+			Long diffDays = DateUtil.calculateTwoDateDiffAbs(
+					cabinetLentHistories.get(0).getExpiredAt(), now);
+			if (diffDays <= getDaysForNearExpiration()) {
+				return LentPolicyStatus.LENT_UNDER_PENALTY_DAY_SHARE;
+			}
 		}
+		return LentPolicyStatus.FINE;
 		// 유저가 사물함을 빌리고 난 후에 cabinet.status가 무엇으로 변경될지 결정
 		// 생성될 lentHistory에 expired_at 필드 값을 어떻게 설정할지 결정
-		if (cabinetActiveLent + 1 == cabinet.getMaxUser()) {
-			lentPolicyDto.setCabinetStatus(CabinetStatus.FULL);
-			// 처음 풀방이 됨
-			if (cabinet.getStatus() == CabinetStatus.AVAILABLE) {
-				if (cabinet.getLentType() == LentType.PRIVATE) {
-					lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.PRIVATE_NEW_EXPIRED);
-				} else { //cabinet.getLentType() == LentType.PUBLIC
-					lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_NEW_EXPIRED);
-				}
-			} else if (cabinet.getStatus() == CabinetStatus.LIMITED_AVAILABLE) {
-				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_EXIST_EXPIRED);
-			} // 이외의 경우는 없음
-		} else {
-			lentPolicyDto.setCabinetStatus(cabinet.getStatus());
-			if (cabinet.getStatus() == CabinetStatus.AVAILABLE) {
-				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SET_INFINITE_EXPIRED);
-			} else if (cabinet.getStatus() == CabinetStatus.LIMITED_AVAILABLE) {
-				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_EXIST_EXPIRED);
-			} // 이외의 경우는 없음
-		}
-		return lentPolicyDto;
+//		if (cabinetActiveLent + 1 == cabinet.getMaxUser()) {
+//			lentPolicyDto.setCabinetStatus(CabinetStatus.FULL);
+//			// 처음 풀방이 됨
+//			if (cabinet.getStatus() == CabinetStatus.AVAILABLE) {
+//				if (cabinet.getLentType() == LentType.PRIVATE) {
+//					lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.PRIVATE_NEW_EXPIRED);
+//				} else { //cabinet.getLentType() == LentType.PUBLIC
+//					lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_NEW_EXPIRED);
+//				}
+//			} else if (cabinet.getStatus() == CabinetStatus.LIMITED_AVAILABLE) {
+//				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_EXIST_EXPIRED);
+//			} // 이외의 경우는 없음
+//		} else {
+//			lentPolicyDto.setCabinetStatus(cabinet.getStatus());
+//			if (cabinet.getStatus() == CabinetStatus.AVAILABLE) {
+//				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SET_INFINITE_EXPIRED);
+//			} else if (cabinet.getStatus() == CabinetStatus.LIMITED_AVAILABLE) {
+//				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_EXIST_EXPIRED);
+//			} // 이외의 경우는 없음
+//		}
 	}
 
 	@Override

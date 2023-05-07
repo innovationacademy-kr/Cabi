@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,28 +57,31 @@ public class LentHistory {
 //		this.cabinetId = cabinetId;
 //	}
 
-	protected LentHistory(Long version, Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
-		this.version = version;
+	protected LentHistory(Date startedAt, Date expiredAt, Long userId,
+			Long cabinetId) {
 		this.startedAt = startedAt;
 		this.expiredAt = expiredAt;
 		this.userId = userId;
 		this.cabinetId = cabinetId;
 	}
-//	public static LentHistory of(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
-//		return new LentHistory(startedAt, expiredAt, userId, cabinetId);
-//	}
 
-	public static LentHistory of(Long version, Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
-		return new LentHistory(version, startedAt, expiredAt, userId, cabinetId);
+	public static LentHistory of(Date startedAt, Date expiredAt, Long userId,
+			Long cabinetId) {
+		return new LentHistory(startedAt, expiredAt, userId, cabinetId);
 	}
+
+	public static LentHistory of(Date startedAt, Long userId, Long cabinetId) {
+		return new LentHistory(startedAt, null, userId, cabinetId);
+	}
+
 	@Override
 	public boolean equals(final Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof LentHistory)) {
-            return false;
-        }
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof LentHistory)) {
+			return false;
+		}
 		return (this.lentHistoryId.equals(((LentHistory) other).lentHistoryId));
 	}
 

@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.service;
 
 import java.util.Date;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 
 public interface UserService {
 
@@ -19,7 +20,7 @@ public interface UserService {
 //
 //    void banUser(Long userId, int days); // 며칠 벤을 할 지는 BanPolicy에서 계산하는 것으로 결정
 //
-	void banUser(Long userId, Date startAt, Date endedAt);
+	void banUser(Long userId, LentType lentType, Date startAt, Date endedAt);
 //
 //    void unbanUser(Long userId);
 //
