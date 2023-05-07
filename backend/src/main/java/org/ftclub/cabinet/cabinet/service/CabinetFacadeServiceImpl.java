@@ -109,7 +109,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 
 	@Override
 	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
-		cabinetService.updateGrid(cabinetId, new Grid(row, col));
+		cabinetService.updateGrid(cabinetId, Grid.of(row, col));
 	}
 
 	@Override

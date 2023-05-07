@@ -3,14 +3,13 @@ package org.ftclub.cabinet.dto;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 
 @Getter
 @AllArgsConstructor
-public class CabinetDto extends Cabinet {
+public class CabinetDto {
 
 	private final Long cabinetId;
 	private final Integer visibleNum;

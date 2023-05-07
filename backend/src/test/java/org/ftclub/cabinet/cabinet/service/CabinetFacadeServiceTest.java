@@ -35,7 +35,7 @@ public class CabinetFacadeServiceTest {
 		assertEquals(1, cabinet.getMaxUser().intValue());
 		assertEquals(LentType.PRIVATE, cabinet.getLentType());
 		assertEquals(1, cabinet.getVisibleNum().intValue());
-		assertEquals(new Location("새롬관", 2, "Oasis"), cabinet.getLocation());
+		assertEquals(Location.of("새롬관", 2, "Oasis"), cabinet.getLocation());
 		assertEquals(null, cabinet.getTitle());
 	}
 

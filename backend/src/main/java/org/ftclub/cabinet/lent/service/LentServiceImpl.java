@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.Location;
+import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -31,6 +32,7 @@ public class LentServiceImpl implements LentService {
 	private final LentRepository lentRepository;
 	private final LentPolicy lentPolicy;
 	private final LentExceptionHandlerService lentExceptionHandler;
+	private final CabinetExceptionHandlerService cabinetExceptionHandler;
 	private final UserService userService;
 	private final CabinetService cabinetService;
 	private final LentMapper lentMapper;
@@ -39,7 +41,7 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		Date now = new Date();
-		Cabinet cabinet = lentExceptionHandler.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
 		User user = lentExceptionHandler.getUser(userId);
 		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
 		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId);
@@ -64,7 +66,7 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void startLentClubCabinet(Long userId, Long cabinetId) {
 		Date now = new Date();
-		Cabinet cabinet = lentExceptionHandler.getClubCabinet(cabinetId);
+		Cabinet cabinet = cabinetExceptionHandler.getClubCabinet(cabinetId);
 		lentExceptionHandler.getClubUser(userId);
 		lentExceptionHandler.checkExistedSpace(cabinetId);
 		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet);
@@ -108,7 +110,7 @@ public class LentServiceImpl implements LentService {
 
 	@Override
 	public List<LentDto> getLentDtoList(Long cabinetId) {
-		lentExceptionHandler.getCabinet(cabinetId);
+		cabinetExceptionHandler.getCabinet(cabinetId);
 		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
 		return lentHistories.stream()
 				.map(e -> new LentDto(
@@ -125,7 +127,7 @@ public class LentServiceImpl implements LentService {
 		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
 						lentExceptionHandler.getUser(e.getUserId()),
-						lentExceptionHandler.getCabinet(e.getCabinetId()),
+						cabinetExceptionHandler.getCabinet(e.getCabinetId()),
 						new Location())) // TODO: 정확한 Location 필요
 				.collect(Collectors.toList());
 		return new LentHistoryPaginationDto(lentHistoryDto, totalLength);

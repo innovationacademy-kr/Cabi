@@ -134,7 +134,7 @@ class CabinetServiceTest {
 	public void 사물함_좌표_업데이트() {
 		Long brokenId = 1L;
 		Cabinet cabinet = cabinetService.getCabinet(brokenId);
-		Grid newGrid = new Grid(42, 99);
+		Grid newGrid = Grid.of(42, 99);
 		cabinetService.updateGrid(1L, newGrid);
 
 		Cabinet updatedCabinet = cabinetService.getCabinet(brokenId);
@@ -144,7 +144,7 @@ class CabinetServiceTest {
 
 	@Test
 	public void 사물함_좌표_업데이트_실패() {
-		Grid newGrid = new Grid(-1, -42);
+		Grid newGrid = Grid.of(-1, -42);
 
 		assertThrows(ServiceException.class, () -> {
 			cabinetService.updateGrid(1L, newGrid);
