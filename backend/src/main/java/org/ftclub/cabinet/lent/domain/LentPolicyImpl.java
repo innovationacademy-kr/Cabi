@@ -116,28 +116,6 @@ public class LentPolicyImpl implements LentPolicy {
 			}
 		}
 		return LentPolicyStatus.FINE;
-		// 유저가 사물함을 빌리고 난 후에 cabinet.status가 무엇으로 변경될지 결정
-		// 생성될 lentHistory에 expired_at 필드 값을 어떻게 설정할지 결정
-//		if (cabinetActiveLent + 1 == cabinet.getMaxUser()) {
-//			lentPolicyDto.setCabinetStatus(CabinetStatus.FULL);
-//			// 처음 풀방이 됨
-//			if (cabinet.getStatus() == CabinetStatus.AVAILABLE) {
-//				if (cabinet.getLentType() == LentType.PRIVATE) {
-//					lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.PRIVATE_NEW_EXPIRED);
-//				} else { //cabinet.getLentType() == LentType.PUBLIC
-//					lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_NEW_EXPIRED);
-//				}
-//			} else if (cabinet.getStatus() == CabinetStatus.LIMITED_AVAILABLE) {
-//				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_EXIST_EXPIRED);
-//			} // 이외의 경우는 없음
-//		} else {
-//			lentPolicyDto.setCabinetStatus(cabinet.getStatus());
-//			if (cabinet.getStatus() == CabinetStatus.AVAILABLE) {
-//				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SET_INFINITE_EXPIRED);
-//			} else if (cabinet.getStatus() == CabinetStatus.LIMITED_AVAILABLE) {
-//				lentPolicyDto.setSetExpiredEnum(SetExpiredEnum.SHARED_EXIST_EXPIRED);
-//			} // 이외의 경우는 없음
-//		}
 	}
 
 	@Override
