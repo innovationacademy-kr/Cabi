@@ -33,20 +33,20 @@ public class AuthAspect {
 
 		switch (authGuard.level()) {
 			case ADMIN_ONLY:
-				if (cookieManager.isCookieExists(request, adminTokenName)
+				if (!cookieManager.isCookieExists(request, adminTokenName)
 						|| !tokenValidator.isTokenValid(request)) {
 					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
 				}
 				break;
 			case USER_ONLY:
-				if (cookieManager.isCookieExists(request, mainTokenName)
+				if (!cookieManager.isCookieExists(request, mainTokenName)
 						|| !tokenValidator.isTokenValid(request)) {
 					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
 				}
 				break;
 			case USER_OR_ADMIN:
-				if (cookieManager.isCookieExists(request, mainTokenName)
-						|| cookieManager.isCookieExists(request, adminTokenName)
+				if ((!cookieManager.isCookieExists(request, mainTokenName)
+						&& !cookieManager.isCookieExists(request, adminTokenName))
 						|| !tokenValidator.isTokenValid(request)) {
 					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
 				}
