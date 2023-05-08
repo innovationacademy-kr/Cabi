@@ -3,8 +3,10 @@ package org.ftclub.cabinet.user.service;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class UserExceptionHandlerService {
 
     private final UserRepository userRepository;
+    private final AdminUserRepository adminUserRepository;
     private final BanHistoryRepository banHistoryRepository;
 
     public User getUser(Long userId) {
@@ -27,5 +30,10 @@ public class UserExceptionHandlerService {
             throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);
         }
         return user;
+    }
+
+    public AdminUser getAdminUser(Long adminUserId) {
+        return adminUserRepository.findById(adminUserId)
+                .orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
     }
 }

@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
 import java.util.Date;
-import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
@@ -11,8 +10,6 @@ import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserFacadeService {
 
-    List<UserSessionDto> getAllUser();
-
     MyProfileResponseDto getMyProfile(UserSessionDto user);
 
     BlockedUserPaginationDto getAllBanUsers();
@@ -21,7 +18,7 @@ public interface UserFacadeService {
 
     void createUser(String name, String email, Date blackholedAt, UserRole role);
 
-    boolean checkAmdinUserExists(String email);
+    boolean checkAdminUserExists(String email);
 
     void createAdminUser(String email);
 

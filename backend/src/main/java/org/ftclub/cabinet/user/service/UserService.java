@@ -1,8 +1,10 @@
 package org.ftclub.cabinet.user.service;
 
 import java.util.Date;
+import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.user.domain.AdminRole;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserService {
@@ -12,7 +14,7 @@ public interface UserService {
 
     void createUser(String name, String email, Date blackholedAt, UserRole role);
 
-    boolean checkAmdinUserExists(String email);
+    boolean checkAdminUserExists(String email);
 
     void createAdminUser(String email);
 
@@ -32,4 +34,6 @@ public interface UserService {
     Long getAccumulateOverdueDaysByUserId(Long userId);
 
     boolean checkUserIsBanned(Long userId);
+
+    List<User> getAllUsers();
 }
