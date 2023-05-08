@@ -35,6 +35,9 @@ public class FtApiProperties {
     @Value("${oauth2.client.registration.provider.ft.user-info-uri}")
     private String userInfoUri;
 
+    @Value("${oauth2.client.registration.provider.ft.users-info-uri}")
+    private String usersInfoUri;
+
     @Value("${oauth2.client.registration.ft.scope}")
     private String scope;
 }

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 @Getter
 public class GmailProperties {
 
+    @Value("${mail.production}")
+    private Boolean isProduction;
+
     @Value("${mail.host}")
     private String host;
 
