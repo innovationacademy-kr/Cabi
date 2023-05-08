@@ -67,7 +67,7 @@ public class BanHistory {
         return Objects.equals(banHistoryId, banHistory.banHistoryId);
     }
 
-    public boolean isBanEnd() {
-        return new Date().before(unbannedAt);
+    public boolean isBanEndedBefore(Date date) {
+        return date.before(unbannedAt);
     }
 }

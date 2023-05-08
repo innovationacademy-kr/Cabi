@@ -14,15 +14,10 @@ public class BanPolicyImpl implements BanPolicy {
 
     @Override
     public BanType verifyForBanType(LentType lentType, Date startAt, Date endedAt, Date expiredAt) {
-        if (lentType == LentType.PRIVATE) {
-            if (expiredAt.before(endedAt)) {
-                return BanType.PRIVATE;
-            }
+        if (checkAlreadyExpired(endedAt, expiredAt)) {
+            return BanType.PRIVATE; // BanType을 BanType.ALL 과 같은 방식으로 바꿔도 좋을 것 같습니다.
         }
         if (lentType == LentType.SHARE) {
-            if (expiredAt.before(endedAt)) {
-                return BanType.PRIVATE;
-            }
             Long dateDiff = DateUtil.calculateTwoDateDiffAbs(startAt, endedAt);
             if (dateDiff < PENALTY_DAY_SHARE) {
                 return BanType.SHARE;
@@ -39,5 +34,15 @@ public class BanPolicyImpl implements BanPolicy {
             int currentBan = DateUtil.calculateTwoDateDiffAbs(endedAt, expiredAt).intValue();
             return DateUtil.addDaysToDate(endedAt, currentBan);
         }
+    }
+
+    @Override
+    public boolean checkAlreadyExpired(Date endedAt, Date expiredAt) {
+        return expiredAt.before(endedAt);
+    }
+
+    @Override
+    public boolean isActiveBanHistory(Date unbannedAt, Date now) {
+        return now.before(unbannedAt);
     }
 }

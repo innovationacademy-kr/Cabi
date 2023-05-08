@@ -3,6 +3,7 @@ package org.ftclub.cabinet.user.service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -49,14 +51,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkAmdinUserExists(String email) {
+    public boolean checkAdminUserExists(String email) {
         Optional<AdminUser> adminUser = adminUserRepository.findByEmail(email);
         return adminUser.isPresent();
     }
 
     @Override
     public void createAdminUser(String email) {
-        if (!checkAmdinUserExists(email)) {
+        if (!checkAdminUserExists(email)) {
             AdminUser adminUser = AdminUser.of(email, AdminRole.NONE);
             adminUserRepository.save(adminUser);
         }
@@ -64,27 +66,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
-        User user = userRepository.getUser(userId);
+        User user = userExceptionHandlerService.getUser(userId);
         user.setDeletedAt(new Date());
         userRepository.save(user);
     }
 
     @Override
     public void deleteAdminUser(Long adminUserId) {
-        AdminUser adminUser = adminUserRepository.getAdminUser(adminUserId);
+        AdminUser adminUser = userExceptionHandlerService.getAdminUser(adminUserId);
         adminUserRepository.delete(adminUser);
     }
 
     @Override
     public void updateUserBlackholedAtById(Long userId, Date newBlackholedAt) {
-        User user = userRepository.getUser(userId);
+        User user = userExceptionHandlerService.getUser(userId);
         user.changeBlackholedAt(newBlackholedAt);
         userRepository.save(user);
     }
 
     @Override
     public void updateAdminUserRole(Long adminUserId, AdminRole role) {
-        AdminUser adminUser = adminUserRepository.getAdminUser(adminUserId);
+        AdminUser adminUser = userExceptionHandlerService.getAdminUser(adminUserId);
         adminUser.changeAdminRole(role);
         adminUserRepository.save(adminUser);
     }
@@ -103,11 +105,12 @@ public class UserServiceImpl implements UserService {
         banHistoryRepository.save(banHistory);
     }
 
+    // 이런 식으로 변경하는 건 어떠신가요..
     @Override
     public void unbanUser(Long userId) {
-        List<BanHistory> banHistories = banHistoryRepository.findBanHistoriesByUserId(userId);
-        if (banHistories.size() > 0) {
-            banHistoryRepository.delete(banHistories.get(0));
+        BanHistory banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId);
+        if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), new Date())) {
+            banHistoryRepository.delete(banHistory);
         }
     }
 
@@ -129,5 +132,10 @@ public class UserServiceImpl implements UserService {
     public boolean checkUserIsBanned(Long userId) {
         List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId);
         return (banHistory.size() != 0);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }
