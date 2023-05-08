@@ -15,8 +15,6 @@ public interface LentService {
 
     void terminateLentCabinet(Long userId);
 
-    // 모든 연체된 대여 정보를 가져오는 메소드
-    List<LentDto> getAllExpiredLents();
 
     /* TODO: admin 관련한 read 메서드들 추가 */
 

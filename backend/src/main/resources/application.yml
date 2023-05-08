@@ -17,3 +17,7 @@ cabinet:
     day:
       share: 3
       padding: 2
+overdue:
+    term:
+      soonoverdue: -1
+      overdue: 1
