@@ -21,6 +21,10 @@ public class MailServiceImpl implements MailService {
 
     public void sendMail(String to, String subject, String template)
             throws MessagingException, IOException {
+        if (gmailProperties.getIsProduction() == false) {
+            System.out.println("Mail is not sent because of development environment.");
+            return;
+        }
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
