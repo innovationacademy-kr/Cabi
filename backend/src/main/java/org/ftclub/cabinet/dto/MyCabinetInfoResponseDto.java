@@ -7,9 +7,8 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 
 /**
- * 내가 대여 중인 사물함의 정보와 대여 정보를 반환하는 DTO입니다.
+ * 내가 대여 중인 사물함의 정보와 그 사물함의 대여 정보들을 반환하는 DTO입니다.
  */
-
 @Getter
 public class MyCabinetInfoResponseDto extends CabinetWithMemoDto {
 

@@ -6,7 +6,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 
 /**
- * 고장난 사물함에 대한 정보입니다. CabinetDto를 상속하고, 고장 사유를 추가로 가집니다.
+ * 고장난 사물함에 대한 정보입니다.
  */
 @Getter
 public class BrokenCabinetDto extends CabinetDto {
