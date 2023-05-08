@@ -25,7 +25,7 @@ public class BanHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BAN_HISTORY_ID")
-    private Long banHistoryId;
+    private long banHistoryId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "BANNED_AT", nullable = false)

@@ -6,7 +6,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -28,8 +27,6 @@ public class UserServiceImpl implements UserService {
     private final AdminUserRepository adminUserRepository;
     private final BanHistoryRepository banHistoryRepository;
     private final BanPolicy banPolicy;
-    private final LentRepository lentRepository;
-    private final UserExceptionHandlerService userExceptionHandlerService;
 
     @Override
     public boolean checkUserExists(String name) {

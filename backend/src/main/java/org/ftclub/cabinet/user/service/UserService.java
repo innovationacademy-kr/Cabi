@@ -28,12 +28,6 @@ public interface UserService {
 
     void unbanUser(Long userId);
 
-//    MyProfileResponseDto getMyProfile(UserSessionDto user);
-
-    //List<BlockedUserPaginationDto> getAllBanUsers();
-
-//    List<UserSessionDto> getAllUser();
-
     // userService에 있는게 맞는지..
     Long getAccumulateOverdueDaysByUserId(Long userId);
 
