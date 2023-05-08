@@ -6,7 +6,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.utils.DateUtil;
-import org.ftclub.cabinet.utils.mail.MailService;
+import org.ftclub.cabinet.utils.mail.MailSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OverdueCheckerImpl implements OverdueChecker {
 
-    private final MailService mailService;
+    private final MailSender mailSender;
     private final DateUtil dateUtil;
     private final CabinetFacadeService cabinetFacadeService;
 
@@ -49,7 +49,7 @@ public class OverdueCheckerImpl implements OverdueChecker {
             }
             // handle exception
             try {
-                this.mailService.sendMail(lent.getName(), subject, template);
+                this.mailSender.sendMail(lent.getName(), subject, template);
             } catch (Exception e) {
                 e.printStackTrace();
             }

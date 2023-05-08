@@ -13,7 +13,7 @@ import org.thymeleaf.context.Context;
 
 @Component
 @RequiredArgsConstructor
-public class MailServiceImpl implements MailService {
+public class MailSenderImpl implements MailSender {
 
     private final JavaMailSender emailSender;
     private final TemplateEngine templateEngine;

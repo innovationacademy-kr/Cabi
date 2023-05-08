@@ -7,7 +7,7 @@ import javax.mail.MessagingException;
 /**
  * 메일을 보내기 위한 인터페이스
  */
-public interface MailService {
+public interface MailSender {
 
     /**
      * 유저에게 메일을 보내는 메소드
