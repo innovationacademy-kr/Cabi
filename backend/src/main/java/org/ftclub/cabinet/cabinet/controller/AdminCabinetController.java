@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 관리자가 사물함을 관리할 때 사용하는 컨트롤러입니다.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/cabinets")
@@ -27,6 +30,13 @@ public class AdminCabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
 
+	/**
+	 * 사물함의 정보와 그 사물함의 대여 정보들을 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 아이디
+	 * @return 사물함 정보와 그 사물함의 대여 정보를 반환합니다.
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@GetMapping("/{cabinetId}")
 	public CabinetInfoResponseDto getCabinetInfo(
 			@PathVariable("cabinetId") Long cabinetId) {
@@ -36,6 +46,13 @@ public class AdminCabinetController {
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
 	}
 
+	/**
+	 * 사물함의 상태를 업데이트합니다.
+	 *
+	 * @param cabinetId 사물함 아이디
+	 * @param status    변경할 사물함 상태
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@PatchMapping("/{cabinetId}/status/{status}")
 	public void updateCabinetStatus(
 			@PathVariable("cabinetId") Long cabinetId,
@@ -46,6 +63,13 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetStatus(cabinetId, status);
 	}
 
+	/**
+	 * 사물함의 대여 타입을 업데이트합니다.
+	 *
+	 * @param cabinetId 사물함 아이디
+	 * @param lentType  변경할 사물함 대여 타입
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@PatchMapping("/{cabinetId}/lent-types/{lentType}")
 	public void updateCabinetLentType(
 			@PathVariable("cabinetId") Long cabinetId,
@@ -56,6 +80,13 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetLentType(cabinetId, lentType);
 	}
 
+	/**
+	 * 사물함의 고장 사유를 업데이트합니다.
+	 *
+	 * @param cabinetId 사물함 아이디
+	 * @param body      { statusNote: 변경할 사물함 상태 메모 }
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@PatchMapping("/{cabinetId}/status-note")
 	public void updateCabinetStatusNote(
 			@PathVariable("cabinetId") Long cabinetId,
@@ -67,6 +98,13 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetStatusNote(cabinetId, body.get("statusNote"));
 	}
 
+	/**
+	 * 사물함의 제목을 업데이트합니다.
+	 *
+	 * @param cabinetId 사물함 아이디
+	 * @param body      { title: 변경할 사물함 제목 }
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@PatchMapping("/{cabinetId}/title")
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
@@ -77,6 +115,13 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetTitle(cabinetId, body.get("title"));
 	}
 
+	/**
+	 * 사물함의 행과 열을 업데이트합니다.
+	 *
+	 * @param cabinetId 사물함 아이디
+	 * @param body      { row: 변경할 사물함 행, col: 변경할 사물함 열 }
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@PatchMapping("/{cabinetId}/grid")
 	public void updateCabinetGrid(
 			@PathVariable("cabinetId") Long cabinetId,
@@ -89,6 +134,13 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetGrid(cabinetId, body.get("row"), body.get("col"));
 	}
 
+	/**
+	 * 사물함의 표시 번호를 업데이트합니다.
+	 *
+	 * @param cabinetId 사물함 아이디
+	 * @param body      { visibleNum: 변경할 사물함 표시 번호 }
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@PatchMapping("/{cabinetId}/visible-num")
 	public void updateCabinetVisibleNum(
 			@PathVariable("cabinetId") Long cabinetId,
@@ -100,6 +152,13 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, body.get("visibleNum"));
 	}
 
+	/**
+	 * 사물함들의 상태를 일괄 변경합니다.
+	 *
+	 * @param body   { 변경할 사물함 아이디 리스트 }
+	 * @param status 변경할 사물함 상태
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@PatchMapping("/status/{status}")
 	public void updateCabinetBundleStatus(
 			@RequestBody HashMap<String, List<Long>> body,
@@ -110,6 +169,13 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetBundleStatus(body.get("cabinetIds"), status);
 	}
 
+	/**
+	 * 사물함들의 대여 타입을 일괄 변경합니다.
+	 *
+	 * @param body     { 변경할 사물함 아이디 리스트 }
+	 * @param lentType 변경할 사물함 대여 타입
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
 	@PatchMapping("/lent-types/{lentType}")
 	public void updateCabinetBundleLentType(
 			@RequestBody HashMap<String, List<Long>> body,

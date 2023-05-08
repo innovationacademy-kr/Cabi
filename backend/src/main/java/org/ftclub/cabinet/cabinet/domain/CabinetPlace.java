@@ -11,6 +11,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 사물함들이 위치하는 구역에 대한 엔티티입니다.
+ */
 @Entity
 @Table(name = "CABINET_PLACE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,10 +25,20 @@ public class CabinetPlace {
 	@Column(name = "CABINET_PLACE_ID")
 	private Long cabinetPlaceId;
 
+	/**
+	 * {@link Location}
+	 */
 	@Embedded
 	private Location location;
+	/**
+	 * {@link Grid}
+	 */
 	@Embedded
 	private Grid grid;
+
+	/**
+	 * {@link MapArea}
+	 */
 	@Embedded
 	private MapArea mapArea;
 
