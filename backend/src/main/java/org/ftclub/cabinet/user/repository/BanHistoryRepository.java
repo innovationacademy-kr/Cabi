@@ -16,8 +16,9 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
     @Query(value = "SELECT * FROM BAN_HISTORY WHERE USER_ID = ?1 and UNBANNED_AT > CURRENT_TIMESTAMP", nativeQuery = true)
     List<BanHistory> findUserActiveBanList(Long userId);
 
-    @Query("select bh from BanHistory bh where bh.user = ?1 and bh.unbannedAt > CURRENT_TIMESTAMP()")
+    @Query("select bh from BanHistory bh where bh.userId = ?1 and bh.unbannedAt > CURRENT_TIMESTAMP()")
     List<BanHistory> findUserActiveBanList(User user);
 
+    @Query("SELECT ban FROM BanHistory ban WHERE ban.userId = :userId")
     List<BanHistory> findBanHistoriesByUserId(Long userId);
 }
