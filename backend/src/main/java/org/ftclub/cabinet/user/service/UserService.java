@@ -12,7 +12,7 @@ public interface UserService {
 
     void createUser(String name, String email, Date blackholedAt, UserRole role);
 
-    boolean checkAmdinUserExists(String name);
+    boolean checkAmdinUserExists(String email);
 
     void createAdminUser(String email);
 
@@ -26,7 +26,7 @@ public interface UserService {
 
     void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
 
-    //void unbanUser(Long userId);
+    void unbanUser(Long userId);
 
 //    MyProfileResponseDto getMyProfile(UserSessionDto user);
 
@@ -36,4 +36,6 @@ public interface UserService {
 
     // userService에 있는게 맞는지..
     Long getAccumulateOverdueDaysByUserId(Long userId);
+
+    boolean checkUserIsBanned(Long userId);
 }
