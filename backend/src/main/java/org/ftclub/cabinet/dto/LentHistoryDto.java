@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.ftclub.cabinet.cabinet.domain.Location;
 
+/**
+ * 사물함의 대여 기록을 반환하는 DTO입니다.
+ */
 @AllArgsConstructor
 @Getter
 public class LentHistoryDto {
