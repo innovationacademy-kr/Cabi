@@ -25,11 +25,11 @@ public class MailServiceImpl implements MailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         helper.setFrom(gmailProperties.getUsername());
-        helper.setTo(to);
+        helper.setTo(to + "@student.42seoul.kr");
         helper.setSubject(subject);
 
         Context context = new Context();
-        context.setVariable("username", to);
+        context.setVariable("name", to);
 
         String htmlContent = this.templateEngine.process(template, context);
         helper.setText(htmlContent, true);
