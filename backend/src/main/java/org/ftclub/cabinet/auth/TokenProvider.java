@@ -31,11 +31,11 @@ public class TokenProvider {
 
 		}
 		if (provider == ftApiProperties.getName()) {
-			claims.put("intra_id", profile.get("login").toString());
+			claims.put("name", profile.get("login").toString());
 			claims.put("email", profile.get("email").toString());
-			claims.put("blackholed_at", profile.getJSONArray("cursus_users")
+			claims.put("blackholedAt", profile.getJSONArray("cursus_users")
 					.getJSONObject(1)
-					.get("blackholed_at"));
+					.get("blackholedAt"));
 			claims.put("role", UserRole.USER);
 		}
 		return claims;
