@@ -5,6 +5,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class UserExceptionHandlerService {
 
     private final UserRepository userRepository;
+    private final BanHistoryRepository banHistoryRepository;
 
     public User getUser(Long userId) {
         return userRepository.findById(userId)

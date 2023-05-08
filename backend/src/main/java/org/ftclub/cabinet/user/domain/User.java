@@ -72,4 +72,8 @@ public class User {
     public void changeBlackholedAt(Date blackholedAt) {
         this.blackholedAt = blackholedAt;
     }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
+    }
 }

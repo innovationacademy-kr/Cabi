@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private final BanHistoryRepository banHistoryRepository;
     private final BanPolicy banPolicy;
     private final LentRepository lentRepository;
+    private final UserExceptionHandlerService userExceptionHandlerService;
 
     @Override
     public boolean checkUserExists(String name) {
@@ -48,8 +49,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkAmdinUserExists(String name) {
-        Optional<AdminUser> adminUser = adminUserRepository.findByEmail(name);
+    public boolean checkAmdinUserExists(String email) {
+        Optional<AdminUser> adminUser = adminUserRepository.findByEmail(email);
         return adminUser.isPresent();
     }
 
@@ -64,7 +65,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         User user = userRepository.getUser(userId);
-        userRepository.delete(user);
+        user.setDeletedAt(new Date());
+        userRepository.save(user);
     }
 
     @Override
@@ -101,7 +103,13 @@ public class UserServiceImpl implements UserService {
         banHistoryRepository.save(banHistory);
     }
 
-//    void unbanUser(Long userId);
+    @Override
+    public void unbanUser(Long userId) {
+        List<BanHistory> banHistories = banHistoryRepository.findBanHistoriesByUserId(userId);
+        if (banHistories.size() > 0) {
+            banHistoryRepository.delete(banHistories.get(0));
+        }
+    }
 
     @Override
     public Long getAccumulateOverdueDaysByUserId(Long userId) {
@@ -112,5 +120,14 @@ public class UserServiceImpl implements UserService {
                     history.getUnbannedAt());
         }
         return accumulateDays;
+    }
+
+    /*
+     * Active한 banHistory를 List로 받아와야하나 싶긴한데 lent 쪽에서 주석에 써놓으신 것 보고 동일하게 처리했습니다.
+     * */
+    @Override
+    public boolean checkUserIsBanned(Long userId) {
+        List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId);
+        return (banHistory.size() != 0);
     }
 }
