@@ -32,7 +32,9 @@ public enum ExceptionStatus {
 	INCORRECT_ARGUMENT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다"),
 	PRIVATE_BANNED_USER(HttpStatus.BAD_REQUEST, "PRIVATE 밴 상태의 유저입니다."),
 	PUBLIC_BANNED_USER(HttpStatus.BAD_REQUEST, "PUBLIC 밴 상태의 유저입니다."),
-	BLACKHOLED_USER(HttpStatus.BAD_REQUEST, "블랙홀 상태의 유저입니다.");
+	BLACKHOLED_USER(HttpStatus.BAD_REQUEST, "블랙홀 상태의 유저입니다."),
+	NOT_FOUND_ADMIN_USER(HttpStatus.NOT_FOUND, "어드민이 존재하지 않습니다"),
+	;
 
 	ExceptionStatus(HttpStatus status, String message) {
 		this.statusCode = status.value();

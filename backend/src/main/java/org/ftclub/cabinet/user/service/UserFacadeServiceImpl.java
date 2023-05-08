@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserDto;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
@@ -12,32 +12,23 @@ import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserFacadeServiceImpl implements UserFacadeService {
 
     private final UserService userService;
     private final LentRepository lentRepository;
     private final BanHistoryRepository banHistoryRepository;
     private final UserRepository userRepository;
-
-    @Override
-    public List<UserSessionDto> getAllUser() {
-        List<User> users = userRepository.findAll();
-        /*
-        해당 메서드 blackhole 모듈에서 쓰는 것 같은데 UserSessionDto로 꼭 반환해줘야하나요?
-        추후 구현하겠습니다.
-        * */
-        return null;
-    }
+    private final UserMapper userMapper;
 
     @Override
     public MyProfileResponseDto getMyProfile(UserSessionDto user) {
@@ -47,7 +38,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         if (lentHistory.isPresent()) {
             cabinetId = lentHistory.get().getCabinetId();
         } else {
-            cabinetId = (long) -1;
+            cabinetId = -1L;
         }
         return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId);
     }
@@ -55,14 +46,14 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     @Override
     public BlockedUserPaginationDto getAllBanUsers() {
         List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList();
-        List<BlockedUserDto> blockedUserDtos = activeBanList.stream()
-                .map(b -> new BlockedUserDto(
+        List<BlockedUserDto> blockedUserDto = activeBanList.stream()
+                .map(b -> userMapper.toBlockedUserDto(
                         b.getUserId(),
                         userRepository.findNameById(b.getUserId()),
                         b.getBannedAt(),
                         b.getUnbannedAt()))
                 .collect(Collectors.toList());
-        return new BlockedUserPaginationDto(blockedUserDtos, blockedUserDtos.size());
+        return new BlockedUserPaginationDto(blockedUserDto, blockedUserDto.size());
     }
 
     @Override
@@ -76,8 +67,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     }
 
     @Override
-    public boolean checkAmdinUserExists(String email) {
-        return userService.checkAmdinUserExists(email);
+    public boolean checkAdminUserExists(String email) {
+        return userService.checkAdminUserExists(email);
     }
 
     @Override
