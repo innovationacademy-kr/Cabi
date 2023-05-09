@@ -24,7 +24,7 @@ public class AuthAspect {
 
 	private final JwtProperties jwtProperties;
 
-	@Before(value = "@annotation(authGuard)")
+	@Before(value = "@annotation(authGuard) || @within(authGuard)")
 	public void AuthToken(AuthGuard authGuard) {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
