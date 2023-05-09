@@ -2,11 +2,38 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.asciidoctor.convert' version '1.5.9.2'
 }
 
 group = 'org.ftclub'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+/**
+ * ext ~ bootJar까지는 asciidoctor를 이용하여
+ * build/generated-snippets에 테스트 결과를 저장하고
+ * bootJar를 실행하면 build/generated-snippets에 저장된
+ * 테스트 결과를 static/docs에 저장합니다.
+ */
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
 
 configurations {
     compileOnly {
@@ -43,6 +70,9 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     testImplementation 'org.modelmapper:modelmapper:3.1.1'
     testRuntimeOnly 'com.h2database:h2'
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
     //JUnit4 추가
     testImplementation("org.junit.vintage:junit-vintage-engine") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
