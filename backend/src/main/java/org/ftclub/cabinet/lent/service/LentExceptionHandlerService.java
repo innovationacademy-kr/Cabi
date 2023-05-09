@@ -57,6 +57,8 @@ public class LentExceptionHandlerService {
 				throw new ServiceException(ExceptionStatus.PUBLIC_BANNED_USER);
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
+			case NOT_USER:
+			case INTERNAL_ERROR:
 			default:
 				throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
 		}
