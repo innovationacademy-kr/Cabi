@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -63,7 +64,8 @@ public class LentServiceImpl implements LentService {
 		Cabinet cabinet = cabinetExceptionHandler.getClubCabinet(cabinetId);
 		userExceptionHandler.getClubUser(userId);
 		lentExceptionHandler.checkExistedSpace(cabinetId);
-		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
+		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet,
+				Collections.emptyList());
 		LentHistory result =
 				LentHistory.of(now, expirationDate, userId, cabinetId);
 		lentRepository.save(result);

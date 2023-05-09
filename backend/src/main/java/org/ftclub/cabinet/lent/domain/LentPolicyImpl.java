@@ -54,9 +54,9 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeHistories,
+	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
 			Date expiredAt) {
-		for (LentHistory lentHistory : beforeHistories) {
+		for (LentHistory lentHistory : beforeActiveHistories) {
 			lentHistory.setExpiredAt(expiredAt);
 		}
 		curHistory.setExpiredAt(expiredAt);
@@ -75,7 +75,7 @@ public class LentPolicyImpl implements LentPolicy {
 			return LentPolicyStatus.BLACKHOLED_USER;
 		}
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
-		if (userActiveBanList.size() == 0) {
+		if (userActiveBanList == null || userActiveBanList.size() == 0) {
 			return LentPolicyStatus.FINE;
 		}
 		LentPolicyStatus ret = LentPolicyStatus.FINE;
@@ -118,7 +118,7 @@ public class LentPolicyImpl implements LentPolicy {
 			Long diffDays = DateUtil.calculateTwoDateDiffAbs(
 					cabinetLentHistories.get(0).getExpiredAt(), now);
 			if (diffDays <= getDaysForNearExpiration()) {
-				return LentPolicyStatus.LENT_UNDER_PENALTY_DAY_SHARE;
+				return LentPolicyStatus.IMMINENT_EXPIRATION;
 			}
 		}
 		return LentPolicyStatus.FINE;
