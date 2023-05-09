@@ -88,6 +88,17 @@ public class LentHistory {
 		return !(getExpiredAt() == null || getExpiredAt() == DateUtil.getInfinityDate());
 	}
 
+	public boolean isSetEndedAt() {
+		return !(getEndedAt() == null || getEndedAt() == DateUtil.getInfinityDate());
+	}
+
+	public Long getDaysDiffEndedAndExpired() {
+		if (isSetExpiredAt() && isSetEndedAt()) {
+			return DateUtil.calculateTwoDateDiff(endedAt, expiredAt);
+		}
+		return null;
+	}
+
 	public void endLent(Date now) {
 		this.endedAt = now;
 	}
