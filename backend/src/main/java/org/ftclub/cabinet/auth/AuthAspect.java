@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -30,25 +30,25 @@ public class AuthAspect {
 				.getRequest();
 		String mainTokenName = jwtProperties.getMainTokenName();
 		String adminTokenName = jwtProperties.getAdminTokenName();
-
+		
 		switch (authGuard.level()) {
 			case ADMIN_ONLY:
 				if (!cookieManager.isCookieExists(request, adminTokenName)
 						|| !tokenValidator.isTokenValid(request)) {
-					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
+					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 				}
 				break;
 			case USER_ONLY:
 				if (!cookieManager.isCookieExists(request, mainTokenName)
 						|| !tokenValidator.isTokenValid(request)) {
-					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
+					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
 				}
 				break;
 			case USER_OR_ADMIN:
 				if ((!cookieManager.isCookieExists(request, mainTokenName)
 						&& !cookieManager.isCookieExists(request, adminTokenName))
 						|| !tokenValidator.isTokenValid(request)) {
-					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
+					throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
 				}
 				break;
 		}

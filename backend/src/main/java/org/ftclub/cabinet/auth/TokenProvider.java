@@ -35,7 +35,7 @@ public class TokenProvider {
 			claims.put("email", profile.get("email").toString());
 			claims.put("blackholedAt", profile.getJSONArray("cursus_users")
 					.getJSONObject(1)
-					.get("blackholedAt"));
+					.get("blackholed_at"));
 			claims.put("role", UserRole.USER);
 		}
 		return claims;
