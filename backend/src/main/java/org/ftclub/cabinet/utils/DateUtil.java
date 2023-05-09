@@ -78,4 +78,16 @@ public class DateUtil {
 		long diff = day1.getTime() - day2.getTime();
 		return Math.abs(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
 	}
+
+	/**
+	 * 두 date의 차이만큼의 day를 리턴합니다.
+	 *
+	 * @param day1 day1
+	 * @param day2 day2
+	 * @return day1 - day2
+	 */
+	static public Long calculateTwoDateDiff(Date day1, Date day2) {
+		long diff = day1.getTime() - day2.getTime();
+		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	}
 }
