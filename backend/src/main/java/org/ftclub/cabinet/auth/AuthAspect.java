@@ -18,35 +18,39 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @RequiredArgsConstructor
 public class AuthAspect {
 
-    private final TokenValidator tokenValidator;
+	private final TokenValidator tokenValidator;
 
-    private final JwtProperties jwtProperties;
+	private final CookieManager cookieManager;
 
-    @Before(value = "@annotation(authGuard)")
-    public void AuthToken(AuthGuard authGuard) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                .getRequest();
+	private final JwtProperties jwtProperties;
 
-        switch (authGuard.level()) {
-            case ADMIN_ONLY:
-                if (tokenValidator.isTokenValid(request, jwtProperties.getAdminTokenName())
-                        == false) {
-                    throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
-                }
-                break;
-            case USER_ONLY:
-                if (tokenValidator.isTokenValid(request, jwtProperties.getMainTokenName())
-                        == false) {
-                    throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
-                }
-                break;
-            case USER_OR_ADMIN:
-                if (tokenValidator.isTokenValid(request, jwtProperties.getAdminTokenName()) == false
-                        && tokenValidator.isTokenValid(request, jwtProperties.getMainTokenName())
-                        == false) {
-                    throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
-                }
-                break;
-        }
-    }
+	@Before(value = "@annotation(authGuard)")
+	public void AuthToken(AuthGuard authGuard) {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getRequest();
+		String mainTokenName = jwtProperties.getMainTokenName();
+		String adminTokenName = jwtProperties.getAdminTokenName();
+
+		switch (authGuard.level()) {
+			case ADMIN_ONLY:
+				if (!cookieManager.isCookieExists(request, adminTokenName)
+						|| !tokenValidator.isTokenValid(request)) {
+					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
+				}
+				break;
+			case USER_ONLY:
+				if (!cookieManager.isCookieExists(request, mainTokenName)
+						|| !tokenValidator.isTokenValid(request)) {
+					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
+				}
+				break;
+			case USER_OR_ADMIN:
+				if ((!cookieManager.isCookieExists(request, mainTokenName)
+						&& !cookieManager.isCookieExists(request, adminTokenName))
+						|| !tokenValidator.isTokenValid(request)) {
+					throw new ServiceException(ExceptionStatus.UNAUTHORIZED);
+				}
+				break;
+		}
+	}
 }

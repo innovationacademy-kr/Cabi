@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.auth;
 
 import java.io.IOException;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,33 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final TokenProvider tokenProvider;
+	private final TokenProvider tokenProvider;
 
-    private final OauthService oauthService;
+	private final OauthService oauthService;
 
-    private final CookieManager cookieManager;
+	private final CookieManager cookieManager;
 
-    private final FtApiProperties ftApiProperties;
+	private final FtApiProperties ftApiProperties;
 
-    private final SiteUrlProperties siteUrlProperties;
+	private final SiteUrlProperties siteUrlProperties;
 
-    private final JwtProperties jwtProperties;
+	private final JwtProperties jwtProperties;
 
-    @GetMapping("/login")
-    public void login(HttpServletResponse response) throws IOException {
-        oauthService.sendToFtApi(response);
-    }
+	@GetMapping("/login")
+	public void login(HttpServletResponse response) throws IOException {
+		oauthService.sendToFtApi(response);
+	}
 
-    @GetMapping("/login/callback")
-    public void loginCallback(@RequestParam String code, HttpServletRequest req,
-            HttpServletResponse res) throws IOException {
-        String apiToken = oauthService.getFtToken(code);
-        JSONObject profile = oauthService.getFtProfile(apiToken);
-        String accessToken = tokenProvider.createToken(ftApiProperties.getName(), profile);
-        String serverName = req.getServerName();
-        cookieManager.setCookie(res, jwtProperties.getMainTokenName(), accessToken, "/",
-                serverName);
-        res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
-    }
+	@GetMapping("/login/callback")
+	public void loginCallback(@RequestParam String code, HttpServletRequest req,
+			HttpServletResponse res) throws IOException {
+		String apiToken = oauthService.getFtToken(code);
+		JSONObject profile = oauthService.getFtProfile(apiToken);
+		String accessToken = tokenProvider.createToken(ftApiProperties.getName(), profile,
+				new Date());
+		String serverName = req.getServerName();
+		cookieManager.setCookie(res, jwtProperties.getMainTokenName(), accessToken, "/",
+				serverName);
+		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
+	}
 
 }
