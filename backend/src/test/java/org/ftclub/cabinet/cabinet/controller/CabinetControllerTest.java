@@ -10,7 +10,6 @@ import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.testutils.TestControllerUtils;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,12 +31,6 @@ public class CabinetControllerTest {
 
 	String userToken;
 	Cookie cookie;
-
-	@Before
-	void setUp() {
-		mvc = MockMvcBuilders.standaloneSetup(CabinetController.class)
-				.build();
-	}
 
 	@BeforeEach
 	void setToken() {

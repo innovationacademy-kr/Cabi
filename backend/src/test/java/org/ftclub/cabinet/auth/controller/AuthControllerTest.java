@@ -3,14 +3,11 @@ package org.ftclub.cabinet.auth.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.ftclub.cabinet.auth.AdminAuthController;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @SpringBootTest(properties = {"spring.config.location=classpath:application-oauth.yml"})
 @AutoConfigureMockMvc
@@ -18,13 +15,7 @@ public class AuthControllerTest {
 
 	@Autowired
 	MockMvc mvc;
-
-	@Before
-	void setUp() {
-		mvc = MockMvcBuilders.standaloneSetup(AdminAuthController.class)
-				.build();
-	}
-
+	
 	@Test
 	void 유저_로그인_요청() throws Exception {
 		//리디렉션 302
