@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.Validate;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -30,7 +28,6 @@ public class UserServiceImpl implements UserService {
     private final AdminUserRepository adminUserRepository;
     private final BanHistoryRepository banHistoryRepository;
     private final BanPolicy banPolicy;
-    private final LentRepository lentRepository;
     private final UserExceptionHandlerService userExceptionHandlerService;
 
     @Override
@@ -39,15 +36,11 @@ public class UserServiceImpl implements UserService {
         return user.isPresent();
     }
 
+    /* createUser는 user를 만드는 행위만 해야될 것 같아 다음과 같이 변경했습니다. */
     @Override
     public void createUser(String name, String email, Date blackholedAt, UserRole role) {
-        if (role == UserRole.USER) {
-            Validate.notNull(email, "email must not be null");
-        }
-        if (!checkUserExists(name)) {
-            User user = User.of(name, email, blackholedAt, role);
-            userRepository.save(user);
-        }
+        User user = User.of(name, email, blackholedAt, role);
+        userRepository.save(user);
     }
 
     @Override
@@ -56,12 +49,11 @@ public class UserServiceImpl implements UserService {
         return adminUser.isPresent();
     }
 
+    /* createUser와 동일한 사유로 로직 수정했습니다. */
     @Override
     public void createAdminUser(String email) {
-        if (!checkAdminUserExists(email)) {
-            AdminUser adminUser = AdminUser.of(email, AdminRole.NONE);
-            adminUserRepository.save(adminUser);
-        }
+        AdminUser adminUser = AdminUser.of(email, AdminRole.NONE);
+        adminUserRepository.save(adminUser);
     }
 
     @Override
@@ -80,6 +72,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserBlackholedAtById(Long userId, Date newBlackholedAt) {
         User user = userExceptionHandlerService.getUser(userId);
+        if (user.getRole() != UserRole.USER) {
+            return;
+        }
         user.changeBlackholedAt(newBlackholedAt);
         userRepository.save(user);
     }
@@ -117,7 +112,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long getAccumulateOverdueDaysByUserId(Long userId) {
         List<BanHistory> banHistories = banHistoryRepository.findBanHistoriesByUserId(userId);
-        Long accumulateDays = (long) 0;
+        Long accumulateDays = 0L;
         for (BanHistory history : banHistories) {
             accumulateDays += DateUtil.calculateTwoDateDiffAbs(history.getBannedAt(),
                     history.getUnbannedAt());
