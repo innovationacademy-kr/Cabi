@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 서비스의 지도에서 나타내지는 영역의 좌표 값들입니다.
+ */
 @Embeddable
 @NoArgsConstructor
 @EqualsAndHashCode
