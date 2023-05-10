@@ -31,9 +31,10 @@ public class UserAspect {
 			throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
+		//@User를 쓰려면 반드시 첫 매개변수에 UserSessionDto로 설정해주어야 함.
 		Object[] args = joinPoint.getArgs();
 		if (!args[0].getClass().equals(UserSessionDto.class)) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+			throw new ControllerException(ExceptionStatus.INTERNAL_SERVER_ERROR);
 		}
 		args[0] = getUserSessionDtoByRequest(request);
 		return joinPoint.proceed(args);
