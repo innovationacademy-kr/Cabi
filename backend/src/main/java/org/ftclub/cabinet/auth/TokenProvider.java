@@ -28,7 +28,6 @@ public class TokenProvider {
 		Map<String, Object> claims = new HashMap<>();
 		if (provider == googleApiProperties.getName()) {
 			claims.put("email", profile.get("email").toString());
-
 		}
 		if (provider == ftApiProperties.getName()) {
 			claims.put("name", profile.get("login").toString());
