@@ -9,12 +9,15 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserDto;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.UserProfileDto;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
@@ -46,14 +49,23 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     @Override
     public BlockedUserPaginationDto getAllBanUsers() {
         List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList();
-        List<BlockedUserDto> blockedUserDto = activeBanList.stream()
+        List<BlockedUserDto> blockedUserDtoList = activeBanList.stream()
                 .map(b -> userMapper.toBlockedUserDto(
                         b.getUserId(),
                         userRepository.findNameById(b.getUserId()),
                         b.getBannedAt(),
                         b.getUnbannedAt()))
                 .collect(Collectors.toList());
-        return new BlockedUserPaginationDto(blockedUserDto, blockedUserDto.size());
+        return new BlockedUserPaginationDto(blockedUserDtoList, blockedUserDtoList.size());
+    }
+
+    @Override
+    public UserProfilePaginationDto getUserProfileListByName(String name) {
+        List<User> users = userRepository.findByNameContaining(name);
+        List<UserProfileDto> userProfileDtoList = users.stream()
+                .map(u -> userMapper.toUserProfileDto(u.getUserId(), u.getName())).collect(
+                        Collectors.toList());
+        return new UserProfilePaginationDto(userProfileDtoList, userProfileDtoList.size());
     }
 
     @Override

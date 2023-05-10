@@ -2,6 +2,7 @@ package org.ftclub.cabinet.mapper;
 
 import java.util.Date;
 import org.ftclub.cabinet.dto.BlockedUserDto;
+import org.ftclub.cabinet.dto.UserProfileDto;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
@@ -12,4 +13,6 @@ public interface UserMapper {
     UserMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(UserMapper.class);
 
     BlockedUserDto toBlockedUserDto(Long userId, String name, Date bannedAt, Date unBannedAt);
+
+    UserProfileDto toUserProfileDto(Long userId, String name);
 }
