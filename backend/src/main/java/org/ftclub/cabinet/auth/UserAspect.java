@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -30,6 +32,9 @@ public class UserAspect {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
 		Object[] args = joinPoint.getArgs();
+		if (!args[0].getClass().equals(UserSessionDto.class)) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
 		args[0] = getUserSessionDtoByRequest(request);
 		return joinPoint.proceed(args);
 	}
