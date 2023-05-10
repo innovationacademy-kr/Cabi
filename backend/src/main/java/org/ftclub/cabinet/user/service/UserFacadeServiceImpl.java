@@ -50,11 +50,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     public BlockedUserPaginationDto getAllBanUsers() {
         List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList();
         List<BlockedUserDto> blockedUserDtoList = activeBanList.stream()
-                .map(b -> userMapper.toBlockedUserDto(
-                        b.getUserId(),
-                        userRepository.findNameById(b.getUserId()),
-                        b.getBannedAt(),
-                        b.getUnbannedAt()))
+                .map(b -> userMapper.toBlockedUserDto(b,
+                        userRepository.findNameById(b.getUserId())))
                 .collect(Collectors.toList());
         return new BlockedUserPaginationDto(blockedUserDtoList, blockedUserDtoList.size());
     }
@@ -63,7 +60,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     public UserProfilePaginationDto getUserProfileListByName(String name) {
         List<User> users = userRepository.findByNameContaining(name);
         List<UserProfileDto> userProfileDtoList = users.stream()
-                .map(u -> userMapper.toUserProfileDto(u.getUserId(), u.getName())).collect(
+                .map(u -> userMapper.toUserProfileDto(u)).collect(
                         Collectors.toList());
         return new UserProfilePaginationDto(userProfileDtoList, userProfileDtoList.size());
     }

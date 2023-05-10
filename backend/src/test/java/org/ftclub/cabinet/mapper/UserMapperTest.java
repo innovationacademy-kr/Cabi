@@ -9,12 +9,12 @@ import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class UserMapperTest {
+class UserMapperTest {
 
     @Autowired
     UserMapper userMapper;
@@ -23,8 +23,7 @@ public class UserMapperTest {
     void toBlockedUserDto() {
         BanHistory banHistory = BanHistory.of(new Date(), new Date(), BanType.PRIVATE, 3L);
         String name = "intraId";
-        BlockedUserDto blockedUserDto = userMapper.toBlockedUserDto(banHistory.getUserId(), name,
-                banHistory.getBannedAt(), banHistory.getUnbannedAt());
+        BlockedUserDto blockedUserDto = userMapper.toBlockedUserDto(banHistory, name);
         assertEquals(banHistory.getUserId(), blockedUserDto.getUserId());
         assertEquals(name, blockedUserDto.getName());
         assertEquals(banHistory.getBannedAt(), blockedUserDto.getBannedAt());
@@ -34,8 +33,7 @@ public class UserMapperTest {
     @Test
     void toUserProfileDto() {
         User user = User.of("intraId", "user@email.com", new Date(), UserRole.USER);
-        UserProfileDto userProfileDto = userMapper.toUserProfileDto(user.getUserId(),
-                user.getName());
+        UserProfileDto userProfileDto = userMapper.toUserProfileDto(user);
         assertEquals(user.getUserId(), userProfileDto.getUserId());
         assertEquals(user.getName(), userProfileDto.getName());
     }
