@@ -29,25 +29,43 @@ public class LentHistory {
 	@Column(name = "LENT_HISTORY_ID")
 	private Long lentHistoryId;
 
+	/**
+	 * 낙관적 락을 위한 version
+	 */
 	@Version
 	@Getter(AccessLevel.NONE)
 	private Long version = 1L;
 
+	/**
+	 * 대여 시작일
+	 */
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "STARTED_AT", nullable = false)
 	private Date startedAt;
 
+	/**
+	 * 연체 시작일
+	 */
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "EXPIRED_AT")
 	private Date expiredAt = null;
 
+	/**
+	 * 반납일
+	 */
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "ENDED_AT")
 	private Date endedAt = null;
 
+	/**
+	 * 대여하는 유저
+	 */
 	@Column(name = "USER_ID", nullable = false)
 	private Long userId;
 
+	/**
+	 * 대여하는 캐비넷
+	 */
 	@Column(name = "CABINET_ID", nullable = false)
 	private Long cabinetId;
 
@@ -59,11 +77,24 @@ public class LentHistory {
 		this.cabinetId = cabinetId;
 	}
 
+	/**
+	 * @param startedAt 대여 시작일
+	 * @param expiredAt 연체 시작일
+	 * @param userId    대여하는 user id
+	 * @param cabinetId 대여하는 cabinet id
+	 * @return 인자 정보를 담고있는 {@link LentHistory}
+	 */
 	public static LentHistory of(Date startedAt, Date expiredAt, Long userId,
 			Long cabinetId) {
 		return new LentHistory(startedAt, expiredAt, userId, cabinetId);
 	}
 
+	/**
+	 * @param startedAt 대여 시작일
+	 * @param userId    대여하는 user id
+	 * @param cabinetId 대여하는 cabinet id
+	 * @return 인자 정보를 담고있는 {@link LentHistory} 반납일은 null값을 담고있음
+	 */
 	public static LentHistory of(Date startedAt, Long userId, Long cabinetId) {
 		return new LentHistory(startedAt, null, userId, cabinetId);
 	}
