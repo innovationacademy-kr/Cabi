@@ -17,6 +17,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * OAuth를 수행하는 서비스 클래스입니다.
+ */
 @Service
 @RequiredArgsConstructor
 public class OauthService {
@@ -27,6 +30,12 @@ public class OauthService {
 
 	private final FtApiProperties ftApiProperties;
 
+	/**
+	 * 구글 OAuth 인증을 위한 URL을 생성하고, HttpServletResponse에 리다이렉트합니다.
+	 *
+	 * @param response {@link HttpServletResponse}
+	 * @throws IOException 입출력 예외
+	 */
 	public void sendToGoogleApi(HttpServletResponse response) throws IOException {
 		response.sendRedirect(
 				apiUriBuilder.buildCodeUri(
@@ -38,6 +47,13 @@ public class OauthService {
 		);
 	}
 
+	/**
+	 * 구글 OAuth 인증을 위한 토큰을 요청합니다.
+	 *
+	 * @param code 인증 코드
+	 * @return API 액세스 토큰
+	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
+	 */
 	public String getGoogleToken(String code) {
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -64,6 +80,13 @@ public class OauthService {
 	}
 
 
+	/**
+	 * 구글 OAuth 인증을 통해 받은 토큰을 이용해 사용자 정보를 요청합니다.
+	 *
+	 * @param token 토큰
+	 * @return 사용자 정보
+	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
+	 */
 	public JSONObject getGoogleProfile(String token) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -82,6 +105,12 @@ public class OauthService {
 		}
 	}
 
+	/**
+	 * FT OAuth 인증을 위한 URL을 생성하고, HttpServletResponse에 리다이렉트합니다.
+	 *
+	 * @param response {@link HttpServletResponse}
+	 * @throws IOException 입출력 예외
+	 */
 	public void sendToFtApi(HttpServletResponse response) throws IOException {
 		String dir = apiUriBuilder.buildCodeUri(
 				ftApiProperties.getAuthUri(),
@@ -92,6 +121,13 @@ public class OauthService {
 		response.sendRedirect(dir);
 	}
 
+	/**
+	 * FT OAuth 인증을 위한 토큰을 요청합니다.
+	 *
+	 * @param code 인증 코드
+	 * @return API 액세스 토큰
+	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
+	 */
 	public String getFtToken(String code) {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -114,6 +150,13 @@ public class OauthService {
 		}
 	}
 
+	/**
+	 * FT OAuth 인증을 통해 받은 토큰을 이용해 사용자 정보를 요청합니다.
+	 *
+	 * @param token 토큰
+	 * @return 사용자 정보
+	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
+	 */
 	public JSONObject getFtProfile(String token) {
 		HttpHeaders headers = new HttpHeaders();
 		RestTemplate restTemplate = new RestTemplate();

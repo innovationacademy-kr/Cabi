@@ -14,6 +14,9 @@ import org.ftclub.cabinet.utils.DateUtil;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+/**
+ * API 제공자에 따라 JWT 토큰을 생성하는 클래스입니다.
+ */
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
@@ -24,6 +27,13 @@ public class TokenProvider {
 
 	private final FtApiProperties ftApiProperties;
 
+	/**
+	 * JWT 토큰에 담을 클레임(Payload)을 생성합니다.
+	 *
+	 * @param provider API 제공자 이름
+	 * @param profile  API 제공자로부터 받은 프로필
+	 * @return JWT 클레임(Payload)
+	 */
 	public Map<String, Object> makeClaims(String provider, JSONObject profile) {
 		Map<String, Object> claims = new HashMap<>();
 		if (provider == googleApiProperties.getName()) {
@@ -40,6 +50,14 @@ public class TokenProvider {
 		return claims;
 	}
 
+	/**
+	 * JWT 토큰을 생성합니다.
+	 *
+	 * @param provider API 제공자 이름
+	 * @param profile  API 제공자로부터 받은 프로필
+	 * @param now      현재 시각
+	 * @return JWT 토큰
+	 */
 	public String createToken(String provider, JSONObject profile, Date now) {
 		return Jwts.builder()
 				.setClaims(makeClaims(provider, profile))

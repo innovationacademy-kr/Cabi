@@ -12,32 +12,45 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 관리자 엔티티 클래스입니다.
+ */
 @Entity
 @Table(name = "ADMIN_USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class AdminUser {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ADMIN_USER_ID")
-    private Long adminUserId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ADMIN_USER_ID")
+	private Long adminUserId;
 
-    @Column(name = "EMAIL", length = 128, unique = true, nullable = false)
-    private String email;
+	/**
+	 * OAuth 방식을 사용하기 때문에 비밀번호 없이 이메일만 저장합니다.
+	 */
+	@Column(name = "EMAIL", length = 128, unique = true, nullable = false)
+	private String email;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "ROLE", length = 16, nullable = false)
-    private AdminRole role = AdminRole.NONE;
+	/**
+	 * {@link AdminRole}
+	 */
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "ROLE", length = 16, nullable = false)
+	private AdminRole role = AdminRole.NONE;
 
-    public AdminUser(String email) {
-        this.email = email;
-    }
+	public AdminUser(String email) {
+		this.email = email;
+	}
 
-    @Override
-    public boolean equals (final Object other) {
-        if (other == this) return true;
-        if (!(other instanceof AdminUser)) return false;
-        return (this.adminUserId.equals(((AdminUser) other).getAdminUserId()));
-    }
+	@Override
+	public boolean equals(final Object other) {
+		if (other == this) {
+			return true;
+		}
+		if (!(other instanceof AdminUser)) {
+			return false;
+		}
+		return (this.adminUserId.equals(((AdminUser) other).getAdminUserId()));
+	}
 }

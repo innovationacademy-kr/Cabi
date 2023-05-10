@@ -3,6 +3,9 @@ package org.ftclub.cabinet.dto;
 import java.util.Date;
 import lombok.Getter;
 
+/**
+ * 유저의 정보와 로그인 세션 정보를 갖는 DTO입니다.
+ */
 @Getter
 public class UserSessionDto extends UserDto {
 
