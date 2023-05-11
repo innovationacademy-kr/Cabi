@@ -38,14 +38,13 @@ public class TokenProvider {
 		Map<String, Object> claims = new HashMap<>();
 		if (provider == googleApiProperties.getName()) {
 			claims.put("email", profile.get("email").toString());
-
 		}
 		if (provider == ftApiProperties.getName()) {
 			claims.put("name", profile.get("login").toString());
 			claims.put("email", profile.get("email").toString());
 			claims.put("blackholedAt", profile.getJSONArray("cursus_users")
 					.getJSONObject(1)
-					.get("blackholedAt"));
+					.get("blackholed_at"));
 			claims.put("role", UserRole.USER);
 		}
 		return claims;

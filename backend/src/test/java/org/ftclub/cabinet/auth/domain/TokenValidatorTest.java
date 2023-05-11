@@ -3,7 +3,9 @@ package org.ftclub.cabinet.auth.domain;
 import java.util.Date;
 import org.ftclub.cabinet.auth.TokenProvider;
 import org.ftclub.cabinet.auth.TokenValidator;
+import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.ftclub.testutils.TestControllerUtils;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,9 @@ public class TokenValidatorTest {
 
 	@Autowired
 	TokenProvider tokenProvider;
+
+	@Autowired
+	JwtProperties jwtProperties;
 
 	@Test
 	void 헤더의_토큰_유효한지_아닌지() {
@@ -49,5 +54,11 @@ public class TokenValidatorTest {
 
 		Assert.assertEquals(true, tokenValidator.checkTokenValidity(validToken));
 		Assert.assertEquals(false, tokenValidator.checkTokenValidity(invalidToken));
+	}
+
+	@Test
+	void 토큰_페이로드_가져오기() {
+		String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey());
+		Assert.assertEquals("testUserName", tokenValidator.getPayloadJson(userToken).get("name"));
 	}
 }

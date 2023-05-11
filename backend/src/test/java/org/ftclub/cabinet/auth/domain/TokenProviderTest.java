@@ -49,7 +49,7 @@ public class TokenProviderTest {
 				ftProfile);
 
 		Assertions.assertEquals(googleEmail, googleClaims.get("email"));
-		Assertions.assertEquals(ftIntraId, ftClaims.get("intra_id"));
+		Assertions.assertEquals(ftIntraId, ftClaims.get("name"));
 		Assertions.assertEquals(ftEmail, ftClaims.get("email"));
 		Assertions.assertEquals(UserRole.USER, ftClaims.get("role"));
 	}

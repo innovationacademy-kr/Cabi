@@ -24,13 +24,15 @@ public enum ExceptionStatus {
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다"),
 	OAUTH_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "인증 서버와 통신 중 에러가 발생했습니다"),
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인 정보가 유효하지 않습니다\\n다시 로그인해주세요"),
+	UNAUTHORIZED_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 로그인 정보가 유효하지 않습니다\\n다시 로그인해주세요"),
+	UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "사용자 로그인 정보가 유효하지 않습니다\\n다시 로그인해주세요"),
 	UNCHANGEABLE_CABINET(HttpStatus.BAD_REQUEST, "사물함의 상태를 변경할 수 없습니다."),
 	LENT_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 대여중인 사물함이 있습니다"),
 	INVALID_ARGUMENT(HttpStatus.BAD_REQUEST, "유효하지 않은 입력입니다"),
 	INCORRECT_ARGUMENT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다"),
-    PRIVATE_BANNED_USER(HttpStatus.BAD_REQUEST, "PRIVATE 밴 상태의 유저입니다."),
-    PUBLIC_BANNED_USER(HttpStatus.BAD_REQUEST, "PUBLIC 밴 상태의 유저입니다."),
-    BLACKHOLED_USER(HttpStatus.BAD_REQUEST, "블랙홀 상태의 유저입니다.");
+	PRIVATE_BANNED_USER(HttpStatus.BAD_REQUEST, "PRIVATE 밴 상태의 유저입니다."),
+	PUBLIC_BANNED_USER(HttpStatus.BAD_REQUEST, "PUBLIC 밴 상태의 유저입니다."),
+	BLACKHOLED_USER(HttpStatus.BAD_REQUEST, "블랙홀 상태의 유저입니다.");
 
 	ExceptionStatus(HttpStatus status, String message) {
 		this.statusCode = status.value();
