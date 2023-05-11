@@ -1,38 +1,70 @@
 package org.ftclub.cabinet.lent.domain;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Date;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest()
-@ActiveProfiles("test")
+@SpringBootTest
 @Transactional
 class LentHistoryTest {
-
-	@PersistenceContext
-	EntityManager em;
 
 	@Autowired
 	LentRepository lentRepository;
 
 	@Test
-	public void test1() {
-//        em.isOpen();
-//        User user = new User("tes", "test", new Date(), UserRole.USER);
-//        Cabinet cabinet = new Cabinet(1, CabinetStatus.AVAILABLE, LentType.PRIVATE, 1, new Grid(),
-//                new CabinetPlace(new Location(), new CabinetGrid(), new MapArea()));
-//        em.persist(user);
-//        em.persist(cabinet);
-//        em.flush();
-//        LentHistory lentHistory = new LentHistory(new Date(), new Date(), user.getUserId(),
-//                cabinet.getCabinetId(), 1L);
-//        em.persist(lentHistory);
-//        Long userLentCount = lentRepository.userActiveLentCount(user.getUserId());
-//        Assertions.assertEquals(1, userLentCount);
+	void isCabinetIdEqual() {
+		Date now = new Date();
+		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+		lentHistory.isCabinetIdEqual(1L);
+		lentHistory.isCabinetIdEqual(2L);
+	}
+
+	@Test
+	void isSetExpiredAt() {
+		Date now = new Date();
+		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+		assertTrue(lentHistory.isSetExpiredAt());
+		lentHistory = LentHistory.of(now, null, 1L, 1L);
+		assertFalse(lentHistory.isSetExpiredAt());
+	}
+
+	@Test
+	void isSetEndedAt() {
+		Date now = new Date();
+		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+		assertFalse(lentHistory.isSetEndedAt());
+		lentHistory.endLent(new Date());
+		assertTrue(lentHistory.isSetEndedAt());
+	}
+
+	@Test
+	void getDaysDiffEndedAndExpired() {
+		Date now = new Date();
+		LentHistory lentHistory = LentHistory.of(now, now, 1L, 1L);
+		assertNull(lentHistory.getDaysDiffEndedAndExpired());
+		lentHistory.endLent(DateUtil.addDaysToDate(now, 3));
+		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
+	}
+
+	@Test
+	void endLent() {
+		Date now = new Date();
+		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+		lentHistory = lentRepository.save(lentHistory);
+		lentHistory.endLent(DateUtil.addDaysToDate(now, 6));
+		assertTrue(lentHistory.isSetEndedAt());
+		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
+		lentRepository.findById(lentHistory.getLentHistoryId());
+		assertTrue(lentHistory.isSetEndedAt());
+		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
 	}
 }
