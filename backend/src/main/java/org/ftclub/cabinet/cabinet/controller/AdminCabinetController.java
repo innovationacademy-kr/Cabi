@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/cabinets")
-@AuthGuard(level = Level.ADMIN_ONLY)
 public class AdminCabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
@@ -38,6 +37,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@GetMapping("/{cabinetId}")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public CabinetInfoResponseDto getCabinetInfo(
 			@PathVariable("cabinetId") Long cabinetId) {
 		if (cabinetId == null) {
@@ -54,6 +54,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/status/{status}")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void updateCabinetStatus(
 			@PathVariable("cabinetId") Long cabinetId,
 			@PathVariable("status") CabinetStatus status) {
@@ -71,6 +72,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/lent-types/{lentType}")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void updateCabinetLentType(
 			@PathVariable("cabinetId") Long cabinetId,
 			@PathVariable("lentType") LentType lentType) {
@@ -88,6 +90,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/status-note")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void updateCabinetStatusNote(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
@@ -106,6 +109,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/title")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
@@ -123,6 +127,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/grid")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void updateCabinetGrid(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody Map<String, Integer> body) {
@@ -142,6 +147,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/visible-num")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void updateCabinetVisibleNum(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, Integer> body) {
@@ -160,6 +166,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/status/{status}")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void updateCabinetBundleStatus(
 			@RequestBody HashMap<String, List<Long>> body,
 			@PathVariable("status") CabinetStatus status) {
@@ -177,6 +184,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/lent-types/{lentType}")
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void updateCabinetBundleLentType(
 			@RequestBody HashMap<String, List<Long>> body,
 			@PathVariable("lentType") LentType lentType) {

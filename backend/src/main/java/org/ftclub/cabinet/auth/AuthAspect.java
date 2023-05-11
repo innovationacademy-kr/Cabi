@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Before;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -35,7 +34,7 @@ public class AuthAspect {
 	 *
 	 * @param authGuard 인터셉트 된 해당 {@link AuthGuard} - Level을 알아낼 수 있습니다.
 	 */
-	@Before(value = "@annotation(authGuard) || @within(authGuard)")
+	@Before("@annotation(authGuard))")
 	public void AuthToken(AuthGuard authGuard) {
 		/**
 		 * 현재 인터셉트 된 서블릿의 {@link HttpServletRequest}를 가져옵니다.
@@ -44,7 +43,6 @@ public class AuthAspect {
 				.getRequest();
 		String mainTokenName = jwtProperties.getMainTokenName();
 		String adminTokenName = jwtProperties.getAdminTokenName();
-
 
 		/**
 		 * {@link AuthGuard}의 레벨에 따라서 토큰의 유무와 유효성을 검사합니다.
