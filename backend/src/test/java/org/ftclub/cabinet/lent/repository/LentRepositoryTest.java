@@ -23,7 +23,7 @@ class LentRepositoryTest {
 
 	@Test
 	void findFirstByCabinetIdAndEndedAtIsNull() {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		// 빌리고 있는 유저가 없는 cabinet id
 		Long cabinetId = 2L;
 
@@ -41,7 +41,7 @@ class LentRepositoryTest {
 
 	@Test
 	void findFirstByUserIdAndEndedAtIsNull() {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		// 빌리고 있는 사물함이 없는 user id
 		Long userId = 1L;
 

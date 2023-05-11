@@ -22,7 +22,7 @@ class LentHistoryTest {
 
 	@Test
 	void isCabinetIdEqual() {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
 		lentHistory.isCabinetIdEqual(1L);
 		lentHistory.isCabinetIdEqual(2L);
@@ -30,7 +30,7 @@ class LentHistoryTest {
 
 	@Test
 	void isSetExpiredAt() {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
 		assertTrue(lentHistory.isSetExpiredAt());
 		lentHistory = LentHistory.of(now, null, 1L, 1L);
@@ -39,16 +39,16 @@ class LentHistoryTest {
 
 	@Test
 	void isSetEndedAt() {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
 		assertFalse(lentHistory.isSetEndedAt());
-		lentHistory.endLent(new Date());
+		lentHistory.endLent(DateUtil.getNow());
 		assertTrue(lentHistory.isSetEndedAt());
 	}
 
 	@Test
 	void getDaysDiffEndedAndExpired() {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		LentHistory lentHistory = LentHistory.of(now, now, 1L, 1L);
 		assertNull(lentHistory.getDaysDiffEndedAndExpired());
 		lentHistory.endLent(DateUtil.addDaysToDate(now, 3));
@@ -57,7 +57,7 @@ class LentHistoryTest {
 
 	@Test
 	void endLent() {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
 		lentHistory = lentRepository.save(lentHistory);
 		lentHistory.endLent(DateUtil.addDaysToDate(now, 6));

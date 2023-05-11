@@ -71,7 +71,7 @@ public class LentPolicyImpl implements LentPolicy {
 		if (userActiveLentCount >= 1) {
 			return LentPolicyStatus.ALREADY_LENT_USER;
 		}
-		if (user.getBlackholedAt().before(new Date())) {
+		if (user.getBlackholedAt().before(DateUtil.getNow())) {
 			return LentPolicyStatus.BLACKHOLED_USER;
 		}
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
