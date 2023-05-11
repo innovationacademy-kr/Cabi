@@ -22,7 +22,7 @@ else
 
 	# Import database
 	echo "Import database"
-	echo -e "${GREEN} mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE < /database/cabi_local.sql ${RESET}"
+	echo -e "${GREEN} mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE < /database/spring_test_db.sql ${RESET}"
 	mysql -u$MARIADB_USER -p$MARIADB_PASSWORD $MARIADB_DATABASE < /database/spring_test_db.sql
 fi
 
