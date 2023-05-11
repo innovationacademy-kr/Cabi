@@ -13,6 +13,4 @@ spring:
         show_sql: false
     hibernate:
       ddl-auto: none
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     database-platform: org.hibernate.dialect.MariaDB103Dialect
