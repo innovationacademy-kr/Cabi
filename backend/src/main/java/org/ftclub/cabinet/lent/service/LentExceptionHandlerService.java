@@ -96,7 +96,7 @@ public class LentExceptionHandlerService {
 	}
 
 	/**
-	 * 사물함에 남은 자리가 있는 지 확인합니다. 남은 자리가 없으면 thow합니다.
+	 * 사물함에 남은 자리가 있는 지 확인합니다. 남은 자리가 없으면 throw합니다.
 	 *
 	 * @param cabinetId 찾고 싶은 cabinet id
 	 * @throws ServiceException LENT_FULL, NOT_FOUND_CABINET
