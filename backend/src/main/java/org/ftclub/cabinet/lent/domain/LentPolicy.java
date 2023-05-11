@@ -15,7 +15,7 @@ public interface LentPolicy {
 	 * 적절한 만료일을 만들어냅니다
 	 *
 	 * @param now                 현재 시각
-	 * @param cabinet             배여하려는 사물함
+	 * @param cabinet             대여하려는 사물함
 	 * @param activeLentHistories 대여 하려는 사물함의 이전 대여 하고있었던 기록들 없다면 빈 리스트
 	 * @return cabinet을 빌릴 때 들어가야 하는 만료일
 	 */

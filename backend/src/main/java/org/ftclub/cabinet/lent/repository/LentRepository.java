@@ -31,7 +31,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	Optional<LentHistory> findFirstByUserIdAndEndedAtIsNull(Long userId);
 
 	/**
-	 * 유저가 지금까지 빌렷던 {@link LentHistory}들을 가져옵니다. {@link Pageable}이 적용되었습니다.
+	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 가져옵니다. {@link Pageable}이 적용되었습니다.
 	 *
 	 * @param userId   찾으려는 user id
 	 * @param pageable pagination 정보
