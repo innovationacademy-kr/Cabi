@@ -2,7 +2,6 @@ package org.ftclub.cabinet.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Date;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -14,6 +13,7 @@ import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,7 +26,7 @@ class LentMapperTest {
 
 	@Test
 	void toLentDto() {
-		LentHistory lentHistory = LentHistory.of(new Date(), new Date(), 19L, 99L);
+		LentHistory lentHistory = LentHistory.of(DateUtil.getNow(), DateUtil.getNow(), 19L, 99L);
 		String name = "someName";
 		LentDto lentDto = lentMapper.toLentDto("someName", lentHistory);
 		assertEquals(lentHistory.getLentHistoryId(), lentDto.getLentHistoryId());
@@ -39,8 +39,8 @@ class LentMapperTest {
 	@Test
 	void toLentHistoryDto() {
 		Location location = Location.of("testBuilding", 9, "testSection");
-		LentHistory lentHistory = LentHistory.of(new Date(), new Date(), 19L, 99L);
-		User user = User.of("testName", "testEmail", new Date(), UserRole.USER);
+		LentHistory lentHistory = LentHistory.of(DateUtil.getNow(), DateUtil.getNow(), 19L, 99L);
+		User user = User.of("testName", "testEmail", DateUtil.getNow(), UserRole.USER);
 		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
 				CabinetPlace.of(location, null, null));
 		LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet);

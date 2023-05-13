@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -15,6 +16,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
 import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,7 +35,7 @@ public class LentServiceImpl implements LentService {
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
 		User user = userExceptionHandler.getUser(userId);
 		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
@@ -59,11 +61,12 @@ public class LentServiceImpl implements LentService {
 
 	@Override
 	public void startLentClubCabinet(Long userId, Long cabinetId) {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		Cabinet cabinet = cabinetExceptionHandler.getClubCabinet(cabinetId);
 		userExceptionHandler.getClubUser(userId);
 		lentExceptionHandler.checkExistedSpace(cabinetId);
-		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
+		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet,
+				Collections.emptyList());
 		LentHistory result =
 				LentHistory.of(now, expirationDate, userId, cabinetId);
 		lentRepository.save(result);
@@ -85,7 +88,7 @@ public class LentServiceImpl implements LentService {
 	}
 
 	private LentHistory returnCabinet(Long userId) {
-		Date now = new Date();
+		Date now = DateUtil.getNow();
 		userExceptionHandler.getUser(userId);
 		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());

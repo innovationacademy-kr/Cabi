@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.utils.DateUtil;
 
 @Entity
 @Table(name = "BAN_HISTORY")
@@ -64,12 +65,12 @@ public class BanHistory {
 
 	@Override
 	public boolean equals(final Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof BanHistory)) {
-            return false;
-        }
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof BanHistory)) {
+			return false;
+		}
 		return (this.banHistoryId.equals(((BanHistory) other).banHistoryId));
 	}
 
@@ -78,6 +79,6 @@ public class BanHistory {
 	}
 
 	public boolean isBanEnd() {
-		return new Date().before(unbannedAt);
+		return DateUtil.getNow().before(unbannedAt);
 	}
 }
