@@ -1,16 +1,17 @@
 package org.ftclub.cabinet.user.domain;
 
 import java.util.Date;
+import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.utils.DateUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class BanPolicyImpl implements BanPolicy {
 
-	@Value("${cabinet.penalty.day.share}")
-	private Integer PENALTY_DAY_SHARE;
+	private final CabinetProperties cabinetProperties;
 
 	@Override
 	public BanType verifyForBanType(LentType lentType, Date startAt, Date endedAt, Date expiredAt) {
@@ -19,7 +20,7 @@ public class BanPolicyImpl implements BanPolicy {
 		}
 		if (lentType == LentType.SHARE) {
 			Long dateDiff = DateUtil.calculateTwoDateDiffAbs(startAt, endedAt);
-			if (dateDiff < PENALTY_DAY_SHARE) {
+			if (dateDiff < cabinetProperties.getPenaltyDayShare()) {
 				return BanType.SHARE;
 			}
 		}
@@ -29,7 +30,7 @@ public class BanPolicyImpl implements BanPolicy {
 	@Override
 	public Date getBanDate(BanType banType, Date endedAt, Date expiredAt) {
 		if (banType == BanType.SHARE) {
-			return DateUtil.addDaysToDate(endedAt, PENALTY_DAY_SHARE);
+			return DateUtil.addDaysToDate(endedAt, cabinetProperties.getPenaltyDayShare());
 		} else {
 			int currentBan = DateUtil.calculateTwoDateDiffAbs(endedAt, expiredAt).intValue();
 			return DateUtil.addDaysToDate(endedAt, currentBan);
