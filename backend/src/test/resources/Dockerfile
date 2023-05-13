@@ -19,6 +19,7 @@ RUN			mkdir -p /database
 RUN			mkdir -p /database/credentials
 
 COPY		./database/ /database/
+COPY    ./my.cnf etc/mysql
 
 RUN			chmod 777 /database/init.sh
 
@@ -26,4 +27,4 @@ ENTRYPOINT	["bash", "/database/init.sh"]
 
 # Command to launch mariadb and enable the database to listen globally
 
-CMD ["mysqld", "--bind-address=0.0.0.0"]
+CMD ["mysqld", "--bind-address=0.0.0.0", "--user=root"]
