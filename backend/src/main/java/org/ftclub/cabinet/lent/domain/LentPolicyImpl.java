@@ -16,16 +16,16 @@ import org.springframework.stereotype.Component;
 public class LentPolicyImpl implements LentPolicy {
 
 	@Value("${cabinet.lent.term.private}")
-	private static Integer LENT_TERM_PRIVATE;
+	private static Integer LENT_TERM_PRIVATE = 21;
 
 	@Value("${cabinet.lent.term.share}")
-	private static Integer LENT_TERM_SHARE;
+	private static Integer LENT_TERM_SHARE = 42;
 
 	@Value("${cabinet.penalty.day.share}")
-	private static Integer PENALTY_DAY_SHARE;
+	private static Integer PENALTY_DAY_SHARE = 3;
 
 	@Value("${cabinet.penalty.day.padding}")
-	private static Integer PENALTY_DAY_PADDING;
+	private static Integer PENALTY_DAY_PADDING = 2;
 
 	@Override
 	public Date generateExpirationDate(Date now, Cabinet cabinet,
@@ -54,9 +54,9 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeHistories,
+	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
 			Date expiredAt) {
-		for (LentHistory lentHistory : beforeHistories) {
+		for (LentHistory lentHistory : beforeActiveHistories) {
 			lentHistory.setExpiredAt(expiredAt);
 		}
 		curHistory.setExpiredAt(expiredAt);
@@ -71,11 +71,11 @@ public class LentPolicyImpl implements LentPolicy {
 		if (userActiveLentCount >= 1) {
 			return LentPolicyStatus.ALREADY_LENT_USER;
 		}
-		if (user.getBlackholedAt().before(new Date())) {
+		if (user.getBlackholedAt().before(DateUtil.getNow())) {
 			return LentPolicyStatus.BLACKHOLED_USER;
 		}
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
-		if (userActiveBanList.size() == 0) {
+		if (userActiveBanList == null || userActiveBanList.size() == 0) {
 			return LentPolicyStatus.FINE;
 		}
 		LentPolicyStatus ret = LentPolicyStatus.FINE;
@@ -118,7 +118,7 @@ public class LentPolicyImpl implements LentPolicy {
 			Long diffDays = DateUtil.calculateTwoDateDiffAbs(
 					cabinetLentHistories.get(0).getExpiredAt(), now);
 			if (diffDays <= getDaysForNearExpiration()) {
-				return LentPolicyStatus.LENT_UNDER_PENALTY_DAY_SHARE;
+				return LentPolicyStatus.IMMINENT_EXPIRATION;
 			}
 		}
 		return LentPolicyStatus.FINE;

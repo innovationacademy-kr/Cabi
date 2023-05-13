@@ -4,10 +4,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 /**
@@ -67,5 +69,13 @@ public class TokenValidator {
 			log.info("JWT 토큰이 잘못되었습니다.");
 		}
 		return false;
+	}
+
+	public JSONObject getPayloadJson(final String token) {
+		final String payloadJWT = token.split("\\.")[1];
+		Base64.Decoder decoder = Base64.getUrlDecoder();
+
+		final String payload = new String(decoder.decode(payloadJWT));
+		return new JSONObject(payload);
 	}
 }

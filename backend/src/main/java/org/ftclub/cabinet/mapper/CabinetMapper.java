@@ -22,10 +22,6 @@ public interface CabinetMapper {
 
 	BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
 
-	//mapping이 안 되는 문제.. 무엇이 이유인지 모르겠어서 리스트로 반환하도록 설정해놓았음.
-//	@Mapping(target = "result", source = "buildingFloors")
-//	BuildingFloorsResponseDto toBuildingFloorsResponseDto(List<BuildingFloorsDto> buildingFloors);
-
 	CabinetInfoResponseDto toCabinetInfoResponseDto(CabinetDto cabinetDto, List<LentDto> lents);
 
 	CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,

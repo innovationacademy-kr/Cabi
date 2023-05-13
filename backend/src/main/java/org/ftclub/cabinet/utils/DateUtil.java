@@ -31,7 +31,7 @@ public class DateUtil {
 	 * @return 문자열 포멧에 맞는 {@link Date}
 	 * @throws RuntimeException 문자열 포멧이 적절하지 않다면 발생시킵니다.
 	 */
-	static public Date stringToDate(String str) {
+	public static Date stringToDate(String str) {
 		boolean matches = Pattern.matches("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$",
 				str);
 		if (!matches) {
@@ -47,7 +47,7 @@ public class DateUtil {
 	 * @param days 더하고 싶은 일 수
 	 * @return date에 days만큼 더한 값을 리턴합니다.
 	 */
-	static public Date addDaysToDate(Date date, int days) {
+	public static Date addDaysToDate(Date date, int days) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.DATE, days);
@@ -62,7 +62,7 @@ public class DateUtil {
 	 * @return str 포멧에 맞는 date에 days만큼 더한 값을 리턴합니다.
 	 * @throws RuntimeException 문자열 포멧이 적절하지 않다면 발생시킵니다.
 	 */
-	static public Date stringToDateAndAddDays(String str, int days) {
+	public static Date stringToDateAndAddDays(String str, int days) {
 		Date date = stringToDate(str);
 		return addDaysToDate(date, days);
 	}
@@ -74,8 +74,29 @@ public class DateUtil {
 	 * @param day2 day2
 	 * @return 두 day 차이의 절댓값
 	 */
-	static public Long calculateTwoDateDiffAbs(Date day1, Date day2) {
+	public static Long calculateTwoDateDiffAbs(Date day1, Date day2) {
 		long diff = day1.getTime() - day2.getTime();
 		return Math.abs(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+	}
+
+	/**
+	 * 두 date의 차이만큼의 day를 리턴합니다.
+	 *
+	 * @param day1 day1
+	 * @param day2 day2
+	 * @return day1 - day2
+	 */
+	public static Long calculateTwoDateDiff(Date day1, Date day2) {
+		long diff = day1.getTime() - day2.getTime();
+		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * 현재 시각을 리턴합니다.
+	 *
+	 * @return 현재 시각에 해당하는 {@link Date}
+	 */
+	public static Date getNow() {
+		return new Date();
 	}
 }
