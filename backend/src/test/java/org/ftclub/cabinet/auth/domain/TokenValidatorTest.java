@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-@SpringBootTest(properties = {"spring.config.location=classpath:application-oauth.yml"})
+@SpringBootTest
 public class TokenValidatorTest {
 
 	@Autowired
