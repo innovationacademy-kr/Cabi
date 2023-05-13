@@ -37,6 +37,11 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	private final LentMapper lentMapper;
 
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * 존재하는 모든 건물들을 가져오고, 각 건물별 층 정보들을 가져옵니다.
+	 */
 	@Override
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
 		List<BuildingFloorsDto> buildingFloors = new ArrayList<>();
@@ -49,6 +54,9 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		return buildingFloors;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
 		if (!cabinetRepository.existsById(cabinetId)) {
@@ -63,6 +71,9 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		return cabinetMapper.toCabinetInfoResponseDto(getCabinet(cabinetId), lentDtos);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor) {
@@ -82,41 +93,65 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetStatus(Long cabinetId, CabinetStatus status) {
 		cabinetService.updateStatus(cabinetId, status);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetLentType(Long cabinetId, LentType lentType) {
 		cabinetService.updateLentType(cabinetId, lentType);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetStatusNote(Long cabinetId, String statusNote) {
 		cabinetService.updateStatusNote(cabinetId, statusNote);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetTitle(Long cabinetId, String title) {
 		cabinetService.updateTitle(cabinetId, title);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetMemo(Long cabinetId, String memo) {
 		cabinetService.updateMemo(cabinetId, memo);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
 		cabinetService.updateGrid(cabinetId, Grid.of(row, col));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum) {
 		cabinetService.updateVisibleNum(cabinetId, visibleNum);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetBundleStatus(List<Long> cabinetIds, CabinetStatus status) {
 		for (Long cabinetId : cabinetIds) {
@@ -124,6 +159,9 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType) {
 		for (Long cabinetId : cabinetIds) {
@@ -131,12 +169,27 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		}
 	}
 
+	/**
+	 * 사물함 정보와 위치 정보를 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 id
+	 * @return 사물함과 위치 정보
+	 * @throws ServiceException 존재하지 않는 사물함인 경우 예외 발생
+	 */
 	public CabinetDto getCabinet(Long cabinetId) {
-		Cabinet cabinet = cabinetRepository.findById(cabinetId).orElseThrow();
-		Location location = cabinetRepository.findLocationById(cabinetId).orElseThrow();
+		Cabinet cabinet = cabinetRepository.findById(cabinetId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+		Location location = cabinetRepository.findLocationById(cabinetId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 		return cabinetMapper.toCabinetDto(location, cabinet);
 	}
 
+	/**
+	 * 사물함들의 정보와 각각의 대여 정보들을 가져옵니다.
+	 *
+	 * @param cabinetIds 사물함 id 리스트
+	 * @return 사물함 정보 리스트
+	 */
 	public List<CabinetInfoResponseDto> getCabinetInfoBundle(List<Long> cabinetIds) {
 		List<CabinetInfoResponseDto> result = new ArrayList<>();
 		for (Long cabinetId : cabinetIds) {

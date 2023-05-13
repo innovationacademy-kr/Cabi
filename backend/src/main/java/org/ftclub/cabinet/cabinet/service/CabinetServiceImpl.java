@@ -17,11 +17,17 @@ public class CabinetServiceImpl implements CabinetService {
 
 	private final CabinetExceptionHandlerService cabinetExceptionHandlerService;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Cabinet getCabinet(Long cabinetId) {
 		return cabinetExceptionHandlerService.getCabinet(cabinetId);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateStatus(Long cabinetId, CabinetStatus status) {
 		if (!status.isValid()) {
@@ -31,6 +37,9 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.specifyStatus(status);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateStatusByUserCount(Long cabinetId, Integer userCount) {
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
@@ -40,12 +49,18 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.specifyStatusByUserCount(userCount);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateMemo(Long cabinetId, String memo) {
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.writeMemo(memo);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateVisibleNum(Long cabinetId, Integer visibleNum) {
 		if (visibleNum < 0) {
@@ -55,18 +70,27 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.assignVisibleNum(visibleNum);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateTitle(Long cabinetId, String title) {
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.writeTitle(title);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateMaxUser(Long cabinetId, Integer maxUser) {
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.specifyMaxUser(maxUser);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateLentType(Long cabinetId, LentType lentType) {
 		if (!lentType.isValid()) {
@@ -76,6 +100,9 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.specifyLentType(lentType);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateGrid(Long cabinetId, Grid grid) {
 		if (!grid.isValid()) {
@@ -85,6 +112,9 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.coordinateGrid(grid);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void updateStatusNote(Long cabinetId, String statusNote) {
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);

@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.cabinet.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.ftclub.testutils.TestControllerUtils.mockRequest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,15 +9,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.junit.Before;
+import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.testutils.TestControllerUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,37 +30,46 @@ public class AdminCabinetControllerTest {
 	@Autowired
 	MockMvc mvc;
 
-	@Before
-	void setUp() {
-		mvc = MockMvcBuilders.standaloneSetup(CabinetController.class)
-				.build();
+	@Autowired
+	JwtProperties jwtProperties;
+
+	String adminToken;
+	Cookie cookie;
+
+	@BeforeEach
+	void setToken() {
+		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey());
+		cookie = TestControllerUtils.getTokenCookie("관리자", adminToken);
 	}
 
 	@Test
 	void 사물함_정보_가져오기() throws Exception {
 		//정상 입력
-		mvc.perform(get("/api/admin/cabinets/{cabinetId}", 1))
+		mvc.perform(mockRequest(HttpMethod.GET, cookie,
+						"/api/admin/cabinets/{cabinetId}", 1))
 				.andExpect(status().isOk());
 
 		//잘못된 입력
-		mvc.perform(get("/api/admin/cabinets/{cabinetId}", "사십이"))
+		mvc.perform(mockRequest(HttpMethod.GET, cookie,
+						"/api/admin/cabinets/{cabinetId}", "사십이"))
 				.andExpect(status().isBadRequest());
-
 	}
 
 	@Test
 	void 사물함_상태_업데이트() throws Exception {
-
 		// 정상 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/status/{status}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie,
+						"/api/admin/cabinets/{cabinetId}/status/{status}",
 						1, "AVAILABLE"))
 				.andExpect(status().isOk());
 
 		// 잘못된 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/status/{status}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie,
+						"/api/admin/cabinets/{cabinetId}/status/{status}",
 						1, "NONE_EXISTS"))
 				.andExpect(status().isBadRequest());
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/status/{status}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie,
+						"/api/admin/cabinets/{cabinetId}/status/{status}",
 						"사십이", CabinetStatus.AVAILABLE))
 				.andExpect(status().isBadRequest());
 	}
@@ -66,15 +77,18 @@ public class AdminCabinetControllerTest {
 	@Test
 	void 사물함_대여_타입_업데이트() throws Exception {
 		// 정상 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/lent-types/{lentType}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie,
+						"/api/admin/cabinets/{cabinetId}/lent-types/{lentType}",
 						1, "PRIVATE"))
 				.andExpect(status().isOk());
 
 		// 잘못된 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/lent-types/{lentType}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie,
+						"/api/admin/cabinets/{cabinetId}/lent-types/{lentType}",
 						1, "NONE_EXISTS"))
 				.andExpect(status().isBadRequest());
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/lent-types/{lentType}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie,
+						"/api/admin/cabinets/{cabinetId}/lent-types/{lentType}",
 						"사십이", "PRVIATE"))
 				.andExpect(status().isBadRequest());
 	}
@@ -89,24 +103,27 @@ public class AdminCabinetControllerTest {
 		String emptyRequestBody = new ObjectMapper().writeValueAsString(emptyRequest);
 
 		// 정상 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/status-note",
-						1)
-						.content(rightRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/status-note",
+								1)
+								.content(rightRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isOk());
 
 		// 잘못된 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/status-note",
-						1)
-						.content(wrongRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/status-note",
+								1)
+								.content(wrongRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 
 		// 빈 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/status-note",
-						1)
-						.content(emptyRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/status-note",
+								1)
+								.content(emptyRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -120,21 +137,21 @@ public class AdminCabinetControllerTest {
 		String emptyRequestBody = new ObjectMapper().writeValueAsString(emptyRequest);
 
 		// 정상 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/title",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/title",
 						1)
 						.content(rightRequestBody)
 						.contentType("application/json"))
 				.andExpect(status().isOk());
 
 		// 잘못된 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/title",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/title",
 						1)
 						.content(wrongRequestBody)
 						.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 
 		// 빈 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/title",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/title",
 						1)
 						.content(emptyRequestBody)
 						.contentType("application/json"))
@@ -153,21 +170,21 @@ public class AdminCabinetControllerTest {
 		String emptyRequestBody = new ObjectMapper().writeValueAsString(emptyRequest);
 
 		// 정상 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/grid",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/grid",
 						1)
 						.content(rightRequestBody)
 						.contentType("application/json"))
 				.andExpect(status().isOk());
 
 		// 잘못된 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/grid",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/grid",
 						1)
 						.content(wrongRequestBody)
 						.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 
 		//빈 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/grid",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/grid",
 						1)
 						.content(emptyRequestBody)
 						.contentType("application/json"))
@@ -184,24 +201,27 @@ public class AdminCabinetControllerTest {
 		String emptyRequestBody = new ObjectMapper().writeValueAsString(emptyRequest);
 
 		// 정상 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/visible-num",
-						1)
-						.content(rightRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/visible-num",
+								1)
+								.content(rightRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isOk());
 
 		// 잘못된 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/visible-num",
-						1)
-						.content(wrongRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/visible-num",
+								1)
+								.content(wrongRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 
 		// 빈 입력
-		mvc.perform(patch("/api/admin/cabinets/{cabinetId}/visible-num",
-						1)
-						.content(emptyRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/{cabinetId}/visible-num",
+								1)
+								.content(emptyRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -216,27 +236,27 @@ public class AdminCabinetControllerTest {
 		String emptyRequestBody = new ObjectMapper().writeValueAsString(emptyRequest);
 
 		// 정상 입력
-		mvc.perform(patch("/api/admin/cabinets/status/{status}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/status/{status}",
 						"AVAILABLE")
 						.content(rightRequestBody)
 						.contentType("application/json"))
 				.andExpect(status().isOk());
 
 		// 잘못된 입력
-		mvc.perform(patch("/api/admin/cabinets/status/{status}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/status/{status}",
 						"AVAILABLE")
 						.content(wrongRequestBody)
 						.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 
-		mvc.perform(patch("/api/admin/cabinets/status/{status}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/status/{status}",
 						"WRONG_STATUS")
 						.content(rightRequestBody)
 						.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 
 		// 빈 입력
-		mvc.perform(patch("/api/admin/cabinets/status/{status}",
+		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/status/{status}",
 						"AVAILABLE")
 						.content(emptyRequestBody)
 						.contentType("application/json"))
@@ -254,30 +274,34 @@ public class AdminCabinetControllerTest {
 		String emptyRequestBody = new ObjectMapper().writeValueAsString(emptyRequest);
 
 		// 정상 입력
-		mvc.perform(patch("/api/admin/cabinets/lent-types/{lentType}",
-						"SHARE")
-						.content(rightRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/lent-types/{lentType}",
+								"SHARE")
+								.content(rightRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isOk());
 
 		// 잘못된 입력
-		mvc.perform(patch("/api/admin/cabinets/lent-types/{lentType}",
-						"SHARE")
-						.content(wrongRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/lent-types/{lentType}",
+								"SHARE")
+								.content(wrongRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 
-		mvc.perform(patch("/api/admin/cabinets/lent-types/{lentType}",
-						"WRONG_TYPE")
-						.content(rightRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/lent-types/{lentType}",
+								"WRONG_TYPE")
+								.content(rightRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 
 		// 빈 입력
-		mvc.perform(patch("/api/admin/cabinets/lent-types/{lentType}",
-						"SHARE")
-						.content(emptyRequestBody)
-						.contentType("application/json"))
+		mvc.perform(
+						mockRequest(HttpMethod.PATCH, cookie, "/api/admin/cabinets/lent-types/{lentType}",
+								"SHARE")
+								.content(emptyRequestBody)
+								.contentType("application/json"))
 				.andExpect(status().isBadRequest());
 	}
 }

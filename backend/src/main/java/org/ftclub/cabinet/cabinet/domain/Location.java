@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 건물, 층, 구역에 대한 정보입니다.
+ */
 @Embeddable
 @NoArgsConstructor
 @EqualsAndHashCode
