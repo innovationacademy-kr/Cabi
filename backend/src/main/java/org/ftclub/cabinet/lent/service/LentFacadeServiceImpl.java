@@ -22,73 +22,73 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class LentFacadeServiceImpl implements LentFacadeService {
 
-	private final LentRepository lentRepository;
-	private final UserExceptionHandlerService userExceptionHandler;
-	private final CabinetExceptionHandlerService cabinetExceptionHandler;
-	private final LentService lentService;
-	private final LentMapper lentMapper;
+    private final LentRepository lentRepository;
+    private final UserExceptionHandlerService userExceptionHandler;
+    private final CabinetExceptionHandlerService cabinetExceptionHandler;
+    private final LentService lentService;
+    private final LentMapper lentMapper;
 
-	@Override
-	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
-			Integer length) {
-		userExceptionHandler.getUser(userId);
-		PageRequest pageable = PageRequest.of(page, length, Sort.by("STARTED_AT"));
-		List<LentHistory> lentHistories = lentRepository.findByUserId(userId, pageable);
-		int totalLength = lentRepository.countUserAllLent(userId);
-		return generateLentHistoryPaginationDto(lentHistories, totalLength);
-	}
+    @Override
+    public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
+            Integer length) {
+        userExceptionHandler.getUser(userId);
+        PageRequest pageable = PageRequest.of(page, length, Sort.by("STARTED_AT"));
+        List<LentHistory> lentHistories = lentRepository.findByUserId(userId, pageable);
+        int totalLength = lentRepository.countUserAllLent(userId);
+        return generateLentHistoryPaginationDto(lentHistories, totalLength);
+    }
 
-	@Override
-	public LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
-			Integer length) {
-		cabinetExceptionHandler.getCabinet(cabinetId);
-		PageRequest pageable = PageRequest.of(page, length, Sort.by("STARTED_AT"));
-		List<LentHistory> lentHistories = lentRepository.findByCabinetId(cabinetId, pageable);
-		int totalLength = lentRepository.countCabinetAllLent(cabinetId);
-		return generateLentHistoryPaginationDto(lentHistories, totalLength);
-	}
+    @Override
+    public LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
+            Integer length) {
+        cabinetExceptionHandler.getCabinet(cabinetId);
+        PageRequest pageable = PageRequest.of(page, length, Sort.by("STARTED_AT"));
+        List<LentHistory> lentHistories = lentRepository.findByCabinetId(cabinetId, pageable);
+        int totalLength = lentRepository.countCabinetAllLent(cabinetId);
+        return generateLentHistoryPaginationDto(lentHistories, totalLength);
+    }
 
-	@Override
-	public List<LentDto> getLentDtoList(Long cabinetId) {
-		cabinetExceptionHandler.getCabinet(cabinetId);
-		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
-		return lentHistories.stream()
-				.map(e -> new LentDto(
-						e.getUserId(),
-						userExceptionHandler.getUser(e.getUserId()).getName(),
-						e.getLentHistoryId(),
-						e.getStartedAt(),
-						e.getExpiredAt()))
-				.collect(Collectors.toList());
-	}
+    @Override
+    public List<LentDto> getLentDtoList(Long cabinetId) {
+        cabinetExceptionHandler.getCabinet(cabinetId);
+        List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+        return lentHistories.stream()
+                .map(e -> new LentDto(
+                        e.getUserId(),
+                        userExceptionHandler.getUser(e.getUserId()).getName(),
+                        e.getLentHistoryId(),
+                        e.getStartedAt(),
+                        e.getExpiredAt()))
+                .collect(Collectors.toList());
+    }
 
-	private LentHistoryPaginationDto generateLentHistoryPaginationDto(
-			List<LentHistory> lentHistories, int totalLength) {
-		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
-				.map(e -> lentMapper.toLentHistoryDto(e,
-						userExceptionHandler.getUser(e.getUserId()),
-						cabinetExceptionHandler.getCabinet(e.getCabinetId())))
-				.collect(Collectors.toList());
-		return new LentHistoryPaginationDto(lentHistoryDto, totalLength);
-	}
+    private LentHistoryPaginationDto generateLentHistoryPaginationDto(
+            List<LentHistory> lentHistories, int totalLength) {
+        List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
+                .map(e -> lentMapper.toLentHistoryDto(e,
+                        userExceptionHandler.getUser(e.getUserId()),
+                        cabinetExceptionHandler.getCabinet(e.getCabinetId())))
+                .collect(Collectors.toList());
+        return new LentHistoryPaginationDto(lentHistoryDto, totalLength);
+    }
 
-	@Override
-	public void startLentCabinet(Long userId, Long cabinetId) {
-		lentService.startLentCabinet(userId, cabinetId);
-	}
+    @Override
+    public void startLentCabinet(Long userId, Long cabinetId) {
+        lentService.startLentCabinet(userId, cabinetId);
+    }
 
-	@Override
-	public void startLentClubCabinet(Long userId, Long cabinetId) {
-		lentService.startLentClubCabinet(userId, cabinetId);
-	}
+    @Override
+    public void startLentClubCabinet(Long userId, Long cabinetId) {
+        lentService.startLentClubCabinet(userId, cabinetId);
+    }
 
-	@Override
-	public void endLentCabinet(Long userId) {
-		lentService.endLentCabinet(userId);
-	}
+    @Override
+    public void endLentCabinet(Long userId) {
+        lentService.endLentCabinet(userId);
+    }
 
-	@Override
-	public void terminateLentCabinet(Long userId) {
-		lentService.terminateLentCabinet(userId);
-	}
+    @Override
+    public void terminateLentCabinet(Long userId) {
+        lentService.terminateLentCabinet(userId);
+    }
 }

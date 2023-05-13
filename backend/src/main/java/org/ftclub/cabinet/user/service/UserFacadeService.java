@@ -1,15 +1,24 @@
 package org.ftclub.cabinet.user.service;
 
 import java.util.Date;
-import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
-import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 
-public interface UserService {
+public interface UserFacadeService {
 
-    /* 동아리일 경우 email은 어떻게 할 지? */
+    MyProfileResponseDto getMyProfile(UserSessionDto user);
+
+    /* 기존 searchByBanUser와 동일한 역할을 합니다. */
+    BlockedUserPaginationDto getAllBanUsers();
+
+    /*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
+    UserProfilePaginationDto getUserProfileListByName(String name);
+
     boolean checkUserExists(String name);
 
     void createUser(String name, String email, Date blackholedAt, UserRole role);
@@ -30,10 +39,5 @@ public interface UserService {
 
     void unbanUser(Long userId);
 
-    // userService에 있는게 맞는지..
-    Long getAccumulateOverdueDaysByUserId(Long userId);
-
     boolean checkUserIsBanned(Long userId);
-
-    List<User> getAllUsers();
 }
