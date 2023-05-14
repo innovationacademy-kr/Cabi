@@ -83,9 +83,9 @@ public class LentExceptionHandlerService {
 			case ALREADY_LENT_USER:
 				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
 			case PRIVATE_BANNED_USER:
-				throw new ServiceException(ExceptionStatus.PRIVATE_BANNED_USER);
+				throw new ServiceException(ExceptionStatus.BAN_USER);
 			case PUBLIC_BANNED_USER:
-				throw new ServiceException(ExceptionStatus.PUBLIC_BANNED_USER);
+				throw new ServiceException(ExceptionStatus.PENALTY_USER);
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			case NOT_USER:

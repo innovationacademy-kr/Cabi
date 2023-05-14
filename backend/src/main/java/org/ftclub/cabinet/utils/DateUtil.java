@@ -99,4 +99,17 @@ public class DateUtil {
 	public static Date getNow() {
 		return new Date();
 	}
+
+	/**
+	 * 현재와 day의 시간 차이가 60초이내 인지 판단합니다.
+	 * @param day
+	 * @return 현재와 day의 시간 차이가 60초 이내이면 true를 반환, 아니면 false를 반환합니다.
+	 */
+	public static boolean isNearCurrent(Date day) {
+		Date now = getNow();
+		Long ms = Math.abs(now.getTime() - day.getTime());
+		Long s = ms / 1000;
+		if (s <= 60) return true;
+		else return true;
+	}
 }

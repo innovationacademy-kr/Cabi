@@ -6,6 +6,8 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.user.domain.BanHistory;
+import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
@@ -88,6 +90,7 @@ class LentServiceImplTest {
 
     Cabinet clubCabinet1;
     Cabinet clubCabinet2;
+
     @BeforeEach
     void beforeEach() {
         banUser1 = em.find(User.class, 1L);
@@ -127,153 +130,356 @@ class LentServiceImplTest {
         sharedBrokenCabinet = em.find(Cabinet.class, 2L);
         sharedFullCabinet = em.find(Cabinet.class, 4L);
         sharedOverdueCabinet = em.find(Cabinet.class, 6L);
-        sharedAvailableCabinet0 = em.find(Cabinet.class, 8L); // 변수명 뒤에 숫자는 대여 카운트 값
-        sharedAvailableCabinet1 = em.find(Cabinet.class, 12L); // 변수명 뒤에 숫자는 대여 카운트 값
-        sharedAvailableCabinet2 = em.find(Cabinet.class, 14L); // 변수명 뒤에 숫자는 대여 카운트 값
-        sharedLimitedAvailableCabinet1 = em.find(Cabinet.class, 16L); // 변수명 뒤에 숫자는 대여 카운트 값
-        sharedLimitedAvailableCabinet2 = em.find(Cabinet.class, 18L); // 변수명 뒤에 숫자는 대여 카운트 값
+        sharedAvailableCabinet0 = em.find(Cabinet.class, 8L); // 변수명 뒤에 숫자는 activeLentCount 값
+        sharedAvailableCabinet1 = em.find(Cabinet.class, 12L); // 변수명 뒤에 숫자는 activeLentCount 값
+        sharedAvailableCabinet2 = em.find(Cabinet.class, 14L); // 변수명 뒤에 숫자는 activeLentCount 값
+        sharedLimitedAvailableCabinet1 = em.find(Cabinet.class, 16L); // 변수명 뒤에 숫자는 activeLentCount 값
+        sharedLimitedAvailableCabinet2 = em.find(Cabinet.class, 18L); // 변수명 뒤에 숫자는 activeLentCount 값
 
         clubCabinet1 = em.find(Cabinet.class, 9L);
         clubCabinet2 = em.find(Cabinet.class, 10L);
     }
-
-    @AfterEach
-    void afterEach() throws NoSuchFieldException {
-    }
-
-    // 대여
-    @Test
-    @DisplayName("사물함 대여 가능한 사용자는 available, limited_available 상태의 사물함을 빌릴 수 있습니다 ")
-    void generalLentSituation() {
+    @Test @DisplayName("사물함 대여 가능한 사용자는 available 상태의 사물함을 빌릴 수 있습니다 ")
+    void generalLentSituation1() {
         // given
         int lentCountBefore = lentRepository.countUserActiveLent(normalUser1.getUserId());
         // when
         lentService.startLentCabinet(normalUser1.getUserId(), privateAvailableCabinet1.getCabinetId());
         // then
         int lentCountAfter = lentRepository.countUserActiveLent(normalUser1.getUserId());
-        LentHistory lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(normalUser1.getUserId()).orElseThrow(() -> new RuntimeException());
+        LentHistory lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(normalUser1.getUserId()).orElse(null);
+        assertNotNull(lentHistory);
         Assertions.assertEquals(lentCountAfter, lentCountBefore + 1L);
         Assertions.assertEquals(CabinetStatus.FULL, privateAvailableCabinet1.getStatus());
         Assertions.assertNotNull(lentRepository.findFirstByUserIdAndEndedAtIsNull(normalUser1.getUserId()).orElse(null));
     }
 
+    @Test @DisplayName("사물함 대여 가능한 사용자는 limited_available 상태의 사물함을 빌릴 수 있습니다 ")
+    void generalLentSituation2() {
+        // given
+        Long userId = normalUser1.getUserId();
+        Cabinet cabinet = sharedLimitedAvailableCabinet2;
+        Long cabinetId = cabinet.getCabinetId();
+        int activeLentCountBefore = lentRepository.countUserActiveLent(userId);
+        // when
+        lentService.startLentCabinet(userId, cabinetId);
+        // then
+        int activeLentCountAfter = lentRepository.countUserActiveLent(userId);
+        LentHistory lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(userId).orElse(null);
+        assertNotNull(lentHistory);
+        Assertions.assertEquals(activeLentCountAfter, activeLentCountBefore + 1L);
+        Assertions.assertEquals(CabinetStatus.FULL, cabinet.getStatus());
+        Assertions.assertNotNull(lentRepository.findFirstByUserIdAndEndedAtIsNull(userId).orElse(null));
+    }
     @Test @DisplayName("대여자는 또 다른 사물함을 빌릴 수 없습니다.")
     void alreadyLentUserSituation() {
         // given
         Long userId = lentUser1.getUserId();
+        Long cabinetId1 = privateAvailableCabinet1.getCabinetId();
+        Long cabinetId2 = sharedAvailableCabinet0.getCabinetId();
+        // when
+        ServiceException serviceException1 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId1));
+        ServiceException serviceException2 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId2));
+        // then
+        assertEquals(ExceptionStatus.LENT_ALREADY_EXISTED, serviceException1.getStatus());
+        assertEquals(ExceptionStatus.LENT_ALREADY_EXISTED, serviceException2.getStatus());
+    }
+
+    @Test @DisplayName("사물함이 빌릴 수 없는 상태이면 대여 실패 해야합니다(FULL, BROKEN, OVERDUE)")
+    void startLentAlreadyLentCabinet() {
+        // given
+        Long userId = normalUser1.getUserId();
+        Long cabinetId1 = privateBrokenCabinet.getCabinetId();
+        Long cabinetId2 = privateOverdueCabinet.getCabinetId();
+        Long cabinetId3 = privateFullCabinet.getCabinetId();
+        Long cabinetId4 = sharedBrokenCabinet.getCabinetId();
+        Long cabinetId5 = sharedOverdueCabinet.getCabinetId();
+        Long cabinetId6 = sharedFullCabinet.getCabinetId();
+        // when
+        ServiceException serviceException1 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId1));
+        ServiceException serviceException2 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId2));
+        ServiceException serviceException3 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId3));
+        ServiceException serviceException4 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId4));
+        ServiceException serviceException5 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId5));
+        ServiceException serviceException6 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId6));
+        // then
+        assertEquals(ExceptionStatus.LENT_BROKEN, serviceException1.getStatus());
+        assertEquals(ExceptionStatus.LENT_EXPIRED, serviceException2.getStatus());
+        assertEquals(ExceptionStatus.LENT_FULL, serviceException3.getStatus());
+        assertEquals(ExceptionStatus.LENT_BROKEN, serviceException4.getStatus());
+        assertEquals(ExceptionStatus.LENT_EXPIRED, serviceException5.getStatus());
+        assertEquals(ExceptionStatus.LENT_FULL, serviceException6.getStatus());
+    }
+
+    @Test @DisplayName("존재하지 않는 유저 번호로 렌트를 시도하면 예외가 발생해야 합니다")
+    void invalidStartLent1() {
+        // given
+        Long userId = normalUser1.getUserId();
+        Long invalidCabinetId = -1L;
+        Long maxCabinetId = (Long) em.createQuery("select max(c.cabinetId) from Cabinet c").getSingleResult();
+        // when
+        ServiceException serviceException1 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, invalidCabinetId));
+        ServiceException serviceException2 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, maxCabinetId + 1L));
+        // then
+        assertEquals(ExceptionStatus.NOT_FOUND_CABINET, serviceException1.getStatus());
+        assertEquals(ExceptionStatus.NOT_FOUND_CABINET, serviceException2.getStatus());
+    }
+    @Test @DisplayName("존재하지 않는 사물함 번호로 렌트를 시도하면 예외가 발생해야 합니다")
+    void invalidStartLent2() {
+        // given
+        Long invalidUserId = -1L;
+        Long maxUserId = (Long) em.createQuery("select max(u.userId) from User u").getSingleResult();
         Long cabinetId = privateAvailableCabinet1.getCabinetId();
+        // when
+        ServiceException serviceException1 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(invalidUserId, cabinetId));
+        ServiceException serviceException2 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(maxUserId + 1, cabinetId));
+        // then
+        assertEquals(ExceptionStatus.NOT_FOUND_USER, serviceException1.getStatus());
+        assertEquals(ExceptionStatus.NOT_FOUND_USER, serviceException2.getStatus());
+    }
+    @Test @DisplayName("대여자가 개인 사물함 정상 반납하면 lentHistory.endedAt 값 업데이트 됩니다")
+    void generalEndSituation1() throws InterruptedException {
+        // given
+        Long userId = normalUser1.getUserId();
+        Long cabinetId = privateAvailableCabinet1.getCabinetId();
+        // when
+        lentService.startLentCabinet(userId, cabinetId);
+        lentService.endLentCabinet(userId);
+        List<LentHistory> lentHistoryList = lentRepository.findByUserId(userId, null);
+        // then
+        for (LentHistory lentHistory : lentHistoryList) {
+            assertNotNull(lentHistory.getEndedAt());
+        }
+    }
+    @Test @DisplayName("대여자가 개인 사물함 정상 반납하면 banHistory에 등록되지 않습니다")
+    void generalEndSituation2() throws InterruptedException {
+        // given
+        Long userId = normalUser1.getUserId();
+        Long cabinetId = privateAvailableCabinet1.getCabinetId();
+        // when
+        lentService.startLentCabinet(userId, cabinetId);
+        Long before = banHistoryRepository.countUserActiveBan(userId);
+        lentService.endLentCabinet(userId);
+        Long after = banHistoryRepository.countUserActiveBan(userId);
+        // then
+        assertEquals(before, after);
+    }
+
+    @Test @DisplayName("대여자가 공유 사물함 정상 반납하면 lentHistory.endedAt 값 업데이트 됩니다")
+    void generalEndSituation3() throws InterruptedException {
+        // given
+        Long userId = normalUser1.getUserId();
+        Long cabinetId = sharedAvailableCabinet0.getCabinetId();
+        // when
+        lentService.startLentCabinet(userId, cabinetId);
+        lentService.endLentCabinet(userId);
+        List<LentHistory> lentHistoryList = lentRepository.findByUserId(userId, null);
+        // then
+        for (LentHistory lentHistory : lentHistoryList) {
+            assertNotNull(lentHistory.getEndedAt());
+        }
+    }
+    @Test @DisplayName("대여자가 공유 사물함 정상 반납하면 banHistory에 등록되지 않습니다")
+    void generalEndSituation4() throws InterruptedException {
+        // given
+        Long userId = normalUser1.getUserId();
+        Long cabinetId = sharedAvailableCabinet0.getCabinetId();
+        // when
+        lentService.startLentCabinet(userId, cabinetId);
+        Long before = banHistoryRepository.countUserActiveBan(userId);
+        lentService.endLentCabinet(userId);
+        Long after = banHistoryRepository.countUserActiveBan(userId);
+        // then
+        assertEquals(before, after);
+    }
+    @Test @DisplayName("존재하지 않는 유저 번호로 반납을 시도하면 예외가 발생해야 합니다")
+    void invalidEndLent1() {
+        // given
+        Long invalidUserId = -1L;
+        Long maxUserId = (Long) em.createQuery("select max(u.userId) from User u").getSingleResult();
+        // when
+        ServiceException serviceException1 = assertThrows(ServiceException.class, () -> lentService.endLentCabinet(invalidUserId));
+        ServiceException serviceException2 = assertThrows(ServiceException.class, () -> lentService.endLentCabinet(maxUserId + 1));
+        // then
+        assertEquals(ExceptionStatus.NOT_FOUND_USER, serviceException1.getStatus());
+        assertEquals(ExceptionStatus.NOT_FOUND_USER, serviceException2.getStatus());
+    }
+    @Test @DisplayName("대여자가 아님에도 반납을 시도하면 예외가 발생해야 합니다")
+    void invalidEndLent2() {
+        // given
+        Long userId = normalUser1.getUserId();
+        // when
+        ServiceException serviceException1 = assertThrows(ServiceException.class, () -> lentService.endLentCabinet(userId));
+        // then
+        assertEquals(ExceptionStatus.NO_LENT_CABINET, serviceException1.getStatus());
+    }
+    @Testable @DisplayName("대여자가 개인사물함 혹은 공유사물함 연체반납. BAN")
+    void delayedEndLent() {
+        // given
+        Long userId = overdueUser.getUserId();
+        // when
+        lentService.endLentCabinet(userId);
+        BanHistory banHistory = banHistoryRepository.findFirstBanHistory(userId);
+        // then
+        assertNotNull(banHistory);
+        assertEquals(BanType.PRIVATE, banHistory.getBanType());
+    }
+    @Testable @DisplayName("공유사물함을 빌리고 3일이내에 반납. penalty")
+    void tooEarlyEndLentSharedCabinet() {
+        // given
+        Long userId = normalUser1.getUserId();
+        Long cabinetId = sharedAvailableCabinet0.getCabinetId();
+        // when
+        lentService.startLentCabinet(userId, cabinetId);
+        lentService.endLentCabinet(userId);
+        List<BanHistory> userBanList = banHistoryRepository.findUserActiveBanList(userId);
+        // then
+        assertEquals(1, userBanList.size());
+        assertEquals(BanType.SHARE, userBanList.get(0).getBanType());
+    }
+
+    @Test @DisplayName("현재 ban 상태인 유저는 모든 종류의 사물함을 대여할 수 없습니다.")
+    public void banUserLentCabinet() throws Exception {
+        // given
+        Long userId = banUser1.getUserId();
+        BanHistory userBanHistory = banHistoryRepository.findFirstBanHistory(userId);
+        objectSetValue(userBanHistory, "unbannedAt", DateUtil.getInfinityDate());
+        Long sharedCabinetId = sharedAvailableCabinet0.getCabinetId();
+        Long privateCabinetId = privateAvailableCabinet1.getCabinetId();
+        // when
+        ServiceException serviceException1 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, sharedCabinetId));
+        ServiceException serviceException2 = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, privateCabinetId));
+        // then
+        assertEquals(ExceptionStatus.BAN_USER, serviceException1.getStatus());
+        assertEquals(ExceptionStatus.BAN_USER, serviceException2.getStatus());
+    }
+    @Test @DisplayName("현재 penalty 상태인 유저는 개인 사물함을 대여할 수 있습니다.")
+    public void penaltyUserLentCabinet1() throws Exception {
+        // given
+        Long userId = penaltyUser1.getUserId();
+        BanHistory userBanHistory = banHistoryRepository.findFirstBanHistory(userId);
+        objectSetValue(userBanHistory, "unbannedAt", DateUtil.getInfinityDate());
+        Long cabinetId = privateAvailableCabinet1.getCabinetId();
+        // when
+        assertDoesNotThrow(() -> lentService.startLentCabinet(userId, cabinetId));
+        // then
+    }
+
+    @Test @DisplayName("현재 penalty 상태인 유저는 공유 사물함을 대여할 수 없습니다.")
+    public void penaltyUserLentCabinet2() throws Exception {
+        // given
+        Long userId = penaltyUser1.getUserId();
+        BanHistory userBanHistory = banHistoryRepository.findFirstBanHistory(userId);
+        objectSetValue(userBanHistory, "unbannedAt", DateUtil.getInfinityDate());
+        Long cabinetId = sharedAvailableCabinet0.getCabinetId();
         // when
         ServiceException serviceException = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId, cabinetId));
         // then
-        assertEquals(ExceptionStatus.LENT_ALREADY_EXISTED, serviceException.getStatus());
+        assertEquals(ExceptionStatus.PENALTY_USER, serviceException.getStatus());
     }
-
-    @Testable @DisplayName("PRIVATE 사물함이 이미 대여중이면, 더 이상 대여할 수 없습니다. ")
-    void alreadyLentCabinetSituation() {
-    }
-
-    @Testable @DisplayName("사물함이 빌릴 수 없는 상태이면 대여 실패 해야합니다(FULL, BROKEN, OVERDUE)")
-    void startLentWithAlreadyLentCabinet() {
-    }
-
-    @Testable
-    @DisplayName("존재하지 않는 유저 번호나 사물함 번호로 렌트를 시도하면 예외가 발생해야 합니다")
-    void invalidUserOrCabinetStartLent() {
-    }
-
-
-    // 반납
-    @Testable @DisplayName("대여자가 정상 반납한다.(연체반납X, 공유사물함3일이내반납X)")
-    void generalEndSituation() throws InterruptedException {
-    }
-
-    @Testable @DisplayName("대여자가 개인사물함 혹은 공유사물함 연체반납. 밴을 받아야 합니다.")
-    void userOverdueEndLentAboutPrivateOrPublicCabinet() {
-
-    }
-
-    @Testable @DisplayName("유저가 available 상태의 shared cabinet을 렌트. 3일이내 반납시 페널티를 받아야 합니다.")
-    void userIllegalEndLentAboutSharedCabinet() {
-
-    }
-
-    @Testable @DisplayName("현재 ban 상태인 유저는 사물함을 대여할 수 없습니다.")
-    public void banUserCannotLentCabinet() throws Exception {
-        // given
-        // when
-        // then
-    }
-
-    @Testable @DisplayName("대여자가 공유사물함을 빌리고 3일이내에 반납. SHARE BAN.")
-    void tooEarlyEndLentAboutSharedCabinet() {
-
-    }
-
-    // available -> full
-    @Test @DisplayName("유저가 available 상태의 shared cabinet을 렌트합니다. cabinet의 status, expired_at, ended_at 값이 적절히 변경돼야 합니다.")
+    @Test @DisplayName("available -> full")
     void sharedCabinetProperStatus1() {
         // given
         Long userId1 = normalUser1.getUserId();
         Long userId2 = normalUser2.getUserId();
         Long userId3 = normalUser3.getUserId();
-        Long cabinetId = sharedAvailableCabinet1.getCabinetId();
         Cabinet cabinet = sharedAvailableCabinet1;
+        Long cabinetId = cabinet.getCabinetId();
         // when
         lentService.startLentCabinet(userId1, cabinetId);
         assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
-        List<LentHistory> activeLentHistory = lentRepository.findAllActiveLentByCabinetId(cabinetId);
-        for (LentHistory lentHistory : activeLentHistory) assertEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
+        assertEquals(2, lentRepository.countCabinetActiveLent(cabinetId));
+        List<LentHistory> activeLentHistoryList = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+        for (LentHistory lentHistory : activeLentHistoryList)
+            assertEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
 
         lentService.endLentCabinet(userId1);
         assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
+        assertEquals(1, lentRepository.countCabinetActiveLent(cabinetId));
 
         lentService.startLentCabinet(userId2, cabinetId);
         assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
+        assertEquals(2, lentRepository.countCabinetActiveLent(cabinetId));
+        activeLentHistoryList = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+        for (LentHistory lentHistory : activeLentHistoryList)
+            assertEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
 
         lentService.startLentCabinet(userId3, cabinetId);
         assertEquals(CabinetStatus.FULL, cabinet.getStatus());
-        activeLentHistory = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+        assertEquals(3, lentRepository.countCabinetActiveLent(cabinetId));
+        activeLentHistoryList = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+        for (LentHistory lentHistory : activeLentHistoryList)
+            assertNotEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
         // then
-        for (LentHistory lentHistory : activeLentHistory) assertNotEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
     }
-
-    // full -> limited_available -> full -> available
-    @Test @DisplayName("유저가 available 상태의 shared cabinet을 렌트합니다. cabinet의 status, expired_at, ended_at 값이 적절히 변경돼야 합니다.")
+    @Test @DisplayName("full -> limited_available -> full -> available")
     void sharedCabinetProperStatus2() {
         // given
         Long userId1 = normalUser1.getUserId();
         Long userId2 = normalUser2.getUserId();
         Long userId3 = normalUser3.getUserId();
         Long userId4 = normalUser4.getUserId();
-
-        Long cabinetId = sharedAvailableCabinet0.getCabinetId();
         Cabinet cabinet = sharedAvailableCabinet0;
+        Long cabinetId = cabinet.getCabinetId();
         lentService.startLentCabinet(userId1, cabinetId);
         lentService.startLentCabinet(userId2, cabinetId);
         lentService.startLentCabinet(userId3, cabinetId);
         assertEquals(CabinetStatus.FULL, cabinet.getStatus());
-        List<LentHistory> activeLentHistory = lentRepository.findAllActiveLentByCabinetId(cabinetId);
-        for (LentHistory lentHistory : activeLentHistory) assertNotEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
+        List<LentHistory> activeLentHistoryList = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+        for (LentHistory lentHistory : activeLentHistoryList)
+            assertNotEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
         // when
         lentService.endLentCabinet(userId1);
         assertEquals(CabinetStatus.LIMITED_AVAILABLE, cabinet.getStatus());
+        assertEquals(2, lentRepository.countCabinetActiveLent(cabinetId));
 
         lentService.startLentCabinet(userId4, cabinetId);
         assertEquals(CabinetStatus.FULL, cabinet.getStatus());
+        assertEquals(3, lentRepository.countCabinetActiveLent(cabinetId));
         LentHistory latestLentHistory = lentRepository.findFirstByCabinetIdAndEndedAtIsNull(cabinetId).orElse(null);
-        activeLentHistory = lentRepository.findAllActiveLentByCabinetId(cabinetId);
-        for (LentHistory lentHistory : activeLentHistory) assertEquals(latestLentHistory.getExpiredAt(), lentHistory.getExpiredAt());
+        activeLentHistoryList = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+        for (LentHistory lentHistory : activeLentHistoryList)
+            assertEquals(latestLentHistory.getExpiredAt(), lentHistory.getExpiredAt());
 
         lentService.endLentCabinet(userId2);
         lentService.endLentCabinet(userId3);
         lentService.endLentCabinet(userId4);
-        assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
-
         // then
+        assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
+        assertEquals(0, lentRepository.countCabinetActiveLent(cabinetId));
+        List<LentHistory> cabinetAllLentHistory = lentRepository.findByCabinetId(cabinetId, null);
+        for (LentHistory lentHistory : cabinetAllLentHistory)
+            assertTrue(DateUtil.isNearCurrent(lentHistory.getEndedAt()));
     }
 
-    @Testable @DisplayName("공유 사물함을 빌린 뒤 인원수가 MAX-USER 값을 초과하지 않습니다")
-    void startLentPublicCabinetMaxUserLimit() {
+    @Test @DisplayName("캐비넷 상태가 overdue일 때, 반납이 모두 이루어져야 available 상태로 바뀝니다.")
+    void overdueCabinetStatus() throws Exception {
+        // given
+        Long userId1 = normalUser1.getUserId();
+        Long userId2 = normalUser2.getUserId();
+        Long userId3 = normalUser3.getUserId();
+        Long userId4 = normalUser4.getUserId();
+        Cabinet cabinet = sharedAvailableCabinet0;
+        Long cabinetId = cabinet.getCabinetId();
+        lentService.startLentCabinet(userId1, cabinetId);
+        lentService.startLentCabinet(userId2, cabinetId);
+        lentService.startLentCabinet(userId3, cabinetId);
+        List<LentHistory> cabinetAllLentHistory = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+        for (LentHistory lentHistory : cabinetAllLentHistory)
+            objectSetValue(lentHistory, "expiredAt", DateUtil.stringToDate("2020-01-01"));
+        objectSetValue(cabinet, "status", CabinetStatus.OVERDUE);
+        // when
+        lentService.endLentCabinet(userId1);
+        assertEquals(CabinetStatus.OVERDUE, cabinet.getStatus());
 
+        lentService.endLentCabinet(userId2);
+        assertEquals(CabinetStatus.OVERDUE, cabinet.getStatus());
+
+        ServiceException serviceException = assertThrows(ServiceException.class, () -> lentService.startLentCabinet(userId4, cabinetId));
+        assertEquals(ExceptionStatus.LENT_EXPIRED, serviceException.getStatus());
+
+        lentService.endLentCabinet(userId3);
+        // then
+        assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
     }
 }

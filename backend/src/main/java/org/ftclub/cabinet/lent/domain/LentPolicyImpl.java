@@ -74,7 +74,6 @@ public class LentPolicyImpl implements LentPolicy {
 		if (user.getBlackholedAt().before(DateUtil.getNow())) {
 			return LentPolicyStatus.BLACKHOLED_USER;
 		}
-		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
 		if (userActiveBanList == null || userActiveBanList.size() == 0) {
 			return LentPolicyStatus.FINE;
 		}
@@ -98,7 +97,6 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public LentPolicyStatus verifyCabinetForLent(Cabinet cabinet,
 			List<LentHistory> cabinetLentHistories, Date now) {
-		// 빌릴 수 있는지 검증. 빌릴 수 없으면 return lentPolicyDto;
 		switch (cabinet.getStatus()) {
 			case FULL:
 				return LentPolicyStatus.FULL_CABINET;
