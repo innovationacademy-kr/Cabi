@@ -19,4 +19,8 @@ public class ServiceException extends RuntimeException {
     public ServiceException(ExceptionStatus status) {
         this.status = status;
     }
+
+    public ExceptionStatus getStatus() {
+        return status;
+    }
 }

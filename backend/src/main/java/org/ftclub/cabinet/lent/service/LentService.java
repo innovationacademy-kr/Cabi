@@ -1,29 +1,37 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.util.List;
-import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentHistoryDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-
+/**
+ * 대여 관련된 서비스
+ */
 public interface LentService {
 
+	/**
+	 * 사물함 대여를 합니다.
+	 *
+	 * @param userId    대여하려는 일반 user id
+	 * @param cabinetId 대여하려는 cabinet id
+	 */
 	void startLentCabinet(Long userId, Long cabinetId);
 
+	/**
+	 * 동아리 사물함 대여를 합니다.
+	 *
+	 * @param userId    대여하려는 동아리 user id
+	 * @param cabinetId 대여하려는 동아리 cabinet id
+	 */
 	void startLentClubCabinet(Long userId, Long cabinetId);
 
+	/**
+	 * 사물함을 반납 합니다. 유저가 정책에 따라 벤이 될 수 있습니다.
+	 *
+	 * @param userId 반납하려는 user id
+	 */
 	void endLentCabinet(Long userId);
 
-    void terminateLentCabinet(Long userId);
-
-
-    /* TODO: admin 관련한 read 메서드들 추가 */
-
-    LentHistoryDto getActiveLentInfo();
-
-    List<LentHistoryDto> getAllActiveLentInfo();
-
-    LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page, Integer length);
-
-    LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
-            Integer length);
+	/**
+	 * 사물함을 강제 반납 합니다. 유저가 벤이 되진 않습니다
+	 *
+	 * @param userId 반납하려는 user id
+	 */
+	void terminateLentCabinet(Long userId);
 }

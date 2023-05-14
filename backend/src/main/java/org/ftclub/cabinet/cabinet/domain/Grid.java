@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 사물함이 실제로 구역에서 위치한 행과 열입니다.
+ */
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
