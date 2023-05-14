@@ -2,14 +2,17 @@ package org.ftclub.cabinet.lent.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
+import org.ftclub.cabinet.dto.LentHistoryWithNameExpiredAtDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
@@ -30,6 +33,7 @@ public class LentServiceImpl implements LentService {
     private final UserService userService;
     private final CabinetService cabinetService;
     private final BanHistoryRepository banHistoryRepository;
+    private final LentMapper lentMapper;
 
     @Override
     public void startLentCabinet(Long userId, Long cabinetId) {
@@ -92,5 +96,15 @@ public class LentServiceImpl implements LentService {
         lentHistory.endLent(now);
         cabinetService.updateStatusByUserCount(lentHistory.getCabinetId(), activeLentCount - 1);
         return lentHistory;
+    }
+
+    public List<LentHistoryWithNameExpiredAtDto> getAllLentHistoryWithNameExpired() {
+        List<LentHistory> lentHistories = lentRepository.findAllActiveLent();
+        List<LentHistoryWithNameExpiredAtDto> lentHistoryWithExpiredAtDtoList = lentHistories.stream()
+                .map(e -> lentMapper.toLentHistoryWithExpiredAtDto(e,
+                        userExceptionHandler.getUser(e.getUserId()),
+                        cabinetExceptionHandler.getCabinet(e.getCabinetId())))
+                .collect(Collectors.toList());
+        return lentHistoryWithExpiredAtDtoList;
     }
 }

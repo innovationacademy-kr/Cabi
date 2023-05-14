@@ -2,10 +2,10 @@ package org.ftclub.cabinet.utils.scheduler;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.LentHistoryDto;
+import org.ftclub.cabinet.dto.LentHistoryWithNameExpiredAtDto;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
-import org.ftclub.cabinet.utils.overdue.checker.OverdueChecker;
+import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class SystemScheduler {
 
     private final LeaveAbsenceManager leaveAbsenceManager;
-    private final OverdueChecker overdueChecker;
+    private final OverdueManager overdueManager;
     private final LentService lentService;
 
     /**
@@ -27,11 +27,14 @@ public class SystemScheduler {
      */
     // Every Midnight
     @Scheduled(cron = "0 0 0 * * *")
+    // // 서버 가동 후 10초 뒤에 실행
+    // @Scheduled(initialDelay = 3000, fixedDelay = Long.MAX_VALUE)
     public void checkAllLents() {
-        List<LentHistoryDto> lentList = lentService.getAllActiveLentInfo();
-        for (LentHistoryDto lent : lentList) {
-            this.overdueChecker.handleOverdue(lent);
-            this.leaveAbsenceManager.handleLeaveAbsence(lent);
+        List<LentHistoryWithNameExpiredAtDto> lents = this.lentService.getAllLentHistoryWithNameExpired();
+
+        for (LentHistoryWithNameExpiredAtDto lent : lents) {
+            this.overdueManager.handleOverdue(lent);
+//            this.leaveAbsenceManager.handleLeaveAbsence(lent);
             // 2초 간격으로 대여 검증
             try {
                 Thread.sleep(2000);

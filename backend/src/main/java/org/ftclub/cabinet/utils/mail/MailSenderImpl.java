@@ -19,7 +19,7 @@ public class MailSenderImpl implements MailSender {
     private final TemplateEngine templateEngine;
     private final GmailProperties gmailProperties;
 
-    public void sendMail(String to, String subject, String template)
+    public void sendMail(String name, String to, String subject, String template)
             throws MessagingException, IOException {
         if (gmailProperties.getIsProduction() == false) {
             System.out.println("Mail is not sent because of development environment.");
@@ -29,11 +29,11 @@ public class MailSenderImpl implements MailSender {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
         helper.setFrom(gmailProperties.getUsername());
-        helper.setTo(to + "@student.42seoul.kr");
+        helper.setTo(to);
         helper.setSubject(subject);
 
         Context context = new Context();
-        context.setVariable("name", to);
+        context.setVariable("name", name);
 
         String htmlContent = this.templateEngine.process(template, context);
         helper.setText(htmlContent, true);

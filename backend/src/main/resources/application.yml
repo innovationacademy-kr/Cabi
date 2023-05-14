@@ -1,6 +1,8 @@
 spring:
   config:
-    import: classpath:application-oauth.yml
+    import:
+      - classpath:application-oauth.yml
+      - classpath:application-mail.yml
   profiles:
     default: local
   jpa:
@@ -19,6 +21,6 @@ cabinet:
       share: 3
       padding: 2
 overdue:
-    term:
-      soonoverdue: -1
-      overdue: 1
+  term:
+    soonoverdue: -1
+    overdue: 1
