@@ -3,6 +3,8 @@ package org.ftclub.cabinet.user.service;
 import java.util.Date;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -11,33 +13,37 @@ import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserFacadeService {
 
-    MyProfileResponseDto getMyProfile(UserSessionDto user);
+	MyProfileResponseDto getMyProfile(UserSessionDto user);
 
-    /* 기존 searchByBanUser와 동일한 역할을 합니다. */
-    BlockedUserPaginationDto getAllBanUsers();
+	/* 기존 searchByBanUser와 동일한 역할을 합니다. */
+	BlockedUserPaginationDto getAllBanUsers();
 
-    /*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
-    UserProfilePaginationDto getUserProfileListByName(String name);
+	/*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
+	UserProfilePaginationDto getUserProfileListByName(String name);
 
-    boolean checkUserExists(String name);
+	LentHistoryPaginationDto getUserLentHistories(Long userId, Integer page, Integer length);
 
-    void createUser(String name, String email, Date blackholedAt, UserRole role);
+	MyCabinetInfoResponseDto getMyLentAndCabinetInfo(Long userId);
 
-    boolean checkAdminUserExists(String email);
+	boolean checkUserExists(String name);
 
-    void createAdminUser(String email);
+	void createUser(String name, String email, Date blackholedAt, UserRole role);
 
-    void deleteUser(Long userId);
+	boolean checkAdminUserExists(String email);
 
-    void deleteAdminUser(Long adminUserId);
+	void createAdminUser(String email);
 
-    void updateAdminUserRole(Long adminUserId, AdminRole role);
+	void deleteUser(Long userId);
 
-    void updateUserBlackholedAtById(Long userId, Date newBlackholedAt);
+	void deleteAdminUser(Long adminUserId);
 
-    void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
+	void updateAdminUserRole(Long adminUserId, AdminRole role);
 
-    void unbanUser(Long userId);
+	void updateUserBlackholedAtById(Long userId, Date newBlackholedAt);
 
-    boolean checkUserIsBanned(Long userId);
+	void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
+
+	void unbanUser(Long userId);
+
+	boolean checkUserIsBanned(Long userId);
 }
