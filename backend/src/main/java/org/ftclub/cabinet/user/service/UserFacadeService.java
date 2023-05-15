@@ -6,6 +6,7 @@ import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
@@ -19,7 +20,11 @@ public interface UserFacadeService {
 	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer length);
 
 	/*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
-	UserProfilePaginationDto getUserProfileListByName(String name, Integer page, Integer length);
+	UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
+			Integer length);
+
+	UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
+			Integer length);
 
 	LentHistoryPaginationDto getUserLentHistories(Long userId, Integer page, Integer length);
 

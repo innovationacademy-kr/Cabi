@@ -5,6 +5,7 @@ import org.ftclub.cabinet.auth.AuthGuard;
 import org.ftclub.cabinet.auth.AuthGuard.Level;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,18 +25,19 @@ public class AdminUserController {
 	/* 노션에는 /search/users/{name}으로 쓰여져 있는데 혹시 어떤 게 더 좋을까요? */
 	@GetMapping("/search/users/name/{name}")
 	@AuthGuard(level = Level.ADMIN_ONLY)
-	public UserProfilePaginationDto getUserProfileByName(@PathVariable("name") String name,
+	public UserProfilePaginationDto getUserProfileListByPartialName(
+			@PathVariable("name") String name,
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
-		return userFacadeService.getUserProfileListByName(name, page, length);
+		return userFacadeService.getUserProfileListByPartialName(name, page, length);
 	}
 
-//  보류
-//	@GetMapping("/search/users")
-//	@AuthGuard(level = Level.ADMIN_ONLY)
-//	public findByPartialName(@RequestParam("name") String name,
-//			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
-//		return userFacadeService.getUserProfileListByName(name, page, length);
-//	}
+	@GetMapping("/search/users")
+	@AuthGuard(level = Level.ADMIN_ONLY)
+	public UserCabinetPaginationDto findUserCabinetListByPartialName(
+			@RequestParam("name") String name,
+			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
+		return userFacadeService.findUserCabinetListByPartialName(name, page, length);
+	}
 
 	@GetMapping("/search/users/banned")
 	@AuthGuard(level = Level.ADMIN_ONLY)
