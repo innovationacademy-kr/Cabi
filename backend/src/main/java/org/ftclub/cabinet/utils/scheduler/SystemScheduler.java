@@ -27,14 +27,12 @@ public class SystemScheduler {
      */
     // Every Midnight
     @Scheduled(cron = "0 0 0 * * *")
-    // // 서버 가동 후 10초 뒤에 실행
-    // @Scheduled(initialDelay = 3000, fixedDelay = Long.MAX_VALUE)
     public void checkAllLents() {
         List<LentHistoryWithNameExpiredAtDto> lents = this.lentService.getAllLentHistoryWithNameExpired();
 
         for (LentHistoryWithNameExpiredAtDto lent : lents) {
             this.overdueManager.handleOverdue(lent);
-//            this.leaveAbsenceManager.handleLeaveAbsence(lent);
+            this.leaveAbsenceManager.handleLeaveAbsence(lent.getUserId(), lent.getName());
             // 2초 간격으로 대여 검증
             try {
                 Thread.sleep(2000);

@@ -7,6 +7,7 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,16 +20,15 @@ import org.springframework.web.client.RestTemplate;
  */
 @Component
 @RequiredArgsConstructor
-public class FtAPIService {
+public class FtAPIManager {
 
     private final FtApiProperties ftApiProperties;
+    private String accessToken;
 
     /**
-     * 42 OAuth 토큰을 발급받는다.
-     *
-     * @return 42API의 OAuth 토큰
+     * 42 토큰을 발급받는다.
      */
-    public String postOauthToken() {
+    public void issueAccessToken() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -39,7 +39,7 @@ public class FtAPIService {
         map.add("client_secret", this.ftApiProperties.getClientSecret());
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
         try {
-            return new JSONObject(
+            this.accessToken = new JSONObject(
                     restTemplate.postForEntity(this.ftApiProperties.getTokenUri(), request,
                             String.class).getBody())
                     .get(this.ftApiProperties.getAccessTokenName())
@@ -56,18 +56,25 @@ public class FtAPIService {
      * @return JSONObject 형태의 유저 정보
      */
     public JSONObject getFtUserInfo(String name) {
-        String token = this.postOauthToken();
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBearerAuth(token);
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
-        try {
-            String requestUri = this.ftApiProperties.getUsersInfoUri() + '/' + name;
-            return new JSONObject(
-                    restTemplate.getForEntity(requestUri, String.class, request).getBody());
-        } catch (Exception e) {
-            throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
+        int tryCount = 0;
+        while (tryCount < 3) {
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                headers.setBearerAuth(this.accessToken);
+                HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
+                String requestUri = this.ftApiProperties.getUsersInfoUri() + '/' + name;
+                return new JSONObject(
+                        restTemplate.exchange(requestUri, HttpMethod.GET, requestEntity,
+                                        String.class)
+                                .getBody());
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.issueAccessToken();
+                tryCount++;
+            }
         }
+        return null;
     }
 }
