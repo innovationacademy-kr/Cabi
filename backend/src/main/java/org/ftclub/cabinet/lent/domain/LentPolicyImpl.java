@@ -2,9 +2,11 @@ package org.ftclub.cabinet.lent.domain;
 
 import java.util.Date;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -13,7 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class LentPolicyImpl implements LentPolicy {
+
+	private final CabinetProperties cabinetProperties;
 
 	@Value("${cabinet.lent.term.private}")
 	private static Integer LENT_TERM_PRIVATE = 21;
@@ -124,16 +129,16 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public Integer getDaysForLentTermPrivate() {
-		return LENT_TERM_PRIVATE;
+		return cabinetProperties.getLentTermPrivate();
 	}
 
 	@Override
 	public Integer getDaysForLentTermShare() {
-		return LENT_TERM_SHARE;
+		return cabinetProperties.getLentTermShare();
 	}
 
 	@Override
 	public Integer getDaysForNearExpiration() {
-		return PENALTY_DAY_SHARE + PENALTY_DAY_PADDING;
+		return cabinetProperties.getPenaltyDayShare() + cabinetProperties.getPenaltyDayPadding();
 	}
 }

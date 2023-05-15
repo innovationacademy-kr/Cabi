@@ -78,7 +78,7 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = returnCabinet(userId);
 		Cabinet cabinet = cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId());
 		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
-				lentHistory.getEndedAt());
+				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
 	}
 
 	@Override

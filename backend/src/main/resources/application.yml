@@ -1,6 +1,7 @@
 spring:
+  config:
+    import: classpath:application-oauth.yml
   profiles:
-    include: oauth, local
     default: local
   jpa:
     properties:

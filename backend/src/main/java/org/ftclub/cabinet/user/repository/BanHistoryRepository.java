@@ -24,4 +24,12 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 
 	@Query(value = "SELECT * FROM BAN_HISTORY WHERE USER_ID = ?1 ORDER BY UNBANNED_AT DESC LIMIT 1", nativeQuery = true)
 	BanHistory findFirstBanHistory(Long userId);
+    @Query("SELECT b FROM BanHistory b WHERE b.userId = :userId")
+    List<BanHistory> findBanHistoriesByUserId(Long userId);
+
+    @Query("SELECT b FROM BanHistory b WHERE b.unbannedAt > CURRENT_TIMESTAMP ")
+    List<BanHistory> findActiveBanList();
+
+    @Query("SELECT b FROM BanHistory b WHERE b.unbannedAt = (SELECT MAX(b2.unbannedAt) FROM BanHistory b2) AND b.userId = :userId")
+    BanHistory findRecentBanHistoryByUserId(Long userId);
 }
