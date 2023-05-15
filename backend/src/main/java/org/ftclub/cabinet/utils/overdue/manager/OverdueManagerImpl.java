@@ -16,13 +16,46 @@ public class OverdueManagerImpl implements OverdueManager {
     private final MailSender mailSender;
     private final CabinetService cabinetService;
 
-    @Value("${overdue.term.soonoverdue}")
+    @Value("${spring.mail.soonoverdue.term}")
     private Long SOON_OVERDUE_TERM;
+
+    @Value("${spring.mail.overdue.subject}")
+    private String OVERDUE_MAIL_SUBJECT;
+
+    @Value("${spring.mail.overdue.template}")
+    private String OVERDUE_MAIL_TEMPLATE_URL;
+
+    @Value("${spring.mail.soonoverdue.subject}")
+    private String SOON_OVERDUE_MAIL_SUBJECT;
+
+    @Value("${spring.mail.soonoverdue.template}")
+    private String SOON_OVERDUE_MAIL_TEMPLATE_URL;
+
+    @Override
+    public String getOverdueMailSubject() {
+        return this.OVERDUE_MAIL_SUBJECT;
+    }
+
+    @Override
+    public String getOverdueMailTemplateUrl() {
+        return this.OVERDUE_MAIL_TEMPLATE_URL;
+    }
+
+    @Override
+    public String getSoonOverdueMailSubject() {
+        return this.SOON_OVERDUE_MAIL_SUBJECT;
+    }
+
+    @Override
+    public String getSoonOverdueMailTemplateUrl() {
+        return this.SOON_OVERDUE_MAIL_TEMPLATE_URL;
+    }
 
     @Override
     public Long getSoonOverdueTerm() {
         return this.SOON_OVERDUE_TERM;
     }
+
 
     /**
      * 연체 타입을 반환하는 메소드 연체 예정인 경우, SOON_OVERDUE를 반환하고, 연체 기간이 지난 경우, OVERDUE를 반환한다. 그 외의 경우, NONE을
@@ -55,14 +88,14 @@ public class OverdueManagerImpl implements OverdueManager {
             case NONE:
                 return;
             case SOON_OVERDUE:
-                subject = "42CABI 사물함 연체 예정 알림";
-                template = "mail/soonoverdue";
+                subject = this.getSoonOverdueMailSubject();
+                template = this.getSoonOverdueMailTemplateUrl();
                 break;
             case OVERDUE:
                 this.cabinetService.updateStatus(lent.getCabinetId(),
                         CabinetStatus.OVERDUE);
-                subject = "42CABI 사물함 연체 알림";
-                template = "mail/overdue";
+                subject = this.getOverdueMailSubject();
+                template = this.getOverdueMailTemplateUrl();
                 break;
         }
         try {
