@@ -16,10 +16,10 @@ public interface UserFacadeService {
 	MyProfileResponseDto getMyProfile(UserSessionDto user);
 
 	/* 기존 searchByBanUser와 동일한 역할을 합니다. */
-	BlockedUserPaginationDto getAllBanUsers();
+	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer length);
 
 	/*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
-	UserProfilePaginationDto getUserProfileListByName(String name);
+	UserProfilePaginationDto getUserProfileListByName(String name, Integer page, Integer length);
 
 	LentHistoryPaginationDto getUserLentHistories(Long userId, Integer page, Integer length);
 

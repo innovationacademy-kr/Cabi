@@ -27,97 +27,98 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserFacadeServiceImpl implements UserFacadeService {
 
-    private final UserService userService;
-    private final LentRepository lentRepository;
-    private final BanHistoryRepository banHistoryRepository;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+	private final UserService userService;
+	private final LentRepository lentRepository;
+	private final BanHistoryRepository banHistoryRepository;
+	private final UserRepository userRepository;
+	private final UserMapper userMapper;
 
-    @Override
-    public MyProfileResponseDto getMyProfile(UserSessionDto user) {
-        Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
-                user.getUserId());
-        Long cabinetId;
-        if (lentHistory.isPresent()) {
-            cabinetId = lentHistory.get().getCabinetId();
-        } else {
-            cabinetId = -1L;
-        }
-        return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId);
-    }
+	@Override
+	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
+		Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
+				user.getUserId());
+		Long cabinetId;
+		if (lentHistory.isPresent()) {
+			cabinetId = lentHistory.get().getCabinetId();
+		} else {
+			cabinetId = -1L;
+		}
+		return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId);
+	}
 
-    @Override
-    public BlockedUserPaginationDto getAllBanUsers() {
-        List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList();
-        List<BlockedUserDto> blockedUserDtoList = activeBanList.stream()
-                .map(b -> userMapper.toBlockedUserDto(b,
-                        userRepository.findNameById(b.getUserId())))
-                .collect(Collectors.toList());
-        return new BlockedUserPaginationDto(blockedUserDtoList, blockedUserDtoList.size());
-    }
+	@Override
+	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer length) {
+		List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList();
+		List<BlockedUserDto> blockedUserDtoList = activeBanList.stream()
+				.map(b -> userMapper.toBlockedUserDto(b,
+						userRepository.findNameById(b.getUserId())))
+				.collect(Collectors.toList());
+		return new BlockedUserPaginationDto(blockedUserDtoList, blockedUserDtoList.size());
+	}
 
-    @Override
-    public UserProfilePaginationDto getUserProfileListByName(String name) {
-        List<User> users = userRepository.findByNameContaining(name);
-        List<UserProfileDto> userProfileDtoList = users.stream()
-                .map(u -> userMapper.toUserProfileDto(u)).collect(
-                        Collectors.toList());
-        return new UserProfilePaginationDto(userProfileDtoList, userProfileDtoList.size());
-    }
+	@Override
+	public UserProfilePaginationDto getUserProfileListByName(String name, Integer page,
+			Integer length) {
+		List<User> users = userRepository.findByNameContaining(name);
+		List<UserProfileDto> userProfileDtoList = users.stream()
+				.map(u -> userMapper.toUserProfileDto(u)).collect(
+						Collectors.toList());
+		return new UserProfilePaginationDto(userProfileDtoList, userProfileDtoList.size());
+	}
 
-    @Override
-    public boolean checkUserExists(String name) {
-        return userService.checkUserExists(name);
-    }
+	@Override
+	public boolean checkUserExists(String name) {
+		return userService.checkUserExists(name);
+	}
 
-    @Override
-    public void createUser(String name, String email, Date blackholedAt, UserRole role) {
-        userService.createUser(name, email, blackholedAt, role);
-    }
+	@Override
+	public void createUser(String name, String email, Date blackholedAt, UserRole role) {
+		userService.createUser(name, email, blackholedAt, role);
+	}
 
-    @Override
-    public boolean checkAdminUserExists(String email) {
-        return userService.checkAdminUserExists(email);
-    }
+	@Override
+	public boolean checkAdminUserExists(String email) {
+		return userService.checkAdminUserExists(email);
+	}
 
-    @Override
-    public void createAdminUser(String email) {
-        userService.createAdminUser(email);
-    }
+	@Override
+	public void createAdminUser(String email) {
+		userService.createAdminUser(email);
+	}
 
-    @Override
-    public void deleteUser(Long userId) {
-        userService.deleteUser(userId);
-    }
+	@Override
+	public void deleteUser(Long userId) {
+		userService.deleteUser(userId);
+	}
 
-    @Override
-    public void deleteAdminUser(Long adminUserId) {
-        userService.deleteAdminUser(adminUserId);
-    }
+	@Override
+	public void deleteAdminUser(Long adminUserId) {
+		userService.deleteAdminUser(adminUserId);
+	}
 
-    @Override
-    public void updateAdminUserRole(Long adminUserId, AdminRole role) {
-        userService.updateAdminUserRole(adminUserId, role);
-    }
+	@Override
+	public void updateAdminUserRole(Long adminUserId, AdminRole role) {
+		userService.updateAdminUserRole(adminUserId, role);
+	}
 
-    @Override
-    public void updateUserBlackholedAtById(Long userId, Date newBlackholedAt) {
-        userService.updateUserBlackholedAtById(userId, newBlackholedAt);
-    }
+	@Override
+	public void updateUserBlackholedAtById(Long userId, Date newBlackholedAt) {
+		userService.updateUserBlackholedAtById(userId, newBlackholedAt);
+	}
 
-    @Override
-    public void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt,
-            Date expiredAt) {
-        userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
-    }
+	@Override
+	public void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt,
+			Date expiredAt) {
+		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
+	}
 
-    @Override
-    public void unbanUser(Long userId) {
-        userService.unbanUser(userId);
-    }
+	@Override
+	public void unbanUser(Long userId) {
+		userService.unbanUser(userId);
+	}
 
-    @Override
-    public boolean checkUserIsBanned(Long userId) {
-        return userService.checkUserIsBanned(userId);
-    }
+	@Override
+	public boolean checkUserIsBanned(Long userId) {
+		return userService.checkUserIsBanned(userId);
+	}
 }
