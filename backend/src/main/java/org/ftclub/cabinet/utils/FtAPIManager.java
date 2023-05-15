@@ -73,6 +73,9 @@ public class FtAPIManager {
                 e.printStackTrace();
                 this.issueAccessToken();
                 tryCount++;
+                if (tryCount == 3) {
+                    throw e;
+                }
             }
         }
         return null;
