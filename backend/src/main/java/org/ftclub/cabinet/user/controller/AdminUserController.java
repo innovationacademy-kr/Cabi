@@ -22,8 +22,7 @@ public class AdminUserController {
 
 	private final UserFacadeService userFacadeService;
 
-	/* 노션에는 /search/users/{name}으로 쓰여져 있는데 혹시 어떤 게 더 좋을까요? */
-	@GetMapping("/search/users/name/{name}")
+	@GetMapping("/search/users/{name}")
 	@AuthGuard(level = Level.ADMIN_ONLY)
 	public UserProfilePaginationDto getUserProfileListByPartialName(
 			@PathVariable("name") String name,
