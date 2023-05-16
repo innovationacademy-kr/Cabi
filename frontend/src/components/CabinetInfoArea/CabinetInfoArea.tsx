@@ -52,6 +52,11 @@ const CabinetInfoArea: React.FC<{
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
+  const isAvailable: boolean =
+    selectedCabinetInfo?.status === "AVAILABLE" ||
+    selectedCabinetInfo?.status === "SET_EXPIRE_AVAILABLE"
+      ? true
+      : false;
 
   const handleOpenLentModal = () => {
     if (myCabinetId) return handleOpenUnavailableModal();
@@ -140,6 +145,7 @@ const CabinetInfoArea: React.FC<{
               onClick={handleOpenLentModal}
               text="대여"
               theme="fill"
+              disabled={isAvailable ? false : true}
             />
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>

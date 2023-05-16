@@ -47,6 +47,7 @@ const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
   else if (lent_type === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
   else if (
+    status === CabinetStatus.SET_EXPIRE_AVAILABLE ||
     status === CabinetStatus.SET_EXPIRE_FULL ||
     status === CabinetStatus.EXPIRED
   )
