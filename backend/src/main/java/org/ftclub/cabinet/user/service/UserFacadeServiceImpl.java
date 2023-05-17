@@ -117,8 +117,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void deleteUser(Long userId) {
-		userService.deleteUser(userId);
+	public void deleteUser(Long userId, Date deletedAt) {
+		userService.deleteUser(userId, deletedAt);
 	}
 
 	@Override
@@ -132,8 +132,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void updateUserBlackholedAtById(Long userId, Date newBlackholedAt) {
-		userService.updateUserBlackholedAtById(userId, newBlackholedAt);
+	public void updateUserBlackholedAt(Long userId, Date newBlackholedAt) {
+		userService.updateUserBlackholedAt(userId, newBlackholedAt);
 	}
 
 	@Override

@@ -9,31 +9,31 @@ import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserService {
 
-    /* 동아리일 경우 email은 어떻게 할 지? */
-    boolean checkUserExists(String name);
+	/* 동아리일 경우 email은 어떻게 할 지? */
+	boolean checkUserExists(String name);
 
-    void createUser(String name, String email, Date blackholedAt, UserRole role);
+	void createUser(String name, String email, Date blackholedAt, UserRole role);
 
-    boolean checkAdminUserExists(String email);
+	boolean checkAdminUserExists(String email);
 
-    void createAdminUser(String email);
+	void createAdminUser(String email);
 
-    void deleteUser(Long userId);
+	void deleteUser(Long userId, Date deletedAt);
 
-    void deleteAdminUser(Long adminUserId);
+	void deleteAdminUser(Long adminUserId);
 
-    void updateAdminUserRole(Long adminUserId, AdminRole role);
+	void updateAdminUserRole(Long adminUserId, AdminRole role);
 
-    void updateUserBlackholedAtById(Long userId, Date newBlackholedAt);
+	void updateUserBlackholedAt(Long userId, Date newBlackholedAt);
 
-    void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
+	void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
 
-    void unbanUser(Long userId);
+	void unbanUser(Long userId);
 
-    // userService에 있는게 맞는지..
-    Long getAccumulateOverdueDaysByUserId(Long userId);
+	// userService에 있는게 맞는지..
+	Long getAccumulateBanDaysByUserId(Long userId);
 
-    boolean checkUserIsBanned(Long userId);
+	boolean checkUserIsBanned(Long userId);
 
-    List<User> getAllUsers();
+	List<User> getAllUsers();
 }

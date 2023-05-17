@@ -38,13 +38,13 @@ public interface UserFacadeService {
 
 	void createAdminUser(String email);
 
-	void deleteUser(Long userId);
+	void deleteUser(Long userId, Date deletedAt);
 
 	void deleteAdminUser(Long adminUserId);
 
 	void updateAdminUserRole(Long adminUserId, AdminRole role);
 
-	void updateUserBlackholedAtById(Long userId, Date newBlackholedAt);
+	void updateUserBlackholedAt(Long userId, Date newBlackholedAt);
 
 	void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
 

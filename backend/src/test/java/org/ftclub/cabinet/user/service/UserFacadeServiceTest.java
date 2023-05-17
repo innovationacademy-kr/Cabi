@@ -14,35 +14,36 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class UserFacadeServiceTest {
 
-    @Autowired
-    private UserFacadeService userFacadeService;
+	@Autowired
+	private UserFacadeService userFacadeService;
 
-    @Nested
-    class getMyProfileResponseDto {
+	@Nested
+	class getMyProfileResponseDto {
 
-        @Test
-        public void 대여_정보_없는_유저_DTO_가져오기() {
-            // 2 banuser2
-            UserSessionDto user = new UserSessionDto(2L, "banuser2",
-                    "banuser2@student.42seoul.kr", null, null, null, false);
+		@Test
+		void 대여_정보_없는_유저_DTO_가져오기() {
+			// 2 banuser2
+			UserSessionDto user = new UserSessionDto(2L, "banuser2",
+					"banuser2@student.42seoul.kr", null, null, null, false);
 
-            MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
-            assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
-            assertEquals(user.getName(), myProfileResponseDto.getName());
-            assertEquals(-1L, myProfileResponseDto.getCabinetId());
-        }
+			MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
+			assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
+			assertEquals(user.getName(), myProfileResponseDto.getName());
+			assertEquals(-1L, myProfileResponseDto.getCabinetId());
+		}
 
-        @Test
-        public void 대여_정보_있는_유저_DTO_가져오기() {
-            // 5 lentuser1
-            UserSessionDto user = new UserSessionDto(5L, "lentuser1",
-                    "lentuser1@student.42seoul.kr", null, null, null, false);
+		@Test
+		void 대여_정보_있는_유저_DTO_가져오기() {
+			// 5 lentuser1
+			UserSessionDto user = new UserSessionDto(5L, "lentuser1",
+					"lentuser1@student.42seoul.kr", null, null, null, false);
 
-            MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
-            assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
-            assertEquals(user.getName(), myProfileResponseDto.getName());
-            assertEquals(-1L, myProfileResponseDto.getCabinetId());
-        }
-    }
+			MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
+			assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
+			assertEquals(user.getName(), myProfileResponseDto.getName());
+			assertEquals(-1L, myProfileResponseDto.getCabinetId());
+		}
+	}
+
 
 }
