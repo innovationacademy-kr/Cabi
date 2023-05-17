@@ -102,9 +102,9 @@ public class UserServiceImpl implements UserService {
 
 	// 이런 식으로 변경하는 건 어떠신가요..
 	@Override
-	public void unbanUser(Long userId) {
+	public void unbanUser(Long userId, Date today) {
 		BanHistory banHistory = userExceptionHandlerService.getRecentBanHistory(userId);
-		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), new Date())) {
+		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), today)) {
 			banHistoryRepository.delete(banHistory);
 		}
 	}
@@ -125,7 +125,8 @@ public class UserServiceImpl implements UserService {
 	 * */
 	@Override
 	public boolean checkUserIsBanned(Long userId) {
-		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId);
+		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
+				DateUtil.getNow());
 		return (banHistory.size() != 0);
 	}
 

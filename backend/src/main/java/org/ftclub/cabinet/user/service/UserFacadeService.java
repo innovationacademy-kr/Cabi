@@ -48,5 +48,5 @@ public interface UserFacadeService {
 
 	void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
 
-	void unbanUser(Long userId);
+	void unbanUser(Long userId, Date today);
 }

@@ -28,7 +28,7 @@ public interface UserService {
 
 	void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
 
-	void unbanUser(Long userId);
+	void unbanUser(Long userId, Date today);
 
 	// userService에 있는게 맞는지..
 	Long getAccumulateBanDaysByUserId(Long userId);

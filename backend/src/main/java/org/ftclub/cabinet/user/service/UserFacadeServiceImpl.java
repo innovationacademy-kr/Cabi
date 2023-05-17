@@ -25,6 +25,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +56,9 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer length) {
 		PageRequest pageable = PageRequest.of(page, length);
-		List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable);
+		List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
+				DateUtil.getNow());
+		System.out.println(activeBanList);
 		List<BlockedUserDto> blockedUserDtoList = activeBanList.stream()
 				.map(b -> userMapper.toBlockedUserDto(b,
 						userRepository.findNameById(b.getUserId())))
@@ -143,8 +146,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void unbanUser(Long userId) {
-		userService.unbanUser(userId);
+	public void unbanUser(Long userId, Date today) {
+		userService.unbanUser(userId, today);
 	}
 
 }

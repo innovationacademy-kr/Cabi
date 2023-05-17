@@ -34,6 +34,8 @@ public class UserServiceTest {
 	@Autowired
 	private BanHistoryRepository banHistoryRepository;
 
+	private final Date testDate = new Date(123, 0, 15, 9, 0);
+
 	@Test
 	void 유저_생성() {
 		userService.createUser("testUser", "testUser@student.42seoul.kr", null, UserRole.USER);

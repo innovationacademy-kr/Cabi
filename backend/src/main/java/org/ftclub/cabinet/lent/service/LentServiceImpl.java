@@ -15,6 +15,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
 import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,7 +38,8 @@ public class LentServiceImpl implements LentService {
 		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
 		User user = userExceptionHandler.getUser(userId);
 		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
-		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId);
+		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
+				DateUtil.getNow());
 		// 대여 가능한 유저인지 확인
 		lentExceptionHandler.handlePolicyStatus(
 				lentPolicy.verifyUserForLent(user, cabinet, userActiveLentCount,

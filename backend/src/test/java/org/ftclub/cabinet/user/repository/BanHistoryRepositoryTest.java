@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -22,16 +23,20 @@ public class BanHistoryRepositoryTest {
 	@Autowired
 	private BanHistoryRepository banHistoryRepository;
 
+	// DB와 같이 2023.01.15 09:00:00 시간을 기준으로 했습니다.
+	private final Date testDate = new Date(123, 0, 15, 9, 0);
+
 	@Test
 	public void 현재_active한_밴_히스토리가_있는_유저() {
 		// ban history 한 개 존재
-		// 2023.1.15 이 기준일이었기 때문에 현재 시간으로 한 테스트와 결과값이 다르게 나옴
 		Long userId = 1L;
 
-		List<BanHistory> activeBanList = banHistoryRepository.findUserActiveBanList(userId);
+		List<BanHistory> activeBanList = banHistoryRepository.findUserActiveBanList(userId,
+				testDate);
 
 		Assertions.assertNotNull(activeBanList);
 		Assertions.assertFalse(activeBanList.isEmpty());
+		Assertions.assertEquals(1, activeBanList.size());
 	}
 
 	@Test
@@ -48,12 +53,12 @@ public class BanHistoryRepositoryTest {
 
 	@Test
 	public void testFindActiveBanList() {
-		// 결과값이 다르게 나올 것. 날짜 설정 해줘야 함.
 		Pageable pageable = PageRequest.of(0, 10);
-
-		List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable);
+		List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
+				testDate);
 
 		Assertions.assertNotNull(activeBanList);
+		Assertions.assertEquals(2, activeBanList.size());
 	}
 
 	@Test
@@ -64,6 +69,6 @@ public class BanHistoryRepositoryTest {
 		Optional<BanHistory> recentBanHistory = banHistoryRepository.findRecentBanHistoryByUserId(
 				userId);
 
-		Assertions.assertTrue(recentBanHistory.isPresent());
+		Assertions.assertFalse(recentBanHistory.isPresent());
 	}
 }
