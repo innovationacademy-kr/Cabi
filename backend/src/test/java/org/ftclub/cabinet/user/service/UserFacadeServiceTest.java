@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Date;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
@@ -17,6 +18,8 @@ public class UserFacadeServiceTest {
 
 	@Autowired
 	private UserFacadeService userFacadeService;
+
+	private final Date testDate = new Date(123, 0, 15, 9, 0);
 
 	@Test
 	public void 대여_정보_없는_유저_DTO_가져오기() {
@@ -45,11 +48,9 @@ public class UserFacadeServiceTest {
 	@Test
 	public void 모든_벤_유저_가져오기() {
 		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
-				10);
-//
-		System.out.println("total lenght" + blockedUserPaginationDto.getTotalLength());
-//		assertEquals(2, blockedUserPaginationDto.getTotalLength());
-//		assertEquals(2, blockedUserPaginationDto.getResult().size());
+				10, testDate);
+		assertEquals(2, blockedUserPaginationDto.getTotalLength());
+		assertEquals(2, blockedUserPaginationDto.getResult().size());
 	}
 
 	@Test

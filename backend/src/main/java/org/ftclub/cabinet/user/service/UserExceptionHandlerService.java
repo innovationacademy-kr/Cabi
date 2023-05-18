@@ -20,11 +20,23 @@ public class UserExceptionHandlerService {
 	private final AdminUserRepository adminUserRepository;
 	private final BanHistoryRepository banHistoryRepository;
 
+	/**
+	 * 유저가 존재하는지 확인하고 존재하지 않으면 예외를 발생시킵니다.
+	 *
+	 * @param userId
+	 * @return User
+	 */
 	public User getUser(Long userId) {
 		return userRepository.findById(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 	}
 
+	/**
+	 * 동아리가 존재하는지 확인하고 존재하지 않으면 예외를 발생시킵니다.
+	 *
+	 * @param userId
+	 * @return User
+	 */
 	public User getClubUser(Long userId) {
 		User user = getUser(userId);
 		if (!user.isUserRole(UserRole.CLUB)) {
@@ -33,11 +45,23 @@ public class UserExceptionHandlerService {
 		return user;
 	}
 
+	/**
+	 * 관리자가 존재하는지 확인하고 존재하지 않으면 예외를 발생시킵니다.
+	 *
+	 * @param adminUserId
+	 * @return AdminUser
+	 */
 	public AdminUser getAdminUser(Long adminUserId) {
 		return adminUserRepository.findById(adminUserId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
 
+	/**
+	 * 최근 BanHistory를 가져옵니다. 없으면 예외를 발생시킵니다.
+	 *
+	 * @param userId
+	 * @return BanHistory
+	 */
 	public BanHistory getRecentBanHistory(Long userId) {
 		return banHistoryRepository.findRecentBanHistoryByUserId(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BAN_HISTORY));

@@ -55,7 +55,7 @@ public class BanHistoryRepositoryTest {
 	public void testFindActiveBanList() {
 		Pageable pageable = PageRequest.of(0, 10);
 		List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
-				testDate);
+				testDate).getContent();
 
 		Assertions.assertNotNull(activeBanList);
 		Assertions.assertEquals(2, activeBanList.size());

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 관리자가 유저를 관리할 때 사용하는 컨트롤러입니다.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
@@ -23,6 +26,14 @@ public class AdminUserController {
 
 	private final UserFacadeService userFacadeService;
 
+	/**
+	 * 유저 이름의 일부를 입력받아 해당 유저들의 프로필을 반환합니다.
+	 *
+	 * @param name
+	 * @param page
+	 * @param length
+	 * @return UserProfilePaginationDto
+	 */
 	@GetMapping("/search/users/{name}")
 	@AuthGuard(level = Level.ADMIN_ONLY)
 	public UserProfilePaginationDto getUserProfileListByPartialName(
@@ -31,6 +42,14 @@ public class AdminUserController {
 		return userFacadeService.getUserProfileListByPartialName(name, page, length);
 	}
 
+	/**
+	 * 유저 이름의 일부를 입력받아 해당 유저들의 캐비넷 정보를 반환합니다.
+	 *
+	 * @param name
+	 * @param page
+	 * @param length
+	 * @return UserCabinetPaginationDto
+	 */
 	@GetMapping("/search/users")
 	@AuthGuard(level = Level.ADMIN_ONLY)
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(
@@ -39,19 +58,39 @@ public class AdminUserController {
 		return userFacadeService.findUserCabinetListByPartialName(name, page, length);
 	}
 
+	/**
+	 * 차단된 유저 리스트를 받아옵니다.
+	 *
+	 * @param page
+	 * @param length
+	 * @return BlockedUserPaginationDto
+	 */
 	@GetMapping("/search/users/banned")
 	@AuthGuard(level = Level.ADMIN_ONLY)
 	public BlockedUserPaginationDto getBannedUsersList(@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length) {
-		return userFacadeService.getAllBanUsers(page, length);
+		return userFacadeService.getAllBanUsers(page, length, DateUtil.getNow());
 	}
 
+	/**
+	 * 현재 유저가 차단된 상태일 때, 차단을 해제합니다.
+	 *
+	 * @param userId
+	 */
 	@DeleteMapping("/log/users/{userId}/ban-history")
 	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
 		userFacadeService.unbanUser(userId, DateUtil.getNow());
 	}
 
+	/**
+	 * 유저의 대여 기록을 반환합니다.
+	 *
+	 * @param userId
+	 * @param page
+	 * @param length
+	 * @return LentHistoryPaginationDto
+	 */
 	@GetMapping("/log/users/{userId}/lent-histories")
 	@AuthGuard(level = Level.ADMIN_ONLY)
 	public LentHistoryPaginationDto getLentHistoriesByUserId(@PathVariable("userId") Long userId,
@@ -59,4 +98,6 @@ public class AdminUserController {
 			@RequestParam("length") Integer length) {
 		return userFacadeService.getUserLentHistories(userId, page, length);
 	}
+
+	// 동아리 유저 생성하는 메서드 필요
 }
