@@ -1,15 +1,8 @@
 package org.ftclub.cabinet.lent.domain;
 
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +12,9 @@ import org.ftclub.cabinet.utils.DateUtil;
  * lent의 기록을 관리하기 위한 data mapper
  */
 @Entity
-@Table(name = "LENT_HISTORY")
+@Table(name = "LENT_HISTORY", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"VERSION", "CABINET_ID"})
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class LentHistory {
@@ -32,9 +27,9 @@ public class LentHistory {
 	/**
 	 * 낙관적 락을 위한 version
 	 */
-	@Version
 	@Getter(AccessLevel.NONE)
-	private Long version = 1L;
+	@Column(name = "VERSION")
+	private Long version;
 
 	/**
 	 * 대여 시작일
@@ -77,6 +72,14 @@ public class LentHistory {
 		this.cabinetId = cabinetId;
 	}
 
+	protected LentHistory(Date startedAt, Date expiredAt, Long userId,
+						  Long cabinetId, Long version) {
+		this.startedAt = startedAt;
+		this.expiredAt = expiredAt;
+		this.userId = userId;
+		this.cabinetId = cabinetId;
+		this.version = version;
+	}
 	/**
 	 * @param startedAt 대여 시작일
 	 * @param expiredAt 연체 시작일
@@ -95,10 +98,13 @@ public class LentHistory {
 	 * @param cabinetId 대여하는 cabinet id
 	 * @return 인자 정보를 담고있는 {@link LentHistory} 반납일은 null값을 담고있음
 	 */
-	public static LentHistory of(Date startedAt, Long userId, Long cabinetId) {
-		return new LentHistory(startedAt, null, userId, cabinetId);
+	public static LentHistory of(Date startedAt, Long userId, Long cabinetId, Long version) {
+		return new LentHistory(startedAt, null, userId, cabinetId, version);
 	}
 
+	public static LentHistory of(Date startedAt, Date expiredAt, Long userId, Long cabinetId, Long version) {
+		return new LentHistory(startedAt, expiredAt, userId, cabinetId, version);
+	}
 	@Override
 	public boolean equals(final Object other) {
 		if (this == other) {

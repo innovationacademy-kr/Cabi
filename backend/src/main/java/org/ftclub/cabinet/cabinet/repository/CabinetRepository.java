@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -71,4 +74,10 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"JOIN c.cabinetPlace p " +
 			"WHERE p.location.building = :building AND p.location.floor = :floor")
 	boolean existsBuildingAndFloor(String building, Integer floor);
+
+	@Modifying(flushAutomatically = true, clearAutomatically = false)
+	@Query("update Cabinet c " +
+			"set c.status = :cabinetStatus, c.version = c.version + 1 " +
+			"where c.cabinetId = :cabinetId and c.version = :version")
+	int updateCabinetStatus(@Param("cabinetId") Long cabinetId, @Param("cabinetStatus") CabinetStatus cabinetStatus, @Param("version") Long version);
 }

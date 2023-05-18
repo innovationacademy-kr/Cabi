@@ -112,4 +112,14 @@ public class DateUtil {
 		if (s <= 60) return true;
 		else return true;
 	}
+
+	public static boolean isInfinite(Date day) {
+		LocalDate localDate = day.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		int year = localDate.getYear();
+		if (year >= 9999) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

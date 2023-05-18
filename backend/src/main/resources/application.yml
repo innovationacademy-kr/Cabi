@@ -8,6 +8,11 @@ spring:
         show_sql: true
         format_sql: true
         globally_quoted_identifiers: true
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3310/test_db
+    username: root
+    password: test_password
 cabinet:
   lent:
     term:

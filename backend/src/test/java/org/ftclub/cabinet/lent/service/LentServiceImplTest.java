@@ -13,16 +13,25 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.junit.After;
 import org.junit.jupiter.api.*;
 import org.junit.platform.commons.annotation.Testable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest()
@@ -33,12 +42,15 @@ class LentServiceImplTest {
     private LentService lentService;
     @PersistenceContext
     private EntityManager em;
+    @PersistenceUnit
+    private EntityManagerFactory emf;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private LentRepository lentRepository;
     @Autowired
     private BanHistoryRepository banHistoryRepository;
+
 
     private <T1, T2> void objectSetValue(T1 target, String filedName, T2 value) throws NoSuchFieldException, IllegalAccessException {
         Field fieldReflect = target.getClass().getDeclaredField(filedName);
@@ -58,10 +70,26 @@ class LentServiceImplTest {
     User foreignUser;
     User clubUser1;
     User clubUser2;
+    User user1;
+    User user2;
+    User user3;
+    User user4;
+    User user5;
+    User user6;
+    User user7;
+    User user8;
+    User user9;
+    User user10;
     User normalUser1;
     User normalUser2;
     User normalUser3;
     User normalUser4;
+    User normalUser5;
+    User normalUser6;
+    User normalUser7;
+    User normalUser8;
+    User normalUser9;
+    User normalUser10;
 
     Cabinet privateBrokenCabinet;
     Cabinet privateFullCabinet;
@@ -104,14 +132,48 @@ class LentServiceImplTest {
         foreignUser = em.find(User.class, 8L);
         clubUser1 = em.find(User.class, 21L);
         clubUser2 = em.find(User.class, 22L);
-        normalUser1 = User.of("normalUser1", "normalUser1@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
-        normalUser2 = User.of("normalUser2", "normalUser2@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
-        normalUser3 = User.of("normalUser3", "normalUser3@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
-        normalUser4 = User.of("normalUser4", "normalUser4@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
-        em.persist(normalUser1);
-        em.persist(normalUser2);
-        em.persist(normalUser3);
-        em.persist(normalUser4);
+
+        user1 = em.find(User.class, 9L);
+        user2 = em.find(User.class, 10L);
+        user3 = em.find(User.class, 11L);
+        user4 = em.find(User.class, 12L);
+        user5 = em.find(User.class, 13L);
+        user6 = em.find(User.class, 14L);
+        user7 = em.find(User.class, 15L);
+        user8 = em.find(User.class, 16L);
+        user9 = em.find(User.class, 17L);
+        user10 = em.find(User.class, 18L);
+
+        normalUser1 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser1").getSingleResult();
+        normalUser2 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser2").getSingleResult();
+        normalUser3 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser3").getSingleResult();
+        normalUser4 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser4").getSingleResult();
+        normalUser5 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser5").getSingleResult();
+        normalUser6 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser6").getSingleResult();
+        normalUser7 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser7").getSingleResult();
+        normalUser8 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser8").getSingleResult();
+        normalUser9 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser9").getSingleResult();
+        normalUser10 = em.createQuery("select u from User u where u.name = :name", User.class).setParameter("name", "normalUser10").getSingleResult();
+//        normalUser1 = User.of("normalUser1", "normalUser1@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser2 = User.of("normalUser2", "normalUser2@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser3 = User.of("normalUser3", "normalUser3@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser4 = User.of("normalUser4", "normalUser4@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser5 = User.of("normalUser5", "normalUser5@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser6 = User.of("normalUser6", "normalUser6@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser7 = User.of("normalUser7", "normalUser7@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser8 = User.of("normalUser8", "normalUser8@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser9 = User.of("normalUser9", "normalUser9@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        normalUser10 = User.of("normalUser10", "normalUser10@email", DateUtil.stringToDate("2024-12-31"), UserRole.USER);
+//        em.persist(normalUser1);
+//        em.persist(normalUser2);
+//        em.persist(normalUser3);
+//        em.persist(normalUser4);
+//        em.persist(normalUser5);
+//        em.persist(normalUser6);
+//        em.persist(normalUser7);
+//        em.persist(normalUser8);
+//        em.persist(normalUser9);
+//        em.persist(normalUser10);
 
         privateBrokenCabinet = em.find(Cabinet.class, 1L);
         privateFullCabinet = em.find(Cabinet.class, 3L);
@@ -139,6 +201,7 @@ class LentServiceImplTest {
         clubCabinet1 = em.find(Cabinet.class, 9L);
         clubCabinet2 = em.find(Cabinet.class, 10L);
     }
+
     @Test @DisplayName("사물함 대여 가능한 사용자는 available 상태의 사물함을 빌릴 수 있습니다 ")
     void generalLentSituation1() {
         // given
@@ -482,4 +545,248 @@ class LentServiceImplTest {
         // then
         assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
     }
+
+    @Test @DisplayName("동시 대여 문제가 발생하는지 확인합니다")
+    @Rollback(value = false)
+    void concurrencyLent1() throws InterruptedException {
+        // given
+        List<Long> userIdList = em.createQuery("select u.userId from User u where u.name like :pattern")
+                .setParameter("pattern", "normalUser%")
+                .getResultList();
+        Cabinet cabinet = sharedAvailableCabinet0;
+        final CabinetStatus originalStatus = cabinet.getStatus();
+        final Long cabinetId = cabinet.getCabinetId();
+        // when
+        int numberOfThreads = 10; // 동시에 실행할 스레드 수
+        CountDownLatch latch = new CountDownLatch(numberOfThreads);
+        AtomicInteger exceptionCount = new AtomicInteger(0);
+        for (int i = 0; i < numberOfThreads; i++) {
+            final Long finalUserId = userIdList.get(i); // effectively final 변수 생성
+            // 새 쓰레드에서 실행되기 떄문에 내부적으로 새 entityManager를 만듦
+            new Thread(() -> {
+                try {
+                    lentService.startLentCabinet(finalUserId, cabinetId);
+                    lentService.endLentCabinet(finalUserId);
+                } catch (Exception e) {
+                    assertEquals(DataIntegrityViolationException.class, e.getClass());
+                    exceptionCount.getAndIncrement();
+                } finally {
+                    latch.countDown();
+                }
+            }).start();
+        }
+        latch.await(); // 모든 스레드가 종료될 때까지 대기
+        int lentCount = lentRepository.countCabinetActiveLent(cabinetId);
+        // then
+        assertTrue(lentCount <= cabinet.getMaxUser());
+        em.createQuery("delete from LentHistory lh where lh.userId >= 23").executeUpdate();
+        em.createQuery("update Cabinet c set c.status = :status where c.cabinetId = :cabinetId")
+                .setParameter("status", originalStatus)
+                .setParameter("cabinetId", cabinetId)
+                .executeUpdate();
+    }
+
+    @Test @DisplayName("동시 대여, 반납시 캐비넷 상태가 적절히 변경되는지 확인합니다")
+    @Rollback(value = false)
+    void concurrencyLent2() throws InterruptedException {
+        // given
+        List<Long> userIdList = em.createQuery("select u.userId from User u where u.name like :pattern").setParameter("pattern", "normalUser%").getResultList();
+        Cabinet cabinet = sharedAvailableCabinet0;
+        final CabinetStatus originalStatus = cabinet.getStatus();
+        final Long cabinetId = cabinet.getCabinetId();
+        // when
+        // 다수의 사람이 동시에 대여를 합니다.
+        int numberOfThreads1 = 5; // 동시에 실행할 스레드 수
+        CountDownLatch latch1 = new CountDownLatch(5);
+        AtomicInteger exceptionCount = new AtomicInteger(0);
+        for (int i = 0; i < numberOfThreads1; i++) {
+            final Long lentUserId = userIdList.get(i);
+            new Thread(() -> {
+                try {
+                    lentService.startLentCabinet(lentUserId, cabinetId);
+                } catch (Exception e) {
+                    assertEquals(DataIntegrityViolationException.class, e.getClass());
+                    exceptionCount.getAndIncrement();
+                } finally {
+                    latch1.countDown();
+                }
+            }).start();
+        }
+        latch1.await();
+        // 동시에 어떤 사람은 대여를, 어떤 사람은 반납을 합니다.
+        final int numberOfThreads2 = numberOfThreads1 * 2;
+        CountDownLatch latch2 = new CountDownLatch(numberOfThreads2);
+        for (int i = numberOfThreads2 - 1; i >= 0; i--) {
+            final int finalI = i;
+            final Long lentUserId = userIdList.get(i);
+            final Long endUserId = userIdList.get(i);
+            new Thread(() -> {
+                try {
+                    if (finalI < (numberOfThreads2 / 2)) {
+                        lentService.endLentCabinet(endUserId);
+                    } else {
+                        lentService.startLentCabinet(lentUserId, cabinetId);
+                    }
+                } catch (Exception e) {
+                    boolean isDataIntegrityViolationException = e instanceof DataIntegrityViolationException;
+                    boolean isServiceException = e instanceof ServiceException;
+                    boolean isOptimisticLockException = e instanceof OptimisticLockException;
+                    assertTrue(isDataIntegrityViolationException || isServiceException || isOptimisticLockException);
+                    if (isOptimisticLockException) System.out.println("낙관적 락");
+                    exceptionCount.getAndIncrement();
+                } finally {
+                    latch2.countDown();
+                }
+            }).start();
+        }
+        latch2.await();
+        // 다수의 사람이 동시에 반납을 합니다.
+        CountDownLatch latch3 = new CountDownLatch(5);
+        for (int i = 5; i < 10; i++) {
+            final int finalI = i;
+            final Long lentUserId = userIdList.get(i);
+            new Thread(() -> {
+                try {
+                    lentService.endLentCabinet(lentUserId);
+                } catch (Exception e) {
+                    boolean isDataIntegrityViolationException = e instanceof DataIntegrityViolationException;
+                    boolean isServiceException = e instanceof ServiceException;
+                    boolean isOptimisticLockException = e instanceof OptimisticLockException;
+                    assertTrue(isDataIntegrityViolationException || isServiceException || isOptimisticLockException);
+                    if (isOptimisticLockException) System.out.println("낙관적 락");
+                    exceptionCount.getAndIncrement();
+                } finally {
+                    latch3.countDown();
+                }
+            }).start();
+        }
+        latch3.await();
+        // then
+        EntityManager tempEM = emf.createEntityManager();
+        BigInteger bigInteger = (BigInteger)tempEM.createNativeQuery("select count(*) from LENT_HISTORY as lh where lh.cabinet_id = :cabinetId and lh.ended_at is null")
+                .setParameter("cabinetId", cabinetId).getSingleResult();
+        int lentCount = bigInteger.intValue();
+        List<LentHistory> activeLentHistoryList = (List<LentHistory>) tempEM.createNativeQuery("select * from LENT_HISTORY as lh where lh.cabinet_id = :cabinetId and lh.ended_at is null", LentHistory.class)
+                .setParameter("cabinetId", cabinetId).getResultList();
+        assertTrue(lentCount <= cabinet.getMaxUser());
+        if (lentCount == 0) {
+            assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
+        } else {
+            Date expiredAt = activeLentHistoryList.get(0).getExpiredAt();
+            if (DateUtil.isInfinite(expiredAt)) {
+                assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
+            } else {
+                if (lentCount == cabinet.getMaxUser()) {
+                    assertEquals(CabinetStatus.FULL, cabinet.getStatus());
+                } else {
+                    assertEquals(CabinetStatus.LIMITED_AVAILABLE, cabinet.getStatus());
+                }
+            }
+            for (LentHistory lentHistory : activeLentHistoryList) {
+                assertEquals(expiredAt, lentHistory.getExpiredAt());
+            }
+        }
+        em.createQuery("delete from LentHistory lh where lh.userId >= 23").executeUpdate();
+        em.createQuery("update Cabinet c set c.status = :status where c.cabinetId = :cabinetId")
+                .setParameter("status", originalStatus)
+                .setParameter("cabinetId", cabinetId)
+                .executeUpdate();
+    }
+
+    @Test @DisplayName("동시 반납시 캐비넷 상태가 적절히 변경되는지 확인합니다")
+    @Rollback(value = false)
+    void concurrencyLent3() throws InterruptedException {
+        // given
+        Long userId1 = user7.getUserId();
+        Long userId2 = user8.getUserId();
+        Long userId3 = user9.getUserId();
+        Cabinet cabinet = sharedFullCabinet;
+        Long cabinetId = cabinet.getCabinetId();
+        int lentCount = lentRepository.countCabinetActiveLent(cabinetId);
+        CabinetStatus originalStatus = cabinet.getStatus();
+        // when
+        int numberOfThreads = 3; // 동시에 실행할 스레드 수
+        List<Long> userList = new ArrayList<>();
+        userList.add(userId1); userList.add(userId2); userList.add(userId3);
+        CountDownLatch latch = new CountDownLatch(numberOfThreads);
+        AtomicInteger successCount = new AtomicInteger(numberOfThreads);
+        for (int i = 0; i < numberOfThreads; i++) {
+            final Long lentUserId = userList.get(i);
+            new Thread(() -> {
+                try {
+                    lentService.endLentCabinet(lentUserId);
+                } catch (Exception e) {
+                    successCount.decrementAndGet();
+                    assertEquals(OptimisticLockException.class, e.getClass());
+                } finally {
+                    latch.countDown();
+                }
+            }).start();
+        }
+        latch.await();
+        EntityManager tempEM = emf.createEntityManager();
+        BigInteger count = (BigInteger)tempEM.createNativeQuery("select count(*) from LENT_HISTORY as lh where lh.cabinet_id = :cabinetId and lh.ended_at is null")
+                .setParameter("cabinetId", cabinetId).getSingleResult();
+        assertEquals(lentCount - successCount.get(), count.intValue());
+        int activeLentCount = lentRepository.countCabinetActiveLent(cabinetId);
+        assertEquals(lentCount - successCount.get(), activeLentCount);
+
+//        tempEM.createQuery("delete from LentHistory lh where lh.userId >= 23").executeUpdate();
+//        tempEM.createQuery("update LentHistory lh set lh.endedAt = null where lh.cabinetId = :cabinetId and lh.userId in :userIdList")
+//                .setParameter("cabinetId", cabinetId).setParameter("userIdList", userList).setMaxResults(3).executeUpdate();
+//        tempEM.createQuery("update Cabinet c set c.status = :status where c.cabinetId = :cabinetId")
+//                .setParameter("status", originalStatus)
+//                .setParameter("cabinetId", cabinetId)
+//                .executeUpdate();
+    }
+
+    @Test @DisplayName("")
+    @Rollback(value = false)
+    void concurrencyLent4() {
+        // given
+        Long userId1 = user2.getUserId();
+        Long userId2 = user3.getUserId();
+        Long userId3 = normalUser1.getUserId();
+        Cabinet cabinet = sharedAvailableCabinet2;
+        CabinetStatus originalStatus = cabinet.getStatus();
+        Long cabinetId = cabinet.getCabinetId();
+        // when
+        int numberOfThreads = 3; // 동시에 실행할 스레드 수
+        List<Long> userList = new ArrayList<>();
+        userList.add(userId1); userList.add(userId2); userList.add(userId3);
+        CountDownLatch latch = new CountDownLatch(numberOfThreads);
+        AtomicInteger successCount = new AtomicInteger(numberOfThreads);
+        // 반납 시도
+        new Thread(() -> {
+            try {
+                lentService.endLentCabinet(userId1);
+            } catch (Exception e) {
+                successCount.decrementAndGet();
+                assertEquals(OptimisticLockException.class, e.getClass());
+            } finally {
+                latch.countDown();
+            }
+        }).start();
+        // 대여 시도
+        new Thread(() -> {
+            try {
+                lentService.startLentCabinet(userId3, cabinetId);
+            } catch (Exception e) {
+                successCount.decrementAndGet();
+                assertEquals(OptimisticLockException.class, e.getClass());
+            } finally {
+                latch.countDown();
+            }
+        }).start();
+        // then
+        EntityManager tempEM = emf.createEntityManager();
+        cabinet = (Cabinet) tempEM.createNativeQuery("select * from CABINET as c where c.cabinet_id = :cabinetId", Cabinet.class)
+                .setParameter("cabinetId", cabinetId)
+                .getSingleResult();
+        assertEquals(originalStatus, cabinet.getStatus());
+        BigInteger lentCount = (BigInteger)tempEM.createNativeQuery("select count(*) from LENT_HISTORY as lh where lh.cabinet_id = :cabinetId and lh.ended_at is null")
+                .setParameter("cabinetId", cabinetId).getSingleResult();
+        assertEquals(2, lentCount.intValue());
+    }
+
 }

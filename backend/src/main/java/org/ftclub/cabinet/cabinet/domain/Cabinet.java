@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,8 +37,7 @@ public class Cabinet {
 	 * <p>
 	 * 동시성 문제 해결을 위한 낙관적 락을 위해 사용됩니다.
 	 */
-	@Version
-	@Getter(AccessLevel.NONE)
+	@Column(name = "VERSION")
 	private Long version = 1L;
 
 	/**
@@ -206,5 +205,28 @@ public class Cabinet {
 				this.status = CabinetStatus.LIMITED_AVAILABLE;
 			}
 		}
+	}
+
+	/**
+	 * 대여 시작/종료에 따른 사용자의 수와 현재 상태에 따라 상태를 반환합니다.
+	 *
+	 * @param userCount 현재 사용자 수
+	 */
+	public CabinetStatus getStatusByUserCount(Integer userCount) {
+		CabinetStatus ret = this.status;
+		if (userCount.equals(0)) {
+			ret = CabinetStatus.AVAILABLE;
+			return ret;
+		}
+		if (userCount.equals(this.maxUser)) {
+			ret = CabinetStatus.FULL;
+			return ret;
+		}
+		if (0 < userCount && userCount < this.maxUser) {
+			if (this.status.equals(CabinetStatus.FULL)) {
+				ret = CabinetStatus.LIMITED_AVAILABLE;
+			}
+		}
+		return ret;
 	}
 }

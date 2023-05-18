@@ -33,7 +33,7 @@ class LentHistoryTest {
 		Date now = DateUtil.getNow();
 		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
 		assertTrue(lentHistory.isSetExpiredAt());
-		lentHistory = LentHistory.of(now, null, 1L, 1L);
+		lentHistory = LentHistory.of(now, (Date) null, 1L, 1L);
 		assertFalse(lentHistory.isSetExpiredAt());
 	}
 

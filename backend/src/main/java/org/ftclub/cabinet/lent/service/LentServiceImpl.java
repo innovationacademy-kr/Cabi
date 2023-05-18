@@ -3,9 +3,12 @@ package org.ftclub.cabinet.lent.service;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.OptimisticLockException;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -32,7 +35,7 @@ public class LentServiceImpl implements LentService {
 	private final UserService userService;
 	private final CabinetService cabinetService;
 	private final BanHistoryRepository banHistoryRepository;
-
+	private final CabinetRepository cabinetRepository;
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		Date now = DateUtil.getNow();
@@ -49,14 +52,16 @@ public class LentServiceImpl implements LentService {
 		// 대여 가능한 캐비넷인지 확인
 		lentExceptionHandler.handlePolicyStatus(
 				lentPolicy.verifyCabinetForLent(cabinet, cabinetActiveLentHistories, now));
-		// 캐비넷 상태 변경
-		cabinet.specifyStatusByUserCount(cabinetActiveLentHistories.size() + 1);
 		Date expiredAt = lentPolicy.generateExpirationDate(now, cabinet,
 				cabinetActiveLentHistories);
-		LentHistory lentHistory = LentHistory.of(now, userId, cabinetId);
+		Long maxVersion = lentRepository.getMaxVersionByCabinet(cabinetId).orElse(0L);
+		LentHistory lentHistory = LentHistory.of(now, userId, cabinetId, maxVersion + 1L);
 		// 연체 시간 적용
 		lentPolicy.applyExpirationDate(lentHistory, cabinetActiveLentHistories, expiredAt);
 		lentRepository.save(lentHistory);
+		// 캐비넷 상태 변경 (마지막에 와야 합니다)
+		CabinetStatus cabinetStatus = cabinet.getStatusByUserCount(cabinetActiveLentHistories.size() + 1);
+		if (cabinetRepository.updateCabinetStatus(cabinetId, cabinetStatus, cabinet.getVersion()) == 0) throw new OptimisticLockException("");
 	}
 
 	@Override
@@ -67,32 +72,36 @@ public class LentServiceImpl implements LentService {
 		lentExceptionHandler.checkExistedSpace(cabinetId);
 		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet,
 				Collections.emptyList());
+		Long maxVersion = lentRepository.getMaxVersionByCabinet(cabinetId).orElse(0L);
 		LentHistory result =
-				LentHistory.of(now, expirationDate, userId, cabinetId);
+				LentHistory.of(now, expirationDate, userId, cabinetId, maxVersion + 1L);
 		lentRepository.save(result);
-		cabinet.specifyStatusByUserCount(1);
+		// 캐비넷 상태 변경 (마지막에 와야 합니다)
+		CabinetStatus cabinetStatus = cabinet.getStatusByUserCount(1);
+		if (cabinetRepository.updateCabinetStatus(cabinetId, cabinetStatus, cabinet.getVersion()) == 0) throw new OptimisticLockException("");
 	}
 
 	@Override
 	public void endLentCabinet(Long userId) {
-		LentHistory lentHistory = returnCabinet(userId);
+		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
 		Cabinet cabinet = cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId());
 		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
 				lentHistory.getEndedAt());
+		returnCabinet(lentHistory, cabinet);
 	}
 
 	@Override
 	public void terminateLentCabinet(Long userId) {
-		returnCabinet(userId);
+		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
+		Cabinet cabinet = cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId());
+		returnCabinet(lentHistory, cabinet);
 	}
 
-	private LentHistory returnCabinet(Long userId) {
+	protected void returnCabinet(LentHistory lentHistory, Cabinet cabinet) {
 		Date now = DateUtil.getNow();
-		userExceptionHandler.getUser(userId);
-		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(now);
-		cabinetService.updateStatusByUserCount(lentHistory.getCabinetId(), activeLentCount - 1);
-		return lentHistory;
+		CabinetStatus cabinetStatus = cabinet.getStatusByUserCount(activeLentCount - 1);
+		if (cabinetRepository.updateCabinetStatus(cabinet.getCabinetId(), cabinetStatus, cabinet.getVersion()) == 0) throw new OptimisticLockException("");
 	}
 }

@@ -12,5 +12,5 @@ spring:
       hibernate:
         show_sql: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MariaDB103Dialect

@@ -56,7 +56,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 */
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +
-			"WHERE lh.endedAt = null and lh.userId = :userId")
+			"WHERE lh.endedAt is null and lh.userId = :userId")
 	int countUserActiveLent(Long userId);
 
 	/**
@@ -67,7 +67,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 */
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +
-			"WHERE lh.endedAt = null and lh.cabinetId = :cabinetId")
+			"WHERE lh.endedAt is null and lh.cabinetId = :cabinetId")
 	int countCabinetActiveLent(Long cabinetId);
 
 	/**
@@ -103,4 +103,13 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"FROM LentHistory lh " +
 			"WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
 	List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId);
+
+	/**
+	 * 현재 lentHistory에서 해당 cabinet에 대한 version 최대값을 가져옵니다.
+	 * @param cabinetId
+	 * @return
+	 */
+	@Query("select max(lh.version) from LentHistory lh where lh.cabinetId = :cabinetId")
+	Optional<Long> getMaxVersionByCabinet(Long cabinetId);
+
 }
