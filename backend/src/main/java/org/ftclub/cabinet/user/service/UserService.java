@@ -33,7 +33,7 @@ public interface UserService {
 	/**
 	 * 유저의 누적 정지일을 가져옵니다.
 	 *
-	 * @param userId
+	 * @param userId 유저 아이디
 	 * @return 누적 정지일
 	 */
 	// userService에 있는게 맞는지..
@@ -42,7 +42,7 @@ public interface UserService {
 	/**
 	 * 유저의 정지 상태를 확인합니다.
 	 *
-	 * @param userId
+	 * @param userId 유저 고유 아이디
 	 * @return 정지 상태인 경우 true, 정지 상태가 아닌 경우 false
 	 */
 	boolean checkUserIsBanned(Long userId);

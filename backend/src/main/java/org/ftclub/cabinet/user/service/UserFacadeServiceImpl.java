@@ -25,6 +25,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 public class UserFacadeServiceImpl implements UserFacadeService {
 
 	private final UserService userService;
+	private final UserExceptionHandlerService userExceptionHandlerService;
 	private final LentRepository lentRepository;
 	private final LentFacadeService lentFacadeService;
 	private final BanHistoryRepository banHistoryRepository;
@@ -43,37 +45,42 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
 		Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
 				user.getUserId());
-		Long cabinetId;
-		if (lentHistory.isPresent()) {
-			cabinetId = lentHistory.get().getCabinetId();
-		} else {
-			cabinetId = -1L;
-		}
+		Long cabinetId = lentHistory.map(LentHistory::getCabinetId).orElse(-1L);
 		return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId);
 	}
 
 	@Override
 	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer length, Date now) {
 		PageRequest pageable = PageRequest.of(page, length);
-		List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
-				now).getContent();
-		System.out.println(activeBanList.get(0).getUserId());
-		List<BlockedUserDto> blockedUserDtoList = activeBanList.stream()
+		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
+				now);
+		return generateBlockedUserPaginationDto(activeBanList.getContent(),
+				activeBanList.getTotalPages());
+	}
+
+	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
+			Integer totalLength) {
+		List<BlockedUserDto> blockedUserDtoList = banHistories.stream()
 				.map(b -> userMapper.toBlockedUserDto(b,
-						userRepository.findNameById(b.getUserId())))
+						userExceptionHandlerService.getUserNameById(b.getUserId())))
 				.collect(Collectors.toList());
-		return new BlockedUserPaginationDto(null, 0);
+		return new BlockedUserPaginationDto(blockedUserDtoList, totalLength);
 	}
 
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
 			Integer length) {
 		PageRequest pageable = PageRequest.of(page, length);
-		List<User> users = userRepository.findByPartialName(name, pageable);
+		Page<User> users = userRepository.findByPartialName(name, pageable);
+		return generateUserProfilePaginationDto(users.getContent(), users.getTotalPages());
+	}
+
+	private UserProfilePaginationDto generateUserProfilePaginationDto(List<User> users,
+			Integer totalLength) {
 		List<UserProfileDto> userProfileDtoList = users.stream()
 				.map(u -> userMapper.toUserProfileDto(u)).collect(
 						Collectors.toList());
-		return new UserProfilePaginationDto(userProfileDtoList, userProfileDtoList.size());
+		return new UserProfilePaginationDto(userProfileDtoList, totalLength);
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
@@ -81,7 +88,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
 			Integer length) {
 		PageRequest pageable = PageRequest.of(page, length);
-		List<User> users = userRepository.findByPartialName(name, pageable);
+		Page<User> users = userRepository.findByPartialName(name, pageable);
 		return new UserCabinetPaginationDto(null, null);
 	}
 

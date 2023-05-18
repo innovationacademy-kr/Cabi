@@ -29,10 +29,10 @@ public class AdminUserController {
 	/**
 	 * 유저 이름의 일부를 입력받아 해당 유저들의 프로필을 반환합니다.
 	 *
-	 * @param name
-	 * @param page
-	 * @param length
-	 * @return UserProfilePaginationDto
+	 * @param name   유저 이름의 일부
+	 * @param page   페이지 번호
+	 * @param length 페이지 당 길이
+	 * @return {@link UserProfilePaginationDto} 해당하는 유저들의 프로필
 	 */
 	@GetMapping("/search/users/{name}")
 	@AuthGuard(level = Level.ADMIN_ONLY)
@@ -45,10 +45,10 @@ public class AdminUserController {
 	/**
 	 * 유저 이름의 일부를 입력받아 해당 유저들의 캐비넷 정보를 반환합니다.
 	 *
-	 * @param name
-	 * @param page
-	 * @param length
-	 * @return UserCabinetPaginationDto
+	 * @param name   유저 이름의 일부
+	 * @param page   페이지 번호
+	 * @param length 페이지 당 길이
+	 * @return {@link UserCabinetPaginationDto} 해당하는 유저들의 캐비넷 정보
 	 */
 	@GetMapping("/search/users")
 	@AuthGuard(level = Level.ADMIN_ONLY)
@@ -61,9 +61,9 @@ public class AdminUserController {
 	/**
 	 * 차단된 유저 리스트를 받아옵니다.
 	 *
-	 * @param page
-	 * @param length
-	 * @return BlockedUserPaginationDto
+	 * @param page   페이지 번호
+	 * @param length 페이지 당 길이
+	 * @return {@link BlockedUserPaginationDto} 차단된 유저 리스트
 	 */
 	@GetMapping("/search/users/banned")
 	@AuthGuard(level = Level.ADMIN_ONLY)
@@ -75,7 +75,7 @@ public class AdminUserController {
 	/**
 	 * 현재 유저가 차단된 상태일 때, 차단을 해제합니다.
 	 *
-	 * @param userId
+	 * @param userId 유저 고유 아이디
 	 */
 	@DeleteMapping("/log/users/{userId}/ban-history")
 	@AuthGuard(level = Level.ADMIN_ONLY)
@@ -86,10 +86,10 @@ public class AdminUserController {
 	/**
 	 * 유저의 대여 기록을 반환합니다.
 	 *
-	 * @param userId
-	 * @param page
-	 * @param length
-	 * @return LentHistoryPaginationDto
+	 * @param userId 유저 고유 아이디
+	 * @param page   페이지 번호
+	 * @param length 페이지 당 길이
+	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
 	 */
 	@GetMapping("/log/users/{userId}/lent-histories")
 	@AuthGuard(level = Level.ADMIN_ONLY)

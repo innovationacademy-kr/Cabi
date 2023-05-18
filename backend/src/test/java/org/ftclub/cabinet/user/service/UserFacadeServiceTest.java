@@ -8,7 +8,7 @@ import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -35,14 +35,14 @@ public class UserFacadeServiceTest {
 
 	@Test
 	public void 대여_정보_있는_유저_DTO_가져오기() {
-		// 5 lentuser1
+		// 5 lentuser1 3번 사물함 대여 중
 		UserSessionDto user = new UserSessionDto(5L, "lentuser1",
 				"lentuser1@student.42seoul.kr", null, null, null, false);
 
 		MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
 		assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
 		assertEquals(user.getName(), myProfileResponseDto.getName());
-		assertEquals(-1L, myProfileResponseDto.getCabinetId());
+		assertEquals(3L, myProfileResponseDto.getCabinetId());
 	}
 
 	@Test
@@ -51,6 +51,7 @@ public class UserFacadeServiceTest {
 				10, testDate);
 		assertEquals(2, blockedUserPaginationDto.getTotalLength());
 		assertEquals(2, blockedUserPaginationDto.getResult().size());
+		assertEquals("banuser1", blockedUserPaginationDto.getResult().get(0).getName());
 	}
 
 	@Test
@@ -63,4 +64,13 @@ public class UserFacadeServiceTest {
 		assertEquals("lentuser1", userProfilePaginationDto.getResult().get(0).getName());
 		assertEquals("lentuser2", userProfilePaginationDto.getResult().get(1).getName());
 	}
+
+//	@Test
+//	public void 특정_유저_대여기록_가져오기() {
+//		// lentuser1
+//		LentHistoryPaginationDto lentHistoryPaginationDto = userFacadeService.getUserLentHistories(
+//				5L, 0, 10);
+//		assertEquals(11, lentHistoryPaginationDto.getTotalLength());
+//		assertEquals(10, lentHistoryPaginationDto.getResult().size());
+//	}
 }
