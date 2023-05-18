@@ -116,17 +116,14 @@ public class UserServiceTest {
 		assertEquals(new Date(2023, 3, 27), banHistory.get().getUnbannedAt());
 	}
 
-	// ban Repository를 사용할 때 날짜를 매개변수로 줘야할 것 같음 (근데 안되서 일단 롤백)
-	@Test
-	void 유저_밴_해제() {
-		// banuser1, ban 기록 O
-		Long userId = 1L;
-		List<BanHistory> banHistory = banHistoryRepository.findBanHistoriesByUserId(userId);
-		System.out.println(banHistory.get(0).getUnbannedAt());
-		//assertEquals(1L, banHistory.get().getUserId());
-		//userService.unbanUser(1L);
-		//assertNull(banHistory);
-	}
+//	@Test
+//	void 유저_밴_해제() {
+//		// banuser1, ban 기록 O
+//		Long userId = 1L;
+//		List<BanHistory> banHistory = banHistoryRepository.findBanHistoriesByUserId(userId);
+//		userService.unbanUser(userId, testDate);
+//		// 어떻게 검증?
+//	}
 
 	@Test
 	void 누적_ban_기록_확인() {
@@ -138,11 +135,10 @@ public class UserServiceTest {
 
 	@Test
 	void 유저_벤_확인() {
-		// banuser1, 아마 테스트상 과거에 unban 되었기 때문에 false가 나올 것.
-		// 따라서 날짜를 매개변수로 넘겨주는 등 로직 수정 필요.
+		// banuser1
 		Long userId = 1L;
-		boolean isBanned = userService.checkUserIsBanned(userId);
-		assertEquals(false, isBanned);
+		boolean isBanned = userService.checkUserIsBanned(userId, testDate);
+		assertEquals(true, isBanned);
 	}
 
 	@Test

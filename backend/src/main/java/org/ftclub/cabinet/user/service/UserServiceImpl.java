@@ -124,9 +124,9 @@ public class UserServiceImpl implements UserService {
 	 * Active한 banHistory를 List로 받아와야하나 싶긴한데 lent 쪽에서 주석에 써놓으신 것 보고 동일하게 처리했습니다.
 	 * */
 	@Override
-	public boolean checkUserIsBanned(Long userId) {
+	public boolean checkUserIsBanned(Long userId, Date today) {
 		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
-				DateUtil.getNow());
+				today);
 		return (banHistory.size() != 0);
 	}
 

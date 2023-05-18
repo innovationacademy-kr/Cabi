@@ -45,7 +45,7 @@ public interface UserService {
 	 * @param userId 유저 고유 아이디
 	 * @return 정지 상태인 경우 true, 정지 상태가 아닌 경우 false
 	 */
-	boolean checkUserIsBanned(Long userId);
+	boolean checkUserIsBanned(Long userId, Date today);
 
 	/**
 	 * 모든 유저의 정보를 가져옵니다.
