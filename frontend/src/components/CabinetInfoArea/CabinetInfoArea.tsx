@@ -14,6 +14,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import PasswordCheckModalContainer from "../Modals/PasswordCheckModal/PasswordCheckModal.container";
 
 export interface ISelectedCabinetInfo {
   floor: number;
@@ -30,6 +31,12 @@ export interface ISelectedCabinetInfo {
   isLented: boolean;
 }
 
+const setExprieDate = (date: Date | undefined) => {
+  if (!date) return null;
+  if (date.toString().slice(0, 4) === "9999") return null;
+  return date.toString().slice(0, 10);
+};
+
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   myCabinetId?: number;
@@ -40,10 +47,16 @@ const CabinetInfoArea: React.FC<{
   const [showLentModal, setShowLentModal] = useState<boolean>(false);
   const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
-  useState<boolean>(false);
+  const [showPasswordCheckModal, setPasswordCheckModal] =
+    useState<boolean>(false);
   const isMine: boolean = myCabinetId
     ? selectedCabinetInfo?.cabinetId === myCabinetId
     : false;
+  const isAvailable: boolean =
+    selectedCabinetInfo?.status === "AVAILABLE" ||
+    selectedCabinetInfo?.status === "SET_EXPIRE_AVAILABLE"
+      ? true
+      : false;
 
   const handleOpenLentModal = () => {
     if (myCabinetId) return handleOpenUnavailableModal();
@@ -69,6 +82,12 @@ const CabinetInfoArea: React.FC<{
   };
   const handleCloseUnavailableModal = () => {
     setShowUnavailableModal(false);
+  };
+  const handleOpenPasswordCheckModal = () => {
+    setPasswordCheckModal(true);
+  };
+  const handleClosePasswordCheckModal = () => {
+    setPasswordCheckModal(false);
   };
 
   if (!selectedCabinetInfo)
@@ -126,6 +145,7 @@ const CabinetInfoArea: React.FC<{
               onClick={handleOpenLentModal}
               text="대여"
               theme="fill"
+              disabled={isAvailable ? false : true}
             />
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>
@@ -137,9 +157,7 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo!.expireDate
-          ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
-          : null}
+        {setExprieDate(selectedCabinetInfo!.expireDate)}
       </CabinetLentDateInfoStyled>
       {showUnavailableModal && (
         <UnavailableModal
@@ -156,10 +174,14 @@ const CabinetInfoArea: React.FC<{
       {showReturnModal && (
         <ReturnModal
           lentType={selectedCabinetInfo!.lentType}
+          handleOpenPasswordCheckModal={handleOpenPasswordCheckModal}
           closeModal={handleCloseReturnModal}
         />
       )}
       {showMemoModal && <MemoModalContainer onClose={handleCloseMemoModal} />}
+      {showPasswordCheckModal && (
+        <PasswordCheckModalContainer onClose={handleClosePasswordCheckModal} />
+      )}
     </CabinetDetailAreaStyled>
   );
 };

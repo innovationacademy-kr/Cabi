@@ -213,7 +213,7 @@ export class lentRepository implements ILentRepository {
   async getLentCabinetData(cabinet_id: number): Promise<LentCabinetDataDto> {
     const result = await this.cabinetRepository
       .createQueryBuilder('c')
-      .select(['c.cabinet_status', 'c.lent_type', 'c.max_user', 'c.cabinet_id'])
+      .select(['c.cabinet_status', 'c.lent_type', 'c.max_user', 'c.cabinet_id', 'c.floor'])
       .leftJoin(Lent, 'l', 'l.lent_cabinet_id = c.cabinet_id')
       .addSelect('l.expire_time', 'expire_time')
       .addSelect('l.lent_id', 'lent_id')
@@ -236,6 +236,7 @@ export class lentRepository implements ILentRepository {
       expire_time:
         result[0].lent_id === null ? undefined : result[0].expire_time,
       max_user: result[0].c_max_user,
+      floor: result[0].c_floor,
     };
   }
 

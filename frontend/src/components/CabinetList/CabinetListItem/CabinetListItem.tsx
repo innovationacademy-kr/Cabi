@@ -56,16 +56,6 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     cabinetLabelText = "사용불가";
   }
 
-  const handleOpenUnavailableModal = () => {
-    if (
-      props.status === "BANNED" ||
-      props.status === "BROKEN" ||
-      props.status === "SET_EXPIRE_FULL" ||
-      props.status === "EXPIRED"
-    )
-      setShowUnavailableModal(true);
-  };
-
   const handleCloseUnavailableModal = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
     setShowUnavailableModal(false);
@@ -76,12 +66,6 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
       closeCabinet();
       return;
     }
-    if (
-      !isMine &&
-      status !== CabinetStatus.AVAILABLE &&
-      status !== CabinetStatus.SET_EXPIRE_AVAILABLE
-    )
-      return handleOpenUnavailableModal();
 
     setCurrentCabinetId(cabinetId);
     async function getData(cabinetId: number) {

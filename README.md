@@ -1,7 +1,8 @@
 <div align="center">
-
-<img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" width="400px" alt="42Cabi" />
-
+<a href="https://cabi.oopy.io/">
+  <img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" width="400px" alt="42Cabi" />
+</a>
+  
 [![GitHub Stars](https://img.shields.io/github/stars/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/innovationacademy-kr/42cabi/stargazers) [![GitHub Stars](https://img.shields.io/github/issues/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/innovationacademy-kr/42cabi/issues) [![Current Version](https://img.shields.io/badge/version-4.0.0-black?style=for-the-badge)](https://github.com/IgorAntun/node-chat) [![GitHub License](https://img.shields.io/github/license/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/IgorAntun/node-chat/issues)
 
 </div>
@@ -83,12 +84,12 @@
     <td>기본적인 코딩룰 적용으로 가독성 향상 및 코드 양식을 통일했습니다.</td>
   </tr>
   <tr>
-    <td rowspan="6" align="center">Front-End</td>
+    <td rowspan="4" align="center">Front-End</td>
     <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png" width="15px" alt="_icon" /> React</td>
     <td>컴포넌트 기반의 UI 구현으로 재사용성을 높이고 상태 관리를 통해 성능을 최적화했습니다.</td>
   </tr>
   <tr>
-    <td><img src="https://img.icons8.com/color/480/redux.png" width="15px" alt="_icon" /> Redux</td>
+    <td><img src="https://noticon-static.tammolo.com/dgggcrkxq/image/upload/v1641952185/noticon/a9qgcuhj0enmzobh68cf.png" width="15px" alt="_icon" /> Recoil</td>
     <td>API 요청 최소화 및 컴포넌트간 공유하는 상태를 효율적으로 관리하여 리렌더링을 최적화했습니다.</td>
   </tr>
   <tr>
@@ -98,15 +99,6 @@
   <tr>
     <td><img src="https://vitejs.dev/logo-with-shadow.png" width="15px" alt="_icon" /> Vite</td>
     <td>esbuild를 통한 빠른 번들링과 HMR을 통해 생산성을 향상했습니다.</td>
-  </tr>
-  <tr>
-    <td><img src="https://mui.com/static/logo.png" width="15px" alt="_icon" /> material-UI</td>
-    <td>안드로이드 시스템에서 검증된 신뢰성과 리액트와의 호환성을 바탕으로 생산성을 향상했습니다.</td>
-      <!-- 명확하지 않은 표현인 것 같은데 작성해주실 분..? -->
-  </tr>
-  <tr>
-    <td><img src="https://static-00.iconduck.com/assets.00/storybook-icon-icon-412x512-341bo8r1.png" width="15px" alt="_icon" /> Storybook</td>
-    <td>공통 UI 컴포넌트 제작 시 컴포넌트를 독립적으로 만들고, 테스트하는 과정을 통해 생산성을 향상했습니다.</td>
   </tr>
   <tr>
     <td rowspan="5" align="center">Back-End</td>
@@ -176,6 +168,10 @@
 
 | [🍎 skim](https://github.com/subin195-09) | [🍪 spark](https://github.com/Hyunja27) | [✏️yooh](https://github.com/oyhoyhk) | [🪀 yoyoo](https://github.com/Yoowatney) | [🎒 yubchoi](https://github.com/yubinquitous) |
 | ----------------------------------------- | ------------------------------------------- | -------------------------------------------- | --------------------------------------- | ---------------------------------------- |
+
+| [ 🌑 daewoole](https://github.com/LeeDaeWook) | [🐝 hyungnoh](https://github.com/YESHYUNGSEOK) | [원 jpark2](https://github.com/Z1park) | [🎨 junsohn](https://github.com/junyoung2015) |[🤓 seong-hui ](https://github.com/seong-hui) | [🚀 wchae](https://github.com/enaenen) |
+| ----------------------------------------- | ------------------------------------------- | -------------------------------------------- | --------------------------------------- | ---------------------------------------- | ---------------------------------------- |
+
 
 |  <a href="https://github.com/innovationacademy-kr"><img src="https://img.shields.io/badge/42Seoul-000000?style=flat-square&logo=42&logoColor=white" /></a> | 
 | ----------------------------------------- |

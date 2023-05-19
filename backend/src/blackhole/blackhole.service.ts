@@ -205,16 +205,18 @@ export class BlackholeService implements OnApplicationBootstrap {
       `Called ${BlackholeService.name} ${this.blackholeTimerTrigger.name}`,
     );
     const users: UserSessionDto[] = await this.userService.getAllUser();
+    let counts: number = 0; // 텀을 두어서 요청을 하게끔 하기 위함
+    let dateToTrigger = new Date();
 
     for (const user of users) {
       try {
-        if (user.blackholed_at === null) {
-          const fire_date = new Date();
-          fire_date.setDate(fire_date.getDate() + 15);
-          this.blackholeTools.addBlackholeTimer(user, fire_date);
-        } else if (user.blackholed_at.getTime() - new Date().getTime() > 0) {
-          this.blackholeTools.addBlackholeTimer(user, user.blackholed_at);
-        } else {
+        if (user.blackholed_at === null) { // member인 경우, 혹은 blackholed_at이 적용이 되지 않은 경우(지금은 멤버만)
+          dateToTrigger = await this.blackholeTools.addDateSeconds(dateToTrigger, (15 * 60 * 60 * 24) + (counts * 2));
+          this.blackholeTools.addBlackholeTimer(user, dateToTrigger);
+        } else if (user.blackholed_at.getTime() - new Date().getTime() > 0) { // 블랙홀에 빠지지 않았다면
+          dateToTrigger = await this.blackholeTools.addDateSeconds(user.blackholed_at, (counts * 2));
+          this.blackholeTools.addBlackholeTimer(user, dateToTrigger);
+        } else { // 블랙홀에 빠졌다면
           await this.postOauthToken();
           await this.requestValidateBlackholedUser(user);
         }
@@ -227,6 +229,9 @@ export class BlackholeService implements OnApplicationBootstrap {
         } else {
           this.logger.error(err);
         }
+      }
+      finally {
+        counts++;
       }
     }
     this.logger.debug(
