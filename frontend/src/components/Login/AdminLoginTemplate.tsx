@@ -22,6 +22,10 @@ const AdminLoginTemplate = (props: {
   const [adminPw, setAdminPw] = useState("");
 
   const handleLoginButton = async () => {
+    if (adminId === "" || adminPw === "") {
+      alert("아이디와 비밀번호를 입력해주세요.");
+      return;
+    }
     try {
       const response = await axiosAdminAuthLogin(adminId, adminPw);
       if (response.status === 200) {
