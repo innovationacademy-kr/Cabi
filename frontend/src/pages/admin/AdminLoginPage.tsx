@@ -1,11 +1,11 @@
 import "@/assets/css/loginPage.css";
-import LoginTemplate from "@/components/Login/LoginTemplate";
+import AdminLoginTemplate from "@/components/Login/AdminLoginTemplate";
 
 const LoginPage = () => {
   const url = `${import.meta.env.VITE_BE_HOST}/api/admin/auth/login`;
 
   return (
-    <LoginTemplate
+    <AdminLoginTemplate
       url={url}
       pageTitle="42Cabi Admin"
       pageSubTitle="관리자 페이지"
