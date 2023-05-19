@@ -4,6 +4,8 @@ import { IAdminAuthRepository } from './repository/auth.repository.interface';
 import { ConfigService } from '@nestjs/config';
 import { AdminUserDto } from '../dto/admin.user.dto';
 import AdminUserRole from 'src/admin/enums/admin.user.role.enum';
+import { AdminLoginDto } from '../dto/admin.login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AdminAuthService {
@@ -11,6 +13,8 @@ export class AdminAuthService {
   constructor(
     @Inject('IAdminAuthRepository')
     private adminAuthRepository: IAdminAuthRepository,
+    @Inject(JwtService)
+    private jwtService: JwtService,
     @Inject(ConfigService) private configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
@@ -44,4 +48,16 @@ export class AdminAuthService {
     const result = await this.adminAuthRepository.getAdminUserRole(email);
     return result;
   }
+
+  async isAdminLoginVerified(loginInfo: AdminLoginDto) {
+    return (loginInfo.id === this.configService.get<string>('admin.login_id') 
+    && loginInfo.password === this.configService.get<string>('admin.login_password')); 
+  }
+
+  async generateAdminJWTToken() {
+    const adminPayload: AdminUserDto = {
+      email: "admin@innovationacademy.kr",
+      role: AdminUserRole.ROOT_ADMIN}; 
+    return this.jwtService.sign(adminPayload);
+  } 
 }
