@@ -63,7 +63,9 @@ export class AdminAuthController {
     @Res() res: Response,
   ): Promise<void> {
     if (!(await this.adminAuthService.isAdminLoginVerified(loginInfo))) {
-      throw new UnauthorizedException('로그인에 실패했습니다.');
+      throw new UnauthorizedException(
+        '아이디 또는 비밀번호가 일치하지 않습니다.',
+      );
     }
     const token = await this.adminAuthService.generateAdminJWTToken();
 
