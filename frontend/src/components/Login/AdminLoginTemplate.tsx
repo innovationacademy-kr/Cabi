@@ -2,6 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import "@/assets/css/loginPage.css";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
+import { additionalModalType } from "@/assets/data/maps";
 
 const AdminLoginTemplate = (props: {
   url: string;
@@ -13,7 +15,14 @@ const AdminLoginTemplate = (props: {
   const [isClicked, setIsClicked] = useState(false);
   const [isIdFocused, setIsIdFocused] = useState(false);
   const [isPwFocused, setIsPwFocused] = useState(false);
-
+  const [showUnavailableModal, setShowUnavailableModal] = useState(false);
+  const handleOpenUnavailableModal = () => {
+    setShowUnavailableModal(true);
+  };
+  const handleCloseUnavailableModal = () => {
+    setIsClicked(false);
+    setShowUnavailableModal(false);
+  };
   return (
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
@@ -72,7 +81,7 @@ const AdminLoginTemplate = (props: {
           </CardInputBoxStyled>
           <button
             onClick={() => {
-              // 백 작업 후 수정
+              handleOpenUnavailableModal();
               setIsClicked(true);
             }}
           >
@@ -87,6 +96,12 @@ const AdminLoginTemplate = (props: {
           </CardGoogleOauthStyled>
         </LoginCardStyled>
       </RightSectionStyled>
+      {showUnavailableModal && (
+        <UnavailableModal
+          status={additionalModalType.MODAL_ADMIN_LOGIN_FAILURE}
+          closeModal={handleCloseUnavailableModal}
+        />
+      )}
     </LoginPageStyled>
   );
 };
