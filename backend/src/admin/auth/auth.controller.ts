@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Inject,
   Logger,
   Post,
@@ -59,15 +60,16 @@ export class AdminAuthController {
   @Post('/login')
   async login(
     @Body(new ValidationPipe()) loginInfo: AdminLoginDto,
-    @Res() res: Response
-    ) : Promise<void> {
-    if (!await this.adminAuthService.isAdminLoginVerified(loginInfo)) {
-      throw new UnauthorizedException;
+    @Res() res: Response,
+  ): Promise<void> {
+    if (!(await this.adminAuthService.isAdminLoginVerified(loginInfo))) {
+      throw new UnauthorizedException('로그인에 실패했습니다.');
     }
     const token = await this.adminAuthService.generateAdminJWTToken();
 
-    res.cookie("admin_access_token", token);
-    return res.redirect(`${this.configService.get<string>('fe_host')}/admin/home`);
+    res.cookie('admin_access_token', token);
+    this.logger.log(`Admin has logged in.`);
+    res.status(HttpStatus.OK).send();
   }
 
   @ApiOperation({

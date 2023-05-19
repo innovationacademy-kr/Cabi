@@ -11,7 +11,7 @@ const LoginTemplate = (props: {
 }) => {
   const { url, pageTitle, pageSubTitle, imgSrc } = props;
   const [isClicked, setIsClicked] = useState(false);
-  
+
   return (
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">

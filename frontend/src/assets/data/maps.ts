@@ -6,7 +6,6 @@ export enum additionalModalType {
   MODAL_UNAVAILABLE_ALREADY_LENT = "MODAL_UNAVAILABLE_ALREADY_LENT",
   MODAL_ADMIN_RETURN = "MODAL_ADMIN_RETURN",
   MODAL_BAN = "MODAL_BAN",
-  MODAL_ADMIN_LOGIN_FAILURE = "MODAL_ADMIN_LOGIN_FAILURE",
 }
 
 export const cabinetIconSrcMap = {
@@ -90,11 +89,6 @@ export const modalPropsMap = {
     type: "confirm",
     title: "밴 해제하기",
     confirmMessage: "해제",
-  },
-  MODAL_ADMIN_LOGIN_FAILURE: {
-    type: "error",
-    title: "로그인에 실패했습니다",
-    confirmMessage: "",
   },
 };
 

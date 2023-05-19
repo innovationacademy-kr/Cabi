@@ -4,6 +4,8 @@ import "@/assets/css/loginPage.css";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import { additionalModalType } from "@/assets/data/maps";
+import { axiosAdminAuthLogin } from "@/api/axios/axios.custom";
+import { useNavigate } from "react-router-dom";
 
 const AdminLoginTemplate = (props: {
   url: string;
@@ -11,18 +13,28 @@ const AdminLoginTemplate = (props: {
   pageSubTitle: string;
   imgSrc?: string;
 }) => {
+  const navigate = useNavigate();
   const { url, pageTitle, pageSubTitle, imgSrc } = props;
   const [isClicked, setIsClicked] = useState(false);
   const [isIdFocused, setIsIdFocused] = useState(false);
   const [isPwFocused, setIsPwFocused] = useState(false);
-  const [showUnavailableModal, setShowUnavailableModal] = useState(false);
-  const handleOpenUnavailableModal = () => {
-    setShowUnavailableModal(true);
+  const [adminId, setAdminId] = useState("");
+  const [adminPw, setAdminPw] = useState("");
+
+  const handleLoginButton = async () => {
+    try {
+      const response = await axiosAdminAuthLogin(adminId, adminPw);
+      if (response.status === 200) {
+        navigate("/admin/home");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setIsClicked(true);
+    setAdminId("");
+    setAdminPw("");
   };
-  const handleCloseUnavailableModal = () => {
-    setIsClicked(false);
-    setShowUnavailableModal(false);
-  };
+
   return (
     <LoginPageStyled id="loginPage">
       <LeftSectionStyled className="leftLoginPage">
@@ -56,6 +68,8 @@ const AdminLoginTemplate = (props: {
 
           <CardInputBoxStyled>
             <CardInputStyled
+              value={adminId}
+              onChange={(e) => setAdminId(e.target.value)}
               placeholder="ID"
               disabled={isClicked ? true : false}
               onFocus={() => {
@@ -67,6 +81,8 @@ const AdminLoginTemplate = (props: {
               isFocus={isIdFocused}
             ></CardInputStyled>
             <CardInputStyled
+              value={adminPw}
+              onChange={(e) => setAdminPw(e.target.value)}
               type="password"
               placeholder="PASSWORD"
               disabled={isClicked ? true : false}
@@ -76,15 +92,13 @@ const AdminLoginTemplate = (props: {
               onBlur={() => {
                 setIsPwFocused(false);
               }}
+              onKeyUp={(e) => {
+                if (e.key == "Enter") handleLoginButton();
+              }}
               isFocus={isPwFocused}
             ></CardInputStyled>
           </CardInputBoxStyled>
-          <button
-            onClick={() => {
-              handleOpenUnavailableModal();
-              setIsClicked(true);
-            }}
-          >
+          <button onClick={handleLoginButton}>
             {isClicked ? <LoadingAnimation></LoadingAnimation> : "L O G I N"}
           </button>
           <CardGoogleOauthStyled
@@ -96,12 +110,6 @@ const AdminLoginTemplate = (props: {
           </CardGoogleOauthStyled>
         </LoginCardStyled>
       </RightSectionStyled>
-      {showUnavailableModal && (
-        <UnavailableModal
-          status={additionalModalType.MODAL_ADMIN_LOGIN_FAILURE}
-          closeModal={handleCloseUnavailableModal}
-        />
-      )}
     </LoginPageStyled>
   );
 };
