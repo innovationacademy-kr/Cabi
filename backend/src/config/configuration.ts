@@ -48,6 +48,8 @@ export default () => ({
     clientid: process.env.ADMIN_GOOGLE_CLIENT_ID,
     secret: process.env.ADMIN_GOOGLE_CLIENT_SECRET,
     callbackurl: process.env.ADMIN_GOOGLE_CLIENT_CALLBACK,
+    login_id: process.env.ADMIN_LOGIN_ID,
+    login_password: process.env.ADMIN_LOGIN_PASSWORD,
   },
   penalty_day_share: parseInt(process.env.PENALTY_DAY_SHARE, 10),
 });
