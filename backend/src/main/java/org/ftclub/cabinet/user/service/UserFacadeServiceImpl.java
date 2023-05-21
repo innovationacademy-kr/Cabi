@@ -8,12 +8,16 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserDto;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -21,103 +25,135 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserFacadeServiceImpl implements UserFacadeService {
 
-    private final UserService userService;
-    private final LentRepository lentRepository;
-    private final BanHistoryRepository banHistoryRepository;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+	private final UserService userService;
+	private final UserExceptionHandlerService userExceptionHandlerService;
+	private final LentRepository lentRepository;
+	private final LentFacadeService lentFacadeService;
+	private final BanHistoryRepository banHistoryRepository;
+	private final UserRepository userRepository;
+	private final UserMapper userMapper;
 
-    @Override
-    public MyProfileResponseDto getMyProfile(UserSessionDto user) {
-        Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
-                user.getUserId());
-        Long cabinetId;
-        if (lentHistory.isPresent()) {
-            cabinetId = lentHistory.get().getCabinetId();
-        } else {
-            cabinetId = -1L;
-        }
-        return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId);
-    }
+	@Override
+	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
+		Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
+				user.getUserId());
+		Long cabinetId = lentHistory.map(LentHistory::getCabinetId).orElse(-1L);
+		return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId);
+	}
 
-    @Override
-    public BlockedUserPaginationDto getAllBanUsers() {
-        List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList();
-        List<BlockedUserDto> blockedUserDtoList = activeBanList.stream()
-                .map(b -> userMapper.toBlockedUserDto(b,
-                        userRepository.findNameById(b.getUserId())))
-                .collect(Collectors.toList());
-        return new BlockedUserPaginationDto(blockedUserDtoList, blockedUserDtoList.size());
-    }
+	@Override
+	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer length, Date now) {
+		PageRequest pageable = PageRequest.of(page, length);
+		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
+				now);
+		return generateBlockedUserPaginationDto(activeBanList.getContent(),
+				activeBanList.getTotalPages());
+	}
 
-    @Override
-    public UserProfilePaginationDto getUserProfileListByName(String name) {
-        List<User> users = userRepository.findByNameContaining(name);
-        List<UserProfileDto> userProfileDtoList = users.stream()
-                .map(u -> userMapper.toUserProfileDto(u)).collect(
-                        Collectors.toList());
-        return new UserProfilePaginationDto(userProfileDtoList, userProfileDtoList.size());
-    }
+	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
+			Integer totalLength) {
+		List<BlockedUserDto> blockedUserDtoList = banHistories.stream()
+				.map(b -> userMapper.toBlockedUserDto(b,
+						userExceptionHandlerService.getUserNameById(b.getUserId())))
+				.collect(Collectors.toList());
+		return new BlockedUserPaginationDto(blockedUserDtoList, totalLength);
+	}
 
-    @Override
-    public boolean checkUserExists(String name) {
-        return userService.checkUserExists(name);
-    }
+	@Override
+	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
+			Integer length) {
+		PageRequest pageable = PageRequest.of(page, length);
+		Page<User> users = userRepository.findByPartialName(name, pageable);
+		return generateUserProfilePaginationDto(users.getContent(), users.getTotalPages());
+	}
 
-    @Override
-    public void createUser(String name, String email, Date blackholedAt, UserRole role) {
-        userService.createUser(name, email, blackholedAt, role);
-    }
+	private UserProfilePaginationDto generateUserProfilePaginationDto(List<User> users,
+			Integer totalLength) {
+		List<UserProfileDto> userProfileDtoList = users.stream()
+				.map(u -> userMapper.toUserProfileDto(u)).collect(
+						Collectors.toList());
+		return new UserProfilePaginationDto(userProfileDtoList, totalLength);
+	}
 
-    @Override
-    public boolean checkAdminUserExists(String email) {
-        return userService.checkAdminUserExists(email);
-    }
+	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
+	@Override
+	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
+			Integer length) {
+		PageRequest pageable = PageRequest.of(page, length);
+		Page<User> users = userRepository.findByPartialName(name, pageable);
+		return new UserCabinetPaginationDto(null, null);
+	}
 
-    @Override
-    public void createAdminUser(String email) {
-        userService.createAdminUser(email);
-    }
+	@Override
+	public LentHistoryPaginationDto getUserLentHistories(Long userId, Integer page,
+			Integer length) {
+		return lentFacadeService.getAllUserLentHistories(userId, page, length);
+	}
 
-    @Override
-    public void deleteUser(Long userId) {
-        userService.deleteUser(userId);
-    }
+	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
+	@Override
+	public MyCabinetInfoResponseDto getMyLentAndCabinetInfo(Long userId) {
+		User user = userRepository.getUser(userId);
+		return new MyCabinetInfoResponseDto(null, null, null, null, null, null, null, null, null);
+	}
 
-    @Override
-    public void deleteAdminUser(Long adminUserId) {
-        userService.deleteAdminUser(adminUserId);
-    }
+	@Override
+	public boolean checkUserExists(String name) {
+		return userService.checkUserExists(name);
+	}
 
-    @Override
-    public void updateAdminUserRole(Long adminUserId, AdminRole role) {
-        userService.updateAdminUserRole(adminUserId, role);
-    }
+	@Override
+	public void createUser(String name, String email, Date blackholedAt, UserRole role) {
+		userService.createUser(name, email, blackholedAt, role);
+	}
 
-    @Override
-    public void updateUserBlackholedAtById(Long userId, Date newBlackholedAt) {
-        userService.updateUserBlackholedAtById(userId, newBlackholedAt);
-    }
+	@Override
+	public boolean checkAdminUserExists(String email) {
+		return userService.checkAdminUserExists(email);
+	}
 
-    @Override
-    public void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt,
-            Date expiredAt) {
-        userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
-    }
+	@Override
+	public void createAdminUser(String email) {
+		userService.createAdminUser(email);
+	}
 
-    @Override
-    public void unbanUser(Long userId) {
-        userService.unbanUser(userId);
-    }
+	@Override
+	public void deleteUser(Long userId, Date deletedAt) {
+		userService.deleteUser(userId, deletedAt);
+	}
 
-    @Override
-    public boolean checkUserIsBanned(Long userId) {
-        return userService.checkUserIsBanned(userId);
-    }
+	@Override
+	public void deleteAdminUser(Long adminUserId) {
+		userService.deleteAdminUser(adminUserId);
+	}
+
+	@Override
+	public void updateAdminUserRole(Long adminUserId, AdminRole role) {
+		userService.updateAdminUserRole(adminUserId, role);
+	}
+
+	@Override
+	public void updateUserBlackholedAt(Long userId, Date newBlackholedAt) {
+		userService.updateUserBlackholedAt(userId, newBlackholedAt);
+	}
+
+	@Override
+	public void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt,
+			Date expiredAt) {
+		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
+	}
+
+	@Override
+	public void unbanUser(Long userId, Date today) {
+		userService.unbanUser(userId, today);
+	}
+
 }
