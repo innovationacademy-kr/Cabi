@@ -1,4 +1,5 @@
 spring:
+  production: false # 배포 환경에서는 true
   config:
     activate:
       on-profile: test
