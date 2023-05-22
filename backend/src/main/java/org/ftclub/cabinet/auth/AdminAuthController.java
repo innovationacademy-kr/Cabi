@@ -23,15 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminAuthController {
 
 	private final TokenProvider tokenProvider;
-
 	private final OauthService oauthService;
-
 	private final CookieManager cookieManager;
-
 	private final SiteUrlProperties siteUrlProperties;
-
 	private final GoogleApiProperties googleApiProperties;
-
 	private final JwtProperties jwtProperties;
 
 	/**
