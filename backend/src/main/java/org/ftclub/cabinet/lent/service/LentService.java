@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.lent.service;
 
 import java.util.List;
-import org.ftclub.cabinet.dto.LentHistoryWithNameExpiredAtDto;
+import org.ftclub.cabinet.dto.LentHistoryWithNameExpirationDto;
 
 /**
  * 대여 관련된 서비스
@@ -39,9 +39,9 @@ public interface LentService {
     void terminateLentCabinet(Long userId);
 
     /**
-     * 모든 유저의 대여 정보를 가져옵니다. 연체일 정보도 함께 가져옵니다.
+     * 모든 유저의 대여 정보를 가져옵니다. 연체 정보도 함께 가져옵니다.
      *
      * @return 모든 유저의 대여 정보
      */
-    List<LentHistoryWithNameExpiredAtDto> getAllLentHistoryWithNameExpired();
+    List<LentHistoryWithNameExpirationDto> getAllLentHistoryWithNameExpiration();
 }

@@ -3,7 +3,7 @@ package org.ftclub.cabinet.mapper;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
-import org.ftclub.cabinet.dto.LentHistoryWithNameExpiredAtDto;
+import org.ftclub.cabinet.dto.LentHistoryWithNameExpirationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.mapstruct.Mapper;
@@ -25,7 +25,10 @@ public interface LentMapper {
 
     @Mapping(target = "userId", source = "lentHistory.userId")
     @Mapping(target = "cabinetId", source = "cabinet.cabinetId")
-    LentHistoryWithNameExpiredAtDto toLentHistoryWithExpiredAtDto(LentHistory lentHistory,
+    LentHistoryWithNameExpirationDto toLentHistoryWithExpirationDto(LentHistory lentHistory,
             User user,
-            Cabinet cabinet);
+            Cabinet cabinet,
+            Boolean isExpired,
+            Long daysLeftFromExpireDate
+    );
 }

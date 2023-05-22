@@ -2,7 +2,7 @@ package org.ftclub.cabinet.utils.scheduler;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.LentHistoryWithNameExpiredAtDto;
+import org.ftclub.cabinet.dto.LentHistoryWithNameExpirationDto;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
@@ -28,9 +28,9 @@ public class SystemScheduler {
     // Every Midnight
     @Scheduled(cron = "0 0 0 * * *")
     public void checkAllLents() {
-        List<LentHistoryWithNameExpiredAtDto> lents = this.lentService.getAllLentHistoryWithNameExpired();
+        List<LentHistoryWithNameExpirationDto> lents = this.lentService.getAllLentHistoryWithNameExpiration();
 
-        for (LentHistoryWithNameExpiredAtDto lent : lents) {
+        for (LentHistoryWithNameExpirationDto lent : lents) {
             this.overdueManager.handleOverdue(lent);
             this.leaveAbsenceManager.handleLeaveAbsence(lent.getUserId(), lent.getName());
             // 2초 간격으로 대여 검증

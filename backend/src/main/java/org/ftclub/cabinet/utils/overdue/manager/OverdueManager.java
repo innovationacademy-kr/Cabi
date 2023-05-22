@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.utils.overdue.manager;
 
 
-import org.ftclub.cabinet.dto.LentHistoryWithNameExpiredAtDto;
+import org.ftclub.cabinet.dto.LentHistoryWithNameExpirationDto;
 
 /**
  * 연체 처리를 위한 인터페이스
@@ -44,7 +44,7 @@ public interface OverdueManager {
     /**
      * 연체된 대여에 대한 처리를 위한 메소드
      *
-     * @param lent - 유저의 대여 정보
+     * @param lent - 연체 정보를 포함한 유저의 대여 정보
      */
-    void handleOverdue(LentHistoryWithNameExpiredAtDto lent);
+    void handleOverdue(LentHistoryWithNameExpirationDto lent);
 }

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
-import org.ftclub.cabinet.dto.LentHistoryWithNameExpiredAtDto;
+import org.ftclub.cabinet.dto.LentHistoryWithNameExpirationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentRepository;
@@ -98,12 +98,15 @@ public class LentServiceImpl implements LentService {
         return lentHistory;
     }
 
-    public List<LentHistoryWithNameExpiredAtDto> getAllLentHistoryWithNameExpired() {
+    public List<LentHistoryWithNameExpirationDto> getAllLentHistoryWithNameExpiration() {
         List<LentHistory> lentHistories = lentRepository.findAllActiveLent();
-        List<LentHistoryWithNameExpiredAtDto> lentHistoryWithExpiredAtDtoList = lentHistories.stream()
-                .map(e -> lentMapper.toLentHistoryWithExpiredAtDto(e,
+        List<LentHistoryWithNameExpirationDto> lentHistoryWithExpiredAtDtoList = lentHistories.stream()
+                .map(e -> lentMapper.toLentHistoryWithExpirationDto(e,
                         userExceptionHandler.getUser(e.getUserId()),
-                        cabinetExceptionHandler.getCabinet(e.getCabinetId())))
+                        cabinetExceptionHandler.getCabinet(e.getCabinetId()),
+                        e.isExpired(),
+                        e.getDaysDiffEndedAndExpired()
+                ))
                 .collect(Collectors.toList());
         return lentHistoryWithExpiredAtDtoList;
     }
