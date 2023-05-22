@@ -1,10 +1,10 @@
 package org.ftclub.cabinet.utils.leave.absence;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.FtAPIManager;
-import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -18,14 +18,14 @@ public class LeaveAbsenceManagerImpl implements LeaveAbsenceManager {
     private final UserService userService;
 
     @Override
-    public Boolean isLeaveAbsence(JSONObject jsonUserInfo) {
-        return !jsonUserInfo.getBoolean("active?");
+    public Boolean isLeaveAbsence(JsonNode jsonUserInfo) {
+        return !jsonUserInfo.get("active?").asBoolean();
     }
 
     @Override
     public void handleLeaveAbsence(Long userId, String name) {
         try {
-            JSONObject jsonUserInfo = this.ftAPIManager.getFtUserInfo(name);
+            JsonNode jsonUserInfo = this.ftAPIManager.getFtUserInfo(name);
             if (isLeaveAbsence(jsonUserInfo)) {
                 this.lentService.terminateLentCabinet(userId);
             }
