@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class GmailProperties {
 
-    @Value("${spring.mail.production}")
+    @Value("${spring.production}")
     private Boolean isProduction;
 
     @Value("${spring.mail.host}")
