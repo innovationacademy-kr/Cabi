@@ -3,7 +3,6 @@ package org.ftclub.cabinet.user.service;
 import java.util.Date;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -55,16 +54,6 @@ public interface UserFacadeService {
 	 */
 	UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
 			Integer length);
-
-	/**
-	 * 유저 아이디를 입력받아 해당 유저의 대여 기록을 반환합니다.
-	 *
-	 * @param userId 유저 고유 아이디
-	 * @param page   페이지 번호
-	 * @param length 페이지 당 길이
-	 * @return {@link LentHistoryPaginationDto} 해당 유저의 대여 기록
-	 */
-	LentHistoryPaginationDto getUserLentHistories(Long userId, Integer page, Integer length);
 
 	/**
 	 * 사용자의 아이디를 입력받아 본인의 대여 정보와 캐비넷 정보를 반환합니다.

@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserDto;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -55,11 +54,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
 				now);
 		return generateBlockedUserPaginationDto(activeBanList.getContent(),
-				activeBanList.getTotalPages());
+				activeBanList.getTotalElements());
 	}
 
 	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
-			Integer totalLength) {
+			Long totalLength) {
 		List<BlockedUserDto> blockedUserDtoList = banHistories.stream()
 				.map(b -> userMapper.toBlockedUserDto(b,
 						userExceptionHandlerService.getUserNameById(b.getUserId())))
@@ -72,11 +71,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			Integer length) {
 		PageRequest pageable = PageRequest.of(page, length);
 		Page<User> users = userRepository.findByPartialName(name, pageable);
-		return generateUserProfilePaginationDto(users.getContent(), users.getTotalPages());
+		return generateUserProfilePaginationDto(users.getContent(), users.getTotalElements());
 	}
 
 	private UserProfilePaginationDto generateUserProfilePaginationDto(List<User> users,
-			Integer totalLength) {
+			Long totalLength) {
 		List<UserProfileDto> userProfileDtoList = users.stream()
 				.map(u -> userMapper.toUserProfileDto(u)).collect(
 						Collectors.toList());
@@ -90,12 +89,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		PageRequest pageable = PageRequest.of(page, length);
 		Page<User> users = userRepository.findByPartialName(name, pageable);
 		return new UserCabinetPaginationDto(null, null);
-	}
-
-	@Override
-	public LentHistoryPaginationDto getUserLentHistories(Long userId, Integer page,
-			Integer length) {
-		return lentFacadeService.getAllUserLentHistories(userId, page, length);
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */

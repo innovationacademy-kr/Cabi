@@ -7,6 +7,7 @@ import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminUserController {
 
 	private final UserFacadeService userFacadeService;
+	private final LentFacadeService lentFacadeService;
 
 	/**
 	 * 유저 이름의 일부를 입력받아 해당 유저들의 프로필을 반환합니다.
@@ -96,7 +98,7 @@ public class AdminUserController {
 	public LentHistoryPaginationDto getLentHistoriesByUserId(@PathVariable("userId") Long userId,
 			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length) {
-		return userFacadeService.getUserLentHistories(userId, page, length);
+		return lentFacadeService.getAllUserLentHistories(userId, page, length);
 	}
 
 	// 동아리 유저 생성하는 메서드 필요
