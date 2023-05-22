@@ -68,7 +68,7 @@ public class OverdueManagerImpl implements OverdueManager {
         if (isExpired) {
             return OverdueType.OVERDUE;
         }
-        if (daysLeftFromExpireDate.equals(this.getSoonOverdueTerm())) {
+        if (this.getSoonOverdueTerm().equals(daysLeftFromExpireDate)) {
             return OverdueType.SOON_OVERDUE;
         }
         return OverdueType.NONE;

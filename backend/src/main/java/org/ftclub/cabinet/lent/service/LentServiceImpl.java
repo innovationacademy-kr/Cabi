@@ -100,14 +100,14 @@ public class LentServiceImpl implements LentService {
 
     public List<LentHistoryWithNameExpirationDto> getAllLentHistoryWithNameExpiration() {
         List<LentHistory> lentHistories = lentRepository.findAllActiveLent();
-        List<LentHistoryWithNameExpirationDto> lentHistoryWithExpiredAtDtoList = lentHistories.stream()
+        List<LentHistoryWithNameExpirationDto> lentHistoryWithExpirationDtoList = lentHistories.stream()
                 .map(e -> lentMapper.toLentHistoryWithExpirationDto(e,
                         userExceptionHandler.getUser(e.getUserId()),
                         cabinetExceptionHandler.getCabinet(e.getCabinetId()),
-                        e.isExpired(),
-                        e.getDaysDiffEndedAndExpired()
+                        e.isExpired(new Date()),
+                        e.getDaysLeftFromOverdueDay(new Date())
                 ))
                 .collect(Collectors.toList());
-        return lentHistoryWithExpiredAtDtoList;
+        return lentHistoryWithExpirationDtoList;
     }
 }
