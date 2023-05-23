@@ -14,6 +14,7 @@ import useMultiSelect from "@/hooks/useMultiSelect";
 import AdminReturnModal from "../Modals/ReturnModal/AdminReturnModal";
 import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
 import { ISelectedCabinetInfo } from "@/components/CabinetInfoArea/CabinetInfoArea";
+import { IAdminModalState } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 
 export interface IMultiSelectTargetInfo {
   targetCabinetInfoList: CabinetInfo[];
@@ -31,52 +32,24 @@ const AdminCabinetInfoArea: React.FC<{
   closeCabinet: () => void;
   multiSelectTargetInfo: IMultiSelectTargetInfo | null;
   openLent: React.MouseEventHandler;
+  adminModal: IAdminModalState;
+  handleAdminModal: (arg0: string, arg1: boolean) => void;
+  checkMultiReturn: boolean;
+  checkMultiStatus: boolean;
+  resetMultiSelectMode: () => void;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
   multiSelectTargetInfo,
   openLent,
+  adminModal,
+  handleAdminModal,
+  checkMultiReturn,
+  checkMultiStatus,
+  resetMultiSelectMode,
 }) => {
   const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
-  const [showAdminReturnModal, setShowAdminReturnModal] =
-    useState<boolean>(false);
-  const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
-
-  const { resetMultiSelectMode, isSameStatus, isSameType } = useMultiSelect();
-
   const isLented: boolean = selectedCabinetInfo?.userNameList.at(0) !== "-";
-
-  const handleOpenAdminReturnModal = () => {
-    setShowAdminReturnModal(true);
-  };
-  const handleCloseAdminReturnModal = () => {
-    setShowAdminReturnModal(false);
-  };
-  const handleOpenStatusModal = () => {
-    setShowStatusModal(true);
-  };
-  const handleCloseStatusModal = () => {
-    setShowStatusModal(false);
-  };
-
-  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
-    const returnable = selectedCabinets.find(
-      (cabinet) => cabinet.lent_info.length >= 1
-    );
-    if (returnable !== undefined) {
-      return true;
-    }
-    return false;
-  };
-
-  const checkMultiStatus = (selectedCabinets: CabinetInfo[]) => {
-    // 캐비넷 일괄 상태 관리 모달을 열기 위한 조건
-    // 선택된 캐비넷들이 같은 타입, 같은 상태여야 함.
-    if (isSameType(selectedCabinets) && isSameStatus(selectedCabinets))
-      return true;
-    return false;
-  };
-
   if (
     (!multiSelectTargetInfo && selectedCabinetInfo === null) ||
     (multiSelectTargetInfo && targetCabinetInfoList!.length < 1)
@@ -116,16 +89,16 @@ const AdminCabinetInfoArea: React.FC<{
         </MultiCabinetIconWrapperStyled>
         <CabinetInfoButtonsContainerStyled>
           <ButtonContainer
-            onClick={handleOpenAdminReturnModal} //todo: admin 일괄 반납 모달 만들기
+            onClick={() => handleAdminModal("returnModal", true)}
             text="일괄 반납"
             theme="fill"
-            disabled={!checkMultiReturn(targetCabinetInfoList!)}
+            disabled={!checkMultiReturn}
           />
           <ButtonContainer
-            onClick={handleOpenStatusModal} //todo: admin 일괄 상태관리 모달 만들기
+            onClick={() => handleAdminModal("statusModal", true)}
             text="상태관리"
             theme="line"
-            disabled={!checkMultiStatus(targetCabinetInfoList!)}
+            disabled={!checkMultiStatus}
           />
           <ButtonContainer
             onClick={() => {
@@ -136,11 +109,15 @@ const AdminCabinetInfoArea: React.FC<{
             theme="grayLine"
           />
         </CabinetInfoButtonsContainerStyled>
-        {showAdminReturnModal && (
-          <AdminReturnModal closeModal={handleCloseAdminReturnModal} />
+        {adminModal.returnModal && (
+          <AdminReturnModal
+            closeModal={() => handleAdminModal("returnModal", false)}
+          />
         )}
-        {showStatusModal && (
-          <StatusModalContainer onClose={handleCloseStatusModal} />
+        {adminModal.statusModal && (
+          <StatusModalContainer
+            onClose={() => handleAdminModal("statusModal", false)}
+          />
         )}
       </CabinetDetailAreaStyled>
     );
@@ -167,7 +144,7 @@ const AdminCabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         <ButtonContainer
-          onClick={handleOpenAdminReturnModal} //todo: admin 단일 반납 모달 만들기
+          onClick={() => handleAdminModal("returnModal", true)}
           text="반납"
           theme="fill"
           disabled={
@@ -175,7 +152,7 @@ const AdminCabinetInfoArea: React.FC<{
           }
         />
         <ButtonContainer
-          onClick={handleOpenStatusModal} //todo: admin 단일 상태관리 모달 만들기
+          onClick={() => handleAdminModal("statusModal", true)}
           text="상태 관리"
           theme="line"
         />
@@ -191,14 +168,16 @@ const AdminCabinetInfoArea: React.FC<{
           ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
           : null}
       </CabinetLentDateInfoStyled>
-      {showAdminReturnModal && (
+      {adminModal.returnModal && (
         <AdminReturnModal
           lentType={selectedCabinetInfo!.lentType}
-          closeModal={handleCloseAdminReturnModal}
+          closeModal={() => handleAdminModal("returnModal", false)}
         />
       )}
-      {showStatusModal && (
-        <StatusModalContainer onClose={handleCloseStatusModal} />
+      {adminModal.statusModal && (
+        <StatusModalContainer
+          onClose={() => handleAdminModal("statusModal", false)}
+        />
       )}
     </CabinetDetailAreaStyled>
   );

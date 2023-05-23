@@ -1,11 +1,18 @@
 /// <reference types="vitest" />
-import { defineConfig } from "vite";
+import {defineConfig, PluginOption} from "vite";
 import react from "@vitejs/plugin-react";
 import * as path from "path";
 
 // https://vitejs.dev/config/
+import { visualizer } from 'rollup-plugin-visualizer'
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), visualizer({
+    template: 'treemap',
+    open:true,
+    gzipSize:true,
+    brotliSize: true,
+    filename : 'analyse.html'
+  }) as PluginOption],
   resolve: {
     alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }],
   },

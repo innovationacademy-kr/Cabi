@@ -11,6 +11,7 @@ import AdminCabinetInfoArea, {
   IMultiSelectTargetInfo,
 } from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
+import { useState } from "react";
 
 const calExpiredTime = (expireTime: Date) =>
   Math.floor(
@@ -73,6 +74,26 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
   else return "var(--black)";
 };
 
+interface ICount {
+  AVAILABLE: number;
+  SET_EXPIRE_FULL: number;
+  EXPIRED: number;
+  BROKEN: number;
+}
+
+export interface IUserModalState {
+  lentModal: boolean;
+  unavailableModal: boolean;
+  returnModal: boolean;
+  memoModal: boolean;
+  passwordCheckModal: boolean;
+}
+
+export interface IAdminModalState {
+  returnModal: boolean;
+  statusModal: boolean;
+}
+
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const myCabinetInfo =
@@ -80,6 +101,19 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const { closeCabinet, toggleLent } = useMenu();
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
+  const { resetMultiSelectMode, isSameStatus, isSameType } = useMultiSelect();
+
+  const [modal, setModal] = useState<IUserModalState>({
+    lentModal: false,
+    unavailableModal: false,
+    returnModal: false,
+    memoModal: false,
+    passwordCheckModal: false,
+  });
+  const [adminModal, setAdminModal] = useState<IAdminModalState>({
+    returnModal: false,
+    statusModal: false,
+  });
 
   const cabinetViewData: ISelectedCabinetInfo | null = targetCabinetInfo
     ? {
@@ -97,13 +131,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         isLented: targetCabinetInfo.lent_info.length !== 0,
       }
     : null;
-
-  interface ICount {
-    AVAILABLE: number;
-    SET_EXPIRE_FULL: number;
-    EXPIRED: number;
-    BROKEN: number;
-  }
 
   const countTypes = (cabinetList: CabinetInfo[]) =>
     cabinetList.reduce(
@@ -124,6 +151,32 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
+  const handleAdminModal = (modalName: string, toggle: boolean) => {
+    setAdminModal({
+      ...adminModal,
+      [modalName]: toggle,
+    });
+  };
+
+  const checkMultiReturn = (multiSelectInfo: IMultiSelectTargetInfo | null) => {
+    if (multiSelectInfo === null) return false;
+    return multiSelectInfo.targetCabinetInfoList.some(
+      (cabinet) => cabinet.lent_info.length >= 1
+    );
+  };
+
+  const checkMultiStatus = (multiSelectInfo: IMultiSelectTargetInfo | null) => {
+    if (
+      multiSelectInfo === null ||
+      multiSelectInfo.targetCabinetInfoList.length === 0
+    )
+      return false;
+    return (
+      isSameType(multiSelectInfo.targetCabinetInfoList) &&
+      isSameStatus(multiSelectInfo.targetCabinetInfoList)
+    );
+  };
+
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -131,6 +184,11 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         closeCabinet={closeCabinet}
         multiSelectTargetInfo={multiSelectInfo}
         openLent={toggleLent}
+        adminModal={adminModal}
+        handleAdminModal={handleAdminModal}
+        checkMultiReturn={checkMultiReturn(multiSelectInfo)}
+        checkMultiStatus={checkMultiStatus(multiSelectInfo)}
+        resetMultiSelectMode={resetMultiSelectMode}
       />
       {cabinetViewData && <AdminCabinetLentLogContainer />}
     </>
