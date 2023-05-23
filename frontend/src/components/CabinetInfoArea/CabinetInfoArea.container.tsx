@@ -177,19 +177,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     );
   };
 
-  const handleUserModal = (
-    modalName: string,
-    toggle: boolean,
-    myCabinetId: number | undefined
-  ) => {
-    // if (myCabinetId) {
-    //   setUserModal({
-    //     ...userModal,
-    //     unavailableModal: true,
-    //     lentModal: true,
-    //   });
-    //   return;
-    // }
+  const handleUserModal = (modalName: string, toggle: boolean) => {
     setUserModal({
       ...userModal,
       [modalName]: toggle,

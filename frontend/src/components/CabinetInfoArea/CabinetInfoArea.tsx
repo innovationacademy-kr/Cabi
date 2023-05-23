@@ -44,11 +44,7 @@ const CabinetInfoArea: React.FC<{
   isAvailable: boolean;
   closeCabinet: () => void;
   userModal: IUserModalState;
-  handleUserModal: (
-    arg0: string,
-    arg1: boolean,
-    arg2?: number | undefined
-  ) => void;
+  handleUserModal: (arg0: string, arg1: boolean) => void;
 }> = ({
   selectedCabinetInfo,
   isMine,
