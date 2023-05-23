@@ -103,7 +103,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
   const { resetMultiSelectMode, isSameStatus, isSameType } = useMultiSelect();
 
-  const [modal, setModal] = useState<IUserModalState>({
+  const [userModal, setUserModal] = useState<IUserModalState>({
     lentModal: false,
     unavailableModal: false,
     returnModal: false,
@@ -177,6 +177,25 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     );
   };
 
+  const handleUserModal = (
+    modalName: string,
+    toggle: boolean,
+    myCabinetId: number | undefined
+  ) => {
+    // if (myCabinetId) {
+    //   setUserModal({
+    //     ...userModal,
+    //     unavailableModal: true,
+    //     lentModal: true,
+    //   });
+    //   return;
+    // }
+    setUserModal({
+      ...userModal,
+      [modalName]: toggle,
+    });
+  };
+
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -195,8 +214,14 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   ) : (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}
-      myCabinetId={myCabinetInfo?.cabinet_id}
+      isMine={myCabinetInfo?.cabinet_id === cabinetViewData?.cabinetId}
+      isAvailable={
+        cabinetViewData?.status === "AVAILABLE" ||
+        cabinetViewData?.status === "SET_EXPIRE_AVAILABLE"
+      }
       closeCabinet={closeCabinet}
+      userModal={userModal}
+      handleUserModal={handleUserModal}
     />
   );
 };
