@@ -10,6 +10,7 @@ import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Component;
@@ -49,10 +50,9 @@ public class UserAspect {
 		String name = tokenValidator.getPayloadJson(
 						cookieManager.getCookie(req, jwtProperties.getMainTokenName())).get("name")
 				.toString();
-		Long userId = userExceptionHandlerService.getUserIdByName(name);
-		String email = userService.getUserEmail(userId);
+		User user = userExceptionHandlerService.getUserByName(name);
 		//To-Do: name을 기준으로 service에게 정보를 받고, 매핑한다.
 		// name과 email은 우선 구현했으나 수정이 필요함.
-		return new UserSessionDto(userId, name, email, 1, 1, new Date(), true);
+		return new UserSessionDto(user.getUserId(), name, user.getEmail(), 1, 1, new Date(), true);
 	}
 }

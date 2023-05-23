@@ -60,7 +60,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			Long totalLength) {
 		List<BlockedUserDto> blockedUserDtoList = banHistories.stream()
 				.map(b -> userMapper.toBlockedUserDto(b,
-						userExceptionHandlerService.getUserNameById(b.getUserId())))
+						userExceptionHandlerService.getUser(b.getUserId()).getName()))
 				.collect(Collectors.toList());
 		return new BlockedUserPaginationDto(blockedUserDtoList, totalLength);
 	}

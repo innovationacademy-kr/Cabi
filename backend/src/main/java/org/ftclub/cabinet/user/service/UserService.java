@@ -7,7 +7,7 @@ import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserService {
 
-	/* 동아리일 경우 email은 어떻게 할 지? */
+	// TODO: 동아리의 경우 Email은 어떻게 할지?
 	boolean checkUserExists(String name);
 
 	void createUser(String name, String email, Date blackholedAt, UserRole role);
@@ -36,7 +36,6 @@ public interface UserService {
 	 * @param userId 유저 아이디
 	 * @return 누적 정지일
 	 */
-	// userService에 있는게 맞는지..
 	Long getAccumulateBanDaysByUserId(Long userId);
 
 	/**
