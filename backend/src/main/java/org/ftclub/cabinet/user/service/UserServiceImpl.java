@@ -16,7 +16,6 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -93,10 +92,8 @@ public class UserServiceImpl implements UserService {
 		if (banType == BanType.NONE) {
 			return;
 		}
-		Date banDate = banPolicy.getBanDate(banType, endedAt, expiredAt);
-		BanHistory banHistory = BanHistory.of(endedAt, DateUtil.addDaysToDate(banDate,
-						getAccumulateBanDaysByUserId(userId).intValue()),
-				banType, userId);
+		Date banDate = banPolicy.getBanDate(banType, endedAt, expiredAt, userId);
+		BanHistory banHistory = BanHistory.of(endedAt, banDate, banType, userId);
 		banHistoryRepository.save(banHistory);
 	}
 
@@ -112,17 +109,6 @@ public class UserServiceImpl implements UserService {
 	public String getUserEmail(Long userId) {
 		User user = userExceptionHandlerService.getUser(userId);
 		return user.getEmail();
-	}
-
-	@Override
-	public Long getAccumulateBanDaysByUserId(Long userId) {
-		List<BanHistory> banHistories = banHistoryRepository.findBanHistoriesByUserId(userId);
-		Long accumulateDays = 0L;
-		for (BanHistory history : banHistories) {
-			accumulateDays += DateUtil.calculateTwoDateDiffAbs(history.getBannedAt(),
-					history.getUnbannedAt());
-		}
-		return accumulateDays;
 	}
 
 	@Override

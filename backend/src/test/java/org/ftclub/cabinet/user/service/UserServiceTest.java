@@ -124,13 +124,14 @@ public class UserServiceTest {
 //		// 어떻게 검증?
 //	}
 
-	@Test
-	void 누적_ban_기록_확인() {
-		// banuser1, 1일 동안 벤
-		Long userId = 1L;
-		Long accumulatedBanDays = userService.getAccumulateBanDaysByUserId(userId);
-		assertEquals(1, accumulatedBanDays);
-	}
+//ban Policy로 이동
+//	@Test
+//	void 누적_ban_기록_확인() {
+//		// banuser1, 1일 동안 벤
+//		Long userId = 1L;
+//		Long accumulatedBanDays = userService.getAccumulateBanDaysByUserId(userId);
+//		assertEquals(1, accumulatedBanDays);
+//	}
 
 	@Test
 	void 유저_벤_확인() {

@@ -24,7 +24,7 @@ public interface BanPolicy {
 	 * @param expiredAt 대여 만료 시간
 	 * @return unbannedAt을 반환합니다.
 	 */
-	Date getBanDate(BanType banType, Date endedAt, Date expiredAt);
+	Date getBanDate(BanType banType, Date endedAt, Date expiredAt, Long userId);
 
 	/**
 	 * 이미 만료된 대여 기록인지 확인합니다.
@@ -43,4 +43,12 @@ public interface BanPolicy {
 	 * @return 현재 Active한 banHistory라면 true를 반환합니다.
 	 */
 	boolean isActiveBanHistory(Date unbannedAt, Date now);
+
+	/**
+	 * 유저의 누적 정지일을 가져옵니다.
+	 *
+	 * @param userId 유저 아이디
+	 * @return 누적 정지일
+	 */
+	Long getAccumulateBanDaysByUserId(Long userId);
 }

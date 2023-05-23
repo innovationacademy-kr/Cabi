@@ -30,13 +30,6 @@ public interface UserService {
 
 	String getUserEmail(Long userId);
 
-	/**
-	 * 유저의 누적 정지일을 가져옵니다.
-	 *
-	 * @param userId 유저 아이디
-	 * @return 누적 정지일
-	 */
-	Long getAccumulateBanDaysByUserId(Long userId);
 
 	/**
 	 * 유저의 정지 상태를 확인합니다.
