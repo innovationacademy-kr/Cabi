@@ -30,6 +30,8 @@ public interface UserService {
 
 	void unbanUser(Long userId, Date today);
 
+	String getUserEmail(Long userId);
+
 	/**
 	 * 유저의 누적 정지일을 가져옵니다.
 	 *

@@ -49,7 +49,6 @@ public class UserRepositoryTest {
 
 		assertTrue(user.isPresent());
 		assertEquals("user2", user.get().getName());
-		//assertEquals(10L, user.get().getUserId());
 	}
 
 	@Test

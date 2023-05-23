@@ -10,6 +10,7 @@ import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,10 +39,15 @@ public class AdminUserController {
 	 */
 	@GetMapping("/search/users/{name}")
 	@AuthGuard(level = Level.ADMIN_ONLY)
-	public UserProfilePaginationDto getUserProfileListByPartialName(
+	public ResponseEntity<UserProfilePaginationDto> getUserProfileListByPartialName(
 			@PathVariable("name") String name,
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
-		return userFacadeService.getUserProfileListByPartialName(name, page, length);
+		UserProfilePaginationDto userProfilePaginationDto = userFacadeService.getUserProfileListByPartialName(
+				name, page, length);
+		if (userProfilePaginationDto.getTotalLength() == 0) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(userProfilePaginationDto);
 	}
 
 	/**
@@ -54,10 +60,15 @@ public class AdminUserController {
 	 */
 	@GetMapping("/search/users")
 	@AuthGuard(level = Level.ADMIN_ONLY)
-	public UserCabinetPaginationDto findUserCabinetListByPartialName(
+	public ResponseEntity<UserCabinetPaginationDto> findUserCabinetListByPartialName(
 			@RequestParam("name") String name,
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
-		return userFacadeService.findUserCabinetListByPartialName(name, page, length);
+		UserCabinetPaginationDto userCabinetPaginationDto = userFacadeService
+				.findUserCabinetListByPartialName(name, page, length);
+		if (userCabinetPaginationDto.getTotalLength() == 0) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(userCabinetPaginationDto);
 	}
 
 	/**
@@ -65,13 +76,19 @@ public class AdminUserController {
 	 *
 	 * @param page   페이지 번호
 	 * @param length 페이지 당 길이
-	 * @return {@link BlockedUserPaginationDto} 차단된 유저 리스트
+	 * @return {@link BlockedUserPaginationDto} 차단된 유저 리스트 혹은 204 No Content
 	 */
 	@GetMapping("/search/users/banned")
 	@AuthGuard(level = Level.ADMIN_ONLY)
-	public BlockedUserPaginationDto getBannedUsersList(@RequestParam("page") Integer page,
+	public ResponseEntity<BlockedUserPaginationDto> getBannedUsersList(
+			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length) {
-		return userFacadeService.getAllBanUsers(page, length, DateUtil.getNow());
+		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService
+				.getAllBanUsers(page, length, DateUtil.getNow());
+		if (blockedUserPaginationDto.getTotalLength() == 0) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(blockedUserPaginationDto);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import javax.transaction.Transactional;
@@ -8,6 +9,7 @@ import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,9 +25,9 @@ public class UserFacadeServiceTest {
 
 	@Test
 	public void 대여_정보_없는_유저_DTO_가져오기() {
-		// 2 banuser2
-		UserSessionDto user = new UserSessionDto(2L, "banuser2",
-				"banuser2@student.42seoul.kr", null, null, null, false);
+		// 4 penaltyuser2
+		UserSessionDto user = new UserSessionDto(4L, "penaltyuser2",
+				"penaltyuser2@student.42seoul.kr", null, null, null, false);
 
 		MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
 		assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
@@ -49,9 +51,17 @@ public class UserFacadeServiceTest {
 	public void 모든_벤_유저_가져오기() {
 		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
 				10, testDate);
-		//assertEquals(2, blockedUserPaginationDto.getTotalLength());
+		assertEquals(2, blockedUserPaginationDto.getTotalLength());
 		assertEquals(2, blockedUserPaginationDto.getResult().size());
 		assertEquals("banuser1", blockedUserPaginationDto.getResult().get(0).getName());
+	}
+
+	@Test
+	public void 모든_벤_유저_가져오기_현재_기준() {
+		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
+				10, DateUtil.getNow());
+		assertEquals(0, blockedUserPaginationDto.getTotalLength());
+		assertTrue(blockedUserPaginationDto.getResult().isEmpty());
 	}
 
 	@Test
@@ -65,12 +75,4 @@ public class UserFacadeServiceTest {
 		assertEquals("lentuser2", userProfilePaginationDto.getResult().get(1).getName());
 	}
 
-//	@Test
-//	public void 특정_유저_대여기록_가져오기() {
-//		// lentuser1
-//		LentHistoryPaginationDto lentHistoryPaginationDto = userFacadeService.getUserLentHistories(
-//				5L, 0, 10);
-//		assertEquals(11, lentHistoryPaginationDto.getTotalLength());
-//		assertEquals(10, lentHistoryPaginationDto.getResult().size());
-//	}
 }

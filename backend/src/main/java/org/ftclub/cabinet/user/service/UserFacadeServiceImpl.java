@@ -16,7 +16,6 @@ import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
-import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -35,7 +34,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final UserService userService;
 	private final UserExceptionHandlerService userExceptionHandlerService;
 	private final LentRepository lentRepository;
-	private final LentFacadeService lentFacadeService;
 	private final BanHistoryRepository banHistoryRepository;
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
@@ -53,6 +51,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		PageRequest pageable = PageRequest.of(page, length);
 		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
 				now);
+		System.out.println("service " + activeBanList.getContent());
 		return generateBlockedUserPaginationDto(activeBanList.getContent(),
 				activeBanList.getTotalElements());
 	}

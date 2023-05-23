@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,6 +19,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT u FROM User u WHERE u.userId = :userId")
 	User getUser(Long userId);
+
+	@Query("SELECT u.userId FROM User u WHERE u.name = :name")
+	Long getUserIdByName(@Param("name") String name);
 
 	@Query("SELECT u FROM User u WHERE u.name = :name")
 	Optional<User> findByName(String name);

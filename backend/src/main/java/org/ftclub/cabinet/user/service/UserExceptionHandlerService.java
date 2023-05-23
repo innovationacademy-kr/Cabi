@@ -46,6 +46,20 @@ public class UserExceptionHandlerService {
 	}
 
 	/**
+	 * 유저가 존재하는지 확인하고 유저의 고유 ID를 반환합니다. 존재하지 않으면 예외를 발생시킵니다.
+	 *
+	 * @param name 찾을 유저의 이름
+	 * @return 찾은 유저의 고유 id
+	 */
+	public Long getUserIdByName(String name) {
+		Long id = userRepository.getUserIdByName(name);
+		if (id == null) {
+			throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);
+		}
+		return id;
+	}
+
+	/**
 	 * 동아리가 존재하는지 확인하고 존재하지 않으면 예외를 발생시킵니다.
 	 *
 	 * @param userId 동아리의 고유 ID

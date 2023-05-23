@@ -100,13 +100,18 @@ public class UserServiceImpl implements UserService {
 		banHistoryRepository.save(banHistory);
 	}
 
-	// 이런 식으로 변경하는 건 어떠신가요..
 	@Override
 	public void unbanUser(Long userId, Date today) {
 		BanHistory banHistory = userExceptionHandlerService.getRecentBanHistory(userId);
 		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), today)) {
 			banHistoryRepository.delete(banHistory);
 		}
+	}
+
+	@Override
+	public String getUserEmail(Long userId) {
+		User user = userExceptionHandlerService.getUser(userId);
+		return user.getEmail();
 	}
 
 	@Override
@@ -120,9 +125,6 @@ public class UserServiceImpl implements UserService {
 		return accumulateDays;
 	}
 
-	/*
-	 * Active한 banHistory를 List로 받아와야하나 싶긴한데 lent 쪽에서 주석에 써놓으신 것 보고 동일하게 처리했습니다.
-	 * */
 	@Override
 	public boolean checkUserIsBanned(Long userId, Date today) {
 		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
