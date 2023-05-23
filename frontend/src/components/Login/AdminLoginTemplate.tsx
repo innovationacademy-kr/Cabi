@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import "@/assets/css/loginPage.css";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
@@ -20,7 +21,15 @@ const AdminLoginTemplate = (props: {
   const [isPwFocused, setIsPwFocused] = useState(false);
   const [adminId, setAdminId] = useState("");
   const [adminPw, setAdminPw] = useState("");
+  const [showUnavailableModal, setShowUnavailableModal] = useState(false);
 
+  const handleOpenUnavailableModal = () => {
+    setShowUnavailableModal(true);
+  };
+  const handleCloseUnavailableModal = () => {
+    setIsClicked(false);
+    setShowUnavailableModal(false);
+  };
   const handleLoginButton = async () => {
     if (adminId === "" || adminPw === "") {
       alert("아이디와 비밀번호를 입력해주세요.");
@@ -32,6 +41,13 @@ const AdminLoginTemplate = (props: {
         navigate("/admin/home");
       }
     } catch (error) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.status == 400
+      ) {
+        handleOpenUnavailableModal();
+      }
       console.error(error);
     }
     setIsClicked(true);
@@ -114,6 +130,12 @@ const AdminLoginTemplate = (props: {
           </CardGoogleOauthStyled>
         </LoginCardStyled>
       </RightSectionStyled>
+      {showUnavailableModal && (
+        <UnavailableModal
+          status={additionalModalType.MODAL_ADMIN_LOGIN_FAILURE}
+          closeModal={handleCloseUnavailableModal}
+        />
+      )}
     </LoginPageStyled>
   );
 };
