@@ -206,7 +206,7 @@ const LoginCardStyled = styled.div`
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
-  padding: 85px 0;
+  padding: 85px 40px;
   background-color: var(--white);
 `;
 
@@ -234,15 +234,17 @@ const CardInputBoxStyled = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin: 40px 0 10px;
+  width: 200px;
+  padding: 40px 0 10px;
 `;
 
 const CardInputStyled = styled.input<{ isFocus: boolean }>`
   text-align: left;
   padding-left: 15px;
   font-family: var(--main-font);
-  font-size: 18px;
+  font-size: 14px;
   letter-spacing: 0.05rem;
+  width: 100%;
   height: 48px;
   background-color: var(--white);
   border-radius: 8px;
