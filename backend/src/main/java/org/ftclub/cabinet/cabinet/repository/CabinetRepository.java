@@ -7,6 +7,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,7 +17,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE p.location.building = :building")
-	Optional<List<Integer>> findAllFloorsByBuilding(String building);
+	Optional<List<Integer>> findAllFloorsByBuilding(@Param("building") String building);
 
 	@Query("SELECT DISTINCT p.location.building "
 			+ "FROM Cabinet c "
@@ -27,24 +28,26 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE p.location.building = :building AND p.location.floor = :floor")
-	Optional<List<String>> findAllSectionsByBuildingAndFloor(String building, Integer floor);
+	Optional<List<String>> findAllSectionsByBuildingAndFloor(
+			@Param("building") String building,
+			@Param("floor") Integer floor);
 
 	@Query("SELECT c.cabinetId "
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE p.location.section = :section")
-	Optional<List<Long>> findAllCabinetIdsBySection(String section);
+	Optional<List<Long>> findAllCabinetIdsBySection(@Param("section") String section);
 
 
 	@Query("SELECT c.statusNote "
 			+ "FROM Cabinet c ")
-	Optional<String> findStatusNoteById(Long cabinetId);
+	Optional<String> findStatusNoteById(@Param("cabinetId") Long cabinetId);
 
 	@Query("SELECT p.location "
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE c.cabinetId = :cabinetId")
-	Optional<Location> findLocationById(Long cabinetId);
+	Optional<Location> findLocationById(@Param("cabinetId") Long cabinetId);
 
 
 	@Query(value = "SELECT AUTO_INCREMENT "
@@ -57,18 +60,22 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE p.location = :location")
-	Optional<CabinetPlace> findCabinetPlaceByLocation(Location location);
+	Optional<CabinetPlace> findCabinetPlaceByLocation(@Param("location") Location location);
 
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE p.location.building = :building AND p.location.floor = :floor AND p.location.section = :section")
-	Optional<List<Cabinet>> findAllByBuildingAndFloorAndSection(String building, Integer floor,
-			String section);
+	Optional<List<Cabinet>> findAllByBuildingAndFloorAndSection(
+			@Param("building") String building,
+			@Param("floor") Integer floor,
+			@Param("section") String section);
 
 	@Query("SELECT COUNT(p.location.building) > 0 " +
 			"FROM Cabinet c " +
 			"JOIN c.cabinetPlace p " +
 			"WHERE p.location.building = :building AND p.location.floor = :floor")
-	boolean existsBuildingAndFloor(String building, Integer floor);
+	boolean existsBuildingAndFloor(
+			@Param("building") String building,
+			@Param("floor") Integer floor);
 }

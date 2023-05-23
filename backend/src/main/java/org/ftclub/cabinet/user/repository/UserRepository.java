@@ -15,17 +15,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT lh.name " +
 			"FROM User lh " +
 			"WHERE lh.userId = :userId")
-	String findNameById(Long userId);
+	String findNameById(@Param("userId") Long userId);
 
 	@Query("SELECT u FROM User u WHERE u.userId = :userId")
-	User getUser(Long userId);
+	User getUser(@Param("userId") Long userId);
 
 	@Query("SELECT u.userId FROM User u WHERE u.name = :name")
 	Long getUserIdByName(@Param("name") String name);
 
 	@Query("SELECT u FROM User u WHERE u.name = :name")
-	Optional<User> findByName(String name);
+	Optional<User> findByName(@Param("name") String name);
 
 	@Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
-	Page<User> findByPartialName(String name, Pageable pageable);
+	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
 }
