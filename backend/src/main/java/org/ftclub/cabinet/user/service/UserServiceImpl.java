@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void unbanUser(Long userId, Date today) {
+	public void deleteRecentBanHistory(Long userId, Date today) {
 		BanHistory banHistory = userExceptionHandlerService.getRecentBanHistory(userId);
 		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), today)) {
 			banHistoryRepository.delete(banHistory);
@@ -130,10 +130,5 @@ public class UserServiceImpl implements UserService {
 		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
 				today);
 		return (banHistory.size() != 0);
-	}
-
-	@Override
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
 	}
 }

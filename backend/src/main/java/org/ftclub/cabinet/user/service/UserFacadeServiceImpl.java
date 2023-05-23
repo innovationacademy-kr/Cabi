@@ -98,6 +98,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
+	}
+
+	@Override
 	public boolean checkUserExists(String name) {
 		return userService.checkUserExists(name);
 	}
@@ -144,8 +149,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void unbanUser(Long userId, Date today) {
-		userService.unbanUser(userId, today);
+	public void deleteRecentBanHistory(Long userId, Date today) {
+		userService.deleteRecentBanHistory(userId, today);
 	}
 
 }

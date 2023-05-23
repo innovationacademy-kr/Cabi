@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import java.util.List;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,4 +77,10 @@ public class UserFacadeServiceTest {
 		assertEquals("lentuser2", userProfilePaginationDto.getResult().get(1).getName());
 	}
 
+	@Test
+	void 모든_유저_가져오기() {
+		// test DB상 존재하는 유저 20명
+		List<User> users = userFacadeService.getAllUsers();
+		assertEquals(20, users.size());
+	}
 }

@@ -99,7 +99,7 @@ public class AdminUserController {
 	@DeleteMapping("/log/users/{userId}/ban-history")
 	@AuthGuard(level = Level.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
-		userFacadeService.unbanUser(userId, DateUtil.getNow());
+		userFacadeService.deleteRecentBanHistory(userId, DateUtil.getNow());
 	}
 
 	/**
