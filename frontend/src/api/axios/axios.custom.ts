@@ -145,6 +145,22 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
 };
 
 // Admin API
+const axiosAdminAuthLoginURL = "/api/admin/auth/login";
+export const axiosAdminAuthLogin = async (
+  id: string,
+  password: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(axiosAdminAuthLoginURL, {
+      id,
+      password,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosAdminCabinetInfoByIdURL = "/api/admin/cabinet/";
 export const axiosAdminCabinetInfoByCabinetId = async (
   cabinetId: number
