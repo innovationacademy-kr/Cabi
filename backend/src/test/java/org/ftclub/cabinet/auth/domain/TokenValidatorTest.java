@@ -49,9 +49,7 @@ public class TokenValidatorTest {
 		MockHttpServletRequest validTokenRequest = new MockHttpServletRequest();
 		MockHttpServletRequest invalidTokenRequest = new MockHttpServletRequest();
 		MockHttpServletRequest emptyTokenRequest = new MockHttpServletRequest();
-
-		System.out.println("ftProfile = " + ftProfile);
-
+		
 		String validToken = tokenProvider.createToken("ft",
 				objectMapper.readTree(ftProfile.toString()), DateUtil.getNow());
 		validTokenRequest.addHeader("Authorization", "Bearer " + validToken);
