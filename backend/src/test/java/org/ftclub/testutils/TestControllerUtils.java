@@ -39,6 +39,19 @@ public class TestControllerUtils {
 				.compact();
 	}
 
+	public static String getTestUserTokenByName(Key signingKey, String name) {
+		Map<String, Object> claim = new HashMap<>();
+		claim.put("name", name);
+		claim.put("email", name + "@student.42seoul.kr");
+		claim.put("blackholedAt", new Date());
+		claim.put("role", UserRole.USER);
+		return Jwts.builder()
+				.setClaims(claim)
+				.signWith(signingKey, SignatureAlgorithm.HS256)
+				.setExpiration(DateUtil.addDaysToDate(new Date(), 10))
+				.compact();
+	}
+
 	public static Cookie getTokenCookie(String role, String token) {
 		String tokenName;
 		if (role.equals("관리자")) {

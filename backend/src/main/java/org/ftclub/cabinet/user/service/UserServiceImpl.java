@@ -16,7 +16,6 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -93,16 +92,13 @@ public class UserServiceImpl implements UserService {
 		if (banType == BanType.NONE) {
 			return;
 		}
-		Date banDate = banPolicy.getBanDate(banType, endedAt, expiredAt);
-		BanHistory banHistory = BanHistory.of(endedAt, DateUtil.addDaysToDate(banDate,
-						getAccumulateBanDaysByUserId(userId).intValue()),
-				banType, userId);
+		Date banDate = banPolicy.getBanDate(banType, endedAt, expiredAt, userId);
+		BanHistory banHistory = BanHistory.of(endedAt, banDate, banType, userId);
 		banHistoryRepository.save(banHistory);
 	}
 
-	// 이런 식으로 변경하는 건 어떠신가요..
 	@Override
-	public void unbanUser(Long userId, Date today) {
+	public void deleteRecentBanHistory(Long userId, Date today) {
 		BanHistory banHistory = userExceptionHandlerService.getRecentBanHistory(userId);
 		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), today)) {
 			banHistoryRepository.delete(banHistory);
@@ -110,28 +106,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Long getAccumulateBanDaysByUserId(Long userId) {
-		List<BanHistory> banHistories = banHistoryRepository.findBanHistoriesByUserId(userId);
-		Long accumulateDays = 0L;
-		for (BanHistory history : banHistories) {
-			accumulateDays += DateUtil.calculateTwoDateDiffAbs(history.getBannedAt(),
-					history.getUnbannedAt());
-		}
-		return accumulateDays;
+	public String getUserEmail(Long userId) {
+		User user = userExceptionHandlerService.getUser(userId);
+		return user.getEmail();
 	}
 
-	/*
-	 * Active한 banHistory를 List로 받아와야하나 싶긴한데 lent 쪽에서 주석에 써놓으신 것 보고 동일하게 처리했습니다.
-	 * */
 	@Override
 	public boolean checkUserIsBanned(Long userId, Date today) {
 		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
 				today);
 		return (banHistory.size() != 0);
-	}
-
-	@Override
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
 	}
 }
