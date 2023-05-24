@@ -86,13 +86,12 @@ const TableWrapperStyled = styled.div`
 const TableBorderStyled = styled.div`
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 15px 25px -6px var(--bg-shadow);
+  box-shadow: 0 10px 10px 0px rgba(0, 0, 0, 0.1);
 `;
 
 const TableStyled = styled.table`
   width: 100%;
   background: var(--white);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
   overflow: scroll;
 
   @media screen and (max-width: 1300px) {
