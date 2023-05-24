@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -7,10 +8,8 @@ import {
   Inject,
   Logger,
   Post,
-  Redirect,
   Req,
   Res,
-  UnauthorizedException,
   UseFilters,
   UseGuards,
   ValidationPipe,
@@ -63,7 +62,7 @@ export class AdminAuthController {
     @Res() res: Response,
   ): Promise<void> {
     if (!(await this.adminAuthService.isAdminLoginVerified(loginInfo))) {
-      throw new UnauthorizedException(
+      throw new BadRequestException(
         '아이디 또는 비밀번호가 일치하지 않습니다.',
       );
     }
