@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -71,11 +72,10 @@ public class OauthService {
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		try {
-			return objectMapper.readTree(
-							restTemplate.postForEntity(googleApiProperties.getTokenUri(), request,
-									String.class).getBody())
-					.get(googleApiProperties.getAccessTokenName())
-					.asText();
+			ResponseEntity<String> response = restTemplate.postForEntity(
+					googleApiProperties.getTokenUri(), request, String.class);
+			return objectMapper.readTree(response.getBody())
+					.get(googleApiProperties.getAccessTokenName()).asText();
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
@@ -91,18 +91,16 @@ public class OauthService {
 	 */
 	public JsonNode getGoogleProfile(String token) {
 		ObjectMapper objectMapper = new ObjectMapper();
+		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.setBearerAuth(token);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
 
-		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
-		RestTemplate restTemplate = new RestTemplate();
 		try {
-			return objectMapper.readTree(
-					restTemplate.exchange(googleApiProperties.getUserInfoUri(), HttpMethod.GET,
-									requestEntity, String.class)
-							.getBody());
+			ResponseEntity<String> response = restTemplate.exchange(
+					googleApiProperties.getUserInfoUri(), HttpMethod.GET, request, String.class);
+			return objectMapper.readTree(response.getBody());
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
@@ -148,10 +146,10 @@ public class OauthService {
 		map.add("code", code);
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		try {
-			return objectMapper.readTree(
-							restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class)
-									.getBody())
-					.get(ftApiProperties.getAccessTokenName()).toString();
+			ResponseEntity<String> response = restTemplate.postForEntity(
+					ftApiProperties.getTokenUri(), request, String.class);
+			return objectMapper.readTree(response.getBody())
+					.get(ftApiProperties.getAccessTokenName()).asText();
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
@@ -172,10 +170,9 @@ public class OauthService {
 		headers.setBearerAuth(token);
 		HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
 		try {
-			return objectMapper.readTree(
-					restTemplate.exchange(ftApiProperties.getUserInfoUri(), HttpMethod.GET,
-									requestEntity, String.class)
-							.getBody());
+			ResponseEntity<String> response = restTemplate.exchange(
+					ftApiProperties.getUserInfoUri(), HttpMethod.GET, requestEntity, String.class);
+			return objectMapper.readTree(response.getBody());
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}
