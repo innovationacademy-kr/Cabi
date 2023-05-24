@@ -8,6 +8,7 @@ import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private final UserFacadeService userFacadeService;
+	private final LentFacadeService lentFacadeService;
 
 	/**
 	 * 현재 로그인한 유저의 프로필을 반환합니다. 전체 사물함 뷰에서 본인의 사물함을 표시하기 위해 사용됩니다.
@@ -61,7 +63,7 @@ public class UserController {
 	@AuthGuard(level = Level.USER_ONLY)
 	public LentHistoryPaginationDto getMyLentHistories(@User UserSessionDto userSessionDto,
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
-		return userFacadeService.getUserLentHistories(
+		return lentFacadeService.getAllUserLentHistories(
 				userSessionDto.getUserId(), page, length);
 	}
 }

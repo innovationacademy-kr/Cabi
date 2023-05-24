@@ -10,6 +10,9 @@ import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
+import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -25,6 +28,8 @@ public class UserAspect {
 	private final CookieManager cookieManager;
 	private final TokenValidator tokenValidator;
 	private final JwtProperties jwtProperties;
+	private final UserExceptionHandlerService userExceptionHandlerService;
+	private final UserService userService;
 
 	@Around("execution(* *(.., @User (*), ..))")
 	public Object setUserSessionDto(ProceedingJoinPoint joinPoint)
@@ -40,11 +45,14 @@ public class UserAspect {
 		return joinPoint.proceed(args);
 	}
 
+	// To-Do: 수정 필요
 	public UserSessionDto getUserSessionDtoByRequest(HttpServletRequest req) {
 		String name = tokenValidator.getPayloadJson(
 						cookieManager.getCookie(req, jwtProperties.getMainTokenName())).get("name")
 				.toString();
+		User user = userExceptionHandlerService.getUserByName(name);
 		//To-Do: name을 기준으로 service에게 정보를 받고, 매핑한다.
-		return new UserSessionDto(1L, name, "userEmail", 1, 1, new Date(), true);
+		// name과 email은 우선 구현했으나 수정이 필요함.
+		return new UserSessionDto(user.getUserId(), name, user.getEmail(), 1, 1, new Date(), true);
 	}
 }

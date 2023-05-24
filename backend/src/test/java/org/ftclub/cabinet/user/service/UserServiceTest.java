@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -121,17 +120,18 @@ public class UserServiceTest {
 //		// banuser1, ban 기록 O
 //		Long userId = 1L;
 //		List<BanHistory> banHistory = banHistoryRepository.findBanHistoriesByUserId(userId);
-//		userService.unbanUser(userId, testDate);
+//		userService.deleteRecentBanHistory(userId, testDate);
 //		// 어떻게 검증?
 //	}
 
-	@Test
-	void 누적_ban_기록_확인() {
-		// banuser1, 1일 동안 벤
-		Long userId = 1L;
-		Long accumulatedBanDays = userService.getAccumulateBanDaysByUserId(userId);
-		assertEquals(1, accumulatedBanDays);
-	}
+//ban Policy로 이동
+//	@Test
+//	void 누적_ban_기록_확인() {
+//		// banuser1, 1일 동안 벤
+//		Long userId = 1L;
+//		Long accumulatedBanDays = userService.getAccumulateBanDaysByUserId(userId);
+//		assertEquals(1, accumulatedBanDays);
+//	}
 
 	@Test
 	void 유저_벤_확인() {
@@ -139,12 +139,5 @@ public class UserServiceTest {
 		Long userId = 1L;
 		boolean isBanned = userService.checkUserIsBanned(userId, testDate);
 		assertEquals(true, isBanned);
-	}
-
-	@Test
-	void 모든_유저_가져오기() {
-		// test DB상 존재하는 유저 20명
-		List<User> users = userService.getAllUsers();
-		assertEquals(20, users.size());
 	}
 }
