@@ -1,8 +1,8 @@
 package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.AuthGuard;
-import org.ftclub.cabinet.auth.AuthGuard.Level;
+import org.ftclub.cabinet.auth.domain.AuthGuard;
+import org.ftclub.cabinet.auth.domain.AuthGuard.Level;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;

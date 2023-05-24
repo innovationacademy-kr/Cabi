@@ -2,7 +2,6 @@ package org.ftclub.cabinet.auth.domain;
 
 import java.util.Date;
 import java.util.Map;
-import org.ftclub.cabinet.auth.TokenProvider;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;

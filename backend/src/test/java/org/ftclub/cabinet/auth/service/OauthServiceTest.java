@@ -2,7 +2,6 @@ package org.ftclub.cabinet.auth.service;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
-import org.ftclub.cabinet.auth.OauthService;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;

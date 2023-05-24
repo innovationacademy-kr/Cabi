@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth;
+package org.ftclub.cabinet.auth.domain;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

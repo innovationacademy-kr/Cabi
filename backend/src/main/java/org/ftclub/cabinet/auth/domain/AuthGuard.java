@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth;
+package org.ftclub.cabinet.auth.domain;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * <br>
  * 컨트롤러 메서드에만 사용할 수 있습니다.
  * <br>
- * {@link org.ftclub.cabinet.auth.AuthAspect}에서 이 어노테이션을 검사합니다.
+ * {@link AuthAspect}에서 이 어노테이션을 검사합니다.
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

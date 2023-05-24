@@ -1,8 +1,6 @@
 package org.ftclub.cabinet.auth.domain;
 
 import java.util.Date;
-import org.ftclub.cabinet.auth.TokenProvider;
-import org.ftclub.cabinet.auth.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;

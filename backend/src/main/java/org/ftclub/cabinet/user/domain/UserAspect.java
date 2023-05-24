@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth;
+package org.ftclub.cabinet.user.domain;
 
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
@@ -6,11 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.auth.domain.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class UserAspect {
 	private final UserExceptionHandlerService userExceptionHandlerService;
 	private final UserService userService;
 
-	@Around("execution(* *(.., @User (*), ..))")
+	@Around("execution(* *(.., @UserSession (*), ..))")
 	public Object setUserSessionDto(ProceedingJoinPoint joinPoint)
 			throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
