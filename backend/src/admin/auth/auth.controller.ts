@@ -66,9 +66,7 @@ export class AdminAuthController {
         '아이디 또는 비밀번호가 일치하지 않습니다.',
       );
     }
-    const token = await this.adminAuthService.generateAdminJWTToken();
-
-    res.cookie('admin_access_token', token);
+    await this.adminAuthService.generateAdminJWTToken(res);
     this.logger.log(`Admin has logged in.`);
     res.status(HttpStatus.OK).send();
   }
