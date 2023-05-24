@@ -77,4 +77,8 @@ export class BlackholeTools {
       await this.addBlackholeTimer(user, user.blackholed_at);
     }
   }
+
+  async addDateSeconds(date: Date, seconds: number) {
+    return new Date(date.getTime() + (seconds * 1000));
+  }
 }

@@ -1,13 +1,18 @@
 import {
+  BadRequestException,
+  Body,
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Inject,
   Logger,
+  Post,
   Req,
   Res,
   UseFilters,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -26,6 +31,7 @@ import { GoogleOAuthGuard } from 'src/admin/auth/google/guard/google.guard';
 import { AdminUserDto } from '../dto/admin.user.dto';
 import { AdminAuthService } from './auth.service';
 import { GoogleAuthFilter } from 'src/admin/auth/google/google.auth.filter';
+import { AdminLoginDto } from '../dto/admin.login.dto';
 
 @ApiTags('Auth')
 @Controller('/api/admin/auth')
@@ -48,6 +54,21 @@ export class AdminAuthController {
   @UseGuards(GoogleOAuthGuard)
   async loginGoogle(@Req() req) {
     this.logger.log('Logged in Google OAuth!');
+  }
+
+  @Post('/login')
+  async login(
+    @Body(new ValidationPipe()) loginInfo: AdminLoginDto,
+    @Res() res: Response,
+  ): Promise<void> {
+    if (!(await this.adminAuthService.isAdminLoginVerified(loginInfo))) {
+      throw new BadRequestException(
+        '아이디 또는 비밀번호가 일치하지 않습니다.',
+      );
+    }
+    await this.adminAuthService.generateAdminJWTToken(res);
+    this.logger.log(`Admin has logged in.`);
+    res.status(HttpStatus.OK).send();
   }
 
   @ApiOperation({
