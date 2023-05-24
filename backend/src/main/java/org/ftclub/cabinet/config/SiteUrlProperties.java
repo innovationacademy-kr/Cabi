@@ -1,13 +1,13 @@
 package org.ftclub.cabinet.config;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "site-url")
-@Data
+@Getter
 public class SiteUrlProperties {
 
-    private String feHost;
+	@Value("${spring.server.fe-host}")
+	private String feHost;
 }

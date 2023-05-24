@@ -1,20 +1,27 @@
+---
+#프로덕션 환경
 spring:
+  profiles:
+    active: prod
+  config:
+    import: classpath:application-oauth.yml, classpath:application-mail.yml
+
+---
+#개발서버 환경
+spring:
+  profiles:
+    active: dev
   config:
     import: classpath:application-oauth.yml
+
+---
+#로컬 환경
+spring:
   profiles:
-    default: local
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        globally_quoted_identifiers: true
-cabinet:
-  lent:
-    term:
-      private: 21
-      share: 42
-  penalty:
-    day:
-      share: 3
-      padding: 2
+    active: local
+  config:
+    import: classpath:application-oauth.yml
+
+---
+
+
