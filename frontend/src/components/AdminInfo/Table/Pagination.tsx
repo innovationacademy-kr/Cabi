@@ -41,6 +41,7 @@ const PageButtonStyled = styled.div`
 
 const ActivaPageButtonStyled = styled(PageButtonStyled)`
   background: var(--gray-color);
+  border: 2px solid var(--gray-color);
 `;
 
 const ButtonContainerStyled = styled.div`
@@ -50,7 +51,8 @@ const ButtonContainerStyled = styled.div`
 
 const PaginationStyled = styled.div`
   width: 100%;
-  padding: 8px 0 12px;
+  height: 40px;
+  padding-bottom: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
