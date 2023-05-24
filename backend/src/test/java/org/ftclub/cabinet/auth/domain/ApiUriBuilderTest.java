@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.auth.domain;
 
-import org.ftclub.cabinet.auth.ApiUriBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

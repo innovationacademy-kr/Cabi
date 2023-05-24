@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerTest {
+public class UserSessionControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth;
+package org.ftclub.cabinet.auth.domain;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

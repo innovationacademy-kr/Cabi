@@ -22,8 +22,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Transactional
-public class UserServiceTest {
+public class UserSessionServiceTest {
 
+	private final Date testDate = new Date(123, 0, 15, 9, 0);
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -32,8 +33,6 @@ public class UserServiceTest {
 	private AdminUserRepository adminUserRepository;
 	@Autowired
 	private BanHistoryRepository banHistoryRepository;
-
-	private final Date testDate = new Date(123, 0, 15, 9, 0);
 
 	@Test
 	void 유저_생성() {

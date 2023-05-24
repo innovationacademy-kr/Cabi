@@ -1,8 +1,9 @@
-package org.ftclub.cabinet.auth;
+package org.ftclub.cabinet.auth.service;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.domain.ApiUriBuilder;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;

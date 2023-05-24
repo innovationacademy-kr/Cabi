@@ -18,12 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Transactional
-public class UserFacadeServiceTest {
-
-	@Autowired
-	private UserFacadeService userFacadeService;
+public class UserSessionFacadeServiceTest {
 
 	private final Date testDate = new Date(123, 0, 15, 9, 0);
+	@Autowired
+	private UserFacadeService userFacadeService;
 
 	@Test
 	public void 대여_정보_없는_유저_DTO_가져오기() {
