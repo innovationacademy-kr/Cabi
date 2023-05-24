@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.auth.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +27,6 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class OauthService {
 
-	private final ApiUriBuilder apiUriBuilder;
-
 	private final GoogleApiProperties googleApiProperties;
 
 	private final FtApiProperties ftApiProperties;
@@ -39,13 +39,15 @@ public class OauthService {
 	 */
 	public void sendToGoogleApi(HttpServletResponse response) throws IOException {
 		response.sendRedirect(
-				apiUriBuilder.buildCodeUri(
-						googleApiProperties.getAuthUri(),
-						googleApiProperties.getClientId(),
-						googleApiProperties.getRedirectUri(),
-						googleApiProperties.getScope(),
-						googleApiProperties.getGrantType())
-		);
+				ApiUriBuilder
+						.builder()
+						.authUri(googleApiProperties.getAuthUri())
+						.clientId(googleApiProperties.getClientId())
+						.redirectUri(googleApiProperties.getRedirectUri())
+						.scope(googleApiProperties.getScope())
+						.grantType(googleApiProperties.getGrantType())
+						.build()
+						.getCodeRequestUri());
 	}
 
 	/**
@@ -88,7 +90,8 @@ public class OauthService {
 	 * @return 사용자 정보
 	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
 	 */
-	public JSONObject getGoogleProfile(String token) {
+	public JsonNode getGoogleProfile(String token) {
+		ObjectMapper objectMapper = new ObjectMapper();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.setBearerAuth(token);
@@ -97,7 +100,7 @@ public class OauthService {
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
 		RestTemplate restTemplate = new RestTemplate();
 		try {
-			return new JSONObject(
+			return objectMapper.readTree(
 					restTemplate.exchange(googleApiProperties.getUserInfoUri(), HttpMethod.GET,
 									requestEntity, String.class)
 							.getBody());
@@ -113,13 +116,16 @@ public class OauthService {
 	 * @throws IOException 입출력 예외
 	 */
 	public void sendToFtApi(HttpServletResponse response) throws IOException {
-		String dir = apiUriBuilder.buildCodeUri(
-				ftApiProperties.getAuthUri(),
-				ftApiProperties.getClientId(),
-				ftApiProperties.getRedirectUri(),
-				ftApiProperties.getScope(),
-				ftApiProperties.getGrantType());
-		response.sendRedirect(dir);
+		response.sendRedirect(
+				ApiUriBuilder
+						.builder()
+						.authUri(ftApiProperties.getAuthUri())
+						.clientId(ftApiProperties.getClientId())
+						.redirectUri(ftApiProperties.getRedirectUri())
+						.scope(ftApiProperties.getScope())
+						.grantType(ftApiProperties.getGrantType())
+						.build()
+						.getCodeRequestUri());
 	}
 
 	/**
@@ -130,6 +136,7 @@ public class OauthService {
 	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
 	 */
 	public String getFtToken(String code) {
+		ObjectMapper objectMapper = new ObjectMapper();
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -142,9 +149,9 @@ public class OauthService {
 		map.add("code", code);
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		try {
-			return new JSONObject(
-					restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class)
-							.getBody())
+			return objectMapper.readTree(
+							restTemplate.postForEntity(ftApiProperties.getTokenUri(), request, String.class)
+									.getBody())
 					.get(ftApiProperties.getAccessTokenName()).toString();
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
@@ -158,14 +165,15 @@ public class OauthService {
 	 * @return 사용자 정보
 	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
 	 */
-	public JSONObject getFtProfile(String token) {
+	public JsonNode getFtProfile(String token) {
+		ObjectMapper objectMapper = new ObjectMapper();
 		HttpHeaders headers = new HttpHeaders();
 		RestTemplate restTemplate = new RestTemplate();
 
 		headers.setBearerAuth(token);
 		HttpEntity<String> requestEntity = new HttpEntity<String>("parameters", headers);
 		try {
-			return new JSONObject(
+			return objectMapper.readTree(
 					restTemplate.exchange(ftApiProperties.getUserInfoUri(), HttpMethod.GET,
 									requestEntity, String.class)
 							.getBody());

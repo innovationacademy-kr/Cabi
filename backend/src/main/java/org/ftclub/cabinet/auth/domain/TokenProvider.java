@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.auth.domain;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -11,7 +12,6 @@ import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,20 +34,18 @@ public class TokenProvider {
 	 * @param profile  API 제공자로부터 받은 프로필
 	 * @return JWT 클레임(Payload)
 	 */
-	public Map<String, Object> makeClaims(String provider, JSONObject profile) {
+	public Map<String, Object> makeClaimsByProviderProfile(String provider, JsonNode profile) {
 		Map<String, Object> claims = new HashMap<>();
-		if (provider == googleApiProperties.getName()) {
-			claims.put("email", profile.get("email").toString());
+		if (provider.equals(googleApiProperties.getProviderName())) {
+			claims.put("email", profile.get("email").asText());
 		}
-		if (provider == ftApiProperties.getName()) {
-			claims.put("name", profile.get("login").toString());
-			claims.put("email", profile.get("email").toString());
-			claims.put("blackholedAt", profile.getJSONArray("cursus_users")
-					.getJSONObject(1)
-					.get("blackholed_at") != JSONObject.NULL ?
-					profile.getJSONArray("cursus_users")
-							.getJSONObject(1)
-							.get("blackholed_at") : null);
+		if (provider.equals(ftApiProperties.getProviderName())) {
+			claims.put("name", profile.get("login").asText());
+			claims.put("email", profile.get("email").asText());
+			claims.put("blackholedAt",
+					profile.get("cursus_users").get(1).get("blackholed_at") != null ?
+							profile.get("cursus_users").get(1).get("blackholed_at").asText()
+							: null);
 			claims.put("role", UserRole.USER);
 		}
 		return claims;
@@ -61,13 +59,11 @@ public class TokenProvider {
 	 * @param now      현재 시각
 	 * @return JWT 토큰
 	 */
-	public String createToken(String provider, JSONObject profile, Date now) {
+	public String createToken(String provider, JsonNode profile, Date now) {
 		return Jwts.builder()
-				.setClaims(makeClaims(provider, profile))
+				.setClaims(makeClaimsByProviderProfile(provider, profile))
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
 				.setExpiration(DateUtil.addDaysToDate(now, jwtProperties.getExpiry()))
 				.compact();
 	}
-
-
 }

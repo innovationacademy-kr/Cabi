@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class FtApiProperties {
 
 	@Value("${oauth2.client.registration.ft.name}")
-	private String name;
+	private String providerName;
 
 	@Value("${oauth2.client.registration.ft.client-id}")
 	private String clientId;

@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.auth.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,6 @@ import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.SiteUrlProperties;
-import org.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,8 +63,9 @@ public class AdminAuthController {
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
 		String apiToken = oauthService.getGoogleToken(code);
-		JSONObject profile = oauthService.getGoogleProfile(apiToken);
-		String accessToken = tokenProvider.createToken(googleApiProperties.getName(), profile,
+		JsonNode profile = oauthService.getGoogleProfile(apiToken);
+		String accessToken = tokenProvider.createToken(googleApiProperties.getProviderName(),
+				profile,
 				new Date());
 		String serverName = req.getServerName();
 		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), accessToken, "/",
