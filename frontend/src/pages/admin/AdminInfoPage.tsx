@@ -1,6 +1,6 @@
+import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
-import { useFetchData } from "@/hooks/useFetchData";
-import useMenu from "@/hooks/useMenu";
 import {
   bannedUserListState,
   brokenCabinetListState,
@@ -16,13 +16,13 @@ import {
   IMonthlyData,
 } from "@/types/dto/admin.dto";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import BarChart from "../../components/AdminInfo/Chart/BarChart";
-import LineChart from "../../components/AdminInfo/Chart/LineChart";
-import PieChart from "../../components/AdminInfo/Chart/PieChart";
-import AdminTable from "../../components/AdminInfo/Table/AdminTable";
+import BarChart from "@/components/AdminInfo/Chart/BarChart";
+import LineChart from "@/components/AdminInfo/Chart/LineChart";
+import PieChart from "@/components/AdminInfo/Chart/PieChart";
+import AdminTable from "@/components/AdminInfo/Table/AdminTable";
+import { useFetchData } from "@/hooks/useFetchData";
+import useMenu from "@/hooks/useMenu";
 
 const AdminInfo = () => {
   const [overdueUserList, setOverdueUserList] = useRecoilState<IData[]>(
@@ -138,7 +138,7 @@ const AdminInfo = () => {
 
 const H2styled = styled.h2`
   font-size: 1.25rem;
-  padding-top: 15px;
+  line-height: 2rem;
   text-align: center;
   font-weight: bold;
 `;
@@ -190,7 +190,7 @@ const AdminInfoStyled = styled.div`
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-row: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   place-items: center;
   overflow: hidden;
 
