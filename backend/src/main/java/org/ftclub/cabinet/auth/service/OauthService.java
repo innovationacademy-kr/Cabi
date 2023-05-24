@@ -10,7 +10,6 @@ import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -58,8 +57,8 @@ public class OauthService {
 	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
 	 */
 	public String getGoogleToken(String code) {
+		ObjectMapper objectMapper = new ObjectMapper();
 		RestTemplate restTemplate = new RestTemplate();
-
 		HttpHeaders headers = new HttpHeaders();
 
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -72,11 +71,11 @@ public class OauthService {
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 		try {
-			return new JSONObject(
-					restTemplate.postForEntity(googleApiProperties.getTokenUri(), request,
-							String.class).getBody())
+			return objectMapper.readTree(
+							restTemplate.postForEntity(googleApiProperties.getTokenUri(), request,
+									String.class).getBody())
 					.get(googleApiProperties.getAccessTokenName())
-					.toString();
+					.asText();
 		} catch (Exception e) {
 			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 		}

@@ -81,8 +81,9 @@ public class TokenValidatorTest {
 	}
 
 	@Test
-	void 토큰_페이로드_가져오기() {
+	void 토큰_페이로드_가져오기() throws JsonProcessingException {
 		String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey());
-		Assert.assertEquals("testUserName", tokenValidator.getPayloadJson(userToken).get("name"));
+		Assert.assertEquals("testUserName",
+				tokenValidator.getPayloadJson(userToken).get("name").asText());
 	}
 }
