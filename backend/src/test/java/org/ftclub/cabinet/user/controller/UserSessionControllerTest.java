@@ -36,6 +36,7 @@ public class UserSessionControllerTest {
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
 				"penaltyuser2");
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
+
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
 						"/api/users/me"))
 				.andExpect(status().isOk())

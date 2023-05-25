@@ -2,15 +2,10 @@ package org.ftclub.cabinet.auth.domain;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class ApiUriBuilderTest {
-
-	@Autowired
-	ApiUriBuilder apiUriBuilder;
-
 
 	@Test
 	void uri_생성() {
@@ -20,7 +15,15 @@ public class ApiUriBuilderTest {
 		String scope = "profile";
 		String grantType = "code";
 
-		String uri = apiUriBuilder.buildCodeUri(authUri, clientId, redirectUri, scope, grantType);
+		String uri = ApiUriBuilder
+				.builder()
+				.authUri(authUri)
+				.clientId(clientId)
+				.redirectUri(redirectUri)
+				.scope(scope)
+				.grantType(grantType)
+				.build()
+				.getCodeRequestUri();
 
 		//"%s?client_id=%s&redirect_uri=%s&scope=%s&response_type=%s"
 		Assertions.assertEquals(

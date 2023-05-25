@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +48,11 @@ public class UserAspect {
 	}
 
 	// To-Do: 수정 필요
-	public UserSessionDto getUserSessionDtoByRequest(HttpServletRequest req) {
+	public UserSessionDto getUserSessionDtoByRequest(HttpServletRequest req)
+			throws JsonProcessingException {
 		String name = tokenValidator.getPayloadJson(
 						cookieManager.getCookie(req, jwtProperties.getMainTokenName())).get("name")
-				.toString();
+				.asText();
 		User user = userExceptionHandlerService.getUserByName(name);
 		//To-Do: name을 기준으로 service에게 정보를 받고, 매핑한다.
 		// name과 email은 우선 구현했으나 수정이 필요함.
