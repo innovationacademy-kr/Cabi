@@ -80,6 +80,7 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
       pointBorderColor={{ from: "serieColor" }}
       pointLabelYOffset={-12}
       useMesh={true}
+      enableSlices={'x'}
       legends={[
         {
           anchor: "bottom",
