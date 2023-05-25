@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.event;
 
 import java.util.Date;
+import lombok.Getter;
 import lombok.ToString;
 import org.ftclub.cabinet.cabinet.domain.Location;
 
@@ -8,6 +9,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
  * 대여 시작 이벤트 클래스
  */
 @ToString
+@Getter
 public class LentStartEvent {
 	//TO-DO : 직관적인 이해를 위해서 부득이하게 event 패키지에 위치시켰습니다. 이후에 해당하는 도메인으로 변경해야 합니다.
 	/**
