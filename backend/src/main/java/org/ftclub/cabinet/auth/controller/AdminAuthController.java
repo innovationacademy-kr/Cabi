@@ -62,7 +62,6 @@ public class AdminAuthController {
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
-		System.out.println("loginCallback = " + code);
 		String apiToken = oauthService.getTokenByCode(code, googleApiProperties);
 		JsonNode profile = oauthService.getProfileByToken(apiToken, googleApiProperties);
 		String accessToken = tokenProvider.createToken(

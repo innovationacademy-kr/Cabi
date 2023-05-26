@@ -51,7 +51,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		PageRequest pageable = PageRequest.of(page, length);
 		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
 				now);
-		System.out.println("service " + activeBanList.getContent());
 		return generateBlockedUserPaginationDto(activeBanList.getContent(),
 				activeBanList.getTotalElements());
 	}
