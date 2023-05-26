@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class FtApiProperties {
+public class FtApiProperties implements ApiProperties {
 
 	@Value("${oauth2.client.registration.ft.name}")
 	private String providerName;
