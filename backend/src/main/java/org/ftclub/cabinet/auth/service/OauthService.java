@@ -24,7 +24,7 @@ public class OauthService {
 	private final ObjectMapper objectMapper;
 
 	/**
-	 * 구글 OAuth 인증을 위한 URL을 생성하고, HttpServletResponse에 리다이렉트합니다.
+	 * OAuth 권한 코드를 요청하는 URL을 생성하고, HttpServletResponse에 리다이렉트합니다.
 	 *
 	 * @param response {@link HttpServletResponse}
 	 * @throws IOException 입출력 예외
@@ -37,10 +37,11 @@ public class OauthService {
 	}
 
 	/**
-	 * 구글 OAuth 인증을 위한 토큰을 요청합니다.
+	 * 유저의 정보를 얻어올 수 있는 OAuth 액세스 토큰을 요청합니다.
 	 *
 	 * @param code 인증 코드
 	 * @return API 액세스 토큰
+	 * @throws RuntimeException JSON 파싱 예외
 	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
 	 */
 	public String getTokenByCode(String code, ApiProperties apiProperties) {
@@ -67,10 +68,11 @@ public class OauthService {
 
 
 	/**
-	 * 구글 OAuth 인증을 통해 받은 토큰을 이용해 사용자 정보를 요청합니다.
+	 * 액세스 토큰을 이용해 OAuth 사용자 정보를 요청합니다.
 	 *
 	 * @param token 토큰
 	 * @return 사용자 정보
+	 * @throws RuntimeException JSON 파싱 예외
 	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
 	 */
 	public JsonNode getProfileByToken(String token, ApiProperties apiProperties) {
