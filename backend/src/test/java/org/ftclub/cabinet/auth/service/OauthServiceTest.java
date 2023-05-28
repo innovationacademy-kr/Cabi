@@ -2,6 +2,8 @@ package org.ftclub.cabinet.auth.service;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+import org.ftclub.cabinet.config.FtApiProperties;
+import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
@@ -15,11 +17,17 @@ public class OauthServiceTest {
 	@Autowired
 	OauthService oauthService;
 
+	@Autowired
+	GoogleApiProperties googleApiProperties;
+
+	@Autowired
+	FtApiProperties ftApiProperties;
+
 	@Test
 	void 구글_로그인_요청() throws IOException {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 
-		oauthService.sendToGoogleApi(response);
+		oauthService.sendToApi(response, googleApiProperties);
 
 		Assert.assertEquals(response.getStatus(), HttpServletResponse.SC_FOUND);
 	}
@@ -38,7 +46,7 @@ public class OauthServiceTest {
 	void Ft_로그인_요청() throws IOException {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 
-		oauthService.sendToFtApi(response);
+		oauthService.sendToApi(response, ftApiProperties);
 
 		Assert.assertEquals(response.getStatus(), HttpServletResponse.SC_FOUND);
 	}
