@@ -19,7 +19,7 @@ public class BanPolicyImpl implements BanPolicy {
 	@Override
 	public BanType verifyForBanType(LentType lentType, Date startAt, Date endedAt, Date expiredAt) {
 		if (checkAlreadyExpired(endedAt, expiredAt)) {
-			return BanType.PRIVATE; // BanType을 BanType.ALL 과 같은 방식으로 바꿔도 좋을 것 같습니다.
+			return BanType.ALL;
 		}
 		if (lentType == LentType.SHARE) {
 			Long dateDiff = DateUtil.calculateTwoDateDiffAbs(startAt, endedAt);

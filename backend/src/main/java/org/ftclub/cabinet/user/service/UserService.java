@@ -28,9 +28,6 @@ public interface UserService {
 
 	void deleteRecentBanHistory(Long userId, Date today);
 
-	String getUserEmail(Long userId);
-
-
 	/**
 	 * 유저의 정지 상태를 확인합니다.
 	 *
