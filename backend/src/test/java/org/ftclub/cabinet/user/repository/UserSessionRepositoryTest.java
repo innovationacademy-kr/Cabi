@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
 @Transactional
-public class UserRepositoryTest {
+public class UserSessionRepositoryTest {
 
 	@Autowired
 	private UserRepository userRepository;

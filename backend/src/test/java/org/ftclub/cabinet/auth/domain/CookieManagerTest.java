@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.auth.domain;
 
 import javax.servlet.http.Cookie;
-import org.ftclub.cabinet.auth.CookieManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

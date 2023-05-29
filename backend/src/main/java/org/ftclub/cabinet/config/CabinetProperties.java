@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 @Getter
 public class CabinetProperties {
 
-	@Value("${cabinet.lent.term.private}")
+	@Value("${spring.cabinet.lent.term.private}")
 	private Integer lentTermPrivate;
-	@Value("${cabinet.lent.term.share}")
+	@Value("${spring.cabinet.lent.term.share}")
 	private Integer lentTermShare;
-	@Value("${cabinet.penalty.day.share}")
+	@Value("${spring.cabinet.penalty.day.share}")
 	private Integer penaltyDayShare;
-	@Value("${cabinet.penalty.day.padding}")
+	@Value("${spring.cabinet.penalty.day.padding}")
 	private Integer penaltyDayPadding;
 
 }

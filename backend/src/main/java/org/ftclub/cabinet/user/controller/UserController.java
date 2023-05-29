@@ -1,14 +1,14 @@
 package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.AuthGuard;
-import org.ftclub.cabinet.auth.AuthGuard.Level;
-import org.ftclub.cabinet.auth.User;
+import org.ftclub.cabinet.auth.domain.AuthGuard;
+import org.ftclub.cabinet.auth.domain.AuthGuard.Level;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +34,7 @@ public class UserController {
 	 */
 	@GetMapping("/me")
 	@AuthGuard(level = Level.USER_ONLY)
-	public MyProfileResponseDto getMyProfile(@User UserSessionDto userSessionDto) {
+	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
 		return userFacadeService.getMyProfile(userSessionDto);
 	}
 
@@ -46,7 +46,8 @@ public class UserController {
 	 */
 	@GetMapping("/me/lent")
 	@AuthGuard(level = Level.USER_ONLY)
-	public MyCabinetInfoResponseDto getMyLentAndCabinetInfo(@User UserSessionDto userSessionDto) {
+	public MyCabinetInfoResponseDto getMyLentAndCabinetInfo(
+			@UserSession UserSessionDto userSessionDto) {
 		return userFacadeService.getMyLentAndCabinetInfo(
 				userSessionDto.getUserId());
 	}
@@ -61,7 +62,7 @@ public class UserController {
 	 */
 	@GetMapping("/me/lent/histories")
 	@AuthGuard(level = Level.USER_ONLY)
-	public LentHistoryPaginationDto getMyLentHistories(@User UserSessionDto userSessionDto,
+	public LentHistoryPaginationDto getMyLentHistories(@UserSession UserSessionDto userSessionDto,
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
 		return lentFacadeService.getAllUserLentHistories(
 				userSessionDto.getUserId(), page, length);

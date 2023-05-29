@@ -1,6 +1,7 @@
-package org.ftclub.cabinet.auth;
+package org.ftclub.cabinet.auth.domain;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,6 +42,8 @@ public class AuthAspect {
 		 */
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
+		HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getResponse();
 		String mainTokenName = jwtProperties.getMainTokenName();
 		String adminTokenName = jwtProperties.getAdminTokenName();
 
@@ -56,12 +59,14 @@ public class AuthAspect {
 			case ADMIN_ONLY:
 				if (!cookieManager.isCookieExists(request, adminTokenName)
 						|| !tokenValidator.isTokenValid(request)) {
+					cookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 				}
 				break;
 			case USER_ONLY:
 				if (!cookieManager.isCookieExists(request, mainTokenName)
 						|| !tokenValidator.isTokenValid(request)) {
+					cookieManager.deleteCookie(response, mainTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
 				}
 				break;
@@ -69,6 +74,8 @@ public class AuthAspect {
 				if ((!cookieManager.isCookieExists(request, mainTokenName)
 						&& !cookieManager.isCookieExists(request, adminTokenName))
 						|| !tokenValidator.isTokenValid(request)) {
+					cookieManager.deleteCookie(response, mainTokenName);
+					cookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
 				}
 				break;

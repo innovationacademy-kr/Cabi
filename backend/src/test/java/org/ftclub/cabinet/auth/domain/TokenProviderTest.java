@@ -1,8 +1,9 @@
 package org.ftclub.cabinet.auth.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import java.util.Map;
-import org.ftclub.cabinet.auth.TokenProvider;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
@@ -29,24 +30,28 @@ public class TokenProviderTest {
 	@Autowired
 	JwtProperties jwtProperties;
 
+	ObjectMapper objectMapper = new ObjectMapper();
+
 	@Test
-	void 토큰_클레임_생성() {
-		JSONObject googleProfile = new JSONObject();
-		JSONObject ftProfile = new JSONObject();
+	void 토큰_클레임_생성() throws JsonProcessingException {
 		String googleEmail = "dongledongledongglee@google.com";
 		String ftIntraId = "yooh";
 		String ftEmail = "inshin@member.kr";
-		googleProfile.put("email", googleEmail);
-		ftProfile.put("login", ftIntraId);
-		ftProfile.put("cursus_users", new JSONArray(new JSONObject[]{
-				new JSONObject().put("zero_index", new Date()),
-				new JSONObject().put("blackholed_at", new Date())}));
-		ftProfile.put("email", ftEmail);
+		JSONObject googleProfile = new JSONObject()
+				.put("email", googleEmail);
+		JSONObject ftProfile = new JSONObject()
+				.put("login", ftIntraId)
+				.put("cursus_users", new JSONArray(new JSONObject[]{
+						new JSONObject().put("zero_index", new Date()),
+						new JSONObject().put("blackholed_at", new Date())}))
+				.put("email", ftEmail);
 
-		Map<String, Object> googleClaims = tokenProvider.makeClaims(googleApiProperties.getName(),
-				googleProfile);
-		Map<String, Object> ftClaims = tokenProvider.makeClaims(ftApiProperties.getName(),
-				ftProfile);
+		Map<String, Object> googleClaims = tokenProvider.makeClaimsByProviderProfile(
+				googleApiProperties.getProviderName(),
+				objectMapper.readTree(googleProfile.toString()));
+		Map<String, Object> ftClaims = tokenProvider.makeClaimsByProviderProfile(
+				ftApiProperties.getProviderName(),
+				objectMapper.readTree(ftProfile.toString()));
 
 		Assertions.assertEquals(googleEmail, googleClaims.get("email"));
 		Assertions.assertEquals(ftIntraId, ftClaims.get("name"));
@@ -55,7 +60,8 @@ public class TokenProviderTest {
 	}
 
 	@Test
-	void 토큰_생성() {
+	void 토큰_생성() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
 		JSONObject ftProfile = new JSONObject();
 		String ftIntraId = "yooh";
 		String ftEmail = "inshin@member.kr";
@@ -65,7 +71,9 @@ public class TokenProviderTest {
 				new JSONObject().put("blackholed_at", new Date())}));
 		ftProfile.put("email", ftEmail);
 
-		String token = tokenProvider.createToken(ftApiProperties.getName(), ftProfile, new Date());
+		String token = tokenProvider.createToken(ftApiProperties.getProviderName(),
+				objectMapper.readTree(ftProfile.toString()),
+				new Date());
 
 		Assertions.assertNotNull(token);
 	}

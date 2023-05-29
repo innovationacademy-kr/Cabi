@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerTest {
+public class UserSessionControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
@@ -36,6 +36,7 @@ public class UserControllerTest {
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
 				"penaltyuser2");
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
+
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
 						"/api/users/me"))
 				.andExpect(status().isOk())
