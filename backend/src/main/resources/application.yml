@@ -4,7 +4,7 @@ spring:
   server:
     port: 2424
   profiles:
-    active: prod
+    active: prod, test
   config:
     import: classpath:application-oauth.yml, classpath:application-mail.yml
 
@@ -14,7 +14,7 @@ spring:
   server:
     port: 2424
   profiles:
-    active: dev
+    active: dev, test
   config:
     import: classpath:application-oauth.yml
 
@@ -24,7 +24,7 @@ spring:
   server:
     port: 2424
   profiles:
-    active: local
+    active: local, test
   config:
     import: classpath:application-oauth.yml
 
