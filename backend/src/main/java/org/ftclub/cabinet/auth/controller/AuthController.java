@@ -23,15 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
 	private final TokenProvider tokenProvider;
-
 	private final OauthService oauthService;
-
 	private final CookieManager cookieManager;
-
 	private final FtApiProperties ftApiProperties;
-
 	private final SiteUrlProperties siteUrlProperties;
-
 	private final JwtProperties jwtProperties;
 
 	/**
@@ -42,7 +37,7 @@ public class AuthController {
 	 */
 	@GetMapping("/login")
 	public void login(HttpServletResponse response) throws IOException {
-		oauthService.sendToFtApi(response);
+		oauthService.sendToApi(response, ftApiProperties);
 	}
 
 	/**
@@ -64,13 +59,12 @@ public class AuthController {
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
-		String apiToken = oauthService.getFtToken(code);
-		JsonNode profile = oauthService.getFtProfile(apiToken);
+		String apiToken = oauthService.getTokenByCode(code, ftApiProperties);
+		JsonNode profile = oauthService.getProfileByToken(apiToken, ftApiProperties);
 		String accessToken = tokenProvider.createToken(ftApiProperties.getProviderName(), profile,
 				DateUtil.getNow());
-		String serverName = req.getServerName();
 		cookieManager.setCookie(res, jwtProperties.getMainTokenName(), accessToken, "/",
-				serverName);
+				req.getServerName());
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
 	}
 

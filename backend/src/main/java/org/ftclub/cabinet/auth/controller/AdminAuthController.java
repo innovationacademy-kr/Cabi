@@ -40,7 +40,7 @@ public class AdminAuthController {
 	 */
 	@GetMapping("/login")
 	public void login(HttpServletResponse response) throws IOException {
-		oauthService.sendToGoogleApi(response);
+		oauthService.sendToApi(response, googleApiProperties);
 	}
 
 	/**
@@ -62,14 +62,14 @@ public class AdminAuthController {
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
-		String apiToken = oauthService.getGoogleToken(code);
-		JsonNode profile = oauthService.getGoogleProfile(apiToken);
-		String accessToken = tokenProvider.createToken(googleApiProperties.getProviderName(),
+		String apiToken = oauthService.getTokenByCode(code, googleApiProperties);
+		JsonNode profile = oauthService.getProfileByToken(apiToken, googleApiProperties);
+		String accessToken = tokenProvider.createToken(
+				googleApiProperties.getProviderName(),
 				profile,
 				DateUtil.getNow());
-		String serverName = req.getServerName();
 		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), accessToken, "/",
-				serverName);
+				req.getServerName());
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
 	}
 

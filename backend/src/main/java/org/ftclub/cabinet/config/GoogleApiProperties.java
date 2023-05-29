@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class GoogleApiProperties {
+public class GoogleApiProperties implements ApiProperties {
 
 	@Value("${oauth2.client.registration.google.name}")
 	private String providerName;
