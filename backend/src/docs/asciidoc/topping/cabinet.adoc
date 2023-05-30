@@ -1,0 +1,24 @@
+=== 정보 (info)
+
+==== 명세
+
+operation::Cabinet/CabinetInfo/ok[snippets='http-request']
+
+==== 성공
+
+operation::Cabinet/CabinetInfo/ok[snippets='http-response,response-fields']
+
+==== 실패
+
+operation::Cabinet/CabinetInfo/wrongPathParameter[snippets='http-response']
+
+=== 층 수 (floors)
+
+==== 명세
+
+operation::Cabinet/Floors/ok[snippets='http-request']
+
+==== 성공
+
+operation::Cabinet/Floors/ok[snippets='http-response,response-fields']
+

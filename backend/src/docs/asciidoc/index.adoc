@@ -11,3 +11,8 @@
 == 인증 관련 (admin auth)
 
 include::topping/admin-auth.adoc[]
+
+[[Cabinet]]
+== 캐비넷 관련 (cabinet)
+
+include::topping/cabinet.adoc

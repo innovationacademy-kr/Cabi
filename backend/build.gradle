@@ -2,30 +2,24 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'org.asciidoctor.convert' version '1.5.9.2'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'org.ftclub'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-/**
- * ext ~ bootJar까지는 asciidoctor를 이용하여
- * build/generated-snippets에 테스트 결과를 저장하고
- * bootJar를 실행하면 build/generated-snippets에 저장된
- * 테스트 결과를 static/docs에 저장합니다.
- */
 ext {
     snippetsDir = file('build/generated-snippets')
+    outputDocs = file('src/main/resources/static/docs')
 }
 
-test {
-    outputs.dir snippetsDir
+configurations {
+    asciidoctorExt
 }
 
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
+repositories {
+    mavenCentral()
 }
 
 bootJar {
@@ -33,16 +27,6 @@ bootJar {
     from("${asciidoctor.outputDir}/html5") {
         into 'static/docs'
     }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -75,8 +59,9 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     testImplementation 'org.modelmapper:modelmapper:3.1.1'
     testRuntimeOnly 'com.h2database:h2'
-    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
     //JUnit4 추가
     testImplementation("org.junit.vintage:junit-vintage-engine") {
@@ -84,7 +69,38 @@ dependencies {
     }
 }
 
+/**
+ * ext ~ bootJar까지는 asciidoctor를 이용하여
+ * build/generated-snippets에 테스트 결과를 저장하고
+ * bootJar를 실행하면 build/generated-snippets에 저장된
+ * 테스트 결과를 static/docs에 저장합니다.
+ */
+
 test {
     useJUnitPlatform()
     systemProperty 'spring.profiles.active', 'test'
+}
+
+asciidoctor {
+    dependsOn test
+    baseDirFollowsSourceDir()
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+}
+
+tasks.register('copyDocument', Copy) {
+    dependsOn asciidoctor
+    from file("${asciidoctor.outputDir}")
+    into file("${outputDocs}")
+}
+
+build {
+    dependsOn copyDocument
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}") {
+        into '/static/docs'
+    }
 }
