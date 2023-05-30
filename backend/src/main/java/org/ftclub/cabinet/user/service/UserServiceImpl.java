@@ -106,12 +106,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String getUserEmail(Long userId) {
-		User user = userExceptionHandlerService.getUser(userId);
-		return user.getEmail();
-	}
-
-	@Override
 	public boolean checkUserIsBanned(Long userId, Date today) {
 		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
 				today);
