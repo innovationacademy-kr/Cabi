@@ -29,7 +29,7 @@ class LentMapperTest {
 		LentHistory lentHistory = LentHistory.of(DateUtil.getNow(), DateUtil.getNow(), 19L, 99L);
 		String name = "someName";
 		LentDto lentDto = lentMapper.toLentDto("someName", lentHistory);
-		assertEquals(lentHistory.getLentHistoryId(), lentDto.getLentHistoryId());
+		assertEquals(lentHistory.getId(), lentDto.getLentHistoryId());
 		assertEquals(lentHistory.getUserId(), lentDto.getUserId());
 		assertEquals(name, lentDto.getName());
 		assertEquals(lentHistory.getExpiredAt(), lentDto.getExpiredAt());
@@ -44,7 +44,7 @@ class LentMapperTest {
 		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
 				CabinetPlace.of(location, null, null));
 		LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet);
-		assertEquals(cabinet.getCabinetId(), lentHistoryDto.getCabinetId());
+		assertEquals(cabinet.getId(), lentHistoryDto.getCabinetId());
 		assertEquals(lentHistory.getUserId(), lentHistoryDto.getUserId());
 		assertEquals(cabinet.getVisibleNum(), lentHistoryDto.getVisibleNum());
 		assertEquals(user.getName(), lentHistoryDto.getName());

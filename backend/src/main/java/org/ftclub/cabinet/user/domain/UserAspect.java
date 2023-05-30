@@ -56,6 +56,6 @@ public class UserAspect {
 		User user = userExceptionHandlerService.getUserByName(name);
 		//To-Do: name을 기준으로 service에게 정보를 받고, 매핑한다.
 		// name과 email은 우선 구현했으나 수정이 필요함.
-		return new UserSessionDto(user.getUserId(), name, user.getEmail(), 1, 1, new Date(), true);
+		return new UserSessionDto(user.getId(), name, user.getEmail(), 1, 1, new Date(), true);
 	}
 }

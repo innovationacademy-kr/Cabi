@@ -23,7 +23,7 @@ class CabinetServiceTest {
 	@Test
 	public void 사물함_가져오기() {
 		Cabinet cabinet = cabinetService.getCabinet(1L);
-		assertEquals(1L, cabinet.getCabinetId().longValue());
+		assertEquals(1L, cabinet.getId().longValue());
 	}
 
 	@Test

@@ -34,7 +34,7 @@ class UserSessionMapperTest {
 	void toUserProfileDto() {
 		User user = User.of("intraId", "user@email.com", new Date(), UserRole.USER);
 		UserProfileDto userProfileDto = userMapper.toUserProfileDto(user);
-		assertEquals(user.getUserId(), userProfileDto.getUserId());
+		assertEquals(user.getId(), userProfileDto.getUserId());
 		assertEquals(user.getName(), userProfileDto.getName());
 	}
 }

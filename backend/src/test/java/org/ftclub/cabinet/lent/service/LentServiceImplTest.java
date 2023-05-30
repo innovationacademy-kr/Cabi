@@ -158,18 +158,18 @@ class LentServiceImplTest {
 	@DisplayName("사물함 대여 가능한 사용자는 available, limited_available 상태의 사물함을 빌릴 수 있습니다 ")
 	void generalLentSituation() {
 		// given
-		int lentCountBefore = lentRepository.countUserActiveLent(normalUser1.getUserId());
+		int lentCountBefore = lentRepository.countUserActiveLent(normalUser1.getId());
 		// when
-		lentService.startLentCabinet(normalUser1.getUserId(),
-				privateAvailableCabinet1.getCabinetId());
+		lentService.startLentCabinet(normalUser1.getId(),
+				privateAvailableCabinet1.getId());
 		// then
-		int lentCountAfter = lentRepository.countUserActiveLent(normalUser1.getUserId());
+		int lentCountAfter = lentRepository.countUserActiveLent(normalUser1.getId());
 		LentHistory lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
-				normalUser1.getUserId()).orElseThrow(() -> new RuntimeException());
+				normalUser1.getId()).orElseThrow(() -> new RuntimeException());
 		Assertions.assertEquals(lentCountAfter, lentCountBefore + 1L);
 		Assertions.assertEquals(CabinetStatus.FULL, privateAvailableCabinet1.getStatus());
 		Assertions.assertNotNull(
-				lentRepository.findFirstByUserIdAndEndedAtIsNull(normalUser1.getUserId())
+				lentRepository.findFirstByUserIdAndEndedAtIsNull(normalUser1.getId())
 						.orElse(null));
 	}
 
@@ -177,8 +177,8 @@ class LentServiceImplTest {
 	@DisplayName("대여자는 또 다른 사물함을 빌릴 수 없습니다.")
 	void alreadyLentUserSituation() {
 		// given
-		Long userId = lentUser1.getUserId();
-		Long cabinetId = privateAvailableCabinet1.getCabinetId();
+		Long userId = lentUser1.getId();
+		Long cabinetId = privateAvailableCabinet1.getId();
 		// when
 		ServiceException serviceException = assertThrows(ServiceException.class,
 				() -> lentService.startLentCabinet(userId, cabinetId));
@@ -239,10 +239,10 @@ class LentServiceImplTest {
 	@DisplayName("유저가 available 상태의 shared cabinet을 렌트합니다. cabinet의 status, expired_at, ended_at 값이 적절히 변경돼야 합니다.")
 	void sharedCabinetProperStatus1() {
 		// given
-		Long userId1 = normalUser1.getUserId();
-		Long userId2 = normalUser2.getUserId();
-		Long userId3 = normalUser3.getUserId();
-		Long cabinetId = sharedAvailableCabinet1.getCabinetId();
+		Long userId1 = normalUser1.getId();
+		Long userId2 = normalUser2.getId();
+		Long userId3 = normalUser3.getId();
+		Long cabinetId = sharedAvailableCabinet1.getId();
 		Cabinet cabinet = sharedAvailableCabinet1;
 		// when
 		lentService.startLentCabinet(userId1, cabinetId);
@@ -273,12 +273,12 @@ class LentServiceImplTest {
 	@DisplayName("유저가 available 상태의 shared cabinet을 렌트합니다. cabinet의 status, expired_at, ended_at 값이 적절히 변경돼야 합니다.")
 	void sharedCabinetProperStatus2() {
 		// given
-		Long userId1 = normalUser1.getUserId();
-		Long userId2 = normalUser2.getUserId();
-		Long userId3 = normalUser3.getUserId();
-		Long userId4 = normalUser4.getUserId();
+		Long userId1 = normalUser1.getId();
+		Long userId2 = normalUser2.getId();
+		Long userId3 = normalUser3.getId();
+		Long userId4 = normalUser4.getId();
 
-		Long cabinetId = sharedAvailableCabinet0.getCabinetId();
+		Long cabinetId = sharedAvailableCabinet0.getId();
 		Cabinet cabinet = sharedAvailableCabinet0;
 		lentService.startLentCabinet(userId1, cabinetId);
 		lentService.startLentCabinet(userId2, cabinetId);

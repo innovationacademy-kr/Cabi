@@ -17,8 +17,8 @@ public interface LentMapper {
 
 	LentDto toLentDto(String name, LentHistory lentHistory);
 
-	@Mapping(target = "userId", source = "lentHistory.userId")
-	@Mapping(target = "cabinetId", source = "cabinet.cabinetId")
+	@Mapping(target = "userId", source = "lentHistory.id")
+	@Mapping(target = "cabinetId", source = "cabinet.id")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	LentHistoryDto toLentHistoryDto(LentHistory lentHistory, User user, Cabinet cabinet);
 }

@@ -25,7 +25,7 @@ public class AdminUserRepositoryTestSession {
 		AdminUser adminUser = adminUserRepository.getAdminUser(adminUserId);
 
 		assertNotNull(adminUser);
-		assertEquals(adminUserId, adminUser.getAdminUserId());
+		assertEquals(adminUserId, adminUser.getId());
 		assertEquals("admin0@gmail.com", adminUser.getEmail());
 	}
 

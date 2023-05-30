@@ -63,7 +63,7 @@ class LentHistoryTest {
 		lentHistory.endLent(DateUtil.addDaysToDate(now, 6));
 		assertTrue(lentHistory.isSetEndedAt());
 		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
-		lentRepository.findById(lentHistory.getLentHistoryId());
+		lentRepository.findById(lentHistory.getId());
 		assertTrue(lentHistory.isSetEndedAt());
 		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
 	}
