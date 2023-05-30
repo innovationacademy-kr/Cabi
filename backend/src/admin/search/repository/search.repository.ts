@@ -203,7 +203,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
         cabinet_num: visibleNum,
         floor: floor,
       },
-      order: { cabinet_id: 'ASC' },
+      order: { floor: 'ASC' },
     });
     const rtn = {
       result: result.map((cabinet) => ({
@@ -226,7 +226,6 @@ export class AdminSearchRepository implements IAdminSearchRepository {
       })),
       total_length: result.length,
     };
-    rtn.result.sort((a, b) => a.floor - b.floor);
     return rtn;
   }
 
