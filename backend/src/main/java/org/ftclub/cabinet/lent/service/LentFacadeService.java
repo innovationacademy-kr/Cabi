@@ -1,11 +1,8 @@
 package org.ftclub.cabinet.lent.service;
 
 import java.util.List;
-import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentEndMemoDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.lent.controller.PaginationRequestDto;
 
 /**
@@ -32,9 +29,9 @@ public interface LentFacadeService {
 	/**
 	 * 사물함을 반납 합니다. 유저가 정책에 따라 벤이 될 수 있습니다.
 	 *
-	 * @param userId 반납하려는 user id
+	 * @param userSessionDto 요청한 유저 dto
 	 */
-	void endLentCabinet(Long userId);
+	void endLentCabinet(UserSessionDto userSessionDto);
 
 	/**
 	 * 사물함을 반납될 비밀번화와 함께 반납 합니다.
@@ -42,7 +39,7 @@ public interface LentFacadeService {
 	 * @param userSessionDto 요청한 유저 dto
 	 * @param lentEndMemoDto
 	 */
-	void endLentCabinetWithMemeo(UserSessionDto userSessionDto, LentEndMemoDto lentEndMemoDto);
+	void endLentCabinetWithMemo(UserSessionDto userSessionDto, LentEndMemoDto lentEndMemoDto);
 
 
 	/**
@@ -73,9 +70,7 @@ public interface LentFacadeService {
 	LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
 			Integer length);
 
-
 	MyCabinetInfoResponseDto getMyLentInfo(UserSessionDto user);
-
 
 	/**
 	 * 아직 반납하지 않은 사물함의 대여기록을 가져옵니다.
@@ -86,10 +81,29 @@ public interface LentFacadeService {
 	List<LentDto> getLentDtoList(Long cabinetId);
 
 	/**
+	 *  내가 대여한 기록들을 페이지네이션 기준으로 가져옵니다.
+	 *
 	 * @param user                 유저 정보
 	 * @param paginationRequestDto 페이지네이션 정보
-	 * @return 유저가 지금까지 대여했던 기록을 페이지네이션을 기준으로 가져옵니다.
+	 * @return 대여 기록
 	 */
 	LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
 			PaginationRequestDto paginationRequestDto);
+	/**
+	 * 자신이 대여한 사물함의 메모를 바꿉니다.
+	 *
+	 * @param userSessionDto				요청한 유저 dto
+	 * @param updateCabinetMemoDto	변경할 사물함 제목
+	 */
+	void updateCabinetMemo(UserSessionDto userSessionDto,
+							UpdateCabinetMemoDto updateCabinetMemoDto);
+
+	/**
+	 * 자신이 대여한 사물함의 제목을 바꿉니다.
+	 *
+	 * @param userSessionDto				요청한 유저 dto
+	 * @param updateCabinetTitleDto	변경할 사물함 제목
+	 */
+	void updateCabinetTitle(UserSessionDto userSessionDto,
+			UpdateCabinetTitleDto updateCabinetTitleDto);
 }

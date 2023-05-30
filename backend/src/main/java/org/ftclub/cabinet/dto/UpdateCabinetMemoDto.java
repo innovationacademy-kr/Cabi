@@ -7,8 +7,8 @@ import javax.validation.constraints.Size;
 
 @Getter
 @RequiredArgsConstructor
-public class UpdateCabinetTitleDto {
+public class UpdateCabinetMemoDto {
 
-	@Size(max = 64)
-	private final String cabinetTitle;
+    @Size(max = 64)
+    private final String memo;
 }

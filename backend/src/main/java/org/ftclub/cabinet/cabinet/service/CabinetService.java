@@ -16,6 +16,14 @@ public interface CabinetService {
     Cabinet getCabinet(Long cabinetId);
 
     /**
+     * 유저 ID로 사물함 Entity를 가져옵니다.
+     *
+     * @param userId 유저 ID
+     * @return 사물함 엔티티
+     */
+    Cabinet getLentCabinetByUserId(Long userId);
+
+    /**
      * 사물함의 상태를 업데이트합니다.
      *
      * @param cabinetId 사물함 ID

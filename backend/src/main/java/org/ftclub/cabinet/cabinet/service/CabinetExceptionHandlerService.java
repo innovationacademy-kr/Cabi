@@ -33,6 +33,18 @@ public class CabinetExceptionHandlerService {
 	}
 
 	/**
+	 * 유저 ID로 사물함을 찾습니다.
+	 *
+	 * @param userId 유저ID
+	 * @return 사물함 엔티티
+	 * @throws ServiceException 사물함을 찾을 수 없는 경우
+	 */
+	public Cabinet getLentCabinetByUserId(Long userId) {
+		return cabinetRepository.findLentCabinetByUserId(userId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+	}
+
+	/**
 	 * 사물함 ID로 동아리 사물함을 찾습니다.
 	 *
 	 * @param cabinetId 사물함 ID

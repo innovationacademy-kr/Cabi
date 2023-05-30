@@ -1,11 +1,8 @@
 package org.ftclub.cabinet.lent.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.LentEndMemoDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,23 +30,33 @@ public class LentController {
 	  /api/lent/return-memo
 
  */
-	@PatchMapping("/return-memo")
-	public void endLentWithMemo(
-			@UserSession UserSessionDto user,
-			@RequestBody LentEndMemoDto lentEndMemoDto
-	{
-		lentFacadeService.endLentCabinet(user);
+
+	@PatchMapping("/return")
+	public void endLent(
+			@UserSession UserSessionDto userSessionDto) {
+		lentFacadeService.endLentCabinet(userSessionDto);
 	}
 
+	@PatchMapping("/return-memo")
+	public void endLentWithMemo(
+			@UserSession UserSessionDto userSessionDto,
+			@RequestBody LentEndMemoDto lentEndMemoDto)
+	{
+		lentFacadeService.endLentCabinetWithMemo(userSessionDto, lentEndMemoDto);
+	}
 
+	@PatchMapping("me/memo")
+	public void updateCabinetMemo(
+			@UserSession UserSessionDto user,
+			@RequestBody UpdateCabinetMemoDto updateCabinetMemoDto) {
+				lentFacadeService.updateCabinetMemo(user, updateCabinetMemoDto);
+	}
 
-
-
-	@PatchMapping("/cabinet-title")
+	@PatchMapping("me/cabinet-title")
 	public void updateCabinetTitle(
 			@UserSession UserSessionDto user,
 			@RequestBody UpdateCabinetTitleDto updateCabinetTitleDto) {
-//				lentFacadeService
+				lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
 	}
 
 
@@ -69,9 +76,6 @@ public class LentController {
 
 	/**
 	 * wchae, jpark2
-	 * /api/lent/return
-	 * /api/lent/update_cabinet_memo
-	 * /api/lent/update_cabinet_title
 
 	 * sanan, daewoole
 	 * /api/my_lent_info/log
