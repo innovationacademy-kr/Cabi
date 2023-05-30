@@ -193,4 +193,11 @@ public class AdminCabinetController {
 		}
 		cabinetFacadeService.updateCabinetBundleLentType(body.get("cabinetIds"), lentType);
 	}
+
+	/**
+	 * TO-DO:
+	 * /api/admin/cabinet/count/floor
+	 * /api/admin/log/cabinet/:cabinetId
+	 *
+	 */
 }
