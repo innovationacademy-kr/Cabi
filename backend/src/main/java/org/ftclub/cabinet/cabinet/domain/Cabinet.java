@@ -211,12 +211,12 @@ public class Cabinet {
 		}
 	}
 
-	public void increaseUser() {
+	public void increaseUserCountAndChangeStatus() {
 		currentUserCounter++;
 		specifyStatusByUserCount(currentUserCounter);
 	}
 
-	public void decreaseUser() {
+	public void decreaseUserCountAndChangeStatus() {
 		currentUserCounter--;
 		specifyStatusByUserCount(currentUserCounter);
 	}

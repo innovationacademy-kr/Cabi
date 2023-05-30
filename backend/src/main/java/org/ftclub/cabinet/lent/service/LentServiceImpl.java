@@ -53,7 +53,7 @@ public class LentServiceImpl implements LentService {
 		lentExceptionHandler.handlePolicyStatus(
 				lentPolicy.verifyCabinetForLent(cabinet, cabinetActiveLentHistories, now));
 		// 캐비넷 상태 변경
-		cabinet.increaseUser();
+		cabinet.increaseUserCountAndChangeStatus();
 		Date expiredAt = lentPolicy.generateExpirationDate(now, cabinet,
 				cabinetActiveLentHistories);
 		LentHistory lentHistory = LentHistory.of(now, userId, cabinetId);
@@ -76,7 +76,7 @@ public class LentServiceImpl implements LentService {
 		LentHistory result =
 				LentHistory.of(now, expirationDate, userId, cabinetId);
 		lentRepository.save(result);
-		cabinet.increaseUser();
+		cabinet.increaseUserCountAndChangeStatus();
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
 		Cabinet cabinet = cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId());
 		lentHistory.endLent(now);
-		cabinet.decreaseUser();
+		cabinet.decreaseUserCountAndChangeStatus();
 		return lentHistory;
 	}
 }
