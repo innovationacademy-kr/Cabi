@@ -42,11 +42,14 @@ LentPolicyStatus {
 	 */
 	ALREADY_LENT_USER,
 	/**
-	 * private 벤 기록이 있음
+	 * ALL 벤 기록이 있음
 	 */
-	PRIVATE_BANNED_USER,
+	ALL_BANNED_USER,
 	/**
-	 * public 벤 기록이 있음
+	 * share 벤 기록(패널티)이 있음
 	 */
-	PUBLIC_BANNED_USER, BLACKHOLED_USER,
+	SHARE_BANNED_USER,
+	BLACKHOLED_USER,
+	PRIVATE_BANNED_USER,
+	PUBLIC_BANNED_USER,
 }

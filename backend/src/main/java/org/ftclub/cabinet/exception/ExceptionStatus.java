@@ -34,6 +34,9 @@ public enum ExceptionStatus {
 	BLACKHOLED_USER(HttpStatus.BAD_REQUEST, "블랙홀 상태의 유저입니다."),
 	PRIVATE_BANNED_USER(HttpStatus.BAD_REQUEST, "PRIVATE 밴 상태의 유저입니다."),
 	PUBLIC_BANNED_USER(HttpStatus.BAD_REQUEST, "PUBLIC 밴 상태의 유저입니다."),
+	ALL_BANNED_USER(HttpStatus.BAD_REQUEST, "ALL 밴 상태의 유저입니다."),
+	SHARE_BANNED_USER(HttpStatus.BAD_REQUEST, "SHARE 밴 상태의 유저입니다."),
+	NOT_FOUND_BAN_HISTORY(HttpStatus.NOT_FOUND, "현재 정지 상태인 유저가 아닙니다."),
 	UNAUTHORIZED_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 로그인 정보가 유효하지 않습니다\\n다시 로그인해주세요"),
 	UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "사용자 로그인 정보가 유효하지 않습니다\\n다시 로그인해주세요"),
 	;

@@ -30,11 +30,12 @@ public class CabinetPlace {
 	 */
 	@Embedded
 	private Location location;
+	
 	/**
-	 * {@link Grid}
+	 * {@link SectionFormation}
 	 */
 	@Embedded
-	private Grid grid;
+	private SectionFormation sectionFormation;
 
 	/**
 	 * {@link MapArea}
@@ -42,14 +43,15 @@ public class CabinetPlace {
 	@Embedded
 	private MapArea mapArea;
 
-	protected CabinetPlace(Location location, Grid grid, MapArea mapArea) {
+	protected CabinetPlace(Location location, SectionFormation sectionFormation, MapArea mapArea) {
 		this.location = location;
-		this.grid = grid;
+		this.sectionFormation = sectionFormation;
 		this.mapArea = mapArea;
 	}
 
-	public static CabinetPlace of(Location location, Grid grid, MapArea mapArea) {
-		return new CabinetPlace(location, grid, mapArea);
+	public static CabinetPlace of(Location location, SectionFormation sectionFormation,
+			MapArea mapArea) {
+		return new CabinetPlace(location, sectionFormation, mapArea);
 	}
 
 	@Override

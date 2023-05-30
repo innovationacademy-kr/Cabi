@@ -1,5 +1,8 @@
-package org.ftclub.cabinet.auth;
+package org.ftclub.cabinet.auth.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -9,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 /**
@@ -71,11 +73,11 @@ public class TokenValidator {
 		return false;
 	}
 
-	public JSONObject getPayloadJson(final String token) {
+	public JsonNode getPayloadJson(final String token) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
 		final String payloadJWT = token.split("\\.")[1];
 		Base64.Decoder decoder = Base64.getUrlDecoder();
 
-		final String payload = new String(decoder.decode(payloadJWT));
-		return new JSONObject(payload);
+		return objectMapper.readTree(new String(decoder.decode(payloadJWT)));
 	}
 }

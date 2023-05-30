@@ -12,5 +12,5 @@ import lombok.Getter;
 public class UserProfilePaginationDto {
 
 	private final List<UserProfileDto> result;
-	private final Integer totalLength;
+	private final Long totalLength;
 }

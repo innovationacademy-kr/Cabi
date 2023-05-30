@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth;
+package org.ftclub.cabinet.user.domain;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface User {
+public @interface UserSession {
 
 }

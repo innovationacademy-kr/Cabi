@@ -86,6 +86,10 @@ public class LentExceptionHandlerService {
 				throw new ServiceException(ExceptionStatus.BAN_USER);
 			case PUBLIC_BANNED_USER:
 				throw new ServiceException(ExceptionStatus.PENALTY_USER);
+			case ALL_BANNED_USER:
+				throw new ServiceException(ExceptionStatus.ALL_BANNED_USER);
+			case SHARE_BANNED_USER:
+				throw new ServiceException(ExceptionStatus.SHARE_BANNED_USER);
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			case NOT_USER:
