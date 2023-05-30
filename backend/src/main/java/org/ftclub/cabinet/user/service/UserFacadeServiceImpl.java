@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserDto;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -17,7 +16,6 @@ import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
-import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -36,7 +34,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final UserService userService;
 	private final UserExceptionHandlerService userExceptionHandlerService;
 	private final LentRepository lentRepository;
-	private final LentFacadeService lentFacadeService;
 	private final BanHistoryRepository banHistoryRepository;
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
@@ -55,14 +52,14 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
 				now);
 		return generateBlockedUserPaginationDto(activeBanList.getContent(),
-				activeBanList.getTotalPages());
+				activeBanList.getTotalElements());
 	}
 
 	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
-			Integer totalLength) {
+			Long totalLength) {
 		List<BlockedUserDto> blockedUserDtoList = banHistories.stream()
 				.map(b -> userMapper.toBlockedUserDto(b,
-						userExceptionHandlerService.getUserNameById(b.getUserId())))
+						userExceptionHandlerService.getUser(b.getUserId()).getName()))
 				.collect(Collectors.toList());
 		return new BlockedUserPaginationDto(blockedUserDtoList, totalLength);
 	}
@@ -72,11 +69,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			Integer length) {
 		PageRequest pageable = PageRequest.of(page, length);
 		Page<User> users = userRepository.findByPartialName(name, pageable);
-		return generateUserProfilePaginationDto(users.getContent(), users.getTotalPages());
+		return generateUserProfilePaginationDto(users.getContent(), users.getTotalElements());
 	}
 
 	private UserProfilePaginationDto generateUserProfilePaginationDto(List<User> users,
-			Integer totalLength) {
+			Long totalLength) {
 		List<UserProfileDto> userProfileDtoList = users.stream()
 				.map(u -> userMapper.toUserProfileDto(u)).collect(
 						Collectors.toList());
@@ -92,17 +89,16 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		return new UserCabinetPaginationDto(null, null);
 	}
 
-	@Override
-	public LentHistoryPaginationDto getUserLentHistories(Long userId, Integer page,
-			Integer length) {
-		return lentFacadeService.getAllUserLentHistories(userId, page, length);
-	}
-
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
 	@Override
 	public MyCabinetInfoResponseDto getMyLentAndCabinetInfo(Long userId) {
 		User user = userRepository.getUser(userId);
 		return new MyCabinetInfoResponseDto(null, null, null, null, null, null, null, null, null);
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
 	}
 
 	@Override
@@ -152,8 +148,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void unbanUser(Long userId, Date today) {
-		userService.unbanUser(userId, today);
+	public void deleteRecentBanHistory(Long userId, Date today) {
+		userService.deleteRecentBanHistory(userId, today);
 	}
 
 }

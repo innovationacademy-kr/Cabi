@@ -1,0 +1,33 @@
+---
+#프로덕션 환경
+spring:
+  server:
+    port: 2424
+  profiles:
+    active: prod
+  config:
+    import: classpath:application-oauth.yml, classpath:application-mail.yml
+
+---
+#개발서버 환경
+spring:
+  server:
+    port: 2424
+  profiles:
+    active: dev
+  config:
+    import: classpath:application-oauth.yml
+
+---
+#로컬 환경
+spring:
+  server:
+    port: 2424
+  profiles:
+    active: local
+  config:
+    import: classpath:application-oauth.yml
+
+---
+
+
