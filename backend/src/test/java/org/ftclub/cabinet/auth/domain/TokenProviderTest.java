@@ -7,13 +7,17 @@ import java.util.Map;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static reactor.core.publisher.Mono.when;
 
 @SpringBootTest
 public class TokenProviderTest {
@@ -57,6 +61,25 @@ public class TokenProviderTest {
 		Assertions.assertEquals(ftIntraId, ftClaims.get("name"));
 		Assertions.assertEquals(ftEmail, ftClaims.get("email"));
 		Assertions.assertEquals(UserRole.USER, ftClaims.get("role"));
+	}
+
+	/**
+	 * 지정하는 국가의 카뎃이 아닌 경우 클레임 생성에 실패합니다.
+	 */
+	@Test
+	void 토큰_클레임_생성_실패() throws JsonProcessingException {
+		String ftIntraId = "foreign";
+		String ftEmail = "foreginer@member.kr";
+		JSONObject ftProfile = new JSONObject()
+				.put("login", ftIntraId)
+				.put("cursus_users", new JSONArray(new JSONObject[]{
+						new JSONObject().put("zero_index", new Date()),
+						new JSONObject().put("blackholed_at", new Date())}))
+				.put("email", ftEmail);
+
+		Assertions.assertThrows(ServiceException.class,() ->
+		{tokenProvider.makeClaimsByProviderProfile(ftApiProperties.getProviderName(), objectMapper.readTree(ftProfile.toString()));
+		});
 	}
 
 	@Test

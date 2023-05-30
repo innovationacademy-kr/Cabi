@@ -61,8 +61,12 @@ public class AuthController {
 			HttpServletResponse res) throws IOException {
 		String apiToken = oauthService.getTokenByCode(code, ftApiProperties);
 		JsonNode profile = oauthService.getProfileByToken(apiToken, ftApiProperties);
+		// profile의 어디에 유저 프로필 정보가 존재?
+		// 여기서 42 API에게 받은 프로필 정보를 이용하여 42서울 유저인지 인증
 		String accessToken = tokenProvider.createToken(ftApiProperties.getProviderName(), profile,
 				DateUtil.getNow());
+		// String payload -> String email -> try FtEmail.of(email)
+		//
 		cookieManager.setCookie(res, jwtProperties.getMainTokenName(), accessToken, "/",
 				req.getServerName());
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
