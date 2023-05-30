@@ -1,0 +1,20 @@
+=== 로그인 (login)
+
+==== 명세
+
+operation::AdminAuth/Login/ok[snippets='http-request']
+
+==== 성공
+
+operation::AdminAuth/Login/ok[snippets='http-response']
+
+=== 로그인 (login)
+
+==== 명세
+
+operation::AdminAuth/LoginCallback/ok[snippets='http-request,request-parameters']
+
+==== 성공
+
+operation::AdminAuth/LoginCallback/ok[snippets='http-response']
+
