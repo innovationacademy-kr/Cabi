@@ -13,11 +13,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static reactor.core.publisher.Mono.when;
 
 @SpringBootTest
 public class TokenProviderTest {
@@ -69,7 +66,7 @@ public class TokenProviderTest {
 	@Test
 	void 토큰_클레임_생성_실패() throws JsonProcessingException {
 		String ftIntraId = "foreign";
-		String ftEmail = "foreginer@member.kr";
+		String ftEmail = "foreginer@member.fr";
 		JSONObject ftProfile = new JSONObject()
 				.put("login", ftIntraId)
 				.put("cursus_users", new JSONArray(new JSONObject[]{
@@ -77,8 +74,10 @@ public class TokenProviderTest {
 						new JSONObject().put("blackholed_at", new Date())}))
 				.put("email", ftEmail);
 
-		Assertions.assertThrows(ServiceException.class,() ->
-		{tokenProvider.makeClaimsByProviderProfile(ftApiProperties.getProviderName(), objectMapper.readTree(ftProfile.toString()));
+		Assertions.assertThrows(ServiceException.class, () ->
+		{
+			tokenProvider.makeClaimsByProviderProfile(ftApiProperties.getProviderName(),
+					objectMapper.readTree(ftProfile.toString()));
 		});
 	}
 
