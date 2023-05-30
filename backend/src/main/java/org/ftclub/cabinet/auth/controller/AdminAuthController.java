@@ -73,4 +73,5 @@ public class AdminAuthController {
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
 	}
 
+	//todo  - logout
 }

@@ -68,4 +68,5 @@ public class AuthController {
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
 	}
 
+	//todo  - logout
 }
