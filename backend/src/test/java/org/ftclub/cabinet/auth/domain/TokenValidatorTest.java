@@ -29,19 +29,26 @@ public class TokenValidatorTest {
 
 	ObjectMapper objectMapper;
 	JSONObject googleProfile;
-	JSONObject ftProfile;
+	JSONObject ftKoreanProfile;
+	JSONObject ftForeignerProfile;
 
 	@BeforeEach
 	void setup() {
 		objectMapper = new ObjectMapper();
 		googleProfile = new JSONObject()
 				.put("email", "email");
-		ftProfile = new JSONObject()
+		ftKoreanProfile = new JSONObject()
 				.put("login", "testUserName")
 				.put("cursus_users", new JSONArray(new JSONObject[]{
 						new JSONObject().put("zero_index", new Date()),
 						new JSONObject().put("blackholed_at", new Date())}))
-				.put("email", "testUserEmail");
+				.put("email", "testUser@student.42seoul.kr");
+		ftForeignerProfile = new JSONObject()
+				.put("login", "testUserName")
+				.put("cursus_users", new JSONArray(new JSONObject[]{
+						new JSONObject().put("zero_index", new Date()),
+						new JSONObject().put("blackholed_at", new Date())}))
+				.put("email", "testUser@student.42ecole.fr");
 	}
 
 	@Test
@@ -49,9 +56,9 @@ public class TokenValidatorTest {
 		MockHttpServletRequest validTokenRequest = new MockHttpServletRequest();
 		MockHttpServletRequest invalidTokenRequest = new MockHttpServletRequest();
 		MockHttpServletRequest emptyTokenRequest = new MockHttpServletRequest();
-		
+
 		String validToken = tokenProvider.createToken("ft",
-				objectMapper.readTree(ftProfile.toString()), DateUtil.getNow());
+				objectMapper.readTree(ftKoreanProfile.toString()), DateUtil.getNow());
 		validTokenRequest.addHeader("Authorization", "Bearer " + validToken);
 		String invalidToken = tokenProvider.createToken("google",
 				objectMapper.readTree(googleProfile.toString()),
@@ -68,7 +75,7 @@ public class TokenValidatorTest {
 	@Test
 	void 토큰_유효성_검사() throws JsonProcessingException {
 		String validToken = tokenProvider.createToken("ft",
-				objectMapper.readTree(ftProfile.toString()),
+				objectMapper.readTree(ftKoreanProfile.toString()),
 				new Date());
 		String invalidToken = tokenProvider.createToken("google",
 				objectMapper.readTree(googleProfile.toString()),
