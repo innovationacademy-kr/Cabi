@@ -7,9 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -17,6 +14,7 @@ import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.utils.entity.IdentityKeyEntity;
 
 /**
  * 사물함 엔티티
@@ -25,12 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "CABINET")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Cabinet {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CABINET_ID")
-	private Long cabinetId;
+public class Cabinet extends IdentityKeyEntity {
 
 	/**
 	 * 사물함의 상태가 변경될 때 증가하는 버전입니다.
@@ -163,17 +156,6 @@ public class Cabinet {
 
 	public void writeMemo(String memo) {
 		this.memo = memo;
-	}
-
-	@Override
-	public boolean equals(final Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (!(other instanceof Cabinet)) {
-			return false;
-		}
-		return this.cabinetId.equals(((Cabinet) other).cabinetId);
 	}
 
 	/**

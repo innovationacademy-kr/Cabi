@@ -3,9 +3,6 @@ package org.ftclub.cabinet.lent.domain;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -14,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.ftclub.cabinet.utils.entity.IdentityKeyEntity;
 
 /**
  * lent의 기록을 관리하기 위한 data mapper
@@ -22,12 +20,7 @@ import org.ftclub.cabinet.utils.DateUtil;
 @Table(name = "LENT_HISTORY")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class LentHistory {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "LENT_HISTORY_ID")
-	private Long lentHistoryId;
+public class LentHistory extends IdentityKeyEntity {
 
 	/**
 	 * 낙관적 락을 위한 version
@@ -97,17 +90,6 @@ public class LentHistory {
 	 */
 	public static LentHistory of(Date startedAt, Long userId, Long cabinetId) {
 		return new LentHistory(startedAt, null, userId, cabinetId);
-	}
-
-	@Override
-	public boolean equals(final Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (!(other instanceof LentHistory)) {
-			return false;
-		}
-		return (this.lentHistoryId.equals(((LentHistory) other).lentHistoryId));
 	}
 
 	/**
