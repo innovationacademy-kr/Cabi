@@ -119,4 +119,9 @@ public class AdminUserController {
 	}
 
 	// 동아리 유저 생성하는 메서드 필요
+	/**
+	 * TO-DO:
+	 * /api/admin/develop/promote
+	 * /api/admin/search/user/overdue
+	 */
 }
