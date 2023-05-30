@@ -33,6 +33,9 @@ public class LentServiceImpl implements LentService {
 	private final CabinetService cabinetService;
 	private final BanHistoryRepository banHistoryRepository;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		Date now = DateUtil.getNow();
@@ -50,7 +53,7 @@ public class LentServiceImpl implements LentService {
 		lentExceptionHandler.handlePolicyStatus(
 				lentPolicy.verifyCabinetForLent(cabinet, cabinetActiveLentHistories, now));
 		// 캐비넷 상태 변경
-		cabinet.specifyStatusByUserCount(cabinetActiveLentHistories.size() + 1);
+		cabinet.increaseUser();
 		Date expiredAt = lentPolicy.generateExpirationDate(now, cabinet,
 				cabinetActiveLentHistories);
 		LentHistory lentHistory = LentHistory.of(now, userId, cabinetId);
@@ -59,6 +62,9 @@ public class LentServiceImpl implements LentService {
 		lentRepository.save(lentHistory);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void startLentClubCabinet(Long userId, Long cabinetId) {
 		Date now = DateUtil.getNow();
@@ -70,9 +76,12 @@ public class LentServiceImpl implements LentService {
 		LentHistory result =
 				LentHistory.of(now, expirationDate, userId, cabinetId);
 		lentRepository.save(result);
-		cabinet.specifyStatusByUserCount(1);
+		cabinet.increaseUser();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void endLentCabinet(Long userId) {
 		LentHistory lentHistory = returnCabinet(userId);
@@ -81,18 +90,24 @@ public class LentServiceImpl implements LentService {
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void terminateLentCabinet(Long userId) {
 		returnCabinet(userId);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	private LentHistory returnCabinet(Long userId) {
 		Date now = DateUtil.getNow();
 		userExceptionHandler.getUser(userId);
 		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
-		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
+		Cabinet cabinet = cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId());
 		lentHistory.endLent(now);
-		cabinetService.updateStatusByUserCount(lentHistory.getCabinetId(), activeLentCount - 1);
+		cabinet.decreaseUser();
 		return lentHistory;
 	}
 }

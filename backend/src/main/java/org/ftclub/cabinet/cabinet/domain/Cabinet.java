@@ -64,6 +64,9 @@ public class Cabinet {
 	@Column(name = "MAX_USER", nullable = false)
 	private Integer maxUser;
 
+	@Column(name = "CURRENT_USER_COUNTER", nullable = false)
+	private Integer currentUserCounter = 0;
+
 	/**
 	 * 사물함의 상태에 대한 메모입니다. 주로 고장 사유를 적습니다.
 	 */
@@ -206,5 +209,15 @@ public class Cabinet {
 				this.status = CabinetStatus.LIMITED_AVAILABLE;
 			}
 		}
+	}
+
+	public void increaseUser() {
+		currentUserCounter++;
+		specifyStatusByUserCount(currentUserCounter);
+	}
+
+	public void decreaseUser() {
+		currentUserCounter--;
+		specifyStatusByUserCount(currentUserCounter);
 	}
 }
