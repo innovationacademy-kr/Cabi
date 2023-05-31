@@ -18,7 +18,7 @@ import {
   axiosDeleteCurrentBanLog,
   axiosGetBannedUserList,
 } from "@/api/axios/axios.custom";
-import { handleBannedUserList } from "@/components/AdminInfo/convertFunctions";
+import { handleBannedUserList } from "@/utils/tableUtils";
 
 const BanModal: React.FC<{
   userId: number;

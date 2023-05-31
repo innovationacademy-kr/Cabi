@@ -1,3 +1,9 @@
+import { SetterOrUpdater } from "recoil";
+import {
+  ICabinetNumbersPerFloor,
+  ITableData,
+  IMonthlyData,
+} from "@/types/dto/admin.dto";
 import {
   axiosGetBannedUserList,
   axiosGetBrokenCabinetList,
@@ -9,22 +15,16 @@ import {
   handleBannedUserList,
   handleBrokenCabinetList,
   handleOverdueUserList,
-} from "@/components/AdminInfo/convertFunctions";
-import {
-  ICabinetNumbersPerFloor,
-  IData,
-  IMonthlyData,
-} from "@/types/dto/admin.dto";
-import { SetterOrUpdater } from "recoil";
+} from "@/utils/tableUtils";
 
-export async function useFetchData(
+export async function useAdminHomeApi(
   setMonthlyData: React.Dispatch<React.SetStateAction<IMonthlyData[]>>,
-  setBannedUserList: SetterOrUpdater<IData[]>,
-  setBrokenCabinetList: SetterOrUpdater<IData[]>,
+  setBannedUserList: SetterOrUpdater<ITableData[]>,
+  setBrokenCabinetList: SetterOrUpdater<ITableData[]>,
   setCabinetNumbersPerFloor: React.Dispatch<
     React.SetStateAction<ICabinetNumbersPerFloor[]>
   >,
-  setOverdueUserList: SetterOrUpdater<IData[]>
+  setOverdueUserList: SetterOrUpdater<ITableData[]>
 ) {
   const bannedUserData = await axiosGetBannedUserList();
   const brokenCabinetData = await axiosGetBrokenCabinetList();

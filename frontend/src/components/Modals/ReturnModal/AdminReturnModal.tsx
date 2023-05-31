@@ -27,7 +27,7 @@ import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import Selector from "@/components/Common/Selector";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
+import { handleOverdueUserList } from "@/utils/tableUtils";
 import { UserInfo } from "@/types/dto/user.dto";
 
 const AdminReturnModal: React.FC<{

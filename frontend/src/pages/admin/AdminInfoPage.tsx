@@ -12,7 +12,7 @@ import {
 } from "@/recoil/atoms";
 import {
   ICabinetNumbersPerFloor,
-  IData,
+  ITableData,
   IMonthlyData,
 } from "@/types/dto/admin.dto";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -21,18 +21,18 @@ import BarChart from "@/components/AdminInfo/Chart/BarChart";
 import LineChart from "@/components/AdminInfo/Chart/LineChart";
 import PieChart from "@/components/AdminInfo/Chart/PieChart";
 import AdminTable from "@/components/AdminInfo/Table/AdminTable";
-import { useFetchData } from "@/hooks/useFetchData";
+import { useAdminHomeApi } from "@/hooks/useAdminHomeApi";
 import useMenu from "@/hooks/useMenu";
 
 const AdminInfo = () => {
-  const [overdueUserList, setOverdueUserList] = useRecoilState<IData[]>(
+  const [overdueUserList, setOverdueUserList] = useRecoilState<ITableData[]>(
     overdueCabinetListState
   );
-  const [brokenCabinetList, setBrokenCabinetList] = useRecoilState<IData[]>(
-    brokenCabinetListState
-  );
+  const [brokenCabinetList, setBrokenCabinetList] = useRecoilState<
+    ITableData[]
+  >(brokenCabinetListState);
   const [bannedUserList, setBannedUserList] =
-    useRecoilState<IData[]>(bannedUserListState);
+    useRecoilState<ITableData[]>(bannedUserListState);
   const [cabinetNumbersPerFloor, setCabinetNumbersPerFloor] = useState<
     ICabinetNumbersPerFloor[]
   >([]);
@@ -79,7 +79,7 @@ const AdminInfo = () => {
   };
 
   useEffect(() => {
-    useFetchData(
+    useAdminHomeApi(
       setMonthlyData,
       setBannedUserList,
       setBrokenCabinetList,

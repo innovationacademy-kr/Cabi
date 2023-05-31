@@ -9,7 +9,7 @@ import {
 import { atom } from "recoil";
 import { staticColNumData } from "@/assets/data/sectionColNumData";
 import { ILocationColNum } from "@/assets/data/sectionColNumData";
-import { IData } from "@/types/dto/admin.dto";
+import { ITableData } from "@/types/dto/admin.dto";
 
 const { persistAtom } = recoilPersist();
 
@@ -134,17 +134,17 @@ export const selectAdminDetailState = atom<AdminDetailType>({
   },
 });
 
-export const brokenCabinetListState = atom<IData[]>({
+export const brokenCabinetListState = atom<ITableData[]>({
   key: "brokenCabinetList",
   default: [],
 });
 
-export const overdueCabinetListState = atom<IData[]>({
+export const overdueCabinetListState = atom<ITableData[]>({
   key: "overdueCabinetList",
   default: [],
 });
 
-export const bannedUserListState = atom<IData[]>({
+export const bannedUserListState = atom<ITableData[]>({
   key: "bannedUserList",
   default: [],
 });
