@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { LentLogDto } from "@/types/dto/lent.dto";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import { LentLogDto } from "@/types/dto/lent.dto";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
   year: "2-digit",
