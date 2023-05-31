@@ -4,12 +4,12 @@ import {
   currentSectionCabinetState,
   currentSectionColNumState,
 } from "@/recoil/selectors";
+import { currentSectionNameState, isMultiSelectState } from "@/recoil/atoms";
 import CabinetList from "@/components/CabinetList/CabinetList";
 import RealViewNotification from "@/components/CabinetList/RealViewNotification/RealViewNotification";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import EmptySection from "@/components/CabinetList/EmptySection/EmptySection";
-import { currentSectionNameState, isMultiSelectState } from "@/recoil/atoms";
 import MultiSelectFilterButton from "@/components/Common/MultiSelectFilterButton";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
 interface ICabinetListContainer {

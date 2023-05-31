@@ -1,13 +1,13 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { targetUserInfoState, currentCabinetIdState } from "@/recoil/atoms";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import AdminUserLentLogContainer from "@/components/LentLog/AdminUserLentLog.container";
 import UserInfoArea, {
   ISelectedUserInfo,
   IUserLentInfo,
 } from "@/components/UserInfoArea/UserInfoArea";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import useMenu from "@/hooks/useMenu";
-import AdminUserLentLogContainer from "../LentLog/AdminUserLentLog.container";
 
 const UserInfoAreaContainer = (): JSX.Element => {
   const targetUserInfo = useRecoilValue(targetUserInfoState);

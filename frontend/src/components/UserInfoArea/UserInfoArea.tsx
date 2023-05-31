@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { numberOfAdminWorkState } from "@/recoil/atoms";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import ButtonContainer from "@/components/Common/Button";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -44,8 +42,6 @@ const UserInfoArea: React.FC<{
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
   const [showAdminReturnModal, setShowAdminReturnModal] =
     useState<boolean>(false);
-  const numberOfAdminWork = useRecoilValue(numberOfAdminWorkState);
-  numberOfAdminWork;
 
   const handleOpenAdminReturnModal = () => {
     setShowAdminReturnModal(true);
@@ -160,8 +156,6 @@ const UserInfoArea: React.FC<{
   );
 };
 
-export default UserInfoArea;
-
 const NotSelectedStyled = styled.div`
   height: 100%;
   display: flex;
@@ -254,3 +248,5 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   white-space: pre-line;
   text-align: center;
 `;
+
+export default UserInfoArea;
