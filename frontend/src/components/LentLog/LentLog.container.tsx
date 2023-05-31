@@ -1,8 +1,8 @@
+import { useEffect, useState } from "react";
+import LentLog from "@/components/LentLog/LentLog";
+import { LentLogDto } from "@/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
-import { useEffect, useState } from "react";
-import LentLog from "./LentLog";
-import { LentLogDto } from "@/types/dto/lent.dto";
 
 const BAD_REQUEST = 400;
 
