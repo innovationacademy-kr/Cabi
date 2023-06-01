@@ -10,6 +10,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -84,15 +85,15 @@ public class CabinetExceptionHandlerService {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
-	public List<Cabinet> getAllCabinetsByLentType(LentType lentType) {
-		return cabinetRepository.findAllCabinetsByLentType(lentType);
+	public List<Cabinet> getAllCabinetsByLentType(LentType lentType, PageRequest pageable) {
+		return cabinetRepository.findAllCabinetsByLentType(lentType, pageable);
 	}
 
-	public List<Cabinet> getAllCabinetsByStatus(CabinetStatus status) {
-		return cabinetRepository.findAllCabinetsByStatus(status);
+	public List<Cabinet> getAllCabinetsByStatus(CabinetStatus status, PageRequest pageable) {
+		return cabinetRepository.findAllCabinetsByStatus(status, pageable);
 	}
 
-	public List<Cabinet> getAllCabinetsByVisibleNum(Integer visibleNum) {
-		return cabinetRepository.findAllCabinetsByVisibleNum(visibleNum);
+	public List<Cabinet> getAllCabinetsByVisibleNum(Integer visibleNum, PageRequest pageable) {
+		return cabinetRepository.findAllCabinetsByVisibleNum(visibleNum, pageable);
 	}
 }

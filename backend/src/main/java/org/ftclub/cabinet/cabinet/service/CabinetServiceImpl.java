@@ -9,6 +9,7 @@ import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -123,17 +124,17 @@ public class CabinetServiceImpl implements CabinetService {
 	}
 
 	@Override
-	public List<Cabinet> getCabinetListByLentType(LentType lentType) {
-		return cabinetExceptionHandlerService.getAllCabinetsByLentType(lentType);
+	public List<Cabinet> getCabinetListByLentType(LentType lentType, PageRequest pageable) {
+		return cabinetExceptionHandlerService.getAllCabinetsByLentType(lentType, pageable);
 	}
 
 	@Override
-	public List<Cabinet> getCabinetListByStatus(CabinetStatus status) {
-		return cabinetExceptionHandlerService.getAllCabinetsByStatus(status);
+	public List<Cabinet> getCabinetListByStatus(CabinetStatus status, PageRequest pageable) {
+		return cabinetExceptionHandlerService.getAllCabinetsByStatus(status, pageable);
 	}
 
 	@Override
-	public List<Cabinet> getCabinetListByVisibleNum(Integer visibleNum) {
-		return cabinetExceptionHandlerService.getAllCabinetsByVisibleNum(visibleNum);
+	public List<Cabinet> getCabinetListByVisibleNum(Integer visibleNum, PageRequest pageable) {
+		return cabinetExceptionHandlerService.getAllCabinetsByVisibleNum(visibleNum, pageable);
 	}
 }

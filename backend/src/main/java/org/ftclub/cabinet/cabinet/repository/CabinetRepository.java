@@ -7,6 +7,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -84,15 +85,18 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.lentType = :lentType")
-	List<Cabinet> findAllCabinetsByLentType(@Param("lentType") LentType lentType);
+	List<Cabinet> findAllCabinetsByLentType(@Param("lentType") LentType lentType,
+			Pageable pageable);
 
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.status = :status")
-	List<Cabinet> findAllCabinetsByStatus(@Param("status") CabinetStatus status);
-	
+	List<Cabinet> findAllCabinetsByStatus(@Param("status") CabinetStatus status,
+			Pageable pageable);
+
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.visibleNum = :visibleNum")
-	List<Cabinet> findAllCabinetsByVisibleNum(@Param("visibleNum") Integer visibleNum);
+	List<Cabinet> findAllCabinetsByVisibleNum(@Param("visibleNum") Integer visibleNum,
+			Pageable pageable);
 }

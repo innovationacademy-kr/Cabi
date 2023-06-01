@@ -23,6 +23,7 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -173,21 +174,24 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public CabinetPaginationDto getCabinetListByLentType(LentType lentType, Integer page,
 			Integer length) {
-		List<Cabinet> cabinets = cabinetService.getCabinetListByLentType(lentType);
+		PageRequest pageable = PageRequest.of(page, length);
+		List<Cabinet> cabinets = cabinetService.getCabinetListByLentType(lentType, pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
 	}
 
 	@Override
 	public CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Integer page,
 			Integer length) {
-		List<Cabinet> cabinets = cabinetService.getCabinetListByStatus(status);
+		PageRequest pageable = PageRequest.of(page, length);
+		List<Cabinet> cabinets = cabinetService.getCabinetListByStatus(status, pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
 	}
 
 	@Override
 	public CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Integer page,
 			Integer length) {
-		List<Cabinet> cabinets = cabinetService.getCabinetListByVisibleNum(visibleNum);
+		PageRequest pageable = PageRequest.of(page, length);
+		List<Cabinet> cabinets = cabinetService.getCabinetListByVisibleNum(visibleNum, pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
 	}
 

@@ -5,6 +5,7 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.springframework.data.domain.PageRequest;
 
 public interface CabinetService {
 
@@ -88,9 +89,9 @@ public interface CabinetService {
 	 */
 	void updateStatusNote(Long cabinetId, String statusNote);
 
-	List<Cabinet> getCabinetListByLentType(LentType lentType);
+	List<Cabinet> getCabinetListByLentType(LentType lentType, PageRequest pageable);
 
-	List<Cabinet> getCabinetListByStatus(CabinetStatus status);
+	List<Cabinet> getCabinetListByStatus(CabinetStatus status, PageRequest pageable);
 
-	List<Cabinet> getCabinetListByVisibleNum(Integer visibleNum);
+	List<Cabinet> getCabinetListByVisibleNum(Integer visibleNum, PageRequest pageable);
 }
