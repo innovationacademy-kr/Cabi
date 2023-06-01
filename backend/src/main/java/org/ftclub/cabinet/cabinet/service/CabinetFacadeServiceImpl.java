@@ -23,7 +23,8 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.repository.UserRepository;
-import org.springframework.data.domain.PageRequest;
+import org.ftclub.cabinet.utils.CalculationUtil;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -172,28 +173,31 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 	@Override
-	public CabinetPaginationDto getCabinetListByLentType(LentType lentType, Integer page,
-			Integer length) {
-		PageRequest pageable = PageRequest.of(page, length);
+	public CabinetPaginationDto getCabinetListByLentType(LentType lentType, Pageable pageable) {
 		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByLentType(lentType, pageable);
-		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets,
+				CalculationUtil.countPages(
+						cabinetRepository.countByLentType(lentType),
+						pageable.getPageSize()));
 	}
 
 	@Override
-	public CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Integer page,
-			Integer length) {
-		PageRequest pageable = PageRequest.of(page, length);
+	public CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Pageable pageable) {
 		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByStatus(status, pageable);
-		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets,
+				CalculationUtil.countPages(
+						cabinetRepository.countByStatus(status),
+						pageable.getPageSize()));
 	}
 
 	@Override
-	public CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Integer page,
-			Integer length) {
-		PageRequest pageable = PageRequest.of(page, length);
+	public CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Pageable pageable) {
 		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByVisibleNum(visibleNum,
 				pageable);
-		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets,
+				CalculationUtil.countPages(
+						cabinetRepository.countByVisibleNum(visibleNum),
+						pageable.getPageSize()));
 	}
 
 	/**

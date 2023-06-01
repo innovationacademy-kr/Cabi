@@ -99,4 +99,19 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"WHERE c.visibleNum = :visibleNum")
 	List<Cabinet> findAllCabinetsByVisibleNum(@Param("visibleNum") Integer visibleNum,
 			Pageable pageable);
+
+	@Query("SELECT COUNT(c) " +
+			"FROM Cabinet c " +
+			"WHERE c.lentType = :lentType")
+	Integer countByLentType(LentType lentType);
+
+	@Query("SELECT COUNT(c) " +
+			"FROM Cabinet c " +
+			"WHERE c.status = :status")
+	Integer countByStatus(CabinetStatus status);
+
+	@Query("SELECT COUNT(c) " +
+			"FROM Cabinet c " +
+			"WHERE c.visibleNum = :visibleNum")
+	Integer countByVisibleNum(Integer visibleNum);
 }

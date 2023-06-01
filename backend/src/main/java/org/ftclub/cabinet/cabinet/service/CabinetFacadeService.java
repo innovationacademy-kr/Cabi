@@ -7,6 +7,7 @@ import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
+import org.springframework.data.domain.Pageable;
 
 public interface CabinetFacadeService {
 
@@ -108,10 +109,9 @@ public interface CabinetFacadeService {
 	void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType);
 
 
-	CabinetPaginationDto getCabinetListByLentType(LentType lentType, Integer page, Integer length);
+	CabinetPaginationDto getCabinetListByLentType(LentType lentType, Pageable pageable);
 
-	CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Integer page, Integer length);
+	CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Pageable pageable);
 
-	CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Integer page,
-			Integer length);
+	CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Pageable pageable);
 }
