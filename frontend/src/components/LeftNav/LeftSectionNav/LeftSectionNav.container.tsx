@@ -1,8 +1,8 @@
-import useMenu from "@/hooks/useMenu";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { currentSectionNameState } from "@/recoil/atoms";
 import { currentFloorSectionState } from "@/recoil/selectors";
-import { useRecoilState, useRecoilValue } from "recoil";
 import LeftSectionNav from "@/components/LeftNav/LeftSectionNav/LeftSectionNav";
+import useMenu from "@/hooks/useMenu";
 
 const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
   const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
