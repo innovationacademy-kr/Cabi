@@ -4,13 +4,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
-import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -83,17 +81,5 @@ public class CabinetExceptionHandlerService {
 	public CabinetPlace getCabinetPlaceByLocation(Location location) {
 		return cabinetRepository.findCabinetPlaceByLocation(location)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-	}
-
-	public List<Cabinet> getAllCabinetsByLentType(LentType lentType, PageRequest pageable) {
-		return cabinetRepository.findAllCabinetsByLentType(lentType, pageable);
-	}
-
-	public List<Cabinet> getAllCabinetsByStatus(CabinetStatus status, PageRequest pageable) {
-		return cabinetRepository.findAllCabinetsByStatus(status, pageable);
-	}
-
-	public List<Cabinet> getAllCabinetsByVisibleNum(Integer visibleNum, PageRequest pageable) {
-		return cabinetRepository.findAllCabinetsByVisibleNum(visibleNum, pageable);
 	}
 }

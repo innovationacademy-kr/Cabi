@@ -175,7 +175,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	public CabinetPaginationDto getCabinetListByLentType(LentType lentType, Integer page,
 			Integer length) {
 		PageRequest pageable = PageRequest.of(page, length);
-		List<Cabinet> cabinets = cabinetService.getCabinetListByLentType(lentType, pageable);
+		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByLentType(lentType, pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
 	}
 
@@ -183,7 +183,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	public CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Integer page,
 			Integer length) {
 		PageRequest pageable = PageRequest.of(page, length);
-		List<Cabinet> cabinets = cabinetService.getCabinetListByStatus(status, pageable);
+		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByStatus(status, pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
 	}
 
@@ -191,7 +191,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	public CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Integer page,
 			Integer length) {
 		PageRequest pageable = PageRequest.of(page, length);
-		List<Cabinet> cabinets = cabinetService.getCabinetListByVisibleNum(visibleNum, pageable);
+		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByVisibleNum(visibleNum,
+				pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
 	}
 
