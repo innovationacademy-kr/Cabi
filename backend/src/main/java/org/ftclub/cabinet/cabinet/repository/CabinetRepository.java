@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -78,4 +80,19 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	boolean existsBuildingAndFloor(
 			@Param("building") String building,
 			@Param("floor") Integer floor);
+
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.lentType = :lentType")
+	List<Cabinet> findAllCabinetsByLentType(@Param("lentType") LentType lentType);
+
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.status = :status")
+	List<Cabinet> findAllCabinetsByStatus(@Param("status") CabinetStatus status);
+	
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.visibleNum = :visibleNum")
+	List<Cabinet> findAllCabinetsByVisibleNum(@Param("visibleNum") Integer visibleNum);
 }

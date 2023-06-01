@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.service;
 
+import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -119,5 +120,20 @@ public class CabinetServiceImpl implements CabinetService {
 	public void updateStatusNote(Long cabinetId, String statusNote) {
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.writeStatusNote(statusNote);
+	}
+
+	@Override
+	public List<Cabinet> getCabinetListByLentType(LentType lentType) {
+		return cabinetExceptionHandlerService.getAllCabinetsByLentType(lentType);
+	}
+
+	@Override
+	public List<Cabinet> getCabinetListByStatus(CabinetStatus status) {
+		return cabinetExceptionHandlerService.getAllCabinetsByStatus(status);
+	}
+
+	@Override
+	public List<Cabinet> getCabinetListByVisibleNum(Integer visibleNum) {
+		return cabinetExceptionHandlerService.getAllCabinetsByVisibleNum(visibleNum);
 	}
 }

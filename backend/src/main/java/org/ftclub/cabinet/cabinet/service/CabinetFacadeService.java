@@ -5,6 +5,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 
 public interface CabinetFacadeService {
@@ -107,4 +108,10 @@ public interface CabinetFacadeService {
 	void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType);
 
 
+	CabinetPaginationDto getCabinetListByLentType(LentType lentType, Integer page, Integer length);
+
+	CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Integer page, Integer length);
+
+	CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Integer page,
+			Integer length);
 }

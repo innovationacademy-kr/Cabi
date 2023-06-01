@@ -110,14 +110,4 @@ public class CabinetController {
 		}
 		cabinetFacadeService.updateCabinetMemo(cabinetId, body.get("memo"));
 	}
-
-	/**
-	 * To-Do
-	 * /api/lent/update_cabinet_memo
-	 * /api/lent/update_cabinet_title
-	 * /api/admin/search/cabinet/broken
-	 * /api/admin/search/cabinet/visibleNum/:visibleNum
-	 * /api/admin/search/cabinet/lentType/:lentType
-	 *
-	 */
 }

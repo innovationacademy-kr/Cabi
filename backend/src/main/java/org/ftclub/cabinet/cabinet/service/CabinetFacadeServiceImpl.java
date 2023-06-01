@@ -13,6 +13,7 @@ import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -167,6 +168,27 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		for (Long cabinetId : cabinetIds) {
 			cabinetService.updateLentType(cabinetId, lentType);
 		}
+	}
+
+	@Override
+	public CabinetPaginationDto getCabinetListByLentType(LentType lentType, Integer page,
+			Integer length) {
+		List<Cabinet> cabinets = cabinetService.getCabinetListByLentType(lentType);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
+	}
+
+	@Override
+	public CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Integer page,
+			Integer length) {
+		List<Cabinet> cabinets = cabinetService.getCabinetListByStatus(status);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
+	}
+
+	@Override
+	public CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Integer page,
+			Integer length) {
+		List<Cabinet> cabinets = cabinetService.getCabinetListByVisibleNum(visibleNum);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets, page * length);
 	}
 
 	/**

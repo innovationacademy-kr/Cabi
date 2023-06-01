@@ -10,6 +10,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -194,10 +196,39 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetBundleLentType(body.get("cabinetIds"), lentType);
 	}
 
-	/**
-	 * TO-DO:
-	 * /api/admin/cabinet/count/floor
-	 * /api/admin/log/cabinet/:cabinetId
-	 *
-	 */
+	@GetMapping("lent-types/{lentType}")
+	@AuthGuard(level = Level.ADMIN_ONLY)
+	public CabinetPaginationDto getCabinetsByLentType(
+			@PathVariable("lentType") LentType lentType,
+			@RequestParam("page") Integer page,
+			@RequestParam("length") Integer length) {
+		if (lentType == null) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
+		return cabinetFacadeService.getCabinetListByLentType(lentType, page, length);
+	}
+
+	@GetMapping("/status/{status}")
+	@AuthGuard(level = Level.ADMIN_ONLY)
+	public CabinetPaginationDto getCabinetsByStatus(
+			@PathVariable("status") CabinetStatus status,
+			@RequestParam("page") Integer page,
+			@RequestParam("length") Integer length) {
+		if (status == null) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
+		return cabinetFacadeService.getCabinetListByStatus(status, page, length);
+	}
+
+	@GetMapping("/visibleNum/{visibleNum}")
+	@AuthGuard(level = Level.ADMIN_ONLY)
+	public CabinetPaginationDto getCabinetsByVisibleNum(
+			@PathVariable("visibleNum") Integer visibleNum,
+			@RequestParam("page") Integer page,
+			@RequestParam("length") Integer length) {
+		if (visibleNum == null) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
+		return cabinetFacadeService.getCabinetListByVisibleNum(visibleNum, page, length);
+	}
 }

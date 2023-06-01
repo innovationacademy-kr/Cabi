@@ -6,6 +6,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.mapstruct.Mapper;
@@ -26,4 +27,7 @@ public interface CabinetMapper {
 
 	CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
 			List<CabinetInfoResponseDto> cabinets);
+
+	CabinetPaginationDto toCabinetPaginationDtoList(List<Cabinet> cabinets,
+			Integer totalPage);
 }
