@@ -1,5 +1,5 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { targetUserInfoState, currentCabinetIdState } from "@/recoil/atoms";
+import { currentCabinetIdState, targetUserInfoState } from "@/recoil/atoms";
 import AdminUserLentLogContainer from "@/components/LentLog/AdminUserLentLog.container";
 import UserInfoArea, {
   ISelectedUserInfo,

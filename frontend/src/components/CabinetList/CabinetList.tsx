@@ -2,8 +2,8 @@ import styled from "styled-components";
 import AdminCabinetListItem from "@/components/CabinetList/CabinetListItem/AdminCabinetListItem";
 import CabinetListItem from "@/components/CabinetList/CabinetListItem/CabinetListItem";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import useMultiSelect from "@/hooks/useMultiSelect";
 import useMenu from "@/hooks/useMenu";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 interface CabinetListInterface {
   colNum: number;

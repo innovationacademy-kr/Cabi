@@ -1,19 +1,19 @@
-import styled, { css } from "styled-components";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import styled, { css } from "styled-components";
 import {
   currentCabinetIdState,
-  targetCabinetInfoState,
   selectedTypeOnSearchState,
+  targetCabinetInfoState,
 } from "@/recoil/atoms";
+import {
+  cabinetFilterMap,
+  cabinetIconSrcMap,
+  cabinetLabelColorMap,
+  cabinetStatusColorMap,
+} from "@/assets/data/maps";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import {
-  cabinetStatusColorMap,
-  cabinetLabelColorMap,
-  cabinetIconSrcMap,
-  cabinetFilterMap,
-} from "@/assets/data/maps";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
