@@ -1,11 +1,12 @@
-import { selectedTypeOnSearchState } from "@/recoil/atoms";
-import useMenu from "@/hooks/useMenu";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import {
+  selectedTypeOnSearchState,
   targetCabinetInfoListState,
   isMultiSelectState,
-} from "@//recoil/atoms";
+} from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import useMenu from "@/hooks/useMenu";
+
 const useMultiSelect = () => {
   const [targetCabinetInfoList, setTargetCabinetInfoList] = useRecoilState<
     CabinetInfo[]

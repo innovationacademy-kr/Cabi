@@ -2,14 +2,8 @@ import {
   BannedUserDto,
   BrokenCabinetDto,
   OverdueUserDto,
+  ITableData,
 } from "@/types/dto/admin.dto";
-
-interface IData {
-  first?: string;
-  second?: string;
-  third?: string;
-  info: BannedUserDto | BrokenCabinetDto | OverdueUserDto;
-}
 
 const calcLeftDays = (end: Date) =>
   Math.ceil((end.getTime() - new Date().getTime()) / 1000 / 3600 / 24);
@@ -19,7 +13,7 @@ const convertDate = (date: Date): string =>
     date.getMonth() >= 9 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1)
   }.${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
 
-export const handleBannedUserList = (data: BannedUserDto[]): IData[] =>
+export const handleBannedUserList = (data: BannedUserDto[]): ITableData[] =>
   data
     .map(({ intra_id, banned_date, unbanned_date }, idx, arr) => ({
       first: intra_id,
@@ -31,7 +25,9 @@ export const handleBannedUserList = (data: BannedUserDto[]): IData[] =>
       (personA, personB) => Number(personB.second) - Number(personA.second)
     );
 
-export const handleBrokenCabinetList = (data: BrokenCabinetDto[]): IData[] =>
+export const handleBrokenCabinetList = (
+  data: BrokenCabinetDto[]
+): ITableData[] =>
   data.map(({ floor, cabinet_num, section, note }, idx, arr) => ({
     first: `${floor}F-${cabinet_num}`,
     second: section,
@@ -39,7 +35,7 @@ export const handleBrokenCabinetList = (data: BrokenCabinetDto[]): IData[] =>
     info: arr[idx],
   }));
 
-export const handleOverdueUserList = (data: OverdueUserDto[]): IData[] =>
+export const handleOverdueUserList = (data: OverdueUserDto[]): ITableData[] =>
   data.map(({ intra_id, location, overdueDays }, idx, arr) => ({
     first: intra_id,
     second: location.toUpperCase(),

@@ -102,10 +102,6 @@ const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
     css`
       visibility: hidden;
     `}
-  div {
-    &: first-child {
-
-    }
   }
 `;
 
