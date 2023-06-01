@@ -1,9 +1,8 @@
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import instance from "./axios.instance";
+import instance from "@/api/axios/axios.instance";
 
 const axiosLogoutUrl = "/auth/logout";
-
 export const axiosLogout = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosLogoutUrl);
@@ -54,8 +53,6 @@ export const axiosUpdateCabinetTitle = async (
 };
 
 // V3 API
-// TODO
-// 차후 API 확인 후에 URL 수정
 const axiosLocationFloorURL = "/api/cabinet_info";
 export const axiosLocationFloor = async (): Promise<any> => {
   try {
@@ -333,34 +330,36 @@ export const axiosDeleteCurrentBanLog = async (userId: number) => {
   }
 };
 
-const axiosGetBrokenCabinetListURL =
-  "/api/admin/search/cabinet/broken/?page=0&length=0";
+const axiosGetBrokenCabinetListURL = "/api/admin/search/cabinet/broken/";
 export const axiosGetBrokenCabinetList = async () => {
   try {
-    const response = await instance.get(axiosGetBrokenCabinetListURL);
+    const response = await instance.get(axiosGetBrokenCabinetListURL, {
+      params: { page: 0, length: 0 },
+    });
     return response.data.result;
   } catch (error) {
     throw error;
   }
 };
 
-const axiosGetBannedUserListURL =
-  "/api/admin/search/user/banned/?page=0&length=0";
+const axiosGetBannedUserListURL = "/api/admin/search/user/banned/";
 export const axiosGetBannedUserList = async () => {
   try {
-    const response = await instance.get(axiosGetBannedUserListURL);
+    const response = await instance.get(axiosGetBannedUserListURL, {
+      params: { page: 0, length: 0 },
+    });
     return response.data.result;
   } catch (error) {
     throw error;
   }
 };
 
-const axiosGetStatisticsURL = "/api/admin/search/cabinet/statistics/?";
+const axiosGetStatisticsURL = "/api/admin/search/cabinet/statistics/";
 export const axiosGetStatistics = async (start: number, end: number) => {
   try {
-    const response = await instance.get(
-      `${axiosGetStatisticsURL}start=${start}&end=${end}`
-    );
+    const response = await instance.get(axiosGetStatisticsURL, {
+      params: { start: start, end: end },
+    });
     return response.data;
   } catch (error) {
     throw error;
@@ -377,11 +376,12 @@ export const axiosGetCabinetNumbersPerFloor = async () => {
   }
 };
 
-const axiosGetOverdueUserListURL =
-  "api/admin/search/user/overdue?page=0&length=0";
+const axiosGetOverdueUserListURL = "api/admin/search/user/overdue/";
 export const axiosGetOverdueUserList = async () => {
   try {
-    const response = await instance.get(axiosGetOverdueUserListURL);
+    const response = await instance.get(axiosGetOverdueUserListURL, {
+      params: { page: 0, length: 0 },
+    });
     return response.data.result;
   } catch (error) {
     throw error;
