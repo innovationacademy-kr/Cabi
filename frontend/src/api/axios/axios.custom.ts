@@ -294,9 +294,14 @@ export const axiosSearchByIntraId = async (intraId: string) => {
 };
 
 const axiosSearchByCabinetNumURL = "/api/admin/search/cabinet/visibleNum/";
-export const axiosSearchByCabinetNum = async (number: number) => {
+export const axiosSearchByCabinetNum = async (
+  number: number,
+  floor?: number
+) => {
   try {
-    const response = await instance.get(axiosSearchByCabinetNumURL + number);
+    const response = await instance.get(axiosSearchByCabinetNumURL + number, {
+      params: { floor: floor },
+    });
     return response;
   } catch (error) {
     throw error;
