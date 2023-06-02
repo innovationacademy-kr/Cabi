@@ -19,10 +19,12 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
+import org.ftclub.cabinet.user.domain.BanPolicy;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final UserExceptionHandlerService userExceptionHandlerService;
 	private final LentRepository lentRepository;
 	private final BanHistoryRepository banHistoryRepository;
+	private final BanPolicy banPolicy;
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
 
@@ -43,7 +46,12 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
 				user.getUserId());
 		Long cabinetId = lentHistory.map(LentHistory::getCabinetId).orElse(-1L);
-		return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId);
+		Date unbannedAt = banHistoryRepository.findRecentBanHistoryByUserId(user.getUserId())
+				.map(BanHistory::getUnbannedAt).orElse(null);
+		if (unbannedAt != null && banPolicy.isActiveBanHistory(unbannedAt, DateUtil.getNow())) {
+			unbannedAt = null;
+		}
+		return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId, unbannedAt);
 	}
 
 	@Override
