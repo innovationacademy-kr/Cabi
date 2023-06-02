@@ -1,7 +1,9 @@
 package org.ftclub.cabinet.mapper;
 
 import org.ftclub.cabinet.dto.BlockedUserDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
+import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.mapstruct.Mapper;

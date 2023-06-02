@@ -151,5 +151,4 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public void deleteRecentBanHistory(Long userId, Date today) {
 		userService.deleteRecentBanHistory(userId, today);
 	}
-
 }
