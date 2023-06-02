@@ -98,7 +98,7 @@ const AdminInfo = () => {
         <PieChart data={cabinetNumbersPerFloor} />
       </ContainerStyled>
       <ContainerStyled>
-        <H2styled>월간 이용 현황</H2styled>
+        <H2styled>주간 이용 현황</H2styled>
         <LineChart data={monthlyData} />
       </ContainerStyled>
       <ContainerStyled>
@@ -126,7 +126,7 @@ const AdminInfo = () => {
         <AdminTable
           data={brokenCabinetList}
           handleClick={(e) => onClick(e, "broken")}
-          thInfo={["위치 정보", "섹  션", ""]}
+          thInfo={["위치", "섹  션", ""]}
           ratio={["50%", "50%", "0%"]}
           fontSize={["1rem", "0.8rem", "1rem"]}
           ROW_COUNT={5}

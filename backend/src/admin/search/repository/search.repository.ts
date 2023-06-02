@@ -203,7 +203,7 @@ export class AdminSearchRepository implements IAdminSearchRepository {
         cabinet_num: visibleNum,
         floor: floor,
       },
-      order: { cabinet_id: 'ASC' },
+      order: { floor: 'ASC' },
     });
     const rtn = {
       result: result.map((cabinet) => ({
