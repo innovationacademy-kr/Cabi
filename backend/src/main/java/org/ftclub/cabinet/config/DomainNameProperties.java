@@ -22,5 +22,8 @@ public class DomainNameProperties {
 
 	@Value("${domain-name.admin-email}")
 	private String adminEmailDomain;
+
+	@Value("${domain-name.user-email}")
+	private String userEmailDomain;
 }
 

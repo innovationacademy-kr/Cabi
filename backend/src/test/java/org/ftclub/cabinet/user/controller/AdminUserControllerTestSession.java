@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
+import org.ftclub.cabinet.auth.domain.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,9 @@ class AdminUserControllerTestSession {
 
 	@Autowired
 	JwtProperties jwtProperties;
+
+	@Autowired
+	TokenValidator tokenValidator;
 
 	String adminToken;
 	Cookie cookie;

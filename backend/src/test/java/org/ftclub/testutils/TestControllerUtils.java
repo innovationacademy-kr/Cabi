@@ -7,18 +7,42 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.Cookie;
+import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+
 public class TestControllerUtils {
+
+	public static String adminEmailName = "admin1";
+	public static String masterEmailName = "admin2";
+
+	@Value("${domain-name.admin-email}")
+	private static String adminEmailDomain = "gmail.com";
+
+	@Value("${domain-name.user-email}")
+	private static String userEmailDomain = "student.42seoul.kr";
 
 	public static String getTestAdminToken(Key signingKey) {
 		Map<String, Object> claim = new HashMap<>();
-		claim.put("email", "test@gmail.com");
+		claim.put("email", adminEmailName + "@" + adminEmailDomain);
+		claim.put("role", AdminRole.ADMIN.ordinal());
+		return Jwts.builder()
+				.setClaims(claim)
+				.signWith(signingKey, SignatureAlgorithm.HS256)
+				.setExpiration(DateUtil.addDaysToDate(new Date(), 10))
+				.compact();
+	}
+
+	public static String getTestMasterToken(Key signingKey) {
+		Map<String, Object> claim = new HashMap<>();
+		claim.put("admin2", masterEmailName + "@" + adminEmailDomain);
+		claim.put("role", AdminRole.MASTER.ordinal());
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
@@ -29,7 +53,7 @@ public class TestControllerUtils {
 	public static String getTestUserToken(Key signingKey) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("name", "testUserName");
-		claim.put("email", "test@student.42seoul.kr");
+		claim.put("email", "test@" + userEmailDomain);
 		claim.put("blackholedAt", new Date());
 		claim.put("role", UserRole.USER);
 		return Jwts.builder()
@@ -42,7 +66,7 @@ public class TestControllerUtils {
 	public static String getTestUserTokenByName(Key signingKey, String name) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("name", name);
-		claim.put("email", name + "@student.42seoul.kr");
+		claim.put("email", name + "@" + userEmailDomain);
 		claim.put("blackholedAt", new Date());
 		claim.put("role", UserRole.USER);
 		return Jwts.builder()
