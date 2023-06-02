@@ -24,6 +24,7 @@ public interface LentMapper {
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	LentHistoryDto toLentHistoryDto(LentHistory lentHistory, User user, Cabinet cabinet);
 
+	@Mapping(target = "totalPage", source = "totalPage")
 	LentHistoryPaginationDto toLentHistoryPaginationDto(List<LentHistoryDto> result,
 			Integer totalPage);
 }

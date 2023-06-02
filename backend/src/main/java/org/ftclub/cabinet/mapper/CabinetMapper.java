@@ -10,6 +10,7 @@ import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,7 @@ public interface CabinetMapper {
 	CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
 			List<CabinetInfoResponseDto> cabinets);
 
+	@Mapping(target = "totalPage", source = "totalPage")
 	CabinetPaginationDto toCabinetPaginationDtoList(List<Cabinet> cabinets,
 			Integer totalPage);
 }
