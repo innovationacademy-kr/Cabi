@@ -2,6 +2,7 @@ package org.ftclub.cabinet.cabinet.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -16,6 +17,8 @@ import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentHistoryDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -173,7 +176,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 	@Override
-	public CabinetPaginationDto getCabinetListByLentType(LentType lentType, Pageable pageable) {
+	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType,
+			Pageable pageable) {
 		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByLentType(lentType, pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets,
 				CalculationUtil.countPages(
@@ -182,7 +186,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 	@Override
-	public CabinetPaginationDto getCabinetListByStatus(CabinetStatus status, Pageable pageable) {
+	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
+			Pageable pageable) {
 		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByStatus(status, pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets,
 				CalculationUtil.countPages(
@@ -191,12 +196,25 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 	@Override
-	public CabinetPaginationDto getCabinetListByVisibleNum(Integer visibleNum, Pageable pageable) {
+	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum,
+			Pageable pageable) {
 		List<Cabinet> cabinets = cabinetRepository.findAllCabinetsByVisibleNum(visibleNum,
 				pageable);
 		return cabinetMapper.toCabinetPaginationDtoList(cabinets,
 				CalculationUtil.countPages(
 						cabinetRepository.countByVisibleNum(visibleNum),
+						pageable.getPageSize()));
+	}
+
+	@Override
+	public LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId,
+			Pageable pageable) {
+		List<LentHistory> lentHistories = lentRepository.findPaginationByCabinetId(cabinetId,
+				pageable);
+		return lentMapper.toLentHistoryPaginationDto(
+				generateLentHistoryDtoList(lentHistories),
+				CalculationUtil.countPages(
+						lentRepository.countByCabinetId(cabinetId),
 						pageable.getPageSize()));
 	}
 
@@ -227,5 +245,15 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 			result.add(getCabinetInfo(cabinetId));
 		}
 		return result;
+	}
+
+	// ToDo : new -> mapper 쓰기 + query service 분리
+	private List<LentHistoryDto> generateLentHistoryDtoList(
+			List<LentHistory> lentHistories) {
+		return lentHistories.stream()
+				.map(e -> lentMapper.toLentHistoryDto(e,
+						userRepository.getUser(e.getUserId()),
+						cabinetRepository.findById(e.getCabinetId()).orElseThrow()))
+				.collect(Collectors.toList());
 	}
 }

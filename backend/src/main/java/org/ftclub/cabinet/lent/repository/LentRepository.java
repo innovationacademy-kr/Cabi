@@ -104,4 +104,15 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"FROM LentHistory lh " +
 			"WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
 	List<LentHistory> findAllActiveLentByCabinetId(@Param("cabinetId") Long cabinetId);
+
+	@Query("SELECT lh " +
+			"FROM LentHistory lh " +
+			"WHERE lh.cabinetId = :cabinetId")
+	List<LentHistory> findPaginationByCabinetId(@Param("cabinetId") Long cabinetId,
+			Pageable pageable);
+
+	@Query("SELECT COUNT(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE lh.cabinetId = :cabinetId")
+	Integer countByCabinetId(Long cabinetId);
 }

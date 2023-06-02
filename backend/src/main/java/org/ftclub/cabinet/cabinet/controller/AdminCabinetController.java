@@ -11,6 +11,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.data.domain.Pageable;
@@ -196,6 +197,13 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetBundleLentType(body.get("cabinetIds"), lentType);
 	}
 
+	/**
+	 * 사물함 대여 타입에 따른 사물함들의 정보를 페이지네이션으로 가져옵니다.
+	 *
+	 * @param lentType 대여 타입
+	 * @param pageable 페이지네이션 정보(page, size)
+	 * @return 실물 번호에 따른 사물함 정보 페이지네이션
+	 */
 	@GetMapping("lent-types/{lentType}")
 //	@AuthGuard(level = Level.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByLentType(
@@ -204,9 +212,16 @@ public class AdminCabinetController {
 		if (lentType == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		return cabinetFacadeService.getCabinetListByLentType(lentType, pageable);
+		return cabinetFacadeService.getCabinetPaginationByLentType(lentType, pageable);
 	}
 
+	/**
+	 * 사물함 상태에 따른 사물함들의 정보를 페이지네이션으로 가져옵니다.
+	 *
+	 * @param status   사물함 상태
+	 * @param pageable 페이지네이션 정보(page, size)
+	 * @return 사물함 상태에 따른 사물함 정보 페이지네이션
+	 */
 	@GetMapping("/status/{status}")
 //	@AuthGuard(level = Level.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByStatus(
@@ -215,9 +230,16 @@ public class AdminCabinetController {
 		if (status == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		return cabinetFacadeService.getCabinetListByStatus(status, pageable);
+		return cabinetFacadeService.getCabinetPaginationByStatus(status, pageable);
 	}
 
+	/**
+	 * 사물함 표시 번호에 따른 사물함들의 정보를 페이지네이션으로 가져옵니다.
+	 *
+	 * @param visibleNum 사물함 표시 번호
+	 * @param pageable   페이지네이션 정보(page, size)
+	 * @return 사물함 표시 번호에 따른 사물함 정보 페이지네이션
+	 */
 	@GetMapping("/visibleNum/{visibleNum}")
 //	@AuthGuard(level = Level.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByVisibleNum(
@@ -226,6 +248,17 @@ public class AdminCabinetController {
 		if (visibleNum == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		return cabinetFacadeService.getCabinetListByVisibleNum(visibleNum, pageable);
+		return cabinetFacadeService.getCabinetPaginationByVisibleNum(visibleNum, pageable);
+	}
+
+	@GetMapping("/{cabinetId}/lent-histories")
+//	@AuthGuard(level = Level.ADMIN_ONLY)
+	public LentHistoryPaginationDto getCabinetLentHistories(
+			@PathVariable("cabinetId") Long cabinetId,
+			Pageable pageable) {
+		if (cabinetId == null) {
+			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
+		return cabinetFacadeService.getCabinetLentHistoriesPagination(cabinetId, pageable);
 	}
 }
