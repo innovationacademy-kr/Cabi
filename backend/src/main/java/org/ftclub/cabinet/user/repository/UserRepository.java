@@ -59,4 +59,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
 	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
+
+	@Query("SELECT u.role FROM User u WHERE u.email = :email")
+	Integer getUserRoleByEmail(@Param("email") String email);
 }

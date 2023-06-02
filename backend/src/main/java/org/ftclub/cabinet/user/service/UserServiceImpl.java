@@ -111,4 +111,9 @@ public class UserServiceImpl implements UserService {
 				today);
 		return (banHistory.size() != 0);
 	}
+
+	@Override
+	public Integer getAdminUserRole(String email) {
+		return userRepository.getUserRoleByEmail(email);
+	}
 }

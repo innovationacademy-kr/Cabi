@@ -11,8 +11,11 @@ import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.SiteUrlProperties;
+import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +44,11 @@ public class AdminAuthController {
 	@GetMapping("/login")
 	public void login(HttpServletResponse response) throws IOException {
 		oauthService.sendToApi(response, googleApiProperties);
+	}
+
+	@PostMapping("/login")
+	public void masterLogin(@RequestBody MasterLoginDto masterLoginDto) {
+
 	}
 
 	/**

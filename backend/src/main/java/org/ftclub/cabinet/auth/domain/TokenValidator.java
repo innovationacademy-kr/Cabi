@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.auth.domain;
 
+import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_ONLY;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +13,11 @@ import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.config.DomainNameProperties;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.config.MasterProperties;
+import org.ftclub.cabinet.user.domain.AdminRole;
+import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +28,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TokenValidator {
 
+	private final MasterProperties masterProperties;
+	private final DomainNameProperties domainNameProperties;
 	private final JwtProperties jwtProperties;
+	private final UserService userService;
 
 	/**
 	 * 토큰의 유효성을 검사합니다.
@@ -34,7 +43,8 @@ public class TokenValidator {
 	 * @param req {@link HttpServletRequest}
 	 * @return 정상적인 방식의 토큰 요청인지, 유효한 토큰인지 여부
 	 */
-	public Boolean isTokenValid(HttpServletRequest req) {
+	public Boolean isTokenValid(HttpServletRequest req, AuthLevel authLevel)
+			throws JsonProcessingException {
 		String authHeader = req.getHeader("Authorization");
 		if (authHeader == null || authHeader.startsWith("Bearer ") == false) {
 			return false;
@@ -43,7 +53,7 @@ public class TokenValidator {
 		if (token == null || checkTokenValidity(token) == false) {
 			return false;
 		}
-		return true;
+		return checkRole(token, authLevel);
 	}
 
 	/**
@@ -73,11 +83,52 @@ public class TokenValidator {
 		return false;
 	}
 
+	/**
+	 * 토큰의 Payload를 JsonNode(JSON) 형식으로 가져옵니다.
+	 *
+	 * @param token 토큰
+	 * @return JSON 형식의 Payload
+	 * @throws JsonProcessingException
+	 */
 	public JsonNode getPayloadJson(final String token) throws JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		final String payloadJWT = token.split("\\.")[1];
 		Base64.Decoder decoder = Base64.getUrlDecoder();
 
 		return objectMapper.readTree(new String(decoder.decode(payloadJWT)));
+	}
+
+	/**
+	 * 해당 토큰의 페이로드 정보가 인증 단계에 알맞는지 확인합니다.
+	 * <p>
+	 * USER_ONLY의 경우 검증하지 않습니다.
+	 *
+	 * @param token     토큰
+	 * @param authLevel 인증 단계
+	 * @return 페이로드 정보가 실제 DB와 일치하면 true를 반환합니다.
+	 */
+	private boolean checkRole(String token, AuthLevel authLevel) throws JsonProcessingException {
+		if (authLevel.equals(USER_ONLY)) {
+			return true;
+		}
+		String email = getPayloadJson(token).get("email").asText();
+		switch (authLevel) {
+			case USER_OR_ADMIN:
+				if (isAdminEmail(email)) {
+					return userService.getAdminUserRole(email) >= AdminRole.ADMIN.ordinal();
+				}
+				return true;
+			case ADMIN_ONLY:
+				return userService.getAdminUserRole(email).equals(AdminRole.MASTER.ordinal());
+			case MASTER_ONLY:
+				return email.equals(masterProperties.getEmail());
+			default:
+				return false;
+		}
+	}
+
+	private boolean isAdminEmail(String email) {
+		return email.endsWith(masterProperties.getDomain())
+				|| email.endsWith(domainNameProperties.getAdminEmailDomain());
 	}
 }

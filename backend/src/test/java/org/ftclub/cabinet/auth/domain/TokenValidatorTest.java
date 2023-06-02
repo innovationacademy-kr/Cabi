@@ -67,9 +67,9 @@ public class TokenValidatorTest {
 		invalidTokenRequest.addHeader("Authorization", "Bearer " + invalidToken);
 		invalidTokenRequest.addHeader("Authorization", "Bearer " + invalidToken);
 		Assert.assertEquals(true,
-				tokenValidator.isTokenValid(validTokenRequest));
+				tokenValidator.isTokenValid(validTokenRequest, AuthLevel.USER_ONLY));
 		Assert.assertEquals(false,
-				tokenValidator.isTokenValid(emptyTokenRequest));
+				tokenValidator.isTokenValid(emptyTokenRequest, AuthLevel.ADMIN_ONLY));
 	}
 
 	@Test
