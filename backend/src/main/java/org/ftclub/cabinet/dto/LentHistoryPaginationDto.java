@@ -12,5 +12,5 @@ import lombok.Getter;
 public class LentHistoryPaginationDto {
 
 	private final List<LentHistoryDto> result;
-	private final Integer totalLength;
+	private final Integer totalPage;
 }
