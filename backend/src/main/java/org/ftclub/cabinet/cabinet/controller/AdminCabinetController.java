@@ -207,7 +207,7 @@ public class AdminCabinetController {
 	 * @return 사물함 정보 페이지네이션
 	 */
 	@GetMapping("lent-types/{lentType}")
-//	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByLentType(
 			@PathVariable("lentType") LentType lentType,
 			@RequestParam("page") Integer page,
@@ -228,7 +228,7 @@ public class AdminCabinetController {
 	 * @return 사물함 정보 페이지네이션
 	 */
 	@GetMapping("/status/{status}")
-//	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByStatus(
 			@PathVariable("status") CabinetStatus status,
 			@RequestParam("page") Integer page,
@@ -249,7 +249,7 @@ public class AdminCabinetController {
 	 * @return 사물함 정보 페이지네이션
 	 */
 	@GetMapping("/visibleNum/{visibleNum}")
-//	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByVisibleNum(
 			@PathVariable("visibleNum") Integer visibleNum,
 			@RequestParam("page") Integer page,
@@ -270,7 +270,7 @@ public class AdminCabinetController {
 	 * @return 대여 기록 페이지네이션
 	 */
 	@GetMapping("/{cabinetId}/lent-histories")
-//	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = Level.ADMIN_ONLY)
 	public LentHistoryPaginationDto getCabinetLentHistories(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestParam("page") Integer page,
