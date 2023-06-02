@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.repository;
 
 import java.util.Optional;
+import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +61,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
 	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
 
-	@Query("SELECT u.role FROM User u WHERE u.email = :email")
-	Integer getUserRoleByEmail(@Param("email") String email);
+	@Query("SELECT au.role FROM AdminUser au WHERE au.email = :email")
+	AdminRole getAdminUserRole(@Param("email") String email);
 }

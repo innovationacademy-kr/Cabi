@@ -36,5 +36,5 @@ public interface UserService {
 	 */
 	boolean checkUserIsBanned(Long userId, Date today);
 
-	Integer getAdminUserRole(String email);
+	AdminRole getAdminUserRole(String email);
 }

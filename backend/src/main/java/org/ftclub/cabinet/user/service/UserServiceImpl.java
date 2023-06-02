@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Integer getAdminUserRole(String email) {
-		return userRepository.getUserRoleByEmail(email);
+	public AdminRole getAdminUserRole(String email) {
+		return userRepository.getAdminUserRole(email);
 	}
 }
