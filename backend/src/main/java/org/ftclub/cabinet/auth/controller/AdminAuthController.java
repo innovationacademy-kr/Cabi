@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.TokenProvider;
 import org.ftclub.cabinet.auth.service.OauthService;
+import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.cabinet.config.SiteUrlProperties;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +28,7 @@ public class AdminAuthController {
 	private final TokenProvider tokenProvider;
 	private final OauthService oauthService;
 	private final CookieManager cookieManager;
-	private final SiteUrlProperties siteUrlProperties;
+	private final DomainProperties DomainProperties;
 	private final GoogleApiProperties googleApiProperties;
 	private final JwtProperties jwtProperties;
 
@@ -70,7 +70,7 @@ public class AdminAuthController {
 				DateUtil.getNow());
 		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), accessToken, "/",
 				req.getServerName());
-		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
+		res.sendRedirect(DomainProperties.getFeHost() + "/main");
 	}
 
 	//todo  - logout
