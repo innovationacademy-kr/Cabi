@@ -44,7 +44,7 @@ public class AdminUserController {
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
 		UserProfilePaginationDto userProfilePaginationDto = userFacadeService.getUserProfileListByPartialName(
 				name, page, length);
-		if (userProfilePaginationDto.getTotalLength() == 0) {
+		if (userProfilePaginationDto.getTotalPage() == 0) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(userProfilePaginationDto);
@@ -65,7 +65,7 @@ public class AdminUserController {
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
 		UserCabinetPaginationDto userCabinetPaginationDto = userFacadeService
 				.findUserCabinetListByPartialName(name, page, length);
-		if (userCabinetPaginationDto.getTotalLength() == 0) {
+		if (userCabinetPaginationDto.getTotalPage() == 0) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(userCabinetPaginationDto);
@@ -85,7 +85,7 @@ public class AdminUserController {
 			@RequestParam("length") Integer length) {
 		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService
 				.getAllBanUsers(page, length, DateUtil.getNow());
-		if (blockedUserPaginationDto.getTotalLength() == 0) {
+		if (blockedUserPaginationDto.getTotalPage() == 0) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(blockedUserPaginationDto);
