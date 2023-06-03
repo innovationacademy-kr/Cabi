@@ -36,6 +36,7 @@ const SearchPage = () => {
   const [totalSearchList, setTotalSearchList] = useState(0);
   const currentPage = useRef(0);
   const searchValue = useRef("");
+  const searchFloor = useRef(0);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
   const numberOfAdminWork = useRecoilValue(numberOfAdminWorkState);
@@ -48,6 +49,7 @@ const SearchPage = () => {
     setTotalSearchList(0);
     currentPage.current = 0;
     searchValue.current = searchParams.get("q") ?? "";
+    searchFloor.current = Number(searchParams.get("floor")) ?? 0;
     resetCurrentCabinetId();
     resetCurrentIntraId();
   };
@@ -68,7 +70,8 @@ const SearchPage = () => {
   // cabinet_num 검색
   const handleSearchByCabinetNum = async () => {
     const searchResult = await axiosSearchByCabinetNum(
-      Number(searchValue.current)
+      Number(searchValue.current),
+      searchFloor.current === 0 ? undefined : searchFloor.current
     );
     setSearchListByNum(searchResult.data.result);
     setTotalSearchList(searchResult.data.total_length);
