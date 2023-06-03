@@ -112,7 +112,7 @@ public class CabinetController {
 	}
 
 	/**
-	 * To-Do
+	 * ToDo
 	 * /api/lent/update_cabinet_memo
 	 * /api/lent/update_cabinet_title
 	 * /api/admin/search/cabinet/broken

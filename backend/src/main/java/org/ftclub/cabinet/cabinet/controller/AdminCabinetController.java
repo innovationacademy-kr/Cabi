@@ -195,7 +195,7 @@ public class AdminCabinetController {
 	}
 
 	/**
-	 * TO-DO:
+	 * ToDo:
 	 * /api/admin/cabinet/count/floor
 	 * /api/admin/log/cabinet/:cabinetId
 	 *

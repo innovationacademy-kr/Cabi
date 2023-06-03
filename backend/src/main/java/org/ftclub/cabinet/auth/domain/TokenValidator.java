@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 /**
  * 토큰의 유효성을 검사하는 클래스입니다.
  * <p>
- * To-Do : 인증 정책을 관리하는 도메인을 별도로 두어 관리하기
+ * ToDo : 인증 정책을 관리하는 도메인을 별도로 두어 관리하기
  */
 @Component
 @RequiredArgsConstructor
@@ -111,7 +111,7 @@ public class TokenValidator {
 	/**
 	 * 해당 토큰의 페이로드 정보가 인증 단계에 알맞는지 확인합니다.
 	 * <p>
-	 * MASTER의 경우 현재 정적으로 관리하므로 이메일만 검증합니다. TO-DO : DB로 관리
+	 * MASTER의 경우 현재 정적으로 관리하므로 이메일만 검증합니다. ToDo : DB로 관리
 	 *
 	 * @param token     토큰
 	 * @param authLevel 인증 단계
