@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,5 +31,10 @@ public class AuthControllerTest {
 
 		mvc.perform(get("/api/auth/login/callback?code={code}", inValidCode))
 				.andExpect(status().isBadGateway());
+	}
+
+	@Test
+	void 유저_로그아웃_요청() throws Exception {
+		MvcResult result = mvc.perform(get("/api/auth/logout")).andExpect(status().isOk()).andReturn();
 	}
 }
