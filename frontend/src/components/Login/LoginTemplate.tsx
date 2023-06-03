@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
-import "@/assets/css/loginPage.css";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import "@/assets/css/loginPage.css";
 
 const LoginTemplate = (props: {
   url: string;

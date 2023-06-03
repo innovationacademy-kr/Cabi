@@ -1,6 +1,6 @@
-import LoginTemplate from "@/components/Login/LoginTemplate";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, test } from "vitest";
+import LoginTemplate from "@/components/Login/LoginTemplate";
 
 describe("Login Template test", () => {
   it("should render properly", () => {

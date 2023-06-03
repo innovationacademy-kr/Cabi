@@ -1,12 +1,12 @@
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import "@/assets/css/loginPage.css";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
+import "@/assets/css/loginPage.css";
 import { additionalModalType } from "@/assets/data/maps";
 import { axiosAdminAuthLogin } from "@/api/axios/axios.custom";
-import { useNavigate } from "react-router-dom";
 
 const AdminLoginTemplate = (props: {
   url: string;
