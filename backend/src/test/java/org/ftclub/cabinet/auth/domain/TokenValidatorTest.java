@@ -128,9 +128,5 @@ public class TokenValidatorTest {
 		Assert.assertEquals(false,
 				tokenValidator.isAdminRoleValid(adminToken, AuthLevel.MASTER_ONLY));
 	}
-
-	@Test
-	void 어드민_이메일_검사() {
-
-	}
+	
 }
