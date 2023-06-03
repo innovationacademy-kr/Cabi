@@ -3,6 +3,7 @@ package org.ftclub.cabinet.auth.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.ftclub.cabinet.config.JwtProperties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class AdminAuthControllerTest {
 
 	@Autowired
 	MockMvc mvc;
+	@Autowired
+	JwtProperties jwtProperties;
 
 	@Test
 	void 어드민_로그인_요청() throws Exception {
@@ -38,5 +41,7 @@ public class AdminAuthControllerTest {
 	@Test
 	void 어드민_로그아웃_요청() throws Exception {
 		MvcResult result = mvc.perform(get("/api/admin/auth/logout")).andExpect(status().isOk()).andReturn();
+		Assertions.assertEquals(result.getResponse().getCookie(jwtProperties.getAdminTokenName()).getValue(),null);
+		Assertions.assertEquals(result.getResponse().getCookie(jwtProperties.getAdminTokenName()).getMaxAge(),0);
 	}
 }
