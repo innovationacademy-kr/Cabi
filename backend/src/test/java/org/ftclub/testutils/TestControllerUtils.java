@@ -28,42 +28,45 @@ public class TestControllerUtils {
 	@Value("${domain-name.user-email}")
 	private static String userEmailDomain = "student.42seoul.kr";
 
-	public static String getTestAdminToken(Key signingKey) {
+	@Value("${domain-name.master-email}")
+	private static String masterEmailDomain = "cabi.42seoul.io";
+
+	public static String getTestAdminToken(Key signingKey, Date now) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("email", adminEmailName + "@" + adminEmailDomain);
-		claim.put("role", AdminRole.ADMIN.ordinal());
+		claim.put("role", AdminRole.ADMIN);
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(new Date(), 10))
+				.setExpiration(DateUtil.addDaysToDate(now, 10))
 				.compact();
 	}
 
-	public static String getTestMasterToken(Key signingKey) {
+	public static String getTestMasterToken(Key signingKey, Date now) {
 		Map<String, Object> claim = new HashMap<>();
-		claim.put("admin2", masterEmailName + "@" + adminEmailDomain);
-		claim.put("role", AdminRole.MASTER.ordinal());
+		claim.put("email", masterEmailName + "@" + masterEmailDomain);
+		claim.put("role", AdminRole.MASTER);
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(new Date(), 10))
+				.setExpiration(DateUtil.addDaysToDate(now, 10))
 				.compact();
 	}
 
-	public static String getTestUserToken(Key signingKey) {
+	public static String getTestUserToken(Key signingKey, Date now) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("name", "testUserName");
-		claim.put("email", "test@" + userEmailDomain);
+		claim.put("email", "user1@" + userEmailDomain);
 		claim.put("blackholedAt", new Date());
 		claim.put("role", UserRole.USER);
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(new Date(), 10))
+				.setExpiration(DateUtil.addDaysToDate(now, 10))
 				.compact();
 	}
 
-	public static String getTestUserTokenByName(Key signingKey, String name) {
+	public static String getTestUserTokenByName(Key signingKey, String name, Date now) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("name", name);
 		claim.put("email", name + "@" + userEmailDomain);
@@ -72,7 +75,7 @@ public class TestControllerUtils {
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(new Date(), 10))
+				.setExpiration(DateUtil.addDaysToDate(now, 10))
 				.compact();
 	}
 

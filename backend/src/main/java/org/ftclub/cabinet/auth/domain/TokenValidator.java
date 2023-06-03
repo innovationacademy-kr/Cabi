@@ -1,9 +1,10 @@
 package org.ftclub.cabinet.auth.domain;
 
-import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 import static org.ftclub.cabinet.auth.domain.AuthLevel.MASTER_ONLY;
 import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_ONLY;
 import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_OR_ADMIN;
+import static org.ftclub.cabinet.user.domain.AdminRole.ADMIN;
+import static org.ftclub.cabinet.user.domain.AdminRole.MASTER;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -111,25 +112,30 @@ public class TokenValidator {
 	/**
 	 * 해당 토큰의 페이로드 정보가 인증 단계에 알맞는지 확인합니다.
 	 * <p>
-	 * MASTER의 경우 현재 정적으로 관리하므로 이메일만 검증합니다. ToDo : DB로 관리
+	 * MASTER의 경우 현재 정적으로 관리하므로 이메일만 검증합니다.
+	 * <p>
+	 * ToDo : DB로 관리 + UserRole과 AdminRole을 합쳐도 될 것 같음. (role이 null인 경우가 유저)
 	 *
 	 * @param token     토큰
 	 * @param authLevel 인증 단계
 	 * @return 페이로드 정보가 실제 DB와 일치하면 true를 반환합니다.
 	 */
-	private boolean isAdminRoleValid(String token, AuthLevel authLevel)
+	public boolean isAdminRoleValid(String token, AuthLevel authLevel)
 			throws JsonProcessingException {
 		String email = getPayloadJson(token).get("email").asText();
 		AdminRole role = userService.getAdminUserRole(email);
-		if (isAdminEmail(email)) {
-			if (authLevel.equals(MASTER_ONLY)) {
-				return email.endsWith(masterProperties.getEmail());
-			}
-			if (authLevel.equals(ADMIN_ONLY) || authLevel.equals(USER_OR_ADMIN)) {
-				return role.equals(AdminRole.ADMIN) || role.equals(AdminRole.MASTER);
+
+		if (!isAdminEmail(email)) {
+			if (authLevel.equals(USER_OR_ADMIN)) {
+				return true;
+			} else {
+				return false;
 			}
 		}
-		return true;
+		if (authLevel.equals(MASTER_ONLY)) {
+			return email.endsWith(masterProperties.getDomain());
+		}
+		return role.equals(ADMIN) || role.equals(MASTER);
 	}
 
 	/**
