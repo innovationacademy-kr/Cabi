@@ -11,8 +11,6 @@ public enum AdminRole {
 	 * <p>
 	 * MASTER: 최고 관리자
 	 */
-	NONE(0), ADMIN(1), MASTER(2);
+	NONE, ADMIN, MASTER;
 
-	AdminRole(Integer i) {
-	}
 }
