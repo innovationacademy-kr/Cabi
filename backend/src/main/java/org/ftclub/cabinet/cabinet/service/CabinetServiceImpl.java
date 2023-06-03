@@ -24,6 +24,13 @@ public class CabinetServiceImpl implements CabinetService {
 	public Cabinet getCabinet(Long cabinetId) {
 		return cabinetExceptionHandlerService.getCabinet(cabinetId);
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Cabinet getLentCabinetByUserId(Long userId) {
+		return cabinetExceptionHandlerService.getLentCabinetByUserId(userId);
+	}
 
 	/**
 	 * {@inheritDoc}

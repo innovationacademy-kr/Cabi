@@ -60,6 +60,13 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			nativeQuery = true)
 	Optional<Long> getNextCabinetId();
 
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"LEFT JOIN LentHistory lh ON c.cabinetId = lh.cabinetId " +
+			"LEFT JOIN User u ON u.userId = lh.userId " +
+			"WHERE u.userId = :userId")
+	Optional<Cabinet> findLentCabinetByUserId(@Param("userId") Long userId);
+
 	@Query("SELECT c.cabinetPlace "
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
