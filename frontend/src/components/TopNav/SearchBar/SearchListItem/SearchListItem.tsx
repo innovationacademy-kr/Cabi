@@ -23,9 +23,12 @@ const SearchListItem = (props: {
     <LiStyled
       className={targetIndex ? "active" : ""}
       onClick={() => {
+        let query = floor
+          ? `?q=${resultText}&floor=${floor}`
+          : `?q=${resultText}`;
         navigate({
           pathname: "search",
-          search: `?q=${resultText}`,
+          search: query,
         });
         resetSearchState();
       }}

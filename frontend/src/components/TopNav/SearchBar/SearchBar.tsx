@@ -18,12 +18,14 @@ const SearchBar = () => {
   const [isFocus, setIsFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [floor, setFloor] = useState<number>(0);
 
   const resetSearchState = () => {
     setSearchListById([]);
     setSearchListByNum([]);
     setTotalLength(0);
     setTargetIndex(-1);
+    setFloor(0);
     if (searchInput.current) {
       searchInput.current.value = "";
       setSearchValue("");
@@ -40,9 +42,12 @@ const SearchBar = () => {
         resetSearchState();
         return alert("두 글자 이상의 검색어를 입력해주세요.");
       } else {
+        let query = floor
+          ? `?q=${searchInput.current.value}&floor=${floor}`
+          : `?q=${searchInput.current.value}`;
         navigate({
           pathname: "search",
-          search: `?q=${searchInput.current.value}`,
+          search: query,
         });
         resetSearchState();
       }
@@ -119,6 +124,7 @@ const SearchBar = () => {
     if (isNaN(Number(searchInput.current!.value))) {
       return searchListById[targetIndex].intra_id;
     } else {
+      setFloor(searchListByNum[targetIndex].floor);
       return searchInput.current!.value;
     }
   };
