@@ -73,5 +73,13 @@ public class AdminAuthController {
 		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
 	}
 
-	//todo  - logout
+	/**
+	 * 로그아웃시, HTTP Response 의 set-cookie Header 를 지워줍니다.
+	 * cookie에 담긴 JWT 토큰을 제거합니다.
+	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
+	 */
+	@GetMapping("/logout")
+	public void logout(HttpServletResponse res){
+		cookieManager.deleteCookie(res, jwtProperties.getAdminTokenName());
+	}
 }
