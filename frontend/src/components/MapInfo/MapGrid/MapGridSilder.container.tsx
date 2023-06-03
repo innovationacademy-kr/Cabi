@@ -1,10 +1,10 @@
-import useMenu from "@/hooks/useMenu";
-import { currentLocationFloorState } from "@/recoil/selectors";
 import React, { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
-import MapInfo from "./MapInfo";
+import { currentLocationFloorState } from "@/recoil/selectors";
+import MapInfo from "@/components/MapInfo/MapInfo";
+import useMenu from "@/hooks/useMenu";
 
-const MapInfoContainer = () => {
+const MapGridSilderContainer = () => {
   const touchXpos = useRef(0);
   const touchYpos = useRef(0);
   const floorInfo = useRecoilValue(currentLocationFloorState);
@@ -42,4 +42,4 @@ const MapInfoContainer = () => {
   );
 };
 
-export default MapInfoContainer;
+export default MapGridSilderContainer;

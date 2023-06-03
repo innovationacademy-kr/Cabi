@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import exitButton from "@/assets/images/exitButton.svg";
-import MapGrid from "@/components/MapInfo/MapGrid/MapGrid";
 import MapFloorSelect from "@/components/MapInfo/MapFloorSelect/MapFloorSelect";
+import MapGrid from "@/components/MapInfo/MapGrid/MapGrid";
 
 const MapInfo = ({
   touchStart,
@@ -19,23 +18,20 @@ const MapInfo = ({
   closeMap: React.MouseEventHandler;
 }) => {
   return (
-    <MapInfoContainerStyled
-      id="mapInfo"
-      onTouchStart={touchStart}
-      onTouchEnd={touchEnd}
-    >
+    <MapInfoStyled id="mapInfo" onTouchStart={touchStart} onTouchEnd={touchEnd}>
       <HeaderStyled>
         <H2Styled>지도</H2Styled>
         <img
           className="cabiButton"
           onClick={closeMap}
-          src={exitButton}
+          src="src/assets/images/exitButton.svg"
+          alt=""
           style={{ width: "24px", cursor: "pointer" }}
         />
       </HeaderStyled>
       <MapFloorSelect floor={floor} setFloor={setFloor} floorInfo={floorInfo} />
       <MapGrid floor={floor} />
-    </MapInfoContainerStyled>
+    </MapInfoStyled>
   );
 };
 
@@ -52,7 +48,7 @@ const HeaderStyled = styled.div`
   font-weight: bold;
 `;
 
-const MapInfoContainerStyled = styled.div`
+const MapInfoStyled = styled.div`
   position: fixed;
   top: 80px;
   right: 0;
