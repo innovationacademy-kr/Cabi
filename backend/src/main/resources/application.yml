@@ -29,10 +29,4 @@ spring:
       on-profile: local
 
 ---
-#로컬 환경
-spring:
-  config:
-    import: classpath:application-auth.yml
-  profiles:
-    default: local
 
