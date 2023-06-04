@@ -7,18 +7,26 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.TokenProvider;
+import org.ftclub.cabinet.auth.service.AuthService;
 import org.ftclub.cabinet.auth.service.OauthService;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.SiteUrlProperties;
+import org.ftclub.cabinet.dto.MasterLoginDto;
+import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 관리자 인증을 수행하는 컨트롤러 클래스입니다.
+ * <p>
+ * ToDo: 특정 API를 위한 properties를 이용하는 것이 아닌, admin, user 프로퍼티로 관리하기
  */
 @RestController
 @RequestMapping("/api/admin/auth")
@@ -27,6 +35,7 @@ public class AdminAuthController {
 
 	private final TokenProvider tokenProvider;
 	private final OauthService oauthService;
+	private final AuthService authService;
 	private final CookieManager cookieManager;
 	private final SiteUrlProperties siteUrlProperties;
 	private final GoogleApiProperties googleApiProperties;
@@ -41,6 +50,27 @@ public class AdminAuthController {
 	@GetMapping("/login")
 	public void login(HttpServletResponse response) throws IOException {
 		oauthService.sendToApi(response, googleApiProperties);
+	}
+
+	/**
+	 * 최고 관리자 로그인을 수행합니다.
+	 * <p>
+	 * ToDo: 정적 값으로 인증하는 것이 아닌, DB에 저장된 값으로 인증하기
+	 *
+	 * @param req            요청 시의 서블렛 {@link HttpServletRequest}
+	 * @param res            응답 시의 서블렛 {@link HttpServletResponse}
+	 * @param masterLoginDto 최고 관리자 로그인 정보
+	 */
+	@PostMapping("/login")
+	public void masterLogin(HttpServletRequest req,
+			HttpServletResponse res,
+			@RequestBody MasterLoginDto masterLoginDto) {
+		if (!authService.validateMasterLogin(masterLoginDto)) {
+			throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
+		}
+		String masterToken = tokenProvider.createMasterToken(DateUtil.getNow());
+		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), masterToken, "/",
+				req.getServerName());
 	}
 
 	/**

@@ -1,5 +1,11 @@
 package org.ftclub.cabinet.auth.domain;
 
+import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
+import static org.ftclub.cabinet.auth.domain.AuthLevel.MASTER_ONLY;
+import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_ONLY;
+import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_OR_ADMIN;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +42,7 @@ public class AuthAspect {
 	 * @param authGuard 인터셉트 된 해당 {@link AuthGuard} - Level을 알아낼 수 있습니다.
 	 */
 	@Before("@annotation(authGuard))")
-	public void AuthToken(AuthGuard authGuard) {
+	public void AuthToken(AuthGuard authGuard) throws JsonProcessingException {
 		/**
 		 * 현재 인터셉트 된 서블릿의 {@link HttpServletRequest}를 가져옵니다.
 		 */
@@ -58,14 +64,14 @@ public class AuthAspect {
 		switch (authGuard.level()) {
 			case ADMIN_ONLY:
 				if (!cookieManager.isCookieExists(request, adminTokenName)
-						|| !tokenValidator.isTokenValid(request)) {
+						|| !tokenValidator.isTokenValid(request, ADMIN_ONLY)) {
 					cookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 				}
 				break;
 			case USER_ONLY:
 				if (!cookieManager.isCookieExists(request, mainTokenName)
-						|| !tokenValidator.isTokenValid(request)) {
+						|| !tokenValidator.isTokenValid(request, USER_ONLY)) {
 					cookieManager.deleteCookie(response, mainTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
 				}
@@ -73,12 +79,18 @@ public class AuthAspect {
 			case USER_OR_ADMIN:
 				if ((!cookieManager.isCookieExists(request, mainTokenName)
 						&& !cookieManager.isCookieExists(request, adminTokenName))
-						|| !tokenValidator.isTokenValid(request)) {
+						|| !tokenValidator.isTokenValid(request, USER_OR_ADMIN)) {
 					cookieManager.deleteCookie(response, mainTokenName);
 					cookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
 				}
 				break;
+			case MASTER_ONLY:
+				if (!cookieManager.isCookieExists(request, adminTokenName)
+						|| !tokenValidator.isTokenValid(request, MASTER_ONLY)) {
+					cookieManager.deleteCookie(response, adminTokenName);
+					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
+				}
 		}
 	}
 }

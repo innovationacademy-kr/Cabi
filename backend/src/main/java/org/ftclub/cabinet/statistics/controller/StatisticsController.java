@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StatisticsController {
 
 	/**
-	 * To-Do
+	 * ToDo
 	 * /api/admin/cabinet/count/floor
 	 */
 }

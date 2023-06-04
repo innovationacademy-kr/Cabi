@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.auth.domain;
 
+import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,12 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Component;
-
-import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
 
 /**
  * API 제공자에 따라 JWT 토큰을 생성하는 클래스입니다.
@@ -25,15 +27,14 @@ import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
 public class TokenProvider {
 
 	private final JwtProperties jwtProperties;
-
 	private final GoogleApiProperties googleApiProperties;
-
 	private final FtApiProperties ftApiProperties;
+	private final MasterProperties masterProperties;
 
 	/**
 	 * 토큰을 발급하기 전에 특정 국가의 유저인지 (현재는 42서울) 검증합니다.
 	 *
-	 * @param email 42 email
+	 * @param email  42 email
 	 * @param nation 검증하고자 하는 국가 도메인
 	 * @return boolean
 	 */
@@ -55,8 +56,9 @@ public class TokenProvider {
 		}
 		if (provider.equals(ftApiProperties.getProviderName())) {
 			String email = profile.get("email").asText();
-			if (!isValidNationalEmail(email, "kr"))
+			if (!isValidNationalEmail(email, "kr")) {
 				throw new ServiceException(UNAUTHORIZED_USER);
+			}
 			claims.put("email", email);
 			claims.put("name", profile.get("login").asText());
 			claims.put("blackholedAt",
@@ -82,5 +84,20 @@ public class TokenProvider {
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
 				.setExpiration(DateUtil.addDaysToDate(now, jwtProperties.getExpiry()))
 				.compact();
+	}
+
+	public String createMasterToken(Date now) {
+		return Jwts.builder()
+				.setClaims(makeMasterClaims())
+				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
+				.setExpiration(DateUtil.addDaysToDate(now, jwtProperties.getExpiry()))
+				.compact();
+	}
+
+	private Map<String, Object> makeMasterClaims() {
+		Map<String, Object> claims = new HashMap<>();
+		claims.put("email", masterProperties.getEmail());
+		claims.put("role", AdminRole.MASTER);
+		return claims;
 	}
 }

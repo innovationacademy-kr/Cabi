@@ -47,14 +47,14 @@ public class UserAspect {
 		return joinPoint.proceed(args);
 	}
 
-	// To-Do: 수정 필요
+	// ToDo: 수정 필요
 	public UserSessionDto getUserSessionDtoByRequest(HttpServletRequest req)
 			throws JsonProcessingException {
 		String name = tokenValidator.getPayloadJson(
 						cookieManager.getCookie(req, jwtProperties.getMainTokenName())).get("name")
 				.asText();
 		User user = userExceptionHandlerService.getUserByName(name);
-		//To-Do: name을 기준으로 service에게 정보를 받고, 매핑한다.
+		//ToDo: name을 기준으로 service에게 정보를 받고, 매핑한다.
 		// name과 email은 우선 구현했으나 수정이 필요함.
 		return new UserSessionDto(user.getUserId(), name, user.getEmail(), 1, 1, new Date(), true);
 	}
