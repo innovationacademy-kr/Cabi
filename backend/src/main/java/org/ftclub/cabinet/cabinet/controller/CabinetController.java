@@ -109,15 +109,8 @@ public class CabinetController {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
 		cabinetFacadeService.updateCabinetMemo(cabinetId, body.get("memo"));
+		/**
+		 * To-Do: 본인이 대여하고 있는 사물함의 memo, title 업데이트는 lent에서 수행합니다. -> 현재 라우트 삭제
+		 */
 	}
-
-	/**
-	 * To-Do
-	 * /api/lent/update_cabinet_memo
-	 * /api/lent/update_cabinet_title
-	 * /api/admin/search/cabinet/broken
-	 * /api/admin/search/cabinet/visibleNum/:visibleNum
-	 * /api/admin/search/cabinet/lentType/:lentType
-	 *
-	 */
 }

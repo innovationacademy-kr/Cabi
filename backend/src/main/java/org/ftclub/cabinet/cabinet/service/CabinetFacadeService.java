@@ -5,7 +5,10 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.springframework.data.domain.PageRequest;
 
 public interface CabinetFacadeService {
 
@@ -107,4 +110,40 @@ public interface CabinetFacadeService {
 	void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType);
 
 
+	/**
+	 * 대여 타입에 따른 사물함 페이지네이션을 가져옵니다.
+	 *
+	 * @param lentType 대여 타입
+	 * @param pageable 페이지네이션(page, size)
+	 * @return 사물함 페이지네이션
+	 */
+	CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType, PageRequest pageable);
+
+	/**
+	 * 사물함 상태에 따른 사물함 페이지네이션을 가져옵니다.
+	 *
+	 * @param status   사물함 상태
+	 * @param pageable 페이지네이션(page, size)
+	 * @return 사물함 페이지네이션
+	 */
+	CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, PageRequest pageable);
+
+	/**
+	 * 사물함 표시 번호에 따른 사물함 페이지네이션을 가져옵니다.
+	 *
+	 * @param visibleNum 사물함 표시 번호
+	 * @param pageable   페이지네이션(page, size)
+	 * @return 사물함 페이지네이션
+	 */
+	CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum, PageRequest pageable);
+
+	/**
+	 * 사물함 Id에 따른 대여 기록 페이지네이션을 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 Id
+	 * @param pageable  페이지네이션(page, size)
+	 * @return 대여 기록 페이지네이션
+	 */
+	LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId,
+			PageRequest pageable);
 }
