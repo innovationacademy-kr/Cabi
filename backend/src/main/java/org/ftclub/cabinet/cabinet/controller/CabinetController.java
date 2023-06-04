@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthGuard.Level;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
@@ -34,7 +34,7 @@ public class CabinetController {
 	 * @return 모든 건물과 층에 대한 정보를 반환합니다.
 	 */
 	@GetMapping("/buildings/floors")
-	@AuthGuard(level = Level.USER_OR_ADMIN)
+	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
 		return cabinetFacadeService.getBuildingFloorsResponse();
 	}
@@ -48,7 +48,7 @@ public class CabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@GetMapping("/buildings/{building}/floors/{floor}")
-	@AuthGuard(level = Level.USER_OR_ADMIN)
+	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
@@ -66,7 +66,7 @@ public class CabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@GetMapping("/{cabinetId}")
-	@AuthGuard(level = Level.USER_OR_ADMIN)
+	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public CabinetDto getCabinetInfo(
 			@PathVariable("cabinetId") Long cabinetId) {
 		if (cabinetId == null) {
@@ -83,7 +83,7 @@ public class CabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping(value = "/{cabinetId}/title")
-	@AuthGuard(level = Level.USER_ONLY)
+	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
@@ -101,7 +101,7 @@ public class CabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/memo")
-	@AuthGuard(level = Level.USER_ONLY)
+	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void updateCabinetMemo(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
@@ -109,15 +109,8 @@ public class CabinetController {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
 		cabinetFacadeService.updateCabinetMemo(cabinetId, body.get("memo"));
+		/**
+		 * To-Do: 본인이 대여하고 있는 사물함의 memo, title 업데이트는 lent에서 수행합니다. -> 현재 라우트 삭제
+		 */
 	}
-
-	/**
-	 * To-Do
-	 * /api/lent/update_cabinet_memo
-	 * /api/lent/update_cabinet_title
-	 * /api/admin/search/cabinet/broken
-	 * /api/admin/search/cabinet/visibleNum/:visibleNum
-	 * /api/admin/search/cabinet/lentType/:lentType
-	 *
-	 */
 }

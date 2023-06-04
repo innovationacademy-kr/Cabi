@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminLentController {
 
 	/**
-	 * To-Do
+	 * ToDo
 	 * /api/admin/search/statistics
 	 * /api/admin/return/bundle/cabinet
 	 * /api/admin/return/user/:userId
