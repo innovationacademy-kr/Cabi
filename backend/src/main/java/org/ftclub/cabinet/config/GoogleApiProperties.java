@@ -8,33 +8,33 @@ import org.springframework.stereotype.Component;
 @Getter
 public class GoogleApiProperties implements ApiProperties {
 
-	@Value("${oauth2.client.registration.google.name}")
+	@Value("${spring.oauth2.client.registration.google.name}")
 	private String providerName;
 
-	@Value("${oauth2.client.registration.google.client-id}")
+	@Value("${spring.oauth2.client.registration.google.client-id}")
 	private String clientId;
 
-	@Value("${oauth2.client.registration.google.client-secret}")
+	@Value("${spring.oauth2.client.registration.google.client-secret}")
 	private String clientSecret;
 
-	@Value("${spring.cabinet.urls.admin-login-callback}")
+	@Value("${spring.urls.admin-login-callback}")
 	private String redirectUri;
 
-	@Value("${oauth2.client.registration.google.grant-type}")
+	@Value("${spring.oauth2.client.registration.google.grant-type}")
 	private String grantType;
 
-	@Value("${oauth2.client.registration.google.access-token-name}")
+	@Value("${spring.oauth2.client.registration.google.access-token-name}")
 	private String accessTokenName;
 
-	@Value("${oauth2.client.registration.provider.google.token-uri}")
+	@Value("${spring.oauth2.client.registration.provider.google.token-uri}")
 	private String tokenUri;
 
-	@Value("${oauth2.client.registration.provider.google.authorization-uri}")
+	@Value("${spring.oauth2.client.registration.provider.google.authorization-uri}")
 	private String authUri;
 
-	@Value("${oauth2.client.registration.provider.google.user-info-uri}")
+	@Value("${spring.oauth2.client.registration.provider.google.user-info-uri}")
 	private String userInfoUri;
 
-	@Value("${oauth2.client.registration.google.scope}")
+	@Value("${spring.oauth2.client.registration.google.scope}")
 	private String scope;
 }
