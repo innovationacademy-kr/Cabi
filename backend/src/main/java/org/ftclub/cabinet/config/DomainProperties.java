@@ -22,5 +22,11 @@ public class DomainProperties {
 
 	@Value("${spring.server.fe-host}")
 	private String feHost;
+
+	@Value("${spring.oauth2.domain-name.admin-email}")
+	private String adminEmailDomain;
+
+	@Value("${spring.oauth2.domain-name.user-email}")
+	private String userEmailDomain;
 }
 

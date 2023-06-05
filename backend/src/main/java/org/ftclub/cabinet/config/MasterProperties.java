@@ -8,16 +8,16 @@ import org.springframework.stereotype.Component;
 @Getter
 public class MasterProperties {
 
-	@Value("${spring.cabinet.master.id}")
+	@Value("${spring.oauth2.master.id}")
 	private String id;
 
-	@Value("${spring.cabinet.master.password}")
+	@Value("${spring.oauth2.master.password}")
 	private String password;
 
-	@Value("${spring.cabinet.master.domain}")
+	@Value("${spring.oauth2.master.domain}")
 	private String domain;
 
-	@Value("${spring.cabinet.master.email}")
+	@Value("${spring.oauth2.master.email}")
 	private String email;
 
 }

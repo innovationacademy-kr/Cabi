@@ -17,7 +17,7 @@ import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.config.DomainNameProperties;
+import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.user.domain.AdminRole;
@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 public class TokenValidator {
 
 	private final MasterProperties masterProperties;
-	private final DomainNameProperties domainNameProperties;
+	private final DomainProperties domainProperties;
 	private final JwtProperties jwtProperties;
 	private final UserService userService;
 
@@ -146,6 +146,6 @@ public class TokenValidator {
 	 */
 	private boolean isAdminEmail(String email) {
 		return email.endsWith(masterProperties.getDomain())
-				|| email.endsWith(domainNameProperties.getAdminEmailDomain());
+				|| email.endsWith(domainProperties.getAdminEmailDomain());
 	}
 }
