@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,8 @@ public class CabinetControllerTest {
 
 	@BeforeEach
 	void setToken() {
-		userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey());
+		userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey(),
+				DateUtil.getNow());
 		cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 	}
 

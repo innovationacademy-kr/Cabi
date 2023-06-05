@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.config.MasterProperties;
+import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.json.JSONArray;
@@ -27,21 +29,34 @@ public class TokenValidatorTest {
 	@Autowired
 	JwtProperties jwtProperties;
 
+	@Autowired
+	MasterProperties masterProperties;
+
+	@Autowired // delete
+	UserService userService;
+
 	ObjectMapper objectMapper;
 	JSONObject googleProfile;
-	JSONObject ftProfile;
+	JSONObject ftKoreanProfile;
+	JSONObject ftForeignerProfile;
 
 	@BeforeEach
 	void setup() {
 		objectMapper = new ObjectMapper();
 		googleProfile = new JSONObject()
 				.put("email", "email");
-		ftProfile = new JSONObject()
+		ftKoreanProfile = new JSONObject()
 				.put("login", "testUserName")
 				.put("cursus_users", new JSONArray(new JSONObject[]{
 						new JSONObject().put("zero_index", new Date()),
 						new JSONObject().put("blackholed_at", new Date())}))
-				.put("email", "testUserEmail");
+				.put("email", "testUser@student.42seoul.kr");
+		ftForeignerProfile = new JSONObject()
+				.put("login", "testUserName")
+				.put("cursus_users", new JSONArray(new JSONObject[]{
+						new JSONObject().put("zero_index", new Date()),
+						new JSONObject().put("blackholed_at", new Date())}))
+				.put("email", "testUser@student.42ecole.fr");
 	}
 
 	@Test
@@ -49,9 +64,9 @@ public class TokenValidatorTest {
 		MockHttpServletRequest validTokenRequest = new MockHttpServletRequest();
 		MockHttpServletRequest invalidTokenRequest = new MockHttpServletRequest();
 		MockHttpServletRequest emptyTokenRequest = new MockHttpServletRequest();
-		
+
 		String validToken = tokenProvider.createToken("ft",
-				objectMapper.readTree(ftProfile.toString()), DateUtil.getNow());
+				objectMapper.readTree(ftKoreanProfile.toString()), DateUtil.getNow());
 		validTokenRequest.addHeader("Authorization", "Bearer " + validToken);
 		String invalidToken = tokenProvider.createToken("google",
 				objectMapper.readTree(googleProfile.toString()),
@@ -60,15 +75,15 @@ public class TokenValidatorTest {
 		invalidTokenRequest.addHeader("Authorization", "Bearer " + invalidToken);
 		invalidTokenRequest.addHeader("Authorization", "Bearer " + invalidToken);
 		Assert.assertEquals(true,
-				tokenValidator.isTokenValid(validTokenRequest));
+				tokenValidator.isTokenValid(validTokenRequest, AuthLevel.USER_ONLY));
 		Assert.assertEquals(false,
-				tokenValidator.isTokenValid(emptyTokenRequest));
+				tokenValidator.isTokenValid(emptyTokenRequest, AuthLevel.ADMIN_ONLY));
 	}
 
 	@Test
 	void 토큰_유효성_검사() throws JsonProcessingException {
 		String validToken = tokenProvider.createToken("ft",
-				objectMapper.readTree(ftProfile.toString()),
+				objectMapper.readTree(ftKoreanProfile.toString()),
 				new Date());
 		String invalidToken = tokenProvider.createToken("google",
 				objectMapper.readTree(googleProfile.toString()),
@@ -80,8 +95,38 @@ public class TokenValidatorTest {
 
 	@Test
 	void 토큰_페이로드_가져오기() throws JsonProcessingException {
-		String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey());
+		String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey(),
+				DateUtil.getNow());
 		Assert.assertEquals("testUserName",
 				tokenValidator.getPayloadJson(userToken).get("name").asText());
 	}
+
+	@Test
+	void 어드민_권한_유효성_검사() throws JsonProcessingException {
+		String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey(),
+				DateUtil.getNow());
+		String adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
+				DateUtil.getNow());
+		String masterToken = TestControllerUtils.getTestMasterToken(jwtProperties.getSigningKey(),
+				DateUtil.getNow());
+
+		Assert.assertEquals(true,
+				tokenValidator.isAdminRoleValid(userToken, AuthLevel.USER_OR_ADMIN));
+		Assert.assertEquals(true,
+				tokenValidator.isAdminRoleValid(adminToken, AuthLevel.USER_OR_ADMIN));
+		Assert.assertEquals(true,
+				tokenValidator.isAdminRoleValid(adminToken, AuthLevel.ADMIN_ONLY));
+		Assert.assertEquals(true,
+				tokenValidator.isAdminRoleValid(masterToken, AuthLevel.MASTER_ONLY));
+
+		Assert.assertEquals(false,
+				tokenValidator.isAdminRoleValid(userToken, AuthLevel.USER_ONLY));
+		Assert.assertEquals(false,
+				tokenValidator.isAdminRoleValid(userToken, AuthLevel.ADMIN_ONLY));
+		Assert.assertEquals(false,
+				tokenValidator.isAdminRoleValid(userToken, AuthLevel.MASTER_ONLY));
+		Assert.assertEquals(false,
+				tokenValidator.isAdminRoleValid(adminToken, AuthLevel.MASTER_ONLY));
+	}
+	
 }

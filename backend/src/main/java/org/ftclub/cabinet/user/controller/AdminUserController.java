@@ -2,7 +2,7 @@ package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthGuard.Level;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -38,13 +38,13 @@ public class AdminUserController {
 	 * @return {@link UserProfilePaginationDto} 해당하는 유저들의 프로필
 	 */
 	@GetMapping("/search/users/{name}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public ResponseEntity<UserProfilePaginationDto> getUserProfileListByPartialName(
 			@PathVariable("name") String name,
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
 		UserProfilePaginationDto userProfilePaginationDto = userFacadeService.getUserProfileListByPartialName(
 				name, page, length);
-		if (userProfilePaginationDto.getTotalLength() == 0) {
+		if (userProfilePaginationDto.getTotalPage() == 0) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(userProfilePaginationDto);
@@ -59,13 +59,13 @@ public class AdminUserController {
 	 * @return {@link UserCabinetPaginationDto} 해당하는 유저들의 캐비넷 정보
 	 */
 	@GetMapping("/search/users")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public ResponseEntity<UserCabinetPaginationDto> findUserCabinetListByPartialName(
 			@RequestParam("name") String name,
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
 		UserCabinetPaginationDto userCabinetPaginationDto = userFacadeService
 				.findUserCabinetListByPartialName(name, page, length);
-		if (userCabinetPaginationDto.getTotalLength() == 0) {
+		if (userCabinetPaginationDto.getTotalPage() == 0) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(userCabinetPaginationDto);
@@ -79,13 +79,13 @@ public class AdminUserController {
 	 * @return {@link BlockedUserPaginationDto} 차단된 유저 리스트 혹은 204 No Content
 	 */
 	@GetMapping("/search/users/banned")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public ResponseEntity<BlockedUserPaginationDto> getBannedUsersList(
 			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length) {
 		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService
 				.getAllBanUsers(page, length, DateUtil.getNow());
-		if (blockedUserPaginationDto.getTotalLength() == 0) {
+		if (blockedUserPaginationDto.getTotalPage() == 0) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(blockedUserPaginationDto);
@@ -97,7 +97,7 @@ public class AdminUserController {
 	 * @param userId 유저 고유 아이디
 	 */
 	@DeleteMapping("/log/users/{userId}/ban-history")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
 		userFacadeService.deleteRecentBanHistory(userId, DateUtil.getNow());
 	}
@@ -111,7 +111,7 @@ public class AdminUserController {
 	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
 	 */
 	@GetMapping("/log/users/{userId}/lent-histories")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public LentHistoryPaginationDto getLentHistoriesByUserId(@PathVariable("userId") Long userId,
 			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length) {
@@ -120,7 +120,7 @@ public class AdminUserController {
 
 	// 동아리 유저 생성하는 메서드 필요
 	/**
-	 * TO-DO:
+	 * ToDo:
 	 * /api/admin/develop/promote
 	 * /api/admin/search/user/overdue
 	 */

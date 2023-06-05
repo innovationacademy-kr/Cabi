@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,10 @@ public class UserSessionControllerTest {
 	public void testGetMyProfile_대여_사물함_없는_경우() throws Exception {
 		// penaltyuser2 대여 중인 사물함 x 벤 기록 x
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(4L, "penaltyuser2",
-				-1L);
+				-1L, null);
 
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				"penaltyuser2");
+				"penaltyuser2", DateUtil.getNow());
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
@@ -42,24 +43,26 @@ public class UserSessionControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.userId").value(myProfileResponseDto.getUserId()))
 				.andExpect(jsonPath("$.name").value(myProfileResponseDto.getName()))
-				.andExpect(jsonPath("$.cabinetId").value(myProfileResponseDto.getCabinetId()));
+				.andExpect(jsonPath("$.cabinetId").value(myProfileResponseDto.getCabinetId()))
+				.andExpect(jsonPath("$.unbannedAt").value(myProfileResponseDto.getUnbannedAt()));
 	}
 
 	@Test
 	public void testGetMyProfile_대여_사물함_있는_경우() throws Exception {
 		// lentuser1 대여 중인 사물함 3번
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(5L, "lentuser1",
-				3L);
+				3L, null);
 
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				"lentuser1");
+				"lentuser1", DateUtil.getNow());
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
 						"/api/users/me"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.userId").value(myProfileResponseDto.getUserId()))
 				.andExpect(jsonPath("$.name").value(myProfileResponseDto.getName()))
-				.andExpect(jsonPath("$.cabinetId").value(myProfileResponseDto.getCabinetId()));
+				.andExpect(jsonPath("$.cabinetId").value(myProfileResponseDto.getCabinetId()))
+				.andExpect(jsonPath("$.unbannedAt").value(myProfileResponseDto.getUnbannedAt()));
 	}
 
 	// 완전히 구현되어 있지 않은 메서드

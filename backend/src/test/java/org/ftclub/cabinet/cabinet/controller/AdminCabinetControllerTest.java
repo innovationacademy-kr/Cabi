@@ -13,6 +13,7 @@ import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,8 @@ public class AdminCabinetControllerTest {
 
 	@BeforeEach
 	void setToken() {
-		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey());
+		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
+				DateUtil.getNow());
 		cookie = TestControllerUtils.getTokenCookie("관리자", adminToken);
 	}
 

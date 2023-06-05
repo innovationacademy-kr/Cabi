@@ -2,7 +2,7 @@ package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthGuard.Level;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
@@ -33,7 +33,7 @@ public class UserController {
 	 * @return {@link MyProfileResponseDto} 현재 로그인한 유저의 프로필
 	 */
 	@GetMapping("/me")
-	@AuthGuard(level = Level.USER_ONLY)
+	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
 		return userFacadeService.getMyProfile(userSessionDto);
 	}
@@ -45,7 +45,7 @@ public class UserController {
 	 * @return {@link MyCabinetInfoResponseDto} 현재 로그인한 유저의 대여 정보와 대여한 사물함 정보
 	 */
 	@GetMapping("/me/lent")
-	@AuthGuard(level = Level.USER_ONLY)
+	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyCabinetInfoResponseDto getMyLentAndCabinetInfo(
 			@UserSession UserSessionDto userSessionDto) {
 		return userFacadeService.getMyLentAndCabinetInfo(
@@ -61,7 +61,7 @@ public class UserController {
 	 * @return {@link LentHistoryPaginationDto} 현재 로그인한 유저의 대여 기록
 	 */
 	@GetMapping("/me/lent/histories")
-	@AuthGuard(level = Level.USER_ONLY)
+	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public LentHistoryPaginationDto getMyLentHistories(@UserSession UserSessionDto userSessionDto,
 			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
 		return lentFacadeService.getAllUserLentHistories(

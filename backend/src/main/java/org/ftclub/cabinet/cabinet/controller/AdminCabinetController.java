@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.auth.domain.AuthGuard.Level;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
@@ -41,7 +41,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@GetMapping("/{cabinetId}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CabinetInfoResponseDto getCabinetInfo(
 			@PathVariable("cabinetId") Long cabinetId) {
 		if (cabinetId == null) {
@@ -58,7 +58,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/status/{status}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetStatus(
 			@PathVariable("cabinetId") Long cabinetId,
 			@PathVariable("status") CabinetStatus status) {
@@ -76,7 +76,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/lent-types/{lentType}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetLentType(
 			@PathVariable("cabinetId") Long cabinetId,
 			@PathVariable("lentType") LentType lentType) {
@@ -94,7 +94,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/status-note")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetStatusNote(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
@@ -113,7 +113,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/title")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
@@ -131,7 +131,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/grid")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetGrid(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody Map<String, Integer> body) {
@@ -151,7 +151,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/visible-num")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetVisibleNum(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, Integer> body) {
@@ -170,7 +170,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/status/{status}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetBundleStatus(
 			@RequestBody HashMap<String, List<Long>> body,
 			@PathVariable("status") CabinetStatus status) {
@@ -188,7 +188,7 @@ public class AdminCabinetController {
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/lent-types/{lentType}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetBundleLentType(
 			@RequestBody HashMap<String, List<Long>> body,
 			@PathVariable("lentType") LentType lentType) {
@@ -207,7 +207,7 @@ public class AdminCabinetController {
 	 * @return 사물함 정보 페이지네이션
 	 */
 	@GetMapping("lent-types/{lentType}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByLentType(
 			@PathVariable("lentType") LentType lentType,
 			@RequestParam("page") Integer page,
@@ -228,7 +228,7 @@ public class AdminCabinetController {
 	 * @return 사물함 정보 페이지네이션
 	 */
 	@GetMapping("/status/{status}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByStatus(
 			@PathVariable("status") CabinetStatus status,
 			@RequestParam("page") Integer page,
@@ -249,7 +249,7 @@ public class AdminCabinetController {
 	 * @return 사물함 정보 페이지네이션
 	 */
 	@GetMapping("/visibleNum/{visibleNum}")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByVisibleNum(
 			@PathVariable("visibleNum") Integer visibleNum,
 			@RequestParam("page") Integer page,
@@ -270,7 +270,7 @@ public class AdminCabinetController {
 	 * @return 대여 기록 페이지네이션
 	 */
 	@GetMapping("/{cabinetId}/lent-histories")
-	@AuthGuard(level = Level.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public LentHistoryPaginationDto getCabinetLentHistories(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestParam("page") Integer page,
