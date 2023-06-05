@@ -5,14 +5,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import javax.servlet.http.HttpServletResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -20,6 +28,8 @@ public class AdminAuthControllerTest {
 
 	@Autowired
 	MockMvc mvc;
+	@Autowired
+	JwtProperties jwtProperties;
 
 	@Autowired
 	MasterProperties masterProperties;
@@ -67,5 +77,19 @@ public class AdminAuthControllerTest {
 
 		mvc.perform(get("/api/admin/auth/login/callback?code={code}", inValidCode))
 				.andExpect(status().isBadGateway());
+	}
+
+	@Test
+	void 어드민_로그아웃_요청() throws Exception {
+		//given
+		String tokenName = jwtProperties.getAdminTokenName();
+
+		//when
+		MvcResult result = mvc.perform(get("/api/admin/auth/logout")).andReturn();
+
+		//then
+		assertEquals(result.getResponse().getStatus(), HttpServletResponse.SC_OK);
+		assertEquals(result.getResponse().getCookie(tokenName).getValue(), null);
+		assertEquals(result.getResponse().getCookie(tokenName).getMaxAge(), 0);
 	}
 }

@@ -1,9 +1,11 @@
 package org.ftclub.cabinet.auth.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.TokenProvider;
@@ -40,17 +42,16 @@ public class AdminAuthController {
 	private final DomainProperties DomainProperties;
 	private final GoogleApiProperties googleApiProperties;
 	private final JwtProperties jwtProperties;
-
-	/**
-	 * 구글 로그인 페이지로 리다이렉트합니다.
-	 *
-	 * @param response 요청 시의 서블렛 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
-	 */
-	@GetMapping("/login")
-	public void login(HttpServletResponse response) throws IOException {
-		oauthService.sendToApi(response, googleApiProperties);
-	}
+    /**
+     * 구글 로그인 페이지로 리다이렉트합니다.
+     *
+     * @param response 요청 시의 서블렛 {@link HttpServletResponse}
+     * @throws IOException 입출력 예외
+     */
+    @GetMapping("/login")
+    public void login(HttpServletResponse response) throws IOException {
+        oauthService.sendToApi(response, googleApiProperties);
+    }
 
 	/**
 	 * 최고 관리자 로그인을 수행합니다.
@@ -103,5 +104,14 @@ public class AdminAuthController {
 		res.sendRedirect(DomainProperties.getFeHost() + "/main");
 	}
 
-	//todo  - logout
+    /**
+     * 로그아웃시, HTTP Response 의 set-cookie Header 를 지워줍니다.
+     * cookie에 담긴 JWT 토큰을 제거합니다.
+     *
+     * @param res 요청 시의 서블릿 {@link HttpServletResponse}
+     */
+    @GetMapping("/logout")
+    public void logout(HttpServletResponse res) {
+        cookieManager.deleteCookie(res, jwtProperties.getAdminTokenName());
+    }
 }
