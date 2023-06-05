@@ -42,6 +42,7 @@ public class AuthController {
         oauthService.sendToApi(response, ftApiProperties);
     }
 
+    /*
 	 * 42 API 로그인 성공 시에 콜백을 처리합니다.
 	 * <br>
 	 * 42 API로부터 받은 인증 코드를 이용하여 42 API에게 인증 토큰을 요청하고,
