@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Transactional
-public class UserSessionFacadeServiceTest {
+public class UserFacadeServiceTest {
 
 	private final Date testDate = new Date(123, 0, 15, 9, 0);
 	@Autowired

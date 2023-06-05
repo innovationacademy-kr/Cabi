@@ -22,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Transactional
-public class UserSessionServiceTest {
+public class UserServiceTest {
 
 	private final Date testDate = new Date(123, 0, 15, 9, 0);
 	@Autowired
