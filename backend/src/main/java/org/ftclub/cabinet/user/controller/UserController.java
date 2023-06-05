@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
@@ -42,11 +42,11 @@ public class UserController {
 	 * 현재 로그인한 유저의 대여 정보와 대여한 사물함 정보를 반환합니다.
 	 *
 	 * @param userSessionDto 현재 로그인한 유저의 세션 정보
-	 * @return {@link MyCabinetInfoResponseDto} 현재 로그인한 유저의 대여 정보와 대여한 사물함 정보
+	 * @return {@link MyCabinetResponseDto} 현재 로그인한 유저의 대여 정보와 대여한 사물함 정보
 	 */
 	@GetMapping("/me/lent")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public MyCabinetInfoResponseDto getMyLentAndCabinetInfo(
+	public MyCabinetResponseDto getMyLentAndCabinetInfo(
 			@UserSession UserSessionDto userSessionDto) {
 		return userFacadeService.getMyLentAndCabinetInfo(
 				userSessionDto.getUserId());
