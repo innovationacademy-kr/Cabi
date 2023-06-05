@@ -1,22 +1,22 @@
-import {
-  axiosSearchByCabinetNum,
-  axiosSearchDetailByIntraId,
-} from "@/api/axios/axios.custom";
-import SearchItemByNum from "@/components/Search/SearchItemByNum";
-import SearchItemByIntraId from "@/components/Search/SearchItemByIntraId";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { useEffect, useRef, useState } from "react";
-import { useRouteError, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import NoSearch from "@/components/Search/NoSearch";
-import SearchDefault from "@/components/Search/SearchDefault";
-import { useResetRecoilState, useRecoilValue } from "recoil";
 import {
   currentCabinetIdState,
   currentIntraIdState,
   numberOfAdminWorkState,
 } from "@/recoil/atoms";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import NoSearch from "@/components/Search/NoSearch";
+import SearchDefault from "@/components/Search/SearchDefault";
+import SearchItemByIntraId from "@/components/Search/SearchItemByIntraId";
+import SearchItemByNum from "@/components/Search/SearchItemByNum";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import {
+  axiosSearchByCabinetNum,
+  axiosSearchDetailByIntraId,
+} from "@/api/axios/axios.custom";
 
 interface ISearchDetail {
   intra_id: string;
@@ -27,7 +27,7 @@ interface ISearchDetail {
 }
 
 const SearchPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [searchListByNum, setSearchListByNum] = useState<CabinetInfo[]>([]);
   const [searchListByIntraId, setSearchListByIntraId] = useState<
     ISearchDetail[]

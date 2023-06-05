@@ -1,3 +1,12 @@
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import styled, { css } from "styled-components";
+import {
+  currentIntraIdState,
+  selectedTypeOnSearchState,
+  targetCabinetInfoState,
+  targetUserInfoState,
+} from "@/recoil/atoms";
+import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
@@ -6,17 +15,8 @@ import {
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import styled, { css } from "styled-components";
-import ChangeToHTML from "../TopNav/SearchBar/SearchListItem/ChangeToHTML";
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
-import {
-  currentIntraIdState,
-  targetCabinetInfoState,
-  selectedTypeOnSearchState,
-  targetUserInfoState,
-} from "@/recoil/atoms";
-import useMenu from "@/hooks/useMenu";
 import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
+import useMenu from "@/hooks/useMenu";
 
 interface ISearchDetail {
   intra_id: string;
@@ -63,7 +63,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     });
     setSelectedTypeOnSearch("USER");
     setCurrentIntraId(intra_id);
-    async function getData(cabinetId: number) {
+    async function getCabinetInfoByCabinetId(cabinetId: number) {
       try {
         const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
         setTargetCabinetInfo(data);
@@ -72,7 +72,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       }
     }
     if (cabinetInfo) {
-      getData(cabinetInfo.cabinet_id);
+      getCabinetInfoByCabinetId(cabinetInfo.cabinet_id);
       openCabinet();
     } else {
       // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
