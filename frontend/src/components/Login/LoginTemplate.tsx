@@ -1,13 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import "@/assets/css/loginPage.css";
 
 const LoginTemplate = (props: {
   url: string;
   pageTitle: string;
   pageSubTitle: string;
-  imgSrc?: string;
+  imgSrc: string;
 }) => {
   const { url, pageTitle, pageSubTitle, imgSrc } = props;
   const [isClicked, setIsClicked] = useState(false);
@@ -24,7 +23,7 @@ const LoginTemplate = (props: {
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled isAdmin={!!imgSrc}>
-          <img src={imgSrc ?? "/src/assets/images/loginImg.svg"} alt="" />
+          <img src={imgSrc} alt="" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>

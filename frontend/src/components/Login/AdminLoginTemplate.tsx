@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
-import "@/assets/css/loginPage.css";
 import { additionalModalType } from "@/assets/data/maps";
 import { axiosAdminAuthLogin } from "@/api/axios/axios.custom";
 
@@ -12,7 +11,7 @@ const AdminLoginTemplate = (props: {
   url: string;
   pageTitle: string;
   pageSubTitle: string;
-  imgSrc?: string;
+  imgSrc: string;
 }) => {
   const navigate = useNavigate();
   const { url, pageTitle, pageSubTitle, imgSrc } = props;
@@ -67,7 +66,7 @@ const AdminLoginTemplate = (props: {
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled isAdmin={!!imgSrc}>
-          <img src={imgSrc ?? "/src/assets/images/loginImg.svg"} alt="" />
+          <img src={imgSrc} alt="" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
