@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
@@ -61,9 +61,9 @@ public interface UserFacadeService {
 	 * 사용자의 아이디를 입력받아 본인의 대여 정보와 캐비넷 정보를 반환합니다.
 	 *
 	 * @param userId 유저 고유 아이디
-	 * @return {@link MyCabinetInfoResponseDto} 본인의 대여 정보와 캐비넷 정보
+	 * @return {@link MyCabinetResponseDto} 본인의 대여 정보와 캐비넷 정보
 	 */
-	MyCabinetInfoResponseDto getMyLentAndCabinetInfo(Long userId);
+	MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId);
 
 	/**
 	 * 모든 유저의 정보를 가져옵니다.

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserDto;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
@@ -99,9 +99,9 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
 	@Override
-	public MyCabinetInfoResponseDto getMyLentAndCabinetInfo(Long userId) {
+	public MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId) {
 		User user = userRepository.getUser(userId);
-		return new MyCabinetInfoResponseDto(null, null, null, null, null, null, null, null, null);
+		return new MyCabinetResponseDto(null, null, null, null, null, null, null, null, null);
 	}
 
 	@Override
