@@ -28,7 +28,7 @@ const MapInfo = ({
         <img
           className="cabiButton"
           onClick={closeMap}
-          src="src/assets/images/exitButton.svg"
+          src="/src/assets/images/exitButton.svg"
           alt=""
           style={{ width: "24px", cursor: "pointer" }}
         />
