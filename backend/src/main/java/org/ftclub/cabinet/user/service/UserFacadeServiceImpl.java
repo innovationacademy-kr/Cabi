@@ -177,13 +177,16 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer length) {
 		List<OverdueUserCabinetDto> overdueList = new ArrayList<>();
 		PageRequest pageable = PageRequest.of(page, length);
-		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().map(
+		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
 					String userName = userRepository.findNameById(lh.getUserId());
-					Location location = cabinetExceptionHandlerService.getLocation(lh.getCabinetId());
-					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(), DateUtil.getNow());
-					return overdueList.add(
-							cabinetMapper.toOverdueUserCabinetDto(lh, userName, location, overdueDays));
+					Location location = cabinetExceptionHandlerService.getLocation(
+							lh.getCabinetId());
+					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),
+							DateUtil.getNow());
+					overdueList.add(
+							cabinetMapper.toOverdueUserCabinetDto(lh, userName, location,
+									overdueDays));
 				}
 		);
 		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, overdueList.size());
