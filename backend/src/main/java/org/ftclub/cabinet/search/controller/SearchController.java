@@ -3,10 +3,9 @@ package org.ftclub.cabinet.search.controller;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.user.service.UserFacadeService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchController {
 
     private final CabinetFacadeService cabinetFacadeService;
+    private final UserFacadeService userFacadeService;
 
     @GetMapping("/cabinets")
     public CabinetInfoPaginationDto getCabinetsInfo(
@@ -22,5 +22,13 @@ public class SearchController {
         return cabinetFacadeService.getCabinetsInfo(visibleNum);
     }
 
+    @GetMapping("/users-name")
+    public UserProfilePaginationDto getUsersProfile(
+            @PathVariable("name") String name,
+            @RequestParam("page") Integer page,
+            @RequestParam("length") Integer length
+    ) {
+        return userFacadeService.getUserProfileListByPartialName(name, page,length);
+    }
 
 }

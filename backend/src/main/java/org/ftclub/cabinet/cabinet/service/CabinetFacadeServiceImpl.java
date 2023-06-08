@@ -253,9 +253,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		return new CabinetInfoPaginationDto(getCabinetInfoBundle(collect), allCabinetsByVisibleNum.getTotalPages());
 	}
 
-
-	//
-
 	/**
 	 * LentHistory를 이용해 LentHistoryDto로 매핑하여 반환합니다.
 	 * ToDo : new -> mapper 쓰기 + query service 분리
