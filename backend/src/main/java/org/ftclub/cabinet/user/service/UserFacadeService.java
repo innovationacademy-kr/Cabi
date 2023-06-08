@@ -6,6 +6,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -129,6 +130,13 @@ public interface UserFacadeService {
 	void updateAdminUserRole(Long adminUserId, AdminRole role);
 
 	/**
+	 * 유저를 어드민으로 승격시킵니다.
+	 *
+	 * @param email 유저 이메일
+	 */
+	void promoteUserToAdmin(String email);
+
+	/**
 	 * 유저의 블랙홀 시간을 변경합니다.
 	 *
 	 * @param userId          유저 고유 아이디
@@ -154,4 +162,12 @@ public interface UserFacadeService {
 	 * @param today  현재 날짜
 	 */
 	void deleteRecentBanHistory(Long userId, Date today);
+
+	/**
+	 * 연체 중인 유저 리스트를 반환합니다.
+	 *
+	 * @param page      페이지 번호
+	 * @param length    페이지 당 길이
+	 */
+	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer length);
 }

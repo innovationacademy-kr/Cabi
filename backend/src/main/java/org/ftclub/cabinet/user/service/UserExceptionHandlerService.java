@@ -71,6 +71,17 @@ public class UserExceptionHandlerService {
 	}
 
 	/**
+	 * 이메일을 통해 어드민 유저가 존재하는지 확인하고 유저를 반환합니다. 존재하지 않으면 예외를 발생시킵니다.
+	 *
+	 * @param adminUserEmail 찾을 어드민 유저의 이메일 주소
+	 * @return {@link User}
+	 */
+	public AdminUser getAdminUserByEmail(String adminUserEmail) {
+		return adminUserRepository.findByEmail(adminUserEmail)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
+	}
+
+	/**
 	 * 최근 BanHistory를 가져옵니다. 없으면 예외를 발생시킵니다.
 	 *
 	 * @param userId 유저의 고유 ID
