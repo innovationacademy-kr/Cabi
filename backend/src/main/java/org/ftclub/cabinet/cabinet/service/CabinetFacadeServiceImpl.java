@@ -42,7 +42,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
 
-
 	/**
 	 * {@inheritDoc}
 	 * <p>
