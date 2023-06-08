@@ -5,13 +5,12 @@ import AdminCabinetLentLog from "@/components/LentLog/AdminCabinetLentLog";
 import { LentLogDto } from "@/types/dto/lent.dto";
 import { axiosGetCabinetLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
-
-const BAD_REQUEST = 400;
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminCabinetLentLogContainer = () => {
   const { closeLent } = useMenu();
   const [logs, setLogs] = useState<
-    LentLogDto[] | typeof BAD_REQUEST | undefined
+    LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined
   >(undefined);
   const [page, setPage] = useState<number>(-1);
   const [totalPage, setTotalPage] = useState<number>(-1);
@@ -23,7 +22,7 @@ const AdminCabinetLentLogContainer = () => {
       setTotalPage(Math.ceil(result.data.total_length / 10));
       setLogs(result.data.result);
     } catch {
-      setLogs(BAD_REQUEST);
+      setLogs(STATUS_400_BAD_REQUEST);
       setTotalPage(1);
     }
   }

@@ -1,12 +1,11 @@
 import styled, { css } from "styled-components";
 import LogTable from "@/components/LentLog/LogTable/LogTable";
 import { LentLogDto } from "@/types/dto/lent.dto";
-
-const BAD_REQUEST = 400;
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 interface ILentLog {
   closeLent: React.MouseEventHandler;
-  logs: LentLogDto[] | typeof BAD_REQUEST | undefined;
+  logs: LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined;
   page: number;
   totalPage: number;
   onClickPrev: React.MouseEventHandler;
