@@ -1,9 +1,9 @@
 import React, { SetStateAction, useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import { locationsFloorState, currentLocationNameState } from "@/recoil/atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { currentLocationNameState, locationsFloorState } from "@/recoil/atoms";
 import { locationsState } from "@/recoil/selectors";
-import { axiosLocationFloor } from "@/api/axios/axios.custom";
 import TopNav from "@/components/TopNav/TopNav";
+import { axiosLocationFloor } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const AdminTopNavContainer: React.FC<{

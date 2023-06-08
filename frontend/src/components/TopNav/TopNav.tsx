@@ -1,8 +1,8 @@
 import React from "react";
 import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
-import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
+import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
 interface ILocationListItem {

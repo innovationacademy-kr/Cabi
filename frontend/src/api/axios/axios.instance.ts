@@ -4,7 +4,6 @@ import { getCookie, removeCookie } from "@/api/react_cookie/cookies";
 axios.defaults.withCredentials = true;
 
 const instance = axios.create({
-  // baseURL: window.location.origin,
   baseURL: import.meta.env.VITE_BE_HOST,
   withCredentials: true,
 });
