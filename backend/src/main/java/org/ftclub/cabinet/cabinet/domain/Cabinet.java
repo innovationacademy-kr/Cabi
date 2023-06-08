@@ -17,6 +17,8 @@ import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 
 /**
  * 사물함 엔티티
@@ -31,15 +33,6 @@ public class Cabinet {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CABINET_ID")
 	private Long cabinetId;
-
-	/**
-	 * 사물함의 상태가 변경될 때 증가하는 버전입니다.
-	 * <p>
-	 * 동시성 문제 해결을 위한 낙관적 락을 위해 사용됩니다.
-	 */
-	@Version
-	@Getter(AccessLevel.NONE)
-	private Long version = 1L;
 
 	/**
 	 * 실물로 표시되는 번호입니다.
@@ -193,6 +186,10 @@ public class Cabinet {
 	 * @param userCount 현재 사용자 수
 	 */
 	public void specifyStatusByUserCount(Integer userCount) {
+		if (this.status.equals(CabinetStatus.BROKEN)) {
+			// To-Do: 도메인 익셉션으로 변경 필요
+			throw new ServiceException(ExceptionStatus.UNCHANGEABLE_CABINET);
+		}
 		if (userCount.equals(0)) {
 			this.status = CabinetStatus.AVAILABLE;
 			return;
