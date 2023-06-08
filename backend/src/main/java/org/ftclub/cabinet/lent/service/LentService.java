@@ -33,5 +33,12 @@ public interface LentService {
 	 *
 	 * @param userId 반납하려는 user id
 	 */
-	void terminateLentCabinet(Long userId);
+	void terminateLentByUserId(Long userId);
+
+	/**
+	 * 사물함을 강제 반납 합니다. 유저가 벤이 되진 않습니다
+	 *
+	 * @param cabinetId 반납하려는 cabinet id
+	 */
+	void terminateLentByCabinetId(Long cabinetId);
 }

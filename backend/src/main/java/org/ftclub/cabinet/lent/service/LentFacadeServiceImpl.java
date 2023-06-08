@@ -7,7 +7,14 @@ import lombok.AllArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentEndMemoDto;
+import org.ftclub.cabinet.dto.LentHistoryDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
+import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.controller.PaginationRequestDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
@@ -67,6 +74,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	/**
 	 * {@InheritDocs}
+	 *
 	 * @param user                 유저 정보
 	 * @param paginationRequestDto 페이지네이션 정보
 	 * @return
@@ -74,9 +82,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
 			PaginationRequestDto paginationRequestDto) {
-		PageRequest pageable = PageRequest.of(paginationRequestDto.getPage(), paginationRequestDto.getLength(), Sort.by("STARTED_AT"));
-        List<LentHistory> myLentHistories = lentRepository.findByUserId(user.getUserId(), pageable);
-		List<LentHistoryDto> result =  myLentHistories.stream()
+		PageRequest pageable = PageRequest.of(paginationRequestDto.getPage(),
+				paginationRequestDto.getLength(), Sort.by("STARTED_AT"));
+		List<LentHistory> myLentHistories = lentRepository.findByUserId(user.getUserId(), pageable);
+		List<LentHistoryDto> result = myLentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentHistoryDto(
 						lentHistory,
 						userExceptionHandler.getUser(user.getUserId()),
@@ -112,21 +121,25 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
-	public void endLentCabinetWithMemo(UserSessionDto user, LentEndMemoDto lentEndMemoDto){
+	public void endLentCabinetWithMemo(UserSessionDto user, LentEndMemoDto lentEndMemoDto) {
 		Cabinet cabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
 		cabinetService.updateMemo(cabinet.getCabinetId(), lentEndMemoDto.getCabinetMemo());
 		lentService.endLentCabinet(user.getUserId());
 	}
 
 	@Override
-	public void terminateLentCabinet(Long userId) {
-		lentService.terminateLentCabinet(userId);
+	public void terminateLentByUserId(Long userId) {
+		lentService.terminateLentByUserId(userId);
 	}
 
-    @Override
-    public MyCabinetInfoResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
+	@Override
+	public void terminateLentCabinets(List<Long> cabinets) {
+		cabinets.stream().forEach(lentService::terminateLentByCabinetId);
+	}
+
+	@Override
+	public MyCabinetInfoResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
 		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
-		MyCabinetInfoResponseDto
 	}
 
 	@Override
@@ -136,8 +149,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
-	public void updateCabinetTitle(UserSessionDto user, UpdateCabinetTitleDto updateCabinetTitleDto) {
+	public void updateCabinetTitle(UserSessionDto user,
+			UpdateCabinetTitleDto updateCabinetTitleDto) {
 		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
-		cabinetService.updateTitle(myCabinet.getCabinetId(), updateCabinetTitleDto.getCabinetTitle());
+		cabinetService.updateTitle(myCabinet.getCabinetId(),
+				updateCabinetTitleDto.getCabinetTitle());
 	}
 }

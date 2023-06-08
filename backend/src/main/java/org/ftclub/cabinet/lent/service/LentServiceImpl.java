@@ -82,8 +82,23 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public void terminateLentCabinet(Long userId) {
+	public void terminateLentByUserId(Long userId) {
 		returnCabinet(userId);
+	}
+
+	@Override
+	public void terminateLentByCabinetId(Long cabinetId) {
+		returnCabinetByCabinetId(cabinetId);
+	}
+
+	private LentHistory returnCabinetByCabinetId(Long cabinetId) {
+		Date now = new Date();
+		cabinetExceptionHandler.getCabinet(cabinetId);
+		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithCabinetId(cabinetId);
+		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
+		lentHistory.endLent(now);
+		cabinetService.updateStatusByUserCount(lentHistory.getCabinetId(), activeLentCount - 1);
+		return lentHistory;
 	}
 
 	private LentHistory returnCabinet(Long userId) {

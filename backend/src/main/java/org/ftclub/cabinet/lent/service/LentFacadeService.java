@@ -1,8 +1,13 @@
 package org.ftclub.cabinet.lent.service;
 
 import java.util.List;
-
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentEndMemoDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
+import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.controller.PaginationRequestDto;
 
 /**
@@ -47,7 +52,14 @@ public interface LentFacadeService {
 	 *
 	 * @param userId 반납하려는 user id
 	 */
-	void terminateLentCabinet(Long userId);
+	void terminateLentByUserId(Long userId);
+
+	/**
+	 * 사물함들을 강제 반납 합니다. 유저가 벤이 되진 않습니다
+	 *
+	 * @param cabinets 반납하려는 cabinet id list
+	 */
+	void terminateLentCabinets(List<Long> cabinets);
 
 	/**
 	 * 페이지네이션을 적용해서 유저가 지금까지 대여했던 모든 기록을 가져옵니다.
@@ -81,7 +93,7 @@ public interface LentFacadeService {
 	List<LentDto> getLentDtoList(Long cabinetId);
 
 	/**
-	 *  내가 대여한 기록들을 페이지네이션 기준으로 가져옵니다.
+	 * 내가 대여한 기록들을 페이지네이션 기준으로 가져옵니다.
 	 *
 	 * @param user                 유저 정보
 	 * @param paginationRequestDto 페이지네이션 정보
@@ -89,20 +101,21 @@ public interface LentFacadeService {
 	 */
 	LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
 			PaginationRequestDto paginationRequestDto);
+
 	/**
 	 * 자신이 대여한 사물함의 메모를 바꿉니다.
 	 *
-	 * @param userSessionDto				요청한 유저 dto
-	 * @param updateCabinetMemoDto	변경할 사물함 제목
+	 * @param userSessionDto       요청한 유저 dto
+	 * @param updateCabinetMemoDto 변경할 사물함 제목
 	 */
 	void updateCabinetMemo(UserSessionDto userSessionDto,
-							UpdateCabinetMemoDto updateCabinetMemoDto);
+			UpdateCabinetMemoDto updateCabinetMemoDto);
 
 	/**
 	 * 자신이 대여한 사물함의 제목을 바꿉니다.
 	 *
-	 * @param userSessionDto				요청한 유저 dto
-	 * @param updateCabinetTitleDto	변경할 사물함 제목
+	 * @param userSessionDto        요청한 유저 dto
+	 * @param updateCabinetTitleDto 변경할 사물함 제목
 	 */
 	void updateCabinetTitle(UserSessionDto userSessionDto,
 			UpdateCabinetTitleDto updateCabinetTitleDto);
