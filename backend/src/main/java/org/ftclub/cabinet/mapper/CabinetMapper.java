@@ -9,6 +9,9 @@ import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -32,4 +35,9 @@ public interface CabinetMapper {
 	@Mapping(target = "totalPage", source = "totalPage")
 	CabinetPaginationDto toCabinetPaginationDtoList(List<Cabinet> cabinets,
 			Integer totalPage);
+
+	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name, Location location, Long overdueDays);
+
+	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
+			List<OverdueUserCabinetDto> result, Integer totalLength);
 }

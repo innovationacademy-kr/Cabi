@@ -52,6 +52,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByName(@Param("name") String name);
 
 	/**
+	 * 유저의 이메일로 유저를 찾습니다.
+	 *
+	 * @param email     유저 이메일
+	 * @return {@link User}
+	 */
+	@Query("SELECT u FROM User u WHERE u.email = :email")
+	Optional<User> findByEmail(@Param("email") String email);
+
+	/**
 	 * 유저의 이름 일부분으로 유저를 찾습니다.
 	 *
 	 * @param name     유저 이름 일부분

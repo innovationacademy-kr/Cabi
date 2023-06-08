@@ -5,6 +5,7 @@ import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
@@ -117,11 +118,31 @@ public class AdminUserController {
 			@RequestParam("length") Integer length) {
 		return lentFacadeService.getAllUserLentHistories(userId, page, length);
 	}
+	/**
+	 * 유저를 어드민으로 승격시킵니다.
+	 *
+	 * @param email 유저 이메일
+	 * @return redirect:cabi.42seoul.io/admin/login
+	 */
+	@GetMapping("management/admin-users/promote")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY) // TODO: MASTER 권한으로 변경
+	public void promoteUserToAdmin(@RequestParam("email") String email) {
+		userFacadeService.promoteUserToAdmin(email);
+	}
+
+	/**
+	 * 연체 중인 유저 리스트를 반환합니다.
+	 *
+	 * @param page      페이지 번호
+	 * @param length    페이지 당 길이
+	 */
+	@GetMapping("users/overdue")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public OverdueUserCabinetPaginationDto getOverdueUserList(
+			@RequestParam("page") Integer page,
+			@RequestParam("length") Integer length) {
+		return userFacadeService.getOverdueUserList(page, length);
+	}
 
 	// 동아리 유저 생성하는 메서드 필요
-	/**
-	 * ToDo:
-	 * /api/admin/develop/promote
-	 * /api/admin/search/user/overdue
-	 */
 }
