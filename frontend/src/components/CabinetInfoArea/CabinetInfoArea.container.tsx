@@ -1,21 +1,56 @@
 import { useRecoilValue } from "recoil";
 import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
-import CabinetInfoArea, {
-  ISelectedCabinetInfo,
-} from "@/components/CabinetInfoArea/CabinetInfoArea";
+import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
+import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
+import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import AdminCabinetInfoArea, {
-  IMultiSelectTargetInfo,
-} from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
-import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
+
+export interface ISelectedCabinetInfo {
+  floor: number;
+  section: string;
+  cabinetId: number;
+  cabinetNum: number;
+  status: CabinetStatus;
+  lentType: CabinetType;
+  userNameList: string;
+  expireDate?: Date;
+  detailMessage: string | null;
+  detailMessageColor: string;
+  isAdmin: boolean;
+  isLented: boolean;
+}
+
+export interface IMultiSelectTargetInfo {
+  targetCabinetInfoList: CabinetInfo[];
+  typeCounts: {
+    AVAILABLE: number;
+    EXPIRED: number;
+    SET_EXPIRE_FULL: number;
+    BROKEN: number;
+  };
+}
+
+interface ICount {
+  AVAILABLE: number;
+  SET_EXPIRE_FULL: number;
+  EXPIRED: number;
+  BROKEN: number;
+}
 
 const calExpiredTime = (expireTime: Date) =>
   Math.floor(
     (expireTime.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
   );
+
+const setExpireDate = (date: Date | undefined) => {
+  if (!date) return null;
+  if (date.toString().slice(0, 4) === "9999") return null;
+  return date.toString().slice(0, 10);
+};
 
 const getCalcualtedTimeString = (expireTime: Date) => {
   const remainTime = calExpiredTime(expireTime);
@@ -98,13 +133,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
-  interface ICount {
-    AVAILABLE: number;
-    SET_EXPIRE_FULL: number;
-    EXPIRED: number;
-    BROKEN: number;
-  }
-
   const countTypes = (cabinetList: CabinetInfo[]) =>
     cabinetList.reduce(
       (result, cabinet): ICount => {
@@ -139,6 +167,12 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       selectedCabinetInfo={cabinetViewData}
       myCabinetId={myCabinetInfo?.cabinet_id}
       closeCabinet={closeCabinet}
+      expireDate={setExpireDate(cabinetViewData?.expireDate)}
+      isMine={myCabinetInfo?.cabinet_id === cabinetViewData?.cabinetId}
+      isAvailable={
+        cabinetViewData?.status === "AVAILABLE" ||
+        cabinetViewData?.status === "SET_EXPIRE_AVAILABLE"
+      }
     />
   );
 };

@@ -1,29 +1,20 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
+import { ISelectedCabinetInfo } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
+import { IMultiSelectTargetInfo } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import CabinetType from "@/types/enum/cabinet.type.enum";
-import cabiLogo from "@/assets/images/logo.svg";
+import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
+import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import cabiLogo from "@/assets/images/logo.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import AdminReturnModal from "../Modals/ReturnModal/AdminReturnModal";
-import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
-import { ISelectedCabinetInfo } from "@/components/CabinetInfoArea/CabinetInfoArea";
-
-export interface IMultiSelectTargetInfo {
-  targetCabinetInfoList: CabinetInfo[];
-  typeCounts: {
-    AVAILABLE: number;
-    EXPIRED: number;
-    SET_EXPIRE_FULL: number;
-    BROKEN: number;
-  };
-}
 
 const AdminCabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -41,7 +32,6 @@ const AdminCabinetInfoArea: React.FC<{
   const [showAdminReturnModal, setShowAdminReturnModal] =
     useState<boolean>(false);
   const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
-
   const { resetMultiSelectMode, isSameStatus, isSameType } = useMultiSelect();
 
   const isLented: boolean = selectedCabinetInfo?.userNameList.at(0) !== "-";
@@ -204,8 +194,6 @@ const AdminCabinetInfoArea: React.FC<{
   );
 };
 
-export default AdminCabinetInfoArea;
-
 const NotSelectedStyled = styled.div`
   height: 100%;
   display: flex;
@@ -323,3 +311,5 @@ const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
   color: ${({ status }) =>
     status === CabinetStatus.SET_EXPIRE_FULL ? "black" : "white"};
 `;
+
+export default AdminCabinetInfoArea;
