@@ -1,14 +1,13 @@
-import LogTable from "@/components/LentLog/LogTable/LogTable";
-import styled from "styled-components";
-import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
+import LogTable from "@/components/LentLog/LogTable/LogTable";
 import { LentLogDto } from "@/types/dto/lent.dto";
-
-const BAD_REQUEST = 400;
+import { axiosMyLentLog } from "@/api/axios/axios.custom";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const LogPage = () => {
   const [lentLog, setLentLog] = useState<
-    LentLogDto[] | typeof BAD_REQUEST | undefined
+    LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined
   >(undefined);
 
   const getLentLog = async () => {
@@ -20,7 +19,7 @@ const LogPage = () => {
       }, 500);
     } catch {
       setTimeout(() => {
-        setLentLog(BAD_REQUEST);
+        setLentLog(STATUS_400_BAD_REQUEST);
       }, 500);
     }
   };
