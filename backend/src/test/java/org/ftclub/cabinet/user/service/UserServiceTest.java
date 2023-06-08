@@ -16,6 +16,7 @@ import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -131,6 +132,26 @@ public class UserServiceTest {
 //		Long accumulatedBanDays = userService.getAccumulateBanDaysByUserId(userId);
 //		assertEquals(1, accumulatedBanDays);
 //	}
+
+	@Test
+	@DisplayName("이메일을 통해 어드민 유저를 찾고, 해당 유저의 어드민 권한을 승인합니다.")
+	void 어드민_권한_승인() {
+		//when
+		Long adminId1 = 1L;
+		String adminEmail1 = adminUserRepository.getAdminUser(adminId1).getEmail();
+		Long adminId2 = 2L;
+		String adminEmail2 = adminUserRepository.getAdminUser(adminId2).getEmail();
+
+		//given
+		userService.promoteAdminByEmail(adminEmail1);
+		userService.promoteAdminByEmail(adminEmail2);
+
+		//then
+		AdminUser adminUser1 = adminUserRepository.getAdminUser(adminId1);
+		AdminUser adminUser2 = adminUserRepository.getAdminUser(adminId2);
+		assertEquals(adminUser1.getRole(), AdminRole.ADMIN);
+		assertEquals(adminUser2.getRole(), AdminRole.ADMIN);
+	}
 
 	@Test
 	void 유저_벤_확인() {

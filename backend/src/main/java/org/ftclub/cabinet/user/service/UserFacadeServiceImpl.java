@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -34,6 +36,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final BanPolicy banPolicy;
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
+	private final CabinetExceptionHandlerService cabinetExceptionHandlerService;
+	private final CabinetMapper cabinetMapper;
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
@@ -139,6 +143,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
+	public void promoteUserToAdmin(String email) {
+		userService.promoteAdminByEmail(email);
+	}
+
+	@Override
 	public void updateUserBlackholedAt(Long userId, Date newBlackholedAt) {
 		userService.updateUserBlackholedAt(userId, newBlackholedAt);
 	}
@@ -154,4 +163,22 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		userService.deleteRecentBanHistory(userId, today);
 	}
 
+	@Override
+	public OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer length) {
+		List<OverdueUserCabinetDto> overdueList = new ArrayList<>();
+		PageRequest pageable = PageRequest.of(page, length);
+		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
+				(lh) -> {
+					String userName = userRepository.findNameById(lh.getUserId());
+					Location location = cabinetExceptionHandlerService.getLocation(
+							lh.getCabinetId());
+					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),
+							DateUtil.getNow());
+					overdueList.add(
+							cabinetMapper.toOverdueUserCabinetDto(lh, userName, location,
+									overdueDays));
+				}
+		);
+		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, overdueList.size());
+	}
 }
