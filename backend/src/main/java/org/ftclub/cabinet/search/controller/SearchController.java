@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.search.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,12 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v4/admin/search")
 public class SearchController {
 
-    private final SearchFacadeService searchFacadeService;
+    private final CabinetFacadeService cabinetFacadeService;
 
-    @GetMapping("/cabinets?visibleNum={number}")
+    @GetMapping("/cabinets")
     public CabinetInfoPaginationDto getCabinetsInfo(
             @RequestParam Integer visibleNum
     ) {
-        return searchFacadeService.getCabinetsInfo(visibleNum);
+        return cabinetFacadeService.getCabinetsInfo(visibleNum);
     }
+
+
 }

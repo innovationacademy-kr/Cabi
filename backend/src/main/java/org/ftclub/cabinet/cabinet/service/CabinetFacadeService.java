@@ -3,11 +3,7 @@ package org.ftclub.cabinet.cabinet.service;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetPaginationDto;
-import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.*;
 import org.springframework.data.domain.PageRequest;
 
 public interface CabinetFacadeService {
@@ -26,6 +22,8 @@ public interface CabinetFacadeService {
 	 * @return 캐비넷 정보
 	 */
 	CabinetInfoResponseDto getCabinetInfo(Long cabinetId);
+
+	CabinetInfoPaginationDto getCabinetsInfo(Integer visibleNum);
 
 	/**
 	 * 건물의 층별 각 구역들에 있는 사물함들의 정보를 반환합니다.

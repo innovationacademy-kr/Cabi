@@ -11,14 +11,7 @@ import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetPaginationDto;
-import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentHistoryDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -28,6 +21,8 @@ import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -248,6 +243,16 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		}
 		return result;
 	}
+
+	@Override
+	public CabinetInfoPaginationDto getCabinetsInfo(Integer visibleNum) {
+		Pageable page = Pageable.unpaged();
+		Page<Cabinet> allCabinetsByVisibleNum = cabinetRepository.findAllCabinetsByVisibleNum(visibleNum, page);
+		List<Long> collect = allCabinetsByVisibleNum.map(cabinet -> cabinet.getCabinetId())
+				.stream().collect(Collectors.toList());
+		return new CabinetInfoPaginationDto(getCabinetInfoBundle(collect), allCabinetsByVisibleNum.getTotalPages());
+	}
+
 
 	//
 
