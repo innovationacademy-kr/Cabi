@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.lent.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.domain.UserSession;
@@ -10,12 +9,11 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/lent-histories")
+@RequestMapping("/v4/lent-histories")
 public class LentController {
 
 	private final LentFacadeService lentFacadeService;

@@ -82,7 +82,7 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public void terminateLentByUserId(Long userId) {
+	public void terminateLentCabinet(Long userId) {
 		returnCabinet(userId);
 	}
 
@@ -109,5 +109,17 @@ public class LentServiceImpl implements LentService {
 		lentHistory.endLent(now);
 		cabinetService.updateStatusByUserCount(lentHistory.getCabinetId(), activeLentCount - 1);
 		return lentHistory;
+	}
+
+	@Override
+	public void assignLent(Long userId, Long cabinetId) {
+		Date now = DateUtil.getNow();
+		userExceptionHandler.getUser(userId);
+		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
+		lentExceptionHandler.checkExistedSpace(cabinetId);
+		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
+		LentHistory result = LentHistory.of(now, expirationDate, userId, cabinetId);
+		cabinet.specifyStatusByUserCount(1);
+		lentRepository.save(result);
 	}
 }

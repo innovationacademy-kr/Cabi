@@ -5,10 +5,10 @@ import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.PaginationRequestDto;
 import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
 import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.lent.controller.PaginationRequestDto;
 
 /**
  * controller에서 사용하는 파사드 서비스
@@ -52,7 +52,7 @@ public interface LentFacadeService {
 	 *
 	 * @param userId 반납하려는 user id
 	 */
-	void terminateLentByUserId(Long userId);
+	void terminateLentCabinet(Long userId);
 
 	/**
 	 * 사물함들을 강제 반납 합니다. 유저가 벤이 되진 않습니다
@@ -119,4 +119,12 @@ public interface LentFacadeService {
 	 */
 	void updateCabinetTitle(UserSessionDto userSessionDto,
 			UpdateCabinetTitleDto updateCabinetTitleDto);
+
+	/**
+	 * 어드민으로 유저를 지정하여 캐비넷을 대여 시킵니다.
+	 *
+	 * @param userId    대여시킬 유저 Id
+	 * @param cabinetId 대여시킬 캐비넷 Id
+	 */
+	void assignLent(Long userId, Long cabinetId);
 }
