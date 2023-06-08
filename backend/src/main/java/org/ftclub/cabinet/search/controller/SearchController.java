@@ -6,6 +6,7 @@ import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.*;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +31,15 @@ public class SearchController {
     ) {
         return userFacadeService.getUserProfileListByPartialName(name, page,length);
     }
+
+    @GetMapping("/users")
+    public UserCabinetPaginationDto getCabinetsLentInfo(
+            @PathVariable String name,
+            @RequestParam Integer page,
+            @RequestParam Integer length
+    ){
+        return userFacadeService.findUserCabinetListByPartialName(name, page, length);
+    }
+
 
 }

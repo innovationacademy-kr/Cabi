@@ -86,15 +86,15 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
     public BlockedUserPaginationDto getUsersBannedInfo(Integer page, Integer length) {
         PageRequest pageable = PageRequest.of(page, length);
         Page<Object[]> bannedInfo = statisticsRepository.getUsersBannedInfo(pageable);
-        List<BlockedUserDto> blockedUserDtos = new ArrayList<>();
+        List<UserBlockedInfoDto> userBlockedInfoDtos = new ArrayList<>();
         bannedInfo.toList().stream().forEach( (objs) -> {
                     Long userId = (Long) objs[0];
                     String name = userRepository.findNameById(userId);
                     Date bannedAt = (Date) objs[1];
                     Date unbannedAt = (Date) objs[2];
-            blockedUserDtos.add(new BlockedUserDto(userId, name, bannedAt, unbannedAt));
+            userBlockedInfoDtos.add(new UserBlockedInfoDto(userId, name, bannedAt, unbannedAt));
                 });
-        return new BlockedUserPaginationDto(blockedUserDtos, Long.valueOf(bannedInfo.getTotalPages()));
+        return new BlockedUserPaginationDto(userBlockedInfoDtos, Long.valueOf(bannedInfo.getTotalPages()));
     }
 
     /**
@@ -105,7 +105,7 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
      */
     @Override
     public OverdueUserCabinetPaginationDto getOverdueUsers(Integer page, Integer length) {
-        PageRequest pageable = PageRequest.of(page, length)
+        PageRequest pageable = PageRequest.of(page, length);
         Page<Object[]> overdueUsers = statisticsRepository.getOverdueUsers(pageable);
         List<OverdueUserCabinetDto> overdueUserCabinetDtos = new ArrayList<>();
         Date today = new Date();
@@ -117,9 +117,9 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
             Date expiredDate = statisticsRepository.getExpiredDateByCabinetId(cabinetId);
             // DB에 expire_time은 항상 23:59:59로 끝나기 때문에 1000 밀리초(1초)를 더해준 뒤 현재 시간과 비교해서 얼마나 연체되었는지 확인
             Long overdueDaysInMilliSec = today.getTime() - (expiredDate.getTime() + 1000);
-            Integer overdueDays = Integer.valueOf(TimeUnit.DAYS.convert(overdueDaysInMilliSec, TimeUnit.MILLISECONDS);
+            Integer overdueDays = (int) TimeUnit.DAYS.convert(overdueDaysInMilliSec, TimeUnit.MILLISECONDS);
             overdueUserCabinetDtos.add(new OverdueUserCabinetDto(name, cabinetId, location, overdueDays));
         });
-        return new OverdueUserCabinetPaginationDto(overdueUserCabinetDtos, Long.valueOf(overdueUsers.getTotalPages()));
+        return new OverdueUserCabinetPaginationDto(overdueUserCabinetDtos, overdueUsers.getTotalPages());
     }
 }
