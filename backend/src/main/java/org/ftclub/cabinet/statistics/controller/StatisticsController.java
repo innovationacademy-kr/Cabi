@@ -21,8 +21,13 @@ public class StatisticsController {
 
 	private final StatisticsService statisticsService;
 	/**
+<<<<<<< HEAD
 	 * 전 층의 사물함 정보를 가져옵니다.
 	 * @return 전 층의 사물함 정보를 반환합니다.
+=======
+	 * ToDo
+	 * /api/admin/cabinet/count/floor
+>>>>>>> 733389020cddbcc5ed05ec731c4d1dcaee8abad6
 	 */
 	@GetMapping("/buildings/floors/cabinets")
 	public List<CabinetFloorStatisticsResponseDto> getCabinetsInfoOnAllFloors() {
