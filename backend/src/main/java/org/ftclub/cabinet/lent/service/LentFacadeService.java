@@ -3,7 +3,7 @@ package org.ftclub.cabinet.lent.service;
 import java.util.List;
 
 import org.ftclub.cabinet.dto.*;
-import org.ftclub.cabinet.lent.controller.PaginationRequestDto;
+import org.ftclub.cabinet.dto.PaginationRequestDto;
 
 /**
  * controller에서 사용하는 파사드 서비스
@@ -106,4 +106,12 @@ public interface LentFacadeService {
 	 */
 	void updateCabinetTitle(UserSessionDto userSessionDto,
 			UpdateCabinetTitleDto updateCabinetTitleDto);
+
+	/**
+	 * 어드민으로 유저를 지정하여 캐비넷을 대여 시킵니다.
+	 *
+	 * @param userId    대여시킬 유저 Id
+	 * @param cabinetId 대여시킬 캐비넷 Id
+	 */
+	void assignLent(Long userId, Long cabinetId);
 }

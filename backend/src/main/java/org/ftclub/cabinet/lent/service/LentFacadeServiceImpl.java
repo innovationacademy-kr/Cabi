@@ -8,17 +8,18 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.dto.*;
-import org.ftclub.cabinet.lent.controller.PaginationRequestDto;
+import org.ftclub.cabinet.dto.PaginationRequestDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-
+innovationacademy-kr/42cabi/.idea
 @Service
 @AllArgsConstructor
 @Transactional
@@ -139,5 +140,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public void updateCabinetTitle(UserSessionDto user, UpdateCabinetTitleDto updateCabinetTitleDto) {
 		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
 		cabinetService.updateTitle(myCabinet.getCabinetId(), updateCabinetTitleDto.getCabinetTitle());
+	}
+
+	@Override
+	public void assignLent(Long userId, Long cabinetId) {
+		lentService.assignLent(userId, cabinetId);
 	}
 }

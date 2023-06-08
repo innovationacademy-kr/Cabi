@@ -34,4 +34,12 @@ public interface LentService {
 	 * @param userId 반납하려는 user id
 	 */
 	void terminateLentCabinet(Long userId);
+
+	/**
+	 * 어드민으로 유저에게 사물함을 대여 시킵니다.
+	 *
+	 * @param userId    대여시킬 유저 Id
+	 * @param cabinetId 대여시킬 캐비넷 Id
+	 */
+	void assignLent(Long userId, Long cabinetId);
 }
