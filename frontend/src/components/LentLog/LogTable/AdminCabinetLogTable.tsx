@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { LentLogDto } from "@/types/dto/lent.dto";
+import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -9,11 +9,7 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-interface IlentLog {
-  lentLog: LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined;
-}
-
-const AdminCabinetLogTable = ({ lentLog }: IlentLog) => {
+const AdminCabinetLogTable = ({ lentLog }: { lentLog: LentLogResponseType}) => {
   if (lentLog === undefined) return <LoadingAnimation />;
 
   return (

@@ -1,19 +1,9 @@
 import styled, { css } from "styled-components";
 import AdminCabinetLogTable from "@/components/LentLog/LogTable/AdminCabinetLogTable";
-import { LentLogDto } from "@/types/dto/lent.dto";
-import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
-
-interface ILentLog {
-  closeAndResetLogPage: React.MouseEventHandler;
-  logs: LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined;
-  page: number;
-  totalPage: number;
-  onClickPrev: React.MouseEventHandler;
-  onClickNext: React.MouseEventHandler;
-}
+import { ILentLog } from "@/types/dto/lent.dto";
 
 const AdminCabinetLentLog = ({
-  closeAndResetLogPage,
+  closeLent,
   logs,
   page,
   totalPage,
@@ -24,7 +14,7 @@ const AdminCabinetLentLog = ({
     <AdminLentLogStyled id="lentInfo">
       <TitleContainer>
         <TitleStyled>대여 기록</TitleStyled>
-        <GoBackButtonStyled onClick={closeAndResetLogPage}>
+        <GoBackButtonStyled onClick={closeLent}>
           뒤로가기
         </GoBackButtonStyled>
       </TitleContainer>

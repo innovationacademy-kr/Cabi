@@ -2,16 +2,14 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { currentCabinetIdState } from "@/recoil/atoms";
 import AdminCabinetLentLog from "@/components/LentLog/AdminCabinetLentLog";
-import { LentLogDto } from "@/types/dto/lent.dto";
+import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetCabinetLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminCabinetLentLogContainer = () => {
   const { closeLent } = useMenu();
-  const [logs, setLogs] = useState<
-    LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined
-  >(undefined);
+  const [logs, setLogs] = useState<LentLogResponseType>(undefined);
   const [page, setPage] = useState<number>(-1);
   const [totalPage, setTotalPage] = useState<number>(-1);
   const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
@@ -59,7 +57,7 @@ const AdminCabinetLentLogContainer = () => {
 
   return (
     <AdminCabinetLentLog
-      closeAndResetLogPage={closeAndResetLogPage}
+      closeLent={closeAndResetLogPage}
       logs={logs}
       page={page}
       totalPage={totalPage}

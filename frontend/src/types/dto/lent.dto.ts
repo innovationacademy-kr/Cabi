@@ -1,3 +1,5 @@
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
+
 /**
  * @interface
  * @description 대여 기록 데이터
@@ -39,4 +41,15 @@ export interface BanDto {
   cabinet_num: number;
   floor: number;
   section: string;
+}
+
+export type LentLogResponseType = LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined;
+
+export interface ILentLog {
+  closeLent: React.MouseEventHandler;
+  logs: LentLogResponseType;
+  page: number;
+  totalPage: number;
+  onClickPrev: React.MouseEventHandler;
+  onClickNext: React.MouseEventHandler;
 }
