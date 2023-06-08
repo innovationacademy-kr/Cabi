@@ -4,7 +4,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.config.DomainNameProperties;
+import org.ftclub.cabinet.config.DomainProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CookieManager {
 
-	private final DomainNameProperties domainNameProperties;
+	private final DomainProperties domainProperties;
 
 	/**
 	 * 쿠키를 가져옵니다.
@@ -60,10 +60,10 @@ public class CookieManager {
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(60 * 60 * 24 * 28); // 28 days, jwt properties로 설정 가능
 		cookie.setPath(path);
-		if (serverName.equals(domainNameProperties.getLocal())) {
-			cookie.setDomain(domainNameProperties.getLocal());
+		if (serverName.equals(domainProperties.getLocal())) {
+			cookie.setDomain(domainProperties.getLocal());
 		} else {
-			cookie.setDomain(domainNameProperties.getCookieDomain());
+			cookie.setDomain(domainProperties.getCookieDomain());
 		}
 		res.addCookie(cookie);
 	}

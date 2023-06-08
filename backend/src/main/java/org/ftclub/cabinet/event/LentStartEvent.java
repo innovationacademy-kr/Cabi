@@ -11,7 +11,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 @ToString
 @Getter
 public class LentStartEvent {
-	//TO-DO : 직관적인 이해를 위해서 부득이하게 event 패키지에 위치시켰습니다. 이후에 해당하는 도메인으로 변경해야 합니다.
+	//ToDo : 직관적인 이해를 위해서 부득이하게 event 패키지에 위치시켰습니다. 이후에 해당하는 도메인으로 변경해야 합니다.
 	/**
 	 * 메일링 및 알림을 위한 정보들을 가집니다.
 	 */

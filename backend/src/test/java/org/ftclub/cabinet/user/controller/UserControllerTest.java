@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserSessionControllerTest {
+public class UserControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
@@ -34,7 +35,7 @@ public class UserSessionControllerTest {
 				-1L, null);
 
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				"penaltyuser2");
+				"penaltyuser2", DateUtil.getNow());
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
@@ -53,7 +54,7 @@ public class UserSessionControllerTest {
 				3L, null);
 
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				"lentuser1");
+				"lentuser1", DateUtil.getNow());
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
 						"/api/users/me"))

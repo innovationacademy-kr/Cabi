@@ -35,4 +35,6 @@ public interface UserService {
 	 * @return 정지 상태인 경우 true, 정지 상태가 아닌 경우 false
 	 */
 	boolean checkUserIsBanned(Long userId, Date today);
+
+	AdminRole getAdminUserRole(String email);
 }

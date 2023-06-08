@@ -2,6 +2,7 @@ package org.ftclub.cabinet.cabinet.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -13,8 +14,11 @@ import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentHistoryDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -22,6 +26,8 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -170,6 +176,52 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType,
+			PageRequest pageable) {
+		Page<Cabinet> cabinets = cabinetRepository.findAllCabinetsByLentType(lentType, pageable);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets.toList(),
+				cabinets.getTotalPages());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
+			PageRequest pageable) {
+		Page<Cabinet> cabinets = cabinetRepository.findAllCabinetsByStatus(status, pageable);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets.toList(),
+				cabinets.getTotalPages());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum,
+			PageRequest pageable) {
+		Page<Cabinet> cabinets = cabinetRepository.findAllCabinetsByVisibleNum(visibleNum,
+				pageable);
+		return cabinetMapper.toCabinetPaginationDtoList(cabinets.toList(),
+				cabinets.getTotalPages());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId,
+			PageRequest pageable) {
+		Page<LentHistory> lentHistories = lentRepository.findPaginationByCabinetId(cabinetId,
+				pageable);
+		return lentMapper.toLentHistoryPaginationDto(
+				generateLentHistoryDtoList(lentHistories.toList()), lentHistories.getTotalPages());
+	}
+
+	/**
 	 * 사물함 정보와 위치 정보를 가져옵니다.
 	 *
 	 * @param cabinetId 사물함 id
@@ -196,5 +248,23 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 			result.add(getCabinetInfo(cabinetId));
 		}
 		return result;
+	}
+
+	//
+
+	/**
+	 * LentHistory를 이용해 LentHistoryDto로 매핑하여 반환합니다.
+	 * ToDo : new -> mapper 쓰기 + query service 분리
+	 *
+	 * @param lentHistories 대여 기록 리스트
+	 * @return LentHistoryDto 리스트
+	 */
+	private List<LentHistoryDto> generateLentHistoryDtoList(
+			List<LentHistory> lentHistories) {
+		return lentHistories.stream()
+				.map(e -> lentMapper.toLentHistoryDto(e,
+						userRepository.getUser(e.getUserId()),
+						cabinetRepository.findById(e.getCabinetId()).orElseThrow()))
+				.collect(Collectors.toList());
 	}
 }

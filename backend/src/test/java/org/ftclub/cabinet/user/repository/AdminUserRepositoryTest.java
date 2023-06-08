@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Transactional
-public class AdminUserRepositoryTestSession {
+public class AdminUserRepositoryTest {
 
 	@Autowired
 	private AdminUserRepository adminUserRepository;
