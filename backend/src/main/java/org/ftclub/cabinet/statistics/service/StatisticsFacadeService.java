@@ -5,11 +5,10 @@ import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 
-import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.List;
 
-public interface StatisticsService {
+public interface StatisticsFacadeService {
 
     List<CabinetFloorStatisticsResponseDto> getCabinetsCountOnAllFloors();
 

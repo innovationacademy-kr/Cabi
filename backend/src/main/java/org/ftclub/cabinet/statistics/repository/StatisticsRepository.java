@@ -2,8 +2,6 @@ package org.ftclub.cabinet.statistics.repository;
 
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
-import org.hibernate.mapping.Table;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,8 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Repository
 @Transactional

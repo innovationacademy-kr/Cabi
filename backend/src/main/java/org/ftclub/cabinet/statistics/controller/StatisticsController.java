@@ -5,7 +5,7 @@ import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
-import org.ftclub.cabinet.statistics.service.StatisticsService;
+import org.ftclub.cabinet.statistics.service.StatisticsFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/v4/admin/statistics")
 public class StatisticsController {
 
-	private final StatisticsService statisticsService;
+	private final StatisticsFacadeService statisticsService;
 	/**
 	 * 전 층의 사물함 정보를 가져옵니다.
 	 * @return 전 층의 사물함 정보를 반환합니다.
