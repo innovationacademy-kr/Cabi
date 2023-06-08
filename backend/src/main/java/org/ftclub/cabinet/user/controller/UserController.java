@@ -46,11 +46,7 @@ public class UserController {
 	 */
 	@GetMapping("/me/lent")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-<<<<<<< HEAD
-	public MyCabinetInfoResponseDto getMyLentAndCabinetInfo(
-=======
 	public MyCabinetResponseDto getMyLentAndCabinetInfo(
->>>>>>> 733389020cddbcc5ed05ec731c4d1dcaee8abad6
 			@UserSession UserSessionDto userSessionDto) {
 		return userFacadeService.getMyLentAndCabinetInfo(
 				userSessionDto.getUserId());
