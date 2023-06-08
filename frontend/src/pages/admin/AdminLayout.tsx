@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { selectedTypeOnSearchState } from "@/recoil/atoms";
-import AdminTopNavContainer from "@/components/TopNav/AdminTopNav.container";
-import LeftNav from "@/components/LeftNav/LeftNav";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { getCookie } from "@/api/react_cookie/cookies";
 import styled, { css } from "styled-components";
+import { selectedTypeOnSearchState } from "@/recoil/atoms";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
-import useMenu from "@/hooks/useMenu";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import LeftNav from "@/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
+import AdminTopNavContainer from "@/components/TopNav/AdminTopNav.container";
 import UserInfoAreaContainer from "@/components/UserInfoArea/UserInfoArea.container";
+import { getCookie } from "@/api/react_cookie/cookies";
+import useMenu from "@/hooks/useMenu";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
