@@ -3,6 +3,7 @@ package org.ftclub.cabinet.dto;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.ftclub.cabinet.cabinet.domain.Location;
 
 /**

@@ -123,11 +123,11 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		lentService.terminateLentCabinet(userId);
 	}
 
-    @Override
-    public MyCabinetInfoResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
-		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
-		MyCabinetInfoResponseDto
-	}
+//    @Override
+//    public MyCabinetInfoResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
+//		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
+////		MyCabinetInfoResponseDto
+//	}
 
 	@Override
 	public void updateCabinetMemo(UserSessionDto user, UpdateCabinetMemoDto updateCabinetMemoDto) {

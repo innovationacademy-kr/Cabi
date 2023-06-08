@@ -31,7 +31,7 @@ public interface CabinetMapper {
     CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
             List<CabinetInfoResponseDto> cabinets);
 
-    OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name, Optional<Location> location);
+    OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name, Location location, Long overdueDays);
 
     OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
             List<OverdueUserCabinetDto> result, Integer totalLength);

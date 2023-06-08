@@ -70,7 +70,7 @@ public interface LentFacadeService {
 	LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
 			Integer length);
 
-	MyCabinetInfoResponseDto getMyLentInfo(UserSessionDto user);
+//	MyCabinetInfoResponseDto getMyLentInfo(UserSessionDto user);
 
 	/**
 	 * 아직 반납하지 않은 사물함의 대여기록을 가져옵니다.

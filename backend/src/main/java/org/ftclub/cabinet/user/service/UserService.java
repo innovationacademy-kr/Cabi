@@ -22,6 +22,8 @@ public interface UserService {
 
 	void updateAdminUserRole(Long adminUserId, AdminRole role);
 
+	void promoteAdminByEmail(String email);
+
 	void updateUserBlackholedAt(Long userId, Date newBlackholedAt);
 
 	void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);

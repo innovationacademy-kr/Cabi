@@ -5,16 +5,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
@@ -81,5 +82,16 @@ public class UserSessionFacadeServiceTest {
 		// test DB상 존재하는 유저 20명
 		List<User> users = userFacadeService.getAllUsers();
 		assertEquals(20, users.size());
+	}
+
+	@Test
+	@DisplayName("현재 연체 중인 유저 전부를 조회합니다.")
+	void 연체유저_전체조회() {
+		//given
+
+		//when
+
+		//then
+
 	}
 }

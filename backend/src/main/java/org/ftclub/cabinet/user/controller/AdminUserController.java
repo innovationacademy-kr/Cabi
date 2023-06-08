@@ -5,14 +5,10 @@ import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthGuard.Level;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.user.domain.UserSession;
-import org.ftclub.cabinet.user.service.AdminUserFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminUserController {
 
     private final UserFacadeService userFacadeService;
-    private final AdminUserFacadeService adminUserFacadeService;
     private final LentFacadeService lentFacadeService;
 
     /**
@@ -131,8 +126,9 @@ public class AdminUserController {
      * @return redirect:cabi.42seoul.io/admin/login
      */
     @GetMapping("management/admin-users/promote")
+    @AuthGuard(level = Level.ADMIN_ONLY) // TODO: MASTER 권한으로 변경
     public void promoteUserToAdmin(@RequestParam("email") String email) {
-        adminUserFacadeService.promoteUserToAdmin(email);
+        userFacadeService.promoteUserToAdmin(email);
     }
 
     /**
@@ -142,10 +138,11 @@ public class AdminUserController {
      * @param length    페이지 당 길이
      */
     @GetMapping("users/overdue")
+    @AuthGuard(level = Level.ADMIN_ONLY)
     public OverdueUserCabinetPaginationDto getOverdueUserList(
             @RequestParam("page") Integer page,
             @RequestParam("length") Integer length) {
-        return adminUserFacadeService.getOverdueUserList(page, length);
+        return userFacadeService.getOverdueUserList(page, length);
     }
 
     // 동아리 유저 생성하는 메서드 필요

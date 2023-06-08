@@ -11,11 +11,18 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
+import org.ftclub.cabinet.cabinet.domain.MapArea;
+import org.ftclub.cabinet.cabinet.domain.SectionFormation;
+import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
+import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
+import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -89,5 +96,25 @@ class CabinetMapperTest {
         assertEquals(section, cabinetsPerSectionResponseDto.getSection());
         assertArrayEquals(cabinetInfoResponseDtos.toArray(),
                 cabinetsPerSectionResponseDto.getCabinets().toArray(new CabinetInfoResponseDto[0]));
+    }
+
+    @Test
+    void toOverdueUserCabinetDtoTest() {
+        //given
+        Location location = Location.of("testBuilding", 99, "testSection");
+        LentHistory lentHistory = LentHistory.of(DateUtil.getNow(), 1L, 2L);
+        String userName = "user1";
+        Long overdueDays = 7L;
+
+        //when
+        OverdueUserCabinetDto overdueUserCabinetDto = cabinetMapper.toOverdueUserCabinetDto(
+                lentHistory, userName, location, overdueDays);
+        System.out.println("overdueUserCabinetDto = " + overdueUserCabinetDto);
+
+        //then
+        assertEquals(overdueUserCabinetDto.getName(), "user1");
+        assertEquals(overdueUserCabinetDto.getCabinetId(), 2L);
+        assertEquals(overdueUserCabinetDto.getLocation(), location);
+        assertEquals(overdueUserCabinetDto.getOverdueDays(), 7);
     }
 }
