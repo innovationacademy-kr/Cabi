@@ -61,11 +61,11 @@ public class LentController {
 
 
 
-//	@GetMapping("users/me")
-//	public MyCabinetInfoResponseDto getMyLentInfo(
-//			@UserSession UserSessionDto user) {
-//		return lentFacadeService.getMyLentInfo(user);
-//	}
+	@GetMapping("users/me")
+	public MyCabinetInfoResponseDto getMyLentInfo(
+			@UserSession UserSessionDto user) {
+		return lentFacadeService.getMyLentInfo(user);
+	}
 
 	@GetMapping("users/me/log")
 	public LentHistoryPaginationDto getMyLentLog(
