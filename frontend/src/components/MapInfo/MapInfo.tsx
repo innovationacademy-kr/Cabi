@@ -18,7 +18,11 @@ const MapInfo = ({
   closeMap: React.MouseEventHandler;
 }) => {
   return (
-    <MapInfoStyled id="mapInfo" onTouchStart={touchStart} onTouchEnd={touchEnd}>
+    <MapInfoContainerStyled
+      id="mapInfo"
+      onTouchStart={touchStart}
+      onTouchEnd={touchEnd}
+    >
       <HeaderStyled>
         <H2Styled>지도</H2Styled>
         <img
@@ -31,7 +35,7 @@ const MapInfo = ({
       </HeaderStyled>
       <MapFloorSelect floor={floor} setFloor={setFloor} floorInfo={floorInfo} />
       <MapGrid floor={floor} />
-    </MapInfoStyled>
+    </MapInfoContainerStyled>
   );
 };
 
@@ -48,7 +52,7 @@ const HeaderStyled = styled.div`
   font-weight: bold;
 `;
 
-const MapInfoStyled = styled.div`
+const MapInfoContainerStyled = styled.div`
   position: fixed;
   top: 80px;
   right: 0;

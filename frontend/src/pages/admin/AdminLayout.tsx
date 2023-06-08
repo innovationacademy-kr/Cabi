@@ -7,7 +7,7 @@ import { selectedTypeOnSearchState } from "@/recoil/atoms";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LeftNav from "@/components/LeftNav/LeftNav";
-import MapInfoContainer from "@/components/MapInfo/MapGridSilder.container";
+import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import AdminTopNavContainer from "@/components/TopNav/AdminTopNav.container";
 import UserInfoAreaContainer from "@/components/UserInfoArea/UserInfoArea.container";
 import { getCookie } from "@/api/react_cookie/cookies";

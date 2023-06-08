@@ -7,7 +7,7 @@ import { userState } from "@/recoil/atoms";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LeftNav from "@/components/LeftNav/LeftNav";
-import MapInfoContainer from "@/components/MapInfo/MapGridSilder.container";
+import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import TopNav from "@/components/TopNav/TopNav.container";
 import { UserDto } from "@/types/dto/user.dto";
 import { axiosMyInfo } from "@/api/axios/axios.custom";

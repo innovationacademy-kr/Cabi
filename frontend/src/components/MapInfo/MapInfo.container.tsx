@@ -4,7 +4,7 @@ import { currentLocationFloorState } from "@/recoil/selectors";
 import MapInfo from "@/components/MapInfo/MapInfo";
 import useMenu from "@/hooks/useMenu";
 
-const MapGridSilderContainer = () => {
+const MapInfoContainer = () => {
   const touchXpos = useRef(0);
   const touchYpos = useRef(0);
   const floorInfo = useRecoilValue(currentLocationFloorState);
@@ -42,4 +42,4 @@ const MapGridSilderContainer = () => {
   );
 };
 
-export default MapGridSilderContainer;
+export default MapInfoContainer;
