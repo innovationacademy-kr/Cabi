@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
@@ -32,6 +33,19 @@ export interface IMultiSelectTargetInfo {
     SET_EXPIRE_FULL: number;
     BROKEN: number;
   };
+}
+
+export interface ICurrentModalStateInfo {
+  lentModal: boolean;
+  unavailableModal: boolean;
+  returnModal: boolean;
+  memoModal: boolean;
+  passwordCheckModal: boolean;
+}
+
+export interface IAdminCurrentModalStateInfo {
+  returnModal: false;
+  statusModal: false;
 }
 
 interface ICount {
@@ -114,7 +128,19 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet, toggleLent } = useMenu();
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
+  const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
+  const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
+    lentModal: false,
+    unavailableModal: false,
+    returnModal: false,
+    memoModal: false,
+    passwordCheckModal: false,
+  });
+  const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
+    returnModal: false,
+    statusModal: false,
+  });
 
   const cabinetViewData: ISelectedCabinetInfo | null = targetCabinetInfo
     ? {
@@ -152,6 +178,38 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
+  const currentlyOpenedModal = (modalName: string, toggle: boolean) => {
+    setUserModal({
+      ...userModal,
+      [modalName]: toggle,
+    });
+  };
+
+  const currentlyOpenedAdminModal = (modalName: string, toggle: boolean) => {
+    setAdminModal({
+      ...adminModal,
+      [modalName]: toggle,
+    });
+  };
+
+  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
+    const returnable = selectedCabinets.find(
+      (cabinet) => cabinet.lent_info.length >= 1
+    );
+    if (returnable !== undefined) {
+      return true;
+    }
+    return false;
+  };
+
+  const checkMultiStatus = (selectedCabinets: CabinetInfo[]) => {
+    // 캐비넷 일괄 상태 관리 모달을 열기 위한 조건
+    // 선택된 캐비넷들이 같은 타입, 같은 상태여야 함.
+    if (isSameType(selectedCabinets) && isSameStatus(selectedCabinets))
+      return true;
+    return false;
+  };
+
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -159,13 +217,16 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         closeCabinet={closeCabinet}
         multiSelectTargetInfo={multiSelectInfo}
         openLent={toggleLent}
+        adminModal={adminModal}
+        currentlyOpenedModal={currentlyOpenedAdminModal}
+        checkMultiReturn={checkMultiReturn}
+        checkMultiStatus={checkMultiStatus}
       />
       {cabinetViewData && <AdminCabinetLentLogContainer />}
     </>
   ) : (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}
-      myCabinetId={myCabinetInfo?.cabinet_id}
       closeCabinet={closeCabinet}
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
       isMine={myCabinetInfo?.cabinet_id === cabinetViewData?.cabinetId}
@@ -173,6 +234,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         cabinetViewData?.status === "AVAILABLE" ||
         cabinetViewData?.status === "SET_EXPIRE_AVAILABLE"
       }
+      userModal={userModal}
+      currentlyOpenedModal={currentlyOpenedModal}
     />
   );
 };
