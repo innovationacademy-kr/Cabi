@@ -8,6 +8,6 @@ import lombok.Getter;
 @Getter
 public class UserCabinetDto {
 
-	List<BlockedUserDto> userInfo;
+	List<UserBlockedInfoDto> userInfo;
 	CabinetDto cabinetInfo;
 }
