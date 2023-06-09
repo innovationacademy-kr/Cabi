@@ -9,6 +9,7 @@ import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -40,4 +41,6 @@ public interface CabinetMapper {
 
 	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
 			List<OverdueUserCabinetDto> result, Integer totalLength);
+
+	MyCabinetResponseDto toMyCabinetResponseDto(CabinetDto cabinetDto, String memo, List<LentDto> lents);
 }

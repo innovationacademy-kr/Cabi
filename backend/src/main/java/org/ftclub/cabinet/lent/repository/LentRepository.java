@@ -124,4 +124,15 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"WHERE lh.expiredAt < :date " +
 			"ORDER BY lh.expiredAt ASC")
 	List<LentHistory> findAllOverdueLent(@Param("date") Date date, Pageable pageable);
+
+
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE :startDate < lh.startedAt AND lh.startedAt < :endDate")
+	Integer countLentByLentTimeBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE :startDate < lh.endedAt AND lh.endedAt < :endDate")
+	Integer countLentByReturnTimeBetween(Date startDate, Date endDate);
 }

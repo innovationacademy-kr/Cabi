@@ -86,6 +86,21 @@ public class LentServiceImpl implements LentService {
 		returnCabinet(userId);
 	}
 
+	@Override
+	public void terminateLentByCabinetId(Long cabinetId) {
+		returnCabinetByCabinetId(cabinetId);
+	}
+
+	private LentHistory returnCabinetByCabinetId(Long cabinetId) {
+		Date now = new Date();
+		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
+		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithCabinetId(cabinetId);
+		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
+		lentHistory.endLent(now);
+		cabinet.specifyStatusByUserCount(activeLentCount - 1);
+		return lentHistory;
+	}
+
 	private LentHistory returnCabinet(Long userId) {
 		Date now = new Date();
 		userExceptionHandler.getUser(userId);
@@ -95,5 +110,17 @@ public class LentServiceImpl implements LentService {
 		lentHistory.endLent(now);
 		cabinet.specifyStatusByUserCount(activeLentCount - 1);
 		return lentHistory;
+	}
+
+	@Override
+	public void assignLent(Long userId, Long cabinetId) {
+		Date now = DateUtil.getNow();
+		userExceptionHandler.getUser(userId);
+		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
+		lentExceptionHandler.checkExistedSpace(cabinetId);
+		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
+		LentHistory result = LentHistory.of(now, expirationDate, userId, cabinetId);
+		cabinet.specifyStatusByUserCount(1);
+		lentRepository.save(result);
 	}
 }

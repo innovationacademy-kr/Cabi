@@ -6,6 +6,8 @@ import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.statistics.service.StatisticsFacadeService;
+import org.ftclub.cabinet.user.service.UserFacadeService;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,14 +21,15 @@ import java.util.List;
 @RequestMapping("/v4/admin/statistics")
 public class StatisticsController {
 
-	private final StatisticsFacadeService statisticsService;
+	private final StatisticsFacadeService statisticsFacadeService;
+	private final UserFacadeService userFacadeService;
 	/**
 	 * 전 층의 사물함 정보를 가져옵니다.
 	 * @return 전 층의 사물함 정보를 반환합니다.
 	 */
 	@GetMapping("/buildings/floors/cabinets")
 	public List<CabinetFloorStatisticsResponseDto> getCabinetsInfoOnAllFloors() {
-		return statisticsService.getCabinetsCountOnAllFloors();
+		return statisticsFacadeService.getCabinetsCountOnAllFloors();
 	}
 
 	/**
@@ -40,7 +43,7 @@ public class StatisticsController {
 			@RequestParam("startDate") Date startDate,
 			@RequestParam("endDate") Date endDate
 	) {
-		return statisticsService.getCountOnLentAndReturn(startDate, endDate);
+		return statisticsFacadeService.getCountOnLentAndReturn(startDate, endDate);
 	}
 
 	/**
@@ -54,7 +57,7 @@ public class StatisticsController {
 			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length
 	) {
-		return statisticsService.getUsersBannedInfo(page, length);
+		return userFacadeService.getAllBanUsers(page, length, DateUtil.getNow());
 	}
 
 	/**
@@ -68,6 +71,6 @@ public class StatisticsController {
 			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length
 	) {
-		return statisticsService.getOverdueUsers(page, length);
+		return userFacadeService.getOverdueUserList(page, length);
 	}
 }

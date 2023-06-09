@@ -13,8 +13,4 @@ public interface StatisticsFacadeService {
     List<CabinetFloorStatisticsResponseDto> getCabinetsCountOnAllFloors();
 
     LentsStatisticsResponseDto getCountOnLentAndReturn(Date startDate, Date endDate);
-
-    BlockedUserPaginationDto getUsersBannedInfo(Integer page, Integer length);
-
-    OverdueUserCabinetPaginationDto getOverdueUsers(Integer page, Integer length);
 }
