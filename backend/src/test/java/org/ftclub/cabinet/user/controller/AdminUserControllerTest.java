@@ -42,40 +42,10 @@ class AdminUserControllerTest {
 	}
 
 	@Test
-	void getUserProfileListByPartialName() throws Exception {
-		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
-						"/api/admin/search/users/{name}", "user").param("page", "0").param("length", "10"))
-				.andExpect(status().isOk());
-	}
-
-//	@Test
-//	void findUserCabinetListByPartialName() throws Exception {
-//		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
-//						"/api/admin/search/users").param("name", "user").param("page", "0")
-//						.param("length", "10"))
-//				.andExpect(status().isOk());
-//	}
-
-	@Test
-	void getBannedUsersList() throws Exception {
-		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
-						"/api/admin/search/users/banned").param("page", "0").param("length", "10"))
-				.andExpect(status().isNoContent());
-	}
-
-	@Test
 	void deleteBanHistoryByUserId() throws Exception {
 		// 밴 기록이 없는 유저
 		mockMvc.perform(mockRequest(HttpMethod.DELETE, cookie,
-						"/api/admin/log/users/{userId}/ban-history", 2L))
+						"/v4/admin/users/{userId}/ban-history", 2L))
 				.andExpect(status().isNotFound());
 	}
-
-//	@Test
-//	void getLentHistoriesByUserId() throws Exception {
-//		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
-//						"/api/admin/log/users/{userId}/lent-histories", 5L).param("page", "0")
-//						.param("length", "10"))
-//				.andExpect(status().isOk());
-//	}
 }

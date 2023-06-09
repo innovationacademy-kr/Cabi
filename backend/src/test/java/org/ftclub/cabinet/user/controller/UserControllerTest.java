@@ -39,7 +39,7 @@ public class UserControllerTest {
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
-						"/api/users/me"))
+						"/v4/users/me"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.userId").value(myProfileResponseDto.getUserId()))
 				.andExpect(jsonPath("$.name").value(myProfileResponseDto.getName()))
@@ -57,38 +57,12 @@ public class UserControllerTest {
 				"lentuser1", DateUtil.getNow());
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
-						"/api/users/me"))
+						"/v4/users/me"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.userId").value(myProfileResponseDto.getUserId()))
 				.andExpect(jsonPath("$.name").value(myProfileResponseDto.getName()))
 				.andExpect(jsonPath("$.cabinetId").value(myProfileResponseDto.getCabinetId()))
 				.andExpect(jsonPath("$.unbannedAt").value(myProfileResponseDto.getUnbannedAt()));
 	}
-
-	// 완전히 구현되어 있지 않은 메서드
-//	@Test
-//	public void testGetMyLentAndCabinetInfo() throws Exception {
-//		// lentuser1 대여 중인 사물함 3번
-//		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-//				"lentuser1");
-//		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
-//		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
-//						"/api/users/me/lent"))
-//				.andExpect(status().isOk())
-//				.andExpect(jsonPath("$.userId").value(5L))
-//				.andExpect(jsonPath("$.cabinetId").value(3L));
-//	}
-
-//	@Test
-//	public void testGetMyLentHistories() throws Exception {
-//		// lentuser1 대여 중인 사물함 3번
-//		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-//				"lentuser1");
-//		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
-//		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
-//						"/api/users/me/lent/histories").param("page", "0").param("length", "10"))
-//				.andExpect(status().isOk())
-//				.andExpect(jsonPath("$.totalLength").value(11));
-//	}
 }
 
