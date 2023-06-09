@@ -55,6 +55,15 @@ interface ICount {
   BROKEN: number;
 }
 
+export type TModalState =
+  | "lentModal"
+  | "unavailableModal"
+  | "returnModal"
+  | "memoModal"
+  | "passwordCheckModal";
+
+export type TAdminModalState = "returnModal" | "statusModal";
+
 const calExpiredTime = (expireTime: Date) =>
   Math.floor(
     (expireTime.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
@@ -178,14 +187,17 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
-  const currentlyOpenedModal = (modalName: string, toggle: boolean) => {
+  const currentlyOpenedModal = (modalName: TModalState, toggle: boolean) => {
     setUserModal({
       ...userModal,
       [modalName]: toggle,
     });
   };
 
-  const currentlyOpenedAdminModal = (modalName: string, toggle: boolean) => {
+  const currentlyOpenedAdminModal = (
+    modalName: TAdminModalState,
+    toggle: boolean
+  ) => {
     setAdminModal({
       ...adminModal,
       [modalName]: toggle,

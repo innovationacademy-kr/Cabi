@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import {
   ICurrentModalStateInfo,
   ISelectedCabinetInfo,
+  TModalState,
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
 import LentModal from "@/components/Modals/LentModal/LentModal";
@@ -27,7 +28,7 @@ const CabinetInfoArea: React.FC<{
   isMine: boolean;
   isAvailable: boolean;
   userModal: ICurrentModalStateInfo;
-  currentlyOpenedModal: (modalName: string, toggle: boolean) => void;
+  currentlyOpenedModal: (modalName: TModalState, toggle: boolean) => void;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,

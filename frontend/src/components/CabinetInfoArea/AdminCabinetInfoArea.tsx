@@ -4,6 +4,7 @@ import {
   IAdminCurrentModalStateInfo,
   IMultiSelectTargetInfo,
   ISelectedCabinetInfo,
+  TAdminModalState,
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
 import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
@@ -26,7 +27,7 @@ const AdminCabinetInfoArea: React.FC<{
   multiSelectTargetInfo: IMultiSelectTargetInfo | null;
   openLent: React.MouseEventHandler;
   adminModal: IAdminCurrentModalStateInfo;
-  currentlyOpenedModal: (moadlName: string, toggle: boolean) => void;
+  currentlyOpenedModal: (moadlName: TAdminModalState, toggle: boolean) => void;
   checkMultiReturn: (selectedCabinets: CabinetInfo[]) => boolean;
   checkMultiStatus: (selectedCabinets: CabinetInfo[]) => boolean;
 }> = ({
