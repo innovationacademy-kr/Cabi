@@ -24,14 +24,6 @@ public interface CabinetService {
 	void updateStatus(Long cabinetId, CabinetStatus status);
 
 	/**
-	 * 대여 시작/종료 이후의 사용자 수에 따라 사물함의 상태를 변경합니다.
-	 *
-	 * @param cabinetId 사물함 ID
-	 * @param userCount 사용자 수
-	 */
-	void updateStatusByUserCount(Long cabinetId, Integer userCount);
-
-	/**
 	 * 사물함의 메모를 업데이트합니다.
 	 *
 	 * @param cabinetId 사물함 ID

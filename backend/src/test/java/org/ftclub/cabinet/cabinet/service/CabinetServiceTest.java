@@ -40,9 +40,10 @@ class CabinetServiceTest {
 	@Test
 	public void 불가능한_사물함_유저수_상태_업데이트() {
 		Long brokenId = 1L;
+		Cabinet cabinet = cabinetService.getCabinet(brokenId);
 
 		assertThrows(ServiceException.class, () -> {
-			cabinetService.updateStatusByUserCount(brokenId, 0);
+			cabinet.specifyStatusByUserCount(0);
 		});
 	}
 
@@ -52,38 +53,45 @@ class CabinetServiceTest {
 		Long overdueId = 6L;
 		Long availableId = 8L;
 		Long limitedAvailableId = 16L;
+		Cabinet fullCabinet = cabinetService.getCabinet(fullId);
+		Cabinet overdueCabinet = cabinetService.getCabinet(overdueId);
+		Cabinet availableCabinet = cabinetService.getCabinet(availableId);
+		Cabinet limitedAvailableCabinet = cabinetService.getCabinet(limitedAvailableId);
 
-		cabinetService.updateStatusByUserCount(fullId, 2);
-		cabinetService.updateStatusByUserCount(overdueId, 0);
-		cabinetService.updateStatusByUserCount(availableId, 3);
-		cabinetService.updateStatusByUserCount(limitedAvailableId, 0);
+
+		fullCabinet.specifyStatusByUserCount(2);
+		overdueCabinet.specifyStatusByUserCount(0);
+		availableCabinet.specifyStatusByUserCount(3);
+		limitedAvailableCabinet.specifyStatusByUserCount(0);
 
 		// 3 -> 2
 		assertEquals(CabinetStatus.LIMITED_AVAILABLE,
-				cabinetService.getCabinet(fullId).getStatus());
+				fullCabinet.getStatus());
 		// 0, 1, 2 -> 0
 		assertEquals(CabinetStatus.AVAILABLE,
-				cabinetService.getCabinet(overdueId).getStatus());
+				overdueCabinet.getStatus());
 		// 0, 1, 2 -> 3
 		assertEquals(CabinetStatus.FULL,
-				cabinetService.getCabinet(availableId).getStatus());
+				availableCabinet.getStatus());
 		// 1 -> 0
 		assertEquals(CabinetStatus.AVAILABLE,
-				cabinetService.getCabinet(limitedAvailableId).getStatus());
+				limitedAvailableCabinet.getStatus());
 	}
 
 	@Test
 	public void 개인_사물함_유저수_상태_업데이트() {
 		Long fullId = 3L;
 		Long availableId = 7L;
+		Cabinet fullCabinet = cabinetService.getCabinet(fullId);
+		Cabinet availableCabinet = cabinetService.getCabinet(availableId);
 
-		cabinetService.updateStatusByUserCount(fullId, 0);
-		cabinetService.updateStatusByUserCount(availableId, 1);
+		fullCabinet.specifyStatusByUserCount(0);
+		availableCabinet.specifyStatusByUserCount(1);
 
 		// 1 -> 0
-		assertEquals(CabinetStatus.AVAILABLE, cabinetService.getCabinet(fullId).getStatus());
+		assertEquals(CabinetStatus.AVAILABLE, fullCabinet.getStatus());
 		// 0 -> 1
-		assertEquals(CabinetStatus.FULL, cabinetService.getCabinet(availableId).getStatus());
+		assertEquals(CabinetStatus.FULL, availableCabinet.getStatus());
 	}
 
 	@Test
