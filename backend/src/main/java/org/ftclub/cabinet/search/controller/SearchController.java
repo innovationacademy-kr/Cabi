@@ -23,7 +23,7 @@ public class SearchController {
         return cabinetFacadeService.getCabinetsInfo(visibleNum);
     }
 
-    @GetMapping("/users-name")
+    @GetMapping("/users-simple")
     public UserProfilePaginationDto getUsersProfile(
             @PathVariable("name") String name,
             @RequestParam("page") Integer page,
