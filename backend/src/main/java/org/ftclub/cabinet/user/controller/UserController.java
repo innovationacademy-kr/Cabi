@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/v4/users")
 public class UserController {
 
 	private final UserFacadeService userFacadeService;
@@ -36,35 +36,5 @@ public class UserController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
 		return userFacadeService.getMyProfile(userSessionDto);
-	}
-
-	/**
-	 * 현재 로그인한 유저의 대여 정보와 대여한 사물함 정보를 반환합니다.
-	 *
-	 * @param userSessionDto 현재 로그인한 유저의 세션 정보
-	 * @return {@link MyCabinetResponseDto} 현재 로그인한 유저의 대여 정보와 대여한 사물함 정보
-	 */
-	@GetMapping("/me/lent")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public MyCabinetResponseDto getMyLentAndCabinetInfo(
-			@UserSession UserSessionDto userSessionDto) {
-		return userFacadeService.getMyLentAndCabinetInfo(
-				userSessionDto.getUserId());
-	}
-
-	/**
-	 * 현재 로그인한 유저의 대여 기록을 반환합니다.
-	 *
-	 * @param userSessionDto 현재 로그인한 유저의 세션 정보
-	 * @param page           페이지 번호
-	 * @param length         페이지 당 길이
-	 * @return {@link LentHistoryPaginationDto} 현재 로그인한 유저의 대여 기록
-	 */
-	@GetMapping("/me/lent/histories")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public LentHistoryPaginationDto getMyLentHistories(@UserSession UserSessionDto userSessionDto,
-			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
-		return lentFacadeService.getAllUserLentHistories(
-				userSessionDto.getUserId(), page, length);
 	}
 }

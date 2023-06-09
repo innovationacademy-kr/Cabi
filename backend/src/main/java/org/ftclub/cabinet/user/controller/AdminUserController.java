@@ -24,80 +24,18 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin")
+@RequestMapping("/v4/admin/users")
 public class AdminUserController {
 
 	private final UserFacadeService userFacadeService;
 	private final LentFacadeService lentFacadeService;
 
 	/**
-	 * 유저 이름의 일부를 입력받아 해당 유저들의 프로필을 반환합니다.
-	 *
-	 * @param name   유저 이름의 일부
-	 * @param page   페이지 번호
-	 * @param length 페이지 당 길이
-	 * @return {@link UserProfilePaginationDto} 해당하는 유저들의 프로필
-	 */
-	@GetMapping("/search/users/{name}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public ResponseEntity<UserProfilePaginationDto> getUserProfileListByPartialName(
-			@PathVariable("name") String name,
-			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
-		UserProfilePaginationDto userProfilePaginationDto = userFacadeService.getUserProfileListByPartialName(
-				name, page, length);
-		if (userProfilePaginationDto.getTotalPage() == 0) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(userProfilePaginationDto);
-	}
-
-	/**
-	 * 유저 이름의 일부를 입력받아 해당 유저들의 캐비넷 정보를 반환합니다.
-	 *
-	 * @param name   유저 이름의 일부
-	 * @param page   페이지 번호
-	 * @param length 페이지 당 길이
-	 * @return {@link UserCabinetPaginationDto} 해당하는 유저들의 캐비넷 정보
-	 */
-	@GetMapping("/search/users")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public ResponseEntity<UserCabinetPaginationDto> findUserCabinetListByPartialName(
-			@RequestParam("name") String name,
-			@RequestParam("page") Integer page, @RequestParam("length") Integer length) {
-		UserCabinetPaginationDto userCabinetPaginationDto = userFacadeService
-				.findUserCabinetListByPartialName(name, page, length);
-		if (userCabinetPaginationDto.getTotalPage() == 0) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(userCabinetPaginationDto);
-	}
-
-	/**
-	 * 차단된 유저 리스트를 받아옵니다.
-	 *
-	 * @param page   페이지 번호
-	 * @param length 페이지 당 길이
-	 * @return {@link BlockedUserPaginationDto} 차단된 유저 리스트 혹은 204 No Content
-	 */
-	@GetMapping("/search/users/banned")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public ResponseEntity<BlockedUserPaginationDto> getBannedUsersList(
-			@RequestParam("page") Integer page,
-			@RequestParam("length") Integer length) {
-		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService
-				.getAllBanUsers(page, length, DateUtil.getNow());
-		if (blockedUserPaginationDto.getTotalPage() == 0) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(blockedUserPaginationDto);
-	}
-
-	/**
 	 * 현재 유저가 차단된 상태일 때, 차단을 해제합니다.
 	 *
 	 * @param userId 유저 고유 아이디
 	 */
-	@DeleteMapping("/log/users/{userId}/ban-history")
+	@DeleteMapping("/{userId}/ban-history")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
 		userFacadeService.deleteRecentBanHistory(userId, DateUtil.getNow());
@@ -111,38 +49,23 @@ public class AdminUserController {
 	 * @param length 페이지 당 길이
 	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
 	 */
-	@GetMapping("/log/users/{userId}/lent-histories")
+	@GetMapping("/{userId}/lent-histories")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public LentHistoryPaginationDto getLentHistoriesByUserId(@PathVariable("userId") Long userId,
 			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length) {
 		return lentFacadeService.getAllUserLentHistories(userId, page, length);
 	}
+
 	/**
 	 * 유저를 어드민으로 승격시킵니다.
 	 *
 	 * @param email 유저 이메일
 	 * @return redirect:cabi.42seoul.io/admin/login
 	 */
-	@GetMapping("management/admin-users/promote")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY) // TODO: MASTER 권한으로 변경
+	@GetMapping("/admins/promote")
+	@AuthGuard(level = AuthLevel.MASTER_ONLY)
 	public void promoteUserToAdmin(@RequestParam("email") String email) {
 		userFacadeService.promoteUserToAdmin(email);
 	}
-
-	/**
-	 * 연체 중인 유저 리스트를 반환합니다.
-	 *
-	 * @param page      페이지 번호
-	 * @param length    페이지 당 길이
-	 */
-	@GetMapping("users/overdue")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public OverdueUserCabinetPaginationDto getOverdueUserList(
-			@RequestParam("page") Integer page,
-			@RequestParam("length") Integer length) {
-		return userFacadeService.getOverdueUserList(page, length);
-	}
-
-	// 동아리 유저 생성하는 메서드 필요
 }
