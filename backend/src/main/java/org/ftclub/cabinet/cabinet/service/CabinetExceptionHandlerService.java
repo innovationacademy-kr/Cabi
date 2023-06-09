@@ -21,6 +21,20 @@ public class CabinetExceptionHandlerService {
 	private final CabinetRepository cabinetRepository;
 
 	/**
+	 * 사물함 ID로 변경 사항이 예정된 사물함을 찾습니다.
+	 *
+	 * X Lock을 획득한 상태로 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 ID
+	 * @return 사물함 엔티티
+	 * @throws ServiceException 사물함을 찾을 수 없는 경우
+	 */
+	public Cabinet getCabinetForUpdate(Long cabinetId) {
+		return cabinetRepository.findByIdForUpdate(cabinetId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+	}
+
+	/**
 	 * 사물함 ID로 사물함을 찾습니다.
 	 *
 	 * @param cabinetId 사물함 ID

@@ -1,16 +1,18 @@
 package org.ftclub.cabinet.auth.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.TokenProvider;
 import org.ftclub.cabinet.auth.service.OauthService;
+import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.cabinet.config.SiteUrlProperties;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,21 +28,21 @@ public class AuthController {
 	private final OauthService oauthService;
 	private final CookieManager cookieManager;
 	private final FtApiProperties ftApiProperties;
-	private final SiteUrlProperties siteUrlProperties;
+	private final DomainProperties DomainProperties;
 	private final JwtProperties jwtProperties;
 
-	/**
-	 * 42 API 로그인 페이지로 리다이렉트합니다.
-	 *
-	 * @param response 요청 시의 서블렛 {@link HttpServletResponse}
-	 * @throws IOException 입출력 예외
-	 */
-	@GetMapping("/login")
-	public void login(HttpServletResponse response) throws IOException {
-		oauthService.sendToApi(response, ftApiProperties);
-	}
+    /**
+     * 42 API 로그인 페이지로 리다이렉트합니다.
+     *
+     * @param response 요청 시의 서블렛 {@link HttpServletResponse}
+     * @throws IOException 입출력 예외
+     */
+    @GetMapping("/login")
+    public void login(HttpServletResponse response) throws IOException {
+        oauthService.sendToApi(response, ftApiProperties);
+    }
 
-	/**
+    /*
 	 * 42 API 로그인 성공 시에 콜백을 처리합니다.
 	 * <br>
 	 * 42 API로부터 받은 인증 코드를 이용하여 42 API에게 인증 토큰을 요청하고,
@@ -65,8 +67,17 @@ public class AuthController {
 				DateUtil.getNow());
 		cookieManager.setCookie(res, jwtProperties.getMainTokenName(), accessToken, "/",
 				req.getServerName());
-		res.sendRedirect(siteUrlProperties.getFeHost() + "/main");
+		res.sendRedirect(DomainProperties.getFeHost() + "/main");
 	}
 
-	//todo  - logout
+    /**
+     * 로그아웃시, HTTP Response 의 set-cookie Header 를 지워줍니다.
+     * cookie에 담긴 JWT 토큰을 제거합니다.
+     *
+     * @param res 요청 시의 서블릿 {@link HttpServletResponse}
+     */
+    @GetMapping("/logout")
+    public void logout(HttpServletResponse res) {
+        cookieManager.deleteCookie(res, jwtProperties.getMainTokenName());
+    }
 }

@@ -48,18 +48,6 @@ public class CabinetServiceImpl implements CabinetService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateStatusByUserCount(Long cabinetId, Integer userCount) {
-		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
-		if (!cabinet.isStatusUpdatableByUserCount(userCount)) {
-			throw new ServiceException(ExceptionStatus.UNCHANGEABLE_CABINET);
-		}
-		cabinet.specifyStatusByUserCount(userCount);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public void updateMemo(Long cabinetId, String memo) {
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.writeMemo(memo);

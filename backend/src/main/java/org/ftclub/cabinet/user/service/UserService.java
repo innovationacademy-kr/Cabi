@@ -22,6 +22,13 @@ public interface UserService {
 
 	void updateAdminUserRole(Long adminUserId, AdminRole role);
 
+	/**
+	 * 어드민 유저를 email로 찾고, 권한을 승인합니다.
+	 *
+	 * @param email
+	 */
+	void promoteAdminByEmail(String email);
+
 	void updateUserBlackholedAt(Long userId, Date newBlackholedAt);
 
 	void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
@@ -35,4 +42,6 @@ public interface UserService {
 	 * @return 정지 상태인 경우 true, 정지 상태가 아닌 경우 false
 	 */
 	boolean checkUserIsBanned(Long userId, Date today);
+
+	AdminRole getAdminUserRole(String email);
 }

@@ -86,6 +86,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void promoteAdminByEmail(String email) {
+		AdminUser adminUser = userExceptionHandlerService.getAdminUserByEmail(email);
+		if (adminUser.getRole() == AdminRole.NONE)
+			adminUser.changeAdminRole(AdminRole.ADMIN);
+	}
+
+	@Override
 	public void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt,
 			Date expiredAt) {
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);
@@ -110,5 +117,10 @@ public class UserServiceImpl implements UserService {
 		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
 				today);
 		return (banHistory.size() != 0);
+	}
+
+	@Override
+	public AdminRole getAdminUserRole(String email) {
+		return userRepository.getAdminUserRole(email);
 	}
 }

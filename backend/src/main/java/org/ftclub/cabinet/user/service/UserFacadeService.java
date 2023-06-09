@@ -3,12 +3,8 @@ package org.ftclub.cabinet.user.service;
 import java.util.Date;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
-import org.ftclub.cabinet.dto.UserProfilePaginationDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -61,9 +57,9 @@ public interface UserFacadeService {
 	 * 사용자의 아이디를 입력받아 본인의 대여 정보와 캐비넷 정보를 반환합니다.
 	 *
 	 * @param userId 유저 고유 아이디
-	 * @return {@link MyCabinetInfoResponseDto} 본인의 대여 정보와 캐비넷 정보
+	 * @return {@link MyCabinetResponseDto} 본인의 대여 정보와 캐비넷 정보
 	 */
-	MyCabinetInfoResponseDto getMyLentAndCabinetInfo(Long userId);
+	MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId);
 
 	/**
 	 * 모든 유저의 정보를 가져옵니다.
@@ -129,6 +125,13 @@ public interface UserFacadeService {
 	void updateAdminUserRole(Long adminUserId, AdminRole role);
 
 	/**
+	 * 유저를 어드민으로 승격시킵니다.
+	 *
+	 * @param email 유저 이메일
+	 */
+	void promoteUserToAdmin(String email);
+
+	/**
 	 * 유저의 블랙홀 시간을 변경합니다.
 	 *
 	 * @param userId          유저 고유 아이디
@@ -154,4 +157,12 @@ public interface UserFacadeService {
 	 * @param today  현재 날짜
 	 */
 	void deleteRecentBanHistory(Long userId, Date today);
+
+	/**
+	 * 연체 중인 유저 리스트를 반환합니다.
+	 *
+	 * @param page      페이지 번호
+	 * @param length    페이지 당 길이
+	 */
+	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer length);
 }

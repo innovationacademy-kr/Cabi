@@ -17,11 +17,6 @@ public class AdminLentController {
 
 	private final LentFacadeService lentFacadeService;
 
-	/**
-	 * To-Do /api/admin/search/statistics /api/admin/return/bundle/cabinet
-	 * /api/admin/return/user/:userId /api/admin/return/cabinet/:cabinetId
-	 * /api/admin/lent/cabinet/:cabinetId/:userId
-	 */
 	@PatchMapping("/return-cabinets")
 	public void terminateLentCabinets(@RequestBody List<Long> cabinets) {
 		lentFacadeService.terminateLentCabinets(cabinets);

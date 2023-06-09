@@ -13,6 +13,7 @@ import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ftclub.cabinet.utils.DateUtil;
 
 /**
@@ -22,6 +23,7 @@ import org.ftclub.cabinet.utils.DateUtil;
 @Table(name = "LENT_HISTORY")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString
 public class LentHistory {
 
 	@Id

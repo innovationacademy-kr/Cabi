@@ -2,16 +2,29 @@ package org.ftclub.cabinet.cabinet.repository;
 
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.LockModeType;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
+
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT c "
+			+ "FROM Cabinet c "
+			+ "WHERE c.cabinetId = :cabinetId")
+	Optional<Cabinet> findByIdForUpdate(@Param("cabinetId") Long cabinetId);
 
 	@Query("SELECT DISTINCT p.location.floor "
 			+ "FROM Cabinet c "
@@ -85,4 +98,22 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	boolean existsBuildingAndFloor(
 			@Param("building") String building,
 			@Param("floor") Integer floor);
+
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.lentType = :lentType")
+	Page<Cabinet> findAllCabinetsByLentType(@Param("lentType") LentType lentType,
+			Pageable pageable);
+
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.status = :status")
+	Page<Cabinet> findAllCabinetsByStatus(@Param("status") CabinetStatus status,
+			Pageable pageable);
+
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.visibleNum = :visibleNum")
+	Page<Cabinet> findAllCabinetsByVisibleNum(@Param("visibleNum") Integer visibleNum,
+			Pageable pageable);
 }

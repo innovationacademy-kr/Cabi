@@ -5,19 +5,22 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
+import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.PaginationRequestDto;
 import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
 import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
@@ -36,6 +39,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private final LentService lentService;
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;
+	private final CabinetMapper cabinetMapper;
+	private final CabinetRepository cabinetRepository;
 
 	@Override
 	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
@@ -137,8 +142,13 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
-	public MyCabinetInfoResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
+	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
 		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
+		CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinetExceptionHandler.getLocation(myCabinet.getCabinetId()), myCabinet);
+		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
+		return cabinetMapper.toMyCabinetResponseDto(cabinetDto, myCabinet.getMemo(), lentDtoList);
+
+
 	}
 
 	@Override

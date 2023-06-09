@@ -4,7 +4,7 @@ import java.util.List;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.PaginationRequestDto;
 import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
 import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
@@ -82,7 +82,7 @@ public interface LentFacadeService {
 	LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
 			Integer length);
 
-	MyCabinetInfoResponseDto getMyLentInfo(UserSessionDto user);
+	MyCabinetResponseDto getMyLentInfo(UserSessionDto user);
 
 	/**
 	 * 아직 반납하지 않은 사물함의 대여기록을 가져옵니다.

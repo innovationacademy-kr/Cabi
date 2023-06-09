@@ -35,7 +35,7 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		Date now = new Date();
-		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetExceptionHandler.getCabinetForUpdate(cabinetId);
 		User user = userExceptionHandler.getUser(userId);
 		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
 		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
@@ -75,7 +75,7 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void endLentCabinet(Long userId) {
 		LentHistory lentHistory = returnCabinet(userId);
-		Cabinet cabinet = cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId());
+		Cabinet cabinet = cabinetExceptionHandler.getCabinetForUpdate(lentHistory.getCabinetId());
 		// cabinetType도 인자로 전달하면 좋을 거 같습니다 (공유사물함 3일이내 반납 페널티)
 		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
@@ -93,11 +93,11 @@ public class LentServiceImpl implements LentService {
 
 	private LentHistory returnCabinetByCabinetId(Long cabinetId) {
 		Date now = new Date();
-		cabinetExceptionHandler.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
 		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithCabinetId(cabinetId);
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(now);
-		cabinetService.updateStatusByUserCount(lentHistory.getCabinetId(), activeLentCount - 1);
+		cabinet.specifyStatusByUserCount(activeLentCount - 1);
 		return lentHistory;
 	}
 
@@ -105,9 +105,10 @@ public class LentServiceImpl implements LentService {
 		Date now = new Date();
 		userExceptionHandler.getUser(userId);
 		LentHistory lentHistory = lentExceptionHandler.getActiveLentHistoryWithUserId(userId);
+		Cabinet cabinet = cabinetExceptionHandler.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(now);
-		cabinetService.updateStatusByUserCount(lentHistory.getCabinetId(), activeLentCount - 1);
+		cabinet.specifyStatusByUserCount(activeLentCount - 1);
 		return lentHistory;
 	}
 

@@ -9,7 +9,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public class BlockedUserDto {
+public class UserBlockedInfoDto {
 
 	private final Long userId;
 	private final String name;

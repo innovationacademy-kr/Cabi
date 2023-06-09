@@ -60,7 +60,7 @@ public class LentController {
 
 
 	@GetMapping("users/me")
-	public MyCabinetInfoResponseDto getMyLentInfo(
+	public MyCabinetResponseDto getMyLentInfo(
 			@UserSession UserSessionDto user) {
 		return lentFacadeService.getMyLentInfo(user);
 	}

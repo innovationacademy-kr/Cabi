@@ -1,8 +1,10 @@
 package org.ftclub.cabinet.lent.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -104,4 +106,33 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"FROM LentHistory lh " +
 			"WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
 	List<LentHistory> findAllActiveLentByCabinetId(@Param("cabinetId") Long cabinetId);
+
+	@Query("SELECT lh " +
+			"FROM LentHistory lh " +
+			"WHERE lh.cabinetId = :cabinetId")
+	Page<LentHistory> findPaginationByCabinetId(@Param("cabinetId") Long cabinetId,
+			Pageable pageable);
+
+	/**
+	 * 연체되어 있는 사물함을 모두 가져옵니다.
+	 *
+	 * @param date	연체의 기준 날짜/시간
+	 * @return 연체되어 있는 {@link LentHistory}의 {@link List}
+	 */
+	@Query("SELECT lh " +
+			"FROM LentHistory lh " +
+			"WHERE lh.expiredAt < :date " +
+			"ORDER BY lh.expiredAt ASC")
+	List<LentHistory> findAllOverdueLent(@Param("date") Date date, Pageable pageable);
+
+
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE :startDate < lh.startedAt AND lh.startedAt < :endDate")
+	Integer countLentByLentTimeBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE :startDate < lh.endedAt AND lh.endedAt < :endDate")
+	Integer countLentByReturnTimeBetween(Date startDate, Date endDate);
 }

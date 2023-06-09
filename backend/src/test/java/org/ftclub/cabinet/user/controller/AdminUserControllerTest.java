@@ -5,7 +5,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
+
+import org.ftclub.cabinet.auth.domain.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class AdminUserControllerTestSession {
+class AdminUserControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
@@ -26,12 +29,15 @@ class AdminUserControllerTestSession {
 	@Autowired
 	JwtProperties jwtProperties;
 
+	@Autowired
+	TokenValidator tokenValidator;
+
 	String adminToken;
 	Cookie cookie;
 
 	@BeforeEach
 	void setToken() {
-		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey());
+		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(), DateUtil.getNow());
 		cookie = TestControllerUtils.getTokenCookie("관리자", adminToken);
 	}
 

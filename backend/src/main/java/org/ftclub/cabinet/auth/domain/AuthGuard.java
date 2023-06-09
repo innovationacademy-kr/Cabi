@@ -16,14 +16,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuthGuard {
 
-	Level level() default Level.USER_ONLY;
+	AuthLevel level() default AuthLevel.USER_ONLY;
 
 	/**
-	 * 해당 어노테이션의 Level을 이용해서, 필요한 인증의 유무를 명시합니다.
+	 * 해당 어노테이션의 Level을 이용해서, 필요한 인증의 유무를 명시합니다. USER : 일반 유저 ADMIN : 일반 관리자 MASTER : 최고 관리자
 	 */
-	enum Level {
-		USER_ONLY,
-		ADMIN_ONLY,
-		USER_OR_ADMIN
-	}
+
 }

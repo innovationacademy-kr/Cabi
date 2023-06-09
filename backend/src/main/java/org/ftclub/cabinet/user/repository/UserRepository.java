@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.repository;
 
 import java.util.Optional;
+import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByName(@Param("name") String name);
 
 	/**
+	 * 유저의 이메일로 유저를 찾습니다.
+	 *
+	 * @param email     유저 이메일
+	 * @return {@link User}
+	 */
+	@Query("SELECT u FROM User u WHERE u.email = :email")
+	Optional<User> findByEmail(@Param("email") String email);
+
+	/**
 	 * 유저의 이름 일부분으로 유저를 찾습니다.
 	 *
 	 * @param name     유저 이름 일부분
@@ -59,4 +69,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
 	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
+
+	@Query("SELECT au.role FROM AdminUser au WHERE au.email = :email")
+	AdminRole getAdminUserRole(@Param("email") String email);
 }

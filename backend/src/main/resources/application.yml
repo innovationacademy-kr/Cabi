@@ -3,31 +3,30 @@
 spring:
   server:
     port: 2424
-  profiles:
-    active: prod
   config:
-    import: classpath:application-oauth.yml, classpath:application-mail.yml
+    import: classpath:application-auth.yml, classpath:application-mail.yml
+    activate:
+      on-profile: prod
 
 ---
 #개발서버 환경
 spring:
   server:
     port: 2424
-  profiles:
-    active: dev
   config:
-    import: classpath:application-oauth.yml
+    import: classpath:application-auth.yml
+    activate:
+      on-profile: dev
 
 ---
 #로컬 환경
 spring:
   server:
     port: 2424
-  profiles:
-    active: local
   config:
-    import: classpath:application-oauth.yml
+    import: classpath:application-auth.yml
+    activate:
+      on-profile: local
 
 ---
-
 
