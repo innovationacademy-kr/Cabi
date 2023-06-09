@@ -40,7 +40,7 @@ public class MapArea {
 		return (this.startX > 0 && this.endX > 0 && this.startY > 0 && this.endY > 0);
 	}
 
-	public MapArea of(Integer startX, Integer endX, Integer startY, Integer endY) {
+	public static MapArea of(Integer startX, Integer endX, Integer startY, Integer endY) {
 		MapArea mapArea = new MapArea(startX, endX, startY, endY);
 		if (!mapArea.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);

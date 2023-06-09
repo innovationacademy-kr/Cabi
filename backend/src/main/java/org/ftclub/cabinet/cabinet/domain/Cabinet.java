@@ -68,7 +68,7 @@ public class Cabinet {
 	 * {@link Grid}
 	 */
 	@Embedded
-	Grid grid;
+	private Grid grid;
 
 	/**
 	 * 서비스에서 나타내지는 사물함의 제목입니다.
