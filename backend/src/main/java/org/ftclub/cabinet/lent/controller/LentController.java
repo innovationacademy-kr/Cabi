@@ -13,21 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v4/lent-histories")
+@RequestMapping("/v4/lent")
 public class LentController {
 
 	private final LentFacadeService lentFacadeService;
 
-	@PostMapping("/api/lent-histories/cabinets/{cabinetId}")
+	@PostMapping("/cabinets/{cabinetId}")
 	public void startLentCabinet(
 			@UserSession UserSessionDto user,
 			Long cabinetId) {
 		lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
 	}
-/*
-	  /api/lent/return-memo
-
- */
 
 	@PatchMapping("/return")
 	public void endLent(
@@ -43,40 +39,30 @@ public class LentController {
 		lentFacadeService.endLentCabinetWithMemo(userSessionDto, lentEndMemoDto);
 	}
 
-	@PatchMapping("me/memo")
+	@PatchMapping("/me/memo")
 	public void updateCabinetMemo(
 			@UserSession UserSessionDto user,
 			@RequestBody UpdateCabinetMemoDto updateCabinetMemoDto) {
 				lentFacadeService.updateCabinetMemo(user, updateCabinetMemoDto);
 	}
 
-	@PatchMapping("me/cabinet-title")
+	@PatchMapping("/me/cabinet-title")
 	public void updateCabinetTitle(
 			@UserSession UserSessionDto user,
 			@RequestBody UpdateCabinetTitleDto updateCabinetTitleDto) {
 				lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
 	}
 
-
-
-	@GetMapping("users/me")
+	@GetMapping("/me")
 	public MyCabinetResponseDto getMyLentInfo(
 			@UserSession UserSessionDto user) {
 		return lentFacadeService.getMyLentInfo(user);
 	}
 
-	@GetMapping("users/me/log")
+	@GetMapping("/me/histories")
 	public LentHistoryPaginationDto getMyLentLog(
 			@UserSession UserSessionDto user,
 			@RequestBody PaginationRequestDto pagination) {
 		return lentFacadeService.getMyLentLog(user, pagination);
 	}
-
-	/**
-	 * wchae, jpark2
-
-	 * sanan, daewoole
-	 * /api/my_lent_info/log
-	 * /api/my_lent_info
-	 */
 }
