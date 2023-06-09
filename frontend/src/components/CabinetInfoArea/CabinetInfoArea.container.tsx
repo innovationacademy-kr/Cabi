@@ -44,8 +44,8 @@ export interface ICurrentModalStateInfo {
 }
 
 export interface IAdminCurrentModalStateInfo {
-  returnModal: false;
-  statusModal: false;
+  returnModal: boolean;
+  statusModal: boolean;
 }
 
 interface ICount {
