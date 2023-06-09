@@ -57,7 +57,6 @@ public class StatisticsController {
 			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length
 	) {
-//		return statisticsFacadeService.getUsersBannedInfo(page, length);
 		return userFacadeService.getAllBanUsers(page, length, DateUtil.getNow());
 	}
 
@@ -72,7 +71,6 @@ public class StatisticsController {
 			@RequestParam("page") Integer page,
 			@RequestParam("length") Integer length
 	) {
-//		return statisticsFacadeService.getOverdueUsers(page, length);
 		return userFacadeService.getOverdueUserList(page, length);
 	}
 }

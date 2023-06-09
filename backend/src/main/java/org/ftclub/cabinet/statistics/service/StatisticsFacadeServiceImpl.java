@@ -27,9 +27,7 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 
     private final StatisticsRepository statisticsRepository;
     private final CabinetRepository cabinetRepository;
-    private final UserRepository userRepository;
     private final LentRepository lentRepository;
-    private final BanHistoryRepository banHistoryRepository;
 
     /**
      *
