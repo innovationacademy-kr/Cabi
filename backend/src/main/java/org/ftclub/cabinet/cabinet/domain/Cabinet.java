@@ -111,7 +111,7 @@ public class Cabinet {
 	}
 
 	private boolean isValid() {
-		return (visibleNum <= 0 || maxUser <= 0 || grid == null || cabinetPlace == null || status == null || lentType == null);
+		return (visibleNum >= 0 && maxUser >= 0 && grid != null && cabinetPlace != null && status != null && lentType != null);
 	}
 
 	public boolean isStatus(CabinetStatus cabinetStatus) {
