@@ -5,6 +5,8 @@ import javax.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 
 /**
  * 건물, 층, 구역에 대한 정보입니다.
@@ -28,7 +30,15 @@ public class Location {
 		this.section = section;
 	}
 
+	private boolean isValid() {
+		return (this.building != null && this.floor > 0 && this.section != null);
+	}
+
 	public static Location of(String building, Integer floor, String section) {
-		return new Location(building, floor, section);
+		Location location = new Location(building, floor, section);
+		if (!location.isValid()) {
+			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		return location;
 	}
 }

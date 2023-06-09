@@ -100,9 +100,6 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateGrid(Long cabinetId, Grid grid) {
-		if (!grid.isValid()) {
-			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
-		}
 		Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(cabinetId);
 		cabinet.coordinateGrid(grid);
 	}

@@ -22,6 +22,10 @@ public class CabinetGrid {
 		this.width = width;
 	}
 
+	private boolean isValid() {
+		return (this.height > 0 && this.width > 0);
+	}
+
 	public static CabinetGrid of(Integer height, Integer width) {
 		return new CabinetGrid(height, width);
 	}

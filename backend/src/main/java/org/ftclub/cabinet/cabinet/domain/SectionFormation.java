@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 
 /**
  * 섹션을 구성하는 사물함들의 가로 x 세로에 대한 데이터입니다.
@@ -23,8 +25,16 @@ public class SectionFormation {
 	@Column(name = "HEIGHT")
 	private Integer height;
 
+	private boolean isValid() {
+		return (this.width > 0 && this.height > 0);
+	}
+
 	public static SectionFormation of(Integer width, Integer height) {
-		return new SectionFormation(width, height);
+		SectionFormation sectionFormation = new SectionFormation(width, height);
+		if (!sectionFormation.isValid()) {
+			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		return sectionFormation;
 	}
 
 }

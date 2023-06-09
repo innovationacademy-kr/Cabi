@@ -17,6 +17,7 @@ import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 
@@ -103,6 +104,10 @@ public class Cabinet {
 	public static Cabinet of(Integer visibleNum, CabinetStatus status, LentType lentType,
 			Integer maxUser,
 			Grid grid, CabinetPlace cabinetPlace) {
+		if (visibleNum < 0 || maxUser < 0 || grid == null || cabinetPlace == null || status == null
+				|| lentType == null) {
+			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
+		}
 		return new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
 	}
 
