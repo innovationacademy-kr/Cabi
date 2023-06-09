@@ -30,7 +30,7 @@ public class Grid {
 
 	public static Grid of(Integer row, Integer col) {
 		Grid grid = new Grid(row, col);
-		ExceptionUtil.throwIfInvalid(grid.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		ExceptionUtil.throwIfFalse(grid.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return grid;
 	}
 }

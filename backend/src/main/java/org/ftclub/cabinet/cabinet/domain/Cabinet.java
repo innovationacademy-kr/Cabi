@@ -15,12 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.exception.DomainException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 
@@ -108,7 +106,7 @@ public class Cabinet {
 			Integer maxUser,
 			Grid grid, CabinetPlace cabinetPlace) {
 		Cabinet cabinet = new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
-		ExceptionUtil.throwIfInvalid(cabinet.isValid(), new DomainException(INVALID_ARGUMENT));
+		ExceptionUtil.throwIfFalse(cabinet.isValid(), new DomainException(INVALID_ARGUMENT));
 		return cabinet;
 	}
 
@@ -138,42 +136,42 @@ public class Cabinet {
 
 	public void assignVisibleNum(Integer visibleNum) {
 		this.visibleNum = visibleNum;
-		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
+		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyStatus(CabinetStatus cabinetStatus) {
 		this.status = cabinetStatus;
-		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
+		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyMaxUser(Integer maxUser) {
 		this.maxUser = maxUser;
-		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
+		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeStatusNote(String statusNote) {
 		this.statusNote = statusNote;
-		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
+		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyLentType(LentType lentType) {
 		this.lentType = lentType;
-		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
+		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeTitle(String title) {
 		this.title = title;
-		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
+		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void coordinateGrid(Grid grid) {
 		this.grid = grid;
-		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
+		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeMemo(String memo) {
 		this.memo = memo;
-		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
+		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	@Override

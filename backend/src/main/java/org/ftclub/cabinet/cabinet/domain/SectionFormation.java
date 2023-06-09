@@ -32,7 +32,7 @@ public class SectionFormation {
 
 	public static SectionFormation of(Integer width, Integer height) {
 		SectionFormation sectionFormation = new SectionFormation(width, height);
-		ExceptionUtil.throwIfInvalid(sectionFormation.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		ExceptionUtil.throwIfFalse(sectionFormation.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return sectionFormation;
 	}
 

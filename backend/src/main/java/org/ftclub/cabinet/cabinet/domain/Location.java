@@ -37,7 +37,7 @@ public class Location {
 
 	public static Location of(String building, Integer floor, String section) {
 		Location location = new Location(building, floor, section);
-		ExceptionUtil.throwIfInvalid(location.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		ExceptionUtil.throwIfFalse(location.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return location;
 	}
 }

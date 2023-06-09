@@ -43,7 +43,7 @@ public class MapArea {
 
 	public static MapArea of(Integer startX, Integer endX, Integer startY, Integer endY) {
 		MapArea mapArea = new MapArea(startX, endX, startY, endY);
-		ExceptionUtil.throwIfInvalid(mapArea.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		ExceptionUtil.throwIfFalse(mapArea.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return mapArea;
 	}
 

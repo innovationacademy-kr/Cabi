@@ -55,7 +55,7 @@ public class CabinetPlace {
 	public static CabinetPlace of(Location location, SectionFormation sectionFormation,
 			MapArea mapArea) {
 		CabinetPlace cabinetPlace = new CabinetPlace(location, sectionFormation, mapArea);
-		ExceptionUtil.throwIfInvalid(cabinetPlace.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		ExceptionUtil.throwIfFalse(cabinetPlace.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return cabinetPlace;
 	}
 
