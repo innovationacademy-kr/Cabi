@@ -27,7 +27,7 @@ public class SectionFormation {
 	private Integer height;
 
 	private boolean isValid() {
-		return (this.width > 0 && this.height > 0);
+		return (this.width >= 0 && this.height >= 0);
 	}
 
 	public static SectionFormation of(Integer width, Integer height) {

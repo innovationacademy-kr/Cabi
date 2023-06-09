@@ -38,7 +38,7 @@ public class MapArea {
 	}
 
 	private boolean isValid() {
-		return (this.startX > 0 && this.endX > 0 && this.startY > 0 && this.endY > 0);
+		return (this.startX >= 0 && this.endX >= 0 && this.startY >= 0 && this.endY >= 0);
 	}
 
 	public static MapArea of(Integer startX, Integer endX, Integer startY, Integer endY) {

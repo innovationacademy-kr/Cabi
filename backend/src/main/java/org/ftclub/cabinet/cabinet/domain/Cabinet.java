@@ -111,7 +111,7 @@ public class Cabinet {
 	}
 
 	private boolean isValid() {
-		return (visibleNum < 0 || maxUser < 0 || grid == null || cabinetPlace == null || status == null || lentType == null);
+		return (visibleNum <= 0 || maxUser <= 0 || grid == null || cabinetPlace == null || status == null || lentType == null);
 	}
 
 	public boolean isStatus(CabinetStatus cabinetStatus) {
@@ -186,25 +186,13 @@ public class Cabinet {
 	}
 
 	/**
-	 * 대여 시작/종료에 따른 사용자의 수와 도메인 로직에 따라 상태 업데이트가 가능한지 여부를 반환합니다.
-	 *
-	 * @param userCount 현재 사용자 수
-	 * @return 가능한지 여부에 따라 참/거짓을 반환합니다.
-	 */
-	public boolean isStatusUpdatableByUserCount(Integer userCount) {
-		return (this.maxUser >= userCount &&
-				!this.status.equals(CabinetStatus.BROKEN));
-	}
-
-	/**
 	 * 대여 시작/종료에 따른 사용자의 수와 현재 상태에 따라 상태를 변경합니다.
 	 *
 	 * @param userCount 현재 사용자 수
 	 */
 	public void specifyStatusByUserCount(Integer userCount) {
 		if (this.status.equals(CabinetStatus.BROKEN)) {
-			// To-Do: 도메인 익셉션으로 변경 필요
-			throw new ServiceException(UNCHANGEABLE_CABINET);
+			throw new DomainException(INVALID_STATUS);
 		}
 		if (userCount.equals(0)) {
 			this.status = CabinetStatus.AVAILABLE;
