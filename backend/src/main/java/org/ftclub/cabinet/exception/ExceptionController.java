@@ -25,4 +25,12 @@ public class ExceptionController {
 				.body(e.status);
 	}
 
+	@ExceptionHandler(DomainException.class)
+	public ResponseEntity<?> domainExceptionHandler(DomainException e) {
+		log.info("called ExceptionController for {}", e.status.getError());
+		return ResponseEntity
+				.status(e.status.getStatusCode())
+				.body(e.status);
+	}
+
 }
