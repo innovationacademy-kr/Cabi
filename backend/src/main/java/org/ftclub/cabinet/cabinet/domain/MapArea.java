@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 
 /**
  * 서비스의 지도에서 나타내지는 영역의 좌표 값들입니다.
@@ -42,9 +43,7 @@ public class MapArea {
 
 	public static MapArea of(Integer startX, Integer endX, Integer startY, Integer endY) {
 		MapArea mapArea = new MapArea(startX, endX, startY, endY);
-		if (!mapArea.isValid()) {
-			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
-		}
+		ExceptionUtil.throwIfInvalid(mapArea.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return mapArea;
 	}
 

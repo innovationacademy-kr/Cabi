@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 
 /**
  * 사물함이 실제로 구역에서 위치한 행과 열입니다.
@@ -29,9 +30,7 @@ public class Grid {
 
 	public static Grid of(Integer row, Integer col) {
 		Grid grid = new Grid(row, col);
-		if (!grid.isValid()) {
-			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
-		}
+		ExceptionUtil.throwIfInvalid(grid.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return grid;
 	}
 }
