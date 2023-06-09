@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.cabinet.domain;
 
+import static org.ftclub.cabinet.exception.ExceptionStatus.*;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 
 /**
  * 사물함 엔티티
@@ -104,11 +107,13 @@ public class Cabinet {
 	public static Cabinet of(Integer visibleNum, CabinetStatus status, LentType lentType,
 			Integer maxUser,
 			Grid grid, CabinetPlace cabinetPlace) {
-		if (visibleNum < 0 || maxUser < 0 || grid == null || cabinetPlace == null || status == null
-				|| lentType == null) {
-			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
-		}
-		return new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
+		Cabinet cabinet = new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
+		ExceptionUtil.throwIfInvalid(cabinet.isValid(), new DomainException(INVALID_ARGUMENT));
+		return cabinet;
+	}
+
+	private boolean isValid() {
+		return (visibleNum < 0 || maxUser < 0 || grid == null || cabinetPlace == null || status == null || lentType == null);
 	}
 
 	public boolean isStatus(CabinetStatus cabinetStatus) {
@@ -133,34 +138,42 @@ public class Cabinet {
 
 	public void assignVisibleNum(Integer visibleNum) {
 		this.visibleNum = visibleNum;
+		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyStatus(CabinetStatus cabinetStatus) {
 		this.status = cabinetStatus;
+		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyMaxUser(Integer maxUser) {
 		this.maxUser = maxUser;
+		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeStatusNote(String statusNote) {
 		this.statusNote = statusNote;
+		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyLentType(LentType lentType) {
 		this.lentType = lentType;
+		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeTitle(String title) {
 		this.title = title;
+		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void coordinateGrid(Grid grid) {
 		this.grid = grid;
+		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeMemo(String memo) {
 		this.memo = memo;
+		ExceptionUtil.throwIfInvalid(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	@Override
@@ -193,7 +206,7 @@ public class Cabinet {
 	public void specifyStatusByUserCount(Integer userCount) {
 		if (this.status.equals(CabinetStatus.BROKEN)) {
 			// To-Do: 도메인 익셉션으로 변경 필요
-			throw new ServiceException(ExceptionStatus.UNCHANGEABLE_CABINET);
+			throw new ServiceException(UNCHANGEABLE_CABINET);
 		}
 		if (userCount.equals(0)) {
 			this.status = CabinetStatus.AVAILABLE;

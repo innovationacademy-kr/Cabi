@@ -53,10 +53,15 @@ public class CabinetPlace {
 
 	public static CabinetPlace of(Location location, SectionFormation sectionFormation,
 			MapArea mapArea) {
-		if (location == null || sectionFormation == null || mapArea == null) {
+		CabinetPlace cabinetPlace = new CabinetPlace(location, sectionFormation, mapArea);
+		if (!cabinetPlace.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
 		}
-		return new CabinetPlace(location, sectionFormation, mapArea);
+		return cabinetPlace;
+	}
+
+	private boolean isValid() {
+		return (this.location != null && this.sectionFormation != null && this.mapArea != null);
 	}
 
 	@Override
