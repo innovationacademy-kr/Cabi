@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.auth.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
