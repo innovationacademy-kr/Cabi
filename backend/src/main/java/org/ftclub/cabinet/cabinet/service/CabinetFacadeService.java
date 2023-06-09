@@ -35,22 +35,6 @@ public interface CabinetFacadeService {
 	List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor);
 
 	/**
-	 * 사물함의 상태를 업데이트합니다.
-	 *
-	 * @param cabinetId 사물함 ID
-	 * @param status    변경할 상태
-	 */
-	void updateCabinetStatus(Long cabinetId, CabinetStatus status);
-
-	/**
-	 * 사물함의 대여 타입을 업데이트합니다.
-	 *
-	 * @param cabinetId 사물함 ID
-	 * @param lentType  변경할 대여 타입
-	 */
-	void updateCabinetLentType(Long cabinetId, LentType lentType);
-
-	/**
 	 * 사물함의 상태 메모를 업데이트합니다.
 	 *
 	 * @param cabinetId  사물함 ID
@@ -65,14 +49,6 @@ public interface CabinetFacadeService {
 	 * @param title     변경할 제목
 	 */
 	void updateCabinetTitle(Long cabinetId, String title);
-
-	/**
-	 * 사물함의 메모를 업데이트합니다.
-	 *
-	 * @param cabinetId 사물함 ID
-	 * @param memo      변경할 메모
-	 */
-	void updateCabinetMemo(Long cabinetId, String memo);
 
 	/**
 	 * 사물함의 행과 열을 업데이트합니다.

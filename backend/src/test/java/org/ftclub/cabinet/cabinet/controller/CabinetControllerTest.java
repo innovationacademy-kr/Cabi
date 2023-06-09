@@ -44,7 +44,7 @@ public class CabinetControllerTest {
 	void 건물_층_정보_가져오기() throws Exception {
 		//항상 정상 입력
 		mvc.perform(mockRequest(HttpMethod.GET, cookie,
-						"/api/cabinets/buildings/floors"))
+						"/v4/cabinets/buildings/floors"))
 				.andExpect(status().isOk());
 	}
 
@@ -52,13 +52,13 @@ public class CabinetControllerTest {
 	void 구역별_사물함_가져오기() throws Exception {
 		//정상 입력
 		mvc.perform(mockRequest(HttpMethod.GET, cookie,
-						"/api/cabinets/buildings/{building}/floors/{floor}",
+						"/v4/cabinets/buildings/{building}/floors/{floor}",
 						"새롬관", 2))
 				.andExpect(status().isOk());
 
 		//잘못된 입력
 		mvc.perform(mockRequest(HttpMethod.GET, cookie,
-						"/api/cabinets/buildings/{building}/floors/{floor}",
+						"/v4/cabinets/buildings/{building}/floors/{floor}",
 						42, "포티투"))
 				.andExpect(status().isBadRequest());
 	}
@@ -67,71 +67,16 @@ public class CabinetControllerTest {
 	void 사물함_정보_가져오기() throws Exception {
 		//정상 입력
 		mvc.perform(
-						mockRequest(HttpMethod.GET, cookie, "/api/cabinets/{cabinetId}",
+						mockRequest(HttpMethod.GET, cookie, "/v4/cabinets/{cabinetId}",
 								1))
 				.andExpect(status().isOk());
 
 		//잘못된 입력
 		mvc.perform(
-						mockRequest(HttpMethod.GET, cookie, "/api/cabinets/{cabinetId}",
+						mockRequest(HttpMethod.GET, cookie, "/v4/cabinets/{cabinetId}",
 								"사십이"))
 				.andExpect(status().isBadRequest());
 
 	}
 
-	@Test
-	void 사물함_제목_수정() throws Exception {
-		Map<String, String> rightRequest = Collections.singletonMap("title", "수정된 제목");
-		Map<String, String> wrongRequest = Collections.singletonMap("memo", "수정된 메모");
-		Map<String, String> emptyRequest = Collections.emptyMap();
-		String rightRequestBody = new ObjectMapper().writeValueAsString(rightRequest);
-		String wrongRequestBody = new ObjectMapper().writeValueAsString(wrongRequest);
-		String emptyRequestBody = new ObjectMapper().writeValueAsString(emptyRequest);
-
-		//정상 입력
-		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/cabinets/{cabinetId}/title", 1)
-						.contentType("application/json")
-						.content(rightRequestBody))
-				.andExpect(status().isOk());
-
-		//잘못된 입력
-		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/cabinets/{cabinetId}/title", 1)
-						.contentType("application/json")
-						.content(wrongRequestBody))
-				.andExpect(status().isBadRequest());
-
-		//빈 입력
-		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/cabinets/{cabinetId}/title", 1)
-						.contentType("application/json")
-						.content(emptyRequestBody))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
-	void 사물함_메모_수정() throws Exception {
-		Map<String, String> rightRequest = Collections.singletonMap("memo", "수정된 메모");
-		Map<String, String> wrongRequest = Collections.singletonMap("title", "수정된 제목");
-		Map<String, String> emptyRequest = Collections.emptyMap();
-		String rightRequestBody = new ObjectMapper().writeValueAsString(rightRequest);
-		String wrongRequestBody = new ObjectMapper().writeValueAsString(wrongRequest);
-		String emptyRequestBody = new ObjectMapper().writeValueAsString(emptyRequest);
-
-		//정상 입력
-		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/cabinets/{cabinetId}/memo", 1)
-						.contentType("application/json")
-						.content(rightRequestBody))
-				.andExpect(status().isOk());
-
-		//잘못된 입력
-		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/cabinets/{cabinetId}/memo", 1)
-						.contentType("application/json")
-						.content(wrongRequestBody))
-				.andExpect(status().isBadRequest());
-
-		//빈 입력
-		mvc.perform(mockRequest(HttpMethod.PATCH, cookie, "/api/cabinets/{cabinetId}/memo", 1)
-						.contentType("application/json")
-						.content(emptyRequestBody))
-				.andExpect(status().isBadRequest());
-	}
 }

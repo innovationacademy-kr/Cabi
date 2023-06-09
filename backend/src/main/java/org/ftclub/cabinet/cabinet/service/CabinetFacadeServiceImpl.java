@@ -92,23 +92,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		return result;
 	}
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetStatus(Long cabinetId, CabinetStatus status) {
-		cabinetService.updateStatus(cabinetId, status);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetLentType(Long cabinetId, LentType lentType) {
-		cabinetService.updateLentType(cabinetId, lentType);
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -123,14 +106,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public void updateCabinetTitle(Long cabinetId, String title) {
 		cabinetService.updateTitle(cabinetId, title);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetMemo(Long cabinetId, String memo) {
-		cabinetService.updateMemo(cabinetId, memo);
 	}
 
 	/**

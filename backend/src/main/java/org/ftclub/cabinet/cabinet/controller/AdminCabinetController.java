@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/cabinets")
+@RequestMapping("/v4/admin/cabinets")
 public class AdminCabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
@@ -48,42 +48,6 @@ public class AdminCabinetController {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
-	}
-
-	/**
-	 * 사물함의 상태를 업데이트합니다.
-	 *
-	 * @param cabinetId 사물함 아이디
-	 * @param status    변경할 사물함 상태
-	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-	 */
-	@PatchMapping("/{cabinetId}/status/{status}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void updateCabinetStatus(
-			@PathVariable("cabinetId") Long cabinetId,
-			@PathVariable("status") CabinetStatus status) {
-		if (cabinetId == null || status == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
-		cabinetFacadeService.updateCabinetStatus(cabinetId, status);
-	}
-
-	/**
-	 * 사물함의 대여 타입을 업데이트합니다.
-	 *
-	 * @param cabinetId 사물함 아이디
-	 * @param lentType  변경할 사물함 대여 타입
-	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-	 */
-	@PatchMapping("/{cabinetId}/lent-types/{lentType}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void updateCabinetLentType(
-			@PathVariable("cabinetId") Long cabinetId,
-			@PathVariable("lentType") LentType lentType) {
-		if (cabinetId == null || lentType == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
-		cabinetFacadeService.updateCabinetLentType(cabinetId, lentType);
 	}
 
 	/**

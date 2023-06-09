@@ -28,7 +28,7 @@ public class AuthControllerTest {
     @Test
     void 유저_로그인_요청() throws Exception {
         //리디렉션 302
-        mvc.perform(get("/api/auth/login"))
+        mvc.perform(get("/v4/auth/login"))
                 .andExpect(status().isFound());
     }
 
@@ -37,7 +37,7 @@ public class AuthControllerTest {
         //valid한 코드는 알 수 없음
         String inValidCode = "thisMustBeBadGateWayBecauseOfInvalidCode";
 
-        mvc.perform(get("/api/auth/login/callback?code={code}", inValidCode))
+        mvc.perform(get("/v4/auth/login/callback?code={code}", inValidCode))
                 .andExpect(status().isBadGateway());
     }
 
@@ -47,7 +47,7 @@ public class AuthControllerTest {
         String tokenName = jwtProperties.getMainTokenName();
 
         //when
-        MvcResult result = mvc.perform(get("/api/auth/logout")).andReturn();
+        MvcResult result = mvc.perform(get("/v4/auth/logout")).andReturn();
 
         //then
         assertEquals(result.getResponse().getStatus(), HttpServletResponse.SC_OK);

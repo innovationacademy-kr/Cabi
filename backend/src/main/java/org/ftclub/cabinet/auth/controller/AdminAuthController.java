@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  * ToDo: 특정 API를 위한 properties를 이용하는 것이 아닌, admin, user 프로퍼티로 관리하기
  */
 @RestController
-@RequestMapping("/api/admin/auth")
+@RequestMapping("/v4/admin/auth")
 @RequiredArgsConstructor
 public class AdminAuthController {
 

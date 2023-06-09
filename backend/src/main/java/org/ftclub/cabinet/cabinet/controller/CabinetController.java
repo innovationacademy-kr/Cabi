@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/cabinets")
+@RequestMapping("/v4/cabinets")
 public class CabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
@@ -73,44 +73,5 @@ public class CabinetController {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
-	}
-
-	/**
-	 * 사물함의 제목을 변경합니다.
-	 *
-	 * @param cabinetId 사물함 ID
-	 * @param body      변경할 제목
-	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-	 */
-	@PatchMapping(value = "/{cabinetId}/title")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public void updateCabinetTitle(
-			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody HashMap<String, String> body) {
-		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey("title")) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
-		cabinetFacadeService.updateCabinetTitle(cabinetId, body.get("title"));
-	}
-
-	/**
-	 * 사물함의 메모를 변경합니다.
-	 *
-	 * @param cabinetId 사물함 ID
-	 * @param body      변경할 메모
-	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-	 */
-	@PatchMapping("/{cabinetId}/memo")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public void updateCabinetMemo(
-			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody HashMap<String, String> body) {
-		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey("memo")) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
-		cabinetFacadeService.updateCabinetMemo(cabinetId, body.get("memo"));
-		/**
-		 * To-Do: 본인이 대여하고 있는 사물함의 memo, title 업데이트는 lent에서 수행합니다. -> 현재 라우트 삭제
-		 */
 	}
 }

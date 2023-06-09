@@ -42,7 +42,7 @@ public class AdminAuthControllerTest {
 	@Test
 	void 어드민_로그인_요청() throws Exception {
 		//리디렉션 302
-		mvc.perform(get("/api/admin/auth/login"))
+		mvc.perform(get("/v4/admin/auth/login"))
 				.andExpect(status().isFound());
 	}
 
@@ -56,17 +56,17 @@ public class AdminAuthControllerTest {
 		String invalidDto2 = objectMapper.writeValueAsString(new MasterLoginDto("invalidId",
 				"invalidPassword"));
 
-		mvc.perform(post("/api/admin/auth/login")
+		mvc.perform(post("/v4/admin/auth/login")
 						.content(String.valueOf(dto))
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 
-		mvc.perform(post("/api/admin/auth/login")
+		mvc.perform(post("/v4/admin/auth/login")
 						.content(emptyDto)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest());
 
-		mvc.perform(post("/api/admin/auth/login")
+		mvc.perform(post("/v4/admin/auth/login")
 						.content(invalidDto2)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized());
@@ -77,7 +77,7 @@ public class AdminAuthControllerTest {
 		//valid한 코드는 알 수 없음
 		String inValidCode = "thisMustBeBadGateWayBecauseOfInvalidCode";
 
-		mvc.perform(get("/api/admin/auth/login/callback?code={code}", inValidCode))
+		mvc.perform(get("/v4/admin/auth/login/callback?code={code}", inValidCode))
 				.andExpect(status().isBadGateway());
 	}
 
@@ -87,7 +87,7 @@ public class AdminAuthControllerTest {
 		String tokenName = jwtProperties.getAdminTokenName();
 
 		//when
-		MvcResult result = mvc.perform(get("/api/admin/auth/logout")).andReturn();
+		MvcResult result = mvc.perform(get("/v4/admin/auth/logout")).andReturn();
 
 		//then
 		assertEquals(result.getResponse().getStatus(), HttpServletResponse.SC_OK);
