@@ -187,20 +187,31 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
-  const currentlyOpenedModal = (modalName: TModalState, toggle: boolean) => {
+  const openModal = (modalName: TModalState) => {
     setUserModal({
       ...userModal,
-      [modalName]: toggle,
+      [modalName]: true,
     });
   };
 
-  const currentlyOpenedAdminModal = (
-    modalName: TAdminModalState,
-    toggle: boolean
-  ) => {
+  const closeModal = (modalName: TModalState) => {
+    setUserModal({
+      ...userModal,
+      [modalName]: false,
+    });
+  };
+
+  const openAdminModal = (modalName: TAdminModalState) => {
     setAdminModal({
       ...adminModal,
-      [modalName]: toggle,
+      [modalName]: true,
+    });
+  };
+
+  const closeAdminModal = (modalName: TAdminModalState) => {
+    setAdminModal({
+      ...adminModal,
+      [modalName]: false,
     });
   };
 
@@ -230,9 +241,11 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         multiSelectTargetInfo={multiSelectInfo}
         openLent={toggleLent}
         adminModal={adminModal}
-        currentlyOpenedModal={currentlyOpenedAdminModal}
+        openModal={openAdminModal}
+        closeModal={closeAdminModal}
         checkMultiReturn={checkMultiReturn}
         checkMultiStatus={checkMultiStatus}
+        expireDate={setExpireDate(cabinetViewData?.expireDate)}
       />
       {cabinetViewData && <AdminCabinetLentLogContainer />}
     </>
@@ -247,7 +260,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         cabinetViewData?.status === "SET_EXPIRE_AVAILABLE"
       }
       userModal={userModal}
-      currentlyOpenedModal={currentlyOpenedModal}
+      openModal={openModal}
+      closeModal={closeModal}
     />
   );
 };

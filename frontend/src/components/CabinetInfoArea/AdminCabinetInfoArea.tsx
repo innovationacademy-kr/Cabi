@@ -27,18 +27,22 @@ const AdminCabinetInfoArea: React.FC<{
   multiSelectTargetInfo: IMultiSelectTargetInfo | null;
   openLent: React.MouseEventHandler;
   adminModal: IAdminCurrentModalStateInfo;
-  currentlyOpenedModal: (moadlName: TAdminModalState, toggle: boolean) => void;
+  openModal: (moadlName: TAdminModalState) => void;
+  closeModal: (moadlName: TAdminModalState) => void;
   checkMultiReturn: (selectedCabinets: CabinetInfo[]) => boolean;
   checkMultiStatus: (selectedCabinets: CabinetInfo[]) => boolean;
+  expireDate: string | null;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
   multiSelectTargetInfo,
   openLent,
   adminModal,
-  currentlyOpenedModal,
+  openModal,
+  closeModal,
   checkMultiReturn,
   checkMultiStatus,
+  expireDate,
 }) => {
   const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
   const { resetMultiSelectMode } = useMultiSelect();
@@ -84,13 +88,13 @@ const AdminCabinetInfoArea: React.FC<{
         </MultiCabinetIconWrapperStyled>
         <CabinetInfoButtonsContainerStyled>
           <ButtonContainer
-            onClick={() => currentlyOpenedModal("returnModal", true)}
+            onClick={() => openModal("returnModal")}
             text="일괄 반납"
             theme="fill"
             disabled={!checkMultiReturn(targetCabinetInfoList!)}
           />
           <ButtonContainer
-            onClick={() => currentlyOpenedModal("statusModal", true)}
+            onClick={() => openModal("statusModal")}
             text="상태관리"
             theme="line"
             disabled={!checkMultiStatus(targetCabinetInfoList!)}
@@ -105,14 +109,10 @@ const AdminCabinetInfoArea: React.FC<{
           />
         </CabinetInfoButtonsContainerStyled>
         {adminModal.returnModal && (
-          <AdminReturnModal
-            closeModal={() => currentlyOpenedModal("returnModal", false)}
-          />
+          <AdminReturnModal closeModal={() => closeModal("returnModal")} />
         )}
         {adminModal.statusModal && (
-          <StatusModalContainer
-            onClose={() => currentlyOpenedModal("statusModal", false)}
-          />
+          <StatusModalContainer onClose={() => closeModal("statusModal")} />
         )}
       </CabinetDetailAreaStyled>
     );
@@ -139,7 +139,7 @@ const AdminCabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         <ButtonContainer
-          onClick={() => currentlyOpenedModal("returnModal", true)}
+          onClick={() => openModal("returnModal")}
           text="반납"
           theme="fill"
           disabled={
@@ -147,7 +147,7 @@ const AdminCabinetInfoArea: React.FC<{
           }
         />
         <ButtonContainer
-          onClick={() => currentlyOpenedModal("statusModal", true)}
+          onClick={() => openModal("statusModal")}
           text="상태 관리"
           theme="line"
         />
@@ -159,20 +159,16 @@ const AdminCabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo!.expireDate
-          ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
-          : null}
+        {expireDate}
       </CabinetLentDateInfoStyled>
       {adminModal.returnModal && (
         <AdminReturnModal
           lentType={selectedCabinetInfo!.lentType}
-          closeModal={() => currentlyOpenedModal("returnModal", false)}
+          closeModal={() => closeModal("returnModal")}
         />
       )}
       {adminModal.statusModal && (
-        <StatusModalContainer
-          onClose={() => currentlyOpenedModal("statusModal", false)}
-        />
+        <StatusModalContainer onClose={() => closeModal("statusModal")} />
       )}
     </CabinetDetailAreaStyled>
   );

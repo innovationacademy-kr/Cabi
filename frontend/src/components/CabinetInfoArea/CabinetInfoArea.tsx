@@ -28,7 +28,8 @@ const CabinetInfoArea: React.FC<{
   isMine: boolean;
   isAvailable: boolean;
   userModal: ICurrentModalStateInfo;
-  currentlyOpenedModal: (modalName: TModalState, toggle: boolean) => void;
+  openModal: (modalName: TModalState) => void;
+  closeModal: (modalName: TModalState) => void;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -36,7 +37,8 @@ const CabinetInfoArea: React.FC<{
   isMine,
   isAvailable,
   userModal,
-  currentlyOpenedModal,
+  openModal,
+  closeModal,
 }) => {
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
@@ -68,12 +70,12 @@ const CabinetInfoArea: React.FC<{
         {isMine ? (
           <>
             <ButtonContainer
-              onClick={() => currentlyOpenedModal("returnModal", true)}
+              onClick={() => openModal("returnModal")}
               text="반납"
               theme="fill"
             />
             <ButtonContainer
-              onClick={() => currentlyOpenedModal("memoModal", true)}
+              onClick={() => openModal("memoModal")}
               text="메모관리"
               theme="line"
             />
@@ -86,7 +88,7 @@ const CabinetInfoArea: React.FC<{
         ) : (
           <>
             <ButtonContainer
-              onClick={() => currentlyOpenedModal("lentModal", true)}
+              onClick={() => openModal("lentModal")}
               text="대여"
               theme="fill"
               disabled={!isAvailable}
@@ -106,32 +108,28 @@ const CabinetInfoArea: React.FC<{
       {userModal.unavailableModal && (
         <UnavailableModal
           status={additionalModalType.MODAL_UNAVAILABLE_ALREADY_LENT}
-          closeModal={() => currentlyOpenedModal("unavailableModal", false)}
+          closeModal={() => closeModal("unavailableModal")}
         />
       )}
       {userModal.lentModal && (
         <LentModal
           lentType={selectedCabinetInfo!.lentType}
-          closeModal={() => currentlyOpenedModal("lentModal", false)}
+          closeModal={() => closeModal("lentModal")}
         />
       )}
       {userModal.returnModal && (
         <ReturnModal
           lentType={selectedCabinetInfo!.lentType}
-          handleOpenPasswordCheckModal={() =>
-            currentlyOpenedModal("passwordCheckModal", true)
-          }
-          closeModal={() => currentlyOpenedModal("returnModal", false)}
+          handleOpenPasswordCheckModal={() => openModal("passwordCheckModal")}
+          closeModal={() => closeModal("returnModal")}
         />
       )}
       {userModal.memoModal && (
-        <MemoModalContainer
-          onClose={() => currentlyOpenedModal("memoModal", false)}
-        />
+        <MemoModalContainer onClose={() => closeModal("memoModal")} />
       )}
       {userModal.passwordCheckModal && (
         <PasswordCheckModalContainer
-          onClose={() => currentlyOpenedModal("passwordCheckModal", false)}
+          onClose={() => closeModal("passwordCheckModal")}
         />
       )}
     </CabinetDetailAreaStyled>
