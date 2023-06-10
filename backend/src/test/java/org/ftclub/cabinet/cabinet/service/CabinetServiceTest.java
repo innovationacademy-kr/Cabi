@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ class CabinetServiceTest {
 		Long brokenId = 1L;
 		Cabinet cabinet = cabinetService.getCabinet(brokenId);
 
-		assertThrows(ServiceException.class, () -> {
+		assertThrows(DomainException.class, () -> {
 			cabinet.specifyStatusByUserCount(0);
 		});
 	}
@@ -152,10 +153,8 @@ class CabinetServiceTest {
 
 	@Test
 	public void 사물함_좌표_업데이트_실패() {
-		Grid newGrid = Grid.of(-1, -42);
-
-		assertThrows(ServiceException.class, () -> {
-			cabinetService.updateGrid(1L, newGrid);
+		assertThrows(DomainException.class, () -> {
+			cabinetService.updateGrid(1L, Grid.of(-1, -1));
 		});
 	}
 
