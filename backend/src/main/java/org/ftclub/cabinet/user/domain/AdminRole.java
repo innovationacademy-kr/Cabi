@@ -13,4 +13,7 @@ public enum AdminRole {
 	 */
 	NONE, ADMIN, MASTER;
 
+	public boolean isValid() {
+		return this.equals(NONE) || this.equals(ADMIN) || this.equals(MASTER);
+	}
 }

@@ -109,13 +109,13 @@ class LentServiceImplTest {
 		foreignUser = em.find(User.class, 8L);
 		clubUser1 = em.find(User.class, 21L);
 		clubUser2 = em.find(User.class, 22L);
-		normalUser1 = User.of("normalUser1", "normalUser1@email",
+		normalUser1 = User.of("normalUser1", "normalUser1@email.com",
 				DateUtil.stringToDate("2024-12-31"), UserRole.USER);
-		normalUser2 = User.of("normalUser2", "normalUser2@email",
+		normalUser2 = User.of("normalUser2", "normalUser2@email.com",
 				DateUtil.stringToDate("2024-12-31"), UserRole.USER);
-		normalUser3 = User.of("normalUser3", "normalUser3@email",
+		normalUser3 = User.of("normalUser3", "normalUser3@email.com",
 				DateUtil.stringToDate("2024-12-31"), UserRole.USER);
-		normalUser4 = User.of("normalUser4", "normalUser4@email",
+		normalUser4 = User.of("normalUser4", "normalUser4@email.com",
 				DateUtil.stringToDate("2024-12-31"), UserRole.USER);
 		em.persist(normalUser1);
 		em.persist(normalUser2);

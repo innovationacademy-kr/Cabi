@@ -12,9 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 
 @Entity
 @Table(name = "BAN_HISTORY")
@@ -22,52 +27,61 @@ import lombok.NoArgsConstructor;
 @Getter
 public class BanHistory {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "BAN_HISTORY_ID")
-    private long banHistoryId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "BAN_HISTORY_ID")
+	private long banHistoryId;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "BANNED_AT", nullable = false)
-    private Date bannedAt;
+	@Temporal(TemporalType.TIMESTAMP)
+	@NotNull
+	@Column(name = "BANNED_AT", nullable = false)
+	private Date bannedAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "UNBANNED_AT")
-    private Date unbannedAt;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "UNBANNED_AT")
+	private Date unbannedAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "BAN_TYPE", length = 32, nullable = false)
-    private BanType banType;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "BAN_TYPE", length = 32, nullable = false)
+	private BanType banType;
 
-    @Column(name = "USER_ID", nullable = false)
-    private Long userId;
+	@NotNull
+	@Column(name = "USER_ID", nullable = false)
+	private Long userId;
 
-    protected BanHistory(Date bannedAt, Date unbannedAt, BanType banType,
-            Long userId) {
-        this.bannedAt = bannedAt;
-        this.unbannedAt = unbannedAt;
-        this.banType = banType;
-        this.userId = userId;
-    }
+	private boolean isValid() {
+		return bannedAt != null && banType != null && banType.isValid() && userId != null;
+	}
 
-    public static BanHistory of(Date bannedAt, Date unbannedAt, BanType banType,
-            Long userId) {
-        return new BanHistory(bannedAt, unbannedAt, banType, userId);
-    }
+	protected BanHistory(Date bannedAt, Date unbannedAt, BanType banType,
+			Long userId) {
+		this.bannedAt = bannedAt;
+		this.unbannedAt = unbannedAt;
+		this.banType = banType;
+		this.userId = userId;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        BanHistory banHistory = (BanHistory) o;
-        return Objects.equals(banHistoryId, banHistory.banHistoryId);
-    }
+	public static BanHistory of(Date bannedAt, Date unbannedAt, BanType banType,
+			Long userId) {
+		BanHistory banHistory = new BanHistory(bannedAt, unbannedAt, banType, userId);
+		ExceptionUtil.throwIfFalse(banHistory.isValid(),
+				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		return banHistory;
+	}
 
-    public boolean isBanEndedBefore(Date date) {
-        return date.before(unbannedAt);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		BanHistory banHistory = (BanHistory) o;
+		return Objects.equals(banHistoryId, banHistory.banHistoryId);
+	}
+
+	public boolean isBanEndedBefore(Date date) {
+		return date.before(unbannedAt);
+	}
 }
