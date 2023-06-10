@@ -51,7 +51,7 @@ public class AdminUser {
 	private AdminRole role = AdminRole.NONE;
 
 	private boolean isValid() {
-		return this.email != null && role != null && role.isValid() && email != null &&
+		return role != null && role.isValid() && email != null &&
 				Pattern.matches(
 						"^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*",
 						email);
