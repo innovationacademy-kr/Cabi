@@ -2,9 +2,9 @@ import React from "react";
 import Modal from "@/components/Modals/Modal";
 import { IModalContents } from "@/components/Modals/Modal";
 import ModalPortal from "@/components/Modals/ModalPortal";
-import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import errorIcon from "@/assets/images/errorIcon.svg";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 
 const UnavailableModal: React.FC<{
   status: CabinetStatus | additionalModalType;
