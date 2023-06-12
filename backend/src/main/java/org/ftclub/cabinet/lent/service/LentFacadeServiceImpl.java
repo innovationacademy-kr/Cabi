@@ -46,7 +46,11 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
 			Integer size) {
 		userExceptionHandler.getUser(userId);
-		PageRequest pageable = PageRequest.of(page, size, Sort.by("STARTED_AT"));
+		//todo: 예쁘게 수정
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
+		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		List<LentHistory> lentHistories = lentRepository.findByUserId(userId, pageable);
 		int totalLength = lentRepository.countUserAllLent(userId);
 		return generateLentHistoryPaginationDto(lentHistories, totalLength);
@@ -144,7 +148,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
 		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
-		CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinetExceptionHandler.getLocation(myCabinet.getCabinetId()), myCabinet);
+		CabinetDto cabinetDto = cabinetMapper.toCabinetDto(
+				cabinetExceptionHandler.getLocation(myCabinet.getCabinetId()), myCabinet);
 		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
 		return cabinetMapper.toMyCabinetResponseDto(cabinetDto, myCabinet.getMemo(), lentDtoList);
 
