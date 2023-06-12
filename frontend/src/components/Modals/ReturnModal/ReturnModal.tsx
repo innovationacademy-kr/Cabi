@@ -8,22 +8,21 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import {
-  axiosCabinetById,
-  axiosMyLentInfo,
-  axiosReturn,
-} from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
 import {
   SuccessResponseModal,
   FailResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
-import { getExpireDateString } from "@/utils/dateUtils";
+import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
-import { AxiosError } from "axios";
+import {
+  axiosCabinetById,
+  axiosMyLentInfo,
+  axiosReturn,
+} from "@/api/axios/axios.custom";
+import { getExpireDateString } from "@/utils/dateUtils";
 
 const ReturnModal: React.FC<{
   lentType: string;

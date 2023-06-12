@@ -9,7 +9,7 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-const AdminCabinetLogTable = ({ lentLog }: { lentLog: LentLogResponseType}) => {
+const AdminCabinetLogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
   if (lentLog === undefined) return <LoadingAnimation />;
 
   return (

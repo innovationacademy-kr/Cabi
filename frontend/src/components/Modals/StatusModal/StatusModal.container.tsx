@@ -1,11 +1,5 @@
-import {
-  axiosBundleUpdateCabinetStatus,
-  axiosBundleUpdateCabinetType,
-  axiosCabinetById,
-  axiosGetBrokenCabinetList,
-  axiosUpdateCabinetStatus,
-  axiosUpdateCabinetType,
-} from "@/api/axios/axios.custom";
+import React from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   brokenCabinetListState,
   currentCabinetIdState,
@@ -14,11 +8,17 @@ import {
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import React from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import StatusModal from "@/components/Modals/StatusModal/StatusModal";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import StatusModal from "@/components/Modals/StatusModal/StatusModal";
+import {
+  axiosBundleUpdateCabinetStatus,
+  axiosBundleUpdateCabinetType,
+  axiosCabinetById,
+  axiosGetBrokenCabinetList,
+  axiosUpdateCabinetStatus,
+  axiosUpdateCabinetType,
+} from "@/api/axios/axios.custom";
 import useMultiSelect from "@/hooks/useMultiSelect";
 import { handleBrokenCabinetList } from "@/utils/tableUtils";
 

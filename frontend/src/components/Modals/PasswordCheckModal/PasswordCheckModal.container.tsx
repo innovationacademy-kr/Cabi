@@ -1,20 +1,13 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   myCabinetInfoState,
-  overdueCabinetListState,
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import {
-  axiosCabinetById,
-  axiosMyLentInfo,
-  axiosReturn,
-  axiosSendCabinetPassword,
-} from "@/api/axios/axios.custom";
-import Modal, { IModalContents } from "@/components/Modals/Modal";
+import { IModalContents } from "@/components/Modals/Modal";
 import {
   SuccessResponseModal,
   FailResponseModal,
@@ -23,8 +16,13 @@ import ModalPortal from "@/components/Modals/ModalPortal";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import { modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
-import PasswordCheckModal from "./PasswordCheckModal";
-import PasswordContainer from "./PasswordContainer";
+import PasswordCheckModal from "@/components/Modals/PasswordCheckModal/PasswordCheckModal";
+import PasswordContainer from "@/components/Modals/PasswordCheckModal/PasswordContainer";
+import {
+  axiosCabinetById,
+  axiosMyLentInfo,
+  axiosSendCabinetPassword,
+} from "@/api/axios/axios.custom";
 
 const PasswordCheckModalContainer: React.FC<{
   onClose: () => void;
