@@ -135,6 +135,9 @@ public class TokenValidator {
 		if (authLevel.equals(MASTER_ONLY)) {
 			return email.endsWith(masterProperties.getDomain());
 		}
+		if (role == null) {
+			return false;
+		}
 		return role.equals(ADMIN) || role.equals(MASTER);
 	}
 
