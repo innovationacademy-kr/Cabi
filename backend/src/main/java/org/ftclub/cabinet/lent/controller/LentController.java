@@ -1,10 +1,10 @@
 package org.ftclub.cabinet.lent.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
-import org.ftclub.cabinet.dto.PaginationRequestDto;
 import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
 import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -24,53 +24,53 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v4/lent")
 public class LentController {
 
-	private final LentFacadeService lentFacadeService;
+    private final LentFacadeService lentFacadeService;
 
-	@PostMapping("/cabinets/{cabinetId}")
-	public void startLentCabinet(
-			@UserSession UserSessionDto user,
-			@PathVariable Long cabinetId) {
-		lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
-	}
+    @PostMapping("/cabinets/{cabinetId}")
+    public void startLentCabinet(
+            @UserSession UserSessionDto user,
+            @PathVariable Long cabinetId) {
+        lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
+    }
 
-	@PatchMapping("/return")
-	public void endLent(
-			@UserSession UserSessionDto userSessionDto) {
-		lentFacadeService.endLentCabinet(userSessionDto);
-	}
+    @PatchMapping("/return")
+    public void endLent(
+            @UserSession UserSessionDto userSessionDto) {
+        lentFacadeService.endLentCabinet(userSessionDto);
+    }
 
-	@PatchMapping("/return-memo")
-	public void endLentWithMemo(
-			@UserSession UserSessionDto userSessionDto,
-			@RequestBody LentEndMemoDto lentEndMemoDto) {
-		lentFacadeService.endLentCabinetWithMemo(userSessionDto, lentEndMemoDto);
-	}
+    @PatchMapping("/return-memo")
+    public void endLentWithMemo(
+            @UserSession UserSessionDto userSessionDto,
+            @Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
+        lentFacadeService.endLentCabinetWithMemo(userSessionDto, lentEndMemoDto);
+    }
 
-	@PatchMapping("/me/memo")
-	public void updateCabinetMemo(
-			@UserSession UserSessionDto user,
-			@RequestBody UpdateCabinetMemoDto updateCabinetMemoDto) {
-		lentFacadeService.updateCabinetMemo(user, updateCabinetMemoDto);
-	}
+    @PatchMapping("/me/memo")
+    public void updateCabinetMemo(
+            @UserSession UserSessionDto user,
+            @Valid @RequestBody UpdateCabinetMemoDto updateCabinetMemoDto) {
+        lentFacadeService.updateCabinetMemo(user, updateCabinetMemoDto);
+    }
 
-	@PatchMapping("/me/cabinet-title")
-	public void updateCabinetTitle(
-			@UserSession UserSessionDto user,
-			@RequestBody UpdateCabinetTitleDto updateCabinetTitleDto) {
-		lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
-	}
+    @PatchMapping("/me/cabinet-title")
+    public void updateCabinetTitle(
+            @UserSession UserSessionDto user,
+            @Valid @RequestBody UpdateCabinetTitleDto updateCabinetTitleDto) {
+        lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
+    }
 
-	@GetMapping("/me")
-	public MyCabinetResponseDto getMyLentInfo(
-			@UserSession UserSessionDto user) {
-		return lentFacadeService.getMyLentInfo(user);
-	}
+    @GetMapping("/me")
+    public MyCabinetResponseDto getMyLentInfo(
+            @UserSession UserSessionDto user) {
+        return lentFacadeService.getMyLentInfo(user);
+    }
 
-	@GetMapping("/me/histories")
-	public LentHistoryPaginationDto getMyLentLog(
-			@UserSession UserSessionDto user,
-			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
-		return lentFacadeService.getMyLentLog(user, page, size);
-	}
+    @GetMapping("/me/histories")
+    public LentHistoryPaginationDto getMyLentLog(
+            @UserSession UserSessionDto user,
+            @RequestParam("page") Integer page,
+            @RequestParam("size") Integer size) {
+        return lentFacadeService.getMyLentLog(user, page, size);
+    }
 }
