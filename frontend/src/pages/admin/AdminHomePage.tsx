@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { axiosCabinetById } from "@/api/axios/axios.custom";
+import styled from "styled-components";
 import {
   bannedUserListState,
   brokenCabinetListState,
@@ -10,21 +10,21 @@ import {
   targetCabinetInfoState,
   targetUserInfoState,
 } from "@/recoil/atoms";
-import {
-  ICabinetNumbersPerFloor,
-  ITableData,
-  IMonthlyData,
-} from "@/types/dto/admin.dto";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import styled from "styled-components";
 import BarChart from "@/components/AdminInfo/Chart/BarChart";
 import LineChart from "@/components/AdminInfo/Chart/LineChart";
 import PieChart from "@/components/AdminInfo/Chart/PieChart";
 import AdminTable from "@/components/AdminInfo/Table/AdminTable";
+import {
+  ICabinetNumbersPerFloor,
+  IMonthlyData,
+  ITableData,
+} from "@/types/dto/admin.dto";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { useAdminHomeApi } from "@/hooks/useAdminHomeApi";
 import useMenu from "@/hooks/useMenu";
 
-const AdminInfo = () => {
+const AdminHomePage = () => {
   const [overdueUserList, setOverdueUserList] = useRecoilState<ITableData[]>(
     overdueCabinetListState
   );
@@ -208,4 +208,4 @@ const AdminInfoStyled = styled.div`
   }
 `;
 
-export default AdminInfo;
+export default AdminHomePage;
