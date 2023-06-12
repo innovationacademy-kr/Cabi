@@ -10,6 +10,9 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 
 /**
  * 사물함들이 위치하는 구역에 대한 엔티티입니다.
@@ -51,7 +54,13 @@ public class CabinetPlace {
 
 	public static CabinetPlace of(Location location, SectionFormation sectionFormation,
 			MapArea mapArea) {
-		return new CabinetPlace(location, sectionFormation, mapArea);
+		CabinetPlace cabinetPlace = new CabinetPlace(location, sectionFormation, mapArea);
+		ExceptionUtil.throwIfFalse(cabinetPlace.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		return cabinetPlace;
+	}
+
+	private boolean isValid() {
+		return (this.location != null && this.sectionFormation != null && this.mapArea != null);
 	}
 
 	@Override

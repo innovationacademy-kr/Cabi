@@ -2,12 +2,7 @@ package org.ftclub.cabinet.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
-import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.Grid;
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
+import org.ftclub.cabinet.cabinet.domain.*;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -42,7 +37,7 @@ class LentMapperTest {
 		LentHistory lentHistory = LentHistory.of(DateUtil.getNow(), DateUtil.getNow(), 19L, 99L);
 		User user = User.of("testName", "testEmail", DateUtil.getNow(), UserRole.USER);
 		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
-				CabinetPlace.of(location, null, null));
+				CabinetPlace.of(location, SectionFormation.of(1, 2), MapArea.of(1, 1, 1, 1)));
 		LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet);
 		assertEquals(cabinet.getCabinetId(), lentHistoryDto.getCabinetId());
 		assertEquals(lentHistory.getUserId(), lentHistoryDto.getUserId());
