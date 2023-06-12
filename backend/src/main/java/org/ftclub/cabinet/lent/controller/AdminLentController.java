@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.lent.controller;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.dto.ReturnCabinetsRequestDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,21 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v4/admin")
 public class AdminLentController {
 
-	private final LentFacadeService lentFacadeService;
+    private final LentFacadeService lentFacadeService;
 
-	@PatchMapping("/return-cabinets")
-	public void terminateLentCabinets(@RequestBody List<Long> cabinets) {
-		lentFacadeService.terminateLentCabinets(cabinets);
-	}
+    @PatchMapping("/return-cabinets")
+    public void terminateLentCabinets(
+            @RequestBody ReturnCabinetsRequestDto returnCabinetsRequestDto) {
+        lentFacadeService.terminateLentCabinets(returnCabinetsRequestDto);
+    }
 
-	@PatchMapping("/return-users/{userId}")
-	public void terminateLentUser(@PathVariable("userId") Long userId) {
-		lentFacadeService.terminateLentCabinet(userId);
-	}
+    @PatchMapping("/return-users/{userId}")
+    public void terminateLentUser(@PathVariable("userId") Long userId) {
+        lentFacadeService.terminateLentCabinet(userId);
+    }
 
-	@PostMapping("lent/users/{userId}/cabinets/{cabinetId}")
-	public void assignLent(@PathVariable("userId") Long userId,
-			@PathVariable("cabinetId") Long cabinetId) {
-		lentFacadeService.assignLent(userId, cabinetId);
-	}
+    @PostMapping("lent/users/{userId}/cabinets/{cabinetId}")
+    public void assignLent(@PathVariable("userId") Long userId,
+            @PathVariable("cabinetId") Long cabinetId) {
+        lentFacadeService.assignLent(userId, cabinetId);
+    }
 }
