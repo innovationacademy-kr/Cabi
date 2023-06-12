@@ -26,7 +26,7 @@ public interface CabinetMapper {
 
 	CabinetDto toCabinetDto(Location location, Cabinet cabinet);
 
-	BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
+	BuildingFloorsDto toBuildingFloorsDto(String buildingName, List<Integer> floors);
 
 	CabinetInfoResponseDto toCabinetInfoResponseDto(CabinetDto cabinetDto, List<LentDto> lents);
 
@@ -37,10 +37,12 @@ public interface CabinetMapper {
 	CabinetPaginationDto toCabinetPaginationDtoList(List<Cabinet> cabinets,
 			Integer totalPage);
 
-	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name, Location location, Long overdueDays);
+	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name,
+			Location location, Long overdueDays);
 
 	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
 			List<OverdueUserCabinetDto> result, Integer totalPage);
 
-	MyCabinetResponseDto toMyCabinetResponseDto(CabinetDto cabinetDto, String memo, List<LentDto> lents);
+	MyCabinetResponseDto toMyCabinetResponseDto(CabinetDto cabinetDto, String memo,
+			List<LentDto> lents);
 }
