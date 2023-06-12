@@ -1,0 +1,34 @@
+#directory -> "/src/test/resources"
+spring:
+  production: false # 배포 환경에서는 true
+  config:
+    import: classpath:application-auth.yml
+  server:
+    fe-host: http://localhost
+    port: 2424
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3310/test_db
+    username: root
+    password: test_password
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      globally_quoted_identifiers: true
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  cabinet:
+    lent:
+      term:
+        private: 21
+        share: 42
+    penalty:
+      day:
+        share: 3
+        padding: 2
+
+  urls:
+    admin-login-callback: ${spring.server.fe-host}/api/admin/auth/login/callback
+    user-login-callback: ${spring.server.fe-host}/api/auth/login/callback
