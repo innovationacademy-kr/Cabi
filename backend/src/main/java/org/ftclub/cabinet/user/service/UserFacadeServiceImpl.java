@@ -9,8 +9,16 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
+import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserBlockedInfoDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserProfileDto;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -56,6 +64,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now) {
+		// todo - size가 0일 때 모든 데이터를 가져오기
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
 		PageRequest pageable = PageRequest.of(page, size);
 		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
 				now);
@@ -75,6 +87,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
 			Integer size) {
+		// todo - size가 0일 때 모든 데이터를 가져오기
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
 		PageRequest pageable = PageRequest.of(page, size);
 		Page<User> users = userRepository.findByPartialName(name, pageable);
 		return generateUserProfilePaginationDto(users.getContent(), users.getTotalPages());
@@ -92,6 +108,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
 			Integer size) {
+		// todo - size가 0일 때 모든 데이터를 가져오기
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
 		PageRequest pageable = PageRequest.of(page, size);
 		Page<User> users = userRepository.findByPartialName(name, pageable);
 		return new UserCabinetPaginationDto(null, null);
@@ -168,6 +188,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size) {
 		List<OverdueUserCabinetDto> overdueList = new ArrayList<>();
+		// todo - size가 0일 때 모든 데이터를 가져오기
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
 		PageRequest pageable = PageRequest.of(page, size);
 		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
