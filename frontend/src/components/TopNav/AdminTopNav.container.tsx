@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { currentLocationNameState, locationsFloorState } from "@/recoil/atoms";
 import { locationsState } from "@/recoil/selectors";
 import TopNav from "@/components/TopNav/TopNav";
-import { axiosLocationFloor } from "@/api/axios/axios.custom";
+import { axiosBuildingFloor } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const AdminTopNavContainer: React.FC<{
@@ -28,17 +28,17 @@ const AdminTopNavContainer: React.FC<{
       return new Promise((resolve) => setTimeout(resolve, delay));
     }
 
-    const getLocationsData = async () => {
+    const getBuildingsData = async () => {
       try {
         await setTimeoutPromise(500);
-        const locationsFloorData = await axiosLocationFloor();
-        setLocationsFloor(locationsFloorData.data.space_data);
+        const buildingsFloorData = await axiosBuildingFloor();
+        setLocationsFloor(buildingsFloorData.data);
       } catch (error) {
         console.log(error);
       }
     };
 
-    getLocationsData().then(() => setIsLoading(false));
+    getBuildingsData().then(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {

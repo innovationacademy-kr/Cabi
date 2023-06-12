@@ -1,6 +1,6 @@
 import { LentDto } from "@/types/dto/lent.dto";
-import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 
 // TODO :hybae
 // lent_type을 LentType으로 변경 예정
@@ -8,8 +8,8 @@ export interface MyCabinetInfoResponseDto extends CabinetInfo {
   cabinet_memo: string; // 사물함 비밀번호와 관련된 메모
 }
 
-export interface CabinetLocationFloorDto {
-  location: string;
+export interface CabinetBuildingFloorDto {
+  buildingName: string;
   floors: Array<number>;
 }
 
