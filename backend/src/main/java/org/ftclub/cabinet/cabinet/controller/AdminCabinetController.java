@@ -179,6 +179,10 @@ public class AdminCabinetController {
 		if (lentType == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
+		//todo size=0일 때 Integer.Max로 가져오기 + 파사드로 page.of 책임넘기기
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
 		return cabinetFacadeService.getCabinetPaginationByLentType(lentType, PageRequest.of(
 				page, size));
 	}
@@ -200,6 +204,10 @@ public class AdminCabinetController {
 		if (status == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
+		//todo size=0일 때 Integer.Max로 가져오기 + 파사드로 page.of 책임넘기기
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
 		return cabinetFacadeService.getCabinetPaginationByStatus(status, PageRequest.of(
 				page, size));
 	}
@@ -212,7 +220,7 @@ public class AdminCabinetController {
 	 * @param size       한 페이지에 있는 정보의 수
 	 * @return 사물함 정보 페이지네이션
 	 */
-	@GetMapping("/visibleNum/{visibleNum}")
+	@GetMapping("/visible-num/{visibleNum}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByVisibleNum(
 			@PathVariable("visibleNum") Integer visibleNum,
@@ -220,6 +228,10 @@ public class AdminCabinetController {
 			@RequestParam("size") Integer size) {
 		if (visibleNum == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
+		//todo size=0일 때 Integer.Max로 가져오기 + 파사드로 page.of 책임넘기기
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
 		}
 		return cabinetFacadeService.getCabinetPaginationByVisibleNum(visibleNum, PageRequest.of(
 				page, size));
@@ -241,6 +253,10 @@ public class AdminCabinetController {
 			@RequestParam("size") Integer size) {
 		if (cabinetId == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+		}
+		//todo size=0일 때 Integer.Max로 가져오기 + 파사드로 page.of 책임넘기기
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
 		}
 		return cabinetFacadeService.getCabinetLentHistoriesPagination(cabinetId, PageRequest.of(
 				page, size));
