@@ -125,6 +125,9 @@ public class TokenValidator {
 		String email = getPayloadJson(token).get("email").asText();
 		AdminRole role = userService.getAdminUserRole(email);
 
+		if (role == null) {
+			return false;
+		}
 		if (!isAdminEmail(email)) {
 			if (authLevel.equals(USER_OR_ADMIN)) {
 				return true;
