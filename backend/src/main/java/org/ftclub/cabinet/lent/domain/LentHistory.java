@@ -76,7 +76,7 @@ public class LentHistory {
     private Long cabinetId;
 
     protected LentHistory(Date startedAt, Date expiredAt, Long userId,
-                          Long cabinetId) {
+            Long cabinetId) {
         this.startedAt = startedAt;
         this.expiredAt = expiredAt;
         this.userId = userId;
@@ -97,7 +97,7 @@ public class LentHistory {
      * @return 인자 정보를 담고있는 {@link LentHistory}
      */
     public static LentHistory of(Date startedAt, Date expiredAt, Long userId,
-                                 Long cabinetId) {
+            Long cabinetId) {
         LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
         if (!lentHistory.isValid()) {
             throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -133,7 +133,8 @@ public class LentHistory {
      */
     public void setExpiredAt(Date expiredAt) {
         this.expiredAt = expiredAt;
-        ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(ExceptionStatus.INVALID_STATUS));
+        ExceptionUtil.throwIfFalse(this.isValid(),
+                new DomainException(ExceptionStatus.INVALID_STATUS));
     }
 
     /**
@@ -174,6 +175,7 @@ public class LentHistory {
      */
     public void endLent(Date now) {
         this.endedAt = now;
-        ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(ExceptionStatus.INVALID_STATUS));
+        ExceptionUtil.throwIfFalse(this.isValid(),
+                new DomainException(ExceptionStatus.INVALID_STATUS));
     }
 }
