@@ -84,15 +84,15 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	/**
 	 * {@InheritDocs}
 	 *
-	 * @param user                 유저 정보
-	 * @param paginationRequestDto 페이지네이션 정보
+	 * @param user 유저 정보
+	 * @param page 페이지
+	 * @param size 사이즈
 	 * @return
 	 */
 	@Override
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
-			PaginationRequestDto paginationRequestDto) {
-		PageRequest pageable = PageRequest.of(paginationRequestDto.getPage(),
-				paginationRequestDto.getSize(), Sort.by("STARTED_AT"));
+			Integer page, Integer size) {
+		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		List<LentHistory> myLentHistories = lentRepository.findByUserId(user.getUserId(), pageable);
 		List<LentHistoryDto> result = myLentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentHistoryDto(
@@ -100,8 +100,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 						userExceptionHandler.getUser(user.getUserId()),
 						cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId())))
 				.collect(Collectors.toList());
-		return lentMapper.toLentHistoryPaginationDto(result,
-				paginationRequestDto.getSize() * paginationRequestDto.getPage());
+		// TODO: totalPage로 바꾸기
+		return lentMapper.toLentHistoryPaginationDto(result, result.size() / size);
 	}
 
 	private LentHistoryPaginationDto generateLentHistoryPaginationDto(

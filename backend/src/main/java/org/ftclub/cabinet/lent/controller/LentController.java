@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -68,7 +69,8 @@ public class LentController {
 	@GetMapping("/me/histories")
 	public LentHistoryPaginationDto getMyLentLog(
 			@UserSession UserSessionDto user,
-			@RequestBody PaginationRequestDto pagination) {
-		return lentFacadeService.getMyLentLog(user, pagination);
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		return lentFacadeService.getMyLentLog(user, page, size);
 	}
 }
