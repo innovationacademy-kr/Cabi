@@ -1,15 +1,15 @@
-import { recoilPersist } from "recoil-persist";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import {
-  CabinetInfo,
-  CabinetInfoByLocationFloorDto,
-  MyCabinetInfoResponseDto,
-  CabinetLocationFloorDto,
-} from "@/types/dto/cabinet.dto";
 import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
 import { staticColNumData } from "@/assets/data/sectionColNumData";
 import { ILocationColNum } from "@/assets/data/sectionColNumData";
 import { ITableData } from "@/types/dto/admin.dto";
+import {
+  CabinetBuildingFloorDto,
+  CabinetInfo,
+  CabinetInfoByLocationFloorDto,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
+import { UserDto, UserInfo } from "@/types/dto/user.dto";
 
 const { persistAtom } = recoilPersist();
 
@@ -43,7 +43,7 @@ export const myCabinetInfoState = atom<MyCabinetInfoResponseDto>({
 //   },
 // });
 
-export const locationsFloorState = atom<CabinetLocationFloorDto[]>({
+export const locationsFloorState = atom<CabinetBuildingFloorDto[]>({
   key: "CurrentLocationData",
   default: [],
 });

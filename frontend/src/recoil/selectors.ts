@@ -1,24 +1,24 @@
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { selector } from "recoil";
 import {
-  locationsFloorState,
-  currentLocationNameState,
   currentFloorCabinetState,
-  currentSectionNameState,
   currentFloorNumberState,
+  currentLocationNameState,
+  currentSectionNameState,
   locationColNumState,
+  locationsFloorState,
 } from "@/recoil/atoms";
 import {
   IFloorSectionColNum,
   ISectionColNum,
 } from "@/assets/data/sectionColNumData";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 
 export const locationsState = selector<Array<string>>({
   key: "Locations",
   get: ({ get }) => {
     const locationsFloorData = get(locationsFloorState);
 
-    const locationsArray = locationsFloorData.map((data) => data.location);
+    const locationsArray = locationsFloorData.map((data) => data.buildingName);
     return locationsArray;
   },
 });
@@ -29,9 +29,11 @@ export const currentLocationFloorState = selector<Array<number>>({
     const locationsFloorData = get(locationsFloorState);
     const currentLocation = get(currentLocationNameState);
 
-    const currentLocationIndex = locationsFloorData.findIndex((building) => {
-      return building.location === currentLocation;
-    });
+    const currentLocationIndex = locationsFloorData.findIndex(
+      (building) => {
+        return building.buildingName === currentLocation;
+      }
+    );
     if (currentLocationIndex === -1) return [];
     return locationsFloorData[currentLocationIndex].floors;
   },

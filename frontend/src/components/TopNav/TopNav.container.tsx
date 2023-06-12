@@ -8,7 +8,7 @@ import {
 import { locationsState } from "@/recoil/selectors";
 import TopNav from "@/components/TopNav/TopNav";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
-import { axiosLocationFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
+import { axiosBuildingFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const TopNavContainer: React.FC<{
@@ -36,7 +36,7 @@ const TopNavContainer: React.FC<{
     const getLocationsData = async () => {
       try {
         await setTimeoutPromise(500);
-        const locationsFloorData = await axiosLocationFloor();
+        const locationsFloorData = await axiosBuildingFloor();
 
         setLocationsFloor(locationsFloorData.data.space_data);
       } catch (error) {
