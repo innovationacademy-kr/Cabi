@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LogTable from "@/components/LentLog/LogTable/LogTable";
 import { LentLogDto } from "@/types/dto/lent.dto";
+import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const LogPage = () => {
-  const [lentLog, setLentLog] = useState<
-    LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined
-  >(undefined);
+  const [lentLog, setLentLog] = useState<LentLogResponseType>(undefined);
 
   const getLentLog = async () => {
     try {
