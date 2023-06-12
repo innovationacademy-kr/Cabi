@@ -4,7 +4,7 @@ import LoginTemplate from "@/components/Login/LoginTemplate";
 
 describe("Login Template test", () => {
   it("should render properly", () => {
-    const url = `${import.meta.env.VITE_BE_HOST}/auth/login`;
+    const url = `${import.meta.env.VITE_BE_HOST}/v4/auth/login`;
     const pageTitle = "42cabi";
     const pageSubTitle = "여러분의 일상을 가볍게";
     const imgSrc = "/src/assets/images/loginImg.svg";

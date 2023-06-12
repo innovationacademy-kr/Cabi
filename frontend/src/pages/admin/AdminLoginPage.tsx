@@ -2,7 +2,7 @@ import AdminLoginTemplate from "@/components/Login/AdminLoginTemplate";
 import "@/assets/css/loginPage.css";
 
 const LoginPage = () => {
-  const url = `${import.meta.env.VITE_BE_HOST}/api/admin/auth/login`;
+  const url = `${import.meta.env.VITE_BE_HOST}/v4/admin/auth/login`;
 
   return (
     <AdminLoginTemplate

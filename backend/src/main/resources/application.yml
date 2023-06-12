@@ -20,9 +20,9 @@ spring:
 
 ---
 #로컬 환경
+server:
+  port: 2424
 spring:
-  server:
-    port: 2424
   config:
     import: classpath:application-auth.yml
     activate:
