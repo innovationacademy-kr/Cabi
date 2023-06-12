@@ -49,28 +49,28 @@ public class StatisticsController {
 	/**
 	 * 차단당한 유저 정보를 가져옵니다.
 	 * @param page 가져오고자 하는 페이지
-	 * @param length 가져오고자 하는 페이지의 길이
+	 * @param size 가져오고자 하는 페이지의 길이
 	 * @return 차단당한 유저 정보를 반환합니다.
 	 */
 	@GetMapping("/users/banned")
 	public BlockedUserPaginationDto getUsersBannedInfo(
 			@RequestParam("page") Integer page,
-			@RequestParam("length") Integer length
+			@RequestParam("size") Integer size
 	) {
-		return userFacadeService.getAllBanUsers(page, length, DateUtil.getNow());
+		return userFacadeService.getAllBanUsers(page, size, DateUtil.getNow());
 	}
 
 	/**
 	 * 연체중인 유저 리스트를 가져옵니다.
 	 * @param page 가져오고자 하는 페이지
-	 * @param length 가져오고자 하는 페이지의 길이
+	 * @param size 가져오고자 하는 페이지의 길이
 	 * @return 연체중인 유저 리스트를 반환합니다.
 	 */
 	@GetMapping("/users/overdue")
 	public OverdueUserCabinetPaginationDto getOverdueUsers(
 			@RequestParam("page") Integer page,
-			@RequestParam("length") Integer length
+			@RequestParam("size") Integer size
 	) {
-		return userFacadeService.getOverdueUserList(page, length);
+		return userFacadeService.getOverdueUserList(page, size);
 	}
 }
