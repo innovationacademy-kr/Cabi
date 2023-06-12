@@ -1,14 +1,13 @@
 package org.ftclub.cabinet.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class UpdateCabinetMemoDto {
 
-    @Size(max = 64)
-    private final String memo;
+	@Size(max = 64)
+	private String memo;
 }
