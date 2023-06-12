@@ -5,7 +5,7 @@ const SectionPagination: React.FC<{
   currentSectionName: string;
   currentPositionName: string;
   sectionList: Array<string>;
-  changeSectionOnClickIdxButton: (idx: number) => void;
+  changeSectionOnClickIndexButton: (index: number) => void;
   moveToLeftSection: React.MouseEventHandler;
   moveToRightSection: React.MouseEventHandler;
 }> = (props) => {
@@ -13,15 +13,16 @@ const SectionPagination: React.FC<{
     currentSectionName,
     currentPositionName,
     sectionList,
-    changeSectionOnClickIdxButton,
+    changeSectionOnClickIndexButton,
     moveToLeftSection,
     moveToRightSection,
   } = props;
-  const paginationIdxBar = sectionList.map((sectionName, idx) => (
+
+  const paginationIndexBar = sectionList.map((sectionName, index) => (
     <IndexRectangleStyled
       key={sectionName}
-      bgColor={sectionName === currentSectionName ? "#9747FF" : "#D9D9D9"}
-      onClick={() => changeSectionOnClickIdxButton(idx)}
+      filledColor={sectionName === currentSectionName ? "#9747FF" : "#D9D9D9"}
+      onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"
     />
   ));
@@ -37,17 +38,15 @@ const SectionPagination: React.FC<{
         <SectionNameTextStyled>{currentPositionName}</SectionNameTextStyled>
         <MoveSectionButtonStyled
           src={LeftSectionButton}
-          needRotate
+          arrowReversed={true}
           onClick={moveToRightSection}
           className="cabiButton"
         />
       </SectionBarStyled>
-      <SectionIndexStyled>{paginationIdxBar}</SectionIndexStyled>
+      <SectionIndexStyled>{paginationIndexBar}</SectionIndexStyled>
     </SectionPaginationStyled>
   );
 };
-
-export default SectionPagination;
 
 const SectionPaginationStyled = styled.div`
   min-width: 360px;
@@ -70,18 +69,18 @@ const SectionBarStyled = styled.div`
   align-items: center;
 `;
 
-const MoveSectionButtonStyled = styled.img<{ needRotate?: boolean }>`
+const MoveSectionButtonStyled = styled.img<{ arrowReversed?: boolean }>`
   width: 24px;
   height: 24px;
   margin: 0px 15px;
   opacity: 70%;
   cursor: pointer;
-  transform: rotate(${(props) => (props.needRotate ? "180deg" : "0")});
+  transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")});
   transition: all 0.2s;
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       opacity: 100%;
-      transform: rotate(${(props) => (props.needRotate ? "180deg" : "0")})
+      transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")})
         scale(1.3);
     }
   }
@@ -100,12 +99,12 @@ const SectionIndexStyled = styled.div`
   justify-content: center;
 `;
 
-const IndexRectangleStyled = styled.div<{ bgColor: string }>`
+const IndexRectangleStyled = styled.div<{ filledColor: string }>`
   width: 15px;
   height: 8px;
   border-radius: 2px;
   margin: 0px 3px;
-  background: ${(props) => props.bgColor};
+  background: ${(props) => props.filledColor};
   cursor: pointer;
   transition: all 0.2s;
   @media (hover: hover) and (pointer: fine) {
@@ -115,3 +114,5 @@ const IndexRectangleStyled = styled.div<{ bgColor: string }>`
     }
   }
 `;
+
+export default SectionPagination;
