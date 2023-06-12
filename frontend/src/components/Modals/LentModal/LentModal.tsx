@@ -14,7 +14,7 @@ import {
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import checkIcon from "@/assets/images/checkIcon.svg";
-import { MyCabinetInfoResponseDto } from "@ /types/dto/cabinet.dto";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import { getExpireDateString } from "@/utils/dateUtils";
 import { modalPropsMap } from "@/assets/data/maps";
