@@ -8,5 +8,5 @@ import lombok.Getter;
 public class PaginationRequestDto {
 
 	private final Integer page;
-	private final Integer length;
+	private final Integer size;
 }

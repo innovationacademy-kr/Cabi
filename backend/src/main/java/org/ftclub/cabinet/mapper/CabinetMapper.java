@@ -40,7 +40,7 @@ public interface CabinetMapper {
 	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name, Location location, Long overdueDays);
 
 	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
-			List<OverdueUserCabinetDto> result, Integer totalLength);
+			List<OverdueUserCabinetDto> result, Integer totalPage);
 
 	MyCabinetResponseDto toMyCabinetResponseDto(CabinetDto cabinetDto, String memo, List<LentDto> lents);
 }

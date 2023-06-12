@@ -66,21 +66,21 @@ public interface LentFacadeService {
 	 *
 	 * @param userId 찾으려는 user id
 	 * @param page   페이지네이션 offset
-	 * @param length 페이지네이션 size
+	 * @param size 페이지네이션 size
 	 * @return {@link LentHistoryPaginationDto}
 	 */
-	LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page, Integer length);
+	LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page, Integer size);
 
 	/**
 	 * 페이지네이션을 적용해서 지금까지 사물함의 모든 기록을 가져옵니다.
 	 *
 	 * @param cabinetId 찾으려는 cabinet id
 	 * @param page      페이지네이션 offset
-	 * @param length    페이지네이션 size
+	 * @param size    페이지네이션 size
 	 * @return {@link LentHistoryPaginationDto}
 	 */
 	LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
-			Integer length);
+			Integer size);
 
 	MyCabinetResponseDto getMyLentInfo(UserSessionDto user);
 
