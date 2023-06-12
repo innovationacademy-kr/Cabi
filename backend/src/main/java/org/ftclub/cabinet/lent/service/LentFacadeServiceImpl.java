@@ -44,9 +44,9 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
-			Integer length) {
+			Integer size) {
 		userExceptionHandler.getUser(userId);
-		PageRequest pageable = PageRequest.of(page, length, Sort.by("STARTED_AT"));
+		PageRequest pageable = PageRequest.of(page, size, Sort.by("STARTED_AT"));
 		List<LentHistory> lentHistories = lentRepository.findByUserId(userId, pageable);
 		int totalLength = lentRepository.countUserAllLent(userId);
 		return generateLentHistoryPaginationDto(lentHistories, totalLength);
@@ -54,9 +54,9 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
-			Integer length) {
+			Integer size) {
 		cabinetExceptionHandler.getCabinet(cabinetId);
-		PageRequest pageable = PageRequest.of(page, length, Sort.by("STARTED_AT"));
+		PageRequest pageable = PageRequest.of(page, size, Sort.by("STARTED_AT"));
 		List<LentHistory> lentHistories = lentRepository.findByCabinetId(cabinetId, pageable);
 		int totalLength = lentRepository.countCabinetAllLent(cabinetId);
 		return generateLentHistoryPaginationDto(lentHistories, totalLength);
@@ -87,7 +87,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
 			PaginationRequestDto paginationRequestDto) {
 		PageRequest pageable = PageRequest.of(paginationRequestDto.getPage(),
-				paginationRequestDto.getLength(), Sort.by("STARTED_AT"));
+				paginationRequestDto.getSize(), Sort.by("STARTED_AT"));
 		List<LentHistory> myLentHistories = lentRepository.findByUserId(user.getUserId(), pageable);
 		List<LentHistoryDto> result = myLentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentHistoryDto(
@@ -96,17 +96,17 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 						cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId())))
 				.collect(Collectors.toList());
 		return lentMapper.toLentHistoryPaginationDto(result,
-				paginationRequestDto.getLength() * paginationRequestDto.getPage());
+				paginationRequestDto.getSize() * paginationRequestDto.getPage());
 	}
 
 	private LentHistoryPaginationDto generateLentHistoryPaginationDto(
-			List<LentHistory> lentHistories, int totalLength) {
+			List<LentHistory> lentHistories, int totalPage) {
 		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
 						userExceptionHandler.getUser(e.getUserId()),
 						cabinetExceptionHandler.getCabinet(e.getCabinetId())))
 				.collect(Collectors.toList());
-		return new LentHistoryPaginationDto(lentHistoryDto, totalLength);
+		return new LentHistoryPaginationDto(lentHistoryDto, totalPage);
 	}
 
 	@Override

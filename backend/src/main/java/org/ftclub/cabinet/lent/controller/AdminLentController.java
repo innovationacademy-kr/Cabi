@@ -23,7 +23,7 @@ public class AdminLentController {
 	}
 
 	@PatchMapping("/return-users/{userId}")
-	public void terminateLentUser(Long userId) {
+	public void terminateLentUser(@PathVariable("userId") Long userId) {
 		lentFacadeService.terminateLentCabinet(userId);
 	}
 

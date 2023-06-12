@@ -55,44 +55,44 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer length, Date now) {
-		PageRequest pageable = PageRequest.of(page, length);
+	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now) {
+		PageRequest pageable = PageRequest.of(page, size);
 		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
 				now);
 		return generateBlockedUserPaginationDto(activeBanList.getContent(),
-				activeBanList.getTotalElements());
+				activeBanList.getTotalPages());
 	}
 
 	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
-			Long totalLength) {
+			Integer totalPage) {
 		List<UserBlockedInfoDto> userBlockedInfoDtoList = banHistories.stream()
 				.map(b -> userMapper.toUserBlockedInfoDto(b,
 						userExceptionHandlerService.getUser(b.getUserId()).getName()))
 				.collect(Collectors.toList());
-		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalLength);
+		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalPage);
 	}
 
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
-			Integer length) {
-		PageRequest pageable = PageRequest.of(page, length);
+			Integer size) {
+		PageRequest pageable = PageRequest.of(page, size);
 		Page<User> users = userRepository.findByPartialName(name, pageable);
-		return generateUserProfilePaginationDto(users.getContent(), users.getTotalElements());
+		return generateUserProfilePaginationDto(users.getContent(), users.getTotalPages());
 	}
 
 	private UserProfilePaginationDto generateUserProfilePaginationDto(List<User> users,
-			Long totalLength) {
+			Integer totalPage) {
 		List<UserProfileDto> userProfileDtoList = users.stream()
 				.map(u -> userMapper.toUserProfileDto(u)).collect(
 						Collectors.toList());
-		return new UserProfilePaginationDto(userProfileDtoList, totalLength);
+		return new UserProfilePaginationDto(userProfileDtoList, totalPage);
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
 	@Override
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
-			Integer length) {
-		PageRequest pageable = PageRequest.of(page, length);
+			Integer size) {
+		PageRequest pageable = PageRequest.of(page, size);
 		Page<User> users = userRepository.findByPartialName(name, pageable);
 		return new UserCabinetPaginationDto(null, null);
 	}
@@ -166,9 +166,9 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer length) {
+	public OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size) {
 		List<OverdueUserCabinetDto> overdueList = new ArrayList<>();
-		PageRequest pageable = PageRequest.of(page, length);
+		PageRequest pageable = PageRequest.of(page, size);
 		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
 					String userName = userRepository.findNameById(lh.getUserId());

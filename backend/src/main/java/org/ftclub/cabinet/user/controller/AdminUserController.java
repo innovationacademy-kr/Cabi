@@ -46,15 +46,15 @@ public class AdminUserController {
 	 *
 	 * @param userId 유저 고유 아이디
 	 * @param page   페이지 번호
-	 * @param length 페이지 당 길이
+	 * @param size 페이지 당 길이
 	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
 	 */
 	@GetMapping("/{userId}/lent-histories")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public LentHistoryPaginationDto getLentHistoriesByUserId(@PathVariable("userId") Long userId,
 			@RequestParam("page") Integer page,
-			@RequestParam("length") Integer length) {
-		return lentFacadeService.getAllUserLentHistories(userId, page, length);
+			@RequestParam("size") Integer size) {
+		return lentFacadeService.getAllUserLentHistories(userId, page, size);
 	}
 
 	/**

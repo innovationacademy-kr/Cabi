@@ -23,35 +23,35 @@ public interface UserFacadeService {
 	 * 모든 정지 유저를 반환합니다.
 	 *
 	 * @param page   페이지 번호
-	 * @param length 페이지 당 길이
+	 * @param size 페이지 당 길이
 	 * @param now    현재 시간
 	 * @return {@link BlockedUserPaginationDto} 모든 정지 유저
 	 */
 	/* 기존 searchByBanUser와 동일한 역할을 합니다. */
-	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer length, Date now);
+	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now);
 
 	/**
 	 * 유저 이름의 일부를 입력받아 해당하는 유저들의 프로필을 받아옵니다.
 	 *
 	 * @param name   유저 이름의 일부
 	 * @param page   페이지 번호
-	 * @param length 페이지 당 길이
+	 * @param size 페이지 당 길이
 	 * @return {@link UserProfilePaginationDto} 해당하는 유저들의 프로필
 	 */
 	/*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
 	UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
-			Integer length);
+			Integer size);
 
 	/**
 	 * 유저 이름의 일부를 입력받아 해당 유저들의 캐비넷 정보를 반환합니다.
 	 *
 	 * @param name   유저 이름의 일부
 	 * @param page   페이지 번호
-	 * @param length 페이지 당 길이
+	 * @param size 페이지 당 길이
 	 * @return {@link UserCabinetPaginationDto} 해당하는 유저들의 캐비넷 정보
 	 */
 	UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
-			Integer length);
+			Integer size);
 
 	/**
 	 * 사용자의 아이디를 입력받아 본인의 대여 정보와 캐비넷 정보를 반환합니다.
@@ -162,7 +162,7 @@ public interface UserFacadeService {
 	 * 연체 중인 유저 리스트를 반환합니다.
 	 *
 	 * @param page      페이지 번호
-	 * @param length    페이지 당 길이
+	 * @param size    페이지 당 길이
 	 */
-	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer length);
+	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size);
 }

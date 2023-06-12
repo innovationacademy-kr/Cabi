@@ -18,7 +18,7 @@ public class SearchController {
 
     @GetMapping("/cabinets")
     public CabinetInfoPaginationDto getCabinetsInfo(
-            @RequestParam Integer visibleNum
+            @RequestParam("visibleNum") Integer visibleNum
     ) {
         return cabinetFacadeService.getCabinetsInfo(visibleNum);
     }
@@ -27,18 +27,18 @@ public class SearchController {
     public UserProfilePaginationDto getUsersProfile(
             @PathVariable("name") String name,
             @RequestParam("page") Integer page,
-            @RequestParam("length") Integer length
+            @RequestParam("size") Integer size
     ) {
-        return userFacadeService.getUserProfileListByPartialName(name, page,length);
+        return userFacadeService.getUserProfileListByPartialName(name, page, size);
     }
 
     @GetMapping("/users")
     public UserCabinetPaginationDto getCabinetsLentInfo(
-            @PathVariable String name,
-            @RequestParam Integer page,
-            @RequestParam Integer length
+            @PathVariable("name") String name,
+            @RequestParam("page") Integer page,
+            @RequestParam("size") Integer size
     ){
-        return userFacadeService.findUserCabinetListByPartialName(name, page, length);
+        return userFacadeService.findUserCabinetListByPartialName(name, page, size);
     }
 
 
