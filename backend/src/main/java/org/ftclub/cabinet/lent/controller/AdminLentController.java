@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.ReturnCabinetsRequestDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
@@ -19,7 +20,7 @@ public class AdminLentController {
 
     @PatchMapping("/return-cabinets")
     public void terminateLentCabinets(
-            @RequestBody ReturnCabinetsRequestDto returnCabinetsRequestDto) {
+            @Valid @RequestBody ReturnCabinetsRequestDto returnCabinetsRequestDto) {
         lentFacadeService.terminateLentCabinets(returnCabinetsRequestDto);
     }
 
