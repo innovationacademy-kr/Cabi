@@ -5,8 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Date;
 import java.util.List;
-
-import org.ftclub.cabinet.cabinet.domain.*;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.Grid;
+import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.cabinet.domain.Location;
+import org.ftclub.cabinet.cabinet.domain.MapArea;
+import org.ftclub.cabinet.cabinet.domain.SectionFormation;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
@@ -26,7 +32,8 @@ class CabinetMapperTest {
     void toCabinetDto() {
         Location location = Location.of("testBuilding", 99, "testSection");
         Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
-                CabinetPlace.of(Location.of("새롬관", 2, "oasis"), SectionFormation.of(1, 1), MapArea.of(1, 1, 1, 1)));
+                CabinetPlace.of(Location.of("새롬관", 2, "oasis"), SectionFormation.of(1, 1),
+                        MapArea.of(1, 1, 1, 1)));
         CabinetDto cabinetDto = cabinetMapper.toCabinetDto(location, cabinet);
         assertEquals(cabinet.getCabinetId(), cabinetDto.getCabinetId());
         assertEquals(cabinet.getVisibleNum(), cabinetDto.getVisibleNum());
@@ -44,7 +51,7 @@ class CabinetMapperTest {
 
         BuildingFloorsDto buildingFloorsDto = cabinetMapper.toBuildingFloorsDto(targetBuilding,
                 floors);
-        assertEquals(targetBuilding, buildingFloorsDto.getBuilding());
+        assertEquals(targetBuilding, buildingFloorsDto.getBuildingName());
         assertArrayEquals(floors.toArray(), buildingFloorsDto.getFloors().toArray());
     }
 
