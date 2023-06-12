@@ -37,7 +37,7 @@ CREATE TABLE `admin_user` (
 
 LOCK TABLES `admin_user` WRITE;
 /*!40000 ALTER TABLE `admin_user` DISABLE KEYS */;
-INSERT INTO `admin_user` VALUES (1,'admin0@gmail.com','NONE'),(2,'admin1@gmail.com','ADMIN'),(3,'admin2@gamil.com','MASTER');
+INSERT INTO `admin_user` VALUES (1,'admin0@gmail.com','NONE'),(2,'admin1@gmail.com','ADMIN'),(3,'admin2@gmail.com','MASTER'),(4, 'innoaca@cabi.42seoul.io', 'MASTER');
 /*!40000 ALTER TABLE `admin_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
