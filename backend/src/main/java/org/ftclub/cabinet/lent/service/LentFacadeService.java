@@ -96,12 +96,13 @@ public interface LentFacadeService {
     /**
      * 내가 대여한 기록들을 페이지네이션 기준으로 가져옵니다.
      *
-     * @param user                 유저 정보
-     * @param paginationRequestDto 페이지네이션 정보
+     * @param user  유저 정보
+     * @param page  페이지
+     * @param size  사이즈
      * @return 대여 기록
      */
     LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
-            PaginationRequestDto paginationRequestDto);
+            Integer page, Integer size);
 
     /**
      * 자신이 대여한 사물함의 메모를 바꿉니다.
