@@ -1,9 +1,8 @@
 import React from "react";
-import Modal from "@/components/Modals/Modal";
-import { IModalContents } from "@/components/Modals/Modal";
+import Modal, { IModalContents } from "@/components/Modals/Modal";
+import ModalPortal from "@/components/Modals/ModalPortal";
 import checkIcon from "@/assets/images/checkIcon.svg";
 import errorIcon from "@/assets/images/errorIcon.svg";
-import ModalPortal from "@/components/Modals/ModalPortal";
 
 export const SuccessResponseModal: React.FC<{
   modalTitle?: string;

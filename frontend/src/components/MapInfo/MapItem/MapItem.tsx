@@ -1,9 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { currentLocationFloorState } from "@/recoil/selectors";
+import styled from "styled-components";
 import { currentFloorNumberState } from "@/recoil/atoms";
+import { currentLocationFloorState } from "@/recoil/selectors";
 import { ISectionInfo } from "@/assets/data/mapPositionData";
 import useMenu from "@/hooks/useMenu";
 

@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
-import useMenu from "@/hooks/useMenu";
-import AdminUserLentLog from "@/components/LentLog/AdminUserLentLog";
-import { LentLogDto } from "@/types/dto/lent.dto";
 import { useRecoilValue } from "recoil";
 import { targetUserInfoState } from "@/recoil/atoms";
+import AdminUserLentLog from "@/components/LentLog/AdminUserLentLog";
+import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetUserLentLog } from "@/api/axios/axios.custom";
+import useMenu from "@/hooks/useMenu";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
-const BAD_REQUEST = 400;
 
 const AdminUserLentLogContainer = () => {
   const { closeLent } = useMenu();
-  const [logs, setLogs] = useState<
-    LentLogDto[] | typeof BAD_REQUEST | undefined
-  >(undefined);
+  const [logs, setLogs] = useState<LentLogResponseType>(undefined);
   const [page, setPage] = useState<number>(-1);
   const [totalPage, setTotalPage] = useState<number>(-1);
   const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
@@ -23,7 +21,7 @@ const AdminUserLentLogContainer = () => {
       setTotalPage(Math.ceil(result.data.total_length / 10));
       setLogs(result.data.result);
     } catch {
-      setLogs(BAD_REQUEST);
+      setLogs(STATUS_400_BAD_REQUEST);
       setTotalPage(1);
     }
   }
@@ -61,7 +59,7 @@ const AdminUserLentLogContainer = () => {
 
   return (
     <AdminUserLentLog
-      closeAndResetLogPage={closeAndResetLogPage}
+      closeLent={closeAndResetLogPage}
       logs={logs}
       page={page}
       totalPage={totalPage}

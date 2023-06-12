@@ -1,21 +1,21 @@
-import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import styled, { css } from "styled-components";
+import {
+  currentCabinetIdState,
+  selectedTypeOnSearchState,
+  targetCabinetInfoState,
+} from "@/recoil/atoms";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import useMenu from "@/hooks/useMenu";
-import {
-  currentCabinetIdState,
-  targetCabinetInfoState,
-  selectedTypeOnSearchState,
-} from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
+import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
+import useMenu from "@/hooks/useMenu";
 
 const reformIntraId = (lent_info: LentDto[]) => {
   if (lent_info.length === 0) {

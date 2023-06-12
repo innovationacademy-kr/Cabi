@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { LentLogDto } from "@/types/dto/lent.dto";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import { LentLogResponseType } from "@/types/dto/lent.dto";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
   year: "2-digit",
@@ -8,13 +9,7 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-const BAD_REQUEST = 400;
-
-interface IlentLog {
-  lentLog: LentLogDto[] | typeof BAD_REQUEST | undefined;
-}
-
-const AdminCabinetLogTable = ({ lentLog }: IlentLog) => {
+const AdminCabinetLogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
   if (lentLog === undefined) return <LoadingAnimation />;
 
   return (
@@ -27,7 +22,7 @@ const AdminCabinetLogTable = ({ lentLog }: IlentLog) => {
             <th>반납일</th>
           </tr>
         </TheadStyled>
-        {lentLog !== BAD_REQUEST && (
+        {lentLog !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
             {lentLog.map(
               ({ floor, section, intra_id, lent_time, return_time }, idx) => (
@@ -45,7 +40,7 @@ const AdminCabinetLogTable = ({ lentLog }: IlentLog) => {
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {lentLog === BAD_REQUEST && (
+      {lentLog === STATUS_400_BAD_REQUEST && (
         <EmptyLogStyled>반납처리 된 사물함이 아직 없습니다.</EmptyLogStyled>
       )}
     </LogTableWrapperstyled>

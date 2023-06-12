@@ -1,8 +1,8 @@
-import ServiceManual from "@/components/Home/ServiceManual";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { currentFloorNumberState } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import ServiceManual from "@/components/Home/ServiceManual";
 import "@/assets/css/homePage.css";
 
 const HomePage = () => {

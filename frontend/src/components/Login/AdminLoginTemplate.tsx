@@ -1,18 +1,17 @@
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import "@/assets/css/loginPage.css";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import { additionalModalType } from "@/assets/data/maps";
 import { axiosAdminAuthLogin } from "@/api/axios/axios.custom";
-import { useNavigate } from "react-router-dom";
 
 const AdminLoginTemplate = (props: {
   url: string;
   pageTitle: string;
   pageSubTitle: string;
-  imgSrc?: string;
+  imgSrc: string;
 }) => {
   const navigate = useNavigate();
   const { url, pageTitle, pageSubTitle, imgSrc } = props;
@@ -66,8 +65,8 @@ const AdminLoginTemplate = (props: {
             여러분의 일상을 가볍게
           </LoginTitleStyled>
         </TopContentsStyled>
-        <LoginImgStyled isAdmin={!!imgSrc}>
-          <img src={imgSrc ?? "/src/assets/images/loginImg.svg"} alt="" />
+        <LoginImgStyled>
+          <img src={imgSrc} alt="" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
@@ -173,10 +172,10 @@ const LoginTitleStyled = styled.p<{ color: string }>`
   line-height: 3rem;
 `;
 
-const LoginImgStyled = styled.div<{ isAdmin?: boolean }>`
+const LoginImgStyled = styled.div`
   margin: 10%;
   margin-left: 0;
-  transform: ${(props) => (props.isAdmin ? "scaleX(-1)" : "scaleX(1)")};
+  transform: scaleX(-1);
 `;
 
 const BottomContentsStyled = styled.div`

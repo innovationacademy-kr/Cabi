@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { numberOfAdminWorkState } from "@/recoil/atoms";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import ButtonContainer from "@/components/Common/Button";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import CabinetType from "@/types/enum/cabinet.type.enum";
-import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
-import cabiLogo from "@/assets/images/logo.svg";
 import BanModal from "@/components/Modals/BanModal/BanModal";
 import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
+import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import cabiLogo from "@/assets/images/logo.svg";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
+
 export interface ISelectedUserInfo {
   intraId: string;
   userId: number;
@@ -44,8 +43,6 @@ const UserInfoArea: React.FC<{
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
   const [showAdminReturnModal, setShowAdminReturnModal] =
     useState<boolean>(false);
-  const numberOfAdminWork = useRecoilValue(numberOfAdminWorkState);
-  numberOfAdminWork;
 
   const handleOpenAdminReturnModal = () => {
     setShowAdminReturnModal(true);
@@ -160,8 +157,6 @@ const UserInfoArea: React.FC<{
   );
 };
 
-export default UserInfoArea;
-
 const NotSelectedStyled = styled.div`
   height: 100%;
   display: flex;
@@ -254,3 +249,5 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   white-space: pre-line;
   text-align: center;
 `;
+
+export default UserInfoArea;

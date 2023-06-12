@@ -1,21 +1,79 @@
+import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
-import CabinetInfoArea, {
-  ISelectedCabinetInfo,
-} from "@/components/CabinetInfoArea/CabinetInfoArea";
+import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
+import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
+import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import AdminCabinetInfoArea, {
-  IMultiSelectTargetInfo,
-} from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
-import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
+
+export interface ISelectedCabinetInfo {
+  floor: number;
+  section: string;
+  cabinetId: number;
+  cabinetNum: number;
+  status: CabinetStatus;
+  lentType: CabinetType;
+  userNameList: string;
+  expireDate?: Date;
+  detailMessage: string | null;
+  detailMessageColor: string;
+  isAdmin: boolean;
+  isLented: boolean;
+}
+
+export interface IMultiSelectTargetInfo {
+  targetCabinetInfoList: CabinetInfo[];
+  typeCounts: {
+    AVAILABLE: number;
+    EXPIRED: number;
+    SET_EXPIRE_FULL: number;
+    BROKEN: number;
+  };
+}
+
+export interface ICurrentModalStateInfo {
+  lentModal: boolean;
+  unavailableModal: boolean;
+  returnModal: boolean;
+  memoModal: boolean;
+  passwordCheckModal: boolean;
+}
+
+export interface IAdminCurrentModalStateInfo {
+  returnModal: boolean;
+  statusModal: boolean;
+}
+
+interface ICount {
+  AVAILABLE: number;
+  SET_EXPIRE_FULL: number;
+  EXPIRED: number;
+  BROKEN: number;
+}
+
+export type TModalState =
+  | "lentModal"
+  | "unavailableModal"
+  | "returnModal"
+  | "memoModal"
+  | "passwordCheckModal";
+
+export type TAdminModalState = "returnModal" | "statusModal";
 
 const calExpiredTime = (expireTime: Date) =>
   Math.floor(
     (expireTime.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
   );
+
+const setExpireDate = (date: Date | undefined) => {
+  if (!date) return null;
+  if (date.toString().slice(0, 4) === "9999") return null;
+  return date.toString().slice(0, 10);
+};
 
 const getCalcualtedTimeString = (expireTime: Date) => {
   const remainTime = calExpiredTime(expireTime);
@@ -79,7 +137,19 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet, toggleLent } = useMenu();
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
+  const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
+  const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
+    lentModal: false,
+    unavailableModal: false,
+    returnModal: false,
+    memoModal: false,
+    passwordCheckModal: false,
+  });
+  const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
+    returnModal: false,
+    statusModal: false,
+  });
 
   const cabinetViewData: ISelectedCabinetInfo | null = targetCabinetInfo
     ? {
@@ -97,13 +167,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         isLented: targetCabinetInfo.lent_info.length !== 0,
       }
     : null;
-
-  interface ICount {
-    AVAILABLE: number;
-    SET_EXPIRE_FULL: number;
-    EXPIRED: number;
-    BROKEN: number;
-  }
 
   const countTypes = (cabinetList: CabinetInfo[]) =>
     cabinetList.reduce(
@@ -124,6 +187,52 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
+  const openModal = (modalName: TModalState) => {
+    setUserModal({
+      ...userModal,
+      [modalName]: true,
+    });
+  };
+
+  const closeModal = (modalName: TModalState) => {
+    setUserModal({
+      ...userModal,
+      [modalName]: false,
+    });
+  };
+
+  const openAdminModal = (modalName: TAdminModalState) => {
+    setAdminModal({
+      ...adminModal,
+      [modalName]: true,
+    });
+  };
+
+  const closeAdminModal = (modalName: TAdminModalState) => {
+    setAdminModal({
+      ...adminModal,
+      [modalName]: false,
+    });
+  };
+
+  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
+    const returnable = selectedCabinets.find(
+      (cabinet) => cabinet.lent_info.length >= 1
+    );
+    if (returnable !== undefined) {
+      return true;
+    }
+    return false;
+  };
+
+  const checkMultiStatus = (selectedCabinets: CabinetInfo[]) => {
+    // 캐비넷 일괄 상태 관리 모달을 열기 위한 조건
+    // 선택된 캐비넷들이 같은 타입, 같은 상태여야 함.
+    if (isSameType(selectedCabinets) && isSameStatus(selectedCabinets))
+      return true;
+    return false;
+  };
+
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -131,14 +240,28 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         closeCabinet={closeCabinet}
         multiSelectTargetInfo={multiSelectInfo}
         openLent={toggleLent}
+        adminModal={adminModal}
+        openModal={openAdminModal}
+        closeModal={closeAdminModal}
+        checkMultiReturn={checkMultiReturn}
+        checkMultiStatus={checkMultiStatus}
+        expireDate={setExpireDate(cabinetViewData?.expireDate)}
       />
       {cabinetViewData && <AdminCabinetLentLogContainer />}
     </>
   ) : (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}
-      myCabinetId={myCabinetInfo?.cabinet_id}
       closeCabinet={closeCabinet}
+      expireDate={setExpireDate(cabinetViewData?.expireDate)}
+      isMine={myCabinetInfo?.cabinet_id === cabinetViewData?.cabinetId}
+      isAvailable={
+        cabinetViewData?.status === "AVAILABLE" ||
+        cabinetViewData?.status === "SET_EXPIRE_AVAILABLE"
+      }
+      userModal={userModal}
+      openModal={openModal}
+      closeModal={closeModal}
     />
   );
 };

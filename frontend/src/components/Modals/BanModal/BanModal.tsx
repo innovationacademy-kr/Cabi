@@ -12,13 +12,13 @@ import {
   FailResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
-import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
+import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
+import { handleBannedUserList } from "@/utils/tableUtils";
 import {
   axiosDeleteCurrentBanLog,
   axiosGetBannedUserList,
 } from "@/api/axios/axios.custom";
-import { handleBannedUserList } from "@/components/AdminInfo/convertFunctions";
 
 const BanModal: React.FC<{
   userId: number;

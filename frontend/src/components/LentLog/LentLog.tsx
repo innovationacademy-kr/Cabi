@@ -1,17 +1,6 @@
 import styled, { css } from "styled-components";
 import LogTable from "@/components/LentLog/LogTable/LogTable";
-import { LentLogDto } from "@/types/dto/lent.dto";
-
-const BAD_REQUEST = 400;
-
-interface ILentLog {
-  closeLent: React.MouseEventHandler;
-  logs: LentLogDto[] | typeof BAD_REQUEST | undefined;
-  page: number;
-  totalPage: number;
-  onClickPrev: React.MouseEventHandler;
-  onClickNext: React.MouseEventHandler;
-}
+import { ILentLog } from "@/types/dto/lent.dto";
 
 const LentLog = ({
   closeLent,

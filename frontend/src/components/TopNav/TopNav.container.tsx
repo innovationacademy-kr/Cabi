@@ -1,14 +1,14 @@
 import React, { SetStateAction, useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  locationsFloorState,
   currentLocationNameState,
+  locationsFloorState,
   myCabinetInfoState,
 } from "@/recoil/atoms";
 import { locationsState } from "@/recoil/selectors";
-import { axiosLocationFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
-import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import TopNav from "@/components/TopNav/TopNav";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { axiosLocationFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const TopNavContainer: React.FC<{
@@ -30,11 +30,9 @@ const TopNavContainer: React.FC<{
   };
 
   useEffect(() => {
-    /* test timeout */
     function setTimeoutPromise(delay: number) {
       return new Promise((resolve) => setTimeout(resolve, delay));
     }
-    /* ------------ */
     const getLocationsData = async () => {
       try {
         await setTimeoutPromise(500);

@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   currentFloorNumberState,
   currentSectionNameState,
@@ -13,32 +13,32 @@ const SectionPaginationContainer = (): JSX.Element => {
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
-  const currentSectionIdx = sectionList.findIndex(
+  const currentSectionIndex = sectionList.findIndex(
     (sectionName) => sectionName === currentSectionName
   );
   const currentPositionName = floor?.toString() + "층 - " + currentSectionName;
 
-  const changeSectionOnClickIdxButton = (idx: number) => {
+  const changeSectionOnClickIndexButton = (index: number) => {
     if (sectionList === undefined) return;
 
-    const targetSectionName = sectionList.at(idx);
+    const targetSectionName = sectionList.at(index);
     if (targetSectionName === undefined) return;
     setCurrentSectionName(targetSectionName);
   };
 
   const moveToLeftSection = () => {
-    if (currentSectionIdx <= 0) {
+    if (currentSectionIndex <= 0) {
       setCurrentSectionName(sectionList[sectionList.length - 1]);
     } else {
-      setCurrentSectionName(sectionList[currentSectionIdx - 1]);
+      setCurrentSectionName(sectionList[currentSectionIndex - 1]);
     }
   };
 
   const moveToRightSection = () => {
-    if (currentSectionIdx >= sectionList.length - 1) {
+    if (currentSectionIndex >= sectionList.length - 1) {
       setCurrentSectionName(sectionList[0]);
     } else {
-      setCurrentSectionName(sectionList[currentSectionIdx + 1]);
+      setCurrentSectionName(sectionList[currentSectionIndex + 1]);
     }
   };
 
@@ -54,7 +54,7 @@ const SectionPaginationContainer = (): JSX.Element => {
           currentSectionName={currentSectionName}
           currentPositionName={currentPositionName}
           sectionList={sectionList}
-          changeSectionOnClickIdxButton={changeSectionOnClickIdxButton}
+          changeSectionOnClickIndexButton={changeSectionOnClickIndexButton}
           moveToLeftSection={moveToLeftSection}
           moveToRightSection={moveToRightSection}
         />

@@ -1,20 +1,18 @@
-/*
-    클러스터 사물함 위치 더미 데이터
-    grid col : 가로 , grid row : 세로
-
-    colStart : grid 가로 시작 위치 1부터 시작
-    colEnd   : grid 가로 마지막 위치
-    rowStart : grid 세로 시작 위치 2부터 시작
-    rowEnd   : grid 세로 마지막 위치
-    name     : 사물함 이름 정보
-    type     : 사물함과 엘레베이터 타입 구분자
-*/
-
+/**
+ * @interface
+ * @description 클러스터 사물함 위치 더미 데이터
+ * @member {number} colStart : grid 가로 시작 위치 1부터 시작
+ * @member {number} colEnd : grid 가로 마지막 위치
+ * @member {number} rowStart : grid 세로 시작 위치 2부터 시작
+ * @member {number} rowEnd : grid 세로 마지막 위치
+ * @member {string} name : 사물함 이름 정보
+ * @member {string} type : 사물함과 엘레베이터 타입 구분자
+ */
 export interface ISectionInfo {
-  rowStart: number;
-  rowEnd: number;
   colStart: number;
   colEnd: number;
+  rowStart: number;
+  rowEnd: number;
   name: string;
   type: string;
 }

@@ -38,7 +38,7 @@ export interface IMonthlyData {
   returnCount: number;
 }
 
-export interface IData {
+export interface ITableData {
   first?: string;
   second?: string;
   third?: string;

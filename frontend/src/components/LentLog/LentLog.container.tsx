@@ -1,16 +1,14 @@
+import { useEffect, useState } from "react";
+import LentLog from "@/components/LentLog/LentLog";
+import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
-import { useEffect, useState } from "react";
-import LentLog from "./LentLog";
-import { LentLogDto } from "@/types/dto/lent.dto";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
-const BAD_REQUEST = 400;
 
 const LentLogContainer = () => {
   const { closeLent } = useMenu();
-  const [logs, setLogs] = useState<
-    LentLogDto[] | typeof BAD_REQUEST | undefined
-  >(undefined);
+  const [logs, setLogs] = useState<LentLogResponseType>(undefined);
   const [page, setPage] = useState<number>(-1);
   const [totalPage, setTotalPage] = useState<number>(-1);
   async function getData(page: number) {
@@ -19,7 +17,7 @@ const LentLogContainer = () => {
       setTotalPage(Math.floor(result.data.total_length / 10) + 1);
       setLogs(result.data.result);
     } catch {
-      setLogs(BAD_REQUEST);
+      setLogs(STATUS_400_BAD_REQUEST);
     }
   }
   useEffect(() => {

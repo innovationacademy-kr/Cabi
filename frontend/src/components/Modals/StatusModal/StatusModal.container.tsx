@@ -1,11 +1,5 @@
-import {
-  axiosBundleUpdateCabinetStatus,
-  axiosBundleUpdateCabinetType,
-  axiosCabinetById,
-  axiosGetBrokenCabinetList,
-  axiosUpdateCabinetStatus,
-  axiosUpdateCabinetType,
-} from "@/api/axios/axios.custom";
+import React from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   brokenCabinetListState,
   currentCabinetIdState,
@@ -14,13 +8,19 @@ import {
   targetCabinetInfoState,
 } from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import React from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import StatusModal from "@/components/Modals/StatusModal/StatusModal";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import StatusModal from "@/components/Modals/StatusModal/StatusModal";
+import {
+  axiosBundleUpdateCabinetStatus,
+  axiosBundleUpdateCabinetType,
+  axiosCabinetById,
+  axiosGetBrokenCabinetList,
+  axiosUpdateCabinetStatus,
+  axiosUpdateCabinetType,
+} from "@/api/axios/axios.custom";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import { handleBrokenCabinetList } from "@/components/AdminInfo/convertFunctions";
+import { handleBrokenCabinetList } from "@/utils/tableUtils";
 
 const StatusModalContainer = (props: {
   onClose: React.MouseEventHandler<Element>;
@@ -46,7 +46,7 @@ const StatusModalContainer = (props: {
             )
               ? true
               : false,
-            message: `선택된 사물함중에 사용중인 사물함이 
+            message: `선택된 사물함중에 사용중인 사물함이
 포함되어 있습니다.
 사물함의 상태 또는 타입을 변경하려면 해당 사물함을 먼저 반납해주세요.`,
           },
