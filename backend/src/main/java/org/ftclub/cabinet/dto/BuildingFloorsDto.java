@@ -11,6 +11,6 @@ import lombok.Getter;
 @Getter
 public class BuildingFloorsDto {
 
-	private final String building;
-	private final List<Integer> floors;
+    private final String buildingName;
+    private final List<Integer> floors;
 }
