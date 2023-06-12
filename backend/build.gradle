@@ -2,19 +2,12 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'org.asciidoctor.convert' version '1.5.9.2'
 }
 
 group = 'org.ftclub'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-/**
- * ext ~ bootJar까지는 asciidoctor를 이용하여
- * build/generated-snippets에 테스트 결과를 저장하고
- * bootJar를 실행하면 build/generated-snippets에 저장된
- * 테스트 결과를 static/docs에 저장합니다.
- */
 ext {
     snippetsDir = file('build/generated-snippets')
 }
@@ -23,16 +16,7 @@ test {
     outputs.dir snippetsDir
 }
 
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
-}
-
 bootJar {
-    dependsOn asciidoctor
-    from("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
 }
 
 configurations {
@@ -51,8 +35,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-//    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.92' 참고 : https://junho85.pe.kr/2054
-//     M1의 경우 i.n.r.d.DnsServerAddressStreamProviders에서 에러가 발생할 때 설치하는 라이브러리지만, 별개의 환경이므로 스킵합니다.
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.modelmapper:modelmapper:3.1.1'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -76,8 +59,6 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     testImplementation 'org.modelmapper:modelmapper:3.1.1'
     testRuntimeOnly 'com.h2database:h2'
-    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     //JUnit4 추가
     testImplementation("org.junit.vintage:junit-vintage-engine") {
