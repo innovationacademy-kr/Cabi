@@ -1,6 +1,9 @@
 package org.ftclub.cabinet.search.controller;
 
+import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
+
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -20,6 +23,7 @@ public class SearchController {
 	private final UserFacadeService userFacadeService;
 
 	@GetMapping("/cabinets")
+	@AuthGuard(level = ADMIN_ONLY)
 	public CabinetInfoPaginationDto getCabinetsInfo(
 			@RequestParam("visibleNum") Integer visibleNum
 	) {
@@ -27,6 +31,7 @@ public class SearchController {
 	}
 
 	@GetMapping("/users-simple")
+	@AuthGuard(level = ADMIN_ONLY)
 	public UserProfilePaginationDto getUsersProfile(
 			@RequestParam("name") String name,
 			@RequestParam("page") Integer page,
@@ -36,6 +41,7 @@ public class SearchController {
 	}
 
 	@GetMapping("/users")
+	@AuthGuard(level = ADMIN_ONLY)
 	public UserCabinetPaginationDto getCabinetsLentInfo(
 			@RequestParam("name") String name,
 			@RequestParam("page") Integer page,

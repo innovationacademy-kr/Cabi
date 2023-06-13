@@ -18,8 +18,14 @@ public class JwtProperties {
 	@Value("${spring.oauth2.jwt.token.main-token-name}")
 	private String mainTokenName;
 
+	@Value("${spring.oauth2.jwt.token.main-provider}")
+	private String mainProviderName;
+
 	@Value("${spring.oauth2.jwt.token.admin-token-name}")
 	private String adminTokenName;
+
+	@Value("${spring.oauth2.jwt.token.admin-provider}")
+	private String adminProviderName;
 
 	@Value("${spring.oauth2.jwt.token.expiry}")
 	private Integer expiry;

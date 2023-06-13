@@ -114,7 +114,6 @@ public class TokenValidator {
 	 * <p>
 	 * MASTER의 경우 현재 정적으로 관리하므로 이메일만 검증합니다.
 	 * <p>
-	 * ToDo : DB로 관리 + UserRole과 AdminRole을 합쳐도 될 것 같음. (role이 null인 경우가 유저)
 	 *
 	 * @param token     토큰
 	 * @param authLevel 인증 단계
@@ -123,6 +122,9 @@ public class TokenValidator {
 	public boolean isAdminRoleValid(String token, AuthLevel authLevel)
 			throws JsonProcessingException {
 		String email = getPayloadJson(token).get("email").asText();
+		if (email == null) {
+			return false;
+		}
 		AdminRole role = userService.getAdminUserRole(email);
 
 		if (!isAdminEmail(email)) {
