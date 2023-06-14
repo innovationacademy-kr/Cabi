@@ -3,9 +3,11 @@ package org.ftclub.cabinet.lent.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
@@ -28,14 +30,13 @@ class LentHistoryTest {
 		lentHistory.isCabinetIdEqual(2L);
 	}
 
-	@Test
-	void isSetExpiredAt() {
-		Date now = DateUtil.getNow();
-		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
-		assertTrue(lentHistory.isSetExpiredAt());
-		lentHistory = LentHistory.of(now, null, 1L, 1L);
-		assertFalse(lentHistory.isSetExpiredAt());
-	}
+    @Test
+    void isSetExpiredAt() {
+        Date now = DateUtil.getNow();
+        LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+        assertTrue(lentHistory.isSetExpiredAt());
+        assertThrows(DomainException.class, () -> LentHistory.of(now, null, 1L, 1L));
+    }
 
 	@Test
 	void isSetEndedAt() {

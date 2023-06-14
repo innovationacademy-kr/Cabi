@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -76,18 +75,12 @@ public class LentHistory {
     private Long cabinetId;
 
     protected LentHistory(Date startedAt, Date expiredAt, Long userId,
-                          Long cabinetId) {
+            Long cabinetId) {
         this.startedAt = startedAt;
         this.expiredAt = expiredAt;
         this.userId = userId;
         this.cabinetId = cabinetId;
     }
-
-
-    private boolean isValid() {
-        return this.startedAt != null && this.userId != null && this.cabinetId != null;
-    }
-
 
     /**
      * @param startedAt 대여 시작일
@@ -96,13 +89,17 @@ public class LentHistory {
      * @param cabinetId 대여하는 cabinet id
      * @return 인자 정보를 담고있는 {@link LentHistory}
      */
-    public static LentHistory of(Date startedAt, Date expiredAt, Long userId,
-                                 Long cabinetId) {
+    public static LentHistory of(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
         LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
         if (!lentHistory.isValid()) {
             throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
         }
         return lentHistory;
+    }
+
+    private boolean isValid() {
+        return this.startedAt != null && this.userId != null && this.cabinetId != null
+                && this.expiredAt != null;
     }
 
     @Override
