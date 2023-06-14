@@ -8,12 +8,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class LentHistoryUnitTest {
 
     @Test
+    @DisplayName("isValid() 성공")
     void isValid_Success() {
         assertInstanceOf(LentHistory.class, LentHistory.of(
                 DateUtil.getNow(),
@@ -23,6 +26,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("isValid() 실패 대여시작시간 NULL")
     void isValid_FAILURE_startedAt_NULL() {
         assertThrows(DomainException.class, () -> LentHistory.of(
                 null,
@@ -32,6 +36,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("isValid() 실패 만료시간 NULL")
     void isValid_FAILURE_expiredAt_NULL() {
         assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
@@ -53,6 +58,7 @@ class LentHistoryUnitTest {
  */
 
     @Test
+    @DisplayName("isValid() 실패 유저ID NULL")
     void isValid_FAILURE_userId_NULL() {
         assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
@@ -62,6 +68,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("isValid() 실패 사물함ID NULL")
     void isValid_FAILURE_cabinetId_NULL() {
         assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
@@ -71,6 +78,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("캐비넷 아이디 비교 성공")
     void isCabinetIdEqual_SUCCESS() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
@@ -82,6 +90,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("캐비넷 아이디 비교 실패")
     void isCabinetIdEqual_FAILURE() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
@@ -93,7 +102,8 @@ class LentHistoryUnitTest {
     }
 
     @Test
-    void isSetExpiredAt_SUCCESS() {
+    @DisplayName("만료시간 설정여부 true ")
+    void isSetExpiredAt_TRUE() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
                 DateUtil.addDaysToDate(DateUtil.getNow(), 3),
@@ -104,7 +114,8 @@ class LentHistoryUnitTest {
     }
 
     @Test
-    void isSetExpiredAt_Failure() {
+    @DisplayName("만료시간 설정 false - 만료시간 무한")
+    void isSetExpiredAt_False() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
                 DateUtil.getInfinityDate(),
@@ -115,7 +126,8 @@ class LentHistoryUnitTest {
     }
 
     @Test
-    void isSetEndedAt_TRUE_SUCCESS() {
+    @DisplayName("반납시간 설정 성공")
+    void isSetEndedAt_TRUE() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
                 DateUtil.addDaysToDate(DateUtil.getNow(), 3),
@@ -128,7 +140,8 @@ class LentHistoryUnitTest {
     }
 
     @Test
-    void isSetEndedAt_FAILURE() {
+    @DisplayName("반납시간 설정 실패")
+    void isSetEndedAt_FALSE() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
                 DateUtil.getInfinityDate(),
@@ -139,6 +152,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("남은만료일자와 반납일자 차이 - 조기 반납 음수값")
     void getDaysDiffEndedAndExpired_PRE_RETURN() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
@@ -153,6 +167,7 @@ class LentHistoryUnitTest {
 
 
     @Test
+    @DisplayName("남은만료일자와 반납일자 차이 - 연체 반납 양수값")
     void getDaysDiffEndedAndExpired_DELAYED_RETURN() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
@@ -167,6 +182,7 @@ class LentHistoryUnitTest {
 
 
     @Test
+    @DisplayName("남은만료일자와 반납일자 차이 - 잔여 0일 반납")
     void getDaysDiffEndedAndExpired_PROPER_RETURN() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
@@ -180,6 +196,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("남은만료일자와 반납일자 차이 - 잔여 0일 반납")
     void getDaysDiffEndedAndExpired_FAILURE() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
@@ -191,6 +208,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("반납 함수 성공")
     void endLent_SUCCESS() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.getNow(),
@@ -205,6 +223,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
+    @DisplayName("반납 함수 실패 - 대여일자가 반납일자보다 이후")
     void endLent_FAILURE_startDate_BIGGER_THEN_endDate() {
         LentHistory lentHistory = LentHistory.of(
                 DateUtil.addDaysToDate(DateUtil.getNow(), 3),
@@ -214,5 +233,4 @@ class LentHistoryUnitTest {
 
         assertThrows(DomainException.class, () -> lentHistory.endLent(DateUtil.getNow()));
     }
-
 }
