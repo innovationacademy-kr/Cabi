@@ -149,7 +149,7 @@ public class LentHistory {
      * @return 설정이 되어있으면 ture 아니면 false
      */
     public boolean isSetEndedAt() {
-        return !(getEndedAt() == null || getEndedAt() == DateUtil.getInfinityDate());
+        return (getEndedAt() != null && getEndedAt() != DateUtil.getInfinityDate());
     }
 
 
