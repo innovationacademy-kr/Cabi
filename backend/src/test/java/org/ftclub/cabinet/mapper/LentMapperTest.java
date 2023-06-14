@@ -35,7 +35,7 @@ class LentMapperTest {
 	void toLentHistoryDto() {
 		Location location = Location.of("testBuilding", 9, "testSection");
 		LentHistory lentHistory = LentHistory.of(DateUtil.getNow(), DateUtil.getNow(), 19L, 99L);
-		User user = User.of("testName", "testEmail", DateUtil.getNow(), UserRole.USER);
+		User user = User.of("testName", "testEmail@testmail.com", DateUtil.getNow(), UserRole.USER);
 		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
 				CabinetPlace.of(location, SectionFormation.of(1, 2), MapArea.of(1, 1, 1, 1)));
 		LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet);

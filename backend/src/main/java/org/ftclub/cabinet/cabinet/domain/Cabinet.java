@@ -91,7 +91,7 @@ public class Cabinet {
 	private CabinetPlace cabinetPlace;
 
 	protected Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
-			Grid grid, CabinetPlace cabinetPlace) {
+					  Grid grid, CabinetPlace cabinetPlace) {
 		this.visibleNum = visibleNum;
 		this.status = status;
 		this.lentType = lentType;
@@ -103,8 +103,8 @@ public class Cabinet {
 	}
 
 	public static Cabinet of(Integer visibleNum, CabinetStatus status, LentType lentType,
-			Integer maxUser,
-			Grid grid, CabinetPlace cabinetPlace) {
+							 Integer maxUser,
+							 Grid grid, CabinetPlace cabinetPlace) {
 		Cabinet cabinet = new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
 		ExceptionUtil.throwIfFalse(cabinet.isValid(), new DomainException(INVALID_ARGUMENT));
 		return cabinet;

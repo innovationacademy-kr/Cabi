@@ -12,9 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 
 @Entity
 @Table(name = "BAN_HISTORY")
@@ -28,6 +33,7 @@ public class BanHistory {
     private long banHistoryId;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
     @Column(name = "BANNED_AT", nullable = false)
     private Date bannedAt;
 
@@ -39,11 +45,16 @@ public class BanHistory {
     @Column(name = "BAN_TYPE", length = 32, nullable = false)
     private BanType banType;
 
+    @NotNull
     @Column(name = "USER_ID", nullable = false)
     private Long userId;
 
+    private boolean isValid() {
+        return bannedAt != null && banType != null && banType.isValid() && userId != null;
+    }
+
     protected BanHistory(Date bannedAt, Date unbannedAt, BanType banType,
-            Long userId) {
+                         Long userId) {
         this.bannedAt = bannedAt;
         this.unbannedAt = unbannedAt;
         this.banType = banType;
@@ -51,8 +62,11 @@ public class BanHistory {
     }
 
     public static BanHistory of(Date bannedAt, Date unbannedAt, BanType banType,
-            Long userId) {
-        return new BanHistory(bannedAt, unbannedAt, banType, userId);
+                                Long userId) {
+        BanHistory banHistory = new BanHistory(bannedAt, unbannedAt, banType, userId);
+        ExceptionUtil.throwIfFalse(banHistory.isValid(),
+                new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+        return banHistory;
     }
 
     @Override

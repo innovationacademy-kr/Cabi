@@ -3,6 +3,7 @@ package org.ftclub.cabinet.lent.service;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
@@ -53,7 +54,7 @@ public class LentServiceImpl implements LentService {
 		cabinet.specifyStatusByUserCount(cabinetActiveLentHistories.size() + 1);
 		Date expiredAt = lentPolicy.generateExpirationDate(now, cabinet,
 				cabinetActiveLentHistories);
-		LentHistory lentHistory = LentHistory.of(now, userId, cabinetId);
+		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
 		// 연체 시간 적용
 		lentPolicy.applyExpirationDate(lentHistory, cabinetActiveLentHistories, expiredAt);
 		lentRepository.save(lentHistory);
