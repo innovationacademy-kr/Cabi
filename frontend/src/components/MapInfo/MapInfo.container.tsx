@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
+import React, { useEffect, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { currentFloorNumberState, currentMapFloorState } from "@/recoil/atoms";
 import { currentLocationFloorState } from "@/recoil/selectors";
 import MapInfo from "@/components/MapInfo/MapInfo";
 import useMenu from "@/hooks/useMenu";
@@ -7,9 +8,19 @@ import useMenu from "@/hooks/useMenu";
 const MapInfoContainer = () => {
   const { closeMap } = useMenu();
   const floorInfo = useRecoilValue(currentLocationFloorState);
-  const [floor, setFloor] = useState(floorInfo[0]);
+  const [currentMapFloor, setCurrentMapFloor] =
+    useRecoilState<number>(currentMapFloorState);
+  const [currentFloor] = useRecoilState<number>(currentFloorNumberState);
   const touchXpos = useRef(0);
   const touchYpos = useRef(0);
+
+  useEffect(() => {
+    if (currentMapFloor === undefined) {
+      if (currentFloor === undefined) setCurrentMapFloor(floorInfo[0]);
+      else setCurrentMapFloor(currentFloor);
+      return;
+    }
+  }, [currentMapFloor]);
 
   const touchStart = (e: React.TouchEvent) => {
     touchXpos.current = e.changedTouches[0].clientX;
@@ -19,9 +30,9 @@ const MapInfoContainer = () => {
   const touchEnd = (e: React.TouchEvent) => {
     const offsetX = Math.round(e.changedTouches[0].clientX - touchXpos.current);
     const offsetY = Math.round(e.changedTouches[0].clientY - touchYpos.current);
-    let index = floorInfo.indexOf(floor);
+    let index = floorInfo.indexOf(currentMapFloor);
     index = swipeMap(offsetX, offsetY, index);
-    setFloor(floorInfo[index]);
+    setCurrentMapFloor(floorInfo[index]);
   };
 
   const swipeMap = (offsetX: number, offsetY: number, index: number) => {
@@ -37,8 +48,8 @@ const MapInfoContainer = () => {
     <MapInfo
       touchStart={touchStart}
       touchEnd={touchEnd}
-      floor={floor}
-      setFloor={setFloor}
+      floor={currentMapFloor}
+      setFloor={setCurrentMapFloor}
       floorInfo={floorInfo}
       closeMap={closeMap}
     />
