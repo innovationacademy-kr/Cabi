@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
 	private final UserExceptionHandlerService userExceptionHandlerService;
 
 	@Override
-	public boolean checkUserExists(String name) {
-		Optional<User> user = userRepository.findByName(name);
+	public boolean checkUserExists(String email) {
+		Optional<User> user = userRepository.findByEmail(email);
 		return user.isPresent();
 	}
 
@@ -88,8 +88,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void promoteAdminByEmail(String email) {
 		AdminUser adminUser = userExceptionHandlerService.getAdminUserByEmail(email);
-		if (adminUser.getRole() == AdminRole.NONE)
+		if (adminUser.getRole() == AdminRole.NONE) {
 			adminUser.changeAdminRole(AdminRole.ADMIN);
+		}
 	}
 
 	@Override

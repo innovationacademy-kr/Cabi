@@ -1,22 +1,13 @@
 package org.ftclub.cabinet.auth.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.auth.domain.TokenProvider;
-import org.ftclub.cabinet.auth.service.AuthService;
-import org.ftclub.cabinet.auth.service.OauthService;
+import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
-import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
-import org.ftclub.cabinet.exception.ControllerException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,23 +25,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AdminAuthController {
 
-	private final TokenProvider tokenProvider;
-	private final OauthService oauthService;
-	private final AuthService authService;
-	private final CookieManager cookieManager;
 	private final DomainProperties DomainProperties;
 	private final GoogleApiProperties googleApiProperties;
-	private final JwtProperties jwtProperties;
-    /**
-     * 구글 로그인 페이지로 리다이렉트합니다.
-     *
-     * @param response 요청 시의 서블렛 {@link HttpServletResponse}
-     * @throws IOException 입출력 예외
-     */
-    @GetMapping("/login")
-    public void login(HttpServletResponse response) throws IOException {
-        oauthService.sendToApi(response, googleApiProperties);
-    }
+	private final AuthFacadeService authFacadeService;
+
+	/**
+	 * 구글 로그인 페이지로 리다이렉트합니다.
+	 *
+	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
+	 * @throws IOException 입출력 예외
+	 */
+	@GetMapping("/login")
+	public void login(HttpServletResponse res) throws IOException {
+		authFacadeService.requestLoginToApi(res, googleApiProperties);
+	}
 
 	/**
 	 * 최고 관리자 로그인을 수행합니다.
@@ -65,12 +53,7 @@ public class AdminAuthController {
 	public void masterLogin(HttpServletRequest req,
 			HttpServletResponse res,
 			@RequestBody MasterLoginDto masterLoginDto) {
-		if (!authService.validateMasterLogin(masterLoginDto)) {
-			throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
-		}
-		String masterToken = tokenProvider.createMasterToken(DateUtil.getNow());
-		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), masterToken, "/",
-				req.getServerName());
+		authFacadeService.masterLogin(masterLoginDto, req, res);
 	}
 
 	/**
@@ -92,25 +75,17 @@ public class AdminAuthController {
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
-		String apiToken = oauthService.getTokenByCode(code, googleApiProperties);
-		JsonNode profile = oauthService.getProfileByToken(apiToken, googleApiProperties);
-		String accessToken = tokenProvider.createToken(
-				googleApiProperties.getProviderName(),
-				profile,
-				DateUtil.getNow());
-		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), accessToken, "/",
-				req.getServerName());
-		res.sendRedirect(DomainProperties.getFeHost() + "/main");
+		authFacadeService.handleLogin(code, req, res, googleApiProperties);
+		res.sendRedirect(DomainProperties.getFeHost() + "/admin/main");
 	}
 
-    /**
-     * 로그아웃시, HTTP Response 의 set-cookie Header 를 지워줍니다.
-     * cookie에 담긴 JWT 토큰을 제거합니다.
-     *
-     * @param res 요청 시의 서블릿 {@link HttpServletResponse}
-     */
-    @GetMapping("/logout")
-    public void logout(HttpServletResponse res) {
-        cookieManager.deleteCookie(res, jwtProperties.getAdminTokenName());
-    }
+	/**
+	 * 로그아웃시, HTTP Response 의 set-cookie Header 를 지워줍니다. cookie에 담긴 JWT 토큰을 제거합니다.
+	 *
+	 * @param res 요청 시의 서블릿 {@link HttpServletResponse}
+	 */
+	@GetMapping("/logout")
+	public void logout(HttpServletResponse res) {
+		authFacadeService.logout(res, googleApiProperties);
+	}
 }

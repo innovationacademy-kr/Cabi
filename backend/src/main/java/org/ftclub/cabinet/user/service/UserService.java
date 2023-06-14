@@ -8,7 +8,7 @@ import org.ftclub.cabinet.user.domain.UserRole;
 public interface UserService {
 
 	// TODO: 동아리의 경우 Email은 어떻게 할지?
-	boolean checkUserExists(String name);
+	boolean checkUserExists(String email);
 
 	void createUser(String name, String email, Date blackholedAt, UserRole role);
 

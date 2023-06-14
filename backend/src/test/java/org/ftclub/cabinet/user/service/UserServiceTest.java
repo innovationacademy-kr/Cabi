@@ -53,11 +53,11 @@ public class UserServiceTest {
 
 	@Test
 	void 유저_존재_확인하기() {
-		String userName = "banuser1";
-		String falseName = "test";
-		boolean check = userService.checkUserExists(userName);
+		String userEmail = "banuser1@student.42seoul.kr";
+		String falseEmail = "test";
+		boolean check = userService.checkUserExists(userEmail);
 		assertEquals(true, check);
-		boolean checkFalse = userService.checkUserExists(falseName);
+		boolean checkFalse = userService.checkUserExists(falseEmail);
 		assertEquals(false, checkFalse);
 	}
 

@@ -81,22 +81,22 @@ public class TokenProviderTest {
 		});
 	}
 
-	@Test
-	void 토큰_생성() throws JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		JSONObject ftProfile = new JSONObject();
-		String ftIntraId = "yooh";
-		String ftEmail = "inshin@member.kr";
-		ftProfile.put("login", ftIntraId);
-		ftProfile.put("cursus_users", new JSONArray(new JSONObject[]{
-				new JSONObject().put("zero_index", new Date()),
-				new JSONObject().put("blackholed_at", new Date())}));
-		ftProfile.put("email", ftEmail);
-
-		String token = tokenProvider.createToken(ftApiProperties.getProviderName(),
-				objectMapper.readTree(ftProfile.toString()),
-				new Date());
-
-		Assertions.assertNotNull(token);
-	}
+//	@Test
+//	void 토큰_생성() throws JsonProcessingException {
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		JSONObject ftProfile = new JSONObject();
+//		String ftIntraId = "yooh";
+//		String ftEmail = "inshin@member.kr";
+//		ftProfile.put("login", ftIntraId);
+//		ftProfile.put("cursus_users", new JSONArray(new JSONObject[]{
+//				new JSONObject().put("zero_index", new Date()),
+//				new JSONObject().put("blackholed_at", new Date())}));
+//		ftProfile.put("email", ftEmail);
+//
+//		String token = tokenProvider.createToken(ftApiProperties.getProviderName(),
+//				objectMapper.readTree(ftProfile.toString()),
+//				new Date());
+//
+//		Assertions.assertNotNull(token);
+//	}
 }

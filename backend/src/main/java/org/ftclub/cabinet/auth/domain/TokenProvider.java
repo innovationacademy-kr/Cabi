@@ -64,6 +64,7 @@ public class TokenProvider {
 			claims.put("blackholedAt",
 					profile.get("cursus_users").get(1).get("blackholed_at") != null ?
 							profile.get("cursus_users").get(1).get("blackholed_at").asText()
+									.substring(0, 10)
 							: null);
 			claims.put("role", UserRole.USER);
 		}
@@ -73,14 +74,13 @@ public class TokenProvider {
 	/**
 	 * JWT 토큰을 생성합니다.
 	 *
-	 * @param provider API 제공자 이름
-	 * @param profile  API 제공자로부터 받은 프로필
-	 * @param now      현재 시각
+	 * @param claims 토큰에 담길 페이로드
+	 * @param now    현재 시각
 	 * @return JWT 토큰
 	 */
-	public String createToken(String provider, JsonNode profile, Date now) {
+	public String createToken(Map<String, Object> claims, Date now) {
 		return Jwts.builder()
-				.setClaims(makeClaimsByProviderProfile(provider, profile))
+				.setClaims(claims)
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
 				.setExpiration(DateUtil.addDaysToDate(now, jwtProperties.getExpiry()))
 				.compact();
@@ -99,5 +99,13 @@ public class TokenProvider {
 		claims.put("email", masterProperties.getEmail());
 		claims.put("role", AdminRole.MASTER);
 		return claims;
+	}
+
+	public String getTokenNameByProvider(String providerName) {
+		if (providerName.equals(jwtProperties.getAdminProviderName())) {
+			return jwtProperties.getAdminTokenName();
+		} else {
+			return jwtProperties.getMainTokenName();
+		}
 	}
 }
