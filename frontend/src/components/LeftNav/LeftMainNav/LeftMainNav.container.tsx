@@ -10,6 +10,7 @@ import {
   currentFloorCabinetState,
   currentFloorNumberState,
   currentLocationNameState,
+  currentMapFloorState,
   currentSectionNameState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
@@ -19,8 +20,8 @@ import { currentLocationFloorState } from "@/recoil/selectors";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
 import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 import { UserDto } from "@/types/dto/user.dto";
-import { removeCookie } from "@/api/react_cookie/cookies";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
+import { removeCookie } from "@/api/react_cookie/cookies";
 import useIsMount from "@/hooks/useIsMount";
 import useMenu from "@/hooks/useMenu";
 
@@ -29,6 +30,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
   );
+  const setCurrentMapFloor = useSetRecoilState<number>(currentMapFloorState);
   const currentLocation = useRecoilValue<string>(currentLocationNameState);
   const myInfo = useRecoilValue<UserDto>(userState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
@@ -47,7 +49,10 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   );
 
   useEffect(() => {
-    if (currentFloor === undefined) return;
+    if (currentFloor === undefined) {
+      setCurrentMapFloor(floors[0]);
+      return;
+    }
     axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
@@ -72,6 +77,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
+    setCurrentMapFloor(floor);
     if (!pathname.includes("main")) {
       if (floor === currentFloor) {
         axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
