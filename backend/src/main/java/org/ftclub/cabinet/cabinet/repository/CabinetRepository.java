@@ -37,7 +37,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
             + "JOIN c.cabinetPlace p")
     Optional<List<String>> findAllBuildings();
 
-    @Query("SELECT p.location.section "
+    @Query("SELECT DISTINCT p.location.section "
             + "FROM Cabinet c "
             + "JOIN c.cabinetPlace p "
             + "WHERE p.location.building = :building AND p.location.floor = :floor")
