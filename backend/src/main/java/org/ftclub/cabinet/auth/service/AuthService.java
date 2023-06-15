@@ -45,10 +45,15 @@ public class AuthService {
 			userService.createAdminUser(email);
 		}
 		if (email.endsWith(domainProperties.getUserEmailDomain())) {
-			userService.createUser(claims.get("name").toString(),
-					email,
-					DateUtil.stringToDate(claims.get("blackholedAt").toString()),
-					UserRole.valueOf(claims.get("role").toString()));
+			String name = claims.get("name").toString();
+			UserRole role = UserRole.valueOf(claims.get("role").toString());
+			Object blackHoledAt = claims.get("blackholedAt");
+			if (blackHoledAt == null) {
+				userService.createUser(name, email, null, role);
+			} else {
+				userService.createUser(name, email, DateUtil.stringToDate(blackHoledAt.toString()),
+						role);
+			}
 		}
 	}
 
