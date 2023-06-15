@@ -17,7 +17,7 @@ class LentHistoryUnitTest {
 
     @Test
     @DisplayName("isValid() 성공")
-    void isValid_Success() {
+    void of_Success() {
         assertInstanceOf(LentHistory.class, LentHistory.of(
                 DateUtil.getNow(),
                 DateUtil.addDaysToDate(DateUtil.getNow(), 3),
@@ -27,7 +27,7 @@ class LentHistoryUnitTest {
 
     @Test
     @DisplayName("isValid() 실패 대여시작시간 NULL")
-    void isValid_FAILURE_startedAt_NULL() {
+    void of_FAILURE_startedAt_NULL() {
         DomainException domainException = assertThrows(DomainException.class, () -> LentHistory.of(
                 null,
                 DateUtil.addDaysToDate(DateUtil.getNow(), 3),
@@ -39,7 +39,7 @@ class LentHistoryUnitTest {
 
     @Test
     @DisplayName("isValid() 실패 만료시간 NULL")
-    void isValid_FAILURE_expiredAt_NULL() {
+    void of_FAILURE_expiredAt_NULL() {
         DomainException domainException = assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
                 null,
@@ -63,7 +63,7 @@ class LentHistoryUnitTest {
 
     @Test
     @DisplayName("isValid() 실패 유저ID NULL")
-    void isValid_FAILURE_userId_NULL() {
+    void of_FAILURE_userId_NULL() {
         DomainException domainException = assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
                 DateUtil.addDaysToDate(DateUtil.getNow(), 3),
@@ -75,7 +75,7 @@ class LentHistoryUnitTest {
 
     @Test
     @DisplayName("isValid() 실패 사물함ID NULL")
-    void isValid_FAILURE_cabinetId_NULL() {
+    void of_FAILURE_cabinetId_NULL() {
         DomainException domainException = assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
                 DateUtil.addDaysToDate(DateUtil.getNow(), 3),
