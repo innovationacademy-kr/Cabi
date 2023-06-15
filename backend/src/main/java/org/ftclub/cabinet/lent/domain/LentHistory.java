@@ -115,7 +115,7 @@ public class LentHistory {
      * @return
      */
     private boolean isEndLentValid(Date endedAt) {
-        return endedAt != null && 0 <= DateUtil.calculateTwoDateDiff(endedAt, startedAt);
+        return endedAt != null && 0 <= DateUtil.calculateTwoDateDiff(endedAt, this.startedAt);
     }
 
 
