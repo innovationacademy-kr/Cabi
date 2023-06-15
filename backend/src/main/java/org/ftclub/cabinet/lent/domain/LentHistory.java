@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -76,18 +75,12 @@ public class LentHistory {
     private Long cabinetId;
 
     protected LentHistory(Date startedAt, Date expiredAt, Long userId,
-                          Long cabinetId) {
+            Long cabinetId) {
         this.startedAt = startedAt;
         this.expiredAt = expiredAt;
         this.userId = userId;
         this.cabinetId = cabinetId;
     }
-
-
-    private boolean isValid() {
-        return this.startedAt != null && this.userId != null && this.cabinetId != null;
-    }
-
 
     /**
      * @param startedAt 대여 시작일
@@ -96,14 +89,35 @@ public class LentHistory {
      * @param cabinetId 대여하는 cabinet id
      * @return 인자 정보를 담고있는 {@link LentHistory}
      */
-    public static LentHistory of(Date startedAt, Date expiredAt, Long userId,
-                                 Long cabinetId) {
+    public static LentHistory of(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
         LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
         if (!lentHistory.isValid()) {
             throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
         }
         return lentHistory;
     }
+
+    /**
+     * startedAt, userId, cabinetId, expiredAt 의 null 이 아닌지 확인합니다.
+     *
+     * @return 유효한 인스턴스 여부
+     */
+
+    private boolean isValid() {
+        return this.startedAt != null && this.userId != null && this.cabinetId != null
+                && this.expiredAt != null;
+    }
+
+    /**
+     * endedAt 보다 startedAt 이 나중이 아닌지 확인합니다. endedAt 종료시점이 null 이 아닌지 확인합니다.
+     *
+     * @param endedAt 대여 종료 날짜, 시간
+     * @return
+     */
+    private boolean isEndLentValid(Date endedAt) {
+        return endedAt != null && 0 <= DateUtil.calculateTwoDateDiff(endedAt, this.startedAt);
+    }
+
 
     @Override
     public boolean equals(final Object other) {
@@ -143,7 +157,7 @@ public class LentHistory {
      * @return 설정이 되어있으면 true 아니면 false
      */
     public boolean isSetExpiredAt() {
-        return !(getExpiredAt() == null || getExpiredAt() == DateUtil.getInfinityDate());
+        return (getExpiredAt() != null && getExpiredAt() != DateUtil.getInfinityDate());
     }
 
     /**
@@ -152,7 +166,7 @@ public class LentHistory {
      * @return 설정이 되어있으면 ture 아니면 false
      */
     public boolean isSetEndedAt() {
-        return !(getEndedAt() == null || getEndedAt() == DateUtil.getInfinityDate());
+        return (getEndedAt() != null && getEndedAt() != DateUtil.getInfinityDate());
     }
 
 
@@ -168,14 +182,15 @@ public class LentHistory {
         return null;
     }
 
+
     /**
      * 반납일을 설정합니다.
      *
      * @param now 설정하려고 하는 반납일
      */
     public void endLent(Date now) {
-        this.endedAt = now;
-        ExceptionUtil.throwIfFalse(this.isValid(),
+        ExceptionUtil.throwIfFalse((this.isEndLentValid(now) && this.isValid()),
                 new DomainException(ExceptionStatus.INVALID_STATUS));
+        this.endedAt = now;
     }
 }
