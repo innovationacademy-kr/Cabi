@@ -34,7 +34,7 @@ class LentHistoryUnitTest {
                 1L,
                 1L));
 
-        assertEquals(domainException.getStatus(), ExceptionStatus.INVALID_ARGUMENT);
+        assertEquals(ExceptionStatus.INVALID_ARGUMENT, domainException.getStatus());
     }
 
     @Test
@@ -46,7 +46,7 @@ class LentHistoryUnitTest {
                 1L,
                 1L));
 
-        assertEquals(domainException.getStatus(), ExceptionStatus.INVALID_ARGUMENT);
+        assertEquals(ExceptionStatus.INVALID_ARGUMENT, domainException.getStatus());
     }
 /*
 //TODO Expired Date infinity 가능하게 갈건지?? 06.14 wchae
@@ -70,7 +70,7 @@ class LentHistoryUnitTest {
                 null,
                 1L));
 
-        assertEquals(domainException.getStatus(), ExceptionStatus.INVALID_ARGUMENT);
+        assertEquals(ExceptionStatus.INVALID_ARGUMENT, domainException.getStatus());
     }
 
     @Test
@@ -82,7 +82,7 @@ class LentHistoryUnitTest {
                 1L,
                 null));
 
-        assertEquals(domainException.getStatus(), ExceptionStatus.INVALID_ARGUMENT);
+        assertEquals(ExceptionStatus.INVALID_ARGUMENT, domainException.getStatus());
     }
 
     @Test
@@ -170,7 +170,7 @@ class LentHistoryUnitTest {
 
         lentHistory.endLent(DateUtil.getNow()); // 바로 반납
 
-        assertEquals(lentHistory.getDaysDiffEndedAndExpired(), -3);
+        assertEquals(-3, lentHistory.getDaysDiffEndedAndExpired());
     }
 
 
@@ -185,7 +185,7 @@ class LentHistoryUnitTest {
 
         lentHistory.endLent(DateUtil.addDaysToDate(DateUtil.getNow(), 5)); // 2일 연체 반납
 
-        assertEquals(lentHistory.getDaysDiffEndedAndExpired(), 2);
+        assertEquals(2, lentHistory.getDaysDiffEndedAndExpired());
     }
 
 
@@ -200,7 +200,7 @@ class LentHistoryUnitTest {
 
         lentHistory.endLent(DateUtil.addDaysToDate(DateUtil.getNow(), 3)); // 2일 연체 반납
 
-        assertEquals(lentHistory.getDaysDiffEndedAndExpired(), 0);
+        assertEquals( 0, lentHistory.getDaysDiffEndedAndExpired());
     }
 
     @Test
@@ -213,7 +213,7 @@ class LentHistoryUnitTest {
                 1L);
 
         DomainException domainException = assertThrows(DomainException.class, () -> lentHistory.endLent(null));
-        assertEquals(domainException.getStatus(), ExceptionStatus.INVALID_STATUS);
+        assertEquals(ExceptionStatus.INVALID_STATUS, domainException.getStatus());
     }
 
     @Test
@@ -241,6 +241,6 @@ class LentHistoryUnitTest {
                 1L);
 
         DomainException domainException = assertThrows(DomainException.class, () -> lentHistory.endLent(DateUtil.getNow()));
-        assertEquals(domainException.getStatus(), ExceptionStatus.INVALID_STATUS);
+        assertEquals(ExceptionStatus.INVALID_STATUS, domainException.getStatus());
     }
 }
