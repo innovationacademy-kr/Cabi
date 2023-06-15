@@ -35,9 +35,9 @@ const ItemStyled = styled.div<{
   info: ISectionInfo;
 }>`
   padding: 3px;
-  font-size: 0.8rem;
+  font-size: ${({ info }) => (info.type === "floorInfo" ? "1.8rem" : "0.8rem")};
   cursor: pointer;
-  color: white;
+  color: ${({ info }) => (info.type === "floorInfo" ? "#bcb9b9" : "white")};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,7 +48,11 @@ const ItemStyled = styled.div<{
   grid-row-start: ${({ info }) => info.rowStart};
   grid-row-end: ${({ info }) => info.rowEnd};
   background: ${({ info }) =>
-    info.type === "cabinet" ? "#9747ff" : "#bcb9b9"};
+    info.type === "cabinet"
+      ? "#9747ff"
+      : info.type === "floorInfo"
+      ? "transparent"
+      : "#bcb9b9"};
   &:hover {
     opacity: ${({ info }) => (info.type === "cabinet" ? 0.9 : 1)};
   }
