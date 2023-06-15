@@ -26,8 +26,8 @@ class LentHistoryTest {
 	void isCabinetIdEqual() {
 		Date now = DateUtil.getNow();
 		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
-		lentHistory.isCabinetIdEqual(1L);
-		lentHistory.isCabinetIdEqual(2L);
+		assertTrue(lentHistory.isCabinetIdEqual(1L));
+		assertFalse(lentHistory.isCabinetIdEqual(2L));
 	}
 
     @Test
