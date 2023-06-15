@@ -203,7 +203,7 @@ const AdminInfoStyled = styled.div`
   @media screen and (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(6, 500px);
-    min-width: 500px;
+    min-width: 300px;
     overflow: scroll;
   }
 `;
