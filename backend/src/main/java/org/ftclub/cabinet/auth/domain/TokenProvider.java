@@ -61,11 +61,17 @@ public class TokenProvider {
 			}
 			claims.put("email", email);
 			claims.put("name", profile.get("login").asText());
-			claims.put("blackholedAt",
-					profile.get("cursus_users").get(1).get("blackholed_at") != null ?
-							profile.get("cursus_users").get(1).get("blackholed_at").asText()
-									.substring(0, 10)
-							: null);
+			JsonNode blackholedAt = profile.get("cursus_users").get(1).get("blackholed_at");
+			if (blackholedAt.equals(null) || blackholedAt.asText().equals("null")) {
+				claims.put("blackholedAt", null);
+			} else {
+				claims.put("blackholedAt", blackholedAt.asText().substring(0, 10));
+			}
+//			claims.put("blackholedAt",
+//					profile.get("cursus_users").get(1).get("blackholed_at") != null ?
+//							profile.get("cursus_users").get(1).get("blackholed_at").asText()
+//									.substring(0, 10)
+//							: null);
 			claims.put("role", UserRole.USER);
 		}
 		return claims;
