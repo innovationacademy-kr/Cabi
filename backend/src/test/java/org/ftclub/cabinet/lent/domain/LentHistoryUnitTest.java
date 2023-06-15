@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class LentHistoryUnitTest {
 
     @Test
-    @DisplayName("isValid() 성공")
+    @DisplayName("of() 성공")
     void of_Success() {
         assertInstanceOf(LentHistory.class, LentHistory.of(
                 DateUtil.getNow(),
@@ -26,7 +26,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
-    @DisplayName("isValid() 실패 대여시작시간 NULL")
+    @DisplayName("of() 실패 대여시작시간 NULL")
     void of_FAILURE_startedAt_NULL() {
         DomainException domainException = assertThrows(DomainException.class, () -> LentHistory.of(
                 null,
@@ -38,7 +38,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
-    @DisplayName("isValid() 실패 만료시간 NULL")
+    @DisplayName("of() 실패 만료시간 NULL")
     void of_FAILURE_expiredAt_NULL() {
         DomainException domainException = assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
@@ -62,7 +62,7 @@ class LentHistoryUnitTest {
  */
 
     @Test
-    @DisplayName("isValid() 실패 유저ID NULL")
+    @DisplayName("of() 실패 유저ID NULL")
     void of_FAILURE_userId_NULL() {
         DomainException domainException = assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
@@ -74,7 +74,7 @@ class LentHistoryUnitTest {
     }
 
     @Test
-    @DisplayName("isValid() 실패 사물함ID NULL")
+    @DisplayName("of() 실패 사물함ID NULL")
     void of_FAILURE_cabinetId_NULL() {
         DomainException domainException = assertThrows(DomainException.class, () -> LentHistory.of(
                 DateUtil.getNow(),
