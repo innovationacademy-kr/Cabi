@@ -17,23 +17,25 @@ public class AdminUserRepositoryTest {
 
 	@Autowired
 	private AdminUserRepository adminUserRepository;
+	@Autowired
+	private UserOptionalFetcher userOptionalFetcher;
 
 	@Test
 	public void testGetAdminUser() {
 		Long adminUserId = 1L;
 
-		AdminUser adminUser = adminUserRepository.getAdminUser(adminUserId);
+		AdminUser adminUser = userOptionalFetcher.findAdminUser(adminUserId);
 
-		assertNotNull(adminUser);
-		assertEquals(adminUserId, adminUser.getAdminUserId());
-		assertEquals("admin0@gmail.com", adminUser.getEmail());
+		Assertions.assertNotNull(adminUser);
+		Assertions.assertEquals(adminUserId, adminUser.getAdminUserId());
+		Assertions.assertEquals("admin0@gmail.com", adminUser.getEmail());
 	}
 
 	@Test
 	public void testFindByEmail() {
 		String email = "admin1@gmail.com";
 
-		Optional<AdminUser> adminUser = adminUserRepository.findByEmail(email);
+		Optional<AdminUser> adminUser = adminUserRepository.findAdminUserByEmail(email);
 
 		Assertions.assertTrue(adminUser.isPresent());
 		assertEquals(email, adminUser.get().getEmail());

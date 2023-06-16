@@ -45,8 +45,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean checkAdminUserExists(String email) {
-		Optional<AdminUser> adminUser = adminUserRepository.findByEmail(email);
-		return adminUser.isPresent();
+		AdminUser adminUser = userOptionalFetcher.findAdminUserByEmail(email);
+		return adminUser != null;
 	}
 
 	/* createUser와 동일한 사유로 로직 수정했습니다. */
@@ -123,6 +123,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public AdminRole getAdminUserRole(String email) {
-		return adminUserRepository.getAdminUserRole(email);
+		return userOptionalFetcher.findAdminUserRoleByEmail(email);
 	}
 }
