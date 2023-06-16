@@ -17,8 +17,12 @@ export interface BrokenCabinetDto {
 }
 
 export interface OverdueUserDto {
-  intra_id: string;
-  location: string;
+  building: string;
+  floor: number;
+  section: string;
+  cabinetId: number;
+  visibleNum: number;
+  name: string;
   overdueDays: number;
 }
 
