@@ -9,6 +9,6 @@ import lombok.Getter;
 @Getter
 public class CabinetPaginationDto {
 
-	private final List<CabinetDto> cabinets;
+	private final List<CabinetDto> result;
 	private final Integer totalPage;
 }
