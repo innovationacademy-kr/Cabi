@@ -42,7 +42,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final UserOptionalFetcher userOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
 	private final LentRepository lentRepository;
-	private final BanPolicy banPolicy;
 	private final UserMapper userMapper;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final CabinetMapper cabinetMapper;
@@ -192,8 +191,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
 					User user = userOptionalFetcher.findUser(lh.getUserId());
-					Location location = cabinetOptionalFetcher.getLocation(
-							lh.getCabinetId());
 					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),
 							DateUtil.getNow());
 					Cabinet cabinet = cabinetOptionalFetcher.getCabinet(

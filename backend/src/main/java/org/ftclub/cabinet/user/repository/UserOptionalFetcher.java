@@ -21,6 +21,7 @@ public class UserOptionalFetcher {
 	private final AdminUserRepository adminUserRepository;
 	private final BanHistoryRepository banHistoryRepository;
 
+	/*-------------------------------------------FIND-------------------------------------------*/
 	/**
 	 * 유저 전체 목록을 가져옵니다.
 	 *
@@ -39,6 +40,58 @@ public class UserOptionalFetcher {
 	public User findUser(Long userId) {
 		return userRepository.findById(userId).orElse(null);
 	}
+	/**
+	 * 유저가 존재하는지 확인하고 유저의 고유 ID를 반환합니다. 존재하지 않으면 null을 반환합니다.
+	 *
+	 * @param name 찾을 유저의 이름
+	 * @return 찾은 유저의 고유 id
+	 */
+	public User findUserByName(String name) {
+		return userRepository.findByName(name).orElse(null);
+	}
+	/**
+	 * 유저의 이메일로 유저를 검색합니다.
+	 *
+	 * @param email 유저의 이메일
+	 */
+	public User findUserByEmail(String email) {
+		return userRepository.findByEmail(email).orElse(null);
+	}
+
+	/**
+	 * 유저의 이름 일부분으로 유저를 검색합니다.
+	 *
+	 * @param name     유저의 이름 일부분
+	 * @param pageable 페이지 정보
+	 * @return {@link Page} of {@link User}
+	 */
+	public Page<User> findUsersByPartialName(String name, Pageable pageable) {
+		return userRepository.findByPartialName(name, pageable);
+	}
+
+	/**
+	 * 유저의 BanHistory 목록을 가져옵니다.
+	 */
+	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, Date now) {
+		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
+	}
+
+
+	/**
+	 * 최근 BanHistory를 가져옵니다. 없으면 null을 반환합니다.
+	 *
+	 * @param userId 유저의 고유 ID
+	 * @return {@link BanHistory}
+	 */
+	public BanHistory findRecentBanHistory(Long userId) {
+		return banHistoryRepository.findRecentBanHistoryByUserId(userId).orElse(null);
+	}
+
+	public BanHistory findRecentActiveBanHistory(Long userId, Date now) {
+		return banHistoryRepository.findRecentActiveBanHistoryByUserId(userId, now).orElse(null);
+	}
+
+	/*-------------------------------------------GET--------------------------------------------*/
 
 	/**
 	 * 유저가 존재하는지 확인하고 존재하지 않으면 예외를 발생시킵니다.
@@ -51,15 +104,6 @@ public class UserOptionalFetcher {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 	}
 
-	/**
-	 * 유저가 존재하는지 확인하고 유저의 고유 ID를 반환합니다. 존재하지 않으면 null을 반환합니다.
-	 *
-	 * @param name 찾을 유저의 이름
-	 * @return 찾은 유저의 고유 id
-	 */
-	public User findUserByName(String name) {
-		return userRepository.findByName(name).orElse(null);
-	}
 
 	/**
 	 * 유저가 존재하는지 확인하고 유저의 고유 ID를 반환합니다. 존재하지 않으면 예외를 발생시킵니다.
@@ -109,26 +153,6 @@ public class UserOptionalFetcher {
 	}
 
 	/**
-	 * 유저의 이메일로 유저를 검색합니다.
-	 *
-	 * @param email 유저의 이메일
-	 */
-	public User findUserByEmail(String email) {
-		return userRepository.findByEmail(email).orElse(null);
-	}
-
-	/**
-	 * 유저의 이름 일부분으로 유저를 검색합니다.
-	 *
-	 * @param name     유저의 이름 일부분
-	 * @param pageable 페이지 정보
-	 * @return {@link Page} of {@link User}
-	 */
-	public Page<User> findUsersByPartialName(String name, Pageable pageable) {
-		return userRepository.findByPartialName(name, pageable);
-	}
-
-	/**
 	 * 최근 BanHistory를 가져옵니다. 없으면 예외를 발생시킵니다.
 	 *
 	 * @param userId 유저의 고유 ID
@@ -137,26 +161,5 @@ public class UserOptionalFetcher {
 	public BanHistory getRecentBanHistory(Long userId) {
 		return banHistoryRepository.findRecentBanHistoryByUserId(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BAN_HISTORY));
-	}
-
-	/**
-	 * 유저의 BanHistory 목록을 가져옵니다.
-	 */
-	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, Date now) {
-		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
-	}
-
-	/**
-	 * 최근 BanHistory를 가져옵니다. 없으면 null을 반환합니다.
-	 *
-	 * @param userId 유저의 고유 ID
-	 * @return {@link BanHistory}
-	 */
-	public BanHistory findRecentBanHistory(Long userId) {
-		return banHistoryRepository.findRecentBanHistoryByUserId(userId).orElse(null);
-	}
-
-	public BanHistory findRecentActiveBanHistory(Long userId, Date now) {
-		return banHistoryRepository.findRecentActiveBanHistoryByUserId(userId, now).orElse(null);
 	}
 }
