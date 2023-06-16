@@ -7,10 +7,10 @@ import {
   numberOfAdminWorkState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import CabinetType from "@/types/enum/cabinet.type.enum";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import StatusModal from "@/components/Modals/StatusModal/StatusModal";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import {
   axiosBundleUpdateCabinetStatus,
   axiosBundleUpdateCabinetType,
