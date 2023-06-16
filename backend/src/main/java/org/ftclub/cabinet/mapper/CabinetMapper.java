@@ -5,7 +5,6 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_NULL;
 
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
@@ -16,6 +15,7 @@ import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.user.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -33,25 +33,26 @@ public interface CabinetMapper {
 
 	/*------------------------------------DTO------------------------------------*/
 
-	//CabinetPlace, Cabinet
-	CabinetDto toCabinetDto(Location location, Cabinet cabinet);
+	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
+	CabinetDto toCabinetDto(Cabinet cabinet);
 
-	//LentHistory, User, Cabinet, CabinetPlace, (별도)overdueDays
-	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name,
-			Integer visibleNum, Location location, Long overdueDays);
+	@Mapping(target = "cabinetId", source = "lentHistory.cabinetId")
+	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
+	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, User user,
+			Cabinet cabinet, Long overdueDays);
 
-	//CabinetPlace, (별도)floors
+	//To do : CabinetPlace로 바꾸기?
 	BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
 
 
 	/*--------------------------------Wrapped DTO--------------------------------*/
 
-	//CabinetPlace, List<CabinetInfoResponseDto>
+	//TO do : cabinetPlace러 바꾸기
 	CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
 			List<CabinetInfoResponseDto> cabinets);
 
-	//CabinetDto = CabinetPlace, Cabinet ... List<LentDto>
-	CabinetInfoResponseDto toCabinetInfoResponseDto(CabinetDto cabinetDto, List<LentDto> lents);
+	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
+	CabinetInfoResponseDto toCabinetInfoResponseDto(Cabinet cabinet, List<LentDto> lents);
 
 	@Mapping(target = "totalPage", source = "totalPage")
 	CabinetPaginationDto toCabinetPaginationDtoList(List<CabinetDto> result,
@@ -60,7 +61,6 @@ public interface CabinetMapper {
 	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
 			List<OverdueUserCabinetDto> result, Integer totalPage);
 
-	//CabinetDto = CabinetPlace, Cabinet(+memo) ... List<LentDto>
-	MyCabinetResponseDto toMyCabinetResponseDto(CabinetDto cabinetDto, String memo,
-			List<LentDto> lents);
+	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
+	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents);
 }

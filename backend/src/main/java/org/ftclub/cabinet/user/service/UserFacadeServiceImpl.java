@@ -122,7 +122,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId) {
 		User user = userRepository.getUser(userId);
-		return new MyCabinetResponseDto(null, null, null, null, null, null, null, null, null);
+		return null;
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		PageRequest pageable = PageRequest.of(page, size);
 		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
-					String userName = userRepository.findNameById(lh.getUserId());
+					User user = userRepository.findById(lh.getUserId()).orElse(null);
 					Location location = cabinetExceptionHandlerService.getLocation(
 							lh.getCabinetId());
 					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),
@@ -204,9 +204,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 					Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(
 							lh.getCabinetId());
 					overdueList.add(
-							cabinetMapper.toOverdueUserCabinetDto(lh, userName,
-									cabinet.getVisibleNum(), location,
-									overdueDays));
+							cabinetMapper.toOverdueUserCabinetDto(lh, user,
+									cabinet, overdueDays));
 				}
 		);
 		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, overdueList.size());
