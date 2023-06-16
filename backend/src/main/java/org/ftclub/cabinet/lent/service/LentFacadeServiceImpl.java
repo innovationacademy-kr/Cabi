@@ -34,18 +34,21 @@ import org.springframework.stereotype.Service;
 public class LentFacadeServiceImpl implements LentFacadeService {
 
 	private final LentRepository lentRepository;
-	private final UserOptionalFetcher userExceptionHandler;
-	private final CabinetOptionalFetcher cabinetExceptionHandler;
+	private final UserOptionalFetcher userOptionalFetcher;
+	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentService lentService;
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;
 	private final CabinetMapper cabinetMapper;
 	private final CabinetRepository cabinetRepository;
 
+
+	/*-------------------------------------------READ-------------------------------------------*/
+
 	@Override
 	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
 			Integer size) {
-		userExceptionHandler.getUser(userId);
+		userOptionalFetcher.findUser(userId);
 		//todo: 예쁘게 수정
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -59,7 +62,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
 			Integer size) {
-		cabinetExceptionHandler.getCabinet(cabinetId);
+		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		List<LentHistory> lentHistories = lentRepository.findByCabinetId(cabinetId, pageable);
 		int totalLength = lentRepository.countCabinetAllLent(cabinetId);
@@ -68,12 +71,12 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public List<LentDto> getLentDtoList(Long cabinetId) {
-		cabinetExceptionHandler.getCabinet(cabinetId);
+		cabinetOptionalFetcher.getCabinet(cabinetId);
 		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
 		return lentHistories.stream()
 				.map(e -> new LentDto(
 						e.getUserId(),
-						userExceptionHandler.getUser(e.getUserId()).getName(),
+						userOptionalFetcher.findUser(e.getUserId()).getName(),
 						e.getLentHistoryId(),
 						e.getStartedAt(),
 						e.getExpiredAt()))
@@ -96,8 +99,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		List<LentHistoryDto> result = myLentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentHistoryDto(
 						lentHistory,
-						userExceptionHandler.getUser(user.getUserId()),
-						cabinetExceptionHandler.getCabinet(lentHistory.getCabinetId())))
+						userOptionalFetcher.findUser(user.getUserId()),
+						cabinetOptionalFetcher.findCabinet(lentHistory.getCabinetId())))
 				.collect(Collectors.toList());
 		// TODO: totalPage로 바꾸기
 		return lentMapper.toLentHistoryPaginationDto(result, result.size() / size);
@@ -107,11 +110,20 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 			List<LentHistory> lentHistories, int totalPage) {
 		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
-						userExceptionHandler.getUser(e.getUserId()),
-						cabinetExceptionHandler.getCabinet(e.getCabinetId())))
+						userOptionalFetcher.findUser(e.getUserId()),
+						cabinetOptionalFetcher.findCabinet(e.getCabinetId())))
 				.collect(Collectors.toList());
 		return new LentHistoryPaginationDto(lentHistoryDto, totalPage);
 	}
+
+	@Override
+	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
+		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
+		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
+		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
+	}
+
+	/*--------------------------------------------CUD--------------------------------------------*/
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
@@ -144,16 +156,6 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public void terminateLentCabinets(ReturnCabinetsRequestDto returnCabinetsRequestDto) {
 		returnCabinetsRequestDto.getCabinetIds().stream()
 				.forEach(lentService::terminateLentByCabinetId);
-	}
-
-	@Override
-	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
-		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
-		CabinetDto cabinetDto = cabinetMapper.toCabinetDto(myCabinet);
-		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
-		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
-
-
 	}
 
 	@Override
