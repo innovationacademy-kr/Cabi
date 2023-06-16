@@ -29,8 +29,8 @@ export interface IMultiSelectTargetInfo {
   targetCabinetInfoList: CabinetInfo[];
   typeCounts: {
     AVAILABLE: number;
-    EXPIRED: number;
-    SET_EXPIRE_FULL: number;
+    OVERDUE: number;
+    FULL: number;
     BROKEN: number;
   };
 }
@@ -50,8 +50,8 @@ export interface IAdminCurrentModalStateInfo {
 
 interface ICount {
   AVAILABLE: number;
-  SET_EXPIRE_FULL: number;
-  EXPIRED: number;
+  OVERDUE: number;
+  FULL: number;
   BROKEN: number;
 }
 
@@ -105,9 +105,9 @@ const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
   else if (lent_type === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
   else if (
-    status === CabinetStatus.SET_EXPIRE_AVAILABLE ||
-    status === CabinetStatus.SET_EXPIRE_FULL ||
-    status === CabinetStatus.EXPIRED
+    status === CabinetStatus.LIMITED_AVAILABLE ||
+    status === CabinetStatus.FULL ||
+    status === CabinetStatus.OVERDUE
   )
     return getCalcualtedTimeString(new Date(lent_info[0].expire_time));
   // 빈 사물함
@@ -118,14 +118,14 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
   const { status, lent_type, lent_info } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
-    return "var(--expired)";
+    return "var(--overdue)";
   // 사용 중 사물함
   else if (
-    (status === CabinetStatus.SET_EXPIRE_FULL && lent_type !== "CLUB") ||
-    status === CabinetStatus.EXPIRED
+    (status === CabinetStatus.FULL && lent_type !== "CLUB") ||
+    status === CabinetStatus.OVERDUE
   )
     return calExpiredTime(new Date(lent_info[0].expire_time)) < 0
-      ? "var(--expired)"
+      ? "var(--overdue)"
       : "var(--black)";
   // 빈 사물함
   else return "var(--black)";
@@ -171,13 +171,13 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const countTypes = (cabinetList: CabinetInfo[]) =>
     cabinetList.reduce(
       (result, cabinet): ICount => {
-        if (cabinet.status === CabinetStatus.SET_EXPIRE_AVAILABLE)
+        if (cabinet.status === CabinetStatus.LIMITED_AVAILABLE)
           result["AVAILABLE"]++;
         else if (cabinet.status === CabinetStatus.BANNED) result["BROKEN"]++;
         else result[cabinet.status]++;
         return result;
       },
-      { AVAILABLE: 0, SET_EXPIRE_FULL: 0, EXPIRED: 0, BROKEN: 0 }
+      { AVAILABLE: 0, FULL: 0, OVERDUE: 0, BROKEN: 0 }
     );
 
   const multiSelectInfo: IMultiSelectTargetInfo | null = isMultiSelect
@@ -257,7 +257,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       isMine={myCabinetInfo?.cabinet_id === cabinetViewData?.cabinetId}
       isAvailable={
         cabinetViewData?.status === "AVAILABLE" ||
-        cabinetViewData?.status === "SET_EXPIRE_AVAILABLE"
+        cabinetViewData?.status === "LIMITED_AVAILABLE"
       }
       userModal={userModal}
       openModal={openModal}

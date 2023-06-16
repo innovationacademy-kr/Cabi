@@ -47,8 +47,8 @@ const UserInfoAreaContainer = (): JSX.Element => {
     else if (selectedCabinetInfo.lent_type === "CLUB") return "동아리 사물함";
     // 사용 중 사물함
     else if (
-      selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
-      selectedCabinetInfo.status === CabinetStatus.EXPIRED
+      selectedCabinetInfo.status === CabinetStatus.FULL ||
+      selectedCabinetInfo.status === CabinetStatus.OVERDUE
     ) {
       const nowDate = new Date();
       const expireTime = new Date(selectedCabinetInfo.lent_info[0].expire_time);
@@ -70,18 +70,18 @@ const UserInfoAreaContainer = (): JSX.Element => {
       selectedCabinetInfo.status === CabinetStatus.BANNED ||
       selectedCabinetInfo.status === CabinetStatus.BROKEN
     )
-      return "var(--expired)";
+      return "var(--overdue)";
     // 사용 중 사물함
     else if (
-      selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
-      selectedCabinetInfo.status === CabinetStatus.EXPIRED
+      selectedCabinetInfo.status === CabinetStatus.FULL ||
+      selectedCabinetInfo.status === CabinetStatus.OVERDUE
     ) {
       const nowDate = new Date();
       const expireTime = new Date(selectedCabinetInfo.lent_info[0].expire_time);
       const remainTime = Math.floor(
         (expireTime.getTime() - nowDate.getTime()) / (1000 * 60 * 60 * 24)
       );
-      return remainTime < 0 ? "var(--expired)" : "var(--black)";
+      return remainTime < 0 ? "var(--overdue)" : "var(--black)";
       // 빈 사물함
     } else return "var(--black)";
   };

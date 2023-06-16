@@ -168,7 +168,7 @@ const InfoSectionStyled = styled.section`
     text-align: center;
   }
   .redColor {
-    color: var(--expired);
+    color: var(--overdue);
   }
   .article > p > span {
     font-weight: 700;

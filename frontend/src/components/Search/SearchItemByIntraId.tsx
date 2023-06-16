@@ -157,7 +157,7 @@ const RectangleStyled = styled.div<{
   border-radius: 10px;
   background-color: ${(props) =>
     props.banned
-      ? "var(--expired)"
+      ? "var(--overdue)"
       : props.status
       ? cabinetStatusColorMap[props.status]
       : "var(--full)"};

@@ -76,11 +76,11 @@ const AdminCabinetInfoArea: React.FC<{
           <MultiCabinetIconStyled status={CabinetStatus.AVAILABLE}>
             {typeCounts![CabinetStatus.AVAILABLE]}
           </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.EXPIRED}>
-            {typeCounts![CabinetStatus.EXPIRED]}
+          <MultiCabinetIconStyled status={CabinetStatus.OVERDUE}>
+            {typeCounts![CabinetStatus.OVERDUE]}
           </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.SET_EXPIRE_FULL}>
-            {typeCounts![CabinetStatus.SET_EXPIRE_FULL]}
+          <MultiCabinetIconStyled status={CabinetStatus.FULL}>
+            {typeCounts![CabinetStatus.FULL]}
           </MultiCabinetIconStyled>
           <MultiCabinetIconStyled status={CabinetStatus.BROKEN}>
             {typeCounts![CabinetStatus.BROKEN]}
@@ -288,8 +288,7 @@ const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
   align-items: center;
   background-color: ${({ status }) => cabinetStatusColorMap[status]};
   border-radius: 5px;
-  color: ${({ status }) =>
-    status === CabinetStatus.SET_EXPIRE_FULL ? "black" : "white"};
+  color: ${({ status }) => (status === CabinetStatus.FULL ? "black" : "white")};
 `;
 
 export default AdminCabinetInfoArea;

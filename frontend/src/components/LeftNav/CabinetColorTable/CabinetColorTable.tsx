@@ -23,7 +23,7 @@ const CabinetColorTable = () => {
       <ColorTableItemContainer color={"var(--mine)"} text={"내 사물함"} />
       <ColorTableItemContainer color={"var(--available)"} text={"사용가능"} />
       <ColorTableItemContainer color={"var(--full)"} text={"사용 중"} />
-      <ColorTableItemContainer color={"var(--expired)"} text={"반납지연"} />
+      <ColorTableItemContainer color={"var(--overdue)"} text={"반납지연"} />
       <ColorTableItemContainer color={"var(--banned)"} text={"사용불가"} />
     </ColorTableStyled>
   );
