@@ -9,7 +9,7 @@ export interface MyCabinetInfoResponseDto extends CabinetInfo {
 }
 
 export interface CabinetBuildingFloorDto {
-  buildingName: string;
+  building: string;
   floors: Array<number>;
 }
 

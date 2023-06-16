@@ -1,8 +1,8 @@
 import {
   BannedUserDto,
   BrokenCabinetDto,
-  OverdueUserDto,
   ITableData,
+  OverdueUserDto,
 } from "@/types/dto/admin.dto";
 
 const calcLeftDays = (end: Date) =>
@@ -36,9 +36,9 @@ export const handleBrokenCabinetList = (
   }));
 
 export const handleOverdueUserList = (data: OverdueUserDto[]): ITableData[] =>
-  data.map(({ intra_id, location, overdueDays }, idx, arr) => ({
-    first: intra_id,
-    second: location.toUpperCase(),
+  data.map(({ name, floor, visibleNum, overdueDays }, idx, arr) => ({
+    first: name,
+    second: `${floor}F-${visibleNum}`,
     third: overdueDays.toString(),
     info: arr[idx],
   }));
