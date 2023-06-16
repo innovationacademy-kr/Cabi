@@ -29,27 +29,27 @@ import org.springframework.stereotype.Component;
 @Component
 public interface CabinetMapper {
 
-    CabinetMapper INSTANCE = Mappers.getMapper(CabinetMapper.class);
+	CabinetMapper INSTANCE = Mappers.getMapper(CabinetMapper.class);
 
-    CabinetDto toCabinetDto(Location location, Cabinet cabinet);
+	CabinetDto toCabinetDto(Location location, Cabinet cabinet);
 
-    BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
+	BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
 
-    CabinetInfoResponseDto toCabinetInfoResponseDto(CabinetDto cabinetDto, List<LentDto> lents);
+	CabinetInfoResponseDto toCabinetInfoResponseDto(CabinetDto cabinetDto, List<LentDto> lents);
 
-    CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
-            List<CabinetInfoResponseDto> cabinets);
+	CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
+			List<CabinetInfoResponseDto> cabinets);
 
-    @Mapping(target = "totalPage", source = "totalPage")
-    CabinetPaginationDto toCabinetPaginationDtoList(List<Cabinet> result,
-            Integer totalPage);
+	@Mapping(target = "totalPage", source = "totalPage")
+	CabinetPaginationDto toCabinetPaginationDtoList(List<Cabinet> result,
+			Integer totalPage);
 
-    OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name,
-            Location location, Long overdueDays);
+	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name,
+			Integer visibleNum, Location location, Long overdueDays);
 
-    OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
-            List<OverdueUserCabinetDto> result, Integer totalPage);
+	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
+			List<OverdueUserCabinetDto> result, Integer totalPage);
 
-    MyCabinetResponseDto toMyCabinetResponseDto(CabinetDto cabinetDto, String memo,
-            List<LentDto> lents);
+	MyCabinetResponseDto toMyCabinetResponseDto(CabinetDto cabinetDto, String memo,
+			List<LentDto> lents);
 }
