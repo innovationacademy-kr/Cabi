@@ -62,5 +62,5 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @return {@link BanHistory}
 	 */
 	@Query("SELECT b FROM BanHistory b WHERE b.unbannedAt = (SELECT MAX(b2.unbannedAt) FROM BanHistory b2) AND b.userId = :userId AND b.unbannedAt > :now")
-	Optional<BanHistory> findRecentActiveBanHistoryByUserId(Long userId, Date now);
+	Optional<BanHistory> findRecentActiveBanHistoryByUserId(@Param("userId") Long userId, @Param("now") Date now);
 }
