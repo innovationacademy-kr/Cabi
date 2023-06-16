@@ -21,8 +21,6 @@ import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.UpdateCabinetsRequestDto;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -57,14 +55,12 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	@Override
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
-		List<BuildingFloorsDto> buildingFloors = new ArrayList<>();
-		List<String> buildings = cabinetRepository.findAllBuildings().orElseThrow();
-		for (String building : buildings) {
-			List<Integer> floors = cabinetRepository.findAllFloorsByBuilding(building)
-					.orElseThrow();
-			buildingFloors.add(cabinetMapper.toBuildingFloorsDto(building, floors));
-		}
-		return buildingFloors;
+		return cabinetOptionalFetcher.findAllBuildings().stream()
+				.map(building -> {
+					List<Integer> floors = cabinetOptionalFetcher.findAllFloorsByBuilding(building);
+					return cabinetMapper.toBuildingFloorsDto(building, floors);
+				})
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -72,9 +68,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	@Override
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
-		if (!cabinetRepository.existsById(cabinetId)) {
-			throw new ServiceException(ExceptionStatus.NOT_FOUND_CABINET);
-		}
 		List<LentDto> lentDtos = new ArrayList<>();
 		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
 		for (LentHistory lentHistory : lentHistories) {
@@ -91,19 +84,14 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor) {
-		if (!cabinetRepository.existsBuildingAndFloor(building, floor) || building.isEmpty()) {
-			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
-		}
-		List<CabinetsPerSectionResponseDto> result = new ArrayList<>();
-		List<String> sections = cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor)
-				.orElseThrow();
-		for (String section : sections) {
-			List<Long> cabinetIds = cabinetRepository.findAllCabinetIdsBySection(section)
-					.orElseThrow();
-			result.add(cabinetMapper.toCabinetsPerSectionResponseDto(section,
-					getCabinetInfoBundle(cabinetIds)));
-		}
-		return result;
+		return cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor).stream()
+				.map(section -> {
+					List<Long> cabinetIds = cabinetOptionalFetcher.findAllCabinetIdsBySection(
+							section);
+					return cabinetMapper.toCabinetsPerSectionResponseDto(section,
+							getCabinetInfoBundle(cabinetIds));
+				})
+				.collect(Collectors.toList());
 	}
 
 
