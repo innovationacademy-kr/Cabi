@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.utils.ExceptionUtil;

@@ -30,5 +30,5 @@ spring:
         padding: 2
 
   urls:
-    admin-login-callback: ${spring.server.fe-host}/v4/admin/auth/login/callback
-    user-login-callback: ${spring.server.fe-host}/v4/auth/login/callback
+    admin-login-callback: ${spring.server.fe-host}/api/admin/auth/login/callback
+    user-login-callback: ${spring.server.fe-host}/api/auth/login/callback
