@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
@@ -40,6 +41,7 @@ public class UserOptionalFetcher {
 	public User findUser(Long userId) {
 		return userRepository.findById(userId).orElse(null);
 	}
+
 	/**
 	 * 유저가 존재하는지 확인하고 유저의 고유 ID를 반환합니다. 존재하지 않으면 null을 반환합니다.
 	 *
@@ -49,6 +51,7 @@ public class UserOptionalFetcher {
 	public User findUserByName(String name) {
 		return userRepository.findByName(name).orElse(null);
 	}
+
 	/**
 	 * 유저의 이메일로 유저를 검색합니다.
 	 *
@@ -70,23 +73,51 @@ public class UserOptionalFetcher {
 	}
 
 	/**
+	 * 어드민 유저 아이디로 어드민 유저를 찾습니다.
+	 *
+	 * @param adminUserId   어드민 유저 아이디
+	 * @return {@link AdminUser}
+	 */
+	public AdminUser findAdminUser(Long adminUserId) {
+		return adminUserRepository.findAdminUser(adminUserId).orElse(null);
+	}
+
+	/**
+	 * 어드민 유저의 이메일로 어드민 유저를 찾습니다.
+	 *
+	 * @param email 어드민 유저의 이메일
+	 * @return {@link AdminUser}
+	 */
+	public AdminUser findAdminUserByEmail(String email) {
+		return adminUserRepository.findAdminUserByEmail(email).orElse(null);
+	}
+
+	/**
+	 *
+	 */
+	public AdminRole findAdminUserRoleByEmail(String email) {
+		return adminUserRepository.findAdminUserRoleByEmail(email)
+				.orElse(null);
+	}
+
+	/**
 	 * 유저의 BanHistory 목록을 가져옵니다.
+	 *
+	 * @param pageable  페이지 정보
+	 * @param now       현재 시간
+	 * @return {@link Page} of {@link BanHistory}
 	 */
 	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, Date now) {
 		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
 	}
 
-
 	/**
-	 * 최근 BanHistory를 가져옵니다. 없으면 null을 반환합니다.
+	 * 유저의 가장 최근 BanHistory를 가져옵니다. 없으면 null을 반환합니다.
 	 *
-	 * @param userId 유저의 고유 ID
+	 * @param userId    유저의 고유 ID
+	 * @param now       현재 시간
 	 * @return {@link BanHistory}
 	 */
-	public BanHistory findRecentBanHistory(Long userId) {
-		return banHistoryRepository.findRecentBanHistoryByUserId(userId).orElse(null);
-	}
-
 	public BanHistory findRecentActiveBanHistory(Long userId, Date now) {
 		return banHistoryRepository.findRecentActiveBanHistoryByUserId(userId, now).orElse(null);
 	}
@@ -137,7 +168,7 @@ public class UserOptionalFetcher {
 	 * @return {@link AdminUser}
 	 */
 	public AdminUser getAdminUser(Long adminUserId) {
-		return adminUserRepository.findById(adminUserId)
+		return adminUserRepository.findAdminUser(adminUserId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
 
@@ -148,7 +179,7 @@ public class UserOptionalFetcher {
 	 * @return {@link User}
 	 */
 	public AdminUser getAdminUserByEmail(String adminUserEmail) {
-		return adminUserRepository.findByEmail(adminUserEmail)
+		return adminUserRepository.findAdminUserByEmail(adminUserEmail)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
 
