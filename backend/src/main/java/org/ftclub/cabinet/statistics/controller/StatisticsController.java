@@ -47,8 +47,8 @@ public class StatisticsController {
 	@GetMapping("/lent-histories")
 	@AuthGuard(level = ADMIN_ONLY)
 	public LentsStatisticsResponseDto getCountOnLentAndReturn(
-			@RequestParam("startDate") Date startDate,
-			@RequestParam("endDate") Date endDate
+			@RequestParam("startDate") Integer startDate,
+			@RequestParam("endDate") Integer endDate
 	) {
 		return statisticsFacadeService.getCountOnLentAndReturn(startDate, endDate);
 	}

@@ -12,5 +12,5 @@ public interface StatisticsFacadeService {
 
     List<CabinetFloorStatisticsResponseDto> getCabinetsCountOnAllFloors();
 
-    LentsStatisticsResponseDto getCountOnLentAndReturn(Date startDate, Date endDate);
+    LentsStatisticsResponseDto getCountOnLentAndReturn(Integer startDate, Integer endDate);
 }
