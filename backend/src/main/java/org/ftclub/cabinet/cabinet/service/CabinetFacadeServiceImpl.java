@@ -9,7 +9,6 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
@@ -48,6 +47,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
 
+	/*-------------------------------------------READ-------------------------------------------*/
+
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -75,10 +76,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		}
 		List<LentDto> lentDtos = new ArrayList<>();
 		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
-        for (LentHistory lentHistory : lentHistories) {
-            User findUser = userRepository.getUser(lentHistory.getUserId());
-            lentDtos.add(lentMapper.toLentDto(findUser, lentHistory));
-        }
+		for (LentHistory lentHistory : lentHistories) {
+			User findUser = userRepository.getUser(lentHistory.getUserId());
+			lentDtos.add(lentMapper.toLentDto(findUser, lentHistory));
+		}
 		return cabinetMapper.toCabinetInfoResponseDto(cabinetOptionalFetcher.findCabinet(cabinetId),
 				lentDtos);
 	}
@@ -104,58 +105,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetStatusNote(Long cabinetId, String statusNote) {
-		cabinetService.updateStatusNote(cabinetId, statusNote);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetTitle(Long cabinetId, String title) {
-		cabinetService.updateTitle(cabinetId, title);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
-		cabinetService.updateGrid(cabinetId, Grid.of(row, col));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum) {
-		cabinetService.updateVisibleNum(cabinetId, visibleNum);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetBundleStatus(UpdateCabinetsRequestDto updateCabinetsRequestDto,
-			CabinetStatus status) {
-		for (Long cabinetId : updateCabinetsRequestDto.getCabinetIds()) {
-			cabinetService.updateStatus(cabinetId, status);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType) {
-		for (Long cabinetId : cabinetIds) {
-			cabinetService.updateLentType(cabinetId, lentType);
-		}
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -213,21 +162,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 	/**
-	 * 사물함 정보와 위치 정보를 가져옵니다.
-	 *
-	 * @param cabinetId 사물함 id
-	 * @return 사물함과 위치 정보
-	 * @throws ServiceException 존재하지 않는 사물함인 경우 예외 발생
-	 */
-	public CabinetDto getCabinet(Long cabinetId) {
-		Cabinet cabinet = cabinetRepository.findById(cabinetId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-		Location location = cabinetRepository.findLocationById(cabinetId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-		return cabinetMapper.toCabinetDto(cabinet);
-	}
-
-	/**
 	 * 사물함들의 정보와 각각의 대여 정보들을 가져옵니다.
 	 *
 	 * @param cabinetIds 사물함 id 리스트
@@ -266,5 +200,60 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 						userRepository.getUser(e.getUserId()),
 						cabinetRepository.findById(e.getCabinetId()).orElseThrow()))
 				.collect(Collectors.toList());
+	}
+
+	/*--------------------------------------------CUD--------------------------------------------*/
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateCabinetStatusNote(Long cabinetId, String statusNote) {
+		cabinetService.updateStatusNote(cabinetId, statusNote);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateCabinetTitle(Long cabinetId, String title) {
+		cabinetService.updateTitle(cabinetId, title);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
+		cabinetService.updateGrid(cabinetId, Grid.of(row, col));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum) {
+		cabinetService.updateVisibleNum(cabinetId, visibleNum);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateCabinetBundleStatus(UpdateCabinetsRequestDto updateCabinetsRequestDto,
+			CabinetStatus status) {
+		for (Long cabinetId : updateCabinetsRequestDto.getCabinetIds()) {
+			cabinetService.updateStatus(cabinetId, status);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType) {
+		for (Long cabinetId : cabinetIds) {
+			cabinetService.updateLentType(cabinetId, lentType);
+		}
 	}
 }
