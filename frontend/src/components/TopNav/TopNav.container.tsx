@@ -38,7 +38,7 @@ const TopNavContainer: React.FC<{
         await setTimeoutPromise(500);
         const locationsFloorData = await axiosBuildingFloor();
 
-        setLocationsFloor(locationsFloorData.data.space_data);
+        setLocationsFloor(locationsFloorData.data);
       } catch (error) {
         console.log(error);
       }

@@ -29,11 +29,9 @@ export const currentLocationFloorState = selector<Array<number>>({
     const locationsFloorData = get(locationsFloorState);
     const currentLocation = get(currentLocationNameState);
 
-    const currentLocationIndex = locationsFloorData.findIndex(
-      (building) => {
-        return building.buildingName === currentLocation;
-      }
-    );
+    const currentLocationIndex = locationsFloorData.findIndex((building) => {
+      return building.buildingName === currentLocation;
+    });
     if (currentLocationIndex === -1) return [];
     return locationsFloorData[currentLocationIndex].floors;
   },
