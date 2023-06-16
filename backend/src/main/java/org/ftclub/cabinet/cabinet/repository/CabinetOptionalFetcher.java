@@ -12,11 +12,11 @@ public class CabinetOptionalFetcher {
 
 	private final CabinetRepository cabinetRepository;
 
-	public Cabinet getCabinetNullable(Long cabinetId) {
+	public Cabinet findCabinet(Long cabinetId) {
 		return cabinetRepository.findById(cabinetId).orElse(null);
 	}
 
-	public Cabinet getCabinetNotNull(Long cabinetId) {
+	public Cabinet getCabinet(Long cabinetId) {
 		return cabinetRepository.findById(cabinetId)
 				.orElseThrow(() -> new DomainException(ExceptionStatus.NOT_FOUND_CABINET));
 	}

@@ -33,25 +33,14 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class LentFacadeServiceImpl implements LentFacadeService {
 
-<<<<<<< HEAD
-    private final LentRepository lentRepository;
-    private final UserOptionalFetcher userExceptionHandler;
-    private final CabinetExceptionHandlerService cabinetExceptionHandler;
-    private final LentService lentService;
-    private final LentMapper lentMapper;
-    private final CabinetService cabinetService;
-    private final CabinetMapper cabinetMapper;
-    private final CabinetRepository cabinetRepository;
-=======
 	private final LentRepository lentRepository;
-	private final UserExceptionHandlerService userExceptionHandler;
+	private final UserOptionalFetcher userExceptionHandler;
 	private final CabinetExceptionHandlerService cabinetExceptionHandler;
 	private final LentService lentService;
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;
 	private final CabinetMapper cabinetMapper;
 	private final CabinetRepository cabinetRepository;
->>>>>>> 5e94e8242379193e027c93ce452082a06dc04db8
 
 	@Override
 	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
