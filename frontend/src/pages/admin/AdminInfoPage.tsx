@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { axiosCabinetById } from "@/api/axios/axios.custom";
+import styled from "styled-components";
 import {
   bannedUserListState,
   brokenCabinetListState,
@@ -10,17 +10,17 @@ import {
   targetCabinetInfoState,
   targetUserInfoState,
 } from "@/recoil/atoms";
-import {
-  ICabinetNumbersPerFloor,
-  ITableData,
-  IMonthlyData,
-} from "@/types/dto/admin.dto";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import styled from "styled-components";
 import BarChart from "@/components/AdminInfo/Chart/BarChart";
 import LineChart from "@/components/AdminInfo/Chart/LineChart";
 import PieChart from "@/components/AdminInfo/Chart/PieChart";
 import AdminTable from "@/components/AdminInfo/Table/AdminTable";
+import {
+  ICabinetNumbersPerFloor,
+  IMonthlyData,
+  ITableData,
+} from "@/types/dto/admin.dto";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { axiosCabinetById } from "@/api/axios/axios.custom";
 import { useAdminHomeApi } from "@/hooks/useAdminHomeApi";
 import useMenu from "@/hooks/useMenu";
 
@@ -51,7 +51,7 @@ const AdminInfo = () => {
     openCabinet();
     if (type === "broken" || type === "overdue") {
       let cabinetId = -1;
-      if (str) cabinetId = JSON.parse(str)?.cabinet_id;
+      if (str) cabinetId = JSON.parse(str)?.cabinetId;
       getData(cabinetId);
       setSelectedTypeOnSearch("CABINET");
     } else {
@@ -60,10 +60,10 @@ const AdminInfo = () => {
       if (str) {
         result = JSON.parse(str);
         setTargetUserInfo({
-          intraId: result.intra_id,
-          userId: result.user_id,
-          bannedDate: result.banned_date,
-          unbannedDate: result.unbanned_date,
+          intraId: result.name,
+          userId: result.userId,
+          bannedDate: result.bannedAt,
+          unbannedDate: result.unbannedAt,
         });
       }
     }

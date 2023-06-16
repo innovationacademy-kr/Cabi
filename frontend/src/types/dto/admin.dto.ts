@@ -6,14 +6,16 @@ export interface BannedUserDto {
 }
 
 export interface BrokenCabinetDto {
-  cabinet_id: number;
-  cabinet_num: number;
+  cabinetId: number;
+  visibleNum: number;
+  maxUser: number;
+  building: string;
   floor: number;
-  lent_type: string;
-  location: string;
-  max_user: number;
-  note: string | null;
   section: string;
+  lentType: string;
+  status: string;
+  statusNote: string | null;
+  title: string;
 }
 
 export interface OverdueUserDto {

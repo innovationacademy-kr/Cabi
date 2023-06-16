@@ -28,10 +28,10 @@ export const handleBannedUserList = (data: BannedUserDto[]): ITableData[] =>
 export const handleBrokenCabinetList = (
   data: BrokenCabinetDto[]
 ): ITableData[] =>
-  data.map(({ floor, cabinet_num, section, note }, idx, arr) => ({
-    first: `${floor}F-${cabinet_num}`,
+  data.map(({ floor, visibleNum, section, statusNote }, idx, arr) => ({
+    first: `${floor}F-${visibleNum}`,
     second: section,
-    third: note || "",
+    third: statusNote || "",
     info: arr[idx],
   }));
 
