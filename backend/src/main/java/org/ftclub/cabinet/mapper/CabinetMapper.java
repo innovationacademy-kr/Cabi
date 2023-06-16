@@ -13,12 +13,12 @@ import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.mapstruct.Mapper;
+import org.ftclub.cabinet.utils.annotations.NullableMapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
+@NullableMapper
 @Component
 public interface CabinetMapper {
 

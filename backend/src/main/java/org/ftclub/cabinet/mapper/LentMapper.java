@@ -7,11 +7,11 @@ import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.User;
-import org.mapstruct.Mapper;
+import org.ftclub.cabinet.utils.annotations.NullableMapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
+@NullableMapper
 @Component
 public interface LentMapper {
 
