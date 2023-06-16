@@ -107,4 +107,7 @@ public class CabinetOptionalFetcher {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
+	public Cabinet findCabinetByUserId(Long userId) {
+		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
+	}
 }

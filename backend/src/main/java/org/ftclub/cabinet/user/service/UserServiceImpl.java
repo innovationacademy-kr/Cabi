@@ -32,8 +32,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean checkUserExists(String email) {
-		Optional<User> user = userRepository.findByEmail(email);
-		return user.isPresent();
+		User user = userOptionalFetcher.findUserByEmail(email);
+		return user != null;
 	}
 
 	/* createUser는 user를 만드는 행위만 해야될 것 같아 다음과 같이 변경했습니다. */
@@ -123,6 +123,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public AdminRole getAdminUserRole(String email) {
-		return userRepository.getAdminUserRole(email);
+		return adminUserRepository.getAdminUserRole(email);
 	}
 }

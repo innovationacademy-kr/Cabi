@@ -3,8 +3,14 @@ package org.ftclub.cabinet.mapper;
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 import static org.mapstruct.NullValueMappingStrategy.RETURN_NULL;
 
+import java.util.Date;
+import java.util.List;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.mapstruct.Mapper;
@@ -25,4 +31,9 @@ public interface UserMapper {
 	UserBlockedInfoDto toUserBlockedInfoDto(BanHistory banHistory, User user);
 
 	UserProfileDto toUserProfileDto(User user);
+
+	@Mapping(target = "userId", source = "user.userId")
+	MyProfileResponseDto toMyProfileResponseDto(UserSessionDto user, Cabinet cabinet, BanHistory banHistory);
+
+	BlockedUserPaginationDto toBlockedUserPaginationDto(List<UserBlockedInfoDto> result, Integer totalPage);
 }

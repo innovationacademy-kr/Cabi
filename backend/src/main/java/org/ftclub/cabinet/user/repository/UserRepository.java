@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT lh.name " +
 			"FROM User lh " +
 			"WHERE lh.userId = :userId")
-	String findNameById(@Param("userId") Long userId);
+	Optional<String> findNameById(@Param("userId") Long userId);
 
 	/**
 	 * 유저 고유 아이디로 유저를 가져옵니다.
@@ -60,7 +60,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
 	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
-
-	@Query("SELECT au.role FROM AdminUser au WHERE au.email = :email")
-	AdminRole getAdminUserRole(@Param("email") String email);
 }

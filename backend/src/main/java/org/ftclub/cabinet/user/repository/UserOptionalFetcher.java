@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.repository;
 
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -108,6 +109,15 @@ public class UserOptionalFetcher {
 	}
 
 	/**
+	 * 유저의 이메일로 유저를 검색합니다.
+	 *
+	 * @param email 유저의 이메일
+	 */
+	public User findUserByEmail(String email) {
+		return userRepository.findByEmail(email).orElse(null);
+	}
+
+	/**
 	 * 유저의 이름 일부분으로 유저를 검색합니다.
 	 *
 	 * @param name     유저의 이름 일부분
@@ -127,5 +137,26 @@ public class UserOptionalFetcher {
 	public BanHistory getRecentBanHistory(Long userId) {
 		return banHistoryRepository.findRecentBanHistoryByUserId(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BAN_HISTORY));
+	}
+
+	/**
+	 * 유저의 BanHistory 목록을 가져옵니다.
+	 */
+	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, Date now) {
+		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
+	}
+
+	/**
+	 * 최근 BanHistory를 가져옵니다. 없으면 null을 반환합니다.
+	 *
+	 * @param userId 유저의 고유 ID
+	 * @return {@link BanHistory}
+	 */
+	public BanHistory findRecentBanHistory(Long userId) {
+		return banHistoryRepository.findRecentBanHistoryByUserId(userId).orElse(null);
+	}
+
+	public BanHistory findRecentActiveBanHistory(Long userId, Date now) {
+		return banHistoryRepository.findRecentActiveBanHistoryByUserId(userId, now).orElse(null);
 	}
 }

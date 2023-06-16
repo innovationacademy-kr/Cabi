@@ -32,7 +32,7 @@ public class UserControllerTest {
 	public void testGetMyProfile_대여_사물함_없는_경우() throws Exception {
 		// penaltyuser2 대여 중인 사물함 x 벤 기록 x
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(4L, "penaltyuser2",
-				-1L, null);
+				null, null);
 
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
 				"penaltyuser2", DateUtil.getNow());
