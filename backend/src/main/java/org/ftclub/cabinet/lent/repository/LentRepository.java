@@ -116,12 +116,12 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	/**
 	 * 연체되어 있는 사물함을 모두 가져옵니다.
 	 *
-	 * @param date	연체의 기준 날짜/시간
+	 * @param date 연체의 기준 날짜/시간
 	 * @return 연체되어 있는 {@link LentHistory}의 {@link List}
 	 */
 	@Query("SELECT lh " +
 			"FROM LentHistory lh " +
-			"WHERE lh.expiredAt < :date " +
+			"WHERE lh.expiredAt > :date " +
 			"ORDER BY lh.expiredAt ASC")
 	List<LentHistory> findAllOverdueLent(@Param("date") Date date, Pageable pageable);
 
@@ -129,10 +129,12 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +
 			"WHERE lh.startedAt > :startDate AND lh.startedAt < :endDate")
-	Integer countLentByLentTimeBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	Integer countLentByLentTimeBetween(@Param("startDate") Date startDate,
+			@Param("endDate") Date endDate);
 
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +
 			"WHERE :startDate < lh.endedAt AND lh.endedAt < :endDate")
-	Integer countLentByReturnTimeBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+	Integer countLentByReturnTimeBetween(@Param("startDate") Date startDate,
+			@Param("endDate") Date endDate);
 }
