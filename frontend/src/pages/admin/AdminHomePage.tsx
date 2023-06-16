@@ -88,7 +88,7 @@ const AdminHomePage = () => {
     );
   }, []);
   return (
-    <AdminInfoStyled>
+    <AdminHomeStyled>
       <ContainerStyled>
         <H2styled>층별 이용 현황</H2styled>
         <BarChart data={cabinetNumbersPerFloor} />
@@ -132,7 +132,7 @@ const AdminHomePage = () => {
           ROW_COUNT={5}
         />
       </ContainerStyled>
-    </AdminInfoStyled>
+    </AdminHomeStyled>
   );
 };
 
@@ -184,7 +184,7 @@ const ContainerStyled = styled.div`
   }
 `;
 
-const AdminInfoStyled = styled.div`
+const AdminHomeStyled = styled.div`
   background: var(--white);
   width: 100%;
   height: 100%;
@@ -203,7 +203,7 @@ const AdminInfoStyled = styled.div`
   @media screen and (max-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(6, 500px);
-    min-width: 500px;
+    min-width: 300px;
     overflow: scroll;
   }
 `;
