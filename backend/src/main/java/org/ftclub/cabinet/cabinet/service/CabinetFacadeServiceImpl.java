@@ -27,6 +27,7 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -73,8 +74,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
         List<LentDto> lentDtos = new ArrayList<>();
         List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
         for (LentHistory lentHistory : lentHistories) {
-            String name = userRepository.findNameById(lentHistory.getUserId());
-            lentDtos.add(lentMapper.toLentDto(name, lentHistory));
+            User findUser = userRepository.getUser(lentHistory.getUserId());
+            lentDtos.add(lentMapper.toLentDto(findUser, lentHistory));
         }
         return cabinetMapper.toCabinetInfoResponseDto(getCabinet(cabinetId), lentDtos);
     }
