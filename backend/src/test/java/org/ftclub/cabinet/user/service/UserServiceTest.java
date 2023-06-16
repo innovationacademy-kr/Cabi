@@ -14,6 +14,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +30,7 @@ public class UserServiceTest {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private UserRepository userRepository;
+	private UserOptionalFetcher userOptionalFetcher;
 	@Autowired
 	private AdminUserRepository adminUserRepository;
 	@Autowired
@@ -38,9 +39,9 @@ public class UserServiceTest {
 	@Test
 	void 유저_생성() {
 		userService.createUser("testUser", "testUser@student.42seoul.kr", null, UserRole.USER);
-		Optional<User> user = userRepository.findByName("testUser");
-		assertEquals("testUser", user.get().getName());
-		assertEquals(UserRole.USER, user.get().getRole());
+		User user = userOptionalFetcher.findUserByName("testUser");
+		assertEquals("testUser", user.getName());
+		assertEquals(UserRole.USER, user.getRole());
 	}
 
 	@Test
@@ -78,8 +79,8 @@ public class UserServiceTest {
 		Date deletedAt = DateUtil.getNow();
 		Long userId = 1L;
 		userService.deleteUser(userId, deletedAt);
-		Optional<User> user = userRepository.findById(userId);
-		assertEquals(user.get().getDeletedAt(), deletedAt);
+		User user = userOptionalFetcher.getUser(userId);
+		assertEquals(user.getDeletedAt(), deletedAt);
 	}
 
 	@Test
@@ -87,7 +88,7 @@ public class UserServiceTest {
 		Date blackholedAt = DateUtil.getNow();
 		Long userId = 1L;
 		userService.updateUserBlackholedAt(userId, blackholedAt);
-		User user = userRepository.getUser(userId);
+		User user = userOptionalFetcher.getUser(userId);
 		assertEquals(user.getBlackholedAt(), blackholedAt);
 	}
 

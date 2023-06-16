@@ -28,6 +28,7 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,7 +44,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	private final CabinetRepository cabinetRepository;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentRepository lentRepository;
-	private final UserRepository userRepository;
+	private final UserOptionalFetcher userOptionalFetcher;
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
 
@@ -77,7 +78,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<LentDto> lentDtos = new ArrayList<>();
 		List<LentHistory> lentHistories = lentRepository.findAllActiveLentByCabinetId(cabinetId);
 		for (LentHistory lentHistory : lentHistories) {
-			User findUser = userRepository.getUser(lentHistory.getUserId());
+			User findUser = userOptionalFetcher.findUser(lentHistory.getUserId());
 			lentDtos.add(lentMapper.toLentDto(findUser, lentHistory));
 		}
 		return cabinetMapper.toCabinetInfoResponseDto(cabinetOptionalFetcher.findCabinet(cabinetId),
@@ -197,7 +198,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 			List<LentHistory> lentHistories) {
 		return lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
-						userRepository.getUser(e.getUserId()),
+						userOptionalFetcher.findUser(e.getUserId()),
 						cabinetRepository.findById(e.getCabinetId()).orElseThrow()))
 				.collect(Collectors.toList());
 	}

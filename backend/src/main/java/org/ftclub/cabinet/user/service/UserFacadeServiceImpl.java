@@ -31,7 +31,6 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.ftclub.cabinet.user.repository.UserRepository;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,7 +45,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final LentRepository lentRepository;
 	private final BanHistoryRepository banHistoryRepository;
 	private final BanPolicy banPolicy;
-	private final UserRepository userRepository;
 	private final UserMapper userMapper;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final CabinetMapper cabinetMapper;
@@ -94,7 +92,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size);
-		Page<User> users = userRepository.findByPartialName(name, pageable);
+		Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
 		return generateUserProfilePaginationDto(users.getContent(), users.getTotalElements());
 	}
 
@@ -115,20 +113,20 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size);
-		Page<User> users = userRepository.findByPartialName(name, pageable);
+		Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
 		return new UserCabinetPaginationDto(null, null);
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
 	@Override
 	public MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId) {
-		User user = userRepository.getUser(userId);
+		User user = userOptionalFetcher.findUser(userId);
 		return null;
 	}
 
 	@Override
 	public List<User> getAllUsers() {
-		return userRepository.findAll();
+		return userOptionalFetcher.findAllUsers();
 	}
 
 	@Override
@@ -197,7 +195,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		PageRequest pageable = PageRequest.of(page, size);
 		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
-					User user = userRepository.findById(lh.getUserId()).orElse(null);
+					User user = userOptionalFetcher.findUser(lh.getUserId());
 					Location location = cabinetOptionalFetcher.getLocation(
 							lh.getCabinetId());
 					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),

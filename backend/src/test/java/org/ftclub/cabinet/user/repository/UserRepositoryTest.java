@@ -35,10 +35,10 @@ public class UserRepositoryTest {
 	public void testGetUser() {
 		Long userId = 9L;
 
-		User user = userRepository.getUser(userId);
+		Optional<User> user = userRepository.findUser(userId);
 
 		assertNotNull(user);
-		assertEquals("user1", user.getName());
+		assertEquals("user1", user.get().getName());
 	}
 
 	@Test

@@ -31,16 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return {@link User}
 	 */
 	@Query("SELECT u FROM User u WHERE u.userId = :userId")
-	User getUser(@Param("userId") Long userId);
-
-	/**
-	 * 유저 이름으로 유저를 가져옵니다.
-	 *
-	 * @param name 유저 이름
-	 * @return {@link User}
-	 */
-	@Query("SELECT u FROM User u WHERE u.name = :name")
-	User getUserByName(@Param("name") String name);
+	Optional<User> findUser(@Param("userId") Long userId);
 
 	/**
 	 * 유저 이름으로 유저를 찾습니다.
