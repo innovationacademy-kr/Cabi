@@ -8,6 +8,8 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,14 @@ public class LentOptionalFetcher {
 
 	private final LentRepository lentRepository;
 	private final CabinetOptionalFetcher cabinetExceptionHandler;
+
+	public List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId) {
+		return lentRepository.findAllActiveLentByCabinetId(cabinetId);
+	}
+
+	public Page<LentHistory> findPaginationByCabinetId(Long cabinetId, PageRequest pageable) {
+		return lentRepository.findPaginationByCabinetId(cabinetId, pageable);
+	}
 
 	/**
 	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id와 cabinet id에 맞는 {@link LentHistory}를 찾습니다.
@@ -146,11 +156,4 @@ public class LentOptionalFetcher {
 		return lentRepository.countCabinetAllLent(cabinetId);
 	}
 
-	/**
-	 * @param cabinetId 캐비넷 id
-	 * @return 현재 대여중인 캐비넷 리스트
-	 */
-	public List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId) {
-		return lentRepository.findAllActiveLentByCabinetId(cabinetId);
-	}
 }
