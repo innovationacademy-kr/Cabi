@@ -326,7 +326,7 @@ const axiosGetBrokenCabinetListURL = "/v4/admin/cabinets/status/BROKEN";
 export const axiosGetBrokenCabinetList = async () => {
   try {
     const response = await instance.get(axiosGetBrokenCabinetListURL, {
-      params: { page: 0, size: 1 },
+      params: { page: 0, size: 0 },
     });
     return response.data.result;
   } catch (error) {
@@ -338,7 +338,7 @@ const axiosGetBannedUserListURL = "v4/admin/statistics/users/banned";
 export const axiosGetBannedUserList = async () => {
   try {
     const response = await instance.get(axiosGetBannedUserListURL, {
-      params: { page: 0, size: 1 },
+      params: { page: 0, size: 0 },
     });
     return response.data.result;
   } catch (error) {

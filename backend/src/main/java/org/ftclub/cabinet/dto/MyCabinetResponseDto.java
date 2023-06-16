@@ -18,7 +18,7 @@ public class MyCabinetResponseDto extends CabinetDto {
 	public MyCabinetResponseDto(Long cabinetId, Integer visibleNum, LentType lentType,
 			Integer maxUser, String title, CabinetStatus status, Location location, String memo,
 			List<LentDto> lents) {
-		super(cabinetId, visibleNum, lentType, maxUser, title, status, location);
+		super(cabinetId, visibleNum, lentType, maxUser, title, status, null, location);
 		this.memo = memo;
 		this.lents = lents;
 	}

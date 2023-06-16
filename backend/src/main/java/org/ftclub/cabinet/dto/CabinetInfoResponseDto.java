@@ -17,7 +17,7 @@ public class CabinetInfoResponseDto extends CabinetDto {
 	public CabinetInfoResponseDto(Long cabinetId, Integer visibleNum, LentType lentType,
 			Integer maxUser, String title, CabinetStatus status, Location location,
 			List<LentDto> lents) {
-		super(cabinetId, visibleNum, lentType, maxUser, title, status, location);
+		super(cabinetId, visibleNum, lentType, maxUser, title, status, null, location);
 		this.lents = lents;
 	}
 }

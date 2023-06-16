@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.mapper;
 
+import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
+import static org.mapstruct.NullValueMappingStrategy.RETURN_NULL;
+
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.LentDto;
@@ -11,7 +14,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
+//@NullableMapper
+@Mapper(componentModel = "spring",
+		nullValueMappingStrategy = RETURN_NULL,
+		nullValueMapMappingStrategy = RETURN_DEFAULT,
+		nullValueIterableMappingStrategy = RETURN_DEFAULT)
 @Component
 public interface LentMapper {
 

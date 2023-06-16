@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
@@ -200,8 +201,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 							lh.getCabinetId());
 					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),
 							DateUtil.getNow());
+					Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(
+							lh.getCabinetId());
 					overdueList.add(
-							cabinetMapper.toOverdueUserCabinetDto(lh, userName, location,
+							cabinetMapper.toOverdueUserCabinetDto(lh, userName,
+									cabinet.getVisibleNum(), location,
 									overdueDays));
 				}
 		);

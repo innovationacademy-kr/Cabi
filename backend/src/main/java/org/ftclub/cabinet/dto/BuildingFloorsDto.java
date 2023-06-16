@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class BuildingFloorsDto {
 
-    private final String buildingName;
+    private final String building;
     private final List<Integer> floors;
 }

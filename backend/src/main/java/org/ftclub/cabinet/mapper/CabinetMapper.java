@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.mapper;
 
+import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
+import static org.mapstruct.NullValueMappingStrategy.RETURN_NULL;
+
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.Location;
@@ -18,7 +21,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
+//@NullableMapper
+@Mapper(componentModel = "spring",
+		nullValueMappingStrategy = RETURN_NULL,
+		nullValueMapMappingStrategy = RETURN_DEFAULT,
+		nullValueIterableMappingStrategy = RETURN_DEFAULT)
 @Component
 public interface CabinetMapper {
 
@@ -26,7 +33,7 @@ public interface CabinetMapper {
 
 	CabinetDto toCabinetDto(Location location, Cabinet cabinet);
 
-	BuildingFloorsDto toBuildingFloorsDto(String buildingName, List<Integer> floors);
+	BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
 
 	CabinetInfoResponseDto toCabinetInfoResponseDto(CabinetDto cabinetDto, List<LentDto> lents);
 
@@ -38,7 +45,7 @@ public interface CabinetMapper {
 			Integer totalPage);
 
 	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name,
-			Location location, Long overdueDays);
+			Integer visibleNum, Location location, Long overdueDays);
 
 	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
 			List<OverdueUserCabinetDto> result, Integer totalPage);
