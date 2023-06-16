@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -20,12 +19,10 @@ import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
-import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.BanPolicy;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
@@ -41,7 +38,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final UserService userService;
 	private final UserOptionalFetcher userOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
-	private final LentRepository lentRepository;
 	private final UserMapper userMapper;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final CabinetMapper cabinetMapper;
@@ -188,7 +184,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size);
-		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
+		lentOptionalFetcher.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
 					User user = userOptionalFetcher.findUser(lh.getUserId());
 					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),

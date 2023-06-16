@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.repository;
 
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -158,7 +159,16 @@ public class LentOptionalFetcher {
 		return lentRepository.countCabinetAllLent(cabinetId);
 	}
 
+	/**
+	 *
+	 * @param userId 유저 id
+	 * @return	유저가 대여중인 캐비넷
+	 */
 	public Cabinet findActiveLentCabinetByUserId(Long userId) {
 		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
+	}
+
+	public List<LentHistory> findAllOverdueLent(Date date, Pageable pageable){
+		return lentRepository.findAllOverdueLent(date, pageable);
 	}
 }
