@@ -14,7 +14,7 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
-import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class LentServiceImpl implements LentService {
 	private final LentPolicy lentPolicy;
 	private final LentExceptionHandlerService lentExceptionHandler;
 	private final CabinetExceptionHandlerService cabinetExceptionHandler;
-	private final UserExceptionHandlerService userExceptionHandler;
+	private final UserOptionalFetcher userExceptionHandler;
 	private final UserService userService;
 	private final CabinetService cabinetService;
 	private final BanHistoryRepository banHistoryRepository;

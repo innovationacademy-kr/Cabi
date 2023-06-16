@@ -30,6 +30,7 @@ import org.ftclub.cabinet.user.domain.BanPolicy;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
@@ -41,7 +42,7 @@ import org.springframework.stereotype.Service;
 public class UserFacadeServiceImpl implements UserFacadeService {
 
 	private final UserService userService;
-	private final UserExceptionHandlerService userExceptionHandlerService;
+	private final UserOptionalFetcher userOptionalFetcher;
 	private final LentRepository lentRepository;
 	private final BanHistoryRepository banHistoryRepository;
 	private final BanPolicy banPolicy;
@@ -80,7 +81,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			Integer totalPage) {
 		List<UserBlockedInfoDto> userBlockedInfoDtoList = banHistories.stream()
 				.map(b -> userMapper.toUserBlockedInfoDto(b,
-						userExceptionHandlerService.getUser(b.getUserId()).getName()))
+						userOptionalFetcher.getUser(b.getUserId())))
 				.collect(Collectors.toList());
 		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalPage);
 	}

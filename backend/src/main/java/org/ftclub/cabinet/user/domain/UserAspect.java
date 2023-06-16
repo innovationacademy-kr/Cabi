@@ -13,7 +13,7 @@ import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,7 +30,7 @@ public class UserAspect {
 	private final CookieManager cookieManager;
 	private final TokenValidator tokenValidator;
 	private final JwtProperties jwtProperties;
-	private final UserExceptionHandlerService userExceptionHandlerService;
+	private final UserOptionalFetcher userOptionalFetcher;
 	private final UserService userService;
 
 	@Around("execution(* *(.., @UserSession (*), ..))")
@@ -53,7 +53,7 @@ public class UserAspect {
 		String name = tokenValidator.getPayloadJson(
 						cookieManager.getCookie(req, jwtProperties.getMainTokenName())).get("name")
 				.asText();
-		User user = userExceptionHandlerService.getUserByName(name);
+		User user = userOptionalFetcher.getUserByName(name);
 		//ToDo: name을 기준으로 service에게 정보를 받고, 매핑한다.
 		// name과 email은 우선 구현했으나 수정이 필요함.
 		return new UserSessionDto(user.getUserId(), name, user.getEmail(), 1, 1, new Date(), true);

@@ -23,7 +23,7 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.UserSession;
-import org.ftclub.cabinet.user.service.UserExceptionHandlerService;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
 public class LentFacadeServiceImpl implements LentFacadeService {
 
     private final LentRepository lentRepository;
-    private final UserExceptionHandlerService userExceptionHandler;
+    private final UserOptionalFetcher userExceptionHandler;
     private final CabinetExceptionHandlerService cabinetExceptionHandler;
     private final LentService lentService;
     private final LentMapper lentMapper;
