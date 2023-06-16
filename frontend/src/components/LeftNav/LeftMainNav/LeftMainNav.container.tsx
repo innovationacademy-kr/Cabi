@@ -19,8 +19,8 @@ import { currentLocationFloorState } from "@/recoil/selectors";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
 import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
 import { UserDto } from "@/types/dto/user.dto";
-import { removeCookie } from "@/api/react_cookie/cookies";
 import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
+import { removeCookie } from "@/api/react_cookie/cookies";
 import useIsMount from "@/hooks/useIsMount";
 import useMenu from "@/hooks/useMenu";
 
@@ -68,7 +68,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       .catch((error) => {
         console.error(error);
       });
-  }, [currentLocation, currentFloor, myInfo.cabinet_id, numberOfAdminWork]);
+  }, [currentLocation, currentFloor, myInfo.cabinetId, numberOfAdminWork]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);

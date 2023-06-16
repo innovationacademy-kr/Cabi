@@ -83,48 +83,48 @@ const getCalcualtedTimeString = (expireTime: Date) => {
 };
 
 const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
-  // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
-  const { lent_type, cabinet_title, max_user, lent_info } = selectedCabinetInfo;
-  if (lent_type === "CLUB" && cabinet_title) return cabinet_title;
+  // 동아리 사물함인 경우 title에 있는 동아리 이름 반환
+  const { lentType, title, maxUser, lents } = selectedCabinetInfo;
+  if (lentType === "CLUB" && title) return title;
 
   // 그 외에는 유저리스트 반환
-  const userNameList = new Array(max_user)
+  const userNameList = new Array(maxUser)
     .fill(null)
-    .map((_, idx) => lent_info[idx])
-    .map((info) => (info ? info.intra_id : "-"))
+    .map((_, idx) => lents[idx])
+    .map((info) => (info ? info.intraId : "-"))
     .join("\n");
   return userNameList;
 };
 
 const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
-  const { status, lent_type, lent_info } = selectedCabinetInfo;
+  const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
     return "사용 불가";
   // 동아리 사물함
-  else if (lent_type === "CLUB") return "동아리 사물함";
+  else if (lentType === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
   else if (
     status === CabinetStatus.SET_EXPIRE_AVAILABLE ||
     status === CabinetStatus.SET_EXPIRE_FULL ||
     status === CabinetStatus.EXPIRED
   )
-    return getCalcualtedTimeString(new Date(lent_info[0].expire_time));
+    return getCalcualtedTimeString(new Date(lents[0].expiredAt));
   // 빈 사물함
   else return null;
 };
 
 const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
-  const { status, lent_type, lent_info } = selectedCabinetInfo;
+  const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
     return "var(--expired)";
   // 사용 중 사물함
   else if (
-    (status === CabinetStatus.SET_EXPIRE_FULL && lent_type !== "CLUB") ||
+    (status === CabinetStatus.SET_EXPIRE_FULL && lentType !== "CLUB") ||
     status === CabinetStatus.EXPIRED
   )
-    return calExpiredTime(new Date(lent_info[0].expire_time)) < 0
+    return calExpiredTime(new Date(lents[0].expiredAt)) < 0
       ? "var(--expired)"
       : "var(--black)";
   // 빈 사물함
@@ -155,16 +155,16 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     ? {
         floor: targetCabinetInfo.floor,
         section: targetCabinetInfo.section,
-        cabinetId: targetCabinetInfo.cabinet_id,
-        cabinetNum: targetCabinetInfo.cabinet_num,
+        cabinetId: targetCabinetInfo.cabinetId,
+        cabinetNum: targetCabinetInfo.visibleNum,
         status: targetCabinetInfo.status,
-        lentType: targetCabinetInfo.lent_type,
+        lentType: targetCabinetInfo.lentType,
         userNameList: getCabinetUserList(targetCabinetInfo),
-        expireDate: targetCabinetInfo.lent_info[0]?.expire_time,
+        expireDate: targetCabinetInfo.lents[0]?.expiredAt,
         detailMessage: getDetailMessage(targetCabinetInfo),
         detailMessageColor: getDetailMessageColor(targetCabinetInfo),
         isAdmin: isAdmin,
-        isLented: targetCabinetInfo.lent_info.length !== 0,
+        isLented: targetCabinetInfo.lents.length !== 0,
       }
     : null;
 
@@ -217,7 +217,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
 
   const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
     const returnable = selectedCabinets.find(
-      (cabinet) => cabinet.lent_info.length >= 1
+      (cabinet) => cabinet.lents.length >= 1
     );
     if (returnable !== undefined) {
       return true;
@@ -254,7 +254,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       selectedCabinetInfo={cabinetViewData}
       closeCabinet={closeCabinet}
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
-      isMine={myCabinetInfo?.cabinet_id === cabinetViewData?.cabinetId}
+      isMine={myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId}
       isAvailable={
         cabinetViewData?.status === "AVAILABLE" ||
         cabinetViewData?.status === "SET_EXPIRE_AVAILABLE"

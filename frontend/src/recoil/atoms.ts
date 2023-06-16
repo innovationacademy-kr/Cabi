@@ -16,9 +16,9 @@ const { persistAtom } = recoilPersist();
 export const userState = atom<UserDto>({
   key: "UserInfo",
   default: {
-    cabinet_id: -1,
-    user_id: -1,
-    intra_id: "default",
+    cabinetId: -1,
+    userId: -1,
+    name: "default",
   },
 });
 

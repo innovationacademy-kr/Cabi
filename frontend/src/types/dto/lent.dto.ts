@@ -11,12 +11,12 @@ import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
  * @property {boolean} is_expired : 연체 여부
  */
 export interface LentDto {
-  user_id: number;
-  intra_id: string;
-  lent_id: number;
-  lent_time: Date;
-  expire_time: Date;
-  is_expired: boolean;
+  userId: number;
+  intraId: string;
+  lentHistoryId: number;
+  startedAt: Date;
+  expiredAt: Date;
+  isExpired: boolean;
 }
 
 export interface LentLogDto {
@@ -43,7 +43,10 @@ export interface BanDto {
   section: string;
 }
 
-export type LentLogResponseType = LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined;
+export type LentLogResponseType =
+  | LentLogDto[]
+  | typeof STATUS_400_BAD_REQUEST
+  | undefined;
 
 export interface ILentLog {
   closeLent: React.MouseEventHandler;

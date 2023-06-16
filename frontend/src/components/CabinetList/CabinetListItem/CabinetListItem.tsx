@@ -31,25 +31,24 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const { openCabinet, closeCabinet } = useMenu();
-  const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
+  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
 
   let cabinetLabelText = "";
 
   if (props.status !== "BANNED" && props.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
-    if (props.lent_type === "PRIVATE")
-      cabinetLabelText = props.lent_info[0]?.intra_id;
-    else if (props.lent_type === "SHARE") {
-      const headcount = props.lent_info.length;
-      const cabinetTitle =
-        props.cabinet_title ?? `${props.max_user} / ${props.max_user}`;
+    if (props.lentType === "PRIVATE")
+      cabinetLabelText = props.lents[0]?.intraId;
+    else if (props.lentType === "SHARE") {
+      const headcount = props.lents.length;
+      const cabinetTitle = props.title ?? `${props.maxUser} / ${props.maxUser}`;
 
       cabinetLabelText =
-        headcount === props.max_user
+        headcount === props.maxUser
           ? cabinetTitle
-          : headcount + " / " + props.max_user;
-    } else if (props.lent_type === "CLUB")
-      cabinetLabelText = props.cabinet_title ?? "동아리";
+          : headcount + " / " + props.maxUser;
+    } else if (props.lentType === "CLUB")
+      cabinetLabelText = props.title ?? "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
@@ -81,9 +80,9 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
 
   const cabinetItemTitleHandler = () => {
     let lentType;
-    if (props.lent_type === CabinetType.PRIVATE) lentType = "개인";
-    else if (props.lent_type === CabinetType.SHARE) lentType = "공유";
-    else if (props.lent_type === CabinetType.CLUB) lentType = "동아리";
+    if (props.lentType === CabinetType.PRIVATE) lentType = "개인";
+    else if (props.lentType === CabinetType.SHARE) lentType = "공유";
+    else if (props.lentType === CabinetType.CLUB) lentType = "동아리";
 
     if (!cabinetLabelText) return `[${lentType}]`;
     return `[${lentType}] ${cabinetLabelText}`;
@@ -93,21 +92,21 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     <CabinetListItemStyled
       status={props.status}
       isMine={isMine}
-      isSelected={currentCabinetId === props.cabinet_id}
+      isSelected={currentCabinetId === props.cabinetId}
       title={cabinetItemTitleHandler()}
       className="cabiButton"
       onClick={() => {
-        selectCabinetOnClick(props.status, props.cabinet_id);
+        selectCabinetOnClick(props.status, props.cabinetId);
       }}
     >
       <CabinetIconNumberWrapperStyled>
         <CabinetIconContainerStyled
-          lent_type={props.lent_type}
+          lentType={props.lentType}
           isMine={isMine}
           status={props.status}
         />
         <CabinetNumberStyled status={props.status} isMine={isMine}>
-          {props.cabinet_num}
+          {props.visibleNum}
         </CabinetNumberStyled>
       </CabinetIconNumberWrapperStyled>
       <CabinetLabelStyled
@@ -199,13 +198,13 @@ const CabinetNumberStyled = styled.p<{
 `;
 
 const CabinetIconContainerStyled = styled.div<{
-  lent_type: CabinetType;
+  lentType: CabinetType;
   status: CabinetStatus;
   isMine: boolean;
 }>`
   width: 16px;
   height: 16px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.lent_type]});
+  background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
   background-size: contain;
   filter: ${(props) => cabinetFilterMap[props.status]};
   ${(props) =>

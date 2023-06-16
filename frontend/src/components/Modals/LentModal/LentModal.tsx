@@ -8,21 +8,21 @@ import {
   userState,
 } from "@/recoil/atoms";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
-import {
-  SuccessResponseModal,
-  FailResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
+import { modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import { getExpireDateString } from "@/utils/dateUtils";
-import { modalPropsMap } from "@/assets/data/maps";
 import {
   axiosCabinetById,
   axiosLentId,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
+import { getExpireDateString } from "@/utils/dateUtils";
 
 const LentModal: React.FC<{
   lentType: string;
@@ -46,8 +46,8 @@ const LentModal: React.FC<{
   const privateLentDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
     귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
   const shareLentDetail = `${
-    targetCabinetInfo.lent_info.length > 0 &&
-    targetCabinetInfo.lent_info[0].expire_time !== null
+    targetCabinetInfo.lents.length > 0 &&
+    targetCabinetInfo.lents[0].expiredAt !== null
       ? `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
       : ""
   }
@@ -63,7 +63,7 @@ ${
     try {
       await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
-      setMyInfo({ ...myInfo, cabinet_id: currentCabinetId });
+      setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       setModalTitle("대여가 완료되었습니다");
       // 캐비닛 상세정보 바꾸는 곳

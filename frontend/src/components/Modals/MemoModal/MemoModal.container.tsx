@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilState } from "recoil";
-import { myCabinetInfoState, currentFloorCabinetState } from "@/recoil/atoms";
+import { currentFloorCabinetState, myCabinetInfoState } from "@/recoil/atoms";
 import MemoModal from "@/components/Modals/MemoModal/MemoModal";
 import {
   CabinetInfoByLocationFloorDto,
@@ -20,8 +20,8 @@ const MemoModalContainer = (props: {
     currentFloorCabinetState
   );
   const memoModalProps = {
-    cabinetType: myCabinetInfo.lent_type,
-    cabinetTitle: myCabinetInfo.cabinet_title,
+    cabinetType: myCabinetInfo.lentType,
+    cabinetTitle: myCabinetInfo.title,
     cabinetMemo: myCabinetInfo.cabinet_memo,
   };
 
@@ -35,21 +35,21 @@ const MemoModalContainer = (props: {
     if (targetSectionCabinetList === undefined) return;
 
     let targetCabinet = targetSectionCabinetList.find(
-      (section) => section.cabinet_id === myCabinetInfo.cabinet_id
+      (section) => section.cabinetId === myCabinetInfo.cabinetId
     );
 
-    targetCabinet!.cabinet_title = newTitle;
+    targetCabinet!.title = newTitle;
     setCurrentFloorCabinet(updatedCabinetList);
   };
 
   const onSaveEditMemo = (newTitle: string | null, newMemo: string) => {
-    if (newTitle !== myCabinetInfo.cabinet_title) {
+    if (newTitle !== myCabinetInfo.title) {
       //수정사항이 있으면
-      axiosUpdateCabinetTitle({ cabinet_title: newTitle ?? "" })
+      axiosUpdateCabinetTitle({ title: newTitle ?? "" })
         .then(() => {
           setMyCabinetInfo({
             ...myCabinetInfo,
-            cabinet_title: newTitle,
+            title: newTitle,
             cabinet_memo: newMemo,
           });
           // list에서 제목 업데이트
@@ -64,7 +64,7 @@ const MemoModalContainer = (props: {
         .then(() => {
           setMyCabinetInfo({
             ...myCabinetInfo,
-            cabinet_title: newTitle,
+            title: newTitle,
             cabinet_memo: newMemo,
           });
         })

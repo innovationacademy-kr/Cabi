@@ -17,11 +17,11 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
-const reformIntraId = (lent_info: LentDto[]) => {
-  if (lent_info.length === 0) {
+const reformIntraId = (lents: LentDto[]) => {
+  if (lents.length === 0) {
     return "-";
   } else {
-    const intra_id = lent_info.map((item) => item.intra_id);
+    const intra_id = lents.map((item) => item.intraId);
     return intra_id.join(", ");
   }
 };
@@ -36,23 +36,16 @@ const SearchItemByNum = (props: CabinetInfo) => {
   const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const { openCabinet, closeCabinet } = useMenu();
 
-  const {
-    floor,
-    section,
-    cabinet_id,
-    cabinet_num,
-    status,
-    lent_type,
-    lent_info,
-  } = props;
+  const { floor, section, cabinetId, visibleNum, status, lentType, lents } =
+    props;
 
   const clickSearchItem = () => {
-    if (currentCabinetId === cabinet_id) {
+    if (currentCabinetId === cabinetId) {
       closeCabinet();
       return;
     }
     setSelectedTypeOnSearch("CABINET");
-    setCurrentCabinetId(cabinet_id);
+    setCurrentCabinetId(cabinetId);
     async function getData(cabinetId: number) {
       try {
         const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
@@ -61,22 +54,22 @@ const SearchItemByNum = (props: CabinetInfo) => {
         console.log(error);
       }
     }
-    getData(cabinet_id);
+    getData(cabinetId);
     openCabinet();
   };
 
   return (
     <WrapperStyled
       className="cabiButton"
-      isSelected={currentCabinetId === cabinet_id}
+      isSelected={currentCabinetId === cabinetId}
       onClick={clickSearchItem}
     >
-      <RectangleStyled status={status}>{cabinet_num}</RectangleStyled>
+      <RectangleStyled status={status}>{visibleNum}</RectangleStyled>
       <TextWrapper>
         <LocationStyled>{`${floor}층 - ${section}`}</LocationStyled>
         <NameWrapperStyled>
-          <IconStyled lent_type={lent_type} />
-          <NameStyled>{reformIntraId(lent_info)}</NameStyled>
+          <IconStyled lentType={lentType} />
+          <NameStyled>{reformIntraId(lents)}</NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
     </WrapperStyled>
@@ -145,10 +138,10 @@ const NameWrapperStyled = styled.div`
   overflow: hidden;
 `;
 
-const IconStyled = styled.div<{ lent_type: CabinetType }>`
+const IconStyled = styled.div<{ lentType: CabinetType }>`
   width: 18px;
   height: 28px;
-  background: url(${(props) => cabinetIconSrcMap[props.lent_type]}) no-repeat
+  background: url(${(props) => cabinetIconSrcMap[props.lentType]}) no-repeat
     center center / contain;
 `;
 

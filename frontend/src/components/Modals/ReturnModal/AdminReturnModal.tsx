@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
@@ -8,19 +8,18 @@ import {
   targetCabinetInfoState,
   targetUserInfoState,
 } from "@/recoil/atoms";
-import Modal, { IModalContents } from "@/components/Modals/Modal";
-import {
-  SuccessResponseModal,
-  FailResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
-import ModalPortal from "@/components/Modals/ModalPortal";
 import Selector from "@/components/Common/Selector";
+import Modal, { IModalContents } from "@/components/Modals/Modal";
+import ModalPortal from "@/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
+import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { UserInfo } from "@/types/dto/user.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import useMultiSelect from "@/hooks/useMultiSelect";
-import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import {
   axiosAdminReturn,
   axiosBundleReturn,
@@ -28,6 +27,7 @@ import {
   axiosGetOverdueUserList,
   axiosReturnByUserId,
 } from "@/api/axios/axios.custom";
+import useMultiSelect from "@/hooks/useMultiSelect";
 import { handleOverdueUserList } from "@/utils/tableUtils";
 
 const AdminReturnModal: React.FC<{
@@ -54,7 +54,7 @@ const AdminReturnModal: React.FC<{
     useMultiSelect();
 
   const getReturnDetail = (lentType: CabinetType) => {
-    const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>`;
+    const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.visibleNum}번 사물함</strong>`;
     if (lentType === CabinetType.PRIVATE) {
       return detail + `<br>해당 사물함을 정말 반납하시겠습니까?`;
     }
@@ -66,7 +66,7 @@ const AdminReturnModal: React.FC<{
       const countReturnable = () => {
         let cnt = 0;
         targetCabinetInfoList.forEach((cabinet) => {
-          if (cabinet.lent_info.length >= 1) cnt++;
+          if (cabinet.lents.length >= 1) cnt++;
         });
         return cnt;
       };
@@ -90,8 +90,8 @@ const AdminReturnModal: React.FC<{
   const renderSelector = () => (
     <Selector
       iconSrc="/src/assets/images/shareIcon.svg"
-      selectList={targetCabinetInfo.lent_info.map((info) => {
-        return { key: info.user_id, value: info.intra_id };
+      selectList={targetCabinetInfo.lents.map((info) => {
+        return { key: info.userId, value: info.intraId };
       })}
       onClickSelect={handleSelectUser}
     />
@@ -167,7 +167,7 @@ const AdminReturnModal: React.FC<{
   const tryBundleReturnRequest = async (e: React.MouseEvent) => {
     const returnableCabinetIdList = targetCabinetInfoList
       .map((cabinet) => {
-        if (cabinet.lent_info.length >= 1) return cabinet.cabinet_id;
+        if (cabinet.lents.length >= 1) return cabinet.cabinetId;
       })
       .filter((id) => id);
     try {

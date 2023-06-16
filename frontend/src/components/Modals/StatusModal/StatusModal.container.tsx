@@ -7,10 +7,10 @@ import {
   numberOfAdminWorkState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import CabinetType from "@/types/enum/cabinet.type.enum";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import StatusModal from "@/components/Modals/StatusModal/StatusModal";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import {
   axiosBundleUpdateCabinetStatus,
   axiosBundleUpdateCabinetType,
@@ -38,11 +38,11 @@ const StatusModalContainer = (props: {
   const statusModalProps =
     targetCabinetInfoList.length !== 0
       ? {
-          cabinetType: targetCabinetInfoList[0].lent_type,
+          cabinetType: targetCabinetInfoList[0].lentType,
           cabinetStatus: targetCabinetInfoList[0].status,
           warningNotificationObj: {
             isVisible: targetCabinetInfoList.find(
-              (cabinet) => cabinet.lent_info.length >= 1
+              (cabinet) => cabinet.lents.length >= 1
             )
               ? true
               : false,
@@ -52,10 +52,10 @@ const StatusModalContainer = (props: {
           },
         }
       : {
-          cabinetType: targetCabinetInfo.lent_type,
+          cabinetType: targetCabinetInfo.lentType,
           cabinetStatus: targetCabinetInfo.status,
           warningNotificationObj: {
-            isVisible: targetCabinetInfo.lent_info.length > 0,
+            isVisible: targetCabinetInfo.lents.length > 0,
             message: `사물함의 상태 또는 타입을 변경하려면
 먼저 해당 사물함을 반납해야 합니다.`,
           },
@@ -65,7 +65,7 @@ const StatusModalContainer = (props: {
     return await Promise.all(
       targetCabinetInfoList.map(async (cabinet) => {
         try {
-          const { data } = await axiosCabinetById(cabinet.cabinet_id);
+          const { data } = await axiosCabinetById(cabinet.cabinetId);
           return data;
         } catch (error) {
           console.error(error);
@@ -78,9 +78,9 @@ const StatusModalContainer = (props: {
     newCabinetType: CabinetType,
     newCabinetStatus: CabinetStatus
   ) => {
-    const cabinetId = targetCabinetInfo.cabinet_id;
+    const cabinetId = targetCabinetInfo.cabinetId;
     const cabinetStatus = targetCabinetInfo.status;
-    const cabinetType = targetCabinetInfo.lent_type;
+    const cabinetType = targetCabinetInfo.lentType;
     //type 수정 사항이 있으면 type변경 api 호출
     if (newCabinetType !== cabinetType) {
       axiosUpdateCabinetType(cabinetId, newCabinetType)
@@ -124,9 +124,9 @@ const StatusModalContainer = (props: {
     newCabinetStatus: CabinetStatus
   ) => {
     const cabinetStatus = targetCabinetInfoList[0].status;
-    const cabinetType = targetCabinetInfoList[0].lent_type;
+    const cabinetType = targetCabinetInfoList[0].lentType;
     const updateCabinetIdList = targetCabinetInfoList.map(
-      (cabinet) => cabinet.cabinet_id
+      (cabinet) => cabinet.cabinetId
     );
     if (newCabinetType !== cabinetType) {
       axiosBundleUpdateCabinetType(updateCabinetIdList, newCabinetType)

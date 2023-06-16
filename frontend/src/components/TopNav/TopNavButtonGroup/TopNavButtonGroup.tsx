@@ -25,9 +25,9 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
 
   async function setTargetCabinetInfoToMyCabinet() {
-    setCurrentCabinetId(myInfo.cabinet_id);
+    setCurrentCabinetId(myInfo.cabinetId);
     try {
-      const { data } = await axiosCabinetById(myInfo.cabinet_id);
+      const { data } = await axiosCabinetById(myInfo.cabinetId);
       setTargetCabinetInfo(data);
     } catch (error) {
       console.log(error);
@@ -35,8 +35,8 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   }
 
   const clickMyCabinet = () => {
-    if (myInfo.cabinet_id === -1) return;
-    if (currentCabinetId !== myInfo.cabinet_id) {
+    if (myInfo.cabinetId === -1) return;
+    if (currentCabinetId !== myInfo.cabinetId) {
       setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
@@ -88,7 +88,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
         />
       )}
       <TopNavButton
-        disable={myInfo.cabinet_id === -1}
+        disable={myInfo.cabinetId === -1}
         onClick={clickMyCabinet}
         imgSrc="/src/assets/images/myCabinetIcon.svg"
       />
