@@ -31,25 +31,36 @@ public interface CabinetMapper {
 
 	CabinetMapper INSTANCE = Mappers.getMapper(CabinetMapper.class);
 
+	/*------------------------------------DTO------------------------------------*/
+
+	//CabinetPlace, Cabinet
 	CabinetDto toCabinetDto(Location location, Cabinet cabinet);
 
+	//LentHistory, User, Cabinet, CabinetPlace, (별도)overdueDays
+	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name,
+			Integer visibleNum, Location location, Long overdueDays);
+
+	//CabinetPlace, (별도)floors
 	BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
 
-	CabinetInfoResponseDto toCabinetInfoResponseDto(CabinetDto cabinetDto, List<LentDto> lents);
 
+	/*--------------------------------Wrapped DTO--------------------------------*/
+
+	//CabinetPlace, List<CabinetInfoResponseDto>
 	CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
 			List<CabinetInfoResponseDto> cabinets);
+
+	//CabinetDto = CabinetPlace, Cabinet ... List<LentDto>
+	CabinetInfoResponseDto toCabinetInfoResponseDto(CabinetDto cabinetDto, List<LentDto> lents);
 
 	@Mapping(target = "totalPage", source = "totalPage")
 	CabinetPaginationDto toCabinetPaginationDtoList(List<CabinetDto> result,
 			Integer totalPage);
 
-	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name,
-			Integer visibleNum, Location location, Long overdueDays);
-
 	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
 			List<OverdueUserCabinetDto> result, Integer totalPage);
 
+	//CabinetDto = CabinetPlace, Cabinet(+memo) ... List<LentDto>
 	MyCabinetResponseDto toMyCabinetResponseDto(CabinetDto cabinetDto, String memo,
 			List<LentDto> lents);
 }
