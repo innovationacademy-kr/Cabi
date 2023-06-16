@@ -51,7 +51,7 @@ class CabinetMapperTest {
 
         BuildingFloorsDto buildingFloorsDto = cabinetMapper.toBuildingFloorsDto(targetBuilding,
                 floors);
-        assertEquals(targetBuilding, buildingFloorsDto.getBuildingName());
+        assertEquals(targetBuilding, buildingFloorsDto.getBuilding());
         assertArrayEquals(floors.toArray(), buildingFloorsDto.getFloors().toArray());
     }
 
