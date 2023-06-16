@@ -20,6 +20,7 @@ public class CabinetDto {
 	private final Integer maxUser;
 	private final String title;
 	private final CabinetStatus status;
+	private final String statusNote;
 	/**
 	 * Location의 필드들을 CabinetDto의 필드로 포함시킵니다.
 	 */
