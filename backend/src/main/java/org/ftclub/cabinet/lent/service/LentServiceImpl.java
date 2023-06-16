@@ -3,10 +3,9 @@ package org.ftclub.cabinet.lent.service;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
-
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
+import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
@@ -27,7 +26,7 @@ public class LentServiceImpl implements LentService {
 	private final LentRepository lentRepository;
 	private final LentPolicy lentPolicy;
 	private final LentExceptionHandlerService lentExceptionHandler;
-	private final CabinetExceptionHandlerService cabinetExceptionHandler;
+	private final CabinetOptionalFetcher cabinetExceptionHandler;
 	private final UserOptionalFetcher userExceptionHandler;
 	private final UserService userService;
 	private final CabinetService cabinetService;

@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
-import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.LentDto;
@@ -35,7 +35,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	private final LentRepository lentRepository;
 	private final UserOptionalFetcher userExceptionHandler;
-	private final CabinetExceptionHandlerService cabinetExceptionHandler;
+	private final CabinetOptionalFetcher cabinetExceptionHandler;
 	private final LentService lentService;
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;

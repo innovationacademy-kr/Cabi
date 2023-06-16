@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
+import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
@@ -48,7 +48,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final BanPolicy banPolicy;
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
-	private final CabinetExceptionHandlerService cabinetExceptionHandlerService;
+	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final CabinetMapper cabinetMapper;
 
 	@Override
@@ -198,11 +198,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
 					User user = userRepository.findById(lh.getUserId()).orElse(null);
-					Location location = cabinetExceptionHandlerService.getLocation(
+					Location location = cabinetOptionalFetcher.getLocation(
 							lh.getCabinetId());
 					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),
 							DateUtil.getNow());
-					Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(
+					Cabinet cabinet = cabinetOptionalFetcher.getCabinet(
 							lh.getCabinetId());
 					overdueList.add(
 							cabinetMapper.toOverdueUserCabinetDto(lh, user,

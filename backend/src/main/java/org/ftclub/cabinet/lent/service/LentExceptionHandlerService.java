@@ -2,7 +2,7 @@ package org.ftclub.cabinet.lent.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
+import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class LentExceptionHandlerService {
 
 	private final LentRepository lentRepository;
-	private final CabinetExceptionHandlerService cabinetExceptionHandler;
+	private final CabinetOptionalFetcher cabinetExceptionHandler;
 
 	/**
 	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id와 cabinet id에 맞는 {@link LentHistory}를 찾습니다.
