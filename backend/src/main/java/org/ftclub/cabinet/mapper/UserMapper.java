@@ -33,6 +33,7 @@ public interface UserMapper {
 	UserProfileDto toUserProfileDto(User user);
 
 	@Mapping(target = "userId", source = "user.userId")
+	@Mapping(target = "cabinetId", source = "cabinet.cabinetId")
 	MyProfileResponseDto toMyProfileResponseDto(UserSessionDto user, Cabinet cabinet, BanHistory banHistory);
 
 	BlockedUserPaginationDto toBlockedUserPaginationDto(List<UserBlockedInfoDto> result, Integer totalPage);

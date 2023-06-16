@@ -19,6 +19,7 @@ import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
@@ -39,6 +40,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	private final UserService userService;
 	private final UserOptionalFetcher userOptionalFetcher;
+	private final LentOptionalFetcher lentOptionalFetcher;
 	private final LentRepository lentRepository;
 	private final BanPolicy banPolicy;
 	private final UserMapper userMapper;
@@ -47,12 +49,9 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
-		Cabinet cabinet = cabinetOptionalFetcher.findCabinetByUserId(user.getUserId());
-		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(), DateUtil.getNow());
-//		Date unbannedAt = banHistory.getUnbannedAt();
-//		if (unbannedAt != null && banPolicy.isActiveBanHistory(unbannedAt, DateUtil.getNow())) {
-//			unbannedAt = null;
-//		}
+		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
+		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
+				DateUtil.getNow());
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory);
 	}
 
@@ -68,7 +67,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 						banHistory -> userMapper.toUserBlockedInfoDto(
 								banHistory, userOptionalFetcher.getUser(banHistory.getUserId())))
 				.collect(Collectors.toList());
-		return userMapper.toBlockedUserPaginationDto(userBlockedInfoDtos, activeBanList.getTotalPages());
+		return userMapper.toBlockedUserPaginationDto(userBlockedInfoDtos,
+				activeBanList.getTotalPages());
 	}
 
 	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
