@@ -34,7 +34,7 @@ public interface CabinetMapper {
 			List<CabinetInfoResponseDto> cabinets);
 
 	@Mapping(target = "totalPage", source = "totalPage")
-	CabinetPaginationDto toCabinetPaginationDtoList(List<Cabinet> result,
+	CabinetPaginationDto toCabinetPaginationDtoList(List<CabinetDto> result,
 			Integer totalPage);
 
 	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, String name,

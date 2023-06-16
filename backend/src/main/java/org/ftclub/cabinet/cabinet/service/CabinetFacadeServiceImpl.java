@@ -160,7 +160,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
     public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType,
             PageRequest pageable) {
         Page<Cabinet> cabinets = cabinetRepository.findAllCabinetsByLentType(lentType, pageable);
-        return cabinetMapper.toCabinetPaginationDtoList(cabinets.toList(),
+        List<CabinetDto> cabinetDtos = cabinets.toList().stream()
+                .map((cabinet) -> cabinetMapper.toCabinetDto(cabinet.getCabinetPlace().getLocation(), cabinet))
+                .collect(Collectors.toList());
+        return cabinetMapper.toCabinetPaginationDtoList(cabinetDtos,
                 cabinets.getTotalPages());
     }
 
@@ -171,7 +174,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
     public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
             PageRequest pageable) {
         Page<Cabinet> cabinets = cabinetRepository.findAllCabinetsByStatus(status, pageable);
-        return cabinetMapper.toCabinetPaginationDtoList(cabinets.toList(),
+        List<CabinetDto> cabinetDtos = cabinets.toList().stream()
+                .map((cabinet) -> cabinetMapper.toCabinetDto(cabinet.getCabinetPlace().getLocation(), cabinet))
+                .collect(Collectors.toList());
+        return cabinetMapper.toCabinetPaginationDtoList(cabinetDtos,
                 cabinets.getTotalPages());
     }
 
@@ -183,7 +189,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
             PageRequest pageable) {
         Page<Cabinet> cabinets = cabinetRepository.findAllCabinetsByVisibleNum(visibleNum,
                 pageable);
-        return cabinetMapper.toCabinetPaginationDtoList(cabinets.toList(),
+        List<CabinetDto> cabinetDtos = cabinets.toList().stream()
+                .map((cabinet) -> cabinetMapper.toCabinetDto(cabinet.getCabinetPlace().getLocation(), cabinet))
+                .collect(Collectors.toList());
+        return cabinetMapper.toCabinetPaginationDtoList(cabinetDtos,
                 cabinets.getTotalPages());
     }
 
