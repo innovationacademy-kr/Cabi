@@ -117,7 +117,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
-		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
+		Cabinet myCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
+		if (myCabinet == null) {
+			return null;
+		}
 		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
 		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
 	}

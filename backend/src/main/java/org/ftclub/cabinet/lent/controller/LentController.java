@@ -8,8 +8,12 @@ import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
 import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.domain.UserSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,9 +65,13 @@ public class LentController {
     }
 
     @GetMapping("/me")
-    public MyCabinetResponseDto getMyLentInfo(
+    public ResponseEntity<MyCabinetResponseDto> getMyLentInfo(
             @UserSession UserSessionDto user) {
-        return lentFacadeService.getMyLentInfo(user);
+        MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user);
+        if (myCabinetResponseDto == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(myCabinetResponseDto);
     }
 
     @GetMapping("/me/histories")
