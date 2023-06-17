@@ -8,24 +8,22 @@ import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
  * @property {number} lent_id : 대여 고유 ID
  * @property {Date} lent_time : 대여한 시간
  * @property {Date} expire_time : 만료 시간
- * @property {boolean} is_expired : 연체 여부
  */
 export interface LentDto {
-  user_id: number;
-  intra_id: string;
-  lent_id: number;
-  lent_time: Date;
-  expire_time: Date;
-  is_expired: boolean;
+  userId: number;
+  name: string;
+  lentHistoryId: number;
+  startedAt: Date;
+  expiredAt: Date;
 }
 
 export interface LentLogDto {
   location: string;
   floor: number;
   section: string;
-  cabinet_id: number;
-  cabinet_num: number;
-  intra_id: string;
+  cabinetId: number;
+  visibleNum: number;
+  name: string;
   lent_time: Date;
   return_time: Date;
   user_id: number;
@@ -33,17 +31,20 @@ export interface LentLogDto {
 
 export interface ActivationDto {
   floor: number;
-  cabinet_num: number;
+  visibleNum: number;
   note: string | null;
 }
 
 export interface BanDto {
-  cabinet_num: number;
+  visibleNum: number;
   floor: number;
   section: string;
 }
 
-export type LentLogResponseType = LentLogDto[] | typeof STATUS_400_BAD_REQUEST | undefined;
+export type LentLogResponseType =
+  | LentLogDto[]
+  | typeof STATUS_400_BAD_REQUEST
+  | undefined;
 
 export interface ILentLog {
   closeLent: React.MouseEventHandler;

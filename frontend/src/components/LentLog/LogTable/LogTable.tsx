@@ -26,13 +26,13 @@ const LogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
           <TbodyStyled>
             {lentLog.map(
               (
-                { floor, section, cabinet_num, lent_time, return_time },
+                { floor, section, visibleNum, lent_time, return_time },
                 idx
               ) => (
                 <tr key={idx}>
                   <td
                     title={`${floor}층 ${section}`}
-                  >{`${floor}F - ${cabinet_num}번`}</td>
+                  >{`${floor}F - ${visibleNum}번`}</td>
                   <td title={new Date(lent_time).toLocaleString("ko-KR")}>
                     {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
                   </td>

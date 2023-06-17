@@ -56,7 +56,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     setTargetUserInfo({
       intraId: intra_id,
       userId: user_id,
-      cabinetId: cabinetInfo?.cabinet_id,
+      cabinetId: cabinetInfo?.cabinetId,
       bannedDate: banned_date,
       unbannedDate: unbanned_date,
       cabinetInfo: cabinetInfo,
@@ -72,7 +72,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       }
     }
     if (cabinetInfo) {
-      getCabinetInfoByCabinetId(cabinetInfo.cabinet_id);
+      getCabinetInfoByCabinetId(cabinetInfo.cabinetId);
       openCabinet();
     } else {
       // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
@@ -88,12 +88,12 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       onClick={clickSearchItem}
     >
       <RectangleStyled status={cabinetInfo.status}>
-        {cabinetInfo.cabinet_num}
+        {cabinetInfo.visibleNum}
       </RectangleStyled>
       <TextWrapper>
         <LocationStyled>{`${cabinetInfo.floor}층 - ${cabinetInfo.section}`}</LocationStyled>
         <NameWrapperStyled>
-          <IconStyled lent_type={cabinetInfo.lent_type} />
+          <IconStyled lent_type={cabinetInfo.lentType} />
           <NameStyled>
             <ChangeToHTML origin={intra_id} replace={searchValue} />
           </NameStyled>

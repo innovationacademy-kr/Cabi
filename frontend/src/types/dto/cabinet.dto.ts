@@ -14,16 +14,17 @@ export interface CabinetBuildingFloorDto {
 }
 
 export interface CabinetInfo {
-  cabinet_id: number;
-  cabinet_num: number;
-  lent_type: CabinetType;
-  cabinet_title: string | null;
-  max_user: number;
+  building: string;
+  floor: number;
+  cabinetId: number;
+  visibleNum: number;
+  lentType: CabinetType;
+  title: string | null;
+  maxUser: number;
   status: CabinetStatus;
   section: string;
-  location: string;
-  floor: number;
-  lent_info: LentDto[];
+  lents: LentDto[];
+  statusNote: string | null;
 }
 
 export interface CabinetInfoByLocationFloorDto {

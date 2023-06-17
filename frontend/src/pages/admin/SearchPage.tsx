@@ -67,7 +67,7 @@ const SearchPage = () => {
     }, 500);
   };
 
-  // cabinet_num 검색
+  // visibleNum 검색
   const handleSearchByCabinetNum = async () => {
     const searchResult = await axiosSearchByCabinetNum(
       Number(searchValue.current),

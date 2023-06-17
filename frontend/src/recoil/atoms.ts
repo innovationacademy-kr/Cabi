@@ -36,7 +36,7 @@ export const myCabinetInfoState = atom<MyCabinetInfoResponseDto>({
 //     section: "",
 //     cabinet_memo: "",
 //     cabinet_id: -1,
-//     cabinet_num: -1,
+//     visibleNum: -1,
 //     lent_type: "",
 //     cabinet_title: "",
 //     max_user: -1,

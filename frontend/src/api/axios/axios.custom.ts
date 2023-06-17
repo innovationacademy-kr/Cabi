@@ -72,6 +72,7 @@ export const axiosCabinetByLocationFloor = async (
     const response = await instance.get(
       `${axiosCabinetByLocationFloorURL}${location}/floors/${floor}`
     );
+    console.log(response.data);
     return response;
   } catch (error) {
     throw error;

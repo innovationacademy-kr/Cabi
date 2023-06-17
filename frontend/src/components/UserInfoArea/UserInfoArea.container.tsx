@@ -15,21 +15,18 @@ const UserInfoAreaContainer = (): JSX.Element => {
   const { closeCabinet, openLent } = useMenu();
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
-    if (
-      selectedCabinetInfo.lent_type === "CLUB" &&
-      selectedCabinetInfo.cabinet_title
-    )
-      return selectedCabinetInfo.cabinet_title;
+    if (selectedCabinetInfo.lentType === "CLUB" && selectedCabinetInfo.title)
+      return selectedCabinetInfo.title;
 
     // 그 외에는 유저리스트 반환
     let userNameList: string = "";
-    for (let i = 0; i < selectedCabinetInfo.max_user; i++) {
+    for (let i = 0; i < selectedCabinetInfo.maxUser; i++) {
       const userName =
-        i < selectedCabinetInfo.lent_info.length
-          ? selectedCabinetInfo.lent_info[i].intra_id
+        i < selectedCabinetInfo.lents.length
+          ? selectedCabinetInfo.lents[i].name
           : "-";
       userNameList += userName;
-      if (i !== selectedCabinetInfo.max_user - 1) userNameList += "\n";
+      if (i !== selectedCabinetInfo.maxUser - 1) userNameList += "\n";
     }
     return userNameList;
   };
@@ -44,14 +41,14 @@ const UserInfoAreaContainer = (): JSX.Element => {
     )
       return "사용 불가";
     // 동아리 사물함
-    else if (selectedCabinetInfo.lent_type === "CLUB") return "동아리 사물함";
+    else if (selectedCabinetInfo.lentType === "CLUB") return "동아리 사물함";
     // 사용 중 사물함
     else if (
-      selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
-      selectedCabinetInfo.status === CabinetStatus.EXPIRED
+      selectedCabinetInfo.status === CabinetStatus.FULL ||
+      selectedCabinetInfo.status === CabinetStatus.OVERDUE
     ) {
       const nowDate = new Date();
-      const expireTime = new Date(selectedCabinetInfo.lent_info[0].expire_time);
+      const expireTime = new Date(selectedCabinetInfo.lents[0].expiredAt);
       const remainTime = Math.floor(
         (expireTime.getTime() - nowDate.getTime()) / (1000 * 60 * 60 * 24)
       );
@@ -73,11 +70,11 @@ const UserInfoAreaContainer = (): JSX.Element => {
       return "var(--expired)";
     // 사용 중 사물함
     else if (
-      selectedCabinetInfo.status === CabinetStatus.SET_EXPIRE_FULL ||
-      selectedCabinetInfo.status === CabinetStatus.EXPIRED
+      selectedCabinetInfo.status === CabinetStatus.FULL ||
+      selectedCabinetInfo.status === CabinetStatus.OVERDUE
     ) {
       const nowDate = new Date();
-      const expireTime = new Date(selectedCabinetInfo.lent_info[0].expire_time);
+      const expireTime = new Date(selectedCabinetInfo.lents[0].expiredAt);
       const remainTime = Math.floor(
         (expireTime.getTime() - nowDate.getTime()) / (1000 * 60 * 60 * 24)
       );
@@ -100,12 +97,12 @@ const UserInfoAreaContainer = (): JSX.Element => {
     ? {
         floor: targetUserInfo.cabinetInfo.floor,
         section: targetUserInfo.cabinetInfo.section,
-        cabinetId: targetUserInfo.cabinetInfo.cabinet_id,
-        cabinetNum: targetUserInfo.cabinetInfo.cabinet_num,
+        cabinetId: targetUserInfo.cabinetInfo.cabinetId,
+        cabinetNum: targetUserInfo.cabinetInfo.visibleNum,
         status: targetUserInfo.cabinetInfo.status,
-        lentType: targetUserInfo.cabinetInfo.lent_type,
+        lentType: targetUserInfo.cabinetInfo.lentType,
         userNameList: getCabinetUserList(targetUserInfo.cabinetInfo),
-        expireDate: targetUserInfo.cabinetInfo.lent_info[0].expire_time,
+        expireDate: targetUserInfo.cabinetInfo.lents[0].expiredAt,
         detailMessage: getDetailMessage(targetUserInfo.cabinetInfo),
         detailMessageColor: getDetailMessageColor(targetUserInfo.cabinetInfo),
       }

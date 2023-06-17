@@ -78,8 +78,8 @@ const UserInfoArea: React.FC<{
         <CabinetRectangleStyled
           cabinetStatus={
             selectedUserInfo.isBanned
-              ? CabinetStatus.EXPIRED
-              : CabinetStatus.SET_EXPIRE_FULL
+              ? CabinetStatus.OVERDUE
+              : CabinetStatus.FULL
           }
         >
           {selectedUserInfo.isBanned ? "!" : "-"}

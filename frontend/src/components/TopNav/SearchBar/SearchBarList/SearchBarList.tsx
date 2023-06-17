@@ -41,7 +41,7 @@ const SearchBarList = ({
             key={index}
             floor={item.floor}
             inputText={searchWord}
-            resultText={item.cabinet_num.toString()}
+            resultText={item.visibleNum.toString()}
             isNum={true}
             resetSearchState={resetSearchState}
             isTargetIndex={targetIndex === index}
