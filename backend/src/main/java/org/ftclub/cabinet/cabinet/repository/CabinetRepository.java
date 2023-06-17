@@ -3,6 +3,7 @@ package org.ftclub.cabinet.cabinet.repository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.LockModeType;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -48,8 +49,9 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	@Query("SELECT c.cabinetId "
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
-			+ "WHERE p.location.section = :section")
-	Optional<List<Long>> findAllCabinetIdsBySection(@Param("section") String section);
+			+ "WHERE p.location.section = :section "
+			+ "AND p.location.floor = :floor")
+	Optional<List<Long>> findAllCabinetIdsBySection(@Param("floor") Integer floor, @Param("section") String section);
 
 
 	@Query("SELECT c.statusNote "

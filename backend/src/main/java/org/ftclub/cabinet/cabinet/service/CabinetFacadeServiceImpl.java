@@ -83,7 +83,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 			Integer floor) {
 		return cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor).stream()
 				.map(section -> {
-					List<Long> cabinetIds = cabinetOptionalFetcher.findAllCabinetIdsBySection(
+					List<Long> cabinetIds = cabinetOptionalFetcher.findAllCabinetIdsBySection(floor,
 							section);
 					return cabinetMapper.toCabinetsPerSectionResponseDto(section,
 							getCabinetInfoBundle(cabinetIds));

@@ -39,8 +39,8 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor).orElse(null);
 	}
 
-	public List<Long> findAllCabinetIdsBySection(String section) {
-		return cabinetRepository.findAllCabinetIdsBySection(section).orElse(null);
+	public List<Long> findAllCabinetIdsBySection(Integer floor, String section) {
+		return cabinetRepository.findAllCabinetIdsBySection(floor, section).orElse(null);
 	}
 
 	/*-------------------------------------------GET--------------------------------------------*/
