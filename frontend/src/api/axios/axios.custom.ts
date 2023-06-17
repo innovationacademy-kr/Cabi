@@ -111,7 +111,7 @@ export const axiosMyLentInfo = async (): Promise<any> => {
 const axiosReturnURL = "/v4/lent/return";
 export const axiosReturn = async (): Promise<any> => {
   try {
-    const response = await instance.delete(axiosReturnURL);
+    const response = await instance.patch(axiosReturnURL);
     return response;
   } catch (error) {
     throw error;
