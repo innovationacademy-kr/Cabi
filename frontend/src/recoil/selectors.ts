@@ -18,7 +18,7 @@ export const locationsState = selector<Array<string>>({
   get: ({ get }) => {
     const locationsFloorData = get(locationsFloorState);
 
-    const locationsArray = locationsFloorData.map((data) => data.buildingName);
+    const locationsArray = locationsFloorData.map((data) => data.building);
     return locationsArray;
   },
 });
@@ -30,7 +30,7 @@ export const currentLocationFloorState = selector<Array<number>>({
     const currentLocation = get(currentLocationNameState);
 
     const currentLocationIndex = locationsFloorData.findIndex((building) => {
-      return building.buildingName === currentLocation;
+      return building.building === currentLocation;
     });
     if (currentLocationIndex === -1) return [];
     return locationsFloorData[currentLocationIndex].floors;
