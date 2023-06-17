@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { currentFloorNumberState } from "@/recoil/atoms";
-import { currentLocationFloorState } from "@/recoil/selectors";
+import { currentBuildingFloorState } from "@/recoil/selectors";
 import { ISectionInfo } from "@/assets/data/mapPositionData";
 import useMenu from "@/hooks/useMenu";
 
@@ -15,7 +15,7 @@ const MapItem: React.FC<{
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const setCurrentFloor = useSetRecoilState(currentFloorNumberState);
-  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const floors = useRecoilValue<Array<number>>(currentBuildingFloorState);
   const { closeMap } = useMenu();
   const onClick = () => {
     if (pathname !== "main") navigate("main");

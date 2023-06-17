@@ -14,7 +14,7 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 
 export interface ISelectedUserInfo {
-  intraId: string;
+  name: string;
   userId: number;
   isBanned: boolean;
   bannedInfo?: string;
@@ -86,7 +86,7 @@ const UserInfoArea: React.FC<{
         </CabinetRectangleStyled>
         <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
         <TextStyled fontSize="1rem" fontColor="black">
-          {selectedUserInfo.intraId}
+          {selectedUserInfo.name}
         </TextStyled>
 
         <CabinetInfoButtonsContainerStyled>
@@ -128,7 +128,7 @@ const UserInfoArea: React.FC<{
       <TextStyled fontSize="1rem" fontColor="black">
         <ChangeToHTML
           origin={userLentInfo.userNameList}
-          replace={selectedUserInfo.intraId}
+          replace={selectedUserInfo.name}
         />
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>

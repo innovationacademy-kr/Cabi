@@ -1,11 +1,11 @@
 import { selector } from "recoil";
 import {
+  buildingColNumState,
+  buildingsFloorState,
+  currentBuildingNameState,
   currentFloorCabinetState,
   currentFloorNumberState,
-  currentLocationNameState,
   currentSectionNameState,
-  locationColNumState,
-  locationsFloorState,
 } from "@/recoil/atoms";
 import {
   IFloorSectionColNum,
@@ -13,27 +13,27 @@ import {
 } from "@/assets/data/sectionColNumData";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 
-export const locationsState = selector<Array<string>>({
-  key: "Locations",
+export const buildingsState = selector<Array<string>>({
+  key: "Buildings",
   get: ({ get }) => {
-    const locationsFloorData = get(locationsFloorState);
+    const buildingsFloorData = get(buildingsFloorState);
 
-    const locationsArray = locationsFloorData.map((data) => data.building);
-    return locationsArray;
+    const buildingsArray = buildingsFloorData.map((data) => data.building);
+    return buildingsArray;
   },
 });
 
-export const currentLocationFloorState = selector<Array<number>>({
-  key: "CurrentLocationFloor",
+export const currentBuildingFloorState = selector<Array<number>>({
+  key: "CurrentBuildingFloor",
   get: ({ get }) => {
-    const locationsFloorData = get(locationsFloorState);
-    const currentLocation = get(currentLocationNameState);
+    const buildingsFloorData = get(buildingsFloorState);
+    const currentBuilding = get(currentBuildingNameState);
 
-    const currentLocationIndex = locationsFloorData.findIndex((building) => {
-      return building.building === currentLocation;
+    const currentBuildingIndex = buildingsFloorData.findIndex((buildings) => {
+      return buildings.building === currentBuilding;
     });
-    if (currentLocationIndex === -1) return [];
-    return locationsFloorData[currentLocationIndex].floors;
+    if (currentBuildingIndex === -1) return [];
+    return buildingsFloorData[currentBuildingIndex].floors;
   },
 });
 
@@ -62,27 +62,27 @@ export const currentSectionCabinetState = selector<CabinetInfo[]>({
 
 /* colNum selector test */
 
-export const currentLocationColNumState = selector<IFloorSectionColNum[]>({
-  key: "CurrentLocationColNum",
+export const currentBuildingColNumState = selector<IFloorSectionColNum[]>({
+  key: "CurrentBuildingColNum",
   get: ({ get }) => {
-    const locationColNum = get(locationColNumState);
-    const currentLocationName = get(currentLocationNameState);
-    const currentLocationIdx = locationColNum.findIndex(
-      (building) => building.location === currentLocationName
+    const buildingColNum = get(buildingColNumState);
+    const currentBuildingName = get(currentBuildingNameState);
+    const currentBuildingIdx = buildingColNum.findIndex(
+      (buildings) => buildings.building === currentBuildingName
     );
 
-    if (currentLocationIdx === -1) return [];
-    return locationColNum[currentLocationIdx].floorColNum;
+    if (currentBuildingIdx === -1) return [];
+    return buildingColNum[currentBuildingIdx].floorColNum;
   },
 });
 
 export const currentFloorColNumState = selector<ISectionColNum[]>({
   key: "CurrentFloorSectionColNum",
   get: ({ get }) => {
-    const currentLocationColNum = get(currentLocationColNumState);
+    const currentLocationColNum = get(currentBuildingColNumState);
     const currentFloorNumber = get(currentFloorNumberState);
     const currentFloorIdx = currentLocationColNum.findIndex(
-      (location) => location.floor === currentFloorNumber
+      (building) => building.floor === currentFloorNumber
     );
 
     if (currentFloorIdx === -1) return [];
@@ -109,15 +109,15 @@ export const currentSectionColNumState = selector<number | undefined>({
 // export const currentSectionColNumState = selector<number | undefined>({
 //   key: "CurrentSectionColNum",
 //   get: ({ get }) => {
-//     const locationColNum = get(locationColNumState);
+//     const buildingColNum = get(buildingColNumState);
 //     const currentLocationName = get(currentLocationNameState);
 //     const currentFloorNumber = get(currentFloorNumberState);
 //     const currentSectionName = get(currentSectionNameState);
 
-//     return locationColNum
+//     return buildingColNum
 //       .find((building) => building.location === currentLocationName)
 //       ?.floorColNum.find(
-//         (location) => location.floor === currentFloorNumber
+//         (building) => building.floor === currentFloorNumber
 //       )
 //       ?.sectionColNum.find((floor) => floor.section === currentSectionName)
 //       ?.colNum;

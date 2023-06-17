@@ -16,7 +16,7 @@ const LentLog = ({
         <TitleStyled>대여 기록</TitleStyled>
         <GoBackButtonStyled onClick={closeLent}>뒤로 가기</GoBackButtonStyled>
       </TitleContainer>
-      <LogTable lentLog={logs} />
+      <LogTable lentHistory={logs} />
       <ButtonContainerStyled>
         <PageButtonStyled
           page={page}

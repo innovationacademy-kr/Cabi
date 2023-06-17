@@ -60,10 +60,10 @@ const AdminInfo = () => {
       if (str) {
         result = JSON.parse(str);
         setTargetUserInfo({
-          intraId: result.name,
+          name: result.name,
           userId: result.userId,
-          bannedDate: result.bannedAt,
-          unbannedDate: result.unbannedAt,
+          bannedAt: result.bannedAt,
+          unbannedAt: result.unbannedAt,
         });
       }
     }

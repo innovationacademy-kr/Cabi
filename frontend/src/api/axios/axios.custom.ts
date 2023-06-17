@@ -63,16 +63,15 @@ export const axiosBuildingFloor = async (): Promise<any> => {
   }
 };
 
-const axiosCabinetByLocationFloorURL = "/v4/cabinets/buildings/";
-export const axiosCabinetByLocationFloor = async (
-  location: string,
+const axiosCabinetByBuildingFloorURL = "/v4/cabinets/buildings/";
+export const axiosCabinetByBuildingFloor = async (
+  Building: string,
   floor: number
 ): Promise<any> => {
   try {
     const response = await instance.get(
-      `${axiosCabinetByLocationFloorURL}${location}/floors/${floor}`
+      `${axiosCabinetByBuildingFloorURL}${Building}/floors/${floor}`
     );
-    console.log(response.data);
     return response;
   } catch (error) {
     throw error;

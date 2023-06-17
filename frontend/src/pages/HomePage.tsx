@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { currentFloorNumberState } from "@/recoil/atoms";
-import { currentLocationFloorState } from "@/recoil/selectors";
+import { currentBuildingFloorState } from "@/recoil/selectors";
 import ServiceManual from "@/components/Home/ServiceManual";
 import "@/assets/css/homePage.css";
 
 const HomePage = () => {
-  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const floors = useRecoilValue<Array<number>>(currentBuildingFloorState);
   const setCurrentFloor = useSetRecoilState<number>(currentFloorNumberState);
   const navigator = useNavigate();
 

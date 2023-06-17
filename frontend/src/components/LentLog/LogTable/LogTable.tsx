@@ -9,8 +9,8 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-const LogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
-  if (lentLog === undefined) return <LoadingAnimation />;
+const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
+  if (lentHistory === undefined) return <LoadingAnimation />;
 
   return (
     <LogTableWrapperstyled>
@@ -22,22 +22,22 @@ const LogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
             <th>반납일</th>
           </tr>
         </TheadStyled>
-        {lentLog !== STATUS_400_BAD_REQUEST && (
+        {lentHistory !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
-            {lentLog.map(
+            {lentHistory.map(
               (
-                { floor, section, visibleNum, lent_time, return_time },
+                { floor, section, visibleNum, startedAt, endedAt },
                 idx
               ) => (
                 <tr key={idx}>
                   <td
                     title={`${floor}층 ${section}`}
                   >{`${floor}F - ${visibleNum}번`}</td>
-                  <td title={new Date(lent_time).toLocaleString("ko-KR")}>
-                    {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
+                  <td title={new Date(startedAt).toLocaleString("ko-KR")}>
+                    {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
-                  <td title={new Date(return_time).toLocaleString("ko-KR")}>
-                    {new Date(return_time).toLocaleString("ko-KR", dateOptions)}
+                  <td title={new Date(endedAt).toLocaleString("ko-KR")}>
+                    {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
                 </tr>
               )
@@ -45,7 +45,7 @@ const LogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {lentLog === STATUS_400_BAD_REQUEST && (
+      {lentHistory === STATUS_400_BAD_REQUEST && (
         <EmptyLogStyled>반납처리 된 사물함이 아직 없습니다.</EmptyLogStyled>
       )}
     </LogTableWrapperstyled>

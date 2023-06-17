@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { currentLocationFloorState } from "@/recoil/selectors";
+import { currentBuildingFloorState } from "@/recoil/selectors";
 import MapInfo from "@/components/MapInfo/MapInfo";
 import useMenu from "@/hooks/useMenu";
 
 const MapInfoContainer = () => {
   const { closeMap } = useMenu();
-  const floorInfo = useRecoilValue(currentLocationFloorState);
+  const floorInfo = useRecoilValue(currentBuildingFloorState);
   const [floor, setFloor] = useState(floorInfo[0]);
   const touchXpos = useRef(0);
   const touchYpos = useRef(0);

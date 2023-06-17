@@ -47,8 +47,8 @@ const BanModal: React.FC<{
       // 리코일 유저 정보 변경
       setTargetUserInfo((prev) => ({
         ...prev,
-        bannedDate: undefined,
-        unbannedDate: undefined,
+        bannedAt: undefined,
+        unbannedAt: undefined,
       }));
       // SearchPage 데이터 업데이트 플래그
       setNumberOfAdminWork((prev) => prev + 1);

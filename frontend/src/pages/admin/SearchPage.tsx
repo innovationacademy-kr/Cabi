@@ -19,10 +19,10 @@ import {
 } from "@/api/axios/axios.custom";
 
 interface ISearchDetail {
-  intra_id: string;
-  user_id: number;
-  bannedDate?: Date;
-  unbannedDate?: Date;
+  name: string;
+  userId: number;
+  bannedAt?: Date;
+  unbannedAt?: Date;
   cabinetInfo?: CabinetInfo;
 }
 
@@ -54,7 +54,7 @@ const SearchPage = () => {
     resetCurrentIntraId();
   };
 
-  // intra_id 검색
+  // name 검색
   const handleSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
@@ -93,7 +93,7 @@ const SearchPage = () => {
     }
   }, [searchParams, numberOfAdminWork]);
 
-  // intra_id 검색 더보기
+  // name 검색 더보기
   const handleMoreSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,

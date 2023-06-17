@@ -15,10 +15,10 @@ const convertDate = (date: Date): string =>
 
 export const handleBannedUserList = (data: BannedUserDto[]): ITableData[] =>
   data
-    .map(({ intra_id, banned_date, unbanned_date }, idx, arr) => ({
-      first: intra_id,
-      second: calcLeftDays(new Date(unbanned_date)).toString(),
-      third: convertDate(new Date(unbanned_date)),
+    .map(({ name, bannedAt, unbannedAt }, idx, arr) => ({
+      first: name,
+      second: calcLeftDays(new Date(unbannedAt)).toString(),
+      third: convertDate(new Date(unbannedAt)),
       info: arr[idx],
     }))
     .sort(

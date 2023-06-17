@@ -87,9 +87,9 @@ const UserInfoAreaContainer = (): JSX.Element => {
 
   const userInfoData: ISelectedUserInfo | undefined = targetUserInfo
     ? {
-        intraId: targetUserInfo.intraId,
+        name: targetUserInfo.name,
         userId: targetUserInfo.userId,
-        isBanned: !!targetUserInfo.bannedDate,
+        isBanned: !!targetUserInfo.bannedAt,
       }
     : undefined;
 

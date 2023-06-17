@@ -31,7 +31,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const { openCabinet, closeCabinet } = useMenu();
-  const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinetId : false;
+  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
 
   let cabinetLabelText = "";
 
@@ -100,7 +100,7 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     >
       <CabinetIconNumberWrapperStyled>
         <CabinetIconContainerStyled
-          lent_type={props.lentType}
+          lentType={props.lentType}
           isMine={isMine}
           status={props.status}
         />
@@ -197,13 +197,13 @@ const CabinetNumberStyled = styled.p<{
 `;
 
 const CabinetIconContainerStyled = styled.div<{
-  lent_type: CabinetType;
+  lentType: CabinetType;
   status: CabinetStatus;
   isMine: boolean;
 }>`
   width: 16px;
   height: 16px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.lent_type]});
+  background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
   background-size: contain;
   filter: ${(props) => cabinetFilterMap[props.status]};
   ${(props) =>

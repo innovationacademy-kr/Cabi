@@ -19,21 +19,21 @@ import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 interface ISearchDetail {
-  intra_id: string;
-  user_id: number;
+  name: string;
+  userId: number;
   cabinetInfo?: CabinetInfo;
-  banned_date?: Date;
-  unbanned_date?: Date;
+  bannedAt?: Date;
+  unbannedAt?: Date;
   searchValue: string;
 }
 
 const SearchItemByIntraId = (props: ISearchDetail) => {
   const {
-    intra_id,
-    user_id,
+    name,
+    userId,
     cabinetInfo,
-    banned_date,
-    unbanned_date,
+    bannedAt,
+    unbannedAt,
     searchValue,
   } = props;
   const [currentIntraId, setCurrentIntraId] =
@@ -48,21 +48,21 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   const { openCabinet, closeCabinet } = useMenu();
 
   const clickSearchItem = () => {
-    if (currentIntraId === intra_id) {
+    if (currentIntraId === name) {
       resetCurrentIntraId();
       closeCabinet();
       return;
     }
     setTargetUserInfo({
-      intraId: intra_id,
-      userId: user_id,
+      name: name,
+      userId: userId,
       cabinetId: cabinetInfo?.cabinetId,
-      bannedDate: banned_date,
-      unbannedDate: unbanned_date,
+      bannedAt: bannedAt,
+      unbannedAt: unbannedAt,
       cabinetInfo: cabinetInfo,
     });
     setSelectedTypeOnSearch("USER");
-    setCurrentIntraId(intra_id);
+    setCurrentIntraId(name);
     async function getCabinetInfoByCabinetId(cabinetId: number) {
       try {
         const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
@@ -84,7 +84,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   return cabinetInfo ? (
     <WrapperStyled
       className="cabiButton"
-      isSelected={currentIntraId === intra_id}
+      isSelected={currentIntraId === name}
       onClick={clickSearchItem}
     >
       <RectangleStyled status={cabinetInfo.status}>
@@ -93,9 +93,9 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       <TextWrapper>
         <LocationStyled>{`${cabinetInfo.floor}층 - ${cabinetInfo.section}`}</LocationStyled>
         <NameWrapperStyled>
-          <IconStyled lent_type={cabinetInfo.lentType} />
+          <IconStyled lentType={cabinetInfo.lentType} />
           <NameStyled>
-            <ChangeToHTML origin={intra_id} replace={searchValue} />
+            <ChangeToHTML origin={name} replace={searchValue} />
           </NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
@@ -103,18 +103,18 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   ) : (
     <WrapperStyled
       className="cabiButton"
-      isSelected={currentIntraId === intra_id}
+      isSelected={currentIntraId === name}
       onClick={clickSearchItem}
     >
-      <RectangleStyled banned={!!banned_date}>
-        {banned_date ? "!" : "-"}
+      <RectangleStyled banned={!!bannedAt}>
+        {bannedAt ? "!" : "-"}
       </RectangleStyled>
       <TextWrapper>
         <LocationStyled>대여 중이 아닌 사용자</LocationStyled>
         <NameWrapperStyled>
           <IconStyled />
           <NameStyled>
-            <ChangeToHTML origin={intra_id} replace={searchValue} />
+            <ChangeToHTML origin={name} replace={searchValue} />
           </NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
@@ -196,12 +196,12 @@ const NameWrapperStyled = styled.div`
   overflow: hidden;
 `;
 
-const IconStyled = styled.div<{ lent_type?: CabinetType }>`
+const IconStyled = styled.div<{ lentType?: CabinetType }>`
   width: 18px;
   height: 28px;
   background-image: url((${(props) =>
-      props.lent_type
-        ? cabinetIconSrcMap[props.lent_type]
+      props.lentType
+        ? cabinetIconSrcMap[props.lentType]
         : cabinetIconSrcMap[CabinetType.PRIVATE]}))
     no-repeat center center / contain;
 `;

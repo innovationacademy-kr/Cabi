@@ -1,7 +1,7 @@
 import React, { SetStateAction, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { currentLocationNameState, locationsFloorState } from "@/recoil/atoms";
-import { locationsState } from "@/recoil/selectors";
+import { buildingsFloorState, currentBuildingNameState } from "@/recoil/atoms";
+import { buildingsState } from "@/recoil/selectors";
 import TopNav from "@/components/TopNav/TopNav";
 import { axiosBuildingFloor } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
@@ -9,12 +9,12 @@ import useMenu from "@/hooks/useMenu";
 const AdminTopNavContainer: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
 }> = (props) => {
-  const [locationClicked, setLocationClicked] = useState(false);
-  const [currentLocationName, setCurrentLocationName] = useRecoilState(
-    currentLocationNameState
+  const [buildingClicked, setbuildingClicked] = useState(false);
+  const [currentBuildingName, setCurrentBuildingName] = useRecoilState(
+    currentBuildingNameState
   );
-  const setLocationsFloor = useSetRecoilState(locationsFloorState);
-  const locationsList = useRecoilValue<Array<string>>(locationsState);
+  const setBuildingsFloor = useSetRecoilState(buildingsFloorState);
+  const buildingsList = useRecoilValue<Array<string>>(buildingsState);
   const { setIsLoading } = props;
   const { toggleLeftNav } = useMenu();
 
@@ -32,7 +32,7 @@ const AdminTopNavContainer: React.FC<{
       try {
         await setTimeoutPromise(500);
         const buildingsFloorData = await axiosBuildingFloor();
-        setLocationsFloor(buildingsFloorData.data);
+        setBuildingsFloor(buildingsFloorData.data);
       } catch (error) {
         console.log(error);
       }
@@ -42,19 +42,19 @@ const AdminTopNavContainer: React.FC<{
   }, []);
 
   useEffect(() => {
-    if (locationsList.length === 0) return;
+    if (buildingsList.length === 0) return;
 
-    setCurrentLocationName(locationsList[0]);
-  }, [locationsList]);
+    setCurrentBuildingName(buildingsList[0]);
+  }, [buildingsList]);
 
   return (
     <TopNav
-      currentLocationName={currentLocationName}
-      locationsList={locationsList}
-      locationClicked={locationClicked}
-      setLocationClicked={setLocationClicked}
+      currentBuildingName={currentBuildingName}
+      buildingsList={buildingsList}
+      buildingClicked={buildingClicked}
+      setbuildingClicked={setbuildingClicked}
       onClickLogo={onClickLogo}
-      setCurrentLocationName={setCurrentLocationName}
+      setCurrentBuildingName={setCurrentBuildingName}
       isAdmin={true}
     />
   );

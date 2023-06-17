@@ -25,14 +25,14 @@ const AdminCabinetLogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => 
         {lentLog !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
             {lentLog.map(
-              ({ floor, section, intra_id, lent_time, return_time }, idx) => (
+              ({ floor, section, name, startedAt, endedAt }, idx) => (
                 <tr key={idx}>
-                  <td title={`${floor}층 ${section}`}>{intra_id}</td>
-                  <td title={new Date(lent_time).toLocaleString("ko-KR")}>
-                    {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
+                  <td title={`${floor}층 ${section}`}>{name}</td>
+                  <td title={new Date(startedAt).toLocaleString("ko-KR")}>
+                    {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
-                  <td title={new Date(return_time).toLocaleString("ko-KR")}>
-                    {new Date(return_time).toLocaleString("ko-KR", dateOptions)}
+                  <td title={new Date(endedAt).toLocaleString("ko-KR")}>
+                    {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
                 </tr>
               )

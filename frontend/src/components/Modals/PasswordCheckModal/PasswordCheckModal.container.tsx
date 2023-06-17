@@ -53,7 +53,7 @@ const PasswordCheckModalContainer: React.FC<{
     try {
       await axiosSendCabinetPassword(password);
       //userCabinetId 세팅
-      setMyInfo({ ...myInfo, cabinet_id: -1 });
+      setMyInfo({ ...myInfo, cabinetId: -1 });
       setIsCurrentSectionRender(true);
       setModalTitle("반납되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
