@@ -15,6 +15,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +28,12 @@ public class UserServiceImpl implements UserService {
 	private final AdminUserRepository adminUserRepository;
 	private final BanHistoryRepository banHistoryRepository;
 	private final BanPolicy banPolicy;
-	private final UserExceptionHandlerService userExceptionHandlerService;
+	private final UserOptionalFetcher userOptionalFetcher;
 
 	@Override
 	public boolean checkUserExists(String email) {
-		Optional<User> user = userRepository.findByEmail(email);
-		return user.isPresent();
+		User user = userOptionalFetcher.findUserByEmail(email);
+		return user != null;
 	}
 
 	/* createUser는 user를 만드는 행위만 해야될 것 같아 다음과 같이 변경했습니다. */
@@ -44,8 +45,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean checkAdminUserExists(String email) {
-		Optional<AdminUser> adminUser = adminUserRepository.findByEmail(email);
-		return adminUser.isPresent();
+		AdminUser adminUser = userOptionalFetcher.findAdminUserByEmail(email);
+		return adminUser != null;
 	}
 
 	/* createUser와 동일한 사유로 로직 수정했습니다. */
@@ -57,20 +58,20 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteUser(Long userId, Date deletedAt) {
-		User user = userExceptionHandlerService.getUser(userId);
+		User user = userOptionalFetcher.getUser(userId);
 		user.setDeletedAt(deletedAt);
 		userRepository.save(user);
 	}
 
 	@Override
 	public void deleteAdminUser(Long adminUserId) {
-		AdminUser adminUser = userExceptionHandlerService.getAdminUser(adminUserId);
+		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
 		adminUserRepository.delete(adminUser);
 	}
 
 	@Override
 	public void updateUserBlackholedAt(Long userId, Date newBlackholedAt) {
-		User user = userExceptionHandlerService.getUser(userId);
+		User user = userOptionalFetcher.getUser(userId);
 		if (user.getRole() != UserRole.USER) {
 			return;
 		}
@@ -80,14 +81,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void updateAdminUserRole(Long adminUserId, AdminRole role) {
-		AdminUser adminUser = userExceptionHandlerService.getAdminUser(adminUserId);
+		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
 		adminUser.changeAdminRole(role);
 		adminUserRepository.save(adminUser);
 	}
 
 	@Override
 	public void promoteAdminByEmail(String email) {
-		AdminUser adminUser = userExceptionHandlerService.getAdminUserByEmail(email);
+		AdminUser adminUser = userOptionalFetcher.getAdminUserByEmail(email);
 		if (adminUser.getRole() == AdminRole.NONE) {
 			adminUser.changeAdminRole(AdminRole.ADMIN);
 		}
@@ -107,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteRecentBanHistory(Long userId, Date today) {
-		BanHistory banHistory = userExceptionHandlerService.getRecentBanHistory(userId);
+		BanHistory banHistory = userOptionalFetcher.getRecentBanHistory(userId);
 		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), today)) {
 			banHistoryRepository.delete(banHistory);
 		}
@@ -122,6 +123,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public AdminRole getAdminUserRole(String email) {
-		return userRepository.getAdminUserRole(email);
+		return userOptionalFetcher.findAdminUserRoleByEmail(email);
 	}
 }

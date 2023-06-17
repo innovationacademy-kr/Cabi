@@ -21,11 +21,12 @@ class UserSessionMapperTest {
 
 	@Test
 	void toUserBlockedInfoDto() {
-		BanHistory banHistory = BanHistory.of(new Date(), new Date(), BanType.PRIVATE, 3L);
-		String name = "intraId";
-		UserBlockedInfoDto userBlockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, name);
+		Date now = new Date();
+		User user = User.of("IntraId", "email@test.com", now, UserRole.USER);
+		BanHistory banHistory = BanHistory.of(now, now, BanType.PRIVATE, 3L);
+		UserBlockedInfoDto userBlockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
 		assertEquals(banHistory.getUserId(), userBlockedInfoDto.getUserId());
-		assertEquals(name, userBlockedInfoDto.getName());
+		assertEquals(user.getName(), userBlockedInfoDto.getName());
 		assertEquals(banHistory.getBannedAt(), userBlockedInfoDto.getBannedAt());
 		assertEquals(banHistory.getUnbannedAt(), userBlockedInfoDto.getUnbannedAt());
 	}

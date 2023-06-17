@@ -3,13 +3,11 @@ package org.ftclub.cabinet.user.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.cabinet.service.CabinetExceptionHandlerService;
+import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
@@ -20,17 +18,14 @@ import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.BanPolicy;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.user.repository.BanHistoryRepository;
-import org.ftclub.cabinet.user.repository.UserRepository;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,38 +36,33 @@ import org.springframework.stereotype.Service;
 public class UserFacadeServiceImpl implements UserFacadeService {
 
 	private final UserService userService;
-	private final UserExceptionHandlerService userExceptionHandlerService;
-	private final LentRepository lentRepository;
-	private final BanHistoryRepository banHistoryRepository;
-	private final BanPolicy banPolicy;
-	private final UserRepository userRepository;
+	private final UserOptionalFetcher userOptionalFetcher;
+	private final LentOptionalFetcher lentOptionalFetcher;
 	private final UserMapper userMapper;
-	private final CabinetExceptionHandlerService cabinetExceptionHandlerService;
+	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final CabinetMapper cabinetMapper;
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
-		Optional<LentHistory> lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
-				user.getUserId());
-		Long cabinetId = lentHistory.map(LentHistory::getCabinetId).orElse(-1L);
-		Date unbannedAt = banHistoryRepository.findRecentBanHistoryByUserId(user.getUserId())
-				.map(BanHistory::getUnbannedAt).orElse(null);
-		if (unbannedAt != null && banPolicy.isActiveBanHistory(unbannedAt, DateUtil.getNow())) {
-			unbannedAt = null;
-		}
-		return new MyProfileResponseDto(user.getUserId(), user.getName(), cabinetId, unbannedAt);
+		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
+		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
+				DateUtil.getNow());
+		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory);
 	}
 
 	@Override
 	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now) {
-		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size);
-		Page<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
-				now);
-		return generateBlockedUserPaginationDto(activeBanList.getContent(),
+		Page<BanHistory> activeBanList = userOptionalFetcher.findPaginationActiveBanHistories(
+				pageable, now);
+		List<UserBlockedInfoDto> userBlockedInfoDtos = activeBanList.stream().map(
+						banHistory -> userMapper.toUserBlockedInfoDto(
+								banHistory, userOptionalFetcher.getUser(banHistory.getUserId())))
+				.collect(Collectors.toList());
+		return userMapper.toBlockedUserPaginationDto(userBlockedInfoDtos,
 				activeBanList.getTotalPages());
 	}
 
@@ -80,7 +70,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			Integer totalPage) {
 		List<UserBlockedInfoDto> userBlockedInfoDtoList = banHistories.stream()
 				.map(b -> userMapper.toUserBlockedInfoDto(b,
-						userExceptionHandlerService.getUser(b.getUserId()).getName()))
+						userOptionalFetcher.getUser(b.getUserId())))
 				.collect(Collectors.toList());
 		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalPage);
 	}
@@ -93,7 +83,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size);
-		Page<User> users = userRepository.findByPartialName(name, pageable);
+		Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
 		return generateUserProfilePaginationDto(users.getContent(), users.getTotalElements());
 	}
 
@@ -114,20 +104,20 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size);
-		Page<User> users = userRepository.findByPartialName(name, pageable);
+		Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
 		return new UserCabinetPaginationDto(null, null);
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
 	@Override
 	public MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId) {
-		User user = userRepository.getUser(userId);
-		return new MyCabinetResponseDto(null, null, null, null, null, null, null, null, null);
+		User user = userOptionalFetcher.findUser(userId);
+		return null;
 	}
 
 	@Override
 	public List<User> getAllUsers() {
-		return userRepository.findAll();
+		return userOptionalFetcher.findAllUsers();
 	}
 
 	@Override
@@ -194,19 +184,16 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size);
-		lentRepository.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
+		lentOptionalFetcher.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
-					String userName = userRepository.findNameById(lh.getUserId());
-					Location location = cabinetExceptionHandlerService.getLocation(
-							lh.getCabinetId());
+					User user = userOptionalFetcher.findUser(lh.getUserId());
 					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),
 							DateUtil.getNow());
-					Cabinet cabinet = cabinetExceptionHandlerService.getCabinet(
+					Cabinet cabinet = cabinetOptionalFetcher.getCabinet(
 							lh.getCabinetId());
 					overdueList.add(
-							cabinetMapper.toOverdueUserCabinetDto(lh, userName,
-									cabinet.getVisibleNum(), location,
-									overdueDays));
+							cabinetMapper.toOverdueUserCabinetDto(lh, user,
+									cabinet, overdueDays));
 				}
 		);
 		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, overdueList.size());

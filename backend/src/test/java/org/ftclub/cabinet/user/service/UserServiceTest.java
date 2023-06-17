@@ -14,7 +14,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
-import org.ftclub.cabinet.user.repository.UserRepository;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class UserServiceTest {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private UserRepository userRepository;
+	private UserOptionalFetcher userOptionalFetcher;
 	@Autowired
 	private AdminUserRepository adminUserRepository;
 	@Autowired
@@ -38,17 +38,18 @@ public class UserServiceTest {
 	@Test
 	void 유저_생성() {
 		userService.createUser("testUser", "testUser@student.42seoul.kr", null, UserRole.USER);
-		Optional<User> user = userRepository.findByName("testUser");
-		assertEquals("testUser", user.get().getName());
-		assertEquals(UserRole.USER, user.get().getRole());
+		User user = userOptionalFetcher.findUserByName("testUser");
+		assertEquals("testUser", user.getName());
+		assertEquals(UserRole.USER, user.getRole());
 	}
 
 	@Test
 	void 어드민_유저_생성() {
-		userService.createAdminUser("testAdmin@gmail.com");
-		Optional<AdminUser> adminUser = adminUserRepository.findByEmail("testAdmin@gmail.com");
-		assertNotNull(adminUser.get());
-		assertEquals(AdminRole.NONE, adminUser.get().getRole());
+		String adminEmail = "testAdmin@gmail.com";
+		userService.createAdminUser(adminEmail);
+		AdminUser adminUser = userOptionalFetcher.findAdminUserByEmail(adminEmail);
+		assertNotNull(adminUser);
+		assertEquals(AdminRole.NONE, adminUser.getRole());
 	}
 
 	@Test
@@ -78,8 +79,8 @@ public class UserServiceTest {
 		Date deletedAt = DateUtil.getNow();
 		Long userId = 1L;
 		userService.deleteUser(userId, deletedAt);
-		Optional<User> user = userRepository.findById(userId);
-		assertEquals(user.get().getDeletedAt(), deletedAt);
+		User user = userOptionalFetcher.getUser(userId);
+		assertEquals(user.getDeletedAt(), deletedAt);
 	}
 
 	@Test
@@ -87,7 +88,7 @@ public class UserServiceTest {
 		Date blackholedAt = DateUtil.getNow();
 		Long userId = 1L;
 		userService.updateUserBlackholedAt(userId, blackholedAt);
-		User user = userRepository.getUser(userId);
+		User user = userOptionalFetcher.getUser(userId);
 		assertEquals(user.getBlackholedAt(), blackholedAt);
 	}
 
@@ -95,7 +96,7 @@ public class UserServiceTest {
 	void 어드민_권한_변경() {
 		Long adminUserId = 1L;
 		userService.updateAdminUserRole(adminUserId, AdminRole.ADMIN);
-		AdminUser adminUser = adminUserRepository.getAdminUser(adminUserId);
+		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
 		assertEquals(adminUser.getRole(), AdminRole.ADMIN);
 	}
 
@@ -138,17 +139,17 @@ public class UserServiceTest {
 	void 어드민_권한_승인() {
 		//when
 		Long adminId1 = 1L;
-		String adminEmail1 = adminUserRepository.getAdminUser(adminId1).getEmail();
+		String adminEmail1 = userOptionalFetcher.getAdminUser(adminId1).getEmail();
 		Long adminId2 = 2L;
-		String adminEmail2 = adminUserRepository.getAdminUser(adminId2).getEmail();
+		String adminEmail2 = userOptionalFetcher.getAdminUser(adminId2).getEmail();
 
 		//given
 		userService.promoteAdminByEmail(adminEmail1);
 		userService.promoteAdminByEmail(adminEmail2);
 
 		//then
-		AdminUser adminUser1 = adminUserRepository.getAdminUser(adminId1);
-		AdminUser adminUser2 = adminUserRepository.getAdminUser(adminId2);
+		AdminUser adminUser1 = userOptionalFetcher.findAdminUser(adminId1);
+		AdminUser adminUser2 = userOptionalFetcher.findAdminUser(adminId2);
 		assertEquals(adminUser1.getRole(), AdminRole.ADMIN);
 		assertEquals(adminUser2.getRole(), AdminRole.ADMIN);
 	}

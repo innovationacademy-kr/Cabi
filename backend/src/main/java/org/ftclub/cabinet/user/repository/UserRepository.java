@@ -14,33 +14,13 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	/**
-	 * 유저 고유 아이디로 유저의 이름을 가져옵니다.
-	 *
-	 * @param userId 유저 고유 아이디
-	 * @return 유저 이름
-	 */
-	@Query("SELECT lh.name " +
-			"FROM User lh " +
-			"WHERE lh.userId = :userId")
-	String findNameById(@Param("userId") Long userId);
-
-	/**
 	 * 유저 고유 아이디로 유저를 가져옵니다.
 	 *
 	 * @param userId 유저 고유 아이디
 	 * @return {@link User}
 	 */
 	@Query("SELECT u FROM User u WHERE u.userId = :userId")
-	User getUser(@Param("userId") Long userId);
-
-	/**
-	 * 유저 이름으로 유저를 가져옵니다.
-	 *
-	 * @param name 유저 이름
-	 * @return {@link User}
-	 */
-	@Query("SELECT u FROM User u WHERE u.name = :name")
-	User getUserByName(@Param("name") String name);
+	Optional<User> findUser(@Param("userId") Long userId);
 
 	/**
 	 * 유저 이름으로 유저를 찾습니다.
@@ -69,7 +49,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
 	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
-
-	@Query("SELECT au.role FROM AdminUser au WHERE au.email = :email")
-	AdminRole getAdminUserRole(@Param("email") String email);
 }

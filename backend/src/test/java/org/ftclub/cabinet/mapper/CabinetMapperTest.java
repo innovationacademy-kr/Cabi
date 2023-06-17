@@ -13,6 +13,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.domain.MapArea;
 import org.ftclub.cabinet.cabinet.domain.SectionFormation;
+import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
@@ -28,13 +29,16 @@ class CabinetMapperTest {
 	@Autowired
 	CabinetMapper cabinetMapper;
 
+	@Autowired
+	CabinetRepository cabinetRepository;
+
 	@Test
 	void toCabinetDto() {
 		Location location = Location.of("testBuilding", 99, "testSection");
 		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 10, Grid.of(1, 2),
-				CabinetPlace.of(Location.of("새롬관", 2, "oasis"), SectionFormation.of(1, 1),
+				CabinetPlace.of(location, SectionFormation.of(1, 1),
 						MapArea.of(1, 1, 1, 1)));
-		CabinetDto cabinetDto = cabinetMapper.toCabinetDto(location, cabinet);
+		CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
 		assertEquals(cabinet.getCabinetId(), cabinetDto.getCabinetId());
 		assertEquals(cabinet.getVisibleNum(), cabinetDto.getVisibleNum());
 		assertEquals(cabinet.getLentType(), cabinetDto.getLentType());
@@ -57,20 +61,21 @@ class CabinetMapperTest {
 
 	@Test
 	void toCabinetInfoResponseDto() {
-		Location location = Location.of("buildingTest", 1, "testSection");
-		CabinetDto cabinetDto = new CabinetDto(2L, 3, LentType.SHARE, 4, "title",
-				CabinetStatus.AVAILABLE, "statusNote", location);
+		Cabinet cabinet = Cabinet.of(1, CabinetStatus.AVAILABLE, LentType.SHARE, 4, Grid.of(1, 2),
+				CabinetPlace.of(Location.of("buildingTest", 1, "testSection"),
+						SectionFormation.of(1, 1), MapArea.of(1, 1, 1, 1)));
+
 		LentDto lentDto1 = new LentDto(5L, "testName1", 6L, new Date(), new Date());
 		LentDto lentDto2 = new LentDto(7L, "testName2", 8L, new Date(), new Date());
 		List<LentDto> lentDtos = List.of(lentDto1, lentDto2);
 		CabinetInfoResponseDto cabinetInfoResponseDto = cabinetMapper.toCabinetInfoResponseDto(
-				cabinetDto, lentDtos);
-		assertEquals(cabinetDto.getCabinetId(), cabinetInfoResponseDto.getCabinetId());
-		assertEquals(cabinetDto.getStatus(), cabinetInfoResponseDto.getStatus());
-		assertEquals(cabinetDto.getMaxUser(), cabinetInfoResponseDto.getMaxUser());
-		assertEquals(cabinetDto.getLocation(), cabinetInfoResponseDto.getLocation());
-		assertEquals(cabinetDto.getTitle(), cabinetInfoResponseDto.getTitle());
-		assertEquals(cabinetDto.getVisibleNum(), cabinetInfoResponseDto.getVisibleNum());
+				cabinet, lentDtos);
+		assertEquals(cabinet.getCabinetId(), cabinetInfoResponseDto.getCabinetId());
+		assertEquals(cabinet.getStatus(), cabinetInfoResponseDto.getStatus());
+		assertEquals(cabinet.getMaxUser(), cabinetInfoResponseDto.getMaxUser());
+		assertEquals(cabinet.getCabinetPlace().getLocation(), cabinetInfoResponseDto.getLocation());
+		assertEquals(cabinet.getTitle(), cabinetInfoResponseDto.getTitle());
+		assertEquals(cabinet.getVisibleNum(), cabinetInfoResponseDto.getVisibleNum());
 		assertEquals(lentDtos, cabinetInfoResponseDto.getLents());
 	}
 
@@ -78,13 +83,13 @@ class CabinetMapperTest {
 	void toCabinetsPerSectionResponseDto() {
 		String section = "testSection";
 		CabinetInfoResponseDto cabinetInfoResponseDto1 = new CabinetInfoResponseDto(1L, 2,
-				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null);
+				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null, null);
 		CabinetInfoResponseDto cabinetInfoResponseDto2 = new CabinetInfoResponseDto(2L, 5,
-				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null);
+				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null, null);
 		CabinetInfoResponseDto cabinetInfoResponseDto3 = new CabinetInfoResponseDto(3L, 6,
-				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null);
+				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null, null);
 		CabinetInfoResponseDto cabinetInfoResponseDto4 = new CabinetInfoResponseDto(4L, 7,
-				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null);
+				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null, null);
 		List<CabinetInfoResponseDto> cabinetInfoResponseDtos = List.of(cabinetInfoResponseDto1,
 				cabinetInfoResponseDto2, cabinetInfoResponseDto3, cabinetInfoResponseDto4);
 		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto = cabinetMapper.toCabinetsPerSectionResponseDto(

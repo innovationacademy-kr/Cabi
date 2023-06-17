@@ -33,7 +33,7 @@ public class UserFacadeServiceTest {
         MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
         assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
         assertEquals(user.getName(), myProfileResponseDto.getName());
-        assertEquals(-1L, myProfileResponseDto.getCabinetId());
+        assertEquals(null, myProfileResponseDto.getCabinetId());
     }
 
     @Test

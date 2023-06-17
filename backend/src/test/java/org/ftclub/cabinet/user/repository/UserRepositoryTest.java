@@ -21,30 +21,29 @@ public class UserRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Test
-	public void testFindNameById() {
-		// user1
-		Long userId = 9L;
-
-		String name = userRepository.findNameById(userId);
-		assertNotNull(name);
-		assertEquals("user1", name);
-	}
+	//User 엔티티를 사용하므로 쓰지 않습니다.
+//	@Test
+//	public void testFindNameById() {
+//		// user1
+//		Long userId = 9L;
+//		Optional<String> name = userRepository.findNameById(userId);
+//
+//		assertTrue(name.isPresent());
+//		assertEquals("user1", name);
+//	}
 
 	@Test
 	public void testGetUser() {
 		Long userId = 9L;
+		Optional<User> user = userRepository.findUser(userId);
 
-		User user = userRepository.getUser(userId);
-
-		assertNotNull(user);
-		assertEquals("user1", user.getName());
+		assertTrue(user.isPresent());
+		assertEquals("user1", user.get().getName());
 	}
 
 	@Test
 	public void testFindByName() {
 		String name = "user2";
-
 		Optional<User> user = userRepository.findByName(name);
 
 		assertTrue(user.isPresent());
@@ -55,7 +54,6 @@ public class UserRepositoryTest {
 	public void testFindByPartialName() {
 		String partialName = "lent";
 		Pageable pageable = PageRequest.of(0, 10);
-
 		Page<User> users = userRepository.findByPartialName(partialName, pageable);
 
 		assertNotNull(users);
