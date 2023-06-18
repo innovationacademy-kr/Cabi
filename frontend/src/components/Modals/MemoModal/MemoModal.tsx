@@ -214,7 +214,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   cursor: pointer;
   text-decoration: underline;
   color: var(--main-color);
-  &: hover {
+  &:hover {
     opacity: 0.8;
   }
 `;
