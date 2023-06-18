@@ -187,8 +187,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		lentOptionalFetcher.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
 					User user = userOptionalFetcher.findUser(lh.getUserId());
-					Long overdueDays = DateUtil.calculateTwoDateDiff(lh.getExpiredAt(),
-							DateUtil.getNow());
+					Long overdueDays = DateUtil.calculateTwoDateDiff(DateUtil.getNow(), lh.getExpiredAt());
 					Cabinet cabinet = cabinetOptionalFetcher.getCabinet(
 							lh.getCabinetId());
 					overdueList.add(
