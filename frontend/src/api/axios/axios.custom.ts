@@ -22,7 +22,7 @@ export const axiosMyInfo = async (): Promise<any> => {
   }
 };
 
-const axiosUpdateCabinetMemoURL = "/v4/lent/cabinet/memo";
+const axiosUpdateCabinetMemoURL = "/v4/lent/me/memo";
 export const axiosUpdateCabinetMemo = async (
   cabinet_memo: object
 ): Promise<any> => {
@@ -37,7 +37,7 @@ export const axiosUpdateCabinetMemo = async (
   }
 };
 
-const axiosUpdateCabinetTitleURL = "/v4/lent/cabinet/title";
+const axiosUpdateCabinetTitleURL = "/v4/lent/me/cabinet-title";
 export const axiosUpdateCabinetTitle = async (
   cabinet_title: object
 ): Promise<any> => {
