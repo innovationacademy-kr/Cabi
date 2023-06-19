@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
@@ -34,7 +36,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 public class CabinetFacadeServiceImpl implements CabinetFacadeService {
-
+	private static final Logger logger = LogManager.getLogger(CabinetFacadeService.class);
 	private final CabinetService cabinetService;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
@@ -51,6 +53,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	@Override
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
+		logger.info("getBuildingFloorsResponse");
 		return cabinetOptionalFetcher.findAllBuildings().stream()
 				.map(building -> {
 					List<Integer> floors = cabinetOptionalFetcher.findAllFloorsByBuilding(building);
@@ -64,6 +67,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	@Override
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
+		logger.info("getCabinetInfo");
 		List<LentDto> lentDtos = new ArrayList<>();
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
@@ -81,6 +85,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor) {
+		logger.info("getCabinetsPerSection");
 		return cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor).stream()
 				.map(section -> {
 					List<Long> cabinetIds = cabinetOptionalFetcher.findAllCabinetIdsBySection(floor,
@@ -98,6 +103,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType, Integer page,
 			Integer size) {
+		logger.info("getCabinetPaginationByLentType");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -117,6 +123,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page,
 			Integer size) {
+		logger.info("getCabinetPaginationByStatus");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -135,6 +142,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum, Integer page,
 			Integer size) {
+		logger.info("getCabinetPaginationByVisibleNum");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -154,6 +162,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	public LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId, Integer page,
 			Integer size) {
+		logger.info("getCabinetLentHistoriesPagination");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -171,6 +180,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 * @return 사물함 정보 리스트
 	 */
 	public List<CabinetInfoResponseDto> getCabinetInfoBundle(List<Long> cabinetIds) {
+		logger.info("getCabinetInfoBundle");
 		List<CabinetInfoResponseDto> result = new ArrayList<>();
 		for (Long cabinetId : cabinetIds) {
 			result.add(getCabinetInfo(cabinetId));
@@ -180,6 +190,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 
 	@Override
 	public CabinetInfoPaginationDto getCabinetsInfo(Integer visibleNum) {
+		logger.info("getCabinetsInfo");
 		PageRequest page = PageRequest.of(0, Integer.MAX_VALUE);
 		Page<Cabinet> allCabinetsByVisibleNum = cabinetOptionalFetcher.findPaginationByVisibleNum(
 				visibleNum, page);
@@ -198,6 +209,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	private List<LentHistoryDto> generateLentHistoryDtoList(
 			List<LentHistory> lentHistories) {
+		logger.info("generateLentHistoryDtoList");
 		return lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
 						userOptionalFetcher.findUser(e.getUserId()),

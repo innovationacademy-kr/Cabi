@@ -2,6 +2,8 @@ package org.ftclub.cabinet.cabinet.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v4/cabinets")
 public class CabinetController {
-
+	private static final Logger logger = LogManager.getLogger(CabinetController.class);
 	private final CabinetFacadeService cabinetFacadeService;
 
 	/**
@@ -33,6 +35,7 @@ public class CabinetController {
 	@GetMapping("/buildings/floors")
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
+		logger.info("Called getBuildingFloorsResponse");
 		return cabinetFacadeService.getBuildingFloorsResponse();
 	}
 
@@ -52,6 +55,7 @@ public class CabinetController {
 		if (building == null || floor == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
+		logger.info("Called getCabinetsPerSection");
 		return cabinetFacadeService.getCabinetsPerSection(building, floor);
 	}
 
@@ -69,6 +73,7 @@ public class CabinetController {
 		if (cabinetId == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
+		logger.info("Called getCabinetInfo");
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
 	}
 }
