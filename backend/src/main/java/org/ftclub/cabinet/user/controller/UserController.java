@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v4/users")
 public class UserController {
-
+	private static final Logger logger = LogManager.getLogger(UserController.class);
 	private final UserFacadeService userFacadeService;
 	private final LentFacadeService lentFacadeService;
 
@@ -35,6 +37,7 @@ public class UserController {
 	@GetMapping("/me")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
+		logger.info("Called getMyProfile: {}", userSessionDto.getName());
 		return userFacadeService.getMyProfile(userSessionDto);
 	}
 }

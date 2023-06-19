@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
@@ -9,6 +11,7 @@ import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.statistics.service.StatisticsFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin/users")
 public class AdminUserController {
-
+	private static final Logger logger = LogManager.getLogger(AdminUserController.class);
 	private final UserFacadeService userFacadeService;
 	private final LentFacadeService lentFacadeService;
 
@@ -38,6 +41,7 @@ public class AdminUserController {
 	@DeleteMapping("/{userId}/ban-history")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
+		logger.info("Called deleteBanHistoryByUserId: {}", userId);
 		userFacadeService.deleteRecentBanHistory(userId, DateUtil.getNow());
 	}
 
@@ -54,6 +58,7 @@ public class AdminUserController {
 	public LentHistoryPaginationDto getLentHistoriesByUserId(@PathVariable("userId") Long userId,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
+		logger.info("Called getLentHistoriesByUserId: {}", userId);
 		return lentFacadeService.getAllUserLentHistories(userId, page, size);
 	}
 
@@ -66,6 +71,7 @@ public class AdminUserController {
 	@GetMapping("/admins/promote")
 	@AuthGuard(level = AuthLevel.MASTER_ONLY)
 	public void promoteUserToAdmin(@RequestParam("email") String email) {
+		logger.info("Called promoteUserToAdmin: {}", email);
 		userFacadeService.promoteUserToAdmin(email);
 	}
 }

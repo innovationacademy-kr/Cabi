@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
@@ -21,6 +23,7 @@ import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
+import org.ftclub.cabinet.user.controller.UserController;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
@@ -34,7 +37,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserFacadeServiceImpl implements UserFacadeService {
-
+	private static final Logger logger = LogManager.getLogger(UserFacadeService.class);
 	private final UserService userService;
 	private final UserOptionalFetcher userOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
@@ -44,6 +47,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
+		logger.info("Called getMyProfile: {}", user.getName());
 		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
 				DateUtil.getNow());
@@ -52,6 +56,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now) {
+		logger.info("Called getAllBanUsers");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -78,6 +83,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
 			Integer size) {
+		logger.info("Called getUserProfileListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -99,6 +105,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
 			Integer size) {
+		logger.info("Called findUserCabinetListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -111,6 +118,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
 	@Override
 	public MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId) {
+		logger.info("Called getMyLentAndCabinetInfo: {}", userId);
 		User user = userOptionalFetcher.findUser(userId);
 		return null;
 	}
@@ -178,6 +186,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size) {
+		logger.info("Called getOverdueUserList");
 		List<OverdueUserCabinetDto> overdueList = new ArrayList<>();
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {

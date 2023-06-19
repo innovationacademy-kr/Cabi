@@ -1,11 +1,14 @@
 package org.ftclub.cabinet.statistics.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.statistics.controller.StatisticsController;
 import org.ftclub.cabinet.statistics.repository.StatisticsRepository;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
@@ -24,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 @RequiredArgsConstructor
 public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
-
+    private static final Logger logger = LogManager.getLogger(StatisticsFacadeService.class);
     private final StatisticsRepository statisticsRepository;
     private final CabinetRepository cabinetRepository;
     private final LentRepository lentRepository;
@@ -35,6 +38,7 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
      */
     @Override
     public List<CabinetFloorStatisticsResponseDto> getCabinetsCountOnAllFloors() {
+        logger.info("Called getCabinetsCountOnAllFloors");
         List<CabinetFloorStatisticsResponseDto> cabinetFloorStatisticsResponseDtos = new ArrayList<>();
         List<Integer> floors = cabinetRepository.findAllFloorsByBuilding("새롬관").orElseThrow();
         for (Integer floor : floors) {
@@ -63,6 +67,7 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
      */
     @Override
     public LentsStatisticsResponseDto getCountOnLentAndReturn(Integer startDate, Integer endDate) {
+        logger.info("Called getCountOnLentAndReturn");
         Date start = DateUtil.addDaysToDate(DateUtil.getNow(), startDate);
         Date end = DateUtil.addDaysToDate(DateUtil.getNow(), endDate);
         Integer lentStartCount = lentRepository.countLentByLentTimeBetween(start, end);

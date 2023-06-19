@@ -90,11 +90,4 @@ public class StatisticsController {
 		logger.info("Called getOverdueUsers");
 		return userFacadeService.getOverdueUserList(page, size);
 	}
-
-	@GetMapping("/test/{userId}")
-	@AuthGuard(level = ADMIN_ONLY)
-	public void testFunc(@PathVariable("userId") Long userId) {
-		logger.error("parameter is unvalid");
-		userFacadeService.deleteUser(userId, DateUtil.getNow());
-	}
 }
