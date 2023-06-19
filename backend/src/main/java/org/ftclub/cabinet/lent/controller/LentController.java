@@ -2,6 +2,8 @@ package org.ftclub.cabinet.lent.controller;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -27,19 +29,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v4/lent")
 public class LentController {
-
+    private static final Logger logger = LogManager.getLogger(LentController.class);
     private final LentFacadeService lentFacadeService;
 
     @PostMapping("/cabinets/{cabinetId}")
     public void startLentCabinet(
             @UserSession UserSessionDto user,
             @PathVariable Long cabinetId) {
+        logger.info("Called startLentCabinet");
         lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
     }
 
     @PatchMapping("/return")
     public void endLent(
             @UserSession UserSessionDto userSessionDto) {
+        logger.info("Called endLent");
         lentFacadeService.endLentCabinet(userSessionDto);
     }
 
@@ -47,6 +51,7 @@ public class LentController {
     public void endLentWithMemo(
             @UserSession UserSessionDto userSessionDto,
             @Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
+        logger.info("Called endLentWithMemo");
         lentFacadeService.endLentCabinetWithMemo(userSessionDto, lentEndMemoDto);
     }
 
@@ -54,6 +59,7 @@ public class LentController {
     public void updateCabinetMemo(
             @UserSession UserSessionDto user,
             @Valid @RequestBody UpdateCabinetMemoDto updateCabinetMemoDto) {
+        logger.info("Called updateCabinetMemo");
         lentFacadeService.updateCabinetMemo(user, updateCabinetMemoDto);
     }
 
@@ -61,12 +67,14 @@ public class LentController {
     public void updateCabinetTitle(
             @UserSession UserSessionDto user,
             @Valid @RequestBody UpdateCabinetTitleDto updateCabinetTitleDto) {
+        logger.info("Called updateCabinetTitle");
         lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
     }
 
     @GetMapping("/me")
     public ResponseEntity<MyCabinetResponseDto> getMyLentInfo(
             @UserSession UserSessionDto user) {
+        logger.info("Called getMyLentInfo");
         MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user);
         if (myCabinetResponseDto == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -79,6 +87,7 @@ public class LentController {
             @UserSession UserSessionDto user,
             @RequestParam("page") Integer page,
             @RequestParam("size") Integer size) {
+        logger.info("Called getMyLentLog");
         return lentFacadeService.getMyLentLog(user, page, size);
     }
 }

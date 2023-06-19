@@ -3,12 +3,15 @@ package org.ftclub.cabinet.lent.repository;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,16 +24,18 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LentOptionalFetcher {
-
+	private static final Logger logger = LogManager.getLogger(LentOptionalFetcher.class);
 	private final LentRepository lentRepository;
 	private final CabinetRepository cabinetRepository;
 	private final CabinetOptionalFetcher cabinetExceptionHandler;
 
 	public List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId) {
+		logger.info("Called findAllActiveLentByCabinetId: {}", cabinetId);
 		return lentRepository.findAllActiveLentByCabinetId(cabinetId);
 	}
 
 	public Page<LentHistory> findPaginationByCabinetId(Long cabinetId, PageRequest pageable) {
+		logger.info("Called findPaginationByCabinetId: {}", cabinetId);
 		return lentRepository.findPaginationByCabinetId(cabinetId, pageable);
 	}
 
@@ -43,6 +48,7 @@ public class LentOptionalFetcher {
 	 * @throws ServiceException NO_LENT_CABINET
 	 */
 	public LentHistory getActiveLentHistoryWithUserIdAndCabinetId(Long userId, Long cabinetId) {
+		logger.info("Called getActiveLentHistoryWithUserIdAndCabinetId: {}, {}", userId, cabinetId);
 		LentHistory ret = getActiveLentHistoryWithUserId(userId);
 		if (!ret.isCabinetIdEqual(cabinetId)) {
 			throw new ServiceException(ExceptionStatus.NO_LENT_CABINET);
@@ -58,6 +64,7 @@ public class LentOptionalFetcher {
 	 * @throws ServiceException NO_LENT_CABINET
 	 */
 	public LentHistory getActiveLentHistoryWithCabinetId(Long cabinetId) {
+		logger.info("Called getActiveLentHistoryWithCabinetId: {}", cabinetId);
 		return lentRepository.findFirstByCabinetIdAndEndedAtIsNull(cabinetId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NO_LENT_CABINET));
 	}
@@ -70,6 +77,7 @@ public class LentOptionalFetcher {
 	 * @throws ServiceException NO_LENT_CABINET
 	 */
 	public LentHistory getActiveLentHistoryWithUserId(Long userId) {
+		logger.info("Called getActiveLentHistoryWithUserId: {}", userId);
 		return lentRepository.findFirstByUserIdAndEndedAtIsNull(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NO_LENT_CABINET));
 	}
@@ -81,6 +89,7 @@ public class LentOptionalFetcher {
 	 * @throws ServiceException 정책에 따라 다양한 exception이 throw될 수 있습니다.
 	 */
 	public void handlePolicyStatus(LentPolicyStatus status) {
+		logger.info("Called handlePolicyStatus: {}", status);
 		switch (status) {
 			case FINE:
 				break;
@@ -116,6 +125,7 @@ public class LentOptionalFetcher {
 	 * @throws ServiceException LENT_FULL, NOT_FOUND_CABINET
 	 */
 	public void checkExistedSpace(Long cabinetId) {
+		logger.info("Called checkExistedSpace: {}", cabinetId);
 		Cabinet cabinet = cabinetExceptionHandler.getCabinet(cabinetId);
 		if (lentRepository.countCabinetActiveLent(cabinetId) == cabinet.getMaxUser()) {
 			throw new ServiceException(ExceptionStatus.LENT_FULL);
@@ -130,6 +140,7 @@ public class LentOptionalFetcher {
 	 * @return
 	 */
 	public List<LentHistory> findByUserId(Long userId, Pageable pageable) {
+		logger.info("Called findByUserId: {}", userId);
 		return lentRepository.findByUserId(userId, pageable);
 	}
 
@@ -139,6 +150,7 @@ public class LentOptionalFetcher {
 	 */
 
 	public int countUserAllLent(Long userId) {
+		logger.info("Called countUserAllLent: {}", userId);
 		return lentRepository.countUserAllLent(userId);
 	}
 
@@ -148,6 +160,7 @@ public class LentOptionalFetcher {
 	 * @return 캐비넷이 대여된 기록
 	 */
 	public List<LentHistory> findByCabinetId(Long cabinetId, Pageable pageable) {
+		logger.info("Called findByCabinetId: {}", cabinetId);
 		return lentRepository.findByCabinetId(cabinetId, pageable);
 	}
 
@@ -156,6 +169,7 @@ public class LentOptionalFetcher {
 	 * @return 캐비넷이 대여된 총 횟수
 	 */
 	public int countCabinetAllLent(Long cabinetId) {
+		logger.info("Called countCabinetAllLent: {}", cabinetId);
 		return lentRepository.countCabinetAllLent(cabinetId);
 	}
 
@@ -165,10 +179,12 @@ public class LentOptionalFetcher {
 	 * @return	유저가 대여중인 캐비넷
 	 */
 	public Cabinet findActiveLentCabinetByUserId(Long userId) {
+		logger.info("Called findActiveLentCabinetByUserId: {}", userId);
 		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
 	}
 
 	public List<LentHistory> findAllOverdueLent(Date date, Pageable pageable){
+		logger.info("Called findAllOverdueLent: {}", date);
 		return lentRepository.findAllOverdueLent(date, pageable);
 	}
 }

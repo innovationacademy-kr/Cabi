@@ -3,10 +3,13 @@ package org.ftclub.cabinet.lent.domain;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
+import org.ftclub.cabinet.lent.controller.LentController;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class LentPolicyImpl implements LentPolicy {
-
+	private static final Logger logger = LogManager.getLogger(LentPolicy.class);
 	private final CabinetProperties cabinetProperties;
 
 	@Value("${cabinet.lent.term.private}")
@@ -35,6 +38,7 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public Date generateExpirationDate(Date now, Cabinet cabinet,
 			List<LentHistory> activeLentHistories) {
+		logger.info("Called generateExpirationDate");
 		switch (cabinet.getLentType()) {
 			case PRIVATE:
 				return DateUtil.addDaysToDate(now, getDaysForLentTermPrivate());
@@ -61,6 +65,7 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
 			Date expiredAt) {
+		logger.info("Called applyExpirationDate");
 		for (LentHistory lentHistory : beforeActiveHistories) {
 			lentHistory.setExpiredAt(expiredAt);
 		}
@@ -70,6 +75,7 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount,
 			List<BanHistory> userActiveBanList) {
+		logger.info("Called verifyUserForLent");
 		if (!user.isUserRole(UserRole.USER)) {
 			return LentPolicyStatus.NOT_USER;
 		}
@@ -103,6 +109,7 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public LentPolicyStatus verifyCabinetForLent(Cabinet cabinet,
 			List<LentHistory> cabinetLentHistories, Date now) {
+		logger.info("Called verifyCabinetForLent");
 		// 빌릴 수 있는지 검증. 빌릴 수 없으면 return lentPolicyDto;
 		switch (cabinet.getStatus()) {
 			case FULL:
@@ -131,16 +138,19 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public Integer getDaysForLentTermPrivate() {
+		logger.info("Called getDaysForLentTermPrivate");
 		return cabinetProperties.getLentTermPrivate();
 	}
 
 	@Override
 	public Integer getDaysForLentTermShare() {
+		logger.info("Called getDaysForLentTermShare");
 		return cabinetProperties.getLentTermShare();
 	}
 
 	@Override
 	public Integer getDaysForNearExpiration() {
+		logger.info("Called getDaysForNearExpiration");
 		return cabinetProperties.getPenaltyDayShare() + cabinetProperties.getPenaltyDayPadding();
 	}
 }
