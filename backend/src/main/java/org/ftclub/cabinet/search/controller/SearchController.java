@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin/search")
 public class SearchController {
-
 	private final CabinetFacadeService cabinetFacadeService;
 	private final UserFacadeService userFacadeService;
 

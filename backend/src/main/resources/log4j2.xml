@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+
+  <Properties>
+    <Property name="consoleLayout">%style{%d{yyyy-MM-dd HH:mm:ss}}{white} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1}}{bright,yellow}: %msg%n%throwable</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${consoleLayout}" />
+    </Console>
+  </Appenders>
+
+  <Loggers>
+
+    <logger name="org.springframework" level="info" additivity="false" >
+      <AppenderRef ref="console" />
+    </logger>
+
+    <logger name="org.ftclub.cabinet" level="info" additivity="false" >
+      <AppenderRef ref="console" level="info" />
+    </logger>
+
+  </Loggers>
+</Configuration>
