@@ -21,5 +21,16 @@
       <AppenderRef ref="console" level="info" />
     </logger>
 
+    <!--  sql문 확인을 위한 설정 (시작) -->
+    <!--  sql을 봐야한다면 해당 부분 주석 해제하면 됨.  -->
+<!--    <logger name="org.hibernate.type" level="trace" additivity="false" >-->
+<!--      <AppenderRef ref="console" />-->
+<!--    </logger>-->
+
+<!--    <logger name="org.hibernate.SQL" level="debug" additivity="false" >-->
+<!--      <AppenderRef ref="console" />-->
+<!--    </logger>-->
+    <!--  sql문 확인을 위한 설정 (끝) -->
+
   </Loggers>
 </Configuration>
