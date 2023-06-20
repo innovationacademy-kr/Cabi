@@ -8,7 +8,7 @@ import {
 } from "@/recoil/atoms";
 import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import { axiosCabinetById } from "@/api/axios/axios.custom";
+import { axiosCabinetById, axiosDeleteCurrentBanLog } from "@/api/axios/axios.custom";
 import instance from "@/api/axios/axios.instance";
 import useMenu from "@/hooks/useMenu";
 
@@ -44,16 +44,6 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
     }
   };
 
-  const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";
-  const axiosRemovePenalty = async (): Promise<any> => {
-    try {
-      const response = await instance.delete(axiosRemovePenaltyURL);
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
-
   const searchBarOn = () => {
     document.getElementById("searchBar")!.classList.add("on");
     document.getElementById("topNavLogo")!.classList.add("pushOut");
@@ -71,7 +61,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
     <NaviButtonsStyled id="topNavButtonGroup">
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
-          onClick={axiosRemovePenalty}
+          onClick={() => axiosDeleteCurrentBanLog(myInfo.userId)}
           imgSrc="/src/assets/images/happyCcabiWhite.png"
           width="32px"
           height="32px"

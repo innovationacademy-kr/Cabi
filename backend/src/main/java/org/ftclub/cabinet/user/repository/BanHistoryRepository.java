@@ -43,7 +43,8 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @return active {@link BanHistory} 리스트
 	 */
 	@Query("SELECT b FROM BanHistory b WHERE b.unbannedAt > :today ")
-	Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, @Param("today") Date today);
+	Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable,
+			@Param("today") Date today);
 
 	/**
 	 * 유저의 가장 최근 밴 히스토리를 가져옵니다.
@@ -51,16 +52,21 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @param userId 유저 고유 아이디
 	 * @return {@link BanHistory}
 	 */
-	@Query("SELECT b FROM BanHistory b WHERE b.unbannedAt = (SELECT MAX(b2.unbannedAt) FROM BanHistory b2) AND b.userId = :userId")
+	// TO-DO: 현재 LIMIT 1을 사용하지 않고 있음.
+	@Query("SELECT bh"
+			+ " FROM BanHistory bh"
+			+ " WHERE bh.userId = :userId AND bh.unbannedAt IS NOT NULL"
+			+ " ORDER BY bh.unbannedAt DESC")
 	Optional<BanHistory> findRecentBanHistoryByUserId(@Param("userId") Long userId);
 
 	/**
 	 * 유저의 가장 최근 밴 히스토리 중 현재 시간보다 나중인 값을 가져옵니다.
 	 *
-	 * @param userId    유저 고유 아이디
-	 * @param now       현재 시간
+	 * @param userId 유저 고유 아이디
+	 * @param now    현재 시간
 	 * @return {@link BanHistory}
 	 */
 	@Query("SELECT b FROM BanHistory b WHERE b.unbannedAt = (SELECT MAX(b2.unbannedAt) FROM BanHistory b2) AND b.userId = :userId AND b.unbannedAt > :now")
-	Optional<BanHistory> findRecentActiveBanHistoryByUserId(@Param("userId") Long userId, @Param("now") Date now);
+	Optional<BanHistory> findRecentActiveBanHistoryByUserId(@Param("userId") Long userId,
+			@Param("now") Date now);
 }
