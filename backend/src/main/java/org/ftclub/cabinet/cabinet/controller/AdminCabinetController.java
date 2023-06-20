@@ -176,7 +176,7 @@ public class AdminCabinetController {
 	 * @param size     한 페이지에 있는 정보의 수
 	 * @return 사물함 정보 페이지네이션
 	 */
-	@GetMapping("lent-types/{lentType}")
+	@GetMapping("/lent-types/{lentType}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CabinetPaginationDto getCabinetsByLentType(
 			@PathVariable("lentType") LentType lentType,
