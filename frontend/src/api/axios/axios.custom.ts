@@ -39,13 +39,12 @@ export const axiosUpdateCabinetMemo = async (
 
 const axiosUpdateCabinetTitleURL = "/v4/lent/me/cabinet-title";
 export const axiosUpdateCabinetTitle = async (
-  cabinet_title: object
+  cabinet_title: any
 ): Promise<any> => {
   try {
-    const response = await instance.patch(
-      axiosUpdateCabinetTitleURL,
-      cabinet_title
-    );
+    const response = await instance.patch(axiosUpdateCabinetTitleURL, {
+      cabinetTitle: cabinet_title.title,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -132,7 +131,7 @@ export const axiosSendCabinetPassword = async (password: string) => {
   }
 };
 
-const axiosMyLentLogURL = "/v4/lent/histories";
+const axiosMyLentLogURL = "/v4/lent/me/histories";
 export const axiosMyLentLog = async (page: number): Promise<any> => {
   try {
     const response = await instance.get(axiosMyLentLogURL, {
