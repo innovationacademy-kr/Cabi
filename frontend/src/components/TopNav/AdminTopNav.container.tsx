@@ -52,7 +52,7 @@ const AdminTopNavContainer: React.FC<{
       currentBuildingName={currentBuildingName}
       buildingsList={buildingsList}
       buildingClicked={buildingClicked}
-      setbuildingClicked={setbuildingClicked}
+      setBuildingClicked={setbuildingClicked}
       onClickLogo={onClickLogo}
       setCurrentBuildingName={setCurrentBuildingName}
       isAdmin={true}

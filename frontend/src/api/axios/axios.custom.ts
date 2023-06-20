@@ -91,7 +91,8 @@ export const axiosCabinetById = async (
 };
 
 const axiosLentIdURL = "/v4/lent/cabinets/";
-export const axiosLentId = async (cabinetId: number): Promise<any> => {
+export const axiosLentId = async (cabinetId: number | null): Promise<any> => {
+  if (cabinetId === null) return;
   try {
     const response = await instance.post(`${axiosLentIdURL}${cabinetId}`);
     return response;
@@ -416,9 +417,10 @@ export const axiosGetCabinetLentLog = async (
 
 const axiosGetUserLentLogURL = "/v4/admin/users/";
 export const axiosGetUserLentLog = async (
-  userId: number,
+  userId: number | null,
   page: number
 ): Promise<any> => {
+  if (userId == null) return;
   try {
     const response = await instance.get(
       axiosGetUserLentLogURL + userId.toString() + "/lent-histories",

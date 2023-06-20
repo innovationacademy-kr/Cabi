@@ -14,11 +14,9 @@ const AdminUserLentLog = ({
     <AdminLentLogStyled id="lentInfo">
       <TitleContainer>
         <TitleStyled>대여 기록</TitleStyled>
-        <GoBackButtonStyled onClick={closeLent}>
-          뒤로가기
-        </GoBackButtonStyled>
+        <GoBackButtonStyled onClick={closeLent}>뒤로가기</GoBackButtonStyled>
       </TitleContainer>
-      <LogTable lentLog={logs} />
+      <LogTable lentHistory={logs} />
       <ButtonContainerStyled>
         <PageButtonStyled
           page={page}
