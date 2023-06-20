@@ -22,7 +22,7 @@ const MemoModalContainer = (props: {
   const memoModalProps = {
     cabinetType: myCabinetInfo.lentType,
     cabinetTitle: myCabinetInfo.title,
-    cabinetMemo: myCabinetInfo.cabinet_memo,
+    cabinetMemo: myCabinetInfo.memo,
   };
 
   const updateCabinetTitleInList = (newTitle: string | null) => {
@@ -50,7 +50,7 @@ const MemoModalContainer = (props: {
           setMyCabinetInfo({
             ...myCabinetInfo,
             title: newTitle,
-            cabinet_memo: newMemo,
+            memo: newMemo,
           });
           // list에서 제목 업데이트
           updateCabinetTitleInList(newTitle);
@@ -59,13 +59,13 @@ const MemoModalContainer = (props: {
           console.log(error);
         });
     }
-    if (newMemo !== myCabinetInfo.cabinet_memo) {
-      axiosUpdateCabinetMemo({ cabinet_memo: newMemo })
+    if (newMemo !== myCabinetInfo.memo) {
+      axiosUpdateCabinetMemo({ memo: newMemo })
         .then(() => {
           setMyCabinetInfo({
             ...myCabinetInfo,
             title: newTitle,
-            cabinet_memo: newMemo,
+            memo: newMemo,
           });
         })
         .catch((error) => {

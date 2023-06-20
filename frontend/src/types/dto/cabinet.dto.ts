@@ -5,7 +5,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 // TODO :hybae
 // lentType을 LentType으로 변경 예정
 export interface MyCabinetInfoResponseDto extends CabinetInfo {
-  cabinet_memo: string; // 사물함 비밀번호와 관련된 메모
+  memo: string; // 사물함 비밀번호와 관련된 메모
 }
 
 export interface CabinetBuildingFloorDto {
