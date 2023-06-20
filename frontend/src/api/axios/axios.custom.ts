@@ -175,7 +175,7 @@ export const axiosAdminCabinetInfoByCabinetId = async (
 const axiosAdminReturnURL = "/v4/admin/return-cabinets/";
 export const axiosAdminReturn = async (cabinetId: number): Promise<any> => {
   try {
-    const response = await instance.delete(axiosAdminReturnURL + cabinetId);
+    const response = await instance.patch(axiosAdminReturnURL + cabinetId);
     return response;
   } catch (error) {
     throw error;
@@ -185,7 +185,7 @@ export const axiosAdminReturn = async (cabinetId: number): Promise<any> => {
 const axiosReturnByUserIdURL = "/v4/admin/return-users/";
 export const axiosReturnByUserId = async (userId: number): Promise<any> => {
   try {
-    const response = await instance.delete(axiosReturnByUserIdURL + userId);
+    const response = await instance.patch(axiosReturnByUserIdURL + userId);
     return response;
   } catch (error) {
     throw error;
@@ -197,7 +197,7 @@ export const axiosBundleReturn = async (
   cabinetIdList: number[]
 ): Promise<any> => {
   try {
-    const response = await instance.delete(axiosBundleReturnURL, {
+    const response = await instance.patch(axiosBundleReturnURL, {
       data: cabinetIdList,
     });
     return response;
