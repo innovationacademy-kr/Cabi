@@ -25,7 +25,7 @@ interface IAdminCabinetListItem {
 const AdminCabinetListItem = ({
   cabinet,
 }: IAdminCabinetListItem): JSX.Element => {
-  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
   );
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(

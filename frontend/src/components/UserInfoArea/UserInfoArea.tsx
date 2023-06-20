@@ -15,7 +15,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 
 export interface ISelectedUserInfo {
   name: string;
-  userId: number;
+  userId: number | null;
   isBanned: boolean;
   bannedInfo?: string;
 }

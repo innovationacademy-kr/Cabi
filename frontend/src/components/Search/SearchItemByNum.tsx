@@ -27,7 +27,7 @@ const reformIntraId = (lents: LentDto[]) => {
 };
 
 const SearchItemByNum = (props: CabinetInfo) => {
-  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
   );
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(

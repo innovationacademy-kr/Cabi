@@ -16,8 +16,8 @@ const { persistAtom } = recoilPersist();
 export const userState = atom<UserDto>({
   key: "UserInfo",
   default: {
-    cabinetId: -1,
-    userId: -1,
+    cabinetId: null,
+    userId: null,
     name: "default",
   },
 });
@@ -66,7 +66,7 @@ export const currentSectionNameState = atom<string>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const currentCabinetIdState = atom<number>({
+export const currentCabinetIdState = atom<number | null>({
   key: "CurrentCabinetId",
   default: undefined,
 });

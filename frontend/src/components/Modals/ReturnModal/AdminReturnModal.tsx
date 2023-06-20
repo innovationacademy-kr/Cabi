@@ -98,7 +98,8 @@ const AdminReturnModal: React.FC<{
 
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
-      await axiosBundleReturn([currentCabinetId]);
+      if (currentCabinetId !== null)
+        await axiosBundleReturn([currentCabinetId]);
       //userCabinetId 세팅
       setIsCurrentSectionRender(true);
       setNumberOfAdminWork((prev) => prev + 1);

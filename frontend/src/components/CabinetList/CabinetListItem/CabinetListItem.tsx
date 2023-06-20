@@ -22,7 +22,7 @@ import useMenu from "@/hooks/useMenu";
 
 const CabinetListItem = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<UserDto>(userState);
-  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
   );
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(

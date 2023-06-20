@@ -21,7 +21,7 @@ import {
 } from "@/api/axios/axios.custom";
 
 const BanModal: React.FC<{
-  userId: number;
+  userId: number | null;
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);

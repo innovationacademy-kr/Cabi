@@ -79,7 +79,10 @@ export const axiosCabinetByBuildingFloor = async (
 };
 
 const axiosCabinetByIdURL = "/v4/cabinets/";
-export const axiosCabinetById = async (cabinetId: number): Promise<any> => {
+export const axiosCabinetById = async (
+  cabinetId: number | null
+): Promise<any> => {
+  if (cabinetId === null) return;
   try {
     const response = await instance.get(`${axiosCabinetByIdURL}${cabinetId}`);
     return response;
@@ -322,10 +325,11 @@ export const axiosSearchDetailByIntraId = async (
 };
 
 const axiosDeleteCurrentBanLogURL = "/v4/admin/users/";
-export const axiosDeleteCurrentBanLog = async (userId: number) => {
+export const axiosDeleteCurrentBanLog = async (userId: number | null) => {
+  if (userId === null) return;
   try {
     const response = await instance.delete(
-      axiosDeleteCurrentBanLogURL + userId.toString() + "/ban-history"
+      axiosDeleteCurrentBanLogURL + userId?.toString() + "/ban-history"
     );
     return response;
   } catch (error) {
@@ -394,9 +398,10 @@ export const axiosGetOverdueUserList = async () => {
 
 const axiosGetCabinetLentLogURL = "/v4/admin/cabinets/";
 export const axiosGetCabinetLentLog = async (
-  cabinetId: number,
+  cabinetId: number | null,
   page: number
 ): Promise<any> => {
+  if (cabinetId == null) return;
   try {
     const response = await instance.get(
       axiosGetCabinetLentLogURL + cabinetId.toString() + "/lent-histories",
