@@ -35,7 +35,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   }
 
   const clickMyCabinet = () => {
-    if (myInfo.cabinetId === -1) return;
+    if (myInfo.cabinetId === null) return;
     if (currentCabinetId !== myInfo.cabinetId) {
       setTargetCabinetInfoToMyCabinet();
       openCabinet();
@@ -88,7 +88,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
         />
       )}
       <TopNavButton
-        disable={myInfo.cabinetId === -1}
+        disable={myInfo.cabinetId === null}
         onClick={clickMyCabinet}
         imgSrc="/src/assets/images/myCabinetIcon.svg"
       />

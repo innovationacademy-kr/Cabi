@@ -40,14 +40,16 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
     if (props.lentType === "PRIVATE") cabinetLabelText = props.lents[0]?.name;
     else if (props.lentType === "SHARE") {
       const headcount = props.lents.length;
-      const cabinetTitle = props.title ?? `${props.maxUser} / ${props.maxUser}`;
+      const cabinetTitle = props.title
+        ? props.title
+        : `${props.maxUser} / ${props.maxUser}`;
 
       cabinetLabelText =
         headcount === props.maxUser
           ? cabinetTitle
           : headcount + " / " + props.maxUser;
     } else if (props.lentType === "CLUB")
-      cabinetLabelText = props.title ?? "동아리";
+      cabinetLabelText = props.title ? props.title : "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";

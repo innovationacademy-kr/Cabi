@@ -47,14 +47,14 @@ const AdminCabinetListItem = ({
     else if (cabinet.lentType === "SHARE") {
       const headcount = cabinet.lents.length;
       const cabinetTitle =
-        cabinet.title ?? `${cabinet.maxUser} / ${cabinet.maxUser}`;
+        cabinet.title ? cabinet.title : `${cabinet.maxUser} / ${cabinet.maxUser}`;
 
       cabinetLabelText =
         headcount === cabinet.maxUser
           ? cabinetTitle
           : headcount + " / " + cabinet.maxUser;
     } else if (cabinet.lentType === "CLUB")
-      cabinetLabelText = cabinet.title ?? "동아리";
+      cabinetLabelText = cabinet.title ? cabinet.title : "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
