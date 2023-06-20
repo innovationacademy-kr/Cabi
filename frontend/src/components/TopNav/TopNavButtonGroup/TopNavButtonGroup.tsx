@@ -8,8 +8,10 @@ import {
 } from "@/recoil/atoms";
 import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import { axiosCabinetById, axiosDeleteCurrentBanLog } from "@/api/axios/axios.custom";
-import instance from "@/api/axios/axios.instance";
+import {
+  axiosCabinetById,
+  axiosDeleteCurrentBanLog,
+} from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
