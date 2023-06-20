@@ -172,6 +172,7 @@ export const axiosAdminCabinetInfoByCabinetId = async (
   }
 };
 
+/*
 const axiosAdminReturnURL = "/v4/admin/return-cabinets/";
 export const axiosAdminReturn = async (cabinetId: number): Promise<any> => {
   try {
@@ -181,11 +182,11 @@ export const axiosAdminReturn = async (cabinetId: number): Promise<any> => {
     throw error;
   }
 };
-
+ */
 const axiosReturnByUserIdURL = "/v4/admin/return-users/";
 export const axiosReturnByUserId = async (userId: number): Promise<any> => {
   try {
-    const response = await instance.delete(axiosReturnByUserIdURL + userId);
+    const response = await instance.patch(axiosReturnByUserIdURL + userId);
     return response;
   } catch (error) {
     throw error;
@@ -197,8 +198,8 @@ export const axiosBundleReturn = async (
   cabinetIdList: number[]
 ): Promise<any> => {
   try {
-    const response = await instance.delete(axiosBundleReturnURL, {
-      data: cabinetIdList,
+    const response = await instance.patch(axiosBundleReturnURL, {
+      cabinetIds: cabinetIdList,
     });
     return response;
   } catch (error) {

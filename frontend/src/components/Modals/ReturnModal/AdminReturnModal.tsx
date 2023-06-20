@@ -22,7 +22,6 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMultiSelect from "@/hooks/useMultiSelect";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import {
-  axiosAdminReturn,
   axiosBundleReturn,
   axiosCabinetById,
   axiosGetOverdueUserList,
@@ -99,7 +98,7 @@ const AdminReturnModal: React.FC<{
 
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
-      await axiosAdminReturn(currentCabinetId);
+      await axiosBundleReturn([currentCabinetId]);
       //userCabinetId 세팅
       setIsCurrentSectionRender(true);
       setNumberOfAdminWork((prev) => prev + 1);
