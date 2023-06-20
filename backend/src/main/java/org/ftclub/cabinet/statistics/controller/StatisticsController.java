@@ -4,8 +4,7 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
@@ -15,7 +14,6 @@ import org.ftclub.cabinet.statistics.service.StatisticsFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,8 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin/statistics")
+@Log4j2
 public class StatisticsController {
-	private static final Logger logger = LogManager.getLogger(StatisticsController.class);
+
 	private final StatisticsFacadeService statisticsFacadeService;
 	private final UserFacadeService userFacadeService;
 
@@ -36,7 +35,7 @@ public class StatisticsController {
 	@GetMapping("/buildings/floors/cabinets")
 	@AuthGuard(level = ADMIN_ONLY)
 	public List<CabinetFloorStatisticsResponseDto> getCabinetsInfoOnAllFloors() {
-		logger.info("Called getCabinetsInfoOnAllFloors");
+		log.info("Called getCabinetsInfoOnAllFloors");
 		return statisticsFacadeService.getCabinetsCountOnAllFloors();
 	}
 
@@ -53,7 +52,7 @@ public class StatisticsController {
 			@RequestParam("startDate") Integer startDate,
 			@RequestParam("endDate") Integer endDate
 	) {
-		logger.info("Called getCountOnLentAndReturn");
+		log.info("Called getCountOnLentAndReturn");
 		return statisticsFacadeService.getCountOnLentAndReturn(startDate, endDate);
 	}
 
@@ -70,7 +69,7 @@ public class StatisticsController {
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size
 	) {
-		logger.info("Called getUsersBannedInfo");
+		log.info("Called getUsersBannedInfo");
 		return userFacadeService.getAllBanUsers(page, size, DateUtil.getNow());
 	}
 
@@ -87,7 +86,7 @@ public class StatisticsController {
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size
 	) {
-		logger.info("Called getOverdueUsers");
+		log.info("Called getOverdueUsers");
 		return userFacadeService.getOverdueUserList(page, size);
 	}
 }

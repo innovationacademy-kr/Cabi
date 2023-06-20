@@ -1,12 +1,9 @@
 package org.ftclub.cabinet.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
@@ -14,7 +11,6 @@ import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -23,8 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/users")
+@Log4j2
 public class UserController {
-	private static final Logger logger = LogManager.getLogger(UserController.class);
+
 	private final UserFacadeService userFacadeService;
 	private final LentFacadeService lentFacadeService;
 
@@ -37,7 +34,7 @@ public class UserController {
 	@GetMapping("/me")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
-		logger.info("Called getMyProfile: {}", userSessionDto.getName());
+		log.info("Called getMyProfile: {}", userSessionDto.getName());
 		return userFacadeService.getMyProfile(userSessionDto);
 	}
 }

@@ -4,12 +4,10 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.ReturnCabinetsRequestDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.statistics.controller.StatisticsController;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,22 +18,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin")
+@Log4j2
 public class AdminLentController {
-	private static final Logger logger = LogManager.getLogger(AdminLentController.class);
+
 	private final LentFacadeService lentFacadeService;
 
 	@PatchMapping("/return-cabinets")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void terminateLentCabinets(
 			@Valid @RequestBody ReturnCabinetsRequestDto returnCabinetsRequestDto) {
-		logger.info("Called terminateLentCabinets");
+		log.info("Called terminateLentCabinets");
 		lentFacadeService.terminateLentCabinets(returnCabinetsRequestDto);
 	}
 
 	@PatchMapping("/return-users/{userId}")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void terminateLentUser(@PathVariable("userId") Long userId) {
-		logger.info("Called terminateLentUser");
+		log.info("Called terminateLentUser");
 		lentFacadeService.terminateLentCabinet(userId);
 	}
 
@@ -43,7 +42,7 @@ public class AdminLentController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public void assignLent(@PathVariable("userId") Long userId,
 			@PathVariable("cabinetId") Long cabinetId) {
-		logger.info("Called assignLent");
+		log.info("Called assignLent");
 		lentFacadeService.assignLent(userId, cabinetId);
 	}
 }

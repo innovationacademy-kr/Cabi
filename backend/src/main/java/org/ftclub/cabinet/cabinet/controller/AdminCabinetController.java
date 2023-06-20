@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -18,7 +17,6 @@ import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.UpdateCabinetsRequestDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.search.controller.SearchController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,8 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin/cabinets")
+@Log4j2
 public class AdminCabinetController {
-	private static final Logger logger = LogManager.getLogger(AdminCabinetController.class);
+
 	private final CabinetFacadeService cabinetFacadeService;
 
 	/**
@@ -51,7 +50,7 @@ public class AdminCabinetController {
 		if (cabinetId == null) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		logger.info("Called getCabinetInfo: {}", cabinetId);
+		log.info("Called getCabinetInfo: {}", cabinetId);
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
 	}
 
@@ -71,7 +70,7 @@ public class AdminCabinetController {
 				"statusNote")) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		logger.info("Called updateCabinetStatusNote: {}", cabinetId);
+		log.info("Called updateCabinetStatusNote: {}", cabinetId);
 		cabinetFacadeService.updateCabinetStatusNote(cabinetId, body.get("statusNote"));
 	}
 
@@ -90,7 +89,7 @@ public class AdminCabinetController {
 		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey("title")) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		logger.info("Called updateCabinetTitle: {}", cabinetId);
+		log.info("Called updateCabinetTitle: {}", cabinetId);
 		cabinetFacadeService.updateCabinetTitle(cabinetId, body.get("title"));
 	}
 
@@ -111,7 +110,7 @@ public class AdminCabinetController {
 				|| !body.containsKey("col")) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		logger.info("Called updateCabinetGrid: {}", cabinetId);
+		log.info("Called updateCabinetGrid: {}", cabinetId);
 		cabinetFacadeService.updateCabinetGrid(cabinetId, body.get("row"), body.get("col"));
 	}
 
@@ -131,7 +130,7 @@ public class AdminCabinetController {
 				"visibleNum")) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		logger.info("Called updateCabinetVisibleNum: {}", cabinetId);
+		log.info("Called updateCabinetVisibleNum: {}", cabinetId);
 		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, body.get("visibleNum"));
 	}
 
@@ -147,7 +146,7 @@ public class AdminCabinetController {
 	public void updateCabinetBundleStatus(
 			@Valid @RequestBody UpdateCabinetsRequestDto updateCabinetsRequestDto,
 			@PathVariable("status") CabinetStatus status) {
-		logger.info("Called updateCabinetBundleStatus: {}", status);
+		log.info("Called updateCabinetBundleStatus: {}", status);
 		cabinetFacadeService.updateCabinetBundleStatus(updateCabinetsRequestDto, status);
 	}
 

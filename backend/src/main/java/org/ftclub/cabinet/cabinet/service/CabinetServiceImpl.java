@@ -2,8 +2,7 @@ package org.ftclub.cabinet.cabinet.service;
 
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
@@ -16,8 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Log4j2
 public class CabinetServiceImpl implements CabinetService {
-	private static final Logger logger = LogManager.getLogger(CabinetService.class);
+
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 
 	/**
@@ -41,7 +41,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateStatus(Long cabinetId, CabinetStatus status) {
-		logger.info("Called updateStatus: {}, {}", cabinetId, status);
+		log.info("Called updateStatus: {}, {}", cabinetId, status);
 		if (!status.isValid()) {
 			throw new IllegalArgumentException("Invalid status");
 		}
@@ -54,7 +54,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateMemo(Long cabinetId, String memo) {
-		logger.info("Called updateMemo: {}, {}", cabinetId, memo);
+		log.info("Called updateMemo: {}, {}", cabinetId, memo);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeMemo(memo);
 	}
@@ -64,7 +64,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateVisibleNum(Long cabinetId, Integer visibleNum) {
-		logger.info("Called updateVisibleNum: {}, {}", cabinetId, visibleNum);
+		log.info("Called updateVisibleNum: {}, {}", cabinetId, visibleNum);
 		if (visibleNum < 0) {
 			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
@@ -77,7 +77,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateTitle(Long cabinetId, String title) {
-		logger.info("Called updateTitle: {}, {}", cabinetId, title);
+		log.info("Called updateTitle: {}, {}", cabinetId, title);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeTitle(title);
 	}
@@ -87,7 +87,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateMaxUser(Long cabinetId, Integer maxUser) {
-		logger.info("Called updateMaxUser: {}, {}", cabinetId, maxUser);
+		log.info("Called updateMaxUser: {}, {}", cabinetId, maxUser);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.specifyMaxUser(maxUser);
 	}
@@ -97,7 +97,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateLentType(Long cabinetId, LentType lentType) {
-		logger.info("Called updateLentType: {}, {}", cabinetId, lentType);
+		log.info("Called updateLentType: {}, {}", cabinetId, lentType);
 		if (!lentType.isValid()) {
 			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
@@ -110,7 +110,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateGrid(Long cabinetId, Grid grid) {
-		logger.info("Called updateGrid: {}, {}", cabinetId, grid);
+		log.info("Called updateGrid: {}, {}", cabinetId, grid);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.coordinateGrid(grid);
 	}
@@ -120,7 +120,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateStatusNote(Long cabinetId, String statusNote) {
-		logger.info("Called updateStatusNote: {}, {}", cabinetId, statusNote);
+		log.info("Called updateStatusNote: {}, {}", cabinetId, statusNote);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeStatusNote(statusNote);
 	}
