@@ -207,14 +207,17 @@ export const axiosBundleReturn = async (
   }
 };
 
-const axiosUpdateCabinetTypeURL = "/api/admin/cabinets/";
+const axiosUpdateCabinetTypeURL = "/v4/admin/cabinets/lent-types/";
 export const axiosUpdateCabinetType = async (
   cabinetId: number,
   lentType: CabinetType
 ) => {
   try {
     const response = await instance.patch(
-      `${axiosUpdateCabinetTypeURL}${cabinetId}/lent-types/${lentType}`
+      `${axiosUpdateCabinetTypeURL}${lentType}`,
+      {
+        cabinetIds: [cabinetId],
+      }
     );
     return response;
   } catch (error) {
@@ -230,7 +233,9 @@ export const axiosBundleUpdateCabinetType = async (
   try {
     const response = await instance.patch(
       `${axiosBundleUpdateCabinetTypeURL}${cabinetType}`,
-      cabinetIdList
+      {
+        cabinetIds: cabinetIdList,
+      }
     );
     return response;
   } catch (error) {
@@ -238,14 +243,17 @@ export const axiosBundleUpdateCabinetType = async (
   }
 };
 
-const axiosUpdateCabinetStatusURL = "/v4/admin/cabinets/";
+const axiosUpdateCabinetStatusURL = "/v4/admin/cabinets/status/";
 export const axiosUpdateCabinetStatus = async (
   cabinetId: number,
   status: CabinetStatus
 ): Promise<any> => {
   try {
     const response = await instance.patch(
-      `${axiosUpdateCabinetStatusURL}${cabinetId}/status/${status}`
+      `${axiosUpdateCabinetStatusURL}${status}`,
+      {
+        cabinetIds: [cabinetId],
+      }
     );
     return response;
   } catch (error) {
@@ -261,7 +269,9 @@ export const axiosBundleUpdateCabinetStatus = async (
   try {
     const response = await instance.patch(
       `${axiosBundleUpdateCabinetStatusURL}${cabinetStatus}`,
-      cabinetIdList
+      {
+        cabinetIds: cabinetIdList,
+      }
     );
     return response;
   } catch (error) {
