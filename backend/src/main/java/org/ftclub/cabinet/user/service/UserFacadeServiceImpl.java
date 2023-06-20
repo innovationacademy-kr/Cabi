@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserFacadeServiceImpl implements UserFacadeService {
 
 	private final UserService userService;
@@ -44,6 +46,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
+		log.info("Called getMyProfile: {}", user.getName());
 		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
 				DateUtil.getNow());
@@ -52,6 +55,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now) {
+		log.info("Called getAllBanUsers");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -78,6 +82,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
 			Integer size) {
+		log.info("Called getUserProfileListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -99,6 +104,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
 			Integer size) {
+		log.info("Called findUserCabinetListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -111,6 +117,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
 	@Override
 	public MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId) {
+		log.info("Called getMyLentAndCabinetInfo: {}", userId);
 		User user = userOptionalFetcher.findUser(userId);
 		return null;
 	}
@@ -178,6 +185,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size) {
+		log.info("Called getOverdueUserList");
 		List<OverdueUserCabinetDto> overdueList = new ArrayList<>();
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
@@ -187,7 +195,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		lentOptionalFetcher.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
 					User user = userOptionalFetcher.findUser(lh.getUserId());
-					Long overdueDays = DateUtil.calculateTwoDateDiff(DateUtil.getNow(), lh.getExpiredAt());
+					Long overdueDays = DateUtil.calculateTwoDateDiff(DateUtil.getNow(),
+							lh.getExpiredAt());
 					Cabinet cabinet = cabinetOptionalFetcher.getCabinet(
 							lh.getCabinetId());
 					overdueList.add(

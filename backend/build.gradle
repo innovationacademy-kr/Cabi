@@ -23,6 +23,9 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
 }
 
 repositories {
@@ -35,6 +38,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // log4j2 추가
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.modelmapper:modelmapper:3.1.1'

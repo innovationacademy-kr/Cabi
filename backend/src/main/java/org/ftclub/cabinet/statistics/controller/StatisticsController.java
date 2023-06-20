@@ -2,9 +2,9 @@ package org.ftclub.cabinet.statistics.controller;
 
 import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin/statistics")
+@Log4j2
 public class StatisticsController {
 
 	private final StatisticsFacadeService statisticsFacadeService;
@@ -34,6 +35,7 @@ public class StatisticsController {
 	@GetMapping("/buildings/floors/cabinets")
 	@AuthGuard(level = ADMIN_ONLY)
 	public List<CabinetFloorStatisticsResponseDto> getCabinetsInfoOnAllFloors() {
+		log.info("Called getCabinetsInfoOnAllFloors");
 		return statisticsFacadeService.getCabinetsCountOnAllFloors();
 	}
 
@@ -50,6 +52,7 @@ public class StatisticsController {
 			@RequestParam("startDate") Integer startDate,
 			@RequestParam("endDate") Integer endDate
 	) {
+		log.info("Called getCountOnLentAndReturn");
 		return statisticsFacadeService.getCountOnLentAndReturn(startDate, endDate);
 	}
 
@@ -66,6 +69,7 @@ public class StatisticsController {
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size
 	) {
+		log.info("Called getUsersBannedInfo");
 		return userFacadeService.getAllBanUsers(page, size, DateUtil.getNow());
 	}
 
@@ -82,6 +86,7 @@ public class StatisticsController {
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size
 	) {
+		log.info("Called getOverdueUsers");
 		return userFacadeService.getOverdueUserList(page, size);
 	}
 }
