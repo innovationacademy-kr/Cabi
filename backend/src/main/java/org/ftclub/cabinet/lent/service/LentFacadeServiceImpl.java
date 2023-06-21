@@ -165,6 +165,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public void terminateLentCabinets(ReturnCabinetsRequestDto returnCabinetsRequestDto) {
 		log.info("Called terminateLentCabinets");
+		System.out.println("returnCabinetsRequestDto = " + returnCabinetsRequestDto);
 		returnCabinetsRequestDto.getCabinetIds().stream()
 				.forEach(lentService::terminateLentByCabinetId);
 	}
