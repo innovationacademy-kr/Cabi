@@ -197,7 +197,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<Long> collect = allCabinetsByVisibleNum.map(cabinet -> cabinet.getCabinetId())
 				.stream().collect(Collectors.toList());
 		return new CabinetInfoPaginationDto(getCabinetInfoBundle(collect),
-				allCabinetsByVisibleNum.getTotalPages());
+				allCabinetsByVisibleNum.getTotalElements());
 	}
 
 	/**
