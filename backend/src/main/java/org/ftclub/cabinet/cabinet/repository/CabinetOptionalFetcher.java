@@ -30,6 +30,18 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findById(cabinetId).orElse(null);
 	}
 
+	/**
+	 * 유저 ID로 사물함을 찾습니다.
+	 *
+	 * @param userId 유저ID
+	 * @return 사물함 엔티티
+	 * @throws ServiceException 사물함을 찾을 수 없는 경우
+	 */
+	public Cabinet findLentCabinetByUserId(Long userId) {
+		log.info("Called findLentCabinetByUserId: {}", userId);
+		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
+	}
+
 	public List<String> findAllBuildings() {
 		log.info("Called findAllBuildings");
 		return cabinetRepository.findAllBuildings().orElse(null);

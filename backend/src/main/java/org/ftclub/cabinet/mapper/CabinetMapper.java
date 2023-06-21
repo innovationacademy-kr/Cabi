@@ -13,6 +13,9 @@ import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserBlockedInfoDto;
+import org.ftclub.cabinet.dto.UserCabinetDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.mapstruct.Mapper;
@@ -40,6 +43,8 @@ public interface CabinetMapper {
 	OverdueUserCabinetDto toOverdueUserCabinetDto(LentHistory lentHistory, User user,
 			Cabinet cabinet, Long overdueDays);
 
+	UserCabinetDto toUserCabinetDto(UserBlockedInfoDto userInfo, CabinetDto cabinetInfo);
+
 	//To do : CabinetPlace로 바꾸기?
 	BuildingFloorsDto toBuildingFloorsDto(String building, List<Integer> floors);
 
@@ -59,6 +64,9 @@ public interface CabinetMapper {
 
 	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
 			List<OverdueUserCabinetDto> result, Integer totalPage);
+
+	UserCabinetPaginationDto toUserCabinetPaginationDto(List<UserCabinetDto> result,
+			Integer totalPage);
 
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents);

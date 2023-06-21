@@ -10,11 +10,13 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
+import org.ftclub.cabinet.dto.UserCabinetDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
@@ -111,7 +113,16 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		}
 		PageRequest pageable = PageRequest.of(page, size);
 		Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
-		return new UserCabinetPaginationDto(null, null);
+		List<UserCabinetDto> userCabinetDtoList = new ArrayList<>();
+		users.toList().stream().forEach(user -> {
+			BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(
+					user.getUserId(), DateUtil.getNow());
+			UserBlockedInfoDto blockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
+			Cabinet cabinet = cabinetOptionalFetcher.findLentCabinetByUserId(user.getUserId());
+			CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
+			userCabinetDtoList.add(cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto));
+		});
+		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList, users.getTotalPages());
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */

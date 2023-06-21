@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.dto;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public class UserCabinetDto {
 
-	List<UserBlockedInfoDto> userInfo;
+	@JsonUnwrapped
+	UserBlockedInfoDto userInfo;
 	CabinetDto cabinetInfo;
 }
