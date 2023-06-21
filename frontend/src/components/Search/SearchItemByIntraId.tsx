@@ -28,14 +28,8 @@ interface ISearchDetail {
 }
 
 const SearchItemByIntraId = (props: ISearchDetail) => {
-  const {
-    name,
-    userId,
-    cabinetInfo,
-    bannedAt,
-    unbannedAt,
-    searchValue,
-  } = props;
+  const { name, userId, cabinetInfo, bannedAt, unbannedAt, searchValue } =
+    props;
   const [currentIntraId, setCurrentIntraId] =
     useRecoilState<string>(currentIntraIdState);
   const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
@@ -61,9 +55,13 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
       unbannedAt: unbannedAt,
       cabinetInfo: cabinetInfo,
     });
-    setSelectedTypeOnSearch("USER");
+    if (cabinetInfo?.cabinetId) {
+      setSelectedTypeOnSearch("CABINET");
+    } else {
+      setSelectedTypeOnSearch("USER");
+    }
     setCurrentIntraId(name);
-    async function getCabinetInfoByCabinetId(cabinetId: number) {
+    async function getCabinetInfoByCabinetId(cabinetId: number | null) {
       try {
         const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
         setTargetCabinetInfo(data);
@@ -71,7 +69,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
         console.log(error);
       }
     }
-    if (cabinetInfo) {
+    if (cabinetInfo?.cabinetId) {
       getCabinetInfoByCabinetId(cabinetInfo.cabinetId);
       openCabinet();
     } else {
@@ -81,7 +79,7 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     }
   };
 
-  return cabinetInfo ? (
+  return cabinetInfo?.cabinetId ? (
     <WrapperStyled
       className="cabiButton"
       isSelected={currentIntraId === name}

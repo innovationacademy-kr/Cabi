@@ -94,6 +94,7 @@ const UserInfoAreaContainer = (): JSX.Element => {
     : undefined;
 
   const userViewData: IUserLentInfo | undefined = targetUserInfo?.cabinetInfo
+    ?.cabinetId
     ? {
         floor: targetUserInfo.cabinetInfo.floor,
         section: targetUserInfo.cabinetInfo.section,

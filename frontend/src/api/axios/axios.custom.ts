@@ -163,8 +163,9 @@ export const axiosAdminAuthLogin = async (
 
 const axiosAdminCabinetInfoByIdURL = "/v4/admin/cabinets/";
 export const axiosAdminCabinetInfoByCabinetId = async (
-  cabinetId: number
+  cabinetId: number | null
 ): Promise<any> => {
+  if (cabinetId === null) return;
   try {
     const response = await instance.get(
       axiosAdminCabinetInfoByIdURL + cabinetId
