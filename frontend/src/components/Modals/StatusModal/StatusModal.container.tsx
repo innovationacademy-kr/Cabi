@@ -16,8 +16,6 @@ import {
   axiosBundleUpdateCabinetType,
   axiosCabinetById,
   axiosGetBrokenCabinetList,
-  axiosUpdateCabinetStatus,
-  axiosUpdateCabinetType,
 } from "@/api/axios/axios.custom";
 import useMultiSelect from "@/hooks/useMultiSelect";
 import { handleBrokenCabinetList } from "@/utils/tableUtils";
@@ -83,7 +81,7 @@ const StatusModalContainer = (props: {
     const cabinetType = targetCabinetInfo.lentType;
     //type 수정 사항이 있으면 type변경 api 호출
     if (newCabinetType !== cabinetType) {
-      axiosUpdateCabinetType(cabinetId, newCabinetType)
+      axiosBundleUpdateCabinetType([cabinetId], newCabinetType)
         .then(async () => {
           setIsCurrentSectionRender(true);
           setNumberOfAdminWork((prev) => prev + 1);
@@ -100,7 +98,7 @@ const StatusModalContainer = (props: {
     }
     // status 수정 사항이 있으면 status변경 api호출
     if (newCabinetStatus !== cabinetStatus) {
-      axiosUpdateCabinetStatus(cabinetId, newCabinetStatus)
+      axiosBundleUpdateCabinetStatus([cabinetId], newCabinetStatus)
         .then(async () => {
           setIsCurrentSectionRender(true);
           setNumberOfAdminWork((prev) => prev + 1);

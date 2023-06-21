@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SearchBarList from "@/components/TopNav/SearchBar/SearchBarList/SearchBarList";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import {
   axiosSearchByCabinetNum,
   axiosSearchByIntraId,
@@ -13,7 +14,7 @@ const SearchBar = () => {
   const searchWrap = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
-  const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
+  const [searchListByNum, setSearchListByNum] = useState<CabinetInfo[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
   const [isFocus, setIsFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);

@@ -209,7 +209,7 @@ export const axiosBundleReturn = async (
     throw error;
   }
 };
-
+/*
 const axiosUpdateCabinetTypeURL = "/v4/admin/cabinets/lent-types/";
 export const axiosUpdateCabinetType = async (
   cabinetId: number,
@@ -226,7 +226,7 @@ export const axiosUpdateCabinetType = async (
   } catch (error) {
     throw error;
   }
-};
+}; */
 
 const axiosBundleUpdateCabinetTypeURL = "/v4/admin/cabinets/lent-types/";
 export const axiosBundleUpdateCabinetType = async (
@@ -245,7 +245,7 @@ export const axiosBundleUpdateCabinetType = async (
     throw error;
   }
 };
-
+/*
 const axiosUpdateCabinetStatusURL = "/v4/admin/cabinets/status/";
 export const axiosUpdateCabinetStatus = async (
   cabinetId: number,
@@ -262,7 +262,7 @@ export const axiosUpdateCabinetStatus = async (
   } catch (error) {
     throw error;
   }
-};
+}; */
 
 const axiosBundleUpdateCabinetStatusURL = "/v4/admin/cabinets/status/";
 export const axiosBundleUpdateCabinetStatus = async (
