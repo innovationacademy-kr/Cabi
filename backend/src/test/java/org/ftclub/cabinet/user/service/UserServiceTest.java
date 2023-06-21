@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.user.domain.AdminRole;
@@ -20,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 @Transactional
@@ -111,9 +111,10 @@ public class UserServiceTest {
 		LentType lentType = LentType.PRIVATE;
 
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
-		Optional<BanHistory> banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId);
-		assertEquals(userId, banHistory.get().getUserId());
-		assertEquals(new Date(2023, 3, 27), banHistory.get().getUnbannedAt());
+		BanHistory banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId,
+				DateUtil.getNow(), PageRequest.of(0, 1)).get(0);
+		assertEquals(userId, banHistory.getUserId());
+		assertEquals(new Date(2023, 3, 27), banHistory.getUnbannedAt());
 	}
 
 //	@Test

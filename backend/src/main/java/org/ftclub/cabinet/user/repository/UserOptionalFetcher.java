@@ -11,7 +11,9 @@ import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -132,7 +134,10 @@ public class UserOptionalFetcher {
 	 */
 	public BanHistory findRecentActiveBanHistory(Long userId, Date now) {
 		log.info("Called findRecentActiveBanHistory: {}", userId);
-		return banHistoryRepository.findRecentActiveBanHistoryByUserId(userId, now).orElse(null);
+		BanHistory banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId, now,
+				PageRequest.of(0, 1)).get(0);
+		System.out.println("banHistory = " + banHistory);
+		return banHistory;
 	}
 
 	/*-------------------------------------------GET--------------------------------------------*/
@@ -207,9 +212,10 @@ public class UserOptionalFetcher {
 	 * @param userId 유저의 고유 ID
 	 * @return {@link BanHistory}
 	 */
+	//to-do : if null exception
 	public BanHistory getRecentBanHistory(Long userId) {
 		log.info("Called getRecentBanHistory: {}", userId);
-		return banHistoryRepository.findRecentBanHistoryByUserId(userId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BAN_HISTORY));
+		return banHistoryRepository.findRecentBanHistoryByUserId(userId, DateUtil.getNow(),
+				PageRequest.of(0, 1)).get(0);
 	}
 }
