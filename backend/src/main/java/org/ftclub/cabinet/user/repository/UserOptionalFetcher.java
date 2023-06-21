@@ -132,12 +132,16 @@ public class UserOptionalFetcher {
 	 * @param now    현재 시간
 	 * @return {@link BanHistory}
 	 */
+	//TO-DO : isEmpty, List에 대한 0 인덱스 가져오기 등 리팩터링 매우 필요..
 	public BanHistory findRecentActiveBanHistory(Long userId, Date now) {
 		log.info("Called findRecentActiveBanHistory: {}", userId);
-		BanHistory banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId, now,
-				PageRequest.of(0, 1)).get(0);
-		System.out.println("banHistory = " + banHistory);
-		return banHistory;
+		List<BanHistory> banHistories = banHistoryRepository.findRecentBanHistoryByUserId(userId,
+				now,
+				PageRequest.of(0, 1));
+		if (banHistories.isEmpty()) {
+			return null;
+		}
+		return banHistories.get(0);
 	}
 
 	/*-------------------------------------------GET--------------------------------------------*/
