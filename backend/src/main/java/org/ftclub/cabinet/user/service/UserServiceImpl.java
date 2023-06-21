@@ -121,7 +121,6 @@ public class UserServiceImpl implements UserService {
 	public void deleteRecentBanHistory(Long userId, Date today) {
 		log.info("Called deleteRecentBanHistory: {}", userId);
 		BanHistory banHistory = userOptionalFetcher.getRecentBanHistory(userId);
-		System.out.println("banHistory = " + banHistory);
 		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), today)) {
 			banHistoryRepository.delete(banHistory);
 		}
