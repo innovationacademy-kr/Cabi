@@ -71,7 +71,7 @@ const CabinetInfoArea: React.FC<{
           <>
             <ButtonContainer
               onClick={() => {
-                 openModal("returnModal");
+                openModal("returnModal");
               }}
               text="반납"
               theme="fill"
