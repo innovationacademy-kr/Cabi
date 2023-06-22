@@ -66,8 +66,8 @@ public class BanHistoryRepositoryTest {
 		// ban history가 없는 유저
 		Long userId = 10L;
 
-		BanHistory recentBanHistory = banHistoryRepository.findRecentBanHistoryByUserId(
-				userId, DateUtil.getNow(), PageRequest.of(0, 1)).get(0);
+		Assertions.assertTrue(banHistoryRepository.findRecentBanHistoryByUserId(
+				userId, DateUtil.getNow(), PageRequest.of(0, 1)).isEmpty());
 
 //		Assertions.assertFalse(recentBanHistory.isPresent()); to-do
 	}
