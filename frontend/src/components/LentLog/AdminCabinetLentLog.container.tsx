@@ -17,7 +17,7 @@ const AdminCabinetLentLogContainer = () => {
   async function getData(page: number) {
     try {
       const result = await axiosGetCabinetLentLog(currentCabinetId, page);
-      setTotalPage(Math.ceil(result.data.totalPage / 10));
+      setTotalPage(result.data.totalPage);
       setLogs(result.data.result);
     } catch {
       setLogs(STATUS_400_BAD_REQUEST);
