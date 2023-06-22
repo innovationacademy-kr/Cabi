@@ -137,11 +137,11 @@ export const axiosReturn = async (): Promise<any> => {
   }
 };
 
-const axiosSendCabinetPasswordURL = "/v4/lent/return-password";
+const axiosSendCabinetPasswordURL = "/v4/lent/return-memo";
 export const axiosSendCabinetPassword = async (password: string) => {
   try {
     const response = await instance.patch(axiosSendCabinetPasswordURL, {
-      cabinet_memo: password,
+      cabinetMemo: password,
     });
   } catch (error) {
     throw error;

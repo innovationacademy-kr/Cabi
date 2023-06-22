@@ -23,6 +23,7 @@ export interface ISelectedCabinetInfo {
   detailMessageColor: string;
   isAdmin: boolean;
   isLented: boolean;
+  lentsLength: number;
 }
 
 export interface IMultiSelectTargetInfo {
@@ -165,6 +166,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         detailMessageColor: getDetailMessageColor(targetCabinetInfo),
         isAdmin: isAdmin,
         isLented: targetCabinetInfo.lents.length !== 0,
+        lentsLength: targetCabinetInfo.lents.length,
       }
     : null;
 
@@ -190,6 +192,12 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const openModal = (modalName: TModalState) => {
     if (modalName === "lentModal" && myCabinetInfo.cabinetId) {
       modalName = "unavailableModal";
+    } else if (
+      modalName === "returnModal" &&
+      targetCabinetInfo.floor === 3 &&
+      targetCabinetInfo.lents.length === 1
+    ) {
+      modalName = "passwordCheckModal";
     }
     setUserModal({
       ...userModal,
