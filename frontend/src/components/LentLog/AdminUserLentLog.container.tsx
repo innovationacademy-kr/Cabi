@@ -18,7 +18,7 @@ const AdminUserLentLogContainer = () => {
   async function getData(page: number) {
     try {
       const result = await axiosGetUserLentLog(targetUserInfo.userId, page);
-      setTotalPage(Math.ceil(result.data.total_length / 10));
+      setTotalPage(result.data.totalPage);
       setLogs(result.data.result);
     } catch {
       setLogs(STATUS_400_BAD_REQUEST);
