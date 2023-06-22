@@ -50,8 +50,8 @@ const MemoModalContainer = (props: {
       .then(() => {
         setMyCabinetInfo({
           ...myCabinetInfo,
-          title: newTitle ?? "",
-          memo: newMemo ?? "",
+          title: newTitle ?? myCabinetInfo.title,
+          memo: newMemo ?? myCabinetInfo.memo,
         });
         // list에서 제목 업데이트
         if (newTitle !== null) updateCabinetTitleInList(newTitle);
