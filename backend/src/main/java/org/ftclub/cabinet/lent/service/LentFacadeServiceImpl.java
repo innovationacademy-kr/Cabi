@@ -99,7 +99,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
 			Integer page, Integer size) {
 		log.info("Called getMyLentLog: {}", user.getName());
-		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
+		PageRequest pageable = PageRequest.of(page, size,
+				Sort.by(Sort.Direction.DESC, "startedAt"));
 		List<LentHistory> myLentHistories = lentOptionalFetcher.findByUserId(user.getUserId(),
 				pageable);
 		List<LentHistoryDto> result = myLentHistories.stream()
