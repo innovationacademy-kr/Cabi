@@ -18,11 +18,11 @@ import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.UpdateCabinetsRequestDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -261,20 +261,26 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateCabinetBundleStatus(UpdateCabinetsRequestDto updateCabinetsRequestDto,
-			CabinetStatus status) {
-		for (Long cabinetId : updateCabinetsRequestDto.getCabinetIds()) {
-			cabinetService.updateStatus(cabinetId, status);
+	public void updateCabinetBundleStatus(CabinetStatusRequestDto cabinetStatusRequestDto) {
+		CabinetStatus status = cabinetStatusRequestDto.getStatus();
+		LentType lentType = cabinetStatusRequestDto.getLentType();
+		for (Long cabinetId : cabinetStatusRequestDto.getCabinetIds()) {
+			if (status != null) {
+				cabinetService.updateStatus(cabinetId, cabinetStatusRequestDto.getStatus());
+			}
+			if (lentType != null) {
+				cabinetService.updateLentType(cabinetId, cabinetStatusRequestDto.getLentType());
+			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType) {
-		for (Long cabinetId : cabinetIds) {
-			cabinetService.updateLentType(cabinetId, lentType);
-		}
-	}
+//	/**
+//	 * {@inheritDoc}
+//	 */
+//	@Override
+//	public void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType) {
+//		for (Long cabinetId : cabinetIds) {
+//			cabinetService.updateLentType(cabinetId, lentType);
+//		}
+//	}
 }

@@ -7,9 +7,9 @@ import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.UpdateCabinetsRequestDto;
 
 public interface CabinetFacadeService {
 
@@ -75,19 +75,17 @@ public interface CabinetFacadeService {
 	/**
 	 * 사물함의 상태를 업데이트합니다.
 	 *
-	 * @param updateCabinetsRequestDto 사물함 ID 리스트 dto
-	 * @param status                   변경할 상태
+	 * @param cabinetStatusRequestDto 사물함 ID 리스트 dto
 	 */
-	void updateCabinetBundleStatus(UpdateCabinetsRequestDto updateCabinetsRequestDto,
-			CabinetStatus status);
+	void updateCabinetBundleStatus(CabinetStatusRequestDto cabinetStatusRequestDto);
 
-	/**
-	 * 사물함의 대여 타입을 업데이트합니다.
-	 *
-	 * @param cabinetIds 사물함 ID 리스트
-	 * @param lentType   변경할 대여 타입
-	 */
-	void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType);
+//	/**
+//	 * 사물함의 대여 타입을 업데이트합니다.
+//	 *
+//	 * @param cabinetIds 사물함 ID 리스트
+//	 * @param lentType   변경할 대여 타입
+//	 */
+//	void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType);
 
 
 	/**

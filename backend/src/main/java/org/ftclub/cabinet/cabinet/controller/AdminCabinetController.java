@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.cabinet.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,8 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.UpdateCabinetsRequestDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,6 +92,15 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetTitle(cabinetId, body.get("title"));
 	}
 
+	@PatchMapping("/")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void updateCabinetBundleStatus(
+			@Valid @RequestBody CabinetStatusRequestDto cabinetStatusRequestDto) {
+		log.info("Called updateCabinetBundleStatus: {}", cabinetStatusRequestDto);
+		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto);
+	}
+
+
 	/**
 	 * 사물함의 행과 열을 업데이트합니다.
 	 *
@@ -134,39 +142,39 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, body.get("visibleNum"));
 	}
 
-	/**
-	 * 사물함들의 상태를 일괄 변경합니다.
-	 *
-	 * @param updateCabinetsRequestDto 변경할 사물함 아이디 리스트 dto
-	 * @param status                   변경할 사물함 상태
-	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-	 */
-	@PatchMapping("/status/{status}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void updateCabinetBundleStatus(
-			@Valid @RequestBody UpdateCabinetsRequestDto updateCabinetsRequestDto,
-			@PathVariable("status") CabinetStatus status) {
-		log.info("Called updateCabinetBundleStatus: {}", status);
-		cabinetFacadeService.updateCabinetBundleStatus(updateCabinetsRequestDto, status);
-	}
+//	/**
+//	 * 사물함들의 상태를 일괄 변경합니다.
+//	 *
+//	 * @param updateCabinetsRequestDto 변경할 사물함 아이디 리스트 dto
+//	 * @param status                   변경할 사물함 상태
+//	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+//	 */
+//	@PatchMapping("/status/{status}")
+//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+//	public void updateCabinetBundleStatus(
+//			@Valid @RequestBody UpdateCabinetsRequestDto updateCabinetsRequestDto,
+//			@PathVariable("status") CabinetStatus status) {
+//		log.info("Called updateCabinetBundleStatus: {}", status);
+//		cabinetFacadeService.updateCabinetBundleStatus(updateCabinetsRequestDto, status);
+//	}
 
-	/**
-	 * 사물함들의 대여 타입을 일괄 변경합니다.
-	 *
-	 * @param body     { 변경할 사물함 아이디 리스트 }
-	 * @param lentType 변경할 사물함 대여 타입
-	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-	 */
-	@PatchMapping("/lent-types/{lentType}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void updateCabinetBundleLentType(
-			@RequestBody HashMap<String, List<Long>> body,
-			@PathVariable("lentType") LentType lentType) {
-		if (body == null || body.isEmpty() || !body.containsKey("cabinetIds") || lentType == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
-		cabinetFacadeService.updateCabinetBundleLentType(body.get("cabinetIds"), lentType);
-	}
+//	/**
+//	 * 사물함들의 대여 타입을 일괄 변경합니다.
+//	 *
+//	 * @param body     { 변경할 사물함 아이디 리스트 }
+//	 * @param lentType 변경할 사물함 대여 타입
+//	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+//	 */
+//	@PatchMapping("/lent-types/{lentType}")
+//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+//	public void updateCabinetBundleLentType(
+//			@RequestBody HashMap<String, List<Long>> body,
+//			@PathVariable("lentType") LentType lentType) {
+//		if (body == null || body.isEmpty() || !body.containsKey("cabinetIds") || lentType == null) {
+//			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+//		}
+//		cabinetFacadeService.updateCabinetBundleLentType(body.get("cabinetIds"), lentType);
+//	}
 
 	/**
 	 * 사물함 대여 타입에 따른 사물함의 정보를 페이지네이션으로 가져옵니다.
