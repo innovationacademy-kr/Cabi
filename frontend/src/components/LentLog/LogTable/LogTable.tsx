@@ -24,24 +24,23 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
         </TheadStyled>
         {lentHistory !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
-            {lentHistory.map(
-              (
-                { floor, section, visibleNum, startedAt, endedAt },
-                idx
-              ) => (
-                <tr key={idx}>
-                  <td
-                    title={`${floor}층 ${section}`}
-                  >{`${floor}F - ${visibleNum}번`}</td>
-                  <td title={new Date(startedAt).toLocaleString("ko-KR")}>
-                    {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
-                  </td>
-                  <td title={new Date(endedAt).toLocaleString("ko-KR")}>
-                    {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
-                  </td>
-                </tr>
-              )
-            )}
+            {lentHistory
+              .sort((a, b) => +new Date(b.startedAt) - +new Date(a.startedAt))
+              .map(
+                ({ floor, section, visibleNum, startedAt, endedAt }, idx) => (
+                  <tr key={idx}>
+                    <td
+                      title={`${floor}층 ${section}`}
+                    >{`${floor}F - ${visibleNum}번`}</td>
+                    <td title={new Date(startedAt).toLocaleString("ko-KR")}>
+                      {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
+                    </td>
+                    <td title={new Date(endedAt).toLocaleString("ko-KR")}>
+                      {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
+                    </td>
+                  </tr>
+                )
+              )}
           </TbodyStyled>
         )}
       </LogTableStyled>

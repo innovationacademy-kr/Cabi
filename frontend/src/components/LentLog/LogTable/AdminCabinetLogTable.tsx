@@ -9,7 +9,11 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-const AdminCabinetLogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
+const AdminCabinetLogTable = ({
+  lentLog,
+}: {
+  lentLog: LentLogResponseType;
+}) => {
   if (lentLog === undefined) return <LoadingAnimation />;
 
   return (
@@ -24,8 +28,9 @@ const AdminCabinetLogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => 
         </TheadStyled>
         {lentLog !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
-            {lentLog.map(
-              ({ floor, section, name, startedAt, endedAt }, idx) => (
+            {lentLog
+              .sort((a, b) => +new Date(b.startedAt) - +new Date(a.startedAt))
+              .map(({ floor, section, name, startedAt, endedAt }, idx) => (
                 <tr key={idx}>
                   <td title={`${floor}층 ${section}`}>{name}</td>
                   <td title={new Date(startedAt).toLocaleString("ko-KR")}>
@@ -35,8 +40,7 @@ const AdminCabinetLogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => 
                     {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
                 </tr>
-              )
-            )}
+              ))}
           </TbodyStyled>
         )}
       </LogTableStyled>
