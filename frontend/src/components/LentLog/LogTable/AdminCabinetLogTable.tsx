@@ -28,9 +28,8 @@ const AdminCabinetLogTable = ({
         </TheadStyled>
         {lentLog !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
-            {lentLog
-              .sort((a, b) => +new Date(b.startedAt) - +new Date(a.startedAt))
-              .map(({ floor, section, name, startedAt, endedAt }, idx) => (
+            {lentLog.map(
+              ({ floor, section, name, startedAt, endedAt }, idx) => (
                 <tr key={idx}>
                   <td title={`${floor}층 ${section}`}>{name}</td>
                   <td title={new Date(startedAt).toLocaleString("ko-KR")}>
@@ -40,7 +39,8 @@ const AdminCabinetLogTable = ({
                     {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
                 </tr>
-              ))}
+              )
+            )}
           </TbodyStyled>
         )}
       </LogTableStyled>
