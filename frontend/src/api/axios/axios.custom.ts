@@ -296,13 +296,10 @@ export const axiosSearchByIntraId = async (intraId: string) => {
 };
 
 const axiosSearchByCabinetNumURL = "/v4/admin/search/cabinets";
-export const axiosSearchByCabinetNum = async (
-  number: number,
-  floor?: number
-) => {
+export const axiosSearchByCabinetNum = async (number: number) => {
   try {
     const response = await instance.get(axiosSearchByCabinetNumURL, {
-      params: { visibleNum: number, floor: floor },
+      params: { visibleNum: number },
     });
     return response;
   } catch (error) {

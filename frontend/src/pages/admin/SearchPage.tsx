@@ -70,9 +70,13 @@ const SearchPage = () => {
   // visibleNum 검색
   const handleSearchByCabinetNum = async () => {
     const searchResult = await axiosSearchByCabinetNum(
-      Number(searchValue.current),
-      searchFloor.current === 0 ? undefined : searchFloor.current
+      Number(searchValue.current)
     );
+    if (searchFloor.current !== 0) {
+      searchResult.data.result = searchResult.data.result.filter(
+        (item: CabinetInfo) => item.floor === searchFloor.current
+      );
+    }
     setSearchListByNum(searchResult.data.result ?? []);
     setTotalSearchList(searchResult.data.totalPage ?? 0);
     setTimeout(() => {
