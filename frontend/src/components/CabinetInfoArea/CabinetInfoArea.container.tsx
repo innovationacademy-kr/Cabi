@@ -188,6 +188,9 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     : null;
 
   const openModal = (modalName: TModalState) => {
+    if (modalName === "lentModal" && myCabinetInfo.cabinetId) {
+      modalName = "unavailableModal";
+    }
     setUserModal({
       ...userModal,
       [modalName]: true,
