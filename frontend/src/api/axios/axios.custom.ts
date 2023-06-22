@@ -111,7 +111,7 @@ export const axiosMyLentInfo = async (): Promise<any> => {
   }
 };
 
-const axiosUpdateMyCabinetInfoURL = "/v4/lent/me";
+const axiosUpdateMyCabinetInfoURL = "/v4/lent/me/cabinet";
 export const axiosUpdateMyCabinetInfo = async (
   title: string | null,
   memo: string | null
