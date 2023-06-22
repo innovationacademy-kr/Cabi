@@ -104,24 +104,28 @@ public class LentServiceImpl implements LentService {
 	// 우선 현재 관리자만 쓰고 있고, 한 군데에서만 사용되므로 List로 전체 반납을 하도록 구현, 이에 대한 논의는 TO-DO
 	private List<LentHistory> returnCabinetByCabinetId(Long cabinetId) {
 		log.info("Called returnCabinetByCabinetId: {}", cabinetId);
-		Date now = new Date();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
-		lentHistories.forEach(lentHistory -> lentHistory.endLent(now));
+		lentHistories.forEach(lentHistory -> lentHistory.endLent(DateUtil.getNow()));
 		cabinet.specifyStatusByUserCount(0);
+		cabinet.writeMemo("");
+		cabinet.writeTitle("");
 		return lentHistories;
 	}
 
 	private LentHistory returnCabinetByUserId(Long userId) {
 		log.info("Called returnCabinet: {}", userId);
-		Date now = new Date();
 		userExceptionHandler.getUser(userId);
 		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
-		lentHistory.endLent(now);
+		lentHistory.endLent(DateUtil.getNow());
 		cabinet.specifyStatusByUserCount(activeLentCount - 1);
+		if (activeLentCount - 1 == 0) {
+			cabinet.writeMemo("");
+			cabinet.writeTitle("");
+		}
 		return lentHistory;
 	}
 

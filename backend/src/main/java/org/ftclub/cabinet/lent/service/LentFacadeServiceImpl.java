@@ -153,8 +153,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public void endLentCabinetWithMemo(UserSessionDto user, LentEndMemoDto lentEndMemoDto) {
 		log.info("Called endLentCabinetWithMemo: {}", user.getName());
 		Cabinet cabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
-		cabinetService.updateMemo(cabinet.getCabinetId(), lentEndMemoDto.getCabinetMemo());
 		lentService.endLentCabinet(user.getUserId());
+		cabinetService.updateMemo(cabinet.getCabinetId(), lentEndMemoDto.getCabinetMemo());
 	}
 
 	@Override
