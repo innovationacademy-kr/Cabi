@@ -143,6 +143,14 @@ public class LentOptionalFetcher {
 		return lentRepository.findByUserId(userId, pageable);
 	}
 
+	/**
+	 * 유저 id 로 대여 기록을 확인합니다. 없을경우, 빈 List 를 리턴합니다. 반납하지 않은 기록은 조회하지 않습니다.
+	 *
+	 * @param userId
+	 * @param pageable
+	 * @return
+	 */
+
 	public List<LentHistory> findByUserIdAndEndedAtNotNull(Long userId, Pageable pageable) {
 		log.info("Called findByUserId: {}", userId);
 		return lentRepository.findByUserIdAndEndedAtNotNull(userId, pageable);
