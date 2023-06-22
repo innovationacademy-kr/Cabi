@@ -31,6 +31,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -168,7 +169,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
-		PageRequest pageable = PageRequest.of(page, size);
+		PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startedAt"));
 		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId,
 				pageable);
 		return lentMapper.toLentHistoryPaginationDto(
