@@ -60,7 +60,6 @@ const SearchPage = () => {
       searchValue.current,
       currentPage.current
     );
-    console.log(searchResult.data);
     setSearchListByIntraId(searchResult.data.result ?? []);
     setTotalSearchList(searchResult.data.totalPage ?? 0);
     setTimeout(() => {
@@ -129,8 +128,8 @@ const SearchPage = () => {
                   <SearchItemByNum {...item} key={index} />
                 ))}
             </ListWrapperStyled>
-            {totalSearchList > 10 &&
-              currentPage.current * 10 < totalSearchList - 10 && (
+            {totalSearchList > 1 &&
+              currentPage.current < totalSearchList - 1 && (
                 <MoreButtonStyled onClick={clickMoreButton}>
                   더보기
                 </MoreButtonStyled>
