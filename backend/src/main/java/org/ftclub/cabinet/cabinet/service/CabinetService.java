@@ -22,13 +22,14 @@ public interface CabinetService {
 	 * @param status    변경할 상태
 	 */
 	void updateStatus(Long cabinetId, CabinetStatus status);
-    /**
-     * 유저 ID로 사물함 Entity를 가져옵니다.
-     *
-     * @param userId 유저 ID
-     * @return 사물함 엔티티
-     */
-    Cabinet getLentCabinetByUserId(Long userId);
+
+	/**
+	 * 유저 ID로 사물함 Entity를 가져옵니다.
+	 *
+	 * @param userId 유저 ID
+	 * @return 사물함 엔티티
+	 */
+	Cabinet getLentCabinetByUserId(Long userId);
 
 	/**
 	 * 사물함의 메모를 업데이트합니다.
@@ -53,6 +54,16 @@ public interface CabinetService {
 	 * @param title     변경할 제목
 	 */
 	void updateTitle(Long cabinetId, String title);
+
+	/**
+	 * 사물함의 제목과 메모를 업데이트합니다.
+	 *
+	 * @param cabinetId 사물함 ID
+	 * @param title     변경할 제목
+	 * @param memo      변경할 메모
+	 */
+	void updateTitleAndMemo(Long cabinetId, String title, String memo);
+
 
 	/**
 	 * 사물함의 최대 사용자 수를 업데이트합니다.

@@ -11,6 +11,7 @@ import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -80,6 +81,18 @@ public class CabinetServiceImpl implements CabinetService {
 		log.info("Called updateTitle: {}, {}", cabinetId, title);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeTitle(title);
+	}
+
+	@Override
+	public void updateTitleAndMemo(Long cabinetId, String title, String memo) {
+		log.info("Called updateTitleAndMemo: {}, {}, {}", cabinetId, title, memo);
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+		if (StringUtils.hasText(title)) {
+			cabinet.writeTitle(title);
+		}
+		if (StringUtils.hasText(memo)) {
+			cabinet.writeMemo(memo);
+		}
 	}
 
 	/**

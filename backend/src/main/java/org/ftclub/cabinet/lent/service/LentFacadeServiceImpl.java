@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
+import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -184,6 +185,19 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		cabinetService.updateTitle(myCabinet.getCabinetId(),
 				updateCabinetTitleDto.getCabinetTitle());
 	}
+
+	@Override
+	public void updateCabinetInfo(UserSessionDto user,
+			CabinetInfoRequestDto cabinetInfoRequestDto) {
+		log.info("Called updateCabinetInfo: {}", user.getName());
+
+		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
+
+		cabinetService.updateTitleAndMemo(myCabinet.getCabinetId(),
+				cabinetInfoRequestDto.getTitle(),
+				cabinetInfoRequestDto.getMemo());
+	}
+
 
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {

@@ -3,6 +3,7 @@ package org.ftclub.cabinet.lent.controller;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -67,6 +68,14 @@ public class LentController {
 			@Valid @RequestBody UpdateCabinetTitleDto updateCabinetTitleDto) {
 		log.info("Called updateCabinetTitle");
 		lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
+	}
+
+	@PatchMapping("/me")
+	public void updateCabinetInfo(
+			@UserSession UserSessionDto user,
+			@RequestBody CabinetInfoRequestDto cabinetInfoRequestDto) {
+		log.info("Called updateCabinetInfo");
+		lentFacadeService.updateCabinetInfo(user, cabinetInfoRequestDto);
 	}
 
 	@GetMapping("/me")
