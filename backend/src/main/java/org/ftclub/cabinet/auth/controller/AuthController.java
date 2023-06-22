@@ -52,7 +52,7 @@ public class AuthController {
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
 		authFacadeService.handleLogin(code, req, res, ftApiProperties);
-		res.sendRedirect(DomainProperties.getFeHost() + "/main");
+		res.sendRedirect(DomainProperties.getFeHost() + "/home");
 	}
 
 	/**
