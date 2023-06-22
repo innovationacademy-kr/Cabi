@@ -103,6 +103,11 @@ public class CabinetServiceImpl implements CabinetService {
 		}
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.specifyLentType(lentType);
+		if (lentType == LentType.SHARE) {
+			cabinet.specifyMaxUser(3);
+		} else if (lentType == LentType.PRIVATE) {
+			cabinet.specifyMaxUser(1);
+		}
 	}
 
 	/**
