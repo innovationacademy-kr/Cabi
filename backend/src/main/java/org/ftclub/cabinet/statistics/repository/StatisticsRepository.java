@@ -17,8 +17,8 @@ public interface StatisticsRepository extends JpaRepository<Cabinet, Long> {
 	Integer getCabinetsCountByStatus(@Param("floor") Integer floor,
 			@Param("status") CabinetStatus status);
 
-	@Query("SELECT c.cabinetId FROM Cabinet c WHERE c.status = 'LIMITED_AVAILABLE' or c.status = 'AVAILABLE'")
-	List<Long> getAvailableCabinetsId();
+	@Query("SELECT c.cabinetId FROM Cabinet c WHERE (c.status = 'LIMITED_AVAILABLE' or c.status = 'AVAILABLE') AND c.cabinetPlace.location.floor = :floor")
+	List<Long> getAvailableCabinetsId(@Param("floor") Integer floor);
 }
 
 

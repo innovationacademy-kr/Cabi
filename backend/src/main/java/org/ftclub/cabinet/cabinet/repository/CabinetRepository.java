@@ -3,7 +3,6 @@ package org.ftclub.cabinet.cabinet.repository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder.In;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -16,10 +15,8 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 @Repository
 public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
-
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c "
