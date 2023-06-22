@@ -143,6 +143,12 @@ public class LentOptionalFetcher {
 		return lentRepository.findByUserId(userId, pageable);
 	}
 
+	public List<LentHistory> findByUserIdAndEndedAtNotNull(Long userId, Pageable pageable) {
+		log.info("Called findByUserId: {}", userId);
+		return lentRepository.findByUserIdAndEndedAtNotNull(userId, pageable);
+	}
+
+
 	/**
 	 * @param userId 유저 id
 	 * @return 유저가 대여한 총 횟수
