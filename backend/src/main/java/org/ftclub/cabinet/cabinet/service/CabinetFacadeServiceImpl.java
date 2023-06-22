@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.cabinet.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -185,6 +187,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		for (Long cabinetId : cabinetIds) {
 			result.add(getCabinetInfo(cabinetId));
 		}
+		// Sorting ASC by Cabinet Floor
+		Comparator<CabinetInfoResponseDto> floorComparator = Comparator.comparing(
+				dto -> dto.getLocation().getFloor());
+		Collections.sort(result, floorComparator);
 		return result;
 	}
 

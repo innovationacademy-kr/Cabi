@@ -72,12 +72,14 @@ const SearchPage = () => {
     const searchResult = await axiosSearchByCabinetNum(
       Number(searchValue.current)
     );
+    let searchResultData: CabinetInfo[] = searchResult.data.result;
+    searchResultData.sort((a, b) => a.floor - b.floor);
     if (searchFloor.current !== 0) {
-      searchResult.data.result = searchResult.data.result.filter(
+      searchResultData = searchResultData.filter(
         (item: CabinetInfo) => item.floor === searchFloor.current
       );
     }
-    setSearchListByNum(searchResult.data.result ?? []);
+    setSearchListByNum(searchResultData ?? []);
     setTotalSearchList(searchResult.data.totalPage ?? 0);
     setTimeout(() => {
       setIsLoading(false);

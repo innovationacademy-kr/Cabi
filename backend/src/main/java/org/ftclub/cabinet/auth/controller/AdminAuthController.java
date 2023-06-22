@@ -76,7 +76,7 @@ public class AdminAuthController {
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
 		authFacadeService.handleLogin(code, req, res, googleApiProperties);
-		res.sendRedirect(DomainProperties.getFeHost() + "/admin/main");
+		res.sendRedirect(DomainProperties.getFeHost() + "/admin/home");
 	}
 
 	/**

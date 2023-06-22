@@ -100,8 +100,10 @@ const SearchBar = () => {
           const searchResult = await axiosSearchByCabinetNum(
             Number(searchValue)
           );
+          const searchResultData: CabinetInfo[] = searchResult.data.result;
+          searchResultData.sort((a, b) => a.floor - b.floor);
           setSearchListById([]);
-          setSearchListByNum(searchResult.data.result);
+          setSearchListByNum(searchResultData);
           setTotalLength(searchResult.data.totalLength);
         }
       }
