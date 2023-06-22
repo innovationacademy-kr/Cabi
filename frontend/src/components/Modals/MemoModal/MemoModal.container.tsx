@@ -7,8 +7,8 @@ import {
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
 import {
-  axiosUpdateCabinetMemo,
-  axiosUpdateCabinetTitle,
+  axiosUpdateMyCabinetInfo, // axiosUpdateCabinetMemo,
+  // axiosUpdateCabinetTitle,
 } from "@/api/axios/axios.custom";
 
 const MemoModalContainer = (props: {
@@ -42,36 +42,23 @@ const MemoModalContainer = (props: {
     setCurrentFloorCabinet(updatedCabinetList);
   };
 
-  const onSaveEditMemo = (newTitle: string | null, newMemo: string) => {
-    if (newTitle !== myCabinetInfo.title) {
-      //수정사항이 있으면
-      axiosUpdateCabinetTitle({ title: newTitle ?? "" })
-        .then(() => {
-          setMyCabinetInfo({
-            ...myCabinetInfo,
-            title: newTitle,
-            memo: newMemo,
-          });
-          // list에서 제목 업데이트
-          updateCabinetTitleInList(newTitle);
-        })
-        .catch((error) => {
-          console.log(error);
+  const onSaveEditMemo = (newTitle: string | null, newMemo: string | null) => {
+    if (newTitle === myCabinetInfo.title) newTitle = null;
+    if (newMemo === myCabinetInfo.memo) newMemo = null;
+    //수정사항이 있으면
+    axiosUpdateMyCabinetInfo(newTitle, newMemo)
+      .then(() => {
+        setMyCabinetInfo({
+          ...myCabinetInfo,
+          title: newTitle ?? "",
+          memo: newMemo ?? "",
         });
-    }
-    if (newMemo !== myCabinetInfo.memo) {
-      axiosUpdateCabinetMemo({ memo: newMemo })
-        .then(() => {
-          setMyCabinetInfo({
-            ...myCabinetInfo,
-            title: newTitle,
-            memo: newMemo,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+        // list에서 제목 업데이트
+        if (newTitle !== null) updateCabinetTitleInList(newTitle);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <MemoModal

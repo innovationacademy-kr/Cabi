@@ -21,7 +21,7 @@ export const axiosMyInfo = async (): Promise<any> => {
     throw error;
   }
 };
-
+/*
 const axiosUpdateCabinetMemoURL = "/v4/lent/me/memo";
 export const axiosUpdateCabinetMemo = async (
   cabinet_memo: object
@@ -49,7 +49,7 @@ export const axiosUpdateCabinetTitle = async (
   } catch (error) {
     throw error;
   }
-};
+}; */
 
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
@@ -105,6 +105,22 @@ const axiosMyLentInfoURL = "/v4/lent/me";
 export const axiosMyLentInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyLentInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUpdateMyCabinetInfoURL = "/v4/lent/me";
+export const axiosUpdateMyCabinetInfo = async (
+  title: string | null,
+  memo: string | null
+): Promise<any> => {
+  try {
+    const response = await instance.patch(axiosUpdateMyCabinetInfoURL, {
+      title,
+      memo,
+    });
     return response;
   } catch (error) {
     throw error;
@@ -229,6 +245,24 @@ export const axiosUpdateCabinetType = async (
   }
 }; */
 
+const axiosUpdateCabinetsURL = "/v4/admin/cabinets/";
+export const axiosUpdateCabinets = async (
+  cabinetIds: number[],
+  lentType: CabinetType | null,
+  status: CabinetStatus | null
+): Promise<any> => {
+  try {
+    const response = await instance.patch(axiosUpdateCabinetsURL, {
+      cabinetIds,
+      lentType,
+      status,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+/*
 const axiosBundleUpdateCabinetTypeURL = "/v4/admin/cabinets/lent-types/";
 export const axiosBundleUpdateCabinetType = async (
   cabinetIdList: number[],
@@ -246,6 +280,7 @@ export const axiosBundleUpdateCabinetType = async (
     throw error;
   }
 };
+ */
 /*
 const axiosUpdateCabinetStatusURL = "/v4/admin/cabinets/status/";
 export const axiosUpdateCabinetStatus = async (
@@ -264,7 +299,7 @@ export const axiosUpdateCabinetStatus = async (
     throw error;
   }
 }; */
-
+/*
 const axiosBundleUpdateCabinetStatusURL = "/v4/admin/cabinets/status/";
 export const axiosBundleUpdateCabinetStatus = async (
   cabinetIdList: number[],
@@ -281,7 +316,7 @@ export const axiosBundleUpdateCabinetStatus = async (
   } catch (error) {
     throw error;
   }
-};
+}; */
 
 const axiosSearchByIntraIdURL = "/v4/admin/search/users-simple";
 export const axiosSearchByIntraId = async (intraId: string) => {

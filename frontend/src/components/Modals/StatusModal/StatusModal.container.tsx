@@ -12,10 +12,10 @@ import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import {
-  axiosBundleUpdateCabinetStatus,
-  axiosBundleUpdateCabinetType,
   axiosCabinetById,
-  axiosGetBrokenCabinetList,
+  axiosGetBrokenCabinetList, // axiosBundleUpdateCabinetStatus,
+  // axiosBundleUpdateCabinetType,
+  axiosUpdateCabinets,
 } from "@/api/axios/axios.custom";
 import useMultiSelect from "@/hooks/useMultiSelect";
 import { handleBrokenCabinetList } from "@/utils/tableUtils";
@@ -73,95 +73,70 @@ const StatusModalContainer = (props: {
   };
 
   const onSaveEditStatus = (
-    newCabinetType: CabinetType,
-    newCabinetStatus: CabinetStatus
+    newCabinetType: CabinetType | null,
+    newCabinetStatus: CabinetStatus | null
   ) => {
     const cabinetId = targetCabinetInfo.cabinetId;
     const cabinetStatus = targetCabinetInfo.status;
     const cabinetType = targetCabinetInfo.lentType;
     //type 수정 사항이 있으면 type변경 api 호출
-    if (newCabinetType !== cabinetType) {
-      axiosBundleUpdateCabinetType([cabinetId], newCabinetType)
-        .then(async () => {
-          setIsCurrentSectionRender(true);
-          setNumberOfAdminWork((prev) => prev + 1);
-          try {
-            const { data } = await axiosCabinetById(currentCabinetId);
-            setTargetCabinetInfo(data);
-          } catch (error) {
-            throw error;
-          }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    }
-    // status 수정 사항이 있으면 status변경 api호출
-    if (newCabinetStatus !== cabinetStatus) {
-      axiosBundleUpdateCabinetStatus([cabinetId], newCabinetStatus)
-        .then(async () => {
-          setIsCurrentSectionRender(true);
-          setNumberOfAdminWork((prev) => prev + 1);
-          try {
-            const { data } = await axiosCabinetById(currentCabinetId);
-            setTargetCabinetInfo(data);
+    if (newCabinetType === cabinetType) newCabinetType = null;
+    if (newCabinetStatus === cabinetStatus) newCabinetStatus = null;
+
+    axiosUpdateCabinets([cabinetId], newCabinetType, newCabinetStatus)
+      .then(async () => {
+        setIsCurrentSectionRender(true);
+        setNumberOfAdminWork((prev) => prev + 1);
+        try {
+          const { data } = await axiosCabinetById(currentCabinetId);
+          setTargetCabinetInfo(data);
+          if (newCabinetStatus === CabinetStatus.BROKEN) {
             const cabinetList = await axiosGetBrokenCabinetList();
             setBrokenCabinetList(handleBrokenCabinetList(cabinetList));
-          } catch (error) {
-            throw error;
           }
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    }
+        } catch (error) {
+          throw error;
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
 
   const onSaveEditBundleStatus = (
-    newCabinetType: CabinetType,
-    newCabinetStatus: CabinetStatus
+    newCabinetType: CabinetType | null,
+    newCabinetStatus: CabinetStatus | null
   ) => {
     const cabinetStatus = targetCabinetInfoList[0].status;
     const cabinetType = targetCabinetInfoList[0].lentType;
     const updateCabinetIdList = targetCabinetInfoList.map(
       (cabinet) => cabinet.cabinetId
     );
-    if (newCabinetType !== cabinetType) {
-      axiosBundleUpdateCabinetType(updateCabinetIdList, newCabinetType)
-        .then(async () => {
-          setIsCurrentSectionRender(true);
-          setNumberOfAdminWork((prev) => prev + 1);
-        })
-        .then(async () => {
-          const ret = await buildNewCabinetInfoList();
-          setTargetCabinetInfoList(ret);
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    }
-    // status 수정 사항이 있으면 status변경 api호출
-    if (newCabinetStatus !== cabinetStatus) {
-      axiosBundleUpdateCabinetStatus(updateCabinetIdList, newCabinetStatus)
-        .then(async () => {
-          setIsCurrentSectionRender(true);
-          setNumberOfAdminWork((prev) => prev + 1);
+    if (newCabinetType === cabinetType) newCabinetType = null;
+    if (newCabinetStatus === cabinetStatus) newCabinetStatus = null;
+
+    axiosUpdateCabinets(updateCabinetIdList, newCabinetType, newCabinetStatus)
+      .then(async () => {
+        setIsCurrentSectionRender(true);
+        setNumberOfAdminWork((prev) => prev + 1);
+        if (newCabinetStatus === CabinetStatus.BROKEN) {
           try {
             const cabinetList = await axiosGetBrokenCabinetList();
             setBrokenCabinetList(handleBrokenCabinetList(cabinetList));
           } catch (error) {
             throw error;
           }
-        })
-        .then(async () => {
-          const ret = await buildNewCabinetInfoList();
-          setTargetCabinetInfoList(ret);
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-    }
+        }
+      })
+      .then(async () => {
+        const ret = await buildNewCabinetInfoList();
+        setTargetCabinetInfoList(ret);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
+
   return (
     <StatusModal
       statusModalObj={statusModalProps}
