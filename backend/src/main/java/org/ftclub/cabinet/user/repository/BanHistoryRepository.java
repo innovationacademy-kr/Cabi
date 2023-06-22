@@ -55,7 +55,7 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	// TO-DO: 현재 LIMIT 1을 사용하지 않고 있음.
 	@Query("SELECT bh"
 			+ " FROM BanHistory bh"
-			+ " WHERE bh.userId = :userId AND bh.unbannedAt < :now"
+			+ " WHERE bh.userId = :userId AND bh.unbannedAt > :now"
 			+ " ORDER BY bh.unbannedAt DESC")
 	List<BanHistory> findRecentBanHistoryByUserId(@Param("userId") Long userId,
 			@Param("now") Date now, Pageable pageable);

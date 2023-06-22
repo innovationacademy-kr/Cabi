@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
-
 import org.ftclub.cabinet.auth.domain.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.utils.DateUtil;
@@ -37,7 +36,8 @@ class AdminUserControllerTest {
 
 	@BeforeEach
 	void setToken() {
-		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(), DateUtil.getNow());
+		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
+				DateUtil.getNow());
 		cookie = TestControllerUtils.getTokenCookie("관리자", adminToken);
 	}
 

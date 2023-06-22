@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.AdminRole;
@@ -219,7 +220,12 @@ public class UserOptionalFetcher {
 	//to-do : if null exception
 	public BanHistory getRecentBanHistory(Long userId) {
 		log.info("Called getRecentBanHistory: {}", userId);
-		return banHistoryRepository.findRecentBanHistoryByUserId(userId, DateUtil.getNow(),
-				PageRequest.of(0, 1)).get(0);
+		List<BanHistory> banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId,
+				DateUtil.getNow(),
+				PageRequest.of(0, 1));
+		if (banHistory.isEmpty()) {
+			throw new DomainException(ExceptionStatus.NOT_FOUND_BAN_HISTORY);
+		}
+		return banHistory.get(0);
 	}
 }
