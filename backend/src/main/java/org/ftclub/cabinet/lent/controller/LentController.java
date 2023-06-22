@@ -70,7 +70,7 @@ public class LentController {
 		lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
 	}
 
-	@PatchMapping("/me")
+	@PatchMapping("/me/cabinet")
 	public void updateCabinetInfo(
 			@UserSession UserSessionDto user,
 			@RequestBody CabinetInfoRequestDto cabinetInfoRequestDto) {
