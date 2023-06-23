@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'org.ftclub'
@@ -10,19 +11,11 @@ sourceCompatibility = '11'
 
 ext {
     snippetsDir = file('build/generated-snippets')
-}
-
-test {
-    outputs.dir snippetsDir
-}
-
-bootJar {
+    outputDocs = file('src/main/resources/static/docs')
 }
 
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+    asciidoctorExt
 }
 
 repositories {
@@ -55,18 +48,40 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
-    implementation 'org.json:json:20210307'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     testImplementation 'org.modelmapper:modelmapper:3.1.1'
     testRuntimeOnly 'com.h2database:h2'
 
-    //JUnit4 추가
-    testImplementation("org.junit.vintage:junit-vintage-engine") {
-        exclude group: "org.hamcrest", module: "hamcrest-core"
-    }
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
     systemProperty 'spring.profiles.active', 'test'
+}
+
+asciidoctor {
+    dependsOn test
+    baseDirFollowsSourceDir()
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+}
+
+tasks.register('copyDocument', Copy) {
+    dependsOn asciidoctor
+    from file("${asciidoctor.outputDir}")
+    into file("${outputDocs}")
+}
+
+build {
+    dependsOn copyDocument
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from("${asciidoctor.outputDir}") {
+        into '/static/docs'
+    }
 }
