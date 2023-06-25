@@ -1,15 +1,14 @@
 package org.ftclub.cabinet.user.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.user.domain.BanHistory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,9 +33,9 @@ public class BanHistoryRepositoryTest {
 		List<BanHistory> activeBanList = banHistoryRepository.findUserActiveBanList(userId,
 				testDate);
 
-		Assertions.assertNotNull(activeBanList);
-		Assertions.assertFalse(activeBanList.isEmpty());
-		Assertions.assertEquals(1, activeBanList.size());
+		assertNotNull(activeBanList);
+		assertFalse(activeBanList.isEmpty());
+		assertEquals(1, activeBanList.size());
 	}
 
 	@Test
@@ -57,8 +56,8 @@ public class BanHistoryRepositoryTest {
 		List<BanHistory> activeBanList = banHistoryRepository.findActiveBanList(pageable,
 				testDate).getContent();
 
-		Assertions.assertNotNull(activeBanList);
-		Assertions.assertEquals(2, activeBanList.size());
+		assertNotNull(activeBanList);
+		assertEquals(2, activeBanList.size());
 	}
 
 	@Test
@@ -69,6 +68,6 @@ public class BanHistoryRepositoryTest {
 		Optional<BanHistory> recentBanHistory = banHistoryRepository.findRecentBanHistoryByUserId(
 				userId);
 
-		Assertions.assertFalse(recentBanHistory.isPresent());
+		assertFalse(recentBanHistory.isPresent());
 	}
 }

@@ -1,8 +1,8 @@
 ---
 #프로덕션 환경
+server:
+  port: 2424
 spring:
-  server:
-    port: 2424
   config:
     import: classpath:application-auth.yml, classpath:application-mail.yml
     activate:
@@ -10,9 +10,9 @@ spring:
 
 ---
 #개발서버 환경
+server:
+  port: 2424
 spring:
-  server:
-    port: 2424
   config:
     import: classpath:application-auth.yml
     activate:
@@ -20,13 +20,12 @@ spring:
 
 ---
 #로컬 환경
+server:
+  port: 2424
 spring:
-  server:
-    port: 2424
   config:
     import: classpath:application-auth.yml
     activate:
       on-profile: local
 
 ---
-

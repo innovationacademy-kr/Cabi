@@ -1,20 +1,28 @@
-=== 로그인 (login)
+=== 어드민 로그인 (login)
 
 ==== 명세
 
-operation::AdminAuth/Login/ok[snippets='http-request']
+operation::AdminAuth/Login/adminOk[snippets='http-request']
 
 ==== 성공
 
-operation::AdminAuth/Login/ok[snippets='http-response']
+operation::AdminAuth/Login/adminOk[snippets='http-response']
 
-=== 로그인 (login)
+=== 최고 관리자 로그인 (login)
 
-==== 명세
-
-operation::AdminAuth/LoginCallback/ok[snippets='http-request,request-parameters']
+operation::AdminAuth/Login/masterOk[snippets='http-request,request-fields']
 
 ==== 성공
 
-operation::AdminAuth/LoginCallback/ok[snippets='http-response']
+operation::AdminAuth/Login/adminOk[snippets='http-response']
+
+==== 실패
+
+===== body가 비어있을 때
+
+operation::AdminAuth/Login/masterEmptyDto[snippets='http-response']
+
+===== body값이 잘못되었을 때
+
+operation::AdminAuth/Login/masterInvalidDto[snippets='http-response']
 
