@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
-import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
+import AdminLentLog from "@/components/LentLog/AdminLentLog";
 import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -14,7 +14,7 @@ export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
   cabinetId: number;
-  cabinetNum: number;
+  visibleNum: number;
   status: CabinetStatus;
   lentType: CabinetType;
   userNameList: string;
@@ -157,7 +157,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         floor: targetCabinetInfo.floor,
         section: targetCabinetInfo.section,
         cabinetId: targetCabinetInfo.cabinetId,
-        cabinetNum: targetCabinetInfo.visibleNum,
+        visibleNum: targetCabinetInfo.visibleNum,
         status: targetCabinetInfo.status,
         lentType: targetCabinetInfo.lentType,
         userNameList: getCabinetUserList(targetCabinetInfo),
@@ -258,7 +258,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         checkMultiStatus={checkMultiStatus}
         expireDate={setExpireDate(cabinetViewData?.expireDate)}
       />
-      {cabinetViewData && <AdminCabinetLentLogContainer />}
+      <AdminLentLog lentType={"CABINET"} />
     </>
   ) : (
     <CabinetInfoArea
