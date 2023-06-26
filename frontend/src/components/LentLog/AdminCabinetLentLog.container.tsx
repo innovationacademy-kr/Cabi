@@ -53,8 +53,6 @@ const AdminCabinetLentLogContainer = () => {
     setPage(0);
   };
 
-  if (!currentCabinetId) return null;
-
   return (
     <AdminCabinetLentLog
       closeLent={closeAndResetLogPage}

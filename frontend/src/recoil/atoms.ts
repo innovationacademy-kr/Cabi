@@ -7,6 +7,7 @@ import {
   CabinetBuildingFloorDto,
   CabinetInfo,
   CabinetInfoByBuildingFloorDto,
+  CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
@@ -96,7 +97,7 @@ export const isMultiSelectState = atom<boolean>({
   default: false,
 });
 
-export const targetCabinetInfoListState = atom<CabinetInfo[]>({
+export const targetCabinetInfoListState = atom<CabinetPreviewInfo[]>({
   key: "TargetCabinetInfoList",
   default: [],
 });

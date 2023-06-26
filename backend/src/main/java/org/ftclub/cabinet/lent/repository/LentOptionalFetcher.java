@@ -199,4 +199,9 @@ public class LentOptionalFetcher {
 		log.info("Called findAllOverdueLent: {}", date);
 		return lentRepository.findAllOverdueLent(date, pageable);
 	}
+
+	public Integer countCabinetAllActiveLent(Long cabinetId) {
+		log.info("Called countCabinetAllActiveLent: {}", cabinetId);
+		return lentRepository.countCabinetAllActiveLent(cabinetId);
+	}
 }

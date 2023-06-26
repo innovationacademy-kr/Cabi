@@ -1,6 +1,8 @@
+import { set } from "react-ga";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 import {
+  currentCabinetIdState,
   currentIntraIdState,
   selectedTypeOnSearchState,
   targetCabinetInfoState,
@@ -32,6 +34,9 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     props;
   const [currentIntraId, setCurrentIntraId] =
     useRecoilState<string>(currentIntraIdState);
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
+    currentCabinetIdState
+  );
   const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
@@ -71,10 +76,12 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
     }
     if (cabinetInfo?.cabinetId) {
       getCabinetInfoByCabinetId(cabinetInfo.cabinetId);
+      setCurrentCabinetId(cabinetInfo.cabinetId);
       openCabinet();
     } else {
       // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
       resetTargetCabinetInfo();
+      setCurrentCabinetId(null);
       openCabinet();
     }
   };

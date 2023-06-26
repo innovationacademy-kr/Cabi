@@ -149,4 +149,9 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"WHERE :startDate < lh.endedAt AND lh.endedAt < :endDate")
 	Integer countLentByReturnTimeBetween(@Param("startDate") Date startDate,
 			@Param("endDate") Date endDate);
+
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE lh.cabinetId = :cabinetId AND lh.endedAt IS NULL")
+	Integer countCabinetAllActiveLent(Long cabinetId);
 }

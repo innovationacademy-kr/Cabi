@@ -11,7 +11,7 @@ import {
   IFloorSectionColNum,
   ISectionColNum,
 } from "@/assets/data/sectionColNumData";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 
 export const buildingsState = selector<Array<string>>({
   key: "Buildings",
@@ -46,7 +46,7 @@ export const currentFloorSectionState = selector<Array<string>>({
   },
 });
 
-export const currentSectionCabinetState = selector<CabinetInfo[]>({
+export const currentSectionCabinetState = selector<CabinetPreviewInfo[]>({
   key: "CurrentSectionCabinet",
   get: ({ get }) => {
     const currentFloorData = get(currentFloorCabinetState);

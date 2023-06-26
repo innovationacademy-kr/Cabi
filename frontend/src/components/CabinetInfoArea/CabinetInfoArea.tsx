@@ -57,7 +57,7 @@ const CabinetInfoArea: React.FC<{
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={isMine}
       >
-        {selectedCabinetInfo!.cabinetNum}
+        {selectedCabinetInfo!.visibleNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}

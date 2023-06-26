@@ -9,7 +9,7 @@ import CabinetList from "@/components/CabinetList/CabinetList";
 import EmptySection from "@/components/CabinetList/EmptySection/EmptySection";
 import RealViewNotification from "@/components/CabinetList/RealViewNotification/RealViewNotification";
 import MultiSelectFilterButton from "@/components/Common/MultiSelectFilterButton";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetInfo, CabinetPreview, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
 interface ICabinetListContainer {
@@ -20,7 +20,7 @@ const CabinetListContainer = ({
   isAdmin,
 }: ICabinetListContainer): JSX.Element => {
   const colNum = useRecoilValue(currentSectionColNumState);
-  const currentSectionCabinets = useRecoilValue<CabinetInfo[]>(
+  const currentSectionCabinets = useRecoilValue<CabinetPreviewInfo[]>(
     currentSectionCabinetState
   );
   const currentSectionName = useRecoilValue<string>(currentSectionNameState);
