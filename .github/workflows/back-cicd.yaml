@@ -31,50 +31,22 @@ jobs:
           --host="127.0.0.1"
           --port="3310"
           --database="test_db"
-          --user="test_user"
+          --user="root"
           --password="test_password"
-          < "backend/test/test_db.sql"
-      - name: Node.js 16.x Version
-        uses: actions/setup-node@v1
+          < "backend/src/test/resources/database/spring_test_db.sql"
+
+      - name: JDK 11 설정
+        uses: actions/setup-java@v2
         with:
-          node-version: 16.x
-      - name: 종속 모듈들 캐싱
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/backend/node_modules
-          key: npm-packages-${{ hashFiles('**/backend/package-lock.json') }}
-        id: cache
-      - name: 종속 모듈들 설치
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --prefix backend
-      - name: lint 체크
-        run: npm run lint --prefix backend
-      - name: 빌드 체크
-        run: npm run build --prefix backend
-      - name: 단위 테스트 체크
-        run: npm run test --prefix backend
-      - name: E2E 테스트
-        env:
-          HOST: localhost
-          DB_USER: test_user
-          DB_PORT: 3306
-          DATABASE: test_db
-          DB_PASSWORD: test_password
-          ROOT_PASSWORD: test_password
-          FORTYTWO_APP_ID: 1234
-          FORTYTWO_APP_SECRET: 1234
-          ADMIN_GOOGLE_CLIENT_ID: 1234
-          ADMIN_GOOGLE_CLIENT_SECRET: 1234
-          ADMIN_GOOGLE_CLIENT_CALLBACK: http://localhost/api/admin/auth/login/callback
-          CALLBACK_URL: /auth/login/callback
-          COOKIE_KEY: secret
-          JWT_SECRETKEY: SecretKey
-          JWT_ALGORITHM: HS256
-          JWT_EXPIREIN: 28d
-          JWT_ISSUER: 42cabi
-          MAIL_SEND: false
-          DEBUG_LOG: true
-        run: npm run test:e2e --prefix backend
+          java-version: 11
+          distribution: "amazon-corretto"
+
+      - name: Gradle 빌드
+        run: |
+          cd backend
+          chmod +x ./gradlew
+          ./gradlew build
+        shell: bash
 
   backend-CD-develop:
     name: deploy-develop
