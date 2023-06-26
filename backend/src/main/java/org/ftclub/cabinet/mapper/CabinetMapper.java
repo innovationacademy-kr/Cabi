@@ -72,5 +72,5 @@ public interface CabinetMapper {
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents);
 
-	CabinetPreviewDto toCabinetPreviewDto(Cabinet cabinet, Integer userCount);
+	CabinetPreviewDto toCabinetPreviewDto(Cabinet cabinet, Integer userCount, String name);
 }

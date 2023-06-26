@@ -18,4 +18,5 @@ public class CabinetPreviewDto {
 	private final Integer maxUser;
 	private final CabinetStatus status;
 	private final Integer userCount;
+	private final String name;
 }

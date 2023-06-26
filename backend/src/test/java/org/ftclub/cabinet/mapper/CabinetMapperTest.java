@@ -84,13 +84,13 @@ class CabinetMapperTest {
 	void toCabinetsPerSectionResponseDto() {
 		String section = "testSection";
 		CabinetPreviewDto cabinetPreviewDto1 = new CabinetPreviewDto(1L, 2, "title",
-				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1);
+				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1, null);
 		CabinetPreviewDto cabinetPreviewDto2 = new CabinetPreviewDto(2L, 5, "title",
-				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1);
+				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1, null);
 		CabinetPreviewDto cabinetPreviewDto3 = new CabinetPreviewDto(3L, 6, "title",
-				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1);
+				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1, null);
 		CabinetPreviewDto cabinetPreviewDto4 = new CabinetPreviewDto(4L, 7, "title",
-				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1);
+				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1, null);
 		List<CabinetPreviewDto> cabinetPreviewDtos = List.of(cabinetPreviewDto1, cabinetPreviewDto2,
 				cabinetPreviewDto3, cabinetPreviewDto4);
 		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto = cabinetMapper.toCabinetsPerSectionResponseDto(

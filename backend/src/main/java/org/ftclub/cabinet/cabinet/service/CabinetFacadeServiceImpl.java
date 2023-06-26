@@ -103,9 +103,13 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<Cabinet> cabinets = cabinetOptionalFetcher.findAllCabinetsByLocation(location);
 
 		return cabinets.stream().map(cabinet -> {
-			Integer userCount = lentOptionalFetcher.countCabinetAllActiveLent(
+			List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 					cabinet.getCabinetId());
-			return cabinetMapper.toCabinetPreviewDto(cabinet, userCount);
+			String lentUserName = null;
+			if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
+				lentUserName = lentHistories.get(0).getUser().getName();
+			}
+			return cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(), lentUserName);
 		}).collect(Collectors.toList());
 	}
 
