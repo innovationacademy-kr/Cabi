@@ -21,7 +21,7 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @param today  현재 날짜
 	 * @return active {@link BanHistory} 리스트
 	 */
-	@Query("SELECT b FROM BanHistory b WHERE b.userId = :userId AND b.unbannedAt > :today")
+	@Query("SELECT b FROM BanHistory b WHERE b.user.userId = :userId AND b.unbannedAt > :today")
 	List<BanHistory> findUserActiveBanList(
 			@Param("userId") Long userId,
 			@Param("today") Date today);
@@ -32,7 +32,7 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @param userId 유저 고유 아이디
 	 * @return {@link BanHistory} 리스트
 	 */
-	@Query("SELECT b FROM BanHistory b WHERE b.userId = :userId")
+	@Query("SELECT b FROM BanHistory b WHERE b.user.userId = :userId")
 	List<BanHistory> findBanHistoriesByUserId(@Param("userId") Long userId);
 
 	/**
@@ -55,7 +55,7 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	// TO-DO: 현재 LIMIT 1을 사용하지 않고 있음.
 	@Query("SELECT bh"
 			+ " FROM BanHistory bh"
-			+ " WHERE bh.userId = :userId AND bh.unbannedAt > :now"
+			+ " WHERE bh.user.userId = :userId AND bh.unbannedAt > :now"
 			+ " ORDER BY bh.unbannedAt DESC")
 	List<BanHistory> findRecentBanHistoryByUserId(@Param("userId") Long userId,
 			@Param("now") Date now, Pageable pageable);
@@ -67,7 +67,7 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @param now    현재 시간
 	 * @return {@link BanHistory}
 	 */
-	@Query("SELECT b FROM BanHistory b WHERE b.unbannedAt = (SELECT MAX(b2.unbannedAt) FROM BanHistory b2) AND b.userId = :userId AND b.unbannedAt > :now")
+	@Query("SELECT b FROM BanHistory b WHERE b.unbannedAt = (SELECT MAX(b2.unbannedAt) FROM BanHistory b2) AND b.user.userId = :userId AND b.unbannedAt > :now")
 	Optional<BanHistory> findRecentActiveBanHistoryByUserId(@Param("userId") Long userId,
 			@Param("now") Date now);
 }
