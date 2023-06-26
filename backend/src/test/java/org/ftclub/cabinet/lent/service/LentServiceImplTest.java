@@ -33,6 +33,46 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class LentServiceImplTest {
 
+	User banUser1;
+	User banUser2;
+	User penaltyUser1;
+	User penaltyUser2;
+	User lentUser1;
+	User lentUser2;
+	User overdueUser;
+	User koreaUser;
+	User foreignUser;
+	User clubUser1;
+	User clubUser2;
+	User normalUser1;
+	User normalUser2;
+	User normalUser3;
+	User normalUser4;
+	Cabinet privateBrokenCabinet;
+	Cabinet privateFullCabinet;
+	Cabinet privateOverdueCabinet;
+	Cabinet privateAvailableCabinet1;
+	Cabinet privateAvailableCabinet2;
+	Cabinet privateAvailableCabinet3;
+	Cabinet privateAvailableCabinet4;
+	Cabinet privateAvailableCabinet5;
+	Cabinet privateAvailableCabinet6;
+	Cabinet privateAvailableCabinet7;
+	Cabinet privateAvailableCabinet8;
+	Cabinet privateAvailableCabinet9;
+	Cabinet privateAvailableCabinet10;
+	Cabinet privateAvailableCabinet11;
+	Cabinet privateAvailableCabinet12;
+	Cabinet sharedBrokenCabinet;
+	Cabinet sharedFullCabinet;
+	Cabinet sharedOverdueCabinet;
+	Cabinet sharedAvailableCabinet0;
+	Cabinet sharedAvailableCabinet1;
+	Cabinet sharedAvailableCabinet2;
+	Cabinet sharedLimitedAvailableCabinet1;
+	Cabinet sharedLimitedAvailableCabinet2;
+	Cabinet clubCabinet1;
+	Cabinet clubCabinet2;
 	@Autowired
 	private LentService lentService;
 	@PersistenceContext
@@ -51,50 +91,6 @@ class LentServiceImplTest {
 		fieldReflect.set(target, value);
 		fieldReflect.setAccessible(false);
 	}
-
-	User banUser1;
-	User banUser2;
-	User penaltyUser1;
-	User penaltyUser2;
-	User lentUser1;
-	User lentUser2;
-	User overdueUser;
-	User koreaUser;
-	User foreignUser;
-	User clubUser1;
-	User clubUser2;
-	User normalUser1;
-	User normalUser2;
-	User normalUser3;
-	User normalUser4;
-
-	Cabinet privateBrokenCabinet;
-	Cabinet privateFullCabinet;
-	Cabinet privateOverdueCabinet;
-	Cabinet privateAvailableCabinet1;
-	Cabinet privateAvailableCabinet2;
-	Cabinet privateAvailableCabinet3;
-	Cabinet privateAvailableCabinet4;
-	Cabinet privateAvailableCabinet5;
-	Cabinet privateAvailableCabinet6;
-	Cabinet privateAvailableCabinet7;
-	Cabinet privateAvailableCabinet8;
-	Cabinet privateAvailableCabinet9;
-	Cabinet privateAvailableCabinet10;
-	Cabinet privateAvailableCabinet11;
-	Cabinet privateAvailableCabinet12;
-
-	Cabinet sharedBrokenCabinet;
-	Cabinet sharedFullCabinet;
-	Cabinet sharedOverdueCabinet;
-	Cabinet sharedAvailableCabinet0;
-	Cabinet sharedAvailableCabinet1;
-	Cabinet sharedAvailableCabinet2;
-	Cabinet sharedLimitedAvailableCabinet1;
-	Cabinet sharedLimitedAvailableCabinet2;
-
-	Cabinet clubCabinet1;
-	Cabinet clubCabinet2;
 
 	@BeforeEach
 	void beforeEach() {
@@ -252,7 +248,6 @@ class LentServiceImplTest {
 		for (LentHistory lentHistory : activeLentHistory) {
 			assertEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
 		}
-
 		lentService.endLentCabinet(userId1);
 		assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
 

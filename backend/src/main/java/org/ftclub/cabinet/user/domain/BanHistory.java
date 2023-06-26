@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.user.domain;
 
+import static javax.persistence.FetchType.LAZY;
+
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -9,6 +11,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -49,6 +53,10 @@ public class BanHistory {
 	@NotNull
 	@Column(name = "USER_ID", nullable = false)
 	private Long userId;
+
+	@JoinColumn(name = "USER_ID", insertable = false, updatable = false)
+	@ManyToOne(fetch = LAZY)
+	private User user;
 
 	protected BanHistory(Date bannedAt, Date unbannedAt, BanType banType,
 			Long userId) {
