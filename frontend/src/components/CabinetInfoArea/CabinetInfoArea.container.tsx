@@ -4,7 +4,7 @@ import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
-import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { CabinetInfo, CabinetPreviewInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
@@ -27,7 +27,7 @@ export interface ISelectedCabinetInfo {
 }
 
 export interface IMultiSelectTargetInfo {
-  targetCabinetInfoList: CabinetInfo[];
+  targetCabinetInfoList: CabinetPreviewInfo[];
   typeCounts: {
     AVAILABLE: number;
     OVERDUE: number;
@@ -170,7 +170,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
     : null;
 
-  const countTypes = (cabinetList: CabinetInfo[]) =>
+  const countTypes = (cabinetList: CabinetPreviewInfo[]) =>
     cabinetList.reduce(
       (result, cabinet): ICount => {
         if (cabinet.status === CabinetStatus.LIMITED_AVAILABLE)
@@ -226,9 +226,9 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     });
   };
 
-  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
+  const checkMultiReturn = (selectedCabinets: CabinetPreviewInfo[]) => {
     const returnable = selectedCabinets.find(
-      (cabinet) => cabinet.lents.length >= 1
+      (cabinet) => cabinet.userCount >= 1
     );
     if (returnable !== undefined) {
       return true;
@@ -236,7 +236,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     return false;
   };
 
-  const checkMultiStatus = (selectedCabinets: CabinetInfo[]) => {
+  const checkMultiStatus = (selectedCabinets: CabinetPreviewInfo[]) => {
     // 캐비넷 일괄 상태 관리 모달을 열기 위한 조건
     // 선택된 캐비넷들이 같은 타입, 같은 상태여야 함.
     if (isSameType(selectedCabinets) && isSameStatus(selectedCabinets))

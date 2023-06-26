@@ -40,7 +40,7 @@ const StatusModalContainer = (props: {
           cabinetStatus: targetCabinetInfoList[0].status,
           warningNotificationObj: {
             isVisible: targetCabinetInfoList.find(
-              (cabinet) => cabinet.lents.length >= 1
+              (cabinet) => cabinet.userCount >= 1
             )
               ? true
               : false,

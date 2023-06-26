@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
+  currentFloorNumberState,
+  currentSectionNameState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
   overdueCabinetListState,
@@ -42,6 +44,8 @@ const AdminReturnModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
+  const currentFloor = useRecoilValue(currentFloorNumberState);
+  const currentSection = useRecoilValue(currentSectionNameState);
   const setNumberOfAdminWork = useSetRecoilState<number>(
     numberOfAdminWorkState
   );
@@ -65,12 +69,10 @@ const AdminReturnModal: React.FC<{
       const countReturnable = () => {
         let cnt = 0;
         targetCabinetInfoList.forEach((cabinet) => {
-          if (cabinet.lents.length >= 1) cnt++;
+          if (cabinet.userCount >= 1) cnt++;
         });
         return cnt;
       };
-      const currentFloor = targetCabinetInfoList[0].floor;
-      const currentSection = targetCabinetInfoList[0].section;
       const detail = `<strong>${currentFloor}층 ${currentSection}</strong><br>선택한 <strong>${
         targetCabinetInfoList.length
       }</strong>개의 사물함 중 <strong>${countReturnable()}</strong>개 사물함이 반납 가능합니다.<br>해당 사물함들을 반납 하시겠습니까?`;
@@ -167,7 +169,7 @@ const AdminReturnModal: React.FC<{
   const tryBundleReturnRequest = async (e: React.MouseEvent) => {
     const returnableCabinetIdList = targetCabinetInfoList
       .map((cabinet) => {
-        if (cabinet.lents.length >= 1) return cabinet.cabinetId;
+        if (cabinet.userCount >= 1) return cabinet.cabinetId;
       })
       .filter((id) => id);
     try {
