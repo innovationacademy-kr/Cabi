@@ -11,10 +11,10 @@ jobs:
       mariadb:
         image: mariadb:10.4.10
         env:
-          MARIADB_DATABASE: test_db
-          MARIADB_USER: test_user
-          MARIADB_PASSWORD: test_password
-          MARIADB_ROOT_PASSWORD: test_password
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+          MYSQL_ROOT_PASSWORD: test_password
         ports:
           - 3310:3306
         options: >-
