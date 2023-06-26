@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.repository;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Date;
 import org.ftclub.cabinet.user.domain.User;
@@ -44,6 +45,6 @@ public class UserOptionalFetcherTest {
 		User result = userOptionalFetcher.findUser(0L);
 
 		//then
-		assertEquals(null, result);
+		assertNull(result);
 	}
 }
