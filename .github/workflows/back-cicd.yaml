@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mariadb:
-        image: mariadb
+        image: mariadb:10.4.10
         env:
           MARIADB_DATABASE: test_db
           MARIADB_USER: test_user
@@ -18,10 +18,11 @@ jobs:
         ports:
           - 3310:3306
         options: >-
-          --health-cmd "mysqladmin ping -P 3306 -ptest_password | grep 'mysqld is alive' || exit 1"
+          --health-cmd "mysqladmin status -h 127.0.0.1 -P 3306 -u root -ptest_password"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
@@ -36,10 +37,17 @@ jobs:
           < "backend/src/test/resources/database/spring_test_db.sql"
 
       - name: JDK 11 설정
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
-          java-version: 11
-          distribution: "amazon-corretto"
+          java-version: "11"
+          distribution: "corretto"
+
+      - name: Application YML 생성
+        run: |
+          mkdir -p backend/src/main/resources
+          echo "${{ secrets.APPLICATION_LOCAL_YML }}" | base64 --decode > backend/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > backend/src/main/resources/application-auth.yml
+          echo "${{ secrets.APPLICATION_MAIL_YML }}" | base64 --decode > backend/src/main/resources/application-mail.yml
 
       - name: Gradle 빌드
         run: |
