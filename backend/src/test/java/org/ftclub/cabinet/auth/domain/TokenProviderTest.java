@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.auth.domain;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class TokenProviderTest {
 	ObjectMapper objectMapper = new ObjectMapper();
 
 	@Test
-	void 토큰_클레임_생성() throws JsonProcessingException {
+	void 토큰_클레임_생성() throws Exception {
 		String googleEmail = "dongledongledongglee@google.com";
 		String ftIntraId = "yooh";
 		String ftEmail = "inshin@member.kr";
@@ -64,7 +63,7 @@ public class TokenProviderTest {
 	 * 지정하는 국가의 카뎃이 아닌 경우 클레임 생성에 실패합니다.
 	 */
 	@Test
-	void 토큰_클레임_생성_실패() throws JsonProcessingException {
+	void 토큰_클레임_생성_실패() throws Exception {
 		String ftIntraId = "foreign";
 		String ftEmail = "foreginer@member.fr";
 		JSONObject ftProfile = new JSONObject()

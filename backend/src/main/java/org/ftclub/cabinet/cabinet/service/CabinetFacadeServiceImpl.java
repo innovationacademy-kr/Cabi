@@ -77,7 +77,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
 		for (LentHistory lentHistory : lentHistories) {
-			User findUser = userOptionalFetcher.findUser(lentHistory.getUserId());
+			User findUser = lentHistory.getUser();
 			lentDtos.add(lentMapper.toLentDto(findUser, lentHistory));
 		}
 		return cabinetMapper.toCabinetInfoResponseDto(cabinetOptionalFetcher.findCabinet(cabinetId),
@@ -215,7 +215,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<Long> collect = allCabinetsByVisibleNum.map(cabinet -> cabinet.getCabinetId())
 				.stream().collect(Collectors.toList());
 		return new CabinetInfoPaginationDto(getCabinetInfoBundle(collect),
-				allCabinetsByVisibleNum.getTotalElements());
+				allCabinetsByVisibleNum.getTotalPages());
 	}
 
 	/**
@@ -230,8 +230,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		log.info("generateLentHistoryDtoList");
 		return lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
-						userOptionalFetcher.findUser(e.getUserId()),
-						cabinetOptionalFetcher.findCabinet(e.getCabinetId())))
+						e.getUser(),
+						e.getCabinet()))
 				.collect(Collectors.toList());
 	}
 

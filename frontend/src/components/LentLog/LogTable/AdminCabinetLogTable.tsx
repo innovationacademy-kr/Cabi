@@ -44,8 +44,8 @@ const AdminCabinetLogTable = ({
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {lentLog === STATUS_400_BAD_REQUEST && (
-        <EmptyLogStyled>반납처리 된 사물함이 아직 없습니다.</EmptyLogStyled>
+      {(lentLog === STATUS_400_BAD_REQUEST || lentLog.length === 0) && (
+        <EmptyLogStyled>대여기록이 없습니다.</EmptyLogStyled>
       )}
     </LogTableWrapperstyled>
   );

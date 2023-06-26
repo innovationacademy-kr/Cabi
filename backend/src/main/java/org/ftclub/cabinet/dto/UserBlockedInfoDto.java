@@ -15,4 +15,10 @@ public class UserBlockedInfoDto {
 	private final String name;
 	private final Date bannedAt;
 	private final Date unbannedAt;
+
+	@Override
+	public String toString() {
+		return "UserBlockedInfoDto [userId=" + userId + ", name=" + name + ", bannedAt=" + bannedAt + ", unbannedAt="
+				+ unbannedAt + "]";
+	}
 }

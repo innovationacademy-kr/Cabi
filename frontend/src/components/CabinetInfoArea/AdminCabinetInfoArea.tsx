@@ -128,7 +128,7 @@ const AdminCabinetInfoArea: React.FC<{
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={false}
       >
-        {selectedCabinetInfo!.cabinetNum}
+        {selectedCabinetInfo!.visibleNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}

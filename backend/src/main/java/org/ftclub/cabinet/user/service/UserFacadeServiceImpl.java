@@ -66,7 +66,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 				pageable, now);
 		List<UserBlockedInfoDto> userBlockedInfoDtos = activeBanList.stream().map(
 						banHistory -> userMapper.toUserBlockedInfoDto(
-								banHistory, userOptionalFetcher.getUser(banHistory.getUserId())))
+								banHistory, banHistory.getUser()))
 				.collect(Collectors.toList());
 		return userMapper.toBlockedUserPaginationDto(userBlockedInfoDtos,
 				activeBanList.getTotalPages());
@@ -75,8 +75,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
 			Integer totalPage) {
 		List<UserBlockedInfoDto> userBlockedInfoDtoList = banHistories.stream()
-				.map(b -> userMapper.toUserBlockedInfoDto(b,
-						userOptionalFetcher.getUser(b.getUserId())))
+				.map(b -> userMapper.toUserBlockedInfoDto(b, b.getUser()))
 				.collect(Collectors.toList());
 		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalPage);
 	}
@@ -91,15 +90,15 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		}
 		PageRequest pageable = PageRequest.of(page, size);
 		Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
-		return generateUserProfilePaginationDto(users.getContent(), users.getTotalElements());
+		return generateUserProfilePaginationDto(users.getContent(), users.getTotalPages());
 	}
 
 	private UserProfilePaginationDto generateUserProfilePaginationDto(List<User> users,
-			Long totalLength) {
+			Integer totalPage) {
 		List<UserProfileDto> userProfileDtoList = users.stream()
 				.map(u -> userMapper.toUserProfileDto(u)).collect(
 						Collectors.toList());
-		return new UserProfilePaginationDto(userProfileDtoList, totalLength);
+		return new UserProfilePaginationDto(userProfileDtoList, totalPage);
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
@@ -117,6 +116,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		users.toList().stream().forEach(user -> {
 			BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(
 					user.getUserId(), DateUtil.getNow());
+			//todo : banhistory join으로 한번에 가능
 			UserBlockedInfoDto blockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
 			Cabinet cabinet = cabinetOptionalFetcher.findLentCabinetByUserId(user.getUserId());
 			CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
@@ -205,11 +205,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		PageRequest pageable = PageRequest.of(page, size);
 		lentOptionalFetcher.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
-					User user = userOptionalFetcher.findUser(lh.getUserId());
+					User user = lh.getUser();
 					Long overdueDays = DateUtil.calculateTwoDateDiff(DateUtil.getNow(),
 							lh.getExpiredAt());
-					Cabinet cabinet = cabinetOptionalFetcher.getCabinet(
-							lh.getCabinetId());
+					Cabinet cabinet = lh.getCabinet();
 					overdueList.add(
 							cabinetMapper.toOverdueUserCabinetDto(lh, user,
 									cabinet, overdueDays));

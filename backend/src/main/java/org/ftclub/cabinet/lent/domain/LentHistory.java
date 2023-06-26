@@ -1,11 +1,15 @@
 package org.ftclub.cabinet.lent.domain;
 
+import static javax.persistence.FetchType.LAZY;
+
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -14,8 +18,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 
@@ -73,6 +79,14 @@ public class LentHistory {
 	 */
 	@Column(name = "CABINET_ID", nullable = false)
 	private Long cabinetId;
+
+	@JoinColumn(name = "USER_ID", insertable = false, updatable = false)
+	@ManyToOne(fetch = LAZY)
+	private User user;
+
+	@JoinColumn(name = "CABINET_ID", insertable = false, updatable = false)
+	@ManyToOne(fetch = LAZY)
+	private Cabinet cabinet;
 
 	protected LentHistory(Date startedAt, Date expiredAt, Long userId,
 			Long cabinetId) {

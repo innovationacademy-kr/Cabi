@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.dto;
 
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,5 +13,5 @@ import lombok.Getter;
 public class CabinetInfoPaginationDto {
 
 	private final List<CabinetInfoResponseDto> result; // 캐비넷 정보 배열
-	private final Long totalLength; // DB에 저장된 총 결과의 길이
+	private final Integer totalPage; // 총 페이지 수
 }
