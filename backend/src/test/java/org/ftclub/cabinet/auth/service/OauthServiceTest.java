@@ -1,11 +1,12 @@
 package org.ftclub.cabinet.auth.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
-import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,16 +30,16 @@ public class OauthServiceTest {
 
 		oauthService.sendToApi(response, googleApiProperties);
 
-		Assert.assertEquals(response.getStatus(), HttpServletResponse.SC_FOUND);
+		assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FOUND);
 	}
 
 	@Test
-	@Ignore("직접 요청을 보내야 하므로 제외함")
+	@Disabled("직접 요청을 보내야 하므로 제외함")
 	void 구글_토큰_요청() {
 	}
 
 	@Test
-	@Ignore("직접 요청을 보내야 하므로 제외함")
+	@Disabled("직접 요청을 보내야 하므로 제외함")
 	void 구글_프로필_가져오기() {
 	}
 
@@ -48,16 +49,16 @@ public class OauthServiceTest {
 
 		oauthService.sendToApi(response, ftApiProperties);
 
-		Assert.assertEquals(response.getStatus(), HttpServletResponse.SC_FOUND);
+		assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FOUND);
 	}
 
 	@Test
-	@Ignore("직접 요청을 보내야 하므로 제외함")
+	@Disabled("직접 요청을 보내야 하므로 제외함")
 	void Ft_토큰_요청() {
 	}
 
 	@Test
-	@Ignore("직접 요청을 보내야 하므로 제외함")
+	@Disabled("직접 요청을 보내야 하므로 제외함")
 	void Ft_프로필_가져오기() {
 	}
 
