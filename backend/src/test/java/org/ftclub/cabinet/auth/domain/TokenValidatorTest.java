@@ -40,7 +40,7 @@ public class TokenValidatorTest {
 	JSONObject ftForeignerProfile;
 
 	@BeforeEach
-	void setup() {
+	void setup() throws Exception {
 		objectMapper = new ObjectMapper();
 		googleProfile = new JSONObject()
 				.put("email", "email");
