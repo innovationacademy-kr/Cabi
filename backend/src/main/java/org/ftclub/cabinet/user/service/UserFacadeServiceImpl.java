@@ -66,7 +66,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 				pageable, now);
 		List<UserBlockedInfoDto> userBlockedInfoDtos = activeBanList.stream().map(
 						banHistory -> userMapper.toUserBlockedInfoDto(
-								banHistory, userOptionalFetcher.getUser(banHistory.getUserId())))
+								banHistory, banHistory.getUser()))
 				.collect(Collectors.toList());
 		return userMapper.toBlockedUserPaginationDto(userBlockedInfoDtos,
 				activeBanList.getTotalPages());
@@ -75,8 +75,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
 			Integer totalPage) {
 		List<UserBlockedInfoDto> userBlockedInfoDtoList = banHistories.stream()
-				.map(b -> userMapper.toUserBlockedInfoDto(b,
-						userOptionalFetcher.getUser(b.getUserId())))
+				.map(b -> userMapper.toUserBlockedInfoDto(b, b.getUser()))
 				.collect(Collectors.toList());
 		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalPage);
 	}
@@ -117,6 +116,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		users.toList().stream().forEach(user -> {
 			BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(
 					user.getUserId(), DateUtil.getNow());
+			//todo : banhistory join으로 한번에 가능
 			UserBlockedInfoDto blockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
 			Cabinet cabinet = cabinetOptionalFetcher.findLentCabinetByUserId(user.getUserId());
 			CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
@@ -205,11 +205,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		PageRequest pageable = PageRequest.of(page, size);
 		lentOptionalFetcher.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
 				(lh) -> {
-					User user = userOptionalFetcher.findUser(lh.getUserId());
+					User user = lh.getUser();
 					Long overdueDays = DateUtil.calculateTwoDateDiff(DateUtil.getNow(),
 							lh.getExpiredAt());
-					Cabinet cabinet = cabinetOptionalFetcher.getCabinet(
-							lh.getCabinetId());
+					Cabinet cabinet = lh.getCabinet();
 					overdueList.add(
 							cabinetMapper.toOverdueUserCabinetDto(lh, user,
 									cabinet, overdueDays));

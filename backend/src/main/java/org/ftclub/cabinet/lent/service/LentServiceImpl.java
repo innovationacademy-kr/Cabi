@@ -72,7 +72,7 @@ public class LentServiceImpl implements LentService {
 		LentHistory result =
 				LentHistory.of(now, expirationDate, userId, cabinetId);
 		lentRepository.save(result);
-		cabinet.specifyStatusByUserCount(1);
+		cabinet.specifyStatusByUserCount(1); // todo : policy에서 관리
 	}
 
 	@Override
@@ -104,11 +104,11 @@ public class LentServiceImpl implements LentService {
 	// 우선 현재 관리자만 쓰고 있고, 한 군데에서만 사용되므로 List로 전체 반납을 하도록 구현, 이에 대한 논의는 TO-DO
 	private List<LentHistory> returnCabinetByCabinetId(Long cabinetId) {
 		log.info("Called returnCabinetByCabinetId: {}", cabinetId);
-		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
 		lentHistories.forEach(lentHistory -> lentHistory.endLent(DateUtil.getNow()));
-		cabinet.specifyStatusByUserCount(0);
+		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
 		return lentHistories;
@@ -121,7 +121,7 @@ public class LentServiceImpl implements LentService {
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(DateUtil.getNow());
-		cabinet.specifyStatusByUserCount(activeLentCount - 1);
+		cabinet.specifyStatusByUserCount(activeLentCount - 1); // policy로 빠질만한 부분인듯?
 		if (activeLentCount - 1 == 0) {
 			cabinet.writeMemo("");
 			cabinet.writeTitle("");
@@ -134,7 +134,7 @@ public class LentServiceImpl implements LentService {
 		log.info("Called assignLent: {}, {}", userId, cabinetId);
 		Date now = DateUtil.getNow();
 		userExceptionHandler.getUser(userId);
-		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		lentOptionalFetcher.checkExistedSpace(cabinetId);
 		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
 		LentHistory result = LentHistory.of(now, expirationDate, userId, cabinetId);

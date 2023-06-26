@@ -23,9 +23,9 @@ class UserSessionMapperTest {
 	void toUserBlockedInfoDto() {
 		Date now = new Date();
 		User user = User.of("IntraId", "email@test.com", now, UserRole.USER);
-		BanHistory banHistory = BanHistory.of(now, now, BanType.PRIVATE, 3L);
+		BanHistory banHistory = BanHistory.of(now, now, BanType.PRIVATE, 1L);
 		UserBlockedInfoDto userBlockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
-		assertEquals(banHistory.getUserId(), userBlockedInfoDto.getUserId());
+		assertEquals(1L, userBlockedInfoDto.getUserId());
 		assertEquals(user.getName(), userBlockedInfoDto.getName());
 		assertEquals(banHistory.getBannedAt(), userBlockedInfoDto.getBannedAt());
 		assertEquals(banHistory.getUnbannedAt(), userBlockedInfoDto.getUnbannedAt());
