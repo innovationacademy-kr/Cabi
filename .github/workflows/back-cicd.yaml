@@ -12,7 +12,7 @@ jobs:
         image: mariadb
         env:
           MARIADB_DATABASE: test_db
-          MARIADB_USER: test_user
+          MARIADB_USER: root
           MARIADB_PASSWORD: test_password
           MARIADB_ROOT_PASSWORD: test_password
         ports:
