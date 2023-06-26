@@ -17,6 +17,7 @@ import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.junit.jupiter.api.Test;
@@ -82,20 +83,20 @@ class CabinetMapperTest {
 	@Test
 	void toCabinetsPerSectionResponseDto() {
 		String section = "testSection";
-		CabinetInfoResponseDto cabinetInfoResponseDto1 = new CabinetInfoResponseDto(1L, 2,
-				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null, null);
-		CabinetInfoResponseDto cabinetInfoResponseDto2 = new CabinetInfoResponseDto(2L, 5,
-				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null, null);
-		CabinetInfoResponseDto cabinetInfoResponseDto3 = new CabinetInfoResponseDto(3L, 6,
-				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null, null);
-		CabinetInfoResponseDto cabinetInfoResponseDto4 = new CabinetInfoResponseDto(4L, 7,
-				LentType.SHARE, 3, "title", CabinetStatus.AVAILABLE, null, null, null);
-		List<CabinetInfoResponseDto> cabinetInfoResponseDtos = List.of(cabinetInfoResponseDto1,
-				cabinetInfoResponseDto2, cabinetInfoResponseDto3, cabinetInfoResponseDto4);
+		CabinetPreviewDto cabinetPreviewDto1 = new CabinetPreviewDto(1L, 2, "title",
+				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1);
+		CabinetPreviewDto cabinetPreviewDto2 = new CabinetPreviewDto(2L, 5, "title",
+				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1);
+		CabinetPreviewDto cabinetPreviewDto3 = new CabinetPreviewDto(3L, 6, "title",
+				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1);
+		CabinetPreviewDto cabinetPreviewDto4 = new CabinetPreviewDto(4L, 7, "title",
+				LentType.SHARE, 3, CabinetStatus.AVAILABLE, 1);
+		List<CabinetPreviewDto> cabinetPreviewDtos = List.of(cabinetPreviewDto1, cabinetPreviewDto2,
+				cabinetPreviewDto3, cabinetPreviewDto4);
 		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto = cabinetMapper.toCabinetsPerSectionResponseDto(
-				section, cabinetInfoResponseDtos);
+				section, cabinetPreviewDtos);
+		System.out.println("cabinetsPerSectionResponseDto = " + cabinetsPerSectionResponseDto);
 		assertEquals(section, cabinetsPerSectionResponseDto.getSection());
-		assertArrayEquals(cabinetInfoResponseDtos.toArray(),
-				cabinetsPerSectionResponseDto.getCabinets().toArray(new CabinetInfoResponseDto[0]));
+		assertEquals(cabinetPreviewDtos, cabinetsPerSectionResponseDto.getCabinets());
 	}
 }

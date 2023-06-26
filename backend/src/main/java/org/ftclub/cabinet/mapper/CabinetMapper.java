@@ -8,6 +8,7 @@ import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -53,7 +54,7 @@ public interface CabinetMapper {
 
 	//TO do : cabinetPlace러 바꾸기
 	CabinetsPerSectionResponseDto toCabinetsPerSectionResponseDto(String section,
-			List<CabinetInfoResponseDto> cabinets);
+			List<CabinetPreviewDto> cabinets);
 
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	CabinetInfoResponseDto toCabinetInfoResponseDto(Cabinet cabinet, List<LentDto> lents);
@@ -70,4 +71,6 @@ public interface CabinetMapper {
 
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents);
+
+	CabinetPreviewDto toCabinetPreviewDto(Cabinet cabinet, Integer userCount);
 }

@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 @Repository
 public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 
@@ -48,7 +49,8 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE p.location.section = :section "
 			+ "AND p.location.floor = :floor")
-	Optional<List<Long>> findAllCabinetIdsBySection(@Param("floor") Integer floor, @Param("section") String section);
+	Optional<List<Long>> findAllCabinetIdsBySection(@Param("floor") Integer floor,
+			@Param("section") String section);
 
 
 	@Query("SELECT c.statusNote "
@@ -115,4 +117,9 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"WHERE c.visibleNum = :visibleNum")
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
 			Pageable pageable);
+
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.cabinetPlace.location = :location")
+	List<Cabinet> findAllCabinetsByLocation(Location location);
 }

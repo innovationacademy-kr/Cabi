@@ -12,12 +12,14 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
@@ -91,12 +93,20 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		log.info("getCabinetsPerSection");
 		return cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor).stream()
 				.map(section -> {
-					List<Long> cabinetIds = cabinetOptionalFetcher.findAllCabinetIdsBySection(floor,
-							section);
 					return cabinetMapper.toCabinetsPerSectionResponseDto(section,
-							getCabinetInfoBundle(cabinetIds));
+							getCabinetPreviewBundle(Location.of(building, floor, section)));
 				})
 				.collect(Collectors.toList());
+	}
+
+	private List<CabinetPreviewDto> getCabinetPreviewBundle(Location location) {
+		List<Cabinet> cabinets = cabinetOptionalFetcher.findAllCabinetsByLocation(location);
+
+		return cabinets.stream().map(cabinet -> {
+			Integer userCount = lentOptionalFetcher.countCabinetAllActiveLent(
+					cabinet.getCabinetId());
+			return cabinetMapper.toCabinetPreviewDto(cabinet, userCount);
+		}).collect(Collectors.toList());
 	}
 
 
@@ -169,7 +179,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
-		PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startedAt"));
+		PageRequest pageable = PageRequest.of(page, size,
+				Sort.by(Sort.Direction.DESC, "startedAt"));
 		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId,
 				pageable);
 		return lentMapper.toLentHistoryPaginationDto(

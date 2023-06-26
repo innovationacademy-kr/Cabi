@@ -43,10 +43,11 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	List<LentHistory> findByUserId(@Param("userId") Long userId, Pageable pageable);
 
 	/**
-	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 가져옵니다.(현재 빌리고 반납하지 않은 기록은 표시하지 않습니다.) {@link Pageable}이 적용되었습니다.
+	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 가져옵니다.(현재 빌리고 반납하지 않은 기록은 표시하지 않습니다.) {@link Pageable}이
+	 * 적용되었습니다.
 	 *
-	 * @param userId    찾으려는 user id
-	 * @param pageable  pagination 정보
+	 * @param userId   찾으려는 user id
+	 * @param pageable pagination 정보
 	 * @return
 	 */
 	List<LentHistory> findByUserIdAndEndedAtNotNull(@Param("userId") Long userId,
@@ -149,4 +150,9 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"WHERE :startDate < lh.endedAt AND lh.endedAt < :endDate")
 	Integer countLentByReturnTimeBetween(@Param("startDate") Date startDate,
 			@Param("endDate") Date endDate);
+
+	@Query("SELECT count(lh) " +
+			"FROM LentHistory lh " +
+			"WHERE lh.cabinetId = :cabinetId AND lh.endedAt IS NULL")
+	Integer countCabinetAllActiveLent(Long cabinetId);
 }
