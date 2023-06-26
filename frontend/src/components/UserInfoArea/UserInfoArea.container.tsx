@@ -17,7 +17,6 @@ const UserInfoAreaContainer = (): JSX.Element => {
         isBanned: !!targetUserInfo.bannedAt,
       }
     : undefined;
-  console.log(userInfoData);
 
   return (
     <>
