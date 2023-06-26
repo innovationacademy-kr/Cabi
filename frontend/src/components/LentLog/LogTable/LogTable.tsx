@@ -42,9 +42,10 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {lentHistory === STATUS_400_BAD_REQUEST && (
-        <EmptyLogStyled>반납처리 된 사물함이 아직 없습니다.</EmptyLogStyled>
-      )}
+      {lentHistory === STATUS_400_BAD_REQUEST ||
+        (lentHistory.length === 0 && (
+          <EmptyLogStyled>대여기록이 없습니다.</EmptyLogStyled>
+        ))}
     </LogTableWrapperstyled>
   );
 };

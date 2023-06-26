@@ -1,8 +1,5 @@
 package org.ftclub.cabinet.user.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.user.domain.AdminUser;
@@ -38,6 +35,6 @@ public class AdminUserRepositoryTest {
 		Optional<AdminUser> adminUser = adminUserRepository.findAdminUserByEmail(email);
 
 		Assertions.assertTrue(adminUser.isPresent());
-		assertEquals(email, adminUser.get().getEmail());
+		Assertions.assertEquals(email, adminUser.get().getEmail());
 	}
 }

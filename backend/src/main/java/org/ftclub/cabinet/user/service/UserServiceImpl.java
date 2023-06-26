@@ -113,7 +113,8 @@ public class UserServiceImpl implements UserService {
 			return;
 		}
 		Date banDate = banPolicy.getBanDate(banType, endedAt, expiredAt, userId);
-		BanHistory banHistory = BanHistory.of(endedAt, banDate, banType, userId);
+		BanHistory banHistory = BanHistory.of(endedAt, banDate, banType,
+				userId);
 		banHistoryRepository.save(banHistory);
 	}
 
