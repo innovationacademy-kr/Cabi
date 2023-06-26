@@ -13,14 +13,14 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import { UserDto } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
-const CabinetListItem = (props: CabinetInfo): JSX.Element => {
+const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<UserDto>(userState);
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
@@ -37,17 +37,12 @@ const CabinetListItem = (props: CabinetInfo): JSX.Element => {
 
   if (props.status !== "BANNED" && props.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
-    if (props.lentType === "PRIVATE") cabinetLabelText = props.lents[0]?.name;
+    if (props.lentType === "PRIVATE") cabinetLabelText = props.name;
     else if (props.lentType === "SHARE") {
-      const headcount = props.lents.length;
-      const cabinetTitle = props.title
-        ? props.title
-        : `${props.maxUser} / ${props.maxUser}`;
-
       cabinetLabelText =
-        headcount === props.maxUser
-          ? cabinetTitle
-          : headcount + " / " + props.maxUser;
+        props.userCount === props.maxUser && props.title
+          ? props.title
+          : `${props.userCount} / ${props.maxUser}`;
     } else if (props.lentType === "CLUB")
       cabinetLabelText = props.title ? props.title : "동아리";
   } else {

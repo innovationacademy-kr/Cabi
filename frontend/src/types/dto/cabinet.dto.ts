@@ -27,6 +27,22 @@ export interface CabinetInfo {
   statusNote: string | null;
 }
 
+export interface CabinetPreview {
+  section: string;
+  cabinets: CabinetPreviewInfo[];
+}
+
+export interface CabinetPreviewInfo {
+  cabinetId: number;
+  name: string;
+  visibleNum: number;
+  lentType: CabinetType;
+  title: string | null;
+  userCount: number;
+  maxUser: number;
+  status: CabinetStatus;
+}
+
 export interface CabinetInfoByBuildingFloorDto {
   section: string; // swagger의 CabinetPerSectionDto에 맞추어 object -> string으로 수정했습니다.
   cabinets: CabinetInfo[];
