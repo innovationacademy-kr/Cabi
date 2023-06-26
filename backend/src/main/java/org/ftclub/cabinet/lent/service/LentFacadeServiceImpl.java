@@ -56,7 +56,6 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		}
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		List<LentHistory> lentHistories = lentOptionalFetcher.findByUserId(userId, pageable);
-//		int totalLength = lentOptionalFetcher.countUserAllLent(userId);
 		return generateLentHistoryPaginationDto(lentHistories, lentHistories.size());
 	}
 
@@ -67,7 +66,6 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		List<LentHistory> lentHistories = lentOptionalFetcher.findByCabinetId(cabinetId, pageable);
-//		int totalLength = lentOptionalFetcher.countCabinetAllLent(cabinetId);
 		return generateLentHistoryPaginationDto(lentHistories, lentHistories.size());
 	}
 
