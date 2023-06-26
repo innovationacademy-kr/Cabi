@@ -56,8 +56,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		}
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		List<LentHistory> lentHistories = lentOptionalFetcher.findByUserId(userId, pageable);
-		int totalLength = lentOptionalFetcher.countUserAllLent(userId);
-		return generateLentHistoryPaginationDto(lentHistories, totalLength);
+//		int totalLength = lentOptionalFetcher.countUserAllLent(userId);
+		return generateLentHistoryPaginationDto(lentHistories, lentHistories.size());
 	}
 
 	@Override
@@ -67,8 +67,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		List<LentHistory> lentHistories = lentOptionalFetcher.findByCabinetId(cabinetId, pageable);
-		int totalLength = lentOptionalFetcher.countCabinetAllLent(cabinetId);
-		return generateLentHistoryPaginationDto(lentHistories, totalLength);
+//		int totalLength = lentOptionalFetcher.countCabinetAllLent(cabinetId);
+		return generateLentHistoryPaginationDto(lentHistories, lentHistories.size());
 	}
 
 	@Override
@@ -77,14 +77,16 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
-		return lentHistories.stream()
-				.map(e -> new LentDto(
-						e.getUserId(),
-						userOptionalFetcher.findUser(e.getUserId()).getName(),
-						e.getLentHistoryId(),
-						e.getStartedAt(),
-						e.getExpiredAt()))
-				.collect(Collectors.toList());
+		return lentHistories.stream().map(
+				e -> lentMapper.toLentDto(e.getUser(), e)).collect(Collectors.toList());
+//		return lentHistories.stream()
+//				.map(e -> new LentDto(
+//						e.getUserId(),
+//						e.getUser().getName(),
+//						e.getLentHistoryId(),
+//						e.getStartedAt(),
+//						e.getExpiredAt()))
+//				.collect(Collectors.toList());
 	}
 
 	/**
@@ -107,8 +109,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		List<LentHistoryDto> result = myLentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentHistoryDto(
 						lentHistory,
-						userOptionalFetcher.findUser(user.getUserId()),
-						cabinetOptionalFetcher.findCabinet(lentHistory.getCabinetId())))
+						lentHistory.getUser(),
+						lentHistory.getCabinet()))
 				.collect(Collectors.toList());
 		// TODO: totalPage로 바꾸기
 		return lentMapper.toLentHistoryPaginationDto(result, result.size() / size);
@@ -118,8 +120,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 			List<LentHistory> lentHistories, int totalPage) {
 		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
-						userOptionalFetcher.findUser(e.getUserId()),
-						cabinetOptionalFetcher.findCabinet(e.getCabinetId())))
+						e.getUser(),
+						e.getCabinet()))
 				.collect(Collectors.toList());
 		return new LentHistoryPaginationDto(lentHistoryDto, totalPage);
 	}

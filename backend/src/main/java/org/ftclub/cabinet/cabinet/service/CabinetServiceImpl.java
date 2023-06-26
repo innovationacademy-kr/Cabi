@@ -117,7 +117,7 @@ public class CabinetServiceImpl implements CabinetService {
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.specifyLentType(lentType);
 		if (lentType == LentType.SHARE) {
-			cabinet.specifyMaxUser(3);
+			cabinet.specifyMaxUser(3); // todo : policy에서 외부에서 설정된 properties 변수로 설정하게끔 수정
 		} else if (lentType == LentType.PRIVATE) {
 			cabinet.specifyMaxUser(1);
 		}
