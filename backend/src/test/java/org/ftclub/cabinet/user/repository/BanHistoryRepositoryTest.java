@@ -1,8 +1,8 @@
 package org.ftclub.cabinet.user.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
 import java.util.List;
@@ -33,9 +33,9 @@ public class BanHistoryRepositoryTest {
 		List<BanHistory> activeBanList = banHistoryRepository.findUserActiveBanList(userId,
 				testDate);
 
-		Assertions.assertNotNull(activeBanList);
-		Assertions.assertFalse(activeBanList.isEmpty());
-		Assertions.assertEquals(1, activeBanList.size());
+		assertNotNull(activeBanList);
+		assertFalse(activeBanList.isEmpty());
+		assertEquals(1, activeBanList.size());
 	}
 
 	@Test
@@ -57,8 +57,8 @@ public class BanHistoryRepositoryTest {
 				pageable,
 				testDate).getContent();
 
-		Assertions.assertNotNull(activeBanList);
-		Assertions.assertEquals(2, activeBanList.size());
+		assertNotNull(activeBanList);
+		assertEquals(2, activeBanList.size());
 	}
 
 	@Test
