@@ -10,7 +10,7 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3310/test_db
-    username: root
+    username: test_user
     password: test_password
 
   jpa:
