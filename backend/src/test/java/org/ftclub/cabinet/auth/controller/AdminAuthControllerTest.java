@@ -117,7 +117,7 @@ public class AdminAuthControllerTest {
 							.queryParam("code", invalidCode))
 					.andExpect(status().isBadGateway())
 					.andDo(document(DOCUMENT_NAME, requestParameters(
-							parameterWithName("code").description("네이버 로그인 콜백 코드"))));
+							parameterWithName("code").description("콜백 코드"))));
 		}
 	}
 

@@ -10,6 +10,8 @@ operation::AdminAuth/Login/adminOk[snippets='http-response']
 
 === 최고 관리자 로그인 (login)
 
+==== 명세
+
 operation::AdminAuth/Login/masterOk[snippets='http-request,request-fields']
 
 ==== 성공
