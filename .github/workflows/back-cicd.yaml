@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mariadb:
-        image: mariadb:10.4.10
+        image: mariadb:10.3.39
         env:
           MYSQL_DATABASE: test_db
           MYSQL_USER: test_user
@@ -54,6 +54,15 @@ jobs:
           cd backend
           chmod +x ./gradlew
           ./gradlew build
+        shell: bash
+
+      - name: Get ref_name
+        run: |
+          if [ "${{ github.ref }}" == 'refs/heads/common/test/#1191' ]; then
+            echo "success"
+          else
+            echo "fail"
+          fi
         shell: bash
 
   backend-CD-develop:
