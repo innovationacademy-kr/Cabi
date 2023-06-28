@@ -59,6 +59,7 @@ jobs:
       - name: 조건부 스텝 실행
         if: ${{ github.ref == 'refs/heads/common/test/#1191' }}
         steps:
+          - uses: actions/checkout@v3
           - name: EC2 서버에 배포
             uses: appleboy/scp-action@v0.1.4
             with:
