@@ -4,6 +4,9 @@ on:
     paths:
       - "frontend/**"
 
+env:
+  CUR_BRANCH: common/test/#1191
+
 jobs:
   frontend-CI:
     runs-on: ubuntu-latest
@@ -36,7 +39,7 @@ jobs:
     name: deploy-develop
     runs-on: ubuntu-latest
     needs: [frontend-CI]
-    if: ${{ github.ref == 'refs/heads/dev' }}
+    if: ${{ github.ref == 'refs/heads/$CUR_BRANCH' }}
     steps:
       - name: 리모트 쉘 접속
         uses: appleboy/ssh-action@master
@@ -49,37 +52,46 @@ jobs:
           script: |
             source $HOME/.bash_profile
             echo "해당 리포지토리로 이동"
-            cd $HOME/42cabi_dev
-            echo "리포지토리 pull"
-            git pull origin dev
-            echo "앱 빌드"
-            cd $HOME/42cabi_dev/backend
-            npm run build:fe
-            npm run deploy:dev
-            npm run invalidate:dev
+            cd $HOME/42cabi_spring
 
-  frontend-CD-main:
-    name: deploy-main
-    runs-on: ubuntu-latest
-    needs: [frontend-CI]
-    if: ${{ github.ref == 'refs/heads/main' }}
-    steps:
-      - name: 리모트 쉘 접속
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST_MAIN }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY_NEW }}
-          port: ${{ secrets.PORT }}
-          script_stop: true
-          script: |
-            source $HOME/.bash_profile
-            echo "해당 리포지토리로 이동"
-            cd $HOME/42cabi_main
             echo "리포지토리 pull"
-            git pull origin main
+            git pull origin $CUR_BRANCH
+
             echo "앱 빌드"
-            cd $HOME/42cabi_main/backend
-            npm run build:fe
-            npm run deploy:main
-            npm run invalidate:main
+            cd frontend
+            npm install
+            npm run build
+            mkdir -p dist/src/assets
+            cp -r src/assets/images dist/src/assets
+
+            echo "S3 배포"
+            aws s3 sync ./dist s3://dev.cabi --profile=CABI
+
+            echo "CloudFront 캐시 무효화"
+            aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'
+
+  # frontend-CD-main:
+  #   name: deploy-main
+  #   runs-on: ubuntu-latest
+  #   needs: [frontend-CI]
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   steps:
+  #     - name: 리모트 쉘 접속
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.HOST_MAIN }}
+  #         username: ${{ secrets.USERNAME }}
+  #         key: ${{ secrets.KEY_NEW }}
+  #         port: ${{ secrets.PORT }}
+  #         script_stop: true
+  #         script: |
+  #           source $HOME/.bash_profile
+  #           echo "해당 리포지토리로 이동"
+  #           cd $HOME/42cabi_main
+  #           echo "리포지토리 pull"
+  #           git pull origin main
+  #           echo "앱 빌드"
+  #           cd $HOME/42cabi_main/backend
+  #           npm run build:fe
+  #           npm run deploy:main
+  #           npm run invalidate:main
