@@ -45,7 +45,7 @@ jobs:
       - name: Application YML 생성
         run: |
           mkdir -p backend/src/main/resources
-          echo "${{ secrets.APPLICATION_LOCAL_YML }}" | base64 --decode > backend/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_DEV_YML }}" | base64 --decode > backend/src/main/resources/application-dev.yml
           echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > backend/src/main/resources/application-auth.yml
           echo "${{ secrets.APPLICATION_MAIL_YML }}" | base64 --decode > backend/src/main/resources/application-mail.yml
 
