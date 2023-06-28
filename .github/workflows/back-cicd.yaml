@@ -65,7 +65,7 @@ jobs:
           key: ${{ secrets.KEY_NEW }}
           port: ${{ secrets.PORT }}
           source: "./backend/build/libs/cabinet-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/42cabi_spring/backend/build/libs"
+          target: "/home/ec2-user/42cabi_spring/"
           overwrite: true
 
       # - name: EC2 서버에 배포
