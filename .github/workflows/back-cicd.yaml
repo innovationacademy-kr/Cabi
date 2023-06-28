@@ -64,7 +64,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY_NEW }}
           port: ${{ secrets.PORT }}
-          source: "./build/libs/cabinet-0.0.1-SNAPSHOT.jar"
+          source: "./backend/build/libs/cabinet-0.0.1-SNAPSHOT.jar"
           target: "/home/ec2-user/42cabi_spring/backend/build/libs"
           overwrite: true
 
