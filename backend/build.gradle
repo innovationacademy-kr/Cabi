@@ -69,5 +69,6 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    failFast = true
     systemProperty 'spring.profiles.active', 'test'
 }
