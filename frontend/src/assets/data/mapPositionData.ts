@@ -79,6 +79,14 @@ export const mapPostionData: IFloorSectionsInfo = {
       name: "Cluster 1 - Terrace2",
       type: "cabinet",
     },
+    {
+      colStart: 3,
+      colEnd: 4,
+      rowStart: 4,
+      rowEnd: 6,
+      name: "2F",
+      type: "floorInfo",
+    },
   ],
   "3": [
     {
@@ -145,6 +153,14 @@ export const mapPostionData: IFloorSectionsInfo = {
       name: "Cluster X - 1",
       type: "cabinet",
     },
+    {
+      colStart: 3,
+      colEnd: 4,
+      rowStart: 4,
+      rowEnd: 6,
+      name: "3F",
+      type: "floorInfo",
+    },
   ],
   "4": [
     {
@@ -187,6 +203,14 @@ export const mapPostionData: IFloorSectionsInfo = {
       name: `End of Cluster 3`,
       type: "cabinet",
     },
+    {
+      colStart: 3,
+      colEnd: 4,
+      rowStart: 4,
+      rowEnd: 6,
+      name: "4F",
+      type: "floorInfo",
+    },
   ],
   "5": [
     {
@@ -228,6 +252,14 @@ export const mapPostionData: IFloorSectionsInfo = {
       rowEnd: 9,
       name: "End of Cluster 5",
       type: "cabinet",
+    },
+    {
+      colStart: 3,
+      colEnd: 4,
+      rowStart: 4,
+      rowEnd: 6,
+      name: "5F",
+      type: "floorInfo",
     },
   ],
 };

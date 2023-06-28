@@ -61,6 +61,11 @@ export const currentFloorNumberState = atom<number>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const currentMapFloorState = atom<number>({
+  key: "CurrentMapFloor",
+  default: undefined,
+});
+
 export const currentSectionNameState = atom<string>({
   key: "CurrentSection",
   default: undefined,
