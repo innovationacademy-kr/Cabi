@@ -60,6 +60,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/common/test/#1191' }}
         steps:
           - name: EC2 서버에 배포
+            uses: appleboy/scp-action@v0.1.4
             with:
               host: ${{ secrets.HOST_DEV }}
               username: ${{ secrets.USERNAME }}
