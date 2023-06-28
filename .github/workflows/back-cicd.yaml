@@ -56,14 +56,26 @@ jobs:
           ./gradlew build
         shell: bash
 
-      - name: Get ref_name
-        run: |
-          if [ "${{ github.ref }}" == 'refs/heads/common/test/#1191' ]; then
-            echo "success"
-          else
-            echo "fail"
-          fi
-        shell: bash
+      - name: 조건부 스텝 실행
+        if: ${{ github.ref == 'refs/heads/common/test/#1191' }}
+        steps:
+          - name: EC2 서버에 배포
+            with:
+              host: ${{ secrets.HOST_DEV }}
+              username: ${{ secrets.USERNAME }}
+              key: ${{ secrets.KEY_NEW }}
+              port: ${{ secrets.PORT }}
+              source: "./build/libs/cabinet-0.0.1-SNAPSHOT.jar"
+              target: "/home/ec2-user/42cabi_spring/backend/build/libs/"
+
+      # - name: EC2 서버에 배포
+      #   run: |
+      #     if [ "${{ github.ref }}" == 'refs/heads/common/test/#1191' ]; then
+
+      #     else
+      #       echo "fail"
+      #     fi
+      #   shell: bash
 
   backend-CD-develop:
     name: deploy-develop
