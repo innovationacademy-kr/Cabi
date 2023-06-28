@@ -39,7 +39,7 @@ jobs:
     name: deploy-develop
     runs-on: ubuntu-latest
     needs: [frontend-CI]
-    if: ${{ github.ref == 'refs/heads/$CUR_BRANCH' }}
+    if: ${{ github.ref == refs/heads/$CUR_BRANCH }}
     steps:
       - name: 리모트 쉘 접속
         uses: appleboy/ssh-action@master
