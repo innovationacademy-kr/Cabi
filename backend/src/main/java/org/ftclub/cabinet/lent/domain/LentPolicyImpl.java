@@ -12,7 +12,6 @@ import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,14 +19,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class LentPolicyImpl implements LentPolicy {
 
-	@Value("${cabinet.lent.term.private}")
-	private static Integer LENT_TERM_PRIVATE = 21;
-	@Value("${cabinet.lent.term.share}")
-	private static Integer LENT_TERM_SHARE = 42;
-	@Value("${cabinet.penalty.day.share}")
-	private static Integer PENALTY_DAY_SHARE = 3;
-	@Value("${cabinet.penalty.day.padding}")
-	private static Integer PENALTY_DAY_PADDING = 2;
 	private final CabinetProperties cabinetProperties;
 
 	@Override
