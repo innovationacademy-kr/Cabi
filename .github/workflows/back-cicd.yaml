@@ -68,20 +68,11 @@ jobs:
           target: "/home/ec2-user/42cabi_spring/"
           overwrite: true
 
-      # - name: EC2 서버에 배포
-      #   run: |
-      #     if [ "${{ github.ref }}" == 'refs/heads/common/test/#1191' ]; then
-
-      #     else
-      #       echo "fail"
-      #     fi
-      #   shell: bash
-
   backend-CD-develop:
     name: deploy-develop
     runs-on: ubuntu-latest
     needs: [backend-CI]
-    if: ${{ github.ref == 'refs/heads/dev' }}
+    if: ${{ github.ref == 'refs/heads/common/test/#1191' }}
     steps:
       - name: 리모트 쉘 접속
         uses: appleboy/ssh-action@master
@@ -94,43 +85,37 @@ jobs:
           script: |
             source $HOME/.bash_profile
             echo "해당 리포지토리로 이동"
-            cd $HOME/42cabi_dev
+            cd $HOME/42cabi_spring
             echo "리포지토리 pull"
-            git pull origin dev
-            echo "앱 빌드"
-            cd $HOME/42cabi_dev/backend
-            npm install
-            npm run build
-            echo "env 파일 복사"
-            cp $HOME/42cabi_dev.env $HOME/42cabi_dev/backend/.env
-            echo "앱 배포 (reload)"
-            pm2 reload cabi_dev
+            git pull origin common/test/#1191
+            echo "앱 구동"
+            nohup java -jar -Dspring.profiles.active=dev ./backend/build/libs/cabinet-0.0.1-SNAPSHOT.jar &
 
-  backend-CD-main:
-    name: deploy-main
-    runs-on: ubuntu-latest
-    needs: [backend-CI]
-    if: ${{ github.ref == 'refs/heads/main' }}
-    steps:
-      - name: 리모트 쉘 접속
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST_MAIN }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY_NEW }}
-          port: ${{ secrets.PORT }}
-          script_stop: true
-          script: |
-            source $HOME/.bash_profile
-            echo "해당 리포지토리로 이동"
-            cd $HOME/42cabi_main
-            echo "리포지토리 pull"
-            git pull origin main
-            echo "앱 빌드"
-            cd $HOME/42cabi_main/backend
-            npm install
-            npm run build
-            echo "env 파일 복사"
-            cp $HOME/42cabi_main.env $HOME/42cabi_main/backend/.env
-            echo "앱 배포 (reload)"
-            pm2 reload cabi_main
+  # backend-CD-main:
+  #   name: deploy-main
+  #   runs-on: ubuntu-latest
+  #   needs: [backend-CI]
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   steps:
+  #     - name: 리모트 쉘 접속
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.HOST_MAIN }}
+  #         username: ${{ secrets.USERNAME }}
+  #         key: ${{ secrets.KEY_NEW }}
+  #         port: ${{ secrets.PORT }}
+  #         script_stop: true
+  #         script: |
+  #           source $HOME/.bash_profile
+  #           echo "해당 리포지토리로 이동"
+  #           cd $HOME/42cabi_main
+  #           echo "리포지토리 pull"
+  #           git pull origin main
+  #           echo "앱 빌드"
+  #           cd $HOME/42cabi_main/backend
+  #           npm install
+  #           npm run build
+  #           echo "env 파일 복사"
+  #           cp $HOME/42cabi_main.env $HOME/42cabi_main/backend/.env
+  #           echo "앱 배포 (reload)"
+  #           pm2 reload cabi_main
