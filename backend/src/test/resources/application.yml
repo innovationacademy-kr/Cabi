@@ -10,7 +10,7 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3310/test_db
-    username: test_user
+    username: root
     password: test_password
 
   jpa:
@@ -28,7 +28,14 @@ spring:
       day:
         share: 3
         padding: 2
-
+  auth:
+    ft:
+      client-id: cliend_id
+      client-secret: client_secret
+    google:
+      client-id: client_id
+      client-secret: client_secret
+    jwt-secret-key: jwt_secret_key_must_be_long_jwt_secret_key_must_be_long_jwt_secret_key_must_be_long_jwt_secret_key_must_be_long
   urls:
     admin-login-callback: ${spring.server.fe-host}/v4/admin/auth/login/callback
     user-login-callback: ${spring.server.fe-host}/v4/auth/login/callback
