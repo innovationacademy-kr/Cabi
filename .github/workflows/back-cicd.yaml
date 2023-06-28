@@ -55,13 +55,12 @@ jobs:
           chmod +x ./gradlew
           ./gradlew build
         shell: bash
-
-      - name: 조건부 스텝 실행
         if: ${{ github.ref == 'refs/heads/common/test/#1191' }}
+
+      - name: EC2 서버에 업로드
+        uses: appleboy/scp-action@v0.1.4
         steps:
-          - uses: actions/checkout@v3
-          - name: EC2 서버에 배포
-            uses: appleboy/scp-action@v0.1.4
+          - name: EC2 서버에 업로드
             with:
               host: ${{ secrets.HOST_DEV }}
               username: ${{ secrets.USERNAME }}
