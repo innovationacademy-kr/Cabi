@@ -59,14 +59,13 @@ jobs:
       - name: EC2 서버에 업로드
         if: ${{ github.ref == 'refs/heads/common/test/#1191' }}
         uses: appleboy/scp-action@v0.1.4
-        steps:
-          with:
-            host: ${{ secrets.HOST_DEV }}
-            username: ${{ secrets.USERNAME }}
-            key: ${{ secrets.KEY_NEW }}
-            port: ${{ secrets.PORT }}
-            source: "./build/libs/cabinet-0.0.1-SNAPSHOT.jar"
-            target: "/home/ec2-user/42cabi_spring/backend/build/libs/"
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY_NEW }}
+          port: ${{ secrets.PORT }}
+          source: "./build/libs/cabinet-0.0.1-SNAPSHOT.jar"
+          target: "/home/ec2-user/42cabi_spring/backend/build/libs/"
 
       # - name: EC2 서버에 배포
       #   run: |
