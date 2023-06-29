@@ -1,7 +1,11 @@
 package org.ftclub.cabinet.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.Date;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
@@ -20,9 +24,14 @@ class UserSessionMapperTest {
 	UserMapper userMapper;
 
 	@Test
-	void toUserBlockedInfoDto() {
+	void toUserBlockedInfoDto() throws Exception {
 		Date now = new Date();
-		User user = User.of("IntraId", "email@test.com", now, UserRole.USER);
+		User user = mock(User.class);
+		when(user.getUserId()).thenReturn(3L);
+		when(user.getName()).thenReturn("intraId");
+		when(user.getEmail()).thenReturn("email@test.com");
+		when(user.getBlackholedAt()).thenReturn(now);
+ 		when(user.getRole()).thenReturn(UserRole.USER);
 		BanHistory banHistory = BanHistory.of(now, now, BanType.PRIVATE, 3L);
 		UserBlockedInfoDto userBlockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
 		assertEquals(banHistory.getUserId(), userBlockedInfoDto.getUserId());

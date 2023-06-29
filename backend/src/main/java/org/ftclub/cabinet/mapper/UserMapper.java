@@ -25,7 +25,7 @@ public interface UserMapper {
 
 	UserMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(UserMapper.class);
 
-	@Mapping(target = "userId", source = "banHistory.userId")
+	@Mapping(target = "userId", source = "user.userId")
 	UserBlockedInfoDto toUserBlockedInfoDto(BanHistory banHistory, User user);
 
 	UserProfileDto toUserProfileDto(User user);

@@ -148,4 +148,9 @@ public class CabinetOptionalFetcher {
 		log.info("Called findPaginationByVisibleNum: {}", visibleNum);
 		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
 	}
+
+	public List<Cabinet> findAllCabinetsByLocation(Location location) {
+		log.info("Called findAllCabinetsByLocation: {}", location);
+		return cabinetRepository.findAllCabinetsByLocation(location);
+	}
 }

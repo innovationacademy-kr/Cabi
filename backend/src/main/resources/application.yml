@@ -1,7 +1,7 @@
 ---
 #프로덕션 환경
 server:
-  port: 2424
+  port: 4242
 spring:
   config:
     import: classpath:application-auth.yml, classpath:application-mail.yml
@@ -11,7 +11,7 @@ spring:
 ---
 #개발서버 환경
 server:
-  port: 2424
+  port: 4242
 spring:
   config:
     import: classpath:application-auth.yml

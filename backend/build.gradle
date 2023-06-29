@@ -73,6 +73,7 @@ dependencies {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
+    failFast = true
     systemProperty 'spring.profiles.active', 'test'
 }
 
@@ -91,6 +92,10 @@ tasks.register('copyDocument', Copy) {
 
 build {
     dependsOn copyDocument
+}
+
+jar {
+    enabled = false
 }
 
 bootJar {

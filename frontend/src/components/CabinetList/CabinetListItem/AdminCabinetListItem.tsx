@@ -11,20 +11,14 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
-interface IAdminCabinetListItem {
-  cabinet: CabinetInfo;
-}
-
-const AdminCabinetListItem = ({
-  cabinet,
-}: IAdminCabinetListItem): JSX.Element => {
+const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
   );
@@ -40,21 +34,16 @@ const AdminCabinetListItem = ({
     useMultiSelect();
   let cabinetLabelText = "";
 
-  if (cabinet.status !== "BANNED" && cabinet.status !== "BROKEN") {
+  if (props.status !== "BANNED" && props.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
-    if (cabinet.lentType === "PRIVATE")
-      cabinetLabelText = cabinet.lents[0]?.name;
-    else if (cabinet.lentType === "SHARE") {
-      const headcount = cabinet.lents.length;
-      const cabinetTitle =
-        cabinet.title ? cabinet.title : `${cabinet.maxUser} / ${cabinet.maxUser}`;
-
+    if (props.lentType === "PRIVATE") cabinetLabelText = props.name;
+    else if (props.lentType === "SHARE") {
       cabinetLabelText =
-        headcount === cabinet.maxUser
-          ? cabinetTitle
-          : headcount + " / " + cabinet.maxUser;
-    } else if (cabinet.lentType === "CLUB")
-      cabinetLabelText = cabinet.title ? cabinet.title : "동아리";
+        props.userCount === props.maxUser && !!props.title
+          ? props.title
+          : `${props.userCount} / ${props.maxUser}`;
+    } else if (props.lentType === "CLUB")
+      cabinetLabelText = props.title ? props.title : "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
@@ -82,9 +71,9 @@ const AdminCabinetListItem = ({
 
   const cabinetItemTitleHandler = () => {
     let lentType;
-    if (cabinet.lentType === CabinetType.PRIVATE) lentType = "개인";
-    else if (cabinet.lentType === CabinetType.SHARE) lentType = "공유";
-    else if (cabinet.lentType === CabinetType.CLUB) lentType = "동아리";
+    if (props.lentType === CabinetType.PRIVATE) lentType = "개인";
+    else if (props.lentType === CabinetType.SHARE) lentType = "공유";
+    else if (props.lentType === CabinetType.CLUB) lentType = "동아리";
 
     if (!cabinetLabelText) return `[${lentType}]`;
     return `[${lentType}] ${cabinetLabelText}`;
@@ -92,31 +81,31 @@ const AdminCabinetListItem = ({
 
   return (
     <CabinetListItemStyled
-      status={cabinet.status}
+      status={props.status}
       isMine={false}
-      isSelected={currentCabinetId === cabinet.cabinetId}
+      isSelected={currentCabinetId === props.cabinetId}
       isMultiSelect={isMultiSelect}
-      isMultiSelected={containsCabinet(cabinet.cabinetId)}
+      isMultiSelected={containsCabinet(props.cabinetId)}
       title={cabinetItemTitleHandler()}
       className="cabiButton"
       onClick={() => {
-        if (isMultiSelect) clickCabinetOnMultiSelectMode(cabinet);
-        else selectCabinetOnClick(cabinet.cabinetId);
+        if (isMultiSelect) clickCabinetOnMultiSelectMode(props);
+        else selectCabinetOnClick(props.cabinetId);
       }}
     >
       <CabinetIconNumberWrapperStyled>
         <CabinetIconContainerStyled
-          lentType={cabinet.lentType}
+          lentType={props.lentType}
           isMine={false}
-          status={cabinet.status}
+          status={props.status}
         />
-        <CabinetNumberStyled status={cabinet.status} isMine={false}>
-          {cabinet.visibleNum}
+        <CabinetNumberStyled status={props.status} isMine={false}>
+          {props.visibleNum}
         </CabinetNumberStyled>
       </CabinetIconNumberWrapperStyled>
       <CabinetLabelStyled
         className="textNowrap"
-        status={cabinet.status}
+        status={props.status}
         isMine={false}
       >
         {cabinetLabelText}

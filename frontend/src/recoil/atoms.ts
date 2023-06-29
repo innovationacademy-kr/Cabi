@@ -7,6 +7,7 @@ import {
   CabinetBuildingFloorDto,
   CabinetInfo,
   CabinetInfoByBuildingFloorDto,
+  CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
@@ -60,6 +61,11 @@ export const currentFloorNumberState = atom<number>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const currentMapFloorState = atom<number>({
+  key: "CurrentMapFloor",
+  default: undefined,
+});
+
 export const currentSectionNameState = atom<string>({
   key: "CurrentSection",
   default: undefined,
@@ -96,7 +102,7 @@ export const isMultiSelectState = atom<boolean>({
   default: false,
 });
 
-export const targetCabinetInfoListState = atom<CabinetInfo[]>({
+export const targetCabinetInfoListState = atom<CabinetPreviewInfo[]>({
   key: "TargetCabinetInfoList",
   default: [],
 });

@@ -10,6 +10,7 @@ import {
   currentBuildingNameState,
   currentFloorCabinetState,
   currentFloorNumberState,
+  currentMapFloorState,
   currentSectionNameState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
@@ -30,6 +31,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     currentFloorNumberState
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
+  const setCurrentMapFloor = useSetRecoilState<number>(currentMapFloorState);
   const myInfo = useRecoilValue<UserDto>(userState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
@@ -47,7 +49,10 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   );
 
   useEffect(() => {
-    if (currentFloor === undefined) return;
+    if (currentFloor === undefined) {
+      setCurrentMapFloor(floors[0]);
+      return;
+    }
     axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
@@ -72,6 +77,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
+    setCurrentMapFloor(floor);
     if (!pathname.includes("main")) {
       if (floor === currentFloor) {
         axiosCabinetByBuildingFloor(currentBuilding, currentFloor).then(
