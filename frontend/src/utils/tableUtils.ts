@@ -1,8 +1,8 @@
 import {
   BannedUserDto,
   BrokenCabinetDto,
-  OverdueUserDto,
   ITableData,
+  OverdueUserDto,
 } from "@/types/dto/admin.dto";
 
 const calcLeftDays = (end: Date) =>
@@ -15,10 +15,10 @@ const convertDate = (date: Date): string =>
 
 export const handleBannedUserList = (data: BannedUserDto[]): ITableData[] =>
   data
-    .map(({ intra_id, banned_date, unbanned_date }, idx, arr) => ({
-      first: intra_id,
-      second: calcLeftDays(new Date(unbanned_date)).toString(),
-      third: convertDate(new Date(unbanned_date)),
+    .map(({ name, bannedAt, unbannedAt }, idx, arr) => ({
+      first: name,
+      second: calcLeftDays(new Date(unbannedAt)).toString(),
+      third: convertDate(new Date(unbannedAt)),
       info: arr[idx],
     }))
     .sort(
@@ -28,17 +28,17 @@ export const handleBannedUserList = (data: BannedUserDto[]): ITableData[] =>
 export const handleBrokenCabinetList = (
   data: BrokenCabinetDto[]
 ): ITableData[] =>
-  data.map(({ floor, cabinet_num, section, note }, idx, arr) => ({
-    first: `${floor}F-${cabinet_num}`,
+  data.map(({ floor, visibleNum, section, statusNote }, idx, arr) => ({
+    first: `${floor}F-${visibleNum}`,
     second: section,
-    third: note || "",
+    third: statusNote || "",
     info: arr[idx],
   }));
 
 export const handleOverdueUserList = (data: OverdueUserDto[]): ITableData[] =>
-  data.map(({ intra_id, location, overdueDays }, idx, arr) => ({
-    first: intra_id,
-    second: location.toUpperCase(),
+  data.map(({ name, floor, visibleNum, overdueDays }, idx, arr) => ({
+    first: name,
+    second: `${floor}F-${visibleNum}`,
     third: overdueDays.toString(),
     info: arr[idx],
   }));

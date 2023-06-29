@@ -9,14 +9,14 @@ import {
   userState,
 } from "@/recoil/atoms";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
-import {
-  SuccessResponseModal,
-  FailResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
+import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
-import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
@@ -42,10 +42,10 @@ const ReturnModal: React.FC<{
   );
   const formattedExpireDate = getExpireDateString(
     "myCabinet",
-    myLentInfo.lent_info ? myLentInfo.lent_info[0].expire_time : undefined
+    myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
   );
   const returnDetail = `${
-    myLentInfo && myLentInfo.lent_info[0].expire_time === null
+    myLentInfo && myLentInfo.lents[0].expiredAt === null
       ? ""
       : `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
   }
@@ -54,7 +54,7 @@ const ReturnModal: React.FC<{
     try {
       await axiosReturn();
       //userCabinetId 세팅
-      setMyInfo({ ...myInfo, cabinet_id: -1 });
+      setMyInfo({ ...myInfo, cabinetId: null });
       setIsCurrentSectionRender(true);
       setModalTitle("반납되었습니다");
       // 캐비닛 상세정보 바꾸는 곳

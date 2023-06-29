@@ -57,7 +57,7 @@ const CabinetInfoArea: React.FC<{
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={isMine}
       >
-        {selectedCabinetInfo!.cabinetNum}
+        {selectedCabinetInfo!.visibleNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}
@@ -70,7 +70,9 @@ const CabinetInfoArea: React.FC<{
         {isMine ? (
           <>
             <ButtonContainer
-              onClick={() => openModal("returnModal")}
+              onClick={() => {
+                openModal("returnModal");
+              }}
               text="반납"
               theme="fill"
             />

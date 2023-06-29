@@ -3,8 +3,8 @@ import SearchListItem from "@/components/TopNav/SearchBar/SearchListItem/SearchL
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 
 interface ISearchListByIntraId {
-  intra_id: string;
-  user_id: number;
+  name: string;
+  userId: number;
 }
 
 const SearchBarList = ({
@@ -29,7 +29,7 @@ const SearchBarList = ({
           <SearchListItem
             key={index}
             inputText={searchWord}
-            resultText={item.intra_id}
+            resultText={item.name}
             resetSearchState={resetSearchState}
             isTargetIndex={targetIndex === index}
           />
@@ -41,7 +41,7 @@ const SearchBarList = ({
             key={index}
             floor={item.floor}
             inputText={searchWord}
-            resultText={item.cabinet_num.toString()}
+            resultText={item.visibleNum.toString()}
             isNum={true}
             resetSearchState={resetSearchState}
             isTargetIndex={targetIndex === index}

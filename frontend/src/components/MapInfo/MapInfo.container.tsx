@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { currentFloorNumberState, currentMapFloorState } from "@/recoil/atoms";
-import { currentLocationFloorState } from "@/recoil/selectors";
+import { currentBuildingFloorState } from "@/recoil/selectors";
 import MapInfo from "@/components/MapInfo/MapInfo";
 import useMenu from "@/hooks/useMenu";
 
 const MapInfoContainer = () => {
   const { closeMap } = useMenu();
-  const floorInfo = useRecoilValue(currentLocationFloorState);
+  const floorInfo = useRecoilValue(currentBuildingFloorState);
   const [currentMapFloor, setCurrentMapFloor] =
     useRecoilState<number>(currentMapFloorState);
   const [currentFloor] = useRecoilState<number>(currentFloorNumberState);

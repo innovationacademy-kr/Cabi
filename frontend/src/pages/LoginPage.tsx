@@ -2,7 +2,7 @@ import LoginTemplate from "@/components/Login/LoginTemplate";
 import "@/assets/css/loginPage.css";
 
 const LoginPage = () => {
-  const url = `${import.meta.env.VITE_BE_HOST}/auth/login`;
+  const url = `${import.meta.env.VITE_BE_HOST}/v4/auth/login`;
 
   return (
     <LoginTemplate

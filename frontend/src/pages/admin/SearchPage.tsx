@@ -19,10 +19,10 @@ import {
 } from "@/api/axios/axios.custom";
 
 interface ISearchDetail {
-  intra_id: string;
-  user_id: number;
-  bannedDate?: Date;
-  unbannedDate?: Date;
+  name: string;
+  userId: number;
+  bannedAt?: Date;
+  unbannedAt?: Date;
   cabinetInfo?: CabinetInfo;
 }
 
@@ -54,27 +54,33 @@ const SearchPage = () => {
     resetCurrentIntraId();
   };
 
-  // intra_id 검색
+  // name 검색
   const handleSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
       currentPage.current
     );
-    setSearchListByIntraId(searchResult.data.result);
-    setTotalSearchList(searchResult.data.total_length);
+    setSearchListByIntraId(searchResult.data.result ?? []);
+    setTotalSearchList(searchResult.data.totalPage ?? 0);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
   };
 
-  // cabinet_num 검색
+  // visibleNum 검색
   const handleSearchByCabinetNum = async () => {
     const searchResult = await axiosSearchByCabinetNum(
-      Number(searchValue.current),
-      searchFloor.current === 0 ? undefined : searchFloor.current
+      Number(searchValue.current)
     );
-    setSearchListByNum(searchResult.data.result);
-    setTotalSearchList(searchResult.data.total_length);
+    let searchResultData: CabinetInfo[] = searchResult.data.result;
+    searchResultData.sort((a, b) => a.floor - b.floor);
+    if (searchFloor.current !== 0) {
+      searchResultData = searchResultData.filter(
+        (item: CabinetInfo) => item.floor === searchFloor.current
+      );
+    }
+    setSearchListByNum(searchResultData ?? []);
+    setTotalSearchList(searchResult.data.totalPage ?? 0);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
@@ -93,7 +99,7 @@ const SearchPage = () => {
     }
   }, [searchParams, numberOfAdminWork]);
 
-  // intra_id 검색 더보기
+  // name 검색 더보기
   const handleMoreSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
@@ -128,8 +134,8 @@ const SearchPage = () => {
                   <SearchItemByNum {...item} key={index} />
                 ))}
             </ListWrapperStyled>
-            {totalSearchList > 10 &&
-              currentPage.current * 10 < totalSearchList - 10 && (
+            {totalSearchList > 1 &&
+              currentPage.current < totalSearchList - 1 && (
                 <MoreButtonStyled onClick={clickMoreButton}>
                   더보기
                 </MoreButtonStyled>

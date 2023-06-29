@@ -9,8 +9,8 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-const LogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
-  if (lentLog === undefined) return <LoadingAnimation />;
+const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
+  if (lentHistory === undefined) return <LoadingAnimation />;
 
   return (
     <LogTableWrapperstyled>
@@ -22,22 +22,19 @@ const LogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
             <th>반납일</th>
           </tr>
         </TheadStyled>
-        {lentLog !== STATUS_400_BAD_REQUEST && (
+        {lentHistory !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
-            {lentLog.map(
-              (
-                { floor, section, cabinet_num, lent_time, return_time },
-                idx
-              ) => (
+            {lentHistory.map(
+              ({ floor, section, visibleNum, startedAt, endedAt }, idx) => (
                 <tr key={idx}>
                   <td
                     title={`${floor}층 ${section}`}
-                  >{`${floor}F - ${cabinet_num}번`}</td>
-                  <td title={new Date(lent_time).toLocaleString("ko-KR")}>
-                    {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
+                  >{`${floor}F - ${visibleNum}번`}</td>
+                  <td title={new Date(startedAt).toLocaleString("ko-KR")}>
+                    {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
-                  <td title={new Date(return_time).toLocaleString("ko-KR")}>
-                    {new Date(return_time).toLocaleString("ko-KR", dateOptions)}
+                  <td title={new Date(endedAt).toLocaleString("ko-KR")}>
+                    {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
                 </tr>
               )
@@ -45,9 +42,10 @@ const LogTable = ({ lentLog }: { lentLog: LentLogResponseType }) => {
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {lentLog === STATUS_400_BAD_REQUEST && (
-        <EmptyLogStyled>반납처리 된 사물함이 아직 없습니다.</EmptyLogStyled>
-      )}
+      {lentHistory === STATUS_400_BAD_REQUEST ||
+        (lentHistory.length === 0 && (
+          <EmptyLogStyled>대여기록이 없습니다.</EmptyLogStyled>
+        ))}
     </LogTableWrapperstyled>
   );
 };

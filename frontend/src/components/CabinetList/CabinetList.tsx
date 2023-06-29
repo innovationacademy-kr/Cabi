@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import AdminCabinetListItem from "@/components/CabinetList/CabinetListItem/AdminCabinetListItem";
 import CabinetListItem from "@/components/CabinetList/CabinetListItem/CabinetListItem";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
 interface CabinetListInterface {
   colNum: number;
-  cabinetInfo: CabinetInfo[];
+  cabinetInfo: CabinetPreviewInfo[];
   isAdmin: boolean;
 }
 
@@ -23,8 +23,8 @@ const CabinetList = ({
   return (
     <CabinetListContainerStyled colNum={colNum ?? DEFAULT_COL_NUM}>
       {isAdmin
-        ? cabinetInfo.map((cabinet, index) => (
-            <AdminCabinetListItem cabinet={cabinet} key={index} />
+        ? cabinetInfo.map((cabinet) => (
+            <AdminCabinetListItem {...cabinet} key={cabinet.cabinetId} />
           ))
         : cabinetInfo.map((cabinet, index) => (
             <CabinetListItem {...cabinet} key={index} />

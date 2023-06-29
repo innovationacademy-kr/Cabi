@@ -1,24 +1,30 @@
 export interface BannedUserDto {
-  user_id: number;
-  intra_id: string;
-  banned_date: Date;
-  unbanned_date: Date;
+  userId: number;
+  name: string;
+  bannedAt: Date;
+  unbannedAt: Date;
 }
 
 export interface BrokenCabinetDto {
-  cabinet_id: number;
-  cabinet_num: number;
+  cabinetId: number;
+  visibleNum: number;
+  maxUser: number;
+  building: string;
   floor: number;
-  lent_type: string;
-  location: string;
-  max_user: number;
-  note: string | null;
   section: string;
+  lentType: string;
+  status: string;
+  statusNote: string | null;
+  title: string;
 }
 
 export interface OverdueUserDto {
-  intra_id: string;
-  location: string;
+  building: string;
+  floor: number;
+  section: string;
+  cabinetId: number;
+  visibleNum: number;
+  name: string;
   overdueDays: number;
 }
 

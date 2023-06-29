@@ -1,8 +1,8 @@
 import { SetterOrUpdater } from "recoil";
 import {
   ICabinetNumbersPerFloor,
-  ITableData,
   IMonthlyData,
+  ITableData,
 } from "@/types/dto/admin.dto";
 import {
   axiosGetBannedUserList,

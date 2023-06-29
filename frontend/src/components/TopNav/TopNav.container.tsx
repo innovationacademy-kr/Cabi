@@ -1,27 +1,27 @@
 import React, { SetStateAction, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  currentLocationNameState,
-  locationsFloorState,
+  buildingsFloorState,
+  currentBuildingNameState,
   myCabinetInfoState,
 } from "@/recoil/atoms";
-import { locationsState } from "@/recoil/selectors";
+import { buildingsState } from "@/recoil/selectors";
 import TopNav from "@/components/TopNav/TopNav";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
-import { axiosLocationFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
+import { axiosBuildingFloor, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const TopNavContainer: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
 }> = (props) => {
-  const [locationClicked, setLocationClicked] = useState(false);
-  const [currentLocationName, setCurrentLocationName] = useRecoilState(
-    currentLocationNameState
+  const [buildingClicked, setBuildingClicked] = useState(false);
+  const [currentBuildingName, setCurrentBuildingName] = useRecoilState(
+    currentBuildingNameState
   );
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const setLocationsFloor = useSetRecoilState(locationsFloorState);
-  const locationsList = useRecoilValue<Array<string>>(locationsState);
+  const setBuildingsFloor = useSetRecoilState(buildingsFloorState);
+  const buildingsList = useRecoilValue<Array<string>>(buildingsState);
   const { setIsLoading } = props;
   const { toggleLeftNav } = useMenu();
 
@@ -33,12 +33,12 @@ const TopNavContainer: React.FC<{
     function setTimeoutPromise(delay: number) {
       return new Promise((resolve) => setTimeout(resolve, delay));
     }
-    const getLocationsData = async () => {
+    const getBuildingsData = async () => {
       try {
         await setTimeoutPromise(500);
-        const locationsFloorData = await axiosLocationFloor();
+        const buildingsFloorData = await axiosBuildingFloor();
 
-        setLocationsFloor(locationsFloorData.data.space_data);
+        setBuildingsFloor(buildingsFloorData.data);
       } catch (error) {
         console.log(error);
       }
@@ -53,25 +53,25 @@ const TopNavContainer: React.FC<{
       }
     }
 
-    Promise.all([getLocationsData(), getMyLentInfo()]).then(() =>
+    Promise.all([getBuildingsData(), getMyLentInfo()]).then(() =>
       setIsLoading(false)
     );
   }, []);
 
   useEffect(() => {
-    if (locationsList.length === 0) return;
+    if (buildingsList.length === 0) return;
 
-    setCurrentLocationName(locationsList[0]);
-  }, [locationsList]);
+    setCurrentBuildingName(buildingsList[0]);
+  }, [buildingsList]);
 
   return (
     <TopNav
-      currentLocationName={currentLocationName}
-      locationsList={locationsList}
-      locationClicked={locationClicked}
-      setLocationClicked={setLocationClicked}
+      currentBuildingName={currentBuildingName}
+      buildingsList={buildingsList}
+      buildingClicked={buildingClicked}
+      setBuildingClicked={setBuildingClicked}
       onClickLogo={onClickLogo}
-      setCurrentLocationName={setCurrentLocationName}
+      setCurrentBuildingName={setCurrentBuildingName}
     />
   );
 };

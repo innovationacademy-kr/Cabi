@@ -11,13 +11,7 @@ const AdminCabinetLentLog = ({
   onClickNext,
 }: ILentLog) => {
   return (
-    <AdminLentLogStyled id="lentInfo">
-      <TitleContainer>
-        <TitleStyled>대여 기록</TitleStyled>
-        <GoBackButtonStyled onClick={closeLent}>
-          뒤로가기
-        </GoBackButtonStyled>
-      </TitleContainer>
+    <AdminLentLogStyled>
       <AdminCabinetLogTable lentLog={logs} />
       <ButtonContainerStyled>
         <PageButtonStyled
@@ -51,7 +45,8 @@ const PageButtonStyled = styled.div<{
   position: absolute;
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 0) return "none";
-    if (type == "next" && page == totalPage - 1) return "none";
+    if (type == "next" && (totalPage == 0 || page == totalPage - 1))
+      return "none";
     return "block";
   }};
   ${({ type }) =>
@@ -62,16 +57,6 @@ const PageButtonStyled = styled.div<{
       : css`
           right: 0;
         `}
-`;
-
-const GoBackButtonStyled = styled.div`
-  position: absolute;
-  top: 3%;
-  right: 6%;
-  color: var(--lightpurple-color);
-  font-size: 0.875rem;
-  text-decoration: underline;
-  cursor: pointer;
 `;
 
 const ButtonContainerStyled = styled.div`
@@ -85,37 +70,8 @@ const ButtonContainerStyled = styled.div`
   margin-top: 25px;
 `;
 
-const TitleContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 30px;
-`;
-
-const TitleStyled = styled.h1`
-  font-size: 1.5rem;
-  font-weight: 700;
-`;
-
 const AdminLentLogStyled = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  min-width: 330px;
-  height: 100%;
-  padding: 40px 20px;
-  z-index: 9;
-  transform: translateX(120%);
-  transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 40px 0 var(--bg-shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: var(--white);
-  &.on {
-    transform: translateX(0);
-  }
+  width: 100%;
 `;
 
 export default AdminCabinetLentLog;

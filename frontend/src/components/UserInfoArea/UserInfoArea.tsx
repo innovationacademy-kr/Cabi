@@ -14,42 +14,20 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 
 export interface ISelectedUserInfo {
-  intraId: string;
-  userId: number;
+  name: string;
+  userId: number | null;
   isBanned: boolean;
   bannedInfo?: string;
 }
 
-export interface IUserLentInfo {
-  floor: number;
-  section: string;
-  cabinetId: number;
-  cabinetNum: number;
-  status: CabinetStatus;
-  lentType: CabinetType;
-  userNameList: string;
-  expireDate?: Date;
-  detailMessage: string | null;
-  detailMessageColor: string;
-}
-
 const UserInfoArea: React.FC<{
   selectedUserInfo?: ISelectedUserInfo;
-  userLentInfo?: IUserLentInfo;
   closeCabinet: () => void;
   openLent: React.MouseEventHandler;
 }> = (props) => {
-  const { selectedUserInfo, userLentInfo, closeCabinet, openLent } = props;
+  const { selectedUserInfo, closeCabinet, openLent } = props;
   const [showBanModal, setShowBanModal] = useState<boolean>(false);
-  const [showAdminReturnModal, setShowAdminReturnModal] =
-    useState<boolean>(false);
 
-  const handleOpenAdminReturnModal = () => {
-    setShowAdminReturnModal(true);
-  };
-  const handleCloseAdminReturnModal = () => {
-    setShowAdminReturnModal(false);
-  };
   const handleOpenBanModal = () => {
     setShowBanModal(true);
   };
@@ -68,89 +46,42 @@ const UserInfoArea: React.FC<{
       </NotSelectedStyled>
     );
 
-  if (userLentInfo === undefined)
-    return (
-      <CabinetDetailAreaStyled>
-        <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
-        <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-          대여 중이 아닌 사용자
-        </TextStyled>
-        <CabinetRectangleStyled
-          cabinetStatus={
-            selectedUserInfo.isBanned
-              ? CabinetStatus.EXPIRED
-              : CabinetStatus.SET_EXPIRE_FULL
-          }
-        >
-          {selectedUserInfo.isBanned ? "!" : "-"}
-        </CabinetRectangleStyled>
-        <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
-        <TextStyled fontSize="1rem" fontColor="black">
-          {selectedUserInfo.intraId}
-        </TextStyled>
-
-        <CabinetInfoButtonsContainerStyled>
-          <ButtonContainer
-            onClick={handleOpenBanModal}
-            text="밴 해제"
-            theme="fill"
-            disabled={selectedUserInfo.isBanned === false}
-          />
-          <ButtonContainer
-            onClick={closeCabinet}
-            text="닫기"
-            theme="grayLine"
-          />
-        </CabinetInfoButtonsContainerStyled>
-        {selectedUserInfo.isBanned && (
-          <CabinetLentDateInfoStyled textColor="var(--expired)">
-            {selectedUserInfo.bannedInfo!}
-          </CabinetLentDateInfoStyled>
-        )}
-        {showBanModal && (
-          <BanModal
-            userId={selectedUserInfo.userId}
-            closeModal={handleCloseBanModal}
-          />
-        )}
-      </CabinetDetailAreaStyled>
-    );
   return (
     <CabinetDetailAreaStyled>
       <LinkTextStyled onClick={openLent}>대여기록</LinkTextStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-        {userLentInfo.floor + "F - " + userLentInfo.section}
+        대여 중이 아닌 사용자
       </TextStyled>
-      <CabinetRectangleStyled cabinetStatus={userLentInfo.status}>
-        {userLentInfo.cabinetNum}
+      <CabinetRectangleStyled
+        cabinetStatus={
+          selectedUserInfo.isBanned ? CabinetStatus.OVERDUE : CabinetStatus.FULL
+        }
+      >
+        {selectedUserInfo.isBanned ? "!" : "-"}
       </CabinetRectangleStyled>
-      <CabinetTypeIconStyled cabinetType={userLentInfo.lentType} />
+      <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
       <TextStyled fontSize="1rem" fontColor="black">
-        <ChangeToHTML
-          origin={userLentInfo.userNameList}
-          replace={selectedUserInfo.intraId}
-        />
+        {selectedUserInfo.name}
       </TextStyled>
+
       <CabinetInfoButtonsContainerStyled>
         <ButtonContainer
-          onClick={handleOpenAdminReturnModal}
-          text="반납"
+          onClick={handleOpenBanModal}
+          text="밴 해제"
           theme="fill"
+          disabled={selectedUserInfo.isBanned === false}
         />
         <ButtonContainer onClick={closeCabinet} text="닫기" theme="grayLine" />
       </CabinetInfoButtonsContainerStyled>
-      <CabinetLentDateInfoStyled textColor={userLentInfo.detailMessageColor}>
-        {userLentInfo.detailMessage}
-      </CabinetLentDateInfoStyled>
-      <CabinetLentDateInfoStyled textColor="var(--black)">
-        {userLentInfo.expireDate
-          ? `${userLentInfo.expireDate.toString().substring(0, 10)}`
-          : null}
-      </CabinetLentDateInfoStyled>
-      {showAdminReturnModal && (
-        <AdminReturnModal
-          lentType={userLentInfo.lentType}
-          closeModal={handleCloseAdminReturnModal}
+      {selectedUserInfo.isBanned && (
+        <CabinetLentDateInfoStyled textColor="var(--expired)">
+          {selectedUserInfo.bannedInfo!}
+        </CabinetLentDateInfoStyled>
+      )}
+      {showBanModal && (
+        <BanModal
+          userId={selectedUserInfo.userId}
+          closeModal={handleCloseBanModal}
         />
       )}
     </CabinetDetailAreaStyled>

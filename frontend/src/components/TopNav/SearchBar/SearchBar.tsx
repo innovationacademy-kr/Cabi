@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SearchBarList from "@/components/TopNav/SearchBar/SearchBarList/SearchBarList";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import {
   axiosSearchByCabinetNum,
   axiosSearchByIntraId,
@@ -13,7 +14,7 @@ const SearchBar = () => {
   const searchWrap = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
-  const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
+  const [searchListByNum, setSearchListByNum] = useState<CabinetInfo[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
   const [isFocus, setIsFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);
@@ -88,7 +89,7 @@ const SearchBar = () => {
           const searchResult = await axiosSearchByIntraId(searchValue);
           setSearchListByNum([]);
           setSearchListById(searchResult.data.result);
-          setTotalLength(searchResult.data.total_length);
+          setTotalLength(searchResult.data.totalLength);
         }
       } else {
         // cabinetnumber 검색
@@ -99,9 +100,11 @@ const SearchBar = () => {
           const searchResult = await axiosSearchByCabinetNum(
             Number(searchValue)
           );
+          const searchResultData: CabinetInfo[] = searchResult.data.result;
+          searchResultData.sort((a, b) => a.floor - b.floor);
           setSearchListById([]);
-          setSearchListByNum(searchResult.data.result);
-          setTotalLength(searchResult.data.total_length);
+          setSearchListByNum(searchResultData);
+          setTotalLength(searchResult.data.totalLength);
         }
       }
     }
@@ -122,7 +125,7 @@ const SearchBar = () => {
 
   const valueChangeHandler = () => {
     if (isNaN(Number(searchInput.current!.value))) {
-      return searchListById[targetIndex].intra_id;
+      return searchListById[targetIndex].name;
     } else {
       setFloor(searchListByNum[targetIndex].floor);
       return searchInput.current!.value;

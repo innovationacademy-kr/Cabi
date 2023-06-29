@@ -1,32 +1,49 @@
 import { LentDto } from "@/types/dto/lent.dto";
-import CabinetType from "@/types/enum/cabinet.type.enum";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 
 // TODO :hybae
-// lent_type을 LentType으로 변경 예정
+// lentType을 LentType으로 변경 예정
 export interface MyCabinetInfoResponseDto extends CabinetInfo {
-  cabinet_memo: string; // 사물함 비밀번호와 관련된 메모
+  memo: string; // 사물함 비밀번호와 관련된 메모
 }
 
-export interface CabinetLocationFloorDto {
-  location: string;
+export interface CabinetBuildingFloorDto {
+  building: string;
   floors: Array<number>;
 }
 
 export interface CabinetInfo {
-  cabinet_id: number;
-  cabinet_num: number;
-  lent_type: CabinetType;
-  cabinet_title: string | null;
-  max_user: number;
+  building: string;
+  floor: number;
+  cabinetId: number;
+  visibleNum: number;
+  lentType: CabinetType;
+  title: string | null;
+  maxUser: number;
   status: CabinetStatus;
   section: string;
-  location: string;
-  floor: number;
-  lent_info: LentDto[];
+  lents: LentDto[];
+  statusNote: string | null;
 }
 
-export interface CabinetInfoByLocationFloorDto {
+export interface CabinetPreview {
+  section: string;
+  cabinets: CabinetPreviewInfo[];
+}
+
+export interface CabinetPreviewInfo {
+  cabinetId: number;
+  name: string;
+  visibleNum: number;
+  lentType: CabinetType;
+  title: string | null;
+  userCount: number;
+  maxUser: number;
+  status: CabinetStatus;
+}
+
+export interface CabinetInfoByBuildingFloorDto {
   section: string; // swagger의 CabinetPerSectionDto에 맞추어 object -> string으로 수정했습니다.
-  cabinets: CabinetInfo[];
+  cabinets: CabinetPreviewInfo[];
 }

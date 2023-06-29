@@ -17,7 +17,7 @@ const AdminCabinetLentLogContainer = () => {
   async function getData(page: number) {
     try {
       const result = await axiosGetCabinetLentLog(currentCabinetId, page);
-      setTotalPage(Math.ceil(result.data.total_length / 10));
+      setTotalPage(result.data.totalPage);
       setLogs(result.data.result);
     } catch {
       setLogs(STATUS_400_BAD_REQUEST);
@@ -52,8 +52,6 @@ const AdminCabinetLentLogContainer = () => {
     setNeedsUpdate(true);
     setPage(0);
   };
-
-  if (!currentCabinetId) return null;
 
   return (
     <AdminCabinetLentLog

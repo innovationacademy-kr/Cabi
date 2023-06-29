@@ -7,37 +7,37 @@ import {
   useSetRecoilState,
 } from "recoil";
 import {
+  currentBuildingNameState,
   currentFloorCabinetState,
   currentFloorNumberState,
-  currentLocationNameState,
   currentMapFloorState,
   currentSectionNameState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
   userState,
 } from "@/recoil/atoms";
-import { currentLocationFloorState } from "@/recoil/selectors";
+import { currentBuildingFloorState } from "@/recoil/selectors";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
-import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
+import { CabinetInfoByBuildingFloorDto } from "@/types/dto/cabinet.dto";
 import { UserDto } from "@/types/dto/user.dto";
-import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
+import { axiosCabinetByBuildingFloor } from "@/api/axios/axios.custom";
 import { removeCookie } from "@/api/react_cookie/cookies";
 import useIsMount from "@/hooks/useIsMount";
 import useMenu from "@/hooks/useMenu";
 
 const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
-  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
+  const floors = useRecoilValue<Array<number>>(currentBuildingFloorState);
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
   );
+  const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const setCurrentMapFloor = useSetRecoilState<number>(currentMapFloorState);
-  const currentLocation = useRecoilValue<string>(currentLocationNameState);
   const myInfo = useRecoilValue<UserDto>(userState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
-  const resetLocation = useResetRecoilState(currentLocationNameState);
+  const resetBuilding = useResetRecoilState(currentBuildingNameState);
   const setCurrentFloorData = useSetRecoilState<
-    CabinetInfoByLocationFloorDto[]
+    CabinetInfoByBuildingFloorDto[]
   >(currentFloorCabinetState);
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
   const numberOfAdminWork = useRecoilValue<number>(numberOfAdminWorkState);
@@ -53,7 +53,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       setCurrentMapFloor(floors[0]);
       return;
     }
-    axiosCabinetByLocationFloor(currentLocation, currentFloor)
+    axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
         if (isMount || isCurrentSectionRender) {
@@ -73,14 +73,14 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       .catch((error) => {
         console.error(error);
       });
-  }, [currentLocation, currentFloor, myInfo.cabinet_id, numberOfAdminWork]);
+  }, [currentBuilding, currentFloor, myInfo.cabinetId, numberOfAdminWork]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
     setCurrentMapFloor(floor);
     if (!pathname.includes("main")) {
       if (floor === currentFloor) {
-        axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
+        axiosCabinetByBuildingFloor(currentBuilding, currentFloor).then(
           (response) => {
             setCurrentFloorData(response.data);
             setCurrentSection(response.data[0].section);
@@ -121,7 +121,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
         domain: "cabi.42seoul.io",
       });
     }
-    resetLocation();
+    resetBuilding();
     resetCurrentFloor();
     resetCurrentSection();
     navigator("login");

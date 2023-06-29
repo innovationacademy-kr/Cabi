@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import LogTable from "@/components/LentLog/LogTable/LogTable";
-import { LentLogDto } from "@/types/dto/lent.dto";
+import { LentHistoryDto } from "@/types/dto/lent.dto";
 import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
@@ -12,7 +12,7 @@ const LogPage = () => {
   const getLentLog = async () => {
     try {
       const response = await axiosMyLentLog(0);
-      const lentLogs: LentLogDto[] = response.data.result;
+      const lentLogs: LentHistoryDto[] = response.data.result;
       setTimeout(() => {
         setLentLog(lentLogs);
       }, 500);
@@ -33,7 +33,7 @@ const LogPage = () => {
       <SubTitleStyled>
         최근 10회의 대여 기록을 확인할 수 있습니다.
       </SubTitleStyled>
-      <LogTable lentLog={lentLog} />
+      <LogTable lentHistory={lentLog} />
     </WrapperStyled>
   );
 };

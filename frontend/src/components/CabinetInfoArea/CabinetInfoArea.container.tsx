@@ -3,8 +3,8 @@ import { useRecoilValue } from "recoil";
 import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
-import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
-import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import AdminLentLog from "@/components/LentLog/AdminLentLog";
+import { CabinetInfo, CabinetPreviewInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
@@ -14,7 +14,7 @@ export interface ISelectedCabinetInfo {
   floor: number;
   section: string;
   cabinetId: number;
-  cabinetNum: number;
+  visibleNum: number;
   status: CabinetStatus;
   lentType: CabinetType;
   userNameList: string;
@@ -23,14 +23,15 @@ export interface ISelectedCabinetInfo {
   detailMessageColor: string;
   isAdmin: boolean;
   isLented: boolean;
+  lentsLength: number;
 }
 
 export interface IMultiSelectTargetInfo {
-  targetCabinetInfoList: CabinetInfo[];
+  targetCabinetInfoList: CabinetPreviewInfo[];
   typeCounts: {
     AVAILABLE: number;
-    EXPIRED: number;
-    SET_EXPIRE_FULL: number;
+    OVERDUE: number;
+    FULL: number;
     BROKEN: number;
   };
 }
@@ -50,8 +51,8 @@ export interface IAdminCurrentModalStateInfo {
 
 interface ICount {
   AVAILABLE: number;
-  SET_EXPIRE_FULL: number;
-  EXPIRED: number;
+  FULL: number;
+  OVERDUE: number;
   BROKEN: number;
 }
 
@@ -84,47 +85,47 @@ const getCalcualtedTimeString = (expireTime: Date) => {
 
 const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
-  const { lent_type, cabinet_title, max_user, lent_info } = selectedCabinetInfo;
-  if (lent_type === "CLUB" && cabinet_title) return cabinet_title;
+  const { lentType, title, maxUser, lents } = selectedCabinetInfo;
+  if (lentType === "CLUB" && title) return title;
 
   // 그 외에는 유저리스트 반환
-  const userNameList = new Array(max_user)
+  const userNameList = new Array(maxUser)
     .fill(null)
-    .map((_, idx) => lent_info[idx])
-    .map((info) => (info ? info.intra_id : "-"))
+    .map((_, idx) => lents[idx])
+    .map((info) => (info ? info.name : "-"))
     .join("\n");
   return userNameList;
 };
 
 const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
-  const { status, lent_type, lent_info } = selectedCabinetInfo;
+  const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
     return "사용 불가";
   // 동아리 사물함
-  else if (lent_type === "CLUB") return "동아리 사물함";
+  else if (lentType === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
   else if (
-    status === CabinetStatus.SET_EXPIRE_AVAILABLE ||
-    status === CabinetStatus.SET_EXPIRE_FULL ||
-    status === CabinetStatus.EXPIRED
+    status === CabinetStatus.LIMITED_AVAILABLE ||
+    status === CabinetStatus.FULL ||
+    status === CabinetStatus.OVERDUE
   )
-    return getCalcualtedTimeString(new Date(lent_info[0].expire_time));
+    return getCalcualtedTimeString(new Date(lents[0].expiredAt));
   // 빈 사물함
   else return null;
 };
 
 const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
-  const { status, lent_type, lent_info } = selectedCabinetInfo;
+  const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
     return "var(--expired)";
   // 사용 중 사물함
   else if (
-    (status === CabinetStatus.SET_EXPIRE_FULL && lent_type !== "CLUB") ||
-    status === CabinetStatus.EXPIRED
+    (status === CabinetStatus.FULL && lentType !== "CLUB") ||
+    status === CabinetStatus.OVERDUE
   )
-    return calExpiredTime(new Date(lent_info[0].expire_time)) < 0
+    return calExpiredTime(new Date(lents[0].expiredAt)) < 0
       ? "var(--expired)"
       : "var(--black)";
   // 빈 사물함
@@ -155,29 +156,30 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     ? {
         floor: targetCabinetInfo.floor,
         section: targetCabinetInfo.section,
-        cabinetId: targetCabinetInfo.cabinet_id,
-        cabinetNum: targetCabinetInfo.cabinet_num,
+        cabinetId: targetCabinetInfo.cabinetId,
+        visibleNum: targetCabinetInfo.visibleNum,
         status: targetCabinetInfo.status,
-        lentType: targetCabinetInfo.lent_type,
+        lentType: targetCabinetInfo.lentType,
         userNameList: getCabinetUserList(targetCabinetInfo),
-        expireDate: targetCabinetInfo.lent_info[0]?.expire_time,
+        expireDate: targetCabinetInfo.lents[0]?.expiredAt,
         detailMessage: getDetailMessage(targetCabinetInfo),
         detailMessageColor: getDetailMessageColor(targetCabinetInfo),
         isAdmin: isAdmin,
-        isLented: targetCabinetInfo.lent_info.length !== 0,
+        isLented: targetCabinetInfo.lents.length !== 0,
+        lentsLength: targetCabinetInfo.lents.length,
       }
     : null;
 
-  const countTypes = (cabinetList: CabinetInfo[]) =>
+  const countTypes = (cabinetList: CabinetPreviewInfo[]) =>
     cabinetList.reduce(
       (result, cabinet): ICount => {
-        if (cabinet.status === CabinetStatus.SET_EXPIRE_AVAILABLE)
+        if (cabinet.status === CabinetStatus.LIMITED_AVAILABLE)
           result["AVAILABLE"]++;
         else if (cabinet.status === CabinetStatus.BANNED) result["BROKEN"]++;
         else result[cabinet.status]++;
         return result;
       },
-      { AVAILABLE: 0, SET_EXPIRE_FULL: 0, EXPIRED: 0, BROKEN: 0 }
+      { AVAILABLE: 0, FULL: 0, OVERDUE: 0, BROKEN: 0 }
     );
 
   const multiSelectInfo: IMultiSelectTargetInfo | null = isMultiSelect
@@ -188,6 +190,15 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     : null;
 
   const openModal = (modalName: TModalState) => {
+    if (modalName === "lentModal" && myCabinetInfo.cabinetId) {
+      modalName = "unavailableModal";
+    } else if (
+      modalName === "returnModal" &&
+      targetCabinetInfo.floor === 3 &&
+      targetCabinetInfo.lents.length === 1
+    ) {
+      modalName = "passwordCheckModal";
+    }
     setUserModal({
       ...userModal,
       [modalName]: true,
@@ -215,9 +226,9 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     });
   };
 
-  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
+  const checkMultiReturn = (selectedCabinets: CabinetPreviewInfo[]) => {
     const returnable = selectedCabinets.find(
-      (cabinet) => cabinet.lent_info.length >= 1
+      (cabinet) => cabinet.userCount >= 1
     );
     if (returnable !== undefined) {
       return true;
@@ -225,7 +236,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     return false;
   };
 
-  const checkMultiStatus = (selectedCabinets: CabinetInfo[]) => {
+  const checkMultiStatus = (selectedCabinets: CabinetPreviewInfo[]) => {
     // 캐비넷 일괄 상태 관리 모달을 열기 위한 조건
     // 선택된 캐비넷들이 같은 타입, 같은 상태여야 함.
     if (isSameType(selectedCabinets) && isSameStatus(selectedCabinets))
@@ -247,17 +258,17 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         checkMultiStatus={checkMultiStatus}
         expireDate={setExpireDate(cabinetViewData?.expireDate)}
       />
-      {cabinetViewData && <AdminCabinetLentLogContainer />}
+      <AdminLentLog lentType={"CABINET"} />
     </>
   ) : (
     <CabinetInfoArea
       selectedCabinetInfo={cabinetViewData}
       closeCabinet={closeCabinet}
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
-      isMine={myCabinetInfo?.cabinet_id === cabinetViewData?.cabinetId}
+      isMine={myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId}
       isAvailable={
         cabinetViewData?.status === "AVAILABLE" ||
-        cabinetViewData?.status === "SET_EXPIRE_AVAILABLE"
+        cabinetViewData?.status === "LIMITED_AVAILABLE"
       }
       userModal={userModal}
       openModal={openModal}

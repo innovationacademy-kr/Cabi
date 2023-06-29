@@ -51,7 +51,7 @@ const AdminHomePage = () => {
     openCabinet();
     if (type === "broken" || type === "overdue") {
       let cabinetId = -1;
-      if (str) cabinetId = JSON.parse(str)?.cabinet_id;
+      if (str) cabinetId = JSON.parse(str)?.cabinetId;
       getData(cabinetId);
       setSelectedTypeOnSearch("CABINET");
     } else {
@@ -60,10 +60,10 @@ const AdminHomePage = () => {
       if (str) {
         result = JSON.parse(str);
         setTargetUserInfo({
-          intraId: result.intra_id,
-          userId: result.user_id,
-          bannedDate: result.banned_date,
-          unbannedDate: result.unbanned_date,
+          name: result.name,
+          userId: result.userId,
+          bannedAt: result.bannedAt,
+          unbannedAt: result.unbannedAt,
         });
       }
     }

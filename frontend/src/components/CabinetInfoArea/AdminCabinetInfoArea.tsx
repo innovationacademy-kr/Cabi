@@ -1,5 +1,10 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
+import {
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
 import {
   IAdminCurrentModalStateInfo,
   IMultiSelectTargetInfo,
@@ -15,7 +20,7 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import cabiLogo from "@/assets/images/logo.svg";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMultiSelect from "@/hooks/useMultiSelect";
@@ -29,8 +34,8 @@ const AdminCabinetInfoArea: React.FC<{
   adminModal: IAdminCurrentModalStateInfo;
   openModal: (moadlName: TAdminModalState) => void;
   closeModal: (moadlName: TAdminModalState) => void;
-  checkMultiReturn: (selectedCabinets: CabinetInfo[]) => boolean;
-  checkMultiStatus: (selectedCabinets: CabinetInfo[]) => boolean;
+  checkMultiReturn: (selectedCabinets: CabinetPreviewInfo[]) => boolean;
+  checkMultiStatus: (selectedCabinets: CabinetPreviewInfo[]) => boolean;
   expireDate: string | null;
 }> = ({
   selectedCabinetInfo,
@@ -44,6 +49,8 @@ const AdminCabinetInfoArea: React.FC<{
   checkMultiStatus,
   expireDate,
 }) => {
+  const currentFloor = useRecoilValue(currentFloorNumberState);
+  const currentSection = useRecoilValue(currentSectionNameState);
   const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
   const { resetMultiSelectMode } = useMultiSelect();
 
@@ -65,8 +72,6 @@ const AdminCabinetInfoArea: React.FC<{
     );
   // 다중 선택 모드 진입 후 캐비넷을 하나 이상 선택했을 시
   if (multiSelectTargetInfo) {
-    const currentFloor = targetCabinetInfoList![0].floor;
-    const currentSection = targetCabinetInfoList![0].section;
     return (
       <CabinetDetailAreaStyled>
         <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
@@ -76,11 +81,11 @@ const AdminCabinetInfoArea: React.FC<{
           <MultiCabinetIconStyled status={CabinetStatus.AVAILABLE}>
             {typeCounts![CabinetStatus.AVAILABLE]}
           </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.EXPIRED}>
-            {typeCounts![CabinetStatus.EXPIRED]}
+          <MultiCabinetIconStyled status={CabinetStatus.OVERDUE}>
+            {typeCounts![CabinetStatus.OVERDUE]}
           </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.SET_EXPIRE_FULL}>
-            {typeCounts![CabinetStatus.SET_EXPIRE_FULL]}
+          <MultiCabinetIconStyled status={CabinetStatus.FULL}>
+            {typeCounts![CabinetStatus.FULL]}
           </MultiCabinetIconStyled>
           <MultiCabinetIconStyled status={CabinetStatus.BROKEN}>
             {typeCounts![CabinetStatus.BROKEN]}
@@ -128,7 +133,7 @@ const AdminCabinetInfoArea: React.FC<{
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={false}
       >
-        {selectedCabinetInfo!.cabinetNum}
+        {selectedCabinetInfo!.visibleNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}
@@ -288,8 +293,7 @@ const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
   align-items: center;
   background-color: ${({ status }) => cabinetStatusColorMap[status]};
   border-radius: 5px;
-  color: ${({ status }) =>
-    status === CabinetStatus.SET_EXPIRE_FULL ? "black" : "white"};
+  color: ${({ status }) => (status === CabinetStatus.FULL ? "black" : "white")};
 `;
 
 export default AdminCabinetInfoArea;

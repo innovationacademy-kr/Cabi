@@ -8,14 +8,14 @@ export interface IFloorSectionColNum {
   sectionColNum: ISectionColNum[];
 }
 
-export interface ILocationColNum {
-  location: string;
+export interface IBuildingColNum {
+  building: string;
   floorColNum: IFloorSectionColNum[];
 }
 
-export const staticColNumData: ILocationColNum[] = [
+export const staticColNumData: IBuildingColNum[] = [
   {
-    location: "새롬관",
+    building: "새롬관",
     floorColNum: [
       {
         floor: 2,

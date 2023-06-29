@@ -8,8 +8,10 @@ import {
 } from "@/recoil/atoms";
 import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import { axiosCabinetById } from "@/api/axios/axios.custom";
-import instance from "@/api/axios/axios.instance";
+import {
+  axiosCabinetById,
+  axiosDeleteCurrentBanLog,
+} from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
@@ -25,9 +27,9 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
 
   async function setTargetCabinetInfoToMyCabinet() {
-    setCurrentCabinetId(myInfo.cabinet_id);
+    setCurrentCabinetId(myInfo.cabinetId);
     try {
-      const { data } = await axiosCabinetById(myInfo.cabinet_id);
+      const { data } = await axiosCabinetById(myInfo.cabinetId);
       setTargetCabinetInfo(data);
     } catch (error) {
       console.log(error);
@@ -35,22 +37,12 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   }
 
   const clickMyCabinet = () => {
-    if (myInfo.cabinet_id === -1) return;
-    if (currentCabinetId !== myInfo.cabinet_id) {
+    if (myInfo.cabinetId === null) return;
+    if (currentCabinetId !== myInfo.cabinetId) {
       setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
       toggleCabinet();
-    }
-  };
-
-  const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";
-  const axiosRemovePenalty = async (): Promise<any> => {
-    try {
-      const response = await instance.delete(axiosRemovePenaltyURL);
-      return response;
-    } catch (error) {
-      throw error;
     }
   };
 
@@ -71,7 +63,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
     <NaviButtonsStyled id="topNavButtonGroup">
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
-          onClick={axiosRemovePenalty}
+          onClick={() => axiosDeleteCurrentBanLog(myInfo.userId)}
           imgSrc="/src/assets/images/happyCcabiWhite.png"
           width="32px"
           height="32px"
@@ -88,7 +80,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
         />
       )}
       <TopNavButton
-        disable={myInfo.cabinet_id === -1}
+        disable={myInfo.cabinetId === null}
         onClick={clickMyCabinet}
         imgSrc="/src/assets/images/myCabinetIcon.svg"
       />
