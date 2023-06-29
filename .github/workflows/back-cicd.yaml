@@ -45,6 +45,7 @@ jobs:
       - name: Application YML 생성
         run: |
           mkdir -p backend/src/main/resources
+          echo "${{ secrets.APPLICATION_PROD_YML }}" | base64 --decode > backend/src/main/resources/application-prod.yml
           echo "${{ secrets.APPLICATION_DEV_YML }}" | base64 --decode > backend/src/main/resources/application-dev.yml
           echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > backend/src/main/resources/application-auth.yml
           echo "${{ secrets.APPLICATION_MAIL_YML }}" | base64 --decode > backend/src/main/resources/application-mail.yml
@@ -56,7 +57,7 @@ jobs:
           ./gradlew build
         shell: bash
 
-      - name: EC2 서버에 업로드
+      - name: Dev EC2 서버에 업로드
         if: ${{ github.ref == 'refs/heads/dev' }}
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -64,8 +65,20 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY_NEW }}
           port: ${{ secrets.PORT }}
-          source: "./backend/build/libs/cabinet-0.0.1-SNAPSHOT.jar"
+          source: ./backend/build/libs/cabinet-*.jar
           target: "/home/ec2-user/42cabi_dev/"
+          overwrite: true
+
+      - name: Main EC2 서버에 업로드
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST_MAIN }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY_NEW }}
+          port: ${{ secrets.PORT }}
+          source: ./backend/build/libs/cabinet-*.jar
+          target: "/home/ec2-user/42cabi_main/"
           overwrite: true
 
   backend-CD-develop:
@@ -89,7 +102,7 @@ jobs:
             echo "리포지토리 pull"
             git pull origin dev
             echo "앱 구동"
-            nohup java -jar -Dspring.profiles.active=dev ./backend/build/libs/cabinet-0.0.1-SNAPSHOT.jar &
+            bash ~/script/deploy_java.sh
 
   # backend-CD-main:
   #   name: deploy-main
@@ -100,10 +113,10 @@ jobs:
   #     - name: 리모트 쉘 접속
   #       uses: appleboy/ssh-action@master
   #       with:
-  #         host: ${{ secrets.HOST_MAIN }}
-  #         username: ${{ secrets.USERNAME }}
-  #         key: ${{ secrets.KEY_NEW }}
-  #         port: ${{ secrets.PORT }}
+  # host: ${{ secrets.HOST_MAIN }}
+  # username: ${{ secrets.USERNAME }}
+  # key: ${{ secrets.KEY_NEW }}
+  # port: ${{ secrets.PORT }}
   #         script_stop: true
   #         script: |
   #           source $HOME/.bash_profile
