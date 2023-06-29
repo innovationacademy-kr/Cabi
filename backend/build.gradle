@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'org.ftclub'
@@ -10,25 +11,21 @@ sourceCompatibility = '11'
 
 ext {
     snippetsDir = file('build/generated-snippets')
+    outputDocs = file('src/main/resources/static/docs')
 }
 
 test {
     outputs.dir snippetsDir
 }
 
-bootJar {
-}
-
-jar {
-    enabled = false
-}
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-    all {
+    configureEach {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
+    asciidoctorExt
 }
 
 repositories {
@@ -68,10 +65,43 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
     testImplementation 'org.modelmapper:modelmapper:3.1.1'
     testRuntimeOnly 'com.h2database:h2'
+
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
     failFast = true
     systemProperty 'spring.profiles.active', 'test'
+}
+
+asciidoctor {
+    dependsOn test
+    baseDirFollowsSourceDir()
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+}
+
+tasks.register('copyDocument', Copy) {
+    dependsOn asciidoctor
+    from file("${asciidoctor.outputDir}")
+    into file("${outputDocs}")
+}
+
+build {
+    dependsOn copyDocument
+}
+
+jar {
+    enabled = false
+}
+
+bootJar {
+    dependsOn asciidoctor
+    copy {
+        from("${asciidoctor.outputDir}")
+        into 'build/classes/static'
+    }
 }
