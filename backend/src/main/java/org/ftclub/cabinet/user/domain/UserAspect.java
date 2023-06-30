@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,6 @@ public class UserAspect {
 		User user = userOptionalFetcher.getUserByName(name);
 		//ToDo: name을 기준으로 service에게 정보를 받고, 매핑한다.
 		// name과 email은 우선 구현했으나 수정이 필요함.
-		return new UserSessionDto(user.getUserId(), name, user.getEmail(), 1, 1, new Date(), true);
+		return new UserSessionDto(user.getUserId(), name, user.getEmail(), 1, 1, LocalDateTime.now(), true);
 	}
 }

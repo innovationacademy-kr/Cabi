@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
 	/* createUser는 user를 만드는 행위만 해야될 것 같아 다음과 같이 변경했습니다. */
 	@Override
-	public void createUser(String name, String email, Date blackholedAt, UserRole role) {
+	public void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role) {
 		log.info("Called createUser: {}", email);
 		User user = User.of(name, email, blackholedAt, role);
 		userRepository.save(user);
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUser(Long userId, Date deletedAt) {
+	public void deleteUser(Long userId, LocalDateTime deletedAt) {
 		log.info("Called deleteUser: {}", userId);
 		User user = userOptionalFetcher.getUser(userId);
 		user.setDeletedAt(deletedAt);
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void updateUserBlackholedAt(Long userId, Date newBlackholedAt) {
+	public void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt) {
 		log.info("Called updateUserBlackholedAt: {}", userId);
 		User user = userOptionalFetcher.getUser(userId);
 		if (user.getRole() != UserRole.USER) {
@@ -105,21 +105,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt,
-			Date expiredAt) {
+	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+			LocalDateTime expiredAt) {
 		log.info("Called banUser: {}", userId);
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);
 		if (banType == BanType.NONE) {
 			return;
 		}
-		Date banDate = banPolicy.getBanDate(banType, endedAt, expiredAt, userId);
+		LocalDateTime banDate = banPolicy.getBanDate(banType, endedAt, expiredAt, userId);
 		BanHistory banHistory = BanHistory.of(endedAt, banDate, banType,
 				userId);
 		banHistoryRepository.save(banHistory);
 	}
 
 	@Override
-	public void deleteRecentBanHistory(Long userId, Date today) {
+	public void deleteRecentBanHistory(Long userId, LocalDateTime today) {
 		log.info("Called deleteRecentBanHistory: {}", userId);
 		BanHistory banHistory = userOptionalFetcher.getRecentBanHistory(userId);
 		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), today)) {
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean checkUserIsBanned(Long userId, Date today) {
+	public boolean checkUserIsBanned(Long userId, LocalDateTime today) {
 		log.info("Called checkUserIsBanned: {}", userId);
 		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
 				today);
