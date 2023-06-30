@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.lent.repository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -137,7 +136,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"AND YEAR(lh.expiredAt) <> 9999 " +
 			"AND lh.endedAt is null " +
 			"ORDER BY lh.expiredAt ASC")
-	List<LentHistory> findAllOverdueLent(@Param("date") Date date, Pageable pageable);
+	List<LentHistory> findAllOverdueLent(@Param("date") LocalDateTime date, Pageable pageable);
 
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +

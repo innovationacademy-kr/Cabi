@@ -1,9 +1,9 @@
 package org.ftclub.cabinet.event;
 
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class EventTestService {
 				LentStartEvent.of(
 						"까비",
 						"ccabi@cabi.oopy.io",
-						DateUtil.getNow(),
+						LocalDateTime.now(),
 						Location.of("까비네 집", 2, "방구석"),
 						42));
 	}

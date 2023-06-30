@@ -5,7 +5,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -25,10 +24,10 @@ public class DateUtil {
 	}
 
 	/**
-	 * 문자열을 받아 그 문자열에 맞는 {@link Date}를 리턴합니다.
+	 * 문자열을 받아 그 문자열에 맞는 {@link LocalDateTime}를 리턴합니다.
 	 *
 	 * @param str yyyy-mm-dd 혹은 yyyy-m-dd 혹은 yyyy-m-d 포멧인 {@link String}
-	 * @return 문자열 포멧에 맞는 {@link Date}
+	 * @return 문자열 포멧에 맞는 {@link LocalDateTime}
 	 * @throws RuntimeException 문자열 포멧이 적절하지 않다면 발생시킵니다.
 	 */
 	public static LocalDateTime stringToDate(String str) {

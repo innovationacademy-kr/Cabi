@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,12 +35,11 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		log.info("Called startLentCabinet: {}, {}", userId, cabinetId);
-		Date now = new Date();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		User user = userExceptionHandler.getUser(userId);
 		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
 		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
-				DateUtil.getNow());
+				LocalDateTime.now());
 		// 대여 가능한 유저인지 확인
 		lentOptionalFetcher.handlePolicyStatus(
 				lentPolicy.verifyUserForLent(user, cabinet, userActiveLentCount,
@@ -50,12 +48,13 @@ public class LentServiceImpl implements LentService {
 				cabinetId);
 		// 대여 가능한 캐비넷인지 확인
 		lentOptionalFetcher.handlePolicyStatus(
-				lentPolicy.verifyCabinetForLent(cabinet, cabinetActiveLentHistories, now));
+				lentPolicy.verifyCabinetForLent(cabinet, cabinetActiveLentHistories,
+						LocalDateTime.now()));
 		// 캐비넷 상태 변경
 		cabinet.specifyStatusByUserCount(cabinetActiveLentHistories.size() + 1);
-		Date expiredAt = lentPolicy.generateExpirationDate(now, cabinet,
+		LocalDateTime expiredAt = lentPolicy.generateExpirationDate(LocalDateTime.now(), cabinet,
 				cabinetActiveLentHistories);
-		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
+		LentHistory lentHistory = LentHistory.of(LocalDateTime.now(), expiredAt, userId, cabinetId);
 		// 연체 시간 적용
 		lentPolicy.applyExpirationDate(lentHistory, cabinetActiveLentHistories, expiredAt);
 		lentRepository.save(lentHistory);
@@ -64,13 +63,13 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void startLentClubCabinet(Long userId, Long cabinetId) {
 		log.info("Called startLentClubCabinet: {}, {}", userId, cabinetId);
-		Date now = new Date();
 		Cabinet cabinet = cabinetOptionalFetcher.getClubCabinet(cabinetId);
 		userExceptionHandler.getClubUser(userId);
 		lentOptionalFetcher.checkExistedSpace(cabinetId);
-		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
+		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
+				cabinet, null);
 		LentHistory result =
-				LentHistory.of(now, expirationDate, userId, cabinetId);
+				LentHistory.of(LocalDateTime.now(), expirationDate, userId, cabinetId);
 		lentRepository.save(result);
 		cabinet.specifyStatusByUserCount(1); // todo : policy에서 관리
 	}
@@ -107,7 +106,7 @@ public class LentServiceImpl implements LentService {
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
-		lentHistories.forEach(lentHistory -> lentHistory.endLent(DateUtil.getNow()));
+		lentHistories.forEach(lentHistory -> lentHistory.endLent(LocalDateTime.now()));
 		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
@@ -120,7 +119,7 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
-		lentHistory.endLent(DateUtil.getNow());
+		lentHistory.endLent(LocalDateTime.now());
 		cabinet.specifyStatusByUserCount(activeLentCount - 1); // policy로 빠질만한 부분인듯?
 		if (activeLentCount - 1 == 0) {
 			cabinet.writeMemo("");
@@ -132,12 +131,12 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {
 		log.info("Called assignLent: {}, {}", userId, cabinetId);
-		Date now = DateUtil.getNow();
 		userExceptionHandler.getUser(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		lentOptionalFetcher.checkExistedSpace(cabinetId);
-		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
-		LentHistory result = LentHistory.of(now, expirationDate, userId, cabinetId);
+		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
+				cabinet, null);
+		LentHistory result = LentHistory.of(LocalDateTime.now(), expirationDate, userId, cabinetId);
 		cabinet.specifyStatusByUserCount(1);
 		lentRepository.save(result);
 	}
