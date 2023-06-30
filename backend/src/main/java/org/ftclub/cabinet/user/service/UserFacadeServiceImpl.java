@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -51,12 +51,12 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		log.info("Called getMyProfile: {}", user.getName());
 		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
-				DateUtil.getNow());
+				LocalDateTime.now());
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory);
 	}
 
 	@Override
-	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now) {
+	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, LocalDateTime now) {
 		log.info("Called getAllBanUsers");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -115,7 +115,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		List<UserCabinetDto> userCabinetDtoList = new ArrayList<>();
 		users.toList().stream().forEach(user -> {
 			BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(
-					user.getUserId(), DateUtil.getNow());
+					user.getUserId(), LocalDateTime.now());
 			//todo : banhistory join으로 한번에 가능
 			UserBlockedInfoDto blockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
 			Cabinet cabinet = cabinetOptionalFetcher.findLentCabinetByUserId(user.getUserId());
@@ -144,7 +144,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void createUser(String name, String email, Date blackholedAt, UserRole role) {
+	public void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role) {
 		userService.createUser(name, email, blackholedAt, role);
 	}
 
@@ -159,7 +159,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void deleteUser(Long userId, Date deletedAt) {
+	public void deleteUser(Long userId, LocalDateTime deletedAt) {
 		userService.deleteUser(userId, deletedAt);
 	}
 
@@ -179,18 +179,18 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void updateUserBlackholedAt(Long userId, Date newBlackholedAt) {
+	public void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt) {
 		userService.updateUserBlackholedAt(userId, newBlackholedAt);
 	}
 
 	@Override
-	public void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt,
-			Date expiredAt) {
+	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+			LocalDateTime expiredAt) {
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
 	}
 
 	@Override
-	public void deleteRecentBanHistory(Long userId, Date today) {
+	public void deleteRecentBanHistory(Long userId, LocalDateTime today) {
 		userService.deleteRecentBanHistory(userId, today);
 	}
 
@@ -203,10 +203,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size);
-		lentOptionalFetcher.findAllOverdueLent(DateUtil.getNow(), pageable).stream().forEach(
+		lentOptionalFetcher.findAllOverdueLent(LocalDateTime.now(), pageable).stream().forEach(
 				(lh) -> {
 					User user = lh.getUser();
-					Long overdueDays = DateUtil.calculateTwoDateDiff(DateUtil.getNow(),
+					Long overdueDays = DateUtil.calculateTwoDateDiff(LocalDateTime.now(),
 							lh.getExpiredAt());
 					Cabinet cabinet = lh.getCabinet();
 					overdueList.add(

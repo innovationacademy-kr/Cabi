@@ -1,10 +1,15 @@
 package org.ftclub.cabinet.user.service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
+import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -28,7 +33,7 @@ public interface UserFacadeService {
 	 * @return {@link BlockedUserPaginationDto} 모든 정지 유저
 	 */
 	/* 기존 searchByBanUser와 동일한 역할을 합니다. */
-	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now);
+	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, LocalDateTime now);
 
 	/**
 	 * 유저 이름의 일부를 입력받아 해당하는 유저들의 프로필을 받아옵니다.
@@ -84,7 +89,7 @@ public interface UserFacadeService {
 	 * @param blackholedAt 유저 블랙홀 날짜
 	 * @param role         유저 역할
 	 */
-	void createUser(String name, String email, Date blackholedAt, UserRole role);
+	void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role);
 
 	/**
 	 * 관리자가 존재하는지 확인합니다.
@@ -107,7 +112,7 @@ public interface UserFacadeService {
 	 * @param userId    유저 고유 아이디
 	 * @param deletedAt 유저 삭제 날짜
 	 */
-	void deleteUser(Long userId, Date deletedAt);
+	void deleteUser(Long userId, LocalDateTime deletedAt);
 
 	/**
 	 * 관리자를 삭제합니다.
@@ -137,7 +142,7 @@ public interface UserFacadeService {
 	 * @param userId          유저 고유 아이디
 	 * @param newBlackholedAt 새로운 유저 블랙홀 시간
 	 */
-	void updateUserBlackholedAt(Long userId, Date newBlackholedAt);
+	void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt);
 
 	/**
 	 * 유저를 정지시킵니다.
@@ -148,7 +153,7 @@ public interface UserFacadeService {
 	 * @param endedAt   대여 종료 날짜
 	 * @param expiredAt 대여 만료 날짜
 	 */
-	void banUser(Long userId, LentType lentType, Date startedAt, Date endedAt, Date expiredAt);
+	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt, LocalDateTime expiredAt);
 
 	/**
 	 * 유저의 정지를 해제합니다.
@@ -156,7 +161,7 @@ public interface UserFacadeService {
 	 * @param userId 유저 고유 아이디
 	 * @param today  현재 날짜
 	 */
-	void deleteRecentBanHistory(Long userId, Date today);
+	void deleteRecentBanHistory(Long userId, LocalDateTime today);
 
 	/**
 	 * 연체 중인 유저 리스트를 반환합니다.
