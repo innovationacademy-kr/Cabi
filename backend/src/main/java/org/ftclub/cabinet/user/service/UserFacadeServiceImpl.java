@@ -90,15 +90,15 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		}
 		PageRequest pageable = PageRequest.of(page, size);
 		Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
-		return generateUserProfilePaginationDto(users.getContent(), users.getTotalPages());
+		return generateUserProfilePaginationDto(users.getContent(), users.getTotalElements());
 	}
 
 	private UserProfilePaginationDto generateUserProfilePaginationDto(List<User> users,
-			Integer totalPage) {
+			Long totalLength) {
 		List<UserProfileDto> userProfileDtoList = users.stream()
 				.map(u -> userMapper.toUserProfileDto(u)).collect(
 						Collectors.toList());
-		return new UserProfilePaginationDto(userProfileDtoList, totalPage);
+		return new UserProfilePaginationDto(userProfileDtoList, totalLength);
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
