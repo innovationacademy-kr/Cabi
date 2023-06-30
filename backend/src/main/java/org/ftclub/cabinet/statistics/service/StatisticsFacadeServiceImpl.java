@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.statistics.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,12 +64,10 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 	 * @return
 	 */
 	@Override
-	public LentsStatisticsResponseDto getCountOnLentAndReturn(Integer startDate, Integer endDate) {
+	public LentsStatisticsResponseDto getCountOnLentAndReturn(LocalDateTime startDate, LocalDateTime endDate) {
 		log.info("Called getCountOnLentAndReturn");
-		Date start = DateUtil.addDaysToDate(DateUtil.getNow(), -startDate);
-		Date end = DateUtil.addDaysToDate(DateUtil.getNow(), -endDate);
-		Integer lentStartCount = lentRepository.countLentByLentTimeBetween(start, end);
-		Integer lentEndCount = lentRepository.countLentByReturnTimeBetween(start, end);
-		return new LentsStatisticsResponseDto(start, end, lentStartCount, lentEndCount);
+		Integer lentStartCount = lentRepository.countLentByLentTimeBetween(startDate, endDate);
+		Integer lentEndCount = lentRepository.countLentByReturnTimeBetween(startDate, endDate);
+		return new LentsStatisticsResponseDto(startDate, endDate, lentStartCount, lentEndCount);
 	}
 }

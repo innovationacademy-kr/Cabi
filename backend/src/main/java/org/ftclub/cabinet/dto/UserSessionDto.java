@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,6 @@ public class UserSessionDto {
     private final String email;
     private final Integer tokenIssuedAt;
     private final Integer tokenExpiresAt;
-    private final Date blackHoledAt;
+    private final LocalDateTime blackHoledAt;
     private final Boolean isStaff;
 }
