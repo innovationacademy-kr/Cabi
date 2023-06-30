@@ -70,7 +70,7 @@ public class UserFacadeServiceTest {
         // lent라는 문자열이 들어간 유저 (2명)
         UserProfilePaginationDto userProfilePaginationDto = userFacadeService.getUserProfileListByPartialName(
                 "lent", 0, 10);
-        assertEquals(1, userProfilePaginationDto.getTotalPage());
+        assertEquals(1, userProfilePaginationDto.getTotalLength());
         assertEquals(2, userProfilePaginationDto.getResult().size());
         assertEquals("lentuser1", userProfilePaginationDto.getResult().get(0).getName());
         assertEquals("lentuser2", userProfilePaginationDto.getResult().get(1).getName());
