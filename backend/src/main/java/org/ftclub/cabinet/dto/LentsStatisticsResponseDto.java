@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +12,8 @@ import lombok.Getter;
 @Getter
 public class LentsStatisticsResponseDto {
 
-	private final Date startDate;
-	private final Date endDate;
+	private final LocalDateTime startDate;
+	private final LocalDateTime endDate;
 	private final Integer lentStartCount;
 	private final Integer lentEndCount;
 }

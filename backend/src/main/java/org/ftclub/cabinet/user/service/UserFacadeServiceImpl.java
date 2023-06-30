@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,7 +57,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now) {
+	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, LocalDateTime now) {
 		log.info("Called getAllBanUsers");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;

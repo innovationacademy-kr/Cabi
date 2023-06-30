@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.repository;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -121,7 +122,7 @@ public class UserOptionalFetcher {
 	 * @param now      현재 시간
 	 * @return {@link Page} of {@link BanHistory}
 	 */
-	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, Date now) {
+	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, LocalDateTime now) {
 		log.info("Called findPaginationActiveBanHistories");
 		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
 	}

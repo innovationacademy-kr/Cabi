@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +14,8 @@ public class UserBlockedInfoDto {
 
 	private final Long userId;
 	private final String name;
-	private final Date bannedAt;
-	private final Date unbannedAt;
+	private final LocalDateTime bannedAt;
+	private final LocalDateTime unbannedAt;
 
 	@Override
 	public String toString() {

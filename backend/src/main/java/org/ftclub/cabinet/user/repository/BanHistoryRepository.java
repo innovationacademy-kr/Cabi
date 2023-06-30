@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.repository;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +45,7 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 */
 	@Query("SELECT b FROM BanHistory b WHERE b.unbannedAt > :today ")
 	Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable,
-			@Param("today") Date today);
+			@Param("today") LocalDateTime today);
 
 	/**
 	 * 유저의 가장 최근 밴 히스토리를 가져옵니다.

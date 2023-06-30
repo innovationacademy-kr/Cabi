@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -28,7 +29,7 @@ public interface UserFacadeService {
 	 * @return {@link BlockedUserPaginationDto} 모든 정지 유저
 	 */
 	/* 기존 searchByBanUser와 동일한 역할을 합니다. */
-	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, Date now);
+	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, LocalDateTime now);
 
 	/**
 	 * 유저 이름의 일부를 입력받아 해당하는 유저들의 프로필을 받아옵니다.

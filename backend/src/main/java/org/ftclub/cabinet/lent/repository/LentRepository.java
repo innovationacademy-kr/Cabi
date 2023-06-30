@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.repository;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -141,14 +142,14 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +
 			"WHERE lh.startedAt > :endDate AND lh.startedAt < :startDate")
-	Integer countLentByLentTimeBetween(@Param("startDate") Date startDate,
-			@Param("endDate") Date endDate);
+	Integer countLentByLentTimeBetween(@Param("startDate") LocalDateTime startDate,
+			@Param("endDate") LocalDateTime endDate);
 
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +
 			"WHERE :endDate < lh.endedAt AND lh.endedAt < :startDate")
-	Integer countLentByReturnTimeBetween(@Param("startDate") Date startDate,
-			@Param("endDate") Date endDate);
+	Integer countLentByReturnTimeBetween(@Param("startDate") LocalDateTime startDate,
+			@Param("endDate") LocalDateTime endDate);
 
 	@Query("SELECT count(lh) " +
 			"FROM LentHistory lh " +
