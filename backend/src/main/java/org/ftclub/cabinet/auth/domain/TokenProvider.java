@@ -5,6 +5,11 @@ import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,19 +89,19 @@ public class TokenProvider {
 	 * @param now    현재 시각
 	 * @return JWT 토큰
 	 */
-	public String createToken(Map<String, Object> claims, Date now) {
+	public String createToken(Map<String, Object> claims, LocalDateTime now) {
 		return Jwts.builder()
 				.setClaims(claims)
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(now, jwtProperties.getExpiry()))
+				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiry())))
 				.compact();
 	}
 
-	public String createMasterToken(Date now) {
+	public String createMasterToken(LocalDateTime now) {
 		return Jwts.builder()
 				.setClaims(makeMasterClaims())
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(now, jwtProperties.getExpiry()))
+				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiry())))
 				.compact();
 	}
 

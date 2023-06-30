@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.domain;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ public class LentPolicyImpl implements LentPolicy {
 	private final CabinetProperties cabinetProperties;
 
 	@Override
-	public Date generateExpirationDate(Date now, Cabinet cabinet,
-			List<LentHistory> activeLentHistories) {
+	public LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet,
+									   List<LentHistory> activeLentHistories) {
 		log.info("Called generateExpirationDate");
 		switch (cabinet.getLentType()) {
 			case PRIVATE:

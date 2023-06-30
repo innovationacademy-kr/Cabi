@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -53,7 +54,7 @@ public class LentServiceImpl implements LentService {
 				lentPolicy.verifyCabinetForLent(cabinet, cabinetActiveLentHistories, now));
 		// 캐비넷 상태 변경
 		cabinet.specifyStatusByUserCount(cabinetActiveLentHistories.size() + 1);
-		Date expiredAt = lentPolicy.generateExpirationDate(now, cabinet,
+		LocalDateTime expiredAt = lentPolicy.generateExpirationDate(now, cabinet,
 				cabinetActiveLentHistories);
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
 		// 연체 시간 적용
@@ -132,11 +133,11 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {
 		log.info("Called assignLent: {}, {}", userId, cabinetId);
-		Date now = DateUtil.getNow();
+		LocalDateTime now = LocalDateTime.now();
 		userExceptionHandler.getUser(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		lentOptionalFetcher.checkExistedSpace(cabinetId);
-		Date expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
+		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(now, cabinet, null);
 		LentHistory result = LentHistory.of(now, expirationDate, userId, cabinetId);
 		cabinet.specifyStatusByUserCount(1);
 		lentRepository.save(result);

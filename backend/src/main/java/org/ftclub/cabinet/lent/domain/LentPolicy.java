@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.domain;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -19,7 +20,7 @@ public interface LentPolicy {
 	 * @param activeLentHistories 대여 하려는 사물함의 이전 대여 하고있었던 기록들 없다면 빈 리스트
 	 * @return cabinet을 빌릴 때 들어가야 하는 만료일
 	 */
-	Date generateExpirationDate(Date now, Cabinet cabinet, List<LentHistory> activeLentHistories);
+	LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet, List<LentHistory> activeLentHistories);
 
 
 	/**
@@ -30,7 +31,7 @@ public interface LentPolicy {
 	 * @param expiredAt             적용하려는 만료일
 	 */
 	void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
-			Date expiredAt);
+							 LocalDateTime expiredAt);
 
 	/**
 	 * 대여할 수 있는 유저인지 확인합니다.

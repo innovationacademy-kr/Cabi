@@ -2,6 +2,7 @@ package org.ftclub.cabinet.lent.domain;
 
 import static javax.persistence.FetchType.LAZY;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -52,21 +53,21 @@ public class LentHistory {
 	 */
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "STARTED_AT", nullable = false)
-	private Date startedAt;
+	private LocalDateTime startedAt;
 
 	/**
 	 * 연체 시작일
 	 */
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "EXPIRED_AT")
-	private Date expiredAt = null;
+	private LocalDateTime expiredAt = null;
 
 	/**
 	 * 반납일
 	 */
 	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "ENDED_AT")
-	private Date endedAt = null;
+	private LocalDateTime endedAt = null;
 
 	/**
 	 * 대여하는 유저
@@ -88,7 +89,7 @@ public class LentHistory {
 	@ManyToOne(fetch = LAZY)
 	private Cabinet cabinet;
 
-	protected LentHistory(Date startedAt, Date expiredAt, Long userId,
+	protected LentHistory(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
 			Long cabinetId) {
 		this.startedAt = startedAt;
 		this.expiredAt = expiredAt;
@@ -103,7 +104,7 @@ public class LentHistory {
 	 * @param cabinetId 대여하는 cabinet id
 	 * @return 인자 정보를 담고있는 {@link LentHistory}
 	 */
-	public static LentHistory of(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
+	public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId, Long cabinetId) {
 		LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
 		if (!lentHistory.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
