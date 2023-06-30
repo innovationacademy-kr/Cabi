@@ -3,13 +3,14 @@ package org.ftclub.testutils;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.Cookie;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,29 +32,29 @@ public class TestControllerUtils {
 	@Value("${domain-name.master-email}")
 	private static String masterEmailDomain = "cabi.42seoul.io";
 
-	public static String getTestAdminToken(Key signingKey, Date now) {
+	public static String getTestAdminToken(Key signingKey, LocalDateTime now) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("email", adminEmailName + "@" + adminEmailDomain);
 		claim.put("role", AdminRole.ADMIN);
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(now, 10))
+				.setExpiration(Timestamp.valueOf(now.plusDays(10)))
 				.compact();
 	}
 
-	public static String getTestMasterToken(Key signingKey, Date now) {
+	public static String getTestMasterToken(Key signingKey, LocalDateTime now) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("email", masterEmailName + "@" + masterEmailDomain);
 		claim.put("role", AdminRole.MASTER);
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(now, 10))
+				.setExpiration(Timestamp.valueOf(now.plusDays(10)))
 				.compact();
 	}
 
-	public static String getTestUserToken(Key signingKey, Date now) {
+	public static String getTestUserToken(Key signingKey, LocalDateTime now) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("name", "testUserName");
 		claim.put("email", "user1@" + userEmailDomain);
@@ -62,11 +63,11 @@ public class TestControllerUtils {
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(now, 10))
+				.setExpiration(Timestamp.valueOf(now.plusDays(10)))
 				.compact();
 	}
 
-	public static String getTestUserTokenByName(Key signingKey, String name, Date now) {
+	public static String getTestUserTokenByName(Key signingKey, String name, LocalDateTime now) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("name", name);
 		claim.put("email", name + "@" + userEmailDomain);
@@ -75,7 +76,7 @@ public class TestControllerUtils {
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.addDaysToDate(now, 10))
+				.setExpiration(Timestamp.valueOf(now.plusDays(10)))
 				.compact();
 	}
 

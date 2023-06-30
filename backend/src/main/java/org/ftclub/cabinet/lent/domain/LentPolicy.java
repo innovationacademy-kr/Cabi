@@ -19,9 +19,7 @@ public interface LentPolicy {
 	 * @param activeLentHistories 대여 하려는 사물함의 이전 대여 하고있었던 기록들 없다면 빈 리스트
 	 * @return cabinet을 빌릴 때 들어가야 하는 만료일
 	 */
-	LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet,
-			List<LentHistory> activeLentHistories);
-
+	LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet, List<LentHistory> activeLentHistories);
 
 	/**
 	 * 만료일을 @{@link LentHistory}에 적용시킵니다. 현재와 과거의 기록들에 적용합니다.

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import java.util.Date;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
@@ -68,7 +69,7 @@ public class TokenValidatorTest {
 //		MockHttpServletRequest emptyTokenRequest = new MockHttpServletRequest();
 //
 //		String validToken = tokenProvider.createToken("ft",
-//				objectMapper.readTree(ftKoreanProfile.toString()), DateUtil.getNow());
+//				objectMapper.readTree(ftKoreanProfile.toString()), LocalDateTime.now());
 //		validTokenRequest.addHeader("Authorization", "Bearer " + validToken);
 //		String invalidToken = tokenProvider.createToken("google",
 //				objectMapper.readTree(googleProfile.toString()),
@@ -98,7 +99,7 @@ public class TokenValidatorTest {
 	@Test
 	void 토큰_페이로드_가져오기() throws JsonProcessingException {
 		String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey(),
-				DateUtil.getNow());
+				LocalDateTime.now());
 		assertEquals("testUserName",
 				tokenValidator.getPayloadJson(userToken).get("name").asText());
 	}
@@ -106,11 +107,11 @@ public class TokenValidatorTest {
 	@Test
 	void 어드민_권한_유효성_검사() throws JsonProcessingException {
 		String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey(),
-				DateUtil.getNow());
+				LocalDateTime.now());
 		String adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
-				DateUtil.getNow());
+				LocalDateTime.now());
 		String masterToken = TestControllerUtils.getTestMasterToken(jwtProperties.getSigningKey(),
-				DateUtil.getNow());
+				LocalDateTime.now());
 
 		assertTrue(tokenValidator.isAdminRoleValid(userToken, AuthLevel.USER_OR_ADMIN));
 		assertTrue(tokenValidator.isAdminRoleValid(adminToken, AuthLevel.USER_OR_ADMIN));

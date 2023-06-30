@@ -2,6 +2,7 @@ package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +14,6 @@ import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,7 +40,7 @@ public class AuthFacadeServiceImpl implements AuthFacadeService {
 		Map<String, Object> claims = tokenProvider.makeClaimsByProviderProfile(
 				apiProperties.getProviderName(), profile);
 		authService.addUserIfNotExistsByClaims(claims);
-		String accessToken = tokenProvider.createToken(claims, DateUtil.getNow());
+		String accessToken = tokenProvider.createToken(claims, LocalDateTime.now());
 		cookieManager.setCookie(res,
 				tokenProvider.getTokenNameByProvider(apiProperties.getProviderName()),
 				accessToken,
@@ -54,7 +54,7 @@ public class AuthFacadeServiceImpl implements AuthFacadeService {
 		if (!authService.validateMasterLogin(masterLoginDto)) {
 			throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
 		}
-		String masterToken = tokenProvider.createMasterToken(DateUtil.getNow());
+		String masterToken = tokenProvider.createMasterToken(LocalDateTime.now());
 		cookieManager.setCookie(res, jwtProperties.getAdminTokenName(), masterToken, "/",
 				req.getServerName());
 	}

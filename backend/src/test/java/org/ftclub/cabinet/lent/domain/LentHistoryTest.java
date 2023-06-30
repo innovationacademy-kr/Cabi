@@ -6,10 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.lent.repository.LentRepository;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,44 +23,44 @@ class LentHistoryTest {
 
 	@Test
 	void isCabinetIdEqual() {
-		Date now = DateUtil.getNow();
-		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+		LocalDateTime now = LocalDateTime.now();
+		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
 		assertTrue(lentHistory.isCabinetIdEqual(1L));
 		assertFalse(lentHistory.isCabinetIdEqual(2L));
 	}
 
     @Test
     void isSetExpiredAt() {
-        Date now = DateUtil.getNow();
-        LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+        LocalDateTime now = LocalDateTime.now();
+        LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
         assertTrue(lentHistory.isSetExpiredAt());
         assertThrows(DomainException.class, () -> LentHistory.of(now, null, 1L, 1L));
     }
 
 	@Test
 	void isSetEndedAt() {
-		Date now = DateUtil.getNow();
-		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+		LocalDateTime now = LocalDateTime.now();
+		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
 		assertFalse(lentHistory.isSetEndedAt());
-		lentHistory.endLent(DateUtil.getNow());
+		lentHistory.endLent(LocalDateTime.now());
 		assertTrue(lentHistory.isSetEndedAt());
 	}
 
 	@Test
 	void getDaysDiffEndedAndExpired() {
-		Date now = DateUtil.getNow();
+		LocalDateTime now = LocalDateTime.now();
 		LentHistory lentHistory = LentHistory.of(now, now, 1L, 1L);
 		assertNull(lentHistory.getDaysDiffEndedAndExpired());
-		lentHistory.endLent(DateUtil.addDaysToDate(now, 3));
+		lentHistory.endLent(now.plusDays(3));
 		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
 	}
 
 	@Test
 	void endLent() {
-		Date now = DateUtil.getNow();
-		LentHistory lentHistory = LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, 1L);
+		LocalDateTime now = LocalDateTime.now();
+		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
 		lentHistory = lentRepository.save(lentHistory);
-		lentHistory.endLent(DateUtil.addDaysToDate(now, 6));
+		lentHistory.endLent(now.plusDays(6));
 		assertTrue(lentHistory.isSetEndedAt());
 		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
 		lentRepository.findById(lentHistory.getLentHistoryId());
