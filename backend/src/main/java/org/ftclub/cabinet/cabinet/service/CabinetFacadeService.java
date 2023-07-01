@@ -1,12 +1,14 @@
 package org.ftclub.cabinet.cabinet.service;
 
 import java.util.List;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
@@ -29,6 +31,14 @@ public interface CabinetFacadeService {
 	CabinetInfoResponseDto getCabinetInfo(Long cabinetId);
 
 	CabinetInfoPaginationDto getCabinetsInfo(Integer visibleNum);
+
+	/**
+	 * 특정 사물함의 층 - 번호정보를 반환합니다.
+
+	 * @param visibleNum 표시 번호
+	 * @return  캐비넷 정보
+	 */
+	CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum);
 
 	/**
 	 * 건물의 층별 각 구역들에 있는 사물함들의 정보를 반환합니다.
