@@ -85,6 +85,5 @@ public class AuthAspect {
                     throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
                 }
         }
-        System.out.println("인증 성공!!!!!!!!!!!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     }
 }
