@@ -8,6 +8,7 @@ import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
 import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
 
 /**
@@ -39,7 +41,7 @@ public class TokenProvider {
      * @param nation 검증하고자 하는 국가 도메인
      * @return boolean
      */
-    public boolean isValidNationalEmail(String email, String nation) {
+    private boolean isValidNationalEmail(String email, String nation) {
         return email.endsWith("." + nation);
     }
 
@@ -106,8 +108,10 @@ public class TokenProvider {
     public String getTokenNameByProvider(String providerName) {
         if (providerName.equals(jwtProperties.getAdminProviderName())) {
             return jwtProperties.getAdminTokenName();
-        } else {
+        }
+        if (providerName.equals(jwtProperties.getMainProviderName())) {
             return jwtProperties.getMainTokenName();
         }
+        throw new DomainException(INVALID_ARGUMENT);
     }
 }

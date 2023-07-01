@@ -50,7 +50,7 @@ public class AuthControllerUnitTest {
         //then
         assertEquals(result.getResponse().getStatus(), HttpServletResponse.SC_OK);
         assertEquals(result.getResponse().getCookie(tokenName).getValue(), null);
-        assertEquals(result.getResponse().getCookie(tokenName).getMaxAge(), 0);
+        assertEquals(result.getResponse().getCookie(tokenName).getMaxAge(), -1);
     }
 
 }

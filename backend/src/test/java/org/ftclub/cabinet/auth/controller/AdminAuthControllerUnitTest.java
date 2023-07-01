@@ -130,7 +130,7 @@ public class AdminAuthControllerUnitTest {
             mockMvc.perform(get("/v4/admin/auth/logout"))
                     .andExpect(status().isOk())
                     .andExpect(cookie().exists(tokenName))
-                    .andExpect(cookie().maxAge(tokenName, 0))
+                    .andExpect(cookie().maxAge(tokenName, -1))
                     .andDo(document(DOCUMENT_NAME));
         }
     }

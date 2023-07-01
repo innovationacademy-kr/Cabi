@@ -77,7 +77,7 @@ public class CookieManagerUnitTest {
     @DisplayName("성공: 도메인이 Local이 아닌 다른 도메인일 때")
     void 성공_setCookieToClient2() {
         given(domainProperties.getLocal()).willReturn("local");
-        given(domainProperties.getCookieDomain()).willReturn("cookieDomain");
+        given(domainProperties.getCookieDomain()).willReturn("cookie.domain.com");
         given(jwtProperties.getExpiryDays()).willReturn(100);
         String serverName = domainProperties.getCookieDomain();
         String path = "/";
