@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class UserFacadeServiceTest {
 
-    private final LocalDateTime testDate = LocalDateTime.of(123, 0, 15, 9, 0);
+    private final LocalDateTime testDate = LocalDateTime.of(123, 1, 15, 9, 0);
     @Autowired
     private UserFacadeService userFacadeService;
 

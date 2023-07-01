@@ -20,7 +20,7 @@ import org.springframework.data.domain.Pageable;
 public class BanHistoryRepositoryTest {
 
 	// DB와 같이 2023.01.15 09:00:00 시간을 기준으로 했습니다.
-	LocalDateTime testDate = LocalDateTime.of(123, 0, 15, 9, 0);
+	LocalDateTime testDate = LocalDateTime.of(123, 1, 15, 9, 0);
 	@Autowired
 	private BanHistoryRepository banHistoryRepository;
 

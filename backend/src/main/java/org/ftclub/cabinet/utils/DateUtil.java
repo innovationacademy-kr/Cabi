@@ -1,10 +1,12 @@
 package org.ftclub.cabinet.utils;
 
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
@@ -36,7 +38,9 @@ public class DateUtil {
 		if (!matches) {
 			throw new RuntimeException("적절하지 않은 날짜 포맷의 String 입니다.");
 		}
-		return LocalDateTime.from(LocalDate.parse(str).atStartOfDay(ZoneId.systemDefault()).toInstant());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sdf.parse(str, new ParsePosition(0));
+		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 
 	/**
@@ -60,7 +64,7 @@ public class DateUtil {
 	 * @return 두 day 차이의 절댓값
 	 */
 	public static Long calculateTwoDateDiffAbs(LocalDateTime day1, LocalDateTime day2) {
-		return Math.abs(Duration.between(day1, day2).toNanos());
+		return Math.abs(Duration.between(day1, day2).toDays());
 	}
 
 	/**
@@ -71,6 +75,6 @@ public class DateUtil {
 	 * @return day1 - day2
 	 */
 	public static Long calculateTwoDateDiff(LocalDateTime day1, LocalDateTime day2) {
-		return Duration.between(day1, day2).toNanos();
+		return Duration.between(day2, day1).toDays();
 	}
 }

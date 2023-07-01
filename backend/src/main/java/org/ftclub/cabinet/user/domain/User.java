@@ -11,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -41,11 +39,9 @@ public class User {
     @Column(name = "EMAIL", unique = true)
     private String email;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "BLACKHOLED_AT")
     private LocalDateTime blackholedAt = null;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "DELETED_AT", length = 32)
     private LocalDateTime deletedAt = null;
 

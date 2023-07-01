@@ -14,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,12 +35,10 @@ public class BanHistory {
 	@Column(name = "BAN_HISTORY_ID")
 	private long banHistoryId;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
 	@Column(name = "BANNED_AT", nullable = false)
 	private LocalDateTime bannedAt;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "UNBANNED_AT")
 	private LocalDateTime unbannedAt;
 

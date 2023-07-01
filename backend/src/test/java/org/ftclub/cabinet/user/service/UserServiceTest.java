@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.user.domain.AdminRole;
@@ -25,7 +24,7 @@ import org.springframework.data.domain.PageRequest;
 @Transactional
 public class UserServiceTest {
 
-	private final LocalDateTime testDate = LocalDateTime.of(123, 0, 15, 9, 0);
+	private final LocalDateTime testDate = LocalDateTime.of(123, 1, 15, 9, 0);
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -111,10 +110,11 @@ public class UserServiceTest {
 		LentType lentType = LentType.PRIVATE;
 
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
+		LocalDateTime date = LocalDateTime.of(2023, 3, 25, 0, 0);
 		BanHistory banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId,
-				LocalDateTime.now(), PageRequest.of(0, 1)).get(0);
+				date, PageRequest.of(0, 1)).get(0);
 		assertEquals(userId, banHistory.getUserId());
-		assertEquals(new Date(2023, 3, 27), banHistory.getUnbannedAt());
+		assertEquals(LocalDateTime.of(2023, 3, 27, 0, 0, 0), banHistory.getUnbannedAt());
 	}
 
 //	@Test

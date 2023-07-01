@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -50,21 +48,18 @@ public class LentHistory {
 	/**
 	 * 대여 시작일
 	 */
-	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "STARTED_AT", nullable = false)
 	private LocalDateTime startedAt;
 
 	/**
 	 * 연체 시작일
 	 */
-	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "EXPIRED_AT")
 	private LocalDateTime expiredAt = null;
 
 	/**
 	 * 반납일
 	 */
-	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "ENDED_AT")
 	private LocalDateTime endedAt = null;
 
@@ -103,7 +98,8 @@ public class LentHistory {
 	 * @param cabinetId 대여하는 cabinet id
 	 * @return 인자 정보를 담고있는 {@link LentHistory}
 	 */
-	public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId, Long cabinetId) {
+	public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
+			Long cabinetId) {
 		LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
 		if (!lentHistory.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -129,8 +125,7 @@ public class LentHistory {
 	 * @return
 	 */
 	private boolean isEndLentValid(LocalDateTime endedAt) {
-		return endedAt != null && this.endedAt == null && 0 <= DateUtil.calculateTwoDateDiff(
-				endedAt, this.startedAt);
+		return endedAt != null && 0 <= DateUtil.calculateTwoDateDiff(endedAt, this.startedAt);
 	}
 
 
