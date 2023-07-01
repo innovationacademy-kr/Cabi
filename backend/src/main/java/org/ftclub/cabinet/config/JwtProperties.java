@@ -29,7 +29,7 @@ public class JwtProperties {
     private String adminProviderName;
 
     @Value("${spring.oauth2.jwt.token.expiry}")
-    private Integer expiry;
+    private Integer expiryDays;
 
     public Key getSigningKey() {
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(this.secret);

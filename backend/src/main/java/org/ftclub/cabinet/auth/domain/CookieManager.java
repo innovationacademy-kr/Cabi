@@ -2,6 +2,7 @@ package org.ftclub.cabinet.auth.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.DomainProperties;
+import org.ftclub.cabinet.config.JwtProperties;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CookieManager {
 
     private final DomainProperties domainProperties;
+    private final JwtProperties jwtProperties;
 
     /**
      * 쿠키를 가져옵니다.
@@ -47,7 +49,7 @@ public class CookieManager {
      */
     public void setCookieToClient(HttpServletResponse res, Cookie cookie, String path,
                                   String serverName) {
-        cookie.setMaxAge(60 * 60 * 24 * 28); // 28 days, jwt properties로 설정 가능
+        cookie.setMaxAge(60 * 60 * 24 * jwtProperties.getExpiryDays());
         cookie.setPath(path);
         if (serverName.equals(domainProperties.getLocal())) {
             cookie.setDomain(domainProperties.getLocal());
@@ -67,7 +69,7 @@ public class CookieManager {
      */
     public void deleteCookie(HttpServletResponse res, String name) {
         Cookie cookie = new Cookie(name, null);
-        cookie.setMaxAge(0);
+        cookie.setMaxAge(-1);
         res.addCookie(cookie);
     }
 }
