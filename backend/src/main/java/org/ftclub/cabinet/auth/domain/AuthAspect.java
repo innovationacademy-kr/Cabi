@@ -61,29 +61,30 @@ public class AuthAspect {
          */
         switch (authGuard.level()) {
             case ADMIN_ONLY:
-                if (!tokenValidator.isTokenValid(request, ADMIN_ONLY)) {
+                if (!tokenValidator.isValidRequestWithLevel(request, ADMIN_ONLY)) {
                     cookieManager.deleteCookie(response, adminTokenName);
                     throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
                 }
                 break;
             case USER_ONLY:
-                if (!tokenValidator.isTokenValid(request, USER_ONLY)) {
+                if (!tokenValidator.isValidRequestWithLevel(request, USER_ONLY)) {
                     cookieManager.deleteCookie(response, mainTokenName);
                     throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
                 }
                 break;
             case USER_OR_ADMIN:
-                if (!tokenValidator.isTokenValid(request, USER_OR_ADMIN)) {
+                if (!tokenValidator.isValidRequestWithLevel(request, USER_OR_ADMIN)) {
                     cookieManager.deleteCookie(response, mainTokenName);
                     cookieManager.deleteCookie(response, adminTokenName);
                     throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
                 }
                 break;
             case MASTER_ONLY:
-                if (!tokenValidator.isTokenValid(request, MASTER_ONLY)) {
+                if (!tokenValidator.isValidRequestWithLevel(request, MASTER_ONLY)) {
                     cookieManager.deleteCookie(response, adminTokenName);
                     throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
                 }
         }
+        System.out.println("인증 성공!!!!!!!!!!!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     }
 }

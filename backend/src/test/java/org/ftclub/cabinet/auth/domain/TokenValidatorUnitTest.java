@@ -1,124 +1,233 @@
 package org.ftclub.cabinet.auth.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
+import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.DateUtil;
-import org.ftclub.testutils.TestControllerUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Date;
+import java.security.Key;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class TokenValidatorUnitTest {
 
-    @Autowired
+    static final Key mockSigningKey = TestUtils.getSigningKey("SECRET_KEY_MUST_BE_VERYVERYVERYVERYVERYVERYVERYVERYVERY_LONG");
+    @Spy
+    @InjectMocks
     TokenValidator tokenValidator;
-
-    @Autowired
-    TokenProvider tokenProvider;
-
-    @Autowired
-    JwtProperties jwtProperties;
-
-    @Autowired
+    @Mock
     MasterProperties masterProperties;
-
-    @Autowired // delete
+    @Mock(lenient = true)
+    DomainProperties domainProperties;
+    @Mock
+    JwtProperties jwtProperties;
+    @Mock
     UserService userService;
-
-    ObjectMapper objectMapper;
-    JSONObject googleProfile;
-    JSONObject ftKoreanProfile;
-    JSONObject ftForeignerProfile;
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    MockHttpServletResponse response = new MockHttpServletResponse();
 
     @BeforeEach
-    void setup() throws Exception {
-        objectMapper = new ObjectMapper();
-        googleProfile = new JSONObject()
-                .put("email", "email");
-        ftKoreanProfile = new JSONObject()
-                .put("login", "testUserName")
-                .put("cursus_users", new JSONArray(new JSONObject[]{
-                        new JSONObject().put("zero_index", new Date()),
-                        new JSONObject().put("blackholed_at", new Date())}))
-                .put("email", "testUser@student.42seoul.kr");
-        ftForeignerProfile = new JSONObject()
-                .put("login", "testUserName")
-                .put("cursus_users", new JSONArray(new JSONObject[]{
-                        new JSONObject().put("zero_index", new Date()),
-                        new JSONObject().put("blackholed_at", new Date())}))
-                .put("email", "testUser@student.42ecole.fr");
-    }
-
-//	@Test
-//	void 헤더의_토큰_유효한지_아닌지() throws JsonProcessingException {
-//		MockHttpServletRequest validTokenRequest = new MockHttpServletRequest();
-//		MockHttpServletRequest invalidTokenRequest = new MockHttpServletRequest();
-//		MockHttpServletRequest emptyTokenRequest = new MockHttpServletRequest();
-//
-//		String validToken = tokenProvider.createToken("ft",
-//				objectMapper.readTree(ftKoreanProfile.toString()), DateUtil.getNow());
-//		validTokenRequest.addHeader("Authorization", "Bearer " + validToken);
-//		String invalidToken = tokenProvider.createToken("google",
-//				objectMapper.readTree(googleProfile.toString()),
-//				DateUtil.stringToDate("2000-01-01"));
-//
-//		invalidTokenRequest.addHeader("Authorization", "Bearer " + invalidToken);
-//		invalidTokenRequest.addHeader("Authorization", "Bearer " + invalidToken);
-//		Assert.assertEquals(true,
-//				tokenValidator.isTokenValid(validTokenRequest, AuthLevel.USER_ONLY));
-//		Assert.assertEquals(false,
-//				tokenValidator.isTokenValid(emptyTokenRequest, AuthLevel.ADMIN_ONLY));
-//	}
-
-//	@Test
-//	void 토큰_유효성_검사() throws JsonProcessingException {
-//		String validToken = tokenProvider.createToken("ft",
-//				objectMapper.readTree(ftKoreanProfile.toString()),
-//				new Date());
-//		String invalidToken = tokenProvider.createToken("google",
-//				objectMapper.readTree(googleProfile.toString()),
-//				DateUtil.stringToDate("2000-01-01"));
-//
-//		Assert.assertEquals(true, tokenValidator.checkTokenValidity(validToken));
-//		Assert.assertEquals(false, tokenValidator.checkTokenValidity(invalidToken));
-//	}
-
-    @Test
-    void 토큰_페이로드_가져오기() throws JsonProcessingException {
-        String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey(),
-                DateUtil.getNow());
-        assertEquals("testUserName",
-                tokenValidator.getPayloadJson(userToken).get("name").asText());
+    void setup() {
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request, response));
     }
 
     @Test
-    void 어드민_권한_유효성_검사() throws JsonProcessingException {
-        String userToken = TestControllerUtils.getTestUserToken(jwtProperties.getSigningKey(),
-                DateUtil.getNow());
-        String adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
-                DateUtil.getNow());
-        String masterToken = TestControllerUtils.getTestMasterToken(jwtProperties.getSigningKey(),
-                DateUtil.getNow());
+    @DisplayName("성공: 유효한 토큰 - 유저인 경우")
+    void 성공_isValidRequestWithLevel() throws JsonProcessingException {
+        String userToken = TestUtils.getTestUserTokenByName(mockSigningKey, DateUtil.getNow(), DateUtil.getInfinityDate(),
+                "name", "domainname.com");
+        request.addHeader("Authorization", "Bearer " + userToken);
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        given(masterProperties.getDomain()).willReturn("master.domain.com");
+        given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
 
-        assertTrue(tokenValidator.isAdminRoleValid(userToken, AuthLevel.USER_OR_ADMIN));
-        assertTrue(tokenValidator.isAdminRoleValid(adminToken, AuthLevel.USER_OR_ADMIN));
-        assertTrue(tokenValidator.isAdminRoleValid(adminToken, AuthLevel.ADMIN_ONLY));
-        assertTrue(tokenValidator.isAdminRoleValid(masterToken, AuthLevel.MASTER_ONLY));
-        assertFalse(tokenValidator.isAdminRoleValid(userToken, AuthLevel.USER_ONLY));
-        assertFalse(tokenValidator.isAdminRoleValid(userToken, AuthLevel.ADMIN_ONLY));
-        assertFalse(tokenValidator.isAdminRoleValid(userToken, AuthLevel.MASTER_ONLY));
-        assertFalse(tokenValidator.isAdminRoleValid(adminToken, AuthLevel.MASTER_ONLY));
+        assertTrue(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_ONLY));
+        assertTrue(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_OR_ADMIN));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.MASTER_ONLY));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.ADMIN_ONLY));
     }
 
+    @Test
+    @DisplayName("성공: 유효한 토큰 - 일반 관리자인 경우")
+    void 성공_isValidRequestWithLevel2() throws JsonProcessingException {
+        String adminToken = TestUtils.getTestAdminToken(mockSigningKey, DateUtil.getNow(),
+                "name", "admin.domain.com");
+        request.addHeader("Authorization", "Bearer " + adminToken);
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        given(masterProperties.getDomain()).willReturn("master.domain.com");
+        given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
+
+        assertTrue(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_OR_ADMIN));
+        assertTrue(tokenValidator.isValidRequestWithLevel(request, AuthLevel.ADMIN_ONLY));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_ONLY));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.MASTER_ONLY));
+    }
+
+    @Test
+    @DisplayName("성공: 유효한 토큰 - 최고 관리자인 경우")
+    void 성공_isValidRequestWithLevel3() throws JsonProcessingException {
+        String masterToken = TestUtils.getTestMasterToken(mockSigningKey, DateUtil.getNow(),
+                "name", "master.domain.com");
+        request.addHeader("Authorization", "Bearer " + masterToken);
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        given(masterProperties.getDomain()).willReturn("master.domain.com");
+        given(userService.getAdminUserRole("name@master.domain.com")).willReturn(AdminRole.MASTER);
+        given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
+
+        assertTrue(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_OR_ADMIN));
+        assertTrue(tokenValidator.isValidRequestWithLevel(request, AuthLevel.ADMIN_ONLY));
+        assertTrue(tokenValidator.isValidRequestWithLevel(request, AuthLevel.MASTER_ONLY));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_ONLY));
+    }
+
+    @Test
+    @DisplayName("실패: 유효하지 않은 토큰인 경우")
+    void 실패_isValidRequestWithLevel() throws JsonProcessingException {
+        request.addHeader("Authorization", "Bearer " + "token");
+        given(tokenValidator.isTokenValid("token", jwtProperties.getSigningKey())).willReturn(false);
+
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.ADMIN_ONLY));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_OR_ADMIN));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_ONLY));
+    }
+
+    @Test
+    @DisplayName("실패: 헤더가 잘못된 경우")
+    void 실패_isValidRequestWithLevel2() throws JsonProcessingException {
+        request.addHeader("THIS_HEADER_IS_WRONG", "Bearer " + "token");
+
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.ADMIN_ONLY));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_OR_ADMIN));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_ONLY));
+    }
+
+    @Test
+    @DisplayName("실패: 토큰 인증 타입이 잘못된 경우")
+    void 실패_isValidRequestWithLevel3() throws JsonProcessingException {
+        request.addHeader("Authorization", "MUST_BE_BEARER " + "token");
+
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_OR_ADMIN));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.ADMIN_ONLY));
+        assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_ONLY));
+    }
+
+    @Test
+    @DisplayName("성공: 만료기한과 시그니처가 정상인 경우")
+    void 성공_isTokenValid() {
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(), DateUtil.getNow(), DateUtil.getInfinityDate(), "name", "domainname.com");
+
+        assertTrue(tokenValidator.isTokenValid(token, jwtProperties.getSigningKey()));
+    }
+
+    @Test
+    @DisplayName("실패: 시그니처가 잘못된 경우")
+    void 실패_isTokenValid() {
+        Key wrongKey = TestUtils.getSigningKey("WRONG_KEY_IS_MUST_BE_VERYVERYVERYVERYVERYVERY_LONG_TOO");
+        Key rightKey = mockSigningKey;
+        given(jwtProperties.getSigningKey()).willReturn(rightKey);
+        String wrongKeyToken = TestUtils.getTestUserTokenByName(wrongKey, DateUtil.getNow(), DateUtil.getInfinityDate(), "name", "domainname.com");
+
+        assertFalse(tokenValidator.isTokenValid(wrongKeyToken, jwtProperties.getSigningKey()));
+    }
+
+    @Test
+    @DisplayName("실패: 만료기한이 지난 경우")
+    void 실패_isTokenValid2() {
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        String expiredToken = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
+                DateUtil.addDaysToDate(DateUtil.getNow(), -1000), DateUtil.getInfinityDate(), "name", "domainname.com");
+
+        assertFalse(tokenValidator.isTokenValid(expiredToken, jwtProperties.getSigningKey()));
+    }
+
+    @Test
+    @DisplayName("성공: 토큰의 페이로드를 JSON으로 변환")
+    void 성공_getPayloadJson() throws JsonProcessingException {
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(), DateUtil.getNow(), DateUtil.getInfinityDate(),
+                "sanan", "domainname.com");
+        JsonNode payloadJson = tokenValidator.getPayloadJson(token);
+
+        assertTrue(payloadJson.get("name").asText().equals("sanan"));
+    }
+
+    @Test
+    @DisplayName("실패: 페이로드에 찾는 키가 없을 때")
+    void 실패_getPayloadJson() throws JsonProcessingException {
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(), DateUtil.getNow(), DateUtil.getInfinityDate(),
+                "sanan", "domainname.com");
+
+        JsonNode payloadJson = tokenValidator.getPayloadJson(token);
+
+        assertNull(payloadJson.get("wrong_key"));
+    }
+
+    @Test
+    @DisplayName("유저일 때 USER_ONLY, USER_OR_ADMIN만 인가됨")
+    void isTokenAuthenticatable() throws JsonProcessingException {
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        given(masterProperties.getDomain()).willReturn("master.domain.com");
+        given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
+        String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(), DateUtil.getNow(), DateUtil.getInfinityDate(),
+                "sanan", "domainname.com");
+
+        assertTrue(tokenValidator.isTokenAuthenticatable(token, AuthLevel.USER_ONLY));
+        assertTrue(tokenValidator.isTokenAuthenticatable(token, AuthLevel.USER_OR_ADMIN));
+        assertFalse(tokenValidator.isTokenAuthenticatable(token, AuthLevel.ADMIN_ONLY));
+        assertFalse(tokenValidator.isTokenAuthenticatable(token, AuthLevel.MASTER_ONLY));
+    }
+
+    @Test
+    @DisplayName("일반 관리자일 때 ADMIN_ONLY, USER_OR_ADMIN만 인가됨")
+    void isTokenAuthenticatable2() throws JsonProcessingException {
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        given(masterProperties.getDomain()).willReturn("master.domain.com");
+        given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
+        String adminToken = TestUtils.getTestAdminToken(jwtProperties.getSigningKey(), DateUtil.getNow(), "sanan", "admin.domain.com");
+
+        assertTrue(tokenValidator.isTokenAuthenticatable(adminToken, AuthLevel.ADMIN_ONLY));
+        assertTrue(tokenValidator.isTokenAuthenticatable(adminToken, AuthLevel.USER_OR_ADMIN));
+        assertFalse(tokenValidator.isTokenAuthenticatable(adminToken, AuthLevel.USER_ONLY));
+        assertFalse(tokenValidator.isTokenAuthenticatable(adminToken, AuthLevel.MASTER_ONLY));
+    }
+
+    @Test
+    @DisplayName("최고 관리자일 때 ADMIN_ONLY, USER_OR_ADMIN, MASTER_ONLY 인가됨")
+    void isTokenAuthenticatable3() throws JsonProcessingException {
+        given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
+        given(masterProperties.getDomain()).willReturn("master.domain.com");
+        given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
+        given(userService.getAdminUserRole("sanan@master.domain.com")).willReturn(AdminRole.MASTER);
+        String masterToken = TestUtils.getTestMasterToken(jwtProperties.getSigningKey(), DateUtil.getNow(), "sanan", "master.domain.com");
+
+        assertTrue(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.ADMIN_ONLY));
+        assertTrue(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.USER_OR_ADMIN));
+        assertTrue(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.MASTER_ONLY));
+        assertFalse(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.USER_ONLY));
+    }
+
+    @Test
+    void 실패_isTokenAuthenticatable() {
+    }
 }
