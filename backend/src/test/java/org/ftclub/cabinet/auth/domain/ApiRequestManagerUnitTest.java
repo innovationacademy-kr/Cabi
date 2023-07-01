@@ -1,7 +1,10 @@
 package org.ftclub.cabinet.auth.domain;
 
 import org.ftclub.cabinet.config.ApiProperties;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.MultiValueMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -32,6 +36,17 @@ public class ApiRequestManagerUnitTest {
     }
 
     @Test
+    @DisplayName("실패 - 주입 받는 ApiProperties가 null인 경우")
+    void fail() {
+        DomainException exception = assertThrows(DomainException.class, () -> {
+            ApiRequestManager.of(null);
+        });
+        assertEquals(ExceptionStatus.INVALID_ARGUMENT, exception.getStatus());
+    }
+
+
+    @Test
+    @DisplayName("성공 - code 요청 uri 생성")
     void getCodeRequestUri() {
         String expect = apiProperties.getAuthUri() +
                 "?client_id=" + apiProperties.getClientId() +
@@ -44,6 +59,7 @@ public class ApiRequestManagerUnitTest {
     }
 
     @Test
+    @DisplayName("성공 - access token 요청 body map 생성")
     void getAccessTokenRequestBodyMap() {
         String codeFromCallback = "code";
         MultiValueMap<String, String> result = apiRequestManager.getAccessTokenRequestBodyMap(codeFromCallback);

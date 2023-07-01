@@ -1,12 +1,17 @@
 package org.ftclub.cabinet.auth.domain;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.ApiProperties;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 /**
  * API 요청을 관리하는 매니저 클래스입니다.
  */
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiRequestManager {
 
     /**
@@ -14,11 +19,9 @@ public class ApiRequestManager {
      */
     private final ApiProperties apiProperties;
 
-    protected ApiRequestManager(ApiProperties apiProperties) {
-        this.apiProperties = apiProperties;
-    }
-
     public static ApiRequestManager of(ApiProperties apiProperties) {
+        if (apiProperties == null)
+            throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
         return new ApiRequestManager(apiProperties);
     }
 

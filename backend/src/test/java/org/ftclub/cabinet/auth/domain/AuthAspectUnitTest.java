@@ -49,7 +49,7 @@ class AuthAspectUnitTest {
 
 
     @Test
-    @DisplayName("ADMIN_ONLY - 토큰이 유효할 때")
+    @DisplayName("성공: ADMIN_ONLY, 토큰이 유효할 때")
     void 성공_authToken_ADMIN_ONLY() throws JsonProcessingException {
         given(authGuard.level()).willReturn(ADMIN_ONLY);
         given(tokenValidator.isTokenValid(request, authGuard.level())).willReturn(true);
@@ -58,7 +58,7 @@ class AuthAspectUnitTest {
     }
 
     @Test
-    @DisplayName("ADMIN_ONLY - 토큰이 유효하지 않을 때")
+    @DisplayName("실패: ADMIN_ONLY, 토큰이 유효하지 않을 때")
     void 실패_authToken_ADMIN_ONLY() throws JsonProcessingException {
         given(authGuard.level()).willReturn(ADMIN_ONLY);
         given(tokenValidator.isTokenValid(request, authGuard.level())).willReturn(false);
@@ -70,7 +70,7 @@ class AuthAspectUnitTest {
     }
 
     @Test
-    @DisplayName("USER_ONLY - 토큰이 유효할 때")
+    @DisplayName("성공: USER_ONLY, 토큰이 유효할 때")
     void 성공_authToken_USER_ONLY() throws JsonProcessingException {
         given(authGuard.level()).willReturn(AuthLevel.USER_ONLY);
         given(tokenValidator.isTokenValid(request, authGuard.level())).willReturn(true);
@@ -79,7 +79,7 @@ class AuthAspectUnitTest {
     }
 
     @Test
-    @DisplayName("USER_ONLY - 토큰이 유효하지 않을 때")
+    @DisplayName("실패: USER_ONLY, 토큰이 유효하지 않을 때")
     void 실패_authToken_USER_ONLY() throws JsonProcessingException {
         given(authGuard.level()).willReturn(AuthLevel.USER_ONLY);
         given(tokenValidator.isTokenValid(request, authGuard.level())).willReturn(false);
@@ -91,7 +91,7 @@ class AuthAspectUnitTest {
     }
 
     @Test
-    @DisplayName("USER_OR_ADMIN - 토큰이 유효할 때")
+    @DisplayName("성공: USER_OR_ADMIN, 토큰이 유효할 때")
     void 성공_authToken_USER_OR_ADMIN() throws JsonProcessingException {
         given(authGuard.level()).willReturn(AuthLevel.USER_OR_ADMIN);
         given(tokenValidator.isTokenValid(request, authGuard.level())).willReturn(true);
@@ -100,7 +100,7 @@ class AuthAspectUnitTest {
     }
 
     @Test
-    @DisplayName("USER_OR_ADMIN - 토큰이 유효하지 않을 때")
+    @DisplayName("실패: USER_OR_ADMIN, 토큰이 유효하지 않을 때")
     void 실패_authToken_USER_OR_ADMIN() throws JsonProcessingException {
         given(authGuard.level()).willReturn(AuthLevel.USER_OR_ADMIN);
         given(tokenValidator.isTokenValid(request, authGuard.level())).willReturn(false);
