@@ -66,8 +66,8 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 	@Override
 	public LentsStatisticsResponseDto getCountOnLentAndReturn(LocalDateTime startDate, LocalDateTime endDate) {
 		log.info("Called getCountOnLentAndReturn");
-		Integer lentStartCount = lentRepository.countLentByLentTimeBetween(startDate, endDate);
-		Integer lentEndCount = lentRepository.countReturnByReturnTimeBetween(startDate, endDate);
+		Integer lentStartCount = lentRepository.countLentByTimeDuration(startDate, endDate);
+		Integer lentEndCount = lentRepository.countReturnByTimeDuration(startDate, endDate);
 		return new LentsStatisticsResponseDto(startDate, endDate, lentStartCount, lentEndCount);
 	}
 }
