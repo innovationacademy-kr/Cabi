@@ -4,11 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import org.springframework.data.domain.Pageable;
 public class BanHistoryRepositoryTest {
 
 	// DB와 같이 2023.01.15 09:00:00 시간을 기준으로 했습니다.
-	private final Date testDate = new Date(123, 0, 15, 9, 0);
+	LocalDateTime testDate = LocalDateTime.of(123, 1, 15, 9, 0);
 	@Autowired
 	private BanHistoryRepository banHistoryRepository;
 
@@ -67,7 +66,7 @@ public class BanHistoryRepositoryTest {
 		Long userId = 10L;
 
 		Assertions.assertTrue(banHistoryRepository.findRecentBanHistoryByUserId(
-				userId, DateUtil.getNow(), PageRequest.of(0, 1)).isEmpty());
+				userId, LocalDateTime.now(), PageRequest.of(0, 1)).isEmpty());
 
 //		Assertions.assertFalse(recentBanHistory.isPresent()); to-do
 	}

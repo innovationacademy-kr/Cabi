@@ -3,7 +3,7 @@ package org.ftclub.cabinet.user.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
@@ -11,7 +11,6 @@ import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class UserFacadeServiceTest {
 
-    private final Date testDate = new Date(123, 0, 15, 9, 0);
+    private final LocalDateTime testDate = LocalDateTime.of(123, 1, 15, 9, 0);
     @Autowired
     private UserFacadeService userFacadeService;
 
@@ -60,7 +59,7 @@ public class UserFacadeServiceTest {
     @Test
     public void 모든_벤_유저_가져오기_현재_기준() {
         BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
-                10, DateUtil.getNow());
+                10, LocalDateTime.now());
         assertEquals(0, blockedUserPaginationDto.getTotalPage());
         assertTrue(blockedUserPaginationDto.getResult().isEmpty());
     }

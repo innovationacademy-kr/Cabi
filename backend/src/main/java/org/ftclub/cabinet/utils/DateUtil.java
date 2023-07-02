@@ -1,11 +1,12 @@
 package org.ftclub.cabinet.utils;
 
 
-import java.time.LocalDate;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
@@ -13,45 +14,33 @@ import java.util.regex.Pattern;
  */
 public class DateUtil {
 
-	private static final Date INFINITY_DATE = stringToDate("9999-12-31");
+	private static final LocalDateTime INFINITY_DATE = stringToDate("9999-12-31");
 
 	/**
 	 * 아주 먼 미래의 날을 리턴합니다. 적당히 무한을 나타내는 값으로 사용할 수 있습니다.
 	 *
 	 * @return 9999-12-13에 해당하는 날을 리턴합니다.
 	 */
-	public static Date getInfinityDate() {
+	public static LocalDateTime getInfinityDate() {
 		return INFINITY_DATE;
 	}
 
 	/**
-	 * 문자열을 받아 그 문자열에 맞는 {@link Date}를 리턴합니다.
+	 * 문자열을 받아 그 문자열에 맞는 {@link LocalDateTime}를 리턴합니다.
 	 *
 	 * @param str yyyy-mm-dd 혹은 yyyy-m-dd 혹은 yyyy-m-d 포멧인 {@link String}
-	 * @return 문자열 포멧에 맞는 {@link Date}
+	 * @return 문자열 포멧에 맞는 {@link LocalDateTime}
 	 * @throws RuntimeException 문자열 포멧이 적절하지 않다면 발생시킵니다.
 	 */
-	public static Date stringToDate(String str) {
+	public static LocalDateTime stringToDate(String str) {
 		boolean matches = Pattern.matches("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$",
 				str);
 		if (!matches) {
 			throw new RuntimeException("적절하지 않은 날짜 포맷의 String 입니다.");
 		}
-		return Date.from(LocalDate.parse(str).atStartOfDay(ZoneId.systemDefault()).toInstant());
-	}
-
-	/**
-	 * 특정 date 에서 days만큼 더한 값을 리턴합니다.
-	 *
-	 * @param date 더하고 싶은 {@link Date}
-	 * @param days 더하고 싶은 일 수
-	 * @return date에 days만큼 더한 값을 리턴합니다.
-	 */
-	public static Date addDaysToDate(Date date, int days) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		c.add(Calendar.DATE, days);
-		return c.getTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sdf.parse(str, new ParsePosition(0));
+		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 	}
 
 	/**
@@ -62,9 +51,9 @@ public class DateUtil {
 	 * @return str 포멧에 맞는 date에 days만큼 더한 값을 리턴합니다.
 	 * @throws RuntimeException 문자열 포멧이 적절하지 않다면 발생시킵니다.
 	 */
-	public static Date stringToDateAndAddDays(String str, int days) {
-		Date date = stringToDate(str);
-		return addDaysToDate(date, days);
+	public static LocalDateTime stringToDateAndAddDays(String str, int days) {
+		LocalDateTime date = stringToDate(str);
+		return date.plusDays(days);
 	}
 
 	/**
@@ -74,9 +63,8 @@ public class DateUtil {
 	 * @param day2 day2
 	 * @return 두 day 차이의 절댓값
 	 */
-	public static Long calculateTwoDateDiffAbs(Date day1, Date day2) {
-		long diff = day1.getTime() - day2.getTime();
-		return Math.abs(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS));
+	public static Long calculateTwoDateDiffAbs(LocalDateTime day1, LocalDateTime day2) {
+		return Math.abs(Duration.between(day1, day2).toDays());
 	}
 
 	/**
@@ -86,17 +74,7 @@ public class DateUtil {
 	 * @param day2 day2
 	 * @return day1 - day2
 	 */
-	public static Long calculateTwoDateDiff(Date day1, Date day2) {
-		long diff = day1.getTime() - day2.getTime();
-		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-	}
-
-	/**
-	 * 현재 시각을 리턴합니다.
-	 *
-	 * @return 현재 시각에 해당하는 {@link Date}
-	 */
-	public static Date getNow() {
-		return new Date();
+	public static Long calculateTwoDateDiff(LocalDateTime day1, LocalDateTime day2) {
+		return Duration.between(day2, day1).toDays();
 	}
 }

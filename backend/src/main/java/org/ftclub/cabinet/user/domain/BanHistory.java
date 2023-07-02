@@ -2,7 +2,7 @@ package org.ftclub.cabinet.user.domain;
 
 import static javax.persistence.FetchType.LAZY;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -37,14 +35,12 @@ public class BanHistory {
 	@Column(name = "BAN_HISTORY_ID")
 	private long banHistoryId;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@NotNull
 	@Column(name = "BANNED_AT", nullable = false)
-	private Date bannedAt;
+	private LocalDateTime bannedAt;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "UNBANNED_AT")
-	private Date unbannedAt;
+	private LocalDateTime unbannedAt;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "BAN_TYPE", length = 32, nullable = false)
@@ -58,7 +54,7 @@ public class BanHistory {
 	@ManyToOne(fetch = LAZY)
 	private User user;
 
-	protected BanHistory(Date bannedAt, Date unbannedAt, BanType banType,
+	protected BanHistory(LocalDateTime bannedAt, LocalDateTime unbannedAt, BanType banType,
 			Long userId) {
 		this.bannedAt = bannedAt;
 		this.unbannedAt = unbannedAt;
@@ -66,7 +62,7 @@ public class BanHistory {
 		this.userId = userId;
 	}
 
-	public static BanHistory of(Date bannedAt, Date unbannedAt, BanType banType,
+	public static BanHistory of(LocalDateTime bannedAt, LocalDateTime unbannedAt, BanType banType,
 			Long userId) {
 		BanHistory banHistory = new BanHistory(bannedAt, unbannedAt, banType, userId);
 		ExceptionUtil.throwIfFalse(banHistory.isValid(),
@@ -90,7 +86,7 @@ public class BanHistory {
 		return Objects.equals(banHistoryId, banHistory.banHistoryId);
 	}
 
-	public boolean isBanEndedBefore(Date date) {
-		return date.before(unbannedAt);
+	public boolean isBanEndedBefore(LocalDateTime date) {
+		return date.isBefore(unbannedAt);
 	}
 }

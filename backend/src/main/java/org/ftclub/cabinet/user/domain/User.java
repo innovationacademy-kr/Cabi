@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.user.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
@@ -11,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -41,13 +39,11 @@ public class User {
     @Column(name = "EMAIL", unique = true)
     private String email;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "BLACKHOLED_AT")
-    private Date blackholedAt = null;
+    private LocalDateTime blackholedAt = null;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "DELETED_AT", length = 32)
-    private Date deletedAt = null;
+    private LocalDateTime deletedAt = null;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "ROLE", length = 32, nullable = false)
@@ -59,14 +55,14 @@ public class User {
                 && role != null && role.isValid();
     }
 
-    protected User(String name, String email, Date blackholedAt, UserRole userRole) {
+    protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
         this.name = name;
         this.email = email;
         this.blackholedAt = blackholedAt;
         this.role = userRole;
     }
 
-    public static User of(String name, String email, Date blackholedAt, UserRole userRole) {
+    public static User of(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
         User user = new User(name, email, blackholedAt, userRole);
         ExceptionUtil.throwIfFalse(user.isValid(),
                 new DomainException(ExceptionStatus.INVALID_ARGUMENT));
@@ -89,11 +85,11 @@ public class User {
         return role.equals(this.role);
     }
 
-    public void changeBlackholedAt(Date blackholedAt) {
+    public void changeBlackholedAt(LocalDateTime blackholedAt) {
         this.blackholedAt = blackholedAt;
     }
 
-    public void setDeletedAt(Date deletedAt) {
+    public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 }

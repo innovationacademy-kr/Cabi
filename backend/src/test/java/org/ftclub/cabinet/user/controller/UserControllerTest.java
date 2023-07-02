@@ -4,11 +4,11 @@ import static org.ftclub.testutils.TestControllerUtils.mockRequest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class UserControllerTest {
 				null, null);
 
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				"penaltyuser2", DateUtil.getNow());
+				"penaltyuser2", LocalDateTime.now());
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
@@ -54,7 +54,7 @@ public class UserControllerTest {
 				3L, null);
 
 		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				"lentuser1", DateUtil.getNow());
+				"lentuser1", LocalDateTime.now());
 		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
 						"/v4/users/me"))

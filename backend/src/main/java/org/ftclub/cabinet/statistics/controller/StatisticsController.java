@@ -2,9 +2,11 @@ package org.ftclub.cabinet.statistics.controller;
 
 import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.bytebuddy.asm.Advice;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
@@ -49,8 +51,8 @@ public class StatisticsController {
 	@GetMapping("/lent-histories")
 	@AuthGuard(level = ADMIN_ONLY)
 	public LentsStatisticsResponseDto getCountOnLentAndReturn(
-			@RequestParam("startDate") Integer startDate,
-			@RequestParam("endDate") Integer endDate
+			@RequestParam("startDate") LocalDateTime startDate,
+			@RequestParam("endDate") LocalDateTime endDate
 	) {
 		log.info("Called getCountOnLentAndReturn");
 		return statisticsFacadeService.getCountOnLentAndReturn(startDate, endDate);
@@ -70,7 +72,7 @@ public class StatisticsController {
 			@RequestParam("size") Integer size
 	) {
 		log.info("Called getUsersBannedInfo");
-		return userFacadeService.getAllBanUsers(page, size, DateUtil.getNow());
+		return userFacadeService.getAllBanUsers(page, size, LocalDateTime.now());
 	}
 
 	/**
