@@ -1,8 +1,5 @@
 name: CI/CD
-on:
-  push:
-    paths:
-      - "backend/**"
+on: push
 
 jobs:
   backend-CI:
@@ -53,6 +50,7 @@ jobs:
       - name: Gradle 빌드
         run: |
           cd backend
+          mkdir -p build/generated-snippets/
           chmod +x gradlew
           ./gradlew build --exclude-task test
         shell: bash
