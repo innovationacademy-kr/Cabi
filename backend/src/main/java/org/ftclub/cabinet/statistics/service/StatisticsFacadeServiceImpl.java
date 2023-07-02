@@ -13,6 +13,7 @@ import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.statistics.repository.StatisticsRepository;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -66,8 +67,8 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 	@Override
 	public LentsStatisticsResponseDto getCountOnLentAndReturn(LocalDateTime startDate, LocalDateTime endDate) {
 		log.info("Called getCountOnLentAndReturn");
-		Integer lentStartCount = lentRepository.countLentByLentTimeBetween(startDate, endDate);
-		Integer lentEndCount = lentRepository.countLentByReturnTimeBetween(startDate, endDate);
+		Integer lentStartCount = lentRepository.countLentByTimeDuration(startDate, endDate);
+		Integer lentEndCount = lentRepository.countReturnByTimeDuration(startDate, endDate);
 		return new LentsStatisticsResponseDto(startDate, endDate, lentStartCount, lentEndCount);
 	}
 }
