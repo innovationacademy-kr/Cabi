@@ -1,5 +1,5 @@
-FROM openjdk:11-corretto
+FROM amazoncorretto:11
 
-COPY build/libs/cabi-0.0.1-SNAPSHOT.jar .
+COPY cabinet-0.0.1-SNAPSHOT.jar .
 
-CMD java -jar -Dspring.profiles.active=dev build/libs/cabi-0.0.1-SNAPSHOT.jar
+CMD java -jar -Dspring.profiles.active=dev cabinet-0.0.1-SNAPSHOT.jar

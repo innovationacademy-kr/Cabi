@@ -13,6 +13,6 @@ else
   sleep 5
 fi
 
-cd /home/ec2-user/deploy
+cd /home/ec2-user/deploy/zip/
 docker build -t cabi_dev ./          # Docker Image 생성
 docker run -d -p 4242:4242 cabi_dev  # Docker Container 생성
