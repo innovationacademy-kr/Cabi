@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.event;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.ToString;
 import org.ftclub.cabinet.cabinet.domain.Location;
@@ -17,12 +17,12 @@ public class LentStartEvent {
 	 */
 	private final String name;
 	private final String email;
-	private final Date expiredAt;
+	private final LocalDateTime expiredAt;
 	private final Location location;
 	private final Integer visibleNum;
 
 
-	protected LentStartEvent(String name, String email, Date expiredAt, Location location,
+	protected LentStartEvent(String name, String email, LocalDateTime expiredAt, Location location,
 			Integer visibleNum) {
 		this.name = name;
 		this.email = email;
@@ -44,7 +44,7 @@ public class LentStartEvent {
 	 * @param location  대여한 캐비넷 위치 정보
 	 * @return 이벤트
 	 */
-	public static LentStartEvent of(String name, String email, Date expiredAt, Location location,
+	public static LentStartEvent of(String name, String email, LocalDateTime expiredAt, Location location,
 			Integer visibleNum) {
 		return new LentStartEvent(name, email, expiredAt, location, visibleNum);
 	}

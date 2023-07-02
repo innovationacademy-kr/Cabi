@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.util.Date;
+import java.time.LocalDateTime;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -25,7 +23,7 @@ class UserSessionMapperTest {
 
 	@Test
 	void toUserBlockedInfoDto() throws Exception {
-		Date now = new Date();
+		LocalDateTime now = LocalDateTime.now();
 		User user = mock(User.class);
 		when(user.getUserId()).thenReturn(3L);
 		when(user.getName()).thenReturn("intraId");
@@ -42,7 +40,7 @@ class UserSessionMapperTest {
 
 	@Test
 	void toUserProfileDto() {
-		User user = User.of("intraId", "user@email.com", new Date(), UserRole.USER);
+		User user = User.of("intraId", "user@email.com", LocalDateTime.now(), UserRole.USER);
 		UserProfileDto userProfileDto = userMapper.toUserProfileDto(user);
 		assertEquals(user.getUserId(), userProfileDto.getUserId());
 		assertEquals(user.getName(), userProfileDto.getName());

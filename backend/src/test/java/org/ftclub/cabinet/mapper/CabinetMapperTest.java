@@ -3,7 +3,7 @@ package org.ftclub.cabinet.mapper;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
@@ -66,8 +66,10 @@ class CabinetMapperTest {
 				CabinetPlace.of(Location.of("buildingTest", 1, "testSection"),
 						SectionFormation.of(1, 1), MapArea.of(1, 1, 1, 1)));
 
-		LentDto lentDto1 = new LentDto(5L, "testName1", 6L, new Date(), new Date());
-		LentDto lentDto2 = new LentDto(7L, "testName2", 8L, new Date(), new Date());
+		LentDto lentDto1 = new LentDto(5L, "testName1", 6L, LocalDateTime.now(),
+				LocalDateTime.now());
+		LentDto lentDto2 = new LentDto(7L, "testName2", 8L, LocalDateTime.now(),
+				LocalDateTime.now());
 		List<LentDto> lentDtos = List.of(lentDto1, lentDto2);
 		CabinetInfoResponseDto cabinetInfoResponseDto = cabinetMapper.toCabinetInfoResponseDto(
 				cabinet, lentDtos);

@@ -1,6 +1,12 @@
 package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Map;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.TokenProvider;
@@ -12,27 +18,21 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
-
 @Service
 @RequiredArgsConstructor
 public class AuthFacadeServiceImpl implements AuthFacadeService {
 
-    private final JwtProperties jwtProperties;
-    private final TokenProvider tokenProvider;
-    private final CookieManager cookieManager;
-    private final AuthService authService;
-    private final OauthService oauthService;
+	private final JwtProperties jwtProperties;
+	private final TokenProvider tokenProvider;
+	private final CookieManager cookieManager;
+	private final AuthService authService;
+	private final OauthService oauthService;
 
-    @Override
-    public void requestLoginToApi(HttpServletResponse res, ApiProperties apiProperties)
-            throws IOException {
-        oauthService.sendToApi(res, apiProperties);
-    }
+	@Override
+	public void requestLoginToApi(HttpServletResponse res, ApiProperties apiProperties)
+			throws IOException {
+		oauthService.sendToApi(res, apiProperties);
+	}
 
     @Override
     public void handleLogin(String code, HttpServletRequest req, HttpServletResponse res,
@@ -42,7 +42,7 @@ public class AuthFacadeServiceImpl implements AuthFacadeService {
         Map<String, Object> claims = tokenProvider.makeClaimsByProviderProfile(
                 apiProperties.getProviderName(), profile);
         authService.addUserIfNotExistsByClaims(claims);
-        String accessToken = tokenProvider.createToken(claims, DateUtil.getNow());
+        String accessToken = tokenProvider.createToken(claims, LocalDateTime.now());
         Cookie cookie = new Cookie(tokenProvider.getTokenNameByProvider(apiProperties.getProviderName()), accessToken);
         cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
     }
@@ -53,14 +53,14 @@ public class AuthFacadeServiceImpl implements AuthFacadeService {
         if (!authService.validateMasterLogin(masterLoginDto)) {
             throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
         }
-        String masterToken = tokenProvider.createMasterToken(DateUtil.getNow());
+        String masterToken = tokenProvider.createMasterToken(LocalDateTime.now());
         Cookie cookie = new Cookie(jwtProperties.getAdminTokenName(), masterToken);
         cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
     }
 
-    @Override
-    public void logout(HttpServletResponse res, ApiProperties apiProperties) {
-        cookieManager.deleteCookie(res,
-                tokenProvider.getTokenNameByProvider(apiProperties.getProviderName()));
-    }
+	@Override
+	public void logout(HttpServletResponse res, ApiProperties apiProperties) {
+		cookieManager.deleteCookie(res,
+				tokenProvider.getTokenNameByProvider(apiProperties.getProviderName()));
+	}
 }

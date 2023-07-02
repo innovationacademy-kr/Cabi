@@ -3,12 +3,11 @@ package org.ftclub.cabinet.lent.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +22,7 @@ class LentRepositoryTest {
 
 	@Test
 	void findFirstByCabinetIdAndEndedAtIsNull() {
-		Date now = DateUtil.getNow();
+		LocalDateTime now = LocalDateTime.now();
 		// 빌리고 있는 유저가 없는 cabinet id
 		Long cabinetId = 2L;
 
@@ -31,7 +30,7 @@ class LentRepositoryTest {
 		assertTrue(ent.isEmpty());
 
 		LentHistory lentHistory =
-				LentHistory.of(now, DateUtil.addDaysToDate(now, 3), 1L, cabinetId);
+				LentHistory.of(now, now.plusDays(3), 1L, cabinetId);
 
 		LentHistory saved = lentRepository.save(lentHistory);
 		ent = lentRepository.findFirstByCabinetIdAndEndedAtIsNull(cabinetId);
@@ -41,7 +40,7 @@ class LentRepositoryTest {
 
 	@Test
 	void findFirstByUserIdAndEndedAtIsNull() {
-		Date now = DateUtil.getNow();
+		LocalDateTime now = LocalDateTime.now();
 		// 빌리고 있는 사물함이 없는 user id
 		Long userId = 1L;
 
@@ -49,7 +48,7 @@ class LentRepositoryTest {
 		assertTrue(ent.isEmpty());
 
 		LentHistory lentHistory =
-				LentHistory.of(now, DateUtil.addDaysToDate(now, 3), userId, 1L);
+				LentHistory.of(now, now.plusDays(3), userId, 1L);
 
 		LentHistory saved = lentRepository.save(lentHistory);
 		ent = lentRepository.findFirstByUserIdAndEndedAtIsNull(userId);

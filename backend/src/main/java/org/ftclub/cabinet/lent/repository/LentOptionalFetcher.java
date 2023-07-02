@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.lent.repository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -195,7 +195,7 @@ public class LentOptionalFetcher {
 		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
 	}
 
-	public List<LentHistory> findAllOverdueLent(Date date, Pageable pageable) {
+	public List<LentHistory> findAllOverdueLent(LocalDateTime date, Pageable pageable) {
 		log.info("Called findAllOverdueLent: {}", date);
 		return lentRepository.findAllOverdueLent(date, pageable);
 	}

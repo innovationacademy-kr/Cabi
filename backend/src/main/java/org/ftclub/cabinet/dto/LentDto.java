@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,6 @@ public class LentDto {
 	private final Long userId;
 	private final String name;
 	private final Long lentHistoryId;
-	private final Date startedAt;
-	private final Date expiredAt;
+	private final LocalDateTime startedAt;
+	private final LocalDateTime expiredAt;
 }

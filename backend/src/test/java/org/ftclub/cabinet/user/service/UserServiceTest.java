@@ -3,7 +3,7 @@ package org.ftclub.cabinet.user.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.user.domain.AdminRole;
@@ -14,7 +14,6 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import org.springframework.data.domain.PageRequest;
 @Transactional
 public class UserServiceTest {
 
-	private final Date testDate = new Date(123, 0, 15, 9, 0);
+	private final LocalDateTime testDate = LocalDateTime.of(123, 1, 15, 9, 0);
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -76,7 +75,7 @@ public class UserServiceTest {
 
 	@Test
 	void 유저_삭제() {
-		Date deletedAt = DateUtil.getNow();
+		LocalDateTime deletedAt = LocalDateTime.now();
 		Long userId = 1L;
 		userService.deleteUser(userId, deletedAt);
 		User user = userOptionalFetcher.getUser(userId);
@@ -85,7 +84,7 @@ public class UserServiceTest {
 
 	@Test
 	void 유저의_블랙홀_일자_업데이트() {
-		Date blackholedAt = DateUtil.getNow();
+		LocalDateTime blackholedAt = LocalDateTime.now();
 		Long userId = 1L;
 		userService.updateUserBlackholedAt(userId, blackholedAt);
 		User user = userOptionalFetcher.getUser(userId);
@@ -103,18 +102,19 @@ public class UserServiceTest {
 	@Test
 	void 유저_밴_처리() {
 		// 3일 연체
-		Date startedAt = new Date(2023, 3, 1);
-		Date endedAt = new Date(2023, 3, 24);
-		Date expiredAt = new Date(2023, 3, 21);
+		LocalDateTime startedAt = LocalDateTime.of(2023, 3, 1, 0, 0);
+		LocalDateTime endedAt = LocalDateTime.of(2023, 3, 24, 0, 0);
+		LocalDateTime expiredAt = LocalDateTime.of(2023, 3, 21, 0, 0);
 		// banuser2, 대여기록 X, ban 기록 X
 		Long userId = 2L;
 		LentType lentType = LentType.PRIVATE;
 
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
+		LocalDateTime date = LocalDateTime.of(2023, 3, 25, 0, 0);
 		BanHistory banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId,
-				DateUtil.getNow(), PageRequest.of(0, 1)).get(0);
+				date, PageRequest.of(0, 1)).get(0);
 		assertEquals(userId, banHistory.getUserId());
-		assertEquals(new Date(2023, 3, 27), banHistory.getUnbannedAt());
+		assertEquals(LocalDateTime.of(2023, 3, 27, 0, 0, 0), banHistory.getUnbannedAt());
 	}
 
 //	@Test

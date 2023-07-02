@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.dto;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +21,6 @@ public class LentHistoryDto {
 	private final Integer visibleNum;
 	@JsonUnwrapped
 	private final Location location;
-	private final Date startedAt;
-	private final Date endedAt;
+	private final LocalDateTime startedAt;
+	private final LocalDateTime endedAt;
 }

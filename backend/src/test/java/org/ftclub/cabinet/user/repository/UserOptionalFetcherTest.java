@@ -3,7 +3,7 @@ package org.ftclub.cabinet.user.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ public class UserOptionalFetcherTest {
 	@DisplayName("유저 찾기 성공 - 유저가 존재하는 경우")
 	void findUser_성공_존재하는_유저() {
 		//given
-		User user = User.of("test", "test@test.com", new Date(), UserRole.USER);
+		User user = User.of("test", "test@test.com", LocalDateTime.now(), UserRole.USER);
 		userRepository.save(user);
 
 		//when

@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.lent.domain;
 
-import java.util.Date;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -14,6 +12,9 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 @Log4j2
@@ -22,12 +23,12 @@ public class LentPolicyImpl implements LentPolicy {
 	private final CabinetProperties cabinetProperties;
 
 	@Override
-	public Date generateExpirationDate(Date now, Cabinet cabinet,
-			List<LentHistory> activeLentHistories) {
+	public LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet,
+	                                            List<LentHistory> activeLentHistories) {
 		log.info("Called generateExpirationDate");
 		switch (cabinet.getLentType()) {
 			case PRIVATE:
-				return DateUtil.addDaysToDate(now, getDaysForLentTermPrivate());
+				return now.plusDays(getDaysForLentTermPrivate());
 			case SHARE:
 				if (cabinet.isStatus(CabinetStatus.AVAILABLE)) {
 					return DateUtil.getInfinityDate();
@@ -37,7 +38,7 @@ public class LentPolicyImpl implements LentPolicy {
 					if (activeLentHistory.isSetExpiredAt()) {
 						return activeLentHistory.getExpiredAt();
 					}
-					return DateUtil.addDaysToDate(now, getDaysForLentTermShare());
+					return now.plusDays(getDaysForLentTermShare());
 				}
 				if (cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
 					return activeLentHistory.getExpiredAt();
@@ -50,7 +51,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
-			Date expiredAt) {
+	                                LocalDateTime expiredAt) {
 		log.info("Called applyExpirationDate");
 		for (LentHistory lentHistory : beforeActiveHistories) {
 			lentHistory.setExpiredAt(expiredAt);
@@ -60,7 +61,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount,
-			List<BanHistory> userActiveBanList) {
+	                                          List<BanHistory> userActiveBanList) {
 		log.info("Called verifyUserForLent");
 		if (!user.isUserRole(UserRole.USER)) {
 			return LentPolicyStatus.NOT_USER;
@@ -68,7 +69,7 @@ public class LentPolicyImpl implements LentPolicy {
 		if (userActiveLentCount >= 1) {
 			return LentPolicyStatus.ALREADY_LENT_USER;
 		}
-		if (user.getBlackholedAt() != null && user.getBlackholedAt().before(DateUtil.getNow())) {
+		if (user.getBlackholedAt() != null && user.getBlackholedAt().isBefore(LocalDateTime.now())) {
 			return LentPolicyStatus.BLACKHOLED_USER;
 		}
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
@@ -94,7 +95,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyCabinetForLent(Cabinet cabinet,
-			List<LentHistory> cabinetLentHistories, Date now) {
+	                                             List<LentHistory> cabinetLentHistories, LocalDateTime now) {
 		log.info("Called verifyCabinetForLent");
 		// 빌릴 수 있는지 검증. 빌릴 수 없으면 return lentPolicyDto;
 		switch (cabinet.getStatus()) {

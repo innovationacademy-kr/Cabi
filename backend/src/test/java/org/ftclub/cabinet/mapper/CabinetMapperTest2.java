@@ -1,15 +1,6 @@
 package org.ftclub.cabinet.mapper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
-import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.Grid;
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.cabinet.domain.MapArea;
-import org.ftclub.cabinet.cabinet.domain.SectionFormation;
+import org.ftclub.cabinet.cabinet.domain.*;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.User;
@@ -18,6 +9,10 @@ import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CabinetMapperTest2 {
 
@@ -40,7 +35,7 @@ class CabinetMapperTest2 {
 		// 사용자
 		user = User.of("user", "email@email.com", DateUtil.getInfinityDate(), UserRole.USER);
 		// 대여 기록
-		lentHistory = LentHistory.of(DateUtil.getNow(), DateUtil.getInfinityDate(), 1L,
+		lentHistory = LentHistory.of(LocalDateTime.now(), DateUtil.getInfinityDate(), 1L,
 				1L);
 
 	}

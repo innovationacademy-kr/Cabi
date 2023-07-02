@@ -1,19 +1,5 @@
 package org.ftclub.cabinet.lent.domain;
 
-import static javax.persistence.FetchType.LAZY;
-
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +10,11 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+import static javax.persistence.FetchType.LAZY;
 
 /**
  * lent의 기록을 관리하기 위한 data mapper
@@ -50,23 +41,20 @@ public class LentHistory {
 	/**
 	 * 대여 시작일
 	 */
-	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "STARTED_AT", nullable = false)
-	private Date startedAt;
+	private LocalDateTime startedAt;
 
 	/**
 	 * 연체 시작일
 	 */
-	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "EXPIRED_AT")
-	private Date expiredAt = null;
+	private LocalDateTime expiredAt = null;
 
 	/**
 	 * 반납일
 	 */
-	@Temporal(value = TemporalType.TIMESTAMP)
 	@Column(name = "ENDED_AT")
-	private Date endedAt = null;
+	private LocalDateTime endedAt = null;
 
 	/**
 	 * 대여하는 유저
@@ -88,8 +76,8 @@ public class LentHistory {
 	@ManyToOne(fetch = LAZY)
 	private Cabinet cabinet;
 
-	protected LentHistory(Date startedAt, Date expiredAt, Long userId,
-			Long cabinetId) {
+	protected LentHistory(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
+	                      Long cabinetId) {
 		this.startedAt = startedAt;
 		this.expiredAt = expiredAt;
 		this.userId = userId;
@@ -103,7 +91,8 @@ public class LentHistory {
 	 * @param cabinetId 대여하는 cabinet id
 	 * @return 인자 정보를 담고있는 {@link LentHistory}
 	 */
-	public static LentHistory of(Date startedAt, Date expiredAt, Long userId, Long cabinetId) {
+	public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
+	                             Long cabinetId) {
 		LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
 		if (!lentHistory.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -128,9 +117,8 @@ public class LentHistory {
 	 * @param endedAt 대여 종료 날짜, 시간
 	 * @return
 	 */
-	private boolean isEndLentValid(Date endedAt) {
-		return endedAt != null && this.endedAt == null && 0 <= DateUtil.calculateTwoDateDiff(
-				endedAt, this.startedAt);
+	private boolean isEndLentValid(LocalDateTime endedAt) {
+		return endedAt != null && 0 <= DateUtil.calculateTwoDateDiff(endedAt, this.startedAt);
 	}
 
 
@@ -160,7 +148,7 @@ public class LentHistory {
 	 *
 	 * @param expiredAt 변경하고 싶은 만료일
 	 */
-	public void setExpiredAt(Date expiredAt) {
+	public void setExpiredAt(LocalDateTime expiredAt) {
 		this.expiredAt = expiredAt;
 		ExceptionUtil.throwIfFalse(this.isValid(),
 				new DomainException(ExceptionStatus.INVALID_STATUS));
@@ -203,7 +191,7 @@ public class LentHistory {
 	 *
 	 * @param now 설정하려고 하는 반납일
 	 */
-	public void endLent(Date now) {
+	public void endLent(LocalDateTime now) {
 		ExceptionUtil.throwIfFalse((this.isEndLentValid(now)),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		this.endedAt = now;
