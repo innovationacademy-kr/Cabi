@@ -4,6 +4,7 @@ import static org.ftclub.testutils.TestControllerUtils.mockRequest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -40,7 +40,7 @@ public class AdminCabinetControllerTest {
 	@BeforeEach
 	void setToken() {
 		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
-				DateUtil.getNow());
+				LocalDateTime.now());
 		cookie = TestControllerUtils.getTokenCookie("관리자", adminToken);
 	}
 

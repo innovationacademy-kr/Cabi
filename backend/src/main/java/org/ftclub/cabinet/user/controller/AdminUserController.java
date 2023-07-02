@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.controller;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -7,7 +8,6 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +36,7 @@ public class AdminUserController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
 		log.info("Called deleteBanHistoryByUserId: {}", userId);
-		userFacadeService.deleteRecentBanHistory(userId, DateUtil.getNow());
+		userFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
 	}
 
 	/**

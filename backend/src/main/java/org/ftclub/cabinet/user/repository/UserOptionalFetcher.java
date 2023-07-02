@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.user.repository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +12,6 @@ import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -121,7 +120,7 @@ public class UserOptionalFetcher {
 	 * @param now      현재 시간
 	 * @return {@link Page} of {@link BanHistory}
 	 */
-	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, Date now) {
+	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, LocalDateTime now) {
 		log.info("Called findPaginationActiveBanHistories");
 		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
 	}
@@ -134,7 +133,7 @@ public class UserOptionalFetcher {
 	 * @return {@link BanHistory}
 	 */
 	//TO-DO : isEmpty, List에 대한 0 인덱스 가져오기 등 리팩터링 매우 필요..
-	public BanHistory findRecentActiveBanHistory(Long userId, Date now) {
+	public BanHistory findRecentActiveBanHistory(Long userId, LocalDateTime now) {
 		log.info("Called findRecentActiveBanHistory: {}", userId);
 		List<BanHistory> banHistories = banHistoryRepository.findRecentBanHistoryByUserId(userId,
 				now,
@@ -221,7 +220,7 @@ public class UserOptionalFetcher {
 	public BanHistory getRecentBanHistory(Long userId) {
 		log.info("Called getRecentBanHistory: {}", userId);
 		List<BanHistory> banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId,
-				DateUtil.getNow(),
+				LocalDateTime.now(),
 				PageRequest.of(0, 1));
 		if (banHistory.isEmpty()) {
 			throw new DomainException(ExceptionStatus.NOT_FOUND_BAN_HISTORY);

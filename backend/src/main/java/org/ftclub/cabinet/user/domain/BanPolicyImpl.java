@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.user.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +19,8 @@ public class BanPolicyImpl implements BanPolicy {
 	private final BanHistoryRepository banHistoryRepository;
 
 	@Override
-	public BanType verifyForBanType(LentType lentType, Date startAt, Date endedAt, Date expiredAt) {
+	public BanType verifyForBanType(LentType lentType, LocalDateTime startAt, LocalDateTime endedAt,
+			LocalDateTime expiredAt) {
 		log.info("Called verifyForBanType");
 		if (checkAlreadyExpired(endedAt, expiredAt)) {
 			return BanType.ALL;
@@ -34,27 +35,27 @@ public class BanPolicyImpl implements BanPolicy {
 	}
 
 	@Override
-	public Date getBanDate(BanType banType, Date endedAt, Date expiredAt, Long userId) {
+	public LocalDateTime getBanDate(BanType banType, LocalDateTime endedAt, LocalDateTime expiredAt, Long userId) {
 		log.info("Called getBanDate");
 		if (banType == BanType.SHARE) {
-			return DateUtil.addDaysToDate(endedAt, cabinetProperties.getPenaltyDayShare());
+			return endedAt.plusDays(cabinetProperties.getPenaltyDayShare());
 		} else {
 			int currentBanDays = DateUtil.calculateTwoDateDiffAbs(endedAt, expiredAt).intValue();
 			int accumulateBanDays = getAccumulateBanDaysByUserId(userId).intValue();
-			return DateUtil.addDaysToDate(endedAt, currentBanDays + accumulateBanDays);
+			return endedAt.plusDays(currentBanDays + accumulateBanDays);
 		}
 	}
 
 	@Override
-	public boolean checkAlreadyExpired(Date endedAt, Date expiredAt) {
+	public boolean checkAlreadyExpired(LocalDateTime endedAt, LocalDateTime expiredAt) {
 		log.info("Called checkAlreadyExpired");
-		return expiredAt.before(endedAt);
+		return expiredAt.isBefore(endedAt);
 	}
 
 	@Override
-	public boolean isActiveBanHistory(Date unbannedAt, Date now) {
+	public boolean isActiveBanHistory(LocalDateTime unbannedAt, LocalDateTime now) {
 		log.info("Called isActiveBanHistory");
-		return now.before(unbannedAt);
+		return now.isBefore(unbannedAt);
 	}
 
 	@Override

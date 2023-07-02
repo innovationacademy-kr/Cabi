@@ -105,8 +105,7 @@ public interface CabinetFacadeService {
 	 * @param pageable 페이지네이션(page, size)
 	 * @return 사물함 페이지네이션
 	 */
-	CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page,
-			Integer size);
+	CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page, Integer size);
 
 	/**
 	 * 사물함 표시 번호에 따른 사물함 페이지네이션을 가져옵니다.

@@ -2,6 +2,7 @@ package org.ftclub.cabinet.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDateTime;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -40,7 +41,7 @@ class CabinetMapperTest2 {
 		// 사용자
 		user = User.of("user", "email@email.com", DateUtil.getInfinityDate(), UserRole.USER);
 		// 대여 기록
-		lentHistory = LentHistory.of(DateUtil.getNow(), DateUtil.getInfinityDate(), 1L,
+		lentHistory = LentHistory.of(LocalDateTime.now(), DateUtil.getInfinityDate(), 1L,
 				1L);
 
 	}

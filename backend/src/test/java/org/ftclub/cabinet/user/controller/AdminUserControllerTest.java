@@ -3,11 +3,11 @@ package org.ftclub.cabinet.user.controller;
 import static org.ftclub.testutils.TestControllerUtils.mockRequest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.auth.domain.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestControllerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class AdminUserControllerTest {
 	@BeforeEach
 	void setToken() {
 		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
-				DateUtil.getNow());
+				LocalDateTime.now());
 		cookie = TestControllerUtils.getTokenCookie("관리자", adminToken);
 	}
 
