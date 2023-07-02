@@ -1,27 +1,25 @@
 package org.ftclub.cabinet.auth.domain;
 
-import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
-import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.exception.DomainException;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
+import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
 
 /**
  * API 제공자에 따라 JWT 토큰을 생성하는 클래스입니다.
@@ -61,7 +59,7 @@ public class TokenProvider {
 		if (provider.equals(ftApiProperties.getProviderName())) {
 			String email = profile.get("email").asText();
 			if (!isValidNationalEmail(email, "kr")) {
-				throw new ServiceException(UNAUTHORIZED_USER);
+				throw new DomainException(UNAUTHORIZED_USER);
 			}
 			claims.put("email", email);
 			claims.put("name", profile.get("login").asText());
@@ -106,13 +104,13 @@ public class TokenProvider {
 		return claims;
 	}
 
-    public String getTokenNameByProvider(String providerName) {
-        if (providerName.equals(jwtProperties.getAdminProviderName())) {
-            return jwtProperties.getAdminTokenName();
-        }
-        if (providerName.equals(jwtProperties.getMainProviderName())) {
-            return jwtProperties.getMainTokenName();
-        }
-        throw new DomainException(INVALID_ARGUMENT);
-    }
+	public String getTokenNameByProvider(String providerName) {
+		if (providerName.equals(jwtProperties.getAdminProviderName())) {
+			return jwtProperties.getAdminTokenName();
+		}
+		if (providerName.equals(jwtProperties.getMainProviderName())) {
+			return jwtProperties.getMainTokenName();
+		}
+		throw new DomainException(INVALID_ARGUMENT);
+	}
 }
