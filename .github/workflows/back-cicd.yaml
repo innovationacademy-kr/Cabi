@@ -57,29 +57,30 @@ jobs:
           ./gradlew build
         shell: bash
 
-      - name: Dev EC2 서버에 업로드
-        if: ${{ github.ref == 'refs/heads/dev' }}
-        uses: appleboy/scp-action@v0.1.4
+      - name: Configure AWS credentials
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          host: ${{ secrets.HOST_DEV }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY_NEW }}
-          port: ${{ secrets.PORT }}
-          source: ./backend/build/libs/cabinet-*.jar
-          target: "/home/ec2-user/42cabi_dev/"
-          overwrite: true
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Main EC2 서버에 업로드
-        if: ${{ github.ref == 'refs/heads/main' }}
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.HOST_MAIN }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY_NEW }}
-          port: ${{ secrets.PORT }}
-          source: ./backend/build/libs/cabinet-*.jar
-          target: "/home/ec2-user/42cabi_main/"
-          overwrite: true
+      - name: Dev S3에 업로드
+        if: ${{ github.ref == 'refs/heads/dev' }}
+        run: |
+          mkdir -p before-deploy
+          cp backend/build/libs/cabinet-*.jar before-deploy/
+          cd before-deploy && zip -r before-deploy *
+          cd ../ && mkdir -p deploy
+          mv before-deploy/before-deploy.zip deploy/deploy.zip
+          aws s3 cp deploy/deploy.zip s3://${{ secrets.AWS_S3_DEV_BUCKET_NAME }}/deploy.zip
+
+        # aws deploy create-deployment \
+        # --application-name cabi-app-test \
+        # --deployment-config-name CodeDeployDefault.AllAtOnce \
+        # --deployment-group-name cabi-group-test \
+        # --file-exists-behavior OVERWRITE \
+        # --s3-location bucket=cabi-dev-test,bundleType=zip,key=deploy.zip
 
   backend-CD-develop:
     name: deploy-develop
