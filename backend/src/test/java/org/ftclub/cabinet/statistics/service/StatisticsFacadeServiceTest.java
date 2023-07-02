@@ -14,6 +14,7 @@ import java.util.Date;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 @Transactional
 class StatisticsFacadeServiceTest {
 
@@ -28,7 +29,7 @@ class StatisticsFacadeServiceTest {
         LocalDateTime startDate = LocalDateTime.of(2023, 1, 1, 0, 0); // 2023-01-01
         LocalDateTime endDate = LocalDateTime.of(2023, 6, 1, 0, 0); // 2023-06-01
 
-        when(lentRepository.countLentByLentTimeBetween(startDate, endDate))
+        when(lentRepository.countLentByTimeDuration(startDate, endDate))
                 .thenReturn(12);
 
         when(lentRepository.countLentByReturnTimeBetween(startDate, endDate))
