@@ -24,8 +24,8 @@ jobs:
     #       --health-retries 5
 
     steps:
-      # - name: 체크아웃
-      #   uses: actions/checkout@v2
+      - name: 체크아웃
+        uses: actions/checkout@v2
       # - name: DB에 샘플 데이터 삽입
       #   run: >-
       #     mysql --force
