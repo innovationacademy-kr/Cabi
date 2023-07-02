@@ -53,7 +53,7 @@ jobs:
       - name: Gradle 빌드
         run: |
           cd backend
-          chmod +x ./gradlew
+          chmod +x gradlew
           ./gradlew build --exclude-task test
         shell: bash
 
