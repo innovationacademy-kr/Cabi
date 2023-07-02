@@ -31,108 +31,108 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 public class AdminAuthControllerUnitTest {
 
-    static final String URL_PREFIX = "/v4/admin/auth";
-    static final String DOCUMENT_NAME = "AdminAuth/" + TestProperties.DOCUMENT_FORMAT;
-    @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    JwtProperties jwtProperties;
-    @Autowired
-    MasterProperties masterProperties;
-    @Autowired
-    ObjectMapper objectMapper;
+	static final String URL_PREFIX = "/v4/admin/auth";
+	static final String DOCUMENT_NAME = "AdminAuth/" + TestProperties.DOCUMENT_FORMAT;
+	@Autowired
+	MockMvc mockMvc;
+	@Autowired
+	JwtProperties jwtProperties;
+	@Autowired
+	MasterProperties masterProperties;
+	@Autowired
+	ObjectMapper objectMapper;
 
-    @Nested
-    @DisplayName("/login")
-    class Login {
+	@Nested
+	@DisplayName("/login")
+	class Login {
 
-        static final String url = URL_PREFIX + "/login";
-        MasterLoginDto commonDto;
-        MasterLoginDto invalidDto;
+		static final String url = URL_PREFIX + "/login";
+		MasterLoginDto commonDto;
+		MasterLoginDto invalidDto;
 
-        @BeforeEach
-        void setUp() {
-            commonDto = new MasterLoginDto(masterProperties.getId(),
-                    masterProperties.getPassword());
-            invalidDto = new MasterLoginDto("invalidId", "invalidPassword");
-        }
+		@BeforeEach
+		void setUp() {
+			commonDto = new MasterLoginDto(masterProperties.getId(),
+					masterProperties.getPassword());
+			invalidDto = new MasterLoginDto("invalidId", "invalidPassword");
+		}
 
-        @DisplayName("어드민 로그인 요청")
-        @Test
-        void adminOk() throws Exception {
-            mockMvc.perform(get(url))
-                    .andExpect(status().isFound())
-                    .andDo(document(DOCUMENT_NAME));
-        }
+		@DisplayName("어드민 로그인 요청")
+		@Test
+		void adminOk() throws Exception {
+			mockMvc.perform(get(url))
+					.andExpect(status().isFound())
+					.andDo(document(DOCUMENT_NAME));
+		}
 
-        @DisplayName("최고 관리자 로그인 요청 성공")
-        @Test
-        void masterOk() throws Exception {
-            mockMvc.perform(TestMockApplier
-                            .apply(post(url), objectMapper)
-                            .setJsonContent(commonDto)
-                            .end())
-                    .andExpect(status().isOk())
-                    .andDo(document(DOCUMENT_NAME, requestFields(
-                            fieldWithPath("id").description("어드민 아이디"),
-                            fieldWithPath("password").description("어드민 비밀번호"))));
-        }
+		@DisplayName("최고 관리자 로그인 요청 성공")
+		@Test
+		void masterOk() throws Exception {
+			mockMvc.perform(TestMockApplier
+							.apply(post(url), objectMapper)
+							.setJsonContent(commonDto)
+							.end())
+					.andExpect(status().isOk())
+					.andDo(document(DOCUMENT_NAME, requestFields(
+							fieldWithPath("id").description("어드민 아이디"),
+							fieldWithPath("password").description("어드민 비밀번호"))));
+		}
 
-        @DisplayName("최고 관리자 로그인 요청 dto 빈 값")
-        @Test
-        void masterEmptyDto() throws Exception {
-            mockMvc.perform(post(url))
-                    .andExpect(status().isBadRequest())
-                    .andDo(document(DOCUMENT_NAME));
-        }
+		@DisplayName("최고 관리자 로그인 요청 dto 빈 값")
+		@Test
+		void masterEmptyDto() throws Exception {
+			mockMvc.perform(post(url))
+					.andExpect(status().isBadRequest())
+					.andDo(document(DOCUMENT_NAME));
+		}
 
-        @DisplayName("최고 관리자 로그인 요청 실패")
-        @Test
-        void masterInvalidDto() throws Exception {
-            mockMvc.perform(TestMockApplier
-                            .apply(post(url), objectMapper)
-                            .setJsonContent(invalidDto)
-                            .end())
-                    .andExpect(status().isUnauthorized())
-                    .andDo(document(DOCUMENT_NAME));
-        }
-    }
+		@DisplayName("최고 관리자 로그인 요청 실패")
+		@Test
+		void masterInvalidDto() throws Exception {
+			mockMvc.perform(TestMockApplier
+							.apply(post(url), objectMapper)
+							.setJsonContent(invalidDto)
+							.end())
+					.andExpect(status().isUnauthorized())
+					.andDo(document(DOCUMENT_NAME));
+		}
+	}
 
-    @Nested
-    @DisplayName("/login/callback")
-    class LoginCallback {
+	@Nested
+	@DisplayName("/login/callback")
+	class LoginCallback {
 
-        static final String url = URL_PREFIX + "/login/callback";
-        String invalidCode = "thisMustBeBadGateWayBecauseOfInvalidCode";
-        // valid한 코드는 알 수 없음
+		static final String url = URL_PREFIX + "/login/callback";
+		String invalidCode = "thisMustBeBadGateWayBecauseOfInvalidCode";
+		// valid한 코드는 알 수 없음
 
-        @DisplayName("어드민 로그인 콜백 실패")
-        @Test
-        void wrongCode() throws Exception {
-            mockMvc.perform(get(url)
-                            .queryParam("code", invalidCode))
-                    .andExpect(status().isBadGateway())
-                    .andDo(document(DOCUMENT_NAME, requestParameters(
-                            parameterWithName("code").description("콜백 코드"))));
-        }
-    }
+		@DisplayName("어드민 로그인 콜백 실패")
+		@Test
+		void wrongCode() throws Exception {
+			mockMvc.perform(get(url)
+							.queryParam("code", invalidCode))
+					.andExpect(status().isBadGateway())
+					.andDo(document(DOCUMENT_NAME, requestParameters(
+							parameterWithName("code").description("콜백 코드"))));
+		}
+	}
 
-    @Nested
-    @DisplayName("/logout")
-    class Logout {
+	@Nested
+	@DisplayName("/logout")
+	class Logout {
 
-        String tokenName = jwtProperties.getAdminTokenName();
+		String tokenName = jwtProperties.getAdminTokenName();
 
-        @Test
-        @DisplayName("어드민 로그아웃 요청")
-        void adminLogoutOk() throws Exception {
+		@Test
+		@DisplayName("어드민 로그아웃 요청")
+		void adminLogoutOk() throws Exception {
 
-            mockMvc.perform(get("/v4/admin/auth/logout"))
-                    .andExpect(status().isOk())
-                    .andExpect(cookie().exists(tokenName))
-                    .andExpect(cookie().maxAge(tokenName, -1))
-                    .andDo(document(DOCUMENT_NAME));
-        }
-    }
+			mockMvc.perform(get("/v4/admin/auth/logout"))
+					.andExpect(status().isOk())
+					.andExpect(cookie().exists(tokenName))
+					.andExpect(cookie().maxAge(tokenName, 0))
+					.andDo(document(DOCUMENT_NAME));
+		}
+	}
 
 }
