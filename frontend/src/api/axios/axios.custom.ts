@@ -229,6 +229,18 @@ export const axiosSearchByCabinetNum = async (number: number) => {
   }
 };
 
+const axiosSearchByCabinetNumSimpleURL = "/v4/admin/search/cabinets-simple";
+export const axiosSearchByCabinetNumSimple = async (number: number) => {
+  try {
+    const response = await instance.get(axiosSearchByCabinetNumSimpleURL, {
+      params: { visibleNum: number },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosSearchDetailByIntraIdURL = "/v4/admin/search/users";
 export const axiosSearchDetailByIntraId = async (
   intraId: string,
