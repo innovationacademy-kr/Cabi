@@ -72,4 +72,8 @@ public class CookieManager {
 		cookie.setMaxAge(0);
 		res.addCookie(cookie);
 	}
+
+	public Cookie cookieOf(String name, String value) {
+		return new Cookie(name, value);
+	}
 }
