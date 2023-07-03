@@ -57,7 +57,7 @@ jobs:
           cd backend
           mkdir -p build/generated-snippets/
           chmod +x gradlew
-          ./gradlew build --exclude-task test
+          ./gradlew build
         shell: bash
 
       - name: Configure AWS credentials
