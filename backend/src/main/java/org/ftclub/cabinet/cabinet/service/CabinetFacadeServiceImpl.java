@@ -19,6 +19,8 @@ import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
+import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
@@ -83,6 +85,21 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		}
 		return cabinetMapper.toCabinetInfoResponseDto(cabinetOptionalFetcher.findCabinet(cabinetId),
 				lentDtos);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum) {
+		log.info("getCabinetsSimpleInfoByVisibleNum");
+		PageRequest page = PageRequest.of(0, Integer.MAX_VALUE);
+		Page<Cabinet> allCabinetsByVisibleNum = cabinetOptionalFetcher.findPaginationByVisibleNum(
+				visibleNum, page);
+		List<CabinetSimpleDto> cabinetsSimple = allCabinetsByVisibleNum.stream().map(
+				cabinetMapper::toCabinetSimpleDto).collect(Collectors.toList());
+		return new CabinetSimplePaginationDto(cabinetsSimple, allCabinetsByVisibleNum.getTotalElements());
 	}
 
 	/**
