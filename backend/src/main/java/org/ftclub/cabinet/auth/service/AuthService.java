@@ -6,12 +6,13 @@ import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.service.UserService;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
+
+import static org.ftclub.cabinet.user.domain.UserRole.USER;
 
 /**
  * Cabi 자체의 인증 서비스입니다.
@@ -43,13 +44,11 @@ public class AuthService {
 		}
 		if (email.endsWith(domainProperties.getUserEmailDomain())) {
 			String name = claims.get("name").toString();
-			UserRole role = UserRole.valueOf(claims.get("role").toString());
-			Object blackHoledAt = claims.get("blackholedAt");
+			LocalDateTime blackHoledAt = (LocalDateTime) claims.get("blackholedAt");
 			if (blackHoledAt == null) {
-				userService.createUser(name, email, null, role);
+				userService.createUser(name, email, null, USER);
 			} else {
-				userService.createUser(name, email, DateUtil.stringToDate(blackHoledAt.toString()),
-						role);
+				userService.createUser(name, email, blackHoledAt, USER);
 			}
 		}
 	}

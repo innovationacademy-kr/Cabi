@@ -67,7 +67,7 @@ public class TokenProvider {
 			if (blackholedAt.equals(null) || blackholedAt.asText().equals("null")) {
 				claims.put("blackholedAt", null);
 			} else {
-				claims.put("blackholedAt", blackholedAt.asText().substring(0, 10));
+				claims.put("blackholedAt", DateUtil.stringToDate(blackholedAt.asText().substring(0, 10)));
 			}
 			claims.put("role", UserRole.USER);
 		}
