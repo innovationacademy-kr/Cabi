@@ -31,14 +31,14 @@ public class AuthFacadeServiceImpl implements AuthFacadeService {
 	@Override
 	public void requestLoginToApi(HttpServletResponse res, ApiProperties apiProperties)
 			throws IOException {
-		oauthService.sendToApi(res, apiProperties);
+		oauthService.sendCodeRequestToApi(res, apiProperties);
 	}
 
 	@Override
 	public void handleLogin(String code, HttpServletRequest req, HttpServletResponse res,
 	                        ApiProperties apiProperties, LocalDateTime now) {
-		String apiToken = oauthService.getTokenByCode(code, apiProperties);
-		JsonNode profile = oauthService.getProfileByToken(apiToken, apiProperties);
+		String apiToken = oauthService.getTokenByCodeRequest(code, apiProperties);
+		JsonNode profile = oauthService.getProfileJsonByToken(apiToken, apiProperties);
 		Map<String, Object> claims = tokenProvider.makeClaimsByProviderProfile(
 				apiProperties.getProviderName(), profile);
 		authService.addUserIfNotExistsByClaims(claims);

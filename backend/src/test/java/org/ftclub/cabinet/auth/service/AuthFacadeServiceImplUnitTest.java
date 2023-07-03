@@ -53,7 +53,7 @@ class AuthFacadeServiceImplUnitTest {
 	@DisplayName("성공: OAuth API 서버에 로그인 요청")
 	void 성공_requestLoginToApi() throws IOException {
 		authFacadeService.requestLoginToApi(response, apiProperties);
-		then(oauthService).should().sendToApi(response, apiProperties);
+		then(oauthService).should().sendCodeRequestToApi(response, apiProperties);
 	}
 
 	@Test
@@ -64,8 +64,8 @@ class AuthFacadeServiceImplUnitTest {
 		LocalDateTime timeTokenCreated = LocalDateTime.now();
 		given(apiProperties.getProviderName()).willReturn("providerName");
 		request.setServerName("serverName");
-		given(oauthService.getTokenByCode("code", apiProperties)).willReturn("apiToken");
-		given(oauthService.getProfileByToken("apiToken", apiProperties)).willReturn(profileJsonNode);
+		given(oauthService.getTokenByCodeRequest("code", apiProperties)).willReturn("apiToken");
+		given(oauthService.getProfileJsonByToken("apiToken", apiProperties)).willReturn(profileJsonNode);
 		given(tokenProvider.makeClaimsByProviderProfile(apiProperties.getProviderName(), profileJsonNode)).willReturn(claims);
 		given(tokenProvider.createToken(claims, timeTokenCreated)).willReturn("accessToken");
 		given(tokenProvider.getTokenNameByProvider(apiProperties.getProviderName())).willReturn("tokenName");
