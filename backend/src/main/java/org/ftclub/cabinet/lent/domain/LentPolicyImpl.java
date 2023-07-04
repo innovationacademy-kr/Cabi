@@ -41,7 +41,7 @@ public class LentPolicyImpl implements LentPolicy {
 				return now.plusDays(getDaysForLentTermShare());
 
 			default:
-				throw new IllegalArgumentException("대여 상태가 잘못되었습니다.");
+				throw new IllegalArgumentException("대여 현황 상태가 잘못되었습니다.");
 		}
 	}
 
@@ -49,15 +49,18 @@ public class LentPolicyImpl implements LentPolicy {
 	public LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet,
 			List<LentHistory> activeLentHistories) {
 		log.info("Called generateExpirationDate");
-		switch (cabinet.getLentType()) {
-			case PRIVATE:
-				return now.plusDays(getDaysForLentTermPrivate());
-			case SHARE:
-				LentHistory lentHistory = activeLentHistories.get(0);
-				return generateSharedCabinetExpirationDate(now,
-						cabinet.getStatus(), lentHistory);
-			case CLUB:
-				return DateUtil.getInfinityDate();
+		LentType lentType = cabinet.getLentType();
+		if (lentType != null) {
+			switch (lentType) {
+				case PRIVATE:
+					return now.plusDays(getDaysForLentTermPrivate());
+				case SHARE:
+					LentHistory lentHistory = activeLentHistories.get(0);
+					return generateSharedCabinetExpirationDate(now,
+							cabinet.getStatus(), lentHistory);
+				case CLUB:
+					return DateUtil.getInfinityDate();
+			}
 		}
 		throw new IllegalArgumentException("대여 상태가 잘못되었습니다.");
 	}
