@@ -24,6 +24,7 @@ import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -55,8 +56,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		List<LentHistory> lentHistories = lentOptionalFetcher.findByUserId(userId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories, lentHistories.size());
+		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByUserId(userId, pageable);
+		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalPages());
 	}
 
 	@Override
@@ -65,8 +66,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		log.info("Called getAllCabinetLentHistories: {}", cabinetId);
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		List<LentHistory> lentHistories = lentOptionalFetcher.findByCabinetId(cabinetId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories, lentHistories.size());
+		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId, pageable);
+		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalPages());
 	}
 
 	@Override
@@ -115,7 +116,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	private LentHistoryPaginationDto generateLentHistoryPaginationDto(
-			List<LentHistory> lentHistories, int totalPage) {
+			List<LentHistory> lentHistories, Integer totalPage) {
 		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
 						e.getUser(),
