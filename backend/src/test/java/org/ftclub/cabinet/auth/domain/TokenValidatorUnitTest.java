@@ -186,7 +186,7 @@ public class TokenValidatorUnitTest {
 
 	@Test
 	@DisplayName("유저일 때 USER_ONLY, USER_OR_ADMIN만 인가됨")
-	void isTokenAuthenticatable() throws JsonProcessingException {
+	void 성공_isTokenAuthenticatable() throws JsonProcessingException {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
 		given(masterProperties.getDomain()).willReturn("master.domain.com");
 		given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
@@ -201,7 +201,7 @@ public class TokenValidatorUnitTest {
 
 	@Test
 	@DisplayName("일반 관리자일 때 ADMIN_ONLY, USER_OR_ADMIN만 인가됨")
-	void isTokenAuthenticatable2() throws JsonProcessingException {
+	void 성공_isTokenAuthenticatable2() throws JsonProcessingException {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
 		given(masterProperties.getDomain()).willReturn("master.domain.com");
 		given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
@@ -215,7 +215,7 @@ public class TokenValidatorUnitTest {
 
 	@Test
 	@DisplayName("최고 관리자일 때 ADMIN_ONLY, USER_OR_ADMIN, MASTER_ONLY 인가됨")
-	void isTokenAuthenticatable3() throws JsonProcessingException {
+	void 성공_isTokenAuthenticatable3() throws JsonProcessingException {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
 		given(masterProperties.getDomain()).willReturn("master.domain.com");
 		given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
@@ -226,9 +226,5 @@ public class TokenValidatorUnitTest {
 		assertTrue(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.USER_OR_ADMIN));
 		assertTrue(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.MASTER_ONLY));
 		assertFalse(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.USER_ONLY));
-	}
-
-	@Test
-	void 실패_isTokenAuthenticatable() {
 	}
 }
