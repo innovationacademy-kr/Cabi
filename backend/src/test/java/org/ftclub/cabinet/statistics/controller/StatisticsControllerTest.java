@@ -23,6 +23,6 @@ public class StatisticsControllerTest {
 	@Test
 	@DisplayName("모든층의 사물함 통계 가져오기")
 	public void 모든층의_사물함_통계_가져오기() {
-
+		
 	}
 }
