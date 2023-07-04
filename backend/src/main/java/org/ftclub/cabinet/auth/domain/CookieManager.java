@@ -1,11 +1,13 @@
 package org.ftclub.cabinet.auth.domain;
 
+import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.config.DomainProperties;
+import org.ftclub.cabinet.config.JwtProperties;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.config.DomainProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * 클라이언트의 쿠키를 관리하는 클래스입니다.
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class CookieManager {
 
 	private final DomainProperties domainProperties;
+	private final JwtProperties jwtProperties;
 
 	/**
 	 * 쿠키를 가져옵니다.
@@ -23,7 +26,7 @@ public class CookieManager {
 	 * @param name 쿠키 이름
 	 * @return 쿠키 값, 없는 경우 null
 	 */
-	public String getCookie(HttpServletRequest req, String name) {
+	public String getCookieValue(HttpServletRequest req, String name) {
 		Cookie[] cookies = req.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
@@ -36,17 +39,6 @@ public class CookieManager {
 	}
 
 	/**
-	 * 쿠키가 존재하는지 확인합니다.
-	 *
-	 * @param req  요청 시의 서블렛 {@link HttpServletRequest}
-	 * @param name 쿠키 이름
-	 * @return 쿠키가 존재하는지 여부
-	 */
-	public boolean isCookieExists(HttpServletRequest req, String name) {
-		return getCookie(req, name) != null;
-	}
-
-	/**
 	 * 쿠키를 설정합니다.
 	 *
 	 * @param res        요청 시의 서블렛 {@link HttpServletResponse}
@@ -55,10 +47,9 @@ public class CookieManager {
 	 * @param path       쿠키 사용 경로
 	 * @param serverName 쿠키 도메인
 	 */
-	public void setCookie(HttpServletResponse res, String name, String value, String path,
-			String serverName) {
-		Cookie cookie = new Cookie(name, value);
-		cookie.setMaxAge(60 * 60 * 24 * 28); // 28 days, jwt properties로 설정 가능
+	public void setCookieToClient(HttpServletResponse res, Cookie cookie, String path,
+	                              String serverName) {
+		cookie.setMaxAge(60 * 60 * 24 * jwtProperties.getExpiryDays());
 		cookie.setPath(path);
 		if (serverName.equals(domainProperties.getLocal())) {
 			cookie.setDomain(domainProperties.getLocal());
@@ -80,5 +71,9 @@ public class CookieManager {
 		Cookie cookie = new Cookie(name, null);
 		cookie.setMaxAge(0);
 		res.addCookie(cookie);
+	}
+
+	public Cookie cookieOf(String name, String value) {
+		return new Cookie(name, value);
 	}
 }

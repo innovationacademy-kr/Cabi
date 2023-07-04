@@ -77,4 +77,28 @@ public class DateUtil {
 	public static Long calculateTwoDateDiff(LocalDateTime day1, LocalDateTime day2) {
 		return Duration.between(day2, day1).toDays();
 	}
+
+	/**
+	 * LocalDateTime을 Date로 변환합니다.
+	 * <p>
+	 * Date를 사용하는 라이브러리에 사용합니다.
+	 *
+	 * @param localDateTime
+	 * @return
+	 */
+	public static Date toDate(LocalDateTime localDateTime) {
+		return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * Date를 LocalDateTime으로 변환합니다.
+	 * <p>
+	 * Date를 반환하는 라이브러리의 반환 값을 내부에서 사용하는 LocalDateTime으로 변경할 때 사용합니다.
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static LocalDateTime toLocalDateTime(Date date) {
+		return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+	}
 }

@@ -3,8 +3,6 @@ package org.ftclub.cabinet.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.ApiRequestManager;
 import org.ftclub.cabinet.config.ApiProperties;
@@ -13,6 +11,9 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * OAuth를 수행하는 서비스 클래스입니다.
@@ -29,7 +30,7 @@ public class OauthService {
 	 * @param response {@link HttpServletResponse}
 	 * @throws IOException 입출력 예외
 	 */
-	public void sendToApi(HttpServletResponse response, ApiProperties apiProperties)
+	public void sendCodeRequestToApi(HttpServletResponse response, ApiProperties apiProperties)
 			throws IOException {
 		response.sendRedirect(
 				ApiRequestManager.of(apiProperties)
@@ -44,7 +45,7 @@ public class OauthService {
 	 * @throws RuntimeException JSON 파싱 예외
 	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
 	 */
-	public String getTokenByCode(String code, ApiProperties apiProperties) {
+	public String getTokenByCodeRequest(String code, ApiProperties apiProperties) {
 		return WebClient.create().post()
 				.uri(apiProperties.getTokenUri())
 				.body(BodyInserters.fromFormData(
@@ -75,7 +76,7 @@ public class OauthService {
 	 * @throws RuntimeException JSON 파싱 예외
 	 * @throws ServiceException API 요청에 에러가 반환됐을 때 발생하는 예외
 	 */
-	public JsonNode getProfileByToken(String token, ApiProperties apiProperties) {
+	public JsonNode getProfileJsonByToken(String token, ApiProperties apiProperties) {
 		return WebClient.create().get()
 				.uri(apiProperties.getUserInfoUri())
 				.headers(headers -> headers.setBearerAuth(token))
