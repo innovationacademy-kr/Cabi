@@ -46,16 +46,21 @@ class LentPolicyUnitTest {
 	}
 
 	/**
+	 * 아래의 테스트는 실패합니다.
+	 * IllegalArgumentException가 아닌 NPE가 나기 때문이죠\
+	 * 그렇다면 generateExpirationDate 에 if (lentType != null) 을 추가해줘야 하는가?
+	 * => 모르겠음
+	 *
 	 * Cabinet은 of 를 통해서만 생성
 	 * Cabinet.lentType 이 null 인 경우가 있을까?
 	 * 독립적인 테스트 이므로 작성하는것이 맞는가?
+	 * Lent 는 주요 로직인만큼, null 을 막아두었다해도, 예상치 못한 상황을 안전하게 막는것이 맞지않는가?
 	 */
 	@Test
 	@DisplayName("실패: 사물함 상태 null - 개인사물함")
 	void 실패_상태없는_사물함_generateExpirationDate() {
 		Cabinet mockCabinet = mock(Cabinet.class);
 		given(mockCabinet.getLentType()).willReturn(null);
-
 
 		assertThrows(IllegalArgumentException.class, () -> {
 			lentPolicy.generateExpirationDate(
