@@ -21,35 +21,6 @@ export const axiosMyInfo = async (): Promise<any> => {
     throw error;
   }
 };
-/*
-const axiosUpdateCabinetMemoURL = "/v4/lent/me/memo";
-export const axiosUpdateCabinetMemo = async (
-  cabinet_memo: object
-): Promise<any> => {
-  try {
-    const response = await instance.patch(
-      axiosUpdateCabinetMemoURL,
-      cabinet_memo
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const axiosUpdateCabinetTitleURL = "/v4/lent/me/cabinet-title";
-export const axiosUpdateCabinetTitle = async (
-  cabinet_title: any
-): Promise<any> => {
-  try {
-    const response = await instance.patch(axiosUpdateCabinetTitleURL, {
-      cabinetTitle: cabinet_title.title,
-    });
-    return response;
-  } catch (error) {
-    throw error;
-  }
-}; */
 
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
@@ -192,17 +163,6 @@ export const axiosAdminCabinetInfoByCabinetId = async (
   }
 };
 
-/*
-const axiosAdminReturnURL = "/v4/admin/return-cabinets/";
-export const axiosAdminReturn = async (cabinetId: number): Promise<any> => {
-  try {
-    const response = await instance.patch(axiosAdminReturnURL + cabinetId);
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
- */
 const axiosReturnByUserIdURL = "/v4/admin/return-users/";
 export const axiosReturnByUserId = async (userId: number): Promise<any> => {
   try {
@@ -226,24 +186,6 @@ export const axiosBundleReturn = async (
     throw error;
   }
 };
-/*
-const axiosUpdateCabinetTypeURL = "/v4/admin/cabinets/lent-types/";
-export const axiosUpdateCabinetType = async (
-  cabinetId: number,
-  lentType: CabinetType
-) => {
-  try {
-    const response = await instance.patch(
-      `${axiosUpdateCabinetTypeURL}${lentType}`,
-      {
-        cabinetIds: [cabinetId],
-      }
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-}; */
 
 const axiosUpdateCabinetsURL = "/v4/admin/cabinets/";
 export const axiosUpdateCabinets = async (
@@ -262,61 +204,6 @@ export const axiosUpdateCabinets = async (
     throw error;
   }
 };
-/*
-const axiosBundleUpdateCabinetTypeURL = "/v4/admin/cabinets/lent-types/";
-export const axiosBundleUpdateCabinetType = async (
-  cabinetIdList: number[],
-  cabinetType: CabinetType
-): Promise<any> => {
-  try {
-    const response = await instance.patch(
-      `${axiosBundleUpdateCabinetTypeURL}${cabinetType}`,
-      {
-        cabinetIds: cabinetIdList,
-      }
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-};
- */
-/*
-const axiosUpdateCabinetStatusURL = "/v4/admin/cabinets/status/";
-export const axiosUpdateCabinetStatus = async (
-  cabinetId: number,
-  status: CabinetStatus
-): Promise<any> => {
-  try {
-    const response = await instance.patch(
-      `${axiosUpdateCabinetStatusURL}${status}`,
-      {
-        cabinetIds: [cabinetId],
-      }
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-}; */
-/*
-const axiosBundleUpdateCabinetStatusURL = "/v4/admin/cabinets/status/";
-export const axiosBundleUpdateCabinetStatus = async (
-  cabinetIdList: number[],
-  cabinetStatus: CabinetStatus
-): Promise<any> => {
-  try {
-    const response = await instance.patch(
-      `${axiosBundleUpdateCabinetStatusURL}${cabinetStatus}`,
-      {
-        cabinetIds: cabinetIdList,
-      }
-    );
-    return response;
-  } catch (error) {
-    throw error;
-  }
-}; */
 
 const axiosSearchByIntraIdURL = "/v4/admin/search/users-simple";
 export const axiosSearchByIntraId = async (intraId: string) => {
@@ -334,6 +221,18 @@ const axiosSearchByCabinetNumURL = "/v4/admin/search/cabinets";
 export const axiosSearchByCabinetNum = async (number: number) => {
   try {
     const response = await instance.get(axiosSearchByCabinetNumURL, {
+      params: { visibleNum: number },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosSearchByCabinetNumSimpleURL = "/v4/admin/search/cabinets-simple";
+export const axiosSearchByCabinetNumSimple = async (number: number) => {
+  try {
+    const response = await instance.get(axiosSearchByCabinetNumSimpleURL, {
       params: { visibleNum: number },
     });
     return response;
@@ -395,7 +294,7 @@ export const axiosGetBannedUserList = async () => {
 };
 
 const axiosGetStatisticsURL = "/v4/admin/statistics/lent-histories";
-export const axiosGetStatistics = async (start: number, end: number) => {
+export const axiosGetStatistics = async (start: Date, end: Date) => {
   try {
     const response = await instance.get(axiosGetStatisticsURL, {
       params: { startDate: start, endDate: end },

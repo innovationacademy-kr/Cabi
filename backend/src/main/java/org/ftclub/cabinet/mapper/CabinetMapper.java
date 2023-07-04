@@ -9,6 +9,8 @@ import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
+import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -73,4 +75,7 @@ public interface CabinetMapper {
 	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents);
 
 	CabinetPreviewDto toCabinetPreviewDto(Cabinet cabinet, Integer userCount, String name);
+
+	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
+	CabinetSimpleDto toCabinetSimpleDto(Cabinet cabinet);
 }

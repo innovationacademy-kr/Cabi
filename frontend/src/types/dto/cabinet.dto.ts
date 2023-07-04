@@ -13,6 +13,14 @@ export interface CabinetBuildingFloorDto {
   floors: Array<number>;
 }
 
+export interface CabinetSimple {
+  cabinetId: number;
+  building: string;
+  floor: number;
+  section: string;
+  visibleNum: number;
+}
+
 export interface CabinetInfo {
   building: string;
   floor: number;

@@ -46,6 +46,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'

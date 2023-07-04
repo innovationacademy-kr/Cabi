@@ -38,6 +38,11 @@ public class LentOptionalFetcher {
 		return lentRepository.findPaginationByCabinetId(cabinetId, pageable);
 	}
 
+	public Page<LentHistory> findPaginationByUserId(Long userId, PageRequest pageable) {
+		log.info("Called findPaginationByUserId: {}", userId);
+		return lentRepository.findPaginationByUserId(userId, pageable);
+	}
+
 	/**
 	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id와 cabinet id에 맞는 {@link LentHistory}를 찾습니다.
 	 *

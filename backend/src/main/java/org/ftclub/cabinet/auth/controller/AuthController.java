@@ -1,8 +1,5 @@
 package org.ftclub.cabinet.auth.controller;
 
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
 import org.ftclub.cabinet.config.DomainProperties;
@@ -11,6 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/v4/auth")
@@ -50,8 +52,8 @@ public class AuthController {
 	 */
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
-			HttpServletResponse res) throws IOException {
-		authFacadeService.handleLogin(code, req, res, ftApiProperties);
+	                          HttpServletResponse res) throws IOException {
+		authFacadeService.handleLogin(code, req, res, ftApiProperties, LocalDateTime.now());
 		res.sendRedirect(DomainProperties.getFeHost() + "/home");
 	}
 

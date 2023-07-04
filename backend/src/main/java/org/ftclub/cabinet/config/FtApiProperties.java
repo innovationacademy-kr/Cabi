@@ -26,6 +26,9 @@ public class FtApiProperties implements ApiProperties {
     @Value("${spring.oauth2.client.registration.ft.access-token-name}")
     private String accessTokenName;
 
+    @Value("${spring.oauth2.client.registration.ft.token-grant-type}")
+    private String tokenGrantType;
+
     @Value("${spring.oauth2.client.registration.provider.ft.token-uri}")
     private String tokenUri;
 
