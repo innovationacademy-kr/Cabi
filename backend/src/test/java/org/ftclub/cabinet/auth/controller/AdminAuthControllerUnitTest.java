@@ -1,15 +1,5 @@
 package org.ftclub.cabinet.auth.controller;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
@@ -26,25 +16,31 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-public class AdminAuthControllerTest {
-
-	@Autowired
-	MockMvc mockMvc;
-
-	@Autowired
-	JwtProperties jwtProperties;
-
-	@Autowired
-	MasterProperties masterProperties;
-
-	@Autowired
-	ObjectMapper objectMapper;
+public class AdminAuthControllerUnitTest {
 
 	static final String URL_PREFIX = "/v4/admin/auth";
 	static final String DOCUMENT_NAME = "AdminAuth/" + TestProperties.DOCUMENT_FORMAT;
+	@Autowired
+	MockMvc mockMvc;
+	@Autowired
+	JwtProperties jwtProperties;
+	@Autowired
+	MasterProperties masterProperties;
+	@Autowired
+	ObjectMapper objectMapper;
 
 	@Nested
 	@DisplayName("/login")

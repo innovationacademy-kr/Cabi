@@ -1,21 +1,23 @@
 package org.ftclub.cabinet.user.controller;
 
-import static org.ftclub.testutils.TestControllerUtils.mockRequest;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDateTime;
-import javax.servlet.http.Cookie;
-import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.testutils.TestControllerUtils;
+import org.ftclub.cabinet.utils.DateUtil;
+import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+
+import static org.ftclub.testutils.TestUtils.mockRequest;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -34,9 +36,9 @@ public class UserControllerTest {
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(4L, "penaltyuser2",
 				null, null);
 
-		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				"penaltyuser2", LocalDateTime.now());
-		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
+		String userToken = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), DateUtil.getInfinityDate(), "penaltyuser2", "user.domain.com");
+		Cookie cookie = TestUtils.getTokenCookie("사용자", userToken);
 
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
 						"/v4/users/me"))
@@ -53,9 +55,9 @@ public class UserControllerTest {
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(5L, "lentuser1",
 				3L, null);
 
-		String userToken = TestControllerUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				"lentuser1", LocalDateTime.now());
-		Cookie cookie = TestControllerUtils.getTokenCookie("사용자", userToken);
+		String userToken = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), DateUtil.getInfinityDate(), "lentuser1", "user.domain.com");
+		Cookie cookie = TestUtils.getTokenCookie("사용자", userToken);
 		mockMvc.perform(mockRequest(HttpMethod.GET, cookie,
 						"/v4/users/me"))
 				.andExpect(status().isOk())

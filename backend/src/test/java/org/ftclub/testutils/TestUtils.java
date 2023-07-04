@@ -2,81 +2,57 @@ package org.ftclub.testutils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.security.Key;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.Cookie;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
-import org.springframework.beans.factory.annotation.Value;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.Cookie;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TestControllerUtils {
 
-	public static String adminEmailName = "admin1";
-	public static String masterEmailName = "admin2";
+public class TestUtils {
 
-	@Value("${domain-name.admin-email}")
-	private static String adminEmailDomain = "gmail.com";
-
-	@Value("${domain-name.user-email}")
-	private static String userEmailDomain = "student.42seoul.kr";
-
-	@Value("${domain-name.master-email}")
-	private static String masterEmailDomain = "cabi.42seoul.io";
-
-	public static String getTestAdminToken(Key signingKey, LocalDateTime now) {
+	public static String getTestAdminToken(Key signingKey, LocalDateTime now, String emailName, String emailDomain) {
 		Map<String, Object> claim = new HashMap<>();
-		claim.put("email", adminEmailName + "@" + adminEmailDomain);
+		claim.put("email", emailName + "@" + emailDomain);
 		claim.put("role", AdminRole.ADMIN);
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(Timestamp.valueOf(now.plusDays(10)))
+				.setExpiration(DateUtil.toDate(now.plusDays(10)))
 				.compact();
 	}
 
-	public static String getTestMasterToken(Key signingKey, LocalDateTime now) {
+	public static String getTestMasterToken(Key signingKey, LocalDateTime now, String emailName, String emailDomain) {
 		Map<String, Object> claim = new HashMap<>();
-		claim.put("email", masterEmailName + "@" + masterEmailDomain);
+		claim.put("email", emailName + "@" + emailDomain);
 		claim.put("role", AdminRole.MASTER);
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(Timestamp.valueOf(now.plusDays(10)))
+				.setExpiration(DateUtil.toDate(now.plusDays(10)))
 				.compact();
 	}
 
-	public static String getTestUserToken(Key signingKey, LocalDateTime now) {
-		Map<String, Object> claim = new HashMap<>();
-		claim.put("name", "testUserName");
-		claim.put("email", "user1@" + userEmailDomain);
-		claim.put("blackholedAt", new Date());
-		claim.put("role", UserRole.USER);
-		return Jwts.builder()
-				.setClaims(claim)
-				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(Timestamp.valueOf(now.plusDays(10)))
-				.compact();
-	}
-
-	public static String getTestUserTokenByName(Key signingKey, String name, LocalDateTime now) {
+	public static String getTestUserTokenByName(Key signingKey, LocalDateTime now, LocalDateTime blackholedAt, String name, String emailDomain) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("name", name);
-		claim.put("email", name + "@" + userEmailDomain);
-		claim.put("blackholedAt", new Date());
+		claim.put("email", name + "@" + emailDomain);
+		claim.put("blackholedAt", DateUtil.toDate(blackholedAt));
 		claim.put("role", UserRole.USER);
 		return Jwts.builder()
 				.setClaims(claim)
 				.signWith(signingKey, SignatureAlgorithm.HS256)
-				.setExpiration(Timestamp.valueOf(now.plusDays(10)))
+				.setExpiration(DateUtil.toDate(now.plusDays(10)))
 				.compact();
 	}
 
@@ -92,8 +68,13 @@ public class TestControllerUtils {
 		return new Cookie(tokenName, token);
 	}
 
+	public static Key getSigningKey(String secretKey) {
+		byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(secretKey);
+		return new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS256.getJcaName());
+	}
+
 	public static MockHttpServletRequestBuilder mockRequest(HttpMethod method, Cookie cookie,
-			String url, Object... uriVars) {
+	                                                        String url, Object... uriVars) {
 		if (method.equals(HttpMethod.GET)) {
 			return MockMvcRequestBuilders.get(url, uriVars)
 					.cookie(cookie)
