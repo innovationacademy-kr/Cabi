@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import SearchListItem from "@/components/TopNav/SearchBar/SearchListItem/SearchListItem";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetSimple } from "@/types/dto/cabinet.dto";
 
 interface ISearchListByIntraId {
   name: string;
@@ -16,7 +16,7 @@ const SearchBarList = ({
   targetIndex,
 }: {
   searchListById: ISearchListByIntraId[];
-  searchListByNum: CabinetInfo[];
+  searchListByNum: CabinetSimple[];
   resetSearchState: () => void;
   searchWord?: string;
   totalLength: number;
