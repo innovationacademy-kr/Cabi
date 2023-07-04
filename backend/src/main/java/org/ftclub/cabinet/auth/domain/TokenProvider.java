@@ -11,9 +11,9 @@ import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +67,7 @@ public class TokenProvider {
 			if (blackholedAt.equals(null) || blackholedAt.asText().equals("null")) {
 				claims.put("blackholedAt", null);
 			} else {
-				claims.put("blackholedAt", DateUtil.stringToDate(blackholedAt.asText().substring(0, 10)));
+				claims.put("blackholedAt", blackholedAt.asText().substring(0, 10));
 			}
 			claims.put("role", UserRole.USER);
 		}
@@ -85,7 +85,7 @@ public class TokenProvider {
 		return Jwts.builder()
 				.setClaims(claims)
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.toDate(now.plusDays(jwtProperties.getExpiryDays())))
+				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiryDays())))
 				.compact();
 	}
 
@@ -93,7 +93,7 @@ public class TokenProvider {
 		return Jwts.builder()
 				.setClaims(makeMasterClaims())
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.setExpiration(DateUtil.toDate(now.plusDays(jwtProperties.getExpiryDays())))
+				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiryDays())))
 				.compact();
 	}
 
