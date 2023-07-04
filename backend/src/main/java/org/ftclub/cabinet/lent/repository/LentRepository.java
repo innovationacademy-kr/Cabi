@@ -124,6 +124,12 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	Page<LentHistory> findPaginationByCabinetId(@Param("cabinetId") Long cabinetId,
 			Pageable pageable);
 
+	@Query("SELECT lh " +
+			"FROM LentHistory lh " +
+			"WHERE lh.userId = :userId")
+	Page<LentHistory> findPaginationByUserId(@Param("userId") Long userId,
+			Pageable pageable);
+
 	/**
 	 * 연체되어 있는 사물함을 모두 가져옵니다.
 	 *
