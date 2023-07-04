@@ -1,8 +1,11 @@
 package org.ftclub.cabinet.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class DateUtilTest {
@@ -74,5 +77,25 @@ class DateUtilTest {
 		LocalDateTime tar = LocalDateTime.of(1999, 1, 1, 0, 0, 0);
 		LocalDateTime rst = LocalDateTime.of(1998, 12, 31, 0, 0, 0);
 		assertEquals(rst, tar.plusDays(-1));
+	}
+
+	@Test
+	@DisplayName("성공: 같은 날짜")
+	public void 성공_isSameDay() {
+		LocalDateTime time = LocalDateTime.now();
+		assertTrue(DateUtil.isSameDay(time));
+	}
+	@Test
+	@DisplayName("실패: 하루 전 날짜")
+	public void 실패_하루전_isSameDay() {
+		LocalDateTime time = LocalDateTime.now().minusDays(1);
+		assertFalse(DateUtil.isSameDay(time));
+	}
+
+	@Test
+	@DisplayName("실패: 하루 뒤 날짜")
+	public void 실패_하루뒤_isSameDay() {
+		LocalDateTime time = LocalDateTime.now().plusDays(1);
+		assertFalse(DateUtil.isSameDay(time));
 	}
 }

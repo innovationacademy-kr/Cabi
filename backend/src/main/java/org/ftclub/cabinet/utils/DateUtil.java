@@ -4,6 +4,7 @@ package org.ftclub.cabinet.utils;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -100,5 +101,17 @@ public class DateUtil {
 	 */
 	public static LocalDateTime toLocalDateTime(Date date) {
 		return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+	}
+
+
+	/**
+	 * LocalDateTime 과 서버의 현재 날짜가 같은지 확인합니다.
+	 *
+	 * @param now
+	 * @return
+	 */
+	public static boolean isSameDay(LocalDateTime now) {
+		LocalDate currentServerDate = LocalDate.now();
+		return currentServerDate.equals(now.toLocalDate());
 	}
 }
