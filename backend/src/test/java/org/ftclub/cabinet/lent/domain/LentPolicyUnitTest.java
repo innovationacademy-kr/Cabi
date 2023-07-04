@@ -71,11 +71,17 @@ class LentPolicyUnitTest {
 	}
 
 	@Test
-	@DisplayName("성공: 만료일자 설정 - 공유사물함")
+	@DisplayName("성공: 만료시간 무한 - 공유사물함 최초 대여 - AVAILABLE")
 	void 성공_공유사물함_최초_대여_generateExpirationDate() {
-		LocalDateTime expect = LocalDateTime.now().plusDays(1);
-		LocalDateTime currentTime = LocalDateTime.now();
-//		lentPolicy.generateExpirationDate(currentTime, );
+		Cabinet mockCabinet = mock(Cabinet.class);
+		given(mockCabinet.getLentType()).willReturn(LentType.SHARE);
+		given(mockCabinet.getStatus()).willReturn(CabinetStatus.AVAILABLE);
+		List<LentHistory> mockLentHistorieList = mock(List.class);
+
+		LocalDateTime expiredDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
+				mockCabinet, mockLentHistorieList);
+
+		assertEquals(expiredDate, DateUtil.getInfinityDate());
 	}
 
 	@Test
