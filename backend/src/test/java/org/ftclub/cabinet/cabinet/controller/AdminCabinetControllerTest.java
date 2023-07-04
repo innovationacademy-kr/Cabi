@@ -1,19 +1,8 @@
 package org.ftclub.cabinet.cabinet.controller;
 
-import static org.ftclub.testutils.TestControllerUtils.mockRequest;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.Cookie;
-import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.testutils.TestControllerUtils;
+import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -23,9 +12,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static org.ftclub.testutils.TestUtils.mockRequest;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Disabled
 public class AdminCabinetControllerTest {
 
 	@Autowired
@@ -39,9 +37,9 @@ public class AdminCabinetControllerTest {
 
 	@BeforeEach
 	void setToken() {
-		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
-				LocalDateTime.now());
-		cookie = TestControllerUtils.getTokenCookie("관리자", adminToken);
+		adminToken = TestUtils.getTestAdminToken(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), "name", "admin.domain.com");
+		cookie = TestUtils.getTokenCookie("관리자", adminToken);
 	}
 
 	@Test

@@ -5,23 +5,25 @@ package org.ftclub.cabinet.config;
  */
 public interface ApiProperties {
 
-	String getProviderName();
+    String getProviderName();
 
-	String getClientId();
+    String getClientId();
 
-	String getClientSecret();
+    String getClientSecret();
 
-	String getRedirectUri();
+    String getRedirectUri();
 
-	String getGrantType();
+    String getGrantType();
 
-	String getAccessTokenName();
+    String getTokenGrantType();
 
-	String getTokenUri();
+    String getAccessTokenName();
 
-	String getAuthUri();
+    String getTokenUri();
 
-	String getUserInfoUri();
+    String getAuthUri();
 
-	String getScope();
+    String getUserInfoUri();
+
+    String getScope();
 }
