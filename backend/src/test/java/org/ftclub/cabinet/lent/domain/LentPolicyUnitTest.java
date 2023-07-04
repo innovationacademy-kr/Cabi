@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class LentPolicyImplTest {
+class LentPolicyUnitTest {
 
 	@Mock
 	CabinetProperties cabinetProperties = mock(CabinetProperties.class);
