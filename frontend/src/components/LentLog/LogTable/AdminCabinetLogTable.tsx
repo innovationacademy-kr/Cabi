@@ -56,7 +56,7 @@ const LogTableWrapperstyled = styled.div`
   max-width: 800px;
   border-radius: 10px;
   overflow: hidden;
-  margin: 0px auto;
+  margin: 0 auto;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 `;
 
