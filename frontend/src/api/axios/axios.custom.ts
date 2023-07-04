@@ -439,7 +439,7 @@ export const axiosGetCabinetLentLog = async (
     const response = await instance.get(
       axiosGetCabinetLentLogURL + cabinetId.toString() + "/lent-histories",
       {
-        params: { page: page, size: 10 },
+        params: { page: page, size: 7 },
       }
     );
     return response;
@@ -458,7 +458,7 @@ export const axiosGetUserLentLog = async (
     const response = await instance.get(
       axiosGetUserLentLogURL + userId.toString() + "/lent-histories",
       {
-        params: { page: page, size: 10 },
+        params: { page: page, size: 7 },
       }
     );
     return response;
