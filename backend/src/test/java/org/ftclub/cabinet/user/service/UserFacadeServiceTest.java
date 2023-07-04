@@ -51,7 +51,7 @@ public class UserFacadeServiceTest {
     public void 모든_벤_유저_가져오기() {
         BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
                 10, testDate);
-        assertEquals(1, blockedUserPaginationDto.getTotalPage());
+        assertEquals(2, blockedUserPaginationDto.getTotalLength());
         assertEquals(2, blockedUserPaginationDto.getResult().size());
         assertEquals("banuser1", blockedUserPaginationDto.getResult().get(0).getName());
     }
@@ -60,7 +60,7 @@ public class UserFacadeServiceTest {
     public void 모든_벤_유저_가져오기_현재_기준() {
         BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
                 10, LocalDateTime.now());
-        assertEquals(0, blockedUserPaginationDto.getTotalPage());
+        assertEquals(0, blockedUserPaginationDto.getTotalLength());
         assertTrue(blockedUserPaginationDto.getResult().isEmpty());
     }
 
