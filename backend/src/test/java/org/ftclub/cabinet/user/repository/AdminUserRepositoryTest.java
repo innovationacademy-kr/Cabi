@@ -1,9 +1,14 @@
 package org.ftclub.cabinet.user.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Optional;
 import javax.transaction.Transactional;
+import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,29 +17,70 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class AdminUserRepositoryTest {
 
+	private Long adminUserId;
+
 	@Autowired
 	private AdminUserRepository adminUserRepository;
-	@Autowired
-	private UserOptionalFetcher userOptionalFetcher;
 
-	@Test
-	public void testGetAdminUser() {
-		Long adminUserId = 1L;
-
-		AdminUser adminUser = userOptionalFetcher.findAdminUser(adminUserId);
-
-		Assertions.assertNotNull(adminUser);
-		Assertions.assertEquals(adminUserId, adminUser.getAdminUserId());
-		Assertions.assertEquals("admin0@gmail.com", adminUser.getEmail());
+	@BeforeEach
+	public void setUp() {
+		AdminUser adminUser = AdminUser.of("adminTest@gmail.com", AdminRole.ADMIN);
+		adminUser = adminUserRepository.save(adminUser);
+		adminUserId = adminUser.getAdminUserId();
 	}
 
 	@Test
-	public void testFindByEmail() {
-		String email = "admin1@gmail.com";
+	@DisplayName("어드민 아이디로 어드민 유저 찾기 성공 - 어드민이 존재하는 경우")
+	public void findAdminUser_성공_어드민이_존재하는_경우() {
+		Optional<AdminUser> adminUser = adminUserRepository.findAdminUser(adminUserId);
 
-		Optional<AdminUser> adminUser = adminUserRepository.findAdminUserByEmail(email);
+		assertTrue(adminUser.isPresent());
+		assertEquals(adminUserId, adminUser.get().getAdminUserId());
+		assertEquals("adminTest@gmail.com", adminUser.get().getEmail());
+		assertEquals(AdminRole.ADMIN, adminUser.get().getRole());
+	}
 
-		Assertions.assertTrue(adminUser.isPresent());
-		Assertions.assertEquals(email, adminUser.get().getEmail());
+	@Test
+	@DisplayName("어드민 아이디로 어드민 유저 찾기 실패 - 어드민이 존재하지 않는 경우")
+	public void findAdminUser_실패_어드민이_존재하지_않는_경우() {
+		Optional<AdminUser> adminUser = adminUserRepository.findAdminUser(10000L);
+
+		assertTrue(adminUser.isEmpty());
+	}
+
+	@Test
+	@DisplayName("어드민 이메일로 어드민 유저 찾기 성공 - 어드민이 존재하는 경우")
+	void findAdminUserByEmail_성공_어드민_유저가_존재하는_경우() {
+		Optional<AdminUser> adminUser = adminUserRepository.findAdminUserByEmail("adminTest@gmail.com");
+
+		assertTrue(adminUser.isPresent());
+		assertEquals(adminUserId, adminUser.get().getAdminUserId());
+		assertEquals("adminTest@gmail.com", adminUser.get().getEmail());
+		assertEquals(AdminRole.ADMIN, adminUser.get().getRole());
+	}
+
+	@Test
+	@DisplayName("어드민 이메일로 어드민 유저 찾기 실패 - 어드민이 존재하지 않는 경우")
+	public void findAdminUserByEmail_실패_어드민이_존재하지_않는_경우() {
+		Optional<AdminUser> adminUser = adminUserRepository.findAdminUserByEmail("test@gmail.com");
+
+		assertTrue(adminUser.isEmpty());
+	}
+
+	@Test
+	@DisplayName("유저의 이메일로 어드민 유저의 권한 찾기 성공 - 어드민이 존재하는 경우")
+	void findAdminUserRoleByEmail_성공_어드민이_존재하는_경우() {
+		Optional<AdminRole> adminRole = adminUserRepository.findAdminUserRoleByEmail("admin@gmail.com");
+
+		assertTrue(adminRole.isPresent());
+		assertEquals(AdminRole.ADMIN, adminRole.get());
+	}
+
+	@Test
+	@DisplayName("유저의 이메일로 어드민 유저의 권한 찾기 실패 - 어드민이 존재하지 않는 경우")
+	public void findAdminUserRoleByEmail_실패_어드민이_존재하지_않는_경우() {
+		Optional<AdminRole> adminRole = adminUserRepository.findAdminUserRoleByEmail("test@gmail.com");
+
+		assertTrue(adminRole.isEmpty());
 	}
 }

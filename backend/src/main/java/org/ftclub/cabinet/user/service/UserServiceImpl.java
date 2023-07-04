@@ -105,7 +105,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
+			LocalDateTime endedAt,
 			LocalDateTime expiredAt) {
 		log.info("Called banUser: {}", userId);
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);

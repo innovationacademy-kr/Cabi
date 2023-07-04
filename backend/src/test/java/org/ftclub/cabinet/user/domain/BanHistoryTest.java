@@ -1,7 +1,9 @@
 package org.ftclub.cabinet.user.domain;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import org.ftclub.cabinet.exception.DomainException;
@@ -55,4 +57,21 @@ public class BanHistoryTest {
 				() -> BanHistory.of(LocalDateTime.now(), null, BanType.PRIVATE, null));
 	}
 
+	@Test
+	@DisplayName("밴 여부 확인 성공 - 밴 중")
+	void isBanEndedBefore_성공_밴중() {
+		LocalDateTime now = LocalDateTime.now();
+		BanHistory banHistory = BanHistory.of(now, now.plusHours(3), BanType.ALL, 1L);
+
+		assertTrue(banHistory.isBanEndedBefore(now.plusHours(2)));
+	}
+
+	@Test
+	@DisplayName("밴 여부 확인 성공 - 밴 종료")
+	void isBanEndedBefore_성공_밴종료() {
+		LocalDateTime now = LocalDateTime.now();
+		BanHistory banHistory = BanHistory.of(now, now.plusHours(3), BanType.ALL, 1L);
+
+		assertFalse(banHistory.isBanEndedBefore(now.plusHours(4)));
+	}
 }

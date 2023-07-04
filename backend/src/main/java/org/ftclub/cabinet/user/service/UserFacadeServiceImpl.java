@@ -11,7 +11,6 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -48,7 +47,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
-		log.info("Called getMyProfile: {}", user.getName());
 		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
 				LocalDateTime.now());
@@ -72,14 +70,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 				activeBanList.getTotalPages());
 	}
 
-	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
-			Integer totalPage) {
-		List<UserBlockedInfoDto> userBlockedInfoDtoList = banHistories.stream()
-				.map(b -> userMapper.toUserBlockedInfoDto(b, b.getUser()))
-				.collect(Collectors.toList());
-		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalPage);
-	}
-
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
 			Integer size) {
@@ -101,7 +91,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		return new UserProfilePaginationDto(userProfileDtoList, totalLength);
 	}
 
-	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
 	@Override
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
 			Integer size) {
@@ -123,14 +112,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			userCabinetDtoList.add(cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto));
 		});
 		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList, users.getTotalPages());
-	}
-
-	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
-	@Override
-	public MyCabinetResponseDto getMyLentAndCabinetInfo(Long userId) {
-		log.info("Called getMyLentAndCabinetInfo: {}", userId);
-		User user = userOptionalFetcher.findUser(userId);
-		return null;
 	}
 
 	@Override
@@ -184,7 +165,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	}
 
 	@Override
-	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
+			LocalDateTime endedAt,
 			LocalDateTime expiredAt) {
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
 	}
