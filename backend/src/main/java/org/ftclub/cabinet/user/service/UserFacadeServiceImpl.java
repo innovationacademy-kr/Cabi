@@ -47,6 +47,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
+		log.info("Called getMyProfile: {}", user.getName());
 		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
 				LocalDateTime.now());
@@ -192,6 +193,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 									cabinet, overdueDays));
 				}
 		);
-		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, overdueList.size());
+		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, Long.valueOf(overdueList.size()));
 	}
 }

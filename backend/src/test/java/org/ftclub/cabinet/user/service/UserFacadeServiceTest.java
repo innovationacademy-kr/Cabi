@@ -171,7 +171,7 @@ public class UserFacadeServiceTest {
 							testDate.minusDays(2), testDate.plusDays(2)));
 					add(new UserBlockedInfoDto(3L, "testUser3",
 							testDate.minusDays(3), testDate.plusDays(3)));
-				}}, 3));
+				}}, 3L));
 
 		// when
 		BlockedUserPaginationDto allBanUsers =
@@ -206,7 +206,7 @@ public class UserFacadeServiceTest {
 				.willReturn(new PageImpl(new ArrayList<BanHistory>(0)));
 		given(userMapper.toBlockedUserPaginationDto(any(),any()))
 				.willReturn(new BlockedUserPaginationDto(
-						new ArrayList<UserBlockedInfoDto>(0), 0));
+						new ArrayList<UserBlockedInfoDto>(0), 0L));
 
 		// when
 		BlockedUserPaginationDto allBanUsers =
@@ -558,7 +558,7 @@ public class UserFacadeServiceTest {
 							Location.of("새롬관", 4, "오아시스"), 2));
 					add(new OverdueUserCabinetDto("testUser3", 3L, 15,
 							Location.of("새롬관", 5, "오아시스"), 0));
-				}}, 3));
+				}}, 3L));
 
 		//when
 		OverdueUserCabinetPaginationDto overdueUserList =
@@ -600,9 +600,9 @@ public class UserFacadeServiceTest {
 		testDate = LocalDateTime.now();
 		given(lentOptionalFetcher.findAllOverdueLent(any(), any()))
 				.willReturn(new ArrayList<LentHistory>(0));
-		given(cabinetMapper.toOverdueUserCabinetPaginationDto(any(), eq(0)))
+		given(cabinetMapper.toOverdueUserCabinetPaginationDto(any(), eq(0L)))
 				.willReturn(new OverdueUserCabinetPaginationDto(
-						new ArrayList<OverdueUserCabinetDto>(0), 0));
+						new ArrayList<OverdueUserCabinetDto>(0), 0L));
 
 		// when
 		OverdueUserCabinetPaginationDto overdueUserList =

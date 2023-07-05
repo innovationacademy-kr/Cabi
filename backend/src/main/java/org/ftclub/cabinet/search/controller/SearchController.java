@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.user.service.UserFacadeService;
@@ -31,6 +32,15 @@ public class SearchController {
 	) {
 		log.info("Called getCabinetsInfo");
 		return cabinetFacadeService.getCabinetsInfo(visibleNum);
+	}
+
+	@GetMapping("/cabinets-simple")
+	@AuthGuard(level = ADMIN_ONLY)
+	public CabinetSimplePaginationDto getCabinetsSimpleInfo(
+			@RequestParam("visibleNum") Integer visibleNum
+	) {
+		log.info("Called getCabinetsInfo");
+		return cabinetFacadeService.getCabinetsSimpleInfoByVisibleNum(visibleNum);
 	}
 
 	@GetMapping("/users-simple")

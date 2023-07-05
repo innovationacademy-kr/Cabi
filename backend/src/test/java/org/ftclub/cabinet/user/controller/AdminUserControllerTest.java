@@ -1,14 +1,8 @@
 package org.ftclub.cabinet.user.controller;
 
-import static org.ftclub.testutils.TestControllerUtils.mockRequest;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDateTime;
-import javax.servlet.http.Cookie;
-import javax.transaction.Transactional;
 import org.ftclub.cabinet.auth.domain.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.testutils.TestControllerUtils;
+import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +10,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+
+import static org.ftclub.testutils.TestUtils.mockRequest;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -36,9 +37,9 @@ class AdminUserControllerTest {
 
 	@BeforeEach
 	void setToken() {
-		adminToken = TestControllerUtils.getTestAdminToken(jwtProperties.getSigningKey(),
-				LocalDateTime.now());
-		cookie = TestControllerUtils.getTokenCookie("관리자", adminToken);
+		adminToken = TestUtils.getTestAdminToken(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), "admin", "gmail.com");
+		cookie = TestUtils.getTokenCookie("관리자", adminToken);
 	}
 
 	@Test

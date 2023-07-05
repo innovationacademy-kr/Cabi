@@ -3,13 +3,10 @@ package org.ftclub.cabinet.dto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
-
 
 @AllArgsConstructor
 @Getter
-public class CabinetPaginationDto {
-
-	private final List<CabinetDto> result;
+public class CabinetSimplePaginationDto {
+	private final List<CabinetSimpleDto> result;
 	private final Long totalLength;
 }

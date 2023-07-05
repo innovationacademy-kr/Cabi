@@ -29,22 +29,18 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-public class AdminAuthControllerTest {
-
-	@Autowired
-	MockMvc mockMvc;
-
-	@Autowired
-	JwtProperties jwtProperties;
-
-	@Autowired
-	MasterProperties masterProperties;
-
-	@Autowired
-	ObjectMapper objectMapper;
+public class AdminAuthControllerUnitTest {
 
 	static final String URL_PREFIX = "/v4/admin/auth";
 	static final String DOCUMENT_NAME = "AdminAuth/" + TestProperties.DOCUMENT_FORMAT;
+	@Autowired
+	MockMvc mockMvc;
+	@Autowired
+	JwtProperties jwtProperties;
+	@Autowired
+	MasterProperties masterProperties;
+	@Autowired
+	ObjectMapper objectMapper;
 
 	@Nested
 	@DisplayName("/login")
