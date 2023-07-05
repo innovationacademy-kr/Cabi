@@ -69,15 +69,15 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 								banHistory, banHistory.getUser()))
 				.collect(Collectors.toList());
 		return userMapper.toBlockedUserPaginationDto(userBlockedInfoDtos,
-				activeBanList.getTotalPages());
+				activeBanList.getTotalElements());
 	}
 
 	private BlockedUserPaginationDto generateBlockedUserPaginationDto(List<BanHistory> banHistories,
-			Integer totalPage) {
+			Long totalLength) {
 		List<UserBlockedInfoDto> userBlockedInfoDtoList = banHistories.stream()
 				.map(b -> userMapper.toUserBlockedInfoDto(b, b.getUser()))
 				.collect(Collectors.toList());
-		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalPage);
+		return new BlockedUserPaginationDto(userBlockedInfoDtoList, totalLength);
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
 			userCabinetDtoList.add(cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto));
 		});
-		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList, users.getTotalPages());
+		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList, users.getTotalElements());
 	}
 
 	/* 우선 껍데기만 만들어뒀습니다. 해당 메서드에 대해서는 좀 더 논의한 뒤에 구현하는 것이 좋을 것 같습니다. */
@@ -214,6 +214,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 									cabinet, overdueDays));
 				}
 		);
-		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, overdueList.size());
+		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, Long.valueOf(overdueList.size()));
 	}
 }

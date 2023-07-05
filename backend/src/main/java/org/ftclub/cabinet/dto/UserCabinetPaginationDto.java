@@ -9,5 +9,5 @@ import lombok.Getter;
 public class UserCabinetPaginationDto {
 
 	private final List<UserCabinetDto> result;
-	private final Integer totalPage;
+	private final Long totalLength;
 }

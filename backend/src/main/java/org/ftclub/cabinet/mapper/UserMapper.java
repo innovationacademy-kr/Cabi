@@ -36,5 +36,5 @@ public interface UserMapper {
 			BanHistory banHistory);
 
 	BlockedUserPaginationDto toBlockedUserPaginationDto(List<UserBlockedInfoDto> result,
-			Integer totalPage);
+			Long totalLength);
 }
