@@ -55,17 +55,15 @@ public class LentPolicyImpl implements LentPolicy {
 		}
 
 		LentType lentType = cabinet.getLentType();
-		if (lentType != null) {
-			switch (lentType) {
-				case PRIVATE:
-					return now.plusDays(getDaysForLentTermPrivate());
-				case SHARE:
-					LentHistory lentHistory = activeLentHistories.get(0);
-					return generateSharedCabinetExpirationDate(now,
-							cabinet.getStatus(), lentHistory);
-				case CLUB:
-					return DateUtil.getInfinityDate();
-			}
+		switch (lentType) {
+			case PRIVATE:
+				return now.plusDays(getDaysForLentTermPrivate());
+			case SHARE:
+				LentHistory lentHistory = activeLentHistories.get(0);
+				return generateSharedCabinetExpirationDate(now,
+						cabinet.getStatus(), lentHistory);
+			case CLUB:
+				return DateUtil.getInfinityDate();
 		}
 		throw new IllegalArgumentException("대여 상태가 잘못되었습니다.");
 	}
