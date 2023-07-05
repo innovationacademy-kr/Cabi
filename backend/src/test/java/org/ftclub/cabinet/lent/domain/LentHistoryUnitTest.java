@@ -187,10 +187,10 @@ class LentHistoryUnitTest {
 				1L,
 				1L);
 
-		lentHistory.endLent(LocalDateTime.now());
+		lentHistory.endLent(LocalDateTime.now().plusDays(1));
 
 		assertTrue(lentHistory.isSetEndedAt());
-		assertEquals(0, lentHistory.getDaysDiffEndedAndExpired());
+		assertTrue(0 < lentHistory.getDaysDiffEndedAndExpired());
 	}
 
 	@Test
