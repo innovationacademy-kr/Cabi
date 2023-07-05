@@ -66,10 +66,10 @@ class LentPolicyUnitTest {
 	@Test
 	@DisplayName("실패: 대여시간이 미래")
 	void 실패_대여시간미래_generateExpirationDate() {
-		LocalDateTime past = LocalDateTime.now().plusDays(1);
+		LocalDateTime future = LocalDateTime.now().plusDays(1);
 
 		assertThrows(IllegalArgumentException.class,
-				() -> lentPolicy.generateExpirationDate(past, null, null));
+				() -> lentPolicy.generateExpirationDate(future, null, null));
 	}
 
 	@Test
