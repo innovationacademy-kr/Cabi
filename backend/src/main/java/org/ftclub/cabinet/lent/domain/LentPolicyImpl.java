@@ -8,6 +8,8 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -75,11 +77,11 @@ public class LentPolicyImpl implements LentPolicy {
 		log.info("Called applyExpirationDate");
 
 		if (expiredAt == null){
-			throw new IllegalArgumentException("유효기간이 없습니다.");
+			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 
 		if (DateUtil.isPast(expiredAt)) {
-			throw new IllegalArgumentException("유효기간이 현재 시각보다 과거입니다.");
+			throw new DomainException(ExceptionStatus.INVALID_EXPIRED_AT);
 		}
 
 		for (LentHistory lentHistory : beforeActiveHistories) {
