@@ -13,7 +13,7 @@ import org.thymeleaf.context.Context;
 
 @Component
 @RequiredArgsConstructor
-public class MailSender {
+public class EmailSender {
 
 	private final JavaMailSender emailSender;
 	private final TemplateEngine templateEngine;

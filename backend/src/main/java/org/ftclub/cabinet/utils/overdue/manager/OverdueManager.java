@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.utils.mail.MailSender;
+import org.ftclub.cabinet.utils.mail.EmailSender;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OverdueManager {
 
-	private final MailSender mailSender;
+	private final EmailSender emailSender;
 	private final CabinetService cabinetService;
 
 	@Value("${spring.mail.soonoverdue.term}")
@@ -89,7 +89,7 @@ public class OverdueManager {
 				break;
 		}
 		try {
-			this.mailSender.sendMail(activeLent.getName(), activeLent.getEmail(), subject,
+			this.emailSender.sendMail(activeLent.getName(), activeLent.getEmail(), subject,
 					template);
 		} catch (Exception e) {
 			e.printStackTrace();
