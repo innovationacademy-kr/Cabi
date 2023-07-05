@@ -3,6 +3,7 @@ package org.ftclub.cabinet.auth.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.ApiRequestManager;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Component
 @RequiredArgsConstructor
+@Log4j2
 public class FtApiManager {
 
 	private final FtApiProperties ftApiProperties;
@@ -28,7 +30,8 @@ public class FtApiManager {
 	 * 42 토큰을 발급받는다.
 	 */
 	public void issueAccessToken() {
-		String accessToken =
+		log.info("called issueAccessToken");
+		accessToken =
 				WebClient.create().post()
 						.uri(ftApiProperties.getTokenUri())
 						.body(BodyInserters.fromFormData(
@@ -48,7 +51,6 @@ public class FtApiManager {
 							throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 						})
 						.block();
-		this.accessToken = accessToken;
 	}
 
 	/**
@@ -58,6 +60,7 @@ public class FtApiManager {
 	 * @return JsonNode 형태의 유저 정보
 	 */
 	public JsonNode getFtUsersInfoByName(String name) {
+		log.info("called getFtUsersInfoByName {}", name);
 		Integer tryCount = 0;
 		while (tryCount < 3) {
 			try {
@@ -70,9 +73,10 @@ public class FtApiManager {
 						.block();
 				return results;
 			} catch (Exception e) {
-				e.printStackTrace();
-				this.issueAccessToken();
 				tryCount++;
+				log.info(e.getMessage());
+				log.info("요청에 실패했습니다. 최대 3번 재시도합니다. 현재 시도 횟수: {}", tryCount);
+				this.issueAccessToken();
 				if (tryCount == 3) {
 					throw new RuntimeException();
 				}

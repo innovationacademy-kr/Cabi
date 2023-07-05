@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.utils.overdue.manager;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Log4j2
 public class OverdueManager {
 
 	private final EmailSender emailSender;
@@ -60,6 +62,7 @@ public class OverdueManager {
 	 * @return 연체 타입
 	 */
 	private OverdueType getOverdueType(Boolean isExpired, Long daysLeftFromExpireDate) {
+		log.info("called getOverdueType with {}, {}", isExpired, daysLeftFromExpireDate);
 		if (isExpired) {
 			return OverdueType.OVERDUE;
 		}
@@ -70,6 +73,7 @@ public class OverdueManager {
 	}
 
 	public void handleOverdue(ActiveLentHistoryDto activeLent) {
+		log.info("called handleOverdue with {}", activeLent);
 		String subject = null, template = null;
 		OverdueType overdueType = getOverdueType(activeLent.getIsExpired(),
 				activeLent.getDaysLeftFromExpireDate());

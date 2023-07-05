@@ -2,6 +2,7 @@ package org.ftclub.cabinet.utils.scheduler;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @EnableScheduling
+@Log4j2
 public class SystemScheduler {
 
 	private final LeaveAbsenceManager leaveAbsenceManager;
@@ -29,9 +31,9 @@ public class SystemScheduler {
 //	@Scheduled(cron = "0 0 0 * * *")
 	@Scheduled(initialDelay = 3000, fixedDelay = 1000 * 60 * 60 * 24)
 	public void checkAllLents() {
+		log.info("called checkAllLents");
 		List<ActiveLentHistoryDto> activeLents = this.lentService.getAllActiveLentHistories();
 		for (ActiveLentHistoryDto activeLent : activeLents) {
-			System.out.println(activeLent);
 			overdueManager.handleOverdue(activeLent);
 			leaveAbsenceManager.handleLeaveAbsence(activeLent.getUserId(), activeLent.getName());
 			// 2초 간격으로 대여 검증
