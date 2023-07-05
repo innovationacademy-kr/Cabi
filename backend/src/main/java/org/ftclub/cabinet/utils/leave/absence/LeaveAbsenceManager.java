@@ -24,7 +24,7 @@ public class LeaveAbsenceManager {
 
 	public void handleLeaveAbsence(Long userId, String name) {
 		try {
-			JsonNode jsonUserInfo = ftAPIManager.getFtUserInfo(name);
+			JsonNode jsonUserInfo = ftAPIManager.getFtUsersInfoByName(name);
 			if (isLeaveAbsence(jsonUserInfo)) {
 				lentService.terminateLentCabinet(userId);
 			}

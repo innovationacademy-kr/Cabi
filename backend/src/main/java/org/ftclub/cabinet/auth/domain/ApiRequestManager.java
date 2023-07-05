@@ -63,7 +63,7 @@ public class ApiRequestManager {
 	 */
 	public MultiValueMap<String, String> getAccessTokenRequestBodyMapWithClientSecret() {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add("grant_type", apiProperties.getTokenGrantType());
+		map.add("grant_type", "client_credentials");
 		map.add("client_id", apiProperties.getClientId());
 		map.add("client_secret", apiProperties.getClientSecret());
 		return map;

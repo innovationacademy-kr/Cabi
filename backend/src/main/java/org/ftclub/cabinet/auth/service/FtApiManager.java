@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.auth.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +7,7 @@ import org.ftclub.cabinet.auth.domain.ApiRequestManager;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -52,40 +52,30 @@ public class FtApiManager {
 	}
 
 	/**
-	 * 42API를 통해 특정 유저의 정보를 가져온다.
+	 * 유저의 이름으로 42API를 통해 특정 유저의 정보를 가져온다.
 	 *
 	 * @param name 유저의 이름
 	 * @return JsonNode 형태의 유저 정보
 	 */
-	public JsonNode getFtUserInfo(String name) {
-		var ref = new Object() {
-			Integer tryCount = 0;
-		};
-		while (ref.tryCount < 3) {
-			JsonNode result = WebClient.create().get()
-					.uri(ftApiProperties.getUsersInfoUri() + '/' + name)
-					.headers(headers -> headers.setBearerAuth(accessToken))
-					.retrieve()
-					.bodyToMono(String.class)
-					.map(response -> {
-						try {
-							return objectMapper.readTree(response);
-						} catch (JsonProcessingException e) {
-							e.printStackTrace();
-							this.issueAccessToken();
-							ref.tryCount++;
-							if (ref.tryCount == 3) {
-								throw new RuntimeException(e);
-							}
-						}
-						return null;
-					})
-					.onErrorResume(e -> {
-						throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
-					})
-					.block();
-			if (result != null) {
-				return result;
+	public JsonNode getFtUsersInfoByName(String name) {
+		Integer tryCount = 0;
+		while (tryCount < 3) {
+			try {
+				JsonNode results = WebClient.create().get()
+						.uri(ftApiProperties.getUsersInfoUri() + '/' + name)
+						.accept(MediaType.APPLICATION_JSON)
+						.headers(h -> h.setBearerAuth(accessToken))
+						.retrieve()
+						.bodyToMono(JsonNode.class)
+						.block();
+				return results;
+			} catch (Exception e) {
+				e.printStackTrace();
+				this.issueAccessToken();
+				tryCount++;
+				if (tryCount == 3) {
+					throw new RuntimeException();
+				}
 			}
 		}
 		return null;
