@@ -422,10 +422,14 @@ class LentPolicyUnitTest {
 	}
 
 	@Test
+	@Disabled
+	@DisplayName("생략 - 개인사물함 대여 쿨타임")
 	void getDaysForLentTermPrivate() {
 	}
 
 	@Test
+	@Disabled
+	@DisplayName("생략 - 공유사물함 대여 쿨타임")
 	void getDaysForLentTermShare() {
 	}
 
