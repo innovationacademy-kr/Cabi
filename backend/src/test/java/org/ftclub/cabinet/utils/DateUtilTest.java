@@ -98,4 +98,18 @@ class DateUtilTest {
 		LocalDateTime time = LocalDateTime.now().plusDays(1);
 		assertFalse(DateUtil.isSameDay(time));
 	}
+
+	@Test
+	@DisplayName("성공: 과거시간")
+	public void 성공_하루전_isPast() {
+		LocalDateTime time = LocalDateTime.now().minusDays(1);
+		assertTrue(DateUtil.isPast(time));
+	}
+
+	@Test
+	@DisplayName("실패: 과거 아님")
+	public void 실패_하루_후_isPast() {
+		LocalDateTime time = LocalDateTime.now().plusDays(1);
+		assertFalse(DateUtil.isPast(time));
+	}
 }
