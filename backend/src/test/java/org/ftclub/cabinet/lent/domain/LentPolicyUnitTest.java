@@ -181,9 +181,9 @@ class LentPolicyUnitTest {
 		User user = mock(User.class);
 
 		given(user.isUserRole(UserRole.USER)).willReturn(false);
-		LentPolicyStatus lentPolicyStatus = lentPolicy.verifyUserForLent(user, null, 0, null);
+		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, null, 0, null);
 
-		assertEquals(LentPolicyStatus.NOT_USER, lentPolicyStatus);
+		assertEquals(LentPolicyStatus.NOT_USER, result);
 	}
 
 	@Test
@@ -193,28 +193,28 @@ class LentPolicyUnitTest {
 		User user = mock(User.class);
 		given(user.isUserRole(UserRole.USER)).willReturn(true);
 
-		LentPolicyStatus lentPolicyStatus = lentPolicy.verifyUserForLent(user, null,
+		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, null,
 				userActiveLentCount, null);
 
-		assertEquals(LentPolicyStatus.ALREADY_LENT_USER, lentPolicyStatus);
+		assertEquals(LentPolicyStatus.ALREADY_LENT_USER, result);
 	}
 
 	@Test
-	@DisplayName("실패: 블랙홀에 빠진 유저")
+	@DisplayName("실패: 블랙홀 유저")
 	void 실패_BLACKHOLED_USER_verifyUserForLent() {
 		int userActiveLentCount = 0;
 		User user = mock(User.class);
 		given(user.isUserRole(UserRole.USER)).willReturn(true);
 		given(user.getBlackholedAt()).willReturn(LocalDateTime.now());
 
-		LentPolicyStatus lentPolicyStatus = lentPolicy.verifyUserForLent(user, null,
+		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, null,
 				userActiveLentCount, null);
 
-		assertEquals(LentPolicyStatus.BLACKHOLED_USER, lentPolicyStatus);
+		assertEquals(LentPolicyStatus.BLACKHOLED_USER, result);
 	}
 
 	@Test
-	@DisplayName("실패: ALL BAN된 유저")
+	@DisplayName("실패: ALL BAN 유저")
 	void 실패_ALL_BANNED_USER_verifyUserForLent() {
 		int userActiveLentCount = 0;
 		User user = mock(User.class);
@@ -225,10 +225,10 @@ class LentPolicyUnitTest {
 		given(mockBanHistory.getBanType()).willReturn(BanType.ALL);
 		mockBanHistoryList.add(mockBanHistory);
 
-		LentPolicyStatus lentPolicyStatus = lentPolicy.verifyUserForLent(user, null,
+		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, null,
 				userActiveLentCount, mockBanHistoryList);
 
-		assertEquals(LentPolicyStatus.ALL_BANNED_USER, lentPolicyStatus);
+		assertEquals(LentPolicyStatus.ALL_BANNED_USER, result);
 	}
 
 	@Test
@@ -245,10 +245,10 @@ class LentPolicyUnitTest {
 		given(banHistory.getBanType()).willReturn(BanType.SHARE);
 		userActiveBanList.add(banHistory);
 
-		LentPolicyStatus lentPolicyStatus = lentPolicy.verifyUserForLent(user, cabinet,
+		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, cabinet,
 				userActiveLentCount, userActiveBanList);
 
-		assertEquals(LentPolicyStatus.SHARE_BANNED_USER, lentPolicyStatus);
+		assertEquals(LentPolicyStatus.SHARE_BANNED_USER, result);
 	}
 
 	@Test
@@ -265,10 +265,10 @@ class LentPolicyUnitTest {
 		given(banHistory.getBanType()).willReturn(BanType.SHARE);
 		userActiveBanList.add(banHistory);
 
-		LentPolicyStatus lentPolicyStatus = lentPolicy.verifyUserForLent(user, cabinet,
+		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, cabinet,
 				userActiveLentCount, userActiveBanList);
 
-		assertEquals(LentPolicyStatus.FINE, lentPolicyStatus);
+		assertEquals(LentPolicyStatus.FINE, result);
 	}
 
 
@@ -279,14 +279,14 @@ class LentPolicyUnitTest {
 		User user = mock(User.class);
 		given(user.isUserRole(UserRole.USER)).willReturn(true);
 
-		LentPolicyStatus lentPolicyStatus = lentPolicy.verifyUserForLent(user, null,
+		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, null,
 				userActiveLentCount, null);
 
-		assertEquals(LentPolicyStatus.FINE, lentPolicyStatus);
+		assertEquals(LentPolicyStatus.FINE, result);
 	}
 
 	@Test
-	@DisplayName("성공: 블랙홀 존재하지만, 미래")
+	@DisplayName("성공: 유저 미래 블랙홀 예정")
 	void 성공_BLACKHOLE_IS_FUTURE_verifyUserForLent() {
 		int userActiveLentCount = 0;
 		LocalDateTime future = LocalDateTime.now().plusDays(1);
@@ -295,14 +295,130 @@ class LentPolicyUnitTest {
 		given(user.isUserRole(UserRole.USER)).willReturn(true);
 		given(user.getBlackholedAt()).willReturn(future);
 
-		LentPolicyStatus lentPolicyStatus = lentPolicy.verifyUserForLent(user, null,
+		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, null,
 				userActiveLentCount, null);
 
-		assertEquals(LentPolicyStatus.FINE, lentPolicyStatus);
+		assertEquals(LentPolicyStatus.FINE, result);
 	}
 
 	@Test
-	void verifyCabinetForLent() {
+	@DisplayName("실패: FULL캐비넷 대여시도")
+	void 실패_FULL_verifyCabinetForLent() {
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatus()).willReturn(CabinetStatus.FULL);
+
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, null, null);
+
+		assertEquals(LentPolicyStatus.FULL_CABINET, result);
+	}
+
+	@Test
+	@DisplayName("실패: 고장 캐비넷 대여시도")
+	void 실패_BROKEN_verifyCabinetForLent() {
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatus()).willReturn(CabinetStatus.BROKEN);
+
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, null, null);
+
+		assertEquals(LentPolicyStatus.BROKEN_CABINET, result);
+	}
+
+	@Test
+	@DisplayName("실패: 연체된 캐비넷 대여시도")
+	void 실패_OVERDUE_verifyCabinetForLent() {
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatus()).willReturn(CabinetStatus.OVERDUE);
+
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, null, null);
+
+		assertEquals(LentPolicyStatus.OVERDUE_CABINET, result);
+	}
+
+	@Test
+	@DisplayName("성공: 동아리사물함 대여 - LentType.CLUB")
+	void 성공_CLUB_verifyCabinetForLent() {
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatus()).willReturn(CabinetStatus.AVAILABLE);
+		given(cabinet.isLentType(LentType.CLUB)).willReturn(true);
+
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, null, null);
+
+		assertEquals(LentPolicyStatus.LENT_CLUB, result);
+	}
+
+	@Test
+	@DisplayName("실패: 공유사물함 - 중간합류 AND 대여기록 NULL - INTERNAL_ERROR")
+	void 실패_LIMITED_AVAILABLE_HISTORY_NULL_verifyCabinetForLent() {
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
+		given(cabinet.isLentType(LentType.CLUB)).willReturn(false);
+		given(cabinet.isLentType(LentType.SHARE)).willReturn(true);
+		given(cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)).willReturn(true);
+
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, null, null);
+
+		assertEquals(LentPolicyStatus.INTERNAL_ERROR, result);
+	}
+
+	@Test
+	@DisplayName("실패: 공유사물함 - 중간합류 AND 대여기록 EMPTY - INTERNAL_ERROR")
+	void 실패_LIMITED_AVAILABLE_HISTORY_EMPTY_verifyCabinetForLent() {
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
+		given(cabinet.isLentType(LentType.CLUB)).willReturn(false);
+		given(cabinet.isLentType(LentType.SHARE)).willReturn(true);
+		given(cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)).willReturn(true);
+
+		List<LentHistory> cabinetLentHistories = new ArrayList<>();
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories, null);
+
+		assertEquals(LentPolicyStatus.INTERNAL_ERROR, result);
+	}
+
+	@Test
+	@DisplayName("실패: 공유사물함 - 만료기간 임박시점 대여시도 - IMMINENT_EXPIRATION")
+	void 실패_LIMITED_AVAILABLE_IMMINENT_EXPIRATION_verifyCabinetForLent() {
+		LocalDateTime currentTime = LocalDateTime.now();
+		given(cabinetProperties.getPenaltyDayShare()).willReturn(3);
+		given(cabinetProperties.getPenaltyDayPadding()).willReturn(2);
+
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
+		given(cabinet.isLentType(LentType.CLUB)).willReturn(false);
+		given(cabinet.isLentType(LentType.SHARE)).willReturn(true);
+		given(cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)).willReturn(true);
+		// 잔여 : 1일 (입구컷 기준일자 5일)
+		LentHistory lentHistory = mock(LentHistory.class);
+		given(lentHistory.getExpiredAt()).willReturn(currentTime.plusDays(1));
+		List<LentHistory> cabinetLentHistories = new ArrayList<>();
+		cabinetLentHistories.add(lentHistory);
+
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories, currentTime);
+
+		assertEquals(LentPolicyStatus.IMMINENT_EXPIRATION, result);
+	}
+
+	@Test
+	@DisplayName("성공: 공유사물함 - 만료기간 여유")
+	void 성공_LIMITED_AVAILABLE_JOIN_verifyCabinetForLent() {
+		LocalDateTime currentTime = LocalDateTime.now();
+		given(cabinetProperties.getPenaltyDayShare()).willReturn(3);
+		given(cabinetProperties.getPenaltyDayPadding()).willReturn(2);
+		// 공유사물함 중간합류
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
+		given(cabinet.isLentType(LentType.CLUB)).willReturn(false);
+		given(cabinet.isLentType(LentType.SHARE)).willReturn(true);
+		given(cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)).willReturn(true);
+		// 잔여 : 현재일자 + 5일 = 6일 (입구컷 기준일자 5일)
+		LentHistory lentHistory = mock(LentHistory.class);
+		given(lentHistory.getExpiredAt()).willReturn(currentTime.plusDays(6));
+		List<LentHistory> cabinetLentHistories = new ArrayList<>();
+		cabinetLentHistories.add(lentHistory);
+
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories, currentTime);
+
+		assertEquals(LentPolicyStatus.FINE, result);
 	}
 
 	@Test
