@@ -90,17 +90,18 @@ class LentPolicyUnitTest {
 	@DisplayName("성공: 기존만료일자 리턴 - 공유사물함 합류 - LIMITED_AVAILABLE")
 	void 성공_공유사물함_합류_기존만료시간_존재_generateExpirationDate() {
 		LocalDateTime currentDate = LocalDateTime.now();
+
 		Cabinet cabinet = mock(Cabinet.class);
 		given(cabinet.getLentType()).willReturn(LentType.SHARE);
-
-		LentHistory activeLentHistories = mock(LentHistory.class);
 		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
-		List<LentHistory> mockLentHistorieList = mock(List.class);
-		given(activeLentHistories.getExpiredAt()).willReturn(currentDate.plusDays(42));
-		given(mockLentHistorieList.get(0)).willReturn(activeLentHistories);
+
+		LentHistory activeLentHistory = mock(LentHistory.class);
+		given(activeLentHistory.getExpiredAt()).willReturn(currentDate.plusDays(42));
+		List<LentHistory> lentHistoryList = mock(List.class);
+		given(lentHistoryList.get(0)).willReturn(activeLentHistory);
 
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(currentDate, cabinet,
-				mockLentHistorieList);
+				lentHistoryList);
 
 		assertEquals(expirationDate, currentDate.plusDays(42));
 	}
