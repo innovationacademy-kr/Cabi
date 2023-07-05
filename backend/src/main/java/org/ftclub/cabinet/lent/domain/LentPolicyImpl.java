@@ -131,7 +131,7 @@ public class LentPolicyImpl implements LentPolicy {
 		}
 		if (cabinet.isLentType(LentType.SHARE)
 				&& cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
-			if (cabinetLentHistories.isEmpty()) {
+			if (cabinetLentHistories == null || cabinetLentHistories.isEmpty()) {
 				return LentPolicyStatus.INTERNAL_ERROR;
 			}
 			Long diffDays = DateUtil.calculateTwoDateDiffAbs(
