@@ -2,7 +2,9 @@ package org.ftclub.cabinet.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import net.bytebuddy.asm.Advice.Local;
 import org.junit.jupiter.api.Test;
 
 class DateUtilTest {
@@ -74,5 +76,32 @@ class DateUtilTest {
 		LocalDateTime tar = LocalDateTime.of(1999, 1, 1, 0, 0, 0);
 		LocalDateTime rst = LocalDateTime.of(1998, 12, 31, 0, 0, 0);
 		assertEquals(rst, tar.plusDays(-1));
+	}
+
+	@Test
+	public void 날짜_빼기_올림값_음수() {
+		LocalDateTime day2 = LocalDateTime.of(2000, 2, 20, 0, 0, 42);
+		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
+		long diffInMillis = Duration.between(day1, day2).toMillis();
+		System.out.println(diffInMillis / 1000.0 / 60 / 60 / 24);
+		assertEquals(-1, DateUtil.calculateTwoDateDiffCeil(day1, day2));
+	}
+
+	@Test
+	public void 날짜_빼기_올림값_0() {
+		LocalDateTime day2 = LocalDateTime.of(2000, 2, 21, 0, 0, 42);
+		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
+		long diffInMillis = Duration.between(day1, day2).toMillis();
+		System.out.println(diffInMillis / 1000.0 / 60 / 60 / 24);
+		assertEquals(0, DateUtil.calculateTwoDateDiffCeil(day1, day2));
+	}
+
+	@Test
+	public void 날짜_빼기_올림값_양수() {
+		LocalDateTime day2 = LocalDateTime.of(2000, 2, 22, 0, 0, 42);
+		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
+		long diffInMillis = Duration.between(day1, day2).toMillis();
+		System.out.println(diffInMillis / 1000.0 / 60 / 60 / 24);
+		assertEquals(1, DateUtil.calculateTwoDateDiffCeil(day1, day2));
 	}
 }

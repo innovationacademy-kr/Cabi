@@ -77,7 +77,7 @@ public class LentHistory {
 	private Cabinet cabinet;
 
 	protected LentHistory(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-	                      Long cabinetId) {
+			Long cabinetId) {
 		this.startedAt = startedAt;
 		this.expiredAt = expiredAt;
 		this.userId = userId;
@@ -92,7 +92,7 @@ public class LentHistory {
 	 * @return 인자 정보를 담고있는 {@link LentHistory}
 	 */
 	public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-	                             Long cabinetId) {
+			Long cabinetId) {
 		LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
 		if (!lentHistory.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -192,7 +192,7 @@ public class LentHistory {
 	 */
 	public Boolean isExpired(LocalDateTime now) {
 		if (isSetExpiredAt()) {
-			return DateUtil.calculateTwoDateDiffCeil(now, expiredAt) > 0;
+			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now) > 0;
 		}
 		return false;
 	}
@@ -200,11 +200,11 @@ public class LentHistory {
 	/**
 	 * 만료일까지 남은 일수를 계산합니다. 만료시간이 설정되지 않았으면 null을 반환합니다.
 	 *
-	 * @return 만료일까지 남은 일수
+	 * @return 만료일까지 남은 일수 (만료일 - 현재시간) (일 기준, 올림)
 	 */
 	public Long getDaysLeftFromOverdueDay(LocalDateTime now) {
 		if (isSetExpiredAt()) {
-			return DateUtil.calculateTwoDateDiffCeil(now, expiredAt);
+			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now);
 		}
 		return null;
 	}
