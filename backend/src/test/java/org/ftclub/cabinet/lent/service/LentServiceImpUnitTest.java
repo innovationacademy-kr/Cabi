@@ -2,9 +2,9 @@ package org.ftclub.cabinet.lent.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -61,27 +61,13 @@ class LentServiceImpUnitTest {
 				cabinetOptionalFetcher, userExceptionHandler, userService, banHistoryRepository);
 	}
 
-	@Test
-	void startLentClubCabinet() {
-	}
-
-	@Test
-	void endLentCabinet() {
-	}
-
-	@Test
-	void terminateLentCabinet() {
-	}
-
-	@Test
-	void terminateLentByCabinetId() {
-	}
-
-	@Nested
-	@DisplayName("test startLentCabinet()")
-	class StartLentCabinet {
-
-	}
+	/* TODO:
+	startLentCabinet
+	startLentClubCabinet
+	endLentCabinet
+	terminateLentCabinet
+	terminateLentByCabinetId
+	 */
 
 	@Nested
 	@DisplayName("test assignLentCabinet()")
@@ -119,9 +105,10 @@ class LentServiceImpUnitTest {
 			lentService.assignLent(existedUserId, existedCabinetId);
 
 			// then
-			verify(cabinetOptionalFetcher, atLeastOnce()).getCabinetForUpdate(existedCabinetId);
-			verify(lentRepository, atLeastOnce()).save(any(LentHistory.class));
-			verify(lentPolicy, atLeastOnce()).generateExpirationDate(any(), any(), any());
+			then(cabinetOptionalFetcher).should(atLeastOnce())
+					.getCabinetForUpdate(existedCabinetId);
+			then(lentRepository).should(atLeastOnce()).save(any(LentHistory.class));
+			then(lentPolicy).should(atLeastOnce()).generateExpirationDate(any(), any(), any());
 		}
 
 		@Test
@@ -147,7 +134,8 @@ class LentServiceImpUnitTest {
 			}
 
 			// then
-			verify(cabinetOptionalFetcher, atLeastOnce()).getCabinetForUpdate(notExistedCabinetId);
+			then(cabinetOptionalFetcher).should(atLeastOnce())
+					.getCabinetForUpdate(notExistedCabinetId);
 		}
 
 		@Test
@@ -174,7 +162,7 @@ class LentServiceImpUnitTest {
 			}
 
 			// then
-			verify(userExceptionHandler, atLeastOnce()).getUser(notExitedUserId);
+			then(userExceptionHandler).should(atLeastOnce()).getUser(notExitedUserId);
 		}
 	}
 }
