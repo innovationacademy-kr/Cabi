@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.utils.overdue.manager;
 
-enum OverdueType {
+public enum OverdueType {
 	SOON_OVERDUE,
 	OVERDUE,
 	NONE
