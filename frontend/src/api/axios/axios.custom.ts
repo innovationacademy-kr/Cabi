@@ -294,7 +294,7 @@ export const axiosGetBannedUserList = async () => {
 };
 
 const axiosGetStatisticsURL = "/v4/admin/statistics/lent-histories";
-export const axiosGetStatistics = async (start: number, end: number) => {
+export const axiosGetStatistics = async (start: Date, end: Date) => {
   try {
     const response = await instance.get(axiosGetStatisticsURL, {
       params: { startDate: start, endDate: end },

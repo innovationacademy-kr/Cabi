@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +11,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class LentsStatisticsResponseDto {
-
 	private final LocalDateTime startDate;
 	private final LocalDateTime endDate;
 	private final Integer lentStartCount;
