@@ -38,22 +38,6 @@ class StatisticsFacadeServiceTest {
 	@InjectMocks
 	private StatisticsFacadeServiceImpl statisticsFacadeService;
 
-	// 대여_반납_개수_세기_성공 테스트에서는 사용하지 않는 mock객체가 setUp()에서 선언되어 있기 때문에
-	// @Mock(lenient = false)인 경우에는 대여_반납_개수_세기_성공 테스트에 대해서는 예외가 발생함
-	// @Mock(lenient = true)로 해결할 수 있지만 다른 곳에서 사용하지 않는 부분이 선언되어 있기 때문에
-	// 주석처리하고 모든_층의_사물함_개수_세기_성공 테스트에서 값을 설정하도록 처리함.
-//    @BeforeEach
-//    void setUp() {
-//        given(statisticsRepository.getCabinetsCountByStatus(any(), any()))
-//                .willReturn(10);
-//        when(cabinetRepository.findAllFloorsByBuilding(any()))
-//                .thenReturn(Optional.of(List.of(2, 3, 4, 5)));
-//        when(statisticsRepository.getAvailableCabinetsId(any()))
-//                .thenReturn(List.of(1L, 2L, 3L, 4L, 5L));
-//        when(lentRepository.countCabinetActiveLent(any()))
-//                .thenReturn(1);
-//    }
-
 	@Test
 	@DisplayName("모든_층의_사물함_통계_가져오기 성공 테스트")
 	public void 모든_층의_사물함_통계_가져오기_성공() {
@@ -71,8 +55,6 @@ class StatisticsFacadeServiceTest {
 			cabinetFloorStatisticsResponseDtos.add(
 					new CabinetFloorStatisticsResponseDto(i, 30, 15, 10, 0, 10));
 		}
-//		Assertions.assertTrue(cabinetFloorStatisticsResponseDtos.equals(
-//				statisticsFacadeService.getCabinetsCountOnAllFloors()));
 		for (Integer i = 0; i <= 3; i++) {
 			assertThat(statisticsFacadeService.getCabinetsCountOnAllFloors().get(i).getTotal())
 					.isEqualTo(cabinetFloorStatisticsResponseDtos.get(i).getTotal());
@@ -87,9 +69,10 @@ class StatisticsFacadeServiceTest {
 		}
 	}
 
-	// 모든 층의 사물함 통계 가져오기 실패 케이스에 대한 테스트는 생략
-	// -> getCabinetsCountOnAllFloors는 인자를 따로 받지 않고
-	// repository에서 필요한 값들을 가져온 후 조회하기 때문
+	/**
+	 * 모든 층의 사물함 통계 가져오기 실패 케이스에 대한 테스트는 생략 -> getCabinetsCountOnAllFloors는 인자를 따로 받지 않고
+	 * repository에서 필요한 값들을 가져온 후 조회하기 때문에 실패 케이스가 존재하지 않음
+	 */
 
 	@Test
 	@DisplayName("대여와 반납 개수 세기 성공 테스트")

@@ -2,7 +2,6 @@ package org.ftclub.cabinet.statistics.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,8 +11,6 @@ import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.statistics.repository.StatisticsRepository;
-import org.ftclub.cabinet.utils.DateUtil;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -65,8 +62,12 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 	 * @return
 	 */
 	@Override
-	public LentsStatisticsResponseDto getCountOnLentAndReturn(LocalDateTime startDate, LocalDateTime endDate) {
+	public LentsStatisticsResponseDto getCountOnLentAndReturn(LocalDateTime startDate,
+			LocalDateTime endDate) {
 		log.info("Called getCountOnLentAndReturn");
+		if (startDate.isAfter(endDate)) {
+			throw new IllegalArgumentException("startDate must be before endDate");
+		}
 		Integer lentStartCount = lentRepository.countLentByTimeDuration(startDate, endDate);
 		Integer lentEndCount = lentRepository.countReturnByTimeDuration(startDate, endDate);
 		return new LentsStatisticsResponseDto(startDate, endDate, lentStartCount, lentEndCount);
