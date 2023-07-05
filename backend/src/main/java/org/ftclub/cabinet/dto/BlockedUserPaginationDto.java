@@ -12,5 +12,5 @@ import lombok.Getter;
 public class BlockedUserPaginationDto {
 
 	private final List<UserBlockedInfoDto> result;
-	private final Integer totalPage;
+	private final Integer totalLength;
 }

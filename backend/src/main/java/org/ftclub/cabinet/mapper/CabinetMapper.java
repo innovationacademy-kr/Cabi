@@ -64,10 +64,10 @@ public interface CabinetMapper {
 			Integer totalPage);
 
 	OverdueUserCabinetPaginationDto toOverdueUserCabinetPaginationDto(
-			List<OverdueUserCabinetDto> result, Integer totalPage);
+			List<OverdueUserCabinetDto> result, Integer totalLength);
 
 	UserCabinetPaginationDto toUserCabinetPaginationDto(List<UserCabinetDto> result,
-			Integer totalPage);
+			Long totalLength);
 
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents);
