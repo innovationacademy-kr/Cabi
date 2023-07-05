@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import AdminCabinetLentLogContainer from "@/components/LentLog/AdminCabinetLentLog.container";
 import AdminUserLentLogContainer from "@/components/LentLog/AdminUserLentLog.container";
 import useMenu from "@/hooks/useMenu";
 
-const AdminUserLentLog = ({ lentType }: { lentType: string }) => {
+const AdminLentLog = ({ lentType }: { lentType: string }) => {
   const { closeLent } = useMenu();
   const [togglelentType, setToggleLentType] = useState<string>(lentType);
+  const isSearchPage = window.location.pathname === "/admin/search";
+
+  useEffect(() => {
+    if (!isSearchPage) setToggleLentType("CABINET");
+  }, [isSearchPage]);
 
   const switchLentType = () => {
+    if (!isSearchPage) return;
     if (togglelentType === "USER") {
       setToggleLentType("CABINET");
     } else {
@@ -27,10 +33,12 @@ const AdminUserLentLog = ({ lentType }: { lentType: string }) => {
   return (
     <AdminLentLogStyled id="lentInfo">
       <TitleContainer>
-        <TitleStyled onClick={switchLentType}>
-          <ImageStyled>
-            <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
-          </ImageStyled>
+        <TitleStyled isClick={isSearchPage} onClick={switchLentType}>
+          {isSearchPage && (
+            <ImageStyled>
+              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
+            </ImageStyled>
+          )}
           {getLentTypeText(togglelentType)} 대여 기록
         </TitleStyled>
         <GoBackButtonStyled onClick={closeLent}>뒤로가기</GoBackButtonStyled>
@@ -62,10 +70,14 @@ const TitleContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-const TitleStyled = styled.h1`
+const TitleStyled = styled.h1<{ isClick: boolean }>`
   font-size: 1.5rem;
   font-weight: 700;
   display: flex;
+  cursor: ${(props) => (props.isClick ? "pointer" : "default")};
+  &:hover {
+    color: ${(props) => (props.isClick ? "var(--main-color)" : "")};
+  }
 `;
 
 const ImageStyled = styled.div`
@@ -94,4 +106,4 @@ const AdminLentLogStyled = styled.div`
   }
 `;
 
-export default AdminUserLentLog;
+export default AdminLentLog;

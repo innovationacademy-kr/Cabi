@@ -6,8 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class UserCabinetPaginationDto {
-
-	private final List<UserCabinetDto> result;
+public class CabinetSimplePaginationDto {
+	private final List<CabinetSimpleDto> result;
 	private final Long totalLength;
 }

@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SearchBarList from "@/components/TopNav/SearchBar/SearchBarList/SearchBarList";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetSimple } from "@/types/dto/cabinet.dto";
 import {
-  axiosSearchByCabinetNum,
+  axiosSearchByCabinetNumSimple,
   axiosSearchByIntraId,
 } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
@@ -14,7 +14,7 @@ const SearchBar = () => {
   const searchWrap = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
-  const [searchListByNum, setSearchListByNum] = useState<CabinetInfo[]>([]);
+  const [searchListByNum, setSearchListByNum] = useState<CabinetSimple[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
   const [isFocus, setIsFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);
@@ -97,10 +97,10 @@ const SearchBar = () => {
           setSearchListByNum([]);
           setTotalLength(0);
         } else {
-          const searchResult = await axiosSearchByCabinetNum(
+          const searchResult = await axiosSearchByCabinetNumSimple(
             Number(searchValue)
           );
-          const searchResultData: CabinetInfo[] = searchResult.data.result;
+          const searchResultData: CabinetSimple[] = searchResult.data.result;
           searchResultData.sort((a, b) => a.floor - b.floor);
           setSearchListById([]);
           setSearchListByNum(searchResultData);

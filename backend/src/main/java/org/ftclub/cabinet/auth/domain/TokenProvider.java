@@ -1,23 +1,25 @@
 package org.ftclub.cabinet.auth.domain;
 
-import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
-import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.stereotype.Component;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
+import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
 
 /**
  * API 제공자에 따라 JWT 토큰을 생성하는 클래스입니다.
@@ -57,7 +59,7 @@ public class TokenProvider {
 		if (provider.equals(ftApiProperties.getProviderName())) {
 			String email = profile.get("email").asText();
 			if (!isValidNationalEmail(email, "kr")) {
-				throw new ServiceException(UNAUTHORIZED_USER);
+				throw new DomainException(UNAUTHORIZED_USER);
 			}
 			claims.put("email", email);
 			claims.put("name", profile.get("login").asText());
@@ -67,11 +69,6 @@ public class TokenProvider {
 			} else {
 				claims.put("blackholedAt", blackholedAt.asText().substring(0, 10));
 			}
-//			claims.put("blackholedAt",
-//					profile.get("cursus_users").get(1).get("blackholed_at") != null ?
-//							profile.get("cursus_users").get(1).get("blackholed_at").asText()
-//									.substring(0, 10)
-//							: null);
 			claims.put("role", UserRole.USER);
 		}
 		return claims;
@@ -88,7 +85,7 @@ public class TokenProvider {
 		return Jwts.builder()
 				.setClaims(claims)
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiry())))
+				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiryDays())))
 				.compact();
 	}
 
@@ -96,7 +93,7 @@ public class TokenProvider {
 		return Jwts.builder()
 				.setClaims(makeMasterClaims())
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiry())))
+				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiryDays())))
 				.compact();
 	}
 
@@ -110,8 +107,10 @@ public class TokenProvider {
 	public String getTokenNameByProvider(String providerName) {
 		if (providerName.equals(jwtProperties.getAdminProviderName())) {
 			return jwtProperties.getAdminTokenName();
-		} else {
+		}
+		if (providerName.equals(jwtProperties.getMainProviderName())) {
 			return jwtProperties.getMainTokenName();
 		}
+		throw new DomainException(INVALID_ARGUMENT);
 	}
 }

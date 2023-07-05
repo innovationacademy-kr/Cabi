@@ -26,6 +26,9 @@ public class GoogleApiProperties implements ApiProperties {
     @Value("${spring.oauth2.client.registration.google.access-token-name}")
     private String accessTokenName;
 
+    @Value("${spring.oauth2.client.registration.google.token-grant-type}")
+    private String tokenGrantType;
+
     @Value("${spring.oauth2.client.registration.provider.google.token-uri}")
     private String tokenUri;
 

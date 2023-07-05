@@ -40,8 +40,8 @@ export interface ICabinetNumbersPerFloor {
 export interface IMonthlyData {
   startDate: string;
   endDate: string;
-  lentCount: number;
-  returnCount: number;
+  lentStartCount: number;
+  lentEndCount: number;
 }
 
 export interface ITableData {

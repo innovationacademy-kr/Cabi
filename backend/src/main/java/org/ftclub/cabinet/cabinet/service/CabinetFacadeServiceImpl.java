@@ -19,6 +19,8 @@ import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
+import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
@@ -90,6 +92,21 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	public CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum) {
+		log.info("getCabinetsSimpleInfoByVisibleNum");
+		PageRequest page = PageRequest.of(0, Integer.MAX_VALUE);
+		Page<Cabinet> allCabinetsByVisibleNum = cabinetOptionalFetcher.findPaginationByVisibleNum(
+				visibleNum, page);
+		List<CabinetSimpleDto> cabinetsSimple = allCabinetsByVisibleNum.stream().map(
+				cabinetMapper::toCabinetSimpleDto).collect(Collectors.toList());
+		return new CabinetSimplePaginationDto(cabinetsSimple, allCabinetsByVisibleNum.getTotalElements());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor) {
 		log.info("getCabinetsPerSection");
@@ -134,7 +151,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				.map((cabinet) -> cabinetMapper.toCabinetDto(cabinet))
 				.collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(cabinetDtos,
-				cabinets.getTotalPages());
+				cabinets.getTotalElements());
 	}
 
 	/**
@@ -154,7 +171,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				.map((cabinet) -> cabinetMapper.toCabinetDto(cabinet))
 				.collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(cabinetDtos,
-				cabinets.getTotalPages());
+				cabinets.getTotalElements());
 	}
 
 	/**
@@ -175,7 +192,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				.map((cabinet) -> cabinetMapper.toCabinetDto(cabinet))
 				.collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(cabinetDtos,
-				cabinets.getTotalPages());
+				cabinets.getTotalElements());
 	}
 
 	/**
@@ -194,7 +211,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId,
 				pageable);
 		return lentMapper.toLentHistoryPaginationDto(
-				generateLentHistoryDtoList(lentHistories.toList()), lentHistories.getTotalPages());
+				generateLentHistoryDtoList(lentHistories.toList()), lentHistories.getTotalElements());
 	}
 
 	/**
@@ -227,7 +244,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<Long> collect = allCabinetsByVisibleNum.map(cabinet -> cabinet.getCabinetId())
 				.stream().collect(Collectors.toList());
 		return new CabinetInfoPaginationDto(getCabinetInfoBundle(collect),
-				allCabinetsByVisibleNum.getTotalPages());
+				allCabinetsByVisibleNum.getTotalElements());
 	}
 
 	/**

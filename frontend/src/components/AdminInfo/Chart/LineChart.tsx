@@ -1,12 +1,6 @@
 import { ResponsiveLine } from "@nivo/line";
 import styled from "styled-components";
-
-interface IMonthlyData {
-  startDate: string;
-  endDate: string;
-  lentCount: number;
-  returnCount: number;
-}
+import { IMonthlyData } from "@/types/dto/admin.dto";
 
 interface IChartInfo {
   x: string;
@@ -30,16 +24,19 @@ let init: IChartData[] = [
 ];
 
 const convertData = (data: IMonthlyData[]) =>
-  data.reduce((acc, { startDate, endDate, lentCount, returnCount }, index) => {
-    const end = new Date(startDate);
-    const start = new Date(endDate);
-    const dateInfo = `${start.getMonth() + 1}. ${start.getDate()} ~ ${
-      end.getMonth() + 1
-    }. ${end.getDate()}`;
-    acc[0].data[index] = { x: dateInfo, y: lentCount };
-    acc[1].data[index] = { x: dateInfo, y: returnCount };
-    return acc;
-  }, init);
+  data.reduce(
+    (acc, { startDate, endDate, lentStartCount, lentEndCount }, index) => {
+      const end = new Date(startDate);
+      const start = new Date(endDate);
+      const dateInfo = `${start.getMonth() + 1}. ${start.getDate()} ~ ${
+        end.getMonth() + 1
+      }. ${end.getDate()}`;
+      acc[0].data[index] = { x: dateInfo, y: lentStartCount };
+      acc[1].data[index] = { x: dateInfo, y: lentEndCount };
+      return acc;
+    },
+    init
+  );
 
 // 테마를 고치려면 ....
 // 테마 프로퍼티 안에 속성들을 뜯어 봐야합니다 ... ㅠ
@@ -80,7 +77,7 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
       pointBorderColor={{ from: "serieColor" }}
       pointLabelYOffset={-12}
       useMesh={true}
-      enableSlices={'x'}
+      enableSlices={"x"}
       legends={[
         {
           anchor: "bottom",

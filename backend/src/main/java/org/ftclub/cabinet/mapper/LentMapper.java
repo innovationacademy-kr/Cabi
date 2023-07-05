@@ -37,7 +37,7 @@ public interface LentMapper {
 
 	/*--------------------------------Wrapped DTO--------------------------------*/
 
-	@Mapping(target = "totalPage", source = "totalPage")
+	@Mapping(target = "totalLength", source = "totalLength")
 	LentHistoryPaginationDto toLentHistoryPaginationDto(List<LentHistoryDto> result,
-			Integer totalPage);
+			Long totalLength);
 }
