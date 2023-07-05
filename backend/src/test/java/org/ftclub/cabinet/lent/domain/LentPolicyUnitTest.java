@@ -434,6 +434,11 @@ class LentPolicyUnitTest {
 	}
 
 	@Test
+	@DisplayName("성공: 만료기간 임박날짜 계산")
 	void getDaysForNearExpiration() {
+		given(cabinetProperties.getPenaltyDayShare()).willReturn(3);
+		given(cabinetProperties.getPenaltyDayPadding()).willReturn(2);
+
+		assertEquals(5, lentPolicy.getDaysForNearExpiration());
 	}
 }
