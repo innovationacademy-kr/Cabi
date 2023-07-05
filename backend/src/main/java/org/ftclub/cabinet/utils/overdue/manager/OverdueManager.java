@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
+import org.ftclub.cabinet.config.MailOverdueProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.utils.mail.EmailSender;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,41 +16,7 @@ public class OverdueManager {
 
 	private final EmailSender emailSender;
 	private final CabinetService cabinetService;
-
-	@Value("${spring.mail.soonoverdue.term}")
-	private Long SOON_OVERDUE_TERM;
-
-	@Value("${spring.mail.overdue.subject}")
-	private String OVERDUE_MAIL_SUBJECT;
-
-	@Value("${spring.mail.overdue.template}")
-	private String OVERDUE_MAIL_TEMPLATE_URL;
-
-	@Value("${spring.mail.soonoverdue.subject}")
-	private String SOON_OVERDUE_MAIL_SUBJECT;
-
-	@Value("${spring.mail.soonoverdue.template}")
-	private String SOON_OVERDUE_MAIL_TEMPLATE_URL;
-
-	public String getOverdueMailSubject() {
-		return this.OVERDUE_MAIL_SUBJECT;
-	}
-
-	public String getOverdueMailTemplateUrl() {
-		return this.OVERDUE_MAIL_TEMPLATE_URL;
-	}
-
-	public String getSoonOverdueMailSubject() {
-		return this.SOON_OVERDUE_MAIL_SUBJECT;
-	}
-
-	public String getSoonOverdueMailTemplateUrl() {
-		return this.SOON_OVERDUE_MAIL_TEMPLATE_URL;
-	}
-
-	public Long getSoonOverdueTerm() {
-		return this.SOON_OVERDUE_TERM;
-	}
+	private final MailOverdueProperties mailOverdueProperties;
 
 
 	/**
@@ -61,12 +27,12 @@ public class OverdueManager {
 	 * @param daysLeftFromExpireDate 만료일까지 남은 일수
 	 * @return 연체 타입
 	 */
-	private OverdueType getOverdueType(Boolean isExpired, Long daysLeftFromExpireDate) {
+	public OverdueType getOverdueType(Boolean isExpired, Long daysLeftFromExpireDate) {
 		log.info("called getOverdueType with {}, {}", isExpired, daysLeftFromExpireDate);
 		if (isExpired) {
 			return OverdueType.OVERDUE;
 		}
-		if (this.getSoonOverdueTerm().equals(daysLeftFromExpireDate)) {
+		if (mailOverdueProperties.getSoonOverdueTerm().equals(daysLeftFromExpireDate)) {
 			return OverdueType.SOON_OVERDUE;
 		}
 		return OverdueType.NONE;
@@ -82,14 +48,14 @@ public class OverdueManager {
 			case NONE:
 				return;
 			case SOON_OVERDUE:
-				subject = getSoonOverdueMailSubject();
-				template = getSoonOverdueMailTemplateUrl();
+				subject = mailOverdueProperties.getSoonOverdueMailSubject();
+				template = mailOverdueProperties.getSoonOverdueMailTemplateUrl();
 				break;
 			case OVERDUE:
 				this.cabinetService.updateStatus(activeLent.getCabinetId(),
 						CabinetStatus.OVERDUE);
-				subject = getOverdueMailSubject();
-				template = getOverdueMailTemplateUrl();
+				subject = mailOverdueProperties.getOverdueMailSubject();
+				template = mailOverdueProperties.getOverdueMailTemplateUrl();
 				break;
 		}
 		try {
