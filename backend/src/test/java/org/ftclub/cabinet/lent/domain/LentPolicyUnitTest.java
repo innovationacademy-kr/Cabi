@@ -3,7 +3,6 @@ package org.ftclub.cabinet.lent.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
@@ -41,9 +40,9 @@ class LentPolicyUnitTest {
 	void 성공_개인사물함_generateExpirationDate() {
 		LocalDateTime current = LocalDateTime.now();
 		LocalDateTime expect = LocalDateTime.now().plusDays(21);
-		Cabinet cabinet = mock(Cabinet.class);
-
 		given(cabinetProperties.getLentTermPrivate()).willReturn(21);
+
+		Cabinet cabinet = mock(Cabinet.class);
 		given(cabinet.getLentType()).willReturn(LentType.PRIVATE);
 
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(
@@ -76,8 +75,8 @@ class LentPolicyUnitTest {
 	@Test
 	@DisplayName("성공: 만료시간무한 설정 - 공유사물함 최초 대여 - AVAILABLE")
 	void 성공_공유사물함_최초_대여_generateExpirationDate() {
-		Cabinet cabinet = mock(Cabinet.class);
 		List<LentHistory> activeLentHistories = mock(List.class);
+		Cabinet cabinet = mock(Cabinet.class);
 		given(cabinet.getLentType()).willReturn(LentType.SHARE);
 		given(cabinet.getStatus()).willReturn(CabinetStatus.AVAILABLE);
 
@@ -92,11 +91,11 @@ class LentPolicyUnitTest {
 	void 성공_공유사물함_합류_기존만료시간_존재_generateExpirationDate() {
 		LocalDateTime currentDate = LocalDateTime.now();
 		Cabinet cabinet = mock(Cabinet.class);
-		LentHistory activeLentHistories = mock(LentHistory.class);
-		List<LentHistory> mockLentHistorieList = mock(List.class);
-
 		given(cabinet.getLentType()).willReturn(LentType.SHARE);
+
+		LentHistory activeLentHistories = mock(LentHistory.class);
 		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
+		List<LentHistory> mockLentHistorieList = mock(List.class);
 		given(activeLentHistories.getExpiredAt()).willReturn(currentDate.plusDays(42));
 		given(mockLentHistorieList.get(0)).willReturn(activeLentHistories);
 
@@ -110,14 +109,15 @@ class LentPolicyUnitTest {
 	@DisplayName("성공: 기존만료일자 리턴 - 공유사물함 마지막 합류 - FULL")
 	void 성공_공유사물함_만석_기존만료시간_존재_generateExpirationDate() {
 		LocalDateTime currentDate = LocalDateTime.now();
-		Cabinet cabinet = mock(Cabinet.class);
-		LentHistory activeLentHistories = mock(LentHistory.class);
-		List<LentHistory> mockLentHistorieList = mock(List.class);
 
+		Cabinet cabinet = mock(Cabinet.class);
 		given(cabinet.getLentType()).willReturn(LentType.SHARE);
 		given(cabinet.getStatus()).willReturn(CabinetStatus.FULL);
+
+		LentHistory activeLentHistories = mock(LentHistory.class);
 		given(activeLentHistories.getExpiredAt()).willReturn(currentDate.plusDays(42));
 		given(activeLentHistories.isSetExpiredAt()).willReturn(true);
+		List<LentHistory> mockLentHistorieList = mock(List.class);
 		given(mockLentHistorieList.get(0)).willReturn(activeLentHistories);
 
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(currentDate, cabinet,
@@ -130,12 +130,13 @@ class LentPolicyUnitTest {
 	@DisplayName("성공: 만료일자 새로설정 - 공유사물함 마지막 합류 - FULL")
 	void 성공_공유사물함_만석_기존만료시간_설정_generateExpirationDate() {
 		LocalDateTime currentDate = LocalDateTime.now();
-		Cabinet cabinet = mock(Cabinet.class);
-		LentHistory activeLentHistories = mock(LentHistory.class);
-		List<LentHistory> mockLentHistorieList = mock(List.class);
 
+		Cabinet cabinet = mock(Cabinet.class);
 		given(cabinet.getLentType()).willReturn(LentType.SHARE);
 		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
+
+		LentHistory activeLentHistories = mock(LentHistory.class);
+		List<LentHistory> mockLentHistorieList = mock(List.class);
 		given(activeLentHistories.getExpiredAt()).willReturn(currentDate.plusDays(42));
 		given(mockLentHistorieList.get(0)).willReturn(activeLentHistories);
 
@@ -150,7 +151,6 @@ class LentPolicyUnitTest {
 	void 성공_동아리사물함_대여시간_설정_generateExpirationDate() {
 		LocalDateTime currentDate = LocalDateTime.now();
 		Cabinet cabinet = mock(Cabinet.class);
-
 		given(cabinet.getLentType()).willReturn(LentType.CLUB);
 
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(currentDate, cabinet,
@@ -241,11 +241,11 @@ class LentPolicyUnitTest {
 	void 실패_ALL_BANNED_USER_verifyUserForLent() {
 		int userActiveLentCount = 0;
 		User user = mock(User.class);
-		BanHistory mockBanHistory = mock(BanHistory.class);
-		List<BanHistory> mockBanHistoryList = new ArrayList<>();
-
 		given(user.isUserRole(UserRole.USER)).willReturn(true);
+
+		BanHistory mockBanHistory = mock(BanHistory.class);
 		given(mockBanHistory.getBanType()).willReturn(BanType.ALL);
+		List<BanHistory> mockBanHistoryList = new ArrayList<>();
 		mockBanHistoryList.add(mockBanHistory);
 
 		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, null,
@@ -259,13 +259,14 @@ class LentPolicyUnitTest {
 	void 실패_SHARE_BANNED_USER_verifyUserForLent() {
 		int userActiveLentCount = 0;
 		User user = mock(User.class);
-		BanHistory banHistory = mock(BanHistory.class);
-		List<BanHistory> userActiveBanList = new ArrayList<>();
-		Cabinet cabinet = mock(Cabinet.class);
-
-		given(cabinet.isLentType(LentType.SHARE)).willReturn(true);
 		given(user.isUserRole(UserRole.USER)).willReturn(true);
+
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.isLentType(LentType.SHARE)).willReturn(true);
+
+		BanHistory banHistory = mock(BanHistory.class);
 		given(banHistory.getBanType()).willReturn(BanType.SHARE);
+		List<BanHistory> userActiveBanList = new ArrayList<>();
 		userActiveBanList.add(banHistory);
 
 		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, cabinet,
@@ -279,14 +280,15 @@ class LentPolicyUnitTest {
 	void 성공_SHAREBANNED_LENT_OTHER_verifyUserForLent() {
 		int userActiveLentCount = 0;
 		User user = mock(User.class);
-		BanHistory banHistory = mock(BanHistory.class);
-		List<BanHistory> userActiveBanList = new ArrayList<>();
-		Cabinet cabinet = mock(Cabinet.class);
-
-		given(cabinet.isLentType(LentType.SHARE)).willReturn(false);
 		given(user.isUserRole(UserRole.USER)).willReturn(true);
+
+		BanHistory banHistory = mock(BanHistory.class);
 		given(banHistory.getBanType()).willReturn(BanType.SHARE);
+		List<BanHistory> userActiveBanList = new ArrayList<>();
 		userActiveBanList.add(banHistory);
+
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.isLentType(LentType.SHARE)).willReturn(false);
 
 		LentPolicyStatus result = lentPolicy.verifyUserForLent(user, cabinet,
 				userActiveLentCount, userActiveBanList);
@@ -313,8 +315,8 @@ class LentPolicyUnitTest {
 	void 성공_BLACKHOLE_IS_FUTURE_verifyUserForLent() {
 		int userActiveLentCount = 0;
 		LocalDateTime future = LocalDateTime.now().plusDays(1);
-		User user = mock(User.class);
 
+		User user = mock(User.class);
 		given(user.isUserRole(UserRole.USER)).willReturn(true);
 		given(user.getBlackholedAt()).willReturn(future);
 
@@ -403,6 +405,7 @@ class LentPolicyUnitTest {
 	@DisplayName("실패: 공유사물함 - 만료기간 임박시점 대여시도 - IMMINENT_EXPIRATION")
 	void 실패_LIMITED_AVAILABLE_IMMINENT_EXPIRATION_verifyCabinetForLent() {
 		LocalDateTime currentTime = LocalDateTime.now();
+
 		given(cabinetProperties.getPenaltyDayShare()).willReturn(3);
 		given(cabinetProperties.getPenaltyDayPadding()).willReturn(2);
 
