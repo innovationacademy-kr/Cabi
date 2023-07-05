@@ -99,9 +99,7 @@ class UserServiceUnitTest {
 	void checkAdminUserExists_성공_존재하는_어드민인_경우() {
 		AdminUser adminUser1 = mock(AdminUser.class);
 
-		given(adminUser1.getEmail()).willReturn("admin@admin.com");
 		given(userOptionalFetcher.findAdminUserByEmail("admin@admin.com")).willReturn(adminUser1);
-		given(userService.checkUserExists("admin@admin.com")).willReturn(true);
 
 		boolean result = userService.checkAdminUserExists("admin@admin.com");
 
@@ -110,9 +108,10 @@ class UserServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("유저 존재 확인 성공 - 어드민이 없는 경우")
+	@DisplayName("어드민 존재 확인 성공 - 존재하지 않는 어드민인 경우")
 	void checkAdminUserExists_성공_존재하지_않는_어드민인_경우() {
-		given(userOptionalFetcher.findAdminUserByEmail("notAdmin@admin.com")).willReturn(null);
+		AdminUser adminUser = null;
+		given(userOptionalFetcher.findAdminUserByEmail("notAdmin@admin.com")).willReturn(adminUser);
 
 		boolean result = userService.checkAdminUserExists("notAdmin@admin.com");
 
