@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.lent.domain;
 
 import java.time.LocalDate;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -72,6 +73,15 @@ public class LentPolicyImpl implements LentPolicy {
 	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
 			LocalDateTime expiredAt) {
 		log.info("Called applyExpirationDate");
+
+		if (expiredAt == null){
+			throw new IllegalArgumentException("유효기간이 없습니다.");
+		}
+
+		if (DateUtil.isPast(expiredAt)) {
+			throw new IllegalArgumentException("유효기간이 현재 시각보다 과거입니다.");
+		}
+
 		for (LentHistory lentHistory : beforeActiveHistories) {
 			lentHistory.setExpiredAt(expiredAt);
 		}

@@ -3,6 +3,7 @@ package org.ftclub.cabinet.lent.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
@@ -158,21 +159,43 @@ class LentPolicyUnitTest {
 		assertEquals(expirationDate, DateUtil.getInfinityDate());
 	}
 
-
-	@Disabled
 	@Test
-	@DisplayName("실패: 잘못된 LentType")
-	void 실패_잘못된_대여상태_generateExpirationDate() {
-		//??
+	@DisplayName("성공: 만료일자 일괄 설정")
+	void 성공_applyExpirationDate() {
+		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
+		LentHistory curHistory = LentHistory.of(LocalDateTime.now(), yesterday, 993L, 9999L);
+		LentHistory realHistory = LentHistory.of(LocalDateTime.now(), yesterday, 992L, 9999L);
+		LentHistory trueHistory = LentHistory.of(LocalDateTime.now(), yesterday, 991L, 9999L);
+
+		List<LentHistory> beforeActiveHistories = new ArrayList<>();
+		beforeActiveHistories.add(trueHistory);
+		beforeActiveHistories.add(realHistory);
+
+		lentPolicy.applyExpirationDate(curHistory, beforeActiveHistories, tomorrow);
+
+		assertEquals(tomorrow, curHistory.getExpiredAt());
+		assertEquals(tomorrow, realHistory.getExpiredAt());
+		assertEquals(tomorrow, trueHistory.getExpiredAt());
 	}
 
 	@Test
-	@DisplayName("성공: ")
-	void 성공_applyExpirationDate() {
-		LocalDateTime expiredDate = LocalDateTime.now();
-		LentHistory activeLentHistories = mock(LentHistory.class);
+	@DisplayName("실패: 만료일자 과거")
+	void 실패_EXPIREDAT_IS_PAST_applyExpirationDate() {
+		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 
-//		lentPolicy.applyExpirationDate();
+		assertThrows(IllegalArgumentException.class,
+				() -> lentPolicy.applyExpirationDate(null, null, yesterday));
+
+	}
+
+	@Test
+	@DisplayName("실패: 만료일자 null")
+	void 실패_EXPIREDAT_IS_NULL_applyExpirationDate() {
+
+		assertThrows(IllegalArgumentException.class,
+				() -> lentPolicy.applyExpirationDate(null, null, null));
 	}
 
 	@Test
@@ -370,7 +393,8 @@ class LentPolicyUnitTest {
 		given(cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)).willReturn(true);
 
 		List<LentHistory> cabinetLentHistories = new ArrayList<>();
-		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories, null);
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories,
+				null);
 
 		assertEquals(LentPolicyStatus.INTERNAL_ERROR, result);
 	}
@@ -393,7 +417,8 @@ class LentPolicyUnitTest {
 		List<LentHistory> cabinetLentHistories = new ArrayList<>();
 		cabinetLentHistories.add(lentHistory);
 
-		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories, currentTime);
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories,
+				currentTime);
 
 		assertEquals(LentPolicyStatus.IMMINENT_EXPIRATION, result);
 	}
@@ -416,7 +441,8 @@ class LentPolicyUnitTest {
 		List<LentHistory> cabinetLentHistories = new ArrayList<>();
 		cabinetLentHistories.add(lentHistory);
 
-		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories, currentTime);
+		LentPolicyStatus result = lentPolicy.verifyCabinetForLent(cabinet, cabinetLentHistories,
+				currentTime);
 
 		assertEquals(LentPolicyStatus.FINE, result);
 	}
