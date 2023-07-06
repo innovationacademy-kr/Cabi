@@ -9,7 +9,7 @@ import org.ftclub.cabinet.config.GmailProperties;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Component
@@ -17,8 +17,8 @@ import org.thymeleaf.context.Context;
 @Log4j2
 public class EmailSender {
 
-	private final JavaMailSender emailSender;
-	private final TemplateEngine templateEngine;
+	private final JavaMailSender javaMailSender;
+	private final ITemplateEngine templateEngine;
 	private final GmailProperties gmailProperties;
 
 	public void sendMail(String name, String to, String subject, String template)
@@ -28,7 +28,7 @@ public class EmailSender {
 			log.info("개발 환경이므로 메일을 보내지 않습니다.");
 			return;
 		}
-		MimeMessage message = emailSender.createMimeMessage();
+		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
 		helper.setFrom(gmailProperties.getUsername());
@@ -38,10 +38,10 @@ public class EmailSender {
 		Context context = new Context();
 		context.setVariable("name", name);
 
-		String htmlContent = this.templateEngine.process(template, context);
+		String htmlContent = templateEngine.process(template, context);
 		helper.setText(htmlContent, true);
 
-		emailSender.send(message);
+		javaMailSender.send(message);
 		log.info("{} ({}) 에게 메일을 성공적으로 보냈습니다.", name, to);
 	}
 }
