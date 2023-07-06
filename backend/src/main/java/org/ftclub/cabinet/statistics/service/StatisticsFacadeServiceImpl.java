@@ -38,9 +38,7 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 		log.info("Called getCabinetsCountOnAllFloors");
 		List<CabinetFloorStatisticsResponseDto> cabinetFloorStatisticsResponseDtos = new ArrayList<>();
 		List<Integer> floors = cabinetOptionalFetcher.findAllFloorsByBuilding("새롬관");
-		if (floors == null) {
-			throw new IllegalArgumentException();
-		}
+		throwIfFalse(floors != null, new ServiceException(ExceptionStatus.INVALID_ARGUMENT));
 		for (Integer floor : floors) {
 			Integer used = statisticsRepository.getCabinetsCountByStatus(floor, CabinetStatus.FULL);
 			List<Long> availableCabinetsId = statisticsRepository.getAvailableCabinetsId(floor);
