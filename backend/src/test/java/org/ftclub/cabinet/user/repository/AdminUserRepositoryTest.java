@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class AdminUserRepositoryTest {
 	@Test
 	@DisplayName("유저의 이메일로 어드민 유저의 권한 찾기 성공 - 어드민이 존재하는 경우")
 	void findAdminUserRoleByEmail_성공_어드민이_존재하는_경우() {
-		Optional<AdminRole> adminRole = adminUserRepository.findAdminUserRoleByEmail("admin@gmail.com");
+		Optional<AdminRole> adminRole = adminUserRepository.findAdminUserRoleByEmail("admin1@gmail.com");
 
 		assertTrue(adminRole.isPresent());
 		assertEquals(AdminRole.ADMIN, adminRole.get());
@@ -81,6 +82,6 @@ public class AdminUserRepositoryTest {
 	public void findAdminUserRoleByEmail_실패_어드민이_존재하지_않는_경우() {
 		Optional<AdminRole> adminRole = adminUserRepository.findAdminUserRoleByEmail("test@gmail.com");
 
-		assertTrue(adminRole.isEmpty());
+		assertFalse(adminRole.isPresent());
 	}
 }

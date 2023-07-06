@@ -101,6 +101,7 @@ public class UserServiceImpl implements UserService {
 		AdminUser adminUser = userOptionalFetcher.getAdminUserByEmail(email);
 		if (adminUser.getRole() == AdminRole.NONE) {
 			adminUser.changeAdminRole(AdminRole.ADMIN);
+			adminUserRepository.save(adminUser);
 		}
 	}
 
