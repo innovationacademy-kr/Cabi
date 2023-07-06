@@ -10,6 +10,8 @@ import static org.mockito.Mockito.times;
 import javax.persistence.criteria.CriteriaBuilder.In;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.Grid;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -359,7 +361,7 @@ class CabinetServiceUnitTest {
 				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 
 		assertThrows(ServiceException.class,
-				() -> cabinetService.updateTitleAndMemo(invalidCabinetId, null, null));
+				() -> cabinetService.updateMaxUser(invalidCabinetId, null));
 
 		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
@@ -380,15 +382,117 @@ class CabinetServiceUnitTest {
 		assertEquals(maxUser, cabinet.getMaxUser());
 	}
 
+
 	@Test
-	void updateLentType() {
+	@DisplayName("실패: 잘못된 cabinetId로 대여타입 변경시도 - NOT_FOUND_CABINET")
+	void 실패_updateLentType() {
+		Long invalidCabinetId = -1L;
+		LentType lentType = LentType.PRIVATE;
+
+		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+
+		assertThrows(ServiceException.class,
+				() -> cabinetService.updateLentType(invalidCabinetId, lentType));
+
+		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
 
 	@Test
+	@DisplayName("성공: 대여타입 개인사물함으로 변경")
+	void 성공_CHANGE_TO_PRIVATE_updateLentType() {
+		Long cabinetId = 999L;
+		LentType lentType = LentType.PRIVATE;
+		int privateMaxUser = 1;
+		int shareMaxUser = 3;
+
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getMaxUser()).willReturn(privateMaxUser);
+		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
+		cabinetService.updateLentType(cabinetId, lentType);
+
+		then(cabinet).should().specifyLentType(lentType);
+		then(cabinet).should(times(0)).specifyMaxUser(shareMaxUser);
+		then(cabinet).should().specifyMaxUser(privateMaxUser);
+		assertEquals(privateMaxUser, cabinet.getMaxUser());
+	}
+
+	@Test
+	@DisplayName("성공: 대여타입 공유사물함으로 변경")
+	void 성공_CHANGE_TO_SHARE_updateLentType() {
+		Long cabinetId = 999L;
+		LentType lentType = LentType.SHARE;
+		int privateMaxUser = 1;
+		int shareMaxUser = 3;
+
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getMaxUser()).willReturn(shareMaxUser);
+		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
+		cabinetService.updateLentType(cabinetId, lentType);
+
+		then(cabinet).should().specifyLentType(lentType);
+		then(cabinet).should(times(0)).specifyMaxUser(privateMaxUser);
+		then(cabinet).should().specifyMaxUser(shareMaxUser);
+		assertEquals(shareMaxUser, cabinet.getMaxUser());
+	}
+
+
+	@Test
+	@DisplayName("실패: 잘못된 cabinetId로 grid 변경시도 - NOT_FOUND_CABINET")
+	void 실패_updateGrid() {
+		Long invalidCabinetId = -1L;
+
+		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+
+		assertThrows(ServiceException.class,
+				() -> cabinetService.updateGrid(invalidCabinetId, null));
+
+		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
+	}
+
+	@Test
+	@DisplayName("성공: grid 변경")
 	void updateGrid() {
+		Long cabinetId = 999L;
+		Grid grid = mock(Grid.class);
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getGrid()).willReturn(grid);
+		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
+
+		cabinetService.updateGrid(cabinetId, grid);
+
+		then(cabinet).should().coordinateGrid(grid);
+		assertEquals(grid, cabinet.getGrid());
 	}
 
 	@Test
-	void updateStatusNote() {
+	@DisplayName("실패: 잘못된 cabinetId로 변경할 상태 메모 변경 시도 - NOT_FOUND_CABINET")
+	void 실패_updateStatusNote() {
+		Long invalidCabinetId = -1L;
+
+		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+
+		assertThrows(ServiceException.class,
+				() -> cabinetService.updateStatusNote(invalidCabinetId, null));
+
+		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
+	}
+
+	@Test
+	@DisplayName("성공: 상태 메모 변경")
+	void 성공_updateStatusNote() {
+		Long cabinetId = 999L;
+		String statusNote = "상태 좀 이상함";
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getStatusNote()).willReturn(statusNote);
+		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
+
+		cabinetService.updateStatusNote(cabinetId, statusNote);
+
+		then(cabinetOptionalFetcher).should().getCabinet(cabinetId);
+		then(cabinet).should().writeStatusNote(statusNote);
+		assertEquals(statusNote, cabinet.getStatusNote());
 	}
 }
