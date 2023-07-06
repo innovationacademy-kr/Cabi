@@ -92,11 +92,12 @@ public class UserTest {
 	@DisplayName("유저 블랙홀 날짜 변경 성공 - 블랙홀 날짜 변경")
 	void changeBlackholedAt_성공() {
 		LocalDateTime blackholedAt = LocalDateTime.now().plusDays(10);
+		LocalDateTime changedBlackholedAt = LocalDateTime.now().plusDays(20);
 		User user = User.of("test", "test@test.com", blackholedAt, UserRole.CLUB);
-		user.changeBlackholedAt(blackholedAt.plusDays(10));
+		user.changeBlackholedAt(changedBlackholedAt);
 
 		assertNotEquals(blackholedAt, user.getBlackholedAt());
-		assertEquals(blackholedAt.plusDays(10), user.getBlackholedAt());
+		assertEquals(changedBlackholedAt, user.getBlackholedAt());
 	}
 
 	@Test

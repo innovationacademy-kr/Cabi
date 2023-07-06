@@ -52,26 +52,28 @@ public class BanHistoryTest {
 
 	@Test
 	@DisplayName("BanHistory 생성 실패 - 유저 아이디 null")
-	void of_실패_유저_아이디_null할() {
+	void of_실패_유저_아이디_null() {
 		assertThrows(DomainException.class,
 				() -> BanHistory.of(LocalDateTime.now(), null, BanType.PRIVATE, null));
 	}
 
 	@Test
 	@DisplayName("밴 여부 확인 성공 - 밴 중")
-	void isBanEndedBefore_성공_밴중() {
-		LocalDateTime now = LocalDateTime.now();
-		BanHistory banHistory = BanHistory.of(now, now.plusHours(3), BanType.ALL, 1L);
+	void isBanned_성공_밴중() {
+		LocalDateTime bannedAt = LocalDateTime.now().minusHours(2);
+		LocalDateTime unbannedAt = LocalDateTime.now().plusHours(2);
+		BanHistory banHistory = BanHistory.of(bannedAt, unbannedAt, BanType.ALL, 1L);
 
-		assertTrue(banHistory.isBanEndedBefore(now.plusHours(2)));
+		assertTrue(banHistory.isBanned(LocalDateTime.now()));
 	}
 
 	@Test
 	@DisplayName("밴 여부 확인 성공 - 밴 종료")
-	void isBanEndedBefore_성공_밴종료() {
-		LocalDateTime now = LocalDateTime.now();
-		BanHistory banHistory = BanHistory.of(now, now.plusHours(3), BanType.ALL, 1L);
+	void isBanned_성공_밴종료() {
+		LocalDateTime bannedAt = LocalDateTime.now().minusHours(5);
+		LocalDateTime unbannedAt = LocalDateTime.now().minusHours(1);
+		BanHistory banHistory = BanHistory.of(bannedAt, unbannedAt, BanType.ALL, 1L);
 
-		assertFalse(banHistory.isBanEndedBefore(now.plusHours(4)));
+		assertFalse(banHistory.isBanned(LocalDateTime.now()));
 	}
 }
