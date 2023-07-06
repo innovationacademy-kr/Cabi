@@ -19,66 +19,66 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class UserFacadeServiceTest {
 
-    private final LocalDateTime testDate = LocalDateTime.of(123, 1, 15, 9, 0);
-    @Autowired
-    private UserFacadeService userFacadeService;
+	private final LocalDateTime testDate = LocalDateTime.of(123, 1, 15, 9, 0);
+	@Autowired
+	private UserFacadeService userFacadeService;
 
-    @Test
-    public void 대여_정보_없는_유저_DTO_가져오기() {
-        // 4 penaltyuser2
-        UserSessionDto user = new UserSessionDto(4L, "penaltyuser2",
-                "penaltyuser2@student.42seoul.kr", null, null, null, false);
+	@Test
+	public void 대여_정보_없는_유저_DTO_가져오기() {
+		// 4 penaltyuser2
+		UserSessionDto user = new UserSessionDto(4L, "penaltyuser2",
+				"penaltyuser2@student.42seoul.kr", null, null, null, false);
 
-        MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
-        assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
-        assertEquals(user.getName(), myProfileResponseDto.getName());
-        assertEquals(null, myProfileResponseDto.getCabinetId());
-    }
+		MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
+		assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
+		assertEquals(user.getName(), myProfileResponseDto.getName());
+		assertEquals(null, myProfileResponseDto.getCabinetId());
+	}
 
-    @Test
-    public void 대여_정보_있는_유저_DTO_가져오기() {
-        // 5 lentuser1 3번 사물함 대여 중
-        UserSessionDto user = new UserSessionDto(5L, "lentuser1",
-                "lentuser1@student.42seoul.kr", null, null, null, false);
+	@Test
+	public void 대여_정보_있는_유저_DTO_가져오기() {
+		// 5 lentuser1 3번 사물함 대여 중
+		UserSessionDto user = new UserSessionDto(5L, "lentuser1",
+				"lentuser1@student.42seoul.kr", null, null, null, false);
 
-        MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
-        assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
-        assertEquals(user.getName(), myProfileResponseDto.getName());
-        assertEquals(3L, myProfileResponseDto.getCabinetId());
-    }
+		MyProfileResponseDto myProfileResponseDto = userFacadeService.getMyProfile(user);
+		assertEquals(user.getUserId(), myProfileResponseDto.getUserId());
+		assertEquals(user.getName(), myProfileResponseDto.getName());
+		assertEquals(3L, myProfileResponseDto.getCabinetId());
+	}
 
-    @Test
-    public void 모든_벤_유저_가져오기() {
-        BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
-                10, testDate);
-        assertEquals(1, blockedUserPaginationDto.getTotalPage());
-        assertEquals(2, blockedUserPaginationDto.getResult().size());
-        assertEquals("banuser1", blockedUserPaginationDto.getResult().get(0).getName());
-    }
+	@Test
+	public void 모든_벤_유저_가져오기() {
+		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
+				10, testDate);
+		assertEquals(1, blockedUserPaginationDto.getTotalPage());
+		assertEquals(2, blockedUserPaginationDto.getResult().size());
+		assertEquals("banuser1", blockedUserPaginationDto.getResult().get(0).getName());
+	}
 
-    @Test
-    public void 모든_벤_유저_가져오기_현재_기준() {
-        BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
-                10, LocalDateTime.now());
-        assertEquals(0, blockedUserPaginationDto.getTotalPage());
-        assertTrue(blockedUserPaginationDto.getResult().isEmpty());
-    }
+	@Test
+	public void 모든_벤_유저_가져오기_현재_기준() {
+		BlockedUserPaginationDto blockedUserPaginationDto = userFacadeService.getAllBanUsers(0,
+				10, LocalDateTime.now());
+		assertEquals(0, blockedUserPaginationDto.getTotalPage());
+		assertTrue(blockedUserPaginationDto.getResult().isEmpty());
+	}
 
-    @Test
-    public void 특정_문자_들어간_유저_프로필_가져오기() {
-        // lent라는 문자열이 들어간 유저 (2명)
-        UserProfilePaginationDto userProfilePaginationDto = userFacadeService.getUserProfileListByPartialName(
-                "lent", 0, 10);
-        assertEquals(2, userProfilePaginationDto.getTotalLength());
-        assertEquals(2, userProfilePaginationDto.getResult().size());
-        assertEquals("lentuser1", userProfilePaginationDto.getResult().get(0).getName());
-        assertEquals("lentuser2", userProfilePaginationDto.getResult().get(1).getName());
-    }
+	@Test
+	public void 특정_문자_들어간_유저_프로필_가져오기() {
+		// lent라는 문자열이 들어간 유저 (2명)
+		UserProfilePaginationDto userProfilePaginationDto = userFacadeService.getUserProfileListByPartialName(
+				"lent", 0, 10);
+		assertEquals(2, userProfilePaginationDto.getTotalLength());
+		assertEquals(2, userProfilePaginationDto.getResult().size());
+		assertEquals("lentuser1", userProfilePaginationDto.getResult().get(0).getName());
+		assertEquals("lentuser2", userProfilePaginationDto.getResult().get(1).getName());
+	}
 
-    @Test
-    void 모든_유저_가져오기() {
-        // test DB상 존재하는 유저 20명
-        List<User> users = userFacadeService.getAllUsers();
-        assertEquals(20, users.size());
-    }
+	@Test
+	void 모든_유저_가져오기() {
+		// test DB상 존재하는 유저 20명
+		List<User> users = userFacadeService.getAllUsers();
+		assertEquals(20, users.size());
+	}
 }
