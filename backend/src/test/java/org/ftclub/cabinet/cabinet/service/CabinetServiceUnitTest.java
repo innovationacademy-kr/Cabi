@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
@@ -350,7 +351,33 @@ class CabinetServiceUnitTest {
 	}
 
 	@Test
-	void updateMaxUser() {
+	@DisplayName("실패: 잘못된 cabinetId로 최대인원 변경시도 - NOT_FOUND_CABINET")
+	void 실패_updateMaxUser() {
+		Long invalidCabinetId = -1L;
+
+		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+
+		assertThrows(ServiceException.class,
+				() -> cabinetService.updateTitleAndMemo(invalidCabinetId, null, null));
+
+		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
+	}
+
+	@Test
+	@DisplayName("성공: 최대 수용인원 변경")
+	void 성공_updateMaxUser() {
+		Long cabinetId = 999L;
+		Integer maxUser = 999;
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getMaxUser()).willReturn(maxUser);
+		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
+
+		cabinetService.updateMaxUser(cabinetId, maxUser);
+
+		then(cabinetOptionalFetcher).should().getCabinet(cabinetId);
+		then(cabinet).should().specifyMaxUser(maxUser);
+		assertEquals(maxUser, cabinet.getMaxUser());
 	}
 
 	@Test
