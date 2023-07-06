@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.utils;
+package org.ftclub.cabinet.utils.overdue.manager;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -12,8 +12,6 @@ import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.config.GmailProperties;
 import org.ftclub.cabinet.config.MailOverdueProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
-import org.ftclub.cabinet.utils.overdue.manager.OverdueType;
 import org.ftclub.cabinet.utils.mail.EmailSender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
