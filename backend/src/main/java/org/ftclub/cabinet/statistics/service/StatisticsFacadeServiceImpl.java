@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
-import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 
 	private final StatisticsRepository statisticsRepository;
-	private final CabinetRepository cabinetRepository;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentRepository lentRepository;
 
