@@ -13,6 +13,7 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
+import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.User;
@@ -186,7 +187,7 @@ class LentPolicyUnitTest {
 	void 실패_EXPIREDAT_IS_PAST_applyExpirationDate() {
 		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 
-		assertThrows(IllegalArgumentException.class,
+		assertThrows(DomainException.class,
 				() -> lentPolicy.applyExpirationDate(null, null, yesterday));
 
 	}
@@ -195,7 +196,7 @@ class LentPolicyUnitTest {
 	@DisplayName("실패: 만료일자 null")
 	void 실패_EXPIREDAT_IS_NULL_applyExpirationDate() {
 
-		assertThrows(IllegalArgumentException.class,
+		assertThrows(DomainException.class,
 				() -> lentPolicy.applyExpirationDate(null, null, null));
 	}
 
@@ -407,8 +408,7 @@ class LentPolicyUnitTest {
 	void 실패_LIMITED_AVAILABLE_IMMINENT_EXPIRATION_verifyCabinetForLent() {
 		LocalDateTime currentTime = LocalDateTime.now();
 
-		given(cabinetProperties.getPenaltyDayShare()).willReturn(3);
-		given(cabinetProperties.getPenaltyDayPadding()).willReturn(2);
+		given(lentPolicy.getDaysForNearExpiration()).willReturn(5);
 
 		Cabinet cabinet = mock(Cabinet.class);
 		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
@@ -431,8 +431,9 @@ class LentPolicyUnitTest {
 	@DisplayName("성공: 공유사물함 - 만료기간 여유")
 	void 성공_LIMITED_AVAILABLE_JOIN_verifyCabinetForLent() {
 		LocalDateTime currentTime = LocalDateTime.now();
-		given(cabinetProperties.getPenaltyDayShare()).willReturn(3);
-		given(cabinetProperties.getPenaltyDayPadding()).willReturn(2);
+
+		given(lentPolicy.getDaysForNearExpiration()).willReturn(5);
+
 		// 공유사물함 중간합류
 		Cabinet cabinet = mock(Cabinet.class);
 		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
