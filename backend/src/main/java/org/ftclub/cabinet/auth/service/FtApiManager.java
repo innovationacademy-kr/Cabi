@@ -36,7 +36,8 @@ public class FtApiManager {
 						.uri(ftApiProperties.getTokenUri())
 						.body(BodyInserters.fromFormData(
 								ApiRequestManager.of(ftApiProperties)
-										.getAccessTokenRequestBodyMapWithClientSecret()))
+										.getAccessTokenRequestBodyMapWithClientSecret(
+												"client_credentials")))
 						.retrieve()
 						.bodyToMono(String.class)
 						.map(response -> {
