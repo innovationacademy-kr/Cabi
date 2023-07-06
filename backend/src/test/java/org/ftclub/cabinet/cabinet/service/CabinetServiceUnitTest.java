@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
@@ -111,20 +110,6 @@ class CabinetServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("실패: 잘못된 cabinetId 로 메모 변경 시도")
-	void 실패_INVALID_CABINET_ID_updateMemo() {
-		Long invalidCabinetId = -1L;
-		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
-				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-
-		assertThrows(ServiceException.class,
-				() -> cabinetService.updateMemo(invalidCabinetId, null));
-
-		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
-	}
-
-
-	@Test
 	@DisplayName("성공: 캐비넷 메모 변경")
 	void 성공_updateMemo() {
 		Long cabinetId = 999L;
@@ -139,6 +124,36 @@ class CabinetServiceUnitTest {
 		then(cabinetOptionalFetcher).should().getCabinet(cabinetId);
 		then(cabinet).should().writeMemo(memo);
 		assertEquals(memo, cabinet.getMemo());
+	}
+
+	@Test
+	@DisplayName("실패: 잘못된 cabinetId 로 메모 변경 시도")
+	void 실패_INVALID_CABINET_ID_updateMemo() {
+		Long invalidCabinetId = -1L;
+		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+
+		assertThrows(ServiceException.class,
+				() -> cabinetService.updateMemo(invalidCabinetId, null));
+
+		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
+	}
+
+	@Test
+	@DisplayName("성공: 캐비넷 visibleNum 변경")
+	void 성공_updateVisibleNum() {
+		Long cabinetId = 999L;
+		Integer visibleNum = 1;
+
+		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getVisibleNum()).willReturn(visibleNum);
+		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
+
+		cabinetService.updateVisibleNum(cabinetId, visibleNum);
+
+		then(cabinetOptionalFetcher).should().getCabinet(cabinetId);
+		then(cabinet).should().assignVisibleNum(visibleNum);
+		assertEquals(visibleNum, cabinet.getVisibleNum());
 	}
 
 	@Test
@@ -166,37 +181,6 @@ class CabinetServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("성공: 캐비넷 visibleNum 변경")
-	void 성공_updateVisibleNum() {
-		Long cabinetId = 999L;
-		Integer visibleNum = 1;
-
-		Cabinet cabinet = mock(Cabinet.class);
-		given(cabinet.getVisibleNum()).willReturn(visibleNum);
-		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
-
-		cabinetService.updateVisibleNum(cabinetId, visibleNum);
-
-		then(cabinetOptionalFetcher).should().getCabinet(cabinetId);
-		then(cabinet).should().assignVisibleNum(visibleNum);
-		assertEquals(visibleNum, cabinet.getVisibleNum());
-	}
-
-	@Test
-	@DisplayName("실패: 잘못된 cabinetId로 캐비넷 제목 변경 시도")
-	void 실패_IVALID_CABINET_ID_updateTitle() {
-		Long invalidCabinetId = -1L;
-
-		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
-				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-
-		assertThrows(ServiceException.class,
-				() -> cabinetService.updateTitle(invalidCabinetId, null));
-
-		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
-	}
-
-	@Test
 	@DisplayName("성공: 캐비넷 제목 변경")
 	void 성공_updateTitle() {
 		Long cabinetId = 999L;
@@ -214,32 +198,38 @@ class CabinetServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("실패: 잘못된 cabinetId로 캐비넷 제목과 메모 변경 시도")
-	void 실패_INVALID_CABINET_ID_updateTitleAndMemo() {
+	@DisplayName("실패: 잘못된 cabinetId로 캐비넷 제목 변경 시도")
+	void 실패_IVALID_CABINET_ID_updateTitle() {
 		Long invalidCabinetId = -1L;
 
 		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
 				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 
 		assertThrows(ServiceException.class,
-				() -> cabinetService.updateTitleAndMemo(invalidCabinetId, null, null));
+				() -> cabinetService.updateTitle(invalidCabinetId, null));
 
 		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
 
 	@Test
-	@DisplayName("성공: 제목, 메모 둘다 NULL - 변경사항 없음")
-	void 성공_NOTHING_CHANGES_NULL_updateTitleAndMemo() {
+	@DisplayName("성공: 캐비넷 제목과 메모 변경")
+	void 성공_updateTitleAndMemo() {
 		Long cabinetId = 999L;
+		String title = "앞뒤가 똑같은 전화번호";
+		String memo = "1577-1577";
 
 		Cabinet cabinet = mock(Cabinet.class);
+		given(cabinet.getTitle()).willReturn(title);
+		given(cabinet.getMemo()).willReturn(memo);
 		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
 
-		cabinetService.updateTitleAndMemo(cabinetId, null, null);
+		cabinetService.updateTitleAndMemo(cabinetId, title, memo);
 
 		then(cabinetOptionalFetcher).should().getCabinet(cabinetId);
-		then(cabinet).should(times(0)).writeTitle(any());
-		then(cabinet).should(times(0)).writeMemo(any());
+		then(cabinet).should().writeTitle(title);
+		then(cabinet).should().writeMemo(memo);
+		assertEquals(title, cabinet.getTitle());
+		assertEquals(memo, cabinet.getMemo());
 	}
 
 	@Test
@@ -329,39 +319,16 @@ class CabinetServiceUnitTest {
 		assertEquals(title, cabinet.getTitle());
 	}
 
-
-
 	@Test
-	@DisplayName("성공: 캐비넷 제목과 메모 변경")
-	void 성공_updateTitleAndMemo() {
-		Long cabinetId = 999L;
-		String title = "앞뒤가 똑같은 전화번호";
-		String memo = "1577-1577";
-
-		Cabinet cabinet = mock(Cabinet.class);
-		given(cabinet.getTitle()).willReturn(title);
-		given(cabinet.getMemo()).willReturn(memo);
-		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
-
-		cabinetService.updateTitleAndMemo(cabinetId, title, memo);
-
-		then(cabinetOptionalFetcher).should().getCabinet(cabinetId);
-		then(cabinet).should().writeTitle(title);
-		then(cabinet).should().writeMemo(memo);
-		assertEquals(title, cabinet.getTitle());
-		assertEquals(memo, cabinet.getMemo());
-	}
-
-	@Test
-	@DisplayName("실패: 잘못된 cabinetId로 최대인원 변경시도 - NOT_FOUND_CABINET")
-	void 실패_updateMaxUser() {
+	@DisplayName("실패: 잘못된 cabinetId로 캐비넷 제목과 메모 변경 시도")
+	void 실패_INVALID_CABINET_ID_updateTitleAndMemo() {
 		Long invalidCabinetId = -1L;
 
 		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
 				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 
 		assertThrows(ServiceException.class,
-				() -> cabinetService.updateMaxUser(invalidCabinetId, null));
+				() -> cabinetService.updateTitleAndMemo(invalidCabinetId, null, null));
 
 		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
@@ -382,18 +349,16 @@ class CabinetServiceUnitTest {
 		assertEquals(maxUser, cabinet.getMaxUser());
 	}
 
-
 	@Test
-	@DisplayName("실패: 잘못된 cabinetId로 대여타입 변경시도 - NOT_FOUND_CABINET")
-	void 실패_updateLentType() {
+	@DisplayName("실패: 잘못된 cabinetId로 최대인원 변경시도 - NOT_FOUND_CABINET")
+	void 실패_updateMaxUser() {
 		Long invalidCabinetId = -1L;
-		LentType lentType = LentType.PRIVATE;
 
 		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
 				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 
 		assertThrows(ServiceException.class,
-				() -> cabinetService.updateLentType(invalidCabinetId, lentType));
+				() -> cabinetService.updateMaxUser(invalidCabinetId, null));
 
 		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
@@ -436,24 +401,24 @@ class CabinetServiceUnitTest {
 		assertEquals(shareMaxUser, cabinet.getMaxUser());
 	}
 
-
 	@Test
-	@DisplayName("실패: 잘못된 cabinetId로 grid 변경시도 - NOT_FOUND_CABINET")
-	void 실패_updateGrid() {
+	@DisplayName("실패: 잘못된 cabinetId로 대여타입 변경시도 - NOT_FOUND_CABINET")
+	void 실패_updateLentType() {
 		Long invalidCabinetId = -1L;
+		LentType lentType = LentType.PRIVATE;
 
 		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
 				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 
 		assertThrows(ServiceException.class,
-				() -> cabinetService.updateGrid(invalidCabinetId, null));
+				() -> cabinetService.updateLentType(invalidCabinetId, lentType));
 
 		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
 
 	@Test
 	@DisplayName("성공: grid 변경")
-	void updateGrid() {
+	void 성공_updateGrid() {
 		Long cabinetId = 999L;
 		Grid grid = mock(Grid.class);
 		Cabinet cabinet = mock(Cabinet.class);
@@ -467,15 +432,15 @@ class CabinetServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("실패: 잘못된 cabinetId로 변경할 상태 메모 변경 시도 - NOT_FOUND_CABINET")
-	void 실패_updateStatusNote() {
+	@DisplayName("실패: 잘못된 cabinetId로 grid 변경시도 - NOT_FOUND_CABINET")
+	void 실패_updateGrid() {
 		Long invalidCabinetId = -1L;
 
 		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
 				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 
 		assertThrows(ServiceException.class,
-				() -> cabinetService.updateStatusNote(invalidCabinetId, null));
+				() -> cabinetService.updateGrid(invalidCabinetId, null));
 
 		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
@@ -495,4 +460,19 @@ class CabinetServiceUnitTest {
 		then(cabinet).should().writeStatusNote(statusNote);
 		assertEquals(statusNote, cabinet.getStatusNote());
 	}
+
+	@Test
+	@DisplayName("실패: 잘못된 cabinetId로 변경할 상태 메모 변경 시도 - NOT_FOUND_CABINET")
+	void 실패_updateStatusNote() {
+		Long invalidCabinetId = -1L;
+
+		given(cabinetOptionalFetcher.getCabinet(invalidCabinetId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+
+		assertThrows(ServiceException.class,
+				() -> cabinetService.updateStatusNote(invalidCabinetId, null));
+
+		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
+	}
+
 }
