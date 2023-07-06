@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class OverdueManagerTest {
+public class OverdueManagerUnitTest {
 
 	@Mock(lenient = true)
 	private MailOverdueProperties mailOverdueProperties = mock(MailOverdueProperties.class);
