@@ -3,12 +3,17 @@ package org.ftclub.cabinet.utils;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 
+import java.io.IOException;
+import javax.mail.MessagingException;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.config.MailOverdueProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueType;
+import org.ftclub.cabinet.utils.mail.EmailSender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,24 +28,32 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class OverdueManagerTest {
 
 	@Mock(lenient = true)
-	MailOverdueProperties mailOverdueProperties = mock(MailOverdueProperties.class);
+	private MailOverdueProperties mailOverdueProperties = mock(MailOverdueProperties.class);
+
+	@Mock
+	private CabinetService cabinetService = mock(CabinetService.class);
+
+	@Mock
+	private EmailSender emailSender = mock(EmailSender.class);
 
 	@InjectMocks
-	OverdueManager overdueManager;
+	private OverdueManager overdueManager;
 
 	private static ActiveLentHistoryDto activeLentHistoryDto;
 
 
 	@BeforeAll
+	@DisplayName("테스트 전에 activeLentHistoryDto를 생성한다.")
 	static void setupBeforeAll() {
 		activeLentHistoryDto = mock(ActiveLentHistoryDto.class);
 		given(activeLentHistoryDto.getUserId()).willReturn(1L);
 		given(activeLentHistoryDto.getName()).willReturn("동글동글동그리");
-		given(activeLentHistoryDto.getEmail()).willReturn("동글이.student.42seoul.kr");
+		given(activeLentHistoryDto.getEmail()).willReturn("동글레차.student.42seoul.kr");
 		given(activeLentHistoryDto.getCabinetId()).willReturn(1L);
 	}
 
 	@BeforeEach
+	@DisplayName("테스트 전에 mailOverdueProperties를 설정한다.")
 	void setUp() {
 		given(mailOverdueProperties.getSoonOverdueMailSubject()).willReturn("42CABI 사물함 연체 예정 알림");
 		given(mailOverdueProperties.getSoonOverdueMailTemplateUrl()).willReturn(
@@ -87,5 +100,82 @@ public class OverdueManagerTest {
 
 		Assertions.assertEquals(overdueManager.getOverdueType(false, -42L),
 				OverdueType.NONE);
+	}
+
+	@Test
+	@DisplayName("성공: OVERDUE 상태에서 연체 처리")
+	void 성공_handleOverdue_OVERDUE() throws MessagingException, IOException {
+		given(activeLentHistoryDto.getIsExpired()).willReturn(true);
+		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(1L);
+
+		overdueManager.handleOverdue(activeLentHistoryDto);
+
+		then(cabinetService).should().updateStatus(
+				activeLentHistoryDto.getCabinetId(),
+				CabinetStatus.OVERDUE
+		);
+
+		then(mailOverdueProperties).should().getOverdueMailSubject();
+		then(mailOverdueProperties).should().getOverdueMailTemplateUrl();
+		then(emailSender).should().sendMail(
+				activeLentHistoryDto.getName(),
+				activeLentHistoryDto.getEmail(),
+				mailOverdueProperties.getOverdueMailSubject(),
+				mailOverdueProperties.getOverdueMailTemplateUrl()
+		);
+	}
+
+	@Test
+	@DisplayName("성공: SOON_OVERDUE 상태에서 연체 예정 처리")
+	void 성공_handleOverdue_SOON_OVERDUE() throws MessagingException, IOException {
+		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
+		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(-1L);
+
+		overdueManager.handleOverdue(activeLentHistoryDto);
+
+		then(cabinetService).should(never()).updateStatus(
+				activeLentHistoryDto.getCabinetId(),
+				CabinetStatus.OVERDUE
+		);
+
+		then(mailOverdueProperties).should().getSoonOverdueMailSubject();
+		then(mailOverdueProperties).should().getSoonOverdueMailTemplateUrl();
+		then(emailSender).should().sendMail(
+				activeLentHistoryDto.getName(),
+				activeLentHistoryDto.getEmail(),
+				mailOverdueProperties.getSoonOverdueMailSubject(),
+				mailOverdueProperties.getSoonOverdueMailTemplateUrl()
+		);
+	}
+
+	@Test
+	@DisplayName("실패: NONE 상태에서는 연체 처리를 안함")
+	void 실패_handleOverdue_SOON_NONE() throws MessagingException, IOException {
+		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
+		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(0L);
+
+		overdueManager.handleOverdue(activeLentHistoryDto);
+
+		then(cabinetService).should(never()).updateStatus(
+				activeLentHistoryDto.getCabinetId(),
+				CabinetStatus.OVERDUE
+		);
+
+		then(mailOverdueProperties).should(never()).getSoonOverdueMailSubject();
+		then(mailOverdueProperties).should(never()).getSoonOverdueMailTemplateUrl();
+		then(mailOverdueProperties).should(never()).getOverdueMailSubject();
+		then(mailOverdueProperties).should(never()).getOverdueMailTemplateUrl();
+		then(emailSender).should(never()).sendMail(
+				activeLentHistoryDto.getName(),
+				activeLentHistoryDto.getEmail(),
+				mailOverdueProperties.getSoonOverdueMailSubject(),
+				mailOverdueProperties.getSoonOverdueMailTemplateUrl()
+		);
+		then(emailSender).should(never()).sendMail(
+				activeLentHistoryDto.getName(),
+				activeLentHistoryDto.getEmail(),
+				mailOverdueProperties.getOverdueMailSubject(),
+				mailOverdueProperties.getOverdueMailTemplateUrl()
+		);
 	}
 }

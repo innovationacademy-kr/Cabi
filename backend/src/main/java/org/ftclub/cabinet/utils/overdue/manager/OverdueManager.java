@@ -52,14 +52,14 @@ public class OverdueManager {
 				template = mailOverdueProperties.getSoonOverdueMailTemplateUrl();
 				break;
 			case OVERDUE:
-				this.cabinetService.updateStatus(activeLent.getCabinetId(),
+				cabinetService.updateStatus(activeLent.getCabinetId(),
 						CabinetStatus.OVERDUE);
 				subject = mailOverdueProperties.getOverdueMailSubject();
 				template = mailOverdueProperties.getOverdueMailTemplateUrl();
 				break;
 		}
 		try {
-			this.emailSender.sendMail(activeLent.getName(), activeLent.getEmail(), subject,
+			emailSender.sendMail(activeLent.getName(), activeLent.getEmail(), subject,
 					template);
 		} catch (Exception e) {
 			e.printStackTrace();
