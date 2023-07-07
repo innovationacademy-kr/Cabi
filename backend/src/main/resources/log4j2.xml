@@ -2,7 +2,7 @@
 <Configuration status="INFO">
 
   <Properties>
-    <Property name="consoleLayout">%style{%d{yyyy-MM-dd HH:mm:ss}}{white} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1}}{bright,yellow}: %msg%n%throwable</Property>
+    <Property name="consoleLayout">%style{%d{yyyy-MM-dd HH:mm:ss}}{white} %highlight{%-5level }[%style{%t}{bright,blue}] [%X] %style{%C{1}}{bright,yellow}: %msg%n%throwable</Property>
   </Properties>
 
   <Appenders>
