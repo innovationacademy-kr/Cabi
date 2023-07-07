@@ -38,7 +38,7 @@ public class SystemScheduler {
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				log.error(e.getMessage());
 			}
 		}
 	}

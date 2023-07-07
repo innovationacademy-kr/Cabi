@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 
-import java.io.IOException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
@@ -20,8 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
@@ -47,7 +46,6 @@ public class EmailSenderUnitTest {
 	@Mock(lenient = true)
 	private GmailProperties gmailProperties = mock(GmailProperties.class);
 
-	@Spy
 	@InjectMocks
 	private EmailSender emailSender;
 
@@ -66,8 +64,8 @@ public class EmailSenderUnitTest {
 	@BeforeEach
 	@DisplayName("테스트 전에 gmailProperties를 설정한다.")
 	void setupBeforeEach() {
-		given(gmailProperties.getHost()).willReturn("smtp.gmail.com");
-		given(gmailProperties.getPort()).willReturn(587);
+		given(gmailProperties.getMailServerHost()).willReturn("smtp.gmail.com");
+		given(gmailProperties.getMailServerPort()).willReturn(587);
 		given(gmailProperties.getUsername()).willReturn("까비의부장님사난.gmail.com");
 		given(gmailProperties.getPassword()).willReturn("비밀입니다.");
 		given(gmailProperties.getUseAuth()).willReturn(true);
@@ -76,7 +74,7 @@ public class EmailSenderUnitTest {
 
 	@Test
 	@DisplayName("실패 - 개발 환경에서는 메일을 보내지 않음")
-	void 실패_sendMail_개발환경() throws MessagingException, IOException {
+	void 실패_sendMail_개발환경() throws MessagingException, MailException {
 		given(gmailProperties.getIsProduction()).willReturn(false);
 
 		emailSender.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate());
@@ -88,7 +86,7 @@ public class EmailSenderUnitTest {
 
 	@Test
 	@DisplayName("성공 - 개발 환경이 아니면 메일을 보냄")
-	void 성공_sendMail_개발환경아님() throws MessagingException, IOException {
+	void 성공_sendMail_개발환경아님() throws MessagingException, MailException {
 		given(gmailProperties.getIsProduction()).willReturn(true);
 		given(templateEngine.process(anyString(), any(Context.class))).willReturn("context");
 		MimeMessage mimeMessage = new MimeMessage((javax.mail.Session) null);

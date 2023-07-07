@@ -154,7 +154,7 @@ public class LentServiceImpl implements LentService {
 						e.getUser(),
 						e.getCabinet(),
 						e.isExpired(LocalDateTime.now()),
-						e.getDaysLeftFromOverdueDay(LocalDateTime.now())
+						e.getDaysUntilExpiration(LocalDateTime.now())
 				))
 				.collect(Collectors.toList());
 	}

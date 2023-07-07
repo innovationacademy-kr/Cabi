@@ -12,10 +12,10 @@ public class GmailProperties {
 	private Boolean isProduction;
 
 	@Value("${spring.mail.host}")
-	private String host;
+	private String mailServerHost;
 
 	@Value("${spring.mail.port}")
-	private int port;
+	private int mailServerPort;
 
 	@Value("${spring.mail.username}")
 	private String username;

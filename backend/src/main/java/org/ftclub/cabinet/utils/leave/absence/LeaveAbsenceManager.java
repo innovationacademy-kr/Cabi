@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.FtApiManager;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -32,13 +34,14 @@ public class LeaveAbsenceManager {
 				lentService.terminateLentCabinet(userId);
 			}
 		} catch (HttpClientErrorException e) {
-			e.printStackTrace();
+			log.error("handleLeaveAbsence HttpClientErrorException {}", e.getStatusCode());
 			if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
 				lentService.terminateLentCabinet(userId);
 				userService.deleteUser(userId, LocalDateTime.now());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("handleLeaveAbsence Exception {}", e.getMessage());
+			throw new ServiceException(ExceptionStatus.EXTERNAL_API_EXCEPTION);
 		}
 	}
 }

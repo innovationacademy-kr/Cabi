@@ -12,6 +12,12 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Log4j2
+/**
+ * 연체 관리자 클래스
+ *
+ * TODO: 추후 다른 알림 방식(슬랙봇, 푸쉬 알림 등)으로 연체 알림을 발송하게 될 수 있으므로
+ *       해당 클래스가 MailSender에 의존하지 않도록 리팩토링할 것
+ */
 public class OverdueManager {
 
 	private final EmailSender emailSender;

@@ -82,8 +82,6 @@ class DateUtilTest {
 	public void 날짜_빼기_올림값_음수() {
 		LocalDateTime day2 = LocalDateTime.of(2000, 2, 20, 0, 0, 42);
 		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
-		long diffInMillis = Duration.between(day1, day2).toMillis();
-		System.out.println(diffInMillis / 1000.0 / 60 / 60 / 24);
 		assertEquals(-1, DateUtil.calculateTwoDateDiffCeil(day1, day2));
 	}
 
@@ -91,8 +89,6 @@ class DateUtilTest {
 	public void 날짜_빼기_올림값_0() {
 		LocalDateTime day2 = LocalDateTime.of(2000, 2, 21, 0, 0, 42);
 		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
-		long diffInMillis = Duration.between(day1, day2).toMillis();
-		System.out.println(diffInMillis / 1000.0 / 60 / 60 / 24);
 		assertEquals(0, DateUtil.calculateTwoDateDiffCeil(day1, day2));
 	}
 
@@ -100,8 +96,6 @@ class DateUtilTest {
 	public void 날짜_빼기_올림값_양수() {
 		LocalDateTime day2 = LocalDateTime.of(2000, 2, 22, 0, 0, 42);
 		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
-		long diffInMillis = Duration.between(day1, day2).toMillis();
-		System.out.println(diffInMillis / 1000.0 / 60 / 60 / 24);
 		assertEquals(1, DateUtil.calculateTwoDateDiffCeil(day1, day2));
 	}
 }

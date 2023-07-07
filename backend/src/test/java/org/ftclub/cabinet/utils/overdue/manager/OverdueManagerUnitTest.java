@@ -5,7 +5,6 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 
-import java.io.IOException;
 import javax.mail.MessagingException;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
@@ -22,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.MailException;
 
 @ExtendWith(MockitoExtension.class)
 public class OverdueManagerUnitTest {
@@ -47,8 +47,8 @@ public class OverdueManagerUnitTest {
 		given(activeLentHistoryDto.getCabinetId()).willReturn(1L);
 
 		gmailProperties = mock(GmailProperties.class);
-		given(gmailProperties.getHost()).willReturn("smtp.gmail.com");
-		given(gmailProperties.getPort()).willReturn(587);
+		given(gmailProperties.getMailServerHost()).willReturn("smtp.gmail.com");
+		given(gmailProperties.getMailServerPort()).willReturn(587);
 		given(gmailProperties.getUsername()).willReturn("까비의부장님사난.gmail.com");
 		given(gmailProperties.getPassword()).willReturn("비밀입니다.");
 		given(gmailProperties.getUseAuth()).willReturn(true);
@@ -108,7 +108,7 @@ public class OverdueManagerUnitTest {
 
 	@Test
 	@DisplayName("성공: OVERDUE 상태에서 연체 처리")
-	void 성공_handleOverdue_OVERDUE() throws MessagingException, IOException {
+	void 성공_handleOverdue_OVERDUE() throws MessagingException, MailException {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(true);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(1L);
 
@@ -131,7 +131,7 @@ public class OverdueManagerUnitTest {
 
 	@Test
 	@DisplayName("성공: SOON_OVERDUE 상태에서 연체 예정 처리")
-	void 성공_handleOverdue_SOON_OVERDUE() throws MessagingException, IOException {
+	void 성공_handleOverdue_SOON_OVERDUE() throws MessagingException, MailException {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(-1L);
 
@@ -154,7 +154,7 @@ public class OverdueManagerUnitTest {
 
 	@Test
 	@DisplayName("실패: NONE 상태에서는 연체 처리를 안함")
-	void 실패_handleOverdue_NONE() throws MessagingException, IOException {
+	void 실패_handleOverdue_NONE() throws MessagingException, MailException {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(0L);
 

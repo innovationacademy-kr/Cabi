@@ -202,7 +202,7 @@ public class LentHistory {
 	 *
 	 * @return 만료일까지 남은 일수 (만료일 - 현재시간) (일 기준, 올림)
 	 */
-	public Long getDaysLeftFromOverdueDay(LocalDateTime now) {
+	public Long getDaysUntilExpiration(LocalDateTime now) {
 		if (isSetExpiredAt()) {
 			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now);
 		}

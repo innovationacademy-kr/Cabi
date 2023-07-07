@@ -2,9 +2,11 @@ package org.ftclub.cabinet.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
+@ToString
 public class ActiveLentHistoryDto {
 
 	private final Long userId;
@@ -13,12 +15,4 @@ public class ActiveLentHistoryDto {
 	private final Long cabinetId;
 	private final Boolean isExpired;
 	private final Long daysLeftFromExpireDate;
-
-	@Override
-	public String toString() {
-		return "ActiveLentHistoryDto [userId=" + userId + ", name=" + name + ", email=" + email
-				+ ", cabinetId="
-				+ cabinetId + ", isExpired=" + isExpired + ", daysLeftFromExpireDate="
-				+ daysLeftFromExpireDate + "]";
-	}
 }

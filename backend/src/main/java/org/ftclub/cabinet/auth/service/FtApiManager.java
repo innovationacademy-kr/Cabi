@@ -25,6 +25,7 @@ public class FtApiManager {
 	private final FtApiProperties ftApiProperties;
 	private String accessToken;
 	private final ObjectMapper objectMapper;
+	private static final Integer MAX_RETRY = 3;
 
 	/**
 	 * 42 토큰을 발급받는다.
@@ -63,7 +64,7 @@ public class FtApiManager {
 	public JsonNode getFtUsersInfoByName(String name) {
 		log.info("called getFtUsersInfoByName {}", name);
 		Integer tryCount = 0;
-		while (tryCount < 3) {
+		while (tryCount < MAX_RETRY) {
 			try {
 				JsonNode results = WebClient.create().get()
 						.uri(ftApiProperties.getUsersInfoUri() + '/' + name)
@@ -78,7 +79,7 @@ public class FtApiManager {
 				log.info(e.getMessage());
 				log.info("요청에 실패했습니다. 최대 3번 재시도합니다. 현재 시도 횟수: {}", tryCount);
 				this.issueAccessToken();
-				if (tryCount == 3) {
+				if (tryCount == MAX_RETRY) {
 					throw new RuntimeException();
 				}
 			}
