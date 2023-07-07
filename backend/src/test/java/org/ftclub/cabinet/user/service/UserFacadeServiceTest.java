@@ -103,17 +103,20 @@ public class UserFacadeServiceTest {
 		given(lentOptionalFetcher.findActiveLentCabinetByUserId(1L)).willReturn(cabinet1);
 		given(userOptionalFetcher.findRecentActiveBanHistory(1L, LocalDateTime.now()))
 				.willReturn(null);
-		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null)).willReturn(
-				new MyProfileResponseDto(1L, "testUser1", 1L, null));
+		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(
+				userSessionDto.getUserId(), userSessionDto.getName(),
+				cabinet1.getCabinetId(), null);
+		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null))
+				.willReturn(myProfileResponseDto);
 
 		// when
 		MyProfileResponseDto myProfile = userFacadeService.getMyProfile(userSessionDto);
 
 		// then
-		assertEquals(1L, myProfile.getUserId());
-		assertEquals("testUser1", myProfile.getName());
-		assertEquals(1L, myProfile.getCabinetId());
-		assertEquals(null, myProfile.getUnbannedAt());
+		assertEquals(myProfileResponseDto.getUserId(), myProfile.getUserId());
+		assertEquals(myProfileResponseDto.getName(), myProfile.getName());
+		assertEquals(myProfileResponseDto.getCabinetId(), myProfile.getCabinetId());
+		assertEquals(myProfileResponseDto.getUnbannedAt(), myProfile.getUnbannedAt());
 	}
 
 	@Test
