@@ -3,6 +3,7 @@ import LentLog from "@/components/LentLog/LentLog";
 import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
+import { getTotalPage } from "@/utils/dateUtils";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 
@@ -14,7 +15,7 @@ const LentLogContainer = () => {
   async function getData(page: number) {
     try {
       const result = await axiosMyLentLog(0);
-      setTotalPage(Math.floor(result.data.total_length / 10) + 1);
+      setTotalPage(getTotalPage(result.data.totalLength, 10));
       setLogs(result.data.result);
     } catch {
       setLogs(STATUS_400_BAD_REQUEST);
