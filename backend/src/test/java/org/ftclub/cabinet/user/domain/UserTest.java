@@ -1,9 +1,14 @@
 package org.ftclub.cabinet.user.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.LocalDateTime;
 import org.ftclub.cabinet.exception.DomainException;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -63,5 +68,46 @@ public class UserTest {
 	void of_실패_유저_role_null() {
 		assertThrows(DomainException.class,
 				() -> User.of("test4", "test@test.com", null, null));
+	}
+
+	@Test
+	@DisplayName("유저 역할 확인 성공 - 일반 유저")
+	void isUserRole_성공_일반유저() {
+		User user = User.of("test", "test@test.com", null, UserRole.USER);
+
+		assertTrue(user.isUserRole(UserRole.USER));
+		assertFalse(user.isUserRole(UserRole.CLUB));
+	}
+
+	@Test
+	@DisplayName("유저 역할 확인 성공 - 동아리")
+	void isUserRole_성공_동아리() {
+		User user = User.of("test", "test@test.com", null, UserRole.CLUB);
+
+		assertFalse(user.isUserRole(UserRole.USER));
+		assertTrue(user.isUserRole(UserRole.CLUB));
+	}
+
+	@Test
+	@DisplayName("유저 블랙홀 날짜 변경 성공 - 블랙홀 날짜 변경")
+	void changeBlackholedAt_성공() {
+		LocalDateTime blackholedAt = LocalDateTime.now().plusDays(10);
+		LocalDateTime changedBlackholedAt = LocalDateTime.now().plusDays(20);
+		User user = User.of("test", "test@test.com", blackholedAt, UserRole.CLUB);
+		user.changeBlackholedAt(changedBlackholedAt);
+
+		assertNotEquals(blackholedAt, user.getBlackholedAt());
+		assertEquals(changedBlackholedAt, user.getBlackholedAt());
+	}
+
+	@Test
+	@DisplayName("유저 삭제 날짜 변경 성공 - 삭제 날짜 변경")
+	void setDeletedAt_성공() {
+	    LocalDateTime deletedAt = LocalDateTime.now().plusDays(10);
+		User user = User.of("test", "test@test.com", null, UserRole.CLUB);
+		user.setDeletedAt(deletedAt);
+
+		assertNotEquals(null, user.getDeletedAt());
+		assertEquals(deletedAt, user.getDeletedAt());
 	}
 }
