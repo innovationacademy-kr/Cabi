@@ -8,6 +8,7 @@ import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
@@ -36,5 +37,8 @@ public interface UserMapper {
 			BanHistory banHistory);
 
 	BlockedUserPaginationDto toBlockedUserPaginationDto(List<UserBlockedInfoDto> result,
-			Integer totalPage);
+			Long totalLength);
+
+	UserProfilePaginationDto toUserProfilePaginationDto(List<UserProfileDto> result,
+			Long totalLength);
 }
