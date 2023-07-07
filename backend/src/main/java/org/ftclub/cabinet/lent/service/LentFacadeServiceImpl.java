@@ -57,7 +57,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		}
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByUserId(userId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalPages());
+		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalElements());
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalPages());
+		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalElements());
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	 * @param user 유저 정보
 	 * @param page 페이지
 	 * @param size 사이즈
-	 * @return
+	 * @return LentHistoryPaginationDto 본인의 lent log
 	 */
 	@Override
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
@@ -111,18 +111,17 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 						lentHistory.getUser(),
 						lentHistory.getCabinet()))
 				.collect(Collectors.toList());
-		// TODO: totalPage로 바꾸기
-		return lentMapper.toLentHistoryPaginationDto(result, result.size() / size);
+		return lentMapper.toLentHistoryPaginationDto(result, Long.valueOf(result.size()));
 	}
 
 	private LentHistoryPaginationDto generateLentHistoryPaginationDto(
-			List<LentHistory> lentHistories, Integer totalPage) {
+			List<LentHistory> lentHistories, Long totalLength) {
 		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
 						e.getUser(),
 						e.getCabinet()))
 				.collect(Collectors.toList());
-		return new LentHistoryPaginationDto(lentHistoryDto, totalPage);
+		return new LentHistoryPaginationDto(lentHistoryDto, totalLength);
 	}
 
 	@Override

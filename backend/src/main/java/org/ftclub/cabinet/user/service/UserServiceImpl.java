@@ -101,11 +101,13 @@ public class UserServiceImpl implements UserService {
 		AdminUser adminUser = userOptionalFetcher.getAdminUserByEmail(email);
 		if (adminUser.getRole() == AdminRole.NONE) {
 			adminUser.changeAdminRole(AdminRole.ADMIN);
+			adminUserRepository.save(adminUser);
 		}
 	}
 
 	@Override
-	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
+			LocalDateTime endedAt,
 			LocalDateTime expiredAt) {
 		log.info("Called banUser: {}", userId);
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);

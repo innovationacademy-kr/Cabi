@@ -11,5 +11,5 @@ import lombok.ToString;
 public class CabinetPaginationDto {
 
 	private final List<CabinetDto> result;
-	private final Integer totalPage;
+	private final Long totalLength;
 }

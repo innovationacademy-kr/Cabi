@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.domain;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,7 +78,8 @@ public class AdminUser {
         if (!(other instanceof AdminUser)) {
             return false;
         }
-        return (this.adminUserId.equals(((AdminUser) other).getAdminUserId()));
+        AdminUser adminUser = (AdminUser) other;
+        return Objects.equals(adminUserId, adminUser.adminUserId);
     }
 
     public void changeAdminRole(AdminRole role) {
