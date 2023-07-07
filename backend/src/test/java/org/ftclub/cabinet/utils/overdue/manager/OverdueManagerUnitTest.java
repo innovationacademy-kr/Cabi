@@ -73,7 +73,8 @@ public class OverdueManagerUnitTest {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(true);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(1L);
 
-		Assertions.assertEquals(overdueManager.getOverdueType(true, 1L), OverdueType.OVERDUE);
+		Assertions.assertEquals(overdueManager.getOverdueType(activeLentHistoryDto.getIsExpired(),
+				activeLentHistoryDto.getDaysLeftFromExpireDate()), OverdueType.OVERDUE);
 	}
 
 	@Test
@@ -82,8 +83,8 @@ public class OverdueManagerUnitTest {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(-1L);
 
-		Assertions.assertEquals(overdueManager.getOverdueType(false, -1L),
-				OverdueType.SOON_OVERDUE);
+		Assertions.assertEquals(overdueManager.getOverdueType(activeLentHistoryDto.getIsExpired(),
+				activeLentHistoryDto.getDaysLeftFromExpireDate()), OverdueType.SOON_OVERDUE);
 	}
 
 	@Test
@@ -92,8 +93,8 @@ public class OverdueManagerUnitTest {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(0L);
 
-		Assertions.assertEquals(overdueManager.getOverdueType(false, 0L),
-				OverdueType.NONE);
+		Assertions.assertEquals(overdueManager.getOverdueType(activeLentHistoryDto.getIsExpired(),
+				activeLentHistoryDto.getDaysLeftFromExpireDate()), OverdueType.NONE);
 	}
 
 	@Test
@@ -102,8 +103,8 @@ public class OverdueManagerUnitTest {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(-42L);
 
-		Assertions.assertEquals(overdueManager.getOverdueType(false, -42L),
-				OverdueType.NONE);
+		Assertions.assertEquals(overdueManager.getOverdueType(activeLentHistoryDto.getIsExpired(),
+				activeLentHistoryDto.getDaysLeftFromExpireDate()), OverdueType.NONE);
 	}
 
 	@Test
