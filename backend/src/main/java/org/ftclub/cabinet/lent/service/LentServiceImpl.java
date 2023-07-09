@@ -149,12 +149,13 @@ public class LentServiceImpl implements LentService {
 	public List<ActiveLentHistoryDto> getAllActiveLentHistories() {
 		log.info("Called getAllActiveLentHistories");
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentHistories();
+		LocalDateTime now = LocalDateTime.now();
 		return lentHistories.stream()
 				.map(e -> lentMapper.toActiveLentHistoryDto(e,
 						e.getUser(),
 						e.getCabinet(),
-						e.isExpired(LocalDateTime.now()),
-						e.getDaysUntilExpiration(LocalDateTime.now())
+						e.isExpired(now),
+						e.getDaysUntilExpiration(now)
 				))
 				.collect(Collectors.toList());
 	}
