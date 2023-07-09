@@ -2,15 +2,18 @@ package org.ftclub.cabinet.lent.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
+import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
@@ -31,6 +34,7 @@ public class LentServiceImpl implements LentService {
 	private final UserOptionalFetcher userExceptionHandler;
 	private final UserService userService;
 	private final BanHistoryRepository banHistoryRepository;
+	private final LentMapper lentMapper;
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
@@ -139,5 +143,19 @@ public class LentServiceImpl implements LentService {
 		LentHistory result = LentHistory.of(LocalDateTime.now(), expirationDate, userId, cabinetId);
 		cabinet.specifyStatusByUserCount(1);
 		lentRepository.save(result);
+	}
+
+	@Override
+	public List<ActiveLentHistoryDto> getAllActiveLentHistories() {
+		log.info("Called getAllActiveLentHistories");
+		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentHistories();
+		return lentHistories.stream()
+				.map(e -> lentMapper.toActiveLentHistoryDto(e,
+						e.getUser(),
+						e.getCabinet(),
+						e.isExpired(LocalDateTime.now()),
+						e.getDaysUntilExpiration(LocalDateTime.now())
+				))
+				.collect(Collectors.toList());
 	}
 }
