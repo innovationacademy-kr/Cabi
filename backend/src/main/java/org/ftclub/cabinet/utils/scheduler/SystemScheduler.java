@@ -51,8 +51,7 @@ public class SystemScheduler {
 	/**
 	 * 매주 월요일 자정 42분에 블랙홀에 빠진 유저 처리를 트리거하는 메소드
 	 */
-//	@Scheduled(cron = "0 42 0 * * MON")
-	@Scheduled(initialDelay = 3000, fixedDelay = 1000 * 60 * 60 * 24 * 7)
+	@Scheduled(cron = "0 42 0 * * MON")
 	public void checkBlackHole() {
 		log.info("called checkBlackHole");
 		List<UserBlackholeInfoDto> blackHoledUsers = userService.getAllUserBlackholeInfo();
