@@ -58,7 +58,7 @@ public class BlackholeManagerUnitTest {
 	}
 
 	@Test
-	@DisplayName("성공 - 블랙홀인 유저를 강제 반납 및 삭제 처리 (기존 블랙홀 날짜가 오늘 날짜보다 과거)")
+	@DisplayName("성공 - 블랙홀인 유저를 강제 반납 및 삭제 처리")
 	void 성공_handleBlackhole_블랙홀에_빠진_유저() throws JsonProcessingException {
 		Long userId = 1L;
 		String name = "지최님";

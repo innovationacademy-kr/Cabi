@@ -55,7 +55,7 @@ public class BlackholeManager {
 	 *
 	 * @param blackholedAtDate 블랙홀 날짜
 	 * @param now              현재 시간
-	 * @return
+	 * @return 블랙홀에 빠졌는지 여부
 	 */
 	private Boolean isBlackholed(LocalDateTime blackholedAtDate, LocalDateTime now) {
 		log.debug("isBlackholed {} {}", blackholedAtDate, now);
@@ -105,9 +105,9 @@ public class BlackholeManager {
 	/**
 	 * 유저 정보 조회 결과 해당 유저를 42에서 찾을 수 없다면, 강제 반납 및 삭제 처리한다.
 	 *
-	 * @param userBlackholeInfoDto
-	 * @param now
-	 * @param e
+	 * @param userBlackholeInfoDto 유저 정보 {@link UserBlackholeInfoDto}
+	 * @param now                  현재 시간
+	 * @param e                    HttpClientErrorException
 	 */
 	private void handleHttpClientError(UserBlackholeInfoDto userBlackholeInfoDto, LocalDateTime now,
 			HttpClientErrorException e) {
@@ -144,6 +144,10 @@ public class BlackholeManager {
 			}
 		} catch (HttpClientErrorException e) {
 			handleHttpClientError(userBlackholeInfoDto, now, e);
+		} catch (ServiceException e) {
+			if (e.getStatus().equals(ExceptionStatus.NO_LENT_CABINET)) {
+				userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
+			}
 		} catch (Exception e) {
 			log.error("handleBlackhole Exception {}", e.getMessage());
 			throw new ServiceException(ExceptionStatus.EXTERNAL_API_EXCEPTION);
