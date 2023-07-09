@@ -2,10 +2,12 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -141,5 +143,15 @@ public class UserServiceImpl implements UserService {
 	public AdminRole getAdminUserRole(String email) {
 		log.info("Called getAdminUserRole: {}", email);
 		return userOptionalFetcher.findAdminUserRoleByEmail(email);
+	}
+
+	@Override
+	public List<UserBlackholeInfoDto> getAllUserBlackholeInfo() {
+		log.info("Called getAllUserBlackholeInfo");
+		List<User> users = userRepository.findAll();
+		return users.stream()
+				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+						user.getEmail(), user.getBlackholedAt()))
+				.collect(Collectors.toList());
 	}
 }
