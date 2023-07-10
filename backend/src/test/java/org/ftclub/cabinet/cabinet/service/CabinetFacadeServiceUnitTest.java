@@ -2,11 +2,14 @@ package org.ftclub.cabinet.cabinet.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -295,94 +298,139 @@ class CabinetFacadeServiceUnitTest {
 
 	@Test
 	void getCabinetsPerSection() {
+		//============================== SETUP LITERALS ==============================
+
 		String building = "새롬관";
 		Integer floor = 2;
 		String section1 = "1클러스터끝";
 		String section2 = "오아시스";
 		String section3 = "2클러스터끝";
-		String lentUserName = "제발 그만해";
+		String lentUserName1 = "제발 그만해";
+		String lentUserName2 = "이러다";
+		String lentUserName3 = "다 죽어";
 
-		// FOR private method getCabinetPreviewBundle SETTINGS START
+		//============================== GIVEN ==============================
+
+		//[GIVEN]START: getCabinetPreviewBundle
 		Cabinet cabinet1 = mock(Cabinet.class);
 		Cabinet cabinet2 = mock(Cabinet.class);
 		Cabinet cabinet3 = mock(Cabinet.class);
+		given(cabinet1.getCabinetId()).willReturn(1L);
+		given(cabinet2.getCabinetId()).willReturn(2L);
+		given(cabinet3.getCabinetId()).willReturn(3L);
 
-		List<Cabinet> cabinetList = new ArrayList<>();
-		cabinetList.add(cabinet1);
-		cabinetList.add(cabinet2);
-		cabinetList.add(cabinet3);
-		Location location = Location.of(building, floor, section1);
+		User user1 = mock(User.class);
+		User user2 = mock(User.class);
+		User user3 = mock(User.class);
+		given(user1.getName()).willReturn(lentUserName1);
+		given(user2.getName()).willReturn(lentUserName2);
+		given(user3.getName()).willReturn(lentUserName3);
 
-		given(cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor))
-				.willReturn(new ArrayList<String>(List.of(section1, section2, section3)));
-		given(cabinetOptionalFetcher.findAllCabinetsByLocation(location))
-				.willReturn(cabinetList);
+		LentHistory lentHistory1 = mock(LentHistory.class);
+		LentHistory lentHistory2 = mock(LentHistory.class);
+		LentHistory lentHistory3 = mock(LentHistory.class);
 
-		LentHistory lentHistory = mock(LentHistory.class);
-		User userMock = mock(User.class);
-		given(lentHistory.getUser()).willReturn(userMock);
-		given(userMock.getName()).willReturn(lentUserName);
-		ArrayList<LentHistory> lentHistories = new ArrayList<>(List.of(lentHistory));
+		given(lentHistory1.getUser()).willReturn(user1);
+		given(lentHistory2.getUser()).willReturn(user2);
+		given(lentHistory3.getUser()).willReturn(user3);
 
+		List<LentHistory> lentHistories1 = new ArrayList<>(
+				List.of(lentHistory1, lentHistory2, lentHistory3));
+		List<LentHistory> lentHistories2 = new ArrayList<>(
+				List.of(lentHistory2, lentHistory1, lentHistory3));
+		List<LentHistory> lentHistories3 = new ArrayList<>(
+				List.of(lentHistory3, lentHistory2, lentHistory1));
+		// Section 별로 각각 다른 Cabinet List 반환 (테스트상 편의를 위해, 캐비넷 구성요소는 같으나 실제로는 다른 캐비넷임)
+		given(cabinetOptionalFetcher.findAllCabinetsByLocation(
+				Location.of(building, floor, section1)))
+				.willReturn(List.of(cabinet1, cabinet2, cabinet3));
+		given(cabinetOptionalFetcher.findAllCabinetsByLocation(
+				Location.of(building, floor, section2)))
+				.willReturn(List.of(cabinet1, cabinet2, cabinet3));
+		given(cabinetOptionalFetcher.findAllCabinetsByLocation(
+				Location.of(building, floor, section3)))
+				.willReturn(List.of(cabinet1, cabinet2, cabinet3));
+
+		// 캐비넷 리스트를 돌면서 활성화(lentHistory.endedAt == null)  대여기록 조회
 		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinet1.getCabinetId()))
-				.willReturn(lentHistories);
+				.willReturn(lentHistories1);
 		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinet2.getCabinetId()))
-				.willReturn(lentHistories);
+				.willReturn(lentHistories2);
 		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinet3.getCabinetId()))
-				.willReturn(lentHistories);
+				.willReturn(lentHistories3);
 
+		// 캐비넷 리스트롤, 활성화된 대여기록에서 대여자 이름을 찾고, PreviewDto 로 변환
 		CabinetPreviewDto cabinetPreviewDto1 = mock(CabinetPreviewDto.class);
 		CabinetPreviewDto cabinetPreviewDto2 = mock(CabinetPreviewDto.class);
 		CabinetPreviewDto cabinetPreviewDto3 = mock(CabinetPreviewDto.class);
-
-		given(cabinetMapper.toCabinetPreviewDto(cabinet1, lentHistories.size(), lentUserName))
+		given(cabinetMapper.toCabinetPreviewDto(cabinet1, lentHistories1.size(), lentUserName1))
 				.willReturn(cabinetPreviewDto1);
-		given(cabinetMapper.toCabinetPreviewDto(cabinet2, lentHistories.size(), lentUserName))
+		given(cabinetMapper.toCabinetPreviewDto(cabinet2, lentHistories2.size(), lentUserName2))
 				.willReturn(cabinetPreviewDto2);
-		given(cabinetMapper.toCabinetPreviewDto(cabinet3, lentHistories.size(), lentUserName))
+		given(cabinetMapper.toCabinetPreviewDto(cabinet3, lentHistories3.size(), lentUserName3))
 				.willReturn(cabinetPreviewDto3);
+		// 최종적으로는 map().collect 로 캐비넷별로 List <CabinetPrevieDto> 반환
+		// [GIVEN]END: getCabinetPreviewBundle
 
+		given(cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor)).willReturn(
+				new ArrayList<>(List.of(section1, section2, section3)));
 
-		List<CabinetPreviewDto> cabinetPreviewDtoList = new ArrayList<>();
-		cabinetPreviewDtoList.add(cabinetPreviewDto1);
-		cabinetPreviewDtoList.add(cabinetPreviewDto2);
-		cabinetPreviewDtoList.add(cabinetPreviewDto3);
-		// FOR private method getCabinetPreviewBundle SETTINGS END
-
-
-		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto1 = new CabinetsPerSectionResponseDto(section1, cabinetPreviewDtoList);
-		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto2 = new CabinetsPerSectionResponseDto(section2, cabinetPreviewDtoList);
-		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto3 = new CabinetsPerSectionResponseDto(section3, cabinetPreviewDtoList);
-//		given(cabinetsPerSectionResponseDto1.getSection()).willReturn(section1);
-//		given(cabinetsPerSectionResponseDto2.getSection()).willReturn(section2);
-//		given(cabinetsPerSectionResponseDto3.getSection()).willReturn(section3);
+		// 테스트 편의상 cabinetPreviewDto1,2,3 순서를 그대로 함
+		List<CabinetPreviewDto> getCabinetPreviewBundleResult1 = new ArrayList<>(
+				List.of(cabinetPreviewDto1, cabinetPreviewDto2, cabinetPreviewDto3));
+		List<CabinetPreviewDto> getCabinetPreviewBundleResult2 = new ArrayList<>(
+				List.of(cabinetPreviewDto1, cabinetPreviewDto2, cabinetPreviewDto3));
+		List<CabinetPreviewDto> getCabinetPreviewBundleResult3 = new ArrayList<>(
+				List.of(cabinetPreviewDto1, cabinetPreviewDto2, cabinetPreviewDto3));
 
 		given(cabinetMapper.toCabinetsPerSectionResponseDto(section1,
-				cabinetPreviewDtoList))
-				.willReturn(cabinetsPerSectionResponseDto1);
+				getCabinetPreviewBundleResult1))
+				.willReturn(new CabinetsPerSectionResponseDto(section1,
+						getCabinetPreviewBundleResult1));
 		given(cabinetMapper.toCabinetsPerSectionResponseDto(section2,
-				cabinetPreviewDtoList))
-				.willReturn(cabinetsPerSectionResponseDto2);
+				getCabinetPreviewBundleResult2))
+				.willReturn(new CabinetsPerSectionResponseDto(section2,
+						getCabinetPreviewBundleResult2));
 		given(cabinetMapper.toCabinetsPerSectionResponseDto(section3,
-				cabinetPreviewDtoList))
-				.willReturn(cabinetsPerSectionResponseDto3);
+				getCabinetPreviewBundleResult3))
+				.willReturn(new CabinetsPerSectionResponseDto(section3,
+						getCabinetPreviewBundleResult3));
 
-
-		//when
+		//============================== WHEN ==============================
 		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService.getCabinetsPerSection(
 				building, floor);
 
-		//then
-		then(cabinetOptionalFetcher).should().findAllSectionsByBuildingAndFloor(building, floor);
-		then(cabinetMapper).should(times(3)).toCabinetsPerSectionResponseDto(any(), any());
+		//============================== THEN ==============================
 
-		assertEquals(cabinetsPerSectionResponseDto1, result.get(0));
-		assertEquals(cabinetsPerSectionResponseDto2, result.get(1));
-		assertEquals(cabinetsPerSectionResponseDto3, result.get(2));
+		then(cabinetOptionalFetcher).should(times(1))
+				.findAllSectionsByBuildingAndFloor(building, floor);
 
-//		assertEquals(cabinetsPerSectionResponseDto1, result.get(0).getCabinets());
-//		assertEquals(cabinetsPerSectionResponseDto2, result.get(1).getCabinets());
-//		assertEquals(cabinetsPerSectionResponseDto3, result.get(2).getCabinets());
+		//[THEN]START: getCabinetPreviewBundle()
+		then(cabinetOptionalFetcher).should(times(3)).findAllCabinetsByLocation(any());
+		then(lentOptionalFetcher).should(times(3))
+				.findAllActiveLentByCabinetId(cabinet1.getCabinetId());
+		then(lentOptionalFetcher).should(times(3))
+				.findAllActiveLentByCabinetId(cabinet2.getCabinetId());
+		then(lentOptionalFetcher).should(times(3))
+				.findAllActiveLentByCabinetId(cabinet3.getCabinetId());
+		then(cabinetMapper).should(times(9)).toCabinetPreviewDto(any(), anyInt(), anyString());
+		//[THEN]END:  getCabinetPreviewBundle()
+
+		// section 기준으로 section과, 위에서 반환된 cabinetPreviewDtoList 를 넣어서 DTO 변환
+		then(cabinetMapper).should().toCabinetsPerSectionResponseDto(section1,
+				getCabinetPreviewBundleResult1);
+		then(cabinetMapper).should().toCabinetsPerSectionResponseDto(section2,
+				getCabinetPreviewBundleResult2);
+		then(cabinetMapper).should().toCabinetsPerSectionResponseDto(section3,
+				getCabinetPreviewBundleResult3);
+
+		assertEquals(section1, result.get(0).getSection());
+		assertEquals(section2, result.get(1).getSection());
+		assertEquals(section3, result.get(2).getSection());
+
+		assertEquals(getCabinetPreviewBundleResult1, result.get(0).getCabinets());
+		assertEquals(getCabinetPreviewBundleResult2, result.get(1).getCabinets());
+		assertEquals(getCabinetPreviewBundleResult3, result.get(2).getCabinets());
 	}
 
 	@Test
