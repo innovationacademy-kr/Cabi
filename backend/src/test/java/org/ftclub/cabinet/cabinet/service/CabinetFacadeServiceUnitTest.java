@@ -902,27 +902,22 @@ class CabinetFacadeServiceUnitTest {
 	@DisplayName("성공: 사물함 id 조회결과 모두 없음")
 	void 성공_NULL_getCabinetInfoBundle() {
 		List<Long> cabinetIds = Arrays.asList(-1L, -2L, -3L, -4L, -5L);
-
 		CabinetInfoResponseDto cabinetInfoResponseDto = new CabinetInfoResponseDto(null, null, null,
 				null, null, null, null, null, null);
 
-		// 이것도 테스트가 안됨
-		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(0))).willReturn(
-				cabinetInfoResponseDto);
-		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(1))).willReturn(
-				cabinetInfoResponseDto);
-		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(2))).willReturn(
-				cabinetInfoResponseDto);
-		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(3))).willReturn(
-				cabinetInfoResponseDto);
-		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(4))).willReturn(
-				cabinetInfoResponseDto);
+		//given
+		given(lentOptionalFetcher.findAllActiveLentByCabinetId(anyLong()))
+				.willReturn(new ArrayList<>());
+		given(cabinetMapper.toCabinetInfoResponseDto(any(), any()))
+				.willReturn(cabinetInfoResponseDto);
 
+		//when
 		List<CabinetInfoResponseDto> result = cabinetFacadeService.getCabinetInfoBundle(
 				cabinetIds);
 
-		//then 에러
-//		then(cabinetFacadeService).should(times(5)).getCabinetInfo(anyLong());
+		//then
+		then(lentOptionalFetcher).should(times(5)).findAllActiveLentByCabinetId(anyLong());
+		then(cabinetMapper).should(times(5)).toCabinetInfoResponseDto(any(), any());
 
 		assertEquals(result, new ArrayList<>());
 	}
