@@ -11,8 +11,12 @@ import org.ftclub.cabinet.exception.DomainException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+
+@ExtendWith(MockitoExtension.class)
 public class CabinetDomainUnitTest {
 
 	@Mock
@@ -183,7 +187,7 @@ public class CabinetDomainUnitTest {
 	@Test
 	@DisplayName("사물함을 이용 중인 유저 수에 따른 status 변경 테스트 - broken일 경우")
 	void specifyStatusByUserCount_broken() {
-		Integer userCount = any();
+		Integer userCount = 1;
 		cabinet.specifyStatus(CabinetStatus.BROKEN);
 		assertThrows(DomainException.class, () -> cabinet.specifyStatusByUserCount(userCount));
 	}
