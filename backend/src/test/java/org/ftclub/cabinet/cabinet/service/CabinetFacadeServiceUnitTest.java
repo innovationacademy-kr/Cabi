@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -65,8 +64,6 @@ class CabinetFacadeServiceUnitTest {
 	CabinetOptionalFetcher cabinetOptionalFetcher;
 	@Mock
 	LentOptionalFetcher lentOptionalFetcher;
-	@Mock
-	UserOptionalFetcher userOptionalFetcher;
 	@Mock(lenient = true)
 	CabinetMapper cabinetMapper;
 	@Mock
@@ -219,12 +216,13 @@ class CabinetFacadeServiceUnitTest {
 	@Test
 	@DisplayName("성공: 캐비넷 id로 정보 조회 - NULL")
 	void 성공_NULL_getCabinetInfo() {
-		//given
+		// given
 		Long cabinetId = -1L;
 
 		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinetId))
 				.willReturn(new ArrayList<>());
 
+		// when
 		CabinetInfoResponseDto cabinetInfo = cabinetFacadeService.getCabinetInfo(cabinetId);
 
 		// then
@@ -457,6 +455,7 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor))
 				.willReturn(emptyList);
 
+		// when
 		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService
 				.getCabinetsPerSection(building, floor);
 
@@ -477,6 +476,7 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetOptionalFetcher.findAllCabinetsByLocation(any()))
 				.willReturn(new ArrayList<Cabinet>());
 
+		// when
 		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService
 				.getCabinetsPerSection(building, floor);
 
@@ -533,15 +533,15 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetOptionalFetcher.findPaginationByLentType(lentType, pageRequest))
 				.willReturn(cabinets);
 
-		given(cabinetMapper.toCabinetDto(cabinet1)).willReturn(cabinetDto1);
-		given(cabinetMapper.toCabinetDto(cabinet2)).willReturn(cabinetDto2);
-		given(cabinetMapper.toCabinetDto(cabinet3)).willReturn(cabinetDto3);
-
 		List<CabinetDto> cabinetDtos = new ArrayList<>(
 				List.of(cabinetDto1, cabinetDto2, cabinetDto3));
 
 		CabinetPaginationDto cabinetPaginationDto = new CabinetPaginationDto(cabinetDtos,
 				cabinets.getTotalElements());
+
+		given(cabinetMapper.toCabinetDto(cabinet1)).willReturn(cabinetDto1);
+		given(cabinetMapper.toCabinetDto(cabinet2)).willReturn(cabinetDto2);
+		given(cabinetMapper.toCabinetDto(cabinet3)).willReturn(cabinetDto3);
 		given(cabinetMapper.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements()))
 				.willReturn(cabinetPaginationDto);
 
@@ -576,6 +576,9 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetOptionalFetcher.findPaginationByLentType(LentType.PRIVATE, pageRequest))
 				.willReturn(cabinets);
 
+
+		CabinetPaginationDto cabinetPaginationDto = new CabinetPaginationDto(cabinetDtos,
+				cabinets.getTotalElements());
 		//0 ~ 10까지
 		given(cabinetMapper.toCabinetDto(cabinetList.get(0))).willReturn(cabinetDtos.get(0));
 		given(cabinetMapper.toCabinetDto(cabinetList.get(1))).willReturn(cabinetDtos.get(1));
@@ -588,9 +591,6 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetMapper.toCabinetDto(cabinetList.get(8))).willReturn(cabinetDtos.get(8));
 		given(cabinetMapper.toCabinetDto(cabinetList.get(9))).willReturn(cabinetDtos.get(9));
 		given(cabinetMapper.toCabinetDto(cabinetList.get(10))).willReturn(cabinetDtos.get(10));
-
-		CabinetPaginationDto cabinetPaginationDto = new CabinetPaginationDto(cabinetDtos,
-				cabinets.getTotalElements());
 		given(cabinetMapper.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements()))
 				.willReturn(cabinetPaginationDto);
 
@@ -641,16 +641,16 @@ class CabinetFacadeServiceUnitTest {
 		CabinetDto cabinetDto3 = mock(CabinetDto.class);
 
 		Page<Cabinet> cabinets = new PageImpl<>(Arrays.asList(cabinet1, cabinet2, cabinet3));
+		List<CabinetDto> cabinetDtos = Arrays.asList(cabinetDto1, cabinetDto2, cabinetDto3);
 		given(cabinetOptionalFetcher.findPaginationByStatus(cabinetStatus, pageRequest))
 				.willReturn(cabinets);
 
 		given(cabinetMapper.toCabinetDto(cabinet1)).willReturn(cabinetDto1);
 		given(cabinetMapper.toCabinetDto(cabinet2)).willReturn(cabinetDto2);
 		given(cabinetMapper.toCabinetDto(cabinet3)).willReturn(cabinetDto3);
-
-		List<CabinetDto> cabinetDtos = Arrays.asList(cabinetDto1, cabinetDto2, cabinetDto3);
 		given(cabinetMapper.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements()))
 				.willReturn(new CabinetPaginationDto(cabinetDtos, cabinets.getTotalElements()));
+
 
 		// when
 		CabinetPaginationDto result = cabinetFacadeService.getCabinetPaginationByStatus(
@@ -933,8 +933,6 @@ class CabinetFacadeServiceUnitTest {
 		User findUser1 = mock(User.class);
 		User findUser2 = mock(User.class);
 		User findUser3 = mock(User.class);
-		User findUser4 = mock(User.class);
-		User findUser5 = mock(User.class);
 
 		LentHistory lentHistory1 = mock(LentHistory.class);
 		LentHistory lentHistory2 = mock(LentHistory.class);
@@ -955,7 +953,6 @@ class CabinetFacadeServiceUnitTest {
 
 		Cabinet cabinet1 = mock(Cabinet.class);
 		Cabinet cabinet2 = mock(Cabinet.class);
-		Cabinet cabinet3 = mock(Cabinet.class);
 
 		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinetIds.get(0)))
 				.willReturn(new ArrayList<>());
