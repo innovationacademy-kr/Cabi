@@ -3,6 +3,8 @@ package org.ftclub.cabinet.cabinet.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -13,6 +15,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -21,6 +25,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
@@ -44,6 +49,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -808,11 +815,89 @@ class CabinetFacadeServiceUnitTest {
 	}
 
 	@Test
-	void getCabinetInfoBundle() {
+	@DisplayName("성공: 사물함 id로 사물함 정보 벌크 조회")
+	void 성공_getCabinetInfoBundle() {
+
 	}
 
 	@Test
-	void getCabinetsInfo() {
+	@DisplayName("성공: 사물함 id 조회결과 없음")
+	void 성공_NULL_getCabinetInfoBundle() {
+		List<Long> cabinetIds = Arrays.asList(-1L, -2L, -3L, -4L, -5L);
+
+		CabinetInfoResponseDto cabinetInfoResponseDto = new CabinetInfoResponseDto(null, null, null,
+				null, null, null, null, null, null);
+
+		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(0))).willReturn(cabinetInfoResponseDto);
+		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(1))).willReturn(cabinetInfoResponseDto);
+		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(2))).willReturn(cabinetInfoResponseDto);
+		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(3))).willReturn(cabinetInfoResponseDto);
+		given(cabinetFacadeService.getCabinetInfo(cabinetIds.get(4))).willReturn(cabinetInfoResponseDto);
+
+		List<CabinetInfoResponseDto> result = cabinetFacadeService.getCabinetInfoBundle(
+				cabinetIds);
+
+		assertEquals(result, new ArrayList<>());
+	}
+
+	@Test
+	@DisplayName("성공: 사물함 id로 사물함 정보 조회,")
+	void 성공_getCabinetsInfo() {
+		Long cabinetId = 998L;
+
+		Cabinet cabinet = mock(Cabinet.class);
+
+		LentHistory lentHistory1 = mock(LentHistory.class);
+		LentHistory lentHistory2 = mock(LentHistory.class);
+		LentHistory lentHistory3 = mock(LentHistory.class);
+		given(lentHistory1.getUser()).willReturn(mock(User.class));
+		given(lentHistory2.getUser()).willReturn(mock(User.class));
+		given(lentHistory3.getUser()).willReturn(mock(User.class));
+		List<LentHistory> lentHistories = Arrays.asList(lentHistory1, lentHistory2, lentHistory3);
+
+		LentDto lentDto1 = mock(LentDto.class);
+		LentDto lentDto2 = mock(LentDto.class);
+		LentDto lentDto3 = mock(LentDto.class);
+
+		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinetId)).willReturn(
+				lentHistories);
+
+		given(lentMapper.toLentDto(lentHistory1.getUser(), lentHistory1)).willReturn(lentDto1);
+		given(lentMapper.toLentDto(lentHistory2.getUser(), lentHistory2)).willReturn(lentDto2);
+		given(lentMapper.toLentDto(lentHistory3.getUser(), lentHistory3)).willReturn(lentDto3);
+
+		given(cabinetOptionalFetcher.findCabinet(cabinetId)).willReturn(cabinet);
+		List<LentDto> lentDtos = Arrays.asList(lentDto1, lentDto2, lentDto3);
+		given(cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos))
+				.willReturn(mock(CabinetInfoResponseDto.class));
+
+		// when
+		cabinetFacadeService.getCabinetInfo(cabinetId);
+
+		then(lentOptionalFetcher).should().findAllActiveLentByCabinetId(cabinetId);
+		then(lentMapper).should().toLentDto(lentHistory1.getUser(), lentHistory1);
+		then(lentMapper).should().toLentDto(lentHistory2.getUser(), lentHistory2);
+		then(lentMapper).should().toLentDto(lentHistory3.getUser(), lentHistory3);
+		then(cabinetMapper).should().toCabinetInfoResponseDto(cabinet, lentDtos);
+	}
+
+	@Test
+	@DisplayName("성공: 사물함 id로 사물함 정보 조회, 대여기록 없음")
+	void 성공_NULL_getCabinetsInfo() {
+		Long cabinetId = -1L;
+		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinetId)).willReturn(
+				new ArrayList<>());
+		given(cabinetMapper.toCabinetInfoResponseDto(any(Cabinet.class), anyList()))
+				.willReturn(
+						new CabinetInfoResponseDto(null, null, null, null, null, null, null, null,
+								null)
+				);
+		// when
+		CabinetInfoResponseDto result = cabinetFacadeService.getCabinetInfo(cabinetId);
+
+		then(lentOptionalFetcher).should().findAllActiveLentByCabinetId(cabinetId);
+		then(cabinetMapper).should().toCabinetInfoResponseDto(any(), any());
+		assertNull(result);
 	}
 
 	@Test
