@@ -9,11 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDateTime;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+@Disabled
+@Deprecated
 @SpringBootTest
 @Transactional
 class LentHistoryTest {

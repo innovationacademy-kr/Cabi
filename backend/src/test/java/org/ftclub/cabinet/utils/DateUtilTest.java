@@ -1,10 +1,11 @@
 package org.ftclub.cabinet.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import net.bytebuddy.asm.Advice.Local;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class DateUtilTest {
@@ -97,5 +98,39 @@ class DateUtilTest {
 		LocalDateTime day2 = LocalDateTime.of(2000, 2, 22, 0, 0, 42);
 		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
 		assertEquals(1, DateUtil.calculateTwoDateDiffCeil(day1, day2));
+	}
+
+	@Test
+	@DisplayName("성공: 같은 날짜")
+	public void 성공_isSameDay() {
+		LocalDateTime time = LocalDateTime.now();
+		assertTrue(DateUtil.isSameDay(time));
+	}
+	@Test
+	@DisplayName("실패: 하루 전 날짜")
+	public void 실패_하루전_isSameDay() {
+		LocalDateTime time = LocalDateTime.now().minusDays(1);
+		assertFalse(DateUtil.isSameDay(time));
+	}
+
+	@Test
+	@DisplayName("실패: 하루 뒤 날짜")
+	public void 실패_하루뒤_isSameDay() {
+		LocalDateTime time = LocalDateTime.now().plusDays(1);
+		assertFalse(DateUtil.isSameDay(time));
+	}
+
+	@Test
+	@DisplayName("성공: 과거시간")
+	public void 성공_하루전_isPast() {
+		LocalDateTime time = LocalDateTime.now().minusDays(1);
+		assertTrue(DateUtil.isPast(time));
+	}
+
+	@Test
+	@DisplayName("실패: 과거 아님")
+	public void 실패_하루_후_isPast() {
+		LocalDateTime time = LocalDateTime.now().plusDays(1);
+		assertFalse(DateUtil.isPast(time));
 	}
 }
