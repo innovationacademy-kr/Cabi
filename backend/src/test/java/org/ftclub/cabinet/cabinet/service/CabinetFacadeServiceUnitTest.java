@@ -12,6 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -27,6 +28,8 @@ import org.ftclub.cabinet.dto.CabinetSimpleDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentHistoryDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -44,6 +47,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 @ExtendWith(MockitoExtension.class)
 class CabinetFacadeServiceUnitTest {
@@ -501,7 +506,7 @@ class CabinetFacadeServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("성공: 대여타입으로 캐비넷 정보 page로 가져오기 1페이지, 최대 10개 - 결과 3개")
+	@DisplayName("성공: 대여타입으로 캐비넷 정보 page로 가져오기 1페이지, 최대 10개 - 결과 3개 (개인 캐비넷)")
 	void 성공_getCabinetPaginationByLentType() {
 		Integer page = 0;
 		Integer size = 10;
@@ -551,9 +556,8 @@ class CabinetFacadeServiceUnitTest {
 	}
 
 
-
 	@Test
-	@DisplayName("성공: 대여타입으로 캐비넷 정보 page로 가져오기 - 사이즈 제한없음")
+	@DisplayName("성공: 대여타입으로 캐비넷 정보 page로 가져오기 - 사이즈 제한없음 (개인 캐비넷)")
 	void 성공_UNLIMIT_getCabinetPaginationByLentType() {
 		Integer page = 1;
 		Integer size = 0;
@@ -579,7 +583,6 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetMapper.toCabinetDto(cabinetList.get(9))).willReturn(cabinetDtos.get(9));
 		given(cabinetMapper.toCabinetDto(cabinetList.get(10))).willReturn(cabinetDtos.get(10));
 
-
 		CabinetPaginationDto cabinetPaginationDto = new CabinetPaginationDto(cabinetDtos,
 				cabinets.getTotalElements());
 		given(cabinetMapper.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements()))
@@ -597,7 +600,7 @@ class CabinetFacadeServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("성공: 대여타입으로 찾은 캐비넷 결과 정보 없음")
+	@DisplayName("성공: 대여타입으로 찾은 캐비넷 결과 정보 없음 (동아리 캐비넷)")
 	void 성공_NULL_getCabinetPaginationByLentType() {
 		Integer page = 0;
 		Integer size = 5;
@@ -610,22 +613,198 @@ class CabinetFacadeServiceUnitTest {
 		CabinetPaginationDto result = cabinetFacadeService
 				.getCabinetPaginationByLentType(LentType.CLUB, page, size);
 
-
 		then(cabinetOptionalFetcher).should()
 				.findPaginationByLentType(LentType.CLUB, pageRequest);
 		assertNull(result);
 	}
 
 	@Test
-	void getCabinetPaginationByStatus() {
+	@DisplayName("성공: 캐비넷 상태로 캐비넷 정보 page로 가져오기 (캐비넷 상태 대여가능)")
+	void 성공_getCabinetPaginationByStatus() {
+		Integer page = 0;
+		Integer size = 5;
+		CabinetStatus cabinetStatus = CabinetStatus.AVAILABLE;
+		PageRequest pageRequest = PageRequest.of(page, size);
+
+		Cabinet cabinet1 = mock(Cabinet.class);
+		Cabinet cabinet2 = mock(Cabinet.class);
+		Cabinet cabinet3 = mock(Cabinet.class);
+
+		CabinetDto cabinetDto1 = mock(CabinetDto.class);
+		CabinetDto cabinetDto2 = mock(CabinetDto.class);
+		CabinetDto cabinetDto3 = mock(CabinetDto.class);
+
+		Page<Cabinet> cabinets = new PageImpl<>(Arrays.asList(cabinet1, cabinet2, cabinet3));
+		given(cabinetOptionalFetcher.findPaginationByStatus(cabinetStatus, pageRequest))
+				.willReturn(cabinets);
+
+		given(cabinetMapper.toCabinetDto(cabinet1)).willReturn(cabinetDto1);
+		given(cabinetMapper.toCabinetDto(cabinet2)).willReturn(cabinetDto2);
+		given(cabinetMapper.toCabinetDto(cabinet3)).willReturn(cabinetDto3);
+
+		List<CabinetDto> cabinetDtos = Arrays.asList(cabinetDto1, cabinetDto2, cabinetDto3);
+		given(cabinetMapper.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements()))
+				.willReturn(new CabinetPaginationDto(cabinetDtos, cabinets.getTotalElements()));
+
+		// when
+		CabinetPaginationDto result = cabinetFacadeService.getCabinetPaginationByStatus(
+				cabinetStatus, page, size);
+
+		then(cabinetOptionalFetcher).should().findPaginationByStatus(cabinetStatus, pageRequest);
+		then(cabinetMapper).should(times(3)).toCabinetDto(any(Cabinet.class));
+		then(cabinetMapper).should()
+				.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements());
+
+		assertEquals(cabinets.getTotalElements(), result.getTotalLength());
+		assertEquals(cabinetDtos, result.getResult());
+	}
+
+
+	@Test
+	@DisplayName("성공: 캐비넷 상태로 찾은 캐비넷 정보 없음 (캐비넷 고장 상태)")
+	void 성공_NULL_getCabinetPaginationByStatus() {
+		Integer page = 0;
+		Integer size = 5;
+		CabinetStatus cabinetStatus = CabinetStatus.BROKEN;
+		PageRequest pageRequest = PageRequest.of(page, size);
+
+		given(cabinetOptionalFetcher.findPaginationByStatus(cabinetStatus, pageRequest))
+				.willReturn(Page.empty());
+		// when
+		CabinetPaginationDto result = cabinetFacadeService.getCabinetPaginationByStatus(
+				cabinetStatus, page, size);
+
+		then(cabinetOptionalFetcher).should().findPaginationByStatus(cabinetStatus, pageRequest);
+		assertNull(result);
 	}
 
 	@Test
-	void getCabinetPaginationByVisibleNum() {
+	@DisplayName("성공: 캐비넷 visibleNum(가시 번호)으로 찾은 캐비넷 결과")
+	void 성공_getCabinetPaginationByVisibleNum() {
+		Integer page = 0;
+		Integer size = 5;
+		Integer visibleNum = 1;
+		PageRequest pageRequest = PageRequest.of(page, size);
+
+		Cabinet cabinet1 = mock(Cabinet.class);
+		Cabinet cabinet2 = mock(Cabinet.class);
+		Cabinet cabinet3 = mock(Cabinet.class);
+
+		CabinetDto cabinetDto1 = mock(CabinetDto.class);
+		CabinetDto cabinetDto2 = mock(CabinetDto.class);
+		CabinetDto cabinetDto3 = mock(CabinetDto.class);
+
+		Page<Cabinet> cabinets = new PageImpl<>(Arrays.asList(cabinet1, cabinet2, cabinet3));
+		given(cabinetOptionalFetcher.findPaginationByVisibleNum(visibleNum, pageRequest))
+				.willReturn(cabinets);
+
+		given(cabinetMapper.toCabinetDto(cabinet1)).willReturn(cabinetDto1);
+		given(cabinetMapper.toCabinetDto(cabinet2)).willReturn(cabinetDto2);
+		given(cabinetMapper.toCabinetDto(cabinet3)).willReturn(cabinetDto3);
+
+		List<CabinetDto> cabinetDtos = Arrays.asList(cabinetDto1, cabinetDto2, cabinetDto3);
+		given(cabinetMapper.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements()))
+				.willReturn(new CabinetPaginationDto(cabinetDtos, cabinets.getTotalElements()));
+
+		// when
+		CabinetPaginationDto result = cabinetFacadeService
+				.getCabinetPaginationByVisibleNum(visibleNum, page, size);
+
+		then(cabinetOptionalFetcher).should().findPaginationByVisibleNum(visibleNum, pageRequest);
+		then(cabinetMapper).should(times(3)).toCabinetDto(any(Cabinet.class));
+		then(cabinetMapper).should()
+				.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements());
+
+		assertEquals(cabinets.getTotalElements(), result.getTotalLength());
+		assertEquals(cabinetDtos, result.getResult());
 	}
 
 	@Test
-	void getCabinetLentHistoriesPagination() {
+	@DisplayName("성공: 캐비넷 visibleNum(가시 번호)으로 찾은 캐비넷 정보 없음 ")
+	void 성공_NULL_getCabinetPaginationByVisibleNum() {
+		Integer page = 0;
+		Integer size = 5;
+		Integer visibleNum = 1;
+		PageRequest pageRequest = PageRequest.of(page, size);
+
+		given(cabinetOptionalFetcher.findPaginationByVisibleNum(visibleNum, pageRequest))
+				.willReturn(Page.empty());
+		// when
+		CabinetPaginationDto result = cabinetFacadeService
+				.getCabinetPaginationByVisibleNum(visibleNum, page, size);
+
+		then(cabinetOptionalFetcher).should().findPaginationByVisibleNum(visibleNum, pageRequest);
+		assertNull(result);
+	}
+
+	@Test
+	@DisplayName("성공: 캐비넷 대여기록 캐비넷id 로 내림차순 페이징 조회")
+	void 성공_getCabinetLentHistoriesPagination() {
+		Long cabinetId = 999L;
+		Integer page = 0;
+		Integer size = 5;
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "startedAt"));
+
+		LentHistory lentHistory1 = mock(LentHistory.class);
+		LentHistory lentHistory2 = mock(LentHistory.class);
+		LentHistory lentHistory3 = mock(LentHistory.class);
+		Page<LentHistory> lentHistories = new PageImpl<>(
+				Arrays.asList(lentHistory1, lentHistory2, lentHistory3));
+		given(lentOptionalFetcher.findPaginationByCabinetId(cabinetId, pageRequest))
+				.willReturn(lentHistories);
+
+		LentHistoryDto lentHistoryDto1 = mock(LentHistoryDto.class);
+		LentHistoryDto lentHistoryDto2 = mock(LentHistoryDto.class);
+		LentHistoryDto lentHistoryDto3 = mock(LentHistoryDto.class);
+		List<LentHistoryDto> generateLentHistoryDtoListResult = Arrays.asList(lentHistoryDto1,
+				lentHistoryDto2, lentHistoryDto3);
+
+		given(lentMapper.toLentHistoryPaginationDto(generateLentHistoryDtoListResult,
+				lentHistories.getTotalElements()))
+				.willReturn(new LentHistoryPaginationDto(generateLentHistoryDtoListResult,
+						lentHistories.getTotalElements()));
+
+		given(lentMapper.toLentHistoryDto(lentHistory1, lentHistory1.getUser(),
+				lentHistory1.getCabinet()))
+				.willReturn(lentHistoryDto1);
+		given(lentMapper.toLentHistoryDto(lentHistory2, lentHistory2.getUser(),
+				lentHistory2.getCabinet()))
+				.willReturn(lentHistoryDto2);
+		given(lentMapper.toLentHistoryDto(lentHistory3, lentHistory3.getUser(),
+				lentHistory3.getCabinet()))
+				.willReturn(lentHistoryDto3);
+
+		// when
+		LentHistoryPaginationDto result = cabinetFacadeService
+				.getCabinetLentHistoriesPagination(cabinetId, page, size);
+
+		then(lentOptionalFetcher).should().findPaginationByCabinetId(cabinetId, pageRequest);
+		then(lentMapper).should().toLentHistoryPaginationDto(generateLentHistoryDtoListResult,
+				lentHistories.getTotalElements());
+		then(lentMapper).should(times(3))
+				.toLentHistoryDto(any(), any(), any());
+
+		assertEquals(result.getTotalLength(), lentHistories.getTotalElements());
+		assertEquals(result.getResult(), generateLentHistoryDtoListResult);
+	}
+
+	@Test
+	@DisplayName("성공: 캐비넷 대여기록 캐비넷id 로 내림차순 페이징 조회 - 조회결과 없음")
+	void 성공_NULL_getCabinetLentHistoriesPagination() {
+		Long cabinetId = 999L;
+		Integer page = 0;
+		Integer size = 5;
+		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "startedAt"));
+
+		given(lentOptionalFetcher.findPaginationByCabinetId(cabinetId, pageRequest))
+				.willReturn(Page.empty());
+
+		// when
+		LentHistoryPaginationDto result = cabinetFacadeService
+				.getCabinetLentHistoriesPagination(cabinetId, page, size);
+		then(lentOptionalFetcher).should().findPaginationByCabinetId(cabinetId, pageRequest);
+
+		assertNull(result);
 	}
 
 	@Test
