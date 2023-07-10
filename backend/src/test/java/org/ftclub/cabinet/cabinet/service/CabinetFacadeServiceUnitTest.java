@@ -992,7 +992,6 @@ class CabinetFacadeServiceUnitTest {
 				22, LentType.SHARE, 1, "나가서", CabinetStatus.FULL, "THIS IS STATUS", location,
 				List.of(lentDto1, lentDto2, lentDto3));
 
-
 		given(cabinetMapper.toCabinetInfoResponseDto(cabinet1,
 				List.of(lentDto1, lentDto2, lentDto3)))
 				.willReturn(cabinetResponseDto1);
