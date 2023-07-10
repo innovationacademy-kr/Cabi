@@ -19,7 +19,9 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
@@ -31,6 +33,7 @@ import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
+import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,8 +60,6 @@ class CabinetFacadeServiceUnitTest {
 	CabinetMapper cabinetMapper;
 	@Mock
 	LentMapper lentMapper;
-	@Mock
-	Location locationMock;
 
 	private ArrayList<Integer> generateFloors(int limit) {
 		ArrayList<Integer> floors = new ArrayList<>();
@@ -500,7 +501,119 @@ class CabinetFacadeServiceUnitTest {
 	}
 
 	@Test
-	void getCabinetPaginationByLentType() {
+	@DisplayName("성공: 대여타입으로 캐비넷 정보 page로 가져오기 1페이지, 최대 10개 - 결과 3개")
+	void 성공_getCabinetPaginationByLentType() {
+		Integer page = 0;
+		Integer size = 10;
+		PageRequest pageRequest = PageRequest.of(page, size);
+		LentType lentType = LentType.PRIVATE;
+
+		Cabinet cabinet1 = mock(Cabinet.class);
+		Cabinet cabinet2 = mock(Cabinet.class);
+		Cabinet cabinet3 = mock(Cabinet.class);
+		List<Cabinet> cabinetList = new ArrayList<>(List.of(cabinet1, cabinet2, cabinet3));
+
+		CabinetDto cabinetDto1 = mock(CabinetDto.class);
+		CabinetDto cabinetDto2 = mock(CabinetDto.class);
+		CabinetDto cabinetDto3 = mock(CabinetDto.class);
+
+		Page<Cabinet> cabinets = new PageImpl<>(cabinetList);
+
+		given(cabinetOptionalFetcher.findPaginationByLentType(lentType, pageRequest))
+				.willReturn(cabinets);
+
+		given(cabinetMapper.toCabinetDto(cabinet1)).willReturn(cabinetDto1);
+		given(cabinetMapper.toCabinetDto(cabinet2)).willReturn(cabinetDto2);
+		given(cabinetMapper.toCabinetDto(cabinet3)).willReturn(cabinetDto3);
+
+		List<CabinetDto> cabinetDtos = new ArrayList<>(
+				List.of(cabinetDto1, cabinetDto2, cabinetDto3));
+
+		CabinetPaginationDto cabinetPaginationDto = new CabinetPaginationDto(cabinetDtos,
+				cabinets.getTotalElements());
+		given(cabinetMapper.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements()))
+				.willReturn(cabinetPaginationDto);
+
+		// when
+		CabinetPaginationDto result = cabinetFacadeService
+				.getCabinetPaginationByLentType(LentType.PRIVATE, page, size);
+
+		then(cabinetOptionalFetcher).should()
+				.findPaginationByLentType(LentType.PRIVATE, pageRequest);
+		then(cabinetMapper).should().toCabinetDto(cabinet1);
+		then(cabinetMapper).should().toCabinetDto(cabinet2);
+		then(cabinetMapper).should().toCabinetDto(cabinet3);
+
+		assertEquals(3, result.getTotalLength());
+		assertEquals(cabinetDto1, result.getResult().get(0));
+		assertEquals(cabinetDto2, result.getResult().get(1));
+		assertEquals(cabinetDto3, result.getResult().get(2));
+	}
+
+
+
+	@Test
+	@DisplayName("성공: 대여타입으로 캐비넷 정보 page로 가져오기 - 사이즈 제한없음")
+	void 성공_UNLIMIT_getCabinetPaginationByLentType() {
+		Integer page = 1;
+		Integer size = 0;
+		PageRequest pageRequest = PageRequest.of(page, Integer.MAX_VALUE);
+
+		List<Cabinet> cabinetList = TestUtils.createTestMockList(Cabinet.class, 11);
+		List<CabinetDto> cabinetDtos = TestUtils.createTestMockList(CabinetDto.class, 11);
+
+		Page<Cabinet> cabinets = new PageImpl<>(cabinetList);
+		given(cabinetOptionalFetcher.findPaginationByLentType(LentType.PRIVATE, pageRequest))
+				.willReturn(cabinets);
+
+		//0 ~ 10까지
+		given(cabinetMapper.toCabinetDto(cabinetList.get(0))).willReturn(cabinetDtos.get(0));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(1))).willReturn(cabinetDtos.get(1));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(2))).willReturn(cabinetDtos.get(2));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(3))).willReturn(cabinetDtos.get(3));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(4))).willReturn(cabinetDtos.get(4));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(5))).willReturn(cabinetDtos.get(5));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(6))).willReturn(cabinetDtos.get(6));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(7))).willReturn(cabinetDtos.get(7));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(8))).willReturn(cabinetDtos.get(8));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(9))).willReturn(cabinetDtos.get(9));
+		given(cabinetMapper.toCabinetDto(cabinetList.get(10))).willReturn(cabinetDtos.get(10));
+
+
+		CabinetPaginationDto cabinetPaginationDto = new CabinetPaginationDto(cabinetDtos,
+				cabinets.getTotalElements());
+		given(cabinetMapper.toCabinetPaginationDtoList(cabinetDtos, cabinets.getTotalElements()))
+				.willReturn(cabinetPaginationDto);
+
+		// when
+		CabinetPaginationDto result = cabinetFacadeService
+				.getCabinetPaginationByLentType(LentType.PRIVATE, page, size);
+
+		then(cabinetOptionalFetcher).should()
+				.findPaginationByLentType(LentType.PRIVATE, pageRequest);
+		then(cabinetMapper).should(times(11)).toCabinetDto(any(Cabinet.class));
+
+		assertEquals(cabinets.getTotalElements(), result.getTotalLength());
+	}
+
+	@Test
+	@DisplayName("성공: 대여타입으로 찾은 캐비넷 결과 정보 없음")
+	void 성공_NULL_getCabinetPaginationByLentType() {
+		Integer page = 0;
+		Integer size = 5;
+		PageRequest pageRequest = PageRequest.of(page, size);
+
+		given(cabinetOptionalFetcher.findPaginationByLentType(LentType.CLUB, pageRequest))
+				.willReturn(Page.empty());
+
+		// when
+		CabinetPaginationDto result = cabinetFacadeService
+				.getCabinetPaginationByLentType(LentType.CLUB, page, size);
+
+
+		then(cabinetOptionalFetcher).should()
+				.findPaginationByLentType(LentType.CLUB, pageRequest);
+		assertNull(result);
 	}
 
 	@Test
