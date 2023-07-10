@@ -160,4 +160,9 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"FROM LentHistory lh " +
 			"WHERE lh.cabinetId = :cabinetId AND lh.endedAt IS NULL")
 	Integer countCabinetAllActiveLent(Long cabinetId);
+
+	@Query("SELECT lh " +
+			"FROM LentHistory lh " +
+			"WHERE lh.endedAt IS NULL")
+	List<LentHistory> findAllActiveLentHistories();
 }

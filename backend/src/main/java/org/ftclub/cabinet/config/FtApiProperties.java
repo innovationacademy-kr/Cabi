@@ -38,6 +38,9 @@ public class FtApiProperties implements ApiProperties {
     @Value("${spring.oauth2.client.registration.provider.ft.user-info-uri}")
     private String userInfoUri;
 
+    @Value("${spring.oauth2.client.registration.provider.ft.users-info-uri}")
+    private String usersInfoUri;
+
     @Value("${spring.oauth2.client.registration.ft.scope}")
     private String scope;
 }

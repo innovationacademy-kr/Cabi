@@ -1,11 +1,15 @@
 package org.ftclub.cabinet.lent.domain;
 
+import java.time.LocalDate;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -22,27 +26,45 @@ public class LentPolicyImpl implements LentPolicy {
 
 	private final CabinetProperties cabinetProperties;
 
+	private LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
+			CabinetStatus cabinetStatus, LentHistory activeLentHistory) {
+		log.info("Called shareCabinetExpirationDateProcess");
+
+		switch (cabinetStatus) {
+			case AVAILABLE:
+				return DateUtil.getInfinityDate();
+
+			case LIMITED_AVAILABLE:
+				return activeLentHistory.getExpiredAt();
+
+			case FULL:
+				if (activeLentHistory.isSetExpiredAt()) {
+					return activeLentHistory.getExpiredAt();
+				}
+				return now.plusDays(getDaysForLentTermShare());
+
+			default:
+				throw new IllegalArgumentException("대여 현황 상태가 잘못되었습니다.");
+		}
+	}
+
 	@Override
 	public LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet,
-	                                            List<LentHistory> activeLentHistories) {
+			List<LentHistory> activeLentHistories) {
 		log.info("Called generateExpirationDate");
-		switch (cabinet.getLentType()) {
+
+		if (!DateUtil.isSameDay(now)) {
+			throw new IllegalArgumentException("현재 시각이 아닙니다.");
+		}
+
+		LentType lentType = cabinet.getLentType();
+		switch (lentType) {
 			case PRIVATE:
 				return now.plusDays(getDaysForLentTermPrivate());
 			case SHARE:
-				if (cabinet.isStatus(CabinetStatus.AVAILABLE)) {
-					return DateUtil.getInfinityDate();
-				}
-				LentHistory activeLentHistory = activeLentHistories.get(0);
-				if (cabinet.isStatus(CabinetStatus.FULL)) {
-					if (activeLentHistory.isSetExpiredAt()) {
-						return activeLentHistory.getExpiredAt();
-					}
-					return now.plusDays(getDaysForLentTermShare());
-				}
-				if (cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
-					return activeLentHistory.getExpiredAt();
-				}
+				LentHistory lentHistory = activeLentHistories.get(0);
+				return generateSharedCabinetExpirationDate(now,
+						cabinet.getStatus(), lentHistory);
 			case CLUB:
 				return DateUtil.getInfinityDate();
 		}
@@ -51,8 +73,17 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
-	                                LocalDateTime expiredAt) {
+			LocalDateTime expiredAt) {
 		log.info("Called applyExpirationDate");
+
+		if (expiredAt == null){
+			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+
+		if (DateUtil.isPast(expiredAt)) {
+			throw new DomainException(ExceptionStatus.INVALID_EXPIRED_AT);
+		}
+
 		for (LentHistory lentHistory : beforeActiveHistories) {
 			lentHistory.setExpiredAt(expiredAt);
 		}
@@ -61,7 +92,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount,
-	                                          List<BanHistory> userActiveBanList) {
+			List<BanHistory> userActiveBanList) {
 		log.info("Called verifyUserForLent");
 		if (!user.isUserRole(UserRole.USER)) {
 			return LentPolicyStatus.NOT_USER;
@@ -69,7 +100,8 @@ public class LentPolicyImpl implements LentPolicy {
 		if (userActiveLentCount >= 1) {
 			return LentPolicyStatus.ALREADY_LENT_USER;
 		}
-		if (user.getBlackholedAt() != null && user.getBlackholedAt().isBefore(LocalDateTime.now())) {
+		if (user.getBlackholedAt() != null && user.getBlackholedAt()
+				.isBefore(LocalDateTime.now())) {
 			return LentPolicyStatus.BLACKHOLED_USER;
 		}
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
@@ -95,7 +127,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyCabinetForLent(Cabinet cabinet,
-	                                             List<LentHistory> cabinetLentHistories, LocalDateTime now) {
+			List<LentHistory> cabinetLentHistories, LocalDateTime now) {
 		log.info("Called verifyCabinetForLent");
 		// 빌릴 수 있는지 검증. 빌릴 수 없으면 return lentPolicyDto;
 		switch (cabinet.getStatus()) {
@@ -111,7 +143,7 @@ public class LentPolicyImpl implements LentPolicy {
 		}
 		if (cabinet.isLentType(LentType.SHARE)
 				&& cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
-			if (cabinetLentHistories.isEmpty()) {
+			if (cabinetLentHistories == null || cabinetLentHistories.isEmpty()) {
 				return LentPolicyStatus.INTERNAL_ERROR;
 			}
 			Long diffDays = DateUtil.calculateTwoDateDiffAbs(
