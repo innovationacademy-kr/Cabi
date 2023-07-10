@@ -297,7 +297,8 @@ class CabinetFacadeServiceUnitTest {
 
 
 	@Test
-	void getCabinetsPerSection() {
+	@DisplayName("성공: 빌딩, 층수로 section 별 캐비넷 정보 가져오기")
+	void 성공_getCabinetsPerSection() {
 		//============================== SETUP LITERALS ==============================
 
 		String building = "새롬관";
@@ -431,6 +432,71 @@ class CabinetFacadeServiceUnitTest {
 		assertEquals(getCabinetPreviewBundleResult1, result.get(0).getCabinets());
 		assertEquals(getCabinetPreviewBundleResult2, result.get(1).getCabinets());
 		assertEquals(getCabinetPreviewBundleResult3, result.get(2).getCabinets());
+	}
+
+
+	@Test
+	@DisplayName("성공: 빌딩, 빌딩 혹은 층수에 해당하는 결과가 없을경우")
+	void 성공_EMPTY_getCabinetsPerSection() {
+		String building = "유토피아";
+		Integer floor = 999;
+		ArrayList<String> emptyList = new ArrayList<>();
+
+		given(cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor))
+				.willReturn(emptyList);
+
+		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService
+				.getCabinetsPerSection(building, floor);
+
+		then(cabinetOptionalFetcher).should().findAllSectionsByBuildingAndFloor(building, floor);
+		assertNotNull(result);
+	}
+
+	@Test
+	@DisplayName("성공: 해당하는 Location 없음 - 결과 null")
+	void 성공_NULL_getCabinetsPerSection() {
+		String building = "유토피아";
+		String section = "콜로라도";
+		Integer floor = 999;
+
+		given(cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor))
+				.willReturn(new ArrayList<String>(List.of(section)));
+
+		given(cabinetOptionalFetcher.findAllCabinetsByLocation(any()))
+				.willReturn(new ArrayList<Cabinet>());
+
+		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService
+				.getCabinetsPerSection(building, floor);
+
+		then(cabinetOptionalFetcher).should().findAllSectionsByBuildingAndFloor(building, floor);
+		then(cabinetOptionalFetcher).should().findAllCabinetsByLocation(any());
+		assertNotNull(result);
+	}
+
+	@Test
+	@DisplayName("성공: 반납하지 않은 캐비넷이 없음 - 결과 null")
+	void 성공_findAllActiveLentByCabinetId_EMPTY_getCabinetsPerSection() {
+		String building = "유토피아";
+		String section = "콜로라도";
+		Integer floor = 999;
+
+		given(cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor))
+				.willReturn(new ArrayList<String>(List.of(section)));
+
+		given(cabinetOptionalFetcher.findAllCabinetsByLocation(any()))
+				.willReturn(new ArrayList<Cabinet>(List.of(mock(Cabinet.class))));
+
+		given(lentOptionalFetcher.findAllActiveLentByCabinetId(any()))
+				.willReturn(new ArrayList<LentHistory>());
+		// when
+		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService
+				.getCabinetsPerSection(building, floor);
+
+		then(cabinetOptionalFetcher).should().findAllSectionsByBuildingAndFloor(building, floor);
+		then(cabinetOptionalFetcher).should().findAllCabinetsByLocation(any());
+		then(lentOptionalFetcher).should().findAllActiveLentByCabinetId(any());
+
+		assertNotNull(result);
 	}
 
 	@Test
