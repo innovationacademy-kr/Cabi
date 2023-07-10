@@ -3,6 +3,7 @@ package org.ftclub.cabinet.lent.domain;
 
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -205,5 +206,30 @@ class LentHistoryUnitTest {
 		DomainException domainException = assertThrows(DomainException.class,
 				() -> lentHistory.endLent(LocalDateTime.now()));
 		assertEquals(ExceptionStatus.INVALID_ARGUMENT, domainException.getStatus());
+	}
+
+	@Test
+	@DisplayName("연체 학인 실패 - 만료일자가 설정되지 않음")
+	void isExpired_실패_만료일자_미설정() {
+		LocalDateTime now = LocalDateTime.now();
+		LentHistory lentHistory = LentHistory.of(
+				now,
+				DateUtil.getInfinityDate(),
+				1L,
+				1L);
+
+		assertEquals(false, lentHistory.isExpired(now));
+	}
+
+	@Test
+	@DisplayName("연체 일수 계산 실패 - 만료일자가 설정되지 않음")
+	void getDaysUntilExpiration_실패_만료일자_미설정() {
+		LentHistory lentHistory = LentHistory.of(
+				LocalDateTime.now(),
+				DateUtil.getInfinityDate(),
+				1L,
+				1L);
+
+		assertEquals(null, lentHistory.getDaysDiffEndedAndExpired());
 	}
 }

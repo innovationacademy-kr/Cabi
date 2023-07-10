@@ -59,6 +59,23 @@ class LentHistoryTest {
 	}
 
 	@Test
+	void isExpired() {
+		LocalDateTime now = LocalDateTime.now();
+		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
+		assertFalse(lentHistory.isExpired(now));
+		lentHistory.endLent(now.plusDays(6));
+		assertTrue(lentHistory.isExpired(now.plusDays(6)));
+	}
+
+	@Test
+	void getDaysUntilExpiration() {
+		LocalDateTime now = LocalDateTime.now();
+		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);
+		assertEquals(-3, lentHistory.getDaysUntilExpiration(now));
+		assertEquals(3, lentHistory.getDaysUntilExpiration(now.plusDays(6)));
+	}
+
+	@Test
 	void endLent() {
 		LocalDateTime now = LocalDateTime.now();
 		LentHistory lentHistory = LentHistory.of(now, now.plusDays(3), 1L, 1L);

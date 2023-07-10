@@ -80,6 +80,27 @@ class DateUtilTest {
 	}
 
 	@Test
+	public void 날짜_빼기_올림값_음수() {
+		LocalDateTime day2 = LocalDateTime.of(2000, 2, 20, 0, 0, 42);
+		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
+		assertEquals(-1, DateUtil.calculateTwoDateDiffCeil(day1, day2));
+	}
+
+	@Test
+	public void 날짜_빼기_올림값_0() {
+		LocalDateTime day2 = LocalDateTime.of(2000, 2, 21, 0, 0, 42);
+		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
+		assertEquals(0, DateUtil.calculateTwoDateDiffCeil(day1, day2));
+	}
+
+	@Test
+	public void 날짜_빼기_올림값_양수() {
+		LocalDateTime day2 = LocalDateTime.of(2000, 2, 22, 0, 0, 42);
+		LocalDateTime day1 = LocalDateTime.of(2000, 2, 21, 23, 59, 59);
+		assertEquals(1, DateUtil.calculateTwoDateDiffCeil(day1, day2));
+	}
+
+	@Test
 	@DisplayName("성공: 같은 날짜")
 	public void 성공_isSameDay() {
 		LocalDateTime time = LocalDateTime.now();
