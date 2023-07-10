@@ -2,6 +2,7 @@ package org.ftclub.cabinet.cabinet.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -16,6 +17,10 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPreviewDto;
+import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
+import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
@@ -28,8 +33,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
 class CabinetFacadeServiceUnitTest {
@@ -42,10 +50,12 @@ class CabinetFacadeServiceUnitTest {
 	LentOptionalFetcher lentOptionalFetcher;
 	@Mock
 	UserOptionalFetcher userOptionalFetcher;
-	@Mock
+	@Mock(lenient = true)
 	CabinetMapper cabinetMapper;
 	@Mock
 	LentMapper lentMapper;
+	@Mock
+	Location locationMock;
 
 	private ArrayList<Integer> generateFloors(int limit) {
 		ArrayList<Integer> floors = new ArrayList<>();
@@ -56,7 +66,7 @@ class CabinetFacadeServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("성공: 건물과 층 개수 3개씩 담긴 dto를 가져온다")
+	@DisplayName("성공: 건물과 층 개수 3개씩 담긴 dto를 가져온다 - 결과 3개")
 	void 성공_getBuildingFloorsResponse() {
 		//setups
 		String building1 = "개포클러스터";
@@ -89,6 +99,11 @@ class CabinetFacadeServiceUnitTest {
 		List<BuildingFloorsDto> buildingFloorsResponse = cabinetFacadeService.getBuildingFloorsResponse();
 
 		//then
+
+		then(cabinetOptionalFetcher).should().findAllBuildings();
+		then(cabinetOptionalFetcher).should(times(3)).findAllFloorsByBuilding(any());
+		then(cabinetMapper).should(times(3)).toBuildingFloorsDto(any(), any());
+
 		assertEquals(buildingFloorsResponse.get(0).getBuilding(), building1);
 		assertEquals(buildingFloorsResponse.get(0).getFloors(), floors1);
 
@@ -97,10 +112,6 @@ class CabinetFacadeServiceUnitTest {
 
 		assertEquals(buildingFloorsResponse.get(2).getBuilding(), building3);
 		assertEquals(buildingFloorsResponse.get(2).getFloors(), floors3);
-
-		then(cabinetOptionalFetcher).should().findAllBuildings();
-		then(cabinetOptionalFetcher).should(times(3)).findAllFloorsByBuilding(any());
-		then(cabinetMapper).should(times(3)).toBuildingFloorsDto(any(), any());
 	}
 
 	@Test
@@ -117,7 +128,7 @@ class CabinetFacadeServiceUnitTest {
 	}
 
 	@Test
-	@DisplayName("성공: 캐비넷 정보 조회")
+	@DisplayName("성공: 캐비넷 정보 조회 - 결과 3개")
 	void 성공_getCabinetInfo() {
 		//given
 		Long cabinetId = 123L;
@@ -146,17 +157,14 @@ class CabinetFacadeServiceUnitTest {
 
 		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinetId))
 				.willReturn(lentHistories);
-
 		given(lentMapper.toLentDto(findUser1, lentHistory1))
 				.willReturn(lentDto1);
 		given(lentMapper.toLentDto(findUser2, lentHistory2))
 				.willReturn(lentDto2);
 		given(lentMapper.toLentDto(findUser3, lentHistory3))
 				.willReturn(lentDto3);
-
 		given(cabinetOptionalFetcher.findCabinet(cabinetId))
 				.willReturn(cabinet);
-
 		given(cabinetMapper.toCabinetInfoResponseDto(cabinet,
 				List.of(lentDto1, lentDto2, lentDto3)))
 				.willReturn(
@@ -194,7 +202,7 @@ class CabinetFacadeServiceUnitTest {
 
 
 	@Test
-	@DisplayName("성공: 캐비넷 정보 조회 - NULL")
+	@DisplayName("성공: 캐비넷 id로 정보 조회 - NULL")
 	void 성공_NULL_getCabinetInfo() {
 		//given
 		Long cabinetId = -1L;
@@ -212,11 +220,169 @@ class CabinetFacadeServiceUnitTest {
 	}
 
 	@Test
-	void getCabinetsSimpleInfoByVisibleNum() {
+	@DisplayName("성공: visibleNum으로 캐비넷 정보 page 조회 - 결과 3개")
+	void 성공_getCabinetsSimpleInfoByVisibleNum() {
+		//given
+		Integer visibleNum = 1;
+
+		Cabinet cabinet1 = mock(Cabinet.class);
+		Cabinet cabinet2 = mock(Cabinet.class);
+		Cabinet cabinet3 = mock(Cabinet.class);
+
+		Location location1 = mock(Location.class);
+		Location location2 = mock(Location.class);
+		Location location3 = mock(Location.class);
+
+		Page<Cabinet> allCabinetsByVisibleNum = new PageImpl<>(
+				List.of(cabinet1, cabinet2, cabinet3));
+
+		PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE);
+		given(cabinetOptionalFetcher.findPaginationByVisibleNum(visibleNum, pageRequest))
+				.willReturn(allCabinetsByVisibleNum);
+
+		given(cabinetMapper.toCabinetSimpleDto(cabinet1)).willReturn(
+				new CabinetSimpleDto(999L, location1, visibleNum));
+		given(cabinetMapper.toCabinetSimpleDto(cabinet2)).willReturn(
+				new CabinetSimpleDto(998L, location2, visibleNum));
+		given(cabinetMapper.toCabinetSimpleDto(cabinet3)).willReturn(
+				new CabinetSimpleDto(997L, location3, visibleNum));
+
+		//when
+		CabinetSimplePaginationDto result = cabinetFacadeService.getCabinetsSimpleInfoByVisibleNum(
+				visibleNum);
+
+		//then
+		then(cabinetOptionalFetcher).should().findPaginationByVisibleNum(visibleNum, pageRequest);
+		then(cabinetMapper).should(times(3)).toCabinetSimpleDto(any());
+
+		assertEquals(3, result.getTotalLength());
+		assertEquals(999L, result.getResult().get(0).getCabinetId());
+		assertEquals(1, result.getResult().get(0).getVisibleNum());
+
+		assertEquals(location1, result.getResult().get(0).getLocation());
+		assertEquals(998L, result.getResult().get(1).getCabinetId());
+		assertEquals(1, result.getResult().get(1).getVisibleNum());
+		assertEquals(location2, result.getResult().get(1).getLocation());
+
+		assertEquals(997L, result.getResult().get(2).getCabinetId());
+		assertEquals(1, result.getResult().get(2).getVisibleNum());
+		assertEquals(location3, result.getResult().get(2).getLocation());
 	}
+
+
+	@Test
+	@DisplayName("성공: visibleNum으로 캐비넷 정보 page 조회 - 정보 없음")
+	void 성공_NULL_getCabinetsSimpleInfoByVisibleNum() {
+		//given
+		Integer visibleNum = 3141592;
+		PageRequest pageRequest = PageRequest.of(0, Integer.MAX_VALUE);
+
+		given(cabinetOptionalFetcher.findPaginationByVisibleNum(visibleNum, pageRequest))
+				.willReturn(Page.empty());
+
+		//when
+		CabinetSimplePaginationDto result = cabinetFacadeService.getCabinetsSimpleInfoByVisibleNum(
+				visibleNum);
+
+		//then
+		then(cabinetOptionalFetcher).should().findPaginationByVisibleNum(visibleNum, pageRequest);
+		then(cabinetMapper).should(times(0)).toCabinetSimpleDto(any());
+
+		assertEquals(new ArrayList<>(), result.getResult());
+		assertEquals(0, result.getTotalLength());
+	}
+
 
 	@Test
 	void getCabinetsPerSection() {
+		String building = "새롬관";
+		Integer floor = 2;
+		String section1 = "1클러스터끝";
+		String section2 = "오아시스";
+		String section3 = "2클러스터끝";
+		String lentUserName = "제발 그만해";
+
+		// FOR private method getCabinetPreviewBundle SETTINGS START
+		Cabinet cabinet1 = mock(Cabinet.class);
+		Cabinet cabinet2 = mock(Cabinet.class);
+		Cabinet cabinet3 = mock(Cabinet.class);
+
+		List<Cabinet> cabinetList = new ArrayList<>();
+		cabinetList.add(cabinet1);
+		cabinetList.add(cabinet2);
+		cabinetList.add(cabinet3);
+		Location location = Location.of(building, floor, section1);
+
+		given(cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor))
+				.willReturn(new ArrayList<String>(List.of(section1, section2, section3)));
+		given(cabinetOptionalFetcher.findAllCabinetsByLocation(location))
+				.willReturn(cabinetList);
+
+		LentHistory lentHistory = mock(LentHistory.class);
+		User userMock = mock(User.class);
+		given(lentHistory.getUser()).willReturn(userMock);
+		given(userMock.getName()).willReturn(lentUserName);
+		ArrayList<LentHistory> lentHistories = new ArrayList<>(List.of(lentHistory));
+
+		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinet1.getCabinetId()))
+				.willReturn(lentHistories);
+		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinet2.getCabinetId()))
+				.willReturn(lentHistories);
+		given(lentOptionalFetcher.findAllActiveLentByCabinetId(cabinet3.getCabinetId()))
+				.willReturn(lentHistories);
+
+		CabinetPreviewDto cabinetPreviewDto1 = mock(CabinetPreviewDto.class);
+		CabinetPreviewDto cabinetPreviewDto2 = mock(CabinetPreviewDto.class);
+		CabinetPreviewDto cabinetPreviewDto3 = mock(CabinetPreviewDto.class);
+
+		given(cabinetMapper.toCabinetPreviewDto(cabinet1, lentHistories.size(), lentUserName))
+				.willReturn(cabinetPreviewDto1);
+		given(cabinetMapper.toCabinetPreviewDto(cabinet2, lentHistories.size(), lentUserName))
+				.willReturn(cabinetPreviewDto2);
+		given(cabinetMapper.toCabinetPreviewDto(cabinet3, lentHistories.size(), lentUserName))
+				.willReturn(cabinetPreviewDto3);
+
+
+		List<CabinetPreviewDto> cabinetPreviewDtoList = new ArrayList<>();
+		cabinetPreviewDtoList.add(cabinetPreviewDto1);
+		cabinetPreviewDtoList.add(cabinetPreviewDto2);
+		cabinetPreviewDtoList.add(cabinetPreviewDto3);
+		// FOR private method getCabinetPreviewBundle SETTINGS END
+
+
+		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto1 = new CabinetsPerSectionResponseDto(section1, cabinetPreviewDtoList);
+		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto2 = new CabinetsPerSectionResponseDto(section2, cabinetPreviewDtoList);
+		CabinetsPerSectionResponseDto cabinetsPerSectionResponseDto3 = new CabinetsPerSectionResponseDto(section3, cabinetPreviewDtoList);
+//		given(cabinetsPerSectionResponseDto1.getSection()).willReturn(section1);
+//		given(cabinetsPerSectionResponseDto2.getSection()).willReturn(section2);
+//		given(cabinetsPerSectionResponseDto3.getSection()).willReturn(section3);
+
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(section1,
+				cabinetPreviewDtoList))
+				.willReturn(cabinetsPerSectionResponseDto1);
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(section2,
+				cabinetPreviewDtoList))
+				.willReturn(cabinetsPerSectionResponseDto2);
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(section3,
+				cabinetPreviewDtoList))
+				.willReturn(cabinetsPerSectionResponseDto3);
+
+
+		//when
+		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService.getCabinetsPerSection(
+				building, floor);
+
+		//then
+		then(cabinetOptionalFetcher).should().findAllSectionsByBuildingAndFloor(building, floor);
+		then(cabinetMapper).should(times(3)).toCabinetsPerSectionResponseDto(any(), any());
+
+		assertEquals(cabinetsPerSectionResponseDto1, result.get(0));
+		assertEquals(cabinetsPerSectionResponseDto2, result.get(1));
+		assertEquals(cabinetsPerSectionResponseDto3, result.get(2));
+
+//		assertEquals(cabinetsPerSectionResponseDto1, result.get(0).getCabinets());
+//		assertEquals(cabinetsPerSectionResponseDto2, result.get(1).getCabinets());
+//		assertEquals(cabinetsPerSectionResponseDto3, result.get(2).getCabinets());
 	}
 
 	@Test
