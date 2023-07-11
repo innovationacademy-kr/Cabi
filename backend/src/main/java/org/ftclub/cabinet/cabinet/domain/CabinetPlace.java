@@ -33,7 +33,7 @@ public class CabinetPlace {
 	 */
 	@Embedded
 	private Location location;
-	
+
 	/**
 	 * {@link SectionFormation}
 	 */
@@ -55,7 +55,8 @@ public class CabinetPlace {
 	public static CabinetPlace of(Location location, SectionFormation sectionFormation,
 			MapArea mapArea) {
 		CabinetPlace cabinetPlace = new CabinetPlace(location, sectionFormation, mapArea);
-		ExceptionUtil.throwIfFalse(cabinetPlace.isValid(), new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		ExceptionUtil.throwIfFalse(cabinetPlace.isValid(),
+				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return cabinetPlace;
 	}
 
