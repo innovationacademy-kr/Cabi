@@ -45,6 +45,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -55,7 +56,7 @@ import org.springframework.data.domain.Sort.Direction;
 @ExtendWith(MockitoExtension.class)
 class CabinetFacadeServiceUnitTest {
 
-
+	@Spy
 	@InjectMocks
 	CabinetFacadeServiceImpl cabinetFacadeService;
 	@Mock
@@ -303,6 +304,24 @@ class CabinetFacadeServiceUnitTest {
 
 		assertEquals(new ArrayList<>(), result.getResult());
 		assertEquals(0, result.getTotalLength());
+	}
+
+	@Test
+	void 성공_simple_getCabinetsPerSection(){
+		String building = "새롬관";
+		Integer floor = 2;
+
+		List<String> sectionList = List.of("1클러스터끝", "오아시스", "2클러스터끝");
+		given(cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor))
+			.willReturn(sectionList);
+
+		Location location1 = mock(Location.class);
+//		given(cabinetFacadeService.)
+//		given(cabinetMapper.toCabinetsPerSectionResponseDto(sectionList.get(0),
+//				)).willReturn(location1
+//
+//		)
+
 	}
 
 
@@ -1004,6 +1023,7 @@ class CabinetFacadeServiceUnitTest {
 		then(lentOptionalFetcher).should(times(5)).findAllActiveLentByCabinetId(anyLong());
 		then(lentMapper).should(times(6)).toLentDto(any(), any());
 		then(cabinetOptionalFetcher).should(times(5)).findCabinet(anyLong());
+		then(cabinetFacadeService).should(times(5)).getCabinetInfo(anyLong());
 
 		assertEquals(result, Arrays.asList(cabinetResponseDto1, cabinetResponseDto2));
 		assertEquals(cabinetIds.get(1), result.get(0).getCabinetId());
