@@ -5,6 +5,7 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
@@ -41,4 +42,6 @@ public interface UserMapper {
 
 	UserProfilePaginationDto toUserProfilePaginationDto(List<UserProfileDto> result,
 			Long totalLength);
+
+	ClubUserListDto toClubUserListDto(List<UserProfileDto> result, Long totalLength);
 }

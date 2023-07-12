@@ -11,6 +11,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -108,7 +109,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
 			userCabinetDtoList.add(cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto));
 		});
-		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList, users.getTotalElements());
+		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList,
+				users.getTotalElements());
 	}
 
 	@Override
@@ -193,7 +195,21 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 									cabinet, overdueDays));
 				}
 		);
-		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, Long.valueOf(overdueList.size()));
+		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList,
+				Long.valueOf(overdueList.size()));
+	}
+
+	@Override
+	public ClubUserListDto findAllClubUser(Integer page, Integer size) {
+		log.info("Called findAllClubUser");
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
+		PageRequest pageable = PageRequest.of(page, size);
+		Page<User> pageUser = userOptionalFetcher.findClubUsers(pageable);
+		List<UserProfileDto> userProfileDtos = pageUser
+				.stream().map(u -> userMapper.toUserProfileDto(u)).collect(Collectors.toList());
+		return userMapper.toClubUserListDto(userProfileDtos, pageUser.getTotalElements());
 	}
 
 	@Override
