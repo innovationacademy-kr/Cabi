@@ -15,6 +15,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,8 @@ class CabinetServiceUnitTest {
 	UserOptionalFetcher userOptionalFetcher;
 	@Mock
 	Cabinet cabinet;
+	@Mock
+	User user;
 
 	@Test
 	@DisplayName("성공: cabinetId에 해당하는 캐비넷을 가져온다.")
@@ -481,15 +484,50 @@ class CabinetServiceUnitTest {
 		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
 
-
 	@Test
-	@DisplayName("사물함에 동아리 유저 할당 실패 - 동아리 유저가 아닌 userId")
-	void updateClub_실패() {
+	@DisplayName("사물함에 동아리 유저 할당 성공")
+	void updateClub_성공() {
 	    // given
 		Long cabinetId = 340L;
 		Long userId = 1L;
-		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
-		given(userOptionalFetcher.getClubUser(userId)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+		String userName = "testClubUser";
+		given(cabinetOptionalFetcher.getCabinetForUpdate(cabinetId)).willReturn(cabinet);
+		given(userOptionalFetcher.getClubUser(userId)).willReturn(user);
+		given(user.getName()).willReturn(userName);
+
+		// when
+		cabinetService.updateClub(cabinetId, userId, "statusNote");
+
+		// then
+		then(cabinet).should().writeTitle(userName);
+		then(cabinet).should().writeStatusNote("statusNote");
+		then(cabinet).should().specifyLentType(LentType.CLUB);
+	}
+
+	@Test
+	@DisplayName("사물함에 동아리 유저 할당 실패 - 잘못된 사물함 Id")
+	void updateClub_실패_잘못된_사물함() {
+		// given
+		Long cabinetId = 340L;
+		Long userId = 1L;
+		given(cabinetOptionalFetcher.getCabinetForUpdate(cabinetId))
+				.willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+
+		// when + then
+		assertThrows(ServiceException.class, () -> cabinetService.updateClub(cabinetId, userId, "statusNote"));
+		then(userOptionalFetcher).shouldHaveNoInteractions();
+		then(cabinet).shouldHaveNoInteractions();
+	}
+
+	@Test
+	@DisplayName("사물함에 동아리 유저 할당 실패 - 동아리 유저가 아닌 userId")
+	void updateClub_실패_동아리유저가_아님() {
+	    // given
+		Long cabinetId = 340L;
+		Long userId = 1L;
+		given(cabinetOptionalFetcher.getCabinetForUpdate(cabinetId)).willReturn(cabinet);
+		given(userOptionalFetcher.getClubUser(userId))
+				.willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 
 		// when + then
 		assertThrows(ServiceException.class, () -> cabinetService.updateClub(cabinetId, userId, "statusNote"));
