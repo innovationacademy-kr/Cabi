@@ -75,6 +75,7 @@ const TheadStyled = styled.thead`
 
 const TbodyStyled = styled.tbody`
   & > tr {
+    font-size: small;
     text-align: center;
     height: 50px;
   }

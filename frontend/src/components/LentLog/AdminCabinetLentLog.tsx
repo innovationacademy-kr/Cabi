@@ -73,9 +73,6 @@ const PageButtonStyled = styled.div<{
   border-radius: 10px;
   position: absolute;
   background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.7));
-  /*&:hover {
-    background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.5));
-  }*/
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 0) return "none";
     if (type == "next" && (totalPage == 0 || page == totalPage - 1))
@@ -98,7 +95,6 @@ const ImgCenterStyled = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  //padding-right: 15px;
 `;
 
 const ImageStyled = styled.div`

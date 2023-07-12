@@ -76,14 +76,13 @@ const TheadStyled = styled.thead`
 
 const TbodyStyled = styled.tbody`
   & > tr {
-    //font-size: 11px;
+    font-size: small;
     text-align: center;
     height: 50px;
   }
   & > tr > td {
     height: 50px;
     line-height: 50px;
-    //padding: 0 22px;
     width: 33.3%;
   }
   & > tr:nth-child(2n) {
