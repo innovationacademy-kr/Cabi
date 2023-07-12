@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -95,5 +96,13 @@ public class AdminUserController {
 	public void deleteClubUser(@PathVariable("clubId") Long clubId) {
 		log.info("Called deleteClub");
 		userFacadeService.deleteClubUser(clubId);
+	}
+
+	@GetMapping("/clubs")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public ClubUserListDto findClubs(@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		log.info("Called getClubs");
+		return userFacadeService.findAllClubUser(page, size);
 	}
 }

@@ -144,6 +144,17 @@ public class UserOptionalFetcher {
 		return banHistories.get(0);
 	}
 
+	/**
+	 * ROLE 이 동아리(CLUB)인 유저를 가져옵니다
+	 *
+	 * @param pageable
+	 * @return {@link Page<User>}
+	 */
+	public Page<User> findClubUsers(Pageable pageable) {
+		log.info("Called findClubUsers");
+		return userRepository.findAllByRole(UserRole.CLUB, pageable);
+	}
+
 	/*-------------------------------------------GET--------------------------------------------*/
 
 	/**

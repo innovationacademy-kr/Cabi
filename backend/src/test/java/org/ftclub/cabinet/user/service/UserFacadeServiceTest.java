@@ -2,11 +2,15 @@ package org.ftclub.cabinet.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +22,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -27,6 +32,8 @@ import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -42,7 +49,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
 public class UserFacadeServiceTest {
@@ -627,5 +636,50 @@ public class UserFacadeServiceTest {
 
 		// then
 		then(userService).should().deleteClubUser(eq(1L), any());
+	}
+
+	@Test
+	@DisplayName("성공: 동아리 유저 정보 조회")
+	void findAllClubUser_성공() {
+		Integer page = 0;
+		Integer size = 0;
+		User user1 = mock(User.class);
+		User user2 = mock(User.class);
+		User user3 = mock(User.class);
+
+		PageRequest pageble = PageRequest.of(0, Integer.MAX_VALUE);
+		PageImpl<User> clubUsers = new PageImpl<>(new ArrayList<>(List.of(user1, user2, user3)));
+		given(userOptionalFetcher.findClubUsers(pageble)).willReturn(clubUsers);
+		UserProfileDto userProfileDto = mock(UserProfileDto.class);
+
+		given(userMapper.toUserProfileDto(user1)).willReturn(userProfileDto);
+		given(userMapper.toUserProfileDto(user2)).willReturn(userProfileDto);
+		given(userMapper.toUserProfileDto(user3)).willReturn(userProfileDto);
+		List<UserProfileDto> userProfileDtos = new ArrayList<>(
+				List.of(userProfileDto, userProfileDto, userProfileDto));
+		given(userMapper.toClubUserListDto(userProfileDtos,
+				clubUsers.getTotalElements())).willReturn(mock(ClubUserListDto.class));
+
+		userFacadeService.findAllClubUser(page, size);
+
+		then(userOptionalFetcher).should().findClubUsers(pageble);
+		then(userMapper).should(times(3)).toUserProfileDto(any());
+		then(userMapper).should().toClubUserListDto(any(), any());
+	}
+
+	@Test
+	@DisplayName("성공: 동아리 유저 정보 없음")
+	void findAllClubUser_성공_NULL() {
+		Integer page = 0;
+		Integer size = 0;
+
+		PageRequest pageble = PageRequest.of(0, Integer.MAX_VALUE);
+		given(userOptionalFetcher.findClubUsers(pageble)).willReturn(Page.empty());
+
+		ClubUserListDto result = userFacadeService.findAllClubUser(page, size);
+
+		then(userOptionalFetcher).should().findClubUsers(pageble);
+		then(userMapper).should().toClubUserListDto(any(), any());
+		assertNull(result);
 	}
 }
