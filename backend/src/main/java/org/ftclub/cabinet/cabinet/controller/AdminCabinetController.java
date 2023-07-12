@@ -17,6 +17,7 @@ import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminCabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
+	private final LentFacadeService lentFacadeService;
 
 	/**
 	 * 사물함의 정보와 그 사물함의 대여 정보들을 가져옵니다.
@@ -107,6 +109,8 @@ public class AdminCabinetController {
 			@Valid @RequestBody CabinetClubStatusRequestDto cabinetClubStatusRequestDto) {
 		log.info("Called updateCabinetClubStatus: {}", cabinetClubStatusRequestDto);
 		cabinetFacadeService.updateCabinetClubStatus(cabinetClubStatusRequestDto);
+		lentFacadeService.startLentClubCabinet(cabinetClubStatusRequestDto.getUserId(),
+				cabinetClubStatusRequestDto.getCabinetId());
 	}
 
 

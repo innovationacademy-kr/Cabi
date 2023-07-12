@@ -156,5 +156,4 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.writeStatusNote(statusNote);
 		cabinet.specifyLentType(LentType.CLUB);
 	}
-
 }
