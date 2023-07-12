@@ -76,10 +76,16 @@ public class AdminUserController {
 		userFacadeService.promoteUserToAdmin(email);
 	}
 
+	/**
+	 * 동아리 유저를 생성합니다.
+	 *
+	 * @param clubName
+	 */
 	@PostMapping("/club")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void createClubUser(@RequestBody String clubName) {
 		if (StringUtil.isNullOrEmpty(clubName)) {
+			log.info("Called createClub");
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 		userFacadeService.createUser(clubName, clubName + "@42seoul.student.kr",

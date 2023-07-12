@@ -175,7 +175,6 @@ public class Cabinet {
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
-
 	@Override
 	public boolean equals(final Object other) {
 		if (this == other) {
