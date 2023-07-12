@@ -70,6 +70,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void deleteClubUser(Long clubId, LocalDateTime deletedAt) {
+		log.info("Called deleteClueUser: {}", clubId);
+		User user = userOptionalFetcher.getClubUser(clubId);
+		user.setDeletedAt(deletedAt);
+		userRepository.save(user);
+	}
+
+	@Override
 	public void deleteAdminUser(Long adminUserId) {
 		log.info("Called deleteAdminUser: {}", adminUserId);
 		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);

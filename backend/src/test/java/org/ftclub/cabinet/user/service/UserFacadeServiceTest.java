@@ -2,7 +2,6 @@ package org.ftclub.cabinet.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -28,8 +27,6 @@ import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -625,25 +622,10 @@ public class UserFacadeServiceTest {
 	@Test
 	@DisplayName("동아리 유저 삭제 성공")
 	void deleteClubUser_성공() {
-		// given
-		given(user1.getUserId()).willReturn(1L);
-		given(userOptionalFetcher.getClubUser(1L)).willReturn(user1);
-
 		// when
 		userFacadeService.deleteClubUser(1L);
 
 		// then
-		then(userService).should().deleteUser(eq(user1.getUserId()), any());
-	}
-
-	@Test
-	@DisplayName("동아리 유저 삭제 실패 - 동아리 유저가 없는 경우")
-	void deleteClubUser_실패_동아리유저가_없는_경우() {
-		// given
-		given(userOptionalFetcher.getClubUser(1L))
-				.willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
-
-		// when + then
-		assertThrows(ServiceException.class, () -> userFacadeService.deleteClubUser(1L));
+		then(userService).should().deleteClubUser(eq(1L), any());
 	}
 }

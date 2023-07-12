@@ -10,6 +10,7 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
+import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
@@ -98,6 +99,14 @@ public class AdminCabinetController {
 			@Valid @RequestBody CabinetStatusRequestDto cabinetStatusRequestDto) {
 		log.info("Called updateCabinetBundleStatus: {}", cabinetStatusRequestDto);
 		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto);
+	}
+
+	@PatchMapping("/club")
+//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void updateCabinetClubStatus(
+			@Valid @RequestBody CabinetClubStatusRequestDto cabinetClubStatusRequestDto) {
+		log.info("Called updateCabinetClubStatus: {}", cabinetClubStatusRequestDto);
+		cabinetFacadeService.updateCabinetClubStatus(cabinetClubStatusRequestDto);
 	}
 
 
@@ -246,8 +255,8 @@ public class AdminCabinetController {
 	 */
 	@GetMapping("/{cabinetId}/lent-histories")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public LentHistoryPaginationDto getCabinetLentHistories(
-			@PathVariable("cabinetId") Long cabinetId,
+	public LentHistoryPaginationDto getCabinetLentHistories(@Valid
+	@PathVariable("cabinetId") Long cabinetId,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
 		if (cabinetId == null) {

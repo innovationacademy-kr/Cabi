@@ -14,6 +14,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
@@ -31,7 +32,6 @@ import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -46,7 +46,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	private final CabinetService cabinetService;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
-	private final UserOptionalFetcher userOptionalFetcher;
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
 
@@ -324,6 +323,20 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				cabinetService.updateLentType(cabinetId, cabinetStatusRequestDto.getLentType());
 			}
 		}
+	}
+
+
+	/**
+	 * 사물함에 동아리 유저를 대여 시킵니다.
+	 *
+	 * @param cabinetClubStatusRequestDto
+	 */
+	@Override
+	@Transactional
+	public void updateCabinetClubStatus(CabinetClubStatusRequestDto cabinetClubStatusRequestDto) {
+		cabinetService.updateClub(cabinetClubStatusRequestDto.getCabinetId(),
+				cabinetClubStatusRequestDto.getUserId(),
+				cabinetClubStatusRequestDto.getStatusNote());
 	}
 
 //	/**

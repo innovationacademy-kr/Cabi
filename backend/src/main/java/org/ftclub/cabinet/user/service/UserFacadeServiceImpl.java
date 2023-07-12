@@ -108,7 +108,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
 			userCabinetDtoList.add(cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto));
 		});
-		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList, users.getTotalElements());
+		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList,
+				users.getTotalElements());
 	}
 
 	@Override
@@ -193,13 +194,13 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 									cabinet, overdueDays));
 				}
 		);
-		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, Long.valueOf(overdueList.size()));
+		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList,
+				Long.valueOf(overdueList.size()));
 	}
 
 	@Override
-	public void deleteClubUser(Long clubId) {
+	public void deleteClubUser(Long userId) {
 		log.info("Called deleteClubUser");
-		User clubUser = userOptionalFetcher.getClubUser(clubId);
-		userService.deleteUser(clubUser.getUserId(), LocalDateTime.now());
+		userService.deleteClubUser(userId, LocalDateTime.now());
 	}
 }

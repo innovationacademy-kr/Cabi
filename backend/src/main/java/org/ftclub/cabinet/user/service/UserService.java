@@ -18,6 +18,8 @@ public interface UserService {
 
 	void deleteUser(Long userId, LocalDateTime deletedAt);
 
+	void deleteClubUser(Long clubId, LocalDateTime deletedAt);
+
 	void deleteAdminUser(Long adminUserId);
 
 	void updateAdminUserRole(Long adminUserId, AdminRole role);
@@ -31,7 +33,8 @@ public interface UserService {
 
 	void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt);
 
-	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt, LocalDateTime expiredAt);
+	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+			LocalDateTime expiredAt);
 
 	void deleteRecentBanHistory(Long userId, LocalDateTime today);
 
@@ -44,4 +47,5 @@ public interface UserService {
 	boolean checkUserIsBanned(Long userId, LocalDateTime today);
 
 	AdminRole getAdminUserRole(String email);
+
 }

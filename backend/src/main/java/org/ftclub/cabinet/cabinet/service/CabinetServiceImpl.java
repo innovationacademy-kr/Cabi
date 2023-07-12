@@ -10,6 +10,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -20,6 +21,7 @@ import org.springframework.util.StringUtils;
 public class CabinetServiceImpl implements CabinetService {
 
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
+	private final UserOptionalFetcher userOptionalFetcher;
 
 	/**
 	 * {@inheritDoc}
@@ -142,4 +144,17 @@ public class CabinetServiceImpl implements CabinetService {
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeStatusNote(statusNote);
 	}
+
+	@Override
+	public void updateClub(Long cabinetId, Long userId, String statusNote) {
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
+		String clubName = "";
+		if (userId != null) {
+			clubName = userOptionalFetcher.getClubUser(userId).getName();
+		}
+		cabinet.writeTitle(clubName);
+		cabinet.writeStatusNote(statusNote);
+		cabinet.specifyLentType(LentType.CLUB);
+	}
+
 }

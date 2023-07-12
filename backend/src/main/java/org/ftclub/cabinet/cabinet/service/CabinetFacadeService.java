@@ -1,10 +1,10 @@
 package org.ftclub.cabinet.cabinet.service;
 
 import java.util.List;
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
@@ -34,9 +34,9 @@ public interface CabinetFacadeService {
 
 	/**
 	 * 특정 사물함의 층 - 번호정보를 반환합니다.
-
+	 *
 	 * @param visibleNum 표시 번호
-	 * @return  캐비넷 정보
+	 * @return 캐비넷 정보
 	 */
 	CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum);
 
@@ -115,7 +115,8 @@ public interface CabinetFacadeService {
 	 * @param pageable 페이지네이션(page, size)
 	 * @return 사물함 페이지네이션
 	 */
-	CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page, Integer size);
+	CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page,
+			Integer size);
 
 	/**
 	 * 사물함 표시 번호에 따른 사물함 페이지네이션을 가져옵니다.
@@ -137,4 +138,11 @@ public interface CabinetFacadeService {
 	LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId,
 			Integer page,
 			Integer size);
+
+	/**
+	 * 사물함에 동아
+	 *
+	 * @param clubStatusRequestDto
+	 */
+	void updateCabinetClubStatus(CabinetClubStatusRequestDto clubStatusRequestDto);
 }

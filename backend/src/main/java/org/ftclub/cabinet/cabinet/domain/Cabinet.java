@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.cabinet.domain;
 
-import static org.ftclub.cabinet.exception.ExceptionStatus.*;
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -173,6 +174,7 @@ public class Cabinet {
 		this.memo = memo;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
+
 
 	@Override
 	public boolean equals(final Object other) {
