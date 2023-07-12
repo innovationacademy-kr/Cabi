@@ -13,5 +13,5 @@ import lombok.Getter;
 public class CabinetInfoPaginationDto {
 
 	private final List<CabinetInfoResponseDto> result; // 캐비넷 정보 배열
-	private final Integer totalPage; // 총 페이지 수
+	private final Long totalLength; // 총 페이지 수
 }
