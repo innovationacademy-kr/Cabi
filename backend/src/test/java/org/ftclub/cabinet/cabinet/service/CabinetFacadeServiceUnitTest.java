@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -21,6 +23,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
@@ -37,7 +40,6 @@ import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -1252,5 +1254,37 @@ class CabinetFacadeServiceUnitTest {
 
 		then(cabinetService).should(times(0)).updateStatus(anyLong(), any(CabinetStatus.class));
 		then(cabinetService).should(times(0)).updateLentType(anyLong(), any(LentType.class));
+	}
+
+	@Test
+	@DisplayName("성공: 캐비넷 동아리 설정")
+	void 성공_updateCabinetClubStatus() {
+		Long cabinetId = 1L;
+		Long userId = 1L;
+		String statusNote = "TMP";
+		CabinetClubStatusRequestDto dto = mock(CabinetClubStatusRequestDto.class);
+		given(dto.getCabinetId()).willReturn(cabinetId);
+		given(dto.getUserId()).willReturn(userId);
+		given(dto.getStatusNote()).willReturn(statusNote);
+
+		cabinetFacadeService.updateCabinetClubStatus(dto);
+
+		then(cabinetService).should().updateClub(cabinetId, userId, statusNote);
+	}
+
+	@Test
+	@DisplayName("성공: 캐비넷 동아리 설정 - 캐비넷 할당 해제")
+	void 성공_할당_해제_updateCabinetClubStatus() {
+		Long cabinetId = 1L;
+		Long userId;
+		String statusNote;
+		CabinetClubStatusRequestDto dto = mock(CabinetClubStatusRequestDto.class);
+		given(dto.getCabinetId()).willReturn(cabinetId);
+		given(dto.getUserId()).willReturn(null);
+		given(dto.getStatusNote()).willReturn(null);
+
+		cabinetFacadeService.updateCabinetClubStatus(dto);
+
+		then(cabinetService).should().updateClub(cabinetId, null, null);
 	}
 }
