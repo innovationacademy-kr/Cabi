@@ -1,23 +1,17 @@
 package org.ftclub.cabinet.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import net.bytebuddy.asm.Advice.Local;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -36,7 +30,6 @@ import org.ftclub.cabinet.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -56,6 +49,8 @@ class UserServiceUnitTest {
 	private BanPolicy banPolicy;
 	@Mock
 	private UserOptionalFetcher userOptionalFetcher;
+	@Mock
+	private User user;
 
 
 	@Test
@@ -157,6 +152,34 @@ class UserServiceUnitTest {
 		assertThrows(ServiceException.class, () -> userService.deleteUser(-1L, now));
 		then(userOptionalFetcher).should(times(1)).getUser(-1L);
 		then(userRepository).should(times(0)).save(any());
+	}
+
+	@Test
+	@DisplayName("동아리 유저 삭제 성공 - 존재하는 동아리 유저 삭제")
+	void deleteClubUser_성공_존재하는_동아리유저_삭제() {
+	    // given
+		Long clubUserId = 1L;
+		LocalDateTime now = LocalDateTime.now();
+		given(userOptionalFetcher.getClubUser(clubUserId)).willReturn(user);
+
+		// when
+		userService.deleteClubUser(clubUserId, now);
+
+		// then
+		then(user).should().setDeletedAt(now);
+		then(userRepository).should().save(user);
+	}
+
+	@Test
+	@DisplayName("동아리 유저 삭제 실패 - 존재하지 않는 동아리 유저 삭제")
+	void deleteClubUser_실패_존재하지않는_동아리유저_삭제() {
+	    // given
+		Long clubUserId = -1L;
+		LocalDateTime now = LocalDateTime.now();
+		given(userOptionalFetcher.getClubUser(clubUserId)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+
+		// when + then
+		assertThrows(ServiceException.class, () -> userService.deleteClubUser(clubUserId, now));
 	}
 
 	@Test
