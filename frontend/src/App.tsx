@@ -13,6 +13,7 @@ const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
 const AdminLayout = lazy(() => import("@/pages/admin/AdminLayout"));
 const AdminLoginPage = lazy(() => import("@/pages/admin/AdminLoginPage"));
 const SearchPage = lazy(() => import("@/pages/admin/SearchPage"));
+const AdminClubPage = lazy(() => import("@/pages/admin/AdminClubPage"));
 const AdminLoginFailurePage = lazy(
   () => import("@/pages/admin/AdminLoginFailurePage")
 );
@@ -35,6 +36,7 @@ function App(): React.ReactElement {
             <Route path="home" element={<AdminHomePage />} />
             <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
+            <Route path="club" element={<AdminClubPage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

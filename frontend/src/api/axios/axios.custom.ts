@@ -365,3 +365,15 @@ export const axiosGetUserLentLog = async (
     throw error;
   }
 };
+
+const axiosClubUserLogURL = "/v4/admin/users/clubs";
+export const axiosClubUserLog = async (page: number): Promise<any> => {
+  try {
+    const response = await instance.get(axiosClubUserLogURL, {
+      params: { page: page, size: 10 },
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
