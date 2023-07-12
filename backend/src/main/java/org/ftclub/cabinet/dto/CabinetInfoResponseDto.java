@@ -27,4 +27,11 @@ public class CabinetInfoResponseDto {
 	@JsonUnwrapped
 	private final Location location;
 	private final List<LentDto> lents;
+
+	public static boolean isValid(CabinetInfoResponseDto dto) {
+		return (dto != null && dto.cabinetId != null && dto.visibleNum != null && dto.lentType != null
+				&& dto.maxUser != null && dto.title != null && dto.status != null
+				&& dto.statusNote != null && dto.location != null && dto.lents != null)
+				? true : false;
+	}
 }

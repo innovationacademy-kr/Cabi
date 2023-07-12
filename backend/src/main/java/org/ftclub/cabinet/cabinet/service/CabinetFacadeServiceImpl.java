@@ -99,7 +99,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				visibleNum, page);
 		List<CabinetSimpleDto> cabinetsSimple = allCabinetsByVisibleNum.stream().map(
 				cabinetMapper::toCabinetSimpleDto).collect(Collectors.toList());
-		return new CabinetSimplePaginationDto(cabinetsSimple, allCabinetsByVisibleNum.getTotalElements());
+		return new CabinetSimplePaginationDto(cabinetsSimple,
+				allCabinetsByVisibleNum.getTotalElements());
 	}
 
 	/**
@@ -211,7 +212,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId,
 				pageable);
 		return lentMapper.toLentHistoryPaginationDto(
-				generateLentHistoryDtoList(lentHistories.toList()), lentHistories.getTotalElements());
+				generateLentHistoryDtoList(lentHistories.toList()),
+				lentHistories.getTotalElements());
 	}
 
 	/**
@@ -225,11 +227,15 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		log.info("getCabinetInfoBundle");
 		List<CabinetInfoResponseDto> result = new ArrayList<>();
 		for (Long cabinetId : cabinetIds) {
-			result.add(getCabinetInfo(cabinetId));
+			CabinetInfoResponseDto cabinetInfo = getCabinetInfo(cabinetId);
+			if (CabinetInfoResponseDto.isValid(cabinetInfo)) {
+				result.add(cabinetInfo);
+			}
 		}
 		// Sorting ASC by Cabinet Floor
 		Comparator<CabinetInfoResponseDto> floorComparator = Comparator.comparing(
 				dto -> dto.getLocation().getFloor());
+
 		Collections.sort(result, floorComparator);
 		return result;
 	}

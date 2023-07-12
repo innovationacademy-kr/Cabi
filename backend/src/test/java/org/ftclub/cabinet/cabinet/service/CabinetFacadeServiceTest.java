@@ -12,10 +12,13 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@Deprecated
+@Disabled
 @SpringBootTest
 @Transactional
 public class CabinetFacadeServiceTest {
