@@ -195,4 +195,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		);
 		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, Long.valueOf(overdueList.size()));
 	}
+
+	@Override
+	public void deleteClubUser(Long clubId) {
+		log.info("Called deleteClubUser");
+		User clubUser = userOptionalFetcher.getClubUser(clubId);
+		userService.deleteUser(clubUser.getUserId(), LocalDateTime.now());
+	}
 }

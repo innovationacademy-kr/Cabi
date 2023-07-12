@@ -68,4 +68,16 @@ public class AdminUserController {
 		log.info("Called promoteUserToAdmin: {}", email);
 		userFacadeService.promoteUserToAdmin(email);
 	}
+
+	/**
+	 * 동아리 유저를 삭제합니다.
+	 *
+	 * @param clubId 동아리 고유 아이디
+	 */
+	@DeleteMapping("/club/{clubId}")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void deleteClubUser(@PathVariable("clubId") Long clubId) {
+		log.info("Called deleteClub");
+		userFacadeService.deleteClubUser(clubId);
+	}
 }

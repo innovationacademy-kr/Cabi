@@ -161,4 +161,11 @@ public interface UserFacadeService {
 	 * @param size    페이지 당 길이
 	 */
 	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size);
+
+	/**
+	 * 동아리 유저를 삭제합니다.
+	 *
+	 * @param clubId 동아리 고유 아이디
+	 */
+	void deleteClubUser(Long clubId);
 }
