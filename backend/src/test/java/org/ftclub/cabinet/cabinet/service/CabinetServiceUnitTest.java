@@ -56,25 +56,25 @@ class CabinetServiceUnitTest {
 	@Test
 	@DisplayName("성공: userId에 해당하는 캐비넷을 가져온다 ")
 	void 성공_getLentCabinetByUserId() {
-		Long cabinetId = 100L;
+		Long userId = 100L;
 		Cabinet cabinet = mock(Cabinet.class);
-		given(cabinetOptionalFetcher.getLentCabinetByUserId(cabinetId)).willReturn(cabinet);
+		given(cabinetOptionalFetcher.getLentCabinetByUserId(userId)).willReturn(cabinet);
 
-		assertEquals(cabinet, cabinetService.getLentCabinetByUserId(cabinetId));
+		assertEquals(cabinet, cabinetService.getLentCabinetByUserId(userId));
 
-		then(cabinetOptionalFetcher).should().getLentCabinetByUserId(cabinetId);
+		then(cabinetOptionalFetcher).should().getLentCabinetByUserId(userId);
 	}
 
 	@Test
 	@DisplayName("실패: userId에 해당하는 캐비넷이 없음 ")
 	void 실패_IVALID_USER_ID_getLentCabinetByUserId() {
-		Long invalidCabinetId = -1L;
-		given(cabinetOptionalFetcher.getLentCabinetByUserId(invalidCabinetId)).willThrow(
+		Long invalidUserId = -1L;
+		given(cabinetOptionalFetcher.getLentCabinetByUserId(invalidUserId)).willThrow(
 				new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 
 		assertThrows(ServiceException.class,
-				() -> cabinetService.getLentCabinetByUserId(invalidCabinetId));
-		then(cabinetOptionalFetcher).should().getLentCabinetByUserId(invalidCabinetId);
+				() -> cabinetService.getLentCabinetByUserId(invalidUserId));
+		then(cabinetOptionalFetcher).should().getLentCabinetByUserId(invalidUserId);
 	}
 
 
