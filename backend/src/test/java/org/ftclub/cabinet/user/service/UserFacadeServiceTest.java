@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,6 +49,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -678,5 +680,21 @@ public class UserFacadeServiceTest {
 		then(userOptionalFetcher).should().findClubUsers(pageble);
 		then(userMapper).should(times(3)).toUserProfileDto(any());
 		then(userMapper).should().toClubUserListDto(any(), any());
+	}
+
+	@Test
+	@DisplayName("성공: 동아리 유저 정보 없음")
+	void findAllClubUser_성공_NULL() {
+		Integer page = 0;
+		Integer size = 0;
+
+		PageRequest pageble = PageRequest.of(0, Integer.MAX_VALUE);
+		given(userOptionalFetcher.findClubUsers(pageble)).willReturn(Page.empty());
+
+		ClubUserListDto result = userFacadeService.findAllClubUser(page, size);
+
+		then(userOptionalFetcher).should().findClubUsers(pageble);
+		then(userMapper).should().toClubUserListDto(any(), any());
+		assertNull(result);
 	}
 }
