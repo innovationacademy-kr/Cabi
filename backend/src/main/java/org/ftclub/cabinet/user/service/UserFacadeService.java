@@ -165,7 +165,7 @@ public interface UserFacadeService {
 	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size);
 
 	/**
-	 * 동아리 유저 리스트를 반환합니다.
+	 * 동아리 유저 리스트DTO를 반환합니다.
 	 *
 	 * @param page 페이지 번호
 	 * @param size 페이지 당 길이
