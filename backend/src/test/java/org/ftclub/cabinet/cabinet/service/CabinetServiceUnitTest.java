@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -14,6 +15,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +30,10 @@ class CabinetServiceUnitTest {
 	CabinetServiceImpl cabinetService;
 	@Mock
 	CabinetOptionalFetcher cabinetOptionalFetcher = mock(CabinetOptionalFetcher.class);
+	@Mock
+	UserOptionalFetcher userOptionalFetcher;
+	@Mock
+	Cabinet cabinet;
 
 	@Test
 	@DisplayName("성공: cabinetId에 해당하는 캐비넷을 가져온다.")
@@ -475,4 +481,18 @@ class CabinetServiceUnitTest {
 		then(cabinetOptionalFetcher).should().getCabinet(invalidCabinetId);
 	}
 
+
+	@Test
+	@DisplayName("사물함에 동아리 유저 할당 실패 - 동아리 유저가 아닌 userId")
+	void updateClub_실패() {
+	    // given
+		Long cabinetId = 340L;
+		Long userId = 1L;
+		given(cabinetOptionalFetcher.getCabinet(cabinetId)).willReturn(cabinet);
+		given(userOptionalFetcher.getClubUser(userId)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+
+		// when + then
+		assertThrows(ServiceException.class, () -> cabinetService.updateClub(cabinetId, userId, "statusNote"));
+		then(cabinet).shouldHaveNoInteractions();
+	}
 }
