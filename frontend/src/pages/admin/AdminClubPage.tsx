@@ -87,9 +87,11 @@ const ButtonWrapperStyled = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: normal;
+  /* align-items: center; */
   margin-top: 30px;
+  gap: 30px;
 `;
+
 const WrapperStyled = styled.div`
   /* display: flex; */
   flex-direction: column;

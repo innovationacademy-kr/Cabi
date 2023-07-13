@@ -2,15 +2,15 @@ import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { selectedClubInfoState } from "@/recoil/atoms";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { ClubLogResponseType } from "@/types/dto/lent.dto";
+import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
   
   const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(selectedClubInfoState);
   
-  const handleRowClick = (clubId: number, clubName: string) => {
-    setSelectedClubInfo(selectedClubInfo?.userId === clubId ? null : { userId: clubId, name: clubName });
+  const handleRowClick = (clubInfo:ClubUserDto) => {
+    setSelectedClubInfo(selectedClubInfo?.userId === clubInfo.userId ? null : clubInfo);
   };
   
   if (ClubList === undefined) return <LoadingAnimation />;
@@ -28,7 +28,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
             {ClubList.map(({ userId, name }) => (
               <tr
               key={userId}
-              onClick={() => handleRowClick(userId, name)}
+              onClick={() => handleRowClick({userId, name})}
               style={{ backgroundColor: selectedClubInfo?.userId === userId ? `var(--main-color)` : ''}}
               >
                 <td title={`${name}`}>{`${name}`}</td>

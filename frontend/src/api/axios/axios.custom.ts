@@ -383,9 +383,7 @@ export const axiosCreateClubUser = async (clubName: string | null): Promise<any>
   if (clubName === null) return;
   try {
     const response = await instance.post(
-      axiosCreateClubUserURL,
-      { clubName },
-      { headers: { "Content-Type": "plain/text" } }
+      axiosCreateClubUserURL, { clubName }
     );
     return response;
   } catch (error) {
