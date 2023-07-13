@@ -366,12 +366,41 @@ export const axiosGetUserLentLog = async (
   }
 };
 
-const axiosClubUserLogURL = "/v4/admin/users/clubs";
-export const axiosClubUserLog = async (page: number): Promise<any> => {
+const axiosGetClubUserLogURL = "/v4/admin/users/clubs";
+export const axiosGetClubUserLog = async (page: number): Promise<any> => {
   try {
-    const response = await instance.get(axiosClubUserLogURL, {
+    const response = await instance.get(axiosGetClubUserLogURL, {
       params: { page: page, size: 10 },
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCreateClubUserURL = "/v4/admin/users/club";
+export const axiosCreateClubUser = async (clubName: string | null): Promise<any> => {
+  if (clubName === null) return;
+  console.log(clubName.toString());
+  try {
+    const response = await instance.post(
+      axiosCreateClubUserURL,
+      { clubName },
+      { headers: { "Content-Type": "plain/text" } }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosDeleteClubUserURL = "/v4/admin/users/club/";
+export const axiosDeleteClubUser = async (clubId: number | null): Promise<any> => {
+  if (clubId === null) return ;
+  try {
+    const response = await instance.delete(
+      axiosDeleteClubUserURL + clubId?.toString()
+    );
     return response;
   } catch (error) {
     throw error;
