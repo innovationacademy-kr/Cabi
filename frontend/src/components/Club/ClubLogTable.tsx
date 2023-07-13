@@ -40,7 +40,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
       {ClubList === STATUS_400_BAD_REQUEST ||
         (ClubList.length === 0 && (
           <EmptyLogStyled>등록된 동아리가 없습니다.</EmptyLogStyled>
-        ))}
+      ))}
     </LogTableWrapperstyled>
   );
 };

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { selectedClubInfoState } from "@/recoil/atoms";
 import Button from "@/components/Common/Button";
 import ClubLogTable from "@/components/Club/ClubLogTable";
 import ClubModal from "@/components/Modals/ClubModal/ClubModal";
@@ -8,17 +10,12 @@ import { ClubLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
-const initialClubValue:ClubUserDto = {
-  userId: 0,
-  name: "",
-};
-
 const AdminClubPage = () => {
   const [clubLog, setClubLog] = useState<ClubLogResponseType>(undefined);
   const [logChanged, setLogChanged ] = useState(true);
   const [clubModalType, setClubModalType] = useState<string | null>(null);
-  const [selectedClub, setSelectedClub] = useState<ClubUserDto>(initialClubValue);
-
+  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(selectedClubInfoState);
+  
   useEffect(() => {
     if (logChanged) {
       getLentLog();
@@ -26,14 +23,14 @@ const AdminClubPage = () => {
     }
   }, [logChanged]);
 
-  const handleOpenModal = (type: string, club: ClubUserDto) => {
+  const handleOpenModal = (type: string, club: ClubUserDto | null) => {
     setClubModalType(type);
-    setSelectedClub(club);
+    setSelectedClubInfo(club);
   };
   
   const handleCloseModal = () => {
     setClubModalType(null);
-    setSelectedClub(initialClubValue);
+    setSelectedClubInfo(null);
   };
   
   const handleLogChanged = () => {
@@ -64,14 +61,15 @@ const AdminClubPage = () => {
       <ClubLogTable ClubList={clubLog} />
       <ButtonWrapperStyled>
         <Button
-          onClick={() => handleOpenModal("CREATE", initialClubValue)}
           text={"동아리 생성"}
+          onClick={() => handleOpenModal("CREATE", null)}
           theme="line"
-        />
+          />
         <Button
-          onClick={() => handleOpenModal("DELETE", selectedClub)}
           text={"삭제"}
-          theme="fill"
+          onClick={() => handleOpenModal("DELETE", selectedClubInfo)}
+          theme={!selectedClubInfo ? "lightGrayLine" : "fill"}
+          disabled={!selectedClubInfo}
         />
       </ButtonWrapperStyled>
       {clubModalType && (

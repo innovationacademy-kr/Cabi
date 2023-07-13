@@ -30,7 +30,11 @@ const ClubModal = ({
   const [modalTitle, setModalTitle] = useState<string>("");
   const newClubName = useRef<HTMLInputElement>(null);
 
-  const modalData = modalPropsMap[additionalModalType[`MODAL_ADMIN_CLUB_${type}` as keyof typeof additionalModalType]];
+  const modalData = modalPropsMap[
+    additionalModalType[
+      `MODAL_ADMIN_CLUB_${type}` as keyof typeof additionalModalType
+    ]
+  ];
   
   const handleClickSave = async () => {
     if (type === "CREATE") {
@@ -87,12 +91,16 @@ const ClubModal = ({
                 maxLength={MAX_INPUT_LENGTH}
               />
             </ContentItemWrapperStyled>}
-            {type === "DELETE" && <ContentItemTitleStyled>{selectedClubInfo?.name} 동아리를 정말 <strong>삭제</strong> 하시겠습니까?</ContentItemTitleStyled>}
+            {type === "DELETE" && <ContentItemTitleStyled>{selectedClubInfo?.name} 동아리를 <strong>삭제</strong> 하시겠습니까?</ContentItemTitleStyled>}
           </ContentItemSectionStyled>
         </ContentSectionStyled>
         <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
         <ButtonWrapperStyled>
-          <Button onClick={handleClickSave} text={modalData.confirmMessage} theme="fill" />
+          <Button
+            onClick={handleClickSave}
+            text={modalData.confirmMessage}
+            theme="fill"
+          />
           <Button
             onClick={onClose}
             text={"닫기"}
