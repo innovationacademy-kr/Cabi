@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Button from "@/components/Common/Button";
 import ClubLogTable from "@/components/Club/ClubLogTable";
+import ClubModal, { ClubModalInterface } from "@/components/Modals/ClubModal/ClubModal";
 import { ClubUserDto } from "@/types/dto/lent.dto";
 import { ClubLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
-import ClubModal, { ClubModalInterface } from "@/components/Modals/ClubModal/ClubModal";
-import Button from "@/components/Common/Button";
 
 const initialClubValue:ClubModalInterface = {
   clubName: "",

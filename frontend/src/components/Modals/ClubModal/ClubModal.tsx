@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import { useRecoilState } from "recoil";
+import { selectedClubInfoState } from "@/recoil/atoms";
 import styled from "styled-components";
 import Button from "@/components/Common/Button";
 import {
@@ -6,12 +8,8 @@ import {
   FailResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosCreateClubUser, axiosDeleteClubUser } from "@/api/axios/axios.custom";
-import { atom, useRecoilState } from "recoil";
-import { ClubUserDto } from "@/types/dto/lent.dto";
 
 export interface ClubModalInterface {
   clubName: string | null;
@@ -23,11 +21,6 @@ interface ClubModalContainerInterface {
   onClose: React.MouseEventHandler;
 }
 
-export const selectedClubNameState = atom<ClubUserDto>({
-  key: "selectedClubInfo",
-  default: undefined,
-});
-
 const MAX_INPUT_LENGTH = 16;
 
 const ClubModal = ({
@@ -37,32 +30,29 @@ const ClubModal = ({
 }: ClubModalContainerInterface) => {
   const { clubName } = clubModalObj || {};
 
-  const [selectedClubId, setSelectedClubId] = useRecoilState<ClubUserDto>(selectedClubNameState);
-
+  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(selectedClubInfoState);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [modalConfirmMessage, setModalConfirmMessage] = useState<string>("");
   const newClubName = useRef<HTMLInputElement>(null);
-
-  const handleClickSave = async (e: any) => {
-    document.getElementById("unselect-input")?.focus();
-    if (newClubName.current!.value) {
-      const clubName = newClubName.current!.value;  
-      if (type === "CREATE")
-        await createClubRequest(clubName);
-      else if (type === "DELETE") {
-        // if (selectedClubId !== null) 
-          await deleteClubRequest(1024);
-      }
-    }
-  };
 
   const modalData = modalPropsMap[additionalModalType[`MODAL_ADMIN_CLUB_${type}` as keyof typeof additionalModalType]];
   const { title, confirmMessage } = modalData;
 
+  const handleClickSave = async () => {
+    if (type === "CREATE") {
+      document.getElementById("unselect-input")?.focus();
+      if (newClubName.current!.value) {
+        const clubName = newClubName.current!.value;  
+        if (type === "CREATE")
+          await createClubRequest(clubName);
+        }
+    }
+    else if (type === "DELETE" && selectedClubInfo !== null) 
+      await deleteClubRequest(selectedClubInfo.userId);
+  };
+
   const createClubRequest = async (clubName: string | null) => {
-    // if (clubName === selectedClubName.clubName) clubName == null;
     try {
       await axiosCreateClubUser(clubName);
       setModalTitle("추가되었습니다");
@@ -84,26 +74,28 @@ const ClubModal = ({
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
+      setSelectedClubInfo(null);
     }
   };
 
   return (
     <ModalPortal>
       <BackgroundStyled onClick={onClose} />
-      {!showResponseModal && <ModalContainerStyled type={"confirm"}>
+      {!showResponseModal && <ModalContainerStyled>
         <H2Styled>{title}</H2Styled>
         <ContentSectionStyled>
           <ContentItemSectionStyled>
-            <ContentItemWrapperStyled isVisible={true}>
+            {type === "CREATE" && <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>동아리 이름</ContentItemTitleStyled>
               <ContentItemInputStyled
-                onKeyUp={(e: any) => { if (e.key === "Enter") { handleClickSave(e); }}}
+                onKeyUp={(e: any) => { if (e.key === "Enter") { handleClickSave(); }}}
                 placeholder={clubName ? clubName : ""}
                 defaultValue={clubName ? clubName : ""}
                 ref={newClubName}
                 maxLength={MAX_INPUT_LENGTH}
               />
-            </ContentItemWrapperStyled>
+            </ContentItemWrapperStyled>}
+            {type === "DELETE" && <ContentItemTitleStyled>{selectedClubInfo?.name} 동아리를 정말 <strong>삭제</strong> 하시겠습니까?</ContentItemTitleStyled>}
           </ContentItemSectionStyled>
         </ContentSectionStyled>
         <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
@@ -132,7 +124,7 @@ const ClubModal = ({
   );
 };
 
-const ModalContainerStyled = styled.div<{ type: string }>`
+const ModalContainerStyled = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;

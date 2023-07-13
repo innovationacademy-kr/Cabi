@@ -44,6 +44,7 @@ export interface ILentLog {
 }
 
 export interface ClubUserDto {
+  userId: number;
   name: string;
 }
 

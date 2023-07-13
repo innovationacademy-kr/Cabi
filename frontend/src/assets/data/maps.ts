@@ -117,7 +117,7 @@ export const modalPropsMap = {
   },
   MODAL_ADMIN_CLUB_DELETE: {
     type: "confirm",
-    title: "동아리 삭제",
+    title: "동아리 삭제하기",
     confirmMessage: "삭제",
   },
 };
