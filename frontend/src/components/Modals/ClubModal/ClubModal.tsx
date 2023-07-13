@@ -11,25 +11,19 @@ import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import { axiosCreateClubUser, axiosDeleteClubUser } from "@/api/axios/axios.custom";
 
-export interface ClubModalInterface {
-  clubName: string | null;
-}
-
 interface ClubModalContainerInterface {
-  clubModalObj: ClubModalInterface;
   type: string;
   onClose: React.MouseEventHandler;
+  onReload: () => void;
 }
 
 const MAX_INPUT_LENGTH = 16;
 
 const ClubModal = ({
-  clubModalObj,
   type,
   onClose,
+  onReload,
 }: ClubModalContainerInterface) => {
-  const { clubName } = clubModalObj || {};
-
   const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(selectedClubInfoState);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -37,16 +31,14 @@ const ClubModal = ({
   const newClubName = useRef<HTMLInputElement>(null);
 
   const modalData = modalPropsMap[additionalModalType[`MODAL_ADMIN_CLUB_${type}` as keyof typeof additionalModalType]];
-  const { title, confirmMessage } = modalData;
-
+  
   const handleClickSave = async () => {
     if (type === "CREATE") {
       document.getElementById("unselect-input")?.focus();
       if (newClubName.current!.value) {
         const clubName = newClubName.current!.value;  
-        if (type === "CREATE")
-          await createClubRequest(clubName);
-        }
+        await createClubRequest(clubName);
+      }
     }
     else if (type === "DELETE" && selectedClubInfo !== null) 
       await deleteClubRequest(selectedClubInfo.userId);
@@ -56,6 +48,7 @@ const ClubModal = ({
     try {
       await axiosCreateClubUser(clubName);
       setModalTitle("추가되었습니다");
+      onReload();
     } catch (error: any) {
       // setModalTitle("이미 같은 이름의 동아리가 존재합니다");
       setModalTitle(error.response.data.message);
@@ -69,6 +62,7 @@ const ClubModal = ({
     try {
       await axiosDeleteClubUser(clubId);
       setModalTitle("삭제되었습니다");
+      onReload();
     } catch (error: any) {
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
@@ -82,15 +76,13 @@ const ClubModal = ({
     <ModalPortal>
       <BackgroundStyled onClick={onClose} />
       {!showResponseModal && <ModalContainerStyled>
-        <H2Styled>{title}</H2Styled>
+        <H2Styled>{modalData.title}</H2Styled>
         <ContentSectionStyled>
           <ContentItemSectionStyled>
             {type === "CREATE" && <ContentItemWrapperStyled isVisible={true}>
-              <ContentItemTitleStyled>동아리 이름</ContentItemTitleStyled>
+              <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
               <ContentItemInputStyled
                 onKeyUp={(e: any) => { if (e.key === "Enter") { handleClickSave(); }}}
-                placeholder={clubName ? clubName : ""}
-                defaultValue={clubName ? clubName : ""}
                 ref={newClubName}
                 maxLength={MAX_INPUT_LENGTH}
               />
@@ -100,7 +92,7 @@ const ClubModal = ({
         </ContentSectionStyled>
         <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
         <ButtonWrapperStyled>
-          <Button onClick={handleClickSave} text={confirmMessage} theme="fill" />
+          <Button onClick={handleClickSave} text={modalData.confirmMessage} theme="fill" />
           <Button
             onClick={onClose}
             text={"닫기"}
@@ -109,7 +101,7 @@ const ClubModal = ({
         </ButtonWrapperStyled>
       </ModalContainerStyled>}
       {showResponseModal &&
-        (hasErrorOnResponse ? (
+      (hasErrorOnResponse ? (
           <FailResponseModal
             modalTitle={modalTitle}
             closeModal={onClose}

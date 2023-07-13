@@ -20,7 +20,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
       <LogTableStyled>
         <TheadStyled>
           <tr>
-            <th>동아리 명</th>
+            <th>동아리명</th>
           </tr>
         </TheadStyled>
         {ClubList !== STATUS_400_BAD_REQUEST && (

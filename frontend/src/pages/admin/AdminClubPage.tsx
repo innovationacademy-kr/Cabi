@@ -2,33 +2,42 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "@/components/Common/Button";
 import ClubLogTable from "@/components/Club/ClubLogTable";
-import ClubModal, { ClubModalInterface } from "@/components/Modals/ClubModal/ClubModal";
+import ClubModal from "@/components/Modals/ClubModal/ClubModal";
 import { ClubUserDto } from "@/types/dto/lent.dto";
 import { ClubLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
-const initialClubValue:ClubModalInterface = {
-  clubName: "",
+const initialClubValue:ClubUserDto = {
+  userId: 0,
+  name: "",
 };
 
 const AdminClubPage = () => {
-  const [clubLog, setLentLog] = useState<ClubLogResponseType>(undefined);
+  const [clubLog, setClubLog] = useState<ClubLogResponseType>(undefined);
+  const [logChanged, setLogChanged ] = useState(true);
   const [clubModalType, setClubModalType] = useState<string | null>(null);
-  const [selectedClub, setSelectedClub] = useState<ClubModalInterface>(initialClubValue);
+  const [selectedClub, setSelectedClub] = useState<ClubUserDto>(initialClubValue);
 
   useEffect(() => {
-    getLentLog();
-  }, []);
+    if (logChanged) {
+      getLentLog();
+      setLogChanged(false);
+    }
+  }, [logChanged]);
 
-  const handleOpenModal = (type: string, club: ClubModalInterface) => {
+  const handleOpenModal = (type: string, club: ClubUserDto) => {
     setClubModalType(type);
     setSelectedClub(club);
-  };  
-
+  };
+  
   const handleCloseModal = () => {
     setClubModalType(null);
     setSelectedClub(initialClubValue);
+  };
+  
+  const handleLogChanged = () => {
+    setLogChanged(true);
   };
 
   const getLentLog = async () => {
@@ -36,17 +45,15 @@ const AdminClubPage = () => {
       const response = await axiosGetClubUserLog(0);
       const clubListLogs: ClubUserDto[] = response.data.result;
       setTimeout(() => {
-        setLentLog(clubListLogs);
+        setClubLog(clubListLogs);
       }, 500);
 
     } catch {
       setTimeout(() => {
-        setLentLog(STATUS_400_BAD_REQUEST);
+        setClubLog(STATUS_400_BAD_REQUEST);
       }, 500);
     }
   };
-
-  const clubModalObj = selectedClub;
 
   return (
     <WrapperStyled>
@@ -69,9 +76,9 @@ const AdminClubPage = () => {
       </ButtonWrapperStyled>
       {clubModalType && (
         <ClubModal
-        clubModalObj={selectedClub}
         type={clubModalType}
         onClose={handleCloseModal}
+        onReload={handleLogChanged}
       />
       )}
     </WrapperStyled>
