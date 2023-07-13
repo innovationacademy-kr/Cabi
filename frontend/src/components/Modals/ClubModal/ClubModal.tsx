@@ -23,10 +23,10 @@ interface ClubModalContainerInterface {
   onClose: React.MouseEventHandler;
 }
 
-// export const selectedClubNameState = atom<ClubUserDto>({
-//   key: "selectedClubInfo",
-//   default: undefined,
-// });
+export const selectedClubNameState = atom<ClubUserDto>({
+  key: "selectedClubInfo",
+  default: undefined,
+});
 
 const MAX_INPUT_LENGTH = 16;
 
@@ -37,32 +37,24 @@ const ClubModal = ({
 }: ClubModalContainerInterface) => {
   const { clubName } = clubModalObj || {};
 
-  // const [selectedClubName, setSelectedClubName] = useRecoilState<ClubUserDto>(selectedClubNameState);
+  const [selectedClubId, setSelectedClubId] = useRecoilState<ClubUserDto>(selectedClubNameState);
 
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const [mode, setMode] = useState<string>((type == "EDIT" ? "read" : "write"));
+  const [modalConfirmMessage, setModalConfirmMessage] = useState<string>("");
   const newClubName = useRef<HTMLInputElement>(null);
 
-  const handleClickWriteMode = (e: any) => {
-    setMode("write");
-    if (newClubName.current) {
-      newClubName.current.select();
-    }
-  };
-
-  const handleClickSave = async (e: React.MouseEvent) => {
+  const handleClickSave = async (e: any) => {
     document.getElementById("unselect-input")?.focus();
     if (newClubName.current!.value) {
       const clubName = newClubName.current!.value;  
       if (type === "CREATE")
         await createClubRequest(clubName);
-      // else if (type === "EDIT")
-        // await editClubRequest(clubName);
-      else if (type === "DELETE")
-        await deleteClubRequest(1024);
-      onClose(e);
+      else if (type === "DELETE") {
+        // if (selectedClubId !== null) 
+          await deleteClubRequest(1024);
+      }
     }
   };
 
@@ -75,23 +67,13 @@ const ClubModal = ({
       await axiosCreateClubUser(clubName);
       setModalTitle("추가되었습니다");
     } catch (error: any) {
+      // setModalTitle("이미 같은 이름의 동아리가 존재합니다");
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
     }
   };
-
-  // const editClubRequest = async (clubName: string | null) => {
-  //   try {
-  //     setModalTitle("수정되었습니다");
-  //   } catch (error: any) {
-  //     setModalTitle(error.response.data.message);
-  //     setHasErrorOnResponse(true);
-  //   } finally {
-  //     setShowResponseModal(true);
-  //   }
-  // };
 
   const deleteClubRequest = async (clubId: number | null) => {
     try {
@@ -110,23 +92,14 @@ const ClubModal = ({
       <BackgroundStyled onClick={onClose} />
       {!showResponseModal && <ModalContainerStyled type={"confirm"}>
         <H2Styled>{title}</H2Styled>
-        {type == "EDIT" && <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
-          수정하기
-        </WriteModeButtonStyled>}
         <ContentSectionStyled>
           <ContentItemSectionStyled>
             <ContentItemWrapperStyled isVisible={true}>
               <ContentItemTitleStyled>동아리 이름</ContentItemTitleStyled>
               <ContentItemInputStyled
-                onKeyUp={(e: any) => {
-                  if (e.key === "Enter") {
-                    handleClickSave(e);
-                  }
-                }}
+                onKeyUp={(e: any) => { if (e.key === "Enter") { handleClickSave(e); }}}
                 placeholder={clubName ? clubName : ""}
-                mode={mode}
                 defaultValue={clubName ? clubName : ""}
-                readOnly={mode === "read" ? true : false}
                 ref={newClubName}
                 maxLength={MAX_INPUT_LENGTH}
               />
@@ -134,21 +107,12 @@ const ClubModal = ({
           </ContentItemSectionStyled>
         </ContentSectionStyled>
         <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
-        <ButtonWrapperStyled mode={mode}>
-          {mode === "write" && (
-            <Button onClick={handleClickSave} text={confirmMessage} theme="fill" />
-          )}
+        <ButtonWrapperStyled>
+          <Button onClick={handleClickSave} text={confirmMessage} theme="fill" />
           <Button
-            onClick={
-              mode === "read"
-                ? onClose
-                : () => {
-                    setMode("read");
-                    if (clubName) newClubName.current!.value = clubName;
-                  }
-            }
-            text={mode === "read" ? "닫기" : "취소"}
-            theme={mode === "read" ? "lightGrayLine" : "line"}
+            onClick={onClose}
+            text={"닫기"}
+            theme={"line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>}
@@ -223,7 +187,7 @@ const ContentItemTitleStyled = styled.h3`
   margin-bottom: 8px;
 `;
 
-const ContentItemInputStyled = styled.input<{ mode: string }>`
+const ContentItemInputStyled = styled.input`
   border: 1px solid var(--line-color);
   width: 100%;
   height: 60px;
@@ -231,12 +195,11 @@ const ContentItemInputStyled = styled.input<{ mode: string }>`
   text-align: start;
   text-indent: 20px;
   font-size: 18px;
-  cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
-  color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
+  /* cursor: input; */
+  color: black;
 
   &::placeholder {
-    color: ${({ mode }) =>
-      mode === "read" ? "var(--main-color)" : "var(--line-color)"};
+    color: var(--line-color);
   }
 `;
 
@@ -250,37 +213,14 @@ const BackgroundStyled = styled.div`
   z-index: 1000;
 `;
 
-const WriteModeButtonStyled = styled.button<{ mode: string }>`
-  display: ${({ mode }) => (mode === "read" ? "block" : "none")};
-  position: absolute;
-  right: 40px;
-  padding: 0;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 17px;
-  width: max-content;
-  height: auto;
-  border: none;
-  outline: none;
-  background: none;
-  cursor: pointer;
-  text-decoration: underline;
-  color: var(--main-color);
-
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-const ButtonWrapperStyled = styled.div<{ mode: string }>`
+const ButtonWrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: ${({ mode }) => (mode === "read" ? "75px" : "0")};
+  margin-top: 0;
 
   @media (max-height: 745px) {
-    margin-top: ${({ mode }) => (mode === "read" ? "68px" : "0")};
+    margin-top: 0;
   }
 `;
 

@@ -381,7 +381,6 @@ export const axiosGetClubUserLog = async (page: number): Promise<any> => {
 const axiosCreateClubUserURL = "/v4/admin/users/club";
 export const axiosCreateClubUser = async (clubName: string | null): Promise<any> => {
   if (clubName === null) return;
-  console.log(clubName.toString());
   try {
     const response = await instance.post(
       axiosCreateClubUserURL,
