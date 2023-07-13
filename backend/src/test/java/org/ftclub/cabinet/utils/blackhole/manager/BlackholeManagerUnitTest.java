@@ -323,15 +323,9 @@ public class BlackholeManagerUnitTest {
 				beforeBlackholedAt
 		);
 
-		given(ftApiManager.getFtUsersInfoByName(name)).willThrow(new HttpClientErrorException(
-				HttpStatus.INTERNAL_SERVER_ERROR
-		));
+		given(ftApiManager.getFtUsersInfoByName(name)).willThrow(new RuntimeException());
 
-		blackholeManager.handleBlackhole(userBlackholeInfoDto);
-
-		Assertions.assertThrows(ServiceException.class, () -> {
-			ExceptionUtil.throwIfFalse(false,
-					new ServiceException(ExceptionStatus.EXTERNAL_API_EXCEPTION));
-		});
+		Assertions.assertThrows(RuntimeException.class,
+				() -> blackholeManager.handleBlackhole(userBlackholeInfoDto));
 	}
 }
