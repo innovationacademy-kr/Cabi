@@ -17,7 +17,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,8 +108,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<Location> locations = cabinetOptionalFetcher.findAllLocationsByBuildingAndFloor(building, floor);
 		System.out.println("locations = " + locations);
 		System.out.println("---------------------------------------------------------");
-		Map<Cabinet, List<LentHistory>> map = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
-		System.out.println("map = " + map);
+		cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor).stream().forEach(System.out::println);
 		return null;
 	}
 

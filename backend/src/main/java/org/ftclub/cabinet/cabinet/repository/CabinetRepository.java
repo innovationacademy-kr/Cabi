@@ -127,8 +127,9 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 
 	@Query("SELECT DISTINCT c, lh, u " +
 			"FROM Cabinet c " +
-			"JOIN LentHistory lh ON c.cabinetId = lh.cabinetId " +
-			"LEFT JOIN lh.user u " +
-			"WHERE lh.endedAt IS NULL AND c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
+			"JOIN c.lentHistories lh ON lh.cabinetId = c.cabinetId " +
+			"JOIN lh.user u ON lh.userId = u.userId " +
+			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor " +
+			"AND lh.endedAt IS NULL")
 	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(String building, Integer floor);
 }

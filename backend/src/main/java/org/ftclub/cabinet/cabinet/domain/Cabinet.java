@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
@@ -20,7 +22,7 @@ import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 @Table(name = "CABINET")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"cabinetPlace", "lentHistories"})
 public class Cabinet {
 
 	@Id
@@ -81,6 +83,12 @@ public class Cabinet {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "CABINET_PLACE_ID")
 	private CabinetPlace cabinetPlace;
+
+	@OneToMany(mappedBy = "cabinet",
+			targetEntity = LentHistory.class,
+			cascade = CascadeType.ALL,
+			fetch = FetchType.LAZY)
+	private List<LentHistory> lentHistories;
 
 	protected Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
 	                  Grid grid, CabinetPlace cabinetPlace) {

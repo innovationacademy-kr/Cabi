@@ -6,9 +6,11 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
+import org.ftclub.cabinet.dto.ActiveCabinetInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * CabinetService를 위한 ExceptionService
@@ -24,10 +26,11 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-@Transactional(readOnly = true)
+@Transactional
 public class CabinetOptionalFetcher {
 
 	private final CabinetRepository cabinetRepository;
+	private final CabinetMapper cabinetMapper;
 
 	/*-------------------------------------------FIND-------------------------------------------*/
 
@@ -36,26 +39,15 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findById(cabinetId).orElse(null);
 	}
 
-	public Map<Cabinet, List<LentHistory>> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor) {
+	public List<ActiveCabinetInfoDto> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor) {
 		log.info("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building, floor);
-		List<Object[]> results = cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building, floor);
-		results.stream().forEach(
-				result -> {
+		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building, floor).stream()
+				.map(result -> {
 					Cabinet cabinet = (Cabinet) result[0];
 					LentHistory lentHistory = (LentHistory) result[1];
 					User user = (User) result[2];
-					log.info("cabinet: {}, lentHistory: {}, user: {}", cabinet, lentHistory, user);
-				}
-		);
-//		Map<Cabinet, List<LentHistory>> map = results.stream()
-//				// casting each Object[] into a Map.Entry<Cabinet, LentHistory>
-//				.map(result -> new AbstractMap.SimpleEntry<>((Cabinet) result[0], (LentHistory) result[1]))
-//				// Collecting them into a Map<Cabinet, List<LentHistory>>
-//				.collect(Collectors.groupingBy(
-//						Map.Entry::getKey,
-//						Collectors.mapping(Map.Entry::getValue, Collectors.toList())
-//				));
-		return null;
+					return cabinetMapper.toActiveCabinetInfoDto(cabinet, lentHistory, user);
+				}).collect(Collectors.toList());
 	}
 
 	/**
