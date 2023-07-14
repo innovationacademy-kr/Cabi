@@ -16,7 +16,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
   if (ClubList === undefined) return <LoadingAnimation />;
 
   return (
-    <LogTableWrapperstyled>
+    <LogTableWrapperStyled>
       <LogTableStyled>
         <TheadStyled>
           <tr>
@@ -29,7 +29,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
               <tr
               key={userId}
               onClick={() => handleRowClick({userId, name})}
-              style={{ backgroundColor: selectedClubInfo?.userId === userId ? `var(--main-color)` : ''}}
+              className={ selectedClubInfo?.userId === userId ? 'selected' : '' }
               >
                 <td title={`${name}`}>{`${name}`}</td>
               </tr>
@@ -41,11 +41,11 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
         (ClubList.length === 0 && (
           <EmptyLogStyled>등록된 동아리가 없습니다.</EmptyLogStyled>
       ))}
-    </LogTableWrapperstyled>
+    </LogTableWrapperStyled>
   );
 };
 
-const LogTableWrapperstyled = styled.div`
+const LogTableWrapperStyled = styled.div`
   width: 100%;
   max-width: 400px;
   border-radius: 10px;
@@ -72,6 +72,7 @@ const TbodyStyled = styled.tbody`
   & > tr {
     text-align: center;
     height: 50px;
+    cursor: pointer;
   }
   & > tr > td {
     height: 50px;
@@ -80,6 +81,11 @@ const TbodyStyled = styled.tbody`
   }
   & > tr:nth-child(2n) {
     background: #f9f6ff;
+  }
+  & > tr.selected {
+    background-color: var(--lightpurple-color);
+    color: var(--white);
+    font-weight: 700;
   }
 `;
 
