@@ -206,6 +206,38 @@ class UserServiceUnitTest {
 	}
 
 	@Test
+	@DisplayName("동아리 유저 정보 변경 성공")
+	void updateClubUser_성공() {
+	    // given
+		user = mock(User.class);
+		given(userOptionalFetcher.getClubUser(1L)).willReturn(user);
+
+		// when
+		userService.updateClubUser(1L, "testUser");
+
+		// then
+		then(user).should().changeName("testUser");
+	}
+
+	@Test
+	@DisplayName("동아리 유저 정보 변경 실패 - 변경 이름 null")
+	void updateClubUser_실패_유저이름_null() {
+		// when + then
+		assertThrows(ServiceException.class, () -> userService.updateClubUser(1L, null));
+	}
+
+	@Test
+	@DisplayName("동아리 유저 정보 변경 실패 - 존재하지 않는 유저")
+	void updateClubUser_실패_없는_유저() {
+	    // given
+		given(userOptionalFetcher.getClubUser(999L))
+				.willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+
+		// when + then
+		assertThrows(ServiceException.class, () -> userService.updateClubUser(999L, "testUser"));
+	}
+
+	@Test
 	@DisplayName("어드민 Role 변경 성공 - 존재하는 어드민 Role 변경")
 	void updateAdminUserRole_성공_존재하는_어드민_Role_변경() {
 		Long adminId = 1L;

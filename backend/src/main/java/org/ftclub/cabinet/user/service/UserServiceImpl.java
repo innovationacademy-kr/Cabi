@@ -88,6 +88,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void updateClubUser(Long clubId, String clubName) {
+		log.info("Called updateClubUser: {}", clubId);
+		if (StringUtil.isNullOrEmpty(clubName)) {
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		User clubUser = userOptionalFetcher.getClubUser(clubId);
+		clubUser.changeName(clubName);
+	}
+
+	@Override
 	public void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt) {
 		log.info("Called updateUserBlackholedAt: {}", userId);
 		User user = userOptionalFetcher.getUser(userId);
@@ -152,15 +162,5 @@ public class UserServiceImpl implements UserService {
 	public AdminRole getAdminUserRole(String email) {
 		log.info("Called getAdminUserRole: {}", email);
 		return userOptionalFetcher.findAdminUserRoleByEmail(email);
-	}
-
-	@Override
-	public void updateClubUser(Long clubId, String clubName) {
-		log.info("Called updateClubUser: {}", clubId);
-		if (StringUtil.isNullOrEmpty(clubName)) {
-			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
-		}
-		User clubUser = userOptionalFetcher.getClubUser(clubId);
-		clubUser.changeName(clubName);
 	}
 }

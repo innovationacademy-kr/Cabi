@@ -3,7 +3,6 @@ package org.ftclub.cabinet.user.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,8 +31,6 @@ import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -681,5 +678,15 @@ public class UserFacadeServiceTest {
 		then(userOptionalFetcher).should().findClubUsers(pageble);
 		then(userMapper).should().toClubUserListDto(any(), any());
 		assertNull(result);
+	}
+
+	@Test
+	@DisplayName("동아리 유저 정보 수정 성공")
+	void updateClubUser_성공() {
+	    // when
+		userFacadeService.updateClubUser(1L, "testUser1");
+
+		// given
+		then(userService).should().updateClubUser(1L, "testUser1");
 	}
 }
