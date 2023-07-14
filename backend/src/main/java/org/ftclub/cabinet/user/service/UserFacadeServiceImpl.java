@@ -217,4 +217,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		log.info("Called deleteClubUser");
 		userService.deleteClubUser(userId, LocalDateTime.now());
 	}
+
+	@Override
+	public void updateClubUser(Long clubId, String clubName) {
+		log.info("Called updateClubUser");
+		userService.updateClubUser(clubId, clubName);
+	}
 }

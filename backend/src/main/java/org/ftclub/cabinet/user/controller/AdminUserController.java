@@ -3,6 +3,7 @@ package org.ftclub.cabinet.user.controller;
 import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -16,6 +17,7 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -90,8 +92,17 @@ public class AdminUserController {
 		if (StringUtil.isNullOrEmpty(clubName)) {
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
 		}
-		userFacadeService.createUser(clubName, clubName + "@student.42seoul.kr",
+		String randomUUID = UUID.randomUUID().toString();
+		userFacadeService.createUser(clubName,  randomUUID + "@club.42seoul.kr",
 				null, UserRole.CLUB);
+	}
+
+	@PatchMapping("/club/{clubId}")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void updateClubUser(@PathVariable("clubId") Long clubId, @RequestBody HashMap<String, String> body) {
+		log.info("Called updateClub");
+		String clubName = body.get("clubName");
+		userFacadeService.updateClubUser(clubId, clubName);
 	}
 
 	/**

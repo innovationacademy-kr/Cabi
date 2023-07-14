@@ -48,4 +48,5 @@ public interface UserService {
 
 	AdminRole getAdminUserRole(String email);
 
+	void updateClubUser(Long clubId, String clubName);
 }
