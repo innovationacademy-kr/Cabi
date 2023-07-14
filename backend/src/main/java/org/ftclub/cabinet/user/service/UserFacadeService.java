@@ -181,4 +181,6 @@ public interface UserFacadeService {
 	 * @param clubId 동아리 고유 아이디
 	 */
 	void deleteClubUser(Long clubId);
+
+	void updateClubUser(Long clubId, String clubName);
 }

@@ -17,6 +17,7 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -94,6 +95,14 @@ public class AdminUserController {
 		String randomUUID = UUID.randomUUID().toString();
 		userFacadeService.createUser(clubName,  randomUUID + "@club.42seoul.kr",
 				null, UserRole.CLUB);
+	}
+
+	@PatchMapping("/club/{clubId}")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void updateClubUser(@PathVariable("clubId") Long clubId, @RequestBody HashMap<String, String> body) {
+		log.info("Called updateClub");
+		String clubName = body.get("clubName");
+		userFacadeService.updateClubUser(clubId, clubName);
 	}
 
 	/**
