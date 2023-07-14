@@ -221,10 +221,26 @@ public class BlackholeManagerUnitTest {
 				beforeBlackholedAt
 		);
 
+		JsonNode jsonUserInfo = mock(JsonNode.class);
+		JsonNode mockCursusUsers = mock(JsonNode.class);
+		JsonNode mockFieldZero = mock(JsonNode.class);
+		JsonNode mockFieldOne = mock(JsonNode.class);
+
+//		새 블랙홀 날짜 = null
+		JsonNode JsonafterBlackholedAt = null;
+
+		given(ftApiManager.getFtUsersInfoByName(name)).willReturn(jsonUserInfo);
+		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
+		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
+		lenient().when(mockCursusUsers.get(1)).thenReturn(mockFieldOne);
+		given(mockFieldOne.get("blackholed_at")).willReturn(
+				JsonafterBlackholedAt);
+		given(mockCursusUsers.size()).willReturn(2);
+
 		blackholeManager.handleBlackhole(userBlackholeInfoDto);
 
-//		블랙홀 날짜를 갱신 X
-		then(userService).should(never()).updateUserBlackholedAt(anyLong(), any());
+//		블랙홀 날짜를 갱신 O
+		then(userService).should().updateUserBlackholedAt(anyLong(), any());
 //		사물함 반납 및 유저 삭제 처리 X
 		then(lentService).should(never()).terminateLentCabinet(userId);
 		then(userService).should(never()).deleteUser(anyLong(), any());
