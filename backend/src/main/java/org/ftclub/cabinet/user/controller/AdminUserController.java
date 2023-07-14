@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.controller;
 
 import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -79,12 +80,13 @@ public class AdminUserController {
 	/**
 	 * 동아리 유저를 생성합니다.
 	 *
-	 * @param clubName
+	 * @param body
 	 */
 	@PostMapping("/club")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void createClubUser(@RequestBody String clubName) {
+	public void createClubUser(@RequestBody HashMap<String, String> body) {
 		log.info("Called createClub");
+		String clubName = body.get("clubName");
 		if (StringUtil.isNullOrEmpty(clubName)) {
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
 		}
