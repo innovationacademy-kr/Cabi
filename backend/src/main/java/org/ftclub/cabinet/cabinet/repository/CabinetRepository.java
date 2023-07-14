@@ -3,6 +3,7 @@ package org.ftclub.cabinet.cabinet.repository;
 import org.ftclub.cabinet.cabinet.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -125,6 +126,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
 	List<Location> findAllLocationsByBuildingAndFloor(String building, Integer floor);
 
+	@EntityGraph(attributePaths = {"cabinetPlace.location"})
 	@Query("SELECT DISTINCT c, lh, u " +
 			"FROM Cabinet c " +
 			"JOIN c.lentHistories lh ON lh.cabinetId = c.cabinetId " +

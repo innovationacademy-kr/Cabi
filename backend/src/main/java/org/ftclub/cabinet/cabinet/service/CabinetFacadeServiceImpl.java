@@ -17,10 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -105,11 +102,36 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	}
 
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection2(String building, Integer floor) {
-		List<Location> locations = cabinetOptionalFetcher.findAllLocationsByBuildingAndFloor(building, floor);
-		System.out.println("locations = " + locations);
-		System.out.println("---------------------------------------------------------");
-		cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor).stream().forEach(System.out::println);
-		return null;
+		List<ActiveCabinetInfoEntitiesDto> results = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor2(building, floor);
+		Map<Cabinet, List<LentHistory>> map = results.stream().
+				collect(Collectors.groupingBy(ActiveCabinetInfoEntitiesDto::getCabinet,
+						Collectors.mapping(ActiveCabinetInfoEntitiesDto::getLentHistory, Collectors.toList())));
+		Map<String, List<CabinetPreviewDto>> allPreviews = new HashMap<>();
+		map.forEach((cabinet, lentHistories) -> {
+			String section = cabinet.getCabinetPlace().getLocation().getSection();
+			CabinetPreviewDto previewDto;
+			if (lentHistories != null) {
+				previewDto = getCabinetPreviewDto(cabinet, lentHistories);
+			} else {
+				previewDto = cabinetMapper.toCabinetPreviewDto(cabinet, 0, null);
+			}
+			if (allPreviews.containsKey(section)) {
+				allPreviews.get(section).add(previewDto);
+			} else {
+				List<CabinetPreviewDto> previews = new ArrayList<>();
+				previews.add(previewDto);
+				allPreviews.put(section, previews);
+			}
+		});
+		return allPreviews.entrySet().stream().map(entry -> new CabinetsPerSectionResponseDto(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+	}
+
+	private CabinetPreviewDto getCabinetPreviewDto(Cabinet cabinet, List<LentHistory> lentHistories) {
+		String lentUserName = null;
+		if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
+			lentUserName = lentHistories.get(0).getUser().getName();
+		}
+		return cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(), lentUserName);
 	}
 
 	private List<CabinetPreviewDto> getCabinetPreviewBundle(Location location) {

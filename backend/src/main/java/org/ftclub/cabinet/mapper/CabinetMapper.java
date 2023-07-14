@@ -43,6 +43,11 @@ public interface CabinetMapper {
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	ActiveCabinetInfoDto toActiveCabinetInfoDto(Cabinet cabinet, LentHistory lentHistory, User user);
 
+	@Mapping(target = "cabinet", source = "cabinet")
+	@Mapping(target = "lentHistory", source = "lentHistory")
+	@Mapping(target = "user", source = "user")
+	ActiveCabinetInfoEntitiesDto toActiveCabinetInfoEntitiesDto(Cabinet cabinet, LentHistory lentHistory, User user);
+
 	/*--------------------------------Wrapped DTO--------------------------------*/
 
 	//TO do : cabinetPlace러 바꾸기
@@ -69,4 +74,5 @@ public interface CabinetMapper {
 
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	CabinetSimpleDto toCabinetSimpleDto(Cabinet cabinet);
+
 }
