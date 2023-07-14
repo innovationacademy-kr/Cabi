@@ -52,11 +52,29 @@ public class SystemScheduler {
 	 * 매주 월요일 자정 42분에 블랙홀에 빠진 유저 처리를 트리거하는 메소드
 	 */
 	@Scheduled(cron = "0 42 0 * * MON")
-	public void checkBlackHole() {
-		log.info("called checkBlackHole");
-		List<UserBlackholeInfoDto> blackHoledUsers = userService.getAllUserBlackholeInfo();
-		for (UserBlackholeInfoDto blackHoledUser : blackHoledUsers) {
-			blackholeManager.handleBlackhole(blackHoledUser);
+	public void checkRiskOfBlackhole() {
+		log.info("called checkRiskOfBlackhole");
+		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
+		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
+			blackholeManager.handleBlackhole(blackholeInfo);
+			// 2초 간격으로 블랙홀 검증
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				log.error(e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * 매월 1일 01시 42분에 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 처리를 트리거하는 메소드
+	 */
+	@Scheduled(cron = "0 42 1 1 * *")
+	public void checkNoRiskOfBlackhole() {
+		log.info("called checkNoRiskOfBlackhole");
+		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
+		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
+			blackholeManager.handleBlackhole(blackholeInfo);
 			// 2초 간격으로 블랙홀 검증
 			try {
 				Thread.sleep(2000);

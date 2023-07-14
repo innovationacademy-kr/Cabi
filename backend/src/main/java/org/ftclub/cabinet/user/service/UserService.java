@@ -48,5 +48,17 @@ public interface UserService {
 
 	AdminRole getAdminUserRole(String email);
 
-	List<UserBlackholeInfoDto> getAllUserBlackholeInfo();
+	/**
+	 * 블랙홀에 빠질 위험이 있는 유저들의 블랙홀 정보를 가져옵니다.
+	 *
+	 * @return {@link List<UserBlackholeInfoDto>}
+	 */
+	List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo();
+
+	/**
+	 * 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 정보를 가져옵니다.
+	 *
+	 * @return {@link List<UserBlackholeInfoDto>}
+	 */
+	List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo();
 }

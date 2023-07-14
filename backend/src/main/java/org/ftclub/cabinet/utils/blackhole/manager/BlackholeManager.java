@@ -121,11 +121,6 @@ public class BlackholeManager {
 	public void handleBlackhole(UserBlackholeInfoDto userBlackholeInfoDto) {
 		log.debug("called handleBlackhole {}", userBlackholeInfoDto);
 		LocalDateTime now = LocalDateTime.now();
-		if (userBlackholeInfoDto.getBlackHoledAt() != null && now.isBefore(
-				userBlackholeInfoDto.getBlackHoledAt())) {
-			log.info("{}는 블랙홀에 빠지지 않았습니다.", userBlackholeInfoDto);
-			return;
-		}
 		try {
 			JsonNode jsonUserInfo = ftAPIManager.getFtUsersInfoByName(
 					userBlackholeInfoDto.getName());

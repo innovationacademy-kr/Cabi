@@ -146,10 +146,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserBlackholeInfoDto> getAllUserBlackholeInfo() {
-		log.info("Called getAllUserBlackholeInfo");
-		List<User> users = userRepository.findAll();
+	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
+		log.info("Called getAllRiskOfBlackholeInfo");
+		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
+				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
+				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+						user.getEmail(), user.getBlackholedAt()))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo() {
+		log.info("Called getAllNoRiskOfBlackholeInfo");
+		List<User> users = userRepository.findByNoRiskOfFallingIntoBlackholeUsers();
+		return users.stream()
+				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
 				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
