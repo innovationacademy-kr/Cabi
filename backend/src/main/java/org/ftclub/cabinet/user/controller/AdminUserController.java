@@ -84,8 +84,8 @@ public class AdminUserController {
 	@PostMapping("/club")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void createClubUser(@RequestBody String clubName) {
+		log.info("Called createClub");
 		if (StringUtil.isNullOrEmpty(clubName)) {
-			log.info("Called createClub");
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 		userFacadeService.createUser(clubName, clubName + "@42seoul.student.kr",
