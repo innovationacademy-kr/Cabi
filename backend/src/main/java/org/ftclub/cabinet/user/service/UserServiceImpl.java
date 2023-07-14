@@ -46,10 +46,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role) {
 		log.info("Called createUser: {}", email);
-		if (StringUtil.isNullOrEmpty(name)) {
-			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
-		}
-		String randomUUID = UUID.randomUUID().toString();
 		User user = User.of(name, email, blackholedAt, role);
 		userRepository.save(user);
 	}
