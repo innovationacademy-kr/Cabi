@@ -3,6 +3,7 @@ package org.ftclub.cabinet.user.controller;
 import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -90,7 +91,8 @@ public class AdminUserController {
 		if (StringUtil.isNullOrEmpty(clubName)) {
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
 		}
-		userFacadeService.createUser(clubName, clubName + "@student.42seoul.kr",
+		String randomUUID = UUID.randomUUID().toString();
+		userFacadeService.createUser(clubName,  randomUUID + "@club.42seoul.kr",
 				null, UserRole.CLUB);
 	}
 
