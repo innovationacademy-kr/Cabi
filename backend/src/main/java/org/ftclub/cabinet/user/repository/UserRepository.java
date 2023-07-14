@@ -53,5 +53,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	/**
 	 *
 	 */
-	Page<User> findAllByRole(@Param("role") UserRole role, Pageable pageable);
+	Page<User> findAllByRoleAndDeletedAtNotNull(@Param("role") UserRole role, Pageable pageable);
 }

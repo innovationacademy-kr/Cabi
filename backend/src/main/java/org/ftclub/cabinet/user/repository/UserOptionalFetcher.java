@@ -152,7 +152,7 @@ public class UserOptionalFetcher {
 	 */
 	public Page<User> findClubUsers(Pageable pageable) {
 		log.info("Called findClubUsers");
-		return userRepository.findAllByRole(UserRole.CLUB, pageable);
+		return userRepository.findAllByRoleAndDeletedAtNotNull(UserRole.CLUB, pageable);
 	}
 
 	/*-------------------------------------------GET--------------------------------------------*/
