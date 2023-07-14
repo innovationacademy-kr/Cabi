@@ -88,7 +88,7 @@ public class AdminUserController {
 		if (StringUtil.isNullOrEmpty(clubName)) {
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
 		}
-		userFacadeService.createUser(clubName, clubName + "@42seoul.student.kr",
+		userFacadeService.createUser(clubName, clubName + "@student.42seoul.kr",
 				null, UserRole.CLUB);
 	}
 
