@@ -2,10 +2,12 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -101,11 +103,13 @@ public class UserServiceImpl implements UserService {
 		AdminUser adminUser = userOptionalFetcher.getAdminUserByEmail(email);
 		if (adminUser.getRole() == AdminRole.NONE) {
 			adminUser.changeAdminRole(AdminRole.ADMIN);
+			adminUserRepository.save(adminUser);
 		}
 	}
 
 	@Override
-	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
+			LocalDateTime endedAt,
 			LocalDateTime expiredAt) {
 		log.info("Called banUser: {}", userId);
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);
@@ -139,5 +143,27 @@ public class UserServiceImpl implements UserService {
 	public AdminRole getAdminUserRole(String email) {
 		log.info("Called getAdminUserRole: {}", email);
 		return userOptionalFetcher.findAdminUserRoleByEmail(email);
+	}
+
+	@Override
+	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
+		log.info("Called getAllRiskOfBlackholeInfo");
+		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
+		return users.stream()
+				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
+				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+						user.getEmail(), user.getBlackholedAt()))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo() {
+		log.info("Called getAllNoRiskOfBlackholeInfo");
+		List<User> users = userRepository.findByNoRiskOfFallingIntoBlackholeUsers();
+		return users.stream()
+				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
+				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+						user.getEmail(), user.getBlackholedAt()))
+				.collect(Collectors.toList());
 	}
 }

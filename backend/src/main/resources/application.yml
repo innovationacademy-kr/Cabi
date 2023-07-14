@@ -14,7 +14,7 @@ server:
   port: 4242
 spring:
   config:
-    import: classpath:application-auth.yml
+    import: classpath:application-auth.yml, classpath:application-mail.yml
     activate:
       on-profile: dev
 
@@ -24,7 +24,7 @@ server:
   port: 2424
 spring:
   config:
-    import: classpath:application-auth.yml
+    import: classpath:application-auth.yml, classpath:application-mail.yml
     activate:
       on-profile: local
 

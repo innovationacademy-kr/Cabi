@@ -12,5 +12,5 @@ import lombok.Getter;
 public class BrokenCabinetPaginationDto {
 
 	private final List<CabinetDto> result;
-	private final Integer totalPage;
+	private final Long totalLength;
 }

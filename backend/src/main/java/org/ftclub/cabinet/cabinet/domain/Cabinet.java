@@ -18,9 +18,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.ftclub.cabinet.exception.DomainException;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 
 /**
@@ -92,7 +90,7 @@ public class Cabinet {
 	private CabinetPlace cabinetPlace;
 
 	protected Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
-					  Grid grid, CabinetPlace cabinetPlace) {
+			Grid grid, CabinetPlace cabinetPlace) {
 		this.visibleNum = visibleNum;
 		this.status = status;
 		this.lentType = lentType;
@@ -104,15 +102,16 @@ public class Cabinet {
 	}
 
 	public static Cabinet of(Integer visibleNum, CabinetStatus status, LentType lentType,
-							 Integer maxUser,
-							 Grid grid, CabinetPlace cabinetPlace) {
+			Integer maxUser,
+			Grid grid, CabinetPlace cabinetPlace) {
 		Cabinet cabinet = new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
 		ExceptionUtil.throwIfFalse(cabinet.isValid(), new DomainException(INVALID_ARGUMENT));
 		return cabinet;
 	}
 
 	private boolean isValid() {
-		return (visibleNum >= 0 && maxUser >= 0 && grid != null && cabinetPlace != null && status != null && lentType != null);
+		return (visibleNum >= 0 && maxUser >= 0 && grid != null && cabinetPlace != null
+				&& status != null && lentType != null);
 	}
 
 	public boolean isStatus(CabinetStatus cabinetStatus) {
