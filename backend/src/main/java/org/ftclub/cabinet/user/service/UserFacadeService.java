@@ -84,6 +84,11 @@ public interface UserFacadeService {
 	void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role);
 
 	/**
+	 * @param clubName 동아리 유저 이름
+	 */
+	void createClubUser(String clubName);
+
+	/**
 	 * 관리자가 존재하는지 확인합니다.
 	 *
 	 * @param email 관리자 이메일
@@ -172,7 +177,6 @@ public interface UserFacadeService {
 	 * @return
 	 */
 	ClubUserListDto findAllClubUser(Integer page, Integer size);
-
 
 
 	/**

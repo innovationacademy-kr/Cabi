@@ -12,6 +12,8 @@ public interface UserService {
 
 	void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role);
 
+	void createClubUser(String clubName);
+
 	boolean checkAdminUserExists(String email);
 
 	void createAdminUser(String email);

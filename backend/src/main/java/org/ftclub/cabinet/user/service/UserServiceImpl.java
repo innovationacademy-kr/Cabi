@@ -1,11 +1,15 @@
 package org.ftclub.cabinet.user.service;
 
+import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -42,7 +46,24 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role) {
 		log.info("Called createUser: {}", email);
+		if (StringUtil.isNullOrEmpty(name)) {
+			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		String randomUUID = UUID.randomUUID().toString();
 		User user = User.of(name, email, blackholedAt, role);
+		userRepository.save(user);
+	}
+
+	@Override
+	public void createClubUser(String clubName) {
+		log.info("Called createClubUser: {}", clubName);
+		if (StringUtil.isNullOrEmpty(clubName)) {
+			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
+		} else if (userRepository.findByName(clubName).isPresent()) {
+			throw new ControllerException(ExceptionStatus.EXISTED_CLUB_USER);
+		}
+		String randomUUID = UUID.randomUUID().toString();
+		User user = User.of(clubName, randomUUID, null, UserRole.CLUB);
 		userRepository.save(user);
 	}
 

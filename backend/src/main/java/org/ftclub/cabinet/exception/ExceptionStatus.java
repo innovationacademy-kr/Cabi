@@ -37,16 +37,17 @@ public enum ExceptionStatus {
 	UNAUTHORIZED_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 로그인 정보가 유효하지 않습니다\n다시 로그인해주세요"),
 	UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "사용자 로그인 정보가 유효하지 않습니다\n다시 로그인해주세요"),
 	EXTERNAL_API_EXCEPTION(HttpStatus.BAD_REQUEST, "외부 API와 통신 중 에러가 발생했습니다"),
+	EXISTED_CLUB_USER(HttpStatus.CONFLICT, "이미 존재하는 동아리 유저입니다"),
 	;
 
+
+	final private int statusCode;
+	final private String message;
+	final private String error;
 
 	ExceptionStatus(HttpStatus status, String message) {
 		this.statusCode = status.value();
 		this.message = message;
 		this.error = status.getReasonPhrase();
 	}
-
-	final private int statusCode;
-	final private String message;
-	final private String error;
 }

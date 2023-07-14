@@ -1,19 +1,14 @@
 package org.ftclub.cabinet.user.controller;
 
-import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.exception.ControllerException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,12 +83,7 @@ public class AdminUserController {
 	public void createClubUser(@RequestBody HashMap<String, String> body) {
 		log.info("Called createClub");
 		String clubName = body.get("clubName");
-		if (StringUtil.isNullOrEmpty(clubName)) {
-			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
-		}
-		String randomUUID = UUID.randomUUID().toString();
-		userFacadeService.createUser(clubName,  randomUUID + "@club.42seoul.kr",
-				null, UserRole.CLUB);
+		userFacadeService.createClubUser(clubName);
 	}
 
 	/**
