@@ -44,7 +44,7 @@ public class CabinetServiceImpl implements CabinetService {
 	public void updateStatus(Long cabinetId, CabinetStatus status) {
 		log.info("Called updateStatus: {}, {}", cabinetId, status);
 		if (!status.isValid()) {
-			throw new IllegalArgumentException("Invalid status");
+			throw new ServiceException(ExceptionStatus.INVALID_STATUS);
 		}
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.specifyStatus(status);

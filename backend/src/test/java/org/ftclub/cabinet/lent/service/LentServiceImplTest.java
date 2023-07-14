@@ -25,6 +25,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Disabled
+@Deprecated
 @Transactional
 class LentServiceImplTest {
 

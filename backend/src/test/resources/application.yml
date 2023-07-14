@@ -40,3 +40,24 @@ spring:
   urls:
     admin-login-callback: ${spring.server.fe-host}/v4/admin/auth/login/callback
     user-login-callback: ${spring.server.fe-host}/v4/auth/login/callback
+
+  mail:
+    soonoverdue:
+      term: -1
+      subject: "42CABI 사물함 연체 예정 알림"
+      template: "mail/soonoverdue"
+    overdue:
+      term: 1
+      subject: "42CABI 사물함 연체 알림"
+      template: "mail/overdue"
+
+    host: smtp.gmail.com
+    port: 587
+    username: test_email@gmail.com
+    password: test_password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

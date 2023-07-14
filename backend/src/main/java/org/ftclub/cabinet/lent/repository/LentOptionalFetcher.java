@@ -191,6 +191,11 @@ public class LentOptionalFetcher {
 		return lentRepository.countCabinetAllLent(cabinetId);
 	}
 
+	public List<LentHistory> findAllActiveLentHistories() {
+		log.info("Called findAllActiveLentHistories");
+		return lentRepository.findAllActiveLentHistories();
+	}
+
 	/**
 	 * @param userId 유저 id
 	 * @return 유저가 대여중인 캐비넷

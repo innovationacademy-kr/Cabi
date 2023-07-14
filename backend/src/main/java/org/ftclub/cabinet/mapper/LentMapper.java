@@ -4,6 +4,7 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
@@ -37,7 +38,16 @@ public interface LentMapper {
 
 	/*--------------------------------Wrapped DTO--------------------------------*/
 
-	@Mapping(target = "totalPage", source = "totalPage")
+	@Mapping(target = "totalLength", source = "totalLength")
 	LentHistoryPaginationDto toLentHistoryPaginationDto(List<LentHistoryDto> result,
-			Integer totalPage);
+			Long totalLength);
+
+	@Mapping(target = "userId", source = "lentHistory.userId")
+	@Mapping(target = "cabinetId", source = "cabinet.cabinetId")
+	ActiveLentHistoryDto toActiveLentHistoryDto(LentHistory lentHistory,
+			User user,
+			Cabinet cabinet,
+			Boolean isExpired,
+			Long daysLeftFromExpireDate
+	);
 }
