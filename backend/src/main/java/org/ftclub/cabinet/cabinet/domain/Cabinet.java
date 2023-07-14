@@ -1,25 +1,17 @@
 package org.ftclub.cabinet.cabinet.domain;
 
-import static org.ftclub.cabinet.exception.ExceptionStatus.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+
+import javax.persistence.*;
+import java.util.Objects;
+
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 
 /**
  * 사물함 엔티티
@@ -28,6 +20,7 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Table(name = "CABINET")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString
 public class Cabinet {
 
 	@Id
@@ -90,7 +83,7 @@ public class Cabinet {
 	private CabinetPlace cabinetPlace;
 
 	protected Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
-			Grid grid, CabinetPlace cabinetPlace) {
+	                  Grid grid, CabinetPlace cabinetPlace) {
 		this.visibleNum = visibleNum;
 		this.status = status;
 		this.lentType = lentType;
@@ -102,8 +95,8 @@ public class Cabinet {
 	}
 
 	public static Cabinet of(Integer visibleNum, CabinetStatus status, LentType lentType,
-			Integer maxUser,
-			Grid grid, CabinetPlace cabinetPlace) {
+	                         Integer maxUser,
+	                         Grid grid, CabinetPlace cabinetPlace) {
 		Cabinet cabinet = new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
 		ExceptionUtil.throwIfFalse(cabinet.isValid(), new DomainException(INVALID_ARGUMENT));
 		return cabinet;
@@ -183,6 +176,11 @@ public class Cabinet {
 			return false;
 		}
 		return this.cabinetId.equals(((Cabinet) other).cabinetId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.cabinetId);
 	}
 
 	/**

@@ -1,31 +1,10 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.Grid;
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
+import org.ftclub.cabinet.cabinet.domain.*;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetPaginationDto;
-import org.ftclub.cabinet.dto.CabinetPreviewDto;
-import org.ftclub.cabinet.dto.CabinetSimpleDto;
-import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
-import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
-import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentHistoryDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -37,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -109,7 +91,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
-			Integer floor) {
+	                                                                 Integer floor) {
 		log.info("getCabinetsPerSection");
 		return cabinetOptionalFetcher.findAllSectionsByBuildingAndFloor(building, floor).stream()
 				.map(section -> {
@@ -117,6 +99,15 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 							getCabinetPreviewBundle(Location.of(building, floor, section)));
 				})
 				.collect(Collectors.toList());
+	}
+
+	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection2(String building, Integer floor) {
+		List<Location> locations = cabinetOptionalFetcher.findAllLocationsByBuildingAndFloor(building, floor);
+		System.out.println("locations = " + locations);
+		System.out.println("---------------------------------------------------------");
+		Map<Cabinet, List<LentHistory>> map = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+		System.out.println("map = " + map);
+		return null;
 	}
 
 	private List<CabinetPreviewDto> getCabinetPreviewBundle(Location location) {
@@ -140,7 +131,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType, Integer page,
-			Integer size) {
+	                                                           Integer size) {
 		log.info("getCabinetPaginationByLentType");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -161,7 +152,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page,
-			Integer size) {
+	                                                         Integer size) {
 		log.info("getCabinetPaginationByStatus");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -181,7 +172,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum, Integer page,
-			Integer size) {
+	                                                             Integer size) {
 		log.info("getCabinetPaginationByVisibleNum");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -202,7 +193,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId, Integer page,
-			Integer size) {
+	                                                                  Integer size) {
 		log.info("getCabinetLentHistoriesPagination");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;

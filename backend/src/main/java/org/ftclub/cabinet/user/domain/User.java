@@ -1,29 +1,25 @@
 package org.ftclub.cabinet.user.domain;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString
 public class User {
 
 	@Id
@@ -49,12 +45,6 @@ public class User {
 	@Column(name = "ROLE", length = 32, nullable = false)
 	private UserRole role;
 
-	private boolean isValid() {
-		return name != null && email != null && Pattern.matches(
-				"^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*", email)
-				&& role != null && role.isValid();
-	}
-
 	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
 		this.name = name;
 		this.email = email;
@@ -63,11 +53,17 @@ public class User {
 	}
 
 	public static User of(String name, String email, LocalDateTime blackholedAt,
-			UserRole userRole) {
+	                      UserRole userRole) {
 		User user = new User(name, email, blackholedAt, userRole);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return user;
+	}
+
+	private boolean isValid() {
+		return name != null && email != null && Pattern.matches(
+				"^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*", email)
+				&& role != null && role.isValid();
 	}
 
 	@Override
