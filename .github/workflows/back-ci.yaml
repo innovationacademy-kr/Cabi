@@ -73,9 +73,9 @@ jobs:
         run: |
           mkdir -p before-deploy
           cp backend/build/libs/cabinet-*.jar before-deploy/
-          cp scripts/*.sh before-deploy/
+          cp scripts/deploy-dev.sh before-deploy/deploy.sh
           cp appspec.yml before-deploy/
-          cp Dockerfile before-deploy/
+          cp Dockerfile.dev before-deploy/Dockerfile
           cd before-deploy && zip -r before-deploy *
           cd ../ && mkdir -p deploy
           mv before-deploy/before-deploy.zip deploy/deploy.zip
@@ -88,22 +88,22 @@ jobs:
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=${{ secrets.AWS_S3_DEV_BUCKET_NAME }},bundleType=zip,key=deploy.zip
 
-      # - name: Main S3에 업로드
-      #   if: ${{ github.ref == 'refs/heads/main' }}
-      #   run: |
-      #     mkdir -p before-deploy
-      #     cp backend/build/libs/cabinet-*.jar before-deploy/
-      #     cp scripts/*.sh before-deploy/
-      #     cp appspec.yml before-deploy/
-      #     cp Dockerfile before-deploy/
-      #     cd before-deploy && zip -r before-deploy *
-      #     cd ../ && mkdir -p deploy
-      #     mv before-deploy/before-deploy.zip deploy/deploy.zip
-      #     aws s3 cp deploy/deploy.zip s3://${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}/deploy.zip
+      - name: Main S3에 업로드
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          mkdir -p before-deploy
+          cp backend/build/libs/cabinet-*.jar before-deploy/
+          cp scripts/deploy-main.sh before-deploy/deploy.sh
+          cp appspec.yml before-deploy/
+          cp Dockerfile.main before-deploy/Dockerfile
+          cd before-deploy && zip -r before-deploy *
+          cd ../ && mkdir -p deploy
+          mv before-deploy/before-deploy.zip deploy/deploy.zip
+          aws s3 cp deploy/deploy.zip s3://${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}/deploy.zip
 
-      #     aws deploy create-deployment \
-      #     --application-name ${{ secrets.AWS_CODEDEPLOY_MAIN_APP_NAME }} \
-      #     --deployment-config-name CodeDeployDefault.AllAtOnce \
-      #     --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_MAIN_GROUP_NAME }} \
-      #     --file-exists-behavior OVERWRITE \
-      #     --s3-location bucket=${{ secrets.AWS_S3_MAIN_BUCKET_NAME }},bundleType=zip,key=deploy.zip
+          aws deploy create-deployment \
+          --application-name ${{ secrets.AWS_CODEDEPLOY_MAIN_APP_NAME }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_MAIN_GROUP_NAME }} \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ secrets.AWS_S3_MAIN_BUCKET_NAME }},bundleType=zip,key=deploy.zip
