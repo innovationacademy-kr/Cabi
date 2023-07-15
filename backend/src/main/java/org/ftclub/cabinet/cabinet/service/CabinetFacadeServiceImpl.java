@@ -91,6 +91,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor) {
 		List<ActiveCabinetInfoEntities> results = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
 
