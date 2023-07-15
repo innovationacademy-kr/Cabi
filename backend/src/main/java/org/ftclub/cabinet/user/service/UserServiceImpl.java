@@ -55,12 +55,17 @@ public class UserServiceImpl implements UserService {
 		log.info("Called createClubUser: {}", clubName);
 		if (StringUtil.isNullOrEmpty(clubName)) {
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
-		} else if (userRepository.findByName(clubName).isPresent()) {
+		} else if (userOptionalFetcher.findUserByName(clubName) != null &&
+				userOptionalFetcher.findUserByName(clubName).getDeletedAt() == null) {
 			throw new ControllerException(ExceptionStatus.EXISTED_CLUB_USER);
+		} else if (userOptionalFetcher.findUserByName(clubName) != null &&
+				userOptionalFetcher.findUserByName(clubName).getDeletedAt() != null) {
+			userOptionalFetcher.getUserByName(clubName).setDeletedAt(null);
+		} else {
+			String randomUUID = UUID.randomUUID().toString();
+			User user = User.of(clubName, randomUUID + "@student.42seoul.kr", null, UserRole.CLUB);
+			userRepository.save(user);
 		}
-		String randomUUID = UUID.randomUUID().toString();
-		User user = User.of(clubName, randomUUID, null, UserRole.CLUB);
-		userRepository.save(user);
 	}
 
 	@Override

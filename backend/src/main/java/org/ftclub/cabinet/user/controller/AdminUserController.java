@@ -79,7 +79,7 @@ public class AdminUserController {
 	 * @param body
 	 */
 	@PostMapping("/club")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void createClubUser(@RequestBody HashMap<String, String> body) {
 		log.info("Called createClub");
 		String clubName = body.get("clubName");
@@ -92,14 +92,14 @@ public class AdminUserController {
 	 * @param clubId 동아리 고유 아이디
 	 */
 	@DeleteMapping("/club/{clubId}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteClubUser(@PathVariable("clubId") Long clubId) {
 		log.info("Called deleteClub");
 		userFacadeService.deleteClubUser(clubId);
 	}
 
 	@GetMapping("/clubs")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public ClubUserListDto findClubs(@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
 		log.info("Called getClubs");
