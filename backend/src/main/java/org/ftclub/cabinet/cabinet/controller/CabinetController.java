@@ -57,7 +57,7 @@ public class CabinetController {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
 		log.info("Called getCabinetsPerSection");
-		return cabinetFacadeService.getCabinetsPerSection2(building, floor);
+		return cabinetFacadeService.getCabinetsPerSection(building, floor);
 	}
 
 	/**

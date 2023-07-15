@@ -10,8 +10,8 @@ import org.ftclub.cabinet.user.domain.User;
 @Getter
 @AllArgsConstructor
 @ToString
-public class ActiveCabinetInfoEntitiesDto {
-	private final Cabinet cabinet; // 어차피 인스턴스라 내부 변경에 대해서는 막지못하지만 트랜잭션이 readOnly면 OK
+public class ActiveCabinetInfoEntities {
+	private final Cabinet cabinet;
 	private final LentHistory lentHistory;
 	private final User user;
 }

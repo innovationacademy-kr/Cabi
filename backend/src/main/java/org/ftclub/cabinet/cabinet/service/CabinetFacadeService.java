@@ -41,9 +41,7 @@ public interface CabinetFacadeService {
 	 * @return 구역에 따른 사물함 정보 리스트
 	 */
 	List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor);
-
-	List<CabinetsPerSectionResponseDto> getCabinetsPerSection2(String building, Integer floor);
-
+	
 	/**
 	 * 사물함의 상태 메모를 업데이트합니다.
 	 *

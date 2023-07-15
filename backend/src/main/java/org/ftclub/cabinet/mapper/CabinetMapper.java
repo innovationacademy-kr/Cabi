@@ -46,7 +46,7 @@ public interface CabinetMapper {
 	@Mapping(target = "cabinet", source = "cabinet")
 	@Mapping(target = "lentHistory", source = "lentHistory")
 	@Mapping(target = "user", source = "user")
-	ActiveCabinetInfoEntitiesDto toActiveCabinetInfoEntitiesDto(Cabinet cabinet, LentHistory lentHistory, User user);
+	ActiveCabinetInfoEntities toActiveCabinetInfoEntitiesDto(Cabinet cabinet, LentHistory lentHistory, User user);
 
 	/*--------------------------------Wrapped DTO--------------------------------*/
 

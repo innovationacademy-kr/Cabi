@@ -126,7 +126,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
 	List<Location> findAllLocationsByBuildingAndFloor(String building, Integer floor);
 
-	@EntityGraph(attributePaths = {"cabinetPlace.location"})
+	@EntityGraph(attributePaths = {"cabinetPlace"})
 	@Query("SELECT DISTINCT c, lh, u " +
 			"FROM Cabinet c " +
 			"JOIN c.lentHistories lh ON lh.cabinetId = c.cabinetId " +

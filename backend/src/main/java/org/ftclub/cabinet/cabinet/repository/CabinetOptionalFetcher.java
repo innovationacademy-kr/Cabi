@@ -6,8 +6,7 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.dto.ActiveCabinetInfoDto;
-import org.ftclub.cabinet.dto.ActiveCabinetInfoEntitiesDto;
+import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -40,18 +39,7 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findById(cabinetId).orElse(null);
 	}
 
-	public List<ActiveCabinetInfoDto> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor) {
-		log.info("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building, floor);
-		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building, floor).stream()
-				.map(result -> {
-					Cabinet cabinet = (Cabinet) result[0];
-					LentHistory lentHistory = (LentHistory) result[1];
-					User user = (User) result[2];
-					return cabinetMapper.toActiveCabinetInfoDto(cabinet, lentHistory, user);
-				}).collect(Collectors.toList());
-	}
-
-	public List<ActiveCabinetInfoEntitiesDto> findCabinetsActiveLentHistoriesByBuildingAndFloor2(String building, Integer floor) {
+	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor) {
 		log.info("Called findCabinetsActiveLentHistoriesByBuildingAndFloor2: {}, {}", building, floor);
 		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building, floor).stream()
 				.map(result -> {
@@ -84,15 +72,10 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findAllFloorsByBuilding(building);
 	}
 
-	//deprecated
+	//	deprecated
 	public List<String> findAllSectionsByBuildingAndFloor(String building, Integer floor) {
 		log.info("Called findAllSectionsByBuildingAndFloor: {}, {}", building, floor);
 		return cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor);
-	}
-
-	public List<Location> findAllLocationsByBuildingAndFloor(String building, Integer floor) {
-		log.info("Called findAllLocationsByBuildingAndFloor: {}, {}", building, floor);
-		return cabinetRepository.findAllLocationsByBuildingAndFloor(building, floor);
 	}
 
 	/*-------------------------------------------GET--------------------------------------------*/
