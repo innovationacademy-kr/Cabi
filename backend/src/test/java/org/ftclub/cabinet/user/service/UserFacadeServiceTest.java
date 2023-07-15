@@ -3,7 +3,6 @@ package org.ftclub.cabinet.user.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -32,8 +31,6 @@ import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -626,6 +623,16 @@ public class UserFacadeServiceTest {
 		// then
 		assertEquals(0, overdueUserList.getResult().size());
 		assertEquals(0, overdueUserList.getTotalLength());
+	}
+
+	@Test
+	@DisplayName("동아리 유저 생성 성공")
+	void createClubUser_성공() {
+		String clubName = String.valueOf("testClub");
+
+		userFacadeService.createClubUser(clubName);
+
+		then(userService).should().createClubUser(clubName);
 	}
 
 	@Test

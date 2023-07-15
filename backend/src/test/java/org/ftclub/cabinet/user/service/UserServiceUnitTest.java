@@ -12,7 +12,9 @@ import static org.mockito.Mockito.times;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -84,7 +86,7 @@ class UserServiceUnitTest {
 		User user = User.of("user3", "user3@student.42seoul.kr", null, UserRole.USER);
 		given(userRepository.save(user)).willReturn(user);
 
-		userService.createUser("user3","user3@student.42seoul.kr", null, UserRole.USER);
+		userService.createUser("user3", "user3@student.42seoul.kr", null, UserRole.USER);
 
 		then(userRepository).should(times(1)).save(user);
 	}
@@ -147,7 +149,8 @@ class UserServiceUnitTest {
 	@DisplayName("유저 삭제 실패 - 존재하지 않는 유저 삭제 시도")
 	void deleteUser_실패_존재하지_않는_유저_삭제_시도() {
 		LocalDateTime now = LocalDateTime.now();
-		given(userOptionalFetcher.getUser(-1L)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+		given(userOptionalFetcher.getUser(-1L)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 
 		assertThrows(ServiceException.class, () -> userService.deleteUser(-1L, now));
 		then(userOptionalFetcher).should(times(1)).getUser(-1L);
@@ -155,9 +158,52 @@ class UserServiceUnitTest {
 	}
 
 	@Test
+	@DisplayName("동아리 유저 생성 성공")
+	void createClubUser_성공() {
+		String clubName = "testClub";
+		String randomUUID = UUID.randomUUID().toString();
+		user = User.of(clubName, randomUUID + "@student.42seoul.kr", null, UserRole.CLUB);
+
+		userService.createClubUser(clubName);
+
+		then(userRepository).should().save(user);
+	}
+
+	@Test
+	@DisplayName("동아리 유저 생성 성공 - 이미 존재하는 동아리 유저였는데 soft delete 되어있는 경우")
+	void createClubUser_성공_soft_delete_되었던_동아리_유저() {
+		String clubName = "testClub";
+		given(userOptionalFetcher.findUserByName(clubName)).willReturn(user);
+		given(userOptionalFetcher.findUserByName(clubName).getDeletedAt()).willReturn(
+				LocalDateTime.now());
+		given(userOptionalFetcher.getUserByName(clubName)).willReturn(user);
+
+		userService.createClubUser(clubName);
+
+		then(userOptionalFetcher.getUserByName(clubName)).should().setDeletedAt(null);
+	}
+
+	@Test
+	@DisplayName("동아리 유저 생성 실패 - 유효하지 않은 인자인 경우")
+	void createClubUser_실패_유효하지_않은_인자() {
+		assertThrows(ControllerException.class, () -> userService.createClubUser(null));
+	}
+
+	@Test
+	@DisplayName("동아리 유저 생성 실패 - 이미 존재하는 동아리 유저")
+	void createClubUser_실패_이미_존재하는_동아리_유저() {
+		String clubName = "testClub";
+		given(userOptionalFetcher.findUserByName(clubName)).willReturn(user);
+		given(userOptionalFetcher.findUserByName(clubName).getDeletedAt()).willReturn(null);
+
+		assertThrows(ControllerException.class, () -> userService.createClubUser(clubName));
+	}
+
+
+	@Test
 	@DisplayName("동아리 유저 삭제 성공 - 존재하는 동아리 유저 삭제")
 	void deleteClubUser_성공_존재하는_동아리유저_삭제() {
-	    // given
+		// given
 		Long clubUserId = 1L;
 		LocalDateTime now = LocalDateTime.now();
 		given(userOptionalFetcher.getClubUser(clubUserId)).willReturn(user);
@@ -173,10 +219,11 @@ class UserServiceUnitTest {
 	@Test
 	@DisplayName("동아리 유저 삭제 실패 - 존재하지 않는 동아리 유저 삭제")
 	void deleteClubUser_실패_존재하지않는_동아리유저_삭제() {
-	    // given
+		// given
 		Long clubUserId = -1L;
 		LocalDateTime now = LocalDateTime.now();
-		given(userOptionalFetcher.getClubUser(clubUserId)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+		given(userOptionalFetcher.getClubUser(clubUserId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 
 		// when + then
 		assertThrows(ServiceException.class, () -> userService.deleteClubUser(clubUserId, now));
@@ -199,7 +246,8 @@ class UserServiceUnitTest {
 	@DisplayName("어드민 삭제 실패 - 존재하지 않는 어드민 삭제 시도")
 	void deleteAdminUser_실패_존재하지_않는_어드민_삭제_시도() {
 		Long failId = -1L;
-		given(userOptionalFetcher.getAdminUser(failId)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
+		given(userOptionalFetcher.getAdminUser(failId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 
 		assertThrows(ServiceException.class, () -> userService.deleteAdminUser(failId));
 		then(userOptionalFetcher).should(times(1)).getAdminUser(failId);
@@ -228,9 +276,11 @@ class UserServiceUnitTest {
 	void updateAdminUserRole_실패_존재하지_않는_어드민_변경_시도() {
 		Long failId = -1L;
 		AdminRole adminRole = AdminRole.MASTER;
-		given(userOptionalFetcher.getAdminUser(failId)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
+		given(userOptionalFetcher.getAdminUser(failId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 
-		assertThrows(ServiceException.class, () -> userService.updateAdminUserRole(failId, adminRole));
+		assertThrows(ServiceException.class,
+				() -> userService.updateAdminUserRole(failId, adminRole));
 		then(userOptionalFetcher).should(times(1)).getAdminUser(failId);
 	}
 
@@ -272,7 +322,8 @@ class UserServiceUnitTest {
 	@DisplayName("어드민으로 승격 실패 - 존재하지 않는 어드민 승격 시도")
 	void promoteAdminByEmail_실패_존재하지_않는_어드민_승격_시도() {
 		String failEmail = "fail@fail.com";
-		given(userOptionalFetcher.getAdminUserByEmail(failEmail)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
+		given(userOptionalFetcher.getAdminUserByEmail(failEmail)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 
 		assertThrows(ServiceException.class, () -> userService.promoteAdminByEmail(failEmail));
 		then(userOptionalFetcher).should(times(1)).getAdminUserByEmail(failEmail);
@@ -322,9 +373,11 @@ class UserServiceUnitTest {
 	void updateUserBlackholedAt_실패_존재하지_않는_유저_블랙홀_날짜_변경_시도() {
 		Long failId = -1L;
 		LocalDateTime newBlackholedAt = LocalDateTime.now().plusMonths(1);
-		given(userOptionalFetcher.getUser(failId)).willThrow(new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+		given(userOptionalFetcher.getUser(failId)).willThrow(
+				new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 
-		assertThrows(ServiceException.class, () -> userService.updateUserBlackholedAt(failId, newBlackholedAt));
+		assertThrows(ServiceException.class,
+				() -> userService.updateUserBlackholedAt(failId, newBlackholedAt));
 		then(userOptionalFetcher).should(times(1)).getUser(failId);
 	}
 
@@ -347,7 +400,8 @@ class UserServiceUnitTest {
 
 		BanHistory banHistory = BanHistory.of(now, banDate, banType, userId);
 
-		given(banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt)).willReturn(banType);
+		given(banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt)).willReturn(
+				banType);
 		given(banPolicy.getBanDate(banType, endedAt, expiredAt, userId)).willReturn(banDate);
 
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
@@ -376,7 +430,8 @@ class UserServiceUnitTest {
 
 		BanHistory banHistory = BanHistory.of(now, banDate, banType, userId);
 
-		given(banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt)).willReturn(banType);
+		given(banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt)).willReturn(
+				banType);
 		given(banPolicy.getBanDate(banType, endedAt, expiredAt, userId)).willReturn(banDate);
 
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
@@ -403,7 +458,8 @@ class UserServiceUnitTest {
 
 		BanHistory banHistory = mock(BanHistory.class);
 
-		given(banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt)).willReturn(banType);
+		given(banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt)).willReturn(
+				banType);
 
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
 
@@ -454,7 +510,8 @@ class UserServiceUnitTest {
 		Long userId = 3L;
 		LocalDateTime now = LocalDateTime.now();
 
-		given(userOptionalFetcher.getRecentBanHistory(userId)).willThrow(new DomainException(ExceptionStatus.NOT_FOUND_BAN_HISTORY));
+		given(userOptionalFetcher.getRecentBanHistory(userId)).willThrow(
+				new DomainException(ExceptionStatus.NOT_FOUND_BAN_HISTORY));
 
 		assertThrows(DomainException.class, () -> userService.deleteRecentBanHistory(userId, now));
 		then(userOptionalFetcher).should(times(1)).getRecentBanHistory(userId);
