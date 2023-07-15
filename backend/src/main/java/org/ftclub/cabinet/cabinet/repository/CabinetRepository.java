@@ -1,6 +1,13 @@
 package org.ftclub.cabinet.cabinet.repository;
 
-import org.ftclub.cabinet.cabinet.domain.*;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.LockModeType;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.cabinet.domain.Location;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -9,10 +16,6 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.LockModeType;
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
@@ -48,7 +51,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			+ "WHERE p.location.section = :section "
 			+ "AND p.location.floor = :floor")
 	List<Long> findAllCabinetIdsBySection(@Param("floor") Integer floor,
-	                                      @Param("section") String section);
+			@Param("section") String section);
 
 
 	@Query("SELECT c.statusNote "
@@ -102,36 +105,38 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"FROM Cabinet c " +
 			"WHERE c.lentType = :lentType")
 	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType,
-	                                       Pageable pageable);
+			Pageable pageable);
 
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.status = :status")
 	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status,
-	                                     Pageable pageable);
+			Pageable pageable);
 
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.visibleNum = :visibleNum")
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
-	                                         Pageable pageable);
+			Pageable pageable);
 
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.cabinetPlace.location = :location")
-	List<Cabinet> findAllCabinetsByLocation(Location location);
+	List<Cabinet> findAllCabinetsByLocation(@Param("location") Location location);
 
 	@Query("SELECT c.cabinetPlace.location " +
 			"FROM Cabinet c " +
 			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
-	List<Location> findAllLocationsByBuildingAndFloor(String building, Integer floor);
+	List<Location> findAllLocationsByBuildingAndFloor(@Param("building")String building, @Param("floor") Integer floor);
 
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	@Query("SELECT DISTINCT c, lh, u " +
 			"FROM Cabinet c " +
 			"JOIN c.lentHistories lh ON lh.cabinetId = c.cabinetId " +
 			"JOIN lh.user u ON lh.userId = u.userId " +
-			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor " +
+			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor "
+			+
 			"AND lh.endedAt IS NULL")
-	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(String building, Integer floor);
+	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(
+			@Param("building") String building, @Param("floor") Integer floor);
 }
