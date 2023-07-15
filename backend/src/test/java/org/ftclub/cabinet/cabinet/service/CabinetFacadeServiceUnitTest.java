@@ -46,6 +46,7 @@ class CabinetFacadeServiceUnitTest {
 	CabinetOptionalFetcher cabinetOptionalFetcher;
 	@Mock
 	LentOptionalFetcher lentOptionalFetcher;
+
 	@Mock(lenient = true)
 	CabinetMapper cabinetMapper;
 	@Mock
@@ -409,12 +410,16 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(
 				building, floor)).willReturn(List.of(info1, info2, info3));
 
+		given(cabinetMapper.toCabinetPreviewDto(eq(cabinet1), any(), any())).willReturn(mock(CabinetPreviewDto.class));
+		given(cabinetMapper.toCabinetPreviewDto(eq(cabinet2), any(), any())).willReturn(mock(CabinetPreviewDto.class));
+		given(cabinetMapper.toCabinetPreviewDto(eq(cabinet3), any(), any())).willReturn(mock(CabinetPreviewDto.class));
+
 		//============================== WHEN ==============================
 		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService.getCabinetsPerSection(
 				building, floor);
 
 		//============================== THEN ==============================
-
+		System.out.println("result = " + result);
 		assertEquals(section1, result.get(0).getSection());
 		assertEquals(section2, result.get(1).getSection());
 		assertEquals(section3, result.get(2).getSection());
