@@ -414,12 +414,20 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetMapper.toCabinetPreviewDto(eq(cabinet2), any(), any())).willReturn(mock(CabinetPreviewDto.class));
 		given(cabinetMapper.toCabinetPreviewDto(eq(cabinet3), any(), any())).willReturn(mock(CabinetPreviewDto.class));
 
-		given(cabinetMapper.toCabinetsPerSectionResponseDto(section1, List.of(mock(CabinetPreviewDto.class))))
-				.willReturn(mock(CabinetsPerSectionResponseDto.class));
-		given(cabinetMapper.toCabinetsPerSectionResponseDto(section2, List.of(mock(CabinetPreviewDto.class))))
-				.willReturn(mock(CabinetsPerSectionResponseDto.class));
-		given(cabinetMapper.toCabinetsPerSectionResponseDto(section3, List.of(mock(CabinetPreviewDto.class))))
-				.willReturn(mock(CabinetsPerSectionResponseDto.class));
+		CabinetsPerSectionResponseDto result1 = mock(CabinetsPerSectionResponseDto.class);
+		CabinetsPerSectionResponseDto result2 = mock(CabinetsPerSectionResponseDto.class);
+		CabinetsPerSectionResponseDto result3 = mock(CabinetsPerSectionResponseDto.class);
+
+		given(result1.getSection()).willReturn(section1);
+		given(result2.getSection()).willReturn(section2);
+		given(result3.getSection()).willReturn(section3);
+
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(eq(section1), anyList()))
+				.willReturn(result1);
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(eq(section2), anyList()))
+				.willReturn(result2);
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(eq(section3), anyList()))
+				.willReturn(result3);
 
 		//============================== WHEN ==============================
 		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService.getCabinetsPerSection(
