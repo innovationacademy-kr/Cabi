@@ -40,7 +40,7 @@ public class CabinetOptionalFetcher {
 	}
 
 	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor) {
-		log.info("Called findCabinetsActiveLentHistoriesByBuildingAndFloor2: {}, {}", building, floor);
+		log.info("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building, floor);
 		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building, floor).stream()
 				.map(result -> {
 					Cabinet cabinet = (Cabinet) result[0];
