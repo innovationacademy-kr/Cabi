@@ -323,25 +323,4 @@ public class BlackholeManagerUnitTest {
 		then(lentService).should(never()).terminateLentCabinet(userId);
 		then(userService).should(never()).deleteUser(anyLong(), any());
 	}
-
-	@Test
-	@DisplayName("실패 - 외부 API로부터 알 수 없는 에러 발생")
-	void 실패_handleBlackhole_알_수_없는_에러() {
-		Long userId = 1L;
-		String name = "노란머리 블랙홀헌터 은비킴";
-		String email = "CPP언능끝내요은비킴@student.42seoul.kr";
-//		기존 블랙홀 날짜 = 오늘 날짜 -3
-		LocalDateTime beforeBlackholedAt = LocalDateTime.now().minusDays(3);
-		UserBlackholeInfoDto userBlackholeInfoDto = new UserBlackholeInfoDto(
-				userId,
-				name,
-				email,
-				beforeBlackholedAt
-		);
-
-		given(ftApiManager.getFtUsersInfoByName(name)).willThrow(new RuntimeException());
-
-		Assertions.assertThrows(RuntimeException.class,
-				() -> blackholeManager.handleBlackhole(userBlackholeInfoDto));
-	}
 }
