@@ -40,8 +40,7 @@ public class LeaveAbsenceManager {
 				userService.deleteUser(userId, LocalDateTime.now());
 			}
 		} catch (Exception e) {
-			log.error("handleLeaveAbsence Exception {}", e.getMessage());
-			throw new ServiceException(ExceptionStatus.EXTERNAL_API_EXCEPTION);
+			log.error("handleLeaveAbsence Exception: {}, {}", userId, name, e);
 		}
 	}
 }

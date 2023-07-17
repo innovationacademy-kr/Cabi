@@ -80,7 +80,8 @@ public class FtApiManager {
 				log.info("요청에 실패했습니다. 최대 3번 재시도합니다. 현재 시도 횟수: {}", tryCount);
 				this.issueAccessToken();
 				if (tryCount == MAX_RETRY) {
-					throw new RuntimeException();
+					log.error("요청에 실패했습니다. 최대 재시도 횟수를 초과했습니다. {}", e.getMessage());
+					throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
 				}
 			}
 		}
