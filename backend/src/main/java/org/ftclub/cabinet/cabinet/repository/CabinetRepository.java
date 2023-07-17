@@ -44,7 +44,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	List<String> findAllSectionsByBuildingAndFloor(
 			@Param("building") String building,
 			@Param("floor") Integer floor);
-	
+
 	@Query("SELECT p.location "
 			+ "FROM Cabinet c "
 			+ "JOIN c.cabinetPlace p "
@@ -93,8 +93,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"FROM Cabinet c " +
 			"JOIN c.lentHistories lh ON lh.cabinetId = c.cabinetId " +
 			"JOIN lh.user u ON lh.userId = u.userId " +
-			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor "
-			+
+			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor " +
 			"AND lh.endedAt IS NULL")
 	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);

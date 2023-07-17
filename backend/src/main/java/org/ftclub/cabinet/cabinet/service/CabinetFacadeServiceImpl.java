@@ -114,7 +114,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		});
 		return cabinetPreviewsBySection.entrySet().stream()
 				.sorted(Comparator.comparing(entry -> entry.getValue().get(0).getVisibleNum()))
-				.map(entry -> new CabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))
+				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList());
 	}
 

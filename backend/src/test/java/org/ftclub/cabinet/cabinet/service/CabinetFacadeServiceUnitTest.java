@@ -414,12 +414,18 @@ class CabinetFacadeServiceUnitTest {
 		given(cabinetMapper.toCabinetPreviewDto(eq(cabinet2), any(), any())).willReturn(mock(CabinetPreviewDto.class));
 		given(cabinetMapper.toCabinetPreviewDto(eq(cabinet3), any(), any())).willReturn(mock(CabinetPreviewDto.class));
 
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(section1, List.of(mock(CabinetPreviewDto.class))))
+				.willReturn(mock(CabinetsPerSectionResponseDto.class));
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(section2, List.of(mock(CabinetPreviewDto.class))))
+				.willReturn(mock(CabinetsPerSectionResponseDto.class));
+		given(cabinetMapper.toCabinetsPerSectionResponseDto(section3, List.of(mock(CabinetPreviewDto.class))))
+				.willReturn(mock(CabinetsPerSectionResponseDto.class));
+
 		//============================== WHEN ==============================
 		List<CabinetsPerSectionResponseDto> result = cabinetFacadeService.getCabinetsPerSection(
 				building, floor);
 
 		//============================== THEN ==============================
-		System.out.println("result = " + result);
 		assertEquals(section1, result.get(0).getSection());
 		assertEquals(section2, result.get(1).getSection());
 		assertEquals(section3, result.get(2).getSection());
