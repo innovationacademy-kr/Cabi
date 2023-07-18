@@ -52,3 +52,11 @@ export type ClubLogResponseType =
   | ClubUserDto[]
   | typeof STATUS_400_BAD_REQUEST
   | undefined;
+
+export interface IClubLog {
+  logs: ClubLogResponseType;
+  page: number;
+  totalPage: number;
+  onClickPrev: React.MouseEventHandler;
+  onClickNext: React.MouseEventHandler;
+}

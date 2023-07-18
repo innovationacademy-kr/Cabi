@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { useRecoilState } from "recoil";
+import styled from "styled-components";
 import { selectedClubInfoState } from "@/recoil/atoms";
+import AdminClubLogContainer from "@/components/Club/AdminClubLog.container";
 import Button from "@/components/Common/Button";
-import ClubLogTable from "@/components/Club/ClubLogTable";
 import ClubModal from "@/components/Modals/ClubModal/ClubModal";
 import { ClubUserDto } from "@/types/dto/lent.dto";
 import { ClubLogResponseType } from "@/types/dto/lent.dto";
@@ -12,10 +12,12 @@ import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminClubPage = () => {
   const [clubLog, setClubLog] = useState<ClubLogResponseType>(undefined);
-  const [logChanged, setLogChanged ] = useState(true);
+  const [logChanged, setLogChanged] = useState(true);
   const [clubModalType, setClubModalType] = useState<string | null>(null);
-  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(selectedClubInfoState);
-  
+  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
+    selectedClubInfoState
+  );
+
   useEffect(() => {
     if (logChanged) {
       getLentLog();
@@ -27,12 +29,12 @@ const AdminClubPage = () => {
     setClubModalType(type);
     setSelectedClubInfo(club);
   };
-  
+
   const handleCloseModal = () => {
     setClubModalType(null);
     setSelectedClubInfo(null);
   };
-  
+
   const handleLogChanged = () => {
     setLogChanged(true);
   };
@@ -44,7 +46,6 @@ const AdminClubPage = () => {
       setTimeout(() => {
         setClubLog(clubListLogs);
       }, 500);
-
     } catch {
       setTimeout(() => {
         setClubLog(STATUS_400_BAD_REQUEST);
@@ -58,13 +59,13 @@ const AdminClubPage = () => {
       <SubTitleStyled>
         현재 등록된 동아리 목록을 확인할 수 있습니다.
       </SubTitleStyled>
-      <ClubLogTable ClubList={clubLog} />
+      <AdminClubLogContainer />
       <ButtonWrapperStyled>
         <Button
           text={"동아리 생성"}
           onClick={() => handleOpenModal("CREATE", null)}
           theme="line"
-          />
+        />
         <Button
           text={"삭제"}
           onClick={() => handleOpenModal("DELETE", selectedClubInfo)}
@@ -74,10 +75,10 @@ const AdminClubPage = () => {
       </ButtonWrapperStyled>
       {clubModalType && (
         <ClubModal
-        type={clubModalType}
-        onClose={handleCloseModal}
-        onReload={handleLogChanged}
-      />
+          type={clubModalType}
+          onClose={handleCloseModal}
+          onReload={handleLogChanged}
+        />
       )}
     </WrapperStyled>
   );
