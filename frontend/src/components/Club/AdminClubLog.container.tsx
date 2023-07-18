@@ -2,34 +2,27 @@ import { useEffect, useState } from "react";
 import AdminclubLog from "@/components/Club/AdminClubLog";
 import { ClubLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
-import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminClubLogContainer = () => {
   const [logs, setLogs] = useState<ClubLogResponseType>(undefined);
-  const [page, setPage] = useState<number>(-1);
-  const [totalPage, setTotalPage] = useState<number>(-1);
+  const [page, setPage] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
+
   async function getData(page: number) {
     try {
       const result = await axiosGetClubUserLog(page);
-      setTotalPage(result.data.totalPage);
+      setTotalPage(Math.ceil(result.data.totalLength / 10));
       setLogs(result.data.result);
     } catch {
-      setLogs(STATUS_400_BAD_REQUEST);
+      setLogs([]);
       setTotalPage(1);
     }
   }
+  console.log("test", totalPage);
   useEffect(() => {
-    setPage(0);
-    getData(0);
-  });
-
-  useEffect(() => {
-    if (needsUpdate || page > 0) {
-      setNeedsUpdate(false);
-      getData(page);
-    }
-  }, [page]);
+    getData(page);
+  }, [page, needsUpdate]);
 
   const onClickPrev = () => {
     if (page == 0) return;

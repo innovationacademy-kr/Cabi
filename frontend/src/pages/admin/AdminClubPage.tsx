@@ -84,17 +84,7 @@ const AdminClubPage = () => {
   );
 };
 
-const ButtonWrapperStyled = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  /* align-items: center; */
-  margin-top: 30px;
-  gap: 30px;
-`;
-
 const WrapperStyled = styled.div`
-  /* display: flex; */
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -119,4 +109,13 @@ const SubTitleStyled = styled.div`
   margin-bottom: 25px;
   color: var(--lightpurple-color);
 `;
+
+const ButtonWrapperStyled = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 30px;
+`;
+
 export default AdminClubPage;

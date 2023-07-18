@@ -1,18 +1,21 @@
-import styled from "styled-components";
 import { useRecoilState } from "recoil";
+import styled from "styled-components";
 import { selectedClubInfoState } from "@/recoil/atoms";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
-  
-  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(selectedClubInfoState);
-  
-  const handleRowClick = (clubInfo:ClubUserDto) => {
-    setSelectedClubInfo(selectedClubInfo?.userId === clubInfo.userId ? null : clubInfo);
+  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
+    selectedClubInfoState
+  );
+
+  const handleRowClick = (clubInfo: ClubUserDto) => {
+    setSelectedClubInfo(
+      selectedClubInfo?.userId === clubInfo.userId ? null : clubInfo
+    );
   };
-  
+
   if (ClubList === undefined) return <LoadingAnimation />;
 
   return (
@@ -27,9 +30,14 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
           <TbodyStyled>
             {ClubList.map(({ userId, name }) => (
               <tr
-              key={userId}
-              onClick={() => handleRowClick({userId, name})}
-              style={{ backgroundColor: selectedClubInfo?.userId === userId ? `var(--main-color)` : ''}}
+                key={userId}
+                onClick={() => handleRowClick({ userId, name })}
+                style={{
+                  backgroundColor:
+                    selectedClubInfo?.userId === userId
+                      ? `var(--main-color)`
+                      : "",
+                }}
               >
                 <td title={`${name}`}>{`${name}`}</td>
               </tr>
@@ -40,7 +48,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
       {ClubList === STATUS_400_BAD_REQUEST ||
         (ClubList.length === 0 && (
           <EmptyLogStyled>등록된 동아리가 없습니다.</EmptyLogStyled>
-      ))}
+        ))}
     </LogTableWrapperstyled>
   );
 };

@@ -10,7 +10,7 @@ const AdminClubLog = ({
   onClickNext,
 }: IClubLog) => {
   return (
-    <AdminLentLogStyled>
+    <AdminClubLogStyled>
       <ClubLogTable ClubList={logs} />
       <ButtonContainerStyled>
         <PageButtonStyled
@@ -19,7 +19,11 @@ const AdminClubLog = ({
           type="prev"
           onClick={onClickPrev}
         >
-          이전
+          <ImgCenterStyled>
+            <ImageStyled>
+              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
+            </ImageStyled>
+          </ImgCenterStyled>
         </PageButtonStyled>
         <PageButtonStyled
           page={page}
@@ -27,12 +31,40 @@ const AdminClubLog = ({
           type="next"
           onClick={onClickNext}
         >
-          다음
+          <ImgCenterStyled>
+            <ImageStyled>
+              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
+            </ImageStyled>
+          </ImgCenterStyled>
         </PageButtonStyled>
       </ButtonContainerStyled>
-    </AdminLentLogStyled>
+    </AdminClubLogStyled>
   );
 };
+
+const AdminClubLogStyled = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 auto;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+`;
+
+const ButtonContainerStyled = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  overflow: hidden;
+`;
 
 const PageButtonStyled = styled.div<{
   page: number;
@@ -40,7 +72,10 @@ const PageButtonStyled = styled.div<{
   type: string;
 }>`
   cursor: pointer;
-  color: var(--main-color);
+  width: 50px;
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.7));
   position: absolute;
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 0) return "none";
@@ -55,22 +90,22 @@ const PageButtonStyled = styled.div<{
         `
       : css`
           right: 0;
+          transform: rotate(-180deg);
         `}
 `;
 
-const ButtonContainerStyled = styled.div`
-  position: relative;
-  width: 80%;
-  height: 50px;
+const ImgCenterStyled = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
-  margin-top: 25px;
+  justify-content: center;
+  height: 100%;
 `;
 
-const AdminLentLogStyled = styled.div`
-  //width: 100%;
+const ImageStyled = styled.div`
+  width: 40px;
+  margin-right: 4px;
+  filter: brightness(0%);
+  border-radius: 50%;
 `;
 
 export default AdminClubLog;
