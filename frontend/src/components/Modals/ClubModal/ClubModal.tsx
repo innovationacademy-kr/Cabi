@@ -9,7 +9,7 @@ import {
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import { axiosCreateClubUser, axiosDeleteClubUser } from "@/api/axios/axios.custom";
+import { axiosCreateClubUser, axiosDeleteClubUser, axiosEditClubUser } from "@/api/axios/axios.custom";
 import { ClubUserDto } from "@/types/dto/lent.dto";
 
 interface ClubModalContainerInterface {
@@ -65,8 +65,6 @@ const ClubModal = ({
       setModalTitle("추가되었습니다");
       onReload();
     } catch (error: any) {
-      // setModalTitle("이미 같은 이름의 동아리가 존재합니다");
-      console.log(error);
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
