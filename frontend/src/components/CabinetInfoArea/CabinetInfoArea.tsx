@@ -93,7 +93,7 @@ const CabinetInfoArea: React.FC<{
               onClick={() => openModal("lentModal")}
               text="대여"
               theme="fill"
-              disabled={!isAvailable}
+              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
             />
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>
