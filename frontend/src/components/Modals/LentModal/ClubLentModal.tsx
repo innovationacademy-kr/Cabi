@@ -55,8 +55,8 @@ const ClubLentModal: React.FC<{
 
   const ClubLentModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
-    title: "",
+    icon: "",
+    title: "동아리 선택",
     detail: "사물함을 대여할 동아리를 선택해주세요.",
     proceedBtnText: modalPropsMap[CabinetType.CLUB].confirmMessage,
     onClickProceed: tryLentRequest,
