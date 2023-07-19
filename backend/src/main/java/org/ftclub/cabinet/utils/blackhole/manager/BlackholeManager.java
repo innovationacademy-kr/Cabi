@@ -113,6 +113,7 @@ public class BlackholeManager {
 			HttpClientErrorException e) {
 		log.error("handleBlackhole HttpClientErrorException {}", e.getStatusCode());
 		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+			log.warn("{}는 42에서 찾을 수 없습니다.", userBlackholeInfoDto);
 			lentService.terminateLentCabinet(userBlackholeInfoDto.getUserId());
 			userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
 		}
@@ -144,8 +145,7 @@ public class BlackholeManager {
 				userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
 			}
 		} catch (Exception e) {
-			log.error("handleBlackhole Exception {}", e.getMessage());
-			throw new ServiceException(ExceptionStatus.EXTERNAL_API_EXCEPTION);
+			log.error("handleBlackhole Exception: {}", userBlackholeInfoDto, e);
 		}
 	}
 }

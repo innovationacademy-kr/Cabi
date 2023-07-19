@@ -32,7 +32,7 @@ public class SystemScheduler {
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거하는 메소드
 	 */
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "${spring.schedule.cron.leave-absence}")
 	public void checkAllLents() {
 		log.info("called checkAllLents");
 		List<ActiveLentHistoryDto> activeLents = lentService.getAllActiveLentHistories();
@@ -51,7 +51,7 @@ public class SystemScheduler {
 	/**
 	 * 매주 월요일 자정 42분에 블랙홀에 빠진 유저 처리를 트리거하는 메소드
 	 */
-	@Scheduled(cron = "0 42 0 * * MON")
+	@Scheduled(cron = "${spring.schedule.cron.risk-of-blackhole}")
 	public void checkRiskOfBlackhole() {
 		log.info("called checkRiskOfBlackhole");
 		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
@@ -69,7 +69,7 @@ public class SystemScheduler {
 	/**
 	 * 매월 1일 01시 42분에 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 처리를 트리거하는 메소드
 	 */
-	@Scheduled(cron = "0 42 1 1 * *")
+	@Scheduled(cron = "${spring.schedule.cron.no-risk-of-blackhole}")
 	public void checkNoRiskOfBlackhole() {
 		log.info("called checkNoRiskOfBlackhole");
 		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
