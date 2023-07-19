@@ -12,32 +12,7 @@ const AdminClubLog = ({
   return (
     <AdminClubLogStyled>
       <ClubLogTable ClubList={logs} />
-      <ButtonContainerStyled>
-        <PageButtonStyled
-          page={page}
-          totalPage={totalPage}
-          type="prev"
-          onClick={onClickPrev}
-        >
-          <ImgCenterStyled>
-            <ImageStyled>
-              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
-            </ImageStyled>
-          </ImgCenterStyled>
-        </PageButtonStyled>
-        <PageButtonStyled
-          page={page}
-          totalPage={totalPage}
-          type="next"
-          onClick={onClickNext}
-        >
-          <ImgCenterStyled>
-            <ImageStyled>
-              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
-            </ImageStyled>
-          </ImgCenterStyled>
-        </PageButtonStyled>
-      </ButtonContainerStyled>
+      
     </AdminClubLogStyled>
   );
 };

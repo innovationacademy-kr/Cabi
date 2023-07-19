@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AdminclubLog from "@/components/Club/AdminClubLog";
+import AdminClubLog from "@/components/Club/AdminClubLog";
 import { ClubLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
 
@@ -36,7 +36,7 @@ const AdminClubLogContainer = () => {
   };
 
   return (
-    <AdminclubLog
+    <AdminClubLog
       logs={logs}
       page={page}
       totalPage={totalPage}

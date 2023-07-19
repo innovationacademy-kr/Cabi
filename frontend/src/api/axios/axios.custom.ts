@@ -392,12 +392,14 @@ export const axiosCreateClubUser = async (
   }
 };
 
-const axiosEditClubUserURL = "/v4/admin/users/club";
+const axiosEditClubUserURL = "/v4/admin/users/club/";
 export const axiosEditClubUser = async (clubInfo: ClubUserDto | null): Promise<any> => {
-  if (clubInfo?.name === null) return;
+  if (clubInfo === null || clubInfo.name === null) return;
   try {
     const response = await instance.patch(
-      axiosEditClubUserURL, { clubInfo }
+      axiosEditClubUserURL + clubInfo.userId.toString(), {
+        "clubName": clubInfo.name,
+      }
     );
     return response;
   } catch (error) {
