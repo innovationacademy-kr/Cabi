@@ -17,6 +17,7 @@ import {
   axiosSearchByCabinetNum,
   axiosSearchDetailByIntraId,
 } from "@/api/axios/axios.custom";
+import { getTotalPage } from "@/utils/dateUtils";
 
 interface ISearchDetail {
   name: string;
@@ -61,7 +62,7 @@ const SearchPage = () => {
       currentPage.current
     );
     setSearchListByIntraId(searchResult.data.result ?? []);
-    setTotalSearchList(searchResult.data.totalPage ?? 0);
+    setTotalSearchList(getTotalPage(searchResult.data.totalLength, 10) ?? 0);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
@@ -80,7 +81,7 @@ const SearchPage = () => {
       );
     }
     setSearchListByNum(searchResultData ?? []);
-    setTotalSearchList(searchResult.data.totalPage ?? 0);
+    setTotalSearchList(getTotalPage(searchResult.data.totalLength, 10) ?? 0);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
