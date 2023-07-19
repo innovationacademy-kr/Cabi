@@ -18,6 +18,7 @@ import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -51,6 +52,8 @@ class UserServiceUnitTest {
 	private BanPolicy banPolicy;
 	@Mock
 	private UserOptionalFetcher userOptionalFetcher;
+	@Mock
+	private LentOptionalFetcher lentOptionalFetcher;
 	@Mock
 	private User user;
 
@@ -206,7 +209,9 @@ class UserServiceUnitTest {
 		// given
 		Long clubUserId = 1L;
 		LocalDateTime now = LocalDateTime.now();
+		given(user.getUserId()).willReturn(clubUserId);
 		given(userOptionalFetcher.getClubUser(clubUserId)).willReturn(user);
+		given(lentOptionalFetcher.findActiveLentCabinetByUserId(clubUserId)).willReturn(null);
 
 		// when
 		userService.deleteClubUser(clubUserId, now);
