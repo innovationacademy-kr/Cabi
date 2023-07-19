@@ -7,11 +7,11 @@ export enum additionalModalType {
   MODAL_ADMIN_RETURN = "MODAL_ADMIN_RETURN",
   MODAL_BAN = "MODAL_BAN",
   MODAL_ADMIN_LOGIN_FAILURE = "MODAL_ADMIN_LOGIN_FAILURE",
-  MODAL_ADMIN_CLUB_CREATE = "MODAL_ADMIN_CLUB_CREATE",  
+  MODAL_ADMIN_CLUB_CREATE = "MODAL_ADMIN_CLUB_CREATE",
   MODAL_ADMIN_CLUB_CREATE_FAILURE = "MODAL_ADMIN_CLUB_CREATE_FAILURE",
   MODAL_ADMIN_CLUB_EDIT = "MODAL_ADMIN_CLUB_EDIT",
   MODAL_ADMIN_CLUB_DELETE = "MODAL_ADMIN_CLUB_DELETE",
-};
+}
 
 export const cabinetIconSrcMap = {
   [CabinetType.PRIVATE]: "/src/assets/images/privateIcon.svg",
@@ -69,6 +69,11 @@ export const modalPropsMap = {
     type: "error",
     title: "사용이 불가한 사물함입니다",
     confirmMessage: "",
+  },
+  [CabinetType.CLUB]: {
+    type: "confirm",
+    title: "동아리 대여",
+    confirmMessage: "확인",
   },
   PASSWORD_CHECK: {
     type: "confirm",

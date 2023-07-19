@@ -37,6 +37,8 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
                     selectedClubInfo?.userId === userId
                       ? `var(--main-color)`
                       : "",
+                  color:
+                    selectedClubInfo?.userId === userId ? `var(--white)` : "",
                 }}
               >
                 <td title={`${name}`}>{`${name}`}</td>

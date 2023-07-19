@@ -60,3 +60,8 @@ export interface IClubLog {
   onClickPrev: React.MouseEventHandler;
   onClickNext: React.MouseEventHandler;
 }
+export interface CabinetClubStatusRequestDto {
+  userId: number;
+  cabinetId: number;
+  statusNote: string | null;
+}
