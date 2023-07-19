@@ -9,7 +9,6 @@ const AdminClubLog = ({
   totalPage,
   onClickPrev,
   onClickNext,
-  handleRowClick,
   changePageOnClickIndexButton,
 }: IClubLog) => {
   const paginationIndexBar = (
@@ -51,7 +50,7 @@ const AdminClubLog = ({
         </SectionBarStyled>
       </SectionPaginationStyled>
       <AdminClubLogStyled>
-        <ClubLogTable ClubList={logs} handleRowClick={handleRowClick} />
+        <ClubLogTable ClubList={logs} />
       </AdminClubLogStyled>
     </>
   );
