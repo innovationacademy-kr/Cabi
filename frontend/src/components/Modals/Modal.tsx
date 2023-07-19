@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import ClubLogTable from "../Club/ClubLogTable";
+import ClubLogTableTmp from "../Club/ClubLogTableTmp";
 
 /**
  * @interface
@@ -67,7 +67,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         )}
         <H2Styled>{title}</H2Styled>
 
-        {clubList && <ClubLogTable ClubList={clubList} />}
+        {clubList && <ClubLogTableTmp ClubList={clubList} />}
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}
