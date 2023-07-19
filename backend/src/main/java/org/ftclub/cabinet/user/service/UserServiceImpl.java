@@ -7,10 +7,12 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
 	private final BanHistoryRepository banHistoryRepository;
 	private final BanPolicy banPolicy;
 	private final UserOptionalFetcher userOptionalFetcher;
+	private final LentOptionalFetcher lentOptionalFetcher;
 
 	@Override
 	public boolean checkUserExists(String email) {
@@ -96,6 +99,10 @@ public class UserServiceImpl implements UserService {
 	public void deleteClubUser(Long clubId, LocalDateTime deletedAt) {
 		log.info("Called deleteClueUser: {}", clubId);
 		User user = userOptionalFetcher.getClubUser(clubId);
+		Cabinet lentCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
+		if (lentCabinet != null) {
+			throw new ServiceException(ExceptionStatus.CLUB_HAS_LENT_CABINET);
+		}
 		user.setDeletedAt(deletedAt);
 		userRepository.save(user);
 	}
