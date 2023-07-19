@@ -59,7 +59,6 @@ export interface IClubLog {
   totalPage: number;
   onClickPrev: React.MouseEventHandler;
   onClickNext: React.MouseEventHandler;
-  handleRowClick: (clubInfo: ClubUserDto) => void;
   changePageOnClickIndexButton: (index: number) => void;
 }
 export interface CabinetClubStatusRequestDto {

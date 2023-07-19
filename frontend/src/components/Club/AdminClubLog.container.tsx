@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { selectedClubInfoState } from "@/recoil/atoms";
 import AdminClubLog from "@/components/Club/AdminClubLog";
 import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
 import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
@@ -37,15 +35,6 @@ const AdminClubLogContainer = () => {
     setPage((prev) => prev + 1);
   };
 
-  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
-    selectedClubInfoState
-  );
-
-  const handleRowClick = (clubInfo: ClubUserDto) => {
-    setSelectedClubInfo(
-      selectedClubInfo?.userId === clubInfo.userId ? null : clubInfo
-    );
-  };
   const changePageOnClickIndexButton = (pageIndex: number) => {
     if (totalPage === 0) return;
     setPage(pageIndex);
@@ -58,7 +47,6 @@ const AdminClubLogContainer = () => {
       totalPage={totalPage}
       onClickPrev={onClickPrev}
       onClickNext={onClickNext}
-      handleRowClick={handleRowClick}
       changePageOnClickIndexButton={changePageOnClickIndexButton}
     />
   );
