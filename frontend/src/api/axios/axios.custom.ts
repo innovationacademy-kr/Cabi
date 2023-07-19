@@ -1,7 +1,7 @@
+import { ClubUserDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import instance from "@/api/axios/axios.instance";
-import { ClubUserDto } from "@/types/dto/lent.dto";
 
 const axiosLogoutUrl = "/v4/auth/logout";
 export const axiosLogout = async (): Promise<any> => {
@@ -368,10 +368,13 @@ export const axiosGetUserLentLog = async (
 };
 
 const axiosGetClubUserLogURL = "/v4/admin/users/clubs";
-export const axiosGetClubUserLog = async (page: number): Promise<any> => {
+export const axiosGetClubUserLog = async (
+  page: number,
+  size: number
+): Promise<any> => {
   try {
     const response = await instance.get(axiosGetClubUserLogURL, {
-      params: { page: page, size: 10 },
+      params: { page: page, size: size },
     });
     return response;
   } catch (error) {
@@ -393,19 +396,22 @@ export const axiosCreateClubUser = async (
 };
 
 const axiosEditClubUserURL = "/v4/admin/users/club/";
-export const axiosEditClubUser = async (clubInfo: ClubUserDto | null): Promise<any> => {
+export const axiosEditClubUser = async (
+  clubInfo: ClubUserDto | null
+): Promise<any> => {
   if (clubInfo === null || clubInfo.name === null) return;
   try {
     const response = await instance.patch(
-      axiosEditClubUserURL + clubInfo.userId.toString(), {
-        "clubName": clubInfo.name,
+      axiosEditClubUserURL + clubInfo.userId.toString(),
+      {
+        clubName: clubInfo.name,
       }
     );
     return response;
   } catch (error) {
     throw error;
   }
-}
+};
 
 const axiosDeleteClubUserURL = "/v4/admin/users/club/";
 export const axiosDeleteClubUser = async (

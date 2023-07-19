@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
@@ -15,14 +15,8 @@ import {
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/assets/data/maps";
 import checkIcon from "@/assets/images/checkIcon.svg";
-import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import {
-  axiosCabinetById,
-  axiosGetClubUserLog,
-  axiosLentClubUser,
-} from "@/api/axios/axios.custom";
-import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
+import { axiosCabinetById, axiosLentClubUser } from "@/api/axios/axios.custom";
 
 const ClubLentModal: React.FC<{
   lentType: string;
@@ -38,23 +32,6 @@ const ClubLentModal: React.FC<{
   );
   const selectedClubInfo = useRecoilValue(selectedClubInfoState);
   const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
-
-  const [clubLog, setClubLog] = useState<ClubLogResponseType>(undefined);
-
-  const getLentLog = async () => {
-    try {
-      const response = await axiosGetClubUserLog(0);
-      const clubListLogs: ClubUserDto[] = response.data.result;
-      setClubLog(clubListLogs);
-    } catch (error) {
-      setClubLog(STATUS_400_BAD_REQUEST);
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getLentLog();
-  }, []);
 
   const tryLentRequest = async (e: React.MouseEvent) => {
     try {
@@ -84,7 +61,7 @@ const ClubLentModal: React.FC<{
     proceedBtnText: modalPropsMap[CabinetType.CLUB].confirmMessage,
     onClickProceed: tryLentRequest,
     closeModal: props.closeModal,
-    clubList: clubLog,
+    isClubLentModal: true,
   };
 
   return (

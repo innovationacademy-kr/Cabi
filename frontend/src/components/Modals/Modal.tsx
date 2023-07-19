@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import useMultiSelect from "@/hooks/useMultiSelect";
+import AdminClubLogContainer from "../Club/AdminClubLog.container";
 import ClubLogTable from "../Club/ClubLogTable";
 
 /**
@@ -29,7 +30,7 @@ export interface IModalContents {
   onClickProceed?: ((e: React.MouseEvent) => Promise<void>) | null;
   cancleBtnText?: string;
   closeModal: React.MouseEventHandler;
-  clubList?: any;
+  isClubLentModal?: boolean;
 }
 
 const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
@@ -44,7 +45,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     onClickProceed,
     cancleBtnText,
     closeModal,
-    clubList,
+    isClubLentModal,
   } = props.modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
 
@@ -66,8 +67,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
           <ModalIconImgStyled src={icon} iconScaleEffect={iconScaleEffect} />
         )}
         <H2Styled>{title}</H2Styled>
-
-        {clubList && <ClubLogTable ClubList={clubList} />}
+        {isClubLentModal && <AdminClubLogContainer size={5} />}
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}

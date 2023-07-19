@@ -1,32 +1,30 @@
-  import { useEffect, useState } from "react";
-  import AdminClubLog from "@/components/Club/AdminClubLog";
-  import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
-  import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
-  import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
+import { useEffect, useState } from "react";
+import AdminClubLog from "@/components/Club/AdminClubLog";
+import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
+import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
-  const AdminClubLogContainer = ( props: any ) => {
+const AdminClubLogContainer = (props: any) => {
   const [logs, setLogs] = useState<ClubLogResponseType>(undefined);
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(1);
   const { shouldFetchData, setShouldFetchData } = props;
+  const size = props.size ?? 10;
 
   const getData = async (page: number) => {
     try {
-      const result = await axiosGetClubUserLog(page);
-      if (totalPage > Math.ceil(result.data.totalLength / 10) && page >= 1)
-      {
-        setTotalPage(Math.ceil(result.data.totalLength / 10));
+      const result = await axiosGetClubUserLog(page, size);
+      if (totalPage > Math.ceil(result.data.totalLength / size) && page >= 1) {
+        setTotalPage(Math.ceil(result.data.totalLength / size));
         setPage(page - 1);
-      }
-      else
-        setTotalPage(Math.ceil(result.data.totalLength / 10));
+      } else setTotalPage(Math.ceil(result.data.totalLength / size));
       setLogs(result.data.result);
     } catch {
       setLogs(STATUS_400_BAD_REQUEST);
       setTotalPage(1);
     }
-    }
-    
+  };
+
   useEffect(() => {
     getData(page);
     if (shouldFetchData) {
@@ -67,4 +65,4 @@
   );
 };
 
-  export default AdminClubLogContainer;
+export default AdminClubLogContainer;

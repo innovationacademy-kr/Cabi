@@ -67,7 +67,6 @@ const AdminClubLogStyled = styled.div`
 `;
 
 const SectionPaginationStyled = styled.div`
-  min-width: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
