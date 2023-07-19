@@ -1,30 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { selectedClubInfoState } from "@/recoil/atoms";
 import AdminClubLogContainer from "@/components/Club/AdminClubLog.container";
-import ClubLogTable from "@/components/Club/ClubLogTable";
 import Button from "@/components/Common/Button";
 import ClubModal from "@/components/Modals/ClubModal/ClubModal";
 import { ClubUserDto } from "@/types/dto/lent.dto";
-import { ClubLogResponseType } from "@/types/dto/lent.dto";
-import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
-import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminClubPage = () => {
-  const [clubLog, setClubLog] = useState<ClubLogResponseType>(undefined);
-  const [logChanged, setLogChanged] = useState(true);
+  const [shouldFetchData, setShouldFetchData] = useState(false);
   const [clubModalType, setClubModalType] = useState<string | null>(null);
   const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
     selectedClubInfoState
   );
 
-  useEffect(() => {
-    if (logChanged) {
-      getLentLog();
-      setLogChanged(false);
-    }
-  }, [logChanged]);
+  const handleDataChanged = () => {
+    setShouldFetchData(true);
+  };
 
   const handleOpenModal = (type: string, club: ClubUserDto | null) => {
     setClubModalType(type);
@@ -36,31 +28,13 @@ const AdminClubPage = () => {
     setSelectedClubInfo(null);
   };
 
-  const handleLogChanged = () => {
-    setLogChanged(true);
-  };
-
-  const getLentLog = async () => {
-    try {
-      const response = await axiosGetClubUserLog(0);
-      const clubListLogs: ClubUserDto[] = response.data.result;
-      setTimeout(() => {
-        setClubLog(clubListLogs);
-      }, 500);
-    } catch {
-      setTimeout(() => {
-        setClubLog(STATUS_400_BAD_REQUEST);
-      }, 500);
-    }
-  };
-
   return (
     <WrapperStyled>
       <TitleStyled>동아리 목록</TitleStyled>
       <SubTitleStyled>
         현재 등록된 동아리 목록을 확인할 수 있습니다.
       </SubTitleStyled>
-      <AdminClubLogContainer />
+      <AdminClubLogContainer shouldFetchData={shouldFetchData} setShouldFetchData={setShouldFetchData} />
       <ButtonWrapperStyled>
         <Button
           text={"동아리 생성"}
@@ -84,7 +58,7 @@ const AdminClubPage = () => {
         <ClubModal
           type={clubModalType}
           onClose={handleCloseModal}
-          onReload={handleLogChanged}
+          onReload={handleDataChanged}
         />
       )}
     </WrapperStyled>
