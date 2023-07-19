@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -171,5 +172,15 @@ public class UserServiceImpl implements UserService {
 	public AdminRole getAdminUserRole(String email) {
 		log.info("Called getAdminUserRole: {}", email);
 		return userOptionalFetcher.findAdminUserRoleByEmail(email);
+	}
+
+	@Override
+	public void updateClubUser(Long clubId, String clubName) {
+		log.info("Called updateClubUser: {}", clubId);
+		if (StringUtil.isNullOrEmpty(clubName)) {
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		User clubUser = userOptionalFetcher.getClubUser(clubId);
+		clubUser.changeName(clubName);
 	}
 }
