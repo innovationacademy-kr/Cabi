@@ -5,21 +5,20 @@ import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
-const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
+interface ClubLogTableProps {
+  ClubList: ClubLogResponseType;
+  handleRowClick: (clubInfo: ClubUserDto) => void;
+}
+
+const ClubLogTable = ({ ClubList, handleRowClick }: ClubLogTableProps) => {
   const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
     selectedClubInfoState
   );
 
-  const handleRowClick = (clubInfo: ClubUserDto) => {
-    setSelectedClubInfo(
-      selectedClubInfo?.userId === clubInfo.userId ? null : clubInfo
-    );
-  };
-
   if (ClubList === undefined) return <LoadingAnimation />;
 
   return (
-    <LogTableWrapperstyled>
+    <LogTableWrapperStyled>
       <LogTableStyled>
         <TheadStyled>
           <tr>
@@ -32,14 +31,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
               <tr
                 key={userId}
                 onClick={() => handleRowClick({ userId, name })}
-                style={{
-                  backgroundColor:
-                    selectedClubInfo?.userId === userId
-                      ? `var(--main-color)`
-                      : "",
-                  color:
-                    selectedClubInfo?.userId === userId ? `var(--white)` : "",
-                }}
+                className={ selectedClubInfo?.userId === userId ? 'selected' : '' }
               >
                 <td title={`${name}`}>{`${name}`}</td>
               </tr>
@@ -51,11 +43,11 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
         (ClubList.length === 0 && (
           <EmptyLogStyled>등록된 동아리가 없습니다.</EmptyLogStyled>
         ))}
-    </LogTableWrapperstyled>
+    </LogTableWrapperStyled>
   );
 };
 
-const LogTableWrapperstyled = styled.div`
+const LogTableWrapperStyled = styled.div`
   width: 100%;
   max-width: 400px;
   border-radius: 10px;
@@ -82,6 +74,7 @@ const TbodyStyled = styled.tbody`
   & > tr {
     text-align: center;
     height: 50px;
+    cursor: pointer;
   }
   & > tr > td {
     height: 50px;
@@ -90,6 +83,11 @@ const TbodyStyled = styled.tbody`
   }
   & > tr:nth-child(2n) {
     background: #f9f6ff;
+  }
+  & > tr.selected {
+    background-color: var(--lightpurple-color);
+    color: var(--white);
+    font-weight: 700;
   }
 `;
 

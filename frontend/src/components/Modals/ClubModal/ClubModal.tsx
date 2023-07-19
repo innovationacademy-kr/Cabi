@@ -45,9 +45,8 @@ const ClubModal = ({
   const handleClickSave = async () => {
     if (type === "CREATE") {
       document.getElementById("unselect-input")?.focus();
-      if (newClubName) {
+      if (newClubName)
         await createClubRequest(newClubName);
-      }
     }
     else if (type === "EDIT" && selectedClubInfo) {
       if (selectedClubInfo.name !== newClubName) {
@@ -78,12 +77,7 @@ const ClubModal = ({
       setModalTitle("수정되었습니다");
       onReload();
     } catch (error: any) {
-      // if (error.response.status === 409)
-      //   setModalTitle("이미 같은 이름의 동아리가 존재합니다");
-      // else if (error.response.status === 400)
-      //   setModalTitle("생성에 실패하였습니다");
-      // else
-        setModalTitle(error.response.data.message);
+      setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
