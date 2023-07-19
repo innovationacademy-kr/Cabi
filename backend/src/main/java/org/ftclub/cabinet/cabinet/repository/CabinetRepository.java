@@ -118,5 +118,5 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
     @Query("SELECT c " +
             "FROM Cabinet c " +
             "WHERE c.cabinetPlace.location = :location")
-    List<Cabinet> findAllCabinetsByLocation(Location location);
+    List<Cabinet> findAllCabinetsByLocation(@Param("location") Location location);
 }
