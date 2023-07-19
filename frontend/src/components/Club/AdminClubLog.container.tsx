@@ -25,14 +25,19 @@ const AdminClubLogContainer = () => {
   }, [page, needsUpdate]);
 
   const onClickPrev = () => {
-    if (page == 0) return;
-    setNeedsUpdate(true);
-    setPage((prev) => prev - 1);
+    if (page === 0) {
+      setPage(totalPage - 1);
+    } else {
+      setPage((prev) => prev - 1);
+    }
   };
 
   const onClickNext = () => {
-    if (page == totalPage - 1) return;
-    setPage((prev) => prev + 1);
+    if (page == totalPage - 1) {
+      setPage(0);
+    } else {
+      setPage((prev) => prev + 1);
+    }
   };
 
   const changePageOnClickIndexButton = (pageIndex: number) => {
