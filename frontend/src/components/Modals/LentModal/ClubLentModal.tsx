@@ -4,6 +4,7 @@ import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   myCabinetInfoState,
+  numberOfAdminWorkState,
   selectedClubInfoState,
   targetCabinetInfoState,
   userState,
@@ -46,7 +47,9 @@ const ClubLentModal: React.FC<{
     isCurrentSectionRenderState
   );
   const selectedClubInfo = useRecoilValue(selectedClubInfoState);
-
+  const setNumberOfAdminWork = useSetRecoilState<number>(
+    numberOfAdminWorkState
+  );
   const [clubLog, setClubLog] = useState<ClubLogResponseType>(undefined);
 
   const getLentLog = async () => {
@@ -67,6 +70,7 @@ const ClubLentModal: React.FC<{
     try {
       await axiosLentClubUser(selectedClubInfo!.userId, currentCabinetId!, "");
       setIsCurrentSectionRender(true);
+      setNumberOfAdminWork((prev) => prev + 1);
       setModalTitle("대여가 완료되었습니다");
     } catch (error: any) {
       setModalTitle(error.response.data.message);
