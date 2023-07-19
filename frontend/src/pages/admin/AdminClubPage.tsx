@@ -69,13 +69,13 @@ const AdminClubPage = () => {
         <Button
           text={"수정"}
           onClick={() => handleOpenModal("EDIT", selectedClubInfo)}
-          theme={!selectedClubInfo ? "lightGrayLine" : "fill"}
+          theme={!selectedClubInfo ? "lightGrayLine" : "line"}
           disabled={!selectedClubInfo}
         />
         <Button
           text={"삭제"}
           onClick={() => handleOpenModal("DELETE", selectedClubInfo)}
-          theme={!selectedClubInfo ? "lightGrayLine" : "fill"}
+          theme={!selectedClubInfo ? "lightGrayLine" : "line"}
           disabled={!selectedClubInfo}
         />
       </ButtonWrapperStyled>
