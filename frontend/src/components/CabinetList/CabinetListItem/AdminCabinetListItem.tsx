@@ -32,6 +32,7 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   //  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
   const { isMultiSelect, clickCabinetOnMultiSelectMode, containsCabinet } =
     useMultiSelect();
+
   let cabinetLabelText = "";
 
   if (props.status !== "BANNED" && props.status !== "BROKEN") {
