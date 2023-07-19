@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { selectedClubInfoState } from "@/recoil/atoms";
 import AdminClubLog from "@/components/Club/AdminClubLog";
-import { ClubLogResponseType } from "@/types/dto/lent.dto";
+import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
 import { axiosGetClubUserLog } from "@/api/axios/axios.custom";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminClubLogContainer = () => {
   const [logs, setLogs] = useState<ClubLogResponseType>(undefined);
@@ -15,11 +18,10 @@ const AdminClubLogContainer = () => {
       setTotalPage(Math.ceil(result.data.totalLength / 10));
       setLogs(result.data.result);
     } catch {
-      setLogs([]);
+      setLogs(STATUS_400_BAD_REQUEST);
       setTotalPage(1);
     }
   }
-  console.log("test", totalPage);
   useEffect(() => {
     getData(page);
   }, [page, needsUpdate]);
@@ -35,6 +37,20 @@ const AdminClubLogContainer = () => {
     setPage((prev) => prev + 1);
   };
 
+  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
+    selectedClubInfoState
+  );
+
+  const handleRowClick = (clubInfo: ClubUserDto) => {
+    setSelectedClubInfo(
+      selectedClubInfo?.userId === clubInfo.userId ? null : clubInfo
+    );
+  };
+  const changePageOnClickIndexButton = (pageIndex: number) => {
+    if (totalPage === 0) return;
+    setPage(pageIndex);
+  };
+
   return (
     <AdminClubLog
       logs={logs}
@@ -42,6 +58,8 @@ const AdminClubLogContainer = () => {
       totalPage={totalPage}
       onClickPrev={onClickPrev}
       onClickNext={onClickNext}
+      handleRowClick={handleRowClick}
+      changePageOnClickIndexButton={changePageOnClickIndexButton}
     />
   );
 };

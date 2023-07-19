@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { selectedClubInfoState } from "@/recoil/atoms";
 import AdminClubLogContainer from "@/components/Club/AdminClubLog.container";
+import ClubLogTable from "@/components/Club/ClubLogTable";
 import Button from "@/components/Common/Button";
 import ClubModal from "@/components/Modals/ClubModal/ClubModal";
 import { ClubUserDto } from "@/types/dto/lent.dto";
@@ -112,7 +113,7 @@ const SubTitleStyled = styled.div`
   text-align: center;
   font-size: 1.2rem;
   letter-spacing: -0.02rem;
-  margin-bottom: 25px;
+  margin-bottom: 5px;
   color: var(--lightpurple-color);
 `;
 

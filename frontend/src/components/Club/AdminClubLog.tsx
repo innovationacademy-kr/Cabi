@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import ClubLogTable from "@/components/Club/ClubLogTable";
+import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import { IClubLog } from "@/types/dto/lent.dto";
 
 const AdminClubLog = ({
@@ -8,12 +9,51 @@ const AdminClubLog = ({
   totalPage,
   onClickPrev,
   onClickNext,
+  handleRowClick,
+  changePageOnClickIndexButton,
 }: IClubLog) => {
+  const paginationIndexBar = (
+    currentPage: number,
+    totalPages: number
+  ): JSX.Element[] => {
+    const indexButtons: JSX.Element[] = [];
+    for (let i = 0; i < totalPages; i++) {
+      indexButtons.push(
+        <IndexRectangleStyled
+          key={i}
+          filledColor={currentPage === i ? "#9747FF" : "#D9D9D9"}
+          onClick={() => changePageOnClickIndexButton(i)}
+          className="cabiButton"
+        />
+      );
+    }
+    return indexButtons;
+  };
+
   return (
-    <AdminClubLogStyled>
-      <ClubLogTable ClubList={logs} />
-      
-    </AdminClubLogStyled>
+    <>
+      <SectionPaginationStyled>
+        <SectionBarStyled>
+          <MoveSectionButtonStyled
+            src={LeftSectionButton}
+            onClick={onClickPrev}
+            className="cabiButton"
+          />
+          <SectionIndexStyled>
+            {paginationIndexBar(page, totalPage)}
+          </SectionIndexStyled>
+          <MoveSectionButtonStyled
+            src={LeftSectionButton}
+            arrowReversed={true}
+            onClick={onClickNext}
+            className="cabiButton"
+          />
+        </SectionBarStyled>
+      </SectionPaginationStyled>
+      <AdminClubLogStyled>
+        <ClubLogTable ClubList={logs} handleRowClick={handleRowClick} />
+      </AdminClubLogStyled>
+    </>
   );
 };
 
@@ -27,60 +67,63 @@ const AdminClubLogStyled = styled.div`
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 `;
 
-const ButtonContainerStyled = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.3;
+const SectionPaginationStyled = styled.div`
+  min-width: 360px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 1;
+`;
+
+const SectionBarStyled = styled.div`
+  margin: 10px 5%;
+  display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
-  overflow: hidden;
 `;
 
-const PageButtonStyled = styled.div<{
-  page: number;
-  totalPage: number;
-  type: string;
-}>`
+const MoveSectionButtonStyled = styled.img<{ arrowReversed?: boolean }>`
+  width: 24px;
+  height: 24px;
+  margin: 0px 15px;
+  opacity: 70%;
   cursor: pointer;
-  width: 50px;
-  height: 100%;
-  border-radius: 10px;
-  background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.7));
-  position: absolute;
-  display: ${({ page, totalPage, type }) => {
-    if (type == "prev" && page == 0) return "none";
-    if (type == "next" && (totalPage == 0 || page == totalPage - 1))
-      return "none";
-    return "block";
-  }};
-  ${({ type }) =>
-    type === "prev"
-      ? css`
-          left: 0;
-        `
-      : css`
-          right: 0;
-          transform: rotate(-180deg);
-        `}
+  transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")});
+  transition: all 0.2s;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 100%;
+      transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")})
+        scale(1.3);
+    }
+  }
 `;
 
-const ImgCenterStyled = styled.div`
+const SectionIndexStyled = styled.div`
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100%;
 `;
 
-const ImageStyled = styled.div`
-  width: 40px;
-  margin-right: 4px;
-  filter: brightness(0%);
-  border-radius: 50%;
+const IndexRectangleStyled = styled.div<{ filledColor: string }>`
+  width: 15px;
+  height: 8px;
+  border-radius: 2px;
+  margin: 0px 3px;
+  background: ${(props) => props.filledColor};
+  cursor: pointer;
+  transition: all 0.2s;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: scale(1.3);
+      background-color: var(--lightpurple-color);
+    }
+  }
 `;
 
 export default AdminClubLog;

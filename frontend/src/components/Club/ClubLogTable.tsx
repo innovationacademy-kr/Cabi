@@ -5,16 +5,15 @@ import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { ClubLogResponseType, ClubUserDto } from "@/types/dto/lent.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
-const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
+interface ClubLogTableProps {
+  ClubList: ClubLogResponseType;
+  handleRowClick: (clubInfo: ClubUserDto) => void;
+}
+
+const ClubLogTable = ({ ClubList, handleRowClick }: ClubLogTableProps) => {
   const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
     selectedClubInfoState
   );
-
-  const handleRowClick = (clubInfo: ClubUserDto) => {
-    setSelectedClubInfo(
-      selectedClubInfo?.userId === clubInfo.userId ? null : clubInfo
-    );
-  };
 
   if (ClubList === undefined) return <LoadingAnimation />;
 
