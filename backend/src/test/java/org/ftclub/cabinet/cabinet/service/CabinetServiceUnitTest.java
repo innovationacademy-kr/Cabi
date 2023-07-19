@@ -15,6 +15,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.junit.jupiter.api.DisplayName;
@@ -33,6 +34,8 @@ class CabinetServiceUnitTest {
 	CabinetOptionalFetcher cabinetOptionalFetcher = mock(CabinetOptionalFetcher.class);
 	@Mock
 	UserOptionalFetcher userOptionalFetcher;
+	@Mock
+	LentOptionalFetcher lentOptionalFetcher;
 	@Mock
 	Cabinet cabinet;
 	@Mock
@@ -493,6 +496,7 @@ class CabinetServiceUnitTest {
 		String userName = "testClubUser";
 		given(cabinetOptionalFetcher.getCabinetForUpdate(cabinetId)).willReturn(cabinet);
 		given(userOptionalFetcher.getClubUser(userId)).willReturn(user);
+		given(lentOptionalFetcher.findActiveLentCabinetByUserId(userId)).willReturn(null);
 		given(user.getName()).willReturn(userName);
 
 		// when
