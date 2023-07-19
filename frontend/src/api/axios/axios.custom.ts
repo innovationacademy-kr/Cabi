@@ -1,6 +1,7 @@
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import instance from "@/api/axios/axios.instance";
+import { ClubUserDto } from "@/types/dto/lent.dto";
 
 const axiosLogoutUrl = "/v4/auth/logout";
 export const axiosLogout = async (): Promise<any> => {
@@ -390,6 +391,19 @@ export const axiosCreateClubUser = async (clubName: string | null): Promise<any>
     throw error;
   }
 };
+
+const axiosEditClubUserURL = "/v4/admin/users/club";
+export const axiosEditClubUser = async (clubInfo: ClubUserDto | null): Promise<any> => {
+  if (clubInfo?.name === null) return;
+  try {
+    const response = await instance.patch(
+      axiosEditClubUserURL, { clubInfo }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
 
 const axiosDeleteClubUserURL = "/v4/admin/users/club/";
 export const axiosDeleteClubUser = async (clubId: number | null): Promise<any> => {
