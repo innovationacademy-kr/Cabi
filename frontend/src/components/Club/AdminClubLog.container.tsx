@@ -13,7 +13,7 @@
   const getData = async (page: number) => {
     try {
       const result = await axiosGetClubUserLog(page);
-      if (totalPage != Math.ceil(result.data.totalLength / 10) && page >= 1)
+      if (totalPage > Math.ceil(result.data.totalLength / 10) && page >= 1)
       {
         setTotalPage(Math.ceil(result.data.totalLength / 10));
         setPage(page - 1);
