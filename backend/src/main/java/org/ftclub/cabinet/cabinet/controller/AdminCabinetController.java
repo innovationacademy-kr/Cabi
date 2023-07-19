@@ -104,7 +104,7 @@ public class AdminCabinetController {
 	}
 
 	@PatchMapping("/club")
-//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetClubStatus(
 			@Valid @RequestBody CabinetClubStatusRequestDto cabinetClubStatusRequestDto) {
 		log.info("Called updateCabinetClubStatus: {}", cabinetClubStatusRequestDto);

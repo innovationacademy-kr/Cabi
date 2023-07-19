@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import { selectedClubInfoState } from "@/recoil/atoms";
 import styled from "styled-components";
@@ -9,7 +9,8 @@ import {
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import { axiosCreateClubUser, axiosDeleteClubUser } from "@/api/axios/axios.custom";
+import { axiosCreateClubUser, axiosDeleteClubUser, axiosEditClubUser } from "@/api/axios/axios.custom";
+import { ClubUserDto } from "@/types/dto/lent.dto";
 
 interface ClubModalContainerInterface {
   type: string;
@@ -28,7 +29,7 @@ const ClubModal = ({
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
-  const newClubName = useRef<HTMLInputElement>(null);
+  const [newClubName, setNewClubName] = useState("");
 
   const modalData = modalPropsMap[
     additionalModalType[
@@ -36,12 +37,22 @@ const ClubModal = ({
     ]
   ];
   
+  useEffect(() => {
+    if (type === "EDIT")
+      setNewClubName(selectedClubInfo?.name || "");
+  }, [selectedClubInfo, type])
+
   const handleClickSave = async () => {
     if (type === "CREATE") {
       document.getElementById("unselect-input")?.focus();
-      if (newClubName.current!.value) {
-        const clubName = newClubName.current!.value;  
-        await createClubRequest(clubName);
+      if (newClubName) {
+        await createClubRequest(newClubName);
+      }
+    }
+    else if (type === "EDIT" && selectedClubInfo) {
+      if (selectedClubInfo.name !== newClubName) {
+          const updatedClubInfo = { ...selectedClubInfo, name: newClubName };
+          await editClubRequest(updatedClubInfo);
       }
     }
     else if (type === "DELETE" && selectedClubInfo !== null) 
@@ -54,8 +65,25 @@ const ClubModal = ({
       setModalTitle("추가되었습니다");
       onReload();
     } catch (error: any) {
-      // setModalTitle("이미 같은 이름의 동아리가 존재합니다");
       setModalTitle(error.response.data.message);
+      setHasErrorOnResponse(true);
+    } finally {
+      setShowResponseModal(true);
+    }
+  };
+
+  const editClubRequest = async (clubInfo: ClubUserDto | null) => {
+    try {
+      await axiosEditClubUser(clubInfo);
+      setModalTitle("수정되었습니다");
+      onReload();
+    } catch (error: any) {
+      // if (error.response.status === 409)
+      //   setModalTitle("이미 같은 이름의 동아리가 존재합니다");
+      // else if (error.response.status === 400)
+      //   setModalTitle("생성에 실패하였습니다");
+      // else
+        setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
       setShowResponseModal(true);
@@ -87,7 +115,17 @@ const ClubModal = ({
               <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
               <ContentItemInputStyled
                 onKeyUp={(e: any) => { if (e.key === "Enter") { handleClickSave(); }}}
-                ref={newClubName}
+                value={newClubName}
+                onChange={(e) => setNewClubName(e.target.value)}
+                maxLength={MAX_INPUT_LENGTH}
+              />
+            </ContentItemWrapperStyled>}
+            {type === "EDIT" && <ContentItemWrapperStyled isVisible={true}>
+              <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
+              <ContentItemInputStyled
+                onKeyUp={(e: any) => { if (e.key === "Enter") { handleClickSave(); }}}
+                value={newClubName}
+                onChange={(e) => setNewClubName(e.target.value)}
                 maxLength={MAX_INPUT_LENGTH}
               />
             </ContentItemWrapperStyled>}

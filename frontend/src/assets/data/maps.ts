@@ -117,7 +117,7 @@ export const modalPropsMap = {
   },
   MODAL_ADMIN_CLUB_EDIT: {
     type: "confirm",
-    title: "동아리 이름 변경",
+    title: "동아리 이름 수정",
     confirmMessage: "저장",
   },
   MODAL_ADMIN_CLUB_DELETE: {
