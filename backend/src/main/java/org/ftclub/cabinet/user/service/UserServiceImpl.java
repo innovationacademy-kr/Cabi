@@ -191,6 +191,8 @@ public class UserServiceImpl implements UserService {
 		}
 		User clubUser = userOptionalFetcher.getClubUser(clubId);
 		clubUser.changeName(clubName);
+	}
+	
 	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
 		log.info("Called getAllRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
