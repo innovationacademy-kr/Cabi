@@ -5,6 +5,7 @@ import AdminCabinetLentLog from "@/components/LentLog/AdminCabinetLentLog";
 import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetCabinetLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
+import { getTotalPage } from "@/utils/dateUtils";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminCabinetLentLogContainer = () => {

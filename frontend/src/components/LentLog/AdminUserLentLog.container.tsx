@@ -5,6 +5,7 @@ import AdminUserLentLog from "@/components/LentLog/AdminUserLentLog";
 import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetUserLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
+import { getTotalPage } from "@/utils/dateUtils";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 

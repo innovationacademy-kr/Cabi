@@ -4,6 +4,7 @@ import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +14,7 @@ import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
+import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -189,5 +191,24 @@ public class UserServiceImpl implements UserService {
 		}
 		User clubUser = userOptionalFetcher.getClubUser(clubId);
 		clubUser.changeName(clubName);
+	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
+		log.info("Called getAllRiskOfBlackholeInfo");
+		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
+		return users.stream()
+				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
+				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+						user.getEmail(), user.getBlackholedAt()))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo() {
+		log.info("Called getAllNoRiskOfBlackholeInfo");
+		List<User> users = userRepository.findByNoRiskOfFallingIntoBlackholeUsers();
+		return users.stream()
+				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
+				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+						user.getEmail(), user.getBlackholedAt()))
+				.collect(Collectors.toList());
 	}
 }

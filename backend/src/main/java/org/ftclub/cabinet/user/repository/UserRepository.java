@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -54,4 +55,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 *
 	 */
 	Page<User> findAllByRoleAndDeletedAtIsNull(@Param("role") UserRole role, Pageable pageable);
+	 * 블랙홀에 빠질 위험이 있는 유저들의 정보를 조회합니다. blackholedAt이 현재 시간보다 과거인 유저들을 블랙홀에 빠질 위험이 있는 유저로 판단합니다.
+	 *
+	 * @return {@link User} 리스트
+	 */
+	@Query("SELECT u FROM User u WHERE u.blackholedAt IS NOT NULL OR u.blackholedAt <= CURRENT_TIMESTAMP")
+	List<User> findByRiskOfFallingIntoBlackholeUsers();
+	
+	/**
+	 * 블랙홀에 빠질 위험이 없는 유저들의 정보를 조회합니다. blackholedAt이 null이거나 현재 시간보다 미래인 유저들을 블랙홀에 빠질 위험이 없는 유저로
+	 * 판단합니다.
+	 *
+	 * @return {@link User} 리스트
+	 */
+	@Query("SELECT u FROM User u WHERE u.blackholedAt IS NULL OR u.blackholedAt > CURRENT_TIMESTAMP")
+	List<User> findByNoRiskOfFallingIntoBlackholeUsers();
 }
