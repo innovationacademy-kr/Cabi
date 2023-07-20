@@ -55,6 +55,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 *
 	 */
 	Page<User> findAllByRoleAndDeletedAtIsNull(@Param("role") UserRole role, Pageable pageable);
+
+	 /**
 	 * 블랙홀에 빠질 위험이 있는 유저들의 정보를 조회합니다. blackholedAt이 현재 시간보다 과거인 유저들을 블랙홀에 빠질 위험이 있는 유저로 판단합니다.
 	 *
 	 * @return {@link User} 리스트
