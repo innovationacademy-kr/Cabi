@@ -169,4 +169,8 @@ public class CabinetOptionalFetcher {
 		log.info("Called findAllCabinetsByLocation: {}", location);
 		return cabinetRepository.findAllCabinetsByLocation(location);
 	}
+
+	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
+		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
+	}
 }

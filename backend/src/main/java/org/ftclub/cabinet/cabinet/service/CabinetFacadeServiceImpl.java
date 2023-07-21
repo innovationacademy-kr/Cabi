@@ -7,20 +7,6 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetPaginationDto;
-import org.ftclub.cabinet.dto.CabinetPreviewDto;
-import org.ftclub.cabinet.dto.CabinetSimpleDto;
-import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
-import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
-import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentHistoryDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
@@ -106,9 +92,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor) {
-		List<ActiveCabinetInfoEntities> results = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+		List<Cabinet> allCabinetsByBuildingAndFloor = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(building, floor);
 
-		Map<Cabinet, List<LentHistory>> cabinetLentHistories = results.stream().
+		Map<Cabinet, List<LentHistory>> cabinetLentHistories = currentLentCabinets.stream().
 				collect(Collectors.groupingBy(ActiveCabinetInfoEntities::getCabinet,
 						Collectors.mapping(ActiveCabinetInfoEntities::getLentHistory, Collectors.toList())));
 
@@ -124,6 +111,21 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				cabinetPreviewsBySection.put(section, previews);
 			}
 		});
+		allCabinetsByBuildingAndFloor.forEach(cabinet -> {
+			if (!cabinetLentHistories.containsKey(cabinet)) {
+				String section = cabinet.getCabinetPlace().getLocation().getSection();
+				CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, Collections.emptyList());
+				System.out.println("preview = " + preview);
+				if (cabinetPreviewsBySection.containsKey(section)) {
+					cabinetPreviewsBySection.get(section).add(preview);
+				} else {
+					List<CabinetPreviewDto> previews = new ArrayList<>();
+					previews.add(preview);
+					cabinetPreviewsBySection.put(section, previews);
+				}
+			}
+		});
+		cabinetPreviewsBySection.values().forEach(cabinetList -> cabinetList.sort(Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
 		return cabinetPreviewsBySection.entrySet().stream()
 				.sorted(Comparator.comparing(entry -> entry.getValue().get(0).getVisibleNum()))
 				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))

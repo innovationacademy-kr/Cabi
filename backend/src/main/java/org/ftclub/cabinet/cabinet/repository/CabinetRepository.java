@@ -83,10 +83,10 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
 	                                         Pageable pageable);
 
-    @Query("SELECT c " +
-            "FROM Cabinet c " +
-            "WHERE c.cabinetPlace.location = :location")
-    List<Cabinet> findAllCabinetsByLocation(@Param("location") Location location);
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.cabinetPlace.location = :location")
+	List<Cabinet> findAllCabinetsByLocation(@Param("location") Location location);
 
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	@Query("SELECT DISTINCT c, lh, u " +
@@ -97,4 +97,10 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"AND lh.endedAt IS NULL")
 	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);
+
+	@EntityGraph(attributePaths = {"cabinetPlace"})
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
+	List<Cabinet> findAllByBuildingAndFloor(@Param("building") String building, @Param("floor") Integer floor);
 }
