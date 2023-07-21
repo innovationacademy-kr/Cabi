@@ -1,3 +1,18 @@
+import { axiosCabinetByLocationFloor } from "@/api/axios/axios.custom";
+import { removeCookie } from "@/api/react_cookie/cookies";
+import useIsMount from "@/hooks/useIsMount";
+import {
+  currentFloorCabinetState,
+  currentFloorNumberState,
+  currentLocationNameState,
+  currentSectionNameState,
+  isCurrentSectionRenderState,
+  numberOfAdminWorkState,
+  userState,
+} from "@/recoil/atoms";
+import { currentLocationFloorState } from "@/recoil/selectors";
+import { CabinetInfoByLocationFloorDto } from "@/types/dto/cabinet.dto";
+import { UserDto } from "@/types/dto/user.dto";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -6,38 +21,21 @@ import {
   useResetRecoilState,
   useSetRecoilState,
 } from "recoil";
-import {
-  currentBuildingNameState,
-  currentFloorCabinetState,
-  currentFloorNumberState,
-  currentMapFloorState,
-  currentSectionNameState,
-  isCurrentSectionRenderState,
-  numberOfAdminWorkState,
-  userState,
-} from "@/recoil/atoms";
-import { currentBuildingFloorState } from "@/recoil/selectors";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
-import { CabinetInfoByBuildingFloorDto } from "@/types/dto/cabinet.dto";
-import { UserDto } from "@/types/dto/user.dto";
-import { axiosCabinetByBuildingFloor } from "@/api/axios/axios.custom";
-import { removeCookie } from "@/api/react_cookie/cookies";
-import useIsMount from "@/hooks/useIsMount";
 import useMenu from "@/hooks/useMenu";
 
 const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
-  const floors = useRecoilValue<Array<number>>(currentBuildingFloorState);
+  const floors = useRecoilValue<Array<number>>(currentLocationFloorState);
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
   );
-  const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
-  const setCurrentMapFloor = useSetRecoilState<number>(currentMapFloorState);
+  const currentLocation = useRecoilValue<string>(currentLocationNameState);
   const myInfo = useRecoilValue<UserDto>(userState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
-  const resetBuilding = useResetRecoilState(currentBuildingNameState);
+  const resetLocation = useResetRecoilState(currentLocationNameState);
   const setCurrentFloorData = useSetRecoilState<
-    CabinetInfoByBuildingFloorDto[]
+    CabinetInfoByLocationFloorDto[]
   >(currentFloorCabinetState);
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
   const numberOfAdminWork = useRecoilValue<number>(numberOfAdminWorkState);
@@ -49,11 +47,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   );
 
   useEffect(() => {
-    if (currentFloor === undefined) {
-      setCurrentMapFloor(floors[0]);
-      return;
-    }
-    axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
+    if (currentFloor === undefined) return;
+    axiosCabinetByLocationFloor(currentLocation, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
         if (isMount || isCurrentSectionRender) {
@@ -73,14 +68,13 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       .catch((error) => {
         console.error(error);
       });
-  }, [currentBuilding, currentFloor, myInfo.cabinetId, numberOfAdminWork]);
+  }, [currentLocation, currentFloor, myInfo.cabinet_id, numberOfAdminWork]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
-    setCurrentMapFloor(floor);
     if (!pathname.includes("main")) {
       if (floor === currentFloor) {
-        axiosCabinetByBuildingFloor(currentBuilding, currentFloor).then(
+        axiosCabinetByLocationFloor(currentLocation, currentFloor).then(
           (response) => {
             setCurrentFloorData(response.data);
             setCurrentSection(response.data[0].section);
@@ -108,11 +102,6 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickClubButton = () => {
-    navigator("club");
-    closeAll();
-  };
-
   const onClickLogoutButton = (): void => {
     const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
@@ -126,7 +115,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
         domain: "cabi.42seoul.io",
       });
     }
-    resetBuilding();
+    resetLocation();
     resetCurrentFloor();
     resetCurrentSection();
     navigator("login");
@@ -141,7 +130,6 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickLentLogButton={onClickLentLogButton}
       onClickSearchButton={onClickSearchButton}
       onClickLogoutButton={onClickLogoutButton}
-      onClickClubButton={onClickClubButton}
       isAdmin={isAdmin}
     />
   );

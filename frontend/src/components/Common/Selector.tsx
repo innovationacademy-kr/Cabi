@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import PillButton from "@/components/Common/PillButton";
+import PillButton from "./PillButton";
 
 interface ISelectorProps {
   iconSrc?: string;

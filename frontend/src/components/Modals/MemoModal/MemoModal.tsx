@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import Button from "@/components/Common/Button";
+import React, { useRef, useState } from "react";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import ModalPortal from "@/components/Modals/ModalPortal";
+import ModalPortal from "../ModalPortal";
 
 export interface MemoModalInterface {
   cabinetType: CabinetType;
@@ -168,7 +168,6 @@ const ContentItemTitleStyled = styled.h3`
   font-size: 18px;
   margin-bottom: 8px;
 `;
-
 const ContentItemInputStyled = styled.input<{
   mode: string;
 }>`
@@ -214,7 +213,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   cursor: pointer;
   text-decoration: underline;
   color: var(--main-color);
-  &:hover {
+  &: hover {
     opacity: 0.8;
   }
 `;

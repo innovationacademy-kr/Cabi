@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
 interface Itext {

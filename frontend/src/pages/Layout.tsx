@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
 import { userState } from "@/recoil/atoms";
-import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import LeftNav from "@/components/LeftNav/LeftNav";
-import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import TopNav from "@/components/TopNav/TopNav.container";
-import { UserDto } from "@/types/dto/user.dto";
-import { axiosMyInfo } from "@/api/axios/axios.custom";
+import LeftNav from "@/components/LeftNav/LeftNav";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { getCookie } from "@/api/react_cookie/cookies";
+import { axiosMyInfo } from "@/api/axios/axios.custom";
+import { UserDto } from "@/types/dto/user.dto";
+import styled, { css } from "styled-components";
+import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import useMenu from "@/hooks/useMenu";
+import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);

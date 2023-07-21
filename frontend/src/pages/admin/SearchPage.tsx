@@ -1,34 +1,33 @@
+import {
+  axiosSearchByCabinetNum,
+  axiosSearchDetailByIntraId,
+} from "@/api/axios/axios.custom";
+import SearchItemByNum from "@/components/Search/SearchItemByNum";
+import SearchItemByIntraId from "@/components/Search/SearchItemByIntraId";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useRouteError, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import NoSearch from "@/components/Search/NoSearch";
+import SearchDefault from "@/components/Search/SearchDefault";
+import { useResetRecoilState, useRecoilValue } from "recoil";
 import {
   currentCabinetIdState,
   currentIntraIdState,
   numberOfAdminWorkState,
 } from "@/recoil/atoms";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import NoSearch from "@/components/Search/NoSearch";
-import SearchDefault from "@/components/Search/SearchDefault";
-import SearchItemByIntraId from "@/components/Search/SearchItemByIntraId";
-import SearchItemByNum from "@/components/Search/SearchItemByNum";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import {
-  axiosSearchByCabinetNum,
-  axiosSearchDetailByIntraId,
-} from "@/api/axios/axios.custom";
-import { getTotalPage } from "@/utils/dateUtils";
 
 interface ISearchDetail {
-  name: string;
-  userId: number;
-  bannedAt?: Date;
-  unbannedAt?: Date;
+  intra_id: string;
+  user_id: number;
+  bannedDate?: Date;
+  unbannedDate?: Date;
   cabinetInfo?: CabinetInfo;
 }
 
 const SearchPage = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchListByNum, setSearchListByNum] = useState<CabinetInfo[]>([]);
   const [searchListByIntraId, setSearchListByIntraId] = useState<
     ISearchDetail[]
@@ -55,34 +54,27 @@ const SearchPage = () => {
     resetCurrentIntraId();
   };
 
-  // name 검색
+  // intra_id 검색
   const handleSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
       currentPage.current
     );
-    
-    setSearchListByIntraId(searchResult.data.result ?? []);
-    setTotalSearchList(Math.ceil(searchResult.data.totalLength / 10) ?? 0);
+    setSearchListByIntraId(searchResult.data.result);
+    setTotalSearchList(searchResult.data.total_length);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
   };
 
-  // visibleNum 검색
+  // cabinet_num 검색
   const handleSearchByCabinetNum = async () => {
     const searchResult = await axiosSearchByCabinetNum(
-      Number(searchValue.current)
+      Number(searchValue.current),
+      searchFloor.current === 0 ? undefined : searchFloor.current
     );
-    let searchResultData: CabinetInfo[] = searchResult.data.result;
-    searchResultData.sort((a, b) => a.floor - b.floor);
-    if (searchFloor.current !== 0) {
-      searchResultData = searchResultData.filter(
-        (item: CabinetInfo) => item.floor === searchFloor.current
-      );
-    }
-    setSearchListByNum(searchResultData ?? []);
-    setTotalSearchList(Math.ceil(searchResult.data.totalLength / 10) ?? 0);
+    setSearchListByNum(searchResult.data.result);
+    setTotalSearchList(searchResult.data.total_length);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
@@ -101,7 +93,7 @@ const SearchPage = () => {
     }
   }, [searchParams, numberOfAdminWork]);
 
-  // name 검색 더보기
+  // intra_id 검색 더보기
   const handleMoreSearchDetailByIntraId = async () => {
     const searchResult = await axiosSearchDetailByIntraId(
       searchValue.current,
@@ -136,8 +128,8 @@ const SearchPage = () => {
                   <SearchItemByNum {...item} key={index} />
                 ))}
             </ListWrapperStyled>
-            {totalSearchList > 1 &&
-              currentPage.current < totalSearchList - 1 && (
+            {totalSearchList > 10 &&
+              currentPage.current * 10 < totalSearchList - 10 && (
                 <MoreButtonStyled onClick={clickMoreButton}>
                   더보기
                 </MoreButtonStyled>

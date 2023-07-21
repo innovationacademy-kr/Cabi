@@ -1,14 +1,3 @@
-import { set } from "react-ga";
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
-import {
-  currentCabinetIdState,
-  currentIntraIdState,
-  selectedTypeOnSearchState,
-  targetCabinetInfoState,
-  targetUserInfoState,
-} from "@/recoil/atoms";
-import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
@@ -17,26 +6,38 @@ import {
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
+import styled, { css } from "styled-components";
+import ChangeToHTML from "../TopNav/SearchBar/SearchListItem/ChangeToHTML";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import {
+  currentIntraIdState,
+  targetCabinetInfoState,
+  selectedTypeOnSearchState,
+  targetUserInfoState,
+} from "@/recoil/atoms";
 import useMenu from "@/hooks/useMenu";
+import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
 
 interface ISearchDetail {
-  name: string;
-  userId: number;
+  intra_id: string;
+  user_id: number;
   cabinetInfo?: CabinetInfo;
-  bannedAt?: Date;
-  unbannedAt?: Date;
+  banned_date?: Date;
+  unbanned_date?: Date;
   searchValue: string;
 }
 
 const SearchItemByIntraId = (props: ISearchDetail) => {
-  const { name, userId, cabinetInfo, bannedAt, unbannedAt, searchValue } =
-    props;
+  const {
+    intra_id,
+    user_id,
+    cabinetInfo,
+    banned_date,
+    unbanned_date,
+    searchValue,
+  } = props;
   const [currentIntraId, setCurrentIntraId] =
     useRecoilState<string>(currentIntraIdState);
-  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
-    currentCabinetIdState
-  );
   const resetCurrentIntraId = useResetRecoilState(currentIntraIdState);
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
@@ -47,26 +48,22 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   const { openCabinet, closeCabinet } = useMenu();
 
   const clickSearchItem = () => {
-    if (currentIntraId === name) {
+    if (currentIntraId === intra_id) {
       resetCurrentIntraId();
       closeCabinet();
       return;
     }
     setTargetUserInfo({
-      name: name,
-      userId: userId,
-      cabinetId: cabinetInfo?.cabinetId,
-      bannedAt: bannedAt,
-      unbannedAt: unbannedAt,
+      intraId: intra_id,
+      userId: user_id,
+      cabinetId: cabinetInfo?.cabinet_id,
+      bannedDate: banned_date,
+      unbannedDate: unbanned_date,
       cabinetInfo: cabinetInfo,
     });
-    if (cabinetInfo?.cabinetId) {
-      setSelectedTypeOnSearch("CABINET");
-    } else {
-      setSelectedTypeOnSearch("USER");
-    }
-    setCurrentIntraId(name);
-    async function getCabinetInfoByCabinetId(cabinetId: number | null) {
+    setSelectedTypeOnSearch("USER");
+    setCurrentIntraId(intra_id);
+    async function getData(cabinetId: number) {
       try {
         const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
         setTargetCabinetInfo(data);
@@ -74,33 +71,31 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
         console.log(error);
       }
     }
-    if (cabinetInfo?.cabinetId) {
-      getCabinetInfoByCabinetId(cabinetInfo.cabinetId);
-      setCurrentCabinetId(cabinetInfo.cabinetId);
+    if (cabinetInfo) {
+      getData(cabinetInfo.cabinet_id);
       openCabinet();
     } else {
       // TODO: 대여 사물함이 없는 유저 정보를 불러오는 api를 만들어야 함
       resetTargetCabinetInfo();
-      setCurrentCabinetId(null);
       openCabinet();
     }
   };
 
-  return cabinetInfo?.cabinetId ? (
+  return cabinetInfo ? (
     <WrapperStyled
       className="cabiButton"
-      isSelected={currentIntraId === name}
+      isSelected={currentIntraId === intra_id}
       onClick={clickSearchItem}
     >
       <RectangleStyled status={cabinetInfo.status}>
-        {cabinetInfo.visibleNum}
+        {cabinetInfo.cabinet_num}
       </RectangleStyled>
       <TextWrapper>
         <LocationStyled>{`${cabinetInfo.floor}층 - ${cabinetInfo.section}`}</LocationStyled>
         <NameWrapperStyled>
-          <IconStyled lentType={cabinetInfo.lentType} />
+          <IconStyled lent_type={cabinetInfo.lent_type} />
           <NameStyled>
-            <ChangeToHTML origin={name} replace={searchValue} />
+            <ChangeToHTML origin={intra_id} replace={searchValue} />
           </NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
@@ -108,18 +103,18 @@ const SearchItemByIntraId = (props: ISearchDetail) => {
   ) : (
     <WrapperStyled
       className="cabiButton"
-      isSelected={currentIntraId === name}
+      isSelected={currentIntraId === intra_id}
       onClick={clickSearchItem}
     >
-      <RectangleStyled banned={!!bannedAt}>
-        {bannedAt ? "!" : "-"}
+      <RectangleStyled banned={!!banned_date}>
+        {banned_date ? "!" : "-"}
       </RectangleStyled>
       <TextWrapper>
         <LocationStyled>대여 중이 아닌 사용자</LocationStyled>
         <NameWrapperStyled>
           <IconStyled />
           <NameStyled>
-            <ChangeToHTML origin={name} replace={searchValue} />
+            <ChangeToHTML origin={intra_id} replace={searchValue} />
           </NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
@@ -201,12 +196,12 @@ const NameWrapperStyled = styled.div`
   overflow: hidden;
 `;
 
-const IconStyled = styled.div<{ lentType?: CabinetType }>`
+const IconStyled = styled.div<{ lent_type?: CabinetType }>`
   width: 18px;
   height: 28px;
   background-image: url((${(props) =>
-      props.lentType
-        ? cabinetIconSrcMap[props.lentType]
+      props.lent_type
+        ? cabinetIconSrcMap[props.lent_type]
         : cabinetIconSrcMap[CabinetType.PRIVATE]}))
     no-repeat center center / contain;
 `;

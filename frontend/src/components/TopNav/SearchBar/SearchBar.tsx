@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import SearchBarList from "@/components/TopNav/SearchBar/SearchBarList/SearchBarList";
-import { CabinetSimple } from "@/types/dto/cabinet.dto";
 import {
-  axiosSearchByCabinetNumSimple,
+  axiosSearchByCabinetNum,
   axiosSearchByIntraId,
 } from "@/api/axios/axios.custom";
 import useOutsideClick from "@/hooks/useOutsideClick";
@@ -14,7 +13,7 @@ const SearchBar = () => {
   const searchWrap = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const [searchListById, setSearchListById] = useState<any[]>([]);
-  const [searchListByNum, setSearchListByNum] = useState<CabinetSimple[]>([]);
+  const [searchListByNum, setSearchListByNum] = useState<any[]>([]);
   const [totalLength, setTotalLength] = useState<number>(0);
   const [isFocus, setIsFocus] = useState<boolean>(true);
   const [targetIndex, setTargetIndex] = useState<number>(-1);
@@ -89,7 +88,7 @@ const SearchBar = () => {
           const searchResult = await axiosSearchByIntraId(searchValue);
           setSearchListByNum([]);
           setSearchListById(searchResult.data.result);
-          setTotalLength(searchResult.data.totalLength);
+          setTotalLength(searchResult.data.total_length);
         }
       } else {
         // cabinetnumber 검색
@@ -97,14 +96,12 @@ const SearchBar = () => {
           setSearchListByNum([]);
           setTotalLength(0);
         } else {
-          const searchResult = await axiosSearchByCabinetNumSimple(
+          const searchResult = await axiosSearchByCabinetNum(
             Number(searchValue)
           );
-          const searchResultData: CabinetSimple[] = searchResult.data.result;
-          searchResultData.sort((a, b) => a.floor - b.floor);
           setSearchListById([]);
-          setSearchListByNum(searchResultData);
-          setTotalLength(searchResult.data.totalLength);
+          setSearchListByNum(searchResult.data.result);
+          setTotalLength(searchResult.data.total_length);
         }
       }
     }
@@ -125,7 +122,7 @@ const SearchBar = () => {
 
   const valueChangeHandler = () => {
     if (isNaN(Number(searchInput.current!.value))) {
-      return searchListById[targetIndex].name;
+      return searchListById[targetIndex].intra_id;
     } else {
       setFloor(searchListByNum[targetIndex].floor);
       return searchInput.current!.value;

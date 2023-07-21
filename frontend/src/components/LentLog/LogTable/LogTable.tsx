@@ -1,7 +1,6 @@
 import styled from "styled-components";
+import { LentLogDto } from "@/types/dto/lent.dto";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { LentLogResponseType } from "@/types/dto/lent.dto";
-import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const dateOptions: Intl.DateTimeFormatOptions = {
   year: "2-digit",
@@ -9,8 +8,14 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   day: "2-digit",
 };
 
-const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
-  if (lentHistory === undefined) return <LoadingAnimation />;
+const BAD_REQUEST = 400;
+
+interface IlentLog {
+  lentLog: LentLogDto[] | typeof BAD_REQUEST | undefined;
+}
+
+const LogTable = ({ lentLog }: IlentLog) => {
+  if (lentLog === undefined) return <LoadingAnimation />;
 
   return (
     <LogTableWrapperstyled>
@@ -22,19 +27,22 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
             <th>반납일</th>
           </tr>
         </TheadStyled>
-        {lentHistory !== STATUS_400_BAD_REQUEST && (
+        {lentLog !== BAD_REQUEST && (
           <TbodyStyled>
-            {lentHistory.map(
-              ({ floor, section, visibleNum, startedAt, endedAt }, idx) => (
+            {lentLog.map(
+              (
+                { floor, section, cabinet_num, lent_time, return_time },
+                idx
+              ) => (
                 <tr key={idx}>
                   <td
                     title={`${floor}층 ${section}`}
-                  >{`${floor}F - ${visibleNum}번`}</td>
-                  <td title={new Date(startedAt).toLocaleString("ko-KR")}>
-                    {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
+                  >{`${floor}F - ${cabinet_num}번`}</td>
+                  <td title={new Date(lent_time).toLocaleString("ko-KR")}>
+                    {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
                   </td>
-                  <td title={new Date(endedAt).toLocaleString("ko-KR")}>
-                    {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
+                  <td title={new Date(return_time).toLocaleString("ko-KR")}>
+                    {new Date(return_time).toLocaleString("ko-KR", dateOptions)}
                   </td>
                 </tr>
               )
@@ -42,10 +50,9 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
           </TbodyStyled>
         )}
       </LogTableStyled>
-      {lentHistory === STATUS_400_BAD_REQUEST ||
-        (lentHistory.length === 0 && (
-          <EmptyLogStyled>대여기록이 없습니다.</EmptyLogStyled>
-        ))}
+      {lentLog === BAD_REQUEST && (
+        <EmptyLogStyled>반납처리 된 사물함이 아직 없습니다.</EmptyLogStyled>
+      )}
     </LogTableWrapperstyled>
   );
 };
@@ -71,17 +78,10 @@ const TheadStyled = styled.thead`
   line-height: 50px;
   background-color: var(--main-color);
   color: var(--white);
-  & > tr > th:first-child {
-    padding-left: 20px;
-  }
-  & > tr > th:last-child {
-    padding-right: 20px;
-  }
 `;
 
 const TbodyStyled = styled.tbody`
   & > tr {
-    font-size: small;
     text-align: center;
     height: 50px;
   }
@@ -92,12 +92,6 @@ const TbodyStyled = styled.tbody`
   }
   & > tr:nth-child(2n) {
     background: #f9f6ff;
-  }
-  & > tr > td:first-child {
-    padding-left: 20px;
-  }
-  & > tr > td:last-child {
-    padding-right: 20px;
   }
 `;
 

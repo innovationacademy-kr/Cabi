@@ -1,26 +1,24 @@
-import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { staticColNumData } from "@/assets/data/sectionColNumData";
-import { IBuildingColNum } from "@/assets/data/sectionColNumData";
-import { ITableData } from "@/types/dto/admin.dto";
-import {
-  CabinetBuildingFloorDto,
-  CabinetInfo,
-  CabinetInfoByBuildingFloorDto,
-  CabinetPreviewInfo,
-  MyCabinetInfoResponseDto,
-} from "@/types/dto/cabinet.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import { ClubUserDto } from "@/types/dto/lent.dto";
+import {
+  CabinetInfo,
+  CabinetInfoByLocationFloorDto,
+  MyCabinetInfoResponseDto,
+  CabinetLocationFloorDto,
+} from "@/types/dto/cabinet.dto";
+import { atom } from "recoil";
+import { staticColNumData } from "@/assets/data/sectionColNumData";
+import { ILocationColNum } from "@/assets/data/sectionColNumData";
+import { IData } from "@/types/dto/admin.dto";
 
 const { persistAtom } = recoilPersist();
 
 export const userState = atom<UserDto>({
   key: "UserInfo",
   default: {
-    cabinetId: null,
-    userId: null,
-    name: "default",
+    cabinet_id: -1,
+    user_id: -1,
+    intra_id: "default",
   },
 });
 
@@ -33,25 +31,25 @@ export const myCabinetInfoState = atom<MyCabinetInfoResponseDto>({
 //   default: {
 //     status: CabinetStatus.AVAILABLE,
 //     lent_info: [],
-//     building: "",
+//     location: "",
 //     floor: -1,
 //     section: "",
 //     cabinet_memo: "",
-//     cabinetId: -1,
-//     visibleNum: -1,
-//     lentType: "",
+//     cabinet_id: -1,
+//     cabinet_num: -1,
+//     lent_type: "",
 //     cabinet_title: "",
 //     max_user: -1,
 //   },
 // });
 
-export const buildingsFloorState = atom<CabinetBuildingFloorDto[]>({
-  key: "CurrentBuildingData",
+export const locationsFloorState = atom<CabinetLocationFloorDto[]>({
+  key: "CurrentLocationData",
   default: [],
 });
 
-export const currentBuildingNameState = atom<string>({
-  key: "CurrentBuilding",
+export const currentLocationNameState = atom<string>({
+  key: "CurrentLocation",
   default: undefined,
   effects_UNSTABLE: [persistAtom],
 });
@@ -62,23 +60,18 @@ export const currentFloorNumberState = atom<number>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const currentMapFloorState = atom<number>({
-  key: "CurrentMapFloor",
-  default: undefined,
-});
-
 export const currentSectionNameState = atom<string>({
   key: "CurrentSection",
   default: undefined,
   effects_UNSTABLE: [persistAtom],
 });
 
-export const currentCabinetIdState = atom<number | null>({
+export const currentCabinetIdState = atom<number>({
   key: "CurrentCabinetId",
   default: undefined,
 });
 
-export const currentFloorCabinetState = atom<CabinetInfoByBuildingFloorDto[]>({
+export const currentFloorCabinetState = atom<CabinetInfoByLocationFloorDto[]>({
   key: "CurrentFloorData",
   default: [],
 });
@@ -88,8 +81,8 @@ export const targetCabinetInfoState = atom<CabinetInfo>({
   default: undefined,
 });
 
-export const buildingColNumState = atom<IBuildingColNum[]>({
-  key: "BuildingColNum",
+export const locationColNumState = atom<ILocationColNum[]>({
+  key: "LocationColNum",
   default: staticColNumData,
 });
 
@@ -103,7 +96,7 @@ export const isMultiSelectState = atom<boolean>({
   default: false,
 });
 
-export const targetCabinetInfoListState = atom<CabinetPreviewInfo[]>({
+export const targetCabinetInfoListState = atom<CabinetInfo[]>({
   key: "TargetCabinetInfoList",
   default: [],
 });
@@ -141,22 +134,17 @@ export const selectAdminDetailState = atom<AdminDetailType>({
   },
 });
 
-export const brokenCabinetListState = atom<ITableData[]>({
+export const brokenCabinetListState = atom<IData[]>({
   key: "brokenCabinetList",
   default: [],
 });
 
-export const overdueCabinetListState = atom<ITableData[]>({
+export const overdueCabinetListState = atom<IData[]>({
   key: "overdueCabinetList",
   default: [],
 });
 
-export const bannedUserListState = atom<ITableData[]>({
+export const bannedUserListState = atom<IData[]>({
   key: "bannedUserList",
   default: [],
-});
-
-export const selectedClubInfoState = atom<ClubUserDto | null>({
-  key: "selectedClub",
-  default: null,
 });

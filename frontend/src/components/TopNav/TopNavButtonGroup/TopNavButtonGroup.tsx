@@ -1,18 +1,16 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import {
-  axiosCabinetById,
-  axiosDeleteCurrentBanLog,
-} from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
+import { axiosCabinetById } from "@/api/axios/axios.custom";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import instance from "@/api/axios/axios.instance";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
@@ -27,9 +25,9 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
 
   async function setTargetCabinetInfoToMyCabinet() {
-    setCurrentCabinetId(myInfo.cabinetId);
+    setCurrentCabinetId(myInfo.cabinet_id);
     try {
-      const { data } = await axiosCabinetById(myInfo.cabinetId);
+      const { data } = await axiosCabinetById(myInfo.cabinet_id);
       setTargetCabinetInfo(data);
     } catch (error) {
       console.log(error);
@@ -37,12 +35,22 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   }
 
   const clickMyCabinet = () => {
-    if (myInfo.cabinetId === null) return;
-    if (currentCabinetId !== myInfo.cabinetId) {
+    if (myInfo.cabinet_id === -1) return;
+    if (currentCabinetId !== myInfo.cabinet_id) {
       setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
       toggleCabinet();
+    }
+  };
+
+  const axiosRemovePenaltyURL = "/api/betatest/deletebanlog";
+  const axiosRemovePenalty = async (): Promise<any> => {
+    try {
+      const response = await instance.delete(axiosRemovePenaltyURL);
+      return response;
+    } catch (error) {
+      throw error;
     }
   };
 
@@ -63,7 +71,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
     <NaviButtonsStyled id="topNavButtonGroup">
       {import.meta.env.VITE_UNBAN === "true" && (
         <TopNavButton
-          onClick={() => axiosDeleteCurrentBanLog(myInfo.userId)}
+          onClick={axiosRemovePenalty}
           imgSrc="/src/assets/images/happyCcabiWhite.png"
           width="32px"
           height="32px"
@@ -80,7 +88,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
         />
       )}
       <TopNavButton
-        disable={myInfo.cabinetId === null}
+        disable={myInfo.cabinet_id === -1}
         onClick={clickMyCabinet}
         imgSrc="/src/assets/images/myCabinetIcon.svg"
       />
@@ -88,7 +96,6 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
     </NaviButtonsStyled>
   );
 };
-
 const NaviButtonsStyled = styled.div`
   display: flex;
   justify-content: space-between;

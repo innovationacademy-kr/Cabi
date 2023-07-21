@@ -54,4 +54,3 @@ aria_log.*
 ib_logfile*
 ibdata*
 ibtmp*
-*nohup.out

@@ -50,45 +50,36 @@ jobs:
             source $HOME/.bash_profile
             echo "해당 리포지토리로 이동"
             cd $HOME/42cabi_dev
-
             echo "리포지토리 pull"
             git pull origin dev
-
             echo "앱 빌드"
-            cd frontend
-            npm install
-            npm run build
-            mkdir -p dist/src/assets
-            cp -r src/assets/images dist/src/assets
+            cd $HOME/42cabi_dev/backend
+            npm run build:fe
+            npm run deploy:dev
+            npm run invalidate:dev
 
-            echo "S3 배포"
-            aws s3 sync ./dist s3://dev.cabi --profile=CABI
-
-            echo "CloudFront 캐시 무효화"
-            aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'
-
-  # frontend-CD-main:
-  #   name: deploy-main
-  #   runs-on: ubuntu-latest
-  #   needs: [frontend-CI]
-  #   if: ${{ github.ref == 'refs/heads/main' }}
-  #   steps:
-  #     - name: 리모트 쉘 접속
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.HOST_MAIN }}
-  #         username: ${{ secrets.USERNAME }}
-  #         key: ${{ secrets.KEY_NEW }}
-  #         port: ${{ secrets.PORT }}
-  #         script_stop: true
-  #         script: |
-  #           source $HOME/.bash_profile
-  #           echo "해당 리포지토리로 이동"
-  #           cd $HOME/42cabi_main
-  #           echo "리포지토리 pull"
-  #           git pull origin main
-  #           echo "앱 빌드"
-  #           cd $HOME/42cabi_main/backend
-  #           npm run build:fe
-  #           npm run deploy:main
-  #           npm run invalidate:main
+  frontend-CD-main:
+    name: deploy-main
+    runs-on: ubuntu-latest
+    needs: [frontend-CI]
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - name: 리모트 쉘 접속
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_MAIN }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY_NEW }}
+          port: ${{ secrets.PORT }}
+          script_stop: true
+          script: |
+            source $HOME/.bash_profile
+            echo "해당 리포지토리로 이동"
+            cd $HOME/42cabi_main
+            echo "리포지토리 pull"
+            git pull origin main
+            echo "앱 빌드"
+            cd $HOME/42cabi_main/backend
+            npm run build:fe
+            npm run deploy:main
+            npm run invalidate:main

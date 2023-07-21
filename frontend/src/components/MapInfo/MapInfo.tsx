@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import MapFloorSelect from "@/components/MapInfo/MapFloorSelect/MapFloorSelect";
+import exitButton from "@/assets/images/exitButton.svg";
 import MapGrid from "@/components/MapInfo/MapGrid/MapGrid";
+import MapFloorSelect from "@/components/MapInfo/MapFloorSelect/MapFloorSelect";
 
 const MapInfo = ({
   touchStart,
@@ -28,8 +29,7 @@ const MapInfo = ({
         <img
           className="cabiButton"
           onClick={closeMap}
-          src="/src/assets/images/exitButton.svg"
-          alt=""
+          src={exitButton}
           style={{ width: "24px", cursor: "pointer" }}
         />
       </HeaderStyled>

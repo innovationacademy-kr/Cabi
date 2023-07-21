@@ -1,30 +1,24 @@
 export interface BannedUserDto {
-  userId: number;
-  name: string;
-  bannedAt: Date;
-  unbannedAt: Date;
+  user_id: number;
+  intra_id: string;
+  banned_date: Date;
+  unbanned_date: Date;
 }
 
 export interface BrokenCabinetDto {
-  cabinetId: number;
-  visibleNum: number;
-  maxUser: number;
-  building: string;
+  cabinet_id: number;
+  cabinet_num: number;
   floor: number;
+  lent_type: string;
+  location: string;
+  max_user: number;
+  note: string | null;
   section: string;
-  lentType: string;
-  status: string;
-  statusNote: string | null;
-  title: string;
 }
 
 export interface OverdueUserDto {
-  building: string;
-  floor: number;
-  section: string;
-  cabinetId: number;
-  visibleNum: number;
-  name: string;
+  intra_id: string;
+  location: string;
   overdueDays: number;
 }
 
@@ -40,11 +34,11 @@ export interface ICabinetNumbersPerFloor {
 export interface IMonthlyData {
   startDate: string;
   endDate: string;
-  lentStartCount: number;
-  lentEndCount: number;
+  lentCount: number;
+  returnCount: number;
 }
 
-export interface ITableData {
+export interface IData {
   first?: string;
   second?: string;
   third?: string;

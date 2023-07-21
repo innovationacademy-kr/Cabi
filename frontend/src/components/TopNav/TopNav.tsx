@@ -1,56 +1,56 @@
 import React from "react";
 import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
-import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
+import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
-interface IBuildingListItem {
-  building: string;
+interface ILocationListItem {
+  location: string;
   onUpdate: SetterOrUpdater<string>;
   onClose: React.Dispatch<boolean>;
 }
 
-const BuildingListItem: React.FC<IBuildingListItem> = ({
-  building,
+const LocationListItem: React.FC<ILocationListItem> = ({
+  location,
   onUpdate,
   onClose,
 }) => {
   return (
-    <BuildingListItemStyled
+    <LocationListItemStyled
       className="cabiButton"
       onClick={() => {
-        onUpdate(building);
+        onUpdate(location);
         onClose(false);
       }}
     >
-      {building}
-    </BuildingListItemStyled>
+      {location}
+    </LocationListItemStyled>
   );
 };
 
 const TopNav: React.FC<{
-  currentBuildingName: string;
-  buildingsList: Array<string>;
-  buildingClicked: boolean;
-  setBuildingClicked: React.Dispatch<boolean>;
+  currentLocationName: string;
+  locationsList: Array<string>;
+  locationClicked: boolean;
+  setLocationClicked: React.Dispatch<boolean>;
   onClickLogo: React.MouseEventHandler<HTMLImageElement>;
-  setCurrentBuildingName: SetterOrUpdater<string>;
+  setCurrentLocationName: SetterOrUpdater<string>;
   isAdmin?: boolean;
 }> = (props) => {
   const {
-    currentBuildingName,
-    buildingsList,
-    buildingClicked,
-    setBuildingClicked,
+    currentLocationName,
+    locationsList,
+    locationClicked,
+    setLocationClicked,
     onClickLogo,
-    setCurrentBuildingName,
+    setCurrentLocationName,
     isAdmin,
   } = props;
 
-  const buildingDom = React.useRef<HTMLElement>(null);
-  useOutsideClick(buildingDom, () => {
-    if (buildingClicked) setBuildingClicked(false);
+  const locationDom = React.useRef<HTMLElement>(null);
+  useOutsideClick(locationDom, () => {
+    if (locationClicked) setLocationClicked(false);
   });
 
   return (
@@ -64,24 +64,24 @@ const TopNav: React.FC<{
             alt=""
           />
         </LogoDivStyled>
-        <BuildingSelectBoxStyled ref={buildingDom} className="cabiButton">
+        <LocationSelectBoxStyled ref={locationDom} className="cabiButton">
           <div
             className="cabiButton"
-            onClick={() => setBuildingClicked(!buildingClicked)}
+            onClick={() => setLocationClicked(!locationClicked)}
           >
-            {currentBuildingName}
+            {currentLocationName}
           </div>
-          <BuildingListStyled clicked={buildingClicked} className="cabiButton">
-            {buildingsList.map((building, index) => (
-              <BuildingListItem
-                building={building}
+          <LocationListStyled clicked={locationClicked} className="cabiButton">
+            {locationsList.map((location, index) => (
+              <LocationListItem
+                location={location}
                 key={index}
-                onUpdate={setCurrentBuildingName}
-                onClose={setBuildingClicked}
+                onUpdate={setCurrentLocationName}
+                onClose={setLocationClicked}
               />
             ))}
-          </BuildingListStyled>
-        </BuildingSelectBoxStyled>
+          </LocationListStyled>
+        </LocationSelectBoxStyled>
       </LogoStyled>
       {isAdmin && <SearchBar />}
       <TopNavButtonGroup isAdmin={isAdmin} />
@@ -113,11 +113,11 @@ const LogoDivStyled = styled.div`
   cursor: pointer;
 `;
 
-const BuildingSelectBoxStyled = styled.span`
+const LocationSelectBoxStyled = styled.span`
   position: relative;
   margin-left: 40px;
   font-size: 24px;
-  font-family: var(--building-font);
+  font-family: var(--location-font);
   cursor: pointer;
   & > div {
     user-select: none !important;
@@ -142,7 +142,7 @@ const BuildingSelectBoxStyled = styled.span`
   }
 `;
 
-const BuildingListStyled = styled.ul<{ clicked: boolean }>`
+const LocationListStyled = styled.ul<{ clicked: boolean }>`
   position: absolute;
   top: 30px;
   left: -15px;
@@ -156,7 +156,7 @@ const BuildingListStyled = styled.ul<{ clicked: boolean }>`
   user-select: none !important;
 `;
 
-const BuildingListItemStyled = styled.li`
+const LocationListItemStyled = styled.li`
   width: 80px;
   height: 40px;
   color: var(--black);

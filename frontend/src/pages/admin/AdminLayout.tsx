@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import styled, { css } from "styled-components";
 import { selectedTypeOnSearchState } from "@/recoil/atoms";
-import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import LeftNav from "@/components/LeftNav/LeftNav";
-import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import AdminTopNavContainer from "@/components/TopNav/AdminTopNav.container";
-import UserInfoAreaContainer from "@/components/UserInfoArea/UserInfoArea.container";
+import LeftNav from "@/components/LeftNav/LeftNav";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { getCookie } from "@/api/react_cookie/cookies";
+import styled, { css } from "styled-components";
+import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import useMenu from "@/hooks/useMenu";
+import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
+import UserInfoAreaContainer from "@/components/UserInfoArea/UserInfoArea.container";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -98,8 +98,7 @@ const DetailInfoContainerStyled = styled.div<{ isFloat: boolean }>`
   position: relative;
   border-left: 1px solid var(--line-color);
   background-color: var(--white);
-  overflow-x: hidden;
-  height: 100%;
+  overflow-y: auto;
   ${(props) =>
     props.isFloat &&
     css`

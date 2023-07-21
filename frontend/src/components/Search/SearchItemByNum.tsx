@@ -1,33 +1,33 @@
-import { useRecoilState, useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
-import {
-  currentCabinetIdState,
-  selectedTypeOnSearchState,
-  targetCabinetInfoState,
-} from "@/recoil/atoms";
+import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import useMenu from "@/hooks/useMenu";
+import {
+  currentCabinetIdState,
+  targetCabinetInfoState,
+  selectedTypeOnSearchState,
+} from "@/recoil/atoms";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { axiosAdminCabinetInfoByCabinetId } from "@/api/axios/axios.custom";
-import useMenu from "@/hooks/useMenu";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import styled, { css } from "styled-components";
 
-const reformIntraId = (lents: LentDto[]) => {
-  if (lents.length === 0) {
+const reformIntraId = (lent_info: LentDto[]) => {
+  if (lent_info.length === 0) {
     return "-";
   } else {
-    const intra_id = lents.map((item) => item.name);
+    const intra_id = lent_info.map((item) => item.intra_id);
     return intra_id.join(", ");
   }
 };
 
 const SearchItemByNum = (props: CabinetInfo) => {
-  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
     currentCabinetIdState
   );
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
@@ -36,16 +36,23 @@ const SearchItemByNum = (props: CabinetInfo) => {
   const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const { openCabinet, closeCabinet } = useMenu();
 
-  const { floor, section, cabinetId, visibleNum, status, lentType, lents } =
-    props;
+  const {
+    floor,
+    section,
+    cabinet_id,
+    cabinet_num,
+    status,
+    lent_type,
+    lent_info,
+  } = props;
 
   const clickSearchItem = () => {
-    if (currentCabinetId === cabinetId) {
+    if (currentCabinetId === cabinet_id) {
       closeCabinet();
       return;
     }
     setSelectedTypeOnSearch("CABINET");
-    setCurrentCabinetId(cabinetId);
+    setCurrentCabinetId(cabinet_id);
     async function getData(cabinetId: number) {
       try {
         const { data } = await axiosAdminCabinetInfoByCabinetId(cabinetId);
@@ -54,22 +61,22 @@ const SearchItemByNum = (props: CabinetInfo) => {
         console.log(error);
       }
     }
-    getData(cabinetId);
+    getData(cabinet_id);
     openCabinet();
   };
 
   return (
     <WrapperStyled
       className="cabiButton"
-      isSelected={currentCabinetId === cabinetId}
+      isSelected={currentCabinetId === cabinet_id}
       onClick={clickSearchItem}
     >
-      <RectangleStyled status={status}>{visibleNum}</RectangleStyled>
+      <RectangleStyled status={status}>{cabinet_num}</RectangleStyled>
       <TextWrapper>
         <LocationStyled>{`${floor}층 - ${section}`}</LocationStyled>
         <NameWrapperStyled>
-          <IconStyled lentType={lentType} />
-          <NameStyled>{reformIntraId(lents)}</NameStyled>
+          <IconStyled lent_type={lent_type} />
+          <NameStyled>{reformIntraId(lent_info)}</NameStyled>
         </NameWrapperStyled>
       </TextWrapper>
     </WrapperStyled>
@@ -138,10 +145,10 @@ const NameWrapperStyled = styled.div`
   overflow: hidden;
 `;
 
-const IconStyled = styled.div<{ lentType: CabinetType }>`
+const IconStyled = styled.div<{ lent_type: CabinetType }>`
   width: 18px;
   height: 28px;
-  background: url(${(props) => cabinetIconSrcMap[props.lentType]}) no-repeat
+  background: url(${(props) => cabinetIconSrcMap[props.lent_type]}) no-repeat
     center center / contain;
 `;
 

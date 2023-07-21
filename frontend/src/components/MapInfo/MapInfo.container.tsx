@@ -1,55 +1,41 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { currentFloorNumberState, currentMapFloorState } from "@/recoil/atoms";
-import { currentBuildingFloorState } from "@/recoil/selectors";
-import MapInfo from "@/components/MapInfo/MapInfo";
 import useMenu from "@/hooks/useMenu";
+import { currentLocationFloorState } from "@/recoil/selectors";
+import React, { useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
+import MapInfo from "./MapInfo";
 
 const MapInfoContainer = () => {
-  const { closeMap } = useMenu();
-  const floorInfo = useRecoilValue(currentBuildingFloorState);
-  const [currentMapFloor, setCurrentMapFloor] =
-    useRecoilState<number>(currentMapFloorState);
-  const [currentFloor] = useRecoilState<number>(currentFloorNumberState);
   const touchXpos = useRef(0);
   const touchYpos = useRef(0);
-
-  useEffect(() => {
-    if (currentMapFloor === undefined) {
-      if (currentFloor === undefined) setCurrentMapFloor(floorInfo[0]);
-      else setCurrentMapFloor(currentFloor);
-      return;
-    }
-  }, [currentMapFloor]);
-
+  const floorInfo = useRecoilValue(currentLocationFloorState);
+  const [floor, setFloor] = useState(floorInfo[0]);
   const touchStart = (e: React.TouchEvent) => {
     touchXpos.current = e.changedTouches[0].clientX;
     touchYpos.current = e.changedTouches[0].clientY;
   };
+  const { closeMap } = useMenu();
 
   const touchEnd = (e: React.TouchEvent) => {
     const offsetX = Math.round(e.changedTouches[0].clientX - touchXpos.current);
     const offsetY = Math.round(e.changedTouches[0].clientY - touchYpos.current);
-    let index = floorInfo.indexOf(currentMapFloor);
-    index = swipeMap(offsetX, offsetY, index);
-    setCurrentMapFloor(floorInfo[index]);
-  };
+    let index = floorInfo.indexOf(floor);
+    if (Math.abs(offsetX) < 50 || Math.abs(offsetX) < Math.abs(offsetY)) return;
 
-  const swipeMap = (offsetX: number, offsetY: number, index: number) => {
-    if (Math.abs(offsetX) < 50 || Math.abs(offsetX) < Math.abs(offsetY)) {
-      return index;
+    if (offsetX < 0) {
+      index++;
+      if (index === floorInfo.length) index = 0;
+    } else {
+      index--;
+      if (index === -1) index = floorInfo.length - 1;
     }
-    index = offsetX < 0 ? index + 1 : index - 1;
-    index = (index + floorInfo.length) % floorInfo.length;
-    return index;
+    setFloor(floorInfo[index]);
   };
-
   return (
     <MapInfo
       touchStart={touchStart}
       touchEnd={touchEnd}
-      floor={currentMapFloor}
-      setFloor={setCurrentMapFloor}
+      floor={floor}
+      setFloor={setFloor}
       floorInfo={floorInfo}
       closeMap={closeMap}
     />
