@@ -7,11 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest --reporter verbose",
-    "maintenance:dev": "mkdir -p dist && cp ../maintenance/index.html ./dist && aws s3 sync ./dist s3://dev.cabi --profile=CABI && aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'",
-    "deploy:dev": "npm run build && aws s3 sync ./dist s3://dev.cabi --profile=CABI && aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'",
-    "maintenance:main": "mkdir -p dist && cp ../maintenance/index.html ./dist && aws s3 sync ./dist s3://cabi --profile=CABI && aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'",
-    "deploy:main": "npm run build && aws s3 sync ./dist s3://cabi --profile=CABI && aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'"
+    "test": "vitest --reporter verbose"
   },
   "dependencies": {
     "@nivo/bar": "^0.80.0",
@@ -32,7 +28,6 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/node": "^18.11.17",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",

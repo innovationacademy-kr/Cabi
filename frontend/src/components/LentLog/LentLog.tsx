@@ -1,6 +1,17 @@
 import styled, { css } from "styled-components";
 import LogTable from "@/components/LentLog/LogTable/LogTable";
-import { ILentLog } from "@/types/dto/lent.dto";
+import { LentLogDto } from "@/types/dto/lent.dto";
+
+const BAD_REQUEST = 400;
+
+interface ILentLog {
+  closeLent: React.MouseEventHandler;
+  logs: LentLogDto[] | typeof BAD_REQUEST | undefined;
+  page: number;
+  totalPage: number;
+  onClickPrev: React.MouseEventHandler;
+  onClickNext: React.MouseEventHandler;
+}
 
 const LentLog = ({
   closeLent,
@@ -16,7 +27,7 @@ const LentLog = ({
         <TitleStyled>대여 기록</TitleStyled>
         <GoBackButtonStyled onClick={closeLent}>뒤로 가기</GoBackButtonStyled>
       </TitleContainer>
-      <LogTable lentHistory={logs} />
+      <LogTable lentLog={logs} />
       <ButtonContainerStyled>
         <PageButtonStyled
           page={page}

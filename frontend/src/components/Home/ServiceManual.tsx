@@ -169,6 +169,7 @@ const InfoSectionStyled = styled.section`
   }
   .redColor {
     color: var(--expired);
+    /* font-style: oblique; */
   }
   .article > p > span {
     font-weight: 700;

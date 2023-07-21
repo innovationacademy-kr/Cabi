@@ -1,28 +1,29 @@
 import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
 import {
   currentCabinetIdState,
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
+import useMenu from "@/hooks/useMenu";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
-import {
-  cabinetFilterMap,
-  cabinetIconSrcMap,
-  cabinetLabelColorMap,
-  cabinetStatusColorMap,
-} from "@/assets/data/maps";
-import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
-import { UserDto } from "@/types/dto/user.dto";
+import { axiosCabinetById } from "@/api/axios/axios.custom";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import styled, { css } from "styled-components";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { axiosCabinetById } from "@/api/axios/axios.custom";
-import useMenu from "@/hooks/useMenu";
 
-const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
+import { UserDto } from "@/types/dto/user.dto";
+import {
+  cabinetStatusColorMap,
+  cabinetLabelColorMap,
+  cabinetIconSrcMap,
+  cabinetFilterMap,
+} from "@/assets/data/maps";
+
+const CabinetListItem = (props: CabinetInfo): JSX.Element => {
   const MY_INFO = useRecoilValue<UserDto>(userState);
-  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
     currentCabinetIdState
   );
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
@@ -31,20 +32,25 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const { openCabinet, closeCabinet } = useMenu();
-  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
+  const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
 
   let cabinetLabelText = "";
 
   if (props.status !== "BANNED" && props.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
-    if (props.lentType === "PRIVATE") cabinetLabelText = props.name;
-    else if (props.lentType === "SHARE") {
+    if (props.lent_type === "PRIVATE")
+      cabinetLabelText = props.lent_info[0]?.intra_id;
+    else if (props.lent_type === "SHARE") {
+      const headcount = props.lent_info.length;
+      const cabinetTitle =
+        props.cabinet_title ?? `${props.max_user} / ${props.max_user}`;
+
       cabinetLabelText =
-        props.userCount === props.maxUser && !!props.title
-          ? props.title
-          : `${props.userCount} / ${props.maxUser}`;
-    } else if (props.lentType === "CLUB")
-      cabinetLabelText = props.title ? props.title : "동아리";
+        headcount === props.max_user
+          ? cabinetTitle
+          : headcount + " / " + props.max_user;
+    } else if (props.lent_type === "CLUB")
+      cabinetLabelText = props.cabinet_title ?? "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
@@ -76,9 +82,9 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
 
   const cabinetItemTitleHandler = () => {
     let lentType;
-    if (props.lentType === CabinetType.PRIVATE) lentType = "개인";
-    else if (props.lentType === CabinetType.SHARE) lentType = "공유";
-    else if (props.lentType === CabinetType.CLUB) lentType = "동아리";
+    if (props.lent_type === CabinetType.PRIVATE) lentType = "개인";
+    else if (props.lent_type === CabinetType.SHARE) lentType = "공유";
+    else if (props.lent_type === CabinetType.CLUB) lentType = "동아리";
 
     if (!cabinetLabelText) return `[${lentType}]`;
     return `[${lentType}] ${cabinetLabelText}`;
@@ -88,21 +94,21 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     <CabinetListItemStyled
       status={props.status}
       isMine={isMine}
-      isSelected={currentCabinetId === props.cabinetId}
+      isSelected={currentCabinetId === props.cabinet_id}
       title={cabinetItemTitleHandler()}
       className="cabiButton"
       onClick={() => {
-        selectCabinetOnClick(props.status, props.cabinetId);
+        selectCabinetOnClick(props.status, props.cabinet_id);
       }}
     >
       <CabinetIconNumberWrapperStyled>
         <CabinetIconContainerStyled
-          lentType={props.lentType}
+          lent_type={props.lent_type}
           isMine={isMine}
           status={props.status}
         />
         <CabinetNumberStyled status={props.status} isMine={isMine}>
-          {props.visibleNum}
+          {props.cabinet_num}
         </CabinetNumberStyled>
       </CabinetIconNumberWrapperStyled>
       <CabinetLabelStyled
@@ -194,13 +200,13 @@ const CabinetNumberStyled = styled.p<{
 `;
 
 const CabinetIconContainerStyled = styled.div<{
-  lentType: CabinetType;
+  lent_type: CabinetType;
   status: CabinetStatus;
   isMine: boolean;
 }>`
   width: 16px;
   height: 16px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
+  background-image: url(${(props) => cabinetIconSrcMap[props.lent_type]});
   background-size: contain;
   filter: ${(props) => cabinetFilterMap[props.status]};
   ${(props) =>

@@ -1,15 +1,15 @@
-import React from "react";
-import { useRecoilState } from "recoil";
-import { currentFloorCabinetState, myCabinetInfoState } from "@/recoil/atoms";
-import MemoModal from "@/components/Modals/MemoModal/MemoModal";
 import {
-  CabinetInfoByBuildingFloorDto,
+  axiosUpdateCabinetMemo,
+  axiosUpdateCabinetTitle,
+} from "@/api/axios/axios.custom";
+import MemoModal from "@/components/Modals/MemoModal/MemoModal";
+import { myCabinetInfoState, currentFloorCabinetState } from "@/recoil/atoms";
+import {
+  CabinetInfoByLocationFloorDto,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
-import {
-  axiosUpdateMyCabinetInfo, // axiosUpdateCabinetMemo,
-  // axiosUpdateCabinetTitle,
-} from "@/api/axios/axios.custom";
+import React from "react";
+import { useRecoilState } from "recoil";
 
 const MemoModalContainer = (props: {
   onClose: React.MouseEventHandler<Element>;
@@ -20,13 +20,13 @@ const MemoModalContainer = (props: {
     currentFloorCabinetState
   );
   const memoModalProps = {
-    cabinetType: myCabinetInfo.lentType,
-    cabinetTitle: myCabinetInfo.title,
-    cabinetMemo: myCabinetInfo.memo,
+    cabinetType: myCabinetInfo.lent_type,
+    cabinetTitle: myCabinetInfo.cabinet_title,
+    cabinetMemo: myCabinetInfo.cabinet_memo,
   };
 
   const updateCabinetTitleInList = (newTitle: string | null) => {
-    const updatedCabinetList: CabinetInfoByBuildingFloorDto[] = JSON.parse(
+    const updatedCabinetList: CabinetInfoByLocationFloorDto[] = JSON.parse(
       JSON.stringify(currentFloorCabinet)
     );
     const targetSectionCabinetList = updatedCabinetList.find(
@@ -35,30 +35,43 @@ const MemoModalContainer = (props: {
     if (targetSectionCabinetList === undefined) return;
 
     let targetCabinet = targetSectionCabinetList.find(
-      (section) => section.cabinetId === myCabinetInfo.cabinetId
+      (section) => section.cabinet_id === myCabinetInfo.cabinet_id
     );
 
-    targetCabinet!.title = newTitle;
+    targetCabinet!.cabinet_title = newTitle;
     setCurrentFloorCabinet(updatedCabinetList);
   };
 
-  const onSaveEditMemo = (newTitle: string | null, newMemo: string | null) => {
-    if (newTitle === myCabinetInfo.title) newTitle = null;
-    if (newMemo === myCabinetInfo.memo) newMemo = null;
-    //수정사항이 있으면
-    axiosUpdateMyCabinetInfo(newTitle, newMemo)
-      .then(() => {
-        setMyCabinetInfo({
-          ...myCabinetInfo,
-          title: newTitle ?? myCabinetInfo.title,
-          memo: newMemo ?? myCabinetInfo.memo,
+  const onSaveEditMemo = (newTitle: string | null, newMemo: string) => {
+    if (newTitle !== myCabinetInfo.cabinet_title) {
+      //수정사항이 있으면
+      axiosUpdateCabinetTitle({ cabinet_title: newTitle ?? "" })
+        .then(() => {
+          setMyCabinetInfo({
+            ...myCabinetInfo,
+            cabinet_title: newTitle,
+            cabinet_memo: newMemo,
+          });
+          // list에서 제목 업데이트
+          updateCabinetTitleInList(newTitle);
+        })
+        .catch((error) => {
+          console.log(error);
         });
-        // list에서 제목 업데이트
-        if (newTitle !== null) updateCabinetTitleInList(newTitle);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }
+    if (newMemo !== myCabinetInfo.cabinet_memo) {
+      axiosUpdateCabinetMemo({ cabinet_memo: newMemo })
+        .then(() => {
+          setMyCabinetInfo({
+            ...myCabinetInfo,
+            cabinet_title: newTitle,
+            cabinet_memo: newMemo,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
   return (
     <MemoModal

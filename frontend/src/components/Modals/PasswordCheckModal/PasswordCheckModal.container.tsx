@@ -1,28 +1,30 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   myCabinetInfoState,
+  overdueCabinetListState,
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import { IModalContents } from "@/components/Modals/Modal";
-import ModalPortal from "@/components/Modals/ModalPortal";
-import PasswordCheckModal from "@/components/Modals/PasswordCheckModal/PasswordCheckModal";
-import PasswordContainer from "@/components/Modals/PasswordCheckModal/PasswordContainer";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
-import { modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
-import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
+  axiosReturn,
   axiosSendCabinetPassword,
 } from "@/api/axios/axios.custom";
+import Modal, { IModalContents } from "@/components/Modals/Modal";
+import {
+  SuccessResponseModal,
+  FailResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
+import ModalPortal from "@/components/Modals/ModalPortal";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { modalPropsMap } from "@/assets/data/maps";
+import checkIcon from "@/assets/images/checkIcon.svg";
+import PasswordCheckModal from "./PasswordCheckModal";
+import PasswordContainer from "./PasswordContainer";
 
 const PasswordCheckModalContainer: React.FC<{
   onClose: () => void;
@@ -53,7 +55,7 @@ const PasswordCheckModalContainer: React.FC<{
     try {
       await axiosSendCabinetPassword(password);
       //userCabinetId 세팅
-      setMyInfo({ ...myInfo, cabinetId: null });
+      setMyInfo({ ...myInfo, cabinet_id: -1 });
       setIsCurrentSectionRender(true);
       setModalTitle("반납되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
@@ -69,8 +71,7 @@ const PasswordCheckModalContainer: React.FC<{
       } catch (error) {
         throw error;
       }
-    } catch (error: any) {
-      setModalTitle(error.response.data.message);
+    } catch (error) {
       throw error;
     } finally {
       setShowResponseModal(true);

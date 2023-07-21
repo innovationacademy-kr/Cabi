@@ -1,50 +1,59 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
 import {
   currentCabinetIdState,
-  selectedTypeOnSearchState,
   targetCabinetInfoState,
+  selectedTypeOnSearchState,
 } from "@/recoil/atoms";
-import {
-  cabinetFilterMap,
-  cabinetIconSrcMap,
-  cabinetLabelColorMap,
-  cabinetStatusColorMap,
-} from "@/assets/data/maps";
-import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
+import useMenu from "@/hooks/useMenu";
+import { axiosCabinetById } from "@/api/axios/axios.custom";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import styled, { css } from "styled-components";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { axiosCabinetById } from "@/api/axios/axios.custom";
-import useMenu from "@/hooks/useMenu";
+
+import {
+  cabinetStatusColorMap,
+  cabinetLabelColorMap,
+  cabinetIconSrcMap,
+  cabinetFilterMap,
+} from "@/assets/data/maps";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
-const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
-  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
+interface IAdminCabinetListItem {
+  cabinet: CabinetInfo;
+}
+
+const AdminCabinetListItem = ({
+  cabinet,
+}: IAdminCabinetListItem): JSX.Element => {
+  const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number>(
     currentCabinetIdState
   );
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const setSelectedTypeOnSearch = useSetRecoilState<string>(
-    selectedTypeOnSearchState
-  );
+  const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const { openCabinet, closeCabinet } = useMenu();
-  //  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
+  //  const isMine = MY_INFO ? MY_INFO.cabinet_id === props.cabinet_id : false;
   const { isMultiSelect, clickCabinetOnMultiSelectMode, containsCabinet } =
     useMultiSelect();
-
   let cabinetLabelText = "";
 
-  if (props.status !== "BANNED" && props.status !== "BROKEN") {
+  if (cabinet.status !== "BANNED" && cabinet.status !== "BROKEN") {
     //사용불가가 아닌 모든 경우
-    if (props.lentType === "PRIVATE") cabinetLabelText = props.name;
-    else if (props.lentType === "SHARE") {
+    if (cabinet.lent_type === "PRIVATE")
+      cabinetLabelText = cabinet.lent_info[0]?.intra_id;
+    else if (cabinet.lent_type === "SHARE") {
+      const headcount = cabinet.lent_info.length;
+      const cabinetTitle =
+        cabinet.cabinet_title ?? `${cabinet.max_user} / ${cabinet.max_user}`;
+
       cabinetLabelText =
-        props.userCount === props.maxUser && !!props.title
-          ? props.title
-          : `${props.userCount} / ${props.maxUser}`;
-    } else if (props.lentType === "CLUB")
-      cabinetLabelText = props.title ? props.title : "동아리";
+        headcount === cabinet.max_user
+          ? cabinetTitle
+          : headcount + " / " + cabinet.max_user;
+    } else if (cabinet.lent_type === "CLUB")
+      cabinetLabelText = cabinet.cabinet_title ?? "동아리";
   } else {
     //사용불가인 경우
     cabinetLabelText = "사용불가";
@@ -72,9 +81,9 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
 
   const cabinetItemTitleHandler = () => {
     let lentType;
-    if (props.lentType === CabinetType.PRIVATE) lentType = "개인";
-    else if (props.lentType === CabinetType.SHARE) lentType = "공유";
-    else if (props.lentType === CabinetType.CLUB) lentType = "동아리";
+    if (cabinet.lent_type === CabinetType.PRIVATE) lentType = "개인";
+    else if (cabinet.lent_type === CabinetType.SHARE) lentType = "공유";
+    else if (cabinet.lent_type === CabinetType.CLUB) lentType = "동아리";
 
     if (!cabinetLabelText) return `[${lentType}]`;
     return `[${lentType}] ${cabinetLabelText}`;
@@ -82,31 +91,31 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
 
   return (
     <CabinetListItemStyled
-      status={props.status}
+      status={cabinet.status}
       isMine={false}
-      isSelected={currentCabinetId === props.cabinetId}
+      isSelected={currentCabinetId === cabinet.cabinet_id}
       isMultiSelect={isMultiSelect}
-      isMultiSelected={containsCabinet(props.cabinetId)}
+      isMultiSelected={containsCabinet(cabinet.cabinet_id)}
       title={cabinetItemTitleHandler()}
       className="cabiButton"
       onClick={() => {
-        if (isMultiSelect) clickCabinetOnMultiSelectMode(props);
-        else selectCabinetOnClick(props.cabinetId);
+        if (isMultiSelect) clickCabinetOnMultiSelectMode(cabinet);
+        else selectCabinetOnClick(cabinet.cabinet_id);
       }}
     >
       <CabinetIconNumberWrapperStyled>
         <CabinetIconContainerStyled
-          lentType={props.lentType}
+          lent_type={cabinet.lent_type}
           isMine={false}
-          status={props.status}
+          status={cabinet.status}
         />
-        <CabinetNumberStyled status={props.status} isMine={false}>
-          {props.visibleNum}
+        <CabinetNumberStyled status={cabinet.status} isMine={false}>
+          {cabinet.cabinet_num}
         </CabinetNumberStyled>
       </CabinetIconNumberWrapperStyled>
       <CabinetLabelStyled
         className="textNowrap"
-        status={props.status}
+        status={cabinet.status}
         isMine={false}
       >
         {cabinetLabelText}
@@ -202,13 +211,13 @@ const CabinetNumberStyled = styled.p<{
 `;
 
 const CabinetIconContainerStyled = styled.div<{
-  lentType: CabinetType;
+  lent_type: CabinetType;
   status: CabinetStatus;
   isMine: boolean;
 }>`
   width: 16px;
   height: 16px;
-  background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
+  background-image: url(${(props) => cabinetIconSrcMap[props.lent_type]});
   background-size: contain;
   filter: ${(props) => cabinetFilterMap[props.status]};
   ${(props) =>

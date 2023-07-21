@@ -1,20 +1,20 @@
 import React, { SetStateAction, useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { buildingsFloorState, currentBuildingNameState } from "@/recoil/atoms";
-import { buildingsState } from "@/recoil/selectors";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import { locationsFloorState, currentLocationNameState } from "@/recoil/atoms";
+import { locationsState } from "@/recoil/selectors";
+import { axiosLocationFloor } from "@/api/axios/axios.custom";
 import TopNav from "@/components/TopNav/TopNav";
-import { axiosBuildingFloor } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const AdminTopNavContainer: React.FC<{
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
 }> = (props) => {
-  const [buildingClicked, setbuildingClicked] = useState(false);
-  const [currentBuildingName, setCurrentBuildingName] = useRecoilState(
-    currentBuildingNameState
+  const [locationClicked, setLocationClicked] = useState(false);
+  const [currentLocationName, setCurrentLocationName] = useRecoilState(
+    currentLocationNameState
   );
-  const setBuildingsFloor = useSetRecoilState(buildingsFloorState);
-  const buildingsList = useRecoilValue<Array<string>>(buildingsState);
+  const setLocationsFloor = useSetRecoilState(locationsFloorState);
+  const locationsList = useRecoilValue<Array<string>>(locationsState);
   const { setIsLoading } = props;
   const { toggleLeftNav } = useMenu();
 
@@ -28,33 +28,33 @@ const AdminTopNavContainer: React.FC<{
       return new Promise((resolve) => setTimeout(resolve, delay));
     }
 
-    const getBuildingsData = async () => {
+    const getLocationsData = async () => {
       try {
         await setTimeoutPromise(500);
-        const buildingsFloorData = await axiosBuildingFloor();
-        setBuildingsFloor(buildingsFloorData.data);
+        const locationsFloorData = await axiosLocationFloor();
+        setLocationsFloor(locationsFloorData.data.space_data);
       } catch (error) {
         console.log(error);
       }
     };
 
-    getBuildingsData().then(() => setIsLoading(false));
+    getLocationsData().then(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
-    if (buildingsList.length === 0) return;
+    if (locationsList.length === 0) return;
 
-    setCurrentBuildingName(buildingsList[0]);
-  }, [buildingsList]);
+    setCurrentLocationName(locationsList[0]);
+  }, [locationsList]);
 
   return (
     <TopNav
-      currentBuildingName={currentBuildingName}
-      buildingsList={buildingsList}
-      buildingClicked={buildingClicked}
-      setBuildingClicked={setbuildingClicked}
+      currentLocationName={currentLocationName}
+      locationsList={locationsList}
+      locationClicked={locationClicked}
+      setLocationClicked={setLocationClicked}
       onClickLogo={onClickLogo}
-      setCurrentBuildingName={setCurrentBuildingName}
+      setCurrentLocationName={setCurrentLocationName}
       isAdmin={true}
     />
   );

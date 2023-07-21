@@ -7,10 +7,6 @@ export enum additionalModalType {
   MODAL_ADMIN_RETURN = "MODAL_ADMIN_RETURN",
   MODAL_BAN = "MODAL_BAN",
   MODAL_ADMIN_LOGIN_FAILURE = "MODAL_ADMIN_LOGIN_FAILURE",
-  MODAL_ADMIN_CLUB_CREATE = "MODAL_ADMIN_CLUB_CREATE",
-  MODAL_ADMIN_CLUB_CREATE_FAILURE = "MODAL_ADMIN_CLUB_CREATE_FAILURE",
-  MODAL_ADMIN_CLUB_EDIT = "MODAL_ADMIN_CLUB_EDIT",
-  MODAL_ADMIN_CLUB_DELETE = "MODAL_ADMIN_CLUB_DELETE",
 }
 
 export const cabinetIconSrcMap = {
@@ -21,9 +17,9 @@ export const cabinetIconSrcMap = {
 
 export const cabinetLabelColorMap = {
   [CabinetStatus.AVAILABLE]: "var(--white)",
-  [CabinetStatus.FULL]: "var(--black)",
-  [CabinetStatus.LIMITED_AVAILABLE]: "var(--white)",
-  [CabinetStatus.OVERDUE]: "var(--white)",
+  [CabinetStatus.SET_EXPIRE_FULL]: "var(--black)",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--white)",
+  [CabinetStatus.EXPIRED]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
   MINE: "var(--black)",
@@ -31,9 +27,9 @@ export const cabinetLabelColorMap = {
 
 export const cabinetStatusColorMap = {
   [CabinetStatus.AVAILABLE]: "var(--available)",
-  [CabinetStatus.FULL]: "var(--full)",
-  [CabinetStatus.LIMITED_AVAILABLE]: "var(--available)",
-  [CabinetStatus.OVERDUE]: "var(--expired)",
+  [CabinetStatus.SET_EXPIRE_FULL]: "var(--full)",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "var(--available)",
+  [CabinetStatus.EXPIRED]: "var(--expired)",
   [CabinetStatus.BROKEN]: "var(--broken)",
   [CabinetStatus.BANNED]: "var(--banned)",
   MINE: "var(--mine)",
@@ -45,17 +41,17 @@ export const modalPropsMap = {
     title: "이용 시 주의 사항",
     confirmMessage: "네, 대여할게요",
   },
-  [CabinetStatus.FULL]: {
+  [CabinetStatus.SET_EXPIRE_FULL]: {
     type: "error",
     title: "이미 사용 중인 사물함입니다",
     confirmMessage: "",
   },
-  [CabinetStatus.LIMITED_AVAILABLE]: {
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: {
     type: "confirm",
     title: "이용 시 주의 사항",
     confirmMessage: "네, 대여할게요",
   },
-  [CabinetStatus.OVERDUE]: {
+  [CabinetStatus.EXPIRED]: {
     type: "error",
     title: `반납이 지연되고 있어\n현재 대여가 불가합니다`,
     confirmMessage: "",
@@ -69,11 +65,6 @@ export const modalPropsMap = {
     type: "error",
     title: "사용이 불가한 사물함입니다",
     confirmMessage: "",
-  },
-  [CabinetType.CLUB]: {
-    type: "confirm",
-    title: "동아리 대여",
-    confirmMessage: "확인",
   },
   PASSWORD_CHECK: {
     type: "confirm",
@@ -105,42 +96,22 @@ export const modalPropsMap = {
     title: "아이디 또는 비밀번호가\n일치하지 않습니다",
     confirmMessage: "",
   },
-  MODAL_ADMIN_CLUB_CREATE: {
-    type: "confirm",
-    title: "동아리 생성하기",
-    confirmMessage: "생성",
-  },
-  MODAL_ADMIN_CLUB_CREATE_FAILURE: {
-    type: "error",
-    title: "같은 이름의 동아리가\n이미 존재합니다",
-    confirmMessage: "",
-  },
-  MODAL_ADMIN_CLUB_EDIT: {
-    type: "confirm",
-    title: "동아리 이름 수정",
-    confirmMessage: "저장",
-  },
-  MODAL_ADMIN_CLUB_DELETE: {
-    type: "confirm",
-    title: "동아리 삭제하기",
-    confirmMessage: "삭제",
-  },
 };
 
 export const cabinetFilterMap = {
   [CabinetStatus.AVAILABLE]: "brightness(100)",
-  [CabinetStatus.FULL]: "none",
-  [CabinetStatus.LIMITED_AVAILABLE]: "brightness(100)",
-  [CabinetStatus.OVERDUE]: "brightness(100)",
+  [CabinetStatus.SET_EXPIRE_FULL]: "none",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "brightness(100)",
+  [CabinetStatus.EXPIRED]: "brightness(100)",
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
 };
 
 export const cabinetStatusLabelMap = {
   [CabinetStatus.AVAILABLE]: "사용 가능",
-  [CabinetStatus.LIMITED_AVAILABLE]: "사용 가능",
-  [CabinetStatus.FULL]: "사용 가능",
-  [CabinetStatus.OVERDUE]: "사용 가능",
+  [CabinetStatus.SET_EXPIRE_AVAILABLE]: "사용 가능",
+  [CabinetStatus.SET_EXPIRE_FULL]: "사용 가능",
+  [CabinetStatus.EXPIRED]: "사용 가능",
   [CabinetStatus.BANNED]: "사용 불가",
   [CabinetStatus.BROKEN]: "사용 불가",
 };

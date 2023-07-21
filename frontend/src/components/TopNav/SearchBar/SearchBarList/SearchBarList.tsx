@@ -1,12 +1,22 @@
 import styled from "styled-components";
 import SearchListItem from "@/components/TopNav/SearchBar/SearchListItem/SearchListItem";
-import { CabinetSimple } from "@/types/dto/cabinet.dto";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 
 interface ISearchListByIntraId {
-  name: string;
-  userId: number;
+  intra_id: string;
+  user_id: number;
+  // cabinet_info: CabinetInfo;
 }
-
+/*
+cabinet_id: 87
+cabinet_num : 7
+cabinet_title:null
+lent_type: "PRIVATE"
+max_user: 1
+section: "End of Cluster 1"
+status: "SET_EXPIRE_FULL"
+lent_info: [{…}]
+*/
 const SearchBarList = ({
   searchListById,
   searchListByNum,
@@ -16,7 +26,7 @@ const SearchBarList = ({
   targetIndex,
 }: {
   searchListById: ISearchListByIntraId[];
-  searchListByNum: CabinetSimple[];
+  searchListByNum: CabinetInfo[];
   resetSearchState: () => void;
   searchWord?: string;
   totalLength: number;
@@ -29,9 +39,9 @@ const SearchBarList = ({
           <SearchListItem
             key={index}
             inputText={searchWord}
-            resultText={item.name}
+            resultText={item.intra_id}
             resetSearchState={resetSearchState}
-            isTargetIndex={targetIndex === index}
+            targetIndex={targetIndex === index}
           />
         );
       })}
@@ -41,10 +51,10 @@ const SearchBarList = ({
             key={index}
             floor={item.floor}
             inputText={searchWord}
-            resultText={item.visibleNum.toString()}
+            resultText={item.cabinet_num.toString()}
             isNum={true}
             resetSearchState={resetSearchState}
-            isTargetIndex={targetIndex === index}
+            targetIndex={targetIndex === index}
           />
         );
       })}

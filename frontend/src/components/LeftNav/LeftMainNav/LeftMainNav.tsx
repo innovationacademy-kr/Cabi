@@ -9,7 +9,6 @@ interface ILeftMainNav {
   onClickLogoutButton: React.MouseEventHandler;
   onClickLentLogButton: React.MouseEventHandler;
   onClickSearchButton: React.MouseEventHandler;
-  onClickClubButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -22,7 +21,6 @@ const LeftMainNav = ({
   onClickLogoutButton,
   onClickLentLogButton,
   onClickSearchButton,
-  onClickClubButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -100,23 +98,14 @@ const LeftMainNav = ({
             src={"/src/assets/images/clubIconGray.svg"}
             className="cabiButton"
           >
-            {isAdmin ? (
-              <>
-                <a onClick={onClickClubButton}>
-                  <div></div>
-                  Club
-                </a>
-              </>
-            ) : (
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
-                target="_blank"
-                title="동아리 사물함 사용 신청서 새창으로 열기"
-              >
-                <div></div>
-                Club
-              </a>
-            )}
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
+              target="_blank"
+              title="동아리 사물함 사용 신청서 새창으로 열기"
+            >
+              <div></div>
+              Club
+            </a>
           </BottomBtnStyled>
 
           <BottomBtnStyled

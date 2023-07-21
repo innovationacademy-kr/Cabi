@@ -1,18 +1,18 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@/components/Common/Button";
+import React, { useState } from "react";
+import CabinetType from "@/types/enum/cabinet.type.enum";
+import ModalPortal from "../ModalPortal";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import Dropdown from "@/components/Common/Dropdown";
-import WarningNotification, {
-  WarningNotificationProps,
-} from "@/components/Common/WarningNotification";
 import {
   cabinetIconSrcMap,
   cabinetStatusLabelMap,
   cabinetTypeLabelMap,
 } from "@/assets/data/maps";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import CabinetType from "@/types/enum/cabinet.type.enum";
-import ModalPortal from "../ModalPortal";
+import WarningNotification, {
+  WarningNotificationProps,
+} from "@/components/Common/WarningNotification";
 
 export interface StatusModalInterface {
   cabinetType: CabinetType;
@@ -260,7 +260,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   cursor: pointer;
   text-decoration: underline;
   color: var(--main-color);
-  &:hover {
+  &: hover {
     opacity: 0.8;
   }
 `;

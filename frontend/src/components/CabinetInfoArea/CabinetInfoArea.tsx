@@ -1,14 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import {
-  ICurrentModalStateInfo,
-  ISelectedCabinetInfo,
-  TModalState,
-} from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
-import LentModal from "@/components/Modals/LentModal/LentModal";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
+import cabiLogo from "@/assets/images/logo.svg";
 import MemoModalContainer from "@/components/Modals/MemoModal/MemoModal.container";
-import PasswordCheckModalContainer from "@/components/Modals/PasswordCheckModal/PasswordCheckModal.container";
+import LentModal from "@/components/Modals/LentModal/LentModal";
 import ReturnModal from "@/components/Modals/ReturnModal/ReturnModal";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
@@ -17,38 +14,95 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import cabiLogo from "@/assets/images/logo.svg";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import CabinetType from "@/types/enum/cabinet.type.enum";
+import PasswordCheckModalContainer from "../Modals/PasswordCheckModal/PasswordCheckModal.container";
+
+export interface ISelectedCabinetInfo {
+  floor: number;
+  section: string;
+  cabinetId: number;
+  cabinetNum: number;
+  status: CabinetStatus;
+  lentType: CabinetType;
+  userNameList: string;
+  expireDate?: Date;
+  detailMessage: string | null;
+  detailMessageColor: string;
+  isAdmin: boolean;
+  isLented: boolean;
+}
+
+const setExprieDate = (date: Date | undefined) => {
+  if (!date) return null;
+  if (date.toString().slice(0, 4) === "9999") return null;
+  return date.toString().slice(0, 10);
+};
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
+  myCabinetId?: number;
   closeCabinet: () => void;
-  expireDate: string | null;
-  isMine: boolean;
-  isAvailable: boolean;
-  userModal: ICurrentModalStateInfo;
-  openModal: (modalName: TModalState) => void;
-  closeModal: (modalName: TModalState) => void;
-}> = ({
-  selectedCabinetInfo,
-  closeCabinet,
-  expireDate,
-  isMine,
-  isAvailable,
-  userModal,
-  openModal,
-  closeModal,
-}) => {
-  return selectedCabinetInfo === null ? (
-    <NotSelectedStyled>
-      <CabiLogoStyled src={cabiLogo} />
-      <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
-        사물함를 <br />
-        선택해주세요
-      </TextStyled>
-    </NotSelectedStyled>
-  ) : (
+}> = ({ selectedCabinetInfo, myCabinetId, closeCabinet }) => {
+  const [showUnavailableModal, setShowUnavailableModal] =
+    useState<boolean>(false);
+  const [showLentModal, setShowLentModal] = useState<boolean>(false);
+  const [showReturnModal, setShowReturnModal] = useState<boolean>(false);
+  const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
+  const [showPasswordCheckModal, setPasswordCheckModal] =
+    useState<boolean>(false);
+  const isMine: boolean = myCabinetId
+    ? selectedCabinetInfo?.cabinetId === myCabinetId
+    : false;
+  const isAvailable: boolean =
+    selectedCabinetInfo?.status === "AVAILABLE" ||
+    selectedCabinetInfo?.status === "SET_EXPIRE_AVAILABLE"
+      ? true
+      : false;
+
+  const handleOpenLentModal = () => {
+    if (myCabinetId) return handleOpenUnavailableModal();
+    setShowLentModal(true);
+  };
+  const handleCloseLentModal = () => {
+    setShowLentModal(false);
+  };
+  const handleOpenReturnModal = () => {
+    setShowReturnModal(true);
+  };
+  const handleCloseReturnModal = () => {
+    setShowReturnModal(false);
+  };
+  const handleOpenMemoModal = () => {
+    setShowMemoModal(true);
+  };
+  const handleCloseMemoModal = () => {
+    setShowMemoModal(false);
+  };
+  const handleOpenUnavailableModal = () => {
+    setShowUnavailableModal(true);
+  };
+  const handleCloseUnavailableModal = () => {
+    setShowUnavailableModal(false);
+  };
+  const handleOpenPasswordCheckModal = () => {
+    setPasswordCheckModal(true);
+  };
+  const handleClosePasswordCheckModal = () => {
+    setPasswordCheckModal(false);
+  };
+
+  if (!selectedCabinetInfo)
+    //아무 사물함도 선택하지 않았을 때
+    return (
+      <NotSelectedStyled>
+        <CabiLogoStyled src={cabiLogo} />
+        <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
+          사물함를 <br />
+          선택해주세요
+        </TextStyled>
+      </NotSelectedStyled>
+    );
+  // 단일 선택 시 보이는 cabinetInfoArea
+  return (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
         {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
@@ -57,7 +111,7 @@ const CabinetInfoArea: React.FC<{
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={isMine}
       >
-        {selectedCabinetInfo!.visibleNum}
+        {selectedCabinetInfo!.cabinetNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}
@@ -70,14 +124,12 @@ const CabinetInfoArea: React.FC<{
         {isMine ? (
           <>
             <ButtonContainer
-              onClick={() => {
-                openModal("returnModal");
-              }}
+              onClick={handleOpenReturnModal}
               text="반납"
               theme="fill"
             />
             <ButtonContainer
-              onClick={() => openModal("memoModal")}
+              onClick={handleOpenMemoModal}
               text="메모관리"
               theme="line"
             />
@@ -90,10 +142,10 @@ const CabinetInfoArea: React.FC<{
         ) : (
           <>
             <ButtonContainer
-              onClick={() => openModal("lentModal")}
+              onClick={handleOpenLentModal}
               text="대여"
               theme="fill"
-              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
+              disabled={isAvailable ? false : true}
             />
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
           </>
@@ -105,38 +157,36 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {expireDate}
+        {setExprieDate(selectedCabinetInfo!.expireDate)}
       </CabinetLentDateInfoStyled>
-      {userModal.unavailableModal && (
+      {showUnavailableModal && (
         <UnavailableModal
           status={additionalModalType.MODAL_UNAVAILABLE_ALREADY_LENT}
-          closeModal={() => closeModal("unavailableModal")}
+          closeModal={handleCloseUnavailableModal}
         />
       )}
-      {userModal.lentModal && (
+      {showLentModal && (
         <LentModal
           lentType={selectedCabinetInfo!.lentType}
-          closeModal={() => closeModal("lentModal")}
+          closeModal={handleCloseLentModal}
         />
       )}
-      {userModal.returnModal && (
+      {showReturnModal && (
         <ReturnModal
           lentType={selectedCabinetInfo!.lentType}
-          handleOpenPasswordCheckModal={() => openModal("passwordCheckModal")}
-          closeModal={() => closeModal("returnModal")}
+          handleOpenPasswordCheckModal={handleOpenPasswordCheckModal}
+          closeModal={handleCloseReturnModal}
         />
       )}
-      {userModal.memoModal && (
-        <MemoModalContainer onClose={() => closeModal("memoModal")} />
-      )}
-      {userModal.passwordCheckModal && (
-        <PasswordCheckModalContainer
-          onClose={() => closeModal("passwordCheckModal")}
-        />
+      {showMemoModal && <MemoModalContainer onClose={handleCloseMemoModal} />}
+      {showPasswordCheckModal && (
+        <PasswordCheckModalContainer onClose={handleClosePasswordCheckModal} />
       )}
     </CabinetDetailAreaStyled>
   );
 };
+
+export default CabinetInfoArea;
 
 const NotSelectedStyled = styled.div`
   height: 100%;
@@ -223,4 +273,21 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   text-align: center;
 `;
 
-export default CabinetInfoArea;
+const MultiCabinetIconWrapperStyled = styled.div`
+  display: grid;
+  grid-template-columns: 40px 40px;
+  width: 90px;
+  height: 90px;
+  margin-top: 15px;
+  grid-gap: 10px;
+`;
+
+const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ status }) => cabinetStatusColorMap[status]};
+  border-radius: 5px;
+  color: ${({ status }) =>
+    status === CabinetStatus.SET_EXPIRE_FULL ? "black" : "white"};
+`;
