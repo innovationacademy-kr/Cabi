@@ -87,10 +87,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
             "FROM Cabinet c " +
             "WHERE c.cabinetPlace.location = :location")
     List<Cabinet> findAllCabinetsByLocation(@Param("location") Location location);
-	@Query("SELECT c " +
-			"FROM Cabinet c " +
-			"WHERE c.cabinetPlace.location = :location")
-	List<Cabinet> findAllCabinetsByLocation(@Param("location") Location location);
 
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	@Query("SELECT DISTINCT c, lh, u " +
