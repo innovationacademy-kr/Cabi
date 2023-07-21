@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
-import useMenu from "@/hooks/useMenu";
-import AdminCabinetLentLog from "@/components/LentLog/AdminCabinetLentLog";
-import { LentLogDto } from "@/types/dto/lent.dto";
 import { useRecoilValue } from "recoil";
 import { currentCabinetIdState } from "@/recoil/atoms";
+import AdminCabinetLentLog from "@/components/LentLog/AdminCabinetLentLog";
+import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetCabinetLentLog } from "@/api/axios/axios.custom";
-
-const BAD_REQUEST = 400;
+import useMenu from "@/hooks/useMenu";
+import { getTotalPage } from "@/utils/dateUtils";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminCabinetLentLogContainer = () => {
   const { closeLent } = useMenu();
-  const [logs, setLogs] = useState<
-    LentLogDto[] | typeof BAD_REQUEST | undefined
-  >(undefined);
+  const [logs, setLogs] = useState<LentLogResponseType>(undefined);
   const [page, setPage] = useState<number>(-1);
   const [totalPage, setTotalPage] = useState<number>(-1);
   const [needsUpdate, setNeedsUpdate] = useState<boolean>(false);
@@ -20,10 +18,10 @@ const AdminCabinetLentLogContainer = () => {
   async function getData(page: number) {
     try {
       const result = await axiosGetCabinetLentLog(currentCabinetId, page);
-      setTotalPage(Math.ceil(result.data.total_length / 10));
+      setTotalPage(Math.ceil(result.data.totalLength / 10));
       setLogs(result.data.result);
     } catch {
-      setLogs(BAD_REQUEST);
+      setLogs(STATUS_400_BAD_REQUEST);
       setTotalPage(1);
     }
   }
@@ -56,11 +54,9 @@ const AdminCabinetLentLogContainer = () => {
     setPage(0);
   };
 
-  if (!currentCabinetId) return null;
-
   return (
     <AdminCabinetLentLog
-      closeAndResetLogPage={closeAndResetLogPage}
+      closeLent={closeAndResetLogPage}
       logs={logs}
       page={page}
       totalPage={totalPage}

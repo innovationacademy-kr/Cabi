@@ -104,6 +104,7 @@ const useMenu = () => {
   };
 
   const closeCabinet = () => {
+    closeLent();
     if (
       document.getElementById("cabinetDetailArea")?.classList.contains("on") ==
       true

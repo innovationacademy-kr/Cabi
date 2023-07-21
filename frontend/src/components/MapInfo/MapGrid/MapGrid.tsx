@@ -1,11 +1,11 @@
-import styled from "styled-components";
 import { useSetRecoilState } from "recoil";
+import styled from "styled-components";
 import {
   currentSectionNameState,
   isCurrentSectionRenderState,
 } from "@/recoil/atoms";
-import { mapPostionData } from "@/assets/data/mapPositionData";
 import MapItem from "@/components/MapInfo/MapItem/MapItem";
+import { mapPostionData } from "@/assets/data/mapPositionData";
 
 const MapGrid = ({ floor }: { floor: number }) => {
   const setSection = useSetRecoilState(currentSectionNameState);

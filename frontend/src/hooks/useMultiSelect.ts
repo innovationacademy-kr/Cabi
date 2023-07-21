@@ -1,14 +1,15 @@
-import { selectedTypeOnSearchState } from "@/recoil/atoms";
-import useMenu from "@/hooks/useMenu";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import {
-  targetCabinetInfoListState,
   isMultiSelectState,
-} from "@//recoil/atoms";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+  selectedTypeOnSearchState,
+  targetCabinetInfoListState,
+} from "@/recoil/atoms";
+import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
+import useMenu from "@/hooks/useMenu";
+
 const useMultiSelect = () => {
   const [targetCabinetInfoList, setTargetCabinetInfoList] = useRecoilState<
-    CabinetInfo[]
+    CabinetPreviewInfo[]
   >(targetCabinetInfoListState);
   const [isMultiSelect, setIsMultiSelect] =
     useRecoilState<boolean>(isMultiSelectState);
@@ -39,30 +40,30 @@ const useMultiSelect = () => {
   };
 
   const containsCabinet = (cabinetId: number) => {
-    if (targetCabinetInfoList.find((c) => c.cabinet_id === cabinetId))
+    if (targetCabinetInfoList.find((c) => c.cabinetId === cabinetId))
       return true;
     return false;
   };
 
-  const clickCabinetOnMultiSelectMode = (cabinet: CabinetInfo) => {
+  const clickCabinetOnMultiSelectMode = (cabinet: CabinetPreviewInfo) => {
     setSelectedTypeOnSearch("CABINET");
-    if (!containsCabinet(cabinet.cabinet_id)) {
+    if (!containsCabinet(cabinet.cabinetId)) {
       setTargetCabinetInfoList([...targetCabinetInfoList, cabinet]);
       return;
     }
     setTargetCabinetInfoList(
-      targetCabinetInfoList.filter((c) => c.cabinet_id != cabinet.cabinet_id)
+      targetCabinetInfoList.filter((c) => c.cabinetId != cabinet.cabinetId)
     );
   };
 
-  const containsAllCabinets = (cabinets: CabinetInfo[]) => {
+  const containsAllCabinets = (cabinets: CabinetPreviewInfo[]) => {
     if (targetCabinetInfoList.length === cabinets.length) {
       return true;
     }
     return false;
   };
 
-  const handleSelectAll = (cabinets: CabinetInfo[]) => {
+  const handleSelectAll = (cabinets: CabinetPreviewInfo[]) => {
     if (containsAllCabinets(cabinets)) {
       resetTargetCabinetInfoList();
       return;
@@ -75,15 +76,15 @@ const useMultiSelect = () => {
     resetTargetCabinetInfoList();
   };
 
-  const isSameType = (cabinets: CabinetInfo[]) => {
-    const type = cabinets[0].lent_type;
+  const isSameType = (cabinets: CabinetPreviewInfo[]) => {
+    const type = cabinets[0].lentType;
     for (const cabinet of cabinets) {
-      if (cabinet.lent_type !== type) return false;
+      if (cabinet.lentType !== type) return false;
     }
     return true;
   };
 
-  const isSameStatus = (cabinets: CabinetInfo[]) => {
+  const isSameStatus = (cabinets: CabinetPreviewInfo[]) => {
     const status = cabinets[0].status;
     for (const cabinet of cabinets) {
       if (cabinet.status !== status) return false;
@@ -91,9 +92,9 @@ const useMultiSelect = () => {
     return true;
   };
 
-  const isAllEmpty = (cabinets: CabinetInfo[]) => {
+  const isAllEmpty = (cabinets: CabinetPreviewInfo[]) => {
     for (const cabinet of cabinets) {
-      if (cabinet.lent_info.length !== 0) return false;
+      if (cabinet.userCount !== 0) return false;
     }
     return true;
   };

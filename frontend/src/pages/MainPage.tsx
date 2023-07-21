@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
-import styled from "styled-components";
-import { currentFloorSectionState } from "@/recoil/selectors";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import styled from "styled-components";
 import { currentSectionNameState } from "@/recoil/atoms";
 import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
-import useMenu from "@/hooks/useMenu";
-import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
+import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import useMenu from "@/hooks/useMenu";
 
 const MainPage = () => {
   const touchStartPosX = useRef(0);
@@ -33,39 +33,44 @@ const MainPage = () => {
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
-
-  const currentSectionIdx = sectionList.findIndex(
+  const currentSectionIndex = sectionList.findIndex(
     (sectionName) => sectionName === currentSectionName
   );
-
-  const moveToLeftSection = () => {
-    if (currentSectionIdx <= 0) {
-      setCurrentSectionName(sectionList[sectionList.length - 1]);
-    } else {
-      setCurrentSectionName(sectionList[currentSectionIdx - 1]);
-    }
-    mainWrapperRef.current?.scrollTo(0, 0);
-  };
-
-  const moveToRightSection = () => {
-    if (currentSectionIdx >= sectionList.length - 1) {
-      setCurrentSectionName(sectionList[0]);
-    } else {
-      setCurrentSectionName(sectionList[currentSectionIdx + 1]);
-    }
-    mainWrapperRef.current?.scrollTo(0, 0);
-  };
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
     const touchOffsetY = Math.round(touchEndPosY - touchStartPosY.current);
+
     if (
       Math.abs(touchOffsetX) < 50 ||
       Math.abs(touchOffsetX) < Math.abs(touchOffsetY)
-    )
+    ) {
       return;
-    if (touchOffsetX > 0) moveToLeftSection();
-    else moveToRightSection();
+    }
+
+    if (touchOffsetX > 0) {
+      moveSectionTo("left");
+    } else {
+      moveSectionTo("right");
+    }
+  };
+
+  const moveSectionTo = (direction: string) => {
+    if (direction === "left") {
+      setCurrentSectionName(
+        currentSectionIndex <= 0
+          ? sectionList[sectionList.length - 1]
+          : sectionList[currentSectionIndex - 1]
+      );
+    } else if (direction === "right") {
+      setCurrentSectionName(
+        currentSectionIndex >= sectionList.length - 1
+          ? sectionList[0]
+          : sectionList[currentSectionIndex + 1]
+      );
+    }
+
+    mainWrapperRef.current?.scrollTo(0, 0);
   };
 
   return (
@@ -101,4 +106,5 @@ const CabinetListWrapperStyled = styled.div`
   align-items: center;
   padding-bottom: 30px;
 `;
+
 export default MainPage;

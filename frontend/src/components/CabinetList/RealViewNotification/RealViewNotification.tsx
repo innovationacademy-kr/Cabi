@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const RealViewNotification: React.FC<{ colNum: number }> = (props) => {
@@ -32,8 +32,6 @@ const RealViewNotification: React.FC<{ colNum: number }> = (props) => {
   );
 };
 
-export default RealViewNotification;
-
 const ToolTipIcon = styled.div<{ hasEnoughWidth: boolean }>`
   background-image: url("/src/assets/images/cautionSign.svg");
   width: 24px;
@@ -63,6 +61,7 @@ const TooltipBox = styled.div`
   transition: visibility 0.5s, color 0.5s, background-color 0.5s, width 0.5s,
     padding 0.5s ease-in-out;
 `;
+
 const TooltipCard = styled.div<{ hasEnoughWidth: boolean }>`
   visibility: ${({ hasEnoughWidth }) =>
     hasEnoughWidth ? "hidden" : "visible"};
@@ -80,3 +79,5 @@ const TooltipCard = styled.div<{ hasEnoughWidth: boolean }>`
     }
   }
 `;
+
+export default RealViewNotification;

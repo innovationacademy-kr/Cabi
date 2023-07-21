@@ -1,10 +1,10 @@
 import axios from "axios";
 import { getCookie, removeCookie } from "@/api/react_cookie/cookies";
+import { STATUS_401_UNAUTHORIZED } from "@/constants/StatusCode";
 
 axios.defaults.withCredentials = true;
 
 const instance = axios.create({
-  // baseURL: window.location.origin,
   baseURL: import.meta.env.VITE_BE_HOST,
   withCredentials: true,
 });
@@ -23,7 +23,7 @@ instance.interceptors.response.use(
   },
   (error) => {
     // access_token unauthorized
-    if (error.response?.status === 401) {
+    if (error.response?.status === STATUS_401_UNAUTHORIZED) {
       if (import.meta.env.VITE_IS_LOCAL === "true") {
         removeCookie("admin_access_token", {
           path: "/",
