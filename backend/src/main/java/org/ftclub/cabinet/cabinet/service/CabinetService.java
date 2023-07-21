@@ -96,4 +96,6 @@ public interface CabinetService {
 	 * @param statusNote 변경할 상태 메모
 	 */
 	void updateStatusNote(Long cabinetId, String statusNote);
+
+	void updateClub(Long cabinetId, Long userId, String statusNote);
 }

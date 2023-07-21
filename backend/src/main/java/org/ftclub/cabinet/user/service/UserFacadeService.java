@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -26,9 +27,9 @@ public interface UserFacadeService {
 	/**
 	 * 모든 정지 유저를 반환합니다.
 	 *
-	 * @param page   페이지 번호
+	 * @param page 페이지 번호
 	 * @param size 페이지 당 길이
-	 * @param now    현재 시간
+	 * @param now  현재 시간
 	 * @return {@link BlockedUserPaginationDto} 모든 정지 유저
 	 */
 	/* 기존 searchByBanUser와 동일한 역할을 합니다. */
@@ -37,8 +38,8 @@ public interface UserFacadeService {
 	/**
 	 * 유저 이름의 일부를 입력받아 해당하는 유저들의 프로필을 받아옵니다.
 	 *
-	 * @param name   유저 이름의 일부
-	 * @param page   페이지 번호
+	 * @param name 유저 이름의 일부
+	 * @param page 페이지 번호
 	 * @param size 페이지 당 길이
 	 * @return {@link UserProfilePaginationDto} 해당하는 유저들의 프로필
 	 */
@@ -49,8 +50,8 @@ public interface UserFacadeService {
 	/**
 	 * 유저 이름의 일부를 입력받아 해당 유저들의 캐비넷 정보를 반환합니다.
 	 *
-	 * @param name   유저 이름의 일부
-	 * @param page   페이지 번호
+	 * @param name 유저 이름의 일부
+	 * @param page 페이지 번호
 	 * @param size 페이지 당 길이
 	 * @return {@link UserCabinetPaginationDto} 해당하는 유저들의 캐비넷 정보
 	 */
@@ -81,6 +82,11 @@ public interface UserFacadeService {
 	 * @param role         유저 역할
 	 */
 	void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role);
+
+	/**
+	 * @param clubName 동아리 유저 이름
+	 */
+	void createClubUser(String clubName);
 
 	/**
 	 * 관리자가 존재하는지 확인합니다.
@@ -144,7 +150,8 @@ public interface UserFacadeService {
 	 * @param endedAt   대여 종료 날짜
 	 * @param expiredAt 대여 만료 날짜
 	 */
-	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt, LocalDateTime expiredAt);
+	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+			LocalDateTime expiredAt);
 
 	/**
 	 * 유저의 정지를 해제합니다.
@@ -157,8 +164,27 @@ public interface UserFacadeService {
 	/**
 	 * 연체 중인 유저 리스트를 반환합니다.
 	 *
-	 * @param page      페이지 번호
-	 * @param size    페이지 당 길이
+	 * @param page 페이지 번호
+	 * @param size 페이지 당 길이
 	 */
 	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size);
+
+	/**
+	 * 동아리 유저 리스트DTO를 반환합니다.
+	 *
+	 * @param page 페이지 번호
+	 * @param size 페이지 당 길이
+	 * @return
+	 */
+	ClubUserListDto findAllClubUser(Integer page, Integer size);
+
+
+	/**
+	 * 동아리 유저를 삭제합니다.
+	 *
+	 * @param clubId 동아리 고유 아이디
+	 */
+	void deleteClubUser(Long clubId);
+
+	void updateClubUser(Long clubId, String clubName);
 }

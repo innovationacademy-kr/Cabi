@@ -1,20 +1,24 @@
 import { useState } from "react";
 import styled, { css } from "styled-components";
 
-interface IDropdown {
-  options: { name: string; value: any; imageSrc?: string }[];
+interface IClubListDropd {
+  options: { userId: number; name: string; imageSrc?: string }[];
   defaultValue: string;
   defaultImageSrc?: string;
   onChangeValue?: (param: any) => any;
 }
 
-const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
+const ClubListDropd = ({
+  options,
+  defaultValue,
+  onChangeValue,
+}: IClubListDropd) => {
   const [currentName, setCurrentName] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const selectedIdx = options.findIndex((op) => op.name === currentName) ?? 0;
   return (
-    <DropdownContainerStyled>
-      <DropdownSelectionBoxStyled
+    <ClubListDropdContainerStyled>
+      <ClubListDropdSelectionBoxStyled
         onClick={() => {
           setIsOpen(!isOpen);
         }}
@@ -26,18 +30,18 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
           </div>
         )}
         <p style={{ paddingLeft: "10px" }}>{currentName}</p>
-        <img src="/src/assets/images/dropdownChevron.svg" />
-      </DropdownSelectionBoxStyled>
-      <DropdownItemContainerStyled isVisible={isOpen}>
+        <img src="/src/assets/images/ClubListDropdChevron.svg" />
+      </ClubListDropdSelectionBoxStyled>
+      <ClubListDropdItemContainerStyled isVisible={isOpen}>
         {options?.map((option) => {
           return (
-            <DropdownItemStyled
-              key={option.value}
+            <ClubListDropdItemStyled
+              key={option.userId}
               onClick={() => {
                 setCurrentName(option.name);
                 setIsOpen(false);
                 if (onChangeValue) {
-                  onChangeValue(option.value);
+                  onChangeValue(option.userId);
                 }
               }}
               isSelected={option.name === currentName}
@@ -48,22 +52,22 @@ const Dropdown = ({ options, defaultValue, onChangeValue }: IDropdown) => {
                 </div>
               )}
               <p style={{ paddingLeft: "10px" }}>{option.name}</p>
-            </DropdownItemStyled>
+            </ClubListDropdItemStyled>
           );
         })}
-      </DropdownItemContainerStyled>
-    </DropdownContainerStyled>
+      </ClubListDropdItemContainerStyled>
+    </ClubListDropdContainerStyled>
   );
 };
 
-const DropdownContainerStyled = styled.div`
+const ClubListDropdContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   position: relative;
 `;
 
-const DropdownSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
+const ClubListDropdSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -90,7 +94,7 @@ const DropdownSelectionBoxStyled = styled.div<{ isOpen: boolean }>`
   }
 `;
 
-const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
+const ClubListDropdItemContainerStyled = styled.div<{ isVisible: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -104,7 +108,7 @@ const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
     `}
 `;
 
-const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
+const ClubListDropdItemStyled = styled.div<{ isSelected: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -130,4 +134,4 @@ const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
   }
 `;
 
-export default Dropdown;
+export default ClubListDropd;

@@ -12,6 +12,7 @@ import {
   TAdminModalState,
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
+import ClubLentModal from "@/components/Modals/LentModal/ClubLentModal";
 import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
 import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
 import {
@@ -143,14 +144,20 @@ const AdminCabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
-        <ButtonContainer
-          onClick={() => openModal("returnModal")}
-          text="반납"
-          theme="fill"
-          disabled={
-            selectedCabinetInfo!.lentType === CabinetType.CLUB || !isLented
-          }
-        />
+        {selectedCabinetInfo!.lentType === CabinetType.CLUB && !isLented ? (
+          <ButtonContainer
+            onClick={() => openModal("clubLentModal")}
+            text="동아리 대여"
+            theme="fill"
+          />
+        ) : (
+          <ButtonContainer
+            onClick={() => openModal("returnModal")}
+            text="반납"
+            theme="fill"
+            disabled={!isLented}
+          />
+        )}
         <ButtonContainer
           onClick={() => openModal("statusModal")}
           text="상태 관리"
@@ -174,6 +181,12 @@ const AdminCabinetInfoArea: React.FC<{
       )}
       {adminModal.statusModal && (
         <StatusModalContainer onClose={() => closeModal("statusModal")} />
+      )}
+      {adminModal.clubLentModal && (
+        <ClubLentModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={() => closeModal("clubLentModal")}
+        />
       )}
     </CabinetDetailAreaStyled>
   );
