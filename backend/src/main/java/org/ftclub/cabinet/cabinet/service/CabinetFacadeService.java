@@ -12,6 +12,9 @@ import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.*;
+
+import java.util.List;
 
 public interface CabinetFacadeService {
 
@@ -106,7 +109,7 @@ public interface CabinetFacadeService {
 	 * @return 사물함 페이지네이션
 	 */
 	CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType, Integer page,
-			Integer size);
+	                                                    Integer size);
 
 	/**
 	 * 사물함 상태에 따른 사물함 페이지네이션을 가져옵니다.
@@ -126,7 +129,7 @@ public interface CabinetFacadeService {
 	 * @return 사물함 페이지네이션
 	 */
 	CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum, Integer page,
-			Integer size);
+	                                                      Integer size);
 
 	/**
 	 * 사물함 Id에 따른 대여 기록 페이지네이션을 가져옵니다.
@@ -145,4 +148,6 @@ public interface CabinetFacadeService {
 	 * @param clubStatusRequestDto
 	 */
 	void updateCabinetClubStatus(CabinetClubStatusRequestDto clubStatusRequestDto);
+	                                                           Integer page,
+	                                                           Integer size);
 }
