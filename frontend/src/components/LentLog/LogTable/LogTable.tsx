@@ -71,6 +71,12 @@ const TheadStyled = styled.thead`
   line-height: 50px;
   background-color: var(--main-color);
   color: var(--white);
+  & > tr > th:first-child {
+    padding-left: 20px;
+  }
+  & > tr > th:last-child {
+    padding-right: 20px;
+  }
 `;
 
 const TbodyStyled = styled.tbody`
@@ -86,6 +92,12 @@ const TbodyStyled = styled.tbody`
   }
   & > tr:nth-child(2n) {
     background: #f9f6ff;
+  }
+  & > tr > td:first-child {
+    padding-left: 20px;
+  }
+  & > tr > td:last-child {
+    padding-right: 20px;
   }
 `;
 

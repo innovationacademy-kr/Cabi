@@ -19,6 +19,7 @@ const AdminCabinetLentLog = ({
           totalPage={totalPage}
           type="prev"
           onClick={onClickPrev}
+          className="logPageButton"
         >
           <ImgCenterStyled>
             <ImageStyled>
@@ -31,6 +32,7 @@ const AdminCabinetLentLog = ({
           totalPage={totalPage}
           type="next"
           onClick={onClickNext}
+          className="logPageButton"
         >
           <ImgCenterStyled>
             <ImageStyled>
@@ -60,6 +62,9 @@ const ButtonContainerStyled = styled.div`
   align-items: center;
   margin: 0 auto;
   overflow: hidden;
+  &:hover > .logPageButton {
+    opacity: 1;
+  }
 `;
 
 const PageButtonStyled = styled.div<{
@@ -72,7 +77,9 @@ const PageButtonStyled = styled.div<{
   height: 100%;
   border-radius: 10px;
   position: absolute;
-  background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.7));
+  opacity: 0.5;
+  transition: opacity 0.5s;
+  background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.5));
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 0) return "none";
     if (type == "next" && (totalPage == 0 || page == totalPage - 1))
