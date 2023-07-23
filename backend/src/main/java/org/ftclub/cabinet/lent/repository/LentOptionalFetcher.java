@@ -33,6 +33,11 @@ public class LentOptionalFetcher {
 		return lentRepository.findAllActiveLentByCabinetId(cabinetId);
 	}
 
+	public List<LentHistory> findActiveLentByCabinetIdWithUser(Long cabinetId) {
+		log.info("Called findActiveLentByCabinetIdWithUser: {}", cabinetId);
+		return lentRepository.findActiveLentHistoriesByCabinetIdWithUser(cabinetId);
+	}
+
 	public Page<LentHistory> findPaginationByCabinetId(Long cabinetId, PageRequest pageable) {
 		log.info("Called findPaginationByCabinetId: {}", cabinetId);
 		return lentRepository.findPaginationByCabinetId(cabinetId, pageable);

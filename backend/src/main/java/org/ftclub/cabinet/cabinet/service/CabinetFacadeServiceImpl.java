@@ -115,7 +115,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 			if (!cabinetLentHistories.containsKey(cabinet)) {
 				String section = cabinet.getCabinetPlace().getLocation().getSection();
 				CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, Collections.emptyList());
-				System.out.println("preview = " + preview);
 				if (cabinetPreviewsBySection.containsKey(section)) {
 					cabinetPreviewsBySection.get(section).add(preview);
 				} else {
@@ -127,6 +126,33 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		});
 		cabinetPreviewsBySection.values().forEach(cabinetList -> cabinetList.sort(Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
 		return cabinetPreviewsBySection.entrySet().stream()
+				.sorted(Comparator.comparing(entry -> entry.getValue().get(0).getVisibleNum()))
+				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<CabinetsPerSectionResponseDto> getCabinetsPerSectionRefactor(String building,
+			Integer floor) {
+		List<Cabinet> cabinets = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(building, floor);
+		Map<String, List<CabinetPreviewDto>> map = new HashMap<>();
+		cabinets.forEach(cabinet -> {
+			List<LentHistory> lentHistories = lentOptionalFetcher
+					.findActiveLentByCabinetIdWithUser(cabinet.getCabinetId());
+			String section = cabinet.getCabinetPlace().getLocation().getSection();
+			if (map.containsKey(section)) {
+				map.get(section).add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
+						lentHistories.isEmpty() ? null : lentHistories.get(0).getUser().getName()));
+			}
+			else {
+				List<CabinetPreviewDto> cabinetPreviewDtoList = new ArrayList<>();
+				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
+						lentHistories.isEmpty() ? null : lentHistories.get(0).getUser().getName()));
+				map.put(section, cabinetPreviewDtoList);
+			}
+		});
+		map.forEach((key, value) -> value.sort(Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
+		return map.entrySet().stream()
 				.sorted(Comparator.comparing(entry -> entry.getValue().get(0).getVisibleNum()))
 				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList());
