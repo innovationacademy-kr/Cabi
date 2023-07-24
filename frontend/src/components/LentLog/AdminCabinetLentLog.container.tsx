@@ -5,6 +5,7 @@ import AdminCabinetLentLog from "@/components/LentLog/AdminCabinetLentLog";
 import { LentLogResponseType } from "@/types/dto/lent.dto";
 import { axiosGetCabinetLentLog } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
+import { getTotalPage } from "@/utils/dateUtils";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const AdminCabinetLentLogContainer = () => {
@@ -17,7 +18,7 @@ const AdminCabinetLentLogContainer = () => {
   async function getData(page: number) {
     try {
       const result = await axiosGetCabinetLentLog(currentCabinetId, page);
-      setTotalPage(result.data.totalPage);
+      setTotalPage(Math.ceil(result.data.totalLength / 10));
       setLogs(result.data.result);
     } catch {
       setLogs(STATUS_400_BAD_REQUEST);

@@ -46,7 +46,7 @@ public class UserOptionalFetcher {
 	 */
 	public User findUser(Long userId) {
 		log.info("Called findUser: {}", userId);
-		return userRepository.findById(userId).orElse(null);
+		return userRepository.findUser(userId).orElse(null);
 	}
 
 	/**
@@ -144,6 +144,17 @@ public class UserOptionalFetcher {
 		return banHistories.get(0);
 	}
 
+	/**
+	 * ROLE 이 동아리(CLUB)인 유저를 가져옵니다
+	 *
+	 * @param pageable
+	 * @return {@link Page<User>}
+	 */
+	public Page<User> findClubUsers(Pageable pageable) {
+		log.info("Called findClubUsers");
+		return userRepository.findAllByRoleAndDeletedAtIsNull(UserRole.CLUB, pageable);
+	}
+
 	/*-------------------------------------------GET--------------------------------------------*/
 
 	/**
@@ -154,7 +165,7 @@ public class UserOptionalFetcher {
 	 */
 	public User getUser(Long userId) {
 		log.info("Called getUser: {}", userId);
-		return userRepository.findById(userId)
+		return userRepository.findUser(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 	}
 

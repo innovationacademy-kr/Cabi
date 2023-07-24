@@ -1,7 +1,9 @@
 package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 
@@ -12,11 +14,15 @@ public interface UserService {
 
 	void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role);
 
+	void createClubUser(String clubName);
+
 	boolean checkAdminUserExists(String email);
 
 	void createAdminUser(String email);
 
 	void deleteUser(Long userId, LocalDateTime deletedAt);
+
+	void deleteClubUser(Long clubId, LocalDateTime deletedAt);
 
 	void deleteAdminUser(Long adminUserId);
 
@@ -31,7 +37,8 @@ public interface UserService {
 
 	void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt);
 
-	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt, LocalDateTime expiredAt);
+	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
+			LocalDateTime expiredAt);
 
 	void deleteRecentBanHistory(Long userId, LocalDateTime today);
 
@@ -44,4 +51,20 @@ public interface UserService {
 	boolean checkUserIsBanned(Long userId, LocalDateTime today);
 
 	AdminRole getAdminUserRole(String email);
+
+	void updateClubUser(Long clubId, String clubName);
+
+	/**
+	 * 블랙홀에 빠질 위험이 있는 유저들의 블랙홀 정보를 가져옵니다.
+	 *
+	 * @return {@link List<UserBlackholeInfoDto>}
+	 */
+	List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo();
+
+	/**
+	 * 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 정보를 가져옵니다.
+	 *
+	 * @return {@link List<UserBlackholeInfoDto>}
+	 */
+	List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo();
 }

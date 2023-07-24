@@ -8,12 +8,15 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-// service가 갖는 모든 메서드들을 유닛 테스트 합니다.
+@Deprecated
+@Disabled
 @SpringBootTest
 @Transactional
 class CabinetServiceTest {

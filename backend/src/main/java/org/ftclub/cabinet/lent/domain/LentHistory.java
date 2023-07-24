@@ -23,7 +23,7 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name = "LENT_HISTORY")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"user", "cabinet"})
 public class LentHistory {
 
 	@Id
@@ -181,6 +181,30 @@ public class LentHistory {
 	public Long getDaysDiffEndedAndExpired() {
 		if (isSetExpiredAt() && isSetEndedAt()) {
 			return DateUtil.calculateTwoDateDiff(endedAt, expiredAt);
+		}
+		return null;
+	}
+
+	/**
+	 * 만료일이 지났는지 확인합니다.
+	 *
+	 * @return 만료일이 지났으면 true 아니면 false, 만료일이 설정되어 있지 않으면 false
+	 */
+	public Boolean isExpired(LocalDateTime now) {
+		if (isSetExpiredAt()) {
+			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now) > 0;
+		}
+		return false;
+	}
+
+	/**
+	 * 만료일까지 남은 일수를 계산합니다. 만료시간이 설정되지 않았으면 null을 반환합니다.
+	 *
+	 * @return 만료일까지 남은 일수 (만료일 - 현재시간) (일 기준, 올림)
+	 */
+	public Long getDaysUntilExpiration(LocalDateTime now) {
+		if (isSetExpiredAt()) {
+			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now);
 		}
 		return null;
 	}

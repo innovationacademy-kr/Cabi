@@ -10,6 +10,8 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
+import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -20,6 +22,8 @@ import org.springframework.util.StringUtils;
 public class CabinetServiceImpl implements CabinetService {
 
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
+	private final UserOptionalFetcher userOptionalFetcher;
+	private final LentOptionalFetcher lentOptionalFetcher;
 
 	/**
 	 * {@inheritDoc}
@@ -44,7 +48,7 @@ public class CabinetServiceImpl implements CabinetService {
 	public void updateStatus(Long cabinetId, CabinetStatus status) {
 		log.info("Called updateStatus: {}, {}", cabinetId, status);
 		if (!status.isValid()) {
-			throw new IllegalArgumentException("Invalid status");
+			throw new ServiceException(ExceptionStatus.INVALID_STATUS);
 		}
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.specifyStatus(status);
@@ -118,7 +122,7 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.specifyLentType(lentType);
 		if (lentType == LentType.SHARE) {
 			cabinet.specifyMaxUser(3); // todo : policy에서 외부에서 설정된 properties 변수로 설정하게끔 수정
-		} else if (lentType == LentType.PRIVATE) {
+		} else { // club 도 1명으로 변경
 			cabinet.specifyMaxUser(1);
 		}
 	}
@@ -141,5 +145,21 @@ public class CabinetServiceImpl implements CabinetService {
 		log.info("Called updateStatusNote: {}, {}", cabinetId, statusNote);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeStatusNote(statusNote);
+	}
+
+	@Override
+	public void updateClub(Long cabinetId, Long userId, String statusNote) {
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
+		String clubName = "";
+		if (userId != null) {
+			clubName = userOptionalFetcher.getClubUser(userId).getName();
+		}
+		Cabinet lentCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(userId);
+		if (lentCabinet != null) {
+			throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
+		}
+		cabinet.writeTitle(clubName);
+		cabinet.writeStatusNote(statusNote);
+		cabinet.specifyLentType(LentType.CLUB);
 	}
 }

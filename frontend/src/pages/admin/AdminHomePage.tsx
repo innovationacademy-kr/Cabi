@@ -36,7 +36,32 @@ const AdminHomePage = () => {
   const [cabinetNumbersPerFloor, setCabinetNumbersPerFloor] = useState<
     ICabinetNumbersPerFloor[]
   >([]);
-  const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>([]);
+
+  const createDummyArray = (count: number) => {
+    const dummyArray = [];
+    const currentDate = new Date();
+    let dates = [];
+    dates[0] = currentDate;
+    for (let i = 1; i < count + 1; i++) {
+      dates[i] = new Date(currentDate.setDate(currentDate.getDate() - 7));
+    }
+
+    for (let i = 0; i < count; i++) {
+      const dummyObject = {
+        endDate: dates[i].toDateString(),
+        startDate: dates[i + 1].toDateString(),
+        lentEndCount: 0,
+        lentStartCount: 0,
+      };
+      dummyArray.push(dummyObject);
+    }
+
+    return dummyArray.reverse();
+  };
+
+  const [monthlyData, setMonthlyData] = useState<IMonthlyData[]>(
+    createDummyArray(4)
+  );
   const { openCabinet } = useMenu();
   const setSelectedTypeOnSearch = useSetRecoilState(selectedTypeOnSearchState);
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
@@ -192,7 +217,7 @@ const AdminHomeStyled = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
-  overflow: hidden;
+  min-height: 775px;
 
   @media screen and (max-width: 1300px) {
     grid-template-columns: repeat(2, 1fr);

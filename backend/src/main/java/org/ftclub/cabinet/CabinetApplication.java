@@ -1,4 +1,4 @@
-package org.ftclub.cabinet;
+	package org.ftclub.cabinet;
 
 import org.ftclub.cabinet.config.CorsConfig;
 import org.springframework.boot.SpringApplication;

@@ -4,6 +4,7 @@ package org.ftclub.cabinet.utils;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -100,5 +101,39 @@ public class DateUtil {
 	 */
 	public static LocalDateTime toLocalDateTime(Date date) {
 		return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+	}
+
+
+	/**
+	 * LocalDateTime 과 서버의 현재 날짜가 같은지 확인합니다.
+	 *
+	 * @param now
+	 * @return
+	 */
+	public static boolean isSameDay(LocalDateTime now) {
+		LocalDate currentServerDate = LocalDate.now();
+		return currentServerDate.equals(now.toLocalDate());
+	}
+
+	/**
+	 * now 가 서버의 현재 시간보다 과거인지 확입합니다.
+	 * @param now
+	 * @return
+	 */
+	public static boolean isPast(LocalDateTime now){
+		LocalDate currentServerDate = LocalDate.now();
+		return currentServerDate.isAfter(now.toLocalDate());
+	}
+
+	/**
+	 * 두 date의 차이만큼의 day를 올림한 값을 리턴합니다.
+	 *
+	 * @param day1 day1
+	 * @param day2 day2
+	 * @return day2 - day1
+	 */
+	public static Long calculateTwoDateDiffCeil(LocalDateTime day1, LocalDateTime day2) {
+		long diffInMillis = Duration.between(day1, day2).toMillis();
+		return (long) Math.ceil(diffInMillis / 1000.0 / 60 / 60 / 24);
 	}
 }

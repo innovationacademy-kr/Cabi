@@ -40,3 +40,30 @@ spring:
   urls:
     admin-login-callback: ${spring.server.fe-host}/v4/admin/auth/login/callback
     user-login-callback: ${spring.server.fe-host}/v4/auth/login/callback
+
+  schedule:
+    cron:
+      leave-absence: 0 0 0 * * * # 매일 0시 0분 0초
+      risk-of-blackhole: 0 42 0 * * MON # 매주 월요일 0시 42분 0초
+      no-risk-of-blackhole: 0 42 1 1 * * # 매월 1일 1시 42분 0초
+
+  mail:
+    soonoverdue:
+      term: -1
+      subject: "42CABI 사물함 연체 예정 알림"
+      template: "mail/soonoverdue"
+    overdue:
+      term: 1
+      subject: "42CABI 사물함 연체 알림"
+      template: "mail/overdue"
+
+    host: smtp.gmail.com
+    port: 587
+    username: test_email@gmail.com
+    password: test_password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

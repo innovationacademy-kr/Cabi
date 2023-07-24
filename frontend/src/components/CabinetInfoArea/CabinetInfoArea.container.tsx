@@ -4,7 +4,11 @@ import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
-import { CabinetInfo, CabinetPreviewInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import {
+  CabinetInfo,
+  CabinetPreviewInfo,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
@@ -47,6 +51,7 @@ export interface ICurrentModalStateInfo {
 export interface IAdminCurrentModalStateInfo {
   returnModal: boolean;
   statusModal: boolean;
+  clubLentModal: boolean;
 }
 
 interface ICount {
@@ -63,7 +68,7 @@ export type TModalState =
   | "memoModal"
   | "passwordCheckModal";
 
-export type TAdminModalState = "returnModal" | "statusModal";
+export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
 const calExpiredTime = (expireTime: Date) =>
   Math.floor(
@@ -150,6 +155,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
     statusModal: false,
+    clubLentModal: false,
   });
 
   const cabinetViewData: ISelectedCabinetInfo | null = targetCabinetInfo

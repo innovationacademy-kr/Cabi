@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.bytebuddy.asm.Advice;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
@@ -14,7 +13,6 @@ import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.statistics.service.StatisticsFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +52,7 @@ public class StatisticsController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public LentsStatisticsResponseDto getCountOnLentAndReturn(
 			@RequestParam("startDate") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime startDate,
-			@RequestParam("endDate") @DateTimeFormat(iso = ISO.DATE_TIME)LocalDateTime endDate
+			@RequestParam("endDate") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime endDate
 	) {
 		log.info("Called getCountOnLentAndReturn");
 		return statisticsFacadeService.getCountOnLentAndReturn(startDate, endDate);

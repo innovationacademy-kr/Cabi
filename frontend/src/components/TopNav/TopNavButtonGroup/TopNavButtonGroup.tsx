@@ -88,6 +88,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
     </NaviButtonsStyled>
   );
 };
+
 const NaviButtonsStyled = styled.div`
   display: flex;
   justify-content: space-between;

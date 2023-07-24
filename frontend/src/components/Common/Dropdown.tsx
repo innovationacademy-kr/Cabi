@@ -102,7 +102,6 @@ const DropdownItemContainerStyled = styled.div<{ isVisible: boolean }>`
     css`
       visibility: hidden;
     `}
-  }
 `;
 
 const DropdownItemStyled = styled.div<{ isSelected: boolean }>`
