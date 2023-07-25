@@ -33,8 +33,14 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
                   <td title={new Date(startedAt).toLocaleString("ko-KR")}>
                     {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
-                  <td title={new Date(endedAt).toLocaleString("ko-KR")}>
-                    {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
+                  <td
+                    title={
+                      endedAt ? new Date(endedAt).toLocaleString("ko-KR") : "-"
+                    }
+                  >
+                    {endedAt
+                      ? new Date(endedAt).toLocaleString("ko-KR", dateOptions)
+                      : "-"}
                   </td>
                 </tr>
               )
