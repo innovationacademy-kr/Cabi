@@ -3,7 +3,7 @@
   "background_color": "#9747ff",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "/login",
   "name": "42Cabi",
   "short_name": "Cabi",
   "icons": [
