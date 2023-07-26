@@ -61,8 +61,9 @@ const SearchPage = () => {
       searchValue.current,
       currentPage.current
     );
+    
     setSearchListByIntraId(searchResult.data.result ?? []);
-    setTotalSearchList(getTotalPage(searchResult.data.totalLength, 10) ?? 0);
+    setTotalSearchList(Math.ceil(searchResult.data.totalLength / 10) ?? 0);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
@@ -81,7 +82,7 @@ const SearchPage = () => {
       );
     }
     setSearchListByNum(searchResultData ?? []);
-    setTotalSearchList(getTotalPage(searchResult.data.totalLength, 10) ?? 0);
+    setTotalSearchList(Math.ceil(searchResult.data.totalLength / 10) ?? 0);
     setTimeout(() => {
       setIsLoading(false);
     }, 500);

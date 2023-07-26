@@ -68,7 +68,6 @@ public class LentServiceImpl implements LentService {
 	public void startLentClubCabinet(Long userId, Long cabinetId) {
 		log.info("Called startLentClubCabinet: {}, {}", userId, cabinetId);
 		Cabinet cabinet = cabinetOptionalFetcher.getClubCabinet(cabinetId);
-		userExceptionHandler.getClubUser(userId);
 		lentOptionalFetcher.checkExistedSpace(cabinetId);
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
 				cabinet, null);

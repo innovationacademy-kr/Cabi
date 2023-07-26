@@ -14,11 +14,15 @@ public interface UserService {
 
 	void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role);
 
+	void createClubUser(String clubName);
+
 	boolean checkAdminUserExists(String email);
 
 	void createAdminUser(String email);
 
 	void deleteUser(Long userId, LocalDateTime deletedAt);
+
+	void deleteClubUser(Long clubId, LocalDateTime deletedAt);
 
 	void deleteAdminUser(Long adminUserId);
 
@@ -47,6 +51,8 @@ public interface UserService {
 	boolean checkUserIsBanned(Long userId, LocalDateTime today);
 
 	AdminRole getAdminUserRole(String email);
+
+	void updateClubUser(Long clubId, String clubName);
 
 	/**
 	 * 블랙홀에 빠질 위험이 있는 유저들의 블랙홀 정보를 가져옵니다.

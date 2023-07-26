@@ -42,3 +42,27 @@ export interface ILentLog {
   onClickPrev: React.MouseEventHandler;
   onClickNext: React.MouseEventHandler;
 }
+
+export interface ClubUserDto {
+  userId: number;
+  name: string;
+}
+
+export type ClubLogResponseType =
+  | ClubUserDto[]
+  | typeof STATUS_400_BAD_REQUEST
+  | undefined;
+
+export interface IClubLog {
+  logs: ClubLogResponseType;
+  page: number;
+  totalPage: number;
+  onClickPrev: React.MouseEventHandler;
+  onClickNext: React.MouseEventHandler;
+  changePageOnClickIndexButton: (index: number) => void;
+}
+export interface CabinetClubStatusRequestDto {
+  userId: number;
+  cabinetId: number;
+  statusNote: string | null;
+}

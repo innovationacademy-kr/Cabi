@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.cabinet.controller;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 일반 사용자가 사물함 서비스를 사용하기 위한 컨트롤러입니다.

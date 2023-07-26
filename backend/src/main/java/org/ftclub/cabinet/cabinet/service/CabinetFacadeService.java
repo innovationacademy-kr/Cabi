@@ -1,10 +1,10 @@
 package org.ftclub.cabinet.cabinet.service;
 
 import java.util.List;
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
@@ -12,6 +12,9 @@ import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.*;
+
+import java.util.List;
 
 public interface CabinetFacadeService {
 
@@ -34,9 +37,9 @@ public interface CabinetFacadeService {
 
 	/**
 	 * 특정 사물함의 층 - 번호정보를 반환합니다.
-
+	 *
 	 * @param visibleNum 표시 번호
-	 * @return  캐비넷 정보
+	 * @return 캐비넷 정보
 	 */
 	CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum);
 
@@ -102,7 +105,8 @@ public interface CabinetFacadeService {
 	 * 대여 타입에 따른 사물함 페이지네이션을 가져옵니다.
 	 *
 	 * @param lentType 대여 타입
-	 * @param pageable 페이지네이션(page, size)
+	 * @param page 페이지 번호
+	 * @param size 페이지 당 보여줄 개수
 	 * @return 사물함 페이지네이션
 	 */
 	CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType, Integer page,
@@ -112,16 +116,19 @@ public interface CabinetFacadeService {
 	 * 사물함 상태에 따른 사물함 페이지네이션을 가져옵니다.
 	 *
 	 * @param status   사물함 상태
-	 * @param pageable 페이지네이션(page, size)
+	 * @param page 페이지 번호
+	 * @param size 페이지 당 보여줄 개수
 	 * @return 사물함 페이지네이션
 	 */
-	CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page, Integer size);
+	CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page,
+			Integer size);
 
 	/**
 	 * 사물함 표시 번호에 따른 사물함 페이지네이션을 가져옵니다.
 	 *
 	 * @param visibleNum 사물함 표시 번호
-	 * @param pageable   페이지네이션(page, size)
+	 * @param page 페이지 번호
+	 * @param size 페이지 당 보여줄 개수
 	 * @return 사물함 페이지네이션
 	 */
 	CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum, Integer page,
@@ -131,10 +138,17 @@ public interface CabinetFacadeService {
 	 * 사물함 Id에 따른 대여 기록 페이지네이션을 가져옵니다.
 	 *
 	 * @param cabinetId 사물함 Id
-	 * @param pageable  페이지네이션(page, size)
+	 * @param page  페이지네이션(page, size)
 	 * @return 대여 기록 페이지네이션
 	 */
 	LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId,
 			Integer page,
 			Integer size);
+
+	/**
+	 * 사물함에 동아
+	 *
+	 * @param clubStatusRequestDto
+	 */
+	void updateCabinetClubStatus(CabinetClubStatusRequestDto clubStatusRequestDto);
 }

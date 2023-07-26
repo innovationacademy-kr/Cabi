@@ -58,7 +58,7 @@ const AdminReturnModal: React.FC<{
 
   const getReturnDetail = (lentType: CabinetType) => {
     const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.visibleNum}번 사물함</strong>`;
-    if (lentType === CabinetType.PRIVATE) {
+    if (lentType === CabinetType.PRIVATE || lentType === CabinetType.CLUB) {
       return detail + `<br>해당 사물함을 정말 반납하시겠습니까?`;
     }
     return detail + `<br>반납할 유저를 선택해 주세요.`;

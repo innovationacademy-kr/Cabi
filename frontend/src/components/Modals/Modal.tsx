@@ -2,6 +2,8 @@ import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import useMultiSelect from "@/hooks/useMultiSelect";
+import AdminClubLogContainer from "../Club/AdminClubLog.container";
+import ClubLogTable from "../Club/ClubLogTable";
 
 /**
  * @interface
@@ -28,6 +30,7 @@ export interface IModalContents {
   onClickProceed?: ((e: React.MouseEvent) => Promise<void>) | null;
   cancleBtnText?: string;
   closeModal: React.MouseEventHandler;
+  isClubLentModal?: boolean;
 }
 
 const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
@@ -42,8 +45,10 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     onClickProceed,
     cancleBtnText,
     closeModal,
+    isClubLentModal,
   } = props.modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
+
   return (
     <>
       <BackgroundStyled
@@ -62,6 +67,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
           <ModalIconImgStyled src={icon} iconScaleEffect={iconScaleEffect} />
         )}
         <H2Styled>{title}</H2Styled>
+        {isClubLentModal && <AdminClubLogContainer size={5} />}
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}
@@ -171,6 +177,17 @@ const ButtonWrapperStyled = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 30px;
+`;
+
+const DropdownStyled = styled.select`
+  margin-top: 20px;
+  text-align: center;
+  width: 200px;
+  height: 40px;
+`;
+
+const Option = styled.option`
+  background-color: red;
 `;
 
 export default Modal;

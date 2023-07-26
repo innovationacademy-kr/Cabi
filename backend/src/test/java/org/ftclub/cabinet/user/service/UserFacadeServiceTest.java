@@ -2,11 +2,14 @@ package org.ftclub.cabinet.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -42,7 +46,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
 public class UserFacadeServiceTest {
@@ -166,7 +172,7 @@ public class UserFacadeServiceTest {
 		given(userMapper.toUserBlockedInfoDto(banHistory3, user3))
 				.willReturn(new UserBlockedInfoDto(3L, "testUser3",
 						testDate.minusDays(3), testDate.plusDays(3)));
-		given(userMapper.toBlockedUserPaginationDto(any(),any()))
+		given(userMapper.toBlockedUserPaginationDto(any(), any()))
 				.willReturn(new BlockedUserPaginationDto(new ArrayList<UserBlockedInfoDto>(3) {{
 					add(new UserBlockedInfoDto(1L, "testUser1",
 							testDate.minusDays(1), testDate.plusDays(1)));
@@ -207,7 +213,7 @@ public class UserFacadeServiceTest {
 		testDate = LocalDateTime.now();
 		given(userOptionalFetcher.findPaginationActiveBanHistories(any(), any()))
 				.willReturn(new PageImpl(new ArrayList<BanHistory>(0)));
-		given(userMapper.toBlockedUserPaginationDto(any(),any()))
+		given(userMapper.toBlockedUserPaginationDto(any(), any()))
 				.willReturn(new BlockedUserPaginationDto(
 						new ArrayList<UserBlockedInfoDto>(0), 0L));
 
@@ -233,7 +239,7 @@ public class UserFacadeServiceTest {
 		given(userMapper.toUserProfileDto(user1)).willReturn(new UserProfileDto(1L, "testUser1"));
 		given(userMapper.toUserProfileDto(user2)).willReturn(new UserProfileDto(2L, "testUser2"));
 		given(userMapper.toUserProfileDto(user3)).willReturn(new UserProfileDto(3L, "testUser3"));
-		given(userMapper.toUserProfilePaginationDto(any(),any()))
+		given(userMapper.toUserProfilePaginationDto(any(), any()))
 				.willReturn(new UserProfilePaginationDto(new ArrayList<UserProfileDto>(3) {{
 					add(new UserProfileDto(1L, "testUser1"));
 					add(new UserProfileDto(2L, "testUser2"));
@@ -264,7 +270,7 @@ public class UserFacadeServiceTest {
 		// given
 		given(userOptionalFetcher.findUsersByPartialName(eq("test"), any()))
 				.willReturn(new PageImpl(new ArrayList<User>(0)));
-		given(userMapper.toUserProfilePaginationDto(any(),any()))
+		given(userMapper.toUserProfilePaginationDto(any(), any()))
 				.willReturn(new UserProfilePaginationDto(new ArrayList<UserProfileDto>(0), 0L));
 
 		// when
@@ -320,11 +326,11 @@ public class UserFacadeServiceTest {
 				CabinetStatus.FULL, "", Location.of("새롬관", 4, "오아시스"));
 		CabinetDto cabinetDto3 = new CabinetDto(3L, 24, LentType.PRIVATE, 1, "",
 				CabinetStatus.FULL, "", Location.of("새롬관", 5, "오아시스"));
-		given(cabinetMapper.toUserCabinetDto(userBlockedInfoDto1,cabinetDto1))
+		given(cabinetMapper.toUserCabinetDto(userBlockedInfoDto1, cabinetDto1))
 				.willReturn(new UserCabinetDto(userBlockedInfoDto1, cabinetDto1));
-		given(cabinetMapper.toUserCabinetDto(userBlockedInfoDto2,cabinetDto2))
+		given(cabinetMapper.toUserCabinetDto(userBlockedInfoDto2, cabinetDto2))
 				.willReturn(new UserCabinetDto(userBlockedInfoDto2, cabinetDto2));
-		given(cabinetMapper.toUserCabinetDto(userBlockedInfoDto3,cabinetDto3))
+		given(cabinetMapper.toUserCabinetDto(userBlockedInfoDto3, cabinetDto3))
 				.willReturn(new UserCabinetDto(userBlockedInfoDto3, cabinetDto3));
 		UserCabinetDto userCabinetDto1 = new UserCabinetDto(userBlockedInfoDto1, cabinetDto1);
 		UserCabinetDto userCabinetDto2 = new UserCabinetDto(userBlockedInfoDto2, cabinetDto2);
@@ -426,7 +432,8 @@ public class UserFacadeServiceTest {
 		userFacadeService.createUser("testUser1", "testUser1@gmail.com", null, UserRole.USER);
 
 		// then
-		then(userService).should().createUser("testUser1", "testUser1@gmail.com", null, UserRole.USER);
+		then(userService).should()
+				.createUser("testUser1", "testUser1@gmail.com", null, UserRole.USER);
 	}
 
 	@Test
@@ -483,7 +490,7 @@ public class UserFacadeServiceTest {
 	@Test
 	@DisplayName("유저를 어드민으로 승격 성공")
 	void promoteUserToAdmin_성공() {
-	    // when
+		// when
 		userFacadeService.promoteUserToAdmin("testUser@gmail.com");
 
 		// then
@@ -493,7 +500,7 @@ public class UserFacadeServiceTest {
 	@Test
 	@DisplayName("유저 블랙홀 갱신 성공")
 	void updateUserBlackholedAt_성공() {
-	    // when
+		// when
 		testDate = LocalDateTime.now();
 		userFacadeService.updateUserBlackholedAt(4L, testDate);
 
@@ -504,7 +511,7 @@ public class UserFacadeServiceTest {
 	@Test
 	@DisplayName("유저 밴 성공")
 	void banUser_성공() {
-	    // when
+		// when
 		testDate = LocalDateTime.now();
 		userFacadeService.banUser(5L, LentType.PRIVATE, testDate, testDate.plusDays(1),
 				testDate.plusDays(4));
@@ -517,7 +524,7 @@ public class UserFacadeServiceTest {
 	@Test
 	@DisplayName("최근 밴 기록 삭제 성공")
 	void deleteRecentBanHistory_성공() {
-	    // when
+		// when
 		testDate = LocalDateTime.now();
 		userFacadeService.deleteRecentBanHistory(6L, testDate);
 
@@ -527,14 +534,15 @@ public class UserFacadeServiceTest {
 
 	@Test
 	@DisplayName("연체 유저 목록 조회 성공")
-		void getOverdueUserList_성공() {
+	void getOverdueUserList_성공() {
 		// given
 		testDate = LocalDateTime.now();
-		given(lentOptionalFetcher.findAllOverdueLent(any(), any())).willReturn(new ArrayList<LentHistory>(2) {{
-			add(lentHistory1);
-			add(lentHistory2);
-			add(lentHistory3);
-		}});
+		given(lentOptionalFetcher.findAllOverdueLent(any(), any())).willReturn(
+				new ArrayList<LentHistory>(2) {{
+					add(lentHistory1);
+					add(lentHistory2);
+					add(lentHistory3);
+				}});
 		given(lentHistory1.getUser()).willReturn(user1);
 		given(lentHistory1.getExpiredAt()).willReturn(testDate.minusDays(5));
 		given(lentHistory1.getCabinet()).willReturn(cabinet1);
@@ -554,14 +562,15 @@ public class UserFacadeServiceTest {
 				.willReturn(new OverdueUserCabinetDto("testUser3", 3L, 15,
 						Location.of("새롬관", 5, "오아시스"), 0));
 		given(cabinetMapper.toOverdueUserCabinetPaginationDto(any(), any()))
-				.willReturn(new OverdueUserCabinetPaginationDto(new ArrayList<OverdueUserCabinetDto>(3) {{
-					add(new OverdueUserCabinetDto("testUser1", 1L, 15,
-							Location.of("새롬관", 2, "오아시스"), 5));
-					add(new OverdueUserCabinetDto("testUser2", 2L, 15,
-							Location.of("새롬관", 4, "오아시스"), 2));
-					add(new OverdueUserCabinetDto("testUser3", 3L, 15,
-							Location.of("새롬관", 5, "오아시스"), 0));
-				}}, 3L));
+				.willReturn(new OverdueUserCabinetPaginationDto(
+						new ArrayList<OverdueUserCabinetDto>(3) {{
+							add(new OverdueUserCabinetDto("testUser1", 1L, 15,
+									Location.of("새롬관", 2, "오아시스"), 5));
+							add(new OverdueUserCabinetDto("testUser2", 2L, 15,
+									Location.of("새롬관", 4, "오아시스"), 2));
+							add(new OverdueUserCabinetDto("testUser3", 3L, 15,
+									Location.of("새롬관", 5, "오아시스"), 0));
+						}}, 3L));
 
 		//when
 		OverdueUserCabinetPaginationDto overdueUserList =
@@ -599,7 +608,7 @@ public class UserFacadeServiceTest {
 	@Test
 	@DisplayName("연체 유저 목록 조회 실패 - 연체 유저 없음")
 	void getOverdueUserList_실패_연체_유저_없음() {
-	    // given
+		// given
 		testDate = LocalDateTime.now();
 		given(lentOptionalFetcher.findAllOverdueLent(any(), any()))
 				.willReturn(new ArrayList<LentHistory>(0));
@@ -614,5 +623,70 @@ public class UserFacadeServiceTest {
 		// then
 		assertEquals(0, overdueUserList.getResult().size());
 		assertEquals(0, overdueUserList.getTotalLength());
+	}
+
+	@Test
+	@DisplayName("동아리 유저 생성 성공")
+	void createClubUser_성공() {
+		String clubName = String.valueOf("testClub");
+
+		userFacadeService.createClubUser(clubName);
+
+		then(userService).should().createClubUser(clubName);
+	}
+
+	@Test
+	@DisplayName("동아리 유저 삭제 성공")
+	void deleteClubUser_성공() {
+		// when
+		userFacadeService.deleteClubUser(1L);
+
+		// then
+		then(userService).should().deleteClubUser(eq(1L), any());
+	}
+
+	@Test
+	@DisplayName("성공: 동아리 유저 정보 조회")
+	void findAllClubUser_성공() {
+		Integer page = 0;
+		Integer size = 0;
+		User user1 = mock(User.class);
+		User user2 = mock(User.class);
+		User user3 = mock(User.class);
+
+		PageRequest pageble = PageRequest.of(0, Integer.MAX_VALUE);
+		PageImpl<User> clubUsers = new PageImpl<>(new ArrayList<>(List.of(user1, user2, user3)));
+		given(userOptionalFetcher.findClubUsers(pageble)).willReturn(clubUsers);
+		UserProfileDto userProfileDto = mock(UserProfileDto.class);
+
+		given(userMapper.toUserProfileDto(user1)).willReturn(userProfileDto);
+		given(userMapper.toUserProfileDto(user2)).willReturn(userProfileDto);
+		given(userMapper.toUserProfileDto(user3)).willReturn(userProfileDto);
+		List<UserProfileDto> userProfileDtos = new ArrayList<>(
+				List.of(userProfileDto, userProfileDto, userProfileDto));
+		given(userMapper.toClubUserListDto(userProfileDtos,
+				clubUsers.getTotalElements())).willReturn(mock(ClubUserListDto.class));
+
+		userFacadeService.findAllClubUser(page, size);
+
+		then(userOptionalFetcher).should().findClubUsers(pageble);
+		then(userMapper).should(times(3)).toUserProfileDto(any());
+		then(userMapper).should().toClubUserListDto(any(), any());
+	}
+
+	@Test
+	@DisplayName("성공: 동아리 유저 정보 없음")
+	void findAllClubUser_성공_NULL() {
+		Integer page = 0;
+		Integer size = 0;
+
+		PageRequest pageble = PageRequest.of(0, Integer.MAX_VALUE);
+		given(userOptionalFetcher.findClubUsers(pageble)).willReturn(Page.empty());
+
+		ClubUserListDto result = userFacadeService.findAllClubUser(page, size);
+
+		then(userOptionalFetcher).should().findClubUsers(pageble);
+		then(userMapper).should().toClubUserListDto(any(), any());
+		assertNull(result);
 	}
 }

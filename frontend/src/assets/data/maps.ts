@@ -7,6 +7,10 @@ export enum additionalModalType {
   MODAL_ADMIN_RETURN = "MODAL_ADMIN_RETURN",
   MODAL_BAN = "MODAL_BAN",
   MODAL_ADMIN_LOGIN_FAILURE = "MODAL_ADMIN_LOGIN_FAILURE",
+  MODAL_ADMIN_CLUB_CREATE = "MODAL_ADMIN_CLUB_CREATE",
+  MODAL_ADMIN_CLUB_CREATE_FAILURE = "MODAL_ADMIN_CLUB_CREATE_FAILURE",
+  MODAL_ADMIN_CLUB_EDIT = "MODAL_ADMIN_CLUB_EDIT",
+  MODAL_ADMIN_CLUB_DELETE = "MODAL_ADMIN_CLUB_DELETE",
 }
 
 export const cabinetIconSrcMap = {
@@ -66,6 +70,11 @@ export const modalPropsMap = {
     title: "사용이 불가한 사물함입니다",
     confirmMessage: "",
   },
+  [CabinetType.CLUB]: {
+    type: "confirm",
+    title: "동아리 대여",
+    confirmMessage: "확인",
+  },
   PASSWORD_CHECK: {
     type: "confirm",
     title: "반납 시  비밀번호",
@@ -95,6 +104,26 @@ export const modalPropsMap = {
     type: "error",
     title: "아이디 또는 비밀번호가\n일치하지 않습니다",
     confirmMessage: "",
+  },
+  MODAL_ADMIN_CLUB_CREATE: {
+    type: "confirm",
+    title: "동아리 생성하기",
+    confirmMessage: "생성",
+  },
+  MODAL_ADMIN_CLUB_CREATE_FAILURE: {
+    type: "error",
+    title: "같은 이름의 동아리가\n이미 존재합니다",
+    confirmMessage: "",
+  },
+  MODAL_ADMIN_CLUB_EDIT: {
+    type: "confirm",
+    title: "동아리 이름 수정",
+    confirmMessage: "저장",
+  },
+  MODAL_ADMIN_CLUB_DELETE: {
+    type: "confirm",
+    title: "동아리 삭제하기",
+    confirmMessage: "삭제",
   },
 };
 

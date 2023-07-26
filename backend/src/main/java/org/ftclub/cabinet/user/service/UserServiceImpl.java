@@ -1,12 +1,19 @@
 package org.ftclub.cabinet.user.service;
 
+import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
@@ -32,6 +39,7 @@ public class UserServiceImpl implements UserService {
 	private final BanHistoryRepository banHistoryRepository;
 	private final BanPolicy banPolicy;
 	private final UserOptionalFetcher userOptionalFetcher;
+	private final LentOptionalFetcher lentOptionalFetcher;
 
 	@Override
 	public boolean checkUserExists(String email) {
@@ -46,6 +54,24 @@ public class UserServiceImpl implements UserService {
 		log.info("Called createUser: {}", email);
 		User user = User.of(name, email, blackholedAt, role);
 		userRepository.save(user);
+	}
+
+	@Override
+	public void createClubUser(String clubName) {
+		log.info("Called createClubUser: {}", clubName);
+		if (StringUtil.isNullOrEmpty(clubName)) {
+			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
+		} else if (userOptionalFetcher.findUserByName(clubName) != null &&
+				userOptionalFetcher.findUserByName(clubName).getDeletedAt() == null) {
+			throw new ControllerException(ExceptionStatus.EXISTED_CLUB_USER);
+		} else if (userOptionalFetcher.findUserByName(clubName) != null &&
+				userOptionalFetcher.findUserByName(clubName).getDeletedAt() != null) {
+			userOptionalFetcher.getUserByName(clubName).setDeletedAt(null);
+		} else {
+			String randomUUID = UUID.randomUUID().toString();
+			User user = User.of(clubName, randomUUID + "@student.42seoul.kr", null, UserRole.CLUB);
+			userRepository.save(user);
+		}
 	}
 
 	@Override
@@ -67,6 +93,18 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(Long userId, LocalDateTime deletedAt) {
 		log.info("Called deleteUser: {}", userId);
 		User user = userOptionalFetcher.getUser(userId);
+		user.setDeletedAt(deletedAt);
+		userRepository.save(user);
+	}
+
+	@Override
+	public void deleteClubUser(Long clubId, LocalDateTime deletedAt) {
+		log.info("Called deleteClueUser: {}", clubId);
+		User user = userOptionalFetcher.getClubUser(clubId);
+		Cabinet lentCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
+		if (lentCabinet != null) {
+			throw new ServiceException(ExceptionStatus.CLUB_HAS_LENT_CABINET);
+		}
 		user.setDeletedAt(deletedAt);
 		userRepository.save(user);
 	}
@@ -146,6 +184,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void updateClubUser(Long clubId, String clubName) {
+		log.info("Called updateClubUser: {}", clubId);
+		if (StringUtil.isNullOrEmpty(clubName)) {
+			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+		}
+		User clubUser = userOptionalFetcher.getClubUser(clubId);
+		clubUser.changeName(clubName);
+	}
+	
 	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
 		log.info("Called getAllRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();

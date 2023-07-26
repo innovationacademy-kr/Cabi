@@ -11,6 +11,7 @@ import {
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
+import { ClubUserDto } from "@/types/dto/lent.dto";
 
 const { persistAtom } = recoilPersist();
 
@@ -153,4 +154,9 @@ export const overdueCabinetListState = atom<ITableData[]>({
 export const bannedUserListState = atom<ITableData[]>({
   key: "bannedUserList",
   default: [],
+});
+
+export const selectedClubInfoState = atom<ClubUserDto | null>({
+  key: "selectedClub",
+  default: null,
 });

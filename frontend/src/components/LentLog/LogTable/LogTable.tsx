@@ -33,8 +33,14 @@ const LogTable = ({ lentHistory }: { lentHistory: LentLogResponseType }) => {
                   <td title={new Date(startedAt).toLocaleString("ko-KR")}>
                     {new Date(startedAt).toLocaleString("ko-KR", dateOptions)}
                   </td>
-                  <td title={new Date(endedAt).toLocaleString("ko-KR")}>
-                    {new Date(endedAt).toLocaleString("ko-KR", dateOptions)}
+                  <td
+                    title={
+                      endedAt ? new Date(endedAt).toLocaleString("ko-KR") : "-"
+                    }
+                  >
+                    {endedAt
+                      ? new Date(endedAt).toLocaleString("ko-KR", dateOptions)
+                      : "-"}
                   </td>
                 </tr>
               )
@@ -71,10 +77,17 @@ const TheadStyled = styled.thead`
   line-height: 50px;
   background-color: var(--main-color);
   color: var(--white);
+  & > tr > th:first-child {
+    padding-left: 20px;
+  }
+  & > tr > th:last-child {
+    padding-right: 20px;
+  }
 `;
 
 const TbodyStyled = styled.tbody`
   & > tr {
+    font-size: small;
     text-align: center;
     height: 50px;
   }
@@ -85,6 +98,12 @@ const TbodyStyled = styled.tbody`
   }
   & > tr:nth-child(2n) {
     background: #f9f6ff;
+  }
+  & > tr > td:first-child {
+    padding-left: 20px;
+  }
+  & > tr > td:last-child {
+    padding-right: 20px;
   }
 `;
 

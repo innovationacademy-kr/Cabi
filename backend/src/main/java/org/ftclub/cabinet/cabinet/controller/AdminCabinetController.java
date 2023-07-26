@@ -10,12 +10,14 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
+import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminCabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
+	private final LentFacadeService lentFacadeService;
 
 	/**
 	 * 사물함의 정보와 그 사물함의 대여 정보들을 가져옵니다.
@@ -98,6 +101,16 @@ public class AdminCabinetController {
 			@Valid @RequestBody CabinetStatusRequestDto cabinetStatusRequestDto) {
 		log.info("Called updateCabinetBundleStatus: {}", cabinetStatusRequestDto);
 		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto);
+	}
+
+	@PatchMapping("/club")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void updateCabinetClubStatus(
+			@Valid @RequestBody CabinetClubStatusRequestDto cabinetClubStatusRequestDto) {
+		log.info("Called updateCabinetClubStatus: {}", cabinetClubStatusRequestDto);
+		cabinetFacadeService.updateCabinetClubStatus(cabinetClubStatusRequestDto);
+		lentFacadeService.startLentClubCabinet(cabinetClubStatusRequestDto.getUserId(),
+				cabinetClubStatusRequestDto.getCabinetId());
 	}
 
 
@@ -246,8 +259,8 @@ public class AdminCabinetController {
 	 */
 	@GetMapping("/{cabinetId}/lent-histories")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public LentHistoryPaginationDto getCabinetLentHistories(
-			@PathVariable("cabinetId") Long cabinetId,
+	public LentHistoryPaginationDto getCabinetLentHistories(@Valid
+	@PathVariable("cabinetId") Long cabinetId,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
 		if (cabinetId == null) {
@@ -255,4 +268,5 @@ public class AdminCabinetController {
 		}
 		return cabinetFacadeService.getCabinetLentHistoriesPagination(cabinetId, page, size);
 	}
+
 }

@@ -23,7 +23,7 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name = "LENT_HISTORY")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"user", "cabinet"})
 public class LentHistory {
 
 	@Id
@@ -77,7 +77,7 @@ public class LentHistory {
 	private Cabinet cabinet;
 
 	protected LentHistory(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-			Long cabinetId) {
+	                      Long cabinetId) {
 		this.startedAt = startedAt;
 		this.expiredAt = expiredAt;
 		this.userId = userId;
@@ -92,7 +92,7 @@ public class LentHistory {
 	 * @return 인자 정보를 담고있는 {@link LentHistory}
 	 */
 	public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-			Long cabinetId) {
+	                             Long cabinetId) {
 		LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
 		if (!lentHistory.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);

@@ -11,6 +11,7 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -108,56 +109,73 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 			CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
 			userCabinetDtoList.add(cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto));
 		});
-		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList, users.getTotalElements());
+		return cabinetMapper.toUserCabinetPaginationDto(userCabinetDtoList,
+				users.getTotalElements());
 	}
 
 	@Override
 	public List<User> getAllUsers() {
+		log.debug("Called getAllUsers");
 		return userOptionalFetcher.findAllUsers();
 	}
 
 	@Override
 	public boolean checkUserExists(String name) {
+		log.debug("Called checkUserExists: {}", name);
 		return userService.checkUserExists(name);
 	}
 
 	@Override
 	public void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role) {
+		log.debug("Called createUser: {}", name);
 		userService.createUser(name, email, blackholedAt, role);
 	}
 
 	@Override
+	public void createClubUser(String clubName) {
+		log.debug("Called createClubUser: {}", clubName);
+		userService.createClubUser(clubName);
+	}
+
+	@Override
 	public boolean checkAdminUserExists(String email) {
+		log.debug("Called checkAdminUserExists: {}", email);
 		return userService.checkAdminUserExists(email);
 	}
 
 	@Override
 	public void createAdminUser(String email) {
+		log.debug("Called createAdminUser: {}", email);
 		userService.createAdminUser(email);
 	}
 
 	@Override
 	public void deleteUser(Long userId, LocalDateTime deletedAt) {
+		log.debug("Called deleteUser: {}", userId);
 		userService.deleteUser(userId, deletedAt);
 	}
 
 	@Override
 	public void deleteAdminUser(Long adminUserId) {
+		log.debug("Called deleteAdminUser: {}", adminUserId);
 		userService.deleteAdminUser(adminUserId);
 	}
 
 	@Override
 	public void updateAdminUserRole(Long adminUserId, AdminRole role) {
+		log.debug("Called updateAdminUserRole: {}", adminUserId);
 		userService.updateAdminUserRole(adminUserId, role);
 	}
 
 	@Override
 	public void promoteUserToAdmin(String email) {
+		log.debug("Called promoteUserToAdmin: {}", email);
 		userService.promoteAdminByEmail(email);
 	}
 
 	@Override
 	public void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt) {
+		log.debug("Called updateUserBlackholedAt: {}", userId);
 		userService.updateUserBlackholedAt(userId, newBlackholedAt);
 	}
 
@@ -165,11 +183,13 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
 			LocalDateTime endedAt,
 			LocalDateTime expiredAt) {
+		log.debug("Called banUser: {}", userId);
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
 	}
 
 	@Override
 	public void deleteRecentBanHistory(Long userId, LocalDateTime today) {
+		log.debug("Called deleteRecentBanHistory: {}", userId);
 		userService.deleteRecentBanHistory(userId, today);
 	}
 
@@ -193,6 +213,33 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 									cabinet, overdueDays));
 				}
 		);
-		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList, Long.valueOf(overdueList.size()));
+		return cabinetMapper.toOverdueUserCabinetPaginationDto(overdueList,
+				Long.valueOf(overdueList.size()));
+	}
+
+	@Override
+	public ClubUserListDto findAllClubUser(Integer page, Integer size) {
+		log.info("Called findAllClubUser");
+		if (size <= 0) {
+			size = Integer.MAX_VALUE;
+		}
+		PageRequest pageable = PageRequest.of(page, size);
+		Page<User> pageUser = userOptionalFetcher.findClubUsers(pageable);
+		List<UserProfileDto> userProfileDtos = pageUser
+				.stream().map(u -> userMapper.toUserProfileDto(u)).collect(Collectors.toList());
+		return userMapper.toClubUserListDto(userProfileDtos, pageUser.getTotalElements());
+	}
+
+	@Override
+	public void deleteClubUser(Long userId) {
+		log.info("Called deleteClubUser");
+		userService.deleteClubUser(userId, LocalDateTime.now());
+	}
+
+
+	@Override
+	public void updateClubUser(Long clubId, String clubName) {
+		log.info("Called updateClubUser");
+		userService.updateClubUser(clubId, clubName);
 	}
 }
