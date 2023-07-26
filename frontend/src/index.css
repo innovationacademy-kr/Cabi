@@ -54,7 +54,7 @@ body {
 
 /* iOS Pinch Zoom disabled */
 body {
-  touch-action: pan-x pan-y;
+  touch-action: none;
 }
 
 #root {
