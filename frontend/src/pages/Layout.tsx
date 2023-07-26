@@ -84,7 +84,6 @@ const WrapperStyled = styled.div`
   height: 100%;
   display: flex;
   overflow: hidden;
-  touch-action: none;
 `;
 
 const MainStyled = styled.main`
@@ -92,7 +91,6 @@ const MainStyled = styled.main`
   height: 100%;
   overflow-y: scroll;
   user-select: none;
-  touch-action: none;
 `;
 
 const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
