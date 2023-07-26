@@ -63,6 +63,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  touch-action: none;
 }
 
 h1 {
