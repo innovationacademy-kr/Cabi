@@ -43,7 +43,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
-		log.info("getBuildingFloorsResponse");
+		log.debug("getBuildingFloorsResponse");
 		return cabinetOptionalFetcher.findAllBuildings().stream()
 				.map(building -> {
 					List<Integer> floors = cabinetOptionalFetcher.findAllFloorsByBuilding(building);
@@ -58,7 +58,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
-		log.info("getCabinetInfo");
+		log.debug("getCabinetInfo");
 		List<LentDto> lentDtos = new ArrayList<>();
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
@@ -76,7 +76,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum) {
-		log.info("getCabinetsSimpleInfoByVisibleNum");
+		log.debug("getCabinetsSimpleInfoByVisibleNum");
 		PageRequest page = PageRequest.of(0, Integer.MAX_VALUE);
 		Page<Cabinet> allCabinetsByVisibleNum = cabinetOptionalFetcher.findPaginationByVisibleNum(
 				visibleNum, page);
@@ -92,6 +92,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor) {
+		log.debug("getCabinetsPerSection");
 		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
 		List<Cabinet> allCabinetsByBuildingAndFloor = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(building, floor);
 
@@ -148,7 +149,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType, Integer page,
 	                                                           Integer size) {
-		log.info("getCabinetPaginationByLentType");
+		log.debug("getCabinetPaginationByLentType");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -169,7 +170,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page,
 	                                                         Integer size) {
-		log.info("getCabinetPaginationByStatus");
+		log.debug("getCabinetPaginationByStatus");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -189,7 +190,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum, Integer page,
 	                                                             Integer size) {
-		log.info("getCabinetPaginationByVisibleNum");
+		log.debug("getCabinetPaginationByVisibleNum");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -210,7 +211,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId, Integer page,
 	                                                                  Integer size) {
-		log.info("getCabinetLentHistoriesPagination");
+		log.debug("getCabinetLentHistoriesPagination");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -231,7 +232,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public List<CabinetInfoResponseDto> getCabinetInfoBundle(List<Long> cabinetIds) {
-		log.info("getCabinetInfoBundle");
+		log.debug("getCabinetInfoBundle");
 		List<CabinetInfoResponseDto> result = new ArrayList<>();
 		for (Long cabinetId : cabinetIds) {
 			CabinetInfoResponseDto cabinetInfo = getCabinetInfo(cabinetId);
@@ -250,7 +251,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetInfoPaginationDto getCabinetsInfo(Integer visibleNum) {
-		log.info("getCabinetsInfo");
+		log.debug("getCabinetsInfo");
 		PageRequest page = PageRequest.of(0, Integer.MAX_VALUE);
 		Page<Cabinet> allCabinetsByVisibleNum = cabinetOptionalFetcher.findPaginationByVisibleNum(
 				visibleNum, page);
@@ -269,7 +270,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	private List<LentHistoryDto> generateLentHistoryDtoList(
 			List<LentHistory> lentHistories) {
-		log.info("generateLentHistoryDtoList");
+		log.debug("generateLentHistoryDtoList");
 		return lentHistories.stream()
 				.map(e -> lentMapper.toLentHistoryDto(e,
 						e.getUser(),

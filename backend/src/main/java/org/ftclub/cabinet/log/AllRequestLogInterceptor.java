@@ -43,7 +43,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 		String ip = getClientIpAddr(request);
 		String action = request.getRequestURI();
 		int status = response.getStatus();
-		log.info("IP: {}, action: {}, status: {}", ip, action, status);
+		log.debug("IP: {}, action: {}, status: {}", ip, action, status);
 	}
 
 	@Override

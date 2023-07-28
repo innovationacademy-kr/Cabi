@@ -1,5 +1,5 @@
 Configuration:
-  status: DEBUG
+  status: debug
 
   Properties:
     property:
@@ -13,28 +13,6 @@ Configuration:
       PatternLayout:
         pattern: ${pattern}
 
-    RollingFile:
-      name: rollingFile
-      # 파일 저장 위치를 어디로?
-      fileName: logs/42cabi.log
-      filePattern: logs/42cabi-%d{yyyy-MM-dd}-%i.log.gz
-      PatternLayout:
-        pattern: ${pattern}
-      Policies:
-        # 1일 단위로 로그를 압축해서 저장
-        TimeBasedTriggeringPolicy:
-          interval: 1
-          modulate: true
-      DefaultRolloverStrategy:
-        Delete:
-          basePath: logs
-          ifFileName:
-            glob: "42cabi-*.log.gz"
-          # 30일 이상된 로그는 삭제
-          ifLastModified:
-            age: "30d"
-        max: 30
-
   Loggers:
     logger:
       -
@@ -44,15 +22,12 @@ Configuration:
         additivity: false
         AppenderRef:
           - ref: console
-          - ref: rollingFile
-
       -
         name: org.ftclub.cabinet
         level: debug
         additivity: false
         AppenderRef:
           - ref: console
-          - ref: rollingFile
 
     # SQL문 확인을 위한 설정 (시작)
     # sql을 봐야한다면 해당 부분 주석 해제하면 됨.

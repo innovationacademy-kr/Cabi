@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.utils.ExceptionUtil;
@@ -39,6 +40,7 @@ import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(exclude = {"cabinetPlace", "lentHistories"})
+@Log4j2
 public class Cabinet {
 
 	@Id
@@ -148,45 +150,54 @@ public class Cabinet {
 	}
 
 	public void specifyCabinetPlace(CabinetPlace cabinetPlace) {
+		log.info("setCabinetPlace : {}", cabinetPlace);
 		this.cabinetPlace = cabinetPlace;
 	}
 
 	public void assignVisibleNum(Integer visibleNum) {
+		log.info("assignVisibleNum : {}", visibleNum);
 		this.visibleNum = visibleNum;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyStatus(CabinetStatus cabinetStatus) {
+		log.info("specifyStatus : {}", cabinetStatus);
 		this.status = cabinetStatus;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyMaxUser(Integer maxUser) {
+		log.info("specifyMaxUser : {}", maxUser);
 		this.maxUser = maxUser;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeStatusNote(String statusNote) {
+		log.info("writeStatusNote : {}", statusNote);
 		this.statusNote = statusNote;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void specifyLentType(LentType lentType) {
+		log.info("specifyLentType : {}", lentType);
 		this.lentType = lentType;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeTitle(String title) {
+		log.info("writeTitle : {}", title);
 		this.title = title;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void coordinateGrid(Grid grid) {
+		log.info("coordinateGrid : {}", grid);
 		this.grid = grid;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
 
 	public void writeMemo(String memo) {
+		log.info("writeMemo : {}", memo);
 		this.memo = memo;
 		ExceptionUtil.throwIfFalse(this.isValid(), new DomainException(INVALID_STATUS));
 	}
@@ -213,6 +224,7 @@ public class Cabinet {
 	 * @param userCount 현재 사용자 수
 	 */
 	public void specifyStatusByUserCount(Integer userCount) {
+		log.info("specifyStatusByUserCount : {}", userCount);
 		if (this.status.equals(CabinetStatus.BROKEN)) {
 			throw new DomainException(INVALID_STATUS);
 		}

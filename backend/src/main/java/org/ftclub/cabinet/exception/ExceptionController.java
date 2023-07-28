@@ -11,7 +11,7 @@ public class ExceptionController {
 
 	@ExceptionHandler(ControllerException.class)
 	public ResponseEntity<?> controllerExceptionHandler(ControllerException e) {
-		log.info("called ExceptionController for {}", e.status.getError());
+		log.info("[ControllerException] {} : {}", e.status.getError(), e.status.getMessage());
 		return ResponseEntity
 				.status(e.status.getStatusCode())
 				.body(e.status);
@@ -19,7 +19,7 @@ public class ExceptionController {
 
 	@ExceptionHandler(ServiceException.class)
 	public ResponseEntity<?> serviceExceptionHandler(ServiceException e) {
-		log.info("called ExceptionController for {}", e.status.getError());
+		log.info("[ServiceException] {} : {}", e.status.getError(), e.status.getMessage());
 		return ResponseEntity
 				.status(e.status.getStatusCode())
 				.body(e.status);
@@ -27,7 +27,7 @@ public class ExceptionController {
 
 	@ExceptionHandler(DomainException.class)
 	public ResponseEntity<?> domainExceptionHandler(DomainException e) {
-		log.info("called ExceptionController for {}", e.status.getError());
+		log.warn("[DomainException] {} : {}", e.status.getError(), e.status.getMessage());
 		return ResponseEntity
 				.status(e.status.getStatusCode())
 				.body(e.status);

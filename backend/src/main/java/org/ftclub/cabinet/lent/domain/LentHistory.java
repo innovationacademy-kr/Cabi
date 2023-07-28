@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -24,6 +25,7 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(exclude = {"user", "cabinet"})
+@Log4j2
 public class LentHistory {
 
 	@Id
@@ -149,6 +151,7 @@ public class LentHistory {
 	 * @param expiredAt 변경하고 싶은 만료일
 	 */
 	public void setExpiredAt(LocalDateTime expiredAt) {
+		log.info("setExpiredAt : {}", expiredAt);
 		this.expiredAt = expiredAt;
 		ExceptionUtil.throwIfFalse(this.isValid(),
 				new DomainException(ExceptionStatus.INVALID_STATUS));
@@ -216,6 +219,7 @@ public class LentHistory {
 	 * @param now 설정하려고 하는 반납일
 	 */
 	public void endLent(LocalDateTime now) {
+		log.info("setEndLent : {}", now);
 		ExceptionUtil.throwIfFalse((this.isEndLentValid(now)),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		this.endedAt = now;

@@ -66,7 +66,7 @@ public class LentServiceImpl implements LentService {
 
 	@Override
 	public void startLentClubCabinet(Long userId, Long cabinetId) {
-		log.info("Called startLentClubCabinet: {}, {}", userId, cabinetId);
+		log.debug("Called startLentClubCabinet: {}, {}", userId, cabinetId);
 		Cabinet cabinet = cabinetOptionalFetcher.getClubCabinet(cabinetId);
 		lentOptionalFetcher.checkExistedSpace(cabinetId);
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
@@ -79,7 +79,7 @@ public class LentServiceImpl implements LentService {
 
 	@Override
 	public void endLentCabinet(Long userId) {
-		log.info("Called endLentCabinet: {}", userId);
+		log.debug("Called endLentCabinet: {}", userId);
 		LentHistory lentHistory = returnCabinetByUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		// cabinetType도 인자로 전달하면 좋을 거 같습니다 (공유사물함 3일이내 반납 페널티)
@@ -89,13 +89,13 @@ public class LentServiceImpl implements LentService {
 
 	@Override
 	public void terminateLentCabinet(Long userId) {
-		log.info("Called terminateLentCabinet: {}", userId);
+		log.debug("Called terminateLentCabinet: {}", userId);
 		returnCabinetByUserId(userId);
 	}
 
 	@Override
 	public void terminateLentByCabinetId(Long cabinetId) {
-		log.info("Called terminateLentByCabinetId: {}", cabinetId);
+		log.debug("Called terminateLentByCabinetId: {}", cabinetId);
 		returnCabinetByCabinetId(cabinetId);
 	}
 
@@ -105,7 +105,7 @@ public class LentServiceImpl implements LentService {
 	// 유저가 사용하는 경우에 대해서는 userId로만 쓰게하든, 한 방식으로만 사용하게끔 해야함 - 함수를 쪼갤 가능성도 있음.
 	// 우선 현재 관리자만 쓰고 있고, 한 군데에서만 사용되므로 List로 전체 반납을 하도록 구현, 이에 대한 논의는 TO-DO
 	private List<LentHistory> returnCabinetByCabinetId(Long cabinetId) {
-		log.info("Called returnCabinetByCabinetId: {}", cabinetId);
+		log.debug("Called returnCabinetByCabinetId: {}", cabinetId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
@@ -117,7 +117,7 @@ public class LentServiceImpl implements LentService {
 	}
 
 	private LentHistory returnCabinetByUserId(Long userId) {
-		log.info("Called returnCabinet: {}", userId);
+		log.debug("Called returnCabinet: {}", userId);
 		userExceptionHandler.getUser(userId);
 		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
@@ -133,7 +133,7 @@ public class LentServiceImpl implements LentService {
 
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {
-		log.info("Called assignLent: {}, {}", userId, cabinetId);
+		log.debug("Called assignLent: {}, {}", userId, cabinetId);
 		userExceptionHandler.getUser(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		lentOptionalFetcher.checkExistedSpace(cabinetId);
@@ -146,7 +146,7 @@ public class LentServiceImpl implements LentService {
 
 	@Override
 	public List<ActiveLentHistoryDto> getAllActiveLentHistories() {
-		log.info("Called getAllActiveLentHistories");
+		log.debug("Called getAllActiveLentHistories");
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentHistories();
 		LocalDateTime now = LocalDateTime.now();
 		return lentHistories.stream()

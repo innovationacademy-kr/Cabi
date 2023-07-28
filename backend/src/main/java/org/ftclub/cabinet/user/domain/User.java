@@ -14,12 +14,14 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import lombok.extern.log4j.Log4j2;
 
 @Entity
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
+@Log4j2
 public class User {
 
 	@Id
@@ -83,14 +85,17 @@ public class User {
 	}
 
 	public void changeBlackholedAt(LocalDateTime blackholedAt) {
+		log.info("Called changeBlackholedAt - form {} to {}", this.blackholedAt, blackholedAt);
 		this.blackholedAt = blackholedAt;
 	}
 
 	public void setDeletedAt(LocalDateTime deletedAt) {
+		log.info("Called setDeletedAt - from {} to {}", this.deletedAt, deletedAt);
 		this.deletedAt = deletedAt;
 	}
 
 	public void changeName(String name) {
+		log.info("Called changeName - from {} to {}", this.name, name);
 		this.name = name;
 		ExceptionUtil.throwIfFalse(this.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));

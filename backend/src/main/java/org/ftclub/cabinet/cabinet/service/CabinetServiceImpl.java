@@ -46,7 +46,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateStatus(Long cabinetId, CabinetStatus status) {
-		log.info("Called updateStatus: {}, {}", cabinetId, status);
+		log.debug("Called updateStatus: {}, {}", cabinetId, status);
 		if (!status.isValid()) {
 			throw new ServiceException(ExceptionStatus.INVALID_STATUS);
 		}
@@ -59,7 +59,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateMemo(Long cabinetId, String memo) {
-		log.info("Called updateMemo: {}, {}", cabinetId, memo);
+		log.debug("Called updateMemo: {}, {}", cabinetId, memo);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeMemo(memo);
 	}
@@ -69,7 +69,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateVisibleNum(Long cabinetId, Integer visibleNum) {
-		log.info("Called updateVisibleNum: {}, {}", cabinetId, visibleNum);
+		log.debug("Called updateVisibleNum: {}, {}", cabinetId, visibleNum);
 		if (visibleNum < 0) {
 			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
@@ -82,14 +82,14 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateTitle(Long cabinetId, String title) {
-		log.info("Called updateTitle: {}, {}", cabinetId, title);
+		log.debug("Called updateTitle: {}, {}", cabinetId, title);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeTitle(title);
 	}
 
 	@Override
 	public void updateTitleAndMemo(Long cabinetId, String title, String memo) {
-		log.info("Called updateTitleAndMemo: {}, {}, {}", cabinetId, title, memo);
+		log.debug("Called updateTitleAndMemo: {}, {}, {}", cabinetId, title, memo);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		if (StringUtils.hasText(title)) {
 			cabinet.writeTitle(title);
@@ -104,7 +104,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateMaxUser(Long cabinetId, Integer maxUser) {
-		log.info("Called updateMaxUser: {}, {}", cabinetId, maxUser);
+		log.debug("Called updateMaxUser: {}, {}", cabinetId, maxUser);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.specifyMaxUser(maxUser);
 	}
@@ -114,7 +114,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateLentType(Long cabinetId, LentType lentType) {
-		log.info("Called updateLentType: {}, {}", cabinetId, lentType);
+		log.debug("Called updateLentType: {}, {}", cabinetId, lentType);
 		if (!lentType.isValid()) {
 			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
@@ -132,7 +132,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateGrid(Long cabinetId, Grid grid) {
-		log.info("Called updateGrid: {}, {}", cabinetId, grid);
+		log.debug("Called updateGrid: {}, {}", cabinetId, grid);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.coordinateGrid(grid);
 	}
@@ -142,7 +142,7 @@ public class CabinetServiceImpl implements CabinetService {
 	 */
 	@Override
 	public void updateStatusNote(Long cabinetId, String statusNote) {
-		log.info("Called updateStatusNote: {}, {}", cabinetId, statusNote);
+		log.debug("Called updateStatusNote: {}, {}", cabinetId, statusNote);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.writeStatusNote(statusNote);
 	}
