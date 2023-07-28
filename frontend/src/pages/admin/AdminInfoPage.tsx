@@ -192,7 +192,7 @@ const AdminInfoStyled = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
-  overflow: hidden;
+  min-height: 775px;
 
   @media screen and (max-width: 1300px) {
     grid-template-columns: repeat(2, 1fr);

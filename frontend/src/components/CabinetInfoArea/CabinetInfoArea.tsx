@@ -41,6 +41,7 @@ const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
   myCabinetId?: number;
   closeCabinet: () => void;
+<<<<<<< HEAD
 }> = ({ selectedCabinetInfo, myCabinetId, closeCabinet }) => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
@@ -103,6 +104,33 @@ const CabinetInfoArea: React.FC<{
     );
   // 단일 선택 시 보이는 cabinetInfoArea
   return (
+=======
+  expireDate: string | null;
+  isMine: boolean;
+  isAvailable: boolean;
+  userModal: ICurrentModalStateInfo;
+  openModal: (modalName: TModalState) => void;
+  closeModal: (modalName: TModalState) => void;
+}> = ({
+  selectedCabinetInfo,
+  closeCabinet,
+  expireDate,
+  isMine,
+  isAvailable,
+  userModal,
+  openModal,
+  closeModal,
+}) => {
+  return selectedCabinetInfo === null ? (
+    <NotSelectedStyled>
+      <CabiLogoStyled src={cabiLogo} />
+      <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
+        사물함을 <br />
+        선택해주세요
+      </TextStyled>
+    </NotSelectedStyled>
+  ) : (
+>>>>>>> 1865ccbb74964647ca235340bffa349351f3b906
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
         {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}

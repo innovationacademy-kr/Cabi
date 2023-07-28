@@ -41,8 +41,19 @@ const LogTable = ({ lentLog }: IlentLog) => {
                   <td title={new Date(lent_time).toLocaleString("ko-KR")}>
                     {new Date(lent_time).toLocaleString("ko-KR", dateOptions)}
                   </td>
+<<<<<<< HEAD
                   <td title={new Date(return_time).toLocaleString("ko-KR")}>
                     {new Date(return_time).toLocaleString("ko-KR", dateOptions)}
+=======
+                  <td
+                    title={
+                      endedAt ? new Date(endedAt).toLocaleString("ko-KR") : "-"
+                    }
+                  >
+                    {endedAt
+                      ? new Date(endedAt).toLocaleString("ko-KR", dateOptions)
+                      : "-"}
+>>>>>>> 1865ccbb74964647ca235340bffa349351f3b906
                   </td>
                 </tr>
               )
