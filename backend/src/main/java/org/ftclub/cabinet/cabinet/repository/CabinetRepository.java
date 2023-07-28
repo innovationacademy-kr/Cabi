@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
+public interface CabinetRepository extends JpaRepository<Cabinet, Long>, FloorLoadRepository {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c "
