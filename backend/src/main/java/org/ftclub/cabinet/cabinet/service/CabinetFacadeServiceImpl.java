@@ -116,7 +116,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 			if (!cabinetLentHistories.containsKey(cabinet)) {
 				String section = cabinet.getCabinetPlace().getLocation().getSection();
 				CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, Collections.emptyList());
-				System.out.println("preview = " + preview);
 				if (cabinetPreviewsBySection.containsKey(section)) {
 					cabinetPreviewsBySection.get(section).add(preview);
 				} else {
