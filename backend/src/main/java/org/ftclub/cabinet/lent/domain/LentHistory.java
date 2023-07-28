@@ -167,7 +167,7 @@ public class LentHistory {
         if (expiredAt == null) {
             return false;
         }
-        if (expiredAt == DateUtil.getInfinityDate()) {
+        if (expiredAt.isEqual(DateUtil.getInfinityDate())) {
             return false;
         }
         return true;
