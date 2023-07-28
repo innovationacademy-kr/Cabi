@@ -25,7 +25,7 @@ public class EmailSender {
 			throws MessagingException, MailException {
 		log.info("called EmailSender for {}, {}, {}", name, to, subject);
 		if (gmailProperties.getIsProduction() == false) {
-			log.info("개발 환경이므로 메일을 보내지 않습니다.");
+			log.debug("개발 환경이므로 메일을 보내지 않습니다.");
 			return;
 		}
 		MimeMessage message = javaMailSender.createMimeMessage();

@@ -49,9 +49,6 @@ public class AdminCabinetController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public CabinetInfoResponseDto getCabinetInfo(
 			@PathVariable("cabinetId") Long cabinetId) {
-		if (cabinetId == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
 		log.info("Called getCabinetInfo: {}", cabinetId);
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
 	}
@@ -68,11 +65,11 @@ public class AdminCabinetController {
 	public void updateCabinetStatusNote(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
-		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey(
+		log.info("Called updateCabinetStatusNote: {}", cabinetId);
+		if (body == null || body.isEmpty() || !body.containsKey(
 				"statusNote")) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		log.info("Called updateCabinetStatusNote: {}", cabinetId);
 		cabinetFacadeService.updateCabinetStatusNote(cabinetId, body.get("statusNote"));
 	}
 
@@ -88,10 +85,10 @@ public class AdminCabinetController {
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
-		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey("title")) {
+		log.info("Called updateCabinetTitle: {}", cabinetId);
+		if (body == null || body.isEmpty() || !body.containsKey("title")) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		log.info("Called updateCabinetTitle: {}", cabinetId);
 		cabinetFacadeService.updateCabinetTitle(cabinetId, body.get("title"));
 	}
 
@@ -99,7 +96,7 @@ public class AdminCabinetController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetBundleStatus(
 			@Valid @RequestBody CabinetStatusRequestDto cabinetStatusRequestDto) {
-		log.info("Called updateCabinetBundleStatus: {}", cabinetStatusRequestDto);
+		log.info("Called updateCabinetBundleStatus: {}", cabinetStatusRequestDto.getCabinetIds());
 		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto);
 	}
 
@@ -107,7 +104,7 @@ public class AdminCabinetController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetClubStatus(
 			@Valid @RequestBody CabinetClubStatusRequestDto cabinetClubStatusRequestDto) {
-		log.info("Called updateCabinetClubStatus: {}", cabinetClubStatusRequestDto);
+		log.info("Called updateCabinetClubStatus: {}", cabinetClubStatusRequestDto.getCabinetId());
 		cabinetFacadeService.updateCabinetClubStatus(cabinetClubStatusRequestDto);
 		lentFacadeService.startLentClubCabinet(cabinetClubStatusRequestDto.getUserId(),
 				cabinetClubStatusRequestDto.getCabinetId());
@@ -126,12 +123,11 @@ public class AdminCabinetController {
 	public void updateCabinetGrid(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody Map<String, Integer> body) {
-
-		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey("row")
+		log.info("Called updateCabinetGrid: {}", cabinetId);
+		if (body == null || body.isEmpty() || !body.containsKey("row")
 				|| !body.containsKey("col")) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		log.info("Called updateCabinetGrid: {}", cabinetId);
 		cabinetFacadeService.updateCabinetGrid(cabinetId, body.get("row"), body.get("col"));
 	}
 
@@ -147,11 +143,11 @@ public class AdminCabinetController {
 	public void updateCabinetVisibleNum(
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, Integer> body) {
-		if (cabinetId == null || body == null || body.isEmpty() || !body.containsKey(
+		log.info("Called updateCabinetVisibleNum: {}", cabinetId);
+		if (body == null || body.isEmpty() || !body.containsKey(
 				"visibleNum")) {
 			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
 		}
-		log.info("Called updateCabinetVisibleNum: {}", cabinetId);
 		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, body.get("visibleNum"));
 	}
 
@@ -167,7 +163,7 @@ public class AdminCabinetController {
 //	public void updateCabinetBundleStatus(
 //			@Valid @RequestBody UpdateCabinetsRequestDto updateCabinetsRequestDto,
 //			@PathVariable("status") CabinetStatus status) {
-//		log.info("Called updateCabinetBundleStatus: {}", status);
+//		log.debug("Called updateCabinetBundleStatus: {}", status);
 //		cabinetFacadeService.updateCabinetBundleStatus(updateCabinetsRequestDto, status);
 //	}
 
@@ -203,9 +199,7 @@ public class AdminCabinetController {
 			@PathVariable("lentType") LentType lentType,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
-		if (lentType == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
+		log.info("Called getCabinetsByLentType: {}", lentType);
 		return cabinetFacadeService.getCabinetPaginationByLentType(lentType, page, size);
 	}
 
@@ -223,9 +217,7 @@ public class AdminCabinetController {
 			@PathVariable("status") CabinetStatus status,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
-		if (status == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
+		log.info("Called getCabinetsByStatus: {}", status);
 		return cabinetFacadeService.getCabinetPaginationByStatus(status, page, size);
 	}
 
@@ -243,9 +235,7 @@ public class AdminCabinetController {
 			@PathVariable("visibleNum") Integer visibleNum,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
-		if (visibleNum == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
+		log.info("Called getCabinetsByVisibleNum: {}", visibleNum);
 		return cabinetFacadeService.getCabinetPaginationByVisibleNum(visibleNum, page, size);
 	}
 
@@ -263,9 +253,7 @@ public class AdminCabinetController {
 	@PathVariable("cabinetId") Long cabinetId,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
-		if (cabinetId == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
+		log.info("Called getCabinetLentHistories: {}", cabinetId);
 		return cabinetFacadeService.getCabinetLentHistoriesPagination(cabinetId, page, size);
 	}
 

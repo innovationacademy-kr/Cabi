@@ -34,7 +34,7 @@ public class UserOptionalFetcher {
 	 * @return {@link List} of {@link User}
 	 */
 	public List<User> findAllUsers() {
-		log.info("Called findAllUsers");
+		log.debug("Called findAllUsers");
 		return userRepository.findAll();
 	}
 
@@ -45,7 +45,7 @@ public class UserOptionalFetcher {
 	 * @return {@link User}
 	 */
 	public User findUser(Long userId) {
-		log.info("Called findUser: {}", userId);
+		log.debug("Called findUser: {}", userId);
 		return userRepository.findUser(userId).orElse(null);
 	}
 
@@ -56,7 +56,7 @@ public class UserOptionalFetcher {
 	 * @return 찾은 유저의 고유 id
 	 */
 	public User findUserByName(String name) {
-		log.info("Called findUserByName: {}", name);
+		log.debug("Called findUserByName: {}", name);
 		return userRepository.findByName(name).orElse(null);
 	}
 
@@ -66,7 +66,7 @@ public class UserOptionalFetcher {
 	 * @param email 유저의 이메일
 	 */
 	public User findUserByEmail(String email) {
-		log.info("Called findUserByEmail: {}", email);
+		log.debug("Called findUserByEmail: {}", email);
 		return userRepository.findByEmail(email).orElse(null);
 	}
 
@@ -78,7 +78,7 @@ public class UserOptionalFetcher {
 	 * @return {@link Page} of {@link User}
 	 */
 	public Page<User> findUsersByPartialName(String name, Pageable pageable) {
-		log.info("Called findUsersByPartialName: {}", name);
+		log.debug("Called findUsersByPartialName: {}", name);
 		return userRepository.findByPartialName(name, pageable);
 	}
 
@@ -89,7 +89,7 @@ public class UserOptionalFetcher {
 	 * @return {@link AdminUser}
 	 */
 	public AdminUser findAdminUser(Long adminUserId) {
-		log.info("Called findAdminUser: {}", adminUserId);
+		log.debug("Called findAdminUser: {}", adminUserId);
 		return adminUserRepository.findAdminUser(adminUserId).orElse(null);
 	}
 
@@ -100,7 +100,7 @@ public class UserOptionalFetcher {
 	 * @return {@link AdminUser}
 	 */
 	public AdminUser findAdminUserByEmail(String email) {
-		log.info("Called findAdminUserByEmail: {}", email);
+		log.debug("Called findAdminUserByEmail: {}", email);
 		return adminUserRepository.findAdminUserByEmail(email).orElse(null);
 	}
 
@@ -108,7 +108,7 @@ public class UserOptionalFetcher {
 	 *
 	 */
 	public AdminRole findAdminUserRoleByEmail(String email) {
-		log.info("Called findAdminUserRoleByEmail: {}", email);
+		log.debug("Called findAdminUserRoleByEmail: {}", email);
 		return adminUserRepository.findAdminUserRoleByEmail(email)
 				.orElse(null);
 	}
@@ -121,7 +121,7 @@ public class UserOptionalFetcher {
 	 * @return {@link Page} of {@link BanHistory}
 	 */
 	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, LocalDateTime now) {
-		log.info("Called findPaginationActiveBanHistories");
+		log.debug("Called findPaginationActiveBanHistories");
 		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
 	}
 
@@ -134,7 +134,7 @@ public class UserOptionalFetcher {
 	 */
 	//TO-DO : isEmpty, List에 대한 0 인덱스 가져오기 등 리팩터링 매우 필요..
 	public BanHistory findRecentActiveBanHistory(Long userId, LocalDateTime now) {
-		log.info("Called findRecentActiveBanHistory: {}", userId);
+		log.debug("Called findRecentActiveBanHistory: {}", userId);
 		List<BanHistory> banHistories = banHistoryRepository.findRecentBanHistoryByUserId(userId,
 				now,
 				PageRequest.of(0, 1));
@@ -151,7 +151,7 @@ public class UserOptionalFetcher {
 	 * @return {@link Page<User>}
 	 */
 	public Page<User> findClubUsers(Pageable pageable) {
-		log.info("Called findClubUsers");
+		log.debug("Called findClubUsers");
 		return userRepository.findAllByRoleAndDeletedAtIsNull(UserRole.CLUB, pageable);
 	}
 
@@ -164,7 +164,7 @@ public class UserOptionalFetcher {
 	 * @return {@link User}
 	 */
 	public User getUser(Long userId) {
-		log.info("Called getUser: {}", userId);
+		log.debug("Called getUser: {}", userId);
 		return userRepository.findUser(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 	}
@@ -177,7 +177,7 @@ public class UserOptionalFetcher {
 	 * @return 찾은 유저의 고유 id
 	 */
 	public User getUserByName(String name) {
-		log.info("Called getUserByName: {}", name);
+		log.debug("Called getUserByName: {}", name);
 		return userRepository.findByName(name)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 	}
@@ -189,7 +189,7 @@ public class UserOptionalFetcher {
 	 * @return {@link User}
 	 */
 	public User getClubUser(Long userId) {
-		log.info("Called getClubUser: {}", userId);
+		log.debug("Called getClubUser: {}", userId);
 		User user = getUser(userId);
 		if (!user.isUserRole(UserRole.CLUB)) {
 			throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);
@@ -204,7 +204,7 @@ public class UserOptionalFetcher {
 	 * @return {@link AdminUser}
 	 */
 	public AdminUser getAdminUser(Long adminUserId) {
-		log.info("Called getAdminUser: {}", adminUserId);
+		log.debug("Called getAdminUser: {}", adminUserId);
 		return adminUserRepository.findAdminUser(adminUserId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
@@ -216,7 +216,7 @@ public class UserOptionalFetcher {
 	 * @return {@link User}
 	 */
 	public AdminUser getAdminUserByEmail(String adminUserEmail) {
-		log.info("Called getAdminUserByEmail: {}", adminUserEmail);
+		log.debug("Called getAdminUserByEmail: {}", adminUserEmail);
 		return adminUserRepository.findAdminUserByEmail(adminUserEmail)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
@@ -229,7 +229,7 @@ public class UserOptionalFetcher {
 	 */
 	//to-do : if null exception
 	public BanHistory getRecentBanHistory(Long userId) {
-		log.info("Called getRecentBanHistory: {}", userId);
+		log.debug("Called getRecentBanHistory: {}", userId);
 		List<BanHistory> banHistory = banHistoryRepository.findRecentBanHistoryByUserId(userId,
 				LocalDateTime.now(),
 				PageRequest.of(0, 1));
