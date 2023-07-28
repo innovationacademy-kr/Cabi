@@ -31,7 +31,7 @@ public class FtApiManager {
 	 * 42 토큰을 발급받는다.
 	 */
 	public void issueAccessToken() {
-		log.debug("called issueAccessToken");
+		log.info("called issueAccessToken");
 		accessToken =
 				WebClient.create().post()
 						.uri(ftApiProperties.getTokenUri())
@@ -62,7 +62,7 @@ public class FtApiManager {
 	 * @return JsonNode 형태의 유저 정보
 	 */
 	public JsonNode getFtUsersInfoByName(String name) {
-		log.debug("called getFtUsersInfoByName {}", name);
+		log.info("called getFtUsersInfoByName {}", name);
 		Integer tryCount = 0;
 		while (tryCount < MAX_RETRY) {
 			try {
@@ -76,8 +76,8 @@ public class FtApiManager {
 				return results;
 			} catch (Exception e) {
 				tryCount++;
-				log.debug(e.getMessage());
-				log.debug("요청에 실패했습니다. 최대 3번 재시도합니다. 현재 시도 횟수: {}", tryCount);
+				log.info(e.getMessage());
+				log.info("요청에 실패했습니다. 최대 3번 재시도합니다. 현재 시도 횟수: {}", tryCount);
 				this.issueAccessToken();
 				if (tryCount == MAX_RETRY) {
 					log.error("요청에 실패했습니다. 최대 재시도 횟수를 초과했습니다. {}", e.getMessage());
