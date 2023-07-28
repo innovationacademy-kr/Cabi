@@ -1,6 +1,0 @@
-{
-  "devDependencies": {
-    "rollup-plugin-visualizer": "^5.9.0",
-    "webpack-bundle-analyzer": "^4.8.0"
-  }
-}
