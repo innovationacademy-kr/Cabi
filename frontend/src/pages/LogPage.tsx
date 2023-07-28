@@ -1,26 +1,24 @@
-import LogTable from "@/components/LentLog/LogTable/LogTable";
-import styled from "styled-components";
-import { axiosMyLentLog } from "@/api/axios/axios.custom";
 import { useEffect, useState } from "react";
-import { LentLogDto } from "@/types/dto/lent.dto";
-
-const BAD_REQUEST = 400;
+import styled from "styled-components";
+import LogTable from "@/components/LentLog/LogTable/LogTable";
+import { LentHistoryDto } from "@/types/dto/lent.dto";
+import { LentLogResponseType } from "@/types/dto/lent.dto";
+import { axiosMyLentLog } from "@/api/axios/axios.custom";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const LogPage = () => {
-  const [lentLog, setLentLog] = useState<
-    LentLogDto[] | typeof BAD_REQUEST | undefined
-  >(undefined);
+  const [lentLog, setLentLog] = useState<LentLogResponseType>(undefined);
 
   const getLentLog = async () => {
     try {
       const response = await axiosMyLentLog(0);
-      const lentLogs: LentLogDto[] = response.data.result;
+      const lentLogs: LentHistoryDto[] = response.data.result;
       setTimeout(() => {
         setLentLog(lentLogs);
       }, 500);
     } catch {
       setTimeout(() => {
-        setLentLog(BAD_REQUEST);
+        setLentLog(STATUS_400_BAD_REQUEST);
       }, 500);
     }
   };
@@ -35,7 +33,7 @@ const LogPage = () => {
       <SubTitleStyled>
         최근 10회의 대여 기록을 확인할 수 있습니다.
       </SubTitleStyled>
-      <LogTable lentLog={lentLog} />
+      <LogTable lentHistory={lentLog} />
     </WrapperStyled>
   );
 };

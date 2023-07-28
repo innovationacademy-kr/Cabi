@@ -1,19 +1,19 @@
 import { useEffect, useRef } from "react";
-import styled from "styled-components";
-import { currentFloorSectionState } from "@/recoil/selectors";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import styled from "styled-components";
 import {
   currentFloorNumberState,
   currentSectionNameState,
 } from "@/recoil/atoms";
 import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
-import useMenu from "@/hooks/useMenu";
-import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
-import useMultiSelect from "@/hooks/useMultiSelect";
 import MultiSelectButton from "@/components/Common/MultiSelectButton";
+import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import useMenu from "@/hooks/useMenu";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
-const MainPage = () => {
+const AdminMainPage = () => {
   const touchStartPosX = useRef(0);
   const touchStartPosY = useRef(0);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
@@ -43,28 +43,28 @@ const MainPage = () => {
   const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
     currentSectionNameState
   );
-  const currentSectionIdx = sectionList.findIndex(
+  const currentSectionIndex = sectionList.findIndex(
     (sectionName) => sectionName === currentSectionName
   );
 
   useEffect(() => {
     resetMultiSelectMode();
-  }, [currentSectionIdx, currentFloorNumber]);
+  }, [currentSectionIndex, currentFloorNumber]);
 
   const moveToLeftSection = () => {
-    if (currentSectionIdx <= 0) {
+    if (currentSectionIndex <= 0) {
       setCurrentSectionName(sectionList[sectionList.length - 1]);
     } else {
-      setCurrentSectionName(sectionList[currentSectionIdx - 1]);
+      setCurrentSectionName(sectionList[currentSectionIndex - 1]);
     }
     mainWrapperRef.current?.scrollTo(0, 0);
   };
 
   const moveToRightSection = () => {
-    if (currentSectionIdx >= sectionList.length - 1) {
+    if (currentSectionIndex >= sectionList.length - 1) {
       setCurrentSectionName(sectionList[0]);
     } else {
-      setCurrentSectionName(sectionList[currentSectionIdx + 1]);
+      setCurrentSectionName(sectionList[currentSectionIndex + 1]);
     }
     mainWrapperRef.current?.scrollTo(0, 0);
   };
@@ -93,13 +93,13 @@ const MainPage = () => {
       }}
     >
       <SectionPaginationContainer />
-      <div style={{ marginBottom: `${isMultiSelect ? "0px" : "4px"}` }}>
+      <MultiSelectButtonWrapperStyled isMultiSelect={isMultiSelect}>
         <MultiSelectButton
           theme={isMultiSelect ? "fill" : "line"}
           text="다중 선택 모드"
           onClick={toggleMultiSelectMode}
         />
-      </div>
+      </MultiSelectButtonWrapperStyled>
       <CabinetListWrapperStyled>
         <CabinetListContainer isAdmin={true} />
       </CabinetListWrapperStyled>
@@ -114,6 +114,10 @@ const WapperStyled = styled.div`
   user-select: none;
 `;
 
+const MultiSelectButtonWrapperStyled = styled.div<{ isMultiSelect: boolean }>`
+  margin-bottom: ${({ isMultiSelect }) => (isMultiSelect ? "0px" : "4px")};
+`;
+
 const CabinetListWrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
@@ -121,4 +125,5 @@ const CabinetListWrapperStyled = styled.div`
   align-items: center;
   padding-bottom: 30px;
 `;
-export default MainPage;
+
+export default AdminMainPage;

@@ -1,29 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
+import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
+import {
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
+import {
+  IAdminCurrentModalStateInfo,
+  IMultiSelectTargetInfo,
+  ISelectedCabinetInfo,
+  TAdminModalState,
+} from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
-import CabinetType from "@/types/enum/cabinet.type.enum";
-import cabiLogo from "@/assets/images/logo.svg";
+import ClubLentModal from "@/components/Modals/LentModal/ClubLentModal";
+import AdminReturnModal from "@/components/Modals/ReturnModal/AdminReturnModal";
+import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import cabiLogo from "@/assets/images/logo.svg";
+import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import AdminReturnModal from "../Modals/ReturnModal/AdminReturnModal";
-import StatusModalContainer from "@/components/Modals/StatusModal/StatusModal.container";
-import { ISelectedCabinetInfo } from "@/components/CabinetInfoArea/CabinetInfoArea";
-
-export interface IMultiSelectTargetInfo {
-  targetCabinetInfoList: CabinetInfo[];
-  typeCounts: {
-    AVAILABLE: number;
-    EXPIRED: number;
-    SET_EXPIRE_FULL: number;
-    BROKEN: number;
-  };
-}
 
 const AdminCabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -31,57 +32,36 @@ const AdminCabinetInfoArea: React.FC<{
   closeCabinet: () => void;
   multiSelectTargetInfo: IMultiSelectTargetInfo | null;
   openLent: React.MouseEventHandler;
+  adminModal: IAdminCurrentModalStateInfo;
+  openModal: (moadlName: TAdminModalState) => void;
+  closeModal: (moadlName: TAdminModalState) => void;
+  checkMultiReturn: (selectedCabinets: CabinetPreviewInfo[]) => boolean;
+  checkMultiStatus: (selectedCabinets: CabinetPreviewInfo[]) => boolean;
+  expireDate: string | null;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
   multiSelectTargetInfo,
   openLent,
+  adminModal,
+  openModal,
+  closeModal,
+  checkMultiReturn,
+  checkMultiStatus,
+  expireDate,
 }) => {
+  const currentFloor = useRecoilValue(currentFloorNumberState);
+  const currentSection = useRecoilValue(currentSectionNameState);
   const { targetCabinetInfoList, typeCounts } = multiSelectTargetInfo ?? {};
-  const [showAdminReturnModal, setShowAdminReturnModal] =
-    useState<boolean>(false);
-  const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
-
-  const { resetMultiSelectMode, isSameStatus, isSameType } = useMultiSelect();
+  const { resetMultiSelectMode } = useMultiSelect();
 
   const isLented: boolean = selectedCabinetInfo?.userNameList.at(0) !== "-";
 
-  const handleOpenAdminReturnModal = () => {
-    setShowAdminReturnModal(true);
-  };
-  const handleCloseAdminReturnModal = () => {
-    setShowAdminReturnModal(false);
-  };
-  const handleOpenStatusModal = () => {
-    setShowStatusModal(true);
-  };
-  const handleCloseStatusModal = () => {
-    setShowStatusModal(false);
-  };
-
-  const checkMultiReturn = (selectedCabinets: CabinetInfo[]) => {
-    const returnable = selectedCabinets.find(
-      (cabinet) => cabinet.lent_info.length >= 1
-    );
-    if (returnable !== undefined) {
-      return true;
-    }
-    return false;
-  };
-
-  const checkMultiStatus = (selectedCabinets: CabinetInfo[]) => {
-    // 캐비넷 일괄 상태 관리 모달을 열기 위한 조건
-    // 선택된 캐비넷들이 같은 타입, 같은 상태여야 함.
-    if (isSameType(selectedCabinets) && isSameStatus(selectedCabinets))
-      return true;
-    return false;
-  };
-
+  // 아무 사물함도 선택하지 않았을 때, 또는 다중선택 모드 진입후 아무 사물함도 선택하지 않았을 때
   if (
     (!multiSelectTargetInfo && selectedCabinetInfo === null) ||
     (multiSelectTargetInfo && targetCabinetInfoList!.length < 1)
   )
-    // 아무 사물함도 선택하지 않았을 때, 또는 다중선택 모드 진입후 아무 사물함도 선택하지 않았을 때
     return (
       <NotSelectedStyled>
         <CabiLogoStyled src={cabiLogo} />
@@ -91,10 +71,8 @@ const AdminCabinetInfoArea: React.FC<{
         </TextStyled>
       </NotSelectedStyled>
     );
+  // 다중 선택 모드 진입 후 캐비넷을 하나 이상 선택했을 시
   if (multiSelectTargetInfo) {
-    // 다중 선택 모드 진입 후 캐비넷을 하나 이상 선택했을 시
-    const currentFloor = targetCabinetInfoList![0].floor;
-    const currentSection = targetCabinetInfoList![0].section;
     return (
       <CabinetDetailAreaStyled>
         <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
@@ -104,11 +82,11 @@ const AdminCabinetInfoArea: React.FC<{
           <MultiCabinetIconStyled status={CabinetStatus.AVAILABLE}>
             {typeCounts![CabinetStatus.AVAILABLE]}
           </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.EXPIRED}>
-            {typeCounts![CabinetStatus.EXPIRED]}
+          <MultiCabinetIconStyled status={CabinetStatus.OVERDUE}>
+            {typeCounts![CabinetStatus.OVERDUE]}
           </MultiCabinetIconStyled>
-          <MultiCabinetIconStyled status={CabinetStatus.SET_EXPIRE_FULL}>
-            {typeCounts![CabinetStatus.SET_EXPIRE_FULL]}
+          <MultiCabinetIconStyled status={CabinetStatus.FULL}>
+            {typeCounts![CabinetStatus.FULL]}
           </MultiCabinetIconStyled>
           <MultiCabinetIconStyled status={CabinetStatus.BROKEN}>
             {typeCounts![CabinetStatus.BROKEN]}
@@ -116,13 +94,13 @@ const AdminCabinetInfoArea: React.FC<{
         </MultiCabinetIconWrapperStyled>
         <CabinetInfoButtonsContainerStyled>
           <ButtonContainer
-            onClick={handleOpenAdminReturnModal} //todo: admin 일괄 반납 모달 만들기
+            onClick={() => openModal("returnModal")}
             text="일괄 반납"
             theme="fill"
             disabled={!checkMultiReturn(targetCabinetInfoList!)}
           />
           <ButtonContainer
-            onClick={handleOpenStatusModal} //todo: admin 일괄 상태관리 모달 만들기
+            onClick={() => openModal("statusModal")}
             text="상태관리"
             theme="line"
             disabled={!checkMultiStatus(targetCabinetInfoList!)}
@@ -131,16 +109,16 @@ const AdminCabinetInfoArea: React.FC<{
             onClick={() => {
               resetMultiSelectMode();
               closeCabinet();
-            }} //todo: 상태관리 모달 만들기
+            }}
             text="취소"
             theme="grayLine"
           />
         </CabinetInfoButtonsContainerStyled>
-        {showAdminReturnModal && (
-          <AdminReturnModal closeModal={handleCloseAdminReturnModal} />
+        {adminModal.returnModal && (
+          <AdminReturnModal closeModal={() => closeModal("returnModal")} />
         )}
-        {showStatusModal && (
-          <StatusModalContainer onClose={handleCloseStatusModal} />
+        {adminModal.statusModal && (
+          <StatusModalContainer onClose={() => closeModal("statusModal")} />
         )}
       </CabinetDetailAreaStyled>
     );
@@ -156,7 +134,7 @@ const AdminCabinetInfoArea: React.FC<{
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={false}
       >
-        {selectedCabinetInfo!.cabinetNum}
+        {selectedCabinetInfo!.visibleNum}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}
@@ -166,16 +144,22 @@ const AdminCabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
+        {selectedCabinetInfo!.lentType === CabinetType.CLUB && !isLented ? (
+          <ButtonContainer
+            onClick={() => openModal("clubLentModal")}
+            text="동아리 대여"
+            theme="fill"
+          />
+        ) : (
+          <ButtonContainer
+            onClick={() => openModal("returnModal")}
+            text="반납"
+            theme="fill"
+            disabled={!isLented}
+          />
+        )}
         <ButtonContainer
-          onClick={handleOpenAdminReturnModal} //todo: admin 단일 반납 모달 만들기
-          text="반납"
-          theme="fill"
-          disabled={
-            selectedCabinetInfo!.lentType === CabinetType.CLUB || !isLented
-          }
-        />
-        <ButtonContainer
-          onClick={handleOpenStatusModal} //todo: admin 단일 상태관리 모달 만들기
+          onClick={() => openModal("statusModal")}
           text="상태 관리"
           theme="line"
         />
@@ -187,24 +171,26 @@ const AdminCabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo!.expireDate
-          ? `${selectedCabinetInfo!.expireDate.toString().substring(0, 10)}`
-          : null}
+        {expireDate}
       </CabinetLentDateInfoStyled>
-      {showAdminReturnModal && (
+      {adminModal.returnModal && (
         <AdminReturnModal
           lentType={selectedCabinetInfo!.lentType}
-          closeModal={handleCloseAdminReturnModal}
+          closeModal={() => closeModal("returnModal")}
         />
       )}
-      {showStatusModal && (
-        <StatusModalContainer onClose={handleCloseStatusModal} />
+      {adminModal.statusModal && (
+        <StatusModalContainer onClose={() => closeModal("statusModal")} />
+      )}
+      {adminModal.clubLentModal && (
+        <ClubLentModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={() => closeModal("clubLentModal")}
+        />
       )}
     </CabinetDetailAreaStyled>
   );
 };
-
-export default AdminCabinetInfoArea;
 
 const NotSelectedStyled = styled.div`
   height: 100%;
@@ -320,6 +306,7 @@ const MultiCabinetIconStyled = styled.div<{ status: CabinetStatus }>`
   align-items: center;
   background-color: ${({ status }) => cabinetStatusColorMap[status]};
   border-radius: 5px;
-  color: ${({ status }) =>
-    status === CabinetStatus.SET_EXPIRE_FULL ? "black" : "white"};
+  color: ${({ status }) => (status === CabinetStatus.FULL ? "black" : "white")};
 `;
+
+export default AdminCabinetInfoArea;

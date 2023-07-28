@@ -1,34 +1,35 @@
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   currentCabinetIdState,
+  currentFloorNumberState,
+  currentSectionNameState,
   isCurrentSectionRenderState,
   numberOfAdminWorkState,
   overdueCabinetListState,
   targetCabinetInfoState,
   targetUserInfoState,
 } from "@/recoil/atoms";
+import Selector from "@/components/Common/Selector";
+import Modal, { IModalContents } from "@/components/Modals/Modal";
+import ModalPortal from "@/components/Modals/ModalPortal";
 import {
-  axiosAdminReturn,
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
+import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
+import checkIcon from "@/assets/images/checkIcon.svg";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { UserInfo } from "@/types/dto/user.dto";
+import CabinetType from "@/types/enum/cabinet.type.enum";
+import {
   axiosBundleReturn,
   axiosCabinetById,
   axiosGetOverdueUserList,
   axiosReturnByUserId,
 } from "@/api/axios/axios.custom";
-import Modal, { IModalContents } from "@/components/Modals/Modal";
-import {
-  SuccessResponseModal,
-  FailResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
-import ModalPortal from "@/components/Modals/ModalPortal";
-import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
-import CabinetType from "@/types/enum/cabinet.type.enum";
-import Selector from "@/components/Common/Selector";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import { handleOverdueUserList } from "@/components/AdminInfo/convertFunctions";
-import { UserInfo } from "@/types/dto/user.dto";
+import { handleOverdueUserList } from "@/utils/tableUtils";
 
 const AdminReturnModal: React.FC<{
   lentType?: CabinetType;
@@ -43,6 +44,8 @@ const AdminReturnModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
+  const currentFloor = useRecoilValue(currentFloorNumberState);
+  const currentSection = useRecoilValue(currentSectionNameState);
   const setNumberOfAdminWork = useSetRecoilState<number>(
     numberOfAdminWorkState
   );
@@ -54,8 +57,8 @@ const AdminReturnModal: React.FC<{
     useMultiSelect();
 
   const getReturnDetail = (lentType: CabinetType) => {
-    const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.cabinet_num}번 사물함</strong>`;
-    if (lentType === CabinetType.PRIVATE) {
+    const detail = `<strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.visibleNum}번 사물함</strong>`;
+    if (lentType === CabinetType.PRIVATE || lentType === CabinetType.CLUB) {
       return detail + `<br>해당 사물함을 정말 반납하시겠습니까?`;
     }
     return detail + `<br>반납할 유저를 선택해 주세요.`;
@@ -66,12 +69,10 @@ const AdminReturnModal: React.FC<{
       const countReturnable = () => {
         let cnt = 0;
         targetCabinetInfoList.forEach((cabinet) => {
-          if (cabinet.lent_info.length >= 1) cnt++;
+          if (cabinet.userCount >= 1) cnt++;
         });
         return cnt;
       };
-      const currentFloor = targetCabinetInfoList[0].floor;
-      const currentSection = targetCabinetInfoList[0].section;
       const detail = `<strong>${currentFloor}층 ${currentSection}</strong><br>선택한 <strong>${
         targetCabinetInfoList.length
       }</strong>개의 사물함 중 <strong>${countReturnable()}</strong>개 사물함이 반납 가능합니다.<br>해당 사물함들을 반납 하시겠습니까?`;
@@ -90,8 +91,8 @@ const AdminReturnModal: React.FC<{
   const renderSelector = () => (
     <Selector
       iconSrc="/src/assets/images/shareIcon.svg"
-      selectList={targetCabinetInfo.lent_info.map((info) => {
-        return { key: info.user_id, value: info.intra_id };
+      selectList={targetCabinetInfo.lents.map((info) => {
+        return { key: info.userId, value: info.name };
       })}
       onClickSelect={handleSelectUser}
     />
@@ -99,7 +100,8 @@ const AdminReturnModal: React.FC<{
 
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
-      await axiosAdminReturn(currentCabinetId);
+      if (currentCabinetId !== null)
+        await axiosBundleReturn([currentCabinetId]);
       //userCabinetId 세팅
       setIsCurrentSectionRender(true);
       setNumberOfAdminWork((prev) => prev + 1);
@@ -167,7 +169,7 @@ const AdminReturnModal: React.FC<{
   const tryBundleReturnRequest = async (e: React.MouseEvent) => {
     const returnableCabinetIdList = targetCabinetInfoList
       .map((cabinet) => {
-        if (cabinet.lent_info.length >= 1) return cabinet.cabinet_id;
+        if (cabinet.userCount >= 1) return cabinet.cabinetId;
       })
       .filter((id) => id);
     try {

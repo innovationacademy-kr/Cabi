@@ -27,7 +27,7 @@ const CabiImageStyled = styled.img`
 
 const ContentStyled = styled.p`
   font-size: 1.25rem;
-  font-family: var(--location-font);
+  font-family: var(--building-font);
 `;
 
 export default EmptySection;

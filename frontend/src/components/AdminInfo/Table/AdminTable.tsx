@@ -1,4 +1,4 @@
-import { IData } from "src/types/dto/admin.dto";
+import { ITableData } from "src/types/dto/admin.dto";
 import { useState } from "react";
 import styled from "styled-components";
 import Pagination from "./Pagination";
@@ -11,7 +11,7 @@ const AdminTable = ({
   fontSize,
   ROW_COUNT,
 }: {
-  data: IData[];
+  data: ITableData[];
   handleClick: React.MouseEventHandler;
   thInfo: string[];
   ratio: string[];

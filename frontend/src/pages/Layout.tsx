@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { userState } from "@/recoil/atoms";
-import TopNav from "@/components/TopNav/TopNav.container";
-import LeftNav from "@/components/LeftNav/LeftNav";
-import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { getCookie } from "@/api/react_cookie/cookies";
-import { axiosMyInfo } from "@/api/axios/axios.custom";
-import { UserDto } from "@/types/dto/user.dto";
 import styled, { css } from "styled-components";
+import { userState } from "@/recoil/atoms";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
-import useMenu from "@/hooks/useMenu";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import LeftNav from "@/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
+import TopNav from "@/components/TopNav/TopNav.container";
+import { UserDto } from "@/types/dto/user.dto";
+import { axiosMyInfo } from "@/api/axios/axios.custom";
+import { getCookie } from "@/api/react_cookie/cookies";
+import useMenu from "@/hooks/useMenu";
 
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -89,7 +89,7 @@ const WrapperStyled = styled.div`
 const MainStyled = styled.main`
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  overflow-y: scroll;
   user-select: none;
 `;
 

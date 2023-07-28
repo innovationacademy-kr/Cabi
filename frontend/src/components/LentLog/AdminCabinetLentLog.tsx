@@ -1,20 +1,9 @@
 import styled, { css } from "styled-components";
 import AdminCabinetLogTable from "@/components/LentLog/LogTable/AdminCabinetLogTable";
-import { LentLogDto } from "@/types/dto/lent.dto";
-
-const BAD_REQUEST = 400;
-
-interface ILentLog {
-  closeAndResetLogPage: React.MouseEventHandler;
-  logs: LentLogDto[] | typeof BAD_REQUEST | undefined;
-  page: number;
-  totalPage: number;
-  onClickPrev: React.MouseEventHandler;
-  onClickNext: React.MouseEventHandler;
-}
+import { ILentLog } from "@/types/dto/lent.dto";
 
 const AdminCabinetLentLog = ({
-  closeAndResetLogPage,
+  closeLent,
   logs,
   page,
   totalPage,
@@ -22,13 +11,7 @@ const AdminCabinetLentLog = ({
   onClickNext,
 }: ILentLog) => {
   return (
-    <AdminLentLogStyled id="lentInfo">
-      <TitleContainer>
-        <TitleStyled>대여 기록</TitleStyled>
-        <GoBackButtonStyled onClick={closeAndResetLogPage}>
-          뒤로가기
-        </GoBackButtonStyled>
-      </TitleContainer>
+    <AdminLentLogStyled>
       <AdminCabinetLogTable lentLog={logs} />
       <ButtonContainerStyled>
         <PageButtonStyled
@@ -36,21 +19,53 @@ const AdminCabinetLentLog = ({
           totalPage={totalPage}
           type="prev"
           onClick={onClickPrev}
+          className="logPageButton"
         >
-          이전
+          <ImgCenterStyled>
+            <ImageStyled>
+              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
+            </ImageStyled>
+          </ImgCenterStyled>
         </PageButtonStyled>
         <PageButtonStyled
           page={page}
           totalPage={totalPage}
           type="next"
           onClick={onClickNext}
+          className="logPageButton"
         >
-          다음
+          <ImgCenterStyled>
+            <ImageStyled>
+              <img src="/src/assets/images/LeftSectionButton.svg" alt="" />
+            </ImageStyled>
+          </ImgCenterStyled>
         </PageButtonStyled>
       </ButtonContainerStyled>
     </AdminLentLogStyled>
   );
 };
+
+const AdminLentLogStyled = styled.div`
+  width: 100%;
+  position: relative;
+`;
+
+const ButtonContainerStyled = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  overflow: hidden;
+  &:hover > .logPageButton {
+    opacity: 1;
+  }
+`;
 
 const PageButtonStyled = styled.div<{
   page: number;
@@ -58,11 +73,17 @@ const PageButtonStyled = styled.div<{
   type: string;
 }>`
   cursor: pointer;
-  color: var(--main-color);
+  width: 40px;
+  height: 100%;
+  border-radius: 10px;
   position: absolute;
+  opacity: 0.5;
+  transition: opacity 0.5s;
+  background: linear-gradient(to left, transparent, rgba(0, 0, 0, 0.5));
   display: ${({ page, totalPage, type }) => {
     if (type == "prev" && page == 0) return "none";
-    if (type == "next" && page == totalPage - 1) return "none";
+    if (type == "next" && (totalPage == 0 || page == totalPage - 1))
+      return "none";
     return "block";
   }};
   ${({ type }) =>
@@ -72,61 +93,22 @@ const PageButtonStyled = styled.div<{
         `
       : css`
           right: 0;
+          transform: rotate(-180deg);
         `}
 `;
 
-const GoBackButtonStyled = styled.div`
-  position: absolute;
-  top: 3%;
-  right: 6%;
-  color: var(--lightpurple-color);
-  font-size: 0.875rem;
-  text-decoration: underline;
-  cursor: pointer;
-`;
-
-const ButtonContainerStyled = styled.div`
-  position: relative;
-  width: 80%;
-  height: 50px;
+const ImgCenterStyled = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
-  margin-top: 25px;
-`;
-
-const TitleContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 30px;
-`;
-
-const TitleStyled = styled.h1`
-  font-size: 1.5rem;
-  font-weight: 700;
-`;
-
-const AdminLentLogStyled = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  min-width: 330px;
+  justify-content: center;
   height: 100%;
-  padding: 40px 20px;
-  z-index: 9;
-  transform: translateX(120%);
-  transition: transform 0.3s ease-in-out;
-  box-shadow: 0 0 40px 0 var(--bg-shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: var(--white);
-  &.on {
-    transform: translateX(0);
-  }
+`;
+
+const ImageStyled = styled.div`
+  width: 40px;
+  margin-right: 4px;
+  filter: brightness(0%);
+  border-radius: 50%;
 `;
 
 export default AdminCabinetLentLog;

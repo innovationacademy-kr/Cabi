@@ -1,6 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ChangeToHTML from "@/components/TopNav/SearchBar/SearchListItem/ChangeToHTML";
-import { useNavigate } from "react-router-dom";
 
 const SearchListItem = (props: {
   floor?: number;
@@ -8,10 +8,16 @@ const SearchListItem = (props: {
   resultText: string;
   isNum?: boolean;
   resetSearchState: () => void;
-  targetIndex?: boolean;
+  isTargetIndex?: boolean;
 }) => {
-  const { floor, resultText, inputText, isNum, resetSearchState, targetIndex } =
-    props;
+  const {
+    floor,
+    resultText,
+    inputText,
+    isNum,
+    resetSearchState,
+    isTargetIndex,
+  } = props;
   const navigate = useNavigate();
 
   const chooseImage = (isCabinet: boolean | undefined) => {
@@ -21,7 +27,7 @@ const SearchListItem = (props: {
 
   return (
     <LiStyled
-      className={targetIndex ? "active" : ""}
+      className={isTargetIndex ? "active" : ""}
       onClick={() => {
         let query = floor
           ? `?q=${resultText}&floor=${floor}`
