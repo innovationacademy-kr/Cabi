@@ -11,6 +11,7 @@ public class CorsConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 
 		registry.addMapping("/**")
+				.allowedOrigins("https://cabi.42seoul.io")
 				.allowedOrigins("https://dev.cabi.42seoul.io")
 				.allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH")
 				.allowCredentials(true)
