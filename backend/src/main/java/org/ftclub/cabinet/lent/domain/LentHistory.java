@@ -163,7 +163,14 @@ public class LentHistory {
      * @return 설정이 되어있으면 true 아니면 false
      */
     public boolean isSetExpiredAt() {
-        return (getExpiredAt() != DateUtil.getInfinityDate() || getExpiredAt() != null);
+        LocalDateTime expiredAt = getExpiredAt();
+        if (expiredAt == null) {
+            return false;
+        }
+        if (expiredAt == DateUtil.getInfinityDate()) {
+            return false;
+        }
+        return true;
     }
 
     /**
