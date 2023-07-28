@@ -7,6 +7,8 @@ spring:
     import: classpath:application-auth.yml, classpath:application-mail.yml
     activate:
       on-profile: prod
+logging:
+  config: classpath:log4j2-prod.yml
 
 ---
 #개발서버 환경
@@ -17,6 +19,8 @@ spring:
     import: classpath:application-auth.yml, classpath:application-mail.yml
     activate:
       on-profile: dev
+logging:
+  config: classpath:log4j2-dev.yml
 
 ---
 #로컬 환경
@@ -27,5 +31,8 @@ spring:
     import: classpath:application-auth.yml, classpath:application-mail.yml
     activate:
       on-profile: local
+logging:
+  config: classpath:log4j2-local.yml
+
 
 ---

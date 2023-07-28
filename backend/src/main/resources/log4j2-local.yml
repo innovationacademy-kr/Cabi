@@ -1,0 +1,73 @@
+Configuration:
+  status: DEBUG
+
+  Properties:
+    property:
+      name: pattern
+      value: "%style{%d{yyyy-MM-dd HH:mm:ss}}{white} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%X}{normal, white} %style{%C{1}}{bright,yellow}: %msg%n%throwable"
+
+  Appenders:
+    Console:
+      name: console
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: ${pattern}
+
+    RollingFile:
+      name: rollingFile
+      # 파일 저장 위치를 어디로?
+      fileName: logs/42cabi.log
+      filePattern: logs/42cabi-%d{yyyy-MM-dd}-%i.log.gz
+      PatternLayout:
+        pattern: ${pattern}
+      Policies:
+        # 1일 단위로 로그를 압축해서 저장
+        TimeBasedTriggeringPolicy:
+          interval: 1
+          modulate: true
+      DefaultRolloverStrategy:
+        Delete:
+          basePath: logs
+          ifFileName:
+            glob: "42cabi-*.log.gz"
+          # 30일 이상된 로그는 삭제
+          ifLastModified:
+            age: "30d"
+        max: 30
+
+  Loggers:
+    logger:
+      -
+        name: org.springframework
+        # local 환경에서는 debug, production 환경에서는 info
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: console
+          - ref: rollingFile
+
+      -
+        name: org.ftclub.cabinet
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: console
+          - ref: rollingFile
+
+    # SQL문 확인을 위한 설정 (시작)
+    # sql을 봐야한다면 해당 부분 주석 해제하면 됨.
+    # trace로 해놓는 이유는 JDBC 파라미터를 보기 위함
+#      -
+#        name: org.hibernate.type
+#        level: trace
+#        additivity: false
+#        AppenderRef:
+#          ref: console
+#
+#      -
+#        name: org.hibernate.SQL
+#        level: debug
+#        additivity: false
+#        AppenderRef:
+#          ref: console
+    # SQL문 확인을 위한 설정 (끝)
