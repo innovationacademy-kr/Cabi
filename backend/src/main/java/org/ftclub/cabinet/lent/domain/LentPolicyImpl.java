@@ -63,6 +63,9 @@ public class LentPolicyImpl implements LentPolicy {
 			case PRIVATE:
 				return now.plusDays(getDaysForLentTermPrivate());
 			case SHARE:
+				if (activeLentHistories.isEmpty()) {
+					return DateUtil.getInfinityDate();
+				}
 				LentHistory lentHistory = activeLentHistories.get(0);
 				return generateSharedCabinetExpirationDate(now,
 						cabinet.getStatus(), lentHistory);
