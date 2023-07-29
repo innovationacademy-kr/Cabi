@@ -27,7 +27,7 @@ public class LeaveAbsenceManager {
 	}
 
 	public void handleLeaveAbsence(Long userId, String name) {
-		log.info("called handleLeaveAbsence {} {}", userId, name);
+		log.debug("called handleLeaveAbsence {} {}", userId, name);
 		try {
 			JsonNode jsonUserInfo = ftAPIManager.getFtUsersInfoByName(name);
 			if (isLeaveAbsence(jsonUserInfo)) {

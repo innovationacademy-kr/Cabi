@@ -49,7 +49,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
 			Integer size) {
-		log.info("Called getAllUserLentHistories: {}", userId);
+		log.debug("Called getAllUserLentHistories: {}", userId);
 		userOptionalFetcher.findUser(userId);
 		//todo: 예쁘게 수정
 		if (size <= 0) {
@@ -63,7 +63,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
 			Integer size) {
-		log.info("Called getAllCabinetLentHistories: {}", cabinetId);
+		log.debug("Called getAllCabinetLentHistories: {}", cabinetId);
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
 		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId, pageable);
@@ -72,7 +72,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public List<LentDto> getLentDtoList(Long cabinetId) {
-		log.info("Called getLentDtoList: {}", cabinetId);
+		log.debug("Called getLentDtoList: {}", cabinetId);
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
@@ -99,7 +99,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user,
 			Integer page, Integer size) {
-		log.info("Called getMyLentLog: {}", user.getName());
+		log.debug("Called getMyLentLog: {}", user.getName());
 		PageRequest pageable = PageRequest.of(page, size,
 				Sort.by(Sort.Direction.DESC, "startedAt"));
 		List<LentHistory> myLentHistories = lentOptionalFetcher.findByUserIdAndEndedAtNotNull(
@@ -126,7 +126,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
-		log.info("Called getMyLentInfo: {}", user.getName());
+		log.debug("Called getMyLentInfo: {}", user.getName());
 		Cabinet myCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		if (myCabinet == null) {
 			return null;
@@ -154,7 +154,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public void endLentCabinetWithMemo(UserSessionDto user, LentEndMemoDto lentEndMemoDto) {
-		log.info("Called endLentCabinetWithMemo: {}", user.getName());
+		log.debug("Called endLentCabinetWithMemo: {}", user.getName());
 		Cabinet cabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
 		lentService.endLentCabinet(user.getUserId());
 		cabinetService.updateMemo(cabinet.getCabinetId(), lentEndMemoDto.getCabinetMemo());
@@ -167,14 +167,14 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public void terminateLentCabinets(ReturnCabinetsRequestDto returnCabinetsRequestDto) {
-		log.info("Called terminateLentCabinets");
+		log.debug("Called terminateLentCabinets");
 		returnCabinetsRequestDto.getCabinetIds().stream()
 				.forEach(lentService::terminateLentByCabinetId);
 	}
 
 	@Override
 	public void updateCabinetMemo(UserSessionDto user, UpdateCabinetMemoDto updateCabinetMemoDto) {
-		log.info("Called updateCabinetMemo: {}", user.getName());
+		log.debug("Called updateCabinetMemo: {}", user.getName());
 		Cabinet myCabinet = cabinetService.getLentCabinetByUserId((user.getUserId()));
 		cabinetService.updateMemo(myCabinet.getCabinetId(), updateCabinetMemoDto.getMemo());
 	}
@@ -182,7 +182,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public void updateCabinetTitle(UserSessionDto user,
 			UpdateCabinetTitleDto updateCabinetTitleDto) {
-		log.info("Called updateCabinetTitle: {}", user.getName());
+		log.debug("Called updateCabinetTitle: {}", user.getName());
 		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
 		cabinetService.updateTitle(myCabinet.getCabinetId(),
 				updateCabinetTitleDto.getCabinetTitle());
@@ -191,7 +191,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public void updateCabinetInfo(UserSessionDto user,
 			CabinetInfoRequestDto cabinetInfoRequestDto) {
-		log.info("Called updateCabinetInfo: {}", user.getName());
+		log.debug("Called updateCabinetInfo: {}", user.getName());
 
 		Cabinet myCabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
 

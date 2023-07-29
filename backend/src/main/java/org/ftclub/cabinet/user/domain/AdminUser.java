@@ -21,6 +21,7 @@ import org.apache.el.util.ExceptionUtils;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * 관리자 엔티티 클래스입니다.
@@ -29,6 +30,7 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Table(name = "ADMIN_USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Log4j2
 public class AdminUser {
 
     @Id
@@ -83,6 +85,7 @@ public class AdminUser {
     }
 
     public void changeAdminRole(AdminRole role) {
+        log.info("Called changedAdminRole - role from {} to {}", this.role, role);
         this.role = role;
         ExceptionUtil.throwIfFalse(this.isValid(),
                 new DomainException(ExceptionStatus.INVALID_ARGUMENT));

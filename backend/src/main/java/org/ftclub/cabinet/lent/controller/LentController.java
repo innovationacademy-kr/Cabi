@@ -35,14 +35,14 @@ public class LentController {
 	public void startLentCabinet(
 			@UserSession UserSessionDto user,
 			@PathVariable Long cabinetId) {
-		log.info("Called startLentCabinet");
+		log.info("Called startLentCabinet user: {}, cabinetId: {}", user, cabinetId);
 		lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
 	}
 
 	@PatchMapping("/return")
 	public void endLent(
 			@UserSession UserSessionDto userSessionDto) {
-		log.info("Called endLent");
+		log.info("Called endLent user: {}", userSessionDto);
 		lentFacadeService.endLentCabinet(userSessionDto);
 	}
 
@@ -50,7 +50,7 @@ public class LentController {
 	public void endLentWithMemo(
 			@UserSession UserSessionDto userSessionDto,
 			@Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
-		log.info("Called endLentWithMemo");
+		log.info("Called endLentWithMemo user: {}, lentEndMemoDto: {}", userSessionDto, lentEndMemoDto);
 		lentFacadeService.endLentCabinetWithMemo(userSessionDto, lentEndMemoDto);
 	}
 
@@ -58,7 +58,7 @@ public class LentController {
 	public void updateCabinetMemo(
 			@UserSession UserSessionDto user,
 			@Valid @RequestBody UpdateCabinetMemoDto updateCabinetMemoDto) {
-		log.info("Called updateCabinetMemo");
+		log.info("Called updateCabinetMemo user: {}, updateCabinetMemoDto: {}", user, updateCabinetMemoDto);
 		lentFacadeService.updateCabinetMemo(user, updateCabinetMemoDto);
 	}
 
@@ -66,7 +66,7 @@ public class LentController {
 	public void updateCabinetTitle(
 			@UserSession UserSessionDto user,
 			@Valid @RequestBody UpdateCabinetTitleDto updateCabinetTitleDto) {
-		log.info("Called updateCabinetTitle");
+		log.info("Called updateCabinetTitle user: {}, updateCabinetTitleDto: {}", user, updateCabinetTitleDto);
 		lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
 	}
 
@@ -74,14 +74,14 @@ public class LentController {
 	public void updateCabinetInfo(
 			@UserSession UserSessionDto user,
 			@RequestBody CabinetInfoRequestDto cabinetInfoRequestDto) {
-		log.info("Called updateCabinetInfo");
+		log.info("Called updateCabinetInfo user: {}, cabinetInfoRequestDto: {}", user, cabinetInfoRequestDto);
 		lentFacadeService.updateCabinetInfo(user, cabinetInfoRequestDto);
 	}
 
 	@GetMapping("/me")
 	public ResponseEntity<MyCabinetResponseDto> getMyLentInfo(
 			@UserSession UserSessionDto user) {
-		log.info("Called getMyLentInfo");
+		log.info("Called getMyLentInfo user: {}", user);
 		MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user);
 		if (myCabinetResponseDto == null) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -94,7 +94,7 @@ public class LentController {
 			@UserSession UserSessionDto user,
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size) {
-		log.info("Called getMyLentLog");
+		log.info("Called getMyLentLog user: {}, page: {}, size: {}", user, page, size);
 		return lentFacadeService.getMyLentLog(user, page, size);
 	}
 }

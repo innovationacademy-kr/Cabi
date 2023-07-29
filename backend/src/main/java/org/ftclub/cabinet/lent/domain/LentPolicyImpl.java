@@ -28,7 +28,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	private LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
 			CabinetStatus cabinetStatus, LentHistory activeLentHistory) {
-		log.info("Called shareCabinetExpirationDateProcess");
+		log.debug("Called shareCabinetExpirationDateProcess");
 
 		switch (cabinetStatus) {
 			case AVAILABLE:
@@ -51,7 +51,8 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet,
 			List<LentHistory> activeLentHistories) {
-		log.info("Called generateExpirationDate");
+		log.info("Called generateExpirationDate now: {}, cabinet: {}, activeLentHistories: {}",
+				now, cabinet, activeLentHistories);
 
 		if (!DateUtil.isSameDay(now)) {
 			throw new IllegalArgumentException("현재 시각이 아닙니다.");
@@ -74,7 +75,8 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
 			LocalDateTime expiredAt) {
-		log.info("Called applyExpirationDate");
+		log.info("Called applyExpirationDate curHistory: {}, beforeActiveHistories: {}, expiredAt: {}",
+				curHistory, beforeActiveHistories, expiredAt);
 
 		if (expiredAt == null){
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -93,7 +95,7 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount,
 			List<BanHistory> userActiveBanList) {
-		log.info("Called verifyUserForLent");
+		log.debug("Called verifyUserForLent");
 		if (!user.isUserRole(UserRole.USER)) {
 			return LentPolicyStatus.NOT_USER;
 		}
@@ -128,7 +130,8 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public LentPolicyStatus verifyCabinetForLent(Cabinet cabinet,
 			List<LentHistory> cabinetLentHistories, LocalDateTime now) {
-		log.info("Called verifyCabinetForLent");
+		log.info("Called verifyCabinetForLent cabinet: {}, cabinetLentHistories: {}, now: {}",
+				cabinet, cabinetLentHistories, now);
 		// 빌릴 수 있는지 검증. 빌릴 수 없으면 return lentPolicyDto;
 		switch (cabinet.getStatus()) {
 			case FULL:
@@ -157,19 +160,19 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public Integer getDaysForLentTermPrivate() {
-		log.info("Called getDaysForLentTermPrivate");
+		log.debug("Called getDaysForLentTermPrivate");
 		return cabinetProperties.getLentTermPrivate();
 	}
 
 	@Override
 	public Integer getDaysForLentTermShare() {
-		log.info("Called getDaysForLentTermShare");
+		log.debug("Called getDaysForLentTermShare");
 		return cabinetProperties.getLentTermShare();
 	}
 
 	@Override
 	public Integer getDaysForNearExpiration() {
-		log.info("Called getDaysForNearExpiration");
+		log.debug("Called getDaysForNearExpiration");
 		return cabinetProperties.getPenaltyDayShare() + cabinetProperties.getPenaltyDayPadding();
 	}
 }

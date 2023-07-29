@@ -30,7 +30,7 @@ public class SearchController {
 	public CabinetInfoPaginationDto getCabinetsInfo(
 			@RequestParam("visibleNum") Integer visibleNum
 	) {
-		log.info("Called getCabinetsInfo");
+		log.info("Called getCabinetsInfo {}", visibleNum);
 		return cabinetFacadeService.getCabinetsInfo(visibleNum);
 	}
 
@@ -39,7 +39,7 @@ public class SearchController {
 	public CabinetSimplePaginationDto getCabinetsSimpleInfo(
 			@RequestParam("visibleNum") Integer visibleNum
 	) {
-		log.info("Called getCabinetsInfo");
+		log.info("Called getCabinetsInfo {}", visibleNum);
 		return cabinetFacadeService.getCabinetsSimpleInfoByVisibleNum(visibleNum);
 	}
 
@@ -50,7 +50,7 @@ public class SearchController {
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size
 	) {
-		log.info("Called getUsersProfile");
+		log.info("Called getUsersProfile {}", name);
 		return userFacadeService.getUserProfileListByPartialName(name, page, size);
 	}
 
@@ -61,7 +61,7 @@ public class SearchController {
 			@RequestParam("page") Integer page,
 			@RequestParam("size") Integer size
 	) {
-		log.info("Called getCabinetsLentInfo");
+		log.info("Called getCabinetsLentInfo {}", name);
 		return userFacadeService.findUserCabinetListByPartialName(name, page, size);
 	}
 

@@ -1,0 +1,54 @@
+Configuration:
+  status: info
+
+  Properties:
+    property:
+      name: pattern
+      value: "%style{%d{yyyy-MM-dd HH:mm:ss}}{white} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%X}{normal, white} %style{%C{1}}{bright,yellow}: %msg%n%throwable"
+
+  Appenders:
+    Console:
+      name: console
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: ${pattern}
+
+    RollingFile:
+      name: rollingFile
+      # 파일 저장 위치를 어디로?
+      fileName: logs/42cabi.log
+      filePattern: logs/42cabi-%d{yyyy-MM-dd}-%i.log.gz
+      PatternLayout:
+        pattern: ${pattern}
+      Policies:
+        # 1일 단위로 로그를 압축해서 저장
+        TimeBasedTriggeringPolicy:
+          interval: 1
+          modulate: true
+      DefaultRolloverStrategy:
+        Delete:
+          basePath: logs
+          ifFileName:
+            glob: "42cabi-*.log.gz"
+          # 30일 이상된 로그는 삭제
+          ifLastModified:
+            age: "30d"
+        max: 30
+
+  Loggers:
+    logger:
+      -
+        name: org.springframework
+        level: info
+        additivity: false
+        AppenderRef:
+          - ref: console
+          - ref: rollingFile
+
+      -
+        name: org.ftclub.cabinet
+        level: info
+        additivity: false
+        AppenderRef:
+          - ref: console
+          - ref: rollingFile

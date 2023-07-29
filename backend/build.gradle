@@ -1,9 +1,17 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
+
 
 group = 'org.ftclub'
 version = '0.0.1-SNAPSHOT'
@@ -41,9 +49,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+
     // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
@@ -107,4 +121,20 @@ bootJar {
         from("${asciidoctor.outputDir}")
         into 'build/classes/static'
     }
+
+    def querydslDir = "$buildDir/generated/querydsl"
+    querydsl {
+        jpa = true
+        querydslSourcesDir = querydslDir
+    }
+    sourceSets {
+        main.java.srcDir querydslDir
+    }
+    configurations {
+        querydsl.extendsFrom compileClasspath
+    }
+    compileQuerydsl {
+        options.annotationProcessorPath = configurations.querydsl
+    }
+
 }

@@ -21,7 +21,7 @@ public class BanPolicyImpl implements BanPolicy {
 	@Override
 	public BanType verifyForBanType(LentType lentType, LocalDateTime startAt, LocalDateTime endedAt,
 			LocalDateTime expiredAt) {
-		log.info("Called verifyForBanType");
+		log.debug("Called verifyForBanType");
 		if (checkAlreadyExpired(endedAt, expiredAt)) {
 			return BanType.ALL;
 		}
@@ -36,7 +36,7 @@ public class BanPolicyImpl implements BanPolicy {
 
 	@Override
 	public LocalDateTime getBanDate(BanType banType, LocalDateTime endedAt, LocalDateTime expiredAt, Long userId) {
-		log.info("Called getBanDate");
+		log.debug("Called getBanDate");
 		if (banType == BanType.SHARE) {
 			return endedAt.plusDays(cabinetProperties.getPenaltyDayShare());
 		} else {
@@ -48,19 +48,19 @@ public class BanPolicyImpl implements BanPolicy {
 
 	@Override
 	public boolean checkAlreadyExpired(LocalDateTime endedAt, LocalDateTime expiredAt) {
-		log.info("Called checkAlreadyExpired");
+		log.debug("Called checkAlreadyExpired");
 		return expiredAt.isBefore(endedAt);
 	}
 
 	@Override
 	public boolean isActiveBanHistory(LocalDateTime unbannedAt, LocalDateTime now) {
-		log.info("Called isActiveBanHistory");
+		log.debug("Called isActiveBanHistory");
 		return now.isBefore(unbannedAt);
 	}
 
 	@Override
 	public Long getAccumulateBanDaysByUserId(Long userId) {
-		log.info("Called getAccumulateBanDaysByUserId");
+		log.debug("Called getAccumulateBanDaysByUserId");
 		List<BanHistory> banHistories = banHistoryRepository.findBanHistoriesByUserId(userId);
 		Long accumulateDays = 0L;
 		for (BanHistory history : banHistories) {

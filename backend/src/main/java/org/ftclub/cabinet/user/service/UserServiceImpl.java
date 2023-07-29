@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean checkUserExists(String email) {
-		log.info("Called checkUserExists: {}", email);
+		log.debug("Called checkUserExists: {}", email);
 		User user = userOptionalFetcher.findUserByEmail(email);
 		return user != null;
 	}
@@ -51,14 +51,14 @@ public class UserServiceImpl implements UserService {
 	/* createUser는 user를 만드는 행위만 해야될 것 같아 다음과 같이 변경했습니다. */
 	@Override
 	public void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role) {
-		log.info("Called createUser: {}", email);
+		log.debug("Called createUser: {}", email);
 		User user = User.of(name, email, blackholedAt, role);
 		userRepository.save(user);
 	}
 
 	@Override
 	public void createClubUser(String clubName) {
-		log.info("Called createClubUser: {}", clubName);
+		log.debug("Called createClubUser: {}", clubName);
 		if (StringUtil.isNullOrEmpty(clubName)) {
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
 		} else if (userOptionalFetcher.findUserByName(clubName) != null &&
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean checkAdminUserExists(String email) {
-		log.info("Called checkAdminUserExists: {}", email);
+		log.debug("Called checkAdminUserExists: {}", email);
 		AdminUser adminUser = userOptionalFetcher.findAdminUserByEmail(email);
 		return adminUser != null;
 	}
@@ -84,14 +84,14 @@ public class UserServiceImpl implements UserService {
 	/* createUser와 동일한 사유로 로직 수정했습니다. */
 	@Override
 	public void createAdminUser(String email) {
-		log.info("Called createAdminUser: {}", email);
+		log.debug("Called createAdminUser: {}", email);
 		AdminUser adminUser = AdminUser.of(email, AdminRole.NONE);
 		adminUserRepository.save(adminUser);
 	}
 
 	@Override
 	public void deleteUser(Long userId, LocalDateTime deletedAt) {
-		log.info("Called deleteUser: {}", userId);
+		log.debug("Called deleteUser: {}", userId);
 		User user = userOptionalFetcher.getUser(userId);
 		user.setDeletedAt(deletedAt);
 		userRepository.save(user);
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteClubUser(Long clubId, LocalDateTime deletedAt) {
-		log.info("Called deleteClueUser: {}", clubId);
+		log.debug("Called deleteClueUser: {}", clubId);
 		User user = userOptionalFetcher.getClubUser(clubId);
 		Cabinet lentCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		if (lentCabinet != null) {
@@ -111,14 +111,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteAdminUser(Long adminUserId) {
-		log.info("Called deleteAdminUser: {}", adminUserId);
+		log.debug("Called deleteAdminUser: {}", adminUserId);
 		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
 		adminUserRepository.delete(adminUser);
 	}
 
 	@Override
 	public void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt) {
-		log.info("Called updateUserBlackholedAt: {}", userId);
+		log.debug("Called updateUserBlackholedAt: {}", userId);
 		User user = userOptionalFetcher.getUser(userId);
 		if (user.getRole() != UserRole.USER) {
 			return;
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void updateAdminUserRole(Long adminUserId, AdminRole role) {
-		log.info("Called updateAdminUserRole: {}", adminUserId);
+		log.debug("Called updateAdminUserRole: {}", adminUserId);
 		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
 		adminUser.changeAdminRole(role);
 		adminUserRepository.save(adminUser);
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void promoteAdminByEmail(String email) {
-		log.info("Called promoteAdminByEmail: {}", email);
+		log.debug("Called promoteAdminByEmail: {}", email);
 		AdminUser adminUser = userOptionalFetcher.getAdminUserByEmail(email);
 		if (adminUser.getRole() == AdminRole.NONE) {
 			adminUser.changeAdminRole(AdminRole.ADMIN);
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
 	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
 			LocalDateTime endedAt,
 			LocalDateTime expiredAt) {
-		log.info("Called banUser: {}", userId);
+		log.debug("Called banUser: {}", userId);
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);
 		if (banType == BanType.NONE) {
 			return;
@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteRecentBanHistory(Long userId, LocalDateTime today) {
-		log.info("Called deleteRecentBanHistory: {}", userId);
+		log.debug("Called deleteRecentBanHistory: {}", userId);
 		BanHistory banHistory = userOptionalFetcher.getRecentBanHistory(userId);
 		if (banPolicy.isActiveBanHistory(banHistory.getUnbannedAt(), today)) {
 			banHistoryRepository.delete(banHistory);
@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean checkUserIsBanned(Long userId, LocalDateTime today) {
-		log.info("Called checkUserIsBanned: {}", userId);
+		log.debug("Called checkUserIsBanned: {}", userId);
 		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
 				today);
 		return (banHistory.size() != 0);
@@ -179,13 +179,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public AdminRole getAdminUserRole(String email) {
-		log.info("Called getAdminUserRole: {}", email);
+		log.debug("Called getAdminUserRole: {}", email);
 		return userOptionalFetcher.findAdminUserRoleByEmail(email);
 	}
 
 	@Override
 	public void updateClubUser(Long clubId, String clubName) {
-		log.info("Called updateClubUser: {}", clubId);
+		log.debug("Called updateClubUser: {}", clubId);
 		if (StringUtil.isNullOrEmpty(clubName)) {
 			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}

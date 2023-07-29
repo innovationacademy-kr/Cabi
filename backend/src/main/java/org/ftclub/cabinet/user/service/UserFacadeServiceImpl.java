@@ -48,7 +48,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
-		log.info("Called getMyProfile: {}", user.getName());
+		log.debug("Called getMyProfile: {}", user.getName());
 		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
 				LocalDateTime.now());
@@ -57,7 +57,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, LocalDateTime now) {
-		log.info("Called getAllBanUsers");
+		log.debug("Called getAllBanUsers");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -75,7 +75,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
 			Integer size) {
-		log.info("Called getUserProfileListByPartialName: {}", name);
+		log.debug("Called getUserProfileListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -92,7 +92,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
 			Integer size) {
-		log.info("Called findUserCabinetListByPartialName: {}", name);
+		log.debug("Called findUserCabinetListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -195,7 +195,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size) {
-		log.info("Called getOverdueUserList");
+		log.debug("Called getOverdueUserList");
 		List<OverdueUserCabinetDto> overdueList = new ArrayList<>();
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
@@ -219,7 +219,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public ClubUserListDto findAllClubUser(Integer page, Integer size) {
-		log.info("Called findAllClubUser");
+		log.debug("Called findAllClubUser");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
 		}
@@ -232,14 +232,14 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public void deleteClubUser(Long userId) {
-		log.info("Called deleteClubUser");
+		log.debug("Called deleteClubUser");
 		userService.deleteClubUser(userId, LocalDateTime.now());
 	}
 
 
 	@Override
 	public void updateClubUser(Long clubId, String clubName) {
-		log.info("Called updateClubUser");
+		log.debug("Called updateClubUser");
 		userService.updateClubUser(clubId, clubName);
 	}
 }
