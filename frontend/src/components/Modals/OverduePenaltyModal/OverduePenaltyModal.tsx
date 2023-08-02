@@ -51,9 +51,10 @@ const OverduePenaltyModal: React.FC<{
   const modalContents: IModalContents = {
     type: "panaltyBtn",
     icon: errorIcon,
-    title: modalPropsMap[props.status].title,
+    title: modalPropsMap[additionalModalType.MODAL_OVERDUE_PENALTY].title,
     detail: penaltyDateDetail,
-    proceedBtnText: modalPropsMap[CabinetStatus.OVERDUE_PENALTY].confirmMessage,
+    proceedBtnText:
+      modalPropsMap[additionalModalType.MODAL_OVERDUE_PENALTY].confirmMessage,
     onClickProceed: hideForOneDay,
     closeModal: props.closeModal,
   };

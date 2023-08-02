@@ -5,7 +5,6 @@ enum CabinetStatus {
   OVERDUE = "OVERDUE",
   BROKEN = "BROKEN",
   BANNED = "BANNED",
-  OVERDUE_PENALTY = "OVERDUE_PENALTY",
 }
 
 export default CabinetStatus;

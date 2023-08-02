@@ -11,6 +11,7 @@ export enum additionalModalType {
   MODAL_ADMIN_CLUB_CREATE_FAILURE = "MODAL_ADMIN_CLUB_CREATE_FAILURE",
   MODAL_ADMIN_CLUB_EDIT = "MODAL_ADMIN_CLUB_EDIT",
   MODAL_ADMIN_CLUB_DELETE = "MODAL_ADMIN_CLUB_DELETE",
+  MODAL_OVERDUE_PENALTY = "MODAL_OVERDUE_PENALTY",
 }
 
 export const cabinetIconSrcMap = {
@@ -26,7 +27,6 @@ export const cabinetLabelColorMap = {
   [CabinetStatus.OVERDUE]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
-  [CabinetStatus.OVERDUE_PENALTY]: "var(--white)",
   MINE: "var(--black)",
 };
 
@@ -37,7 +37,6 @@ export const cabinetStatusColorMap = {
   [CabinetStatus.OVERDUE]: "var(--expired)",
   [CabinetStatus.BROKEN]: "var(--broken)",
   [CabinetStatus.BANNED]: "var(--banned)",
-  [CabinetStatus.OVERDUE_PENALTY]: "var(--banned)",
   MINE: "var(--mine)",
 };
 
@@ -71,11 +70,6 @@ export const modalPropsMap = {
     type: "error",
     title: "사용이 불가한 사물함입니다",
     confirmMessage: "",
-  },
-  [CabinetStatus.OVERDUE_PENALTY]: {
-    type: "error",
-    title: "패널티 안내",
-    confirmMessage: "오늘 하루동안 보지않기",
   },
   [CabinetType.CLUB]: {
     type: "confirm",
@@ -131,6 +125,11 @@ export const modalPropsMap = {
     type: "confirm",
     title: "동아리 삭제하기",
     confirmMessage: "삭제",
+  },
+  MODAL_OVERDUE_PENALTY: {
+    type: "error",
+    title: "패널티 안내",
+    confirmMessage: "오늘 하루동안 보지않기",
   },
 };
 
