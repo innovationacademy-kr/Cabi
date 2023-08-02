@@ -26,6 +26,7 @@ export const cabinetLabelColorMap = {
   [CabinetStatus.OVERDUE]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
+  [CabinetStatus.OVERDUE_PENALTY]: "var(--white)",
   MINE: "var(--black)",
 };
 
@@ -36,6 +37,7 @@ export const cabinetStatusColorMap = {
   [CabinetStatus.OVERDUE]: "var(--expired)",
   [CabinetStatus.BROKEN]: "var(--broken)",
   [CabinetStatus.BANNED]: "var(--banned)",
+  [CabinetStatus.OVERDUE_PENALTY]: "var(--banned)",
   MINE: "var(--mine)",
 };
 
@@ -69,6 +71,11 @@ export const modalPropsMap = {
     type: "error",
     title: "사용이 불가한 사물함입니다",
     confirmMessage: "",
+  },
+  [CabinetStatus.OVERDUE_PENALTY]: {
+    type: "error",
+    title: "패널티 안내",
+    confirmMessage: "오늘 하루동안 보지않기",
   },
   [CabinetType.CLUB]: {
     type: "confirm",

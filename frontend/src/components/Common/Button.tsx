@@ -64,6 +64,16 @@ const ButtonContainerStyled = styled.button`
       color: var(--gray-color);
       border: 1px solid var(--gray-color);
     `}
+    ${(props) =>
+    props.theme === "smallGrayLine" &&
+    css`
+      max-width: 200px;
+      height: 40px;
+      background: var(--white);
+      color: var(--gray-color);
+      font-size: 14px;
+      border: 1px solid var(--gray-color);
+    `}
 
   @media (max-height: 745px) {
     margin-bottom: 8px;
