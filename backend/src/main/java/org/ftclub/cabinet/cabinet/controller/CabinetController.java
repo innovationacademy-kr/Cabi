@@ -53,10 +53,7 @@ public class CabinetController {
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
-		if (building == null || floor == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
-		log.info("Called getCabinetsPerSection");
+		log.info("Called getCabinetsPerSection building : {} floor : {}", building, floor);
 		return cabinetFacadeService.getCabinetsPerSection(building, floor);
 	}
 
@@ -71,10 +68,7 @@ public class CabinetController {
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public CabinetInfoResponseDto getCabinetInfo(
 			@PathVariable("cabinetId") Long cabinetId) {
-		if (cabinetId == null) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
-		}
-		log.info("Called getCabinetInfo");
+		log.info("Called getCabinetInfo {}", cabinetId);
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
 	}
 }

@@ -76,11 +76,9 @@ class LentPolicyUnitTest {
 	@Test
 	@DisplayName("성공: 만료시간무한 설정 - 공유사물함 최초 대여 - AVAILABLE")
 	void 성공_공유사물함_최초_대여_generateExpirationDate() {
-		List<LentHistory> activeLentHistories = mock(List.class);
+		List<LentHistory> activeLentHistories = new ArrayList<>();
 		Cabinet cabinet = mock(Cabinet.class);
 		given(cabinet.getLentType()).willReturn(LentType.SHARE);
-		given(cabinet.getStatus()).willReturn(CabinetStatus.AVAILABLE);
-
 		LocalDateTime expiredDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
 				cabinet, activeLentHistories);
 
@@ -98,8 +96,8 @@ class LentPolicyUnitTest {
 
 		LentHistory activeLentHistory = mock(LentHistory.class);
 		given(activeLentHistory.getExpiredAt()).willReturn(currentDate.plusDays(42));
-		List<LentHistory> lentHistoryList = mock(List.class);
-		given(lentHistoryList.get(0)).willReturn(activeLentHistory);
+		List<LentHistory> lentHistoryList = new ArrayList<>();
+		lentHistoryList.add(activeLentHistory);
 
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(currentDate, cabinet,
 				lentHistoryList);
@@ -119,8 +117,8 @@ class LentPolicyUnitTest {
 		LentHistory activeLentHistories = mock(LentHistory.class);
 		given(activeLentHistories.getExpiredAt()).willReturn(currentDate.plusDays(42));
 		given(activeLentHistories.isSetExpiredAt()).willReturn(true);
-		List<LentHistory> mockLentHistorieList = mock(List.class);
-		given(mockLentHistorieList.get(0)).willReturn(activeLentHistories);
+		List<LentHistory> mockLentHistorieList = new ArrayList<>();
+		mockLentHistorieList.add(activeLentHistories);
 
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(currentDate, cabinet,
 				mockLentHistorieList);
@@ -138,12 +136,11 @@ class LentPolicyUnitTest {
 		given(cabinet.getStatus()).willReturn(CabinetStatus.LIMITED_AVAILABLE);
 
 		LentHistory activeLentHistories = mock(LentHistory.class);
-		List<LentHistory> mockLentHistorieList = mock(List.class);
+		List<LentHistory> mockLentHistoriesList = new ArrayList<>();
 		given(activeLentHistories.getExpiredAt()).willReturn(currentDate.plusDays(42));
-		given(mockLentHistorieList.get(0)).willReturn(activeLentHistories);
-
+		mockLentHistoriesList.add(activeLentHistories);
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(currentDate, cabinet,
-				mockLentHistorieList);
+				mockLentHistoriesList);
 
 		assertEquals(expirationDate, currentDate.plusDays(42));
 	}

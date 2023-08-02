@@ -33,7 +33,7 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 	 */
 	@Override
 	public List<CabinetFloorStatisticsResponseDto> getCabinetsCountOnAllFloors() {
-		log.info("Called getCabinetsCountOnAllFloors");
+		log.debug("Called getCabinetsCountOnAllFloors");
 		List<CabinetFloorStatisticsResponseDto> cabinetFloorStatisticsResponseDtos = new ArrayList<>();
 		List<Integer> floors = cabinetOptionalFetcher.findAllFloorsByBuilding("새롬관");
 		throwIfFalse(floors != null, new ServiceException(ExceptionStatus.INVALID_ARGUMENT));
@@ -68,7 +68,7 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 	@Override
 	public LentsStatisticsResponseDto getCountOnLentAndReturn(LocalDateTime startDate,
 			LocalDateTime endDate) {
-		log.info("Called getCountOnLentAndReturn");
+		log.debug("Called getCountOnLentAndReturn");
 		throwIfFalse(startDate.isBefore(endDate),
 				new ServiceException(ExceptionStatus.INVALID_ARGUMENT));
 		Integer lentStartCount = lentRepository.countLentByTimeDuration(startDate, endDate);

@@ -54,7 +54,7 @@ public class StatisticsController {
 			@RequestParam("startDate") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime startDate,
 			@RequestParam("endDate") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime endDate
 	) {
-		log.info("Called getCountOnLentAndReturn");
+		log.info("Called getCountOnLentAndReturn startDate : {} endDate : {}", startDate, endDate);
 		return statisticsFacadeService.getCountOnLentAndReturn(startDate, endDate);
 	}
 

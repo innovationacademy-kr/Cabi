@@ -27,14 +27,15 @@ public class AdminLentController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public void terminateLentCabinets(
 			@Valid @RequestBody ReturnCabinetsRequestDto returnCabinetsRequestDto) {
-		log.info("Called terminateLentCabinets");
+		log.info("Called terminateLentCabinets returnCabinetsRequestDto={}",
+				returnCabinetsRequestDto);
 		lentFacadeService.terminateLentCabinets(returnCabinetsRequestDto);
 	}
 
 	@PatchMapping("/return-users/{userId}")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void terminateLentUser(@PathVariable("userId") Long userId) {
-		log.info("Called terminateLentUser");
+		log.info("Called terminateLentUser userId={}", userId);
 		lentFacadeService.terminateLentCabinet(userId);
 	}
 
@@ -42,7 +43,7 @@ public class AdminLentController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public void assignLent(@PathVariable("userId") Long userId,
 			@PathVariable("cabinetId") Long cabinetId) {
-		log.info("Called assignLent");
+		log.info("Called assignLent userId={} cabinetId={}", userId, cabinetId);
 		lentFacadeService.assignLent(userId, cabinetId);
 	}
 }

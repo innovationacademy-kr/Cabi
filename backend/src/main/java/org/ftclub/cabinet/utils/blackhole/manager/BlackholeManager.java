@@ -31,7 +31,7 @@ public class BlackholeManager {
 	 * @return 카뎃 여부
 	 */
 	private Boolean isValidCadet(JsonNode jsonUserInfo) {
-		log.debug("isValidCadet {}", jsonUserInfo);
+		log.info("isValidCadet {}", jsonUserInfo);
 		return jsonUserInfo.get("cursus_users").size() >= 2;
 	}
 
@@ -42,7 +42,7 @@ public class BlackholeManager {
 	 * @return LocalDateTime으로 파싱된 블랙홀 날짜
 	 */
 	private LocalDateTime parseBlackholedAt(JsonNode jsonUserInfo) {
-		log.debug("parseBlackholedAt {}", jsonUserInfo);
+		log.info("parseBlackholedAt {}", jsonUserInfo);
 		JsonNode JsonBlackholedAt = jsonUserInfo.get("cursus_users").get(1).get("blackholed_at");
 		if (JsonBlackholedAt == null || JsonBlackholedAt.asText().equals("null")) {
 			return null;
@@ -58,7 +58,7 @@ public class BlackholeManager {
 	 * @return 블랙홀에 빠졌는지 여부
 	 */
 	private Boolean isBlackholed(LocalDateTime blackholedAtDate, LocalDateTime now) {
-		log.debug("isBlackholed {} {}", blackholedAtDate, now);
+		log.info("isBlackholed {} {}", blackholedAtDate, now);
 		if (blackholedAtDate == null || blackholedAtDate.isAfter(now)) {
 			return false;
 		} else {
@@ -85,7 +85,7 @@ public class BlackholeManager {
 	 * @param now                  현재 시간
 	 */
 	private void handleBlackholed(UserBlackholeInfoDto userBlackholeInfoDto, LocalDateTime now) {
-		log.warn("{}는 블랙홀에 빠졌습니다.", userBlackholeInfoDto);
+		log.info("{}는 블랙홀에 빠졌습니다.", userBlackholeInfoDto);
 		lentService.terminateLentCabinet(userBlackholeInfoDto.getUserId());
 		userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
 	}
@@ -120,7 +120,7 @@ public class BlackholeManager {
 	}
 
 	public void handleBlackhole(UserBlackholeInfoDto userBlackholeInfoDto) {
-		log.debug("called handleBlackhole {}", userBlackholeInfoDto);
+		log.info("called handleBlackhole {}", userBlackholeInfoDto);
 		LocalDateTime now = LocalDateTime.now();
 		try {
 			JsonNode jsonUserInfo = ftAPIManager.getFtUsersInfoByName(
