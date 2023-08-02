@@ -10,8 +10,8 @@ import LeftNav from "@/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import OverduePenaltyModal from "@/components/Modals/OverduePenaltyModal/OverduePenaltyModal";
 import TopNav from "@/components/TopNav/TopNav.container";
+import { additionalModalType } from "@/assets/data/maps";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import { axiosMyInfo } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
@@ -93,7 +93,7 @@ const Layout = (): JSX.Element => {
       )}
       {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
         <OverduePenaltyModal
-          status={CabinetStatus.OVERDUE_PENALTY}
+          status={additionalModalType.MODAL_OVERDUE_PENALTY}
           closeModal={closeModal}
           unbannedAt={myInfoData.unbannedAt}
         />
