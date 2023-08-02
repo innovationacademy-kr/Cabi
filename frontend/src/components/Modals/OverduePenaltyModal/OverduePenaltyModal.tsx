@@ -39,8 +39,6 @@ const OverduePenaltyModal: React.FC<{
     const now = new Date();
     now.setDate(now.getDate() + 1);
     localStorage.setItem("hideOverdueModalForOneDay", now.toString());
-    const hideUntil = localStorage.getItem("hideOverdueModalForOneDay");
-    console.log(hideUntil);
     closeModal();
   };
 
