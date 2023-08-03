@@ -15,4 +15,5 @@ fi
 
 cd /home/ec2-user/deploy/zip/
 docker build -t cabi_main ./          # Docker Image 생성
-docker run -d -p 4242:4242 cabi_main  # Docker Container 생성
+docker run --name cabi_main -d -p 4242:4242 -v /home/ec2-user/logs:/logs cabi_main  # Docker Container 생성
+
