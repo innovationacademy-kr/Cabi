@@ -52,12 +52,12 @@ public class AuthService {
 		if (email.endsWith(domainProperties.getUserEmailDomain())) {
 			String name = claims.get("name").toString();
 
-			LocalDateTime blackHoledAt = DateUtil.stringToDate(claims.get("blackholedAt").toString());
+			Object blackHoledAtObject = claims.get("blackholedAt");
 
-			if (blackHoledAt == null) {
+			if (blackHoledAtObject == null) {
 				userService.createUser(name, email, null, USER);
 			} else {
-				userService.createUser(name, email, blackHoledAt, USER);
+				userService.createUser(name, email, DateUtil.stringToDate(blackHoledAtObject.toString()), USER);
 			}
 		}
 	}
