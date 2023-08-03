@@ -1,12 +1,18 @@
 package org.ftclub.cabinet.auth.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.utils.DateUtil;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +25,7 @@ import static org.ftclub.cabinet.user.domain.UserRole.USER;
  */
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class AuthService {
 
 	private final MasterProperties masterProperties;
@@ -44,7 +51,9 @@ public class AuthService {
 		}
 		if (email.endsWith(domainProperties.getUserEmailDomain())) {
 			String name = claims.get("name").toString();
-			LocalDateTime blackHoledAt = (LocalDateTime) claims.get("blackholedAt");
+
+			LocalDateTime blackHoledAt = DateUtil.stringToDate(claims.get("blackholedAt").toString());
+
 			if (blackHoledAt == null) {
 				userService.createUser(name, email, null, USER);
 			} else {
@@ -52,5 +61,4 @@ public class AuthService {
 			}
 		}
 	}
-
 }
