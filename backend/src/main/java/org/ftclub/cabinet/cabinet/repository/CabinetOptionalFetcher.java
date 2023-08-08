@@ -49,14 +49,18 @@ public class CabinetOptionalFetcher {
 					return cabinetMapper.toActiveCabinetInfoEntitiesDto(cabinet, lentHistory, user);
 				}).collect(Collectors.toList());
 	}
+	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor2(String building, Integer floor) {
+		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+	}
 
-	/**
-	 * 유저 ID로 사물함을 찾습니다.
-	 *
-	 * @param userId 유저ID
-	 * @return 사물함 엔티티
-	 * @throws ServiceException 사물함을 찾을 수 없는 경우
-	 */
+
+		/**
+		 * 유저 ID로 사물함을 찾습니다.
+		 *
+		 * @param userId 유저ID
+		 * @return 사물함 엔티티
+		 * @throws ServiceException 사물함을 찾을 수 없는 경우
+		 */
 	public Cabinet findLentCabinetByUserId(Long userId) {
 		log.debug("Called findLentCabinetByUserId: {}", userId);
 		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
