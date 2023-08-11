@@ -52,7 +52,9 @@ public class CabinetOptionalFetcher {
 	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor2(String building, Integer floor) {
 		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
 	}
-
+	public List<Cabinet> findCabinetsByBuildingAndFloor2(String building, Integer floor) {
+		return cabinetRepository.findAllCabinetsByBuildingAndFloor(building, floor);
+	}
 
 		/**
 		 * 유저 ID로 사물함을 찾습니다.

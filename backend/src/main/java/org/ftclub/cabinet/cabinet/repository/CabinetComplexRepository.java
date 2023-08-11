@@ -12,5 +12,5 @@ import org.ftclub.cabinet.utils.annotations.ComplexRepository;
 public interface CabinetComplexRepository {
 	List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor);
 	List<Cabinet> findCabinetsByBuildingAndFloor(String building, Integer floor);
-
+	List <Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor);
 }
