@@ -131,6 +131,11 @@ export const modalPropsMap = {
     title: "패널티 안내",
     confirmMessage: "오늘 하루동안 보지않기",
   },
+  MODAL_INVITATION_CODE: {
+    type: "confirm",
+    title: "초대 코드",
+    confirmMessage: "대여하기",
+  },
 };
 
 export const cabinetFilterMap = {

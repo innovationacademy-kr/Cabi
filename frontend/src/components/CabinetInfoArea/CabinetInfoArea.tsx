@@ -20,6 +20,7 @@ import {
 import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -90,7 +91,14 @@ const CabinetInfoArea: React.FC<{
         ) : (
           <>
             <ButtonContainer
-              onClick={() => openModal("lentModal")}
+              onClick={() =>
+                openModal(
+                  selectedCabinetInfo?.lentsLength &&
+                    selectedCabinetInfo.lentsLength >= 1
+                    ? "invitationCodeModal"
+                    : "lentModal"
+                )
+              }
               text="대여"
               theme="fill"
               disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
@@ -132,6 +140,11 @@ const CabinetInfoArea: React.FC<{
       {userModal.passwordCheckModal && (
         <PasswordCheckModalContainer
           onClose={() => closeModal("passwordCheckModal")}
+        />
+      )}
+      {userModal.invitationCodeModal && (
+        <InvitationCodeModalContainer
+          onClose={() => closeModal("invitationCodeModal")}
         />
       )}
     </CabinetDetailAreaStyled>
