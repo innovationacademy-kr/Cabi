@@ -29,6 +29,8 @@ public class SystemScheduler {
 	private final UserService userService;
 	private final BlackholeManager blackholeManager;
 
+	private final long DELAY_TIME = 2000;
+
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거하는 메소드
 	 */
@@ -41,7 +43,7 @@ public class SystemScheduler {
 			leaveAbsenceManager.handleLeaveAbsence(activeLent.getUserId(), activeLent.getName());
 			// 2초 간격으로 대여 검증
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
 				log.error(e.getMessage());
 			}
@@ -59,7 +61,7 @@ public class SystemScheduler {
 			blackholeManager.handleBlackhole(blackholeInfo);
 			// 2초 간격으로 블랙홀 검증
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
 				log.error(e.getMessage());
 			}
@@ -77,7 +79,7 @@ public class SystemScheduler {
 			blackholeManager.handleBlackhole(blackholeInfo);
 			// 2초 간격으로 블랙홀 검증
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
 				log.error(e.getMessage());
 			}
