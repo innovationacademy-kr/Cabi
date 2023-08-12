@@ -33,6 +33,7 @@ public class SystemScheduler {
 
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거하는 메소드
+	 * 2초 간격으로 블랙홀 검증
 	 */
 	@Scheduled(cron = "${spring.schedule.cron.leave-absence}")
 	public void checkAllLents() {
@@ -41,7 +42,6 @@ public class SystemScheduler {
 		for (ActiveLentHistoryDto activeLent : activeLents) {
 			overdueManager.handleOverdue(activeLent);
 			leaveAbsenceManager.handleLeaveAbsence(activeLent.getUserId(), activeLent.getName());
-			// 2초 간격으로 대여 검증
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
@@ -52,6 +52,7 @@ public class SystemScheduler {
 
 	/**
 	 * 매주 월요일 자정 42분에 블랙홀에 빠진 유저 처리를 트리거하는 메소드
+	 * 2초 간격으로 블랙홀 검증
 	 */
 	@Scheduled(cron = "${spring.schedule.cron.risk-of-blackhole}")
 	public void checkRiskOfBlackhole() {
@@ -59,7 +60,6 @@ public class SystemScheduler {
 		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
 		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
 			blackholeManager.handleBlackhole(blackholeInfo);
-			// 2초 간격으로 블랙홀 검증
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
@@ -70,6 +70,7 @@ public class SystemScheduler {
 
 	/**
 	 * 매월 1일 01시 42분에 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 처리를 트리거하는 메소드
+	 * 2초 간격으로 블랙홀 검증
 	 */
 	@Scheduled(cron = "${spring.schedule.cron.no-risk-of-blackhole}")
 	public void checkNoRiskOfBlackhole() {
@@ -77,7 +78,6 @@ public class SystemScheduler {
 		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
 		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
 			blackholeManager.handleBlackhole(blackholeInfo);
-			// 2초 간격으로 블랙홀 검증
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
