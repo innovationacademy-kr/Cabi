@@ -105,10 +105,17 @@ public class LentPolicyImpl implements LentPolicy {
 		if (userActiveLentCount >= 1) {
 			return LentPolicyStatus.ALREADY_LENT_USER;
 		}
-		if (user.getBlackholedAt() != null && user.getBlackholedAt()
-				.isBefore(LocalDateTime.now())) {
-			return LentPolicyStatus.BLACKHOLED_USER;
-		}
+//		TODO: 현재 구조에서는 DB 정합성 문제를 일으키는 코드입니다.
+//		블랙홀에 빠진 유저 대여 로직을 막는다고 하면, BlackholeManager.handleBlackhole()을 통해
+//		실제 DB에 반영되기 전에 블랙홀에 빠진 유저를 걸러낼 수 있습니다.
+//		하지만, 현재는 BlackholeManager <-> LentService 간의 순환 참조가 발생하는데,
+//		BlackholeManager는 스케줄러에 의해 빈에 등록되는 컴포넌트이므로
+//		현재 구조상으로는 @Lazy 어노테이션을 통해 순환 참조 문제를 해결할 수 없습니다.
+//		추후 다른 방식으로 구조적인 리팩토링이 필요한 부분입니다..!
+//		if (user.getBlackholedAt() != null && user.getBlackholedAt()
+//				.isBefore(LocalDateTime.now())) {
+//			return LentPolicyStatus.BLACKHOLED_USER;
+//		}
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
 		if (userActiveBanList == null || userActiveBanList.size() == 0) {
 			return LentPolicyStatus.FINE;
