@@ -31,6 +31,7 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
+  wrongCodeCounts: { [cabinetId: number]: number };
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -40,6 +41,7 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
+  wrongCodeCounts,
 }) => {
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
@@ -101,9 +103,20 @@ const CabinetInfoArea: React.FC<{
               }
               text="대여"
               theme="fill"
-              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
+              disabled={
+                !isAvailable ||
+                selectedCabinetInfo.lentType === "CLUB" ||
+                wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3
+              }
             />
+
             <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
+            {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
+              <WarningMessageStyled>
+                초대 코드 입력 오류 초과로 <br />
+                입장이 제한된 상태입니다.
+              </WarningMessageStyled>
+            )}
           </>
         )}
       </CabinetInfoButtonsContainerStyled>
@@ -145,6 +158,7 @@ const CabinetInfoArea: React.FC<{
       {userModal.invitationCodeModal && (
         <InvitationCodeModalContainer
           onClose={() => closeModal("invitationCodeModal")}
+          cabinetId={selectedCabinetInfo?.cabinetId}
         />
       )}
     </CabinetDetailAreaStyled>
@@ -234,6 +248,15 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   line-height: 28px;
   white-space: pre-line;
   text-align: center;
+`;
+
+const WarningMessageStyled = styled.p`
+  color: red;
+  font-size: 1rem;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 26px;
 `;
 
 export default CabinetInfoArea;

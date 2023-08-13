@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
-import useMultiSelect from "@/hooks/useMultiSelect";
 import { IModalContents } from "@/components/Modals/Modal";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 const PasswordCheckModal: React.FC<{
   modalContents: IModalContents;
@@ -164,7 +164,7 @@ const ButtonWrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 `;
 
 export default PasswordCheckModal;

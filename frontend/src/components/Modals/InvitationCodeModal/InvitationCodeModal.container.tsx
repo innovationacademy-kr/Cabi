@@ -7,7 +7,6 @@ import {
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
-import InvitationCodeModal from "@/components/Modals/InvitationCodeModal/InvitationCodeModal";
 import { IModalContents } from "@/components/Modals/Modal";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import PasswordContainer from "@/components/Modals/PasswordCheckModal/PasswordContainer";
@@ -27,10 +26,10 @@ import PasswordCheckModal from "../PasswordCheckModal/PasswordCheckModal";
 
 const InvitationCodeModalContainer: React.FC<{
   onClose: () => void;
+  cabinetId: Number;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
-  const [wrongCodeCounts, setWrongCodeCounts] = useState<number>(0);
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [code, setCode] = useState("");
@@ -41,6 +40,34 @@ const InvitationCodeModalContainer: React.FC<{
   );
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+
+  const loadSharedWrongCodeCounts = () => {
+    const savedData = localStorage.getItem("wrongCodeCounts");
+    if (savedData) {
+      try {
+        const { data, expirationTime } = JSON.parse(savedData);
+        const ExpirationTime = new Date(expirationTime);
+        if (ExpirationTime > new Date()) {
+          return data;
+        } else {
+          localStorage.removeItem("wrongCodeCounts");
+        }
+      } catch (error) {
+        console.error("WrongCodeCounts:", error);
+      }
+    }
+    return {};
+  };
+
+  const saveSharedWrongCodeCounts = (data: any) => {
+    const expirationTime = new Date(
+      new Date().getTime() + 10 * 60 * 1000
+    ).toString();
+    const dataToSave = JSON.stringify({ data, expirationTime });
+    localStorage.setItem("wrongCodeCounts", dataToSave);
+  };
+
+  const [sharedWrongCodeCounts] = useState(loadSharedWrongCodeCounts);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regex = /^[0-9]{0,4}$/;
@@ -57,14 +84,12 @@ const InvitationCodeModalContainer: React.FC<{
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       setModalTitle("대여가 완료되었습니다");
-
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
         setTargetCabinetInfo(data);
       } catch (error) {
         throw error;
       }
-
       try {
         const { data: myLentInfo } = await axiosMyLentInfo();
         setMyLentInfo(myLentInfo);
@@ -88,7 +113,12 @@ const InvitationCodeModalContainer: React.FC<{
       if (code === sharedCode) {
         await tryLentRequest();
       } else {
-        setWrongCodeCounts((prevCounts) => prevCounts + 1);
+        const updatedCounts = {
+          ...sharedWrongCodeCounts,
+          [String(props.cabinetId)]:
+            (sharedWrongCodeCounts[String(props.cabinetId)] || 0) + 1,
+        };
+        saveSharedWrongCodeCounts(updatedCounts);
         setModalTitle("일치하지 않는 초대 코드입니다.");
         setHasErrorOnResponse(true);
         setShowResponseModal(true);
@@ -99,8 +129,6 @@ const InvitationCodeModalContainer: React.FC<{
       setShowResponseModal(true);
     }
   };
-
-  const RentBtnDisabled = wrongCodeCounts >= 3;
 
   const InvititaionCodeModalContents: IModalContents = {
     type: "hasProceedBtn",
@@ -120,10 +148,9 @@ const InvitationCodeModalContainer: React.FC<{
   return (
     <ModalPortal>
       {!showResponseModal && (
-        <InvitationCodeModal
-          code={code}
+        <PasswordCheckModal
+          password={code}
           modalContents={InvititaionCodeModalContents}
-          RentBtnDisabled={RentBtnDisabled}
         />
       )}
       {showResponseModal &&

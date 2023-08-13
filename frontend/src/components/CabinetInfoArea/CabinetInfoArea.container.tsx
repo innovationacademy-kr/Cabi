@@ -139,6 +139,24 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
   else return "var(--black)";
 };
 
+const loadSharedWrongCodeCounts = () => {
+  const savedData = localStorage.getItem("wrongCodeCounts");
+  if (savedData) {
+    try {
+      const { data, expirationTime } = JSON.parse(savedData);
+      const ExpirationTime = new Date(expirationTime);
+      if (ExpirationTime > new Date()) {
+        return data;
+      } else {
+        localStorage.removeItem("wrongCodeCounts");
+      }
+    } catch (error) {
+      console.error("WrongCodeCounts:", error);
+    }
+  }
+  return {};
+};
+
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const myCabinetInfo =
@@ -259,6 +277,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     return false;
   };
 
+  const wrongCodeCounts = loadSharedWrongCodeCounts();
+
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -288,6 +308,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
+      wrongCodeCounts={wrongCodeCounts}
     />
   );
 };
