@@ -13,7 +13,7 @@ const UnavailableModal: React.FC<{
   const modalContents: IModalContents = {
     type: "noBtn",
     icon: errorIcon,
-    title: modalPropsMap[props.status].title,
+    title: modalPropsMap[additionalModalType.MODAL_OVERDUE_PENALTY].title,
     closeModal: props.closeModal,
   };
 

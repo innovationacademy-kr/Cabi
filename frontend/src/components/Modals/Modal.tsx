@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import useMultiSelect from "@/hooks/useMultiSelect";
 import AdminClubLogContainer from "../Club/AdminClubLog.container";
-import ClubLogTable from "../Club/ClubLogTable";
 
 /**
  * @interface
@@ -85,6 +84,17 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
               }}
               text={proceedBtnText || "확인"}
               theme="fill"
+            />
+          </ButtonWrapperStyled>
+        )}
+        {type === "panaltyBtn" && (
+          <ButtonWrapperStyled>
+            <Button
+              onClick={(e) => {
+                onClickProceed!(e);
+              }}
+              text={proceedBtnText || "확인"}
+              theme="smallGrayLine"
             />
           </ButtonWrapperStyled>
         )}
