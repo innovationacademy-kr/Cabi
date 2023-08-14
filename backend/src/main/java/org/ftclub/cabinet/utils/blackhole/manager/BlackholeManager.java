@@ -33,7 +33,7 @@ public class BlackholeManager {
 	 */
 	private Boolean isValidCadet(JsonNode jsonUserInfo) {
 		log.info("isValidCadet {}", jsonUserInfo);
-		return jsonUserInfo.get("cursus_users").size() > 3;
+		return jsonUserInfo.get("cursus_users").size() >= 2;
 	}
 
 	/**

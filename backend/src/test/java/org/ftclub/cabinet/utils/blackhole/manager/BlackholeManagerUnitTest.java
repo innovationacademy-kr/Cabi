@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.ftclub.cabinet.auth.service.FtApiManager;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
@@ -24,6 +25,7 @@ import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +40,8 @@ public class BlackholeManagerUnitTest {
 
 	@InjectMocks
 	private BlackholeManager blackholeManager;
+	@Mock
+	private BlackholeRefresher blackholeRefresher;
 	@Mock
 	private FtApiManager ftApiManager = mock(FtApiManager.class);
 	@Mock
@@ -84,7 +88,7 @@ public class BlackholeManagerUnitTest {
 				LocalDateTime.now().minusDays(1));
 		JsonNode JsonafterBlackholedAt = objectMapper.readTree(StringAfterBlackholedAt);
 
-		given(ftApiManager.getFtUsersInfoByName(name)).willReturn(jsonUserInfo);
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
 		lenient().when(mockCursusUsers.get(1)).thenReturn(mockFieldOne);
@@ -116,9 +120,10 @@ public class BlackholeManagerUnitTest {
 				beforeBlackholedAt
 		);
 
-		given(ftApiManager.getFtUsersInfoByName(name)).willThrow(new HttpClientErrorException(
-				HttpStatus.NOT_FOUND
-		));
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willThrow(
+				new HttpClientErrorException(
+						HttpStatus.NOT_FOUND
+				));
 
 		blackholeManager.handleBlackhole(userBlackholeInfoDto);
 
@@ -148,7 +153,8 @@ public class BlackholeManagerUnitTest {
 		JsonNode mockFieldZero = mock(JsonNode.class);
 		JsonNode mockFieldOne = mock(JsonNode.class);
 
-		given(ftApiManager.getFtUsersInfoByName(name)).willReturn(jsonUserInfo);
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
 		given(mockCursusUsers.size()).willReturn(1);
@@ -189,7 +195,8 @@ public class BlackholeManagerUnitTest {
 				LocalDateTime.now().plusDays(42));
 		JsonNode JsonafterBlackholedAt = objectMapper.readTree(StringAfterBlackholedAt);
 
-		given(ftApiManager.getFtUsersInfoByName(name)).willReturn(jsonUserInfo);
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
 		lenient().when(mockCursusUsers.get(1)).thenReturn(mockFieldOne);
@@ -229,7 +236,8 @@ public class BlackholeManagerUnitTest {
 //		새 블랙홀 날짜 = null
 		JsonNode JsonafterBlackholedAt = null;
 
-		given(ftApiManager.getFtUsersInfoByName(name)).willReturn(jsonUserInfo);
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
 		lenient().when(mockCursusUsers.get(1)).thenReturn(mockFieldOne);
@@ -268,7 +276,8 @@ public class BlackholeManagerUnitTest {
 //		새 블랙홀 날짜 = null
 		JsonNode JsonafterBlackholedAt = null;
 
-		given(ftApiManager.getFtUsersInfoByName(name)).willReturn(jsonUserInfo);
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
 		lenient().when(mockCursusUsers.get(1)).thenReturn(mockFieldOne);
@@ -307,7 +316,8 @@ public class BlackholeManagerUnitTest {
 //		새 블랙홀 날짜 = null
 		JsonNode JsonafterBlackholedAt = null;
 
-		given(ftApiManager.getFtUsersInfoByName(name)).willReturn(jsonUserInfo);
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
 		lenient().when(mockCursusUsers.get(1)).thenReturn(mockFieldOne);
