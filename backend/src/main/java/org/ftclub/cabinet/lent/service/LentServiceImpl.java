@@ -1,6 +1,9 @@
 package org.ftclub.cabinet.lent.service;
 
+import static org.ftclub.cabinet.exception.ExceptionStatus.ALL_BANNED_USER;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -9,6 +12,8 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+import org.ftclub.cabinet.exception.CustomExceptionStatus;
+import org.ftclub.cabinet.exception.CustomServiceException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -49,21 +54,24 @@ public class LentServiceImpl implements LentService {
 		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
 				now);
 		// 대여 가능한 유저인지 확인
-		//BanHistory activeBanHistory = userOptionalFetcher.getActiveBanHistory(userId);
-		handlePolicyStatus(
-				lentPolicy.verifyUserForLent(user, cabinet, userActiveLentCount,
-						userActiveBanList));
+		LentPolicyStatus userPolicyStatus = lentPolicy.verifyUserForLent(user, cabinet,
+				userActiveLentCount, userActiveBanList);
+		handlePolicyStatus(userPolicyStatus, userActiveBanList.get(0)); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
 		List<LentHistory> cabinetActiveLentHistories = lentRepository.findAllActiveLentByCabinetId(
 				cabinetId);
+
 		// 대여 가능한 캐비넷인지 확인
-		handlePolicyStatus(
-				lentPolicy.verifyCabinetForLent(cabinet, cabinetActiveLentHistories,
-						now));
+		LentPolicyStatus cabinetPolicyStatus = lentPolicy.verifyCabinetForLent(cabinet,
+				cabinetActiveLentHistories,
+				now);
+		handlePolicyStatus(cabinetPolicyStatus, userActiveBanList.get(0)); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
+
 		// 캐비넷 상태 변경
 		cabinet.specifyStatusByUserCount(cabinetActiveLentHistories.size() + 1);
 		LocalDateTime expiredAt = lentPolicy.generateExpirationDate(now, cabinet,
 				cabinetActiveLentHistories);
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
+
 		// 연체 시간 적용
 		lentPolicy.applyExpirationDate(lentHistory, cabinetActiveLentHistories, expiredAt);
 		lentRepository.save(lentHistory);
@@ -170,7 +178,7 @@ public class LentServiceImpl implements LentService {
 	 * @param status 정책에 대한 결과 상태
 	 * @throws ServiceException 정책에 따라 다양한 exception이 throw될 수 있습니다.
 	 */
-	private void handlePolicyStatus(LentPolicyStatus status) {
+	private void handlePolicyStatus(LentPolicyStatus status, BanHistory banHistory) {
 		log.info("Called handlePolicyStatus status: {}", status);
 		switch (status) {
 			case FINE:
@@ -188,9 +196,8 @@ public class LentServiceImpl implements LentService {
 			case ALREADY_LENT_USER:
 				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
 			case ALL_BANNED_USER:
-				throw new ServiceException(ExceptionStatus.ALL_BANNED_USER);
 			case SHARE_BANNED_USER:
-				throw new ServiceException(ExceptionStatus.SHARE_BANNED_USER);
+				handleBannedUserResponse(status, banHistory);
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			case NOT_USER:
@@ -200,9 +207,21 @@ public class LentServiceImpl implements LentService {
 		}
 	}
 
-	private void handleBannedUserResponse(Long userId) {
-		BanHistory activeBanHistory = userOptionalFetcher.getActiveBanHistory(userId);
-		LocalDateTime unbannedAt = activeBanHistory.getUnbannedAt();
-		throw new ServiceException(ExceptionStatus.ALL_BANNED_USER);
+	private void handleBannedUserResponse(LentPolicyStatus status, BanHistory banHistory) {
+		log.info("Called handleBannedUserResponse: {}", status);
+
+
+		LocalDateTime unbannedAt = banHistory.getUnbannedAt();
+		String unbannedTimeString = unbannedAt.format(
+				DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+		if (status.equals(LentPolicyStatus.ALL_BANNED_USER)) {
+			throw new CustomServiceException(
+					new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER, unbannedTimeString));
+		} else if (status.equals(LentPolicyStatus.SHARE_BANNED_USER)) {
+			throw new CustomServiceException(
+					new CustomExceptionStatus(ExceptionStatus.SHARE_BANNED_USER,
+							unbannedTimeString));
+		}
 	}
 }

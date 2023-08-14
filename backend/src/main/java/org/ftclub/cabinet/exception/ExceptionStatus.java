@@ -41,7 +41,6 @@ public enum ExceptionStatus {
 	CLUB_HAS_LENT_CABINET(HttpStatus.NOT_ACCEPTABLE, "대여 중인 사물함을 반납 후 삭제할 수 있습니다."),
 	;
 
-
 	final private int statusCode;
 	final private String message;
 	final private String error;
@@ -50,9 +49,5 @@ public enum ExceptionStatus {
 		this.statusCode = status.value();
 		this.message = message;
 		this.error = status.getReasonPhrase();
-	}
-
-	public static ExceptionStatus createExceptionStatus(HttpStatus status, String message) {
-		return new ExceptionStatus(status, message);
 	}
 }
