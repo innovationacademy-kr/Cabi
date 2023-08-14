@@ -8,35 +8,9 @@ on:
 jobs:
   backend-CI:
     runs-on: ubuntu-latest
-    services:
-      mariadb:
-        image: mariadb:10.3.39
-        env:
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: test_user
-          MYSQL_PASSWORD: test_password
-          MYSQL_ROOT_PASSWORD: test_password
-        ports:
-          - 3310:3306
-        options: >-
-          --health-cmd "mysqladmin status -h 127.0.0.1 -P 3306 -u root -ptest_password"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
-
-      - name: DB에 샘플 데이터 삽입
-        run: >-
-          mysql --force
-          --host="127.0.0.1"
-          --port="3310"
-          --database="test_db"
-          --user="test_user"
-          --password="test_password"
-          < "backend/src/test/resources/database/spring_test_db.sql"
 
       - name: JDK 11 설정
         uses: actions/setup-java@v3
