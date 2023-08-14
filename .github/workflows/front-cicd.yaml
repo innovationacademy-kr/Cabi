@@ -47,8 +47,8 @@ jobs:
           cd frontend
           mkdir -p dist/src/assets
           cp -r src/assets/images dist/src/assets
-          aws s3 sync ./dist s3://dev.cabi --profile=CABI
-          aws cloudfront create-invalidation --profile=CABI --distribution-id EWPTW52IH5L5C --paths '/*'
+          aws s3 sync ./dist s3://dev.cabi
+          aws cloudfront create-invalidation --distribution-id EWPTW52IH5L5C --paths '/*'
 
       - name: Main S3에 배포 및 CloudFront 캐시 무효화
         if: ${{ github.ref == 'refs/heads/main' }}
@@ -56,5 +56,5 @@ jobs:
           cd frontend
           mkdir -p dist/src/assets
           cp -r src/assets/images dist/src/assets
-          aws s3 sync ./dist s3://cabi --profile=CABI
-          aws cloudfront create-invalidation --profile=CABI --distribution-id E12WMB9HCNB1DT --paths '/*'
+          aws s3 sync ./dist s3://cabi
+          aws cloudfront create-invalidation --distribution-id E12WMB9HCNB1DT --paths '/*'
