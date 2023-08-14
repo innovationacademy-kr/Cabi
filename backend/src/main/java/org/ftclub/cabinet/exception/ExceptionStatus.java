@@ -51,4 +51,8 @@ public enum ExceptionStatus {
 		this.message = message;
 		this.error = status.getReasonPhrase();
 	}
+
+	public static ExceptionStatus createExceptionStatus(HttpStatus status, String message) {
+		return new ExceptionStatus(status, message);
+	}
 }

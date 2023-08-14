@@ -22,6 +22,7 @@ public class BlackholeManager {
 	private final FtApiManager ftAPIManager;
 	private final LentService lentService;
 	private final UserService userService;
+	private final BlackholeRefresher blackholeRefresher;
 
 	/**
 	 * JsonNode에 담긴 cursus_users를 확인하여 해당 유저가 카뎃인지 확인한다. cursus_users에 담긴 정보가 2개 이상이면 카뎃이다.
@@ -32,7 +33,7 @@ public class BlackholeManager {
 	 */
 	private Boolean isValidCadet(JsonNode jsonUserInfo) {
 		log.info("isValidCadet {}", jsonUserInfo);
-		return jsonUserInfo.get("cursus_users").size() >= 2;
+		return jsonUserInfo.get("cursus_users").size() > 3;
 	}
 
 	/**
@@ -123,8 +124,7 @@ public class BlackholeManager {
 		log.info("called handleBlackhole {}", userBlackholeInfoDto);
 		LocalDateTime now = LocalDateTime.now();
 		try {
-			JsonNode jsonUserInfo = ftAPIManager.getFtUsersInfoByName(
-					userBlackholeInfoDto.getName());
+			JsonNode jsonUserInfo = blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto);
 			if (!isValidCadet(jsonUserInfo)) {
 				handleNotCadet(userBlackholeInfoDto, now);
 				return;
