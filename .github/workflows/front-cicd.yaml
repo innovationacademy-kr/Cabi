@@ -26,6 +26,12 @@ jobs:
         run: npm install --prefix frontend
       # - name: lint 체크
       #   run: npm run lint --prefix frontend
+      - name: Dev env 파일 생성
+        if: ${{ github.ref == 'refs/heads/dev' }}
+        run: echo "${{ secrets.FRONTEND_DEV_ENV }}" | base64 --decode > frontend/.env
+      - name: Main env 파일 생성
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: echo "${{ secrets.FRONTEND_MAIN_ENV }}" | base64 --decode > frontend/.env
       - name: 빌드 체크
         run: npm run build --prefix frontend
       # - name: 단위 테스트 체크
