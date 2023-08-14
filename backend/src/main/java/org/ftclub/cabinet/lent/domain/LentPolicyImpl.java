@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.lent.domain;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -14,10 +14,8 @@ import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
+import org.ftclub.cabinet.utils.blackhole.manager.BlackholeRefresher;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +23,7 @@ import java.util.List;
 public class LentPolicyImpl implements LentPolicy {
 
 	private final CabinetProperties cabinetProperties;
+	private final BlackholeRefresher blackholeRefresher;
 
 	private LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
 			CabinetStatus cabinetStatus, LentHistory activeLentHistory) {
@@ -78,10 +77,11 @@ public class LentPolicyImpl implements LentPolicy {
 	@Override
 	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
 			LocalDateTime expiredAt) {
-		log.info("Called applyExpirationDate curHistory: {}, beforeActiveHistories: {}, expiredAt: {}",
+		log.info(
+				"Called applyExpirationDate curHistory: {}, beforeActiveHistories: {}, expiredAt: {}",
 				curHistory, beforeActiveHistories, expiredAt);
 
-		if (expiredAt == null){
+		if (expiredAt == null) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 
@@ -112,10 +112,11 @@ public class LentPolicyImpl implements LentPolicy {
 //		BlackholeManager는 스케줄러에 의해 빈에 등록되는 컴포넌트이므로
 //		현재 구조상으로는 @Lazy 어노테이션을 통해 순환 참조 문제를 해결할 수 없습니다.
 //		추후 다른 방식으로 구조적인 리팩토링이 필요한 부분입니다..!
-//		if (user.getBlackholedAt() != null && user.getBlackholedAt()
-//				.isBefore(LocalDateTime.now())) {
-//			return LentPolicyStatus.BLACKHOLED_USER;
-//		}
+		if (user.getBlackholedAt() != null && user.getBlackholedAt()
+				.isBefore(LocalDateTime.now())) {
+//			blackholeRefresher.getBlackholeInfo(user.get)
+			return LentPolicyStatus.BLACKHOLED_USER;
+		}
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
 		if (userActiveBanList == null || userActiveBanList.size() == 0) {
 			return LentPolicyStatus.FINE;
