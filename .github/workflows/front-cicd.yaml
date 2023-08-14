@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - "frontend/**"
+  workflow_dispatch:
 
 jobs:
   frontend-CI:
