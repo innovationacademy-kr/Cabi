@@ -5,6 +5,7 @@ import static org.ftclub.cabinet.exception.ExceptionStatus.ALL_BANNED_USER;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +57,7 @@ public class LentServiceImpl implements LentService {
 		// 대여 가능한 유저인지 확인
 		LentPolicyStatus userPolicyStatus = lentPolicy.verifyUserForLent(user, cabinet,
 				userActiveLentCount, userActiveBanList);
-		handlePolicyStatus(userPolicyStatus, userActiveBanList.get(0)); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
+		handlePolicyStatus(userPolicyStatus, userActiveBanList); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
 		List<LentHistory> cabinetActiveLentHistories = lentRepository.findAllActiveLentByCabinetId(
 				cabinetId);
 
@@ -64,7 +65,7 @@ public class LentServiceImpl implements LentService {
 		LentPolicyStatus cabinetPolicyStatus = lentPolicy.verifyCabinetForLent(cabinet,
 				cabinetActiveLentHistories,
 				now);
-		handlePolicyStatus(cabinetPolicyStatus, userActiveBanList.get(0)); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
+		handlePolicyStatus(cabinetPolicyStatus, userActiveBanList); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
 
 		// 캐비넷 상태 변경
 		cabinet.specifyStatusByUserCount(cabinetActiveLentHistories.size() + 1);
@@ -178,7 +179,7 @@ public class LentServiceImpl implements LentService {
 	 * @param status 정책에 대한 결과 상태
 	 * @throws ServiceException 정책에 따라 다양한 exception이 throw될 수 있습니다.
 	 */
-	private void handlePolicyStatus(LentPolicyStatus status, BanHistory banHistory) {
+	private void handlePolicyStatus(LentPolicyStatus status, List<BanHistory> banHistory) {
 		log.info("Called handlePolicyStatus status: {}", status);
 		switch (status) {
 			case FINE:
@@ -197,7 +198,7 @@ public class LentServiceImpl implements LentService {
 				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
 			case ALL_BANNED_USER:
 			case SHARE_BANNED_USER:
-				handleBannedUserResponse(status, banHistory);
+				handleBannedUserResponse(status, banHistory.get(0));
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			case NOT_USER:
