@@ -29,7 +29,7 @@ public class SystemScheduler {
 	private final UserService userService;
 	private final BlackholeManager blackholeManager;
 
-	private final long DELAY_TIME = 2000;
+	private static final long DELAY_TIME = 2000;
 
 	/**
 	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거하는 메소드
