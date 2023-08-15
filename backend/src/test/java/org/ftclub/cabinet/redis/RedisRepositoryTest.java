@@ -56,7 +56,7 @@ public class RedisRepositoryTest {
 		TicketingCabinet ticketingCabinet = new TicketingCabinet(userName, wrongPasswordCount);
 		saveWithCustomPrefix(cabinetId, ticketingCabinet);
 
-		final Map<Object, Object> entries = redisTemplate.opsForHash().entries(cabinetId + ":" + userName);
+		final Map<Object, Object> entries = redisTemplate.opsForHash().entries(cabinetId);
 		System.out.println(entries);
 
 		userName = "daewoole";
@@ -64,7 +64,7 @@ public class RedisRepositoryTest {
 		TicketingCabinet ticketingCabinet2 = new TicketingCabinet(userName, wrongPasswordCount);
 		saveWithCustomPrefix(cabinetId, ticketingCabinet2);
 
-		final Map<Object, Object> entries2 = redisTemplate.opsForHash().entries(cabinetId + ":" + userName);
+		final Map<Object, Object> entries2 = redisTemplate.opsForHash().entries(cabinetId);
 		System.out.println(entries2);
 
 		// search all entries by prefix
@@ -73,11 +73,16 @@ public class RedisRepositoryTest {
 		redisTemplate.opsForHash().keys(cabinetId).forEach(System.out::println);
 	}
 
-	public void saveWithCustomPrefix(String prefix, TicketingCabinet cabinet) {
-		String key = prefix + ":" + cabinet.getUserNameOrUserCount();
-		redisTemplate.opsForHash().putAll(key, convertToMap(cabinet));
-		// timeToLive 설정
-		redisTemplate.expire(key, 10, TimeUnit.SECONDS);
+	public void saveWithCustomPrefix(String cabinetId, TicketingCabinet tc) {
+		boolean hasKey = Boolean.TRUE.equals(redisTemplate.hasKey(cabinetId));
+		redisTemplate.opsForHash().put(cabinetId, tc.getUserNameOrUserCount(), tc.getWrongPasswordCountOrUserCount());
+//		redisTemplate.opsForHash().putAll(cabinetId, convertToMap(tc));
+		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
+		if (!hasKey) {
+			System.out.println("set expire time");
+			// 10초 후에 삭제
+			redisTemplate.expire(cabinetId, 10, TimeUnit.SECONDS);
+		}
 	}
 
 	private Map<String, String> convertToMap(TicketingCabinet cabinet) {
