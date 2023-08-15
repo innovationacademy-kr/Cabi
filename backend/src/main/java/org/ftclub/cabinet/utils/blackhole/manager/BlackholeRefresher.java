@@ -58,8 +58,8 @@ public class BlackholeRefresher {
 		LocalDateTime now = LocalDateTime.now();
 		JsonNode blackholeInfo = getBlackholeInfo(userBlackholeInfoDto);
 		LocalDateTime blackholedAtDate = parseBlackholedAt(blackholeInfo);
+		userService.updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), blackholedAtDate);
 		if (blackholedAtDate == null || blackholedAtDate.isAfter(now)) {
-			userService.updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), blackholedAtDate);
 			return false;
 		} else {
 			return true;
