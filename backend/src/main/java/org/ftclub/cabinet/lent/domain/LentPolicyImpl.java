@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.lent.domain;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
-import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeRefresher;
 import org.springframework.stereotype.Component;
 
@@ -112,7 +110,7 @@ public class LentPolicyImpl implements LentPolicy {
 //		 유저의 블랙홀 업데이트와 블랙홀 체크 분리필요- 리펙토링 필요 2023.08.15
 		if (user.getBlackholedAt() != null && user.getBlackholedAt()
 				.isBefore(LocalDateTime.now())) {
-			if(blackholeRefresher.isBlackholedUpdated(UserBlackholeInfoDto.of(user)))
+			if(blackholeRefresher.isBlackholedAndUpdateBlackhole(UserBlackholeInfoDto.of(user)))
 				return LentPolicyStatus.BLACKHOLED_USER;
 		}
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?

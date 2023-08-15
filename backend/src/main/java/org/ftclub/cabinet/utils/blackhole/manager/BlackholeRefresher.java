@@ -53,8 +53,8 @@ public class BlackholeRefresher {
 	 *
 	 * @return 블랙홀에 빠졌는지 여부
 	 */
-	public Boolean isBlackholedUpdated(UserBlackholeInfoDto userBlackholeInfoDto) {
-		log.info("isBlackholed {}", userBlackholeInfoDto);
+	public Boolean isBlackholedAndUpdateBlackhole(UserBlackholeInfoDto userBlackholeInfoDto) {
+		log.info("isBlackholedAndUpdateBlackhole {}", userBlackholeInfoDto);
 		LocalDateTime now = LocalDateTime.now();
 		JsonNode blackholeInfo = getBlackholeInfo(userBlackholeInfoDto);
 		LocalDateTime blackholedAtDate = parseBlackholedAt(blackholeInfo);
