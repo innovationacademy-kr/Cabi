@@ -8,8 +8,10 @@ import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoAr
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LeftNav from "@/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
+import OverduePenaltyModal from "@/components/Modals/OverduePenaltyModal/OverduePenaltyModal";
 import TopNav from "@/components/TopNav/TopNav.container";
-import { UserDto } from "@/types/dto/user.dto";
+import { additionalModalType } from "@/assets/data/maps";
+import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import { axiosMyInfo } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
@@ -17,6 +19,8 @@ import useMenu from "@/hooks/useMenu";
 const Layout = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,12 +30,26 @@ const Layout = (): JSX.Element => {
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const getMyInfo = async () => {
     try {
       const { data: myInfo } = await axiosMyInfo();
+      setMyInfoData(myInfo);
       setUser(myInfo);
       setIsValidToken(true);
-      if (isRootPath || isLoginPage) navigate("/home");
+      if (myInfo.unbannedAt) {
+        openModal();
+      }
+      if (isRootPath || isLoginPage) {
+        navigate("/home");
+      }
     } catch (error) {
       navigate("/login");
     }
@@ -72,6 +90,13 @@ const Layout = (): JSX.Element => {
           </DetailInfoContainerStyled>
           <MapInfoContainer />
         </WrapperStyled>
+      )}
+      {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
+        <OverduePenaltyModal
+          status={additionalModalType.MODAL_OVERDUE_PENALTY}
+          closeModal={closeModal}
+          unbannedAt={myInfoData.unbannedAt}
+        />
       )}
     </React.Fragment>
   );
