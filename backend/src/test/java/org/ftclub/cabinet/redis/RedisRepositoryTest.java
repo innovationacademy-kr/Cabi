@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -51,47 +50,42 @@ public class RedisRepositoryTest {
 
 
 		String cabinetId = "16";
-		String userName = "yubchoi";
-		int wrongPasswordCount = 0;
-		TicketingCabinet ticketingCabinet = new TicketingCabinet(userName, wrongPasswordCount);
-		saveWithCustomPrefix(cabinetId, ticketingCabinet);
+		saveWithCustomPrefix(cabinetId, "yubchoi", 0);
 
 		final Map<Object, Object> entries = redisTemplate.opsForHash().entries(cabinetId);
 		System.out.println(entries);
 
-		userName = "daewoole";
-		wrongPasswordCount = 1;
-		TicketingCabinet ticketingCabinet2 = new TicketingCabinet(userName, wrongPasswordCount);
-		saveWithCustomPrefix(cabinetId, ticketingCabinet2);
+		saveWithCustomPrefix(cabinetId, "daewoole", 1);
 
 		final Map<Object, Object> entries2 = redisTemplate.opsForHash().entries(cabinetId);
 		System.out.println(entries2);
 
 		// search all entries by prefix
-//		final Map<Object, Object> entries3 = redisTemplate.opsForHash().entries(cabinetId);
-//		System.out.println(entries3);
-		redisTemplate.opsForHash().keys(cabinetId).forEach(System.out::println);
+//		redisTemplate.opsForHash().keys(cabinetId).forEach(System.out::println);
 	}
 
-	public void saveWithCustomPrefix(String cabinetId, TicketingCabinet tc) {
+	/**
+	 * @param cabinetId
+	 * @param hashKey:            ${userName} 또는 "userCount"
+	 * @param wrongPasswordCount: ${wrongPasswordCount} 또는 ${userCount}
+	 */
+	public void saveWithCustomPrefix(String cabinetId, String hashKey, int wrongPasswordCount) {
 		boolean hasKey = Boolean.TRUE.equals(redisTemplate.hasKey(cabinetId));
-		redisTemplate.opsForHash().put(cabinetId, tc.getUserNameOrUserCount(), tc.getWrongPasswordCountOrUserCount());
-//		redisTemplate.opsForHash().putAll(cabinetId, convertToMap(tc));
+		redisTemplate.opsForHash().put(cabinetId, hashKey, wrongPasswordCount);
+//		redisTemplate.opsForHash().putAll(cabinetId, convertToMap(tc));	// hashKey를 설정하기 위해 putAll이 아닌 put을 사용했습니다.
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		if (!hasKey) {
 			System.out.println("set expire time");
 			// 10초 후에 삭제
-			redisTemplate.expire(cabinetId, 10, TimeUnit.SECONDS);
+			redisTemplate.expire(cabinetId, 30, TimeUnit.SECONDS);
 		}
 	}
 
-	private Map<String, String> convertToMap(TicketingCabinet cabinet) {
-		Map<String, String> map = new HashMap<>();
-//		map.put("cabinetId", cabinet.getCabinetId());
-		map.put("userNameOrUserCount", cabinet.getUserNameOrUserCount());
-		map.put("wrongPasswordCountOrUserCount", String.valueOf(cabinet.getWrongPasswordCountOrUserCount()));
-//		map.put("createdAt", cabinet.getCreatedAt());
-		return map;
-	}
+//	private Map<String, String> convertToMap(TicketingCabinet cabinet) {
+//		Map<String, String> map = new HashMap<>();
+//		map.put("userNameOrUserCount", cabinet.getUserNameOrUserCount());
+//		map.put("wrongPasswordCountOrUserCount", String.valueOf(cabinet.getWrongPasswordCountOrUserCount()));
+//		return map;
+//	}
 
 }

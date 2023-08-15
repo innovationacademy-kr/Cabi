@@ -67,3 +67,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
+  redis:
+    host: localhost
+    port: 6379
