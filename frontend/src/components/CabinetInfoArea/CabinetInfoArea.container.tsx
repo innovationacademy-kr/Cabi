@@ -46,6 +46,7 @@ export interface ICurrentModalStateInfo {
   returnModal: boolean;
   memoModal: boolean;
   passwordCheckModal: boolean;
+  invitationCodeModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -66,7 +67,8 @@ export type TModalState =
   | "unavailableModal"
   | "returnModal"
   | "memoModal"
-  | "passwordCheckModal";
+  | "passwordCheckModal"
+  | "invitationCodeModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -137,6 +139,24 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
   else return "var(--black)";
 };
 
+const loadSharedWrongCodeCounts = () => {
+  const savedData = localStorage.getItem("wrongCodeCounts");
+  if (savedData) {
+    try {
+      const { data, expirationTime } = JSON.parse(savedData);
+      const ExpirationTime = new Date(expirationTime);
+      if (ExpirationTime > new Date()) {
+        return data;
+      } else {
+        localStorage.removeItem("wrongCodeCounts");
+      }
+    } catch (error) {
+      console.error("WrongCodeCounts:", error);
+    }
+  }
+  return {};
+};
+
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const myCabinetInfo =
@@ -151,6 +171,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     returnModal: false,
     memoModal: false,
     passwordCheckModal: false,
+    invitationCodeModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -204,6 +225,12 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       targetCabinetInfo.lents.length === 1
     ) {
       modalName = "passwordCheckModal";
+    } else if (
+      modalName === "lentModal" &&
+      cabinetViewData?.lentsLength &&
+      cabinetViewData.lentsLength >= 1
+    ) {
+      modalName = "invitationCodeModal";
     }
     setUserModal({
       ...userModal,
@@ -250,6 +277,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     return false;
   };
 
+  const wrongCodeCounts = loadSharedWrongCodeCounts();
+
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -279,6 +308,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
+      wrongCodeCounts={wrongCodeCounts}
     />
   );
 };
