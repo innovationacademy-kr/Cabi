@@ -60,7 +60,7 @@ public class SystemScheduler {
 		log.info("called checkRiskOfBlackhole");
 		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
 		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
-			blackholeManager.handleBlackholeByScheduler(blackholeInfo);
+			blackholeManager.handleBlackhole(blackholeInfo);
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
@@ -78,7 +78,7 @@ public class SystemScheduler {
 		log.info("called checkNoRiskOfBlackhole");
 		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
 		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
-			blackholeManager.handleBlackholeByScheduler(blackholeInfo);
+			blackholeManager.handleBlackhole(blackholeInfo);
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {

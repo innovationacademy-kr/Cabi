@@ -21,6 +21,6 @@ public class BlackholedUserLentEventListener {
 	@EventListener
 	public void handleBlackholedUserLentAttemptingEvent(UserBlackholeInfoDto userBlackholeInfoDto) {
 		log.info("Called handleBlackholedUserLentAttemptingEvent");
-		blackholeManager.blackholeRefresher(userBlackholeInfoDto);
+		blackholeManager.handleBlackhole(userBlackholeInfoDto);
 	}
 }

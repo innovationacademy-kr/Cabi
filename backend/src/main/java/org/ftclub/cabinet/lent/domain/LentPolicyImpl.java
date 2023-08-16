@@ -110,12 +110,12 @@ public class LentPolicyImpl implements LentPolicy {
 		}
 		if (user.getBlackholedAt() != null && user.getBlackholedAt()
 				.isBefore(LocalDateTime.now())) {
+			// 다시 돌고 돌고 돌고~
 			publisher.publishEvent(UserBlackholeInfoDto.of(user));
 			throw new DomainException(ExceptionStatus.BLACKHOLE_REFRESHING);
 
 //			if(user.getBlackholedAt() != null && user.getBlackholedAt().isBefore(LocalDateTime.now()))
 //				return LentPolicyStatus.BLACKHOLED_USER;
-
 //			if(blackholeRefresher.isBlackholedAndUpdateBlackhole(UserBlackholeInfoDto.of(user)))
 //				return LentPolicyStatus.BLACKHOLED_USER;
 		}

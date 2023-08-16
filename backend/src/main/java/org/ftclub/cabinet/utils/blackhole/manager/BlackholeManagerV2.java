@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.service.FtApiManager;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
-import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.service.LentService;
@@ -32,7 +31,8 @@ public class BlackholeManagerV2 {
 	 * @return 카뎃 여부
 	 */
 	private boolean isValidCadet(JsonNode jsonUserInfo) {
-		log.info("isValidCadet {}", jsonUserInfo);
+		log.debug("isValidCadet {}", jsonUserInfo);
+		log.info("isValidCadet" );
 		return jsonUserInfo.get("cursus_users").size() >= 2;
 	}
 
@@ -130,8 +130,10 @@ public class BlackholeManagerV2 {
 	private JsonNode getBlackholeInfo(String userName)
 			throws ServiceException, HttpClientErrorException {
 		log.info("called refreshBlackhole{}", userName);
-		return ftApiManager.getFtUsersInfoByName(
+		JsonNode userInfoFromIntra = ftApiManager.getFtUsersInfoByName(
 				userName);
+
+		return userInfoFromIntra;
 	}
 
 
@@ -157,23 +159,6 @@ public class BlackholeManagerV2 {
 		userService.updateUserBlackholedAt(userId, blackholedAt);
 	}
 
-	/**
-	 * 블랙홀 갱신 후 처리
-	 *
-	 * 블랙홀일 경우 반납 및 삭제 처리
-	 * 블랙홀이 아닐경우 유저 정보(블랙홀일자) 업데이트
-	 *
-	 * @param userBlackholeInfoDto
-	 */
-	public void blackholeRefresher(UserBlackholeInfoDto userBlackholeInfoDto) {
-		LocalDateTime refreshedBlackholedAt = refreshBlackholedAt(userBlackholeInfoDto.getName());
-		if (isBlackholed(refreshedBlackholedAt)) {
-			handleBlackholed(userBlackholeInfoDto);
-			throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
-		} else {
-			updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), refreshedBlackholedAt);
-		}
-	}
 
 	/**
 	 * 스케쥴러가 샐행하는 블랙홀 처리 메서드 유저의 블랙홀 정보를 갱신하여 블랙홀에 빠졌는지 확인 후 처리한다.
@@ -183,7 +168,7 @@ public class BlackholeManagerV2 {
 	 * @param userInfoDto
 	 */
 
-	public void handleBlackholeByScheduler(UserBlackholeInfoDto userInfoDto) {
+	public void handleBlackhole(UserBlackholeInfoDto userInfoDto) {
 		log.info("called handleBlackhole {}", userInfoDto);
 		LocalDateTime now = LocalDateTime.now();
 		try {
@@ -209,6 +194,29 @@ public class BlackholeManagerV2 {
 			}
 		} catch (Exception e) {
 			log.error("handleBlackhole Exception: {}", userInfoDto, e);
+		}
+	}
+
+
+
+
+
+	// 따로 분리할 필요 없을듯..
+	/**
+	 * 블랙홀 갱신 후 처리
+	 *
+	 * 블랙홀일 경우 반납 및 삭제 처리
+	 * 블랙홀이 아닐경우 유저 정보(블랙홀일자) 업데이트
+	 *
+	 * @param userBlackholeInfoDto
+	 */
+	public void blackholeRefresher(UserBlackholeInfoDto userBlackholeInfoDto) {
+		LocalDateTime refreshedBlackholedAt = refreshBlackholedAt(userBlackholeInfoDto.getName());
+		if (isBlackholed(refreshedBlackholedAt)) {
+			handleBlackholed(userBlackholeInfoDto);
+			throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
+		} else {
+			updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), refreshedBlackholedAt);
 		}
 	}
 }
