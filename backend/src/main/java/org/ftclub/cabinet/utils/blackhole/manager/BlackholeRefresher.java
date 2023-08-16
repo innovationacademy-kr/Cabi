@@ -14,16 +14,17 @@ import org.springframework.web.client.HttpClientErrorException;
 @Component
 @RequiredArgsConstructor
 @Log4j2
+@Deprecated
 public class BlackholeRefresher {
 
 	private final FtApiManager ftApiManager;
 	private final UserService userService;
 
 	/**
-	 * 유저의 블랙홀 정보를 찾아온다.
+	 * 유저의 블랙홀 정보를 API 를 통해 요청하 찾아온다.
 	 *
 	 * @param userName 유저 이름
-	 * @return JsonNode
+	 * @return JsonNode 유저의 블랙홀 정보
 	 * @throws ServiceException
 	 */
 	public JsonNode getBlackholeInfo(String userName)
@@ -49,9 +50,9 @@ public class BlackholeRefresher {
 	}
 
 	/**
-	 * 갱신된 블랙홀 날짜를 바탕으로 블랙홀에 빠졌는지 확인한다.
-	 *
-	 * @return 블랙홀에 빠졌는지 여부
+	 * 유저의 블랙홀 날짜를 갱신하여 블랙홀에 빠졌는지 확인 후 업데이트
+	 * @param userBlackholeInfoDto
+	 * @return
 	 */
 	public Boolean isBlackholedAndUpdateBlackhole(UserBlackholeInfoDto userBlackholeInfoDto) {
 		log.info("isBlackholedAndUpdateBlackhole {}", userBlackholeInfoDto);
@@ -64,5 +65,40 @@ public class BlackholeRefresher {
 		} else {
 			return true;
 		}
+	}
+
+	/**
+	 * 갱신된 블랙홀 날짜를 바탕으로 블랙홀에 빠졌는지 확인한다.
+	 *
+	 * @return 블랙홀에 빠졌는지 여부
+	 */
+	public boolean isBlackholed(LocalDateTime blackholedAt) {
+		log.info("isBlackholed {}", blackholedAt);
+		LocalDateTime now = LocalDateTime.now();
+		if (blackholedAt == null || blackholedAt.isAfter(now)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * 유저의 블랙홀 날짜를 갱신하여 LocalDateTime으로 반환한다.
+	 * @param userName 유저 이름
+	 * @return 갱신된 블랙홀 날짜 LocalDateTime
+	 */
+	public LocalDateTime refreshBlackholedAt(String userName) {
+		log.info("refreshBlackholedAt {}", userName);
+		JsonNode blackholeInfo = getBlackholeInfo(userName);
+		return parseBlackholedAt(blackholeInfo);
+	}
+
+	/**
+	 * 유저속성의 블랙홀 날짜를 갱신한다.
+	 * @param userId 유저 아이디
+	 * @param blackholedAt 갱신할 블랙홀 날짜
+	 */
+	public void refreshBlackholedAt(Long userId, LocalDateTime blackholedAt){
+		userService.updateUserBlackholedAt(userId, blackholedAt);
 	}
 }

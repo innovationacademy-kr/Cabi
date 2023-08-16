@@ -8,6 +8,7 @@ import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
+import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManagerV2;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -27,7 +28,7 @@ public class SystemScheduler {
 	private final OverdueManager overdueManager;
 	private final LentService lentService;
 	private final UserService userService;
-	private final BlackholeManager blackholeManager;
+	private final BlackholeManagerV2 blackholeManager;
 
 	private static final long DELAY_TIME = 2000;
 
@@ -59,7 +60,7 @@ public class SystemScheduler {
 		log.info("called checkRiskOfBlackhole");
 		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
 		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
-			blackholeManager.handleBlackhole(blackholeInfo);
+			blackholeManager.handleBlackholeByScheduler(blackholeInfo);
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
@@ -77,7 +78,7 @@ public class SystemScheduler {
 		log.info("called checkNoRiskOfBlackhole");
 		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
 		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
-			blackholeManager.handleBlackhole(blackholeInfo);
+			blackholeManager.handleBlackholeByScheduler(blackholeInfo);
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {

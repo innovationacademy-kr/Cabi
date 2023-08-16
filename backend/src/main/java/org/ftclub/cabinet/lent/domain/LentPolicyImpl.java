@@ -16,6 +16,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeRefresher;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,7 +25,8 @@ import org.springframework.stereotype.Component;
 public class LentPolicyImpl implements LentPolicy {
 
 	private final CabinetProperties cabinetProperties;
-	private final BlackholeRefresher blackholeRefresher;
+	private final ApplicationEventPublisher publisher;
+
 
 	private LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
 			CabinetStatus cabinetStatus, LentHistory activeLentHistory) {
@@ -106,13 +108,18 @@ public class LentPolicyImpl implements LentPolicy {
 		if (userActiveLentCount >= 1) {
 			return LentPolicyStatus.ALREADY_LENT_USER;
 		}
-//		TODO: 현재 구조에서는 DB 정합성 문제를 일으키는 코드입니다.
-//		 유저의 블랙홀 업데이트와 블랙홀 체크 분리필요- 리펙토링 필요 2023.08.15
 		if (user.getBlackholedAt() != null && user.getBlackholedAt()
 				.isBefore(LocalDateTime.now())) {
-			if(blackholeRefresher.isBlackholedAndUpdateBlackhole(UserBlackholeInfoDto.of(user)))
-				return LentPolicyStatus.BLACKHOLED_USER;
+			publisher.publishEvent(UserBlackholeInfoDto.of(user));
+			throw new DomainException(ExceptionStatus.BLACKHOLE_REFRESHING);
+
+//			if(user.getBlackholedAt() != null && user.getBlackholedAt().isBefore(LocalDateTime.now()))
+//				return LentPolicyStatus.BLACKHOLED_USER;
+
+//			if(blackholeRefresher.isBlackholedAndUpdateBlackhole(UserBlackholeInfoDto.of(user)))
+//				return LentPolicyStatus.BLACKHOLED_USER;
 		}
+
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
 		if (userActiveBanList == null || userActiveBanList.size() == 0) {
 			return LentPolicyStatus.FINE;
