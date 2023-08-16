@@ -120,32 +120,32 @@ public class BlackholeManager {
 		}
 	}
 
-	public void handleBlackhole(UserBlackholeInfoDto userBlackholeInfoDto) {
-		log.info("called handleBlackhole {}", userBlackholeInfoDto);
+	public void handleBlackhole(UserBlackholeInfoDto userInfoDto) {
+		log.info("called handleBlackhole {}", userInfoDto);
 		LocalDateTime now = LocalDateTime.now();
 		try {
-			JsonNode jsonUserInfo = blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto);
-			if (!isValidCadet(jsonUserInfo)) {
-				handleNotCadet(userBlackholeInfoDto, now);
+			JsonNode jsonRefreshedUserInfo = blackholeRefresher.getBlackholeInfo(userInfoDto.getName());
+			if (!isValidCadet(jsonRefreshedUserInfo)) {
+				handleNotCadet(userInfoDto, now);
 				return;
 			}
-			LocalDateTime newBlackholedAt = parseBlackholedAt(jsonUserInfo);
+			LocalDateTime newBlackholedAt = parseBlackholedAt(jsonRefreshedUserInfo);
 			log.info("갱신된 블랙홀 날짜 {}", newBlackholedAt);
 			log.info("오늘 날짜 {}", now);
 
 			if (isBlackholed(newBlackholedAt, now)) {
-				handleBlackholed(userBlackholeInfoDto, now);
+				handleBlackholed(userInfoDto, now);
 			} else {
-				handleNotBlackholed(userBlackholeInfoDto, newBlackholedAt);
+				handleNotBlackholed(userInfoDto, newBlackholedAt);
 			}
 		} catch (HttpClientErrorException e) {
-			handleHttpClientError(userBlackholeInfoDto, now, e);
+			handleHttpClientError(userInfoDto, now, e);
 		} catch (ServiceException e) {
 			if (e.getStatus().equals(ExceptionStatus.NO_LENT_CABINET)) {
-				userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
+				userService.deleteUser(userInfoDto.getUserId(), now);
 			}
 		} catch (Exception e) {
-			log.error("handleBlackhole Exception: {}", userBlackholeInfoDto, e);
+			log.error("handleBlackhole Exception: {}", userInfoDto, e);
 		}
 	}
 }

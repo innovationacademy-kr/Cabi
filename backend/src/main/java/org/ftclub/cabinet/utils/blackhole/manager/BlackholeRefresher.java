@@ -26,11 +26,11 @@ public class BlackholeRefresher {
 	 * @return JsonNode
 	 * @throws ServiceException
 	 */
-	JsonNode getBlackholeInfo(UserBlackholeInfoDto userBlackholeInfoDto)
+	public JsonNode getBlackholeInfo(String userName)
 			throws ServiceException, HttpClientErrorException {
-		log.info("called refreshBlackhole{}", userBlackholeInfoDto);
+		log.info("called refreshBlackhole{}", userName);
 		return ftApiManager.getFtUsersInfoByName(
-				userBlackholeInfoDto.getName());
+				userName);
 	}
 
 	/**
@@ -56,10 +56,10 @@ public class BlackholeRefresher {
 	public Boolean isBlackholedAndUpdateBlackhole(UserBlackholeInfoDto userBlackholeInfoDto) {
 		log.info("isBlackholedAndUpdateBlackhole {}", userBlackholeInfoDto);
 		LocalDateTime now = LocalDateTime.now();
-		JsonNode blackholeInfo = getBlackholeInfo(userBlackholeInfoDto);
+		JsonNode blackholeInfo = getBlackholeInfo(userBlackholeInfoDto.getName());
 		LocalDateTime blackholedAtDate = parseBlackholedAt(blackholeInfo);
-		userService.updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), blackholedAtDate);
 		if (blackholedAtDate == null || blackholedAtDate.isAfter(now)) {
+			userService.updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), blackholedAtDate);
 			return false;
 		} else {
 			return true;

@@ -88,7 +88,7 @@ public class BlackholeManagerUnitTest {
 				LocalDateTime.now().minusDays(1));
 		JsonNode JsonafterBlackholedAt = objectMapper.readTree(StringAfterBlackholedAt);
 
-		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(jsonUserInfo);
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto.getName())).willReturn(jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
 		lenient().when(mockCursusUsers.get(1)).thenReturn(mockFieldOne);
@@ -120,7 +120,7 @@ public class BlackholeManagerUnitTest {
 				beforeBlackholedAt
 		);
 
-		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willThrow(
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto.getName())).willThrow(
 				new HttpClientErrorException(
 						HttpStatus.NOT_FOUND
 				));
@@ -153,7 +153,7 @@ public class BlackholeManagerUnitTest {
 		JsonNode mockFieldZero = mock(JsonNode.class);
 		JsonNode mockFieldOne = mock(JsonNode.class);
 
-		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto.getName())).willReturn(
 				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
@@ -195,7 +195,7 @@ public class BlackholeManagerUnitTest {
 				LocalDateTime.now().plusDays(42));
 		JsonNode JsonafterBlackholedAt = objectMapper.readTree(StringAfterBlackholedAt);
 
-		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto.getName())).willReturn(
 				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
@@ -236,7 +236,7 @@ public class BlackholeManagerUnitTest {
 //		새 블랙홀 날짜 = null
 		JsonNode JsonafterBlackholedAt = null;
 
-		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto.getName())).willReturn(
 				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
@@ -276,7 +276,7 @@ public class BlackholeManagerUnitTest {
 //		새 블랙홀 날짜 = null
 		JsonNode JsonafterBlackholedAt = null;
 
-		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto.getName())).willReturn(
 				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
@@ -316,7 +316,7 @@ public class BlackholeManagerUnitTest {
 //		새 블랙홀 날짜 = null
 		JsonNode JsonafterBlackholedAt = null;
 
-		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto)).willReturn(
+		given(blackholeRefresher.getBlackholeInfo(userBlackholeInfoDto.getName())).willReturn(
 				jsonUserInfo);
 		given(jsonUserInfo.get("cursus_users")).willReturn(mockCursusUsers);
 		lenient().when(mockCursusUsers.get(0)).thenReturn(mockFieldZero);
