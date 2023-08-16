@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.service.FtApiManager;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -19,7 +18,6 @@ import org.springframework.web.client.HttpClientErrorException;
 @Log4j2
 public class BlackholeManager {
 
-	private final FtApiManager ftAPIManager;
 	private final LentService lentService;
 	private final UserService userService;
 	private final BlackholeRefresher blackholeRefresher;

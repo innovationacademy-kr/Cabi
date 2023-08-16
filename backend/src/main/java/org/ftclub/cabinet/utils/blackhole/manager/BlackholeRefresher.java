@@ -22,7 +22,7 @@ public class BlackholeRefresher {
 	/**
 	 * 유저의 블랙홀 정보를 찾아온다.
 	 *
-	 * @param userBlackholeInfoDto
+	 * @param userName 유저 이름
 	 * @return JsonNode
 	 * @throws ServiceException
 	 */
