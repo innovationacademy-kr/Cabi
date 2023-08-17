@@ -1,18 +1,51 @@
 package org.ftclub.cabinet.redis;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
 
-@Slf4j
-@Component
-public class ExpirationListener implements MessageListener {
+import java.util.Map;
 
+
+@Component
+public class ExpirationListener extends KeyExpirationEventMessageListener {
+
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
+
+	/**
+	 * Creates new {@link MessageListener} for {@code __keyevent@*__:expired} messages.
+	 *
+	 * @param listenerContainer must not be {@literal null}.
+	 */
+	public ExpirationListener(
+			@Qualifier("redisMessageListenerContainer")
+			RedisMessageListenerContainer listenerContainer) {
+		super(listenerContainer);
+	}
+
+	/**
+	 * @param message redis key
+	 * @param pattern __keyevent@*__:expired
+	 */
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
-//		System.out.println(
-//				"########## onMessage pattern " + new String(pattern) + " | " + message.toString());
-		System.out.println("on message");
+
+		System.out.println("########## onMessage pattern " + new String(pattern) + " | " + message.toString());
+
+		printExpiredKeyValue(message.toString());
+	}
+
+	// 삭제된 키의 value를 출력하려고 해서 출력이 제대로 안 나옴
+	public void printExpiredKeyValue(String key) {
+//		System.out.println("########## printExpiredKeyValue " + key);
+		final Map<Object, Object> entries =
+				redisTemplate.opsForHash().entries(key);
+		System.out.println(entries);
 	}
 }
