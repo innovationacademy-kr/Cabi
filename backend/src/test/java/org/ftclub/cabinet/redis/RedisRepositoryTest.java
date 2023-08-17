@@ -1,12 +1,10 @@
 package org.ftclub.cabinet.redis;
 
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 public class RedisRepositoryTest {
@@ -15,6 +13,9 @@ public class RedisRepositoryTest {
 
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate2;
 
 	@Test
 	void test() {
@@ -48,24 +49,30 @@ public class RedisRepositoryTest {
 
 		/* test3: key 설정 가능하게 */
 
-
 		String cabinetId = "16";
-		saveWithCustomPrefix(cabinetId, "yubchoi", 0);
 
-		final Map<Object, Object> entries = redisTemplate.opsForHash().entries(cabinetId);
-		System.out.println(entries);
+//		final ValueOperations<String, String> stringStringValueOperations = redisTemplate2.opsForValue();
 
-		saveWithCustomPrefix(cabinetId, "daewoole", 1);
+//		stringStringValueOperations.set(cabinetId, ""); // redis set 명령어
 
-		final Map<Object, Object> entries2 = redisTemplate.opsForHash().entries(cabinetId);
-		System.out.println(entries2);
+		setExpireTime(cabinetId);
+
+		saveWithCustomPrefix(cabinetId + ":cabinet", "yubchoi", 0);
+
+//		final Map<Object, Object> entries = redisTemplate.opsForHash().entries(cabinetId);
+//		System.out.println(entries);
+//
+		saveWithCustomPrefix(cabinetId + ":cabinet", "daewoole", 1);
+//
+//		final Map<Object, Object> entries2 = redisTemplate.opsForHash().entries(cabinetId);
+//		System.out.println(entries2);
 
 		// search all entries by prefix
 //		redisTemplate.opsForHash().keys(cabinetId).forEach(System.out::println);
 
 		// sleep 10 sec
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			System.out.println("interrupted");
 		}
@@ -78,14 +85,26 @@ public class RedisRepositoryTest {
 	 */
 	public void saveWithCustomPrefix(String cabinetId, String hashKey, int wrongPasswordCount) {
 		// 해당 키가 존재하는지 확인
-		boolean hasKey = Boolean.TRUE.equals(redisTemplate.hasKey(cabinetId));
+//		boolean hasKey = Boolean.TRUE.equals(redisTemplate.hasKey(cabinetId));
 		redisTemplate.opsForHash().put(cabinetId, hashKey, wrongPasswordCount);
 //		redisTemplate.opsForHash().putAll(cabinetId, convertToMap(tc));	// hashKey를 설정하기 위해 putAll이 아닌 put을 사용했습니다.
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
+//		if (!hasKey) {
+//			System.out.println("set expire time");
+//			// 30초 후에 삭제
+//			redisTemplate.expire(cabinetId, 5, TimeUnit.SECONDS);
+//		}
+	}
+
+	public void setExpireTime(String cabinetId) {
+		// 해당 키가 존재하는지 확인
+		boolean hasKey = Boolean.TRUE.equals(redisTemplate2.hasKey(cabinetId));
+		redisTemplate2.opsForValue().set(cabinetId, "");
+		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		if (!hasKey) {
 			System.out.println("set expire time");
-			// 30초 후에 삭제
-			redisTemplate.expire(cabinetId, 2, TimeUnit.SECONDS);
+			// 5초 후에 삭제
+			redisTemplate2.expire(cabinetId, 5, TimeUnit.SECONDS);
 		}
 	}
 

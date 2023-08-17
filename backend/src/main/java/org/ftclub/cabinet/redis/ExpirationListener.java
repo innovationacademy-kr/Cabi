@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.redis;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -9,14 +9,14 @@ import org.springframework.data.redis.listener.KeyExpirationEventMessageListener
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 
 @Component
 public class ExpirationListener extends KeyExpirationEventMessageListener {
 
-	@Autowired
+	//	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+	private RedisTemplate<String, String> redisTemplate2;
+
 
 	/**
 	 * Creates new {@link MessageListener} for {@code __keyevent@*__:expired} messages.
@@ -36,9 +36,11 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
 
-		System.out.println("########## onMessage pattern " + new String(pattern) + " | " + message.toString());
+//		System.out.println("########## onMessage pattern " + new String(pattern) + " | " + message.toString());
 
-		printExpiredKeyValue(message.toString());
+//		printExpiredKeyValue(message.toString());
+		System.out.println("I'm shadow key");
+		callCabinetSession(message.toString());
 	}
 
 	// 삭제된 키의 value를 출력하려고 해서 출력이 제대로 안 나옴
@@ -47,5 +49,10 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 		final Map<Object, Object> entries =
 				redisTemplate.opsForHash().entries(key);
 		System.out.println(entries);
+	}
+
+	public void callCabinetSession(String key) {
+//		final Map<Object, Object> entries = redisTemplate.opsForHash().entries(key + ":cabinet");
+		System.out.println(redisTemplate.opsForHash().entries(key + ":cabinet").toString());
 	}
 }
