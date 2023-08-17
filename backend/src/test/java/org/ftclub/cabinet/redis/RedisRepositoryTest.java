@@ -62,6 +62,13 @@ public class RedisRepositoryTest {
 
 		// search all entries by prefix
 //		redisTemplate.opsForHash().keys(cabinetId).forEach(System.out::println);
+
+		// sleep 10 sec
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			System.out.println("interrupted");
+		}
 	}
 
 	/**
@@ -70,14 +77,15 @@ public class RedisRepositoryTest {
 	 * @param wrongPasswordCount: ${wrongPasswordCount} 또는 ${userCount}
 	 */
 	public void saveWithCustomPrefix(String cabinetId, String hashKey, int wrongPasswordCount) {
+		// 해당 키가 존재하는지 확인
 		boolean hasKey = Boolean.TRUE.equals(redisTemplate.hasKey(cabinetId));
 		redisTemplate.opsForHash().put(cabinetId, hashKey, wrongPasswordCount);
 //		redisTemplate.opsForHash().putAll(cabinetId, convertToMap(tc));	// hashKey를 설정하기 위해 putAll이 아닌 put을 사용했습니다.
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		if (!hasKey) {
 			System.out.println("set expire time");
-			// 10초 후에 삭제
-			redisTemplate.expire(cabinetId, 30, TimeUnit.SECONDS);
+			// 30초 후에 삭제
+			redisTemplate.expire(cabinetId, 2, TimeUnit.SECONDS);
 		}
 	}
 
