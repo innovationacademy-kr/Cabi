@@ -1,12 +1,11 @@
 package org.ftclub.cabinet.redis;
 
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 public class RedisRepositoryTest {
@@ -48,7 +47,6 @@ public class RedisRepositoryTest {
 
 		/* test3: key 설정 가능하게 */
 
-
 		String cabinetId = "16";
 		saveWithCustomPrefix(cabinetId, "yubchoi", 0);
 
@@ -76,7 +74,7 @@ public class RedisRepositoryTest {
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		if (!hasKey) {
 			System.out.println("set expire time");
-			// 10초 후에 삭제
+			// 30초 후에 삭제
 			redisTemplate.expire(cabinetId, 30, TimeUnit.SECONDS);
 		}
 	}
