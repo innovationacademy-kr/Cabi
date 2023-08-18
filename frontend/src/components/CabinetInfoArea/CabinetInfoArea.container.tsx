@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
-import { userState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -139,7 +138,6 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
-  const [userInfo] = useRecoilState(userState);
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
@@ -278,7 +276,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         cabinetViewData?.status === "AVAILABLE" ||
         cabinetViewData?.status === "LIMITED_AVAILABLE"
       }
-      isUserLenting={userInfo.cabinetId !== null}
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}

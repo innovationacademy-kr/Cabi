@@ -27,7 +27,6 @@ const CabinetInfoArea: React.FC<{
   expireDate: string | null;
   isMine: boolean;
   isAvailable: boolean;
-  isUserLenting: boolean;
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
@@ -37,7 +36,6 @@ const CabinetInfoArea: React.FC<{
   expireDate,
   isMine,
   isAvailable,
-  isUserLenting,
   userModal,
   openModal,
   closeModal,
@@ -95,13 +93,9 @@ const CabinetInfoArea: React.FC<{
               onClick={() => openModal("lentModal")}
               text="대여"
               theme="fill"
-              disabled={
-                !isAvailable ||
-                selectedCabinetInfo.lentType === "CLUB" ||
-                isUserLenting
-              }
+              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
             />
-            <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
+            <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
           </>
         )}
       </CabinetInfoButtonsContainerStyled>
