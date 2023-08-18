@@ -8,6 +8,7 @@ import org.ftclub.cabinet.auth.service.FtApiManager;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.exception.UtilException;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -192,6 +193,9 @@ public class BlackholeManager {
 			if (e.getStatus().equals(ExceptionStatus.NO_LENT_CABINET)) {
 				userService.deleteUser(userInfoDto.getUserId(), now);
 			}
+			else if (e.getStatus().equals(ExceptionStatus.OAUTH_BAD_GATEWAY))
+				log.info("handleBlackhole ServiceException {}", e.getStatus());
+				throw new UtilException(e.getStatus());
 		} catch (Exception e) {
 			log.error("handleBlackhole Exception: {}", userInfoDto, e);
 		}
