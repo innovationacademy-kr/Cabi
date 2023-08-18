@@ -10,7 +10,6 @@ import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -91,41 +90,6 @@ public class LentOptionalFetcher {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NO_LENT_CABINET));
 	}
 
-	/**
-	 * 정책에 대한 결과 상태({@link LentPolicyStatus})에 맞는 적절한 {@link ServiceException}을 throw합니다.
-	 *
-	 * @param status 정책에 대한 결과 상태
-	 * @throws ServiceException 정책에 따라 다양한 exception이 throw될 수 있습니다.
-	 */
-	public void handlePolicyStatus(LentPolicyStatus status) {
-		log.info("Called handlePolicyStatus status: {}", status);
-		switch (status) {
-			case FINE:
-				break;
-			case BROKEN_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_BROKEN);
-			case FULL_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_FULL);
-			case OVERDUE_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_EXPIRED);
-			case LENT_CLUB:
-				throw new ServiceException(ExceptionStatus.LENT_CLUB);
-			case IMMINENT_EXPIRATION:
-				throw new ServiceException(ExceptionStatus.LENT_EXPIRE_IMMINENT);
-			case ALREADY_LENT_USER:
-				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
-			case ALL_BANNED_USER:
-				throw new ServiceException(ExceptionStatus.ALL_BANNED_USER);
-			case SHARE_BANNED_USER:
-				throw new ServiceException(ExceptionStatus.SHARE_BANNED_USER);
-			case BLACKHOLED_USER:
-				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
-			case NOT_USER:
-			case INTERNAL_ERROR:
-			default:
-				throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
 
 	/**
 	 * 사물함에 남은 자리가 있는 지 확인합니다. 남은 자리가 없으면 throw합니다.
