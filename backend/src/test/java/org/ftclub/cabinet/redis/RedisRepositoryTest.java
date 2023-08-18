@@ -56,13 +56,14 @@ public class RedisRepositoryTest {
 //		stringStringValueOperations.set(cabinetId, ""); // redis set 명령어
 
 		setExpireTime(cabinetId);
-
 		saveWithCustomPrefix(cabinetId + ":cabinet", "yubchoi", 0);
+		saveWithCustomPrefix(cabinetId + ":cabinet", "daewoole", 1);
+
+//		System.out.println(redisTemplate.opsForHash().entries(cabinetId + ":cabinet"));
 
 //		final Map<Object, Object> entries = redisTemplate.opsForHash().entries(cabinetId);
 //		System.out.println(entries);
 //
-		saveWithCustomPrefix(cabinetId + ":cabinet", "daewoole", 1);
 //
 //		final Map<Object, Object> entries2 = redisTemplate.opsForHash().entries(cabinetId);
 //		System.out.println(entries2);

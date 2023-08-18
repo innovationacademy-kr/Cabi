@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.redis;
 
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExpirationListener extends KeyExpirationEventMessageListener {
 
-	//	@Autowired
+	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
 	private RedisTemplate<String, String> redisTemplate2;
 
@@ -40,7 +41,8 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 
 //		printExpiredKeyValue(message.toString());
 		System.out.println("I'm shadow key");
-		callCabinetSession(message.toString());
+//		System.out.println("message.toString() = " + message.toString());
+		callCabinetSession(message.toString() + ":cabinet");
 	}
 
 	// 삭제된 키의 value를 출력하려고 해서 출력이 제대로 안 나옴
@@ -52,7 +54,6 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	}
 
 	public void callCabinetSession(String key) {
-//		final Map<Object, Object> entries = redisTemplate.opsForHash().entries(key + ":cabinet");
-		System.out.println(redisTemplate.opsForHash().entries(key + ":cabinet").toString());
+		System.out.println(redisTemplate.opsForHash().entries(key));
 	}
 }
