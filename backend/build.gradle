@@ -56,8 +56,8 @@ dependencies {
 
 
     // RabbitMQ
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-
+//    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp:2.5.4'
     // querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
