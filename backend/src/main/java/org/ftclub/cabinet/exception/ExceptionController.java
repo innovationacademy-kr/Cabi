@@ -41,4 +41,12 @@ public class ExceptionController {
 				.body(e.status);
 	}
 
+	@ExceptionHandler(UtilException.class)
+	public ResponseEntity<?> utilExceptionHandler(UtilException e) {
+		log.warn("[UtilException] {} : {}", e.status.getError(), e.status.getMessage());
+		return ResponseEntity
+				.status(e.status.getStatusCode())
+				.body(e.status);
+	}
+
 }
