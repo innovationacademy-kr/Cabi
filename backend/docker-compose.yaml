@@ -6,11 +6,11 @@ services:
     build: ./
     restart: always
     environment:
-      MARIADB_DATABASE_HOST: ${HOST}
-      MARIADB_DATABASE: ${DATABASE}
-      MARIADB_USER: ${DB_USER}
-      MARIADB_PASSWORD: ${DB_PASSWORD}
-      MARIADB_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MARIADB_DATABASE_HOST: localhost
+      MARIADB_DATABASE: cabi_local
+      MARIADB_USER: root
+      MARIADB_PASSWORD: YourPassword
+      MARIADB_ROOT_PASSWORD: YourPassword
     ports:
       - '3307:3306'
     tty: true
