@@ -15,7 +15,6 @@ import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
-import org.ftclub.cabinet.utils.blackhole.manager.BlackholeRefresher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -110,14 +109,11 @@ public class LentPolicyImpl implements LentPolicy {
 		}
 		if (user.getBlackholedAt() != null && user.getBlackholedAt()
 				.isBefore(LocalDateTime.now())) {
-			// 다시 돌고 돌고 돌고~
 			publisher.publishEvent(UserBlackholeInfoDto.of(user));
-			throw new DomainException(ExceptionStatus.BLACKHOLE_REFRESHING);
-
-//			if(user.getBlackholedAt() != null && user.getBlackholedAt().isBefore(LocalDateTime.now()))
-//				return LentPolicyStatus.BLACKHOLED_USER;
-//			if(blackholeRefresher.isBlackholedAndUpdateBlackhole(UserBlackholeInfoDto.of(user)))
-//				return LentPolicyStatus.BLACKHOLED_USER;
+			if (user.getBlackholedAt() != null && user.getBlackholedAt()
+					.isBefore(LocalDateTime.now())) {
+				return LentPolicyStatus.BLACKHOLED_USER;
+			}
 		}
 
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?

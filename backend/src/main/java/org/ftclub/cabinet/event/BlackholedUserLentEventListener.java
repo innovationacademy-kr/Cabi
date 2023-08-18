@@ -3,21 +3,19 @@ package org.ftclub.cabinet.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
-import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManagerV2;
+import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
-@EnableAsync
+//@EnableAsync
 @RequiredArgsConstructor
 public class BlackholedUserLentEventListener {
 
-	private final BlackholeManagerV2 blackholeManager;
+	private final BlackholeManager blackholeManager;
 
-	@Async
+	//	@Async
 	@EventListener
 	public void handleBlackholedUserLentAttemptingEvent(UserBlackholeInfoDto userBlackholeInfoDto) {
 		log.info("Called handleBlackholedUserLentAttemptingEvent");

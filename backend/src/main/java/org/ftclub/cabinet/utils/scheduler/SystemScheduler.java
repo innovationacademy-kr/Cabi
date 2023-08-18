@@ -8,7 +8,6 @@ import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
-import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManagerV2;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -28,13 +27,12 @@ public class SystemScheduler {
 	private final OverdueManager overdueManager;
 	private final LentService lentService;
 	private final UserService userService;
-	private final BlackholeManagerV2 blackholeManager;
+	private final BlackholeManager blackholeManager;
 
 	private static final long DELAY_TIME = 2000;
 
 	/**
-	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거하는 메소드
-	 * 2초 간격으로 블랙홀 검증
+	 * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거하는 메소드 2초 간격으로 블랙홀 검증
 	 */
 	@Scheduled(cron = "${spring.schedule.cron.leave-absence}")
 	public void checkAllLents() {
@@ -52,8 +50,7 @@ public class SystemScheduler {
 	}
 
 	/**
-	 * 매주 월요일 자정 42분에 블랙홀에 빠진 유저 처리를 트리거하는 메소드
-	 * 2초 간격으로 블랙홀 검증
+	 * 매주 월요일 자정 42분에 블랙홀에 빠진 유저 처리를 트리거하는 메소드 2초 간격으로 블랙홀 검증
 	 */
 	@Scheduled(cron = "${spring.schedule.cron.risk-of-blackhole}")
 	public void checkRiskOfBlackhole() {
@@ -70,8 +67,7 @@ public class SystemScheduler {
 	}
 
 	/**
-	 * 매월 1일 01시 42분에 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 처리를 트리거하는 메소드
-	 * 2초 간격으로 블랙홀 검증
+	 * 매월 1일 01시 42분에 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 처리를 트리거하는 메소드 2초 간격으로 블랙홀 검증
 	 */
 	@Scheduled(cron = "${spring.schedule.cron.no-risk-of-blackhole}")
 	public void checkNoRiskOfBlackhole() {
