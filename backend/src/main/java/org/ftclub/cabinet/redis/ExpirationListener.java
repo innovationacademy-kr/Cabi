@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ExpirationListener extends KeyExpirationEventMessageListener {
 
 	@Autowired
-	private RedisTemplate<String, Integer> valueRedisTemplate;
+	private RedisTemplate<String, Integer> redisTemplate;
 
 
 	/**
