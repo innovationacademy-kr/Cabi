@@ -76,10 +76,9 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
-			LocalDateTime expiredAt) {
-		log.info("Called applyExpirationDate curHistory: {}, beforeActiveHistories: {}, expiredAt: {}",
-				curHistory, beforeActiveHistories, expiredAt);
+	public void applyExpirationDate(LentHistory curHistory, LocalDateTime expiredAt) {
+		log.info("Called applyExpirationDate curHistory: {}, expiredAt: {}",
+				curHistory, expiredAt);
 
 		if (expiredAt == null){
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -89,9 +88,9 @@ public class LentPolicyImpl implements LentPolicy {
 			throw new DomainException(ExceptionStatus.INVALID_EXPIRED_AT);
 		}
 
-		for (LentHistory lentHistory : beforeActiveHistories) {
-			lentHistory.setExpiredAt(expiredAt);
-		}
+//		for (LentHistory lentHistory : beforeActiveHistories) {
+//			lentHistory.setExpiredAt(expiredAt);
+//		}
 		curHistory.setExpiredAt(expiredAt);
 	}
 
@@ -138,10 +137,8 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public LentPolicyStatus verifyCabinetForLent(Cabinet cabinet,
-			List<LentHistory> cabinetLentHistories, LocalDateTime now) {
-		log.info("Called verifyCabinetForLent cabinet: {}, cabinetLentHistories: {}, now: {}",
-				cabinet, cabinetLentHistories, now);
+	public LentPolicyStatus verifyCabinetForLent(Cabinet cabinet) {
+		log.info("Called verifyCabinetForLent cabinet: {}", cabinet);
 		// 빌릴 수 있는지 검증. 빌릴 수 없으면 return lentPolicyDto;
 		switch (cabinet.getStatus()) {
 			case FULL:

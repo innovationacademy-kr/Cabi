@@ -201,28 +201,23 @@ public class Cabinet {
         return Objects.hash(this.cabinetId);
     }
 
-    /**
-     * 대여 시작/종료에 따른 사용자의 수와 현재 상태에 따라 상태를 변경합니다.
-     *
-     * @param userCount 현재 사용자 수
-     */
-    public void specifyStatusByUserCount(Integer userCount) {
-        log.info("specifyStatusByUserCount : {}", userCount);
-        if (this.status.equals(CabinetStatus.BROKEN)) {
-            throw new DomainException(INVALID_STATUS);
-        }
-        if (userCount.equals(0)) {
-            this.status = CabinetStatus.AVAILABLE;
-            return;
-        }
-        if (userCount.equals(this.maxUser)) {
-            this.status = CabinetStatus.FULL;
-            return;
-        }
-        if (0 < userCount && userCount < this.maxUser) {
-            if (this.status.equals(CabinetStatus.FULL)) {
-                this.status = CabinetStatus.LIMITED_AVAILABLE;
-            }
-        }
-    }
+	/**
+	 * 대여 시작/종료에 따른 사용자의 수와 현재 상태에 따라 상태를 변경합니다.
+	 *
+	 * @param userCount 현재 사용자 수
+	 */
+	public void specifyStatusByUserCount(Integer userCount) {
+		log.info("specifyStatusByUserCount : {}", userCount);
+		if (this.status.equals(CabinetStatus.BROKEN)) {
+			throw new DomainException(INVALID_STATUS);
+		}
+		if (userCount.equals(0)) {
+			this.status = CabinetStatus.AVAILABLE;
+			return;
+		}
+		if (userCount.equals(this.maxUser)) {
+			this.status = CabinetStatus.FULL;
+			return;
+		}
+	}
 }

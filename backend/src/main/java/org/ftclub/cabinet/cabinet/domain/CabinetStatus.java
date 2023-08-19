@@ -12,14 +12,12 @@ public enum CabinetStatus {
 	 * <br>
 	 * FULL : 꽉 참
 	 * <br>
-	 * LIMITED_AVAILABLE : 만료기한이 설정되었으나 사용 가능
-	 * <br>
 	 * OVERDUE :연체됨
 	 */
-	BROKEN, AVAILABLE, FULL, LIMITED_AVAILABLE, OVERDUE;
+	BROKEN, AVAILABLE, FULL, OVERDUE;
 
 	public boolean isValid() {
-		return this.equals(BROKEN) || this.equals(AVAILABLE) || this.equals(FULL) ||
-				this.equals(LIMITED_AVAILABLE) || this.equals(OVERDUE);
+		return this.equals(BROKEN) || this.equals(AVAILABLE) || this.equals(FULL) || this.equals(
+				OVERDUE);
 	}
 }
