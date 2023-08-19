@@ -80,11 +80,17 @@ public class LentServiceImpl implements LentService {
 //        // TODO: 공유 사물함 정책 변경으로 cabinetActiveLentHistories가 필요없어진다.
 //        List<LentHistory> cabinetActiveLentHistories = lentRepository.findAllActiveLentByCabinetId(
 //                cabinetId);
-		// 대여 가능한 캐비넷인지 확인
-		lentOptionalFetcher.handlePolicyStatus(
-				lentPolicy.verifyCabinetForLent(cabinet));
-		// 만료 시간 적용
+		// 방장인지 검사 -> 분기
+
+		// 1. 방장 - 대여 가능한 캐비넷인지 확인, shadowKey 생성, valueKey 생성
+		// 2. 이후 유저 - shareCode 검사, valueKey 생
+
+//		// 대여 가능한 캐비넷인지 확인
+//		lentOptionalFetcher.handlePolicyStatus(
+//				lentPolicy.verifyCabinetForLent(cabinet));
+		// 만료 시간 적용 -> listener로 이동할 것
 		LocalDateTime expiredAt = lentPolicy.generateExpirationDate(now, cabinet);
+		// userId 반복문 돌면서 수행
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
 		lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 		lentRepository.save(lentHistory);
