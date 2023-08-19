@@ -57,9 +57,9 @@ public class LentServiceImpl implements LentService {
 				lentPolicy.verifyCabinetForLent(cabinet));
 		// 캐비넷 상태 변경
 		cabinet.specifyStatus(CabinetStatus.FULL);
+		// 만료 시간 적용
 		LocalDateTime expiredAt = lentPolicy.generateExpirationDate(now, cabinet);
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
-		// 만료 시간 적용
 		lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 		lentRepository.save(lentHistory);
 	}
