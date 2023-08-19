@@ -56,8 +56,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByUserId(userId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalElements());
+		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByUserId(userId,
+				pageable);
+		return generateLentHistoryPaginationDto(lentHistories.toList(),
+				lentHistories.getTotalElements());
 	}
 
 	@Override
@@ -66,8 +68,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		log.debug("Called getAllCabinetLentHistories: {}", cabinetId);
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalElements());
+		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId,
+				pageable);
+		return generateLentHistoryPaginationDto(lentHistories.toList(),
+				lentHistories.getTotalElements());
 	}
 
 	@Override
@@ -140,6 +144,11 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		lentService.startLentCabinet(userId, cabinetId);
+	}
+
+	@Override
+	public void startLentShareCabinet(Long userId, Long cabinetId, Long shareCode) {
+		lentService.startLentShareCabinet(userId, cabinetId, shareCode);
 	}
 
 	@Override

@@ -1,5 +1,9 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -17,11 +21,6 @@ import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,18 +90,18 @@ public class LentServiceImpl implements LentService {
 		lentRepository.save(lentHistory);
 	}
 
-    @Override
-    public void startLentClubCabinet(Long userId, Long cabinetId) {
-        log.debug("Called startLentClubCabinet: {}, {}", userId, cabinetId);
-        Cabinet cabinet = cabinetOptionalFetcher.getClubCabinet(cabinetId);
-        lentOptionalFetcher.checkExistedSpace(cabinetId);
-        LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
-            cabinet, null);
-        LentHistory result =
-            LentHistory.of(LocalDateTime.now(), expirationDate, userId, cabinetId);
-        lentRepository.save(result);
-        cabinet.specifyStatusByUserCount(1); // todo : policy에서 관리
-    }
+	@Override
+	public void startLentClubCabinet(Long userId, Long cabinetId) {
+		log.debug("Called startLentClubCabinet: {}, {}", userId, cabinetId);
+		Cabinet cabinet = cabinetOptionalFetcher.getClubCabinet(cabinetId);
+		lentOptionalFetcher.checkExistedSpace(cabinetId);
+		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
+				cabinet);
+		LentHistory result =
+				LentHistory.of(LocalDateTime.now(), expirationDate, userId, cabinetId);
+		lentRepository.save(result);
+		cabinet.specifyStatusByUserCount(1); // todo : policy에서 관리
+	}
 
 	@Override
 	public void endLentCabinet(Long userId) {
@@ -158,18 +157,18 @@ public class LentServiceImpl implements LentService {
 		return lentHistory;
 	}
 
-    @Override
-    public void assignLent(Long userId, Long cabinetId) {
-        log.debug("Called assignLent: {}, {}", userId, cabinetId);
-        userExceptionHandler.getUser(userId);
-        Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
-        lentOptionalFetcher.checkExistedSpace(cabinetId);
-        LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
-            cabinet, null);
-        LentHistory result = LentHistory.of(LocalDateTime.now(), expirationDate, userId, cabinetId);
-        cabinet.specifyStatusByUserCount(1);
-        lentRepository.save(result);
-    }
+	@Override
+	public void assignLent(Long userId, Long cabinetId) {
+		log.debug("Called assignLent: {}, {}", userId, cabinetId);
+		userExceptionHandler.getUser(userId);
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
+		lentOptionalFetcher.checkExistedSpace(cabinetId);
+		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
+				cabinet);
+		LentHistory result = LentHistory.of(LocalDateTime.now(), expirationDate, userId, cabinetId);
+		cabinet.specifyStatusByUserCount(1);
+		lentRepository.save(result);
+	}
 
 	@Override
 	public List<ActiveLentHistoryDto> getAllActiveLentHistories() {

@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.lent.domain;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -15,9 +15,6 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -34,8 +31,8 @@ public class LentPolicyImpl implements LentPolicy {
 			case AVAILABLE:
 				return DateUtil.getInfinityDate();
 
-			case LIMITED_AVAILABLE:
-				return activeLentHistory.getExpiredAt();
+//			case LIMITED_AVAILABLE:
+//				return activeLentHistory.getExpiredAt();
 
 			case FULL:
 				if (activeLentHistory.isSetExpiredAt()) {
@@ -49,10 +46,8 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet,
-			List<LentHistory> activeLentHistories) {
-		log.info("Called generateExpirationDate now: {}, cabinet: {}, activeLentHistories: {}",
-				now, cabinet, activeLentHistories);
+	public LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet) {
+		log.info("Called generateExpirationDate now: {}, cabinet: {}", now, cabinet);
 
 		if (!DateUtil.isSameDay(now)) {
 			throw new IllegalArgumentException("현재 시각이 아닙니다.");
@@ -62,13 +57,13 @@ public class LentPolicyImpl implements LentPolicy {
 		switch (lentType) {
 			case PRIVATE:
 				return now.plusDays(getDaysForLentTermPrivate());
-			case SHARE:
-				if (activeLentHistories.isEmpty()) {
-					return DateUtil.getInfinityDate();
-				}
-				LentHistory lentHistory = activeLentHistories.get(0);
-				return generateSharedCabinetExpirationDate(now,
-						cabinet.getStatus(), lentHistory);
+//			case SHARE:
+//				if (activeLentHistories.isEmpty()) {
+//					return DateUtil.getInfinityDate();
+//				}
+//				LentHistory lentHistory = activeLentHistories.get(0);
+//				return generateSharedCabinetExpirationDate(now,
+//						cabinet.getStatus(), lentHistory);
 			case CLUB:
 				return DateUtil.getInfinityDate();
 		}
@@ -80,7 +75,7 @@ public class LentPolicyImpl implements LentPolicy {
 		log.info("Called applyExpirationDate curHistory: {}, expiredAt: {}",
 				curHistory, expiredAt);
 
-		if (expiredAt == null){
+		if (expiredAt == null) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
 		}
 
@@ -151,17 +146,17 @@ public class LentPolicyImpl implements LentPolicy {
 		if (cabinet.isLentType(LentType.CLUB)) {
 			return LentPolicyStatus.LENT_CLUB;
 		}
-		if (cabinet.isLentType(LentType.SHARE)
-				&& cabinet.isStatus(CabinetStatus.LIMITED_AVAILABLE)) {
-			if (cabinetLentHistories == null || cabinetLentHistories.isEmpty()) {
-				return LentPolicyStatus.INTERNAL_ERROR;
-			}
-			Long diffDays = DateUtil.calculateTwoDateDiffAbs(
-					cabinetLentHistories.get(0).getExpiredAt(), now);
-			if (diffDays <= getDaysForNearExpiration()) {
-				return LentPolicyStatus.IMMINENT_EXPIRATION;
-			}
-		}
+		// 기존의 공유사물함 정책에서 검사해야 되는 부분 -> 현재 필요 x
+//		if (cabinet.isLentType(LentType.SHARE)) {
+//			if (cabinetLentHistories == null || cabinetLentHistories.isEmpty()) {
+//				return LentPolicyStatus.INTERNAL_ERROR;
+//			}
+//			Long diffDays = DateUtil.calculateTwoDateDiffAbs(
+//					cabinetLentHistories.get(0).getExpiredAt(), now);
+//			if (diffDays <= getDaysForNearExpiration()) {   //
+//				return LentPolicyStatus.IMMINENT_EXPIRATION;
+//			}
+//		}
 		return LentPolicyStatus.FINE;
 	}
 
