@@ -21,10 +21,11 @@ public class RedisRepositoryTest {
 	void test() {
 		String cabinetId = "16";
 		String suffix = ":cabinet";
+		String shadowKey = cabinetId + suffix;
 
-		ticketingSharedCabinet.setShadowKey(cabinetId);
-		ticketingSharedCabinet.saveValue(cabinetId + suffix, "yubchoi", 0);
-		ticketingSharedCabinet.saveValue(cabinetId + suffix, "daewoole", 1);
+		ticketingSharedCabinet.setShadowKey(shadowKey);
+		ticketingSharedCabinet.saveValue(cabinetId, "yubchoi", 0);
+		ticketingSharedCabinet.saveValue(cabinetId, "daewoole", 1);
 
 		try {
 			Thread.sleep(10000);
