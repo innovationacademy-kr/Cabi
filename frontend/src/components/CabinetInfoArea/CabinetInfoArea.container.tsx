@@ -5,6 +5,7 @@ import {
   targetCabinetInfoState,
   userState,
   timeOverState,
+  userState,
 } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
@@ -57,6 +58,7 @@ export interface ICurrentModalStateInfo {
   invitationCodeModal: boolean;
   extendModal: boolean;
   cancelModal: boolean;
+  extendModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -190,6 +192,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     invitationCodeModal: false,
     extendModal: false,
     cancelModal: false,
+    extendModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,

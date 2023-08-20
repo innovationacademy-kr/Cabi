@@ -22,6 +22,7 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import ExtendModal from "../Modals/ExtendModal/ExtendModal";
 import CancelModal from "../Modals/CancelModal/CancelModal";
+import ExtendModal from "../Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
 import CountTimeContainer from "./CountTime/CountTime.container";
 
@@ -101,6 +102,15 @@ const CabinetInfoArea: React.FC<{
             </>
           ) : (
             <>
+              {selectedCabinetInfo!.lentType === "PRIVATE" && isExtendable ? (
+                <ButtonContainer
+                  onClick={() => {
+                    openModal("extendModal");
+                  }}
+                  text="연장권 사용"
+                  theme="line"
+                />
+              ) : null}
               <ButtonContainer
                 onClick={() => {
                   openModal("returnModal");
@@ -216,6 +226,12 @@ const CabinetInfoArea: React.FC<{
           closeModal={() => closeModal("cancelModal")}
         />
       )}
+      {userModal.extendModal && (
+        <ExtendModal
+          onClose={() => closeModal("extendModal")}
+          cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
     </CabinetDetailAreaStyled>
   );
 };
@@ -311,7 +327,7 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-height: 300px;
+  max-height: 255px;
   margin: 3vh 0;
   width: 100%;
 `;
