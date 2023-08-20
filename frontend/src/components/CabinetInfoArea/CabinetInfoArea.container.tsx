@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -9,6 +13,7 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
+import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
@@ -47,6 +52,7 @@ export interface ICurrentModalStateInfo {
   memoModal: boolean;
   passwordCheckModal: boolean;
   invitationCodeModal: boolean;
+  extendModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -68,7 +74,8 @@ export type TModalState =
   | "returnModal"
   | "memoModal"
   | "passwordCheckModal"
-  | "invitationCodeModal";
+  | "invitationCodeModal"
+  | "extendModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -159,6 +166,7 @@ const loadSharedWrongCodeCounts = () => {
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
+  const myInfo = useRecoilValue<UserDto>(userState);
   const myCabinetInfo =
     useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet, toggleLent } = useMenu();
@@ -172,6 +180,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     memoModal: false,
     passwordCheckModal: false,
     invitationCodeModal: false,
+    extendModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -231,6 +240,12 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       cabinetViewData.lentsLength >= 1
     ) {
       modalName = "invitationCodeModal";
+    } else if (
+      modalName === "extendModal" &&
+      cabinetViewData?.lentsLength &&
+      cabinetViewData.lentsLength >= 1
+    ) {
+      modalName = "extendModal";
     }
     setUserModal({
       ...userModal,
@@ -305,6 +320,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         cabinetViewData?.status === "AVAILABLE" ||
         cabinetViewData?.status === "LIMITED_AVAILABLE"
       }
+      isExtendable={true}
+      // isExtendable={myInfo.extendable} // TODO: 연장권 구현 후 수정
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}

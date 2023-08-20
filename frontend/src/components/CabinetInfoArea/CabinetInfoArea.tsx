@@ -20,6 +20,7 @@ import {
 import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import ExtendModal from "../Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
 
 const CabinetInfoArea: React.FC<{
@@ -28,6 +29,7 @@ const CabinetInfoArea: React.FC<{
   expireDate: string | null;
   isMine: boolean;
   isAvailable: boolean;
+  isExtendable: boolean;
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
@@ -38,6 +40,7 @@ const CabinetInfoArea: React.FC<{
   expireDate,
   isMine,
   isAvailable,
+  isExtendable,
   userModal,
   openModal,
   closeModal,
@@ -72,6 +75,15 @@ const CabinetInfoArea: React.FC<{
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
           <>
+            {selectedCabinetInfo!.lentType === "PRIVATE" && isExtendable ? (
+              <ButtonContainer
+                onClick={() => {
+                  openModal("extendModal");
+                }}
+                text="연장권 사용"
+                theme="line"
+              />
+            ) : null}
             <ButtonContainer
               onClick={() => {
                 openModal("returnModal");
@@ -161,6 +173,12 @@ const CabinetInfoArea: React.FC<{
           cabinetId={selectedCabinetInfo?.cabinetId}
         />
       )}
+      {userModal.extendModal && (
+        <ExtendModal
+          onClose={() => closeModal("extendModal")}
+          cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
     </CabinetDetailAreaStyled>
   );
 };
@@ -236,7 +254,7 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-height: 210px;
+  max-height: 255px;
   margin: 3vh 0;
   width: 100%;
 `;
