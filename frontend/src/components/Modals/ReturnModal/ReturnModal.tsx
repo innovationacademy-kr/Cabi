@@ -4,7 +4,6 @@ import {
   currentCabinetIdState,
   isCurrentSectionRenderState,
   myCabinetInfoState,
-  overdueCabinetListState,
   targetCabinetInfoState,
   userState,
 } from "@/recoil/atoms";
@@ -47,9 +46,13 @@ const ReturnModal: React.FC<{
   const returnDetail = `${
     myLentInfo && myLentInfo.lents[0].expiredAt === null
       ? ""
+      : myLentInfo.lentType === "SHARE"
+      ? `대여기간 이내 취소(반납) 시,
+대여 기간이 <strong>${formattedExpireDate} 23:59</strong>으로
+변경되는 패널티가 발생합니다.`
       : `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
   }
-지금 반납 하시겠습니까?`;
+  지금 반납 하시겠습니까?`;
   const tryReturnRequest = async (e: React.MouseEvent) => {
     try {
       await axiosReturn();
