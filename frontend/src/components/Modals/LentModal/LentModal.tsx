@@ -45,10 +45,10 @@ const LentModal: React.FC<{
   const formattedExpireDate = getExpireDateString(props.lentType);
   const privateLentDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
     귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
-  const shareLentDetail = `대여 후 ${
+  const shareLentDetail = `<strong>대여 후 ${
     10
     // import.meta.env.VITE_SHARE_LENT_COUNTDOWN // TODO: .env 에 등록하기
-  }분 이내에
+  }분 이내에</strong>
   공유 인원 (2인~4인) 이 충족되지 않으면,
   공유 사물함의 대여가 취소됩니다.
   “메모 내용”은 공유 인원끼리 공유됩니다.
