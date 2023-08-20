@@ -56,19 +56,22 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
       .then((response) => {
         setCurrentFloorData(response.data);
-        if (isMount || isCurrentSectionRender) {
-          const recoilPersist = localStorage.getItem("recoil-persist");
-          let recoilPersistObj;
-          if (recoilPersist) recoilPersistObj = JSON.parse(recoilPersist);
-          setCurrentSection(
-            Object.keys(recoilPersistObj).includes("CurrentSection")
-              ? recoilPersistObj.CurrentSection
-              : response.data[0].section
-          );
-          setIsCurrentSectionRender(false);
-        } else {
-          setCurrentSection(response.data[0].section);
+        const sections = response.data.map(
+          (data: CabinetInfoByBuildingFloorDto) => data.section
+        );
+        let currentSectionFromPersist = undefined;
+        const recoilPersist = localStorage.getItem("recoil-persist");
+        if (recoilPersist) {
+          const recoilPersistObj = JSON.parse(recoilPersist);
+          if (Object.keys(recoilPersistObj).includes("CurrentSection")) {
+            currentSectionFromPersist = recoilPersistObj.CurrentSection;
+          }
         }
+        currentSectionFromPersist &&
+        sections.includes(currentSectionFromPersist)
+          ? setCurrentSection(currentSectionFromPersist)
+          : setCurrentSection(response.data[0].section);
+        setIsCurrentSectionRender(false);
       })
       .catch((error) => {
         console.error(error);
