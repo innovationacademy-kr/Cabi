@@ -7,9 +7,10 @@ import ticketImg from "@/assets/images/subtract.svg";
 interface CountTimeProps {
   minutes: string;
   seconds: string;
+  isTimeOver: boolean;
 }
 
-const CodeAndTime = ({ minutes, seconds }: CountTimeProps) => {
+const CodeAndTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
   //초대코드 가져오기
   const code = "4242";
   const [copySuccess, setCopySuccess] = useState(false);
@@ -33,7 +34,11 @@ const CodeAndTime = ({ minutes, seconds }: CountTimeProps) => {
           <ClockImgStyled src={clockImg} />
           제한시간
         </ClockStyled>
-        <CountDownStyled>{`${minutes}:${seconds}`}</CountDownStyled>
+        {isTimeOver ? (
+          <CountEndStyled>TIME OVER</CountEndStyled>
+        ) : (
+          <CountDownStyled>{`${minutes}:${seconds}`}</CountDownStyled>
+        )}
       </TimeStyled>
       <HoverBox>
         <AlertImgStyled src={alertImg} />
@@ -119,6 +124,12 @@ const CountDownStyled = styled.div`
   font-weight: bold;
   margin-left: 15px;
   letter-spacing: 4px;
+`;
+
+const CountEndStyled = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 15px;
 `;
 
 const AlertImgStyled = styled.img`

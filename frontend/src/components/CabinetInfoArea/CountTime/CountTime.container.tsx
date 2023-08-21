@@ -17,7 +17,7 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
     return targetDate.getTime() - new Date().getTime();
   };
   const endDate = new Date(); //임의 종료시간 설정
-  endDate.setMinutes(endDate.getMinutes() + 4, endDate.getSeconds() + 2);
+  endDate.setMinutes(endDate.getMinutes(), endDate.getSeconds() + 10);
 
   const initCountDown = calculateCountDown(endDate);
   const [countDown, setCountDown] = useState(initCountDown);
@@ -48,13 +48,18 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
   }, []);
 
   const [minutes, seconds] = returnCountTime(countDown);
+  const isTimeOver = countDown === 0;
 
   return (
     <>
       {isMine ? (
-        <CodeAndTime minutes={minutes} seconds={seconds} />
+        <CodeAndTime
+          minutes={minutes}
+          seconds={seconds}
+          isTimeOver={isTimeOver}
+        />
       ) : (
-        <CountTime minutes={minutes} seconds={seconds} />
+        <CountTime minutes={minutes} seconds={seconds} isTimeOver={isTimeOver}/>
       )}
     </>
   );

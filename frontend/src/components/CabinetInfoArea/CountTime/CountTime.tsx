@@ -4,16 +4,21 @@ import clockImg from "@/assets/images/clock.svg";
 interface CountTimeProps {
   minutes: string;
   seconds: string;
+  isTimeOver: boolean;
 }
 
-const CountTime = ({ minutes, seconds }: CountTimeProps) => {
+const CountTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
   return (
     <CountTimeStyled>
       <ClockStyled>
         <ClockImgStyled src={clockImg} />
         제한시간
       </ClockStyled>
-      <CountDownStyled>{`${minutes}:${seconds}`}</CountDownStyled>
+      {isTimeOver ? (
+        <CountEndStyled>TIME OVER</CountEndStyled>
+      ) : (
+        <CountDownStyled>{`${minutes}:${seconds}`}</CountDownStyled>
+      )}
     </CountTimeStyled>
   );
 };
@@ -51,6 +56,12 @@ const CountDownStyled = styled.div`
   font-weight: bold;
   margin-left: 15px;
   letter-spacing: 4px;
+`;
+
+const CountEndStyled = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 15px;
 `;
 
 export default CountTime;
