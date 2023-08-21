@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import {
   ICurrentModalStateInfo,
   ISelectedCabinetInfo,
-  TModalState,
+  TModalState, 
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
 import LentModal from "@/components/Modals/LentModal/LentModal";
@@ -21,7 +21,7 @@ import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
-import CountTimeContainser from "./CountTime/CountTime.container";
+import CountTimeContainer from "./CountTime/CountTime.container";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -87,7 +87,7 @@ const CabinetInfoArea: React.FC<{
                 text="닫기"
                 theme="grayLine"
               />
-              <CountTimeContainser isMine={true} />
+              <CountTimeContainer isMine={true} />
             </>
           ) : (
             <>
@@ -129,9 +129,9 @@ const CabinetInfoArea: React.FC<{
                 wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3
               }
             />
-            <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
+            <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
             {selectedCabinetInfo.lentsLength >= 1 && (
-              <CountTimeContainser isMine={false} />
+              <CountTimeContainer isMine={false} />
             )}
             {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
               <WarningMessageStyled>

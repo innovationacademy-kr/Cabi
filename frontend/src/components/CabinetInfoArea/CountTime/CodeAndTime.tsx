@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import alertImg from "@/assets/images/cautionSign.svg";
 import clockImg from "@/assets/images/clock.svg";
@@ -11,10 +12,22 @@ interface CountTimeProps {
 const CodeAndTime = ({ minutes, seconds }: CountTimeProps) => {
   //초대코드 가져오기
   const code = "4242";
-  const spacedCode = code.split("").join(" ");
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopySuccess(true);
+      setTimeout(() => {
+        setCopySuccess(false);
+      }, 2000);
+    });
+  };
+
   return (
     <CodeAndTimeStyled>
-      <CodeStyled>초대코드 | {spacedCode}</CodeStyled>
+      <CodeStyled onClick={handleCopyClick} copySuccess={copySuccess}>
+        {copySuccess ? "복사 완료" : `초대코드 | ${code}`}
+      </CodeStyled>
       <TimeStyled>
         <ClockStyled>
           <ClockImgStyled src={clockImg} />
@@ -33,7 +46,7 @@ const CodeAndTime = ({ minutes, seconds }: CountTimeProps) => {
 const HoverBox = styled.div`
   opacity: 0;
   position: absolute;
-  top: 115%;
+  top: -165%;
   width: 270px;
   height: 70px;
   padding: 10px;
@@ -63,13 +76,12 @@ const CodeAndTimeStyled = styled.div`
   color: var(--main-color);
   border: 1px solid var(--main-color);
   position: relative;
-
   &:hover ${HoverBox} {
     opacity: 1;
   }
 `;
 
-const CodeStyled = styled.div`
+const CodeStyled = styled.div<{ copySuccess: boolean }>`
   width: 185px;
   height: 48px;
   background-image: url(${ticketImg});
@@ -78,7 +90,9 @@ const CodeStyled = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 14px;
-  letter-spacing: 1px;
+  letter-spacing: 3.5px;
+  cursor: pointer;
+  user-select: none;
 `;
 
 const TimeStyled = styled.div`
