@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.DomainException;
@@ -237,5 +238,13 @@ public class UserOptionalFetcher {
 			throw new DomainException(ExceptionStatus.NOT_FOUND_BAN_HISTORY);
 		}
 		return banHistory.get(0);
+	}
+
+	public BanHistory getActiveBanHistory(Long userId) {
+		log.debug("Called getActiveBanHistory: {}", userId);
+		Optional<BanHistory> banHistory = banHistoryRepository.findRecentActiveBanHistoryByUserId(
+				userId,
+				LocalDateTime.now());
+		return banHistory.get();
 	}
 }
