@@ -15,6 +15,7 @@ import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
@@ -36,6 +37,7 @@ public class LentServiceImpl implements LentService {
 	private final UserService userService;
 	private final BanHistoryRepository banHistoryRepository;
 	private final LentMapper lentMapper;
+	private final TicketingSharedCabinet ticketingSharedCabinet;
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
@@ -65,8 +67,8 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public void startLentShareCabinet(Long userId, Long cabinetId, Long shareCode) {
-		log.info("Called startLentShareCabinet: {}, {}, {}", userId, cabinetId, shareCode);
+	public void startLentShareCabinet(Long userId, Long cabinetId) {
+		log.info("Called startLentShareCabinet: {}, {}", userId, cabinetId);
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		User user = userExceptionHandler.getUser(userId);
@@ -81,10 +83,13 @@ public class LentServiceImpl implements LentService {
 //        List<LentHistory> cabinetActiveLentHistories = lentRepository.findAllActiveLentByCabinetId(
 //                cabinetId);
 		// 방장인지 검사 -> 분기
-
 		// 1. 방장 - 대여 가능한 캐비넷인지 확인, shadowKey 생성, valueKey 생성
-		// 2. 이후 유저 - shareCode 검사, valueKey 생
-
+		lentOptionalFetcher.handlePolicyStatus(lentPolicy.verifyCabinetForLent(cabinet));
+		if (!ticketingSharedCabinet.isShadowKey(cabinetId.toString())) {
+			ticketingSharedCabinet.setShadowKey(cabinetId.toString());
+		}
+//		 2. 이후 유저 - shareCode 검사(front에서 함), valueKey 생성
+		ticketingSharedCabinet.saveValue(cabinetId.toString(), userId.toString(), 1);
 //		// 대여 가능한 캐비넷인지 확인
 //		lentOptionalFetcher.handlePolicyStatus(
 //				lentPolicy.verifyCabinetForLent(cabinet));

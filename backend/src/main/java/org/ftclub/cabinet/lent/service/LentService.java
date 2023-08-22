@@ -21,9 +21,8 @@ public interface LentService {
 	 *
 	 * @param userId    대여하려는 일반 user id
 	 * @param cabinetId 대여하려는 cabinet id
-	 * @param shareCode 10분 간 유지되는 공유사물함 초대 코드
 	 */
-	void startLentShareCabinet(Long userId, Long cabinetId, Long shareCode);
+	void startLentShareCabinet(Long userId, Long cabinetId);
 
 	/**
 	 * 동아리 사물함 대여를 합니다.

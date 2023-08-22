@@ -7,7 +7,6 @@ import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
-import org.ftclub.cabinet.dto.ShareCodeDto;
 import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
 import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -43,12 +42,9 @@ public class LentController {
 	@PostMapping("/cabinets/share/{cabinetId}")
 	public void startLentShareCabinet(
 			@UserSession UserSessionDto user,
-			@PathVariable Long cabinetId,
-			@Valid @RequestBody ShareCodeDto shareCodeDto) {
-		log.info("Called startLentShareCabinet user: {}, cabinetId: {}, shareCode: {}", user,
-				cabinetId, shareCodeDto.getShareCode());
-		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId,
-				shareCodeDto.getShareCode());
+			@PathVariable Long cabinetId) {
+		log.info("Called startLentShareCabinet user: {}, cabinetId: {}", user, cabinetId);
+		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId);
 	}
 
 	@PatchMapping("/return")
