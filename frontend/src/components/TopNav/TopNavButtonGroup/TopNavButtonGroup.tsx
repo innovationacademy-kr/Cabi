@@ -8,6 +8,9 @@ import {
 } from "@/recoil/atoms";
 import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { LentDto } from "@/types/dto/lent.dto";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 import {
   axiosCabinetById,
   axiosDeleteCurrentBanLog,
@@ -27,6 +30,31 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const navigator = useNavigate();
 
   async function setTargetCabinetInfoToMyCabinet() {
+    if (myInfo.cabinetId === null) {
+      setCurrentCabinetId(0);
+      setTargetCabinetInfo({
+        building: "",
+        floor: 0,
+        cabinetId: 0,
+        visibleNum: 0,
+        lentType: CabinetType.PRIVATE,
+        title: null,
+        maxUser: 0,
+        status: CabinetStatus.AVAILABLE,
+        section: "",
+        lents: [
+          {
+            userId: myInfo.userId,
+            name: myInfo.name,
+            lentHistoryId: 0,
+            startedAt: new Date(),
+            expiredAt: new Date(),
+          },
+        ] as LentDto[],
+        statusNote: "",
+      });
+      return;
+    }
     setCurrentCabinetId(myInfo.cabinetId);
     try {
       const { data } = await axiosCabinetById(myInfo.cabinetId);
@@ -37,8 +65,10 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   }
 
   const clickMyCabinet = () => {
-    if (myInfo.cabinetId === null) return;
-    if (currentCabinetId !== myInfo.cabinetId) {
+    if (myInfo.cabinetId === null) {
+      setTargetCabinetInfoToMyCabinet();
+      toggleCabinet();
+    } else if (currentCabinetId !== myInfo.cabinetId) {
       setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
@@ -80,7 +110,6 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
         />
       )}
       <TopNavButton
-        disable={myInfo.cabinetId === null}
         onClick={clickMyCabinet}
         imgSrc="/src/assets/images/myCabinetIcon.svg"
       />

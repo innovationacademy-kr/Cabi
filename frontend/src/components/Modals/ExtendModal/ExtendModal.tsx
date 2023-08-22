@@ -46,6 +46,12 @@ const ExtendModal: React.FC<{
 연장권 사용은 취소할 수 없습니다.
 연장권을 사용하시겠습니까?`;
   const tryExtendRequest = async (e: React.MouseEvent) => {
+    if (currentCabinetId === 0) {
+      setHasErrorOnResponse(true);
+      setModalTitle("현재 대여중인 사물함이 없습니다.");
+      setShowResponseModal(true);
+      return;
+    }
     try {
       // await axiosExtend(); // TODO: 연장권 api 생성 후 연결해야 함
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
