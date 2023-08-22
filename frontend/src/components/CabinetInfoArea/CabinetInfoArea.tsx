@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import {
   ICurrentModalStateInfo,
   ISelectedCabinetInfo,
-  TModalState,
+  TModalState, 
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
 import LentModal from "@/components/Modals/LentModal/LentModal";
@@ -21,6 +21,7 @@ import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
+import CountTimeContainer from "./CountTime/CountTime.container";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -71,25 +72,44 @@ const CabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
-          <>
-            <ButtonContainer
-              onClick={() => {
-                openModal("returnModal");
-              }}
-              text="반납"
-              theme="fill"
-            />
-            <ButtonContainer
-              onClick={() => openModal("memoModal")}
-              text="메모관리"
-              theme="line"
-            />
-            <ButtonContainer
-              onClick={closeCabinet}
-              text="닫기"
-              theme="grayLine"
-            />
-          </>
+          selectedCabinetInfo.lentType === "SHARE" && // 공유 대기 상태에 내가 포함
+          selectedCabinetInfo.lentsLength >= 1 ? (
+            <>
+              <ButtonContainer
+                onClick={() => {
+                  openModal("returnModal"); // 대기열 취소 모달 추가 구현
+                }}
+                text="대기열 취소"
+                theme="fill"
+              />
+              <ButtonContainer
+                onClick={closeCabinet}
+                text="닫기"
+                theme="grayLine"
+              />
+              <CountTimeContainer isMine={true} />
+            </>
+          ) : (
+            <>
+              <ButtonContainer
+                onClick={() => {
+                  openModal("returnModal");
+                }}
+                text="반납"
+                theme="fill"
+              />
+              <ButtonContainer
+                onClick={() => openModal("memoModal")}
+                text="메모관리"
+                theme="line"
+              />
+              <ButtonContainer
+                onClick={closeCabinet}
+                text="닫기"
+                theme="grayLine"
+              />
+            </>
+          )
         ) : (
           <>
             <ButtonContainer
@@ -109,8 +129,10 @@ const CabinetInfoArea: React.FC<{
                 wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3
               }
             />
-
-            <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
+            <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
+            {selectedCabinetInfo.lentsLength >= 1 && (
+              <CountTimeContainer isMine={false} />
+            )}
             {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
               <WarningMessageStyled>
                 초대 코드 입력 오류 초과로 <br />
@@ -236,7 +258,7 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-height: 210px;
+  max-height: 300px;
   margin: 3vh 0;
   width: 100%;
 `;
