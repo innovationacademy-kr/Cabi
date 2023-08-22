@@ -57,13 +57,17 @@ const CabinetInfoArea: React.FC<{
   ) : (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-        {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
+        {selectedCabinetInfo!.floor !== 0
+          ? selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section
+          : "-"}
       </TextStyled>
       <CabinetRectangleStyled
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={isMine}
       >
-        {selectedCabinetInfo!.visibleNum}
+        {selectedCabinetInfo!.visibleNum !== 0
+          ? selectedCabinetInfo!.visibleNum
+          : "-"}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}
@@ -73,17 +77,17 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
+        {selectedCabinetInfo!.lentType === "PRIVATE" && isExtendable ? (
+          <ButtonContainer
+            onClick={() => {
+              openModal("extendModal");
+            }}
+            text="연장권 사용"
+            theme="line"
+          />
+        ) : null}
         {isMine ? (
           <>
-            {selectedCabinetInfo!.lentType === "PRIVATE" && isExtendable ? (
-              <ButtonContainer
-                onClick={() => {
-                  openModal("extendModal");
-                }}
-                text="연장권 사용"
-                theme="line"
-              />
-            ) : null}
             <ButtonContainer
               onClick={() => {
                 openModal("returnModal");
@@ -138,7 +142,7 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {expireDate}
+        {selectedCabinetInfo!.cabinetId === 0 ? "-" : expireDate}
       </CabinetLentDateInfoStyled>
       {userModal.unavailableModal && (
         <UnavailableModal

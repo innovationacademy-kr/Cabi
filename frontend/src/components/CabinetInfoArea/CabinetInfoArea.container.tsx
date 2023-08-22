@@ -101,6 +101,7 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
   const { lentType, title, maxUser, lents } = selectedCabinetInfo;
   if (lentType === "CLUB" && title) return title;
+  else if (maxUser === 0) return lents[0].name;
 
   // 그 외에는 유저리스트 반환
   const userNameList = new Array(maxUser)
@@ -315,10 +316,15 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       selectedCabinetInfo={cabinetViewData}
       closeCabinet={closeCabinet}
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
-      isMine={myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId}
+      isMine={
+        myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId ||
+        myCabinetInfo?.cabinetId === 0
+      }
       isAvailable={
-        cabinetViewData?.status === "AVAILABLE" ||
-        cabinetViewData?.status === "LIMITED_AVAILABLE"
+        (cabinetViewData?.status === "AVAILABLE" ||
+          cabinetViewData?.status === "LIMITED_AVAILABLE") &&
+        myCabinetInfo?.cabinetId !== 0 &&
+        cabinetViewData.cabinetId !== 0
       }
       isExtendable={true}
       // isExtendable={myInfo.extendable} // TODO: 연장권 구현 후 수정
