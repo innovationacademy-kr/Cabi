@@ -161,7 +161,7 @@ export const cabinetStatusLabelMap = {
   [CabinetStatus.BANNED]: "사용 불가",
   [CabinetStatus.BROKEN]: "사용 불가",
   [CabinetStatus.IN_SESSION]: "대기중",
-  [CabinetStatus.PENDING]: "대여 예정",
+  [CabinetStatus.PENDING]: "오픈 예정",
 };
 
 export const cabinetTypeLabelMap = {
