@@ -1,0 +1,3 @@
+package jobs
+
+interface Configuration
