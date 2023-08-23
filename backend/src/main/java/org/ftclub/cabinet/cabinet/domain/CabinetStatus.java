@@ -14,12 +14,17 @@ public enum CabinetStatus {
 	 * <br>
 	 * LIMITED_AVAILABLE : 만료기한이 설정되었으나 사용 가능
 	 * <br>
-	 * OVERDUE :연체됨
+	 * OVERDUE : 연체됨
+	 * <br>
+	 * PENDING : 다음 날 풀릴 사물함 상태
+	 * <br>
+	 * IS_SESSION : 10분 동안 대여 대기 상태
 	 */
-	BROKEN, AVAILABLE, FULL, LIMITED_AVAILABLE, OVERDUE;
+	BROKEN, AVAILABLE, FULL, LIMITED_AVAILABLE, OVERDUE, PENDING, IS_SESSION;
 
 	public boolean isValid() {
 		return this.equals(BROKEN) || this.equals(AVAILABLE) || this.equals(FULL) ||
-				this.equals(LIMITED_AVAILABLE) || this.equals(OVERDUE);
+				this.equals(LIMITED_AVAILABLE) || this.equals(OVERDUE) || this.equals(PENDING)
+				|| this.equals(IS_SESSION);
 	}
 }
