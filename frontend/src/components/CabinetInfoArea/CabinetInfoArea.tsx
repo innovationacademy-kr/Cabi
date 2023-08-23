@@ -1,9 +1,9 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import {
   ICurrentModalStateInfo,
   ISelectedCabinetInfo,
-  TModalState, 
+  TModalState,
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ButtonContainer from "@/components/Common/Button";
 import LentModal from "@/components/Modals/LentModal/LentModal";
@@ -72,8 +72,7 @@ const CabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
-          selectedCabinetInfo.lentType === "SHARE" && // 공유 대기 상태에 내가 포함
-          selectedCabinetInfo.lentsLength >= 1 ? (
+          selectedCabinetInfo.status === "IN_SESSION" ? ( // 공유 대기 상태에 내가 포함
             <>
               <ButtonContainer
                 onClick={() => {
@@ -115,8 +114,7 @@ const CabinetInfoArea: React.FC<{
             <ButtonContainer
               onClick={() =>
                 openModal(
-                  selectedCabinetInfo?.lentsLength &&
-                    selectedCabinetInfo.lentsLength >= 1
+                  selectedCabinetInfo.status == "IN_SESSION"
                     ? "invitationCodeModal"
                     : "lentModal"
                 )
@@ -130,7 +128,7 @@ const CabinetInfoArea: React.FC<{
               }
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
-            {selectedCabinetInfo.lentsLength >= 1 && (
+            {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
             )}
             {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
@@ -251,6 +249,26 @@ const CabinetRectangleStyled = styled.div<{
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "PENDING" &&
+    css`
+      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+    `}
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "IN_SESSION" &&
+    css`
+      border: 3px solid var(--main-color);
+      animation: ${Animation} 3.5s infinite;
+    `}
+`;
+
+const Animation = keyframes`
+  0%, 100% {
+    background-color: var(--main-color);
+  }
+  50% {
+    background-color: #d9d9d9;
+  }
 `;
 
 const CabinetInfoButtonsContainerStyled = styled.div`

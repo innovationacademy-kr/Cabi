@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import {
   currentCabinetIdState,
   targetCabinetInfoState,
@@ -13,6 +13,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import clockIcon from "@/assets/images/clock.svg";
 import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import { UserDto } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
@@ -35,8 +36,12 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
 
   let cabinetLabelText = "";
 
-  if (props.status !== "BANNED" && props.status !== "BROKEN") {
-    //사용불가가 아닌 모든 경우
+  if (
+    props.status !== "BANNED" &&
+    props.status !== "BROKEN" &&
+    props.status != "IN_SESSION" &&
+    props.status != "PENDING"
+  ) {
     if (props.lentType === "PRIVATE") cabinetLabelText = props.name;
     else if (props.lentType === "SHARE") {
       cabinetLabelText =
@@ -46,8 +51,9 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     } else if (props.lentType === "CLUB")
       cabinetLabelText = props.title ? props.title : "동아리";
   } else {
-    //사용불가인 경우
-    cabinetLabelText = "사용불가";
+    if (props.status == "IN_SESSION") cabinetLabelText = "대기중";
+    else if (props.status == "PENDING") cabinetLabelText = "오픈예정";
+    else cabinetLabelText = "사용불가";
   }
 
   const handleCloseUnavailableModal = (e: { stopPropagation: () => void }) => {
@@ -110,7 +116,12 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
         status={props.status}
         isMine={isMine}
       >
-        {cabinetLabelText}
+        <span className="cabinetLabelTextWrap">
+          {props.status === "IN_SESSION" && (
+            <span className="clockIconStyled" />
+          )}
+          {cabinetLabelText}
+        </span>
       </CabinetLabelStyled>
       {showUnavailableModal && (
         <UnavailableModal
@@ -152,6 +163,30 @@ const CabinetListItemStyled = styled.div<{
       box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
         0px 4px 4px rgba(0, 0, 0, 0.25);
     `}
+
+  ${({ status }) =>
+    status === "IN_SESSION" &&
+    css`
+      animation: ${Animation} 3.5s infinite;
+      border: 3px solid var(--main-color);
+    `}
+  ${({ status }) =>
+    status === "PENDING" &&
+    css`
+      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+    `}
+    .cabinetLabelTextWrap {
+    display: flex;
+    align-items: center;
+  }
+  .clockIconStyled {
+    width: 16px;
+    height: 16px;
+    background-image: url(${clockIcon});
+    filter: brightness(100);
+    margin-right: 4px;
+    display: ${(props) => (props.status === "IN_SESSION" ? "block" : "none")};
+  }
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       opacity: 0.9;
@@ -160,6 +195,14 @@ const CabinetListItemStyled = styled.div<{
   }
 `;
 
+const Animation = keyframes`
+  0%, 100% {
+    background-color: var(--main-color);
+  }
+  50% {
+    background-color: #d9d9d9;
+  }
+`;
 const CabinetIconNumberWrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;

@@ -37,6 +37,8 @@ export interface IMultiSelectTargetInfo {
     OVERDUE: number;
     FULL: number;
     BROKEN: number;
+    IN_SESSION: number;
+    PENDING: number;
   };
 }
 
@@ -60,6 +62,8 @@ interface ICount {
   FULL: number;
   OVERDUE: number;
   BROKEN: number;
+  IN_SESSION: number;
+  PENDING: number;
 }
 
 export type TModalState =
@@ -206,7 +210,14 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         else result[cabinet.status]++;
         return result;
       },
-      { AVAILABLE: 0, FULL: 0, OVERDUE: 0, BROKEN: 0 }
+      {
+        AVAILABLE: 0,
+        FULL: 0,
+        OVERDUE: 0,
+        BROKEN: 0,
+        IN_SESSION: 0,
+        PENDING: 0,
+      }
     );
 
   const multiSelectInfo: IMultiSelectTargetInfo | null = isMultiSelect
@@ -302,8 +313,10 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
       isMine={myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId}
       isAvailable={
-        cabinetViewData?.status === "AVAILABLE" ||
-        cabinetViewData?.status === "LIMITED_AVAILABLE"
+        (cabinetViewData?.status === "AVAILABLE" ||
+          cabinetViewData?.status === "LIMITED_AVAILABLE" ||
+          cabinetViewData?.status === "IN_SESSION") &&
+        !myCabinetInfo.cabinetId
       }
       userModal={userModal}
       openModal={openModal}
