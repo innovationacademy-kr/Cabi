@@ -183,7 +183,10 @@ const CabinetListItemStyled = styled.div<{
     width: 16px;
     height: 16px;
     background-image: url(${clockIcon});
-    filter: brightness(100);
+    filter: ${(props) =>
+      props.status === "IN_SESSION" && !props.isMine
+        ? "brightness(100)"
+        : "brightness(0)"};
     margin-right: 4px;
     display: ${(props) => (props.status === "IN_SESSION" ? "block" : "none")};
   }
