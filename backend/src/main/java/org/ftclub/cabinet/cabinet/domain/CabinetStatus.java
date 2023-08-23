@@ -23,7 +23,8 @@ public enum CabinetStatus {
 	BROKEN, AVAILABLE, FULL, OVERDUE, IN_SESSION, PENDING;
 
 	public boolean isValid() {
-		return this.equals(BROKEN) || this.equals(AVAILABLE) || this.equals(FULL) ||
-				this.equals(LIMITED_AVAILABLE) || this.equals(OVERDUE);
+		return this.equals(BROKEN) || this.equals(AVAILABLE) || this.equals(FULL) || this.equals(
+				OVERDUE)
+				|| this.equals(IN_SESSION) || this.equals(PENDING);
 	}
 }
