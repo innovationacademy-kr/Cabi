@@ -33,6 +33,8 @@ const CabinetInfoArea: React.FC<{
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
   wrongCodeCounts: { [cabinetId: number]: number };
+  setTimeOver: (timeOver: boolean) => void;
+  timeOver: boolean;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -43,6 +45,8 @@ const CabinetInfoArea: React.FC<{
   openModal,
   closeModal,
   wrongCodeCounts,
+  setTimeOver,
+  timeOver,
 }) => {
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
@@ -80,13 +84,14 @@ const CabinetInfoArea: React.FC<{
                 }}
                 text="대기열 취소"
                 theme="fill"
+                disabled={timeOver}
               />
               <ButtonContainer
                 onClick={closeCabinet}
                 text="닫기"
                 theme="grayLine"
               />
-              <CountTimeContainer isMine={true} />
+              <CountTimeContainer isMine={true} setTimeOver={setTimeOver} />
             </>
           ) : (
             <>
@@ -124,12 +129,13 @@ const CabinetInfoArea: React.FC<{
               disabled={
                 !isAvailable ||
                 selectedCabinetInfo.lentType === "CLUB" ||
-                wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3
+                wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 ||
+                timeOver
               }
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
             {selectedCabinetInfo.status == "IN_SESSION" && (
-              <CountTimeContainer isMine={false} />
+              <CountTimeContainer isMine={false} setTimeOver={setTimeOver} />
             )}
             {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
               <WarningMessageStyled>

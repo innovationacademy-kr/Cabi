@@ -289,6 +289,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   };
 
   const wrongCodeCounts = loadSharedWrongCodeCounts();
+  const [timeOver, setTimeOver] = useState(false);
 
   return isAdmin ? (
     <>
@@ -322,6 +323,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       openModal={openModal}
       closeModal={closeModal}
       wrongCodeCounts={wrongCodeCounts}
+      setTimeOver={setTimeOver}
+      timeOver={timeOver}
     />
   );
 };
