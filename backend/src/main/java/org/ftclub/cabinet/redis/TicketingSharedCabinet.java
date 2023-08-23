@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.redis;
 
 import java.util.concurrent.TimeUnit;
+import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
+import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -13,18 +15,52 @@ public class TicketingSharedCabinet {
 
 	@Autowired
 	private RedisTemplate<String, String> shadowKeyRedisTemplate;
+	@Autowired
+	private LentOptionalFetcher lentOptionalFetcher;
+
+//	/**
+//	 * @param key      : cabinetId + suffix
+//	 * @param hashKey: ${userName} 또는 "userCount"
+//	 * @param pwCount: ${passwordCount} 또는 "userCount"
+//	 */
+//	public void saveValue(String key, String hashKey, Integer pwCount) {
+//		valueRedisTemplate.opsForHash().put(key, hashKey, pwCount);
+//	}
 
 	/**
-	 * @param key      : cabinetId + suffix
-	 * @param hashKey: ${userName} 또는 "userCount"
-	 * @param pwCount: ${passwordCount} 또는 "userCount"
+	 * @param key     : cabinetId + suffix
+	 * @param hashKey : ${userName} 또는 "userCount"
 	 */
-	public void saveValue(String key, String hashKey, Integer pwCount) {
-		valueRedisTemplate.opsForHash().put(key, hashKey, pwCount);
+	public void saveValue(String key, String hashKey) {
+		if (isUserInValueKey(key, hashKey)) {
+			valueRedisTemplate.opsForHash().put(key, hashKey, getValue(key, hashKey) + 1);
+		} else {
+			if (getSizeOfUsers(key) == 0) // 방장이 들어온 경우
+			{
+				valueRedisTemplate.opsForHash().put(key, hashKey, -1);
+			} else // 방장 이후 유저가 들어올려고 시도한 경우
+			{
+				valueRedisTemplate.opsForHash().put(key, hashKey, 1);
+			}
+		}
+	}
+
+	public void validateShareCode() {
+
 	}
 
 	public Boolean isUserInValueKey(String key, String hashKey) {
 		return valueRedisTemplate.opsForHash().hasKey(key, hashKey);
+	}
+
+	public Long getSizeOfUsers(String key) {
+		valueRedisTemplate.opsForHash().size(key);
+	}
+
+	public void checkSizeOfUsers(String key) {
+		if (getSizeOfUsers(key) > 4) {
+			lentOptionalFetcher.handlePolicyStatus(LentPolicyStatus.FULL_CABINET);
+		}
 	}
 
 	public Integer getValue(String key, String hashKey) {

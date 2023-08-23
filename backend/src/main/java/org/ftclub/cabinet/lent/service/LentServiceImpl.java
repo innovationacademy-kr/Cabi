@@ -67,7 +67,7 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public void startLentShareCabinet(Long userId, Long cabinetId) {
+	public void startLentShareCabinet(Long userId, Long cabinetId, Long shareCode) {
 		log.info("Called startLentShareCabinet: {}, {}", userId, cabinetId);
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
@@ -84,15 +84,18 @@ public class LentServiceImpl implements LentService {
 //                cabinetId);
 		// 방장인지 검사 -> 분기
 		// 1. 방장 - 대여 가능한 캐비넷인지 확인, shadowKey 생성, valueKey 생성
-		lentOptionalFetcher.handlePolicyStatus(lentPolicy.verifyCabinetForLent(cabinet));
-		if (!ticketingSharedCabinet.isShadowKey(cabinetId.toString())) {
-			ticketingSharedCabinet.setShadowKey(cabinetId.toString());
+		String cabinetIdString = cabinetId.toString();
+		if (!ticketingSharedCabinet.isShadowKey(cabinetIdString)) {
+			lentOptionalFetcher.handlePolicyStatus(lentPolicy.verifyCabinetForLent(cabinet));
+			ticketingSharedCabinet.setShadowKey(cabinetIdString);
+//			ticketingSharedCabinet.saveValue(cabinetIdString, userId.toString());
 		}
-//		 2. 이후 유저 - shareCode 검사(front에서 함), valueKey 생성
-		ticketingSharedCabinet.saveValue(cabinetId.toString(), userId.toString(), 1);
-//		// 대여 가능한 캐비넷인지 확인
-//		lentOptionalFetcher.handlePolicyStatus(
-//				lentPolicy.verifyCabinetForLent(cabinet));
+//		 2. 이후 유저 - shareCode 검사, valueKey 생성
+		else {
+			ticketingSharedCabinet.checkSizeOfUsers(cabinetIdString);
+//			ticketingSharedCabinet.saveValue(cabinetIdString, userId.toString());
+		}
+		ticketingSharedCabinet.saveValue(cabinetIdString, userId.toString());
 		// 만료 시간 적용 -> listener로 이동할 것
 		LocalDateTime expiredAt = lentPolicy.generateExpirationDate(now, cabinet);
 		// userId 반복문 돌면서 수행
