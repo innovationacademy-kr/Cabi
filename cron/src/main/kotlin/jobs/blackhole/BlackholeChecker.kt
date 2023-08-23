@@ -31,7 +31,8 @@ class BlackholeCheckerImpl(val config: BlackholeCheckerConfig): BlackholeChecker
     override fun getBlackholeIds(): List<String> {
         val now = LocalDateTime.now();
         val token = ftTokenFetcher.fetchToken()
-        val request = generateRequest(token, now.minusDays(5), now.minusDays(2))
+        val request = generateRequest(token,
+            now.minusDays(config.startMargin), now.minusDays(config.endMargin))
         val response = client.newCall(request).execute()
         if (response.code() != 200) {
             throw Exception("server is not connected: ${response.code()})")
@@ -60,4 +61,8 @@ data class BlackholeCheckerConfig
 constructor(
     @JsonSetter("formatUrl")
     val formatUrl: String,
+    @JsonSetter("startMargin")
+    val startMargin: Long,
+    @JsonSetter("endMargin")
+    val endMargin: Long
 ): Configuration
