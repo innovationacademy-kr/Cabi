@@ -20,11 +20,11 @@ public enum CabinetStatus {
 	 * <br>
 	 * IS_SESSION : 10분 동안 대여 대기 상태
 	 */
-	BROKEN, AVAILABLE, FULL, LIMITED_AVAILABLE, OVERDUE, PENDING, IS_SESSION;
+	BROKEN, AVAILABLE, FULL, LIMITED_AVAILABLE, OVERDUE, PENDING, IN_SESSION;
 
 	public boolean isValid() {
 		return this.equals(BROKEN) || this.equals(AVAILABLE) || this.equals(FULL) ||
 				this.equals(LIMITED_AVAILABLE) || this.equals(OVERDUE) || this.equals(PENDING)
-				|| this.equals(IS_SESSION);
+				|| this.equals(IN_SESSION);
 	}
 }

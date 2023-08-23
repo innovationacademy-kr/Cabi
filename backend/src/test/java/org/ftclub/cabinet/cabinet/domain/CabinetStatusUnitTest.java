@@ -19,7 +19,7 @@ public class CabinetStatusUnitTest {
 		CabinetStatus cabinetStatusLimitedAvailable = CabinetStatus.LIMITED_AVAILABLE;
 		CabinetStatus cabinetStatusOverdue = CabinetStatus.OVERDUE;
 		CabinetStatus cabinetStatusPending = CabinetStatus.PENDING;
-		CabinetStatus cabinetStatusIsSession = CabinetStatus.IS_SESSION;
+		CabinetStatus cabinetStatusInSession = CabinetStatus.IN_SESSION;
 
 		assertTrue(cabinetStatusAvailable.isValid());
 		assertTrue(cabinetStatusFull.isValid());
@@ -27,6 +27,6 @@ public class CabinetStatusUnitTest {
 		assertTrue(cabinetStatusLimitedAvailable.isValid());
 		assertTrue(cabinetStatusOverdue.isValid());
 		assertTrue(cabinetStatusPending.isValid());
-		assertTrue(cabinetStatusIsSession.isValid());
+		assertTrue(cabinetStatusInSession.isValid());
 	}
 }
