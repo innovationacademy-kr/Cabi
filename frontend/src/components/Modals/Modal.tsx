@@ -1,9 +1,8 @@
 import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
+import AdminClubLogContainer from "@/components/Club/AdminClubLog.container";
 import Button from "@/components/Common/Button";
 import useMultiSelect from "@/hooks/useMultiSelect";
-import AdminClubLogContainer from "../Club/AdminClubLog.container";
-import ClubLogTable from "../Club/ClubLogTable";
 
 /**
  * @interface
@@ -16,8 +15,10 @@ import ClubLogTable from "../Club/ClubLogTable";
  * @property {() => ReactElement} renderAdditionalComponent : 모달에 추가로 띄울 UI를 렌더해주는 함수
  * @property {string} proceedBtnText : 확인 버튼의 텍스트(기본값: 확인)
  * @property {((e: React.MouseEvent) => Promise<void>) | null} onClickProceed : 확인 버튼의 동작함수
- * @property {string} cancleBtnText : 취소 버튼의 텍스트(기본값: 취소)
+ * @property {string} cancelBtnText : 취소 버튼의 텍스트(기본값: 취소)
  * @property {React.MouseEventHandler} closeModal : 모달 닫는 함수
+ * @property {boolean} isClubLentModal : 동아리 (CLUB) 대여 모달인지 여부
+ * @property {boolean} isLoading : 로딩중 요청 버튼 비활성화 감지를 위한 변수
  */
 export interface IModalContents {
   type: string;
@@ -28,9 +29,10 @@ export interface IModalContents {
   renderAdditionalComponent?: () => ReactElement;
   proceedBtnText?: string;
   onClickProceed?: ((e: React.MouseEvent) => Promise<void>) | null;
-  cancleBtnText?: string;
+  cancelBtnText?: string;
   closeModal: React.MouseEventHandler;
   isClubLentModal?: boolean;
+  isLoading?: boolean;
 }
 
 const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
@@ -43,9 +45,10 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     renderAdditionalComponent,
     proceedBtnText,
     onClickProceed,
-    cancleBtnText,
+    cancelBtnText,
     closeModal,
     isClubLentModal,
+    isLoading,
   } = props.modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
 
@@ -60,9 +63,6 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         }}
       />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
-        {/* {icon && (
-          <img src={icon} style={{ width: "70px", marginBottom: "20px" }} />
-        )} */}
         {icon && (
           <ModalIconImgStyled src={icon} iconScaleEffect={iconScaleEffect} />
         )}
@@ -76,7 +76,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
           <ButtonWrapperStyled>
             <Button
               onClick={closeModal}
-              text={cancleBtnText || "취소"}
+              text={cancelBtnText || "취소"}
               theme="line"
             />
             <Button
@@ -85,6 +85,18 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
               }}
               text={proceedBtnText || "확인"}
               theme="fill"
+              disabled={isLoading}
+            />
+          </ButtonWrapperStyled>
+        )}
+        {type === "panaltyBtn" && (
+          <ButtonWrapperStyled>
+            <Button
+              onClick={(e) => {
+                onClickProceed!(e);
+              }}
+              text={proceedBtnText || "확인"}
+              theme="smallGrayLine"
             />
           </ButtonWrapperStyled>
         )}

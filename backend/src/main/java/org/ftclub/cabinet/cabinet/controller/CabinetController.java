@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -9,13 +10,10 @@ import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.exception.ControllerException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 일반 사용자가 사물함 서비스를 사용하기 위한 컨트롤러입니다.
@@ -53,7 +51,7 @@ public class CabinetController {
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
-		log.info("Called getCabinetsPerSection building : {} floor : {}", building, floor);
+		log.info("Called getCabinetsPerSection");
 		return cabinetFacadeService.getCabinetsPerSection(building, floor);
 	}
 

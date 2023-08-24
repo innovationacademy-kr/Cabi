@@ -5,6 +5,7 @@ import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class AuthServiceUnitTest {
 	@DisplayName("성공: 카뎃 계정이 존재하지 않으면 사용자를 생성한다.")
 	void 성공_addUserIfNotExistsByClaims() {
 		Map<String, Object> claims = mock(Map.class);
-		LocalDateTime blackholedAt = LocalDateTime.now().plusDays(123);
+		String blackholedAt = "2024-12-31";
 		given(claims.get("email")).willReturn("email@user.com");
 		given(claims.get("name")).willReturn("name");
 		given(claims.get("blackholedAt")).willReturn(blackholedAt);
@@ -70,14 +71,15 @@ class AuthServiceUnitTest {
 
 		authService.addUserIfNotExistsByClaims(claims);
 
-		then(userService).should().createUser("name", "email@user.com", blackholedAt, UserRole.USER);
+		then(userService).should().createUser("name", "email@user.com", DateUtil.stringToDate(blackholedAt), UserRole.USER);
 	}
 
 	@Test
 	@DisplayName("성공: 멤버 계정이 존재하지 않으면 사용자를 생성한다.")
 	void 성공_addUserIfNotExistsByClaims2() {
 		Map<String, Object> claims = mock(Map.class);
-		LocalDateTime blackholedAt = LocalDateTime.now().plusDays(123);
+		String blackholedAt = "2024-12-31";
+
 		given(claims.get("email")).willReturn("email@user.com");
 		given(claims.get("name")).willReturn("name");
 		given(claims.get("blackholedAt")).willReturn(null);
