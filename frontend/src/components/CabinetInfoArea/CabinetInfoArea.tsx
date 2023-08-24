@@ -143,7 +143,7 @@ const CabinetInfoArea: React.FC<{
             }}
             text={isMine ? "연장권 사용하기" : "연장권 보유중"}
             theme="line"
-            iconSrc="/src/assets/images/extension_ticket.svg"
+            iconSrc="/src/assets/images/extensionTicket.svg"
             iconAlt="연장권 아이콘"
           />
         ) : null}
