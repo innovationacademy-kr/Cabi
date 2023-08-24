@@ -1,9 +1,14 @@
 import jobs.blackhole.BlackholeChecker
+import jobs.blackhole.BlackholeDbManager
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
+    println("Start!")
     try {
-        BlackholeChecker.create().getBlackholeIds().let { println(it) }
+        BlackholeDbManager.create().connectionTest()
+            .let {
+                println(it)
+            }
     } catch (e: Exception) {
         println(e.message)
         exitProcess(1)
