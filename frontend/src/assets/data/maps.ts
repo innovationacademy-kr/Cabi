@@ -28,7 +28,7 @@ export const cabinetLabelColorMap = {
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
   [CabinetStatus.IN_SESSION]: "var(--white)",
-  [CabinetStatus.PENDING]: "var(--white)",
+  [CabinetStatus.PENDING]: "var(--main-color)",
   MINE: "var(--black)",
 };
 
@@ -150,7 +150,7 @@ export const cabinetFilterMap = {
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
   [CabinetStatus.IN_SESSION]: "brightness(100)",
-  [CabinetStatus.PENDING]: "brightness(100)",
+  [CabinetStatus.PENDING]: "none",
 };
 
 export const cabinetStatusLabelMap = {

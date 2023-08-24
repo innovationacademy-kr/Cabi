@@ -51,8 +51,8 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     } else if (props.lentType === "CLUB")
       cabinetLabelText = props.title ? props.title : "동아리";
   } else {
-    if (props.status == "IN_SESSION") cabinetLabelText = "대기중";
-    else if (props.status == "PENDING") cabinetLabelText = "오픈예정";
+    if (props.status === "IN_SESSION") cabinetLabelText = "대기중";
+    else if (props.status === "PENDING") cabinetLabelText = "오픈예정";
     else cabinetLabelText = "사용불가";
   }
 
@@ -154,6 +154,8 @@ const CabinetListItemStyled = styled.div<{
   justify-content: space-between;
   padding: 8px 8px 14px;
   transition: transform 0.2s, opacity 0.2s;
+  box-shadow: 0 0.25em 0.3em -0.2em #7b7b7b;
+
   cursor: pointer;
   ${({ isSelected }) =>
     isSelected &&
@@ -167,13 +169,14 @@ const CabinetListItemStyled = styled.div<{
   ${({ status }) =>
     status === "IN_SESSION" &&
     css`
-      animation: ${Animation} 3.5s infinite;
-      border: 3px solid var(--main-color);
+      animation: ${Animation} 2.5s infinite;
+      box-shadow: 0 -0.2em 1em #9747ff45, 0 0.5em 1.5em #9747ff45,
+        0 0.25em 0.5em hsla(190deg, 20%, 30%, 0.2);
     `}
   ${({ status }) =>
     status === "PENDING" &&
     css`
-      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+      border: 2px solid #9747ff;
     `}
     .cabinetLabelTextWrap {
     display: flex;
@@ -204,6 +207,10 @@ const Animation = keyframes`
   }
   50% {
     background-color: #d9d9d9;
+    box-shadow: 0 -0.2em 1em #9747ff45, 0 0.5em 1.5em #9747ff45,
+        0 0.25em 0.3em -0.2em #7b7b7b,
+        0 0.25em 0.5em hsla(190deg, 20%, 30%, 0.2),
+        inset 0 -2px 2px rgb(255 255 255 / 23%);
   }
 `;
 const CabinetIconNumberWrapperStyled = styled.div`
