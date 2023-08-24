@@ -81,6 +81,10 @@ public class SlackbotManager {
 						DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
 	}
+	// TODO
+	// 대여 만료시 메세지
+	// 연체시 메세지
+	// 이벤트 메세지 추가 예정
 
 	@Async
 	public void sendSlackMessage(String intraId, Integer cabinetVisibleNum,
