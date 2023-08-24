@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.cabinet.repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -16,9 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * CabinetService를 위한 ExceptionService

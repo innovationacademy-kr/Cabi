@@ -12,9 +12,6 @@ import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.*;
-
-import java.util.List;
 
 public interface CabinetFacadeService {
 
@@ -51,6 +48,8 @@ public interface CabinetFacadeService {
 	 * @return 구역에 따른 사물함 정보 리스트
 	 */
 	List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor);
+
+	List<CabinetsPerSectionResponseDto> getCabinetsPerSectionRefactor(String building, Integer floor);
 
 	/**
 	 * 사물함의 상태 메모를 업데이트합니다.

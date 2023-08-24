@@ -8,6 +8,7 @@ import org.ftclub.cabinet.auth.service.FtApiManager;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.exception.UtilException;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import org.springframework.web.client.HttpClientErrorException;
 @Log4j2
 public class BlackholeManager {
 
-	private final FtApiManager ftAPIManager;
+	private final FtApiManager ftApiManager;
 	private final LentService lentService;
 	private final UserService userService;
 
@@ -30,8 +31,9 @@ public class BlackholeManager {
 	 * @param jsonUserInfo JsonNode에 담긴 유저 정보
 	 * @return 카뎃 여부
 	 */
-	private Boolean isValidCadet(JsonNode jsonUserInfo) {
-		log.info("isValidCadet {}", jsonUserInfo);
+	private boolean isValidCadet(JsonNode jsonUserInfo) {
+		log.debug("isValidCadet {}", jsonUserInfo);
+		log.info("isValidCadet");
 		return jsonUserInfo.get("cursus_users").size() >= 2;
 	}
 
@@ -54,11 +56,11 @@ public class BlackholeManager {
 	 * 갱신된 블랙홀 날짜를 바탕으로 블랙홀에 빠졌는지 확인한다.
 	 *
 	 * @param blackholedAtDate 블랙홀 날짜
-	 * @param now              현재 시간
 	 * @return 블랙홀에 빠졌는지 여부
 	 */
-	private Boolean isBlackholed(LocalDateTime blackholedAtDate, LocalDateTime now) {
-		log.info("isBlackholed {} {}", blackholedAtDate, now);
+	private boolean isBlackholed(LocalDateTime blackholedAtDate) {
+		log.info("isBlackholed {} {}", blackholedAtDate);
+		LocalDateTime now = LocalDateTime.now();
 		if (blackholedAtDate == null || blackholedAtDate.isAfter(now)) {
 			return false;
 		} else {
@@ -82,10 +84,10 @@ public class BlackholeManager {
 	 * 블랙홀에 빠진 유저를 강제 반납 및 삭제 처리한다.
 	 *
 	 * @param userBlackholeInfoDto 유저 정보 {@link UserBlackholeInfoDto}
-	 * @param now                  현재 시간
 	 */
-	private void handleBlackholed(UserBlackholeInfoDto userBlackholeInfoDto, LocalDateTime now) {
+	private void handleBlackholed(UserBlackholeInfoDto userBlackholeInfoDto) {
 		log.info("{}는 블랙홀에 빠졌습니다.", userBlackholeInfoDto);
+		LocalDateTime now = LocalDateTime.now();
 		lentService.terminateLentCabinet(userBlackholeInfoDto.getUserId());
 		userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
 	}
@@ -119,33 +121,102 @@ public class BlackholeManager {
 		}
 	}
 
-	public void handleBlackhole(UserBlackholeInfoDto userBlackholeInfoDto) {
-		log.info("called handleBlackhole {}", userBlackholeInfoDto);
+	/**
+	 * 유저의 블랙홀 정보를 API 를 통해 요청하여 찾아온다.
+	 *
+	 * @param userName 유저 이름
+	 * @return JsonNode 유저의 블랙홀 정보
+	 * @throws ServiceException
+	 */
+	private JsonNode getBlackholeInfo(String userName)
+			throws ServiceException, HttpClientErrorException {
+		log.info("called refreshBlackhole{}", userName);
+		JsonNode userInfoFromIntra = ftApiManager.getFtUsersInfoByName(
+				userName);
+
+		return userInfoFromIntra;
+	}
+
+
+	/**
+	 * 유저의 블랙홀 날짜를 갱신하여 LocalDateTime으로 반환한다.
+	 *
+	 * @param userName 유저 이름
+	 * @return 갱신된 블랙홀 날짜 LocalDateTime
+	 */
+	private LocalDateTime refreshBlackholedAt(String userName) {
+		log.info("refreshBlackholedAt {}", userName);
+		JsonNode blackholeInfo = getBlackholeInfo(userName);
+		return parseBlackholedAt(blackholeInfo);
+	}
+
+	/**
+	 * 유저속성의 블랙홀 날짜를 갱신한다.
+	 *
+	 * @param userId       유저 아이디
+	 * @param blackholedAt 갱신할 블랙홀 날짜
+	 */
+	private void updateUserBlackholedAt(Long userId, LocalDateTime blackholedAt) {
+		userService.updateUserBlackholedAt(userId, blackholedAt);
+	}
+
+
+	/**
+	 * 스케쥴러가 샐행하는 블랙홀 처리 메서드 유저의 블랙홀 정보를 갱신하여 블랙홀에 빠졌는지 확인 후 처리한다.
+	 * <p>
+	 * 블랙홀에 빠진경우 반납 / 계정 삭제처리 블랙홀에 빠지지 않은경우 블랙홀 날짜 갱신
+	 *
+	 * @param userInfoDto
+	 */
+
+	public void handleBlackhole(UserBlackholeInfoDto userInfoDto) {
+		log.info("called handleBlackhole {}", userInfoDto);
 		LocalDateTime now = LocalDateTime.now();
 		try {
-			JsonNode jsonUserInfo = ftAPIManager.getFtUsersInfoByName(
-					userBlackholeInfoDto.getName());
-			if (!isValidCadet(jsonUserInfo)) {
-				handleNotCadet(userBlackholeInfoDto, now);
+			JsonNode jsonRefreshedUserInfo = getBlackholeInfo(userInfoDto.getName());
+			if (!isValidCadet(jsonRefreshedUserInfo)) {
+				handleNotCadet(userInfoDto, now);
 				return;
 			}
-			LocalDateTime newBlackholedAt = parseBlackholedAt(jsonUserInfo);
+			LocalDateTime newBlackholedAt = parseBlackholedAt(jsonRefreshedUserInfo);
 			log.info("갱신된 블랙홀 날짜 {}", newBlackholedAt);
 			log.info("오늘 날짜 {}", now);
 
-			if (isBlackholed(newBlackholedAt, now)) {
-				handleBlackholed(userBlackholeInfoDto, now);
+			if (isBlackholed(newBlackholedAt)) {
+				handleBlackholed(userInfoDto);
 			} else {
-				handleNotBlackholed(userBlackholeInfoDto, newBlackholedAt);
+				handleNotBlackholed(userInfoDto, newBlackholedAt);
 			}
 		} catch (HttpClientErrorException e) {
-			handleHttpClientError(userBlackholeInfoDto, now, e);
+			handleHttpClientError(userInfoDto, now, e);
 		} catch (ServiceException e) {
 			if (e.getStatus().equals(ExceptionStatus.NO_LENT_CABINET)) {
-				userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
+				userService.deleteUser(userInfoDto.getUserId(), now);
 			}
+			else if (e.getStatus().equals(ExceptionStatus.OAUTH_BAD_GATEWAY))
+				log.info("handleBlackhole ServiceException {}", e.getStatus());
+				throw new UtilException(e.getStatus());
 		} catch (Exception e) {
-			log.error("handleBlackhole Exception: {}", userBlackholeInfoDto, e);
+			log.error("handleBlackhole Exception: {}", userInfoDto, e);
+		}
+	}
+
+	// 따로 분리할 필요 없을듯..
+
+	/**
+	 * 블랙홀 갱신 후 처리
+	 * <p>
+	 * 블랙홀일 경우 반납 및 삭제 처리 블랙홀이 아닐경우 유저 정보(블랙홀일자) 업데이트
+	 *
+	 * @param userBlackholeInfoDto
+	 */
+	public void blackholeRefresher(UserBlackholeInfoDto userBlackholeInfoDto) {
+		LocalDateTime refreshedBlackholedAt = refreshBlackholedAt(userBlackholeInfoDto.getName());
+		if (isBlackholed(refreshedBlackholedAt)) {
+			handleBlackholed(userBlackholeInfoDto);
+			throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
+		} else {
+			updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), refreshedBlackholedAt);
 		}
 	}
 }
