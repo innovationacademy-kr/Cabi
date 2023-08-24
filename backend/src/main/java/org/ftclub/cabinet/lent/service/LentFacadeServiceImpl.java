@@ -147,7 +147,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
-	public void startLentShareCabinet(Long userId, Long cabinetId, Long shareCode) {
+	public void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode) {
 		lentService.startLentShareCabinet(userId, cabinetId, shareCode);
 	}
 
@@ -208,7 +208,6 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 				cabinetInfoRequestDto.getTitle(),
 				cabinetInfoRequestDto.getMemo());
 	}
-
 
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {

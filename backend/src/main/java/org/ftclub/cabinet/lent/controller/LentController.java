@@ -43,7 +43,7 @@ public class LentController {
 	public void startLentShareCabinet(
 			@UserSession UserSessionDto user,
 			@PathVariable Long cabinetId,
-			@Valid @RequestBody Long shareCode) {
+			@Valid @RequestBody Integer shareCode) {
 		log.info("Called startLentShareCabinet user: {}, cabinetId: {}", user, cabinetId);
 		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId, shareCode);
 	}

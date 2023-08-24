@@ -1,16 +1,20 @@
 package org.ftclub.cabinet.lent.domain;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
+import org.ftclub.cabinet.exception.CustomExceptionStatus;
+import org.ftclub.cabinet.exception.CustomServiceException;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -25,28 +29,15 @@ public class LentPolicyImpl implements LentPolicy {
 
 	private final CabinetProperties cabinetProperties;
 	private final ApplicationEventPublisher publisher;
+	private final TicketingSharedCabinet ticketingSharedCabinet;
 
+	@Override
+	public LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
+			Integer totalUserCount) {
+		log.info("Called generateSharedCabinetExpirationDate now: {}, totalUserCount: {}", now,
+				totalUserCount);
 
-	private LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
-			CabinetStatus cabinetStatus, LentHistory activeLentHistory) {
-		log.debug("Called shareCabinetExpirationDateProcess");
-
-		switch (cabinetStatus) {
-			case AVAILABLE:
-				return DateUtil.getInfinityDate();
-
-//			case LIMITED_AVAILABLE:
-//				return activeLentHistory.getExpiredAt();
-
-			case FULL:
-				if (activeLentHistory.isSetExpiredAt()) {
-					return activeLentHistory.getExpiredAt();
-				}
-				return now.plusDays(getDaysForLentTermShare());
-
-			default:
-				throw new IllegalArgumentException("대여 현황 상태가 잘못되었습니다.");
-		}
+		return now.plusDays(getDaysForLentTermShare(totalUserCount));
 	}
 
 	@Override
@@ -61,13 +52,6 @@ public class LentPolicyImpl implements LentPolicy {
 		switch (lentType) {
 			case PRIVATE:
 				return now.plusDays(getDaysForLentTermPrivate());
-//			case SHARE:
-//				if (activeLentHistories.isEmpty()) {
-//					return DateUtil.getInfinityDate();
-//				}
-//				LentHistory lentHistory = activeLentHistories.get(0);
-//				return generateSharedCabinetExpirationDate(now,
-//						cabinet.getStatus(), lentHistory);
 			case CLUB:
 				return DateUtil.getInfinityDate();
 		}
@@ -75,23 +59,15 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public void applyExpirationDate(LentHistory curHistory, List<LentHistory> beforeActiveHistories,
-			LocalDateTime expiredAt) {
+	public void applyExpirationDate(LentHistory curHistory, LocalDateTime expiredAt) {
 		log.info(
-				"Called applyExpirationDate curHistory: {}, beforeActiveHistories: {}, expiredAt: {}",
-				curHistory, beforeActiveHistories, expiredAt);
-
+				"Called applyExpirationDate curHistory: {}, expiredAt: {}", curHistory, expiredAt);
 		if (expiredAt == null) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
 		}
-
 		if (DateUtil.isPast(expiredAt)) {
 			throw new DomainException(ExceptionStatus.INVALID_EXPIRED_AT);
 		}
-
-//		for (LentHistory lentHistory : beforeActiveHistories) {
-//			lentHistory.setExpiredAt(expiredAt);
-//		}
 		curHistory.setExpiredAt(expiredAt);
 	}
 
@@ -102,7 +78,7 @@ public class LentPolicyImpl implements LentPolicy {
 		if (!user.isUserRole(UserRole.USER)) {
 			return LentPolicyStatus.NOT_USER;
 		}
-		if (userActiveLentCount >= 1) {
+		if (userActiveLentCount != 0) {
 			return LentPolicyStatus.ALREADY_LENT_USER;
 		}
 		if (user.getBlackholedAt() != null && user.getBlackholedAt()
@@ -130,6 +106,28 @@ public class LentPolicyImpl implements LentPolicy {
 					break;
 				default:
 					break;
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public LentPolicyStatus verifyUserForLentShare(User user, Cabinet cabinet,
+			int userActiveLentCount,
+			List<BanHistory> userActiveBanList) {
+
+		LentPolicyStatus ret = verifyUserForLent(user, cabinet, userActiveLentCount,
+				userActiveBanList);
+
+		// 유저가 패스워드를 3번 이상 틀린 경우
+		Long cabinetId = cabinet.getCabinetId();
+		Long userId = user.getUserId();
+		// 사물함을 빌릴 수 있는 유저라면 공유 사물함 비밀번호 입력 횟수를 확인
+		if (ret == LentPolicyStatus.FINE && ticketingSharedCabinet.isShadowKey(
+				cabinet.getCabinetId())) {
+			Integer passwordCount = ticketingSharedCabinet.getValue(cabinetId, userId);
+			if (passwordCount >= 3) {
+				ret = LentPolicyStatus.SHARE_BANNED_USER;
 			}
 		}
 		return ret;
@@ -171,14 +169,63 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public Integer getDaysForLentTermShare() {
+	public Integer getDaysForLentTermShare(Integer totalUserCount) {
 		log.debug("Called getDaysForLentTermShare");
-		return cabinetProperties.getLentTermShare();
+		return cabinetProperties.getLentTermShare() * totalUserCount;
 	}
 
 	@Override
 	public Integer getDaysForNearExpiration() {
 		log.debug("Called getDaysForNearExpiration");
 		return cabinetProperties.getPenaltyDayShare() + cabinetProperties.getPenaltyDayPadding();
+	}
+
+	@Override
+	public void handlePolicyStatus(LentPolicyStatus status, List<BanHistory> banHistory)
+			throws ServiceException {
+		log.info("Called handlePolicyStatus status: {}", status);
+		switch (status) {
+			case FINE:
+				break;
+			case BROKEN_CABINET:
+				throw new ServiceException(ExceptionStatus.LENT_BROKEN);
+			case FULL_CABINET:
+				throw new ServiceException(ExceptionStatus.LENT_FULL);
+			case OVERDUE_CABINET:
+				throw new ServiceException(ExceptionStatus.LENT_EXPIRED);
+			case LENT_CLUB:
+				throw new ServiceException(ExceptionStatus.LENT_CLUB);
+			case IMMINENT_EXPIRATION:
+				throw new ServiceException(ExceptionStatus.LENT_EXPIRE_IMMINENT);
+			case ALREADY_LENT_USER:
+				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
+			case ALL_BANNED_USER:
+				handleBannedUserResponse(status, banHistory.get(0));
+//			case SHARE_BANNED_USER:
+
+			case BLACKHOLED_USER:
+				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
+			case NOT_USER:
+			case INTERNAL_ERROR:
+			default:
+				throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public void handleBannedUserResponse(LentPolicyStatus status, BanHistory banHistory) {
+		log.info("Called handleBannedUserResponse: {}", status);
+
+		LocalDateTime unbannedAt = banHistory.getUnbannedAt();
+		String unbannedTimeString = unbannedAt.format(
+				DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+		if (status.equals(LentPolicyStatus.ALL_BANNED_USER)) {
+			throw new CustomServiceException(
+					new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER, unbannedTimeString));
+		} else if (status.equals(LentPolicyStatus.SHARE_BANNED_USER)) {
+			throw new CustomServiceException(
+					new CustomExceptionStatus(ExceptionStatus.SHARE_BANNED_USER,
+							unbannedTimeString));
+		}
 	}
 }
