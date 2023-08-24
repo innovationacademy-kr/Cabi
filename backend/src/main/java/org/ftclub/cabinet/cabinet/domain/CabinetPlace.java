@@ -1,13 +1,11 @@
 package org.ftclub.cabinet.cabinet.domain;
 
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -47,10 +45,7 @@ public class CabinetPlace {
 	 */
 	@Embedded
 	private MapArea mapArea;
-/* 양방향 매핑
-	@OneToMany(mappedBy = "cabinetPlace")
-	private List<Cabinet> cabinets;
-*/
+
 	protected CabinetPlace(Location location, SectionFormation sectionFormation, MapArea mapArea) {
 		this.location = location;
 		this.sectionFormation = sectionFormation;
