@@ -12,6 +12,7 @@ export enum additionalModalType {
   MODAL_ADMIN_CLUB_EDIT = "MODAL_ADMIN_CLUB_EDIT",
   MODAL_ADMIN_CLUB_DELETE = "MODAL_ADMIN_CLUB_DELETE",
   MODAL_OVERDUE_PENALTY = "MODAL_OVERDUE_PENALTY",
+  MODAL_CANCEL = "MODAL_CANCEL",
 }
 
 export const cabinetIconSrcMap = {
@@ -139,6 +140,11 @@ export const modalPropsMap = {
     type: "confirm",
     title: "초대 코드",
     confirmMessage: "대여하기",
+  },
+  MODAL_CANCEL: {
+    type: "confirm",
+    title: "대기열 취소하기",
+    confirmMessage: "네, 취소할게요",
   },
 };
 

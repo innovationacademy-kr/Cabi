@@ -49,6 +49,7 @@ export interface ICurrentModalStateInfo {
   memoModal: boolean;
   passwordCheckModal: boolean;
   invitationCodeModal: boolean;
+  cancelModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -72,7 +73,8 @@ export type TModalState =
   | "returnModal"
   | "memoModal"
   | "passwordCheckModal"
-  | "invitationCodeModal";
+  | "invitationCodeModal"
+  | "cancelModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -176,6 +178,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     memoModal: false,
     passwordCheckModal: false,
     invitationCodeModal: false,
+    cancelModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -238,7 +241,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       modalName = "passwordCheckModal";
     } else if (
       modalName === "lentModal" &&
-      cabinetViewData?.lentsLength &&
+      cabinetViewData?.status == "IN_SESSION" &&
       cabinetViewData.lentsLength >= 1
     ) {
       modalName = "invitationCodeModal";

@@ -20,6 +20,7 @@ import {
 import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import CancelModal from "../Modals/CancelModal/CancelModal";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
 import CountTimeContainer from "./CountTime/CountTime.container";
 
@@ -80,7 +81,7 @@ const CabinetInfoArea: React.FC<{
             <>
               <ButtonContainer
                 onClick={() => {
-                  openModal("returnModal"); // 대기열 취소 모달 추가 구현
+                  openModal("cancelModal"); // 대기열 취소 모달 추가 구현
                 }}
                 text="대기열 취소"
                 theme="fill"
@@ -185,6 +186,13 @@ const CabinetInfoArea: React.FC<{
         <InvitationCodeModalContainer
           onClose={() => closeModal("invitationCodeModal")}
           cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
+      {userModal.cancelModal && (
+        <CancelModal
+          lentType={selectedCabinetInfo!.lentType}
+          handleOpenPasswordCheckModal={() => openModal("passwordCheckModal")}
+          closeModal={() => closeModal("cancelModal")}
         />
       )}
     </CabinetDetailAreaStyled>

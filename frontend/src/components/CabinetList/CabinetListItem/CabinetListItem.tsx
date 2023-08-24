@@ -154,7 +154,6 @@ const CabinetListItemStyled = styled.div<{
   justify-content: space-between;
   padding: 8px 8px 14px;
   transition: transform 0.2s, opacity 0.2s;
-  box-shadow: 0 0.25em 0.3em -0.2em #7b7b7b;
 
   cursor: pointer;
   ${({ isSelected }) =>
