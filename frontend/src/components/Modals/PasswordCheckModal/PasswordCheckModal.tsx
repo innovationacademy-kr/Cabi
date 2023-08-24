@@ -17,7 +17,7 @@ const PasswordCheckModal: React.FC<{
     renderAdditionalComponent,
     proceedBtnText,
     onClickProceed,
-    cancleBtnText,
+    cancelBtnText,
     closeModal,
   } = modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
@@ -44,7 +44,7 @@ const PasswordCheckModal: React.FC<{
         <ButtonWrapperStyled>
           <Button
             onClick={closeModal}
-            text={cancleBtnText || "취소"}
+            text={cancelBtnText || "취소"}
             theme="line"
           />
           <Button
