@@ -1,8 +1,5 @@
 package org.ftclub.cabinet.cabinet.repository;
 
-import java.util.List;
-import java.util.Optional;
-import javax.persistence.LockModeType;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -16,8 +13,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.LockModeType;
+import java.util.List;
+import java.util.Optional;
+
 @Repository
-public interface CabinetRepository extends JpaRepository<Cabinet, Long>, FloorLoadRepository {
+public interface CabinetRepository extends JpaRepository<Cabinet, Long>, CabinetComplexRepository {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c "
@@ -96,7 +97,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, FloorLo
 			"AND lh.endedAt IS NULL")
 	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);
-
 
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	@Query("SELECT c " +
