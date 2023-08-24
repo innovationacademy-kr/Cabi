@@ -85,7 +85,6 @@ public class TicketingSharedCabinet {
 
 	public ArrayList<Long> getUserIdList(Long key) {
 		Map<Long, Integer> entries = valueHashOperations.entries(key);
-		// value가 -1인 데이터의 keys 반환
 		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(-1)).map(
 				Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
