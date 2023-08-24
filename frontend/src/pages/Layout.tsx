@@ -89,14 +89,14 @@ const Layout = (): JSX.Element => {
             <CabinetInfoAreaContainer />
           </DetailInfoContainerStyled>
           <MapInfoContainer />
+          {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
+            <OverduePenaltyModal
+              status={additionalModalType.MODAL_OVERDUE_PENALTY}
+              closeModal={closeModal}
+              unbannedAt={myInfoData.unbannedAt}
+            />
+          )}
         </WrapperStyled>
-      )}
-      {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
-        <OverduePenaltyModal
-          status={additionalModalType.MODAL_OVERDUE_PENALTY}
-          closeModal={closeModal}
-          unbannedAt={myInfoData.unbannedAt}
-        />
       )}
     </React.Fragment>
   );
