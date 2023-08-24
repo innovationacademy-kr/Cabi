@@ -10,14 +10,13 @@ import com.squareup.okhttp.Request
 import com.squareup.okhttp.RequestBody
 import utils.ConfigLoader
 
-interface FtTokenFetcher {
+interface FtTokenFetcher: Sprinter<String>{
     companion object {
         @JvmStatic fun create(): FtTokenFetcher {
             val config = ConfigLoader.create(FtTokenConfig::class)
             return FtTokenFetcherImpl(config);
         }
     }
-    fun fetchToken(): String
 }
 
 class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
@@ -30,7 +29,7 @@ class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
     }
     private val client = OkHttpClient()
 
-    override fun fetchToken(): String {
+    override fun sprint(): String {
         val request = generateRequest(generateBody())
         val response = client.newCall(request).execute()
         if (response.code() != 200) {

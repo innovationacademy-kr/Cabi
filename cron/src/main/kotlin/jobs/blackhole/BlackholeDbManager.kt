@@ -2,8 +2,8 @@ package jobs.blackhole
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonSetter
-import com.squareup.okhttp.internal.Internal.logger
 import jobs.Configuration
+import jobs.Sprinter
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
@@ -12,14 +12,13 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import utils.ConfigLoader
 import java.sql.ResultSet
 
-interface BlackholeDbManager {
+interface BlackholeDbManager: Sprinter<String> {
     companion object {
         @JvmStatic fun create(): BlackholeDbManager {
             val config = ConfigLoader.create(BlackholeDbConfig::class)
             return BlackholeDbManagerImpl(config)
         }
     }
-    fun connectionTest(): String
 }
 
 class BlackholeDbManagerImpl(config: BlackholeDbConfig): BlackholeDbManager {
@@ -33,7 +32,7 @@ class BlackholeDbManagerImpl(config: BlackholeDbConfig): BlackholeDbManager {
         )
     }
 
-    override fun connectionTest(): String {
+    override fun sprint(): String {
         var result: ResultSet? = null
         transaction {
             addLogger(StdOutSqlLogger)
