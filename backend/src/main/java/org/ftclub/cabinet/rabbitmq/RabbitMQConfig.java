@@ -17,8 +17,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-	private static final String TOPIC_EXCHANGE_NAME = "spring-boot-exchange";
-	private static final String QUEUE_NAME = "spring-boot";
+	@Value("${spring.rabbitmq.topic-exchange-name}")
+	private String topicExchangeName;
+
+	@Value("${spring.rabbitmq.queue-name}")
+	private String queueName;
 
 	@Value("${spring.rabbitmq.host}")
 	private String host;
@@ -34,12 +37,12 @@ public class RabbitMQConfig {
 
 	@Bean
 	public Queue queue() {
-		return new Queue(QUEUE_NAME, false);
+		return new Queue(queueName, true);
 	}
 
 	@Bean
 	public TopicExchange topicExchange() {
-		return new TopicExchange(TOPIC_EXCHANGE_NAME);   // Topic Exchange 타입
+		return new TopicExchange(topicExchangeName);   // Topic Exchange 타입
 	}
 
 	@Bean
