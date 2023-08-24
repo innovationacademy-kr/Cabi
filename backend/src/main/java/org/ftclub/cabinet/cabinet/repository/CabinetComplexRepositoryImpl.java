@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.repository;
 
+
 import static org.ftclub.cabinet.cabinet.domain.QCabinet.cabinet;
 import static org.ftclub.cabinet.cabinet.domain.QCabinetPlace.cabinetPlace;
 import static org.ftclub.cabinet.lent.domain.QLentHistory.lentHistory;
@@ -23,6 +24,7 @@ public class CabinetComplexRepositoryImpl implements CabinetComplexRepository {
 	public CabinetComplexRepositoryImpl(EntityManager em) {
 		this.queryFactory = new JPAQueryFactory(em);
 	}
+
 	// CACHE
 	@Cacheable(key = "#building + #floor")
 	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
