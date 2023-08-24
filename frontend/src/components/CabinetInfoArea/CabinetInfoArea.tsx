@@ -77,15 +77,6 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.userNameList}
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
-        {selectedCabinetInfo!.lentType === "PRIVATE" && isExtendable ? (
-          <ButtonContainer
-            onClick={() => {
-              openModal("extendModal");
-            }}
-            text="연장권 사용"
-            theme="line"
-          />
-        ) : null}
         {isMine ? (
           <>
             <ButtonContainer
@@ -144,6 +135,19 @@ const CabinetInfoArea: React.FC<{
       <CabinetLentDateInfoStyled textColor="var(--black)">
         {selectedCabinetInfo!.cabinetId === 0 ? "-" : expireDate}
       </CabinetLentDateInfoStyled>
+      <CabinetInfoButtonsContainerStyled>
+        {isExtendable && selectedCabinetInfo!.lentType === "PRIVATE" ? (
+          <ButtonContainer
+            onClick={() => {
+              openModal("extendModal");
+            }}
+            text={isMine ? "연장권 사용하기" : "연장권 보유중"}
+            theme="line"
+            iconSrc="/src/assets/images/extension_ticket.svg"
+            iconAlt="연장권 아이콘"
+          />
+        ) : null}
+      </CabinetInfoButtonsContainerStyled>
       {userModal.unavailableModal && (
         <UnavailableModal
           status={additionalModalType.MODAL_UNAVAILABLE_ALREADY_LENT}
