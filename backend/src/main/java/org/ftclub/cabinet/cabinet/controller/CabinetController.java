@@ -52,7 +52,7 @@ public class CabinetController {
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
 		log.info("Called getCabinetsPerSection");
-		return cabinetFacadeService.getCabinetsPerSection(building, floor);
+		return cabinetFacadeService.getCabinetsPerSectionDSL(building, floor);
 	}
 
 	/**
