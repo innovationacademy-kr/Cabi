@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  timeOverState,
+} from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -292,7 +296,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   };
 
   const wrongCodeCounts = loadSharedWrongCodeCounts();
-  const [timeOver, setTimeOver] = useState(false);
+  const timeOver = useRecoilValue(timeOverState);
 
   return isAdmin ? (
     <>
@@ -326,7 +330,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       openModal={openModal}
       closeModal={closeModal}
       wrongCodeCounts={wrongCodeCounts}
-      setTimeOver={setTimeOver}
       timeOver={timeOver}
     />
   );

@@ -34,7 +34,6 @@ const CabinetInfoArea: React.FC<{
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
   wrongCodeCounts: { [cabinetId: number]: number };
-  setTimeOver: (timeOver: boolean) => void;
   timeOver: boolean;
 }> = ({
   selectedCabinetInfo,
@@ -46,7 +45,6 @@ const CabinetInfoArea: React.FC<{
   openModal,
   closeModal,
   wrongCodeCounts,
-  setTimeOver,
   timeOver,
 }) => {
   return selectedCabinetInfo === null ? (
@@ -92,7 +90,7 @@ const CabinetInfoArea: React.FC<{
                 text="닫기"
                 theme="grayLine"
               />
-              <CountTimeContainer isMine={true} setTimeOver={setTimeOver} />
+              <CountTimeContainer isMine={true} />
             </>
           ) : (
             <>
@@ -136,7 +134,7 @@ const CabinetInfoArea: React.FC<{
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
             {selectedCabinetInfo.status == "IN_SESSION" && (
-              <CountTimeContainer isMine={false} setTimeOver={setTimeOver} />
+              <CountTimeContainer isMine={false} />
             )}
             {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
               <WarningMessageStyled>
