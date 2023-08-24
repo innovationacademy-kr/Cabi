@@ -19,6 +19,7 @@ export const getExpireDateString = (
     lentType === "SHARE"
       ? import.meta.env.VITE_SHARE_LENT_PERIOD
       : import.meta.env.VITE_PRIVATE_LENT_PERIOD;
+
   if (!existExpireDate)
     expireDate.setDate(expireDate.getDate() + parseInt(addDays));
   return formatDate(expireDate);
@@ -26,8 +27,15 @@ export const getExpireDateString = (
 
 export const getExtendedDateString = (existExpireDate?: Date) => {
   let expireDate = existExpireDate ? new Date(existExpireDate) : new Date();
-  expireDate.setDate(expireDate.getDate() + 30); // TODO: env 에 import.meta.env.VITE_EXTENDED_LENT_PERIOD 추가
+  const addDays: string = import.meta.env.VITE_PRIVATE_LENT_PERIOD;
+  expireDate.setDate(expireDate.getDate() + parseInt(addDays) + 30); // TODO: env 에 import.meta.env.VITE_EXTENDED_LENT_PERIOD 추가
   return formatDate(expireDate);
+};
+
+export const getLastDayofMonthString = (date: Date | null) => {
+  if (date === null) date = new Date();
+  let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  return formatDate(lastDay);
 };
 
 export const getTotalPage = (totalLength: number, size: number) => {
