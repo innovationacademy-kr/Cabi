@@ -31,6 +31,7 @@ const ReturnModal: React.FC<{
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
@@ -54,6 +55,7 @@ const ReturnModal: React.FC<{
   }
   지금 반납 하시겠습니까?`;
   const tryReturnRequest = async (e: React.MouseEvent) => {
+    setIsLoading(true);
     try {
       await axiosReturn();
       //userCabinetId 세팅
@@ -83,6 +85,7 @@ const ReturnModal: React.FC<{
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);
     } finally {
+      setIsLoading(false);
       setShowResponseModal(true);
     }
   };
@@ -96,6 +99,7 @@ const ReturnModal: React.FC<{
       modalPropsMap[additionalModalType.MODAL_RETURN].confirmMessage,
     onClickProceed: tryReturnRequest,
     closeModal: props.closeModal,
+    isLoading: isLoading,
   };
 
   return (

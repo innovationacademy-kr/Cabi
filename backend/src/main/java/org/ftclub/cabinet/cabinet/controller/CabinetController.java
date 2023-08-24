@@ -53,8 +53,8 @@ public class CabinetController {
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
-		log.info("Called getCabinetsPerSection building : {} floor : {}", building, floor);
-		return cabinetFacadeService.getCabinetsPerSection(building, floor);
+		log.info("Called getCabinetsPerSection");
+		return cabinetFacadeService.getCabinetsPerSectionRefactor(building, floor);
 	}
 
 	/**

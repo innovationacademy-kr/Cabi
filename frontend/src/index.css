@@ -18,6 +18,8 @@
   --full: #d9d9d9;
   --broken: #3c3c3c;
   --banned: #3c3c3c;
+  --session: #d9d9d9;
+  --pending: #d9d9d9;
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;

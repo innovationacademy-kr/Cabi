@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import {
   ICurrentModalStateInfo,
   ISelectedCabinetInfo,
@@ -22,6 +22,7 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import ExtendModal from "../Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
+import CountTimeContainer from "./CountTime/CountTime.container";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -34,6 +35,8 @@ const CabinetInfoArea: React.FC<{
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
   wrongCodeCounts: { [cabinetId: number]: number };
+  setTimeOver: (timeOver: boolean) => void;
+  timeOver: boolean;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -45,6 +48,8 @@ const CabinetInfoArea: React.FC<{
   openModal,
   closeModal,
   wrongCodeCounts,
+  setTimeOver,
+  timeOver,
 }) => {
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
@@ -78,32 +83,50 @@ const CabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
-          <>
-            <ButtonContainer
-              onClick={() => {
-                openModal("returnModal");
-              }}
-              text="반납"
-              theme="fill"
-            />
-            <ButtonContainer
-              onClick={() => openModal("memoModal")}
-              text="메모관리"
-              theme="line"
-            />
-            <ButtonContainer
-              onClick={closeCabinet}
-              text="닫기"
-              theme="grayLine"
-            />
-          </>
+          selectedCabinetInfo.status === "IN_SESSION" ? ( // 공유 대기 상태에 내가 포함
+            <>
+              <ButtonContainer
+                onClick={() => {
+                  openModal("returnModal"); // 대기열 취소 모달 추가 구현
+                }}
+                text="대기열 취소"
+                theme="fill"
+                disabled={timeOver}
+              />
+              <ButtonContainer
+                onClick={closeCabinet}
+                text="닫기"
+                theme="grayLine"
+              />
+              <CountTimeContainer isMine={true} setTimeOver={setTimeOver} />
+            </>
+          ) : (
+            <>
+              <ButtonContainer
+                onClick={() => {
+                  openModal("returnModal");
+                }}
+                text="반납"
+                theme="fill"
+              />
+              <ButtonContainer
+                onClick={() => openModal("memoModal")}
+                text="메모관리"
+                theme="line"
+              />
+              <ButtonContainer
+                onClick={closeCabinet}
+                text="닫기"
+                theme="grayLine"
+              />
+            </>
+          )
         ) : (
           <>
             <ButtonContainer
               onClick={() =>
                 openModal(
-                  selectedCabinetInfo?.lentsLength &&
-                    selectedCabinetInfo.lentsLength >= 1
+                  selectedCabinetInfo.status == "IN_SESSION"
                     ? "invitationCodeModal"
                     : "lentModal"
                 )
@@ -113,11 +136,14 @@ const CabinetInfoArea: React.FC<{
               disabled={
                 !isAvailable ||
                 selectedCabinetInfo.lentType === "CLUB" ||
-                wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3
+                wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 ||
+                (selectedCabinetInfo.status == "IN_SESSION" && timeOver)
               }
             />
-
-            <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
+            <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
+            {selectedCabinetInfo.status == "IN_SESSION" && (
+              <CountTimeContainer isMine={false} setTimeOver={setTimeOver} />
+            )}
             {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
               <WarningMessageStyled>
                 초대 코드 입력 오류 초과로 <br />
@@ -255,6 +281,26 @@ const CabinetRectangleStyled = styled.div<{
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "PENDING" &&
+    css`
+      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+    `}
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "IN_SESSION" &&
+    css`
+      border: 3px solid var(--main-color);
+      animation: ${Animation} 3.5s infinite;
+    `}
+`;
+
+const Animation = keyframes`
+  0%, 100% {
+    background-color: var(--main-color);
+  }
+  50% {
+    background-color: #d9d9d9;
+  }
 `;
 
 const CabinetInfoButtonsContainerStyled = styled.div`
@@ -262,7 +308,7 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-height: 255px;
+  max-height: 300px;
   margin: 3vh 0;
   width: 100%;
 `;

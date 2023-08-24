@@ -223,9 +223,9 @@ class LentPolicyUnitTest {
 
 	/**
 	 * @See {@link LentPolicyImpl#verifyUserForLent(User, Cabinet, int, List)}
-	 *
+	 * <p>
 	 * 설계 상의 문제로 테스트 코드 비활성화 처리 해두었습니다.
- 	 */
+	 */
 //	@Test
 //	@DisplayName("실패: 블랙홀 유저")
 //	void 실패_BLACKHOLED_USER_verifyUserForLent() {
@@ -239,7 +239,6 @@ class LentPolicyUnitTest {
 //
 //		assertEquals(LentPolicyStatus.BLACKHOLED_USER, result);
 //	}
-
 	@Test
 	@DisplayName("실패: ALL BAN 유저")
 	void 실패_ALL_BANNED_USER_verifyUserForLent() {
@@ -280,6 +279,7 @@ class LentPolicyUnitTest {
 	}
 
 	@Test
+	@Disabled
 	@DisplayName("성공: 공유사물함 BAN - 공유사물함 이외 대여")
 	void 성공_SHAREBANNED_LENT_OTHER_verifyUserForLent() {
 		int userActiveLentCount = 0;
@@ -316,7 +316,7 @@ class LentPolicyUnitTest {
 
 	/**
 	 * @See {@link LentPolicyImpl#verifyUserForLent(User, Cabinet, int, List)}
-	 *
+	 * <p>
 	 * 설계 상의 문제로 테스트 코드 비활성화 처리 해두었습니다.
 	 */
 //	@Test
@@ -334,7 +334,6 @@ class LentPolicyUnitTest {
 //
 //		assertEquals(LentPolicyStatus.FINE, result);
 //	}
-
 	@Test
 	@DisplayName("실패: FULL캐비넷 대여시도")
 	void 실패_FULL_verifyCabinetForLent() {

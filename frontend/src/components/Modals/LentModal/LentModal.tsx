@@ -31,6 +31,7 @@ const LentModal: React.FC<{
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const setMyLentInfo =
@@ -54,6 +55,7 @@ const LentModal: React.FC<{
   “메모 내용”은 공유 인원끼리 공유됩니다.
   귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
   const tryLentRequest = async (e: React.MouseEvent) => {
+    setIsLoading(true);
     try {
       await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
@@ -78,6 +80,7 @@ const LentModal: React.FC<{
       setModalTitle(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
+      setIsLoading(false);
       setShowResponseModal(true);
     }
   };
@@ -90,6 +93,7 @@ const LentModal: React.FC<{
     proceedBtnText: modalPropsMap[CabinetStatus.AVAILABLE].confirmMessage,
     onClickProceed: tryLentRequest,
     closeModal: props.closeModal,
+    isLoading: isLoading,
   };
 
   return (
