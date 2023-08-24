@@ -72,6 +72,10 @@ dependencies {
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
+    // slack
+    implementation("com.slack.api:bolt-jetty:1.30.0")
+
+
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
