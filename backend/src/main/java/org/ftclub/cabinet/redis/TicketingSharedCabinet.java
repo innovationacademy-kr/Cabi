@@ -1,22 +1,30 @@
 package org.ftclub.cabinet.redis;
 
-import java.util.concurrent.TimeUnit;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 public class TicketingSharedCabinet {
 
-	@Autowired
-	private RedisTemplate<String, Integer> valueRedisTemplate;
+	private final RedisTemplate<String, Integer> valueRedisTemplate;
+
+	private final RedisTemplate<String, String> shadowKeyRedisTemplate;
+
+	private final LentOptionalFetcher lentOptionalFetcher;
 
 	@Autowired
-	private RedisTemplate<String, String> shadowKeyRedisTemplate;
-	@Autowired
-	private LentOptionalFetcher lentOptionalFetcher;
+	public TicketingSharedCabinet(RedisTemplate<String, Integer> valueRedisTemplate,
+								  RedisTemplate<String, String> shadowKeyRedisTemplate,
+								  LentOptionalFetcher lentOptionalFetcher) {
+		this.lentOptionalFetcher = lentOptionalFetcher;
+		this.valueRedisTemplate = valueRedisTemplate;
+		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
+	}
 
 //	/**
 //	 * @param key      : cabinetId + suffix
@@ -54,7 +62,7 @@ public class TicketingSharedCabinet {
 	}
 
 	public Long getSizeOfUsers(String key) {
-		valueRedisTemplate.opsForHash().size(key);
+		return valueRedisTemplate.opsForHash().size(key);
 	}
 
 	public void checkSizeOfUsers(String key) {
