@@ -20,7 +20,11 @@ import {
   axiosCabinetById,
   axiosMyLentInfo, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
 } from "@/api/axios/axios.custom";
-import { formatDate, getExtendedDateString } from "@/utils/dateUtils";
+import {
+  formatDate,
+  getExtendedDateString,
+  getLastDayofMonthString,
+} from "@/utils/dateUtils";
 
 const ExtendModal: React.FC<{
   onClose: () => void;
@@ -40,15 +44,20 @@ const ExtendModal: React.FC<{
   const formattedExtendedDate = getExtendedDateString(
     myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
   );
+  const expireDateDetail = `연장권은 <strong>${getLastDayofMonthString(
+    null
+  )} 23:59</strong> 이후 만료됩니다.`;
   const extendDetail = `사물함 연장권 사용 시,
   대여 기간이 <strong>${formattedExtendedDate} 23:59</strong>으로
   연장됩니다.
   연장권 사용은 취소할 수 없습니다.
   연장권을 사용하시겠습니까?`;
-  const extendInfoDetail = `연장권을 보유 중입니다.
-    사물함 연장권을 오늘 <strong> ${formatDate(new Date())}</strong> 사용 시,
+  const extendInfoDetail = `사물함 연장권을 오늘 <strong> ${formatDate(
+    new Date()
+  )}</strong> 사용 시,
     대여 기간이 <strong>${getExtendedDateString(undefined)} 23:59</strong>으로
-    연장됩니다.`;
+    연장됩니다.\n
+    ${expireDateDetail}`;
   const getModalTitle = (cabinetId: number | null) => {
     return cabinetId === null
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
