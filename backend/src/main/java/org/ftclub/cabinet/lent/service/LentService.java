@@ -1,7 +1,8 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.util.List;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+
+import java.util.List;
 
 /**
  * 대여 관련된 서비스
@@ -22,7 +23,7 @@ public interface LentService {
 	 * @param userId    대여하려는 일반 user id
 	 * @param cabinetId 대여하려는 cabinet id
 	 */
-	void startLentShareCabinet(Long userId, Long cabinetId);
+	void startLentShareCabinet(Long userId, Long cabinetId, Long shareCode);
 
 	/**
 	 * 동아리 사물함 대여를 합니다.
