@@ -8,8 +8,10 @@ import com.squareup.okhttp.MultipartBuilder
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import com.squareup.okhttp.RequestBody
+import mu.KotlinLogging
 import utils.ConfigLoader
 
+private val log = KotlinLogging.logger {}
 interface FtTokenFetcher: Sprinter<String>{
     companion object {
         @JvmStatic fun create(): FtTokenFetcher {
@@ -30,13 +32,16 @@ class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
     private val client = OkHttpClient()
 
     override fun sprint(): String {
+        log.info { "fetching token start" }
         val request = generateRequest(generateBody())
         val response = client.newCall(request).execute()
         if (response.code() != 200) {
+            log.info { "fetching token fail code: ${response.code()}" }
             throw Exception("server is not connected: ${response.code()})")
         }
         val valueMap: Map<String, String> = ObjectMapper()
             .readValue(response.body().string(), object: TypeReference<Map<String, String>>(){})
+        log.info { "fetching token success" }
         return valueMap[accessTokenKey] ?: throw Exception("access token is not found")
     }
 
@@ -52,7 +57,7 @@ class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
     private fun generateRequest(body: RequestBody): Request {
         return Request.Builder()
             .url(FtTokenConfig.url)
-            .post(generateBody())
+            .post(body)
             .build()
     }
 }

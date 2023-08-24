@@ -10,10 +10,13 @@ import com.squareup.okhttp.Response
 import jobs.Configuration
 import jobs.FtTokenFetcher
 import jobs.Sprinter
+import mu.KotlinLogging
 import utils.ConfigLoader
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+// TODO: 로거 추가, 원래 서버에 요청 보내기
+private val log = KotlinLogging.logger {}
 interface BlackholeChecker: Sprinter<List<String>> {
     companion object {
         @JvmStatic fun create(): BlackholeChecker {
@@ -25,19 +28,23 @@ interface BlackholeChecker: Sprinter<List<String>> {
 
 class BlackholeCheckerImpl(val config: BlackholeCheckerConfig): BlackholeChecker {
     companion object {
-        const val AUTHORIZATION = "Authorization"
-        const val BEARER_PREFIX = "Bearer "
-        const val DEFAULT_PAGE = 1
+        private val AUTHORIZATION = "Authorization"
+        private val BEARER_PREFIX = "Bearer "
+        private val DEFAULT_PAGE = 1
     }
     private val ftTokenFetcher: FtTokenFetcher = FtTokenFetcher.create()
     private val client = OkHttpClient()
     private val mapper = ObjectMapper()
 
     override fun sprint(): List<String> {
-        val now = LocalDateTime.now();
+        log.info { "checking blackhole start !" }
+        val now = LocalDateTime.now()
         val token = ftTokenFetcher.sprint()
         val formatUrl = formatUrl(now.minusDays(config.startMargin), now.minusDays(config.endMargin))
-        return executeRequest(formatUrl, token)
+        log.info { "formatUrl: $formatUrl" }
+        val result = executeRequest(formatUrl, token)
+        log.info { "total result blackhole user $result" }
+        return result
     }
 
     private fun formatUrl(startDate: LocalDateTime, endDate: LocalDateTime): String {
@@ -48,11 +55,13 @@ class BlackholeCheckerImpl(val config: BlackholeCheckerConfig): BlackholeChecker
 
     private fun executeRequest(url: String, token: String, page: Int = DEFAULT_PAGE): List<String> {
         val requestUrl = if(page == DEFAULT_PAGE) url else "${url}&&${config.formatPage.format(page)}"
+        log.info { "try blackhole request url: $requestUrl"}
         val request = Request.Builder()
             .url(requestUrl).header(AUTHORIZATION, BEARER_PREFIX + token)
             .get().build()
         val response = client.newCall(request).execute()
         if (response.code() != 200) {
+            log.info { "checking blackhole failed code: ${response.code()}" }
             throw Exception("server is not connected: ${response.code()})")
         }
         if (isLastPage(response)) {
@@ -69,7 +78,11 @@ class BlackholeCheckerImpl(val config: BlackholeCheckerConfig): BlackholeChecker
 
     private fun refine(response: String): List<String> {
         val values = mapper.readValue(response, Array<JsonNode>::class.java)
-        return values.map { it["user"]["login"].asText() }
+        return values.map {
+            val value = it["user"]["login"].asText()
+            log.info { "blackhole userid: $value"}
+            value
+        }
     }
 }
 
