@@ -130,7 +130,7 @@ const CabinetInfoArea: React.FC<{
                 !isAvailable ||
                 selectedCabinetInfo.lentType === "CLUB" ||
                 wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 ||
-                timeOver
+                (selectedCabinetInfo.status == "IN_SESSION" && timeOver)
               }
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
