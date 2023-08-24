@@ -12,7 +12,8 @@ export enum additionalModalType {
   MODAL_ADMIN_CLUB_EDIT = "MODAL_ADMIN_CLUB_EDIT",
   MODAL_ADMIN_CLUB_DELETE = "MODAL_ADMIN_CLUB_DELETE",
   MODAL_OVERDUE_PENALTY = "MODAL_OVERDUE_PENALTY",
-  MODAL_EXTENSION = "MODAL_EXTENSION",
+  MODAL_USE_EXTENSION = "MODAL_USE_EXTENSION",
+  MODAL_OWN_EXTENSION = "MODAL_OWN_EXTENSION",
 }
 
 export const cabinetIconSrcMap = {
@@ -137,10 +138,15 @@ export const modalPropsMap = {
     title: "초대 코드",
     confirmMessage: "대여하기",
   },
-  MODAL_EXTENSION: {
+  MODAL_USE_EXTENSION: {
     type: "confirm",
     title: "연장권 사용",
     confirmMessage: "연장하기",
+  },
+  MODAL_OWN_EXTENSION: {
+    type: "confirm",
+    title: "연장권 정보",
+    confirmMessage: "",
   },
 };
 

@@ -20,7 +20,7 @@ import {
   axiosCabinetById,
   axiosMyLentInfo, // axiosExtend,
 } from "@/api/axios/axios.custom";
-import { getExtendedDateString } from "@/utils/dateUtils";
+import { formatDate, getExtendedDateString } from "@/utils/dateUtils";
 
 const ExtendModal: React.FC<{
   onClose: () => void;
@@ -41,12 +41,19 @@ const ExtendModal: React.FC<{
     myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
   );
   const extendDetail = `사물함 연장권 사용 시,
-대여 기간이 <strong>${formattedExtendedDate} 23:59</strong>으로
-연장됩니다.
-연장권 사용은 취소할 수 없습니다.
-연장권을 사용하시겠습니까?`;
+    대여 기간이 <strong>${formattedExtendedDate} 23:59</strong>으로
+    연장됩니다.
+    연장권 사용은 취소할 수 없습니다.
+    연장권을 사용하시겠습니까?`;
+  const extendInfoDetail = `연장권을 보유 중입니다.
+    사물함 연장권을 오늘 <strong> ${formatDate(new Date())}</strong> 사용 시,
+    대여 기간이 <strong>${getExtendedDateString(undefined)} 23:59</strong>으로
+    연장됩니다.`;
+  const closeModal = async (e: React.MouseEvent) => {
+    props.onClose();
+  };
   const tryExtendRequest = async (e: React.MouseEvent) => {
-    if (currentCabinetId === 0) {
+    if (currentCabinetId === 0 || myInfo.cabinetId === null) {
       setHasErrorOnResponse(true);
       setModalTitle("현재 대여중인 사물함이 없습니다.");
       setShowResponseModal(true);
@@ -78,13 +85,18 @@ const ExtendModal: React.FC<{
   };
 
   const extendModalContents: IModalContents = {
-    type: "hasProceedBtn",
+    type: myInfo.cabinetId === null ? "panaltyBtn" : "hasProceedBtn",
     icon: checkIcon,
-    title: modalPropsMap[additionalModalType.MODAL_EXTENSION].title,
-    detail: extendDetail,
+    title:
+      myInfo.cabinetId === null
+        ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
+        : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].title,
+    detail: myInfo.cabinetId === null ? extendInfoDetail : extendDetail,
     proceedBtnText:
-      modalPropsMap[additionalModalType.MODAL_EXTENSION].confirmMessage,
-    onClickProceed: tryExtendRequest,
+      myInfo.cabinetId === null
+        ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].confirmMessage
+        : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].confirmMessage,
+    onClickProceed: myInfo.cabinetId === null ? closeModal : tryExtendRequest,
     closeModal: props.onClose,
   };
 
