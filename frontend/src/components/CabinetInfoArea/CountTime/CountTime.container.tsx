@@ -12,7 +12,13 @@ const returnCountTime = (countDown: number) => {
   return [minutes, seconds];
 };
 
-const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
+const CountTimeContainer = ({
+  isMine,
+  setTimeOver,
+}: {
+  isMine: boolean;
+  setTimeOver: (timeOver: boolean) => void;
+}) => {
   const calculateCountDown = (targetDate: Date) => {
     return targetDate.getTime() - new Date().getTime();
   };
@@ -33,6 +39,7 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
         if (prevCountDown > 0) {
           return Math.max(prevCountDown - timeElapsed, 0);
         } else {
+          setTimeOver(true);
           return 0;
         }
       });
@@ -59,7 +66,11 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
           isTimeOver={isTimeOver}
         />
       ) : (
-        <CountTime minutes={minutes} seconds={seconds} isTimeOver={isTimeOver}/>
+        <CountTime
+          minutes={minutes}
+          seconds={seconds}
+          isTimeOver={isTimeOver}
+        />
       )}
     </>
   );

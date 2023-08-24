@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import {
   currentFloorNumberState,
   currentSectionNameState,
@@ -270,6 +270,26 @@ const CabinetRectangleStyled = styled.div<{
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "PENDING" &&
+    css`
+      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+    `}
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "IN_SESSION" &&
+    css`
+      border: 3px solid var(--main-color);
+      animation: ${Animation} 3.5s infinite;
+    `}
+`;
+
+const Animation = keyframes`
+  0%, 100% {
+    background-color: var(--main-color);
+  }
+  50% {
+    background-color: #d9d9d9;
+  }
 `;
 
 const CabinetInfoButtonsContainerStyled = styled.div`

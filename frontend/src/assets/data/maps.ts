@@ -27,6 +27,8 @@ export const cabinetLabelColorMap = {
   [CabinetStatus.OVERDUE]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
+  [CabinetStatus.IN_SESSION]: "var(--white)",
+  [CabinetStatus.PENDING]: "var(--main-color)",
   MINE: "var(--black)",
 };
 
@@ -37,6 +39,8 @@ export const cabinetStatusColorMap = {
   [CabinetStatus.OVERDUE]: "var(--expired)",
   [CabinetStatus.BROKEN]: "var(--broken)",
   [CabinetStatus.BANNED]: "var(--banned)",
+  [CabinetStatus.IN_SESSION]: "var(--session)",
+  [CabinetStatus.PENDING]: "var(--pending)",
   MINE: "var(--mine)",
 };
 
@@ -145,6 +149,8 @@ export const cabinetFilterMap = {
   [CabinetStatus.OVERDUE]: "brightness(100)",
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
+  [CabinetStatus.IN_SESSION]: "brightness(100)",
+  [CabinetStatus.PENDING]: "none",
 };
 
 export const cabinetStatusLabelMap = {
@@ -154,6 +160,8 @@ export const cabinetStatusLabelMap = {
   [CabinetStatus.OVERDUE]: "사용 가능",
   [CabinetStatus.BANNED]: "사용 불가",
   [CabinetStatus.BROKEN]: "사용 불가",
+  [CabinetStatus.IN_SESSION]: "대기중",
+  [CabinetStatus.PENDING]: "오픈 예정",
 };
 
 export const cabinetTypeLabelMap = {
