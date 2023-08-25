@@ -75,11 +75,11 @@ const CabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
-          selectedCabinetInfo.status === "IN_SESSION" ? ( // 공유 대기 상태에 내가 포함
+          selectedCabinetInfo.status === "IN_SESSION" ? (
             <>
               <ButtonContainer
                 onClick={() => {
-                  openModal("cancelModal"); // 대기열 취소 모달 추가 구현
+                  openModal("cancelModal");
                 }}
                 text="대기열 취소"
                 theme="fill"
@@ -189,7 +189,6 @@ const CabinetInfoArea: React.FC<{
       {userModal.cancelModal && (
         <CancelModal
           lentType={selectedCabinetInfo!.lentType}
-          handleOpenPasswordCheckModal={() => openModal("passwordCheckModal")}
           closeModal={() => closeModal("cancelModal")}
         />
       )}

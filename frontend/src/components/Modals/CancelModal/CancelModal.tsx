@@ -25,7 +25,6 @@ import {
 const CancelModal: React.FC<{
   lentType: string;
   closeModal: React.MouseEventHandler;
-  handleOpenPasswordCheckModal: Function;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -64,11 +63,6 @@ const CancelModal: React.FC<{
         throw error;
       }
     } catch (error: any) {
-      if (error.response.status === 418) {
-        props.closeModal(e);
-        props.handleOpenPasswordCheckModal();
-        return;
-      }
       setHasErrorOnResponse(true);
       setModalTitle(error.response.data.message);
     } finally {
