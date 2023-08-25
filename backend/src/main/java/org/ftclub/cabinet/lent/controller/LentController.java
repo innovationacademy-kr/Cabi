@@ -48,6 +48,13 @@ public class LentController {
 		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId, shareCode);
 	}
 
+	@PatchMapping("/cabinets/share/cancel")
+	public void cancelLentShareCabinet(
+			@UserSession UserSessionDto user) {
+		log.info("Called cancelLentShareCabinet user: {}", user);
+		lentFacadeService.cancelLentShareCabinet(user.getUserId());
+	}
+
 	@PatchMapping("/return")
 	public void endLent(
 			@UserSession UserSessionDto userSessionDto) {
@@ -97,6 +104,8 @@ public class LentController {
 		log.info("Called getMyLentInfo user: {}", user);
 		MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user);
 		if (myCabinetResponseDto == null) {
+			// redis에서 값 한번 더 찾아보고
+
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(myCabinetResponseDto);

@@ -56,6 +56,12 @@ public interface LentFacadeService {
 	 */
 	void endLentCabinetWithMemo(UserSessionDto userSessionDto, LentEndMemoDto lentEndMemoDto);
 
+	/**
+	 * 공유사물함 대여 대기열을 취소합니다.
+	 * @param userId 대여하려는 일반 user id
+	 */
+	void cancelLentShareCabinet(Long userId);
+
 
 	/**
 	 * 사물함을 강제 반납 합니다. 유저가 벤이 되진 않습니다

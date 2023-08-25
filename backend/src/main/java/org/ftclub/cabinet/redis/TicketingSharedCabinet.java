@@ -114,4 +114,12 @@ public class TicketingSharedCabinet {
 		// 해당 키가 존재하는지 확인
 		return shadowKeyRedisTemplate.hasKey(cabinetId);
 	}
+
+	public void deleteShadowKey(Long cabinetId) {
+		shadowKeyRedisTemplate.delete(cabinetId);
+	}
+
+	public void deleteValueKey(Long key) {
+		valueRedisTemplate.delete(key);
+	}
 }

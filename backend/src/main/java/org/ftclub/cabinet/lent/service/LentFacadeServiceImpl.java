@@ -139,6 +139,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
 	}
 
+
+
 	/*--------------------------------------------CUD--------------------------------------------*/
 
 	@Override
@@ -167,6 +169,11 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		Cabinet cabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
 		lentService.endLentCabinet(user.getUserId());
 		cabinetService.updateMemo(cabinet.getCabinetId(), lentEndMemoDto.getCabinetMemo());
+	}
+
+	@Override
+	public void cancelLentShareCabinet(Long userId) {
+		lentService.cancelLentShareCabinet(userId);
 	}
 
 	@Override

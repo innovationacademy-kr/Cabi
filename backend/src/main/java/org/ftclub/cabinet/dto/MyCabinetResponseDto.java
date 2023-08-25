@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.dto;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +16,6 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 @AllArgsConstructor
 @Getter
 public class MyCabinetResponseDto {
-
 	private final Long cabinetId;
 	private final Integer visibleNum;
 	private final LentType lentType;
@@ -26,4 +27,7 @@ public class MyCabinetResponseDto {
 	@JsonUnwrapped
 	private final Location location;
 	private final List<LentDto> lents;
+	// 공유사물함에 필요한 정보
+	private final Integer shareCode;
+	private final LocalDateTime expiredAt;
 }

@@ -21,8 +21,8 @@ public class RedisRepositoryTest {
 		Long cabinetId = 16L;
 
 		ticketingSharedCabinet.setShadowKey(cabinetId);
-		ticketingSharedCabinet.saveValue(16L, 1234L);
-		ticketingSharedCabinet.saveValue(16L, 5678L);
+		ticketingSharedCabinet.saveValue(16L, 1234L, 0, false);
+		ticketingSharedCabinet.saveValue(16L, 5678L, 0, false);
 
 		try {
 			Thread.sleep(10000);

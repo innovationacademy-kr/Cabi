@@ -1,15 +1,11 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
+import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
@@ -24,13 +20,19 @@ import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Log4j2
 public class LentServiceImpl implements LentService {
 
-	private static final int SHARED_CABINET_MAX_USER_COUNT = 4;
 	private final LentRepository lentRepository;
 	private final LentPolicy lentPolicy;
 	private final LentOptionalFetcher lentOptionalFetcher;
@@ -40,6 +42,7 @@ public class LentServiceImpl implements LentService {
 	private final BanHistoryRepository banHistoryRepository;
 	private final LentMapper lentMapper;
 	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final CabinetProperties cabinetProperties;
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
@@ -86,9 +89,12 @@ public class LentServiceImpl implements LentService {
 		}
 		ticketingSharedCabinet.saveValue(cabinetId, userId, shareCode, hasShadowKey);
 		// 4번째 (마지막) 대여자인 경우
-		if (ticketingSharedCabinet.getSizeOfUsers(cabinetId) == SHARED_CABINET_MAX_USER_COUNT) {
+		if (Objects.equals(ticketingSharedCabinet.getSizeOfUsers(cabinetId), cabinetProperties.getShareMaxUserCount())) {
 			cabinet.specifyStatus(CabinetStatus.FULL);
 			saveLentHistories(now, cabinetId);
+			// cabinetId에 대한 shadowKey, valueKey 삭제
+			ticketingSharedCabinet.deleteShadowKey(cabinetId);
+			ticketingSharedCabinet.deleteValueKey(cabinetId);
 		}
 	}
 
@@ -125,6 +131,12 @@ public class LentServiceImpl implements LentService {
 	public void terminateLentByCabinetId(Long cabinetId) {
 		log.debug("Called terminateLentByCabinetId: {}", cabinetId);
 		returnCabinetByCabinetId(cabinetId);
+	}
+
+	@Override
+	public void cancelLentShareCabinet(Long userId) {
+		log.debug("Called cancelLentShareCabinet: {}", userId);
+		// TODO: redis key 값 삭제
 	}
 
 	// cabinetId로 return하는 경우에서, 공유 사물함과 개인 사물함의 경우에 대한 분기가 되어 있지 않음.

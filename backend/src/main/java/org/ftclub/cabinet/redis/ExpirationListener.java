@@ -1,30 +1,51 @@
 package org.ftclub.cabinet.redis;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
+import org.ftclub.cabinet.config.CabinetProperties;
+import org.ftclub.cabinet.lent.service.LentServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 
 @Component
+@Log4j2
 public class ExpirationListener extends KeyExpirationEventMessageListener {
 
-	@Autowired
-	private RedisTemplate<String, Integer> valueRedisTemplate;
+	private final CabinetOptionalFetcher cabinetOptionalFetcher;
+	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final LentServiceImpl lentServiceImpl;
+	private final CabinetProperties cabinetProperties;
 
 	/**
 	 * Creates new {@link MessageListener} for {@code __keyevent@*__:expired} messages.
 	 *
-	 * @param listenerContainer must not be {@literal null}.
+	 * @param listenerContainer      must not be {@literal null}.
+	 * @param cabinetOptionalFetcher
+	 * @param ticketingSharedCabinet
+	 * @param lentServiceImpl
+	 * @param cabinetProperties
 	 */
 	public ExpirationListener(
 			@Qualifier("redisMessageListenerContainer")
-			RedisMessageListenerContainer listenerContainer) {
+			RedisMessageListenerContainer listenerContainer,
+			CabinetOptionalFetcher cabinetOptionalFetcher,
+			TicketingSharedCabinet ticketingSharedCabinet,
+			LentServiceImpl lentServiceImpl,
+			CabinetProperties cabinetProperties) {
 		super(listenerContainer);
+		this.cabinetOptionalFetcher = cabinetOptionalFetcher;
+		this.ticketingSharedCabinet = ticketingSharedCabinet;
+		this.lentServiceImpl = lentServiceImpl;
+		this.cabinetProperties = cabinetProperties;
 	}
 
 	/**
@@ -33,11 +54,16 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	 */
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
-		System.out.println("I'm shadow key");
-		callCabinetSession(message.toString() + ":cabinet");
-	}
-
-	public void callCabinetSession(String key) {
-		System.out.println(valueRedisTemplate.opsForHash().entries(key));
+		log.debug("Called onMessage: {}, {}", message, pattern);
+		Long cabinetId = Long.parseLong(message.toString());	// message는 key인 cabinetId가 담겨있다.
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId); //
+		Long userCount = ticketingSharedCabinet.getSizeOfUsers(cabinetId);
+		if (cabinetProperties.getShareMinUserCount() <= userCount
+				&& userCount <= cabinetProperties.getShareMaxUserCount()) {    // 2명 이상 4명 이하: 대여 성공
+			LocalDateTime now = LocalDateTime.now();
+			cabinet.specifyStatus(CabinetStatus.FULL);
+			lentServiceImpl.saveLentHistories(now, cabinetId);
+		}
+		ticketingSharedCabinet.deleteValueKey(cabinetId);
 	}
 }
