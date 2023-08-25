@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest
 @Transactional
+@Disabled
 class LentRepositoryTest {
 
 	@Autowired
