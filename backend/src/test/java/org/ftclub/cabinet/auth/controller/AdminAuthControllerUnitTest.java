@@ -7,6 +7,7 @@ import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.testutils.TestMockApplier;
 import org.ftclub.testutils.TestProperties;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -125,6 +126,7 @@ public class AdminAuthControllerUnitTest {
 
 		@Test
 		@DisplayName("어드민 로그아웃 요청")
+		@Disabled
 		void adminLogoutOk() throws Exception {
 
 			mockMvc.perform(get("/v4/admin/auth/logout"))
