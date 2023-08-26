@@ -5,39 +5,38 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.config.HaneProperties;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.user.domain.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/v4/calc")
 @RequiredArgsConstructor
+@Log4j2
 public class OccupiedTimeController {
 
-	private final HaneProperties haneProperties;
+	private final OccupiedTimeManager occupiedTimeManager;
+
 
 	@GetMapping("/data/{year}/{month}")
 	public List<UserMonthDataDto> fetchData(@PathVariable("year") int year,
 			@PathVariable("month") int month) {
-		String apiUrl = haneProperties.getUrl() + "?year=" + year
-				+ "&month=" + month;
 
-		RestTemplate restTemplate = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + haneProperties.getJwtToken());
-		HttpEntity<String> entity = new HttpEntity<>(headers);
+		UserMonthDataDto[] userMonthDataDtoArray = occupiedTimeManager.getUserLastMonthOccupiedTime();
 
-		UserMonthDataDto[] userMonthDataDtoArray = restTemplate.exchange(apiUrl, HttpMethod.GET,
-				entity,
-				UserMonthDataDto[].class).getBody();
+		List<User> allCabiUsers = occupiedTimeManager.findAllCabiUsers();
 
-		List<UserMonthDataDto> userMonthDataDtoList = Arrays.asList(userMonthDataDtoArray);
+		List<UserMonthDataDto> userMonthDataDtoList = Arrays.stream(userMonthDataDtoArray)
+				.filter(dto -> allCabiUsers.stream()
+						.anyMatch(user -> user.getName().equals(dto.getLogin())))
+				.collect(Collectors.toList());
+
+		List<UserMonthDataDto> highTimeUsers = userMonthDataDtoList.stream()
+				.filter(dto -> dto.getMonthAccumationTime() > 432000)
+				.collect(Collectors.toList());
 
 		List<UserMonthDataDto> sortedUserMonthDataDtoList = userMonthDataDtoList.stream()
 				.filter(userMonthDataDto -> userMonthDataDto.getMonthAccumationTime() != 0)
@@ -60,10 +59,13 @@ public class OccupiedTimeController {
 		int minutes = ((int) averageAccumulationTime % 3600) / 60;
 		int secs = (int) averageAccumulationTime % 60;
 
-		sortedUserMonthDataDtoList.forEach(System.out::println);
+//		sortedUserMonthDataDtoList.forEach(System.out::println);
+
+		System.out.println("전체 사람 수 = " + userMonthDataDtoList.size());
+		System.out.println("0시간을 제외한 사람들 수 = " + sortedUserMonthDataDtoList.size());
+		System.out.println("highTimers = " + highTimeUsers.size());
 		System.out.println(
 				"Average monthAccumationTime: " + hours + "시간 " + minutes + "분 " + secs + "초");
 		return sortedUserMonthDataDtoList;
 	}
-
 }
