@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  timeOverState,
+} from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -49,6 +53,7 @@ export interface ICurrentModalStateInfo {
   memoModal: boolean;
   passwordCheckModal: boolean;
   invitationCodeModal: boolean;
+  cancelModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -72,7 +77,8 @@ export type TModalState =
   | "returnModal"
   | "memoModal"
   | "passwordCheckModal"
-  | "invitationCodeModal";
+  | "invitationCodeModal"
+  | "cancelModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -176,6 +182,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     memoModal: false,
     passwordCheckModal: false,
     invitationCodeModal: false,
+    cancelModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -238,7 +245,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       modalName = "passwordCheckModal";
     } else if (
       modalName === "lentModal" &&
-      cabinetViewData?.lentsLength &&
+      cabinetViewData?.status == "IN_SESSION" &&
       cabinetViewData.lentsLength >= 1
     ) {
       modalName = "invitationCodeModal";
@@ -289,7 +296,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   };
 
   const wrongCodeCounts = loadSharedWrongCodeCounts();
-  const [timeOver, setTimeOver] = useState(false);
+  const timeOver = useRecoilValue(timeOverState);
 
   return isAdmin ? (
     <>
@@ -323,7 +330,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       openModal={openModal}
       closeModal={closeModal}
       wrongCodeCounts={wrongCodeCounts}
-      setTimeOver={setTimeOver}
       timeOver={timeOver}
     />
   );

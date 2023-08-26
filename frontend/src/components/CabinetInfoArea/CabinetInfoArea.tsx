@@ -20,6 +20,7 @@ import {
 import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import CancelModal from "../Modals/CancelModal/CancelModal";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
 import CountTimeContainer from "./CountTime/CountTime.container";
 
@@ -33,7 +34,6 @@ const CabinetInfoArea: React.FC<{
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
   wrongCodeCounts: { [cabinetId: number]: number };
-  setTimeOver: (timeOver: boolean) => void;
   timeOver: boolean;
 }> = ({
   selectedCabinetInfo,
@@ -45,7 +45,6 @@ const CabinetInfoArea: React.FC<{
   openModal,
   closeModal,
   wrongCodeCounts,
-  setTimeOver,
   timeOver,
 }) => {
   return selectedCabinetInfo === null ? (
@@ -76,11 +75,11 @@ const CabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
-          selectedCabinetInfo.status === "IN_SESSION" ? ( // 공유 대기 상태에 내가 포함
+          selectedCabinetInfo.status === "IN_SESSION" ? (
             <>
               <ButtonContainer
                 onClick={() => {
-                  openModal("returnModal"); // 대기열 취소 모달 추가 구현
+                  openModal("cancelModal");
                 }}
                 text="대기열 취소"
                 theme="fill"
@@ -91,7 +90,7 @@ const CabinetInfoArea: React.FC<{
                 text="닫기"
                 theme="grayLine"
               />
-              <CountTimeContainer isMine={true} setTimeOver={setTimeOver} />
+              <CountTimeContainer isMine={true} />
             </>
           ) : (
             <>
@@ -135,7 +134,7 @@ const CabinetInfoArea: React.FC<{
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
             {selectedCabinetInfo.status == "IN_SESSION" && (
-              <CountTimeContainer isMine={false} setTimeOver={setTimeOver} />
+              <CountTimeContainer isMine={false} />
             )}
             {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
               <WarningMessageStyled>
@@ -185,6 +184,12 @@ const CabinetInfoArea: React.FC<{
         <InvitationCodeModalContainer
           onClose={() => closeModal("invitationCodeModal")}
           cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
+      {userModal.cancelModal && (
+        <CancelModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={() => closeModal("cancelModal")}
         />
       )}
     </CabinetDetailAreaStyled>

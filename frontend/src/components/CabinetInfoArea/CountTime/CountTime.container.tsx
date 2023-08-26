@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { useRecoilState } from "recoil";
+import { timeOverState } from "@/recoil/atoms";
 import CodeAndTime from "@/components/CabinetInfoArea/CountTime/CodeAndTime";
 import CountTime from "@/components/CabinetInfoArea/CountTime/CountTime";
 
@@ -12,13 +14,8 @@ const returnCountTime = (countDown: number) => {
   return [minutes, seconds];
 };
 
-const CountTimeContainer = ({
-  isMine,
-  setTimeOver,
-}: {
-  isMine: boolean;
-  setTimeOver: (timeOver: boolean) => void;
-}) => {
+const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
+  const [timeOver, setTimeOver] = useRecoilState(timeOverState);
   const calculateCountDown = (targetDate: Date) => {
     return targetDate.getTime() - new Date().getTime();
   };
@@ -28,6 +25,12 @@ const CountTimeContainer = ({
   const initCountDown = calculateCountDown(endDate);
   const [countDown, setCountDown] = useState(initCountDown);
   const lastUpdatedTime = useRef<number>(Date.now());
+
+  const checkTimeOver = () => {
+    if (!timeOver && countDown <= 0) {
+      setTimeOver(true);
+    }
+  };
 
   useEffect(() => {
     const updateCountDown = () => {
@@ -39,7 +42,6 @@ const CountTimeContainer = ({
         if (prevCountDown > 0) {
           return Math.max(prevCountDown - timeElapsed, 0);
         } else {
-          setTimeOver(true);
           return 0;
         }
       });
@@ -54,8 +56,11 @@ const CountTimeContainer = ({
     };
   }, []);
 
+  useEffect(() => {
+    checkTimeOver();
+  }, [countDown]);
+
   const [minutes, seconds] = returnCountTime(countDown);
-  const isTimeOver = countDown === 0;
 
   return (
     <>
@@ -63,14 +68,10 @@ const CountTimeContainer = ({
         <CodeAndTime
           minutes={minutes}
           seconds={seconds}
-          isTimeOver={isTimeOver}
+          isTimeOver={timeOver}
         />
       ) : (
-        <CountTime
-          minutes={minutes}
-          seconds={seconds}
-          isTimeOver={isTimeOver}
-        />
+        <CountTime minutes={minutes} seconds={seconds} isTimeOver={timeOver} />
       )}
     </>
   );
