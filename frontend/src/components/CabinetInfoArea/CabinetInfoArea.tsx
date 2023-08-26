@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import {
   ICurrentModalStateInfo,
   ISelectedCabinetInfo,
@@ -20,6 +20,9 @@ import {
 import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import CancelModal from "../Modals/CancelModal/CancelModal";
+import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
+import CountTimeContainer from "./CountTime/CountTime.container";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -30,6 +33,8 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
+  wrongCodeCounts: { [cabinetId: number]: number };
+  timeOver: boolean;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -39,6 +44,8 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
+  wrongCodeCounts,
+  timeOver,
 }) => {
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
@@ -68,34 +75,73 @@ const CabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
-          <>
-            <ButtonContainer
-              onClick={() => {
-                openModal("returnModal");
-              }}
-              text="반납"
-              theme="fill"
-            />
-            <ButtonContainer
-              onClick={() => openModal("memoModal")}
-              text="메모관리"
-              theme="line"
-            />
-            <ButtonContainer
-              onClick={closeCabinet}
-              text="닫기"
-              theme="grayLine"
-            />
-          </>
+          selectedCabinetInfo.status === "IN_SESSION" ? (
+            <>
+              <ButtonContainer
+                onClick={() => {
+                  openModal("cancelModal");
+                }}
+                text="대기열 취소"
+                theme="fill"
+                disabled={timeOver}
+              />
+              <ButtonContainer
+                onClick={closeCabinet}
+                text="닫기"
+                theme="grayLine"
+              />
+              <CountTimeContainer isMine={true} />
+            </>
+          ) : (
+            <>
+              <ButtonContainer
+                onClick={() => {
+                  openModal("returnModal");
+                }}
+                text="반납"
+                theme="fill"
+              />
+              <ButtonContainer
+                onClick={() => openModal("memoModal")}
+                text="메모관리"
+                theme="line"
+              />
+              <ButtonContainer
+                onClick={closeCabinet}
+                text="닫기"
+                theme="grayLine"
+              />
+            </>
+          )
         ) : (
           <>
             <ButtonContainer
-              onClick={() => openModal("lentModal")}
+              onClick={() =>
+                openModal(
+                  selectedCabinetInfo.status == "IN_SESSION"
+                    ? "invitationCodeModal"
+                    : "lentModal"
+                )
+              }
               text="대여"
               theme="fill"
-              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
+              disabled={
+                !isAvailable ||
+                selectedCabinetInfo.lentType === "CLUB" ||
+                wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 ||
+                (selectedCabinetInfo.status == "IN_SESSION" && timeOver)
+              }
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
+            {selectedCabinetInfo.status == "IN_SESSION" && (
+              <CountTimeContainer isMine={false} />
+            )}
+            {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
+              <WarningMessageStyled>
+                초대 코드 입력 오류 초과로 <br />
+                입장이 제한된 상태입니다.
+              </WarningMessageStyled>
+            )}
           </>
         )}
       </CabinetInfoButtonsContainerStyled>
@@ -132,6 +178,18 @@ const CabinetInfoArea: React.FC<{
       {userModal.passwordCheckModal && (
         <PasswordCheckModalContainer
           onClose={() => closeModal("passwordCheckModal")}
+        />
+      )}
+      {userModal.invitationCodeModal && (
+        <InvitationCodeModalContainer
+          onClose={() => closeModal("invitationCodeModal")}
+          cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
+      {userModal.cancelModal && (
+        <CancelModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={() => closeModal("cancelModal")}
         />
       )}
     </CabinetDetailAreaStyled>
@@ -202,6 +260,26 @@ const CabinetRectangleStyled = styled.div<{
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "PENDING" &&
+    css`
+      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+    `}
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "IN_SESSION" &&
+    css`
+      border: 3px solid var(--main-color);
+      animation: ${Animation} 3.5s infinite;
+    `}
+`;
+
+const Animation = keyframes`
+  0%, 100% {
+    background-color: var(--main-color);
+  }
+  50% {
+    background-color: #d9d9d9;
+  }
 `;
 
 const CabinetInfoButtonsContainerStyled = styled.div`
@@ -209,7 +287,7 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-height: 210px;
+  max-height: 300px;
   margin: 3vh 0;
   width: 100%;
 `;
@@ -221,6 +299,15 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   line-height: 28px;
   white-space: pre-line;
   text-align: center;
+`;
+
+const WarningMessageStyled = styled.p`
+  color: red;
+  font-size: 1rem;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 26px;
 `;
 
 export default CabinetInfoArea;

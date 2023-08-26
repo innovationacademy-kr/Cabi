@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  timeOverState,
+} from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -37,6 +41,8 @@ export interface IMultiSelectTargetInfo {
     OVERDUE: number;
     FULL: number;
     BROKEN: number;
+    IN_SESSION: number;
+    PENDING: number;
   };
 }
 
@@ -46,6 +52,8 @@ export interface ICurrentModalStateInfo {
   returnModal: boolean;
   memoModal: boolean;
   passwordCheckModal: boolean;
+  invitationCodeModal: boolean;
+  cancelModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -59,6 +67,8 @@ interface ICount {
   FULL: number;
   OVERDUE: number;
   BROKEN: number;
+  IN_SESSION: number;
+  PENDING: number;
 }
 
 export type TModalState =
@@ -66,7 +76,9 @@ export type TModalState =
   | "unavailableModal"
   | "returnModal"
   | "memoModal"
-  | "passwordCheckModal";
+  | "passwordCheckModal"
+  | "invitationCodeModal"
+  | "cancelModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -137,6 +149,24 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
   else return "var(--black)";
 };
 
+const loadSharedWrongCodeCounts = () => {
+  const savedData = localStorage.getItem("wrongCodeCounts");
+  if (savedData) {
+    try {
+      const { data, expirationTime } = JSON.parse(savedData);
+      const ExpirationTime = new Date(expirationTime);
+      if (ExpirationTime > new Date()) {
+        return data;
+      } else {
+        localStorage.removeItem("wrongCodeCounts");
+      }
+    } catch (error) {
+      console.error("WrongCodeCounts:", error);
+    }
+  }
+  return {};
+};
+
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
   const myCabinetInfo =
@@ -151,6 +181,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     returnModal: false,
     memoModal: false,
     passwordCheckModal: false,
+    invitationCodeModal: false,
+    cancelModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -185,7 +217,14 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         else result[cabinet.status]++;
         return result;
       },
-      { AVAILABLE: 0, FULL: 0, OVERDUE: 0, BROKEN: 0 }
+      {
+        AVAILABLE: 0,
+        FULL: 0,
+        OVERDUE: 0,
+        BROKEN: 0,
+        IN_SESSION: 0,
+        PENDING: 0,
+      }
     );
 
   const multiSelectInfo: IMultiSelectTargetInfo | null = isMultiSelect
@@ -204,6 +243,12 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       targetCabinetInfo.lents.length === 1
     ) {
       modalName = "passwordCheckModal";
+    } else if (
+      modalName === "lentModal" &&
+      cabinetViewData?.status == "IN_SESSION" &&
+      cabinetViewData.lentsLength >= 1
+    ) {
+      modalName = "invitationCodeModal";
     }
     setUserModal({
       ...userModal,
@@ -250,6 +295,9 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     return false;
   };
 
+  const wrongCodeCounts = loadSharedWrongCodeCounts();
+  const timeOver = useRecoilValue(timeOverState);
+
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -273,12 +321,16 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
       isMine={myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId}
       isAvailable={
-        cabinetViewData?.status === "AVAILABLE" ||
-        cabinetViewData?.status === "LIMITED_AVAILABLE"
+        (cabinetViewData?.status === "AVAILABLE" ||
+          cabinetViewData?.status === "LIMITED_AVAILABLE" ||
+          cabinetViewData?.status === "IN_SESSION") &&
+        !myCabinetInfo.cabinetId
       }
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
+      wrongCodeCounts={wrongCodeCounts}
+      timeOver={timeOver}
     />
   );
 };
