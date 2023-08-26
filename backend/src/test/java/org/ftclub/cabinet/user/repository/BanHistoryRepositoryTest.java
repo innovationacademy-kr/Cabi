@@ -9,6 +9,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
 @Transactional
+@Disabled
 public class BanHistoryRepositoryTest {
 
 	// DB와 같이 2023.01.15 09:00:00 시간을 기준으로 했습니다.

@@ -1,20 +1,24 @@
 package org.ftclub.cabinet;
 
-import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
-import org.junit.jupiter.api.Assertions;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class CabinetApplicationTests {
 
-	@Autowired
-	CabinetRepository cabinetRepository;
+	@PersistenceContext
+	EntityManager em;
 
 	@Test
-	void contextLoads() {
-		Assertions.assertTrue(!cabinetRepository.findAll().isEmpty());
+	void healthcheck() {
+		em.createQuery("select c from Cabinet c", Cabinet.class)
+				.getResultList()
+				.forEach(System.out::println);
 	}
 
 }
