@@ -5,12 +5,11 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -19,14 +18,16 @@ public class TicketingSharedCabinet {
 
 	private static final Integer MAX_SHARE_CODE_TRY = 3;
 
-	private final RedisTemplate<Long, ?> valueRedisTemplate;
+	private final RedisTemplate<Long, Long> valueRedisTemplate;
 	private final HashOperations<Long, Long, Integer> valueHashOperations;
+	private final ValueOperations<Long, Long> valueOperations;
 	private final RedisTemplate<Long, Integer> shadowKeyRedisTemplate;
 
 	@Autowired
-	public TicketingSharedCabinet(RedisTemplate<Long, ?> valueRedisTemplate,
-								  RedisTemplate<Long, Integer> shadowKeyRedisTemplate) {
+	public TicketingSharedCabinet(RedisTemplate<Long, Long> valueRedisTemplate,
+								  ValueOperations<Long, Long> valueOperations, RedisTemplate<Long, Integer> shadowKeyRedisTemplate) {
 		this.valueRedisTemplate = valueRedisTemplate;
+		this.valueOperations = this.valueRedisTemplate.opsForValue();
 		this.valueHashOperations = this.valueRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
 	}
@@ -57,11 +58,11 @@ public class TicketingSharedCabinet {
 	 */
 	public void saveValue(Long key, Long hashKey, Integer shareCode, boolean hasShadowKey) {
 		if (!hasShadowKey || isValidShareCode(key, shareCode)) { // 방장이거나 초대코드를 맞게 입력한 경우
-			valueHashOperations.put(key, hashKey, -1);
+			valueHashOperations.put(key, hashKey, -1);    // userId를 hashKey로 하여 -1을 value로 저장
+			valueOperations.set(hashKey, key);    // userId를 key로 하여 cabinetId를 value로 저장
 		} else { // 초대코드가 틀린 경우
-			int trialCount =
-					valueHashOperations.get(key, hashKey) != null ? getValue(key, hashKey) : 0;
-			valueHashOperations.put(key, hashKey, trialCount + 1);
+			int trialCount = valueHashOperations.get(key, hashKey) != null ? getValue(key, hashKey) : 0;
+			valueHashOperations.put(key, hashKey, trialCount + 1);    // trialCount를 1 증가시켜서 저장
 			throw new ServiceException(ExceptionStatus.WRONG_SHARE_CODE);
 		}
 	}
@@ -90,12 +91,6 @@ public class TicketingSharedCabinet {
 				Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
 
-//	public void checkSizeOfUsers(String key) {
-////		if (getSizeOfUsers(key) > 4) {
-////			LentPolicyImpl.handlePolicyStatus(LentPolicyStatus.FULL_CABINET);
-//		if (getSizeOfUsers(key) == 4)
-//		}
-//	}
 
 	public Integer getValue(Long key, Long hashKey) {
 		return valueHashOperations.get(key, hashKey);
@@ -119,7 +114,23 @@ public class TicketingSharedCabinet {
 		shadowKeyRedisTemplate.delete(cabinetId);
 	}
 
+	public void deleteHashKey(Long key) { // user를 지우는 delete
+		valueHashOperations.delete(key);
+	}
+
 	public void deleteValueKey(Long key) {
-		valueRedisTemplate.delete(key);
+		valueOperations.getOperations().delete(key);
+	}
+
+	public Long findCabinetIdByUserId(Long userId) {
+		return valueOperations.get(userId);
+	}
+
+	public List<Long> getUserIdsByCabinetId(Long cabinetId) {
+		return getUserIdList(cabinetId);
+	}
+
+	public LocalDateTime getSessionExpiredAt(Long cabinetId) {
+		return shadowKeyRedisTemplate.getExpire(cabinetId, TimeUnit.SECONDS);
 	}
 }

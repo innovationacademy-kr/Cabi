@@ -10,11 +10,19 @@ import org.ftclub.cabinet.dto.ReturnCabinetsRequestDto;
 import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
 import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.user.domain.UserSession;
 
 /**
  * controller에서 사용하는 파사드 서비스
  */
 public interface LentFacadeService {
+
+	/**
+	 * 유저의 대여대기 정보를 가져옵니다.
+	 * @param user
+	 * @return
+	 */
+	MyCabinetResponseDto getMyLentInfoFromRedis(@UserSession UserSessionDto user);
 
 	/**
 	 * 사물함 대여를 합니다.
@@ -107,6 +115,8 @@ public interface LentFacadeService {
 	 * @return {@link LentDto}의 {@link List}
 	 */
 	List<LentDto> getLentDtoList(Long cabinetId);
+
+	List<LentDto> getLentDtoListFromRedis(Long cabinetId);
 
 	/**
 	 * 내가 대여한 기록들을 페이지네이션 기준으로 가져옵니다.

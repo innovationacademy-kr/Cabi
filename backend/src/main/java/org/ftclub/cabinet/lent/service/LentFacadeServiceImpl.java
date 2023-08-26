@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -22,6 +23,7 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.data.domain.Page;
@@ -92,6 +94,23 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 //				.collect(Collectors.toList());
 	}
 
+	@Override
+	public List<LentDto> getLentDtoListFromRedis(Long cabinetId) {
+		log.debug("Called getLentDtoListFromRedis: {}", cabinetId);
+
+		List<Long> userIds = lentOptionalFetcher.findUserIdsByCabinetIdFromRedis(cabinetId);
+		return userIds.stream().map(
+				userId -> {
+					User user = userOptionalFetcher.findUser(userId);
+					return new LentDto(
+							user.getUserId(),
+							user.getName(),
+							null,
+							null,
+							null);
+				}).collect(Collectors.toList());
+	}
+
 	/**
 	 * {@InheritDocs}
 	 *
@@ -133,12 +152,27 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		log.debug("Called getMyLentInfo: {}", user.getName());
 		Cabinet myCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
 		if (myCabinet == null) {
+			getMyLentInfoFromRedis(user);
 			return null;
 		}
 		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
 		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
 	}
 
+	@Override
+	public MyCabinetResponseDto getMyLentInfoFromRedis(@UserSession UserSessionDto user) {
+		log.debug("Called getMyLentInfoFromRedis: {}", user.getName());
+		Long userId = user.getUserId();
+		Long cabinetId = lentOptionalFetcher.findCabinetIdByUserIdFromRedis(userId);
+		if (cabinetId == null) {
+			return null;
+		}
+		Cabinet myCabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+		List<LentDto> lentDtoList = getLentDtoListFromRedis(cabinetId);
+		LocalDateTime sessionExpiredAt = lentOptionalFetcher
+				.getSessionExpiredAtFromRedis(userId);
+		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
+	}
 
 
 	/*--------------------------------------------CUD--------------------------------------------*/
