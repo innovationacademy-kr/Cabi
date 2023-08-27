@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
-import useMultiSelect from "@/hooks/useMultiSelect";
 import { IModalContents } from "@/components/Modals/Modal";
+import useMultiSelect from "@/hooks/useMultiSelect";
 
 const PasswordCheckModal: React.FC<{
   modalContents: IModalContents;
@@ -17,8 +17,9 @@ const PasswordCheckModal: React.FC<{
     renderAdditionalComponent,
     proceedBtnText,
     onClickProceed,
-    cancleBtnText,
+    cancelBtnText,
     closeModal,
+    isLoading,
   } = modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
 
@@ -44,7 +45,7 @@ const PasswordCheckModal: React.FC<{
         <ButtonWrapperStyled>
           <Button
             onClick={closeModal}
-            text={cancleBtnText || "취소"}
+            text={cancelBtnText || "취소"}
             theme="line"
           />
           <Button
@@ -53,7 +54,7 @@ const PasswordCheckModal: React.FC<{
             }}
             text={proceedBtnText || "확인"}
             theme="fill"
-            disabled={password.length < 4}
+            disabled={password.length < 4 || isLoading}
           />
         </ButtonWrapperStyled>
       </ModalStyled>

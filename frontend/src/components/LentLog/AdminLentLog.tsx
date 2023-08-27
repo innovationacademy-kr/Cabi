@@ -10,7 +10,7 @@ const AdminLentLog = ({ lentType }: { lentType: string }) => {
   const isSearchPage = window.location.pathname === "/admin/search";
 
   useEffect(() => {
-    if (!isSearchPage) setToggleLentType("CABINET");
+    if (!isSearchPage && lentType === "CABINET") setToggleLentType("CABINET");
   }, [isSearchPage]);
 
   const switchLentType = () => {

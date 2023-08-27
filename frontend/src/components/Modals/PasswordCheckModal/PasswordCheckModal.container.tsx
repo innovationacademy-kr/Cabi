@@ -32,6 +32,7 @@ const PasswordCheckModalContainer: React.FC<{
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
   const setIsCurrentSectionRender = useSetRecoilState(
@@ -50,6 +51,7 @@ const PasswordCheckModalContainer: React.FC<{
   };
 
   const onSendPassword = async () => {
+    setIsLoading(true);
     try {
       await axiosSendCabinetPassword(password);
       //userCabinetId 세팅
@@ -73,6 +75,7 @@ const PasswordCheckModalContainer: React.FC<{
       setModalTitle(error.response.data.message);
       throw error;
     } finally {
+      setIsLoading(false);
       setShowResponseModal(true);
     }
   };
@@ -89,6 +92,7 @@ const PasswordCheckModalContainer: React.FC<{
       <PasswordContainer onChange={onChange} password={password} />
     ),
     closeModal: props.onClose,
+    isLoading: isLoading,
   };
 
   return (

@@ -95,7 +95,7 @@ const CabinetInfoArea: React.FC<{
               theme="fill"
               disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
             />
-            <ButtonContainer onClick={closeCabinet} text="취소" theme="line" />
+            <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
           </>
         )}
       </CabinetInfoButtonsContainerStyled>
