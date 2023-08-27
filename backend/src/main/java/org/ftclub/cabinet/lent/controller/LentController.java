@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.lent.controller;
 
 import javax.validation.Valid;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
@@ -105,10 +104,7 @@ public class LentController {
 		log.info("Called getMyLentInfo user: {}", user);
 		MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user);
 		if (myCabinetResponseDto == null) {
-			// Redis에서 user가 대여대기중인 사물함이 있는지 조회
-			myCabinetResponseDto = lentFacadeService.getMyLentInfoFromRedis(user);
-			if (myCabinetResponseDto == null)
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(myCabinetResponseDto);
 	}

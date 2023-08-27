@@ -30,6 +30,10 @@ LentPolicyStatus {
 	 */
 	BROKEN_CABINET,
 	/**
+	 * 대여 가능하도록 풀릴 사물함
+	 */
+	PENDING_CABINET,
+	/**
 	 * 내부 에러
 	 */
 	INTERNAL_ERROR,

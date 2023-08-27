@@ -1,5 +1,12 @@
 package org.ftclub.cabinet.redis;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,11 +14,6 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Component
 public class TicketingSharedCabinet {
@@ -25,7 +27,8 @@ public class TicketingSharedCabinet {
 
 	@Autowired
 	public TicketingSharedCabinet(RedisTemplate<Long, Long> valueRedisTemplate,
-								  ValueOperations<Long, Long> valueOperations, RedisTemplate<Long, Integer> shadowKeyRedisTemplate) {
+			ValueOperations<Long, Long> valueOperations,
+			RedisTemplate<Long, Integer> shadowKeyRedisTemplate) {
 		this.valueRedisTemplate = valueRedisTemplate;
 		this.valueOperations = this.valueRedisTemplate.opsForValue();
 		this.valueHashOperations = this.valueRedisTemplate.opsForHash();
@@ -61,7 +64,8 @@ public class TicketingSharedCabinet {
 			valueHashOperations.put(key, hashKey, -1);    // userId를 hashKey로 하여 -1을 value로 저장
 			valueOperations.set(hashKey, key);    // userId를 key로 하여 cabinetId를 value로 저장
 		} else { // 초대코드가 틀린 경우
-			int trialCount = valueHashOperations.get(key, hashKey) != null ? getValue(key, hashKey) : 0;
+			int trialCount =
+					valueHashOperations.get(key, hashKey) != null ? getValue(key, hashKey) : 0;
 			valueHashOperations.put(key, hashKey, trialCount + 1);    // trialCount를 1 증가시켜서 저장
 			throw new ServiceException(ExceptionStatus.WRONG_SHARE_CODE);
 		}
@@ -91,9 +95,12 @@ public class TicketingSharedCabinet {
 				Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
 
-
 	public Integer getValue(Long key, Long hashKey) {
 		return valueHashOperations.get(key, hashKey);
+	}
+
+	public Integer getShareCode(Long key) {
+		return shadowKeyRedisTemplate.opsForValue().get(key);
 	}
 
 	public void setShadowKey(Long cabinetId) {
@@ -130,7 +137,7 @@ public class TicketingSharedCabinet {
 		return getUserIdList(cabinetId);
 	}
 
-	public LocalDateTime getSessionExpiredAt(Long cabinetId) {
+	public Long getSessionExpiredAt(Long cabinetId) {
 		return shadowKeyRedisTemplate.getExpire(cabinetId, TimeUnit.SECONDS);
 	}
 }

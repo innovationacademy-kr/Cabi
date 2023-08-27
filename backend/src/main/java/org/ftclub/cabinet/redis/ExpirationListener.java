@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.redis;
 
+import java.time.LocalDateTime;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -12,8 +13,6 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 
 @Component
@@ -55,7 +54,7 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
 		log.debug("Called onMessage: {}, {}", message, pattern);
-		Long cabinetId = Long.parseLong(message.toString());	// message는 key인 cabinetId가 담겨있다.
+		Long cabinetId = Long.parseLong(message.toString());    // message는 key인 cabinetId가 담겨있다.
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId); //
 		Long userCount = ticketingSharedCabinet.getSizeOfUsers(cabinetId);
 		if (cabinetProperties.getShareMinUserCount() <= userCount
@@ -63,6 +62,8 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 			LocalDateTime now = LocalDateTime.now();
 			cabinet.specifyStatus(CabinetStatus.FULL);
 			lentServiceImpl.saveLentHistories(now, cabinetId);
+		} else {
+			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
 		}
 		ticketingSharedCabinet.deleteValueKey(cabinetId);
 	}

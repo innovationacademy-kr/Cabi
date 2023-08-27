@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -23,6 +22,7 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
@@ -44,7 +44,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;
 	private final CabinetMapper cabinetMapper;
-
+	private final TicketingSharedCabinet ticketingSharedCabinet;
 
 	/*-------------------------------------------READ-------------------------------------------*/
 
@@ -151,12 +151,12 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
 		log.debug("Called getMyLentInfo: {}", user.getName());
 		Cabinet myCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
-		if (myCabinet == null) {
-			getMyLentInfoFromRedis(user);
-			return null;
+		if (myCabinet == null) { // 대여 기록이 없거나 대여 대기 중인 경우
+			return getMyLentInfoFromRedis(user);
 		}
 		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
-		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
+		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList,
+				null, null);
 	}
 
 	@Override
@@ -167,11 +167,11 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		if (cabinetId == null) {
 			return null;
 		}
-		Cabinet myCabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		List<LentDto> lentDtoList = getLentDtoListFromRedis(cabinetId);
-		LocalDateTime sessionExpiredAt = lentOptionalFetcher
-				.getSessionExpiredAtFromRedis(userId);
-		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
+		return cabinetMapper.toMyCabinetResponseDto(cabinet, lentDtoList,
+				ticketingSharedCabinet.getShareCode(cabinetId),
+				ticketingSharedCabinet.getSessionExpiredAt(cabinetId));
 	}
 
 

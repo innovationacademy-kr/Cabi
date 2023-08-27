@@ -1,5 +1,11 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -19,13 +25,6 @@ import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -85,11 +84,13 @@ public class LentServiceImpl implements LentService {
 		if (!hasShadowKey) {// 최초 대여인 경우
 			lentPolicy.handlePolicyStatus(lentPolicy.verifyCabinetForLent(cabinet),
 					userActiveBanList);
+			cabinet.specifyStatus(CabinetStatus.IN_SESSION);
 			ticketingSharedCabinet.setShadowKey(cabinetId);
 		}
 		ticketingSharedCabinet.saveValue(cabinetId, userId, shareCode, hasShadowKey);
 		// 4번째 (마지막) 대여자인 경우
-		if (Objects.equals(ticketingSharedCabinet.getSizeOfUsers(cabinetId), cabinetProperties.getShareMaxUserCount())) {
+		if (Objects.equals(ticketingSharedCabinet.getSizeOfUsers(cabinetId),
+				cabinetProperties.getShareMaxUserCount())) {
 			cabinet.specifyStatus(CabinetStatus.FULL);
 			saveLentHistories(now, cabinetId);
 			// cabinetId에 대한 shadowKey, valueKey 삭제

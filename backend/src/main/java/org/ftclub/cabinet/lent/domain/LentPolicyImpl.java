@@ -144,6 +144,8 @@ public class LentPolicyImpl implements LentPolicy {
 				return LentPolicyStatus.BROKEN_CABINET;
 			case OVERDUE:
 				return LentPolicyStatus.OVERDUE_CABINET;
+			case PENDING:
+				return LentPolicyStatus.PENDING_CABINET;
 		}
 		if (cabinet.isLentType(LentType.CLUB)) {
 			return LentPolicyStatus.LENT_CLUB;

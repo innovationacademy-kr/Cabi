@@ -12,12 +12,17 @@ public enum CabinetStatus {
 	 * <br>
 	 * FULL : 꽉 참
 	 * <br>
-	 * OVERDUE :연체됨
+	 * OVERDUE : 연체됨
+	 * <br>
+	 * IN_SESSION : 공유사물함 대여 대기 중
+	 * <br>
+	 * PENDING : 대여 가능하도록 풀릴 예정
 	 */
-	BROKEN, AVAILABLE, FULL, OVERDUE;
+	BROKEN, AVAILABLE, FULL, OVERDUE, IN_SESSION, PENDING;
 
 	public boolean isValid() {
 		return this.equals(BROKEN) || this.equals(AVAILABLE) || this.equals(FULL) || this.equals(
-				OVERDUE);
+				OVERDUE)
+				|| this.equals(IN_SESSION) || this.equals(PENDING);
 	}
 }
