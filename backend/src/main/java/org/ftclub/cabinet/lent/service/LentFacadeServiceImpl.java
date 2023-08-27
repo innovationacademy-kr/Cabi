@@ -206,8 +206,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
-	public void cancelLentShareCabinet(Long userId) {
-		lentService.cancelLentShareCabinet(userId);
+	public void cancelLentShareCabinet(Long userId, Long cabinetId) {
+		lentService.cancelLentShareCabinet(userId, cabinetId);
 	}
 
 	@Override

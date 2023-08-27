@@ -7,6 +7,7 @@ import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
+import org.ftclub.cabinet.dto.ShareCodeDto;
 import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
 import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -43,16 +44,18 @@ public class LentController {
 	public void startLentShareCabinet(
 			@UserSession UserSessionDto user,
 			@PathVariable Long cabinetId,
-			@Valid @RequestBody Integer shareCode) {
+			@Valid @RequestBody ShareCodeDto shareCodeDto) {
 		log.info("Called startLentShareCabinet user: {}, cabinetId: {}", user, cabinetId);
-		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId, shareCode);
+		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId,
+				shareCodeDto.getShareCode());
 	}
 
-	@PatchMapping("/cabinets/share/cancel")
+	@PatchMapping("/cabinets/share/cancel/{cabinetId}")
 	public void cancelLentShareCabinet(
-			@UserSession UserSessionDto user) {
-		log.info("Called cancelLentShareCabinet user: {}", user);
-		lentFacadeService.cancelLentShareCabinet(user.getUserId());
+			@UserSession UserSessionDto user,
+			@PathVariable Long cabinetId) {
+		log.info("Called cancelLentShareCabinet user: {}, cabinetId: {}", user, cabinetId);
+		lentFacadeService.cancelLentShareCabinet(user.getUserId(), cabinetId);
 	}
 
 	@PatchMapping("/return")

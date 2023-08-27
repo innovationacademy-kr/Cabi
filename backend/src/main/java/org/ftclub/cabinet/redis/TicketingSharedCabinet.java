@@ -121,8 +121,9 @@ public class TicketingSharedCabinet {
 		shadowKeyRedisTemplate.delete(cabinetId);
 	}
 
-	public void deleteHashKey(Long key) { // user를 지우는 delete
-		valueHashOperations.delete(key);
+	public void deleteUserInValueKey(Long key, Long hashKey) { // user를 지우는 delete
+		valueHashOperations.delete(key, hashKey);
+		valueOperations.getOperations().delete(hashKey);
 	}
 
 	public void deleteValueKey(Long key) {

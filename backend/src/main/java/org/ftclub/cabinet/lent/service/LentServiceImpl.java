@@ -135,9 +135,15 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public void cancelLentShareCabinet(Long userId) {
-		log.debug("Called cancelLentShareCabinet: {}", userId);
-		// TODO: redis key 값 삭제
+	public void cancelLentShareCabinet(Long userId, Long cabinetId) {
+		log.debug("Called cancelLentShareCabinet: {}, {}", userId, cabinetId);
+		ticketingSharedCabinet.deleteUserInValueKey(cabinetId, userId);
+		// 유저가 나갔을 때, 해당 키에 다른 유저가 없다면 전체 키 삭제
+		if (ticketingSharedCabinet.getSizeOfUsers(cabinetId) == 0) {
+			ticketingSharedCabinet.deleteShadowKey(cabinetId);
+			Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
+			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
+		}
 	}
 
 	// cabinetId로 return하는 경우에서, 공유 사물함과 개인 사물함의 경우에 대한 분기가 되어 있지 않음.

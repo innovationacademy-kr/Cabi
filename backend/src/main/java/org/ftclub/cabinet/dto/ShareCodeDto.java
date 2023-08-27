@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class ShareCodeDto {
 
-	private final Long shareCode;
+	private final Integer shareCode;
 }
