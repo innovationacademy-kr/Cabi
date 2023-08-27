@@ -6,6 +6,8 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.lent.service.LentService;
+import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
+import org.ftclub.cabinet.occupiedtime.UserMonthDataDto;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
@@ -28,6 +30,7 @@ public class SystemScheduler {
 	private final LentService lentService;
 	private final UserService userService;
 	private final BlackholeManager blackholeManager;
+	private final OccupiedTimeManager occupiedTimeManager;
 
 	private static final long DELAY_TIME = 2000;
 
@@ -81,5 +84,12 @@ public class SystemScheduler {
 				log.error(e.getMessage());
 			}
 		}
+	}
+
+	@Scheduled(cron = "${spring.schedule.cron.extensible-user-check}")
+	public void checkUserQualifyForExtensible(){
+		log.info("called checkUserQualifyForExtensible");
+		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.metLimitTimeUser(occupiedTimeManager.getUserLastMonthOccupiedTime());
+		userService.updateUserExtensible(userMonthDataDtos);
 	}
 }

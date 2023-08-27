@@ -21,7 +21,12 @@ public class OccupiedTimeController {
 	private final OccupiedTimeManager occupiedTimeManager;
 
 
-	@GetMapping("/data/{year}/{month}")
+	@GetMapping("/data")
+	public List<UserMonthDataDto> previousMeet(){
+		return occupiedTimeManager.metLimitTimeUser(occupiedTimeManager.getUserLastMonthOccupiedTime());
+	}
+
+	@GetMapping("/stat/data/{year}/{month}")
 	public List<UserMonthDataDto> fetchData(@PathVariable("year") int year,
 			@PathVariable("month") int month) {
 
@@ -29,15 +34,18 @@ public class OccupiedTimeController {
 
 		List<User> allCabiUsers = occupiedTimeManager.findAllCabiUsers();
 
+		// CABI 가입된 유저들만 필터링
 		List<UserMonthDataDto> userMonthDataDtoList = Arrays.stream(userMonthDataDtoArray)
 				.filter(dto -> allCabiUsers.stream()
 						.anyMatch(user -> user.getName().equals(dto.getLogin())))
 				.collect(Collectors.toList());
 
+		// 120시간 이상인 사람들만 필터링
 		List<UserMonthDataDto> highTimeUsers = userMonthDataDtoList.stream()
 				.filter(dto -> dto.getMonthAccumationTime() > 432000)
 				.collect(Collectors.toList());
 
+		// 0시간을 제외한 사람들만 필터링 & monthAccumationTime 기준으로 내림차순 정렬
 		List<UserMonthDataDto> sortedUserMonthDataDtoList = userMonthDataDtoList.stream()
 				.filter(userMonthDataDto -> userMonthDataDto.getMonthAccumationTime() != 0)
 				.sorted(Comparator.comparingInt(UserMonthDataDto::getMonthAccumationTime)
