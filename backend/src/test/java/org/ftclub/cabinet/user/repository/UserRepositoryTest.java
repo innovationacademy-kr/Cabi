@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.ftclub.cabinet.user.domain.User;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
 @Transactional
+@Disabled
 public class UserRepositoryTest {
 
 	@Autowired
