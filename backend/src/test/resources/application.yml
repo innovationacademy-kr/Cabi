@@ -24,7 +24,7 @@ spring:
     lent:
       term:
         private: 21
-        share: 42
+        share: 15
     penalty:
       day:
         share: 3
@@ -67,3 +67,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
+  redis:
+    host: localhost
+    port: 6379
