@@ -19,7 +19,7 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import {
   axiosCabinetById,
-  axiosLentId,
+  axiosLentShareId,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 import PasswordCheckModal from "../PasswordCheckModal/PasswordCheckModal";
@@ -78,9 +78,15 @@ const InvitationCodeModalContainer: React.FC<{
     setCode(e.target.value);
   };
 
+  const updatedCounts = {
+    ...sharedWrongCodeCounts,
+    [String(props.cabinetId)]:
+      (sharedWrongCodeCounts[String(props.cabinetId)] || 0) + 1,
+  };
+
   const tryLentRequest = async () => {
     try {
-      await axiosLentId(currentCabinetId);
+      await axiosLentShareId(currentCabinetId, parseInt(code));
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       setModalTitle("대여가 완료되었습니다");
@@ -88,6 +94,7 @@ const InvitationCodeModalContainer: React.FC<{
         const { data } = await axiosCabinetById(currentCabinetId);
         setTargetCabinetInfo(data);
       } catch (error) {
+        saveSharedWrongCodeCounts(updatedCounts);
         throw error;
       }
       try {
@@ -138,7 +145,7 @@ const InvitationCodeModalContainer: React.FC<{
     초대 코드를 입력해 주세요.
     <strong>3번 이상 일치하지 않을 시</strong> 입장이 제한됩니다.`,
     proceedBtnText: modalPropsMap["MODAL_INVITATION_CODE"].confirmMessage,
-    onClickProceed: onSendCode,
+    onClickProceed: tryLentRequest,
     renderAdditionalComponent: () => (
       <PasswordContainer onChange={onChange} password={code} />
     ),

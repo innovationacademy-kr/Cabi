@@ -32,6 +32,7 @@ export interface ISelectedCabinetInfo {
   isAdmin: boolean;
   isLented: boolean;
   lentsLength: number;
+  sessionExpiredAt?: Date;
 }
 
 export interface IMultiSelectTargetInfo {
@@ -205,6 +206,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         isAdmin: isAdmin,
         isLented: targetCabinetInfo.lents.length !== 0,
         lentsLength: targetCabinetInfo.lents.length,
+        sessionExpiredAt: targetCabinetInfo.sessionExpiredAt,
       }
     : null;
 

@@ -14,11 +14,21 @@ const returnCountTime = (countDown: number) => {
   return [minutes, seconds];
 };
 
-const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
+const CountTimeContainer = ({
+  isMine,
+  sessionExpiredAt,
+}: {
+  isMine: boolean;
+  sessionExpiredAt: Date | undefined;
+}) => {
   const [timeOver, setTimeOver] = useRecoilState(timeOverState);
   const calculateCountDown = (targetDate: Date) => {
     return targetDate.getTime() - new Date().getTime();
   };
+
+  // const initCountDown = sessionExpiredAt
+  //   ? calculateCountDown(sessionExpiredAt)
+  //   : 0;
   const endDate = new Date(); //임의 종료시간 설정
   endDate.setMinutes(endDate.getMinutes(), endDate.getSeconds() + 10);
 

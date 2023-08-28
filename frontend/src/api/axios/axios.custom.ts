@@ -445,3 +445,32 @@ export const axiosLentClubUser = async (
     throw error;
   }
 };
+
+const axiosLentShareIdURL = "/v4/lent/cabinets/share/";
+export const axiosLentShareId = async (
+  cabinetId: number | null,
+  shareCode: number
+): Promise<any> => {
+  if (cabinetId === null) return;
+  try {
+    const response = await instance.post(`${axiosLentShareIdURL}${cabinetId}`, {
+      shareCode,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCancelURL = "/v4/lent/cabinets/share/cancel/";
+export const axiosCancel = async (cabinetId: number | null): Promise<any> => {
+  if (cabinetId === null) {
+    return;
+  }
+  try {
+    const response = await instance.patch(`${axiosCancelURL}${cabinetId}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

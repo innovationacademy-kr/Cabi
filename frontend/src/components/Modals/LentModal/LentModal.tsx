@@ -20,6 +20,7 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import {
   axiosCabinetById,
   axiosLentId,
+  axiosLentShareId,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 import { getExpireDateString } from "@/utils/dateUtils";
@@ -63,7 +64,9 @@ ${
   const tryLentRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
     try {
-      await axiosLentId(currentCabinetId);
+      if (props.lentType == "SHARE")
+        await await axiosLentShareId(currentCabinetId, -1);
+      else await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);

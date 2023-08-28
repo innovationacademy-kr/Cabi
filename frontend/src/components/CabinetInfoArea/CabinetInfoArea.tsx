@@ -90,7 +90,10 @@ const CabinetInfoArea: React.FC<{
                 text="닫기"
                 theme="grayLine"
               />
-              <CountTimeContainer isMine={true} />
+              <CountTimeContainer
+                isMine={true}
+                sessionExpiredAt={selectedCabinetInfo?.sessionExpiredAt}
+              />
             </>
           ) : (
             <>
@@ -134,7 +137,10 @@ const CabinetInfoArea: React.FC<{
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
             {selectedCabinetInfo.status == "IN_SESSION" && (
-              <CountTimeContainer isMine={false} />
+              <CountTimeContainer
+                isMine={false}
+                sessionExpiredAt={selectedCabinetInfo?.sessionExpiredAt}
+              />
             )}
             {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
               <WarningMessageStyled>
