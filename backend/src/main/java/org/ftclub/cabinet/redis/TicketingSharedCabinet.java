@@ -20,18 +20,19 @@ public class TicketingSharedCabinet {
 
 	private static final Integer MAX_SHARE_CODE_TRY = 3;
 
-	private final RedisTemplate<Long, Long> valueRedisTemplate;
+	//	private final RedisTemplate<Long, Long> valueRedisTemplate;
 	private final HashOperations<Long, Long, Integer> valueHashOperations;
 	private final ValueOperations<Long, Long> valueOperations;
 	private final RedisTemplate<Long, Integer> shadowKeyRedisTemplate;
 
 	@Autowired
 	public TicketingSharedCabinet(RedisTemplate<Long, Long> valueRedisTemplate,
-			ValueOperations<Long, Long> valueOperations,
 			RedisTemplate<Long, Integer> shadowKeyRedisTemplate) {
-		this.valueRedisTemplate = valueRedisTemplate;
-		this.valueOperations = this.valueRedisTemplate.opsForValue();
-		this.valueHashOperations = this.valueRedisTemplate.opsForHash();
+//		this.valueRedisTemplate = valueRedisTemplate;
+//		this.valueOperations = this.valueRedisTemplate.opsForValue();
+//		this.valueHashOperations = this.valueRedisTemplate.opsForHash();
+		this.valueOperations = valueRedisTemplate.opsForValue();
+		this.valueHashOperations = valueRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
 	}
 
