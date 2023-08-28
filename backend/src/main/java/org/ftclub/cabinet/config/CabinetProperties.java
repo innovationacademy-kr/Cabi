@@ -16,5 +16,8 @@ public class CabinetProperties {
 	private Integer penaltyDayShare;
 	@Value("${spring.cabinet.penalty.day.padding}")
 	private Integer penaltyDayPadding;
-
+	@Value("${spring.cabinet.lent.limit.share.min-user-count}")
+	private Long shareMinUserCount;
+	@Value("${spring.cabinet.lent.limit.share.max-user-count}")
+	private Long shareMaxUserCount;
 }

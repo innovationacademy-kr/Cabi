@@ -22,6 +22,8 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.redis.TicketingSharedCabinet;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.data.domain.Page;
@@ -42,7 +44,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;
 	private final CabinetMapper cabinetMapper;
-
+	private final TicketingSharedCabinet ticketingSharedCabinet;
 
 	/*-------------------------------------------READ-------------------------------------------*/
 
@@ -56,8 +58,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByUserId(userId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalElements());
+		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByUserId(userId,
+				pageable);
+		return generateLentHistoryPaginationDto(lentHistories.toList(),
+				lentHistories.getTotalElements());
 	}
 
 	@Override
@@ -66,8 +70,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		log.debug("Called getAllCabinetLentHistories: {}", cabinetId);
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalElements());
+		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId,
+				pageable);
+		return generateLentHistoryPaginationDto(lentHistories.toList(),
+				lentHistories.getTotalElements());
 	}
 
 	@Override
@@ -86,6 +92,23 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 //						e.getStartedAt(),
 //						e.getExpiredAt()))
 //				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<LentDto> getLentDtoListFromRedis(Long cabinetId) {
+		log.debug("Called getLentDtoListFromRedis: {}", cabinetId);
+
+		List<Long> userIds = lentOptionalFetcher.findUserIdsByCabinetIdFromRedis(cabinetId);
+		return userIds.stream().map(
+				userId -> {
+					User user = userOptionalFetcher.findUser(userId);
+					return new LentDto(
+							user.getUserId(),
+							user.getName(),
+							null,
+							null,
+							null);
+				}).collect(Collectors.toList());
 	}
 
 	/**
@@ -128,18 +151,40 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
 		log.debug("Called getMyLentInfo: {}", user.getName());
 		Cabinet myCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
-		if (myCabinet == null) {
-			return null;
+		if (myCabinet == null) { // 대여 기록이 없거나 대여 대기 중인 경우
+			return getMyLentInfoFromRedis(user);
 		}
 		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
-		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
+		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList,
+				null, null);
 	}
+
+	@Override
+	public MyCabinetResponseDto getMyLentInfoFromRedis(@UserSession UserSessionDto user) {
+		log.debug("Called getMyLentInfoFromRedis: {}", user.getName());
+		Long userId = user.getUserId();
+		Long cabinetId = lentOptionalFetcher.findCabinetIdByUserIdFromRedis(userId);
+		if (cabinetId == null) {
+			return null;
+		}
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+		List<LentDto> lentDtoList = getLentDtoListFromRedis(cabinetId);
+		return cabinetMapper.toMyCabinetResponseDto(cabinet, lentDtoList,
+				ticketingSharedCabinet.getShareCode(cabinetId),
+				ticketingSharedCabinet.getSessionExpiredAt(cabinetId));
+	}
+
 
 	/*--------------------------------------------CUD--------------------------------------------*/
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		lentService.startLentCabinet(userId, cabinetId);
+	}
+
+	@Override
+	public void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode) {
+		lentService.startLentShareCabinet(userId, cabinetId, shareCode);
 	}
 
 	@Override
@@ -158,6 +203,11 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		Cabinet cabinet = cabinetService.getLentCabinetByUserId(user.getUserId());
 		lentService.endLentCabinet(user.getUserId());
 		cabinetService.updateMemo(cabinet.getCabinetId(), lentEndMemoDto.getCabinetMemo());
+	}
+
+	@Override
+	public void cancelLentShareCabinet(Long userId, Long cabinetId) {
+		lentService.cancelLentShareCabinet(userId, cabinetId);
 	}
 
 	@Override
@@ -199,7 +249,6 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 				cabinetInfoRequestDto.getTitle(),
 				cabinetInfoRequestDto.getMemo());
 	}
-
 
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {
