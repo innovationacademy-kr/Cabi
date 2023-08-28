@@ -65,7 +65,7 @@ ${
     setIsLoading(true);
     try {
       if (props.lentType == "SHARE")
-        await await axiosLentShareId(currentCabinetId, -1);
+        await await axiosLentShareId(currentCabinetId, 0);
       else await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -132,7 +133,15 @@ public class TicketingSharedCabinet {
 	}
 
 	public Long findCabinetIdByUserId(Long userId) {
-		return valueOperations.get(userId);
+		try {
+			System.out.println("userId = " + userId);
+			System.out.println("valueOperations.get(userId) = " + valueOperations.get(userId));
+			Long aLong = valueOperations.get(userId);
+			return aLong;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public List<Long> getUserIdsByCabinetId(Long cabinetId) {
