@@ -1,15 +1,15 @@
 version: "3.6"
 
 services:
-  pinpoint-quickstart:
+  cabi-dev:
     build:
       context: .
       dockerfile: Dockerfile
 
-    container_name: "pinpoint-quickstart"
+    container_name: "cabi-dev"
     image: "pinpointdocker/pinpoint-quickstart"
     ports:
-      - "${APP_PORT:-8085}:2424"
+      - "${APP_PORT:-8085}:4242"
     volumes:
       - data-volume:/pinpoint-agent
     environment:

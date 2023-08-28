@@ -60,7 +60,8 @@ jobs:
 
           cp backend/build/libs/cabinet-*.jar deploy-dev/pinpoint-application/build
 
-          zip -r deploy.zip deploy-dev
+          mkdir -p deploy && cp -r deploy-dev/* deploy/
+          zip -r deploy.zip deploy
 
           aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_DEV_BUCKET_NAME }}/deploy.zip
 
