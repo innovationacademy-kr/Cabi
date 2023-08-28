@@ -8,17 +8,25 @@ spring:
     port: 2424
 
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3310/test_db
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:;MODE=MySQL
     username: root
     password: test_password
+
+  sql:
+    init:
+      mode: embedded
 
   jpa:
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
-      globally_quoted_identifiers: true
+      hibernate:
+        globally_quoted_identifiers: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: true
+    defer-datasource-initialization: true
 
   cabinet:
     lent:

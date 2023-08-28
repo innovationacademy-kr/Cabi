@@ -8,35 +8,9 @@ on:
 jobs:
   backend-CI:
     runs-on: ubuntu-latest
-    services:
-      mariadb:
-        image: mariadb:10.3.39
-        env:
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: test_user
-          MYSQL_PASSWORD: test_password
-          MYSQL_ROOT_PASSWORD: test_password
-        ports:
-          - 3310:3306
-        options: >-
-          --health-cmd "mysqladmin status -h 127.0.0.1 -P 3306 -u root -ptest_password"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - name: 체크아웃
-        uses: actions/checkout@v2
-
-      - name: DB에 샘플 데이터 삽입
-        run: >-
-          mysql --force
-          --host="127.0.0.1"
-          --port="3310"
-          --database="test_db"
-          --user="test_user"
-          --password="test_password"
-          < "backend/src/test/resources/database/spring_test_db.sql"
+        uses: actions/checkout@v3
 
       - name: JDK 11 설정
         uses: actions/setup-java@v3
@@ -51,6 +25,16 @@ jobs:
           echo "${{ secrets.APPLICATION_DEV_YML }}" | base64 --decode > backend/src/main/resources/application-dev.yml
           echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > backend/src/main/resources/application-auth.yml
           echo "${{ secrets.APPLICATION_MAIL_YML }}" | base64 --decode > backend/src/main/resources/application-mail.yml
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Gradle 빌드
         run: |
@@ -71,15 +55,15 @@ jobs:
       - name: Dev S3에 업로드
         if: ${{ github.ref == 'refs/heads/dev' }}
         run: |
-          mkdir -p before-deploy
-          cp backend/build/libs/cabinet-*.jar before-deploy/
-          cp scripts/deploy-dev.sh before-deploy/deploy.sh
-          cp appspec.yml before-deploy/
-          cp Dockerfile.dev before-deploy/Dockerfile
-          cd before-deploy && zip -r before-deploy *
-          cd ../ && mkdir -p deploy
-          mv before-deploy/before-deploy.zip deploy/deploy.zip
-          aws s3 cp deploy/deploy.zip s3://${{ secrets.AWS_S3_DEV_BUCKET_NAME }}/deploy.zip
+          echo "${{ secrets.PINPOINT_APPLICATION_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-application/.env
+          echo "${{ secrets.PINPOINT_AGENT_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-agent/.env
+
+          cp backend/build/libs/cabinet-*.jar deploy-dev/pinpoint-application/build
+
+          mkdir -p deploy && cp -r deploy-dev/* deploy/
+          zip -r deploy.zip deploy
+
+          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_DEV_BUCKET_NAME }}/deploy.zip
 
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_DEV_APP_NAME }} \
@@ -91,15 +75,15 @@ jobs:
       - name: Main S3에 업로드
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          mkdir -p before-deploy
-          cp backend/build/libs/cabinet-*.jar before-deploy/
-          cp scripts/deploy-main.sh before-deploy/deploy.sh
-          cp appspec.yml before-deploy/
-          cp Dockerfile.main before-deploy/Dockerfile
-          cd before-deploy && zip -r before-deploy *
-          cd ../ && mkdir -p deploy
-          mv before-deploy/before-deploy.zip deploy/deploy.zip
-          aws s3 cp deploy/deploy.zip s3://${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}/deploy.zip
+          echo "${{ secrets.PINPOINT_APPLICATION_PROD_ENV }}" | base64 --decode > deploy-main/pinpoint-application/.env
+          echo "${{ secrets.PINPOINT_AGENT_PROD_ENV }}" | base64 --decode > deploy-main/pinpoint-agent/.env
+
+          cp backend/build/libs/cabinet-*.jar deploy-main/pinpoint-application/build
+
+          mkdir -p deploy && cp -r deploy-main/* deploy/
+          zip -r deploy.zip deploy
+
+          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}/deploy.zip
 
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_MAIN_APP_NAME }} \
