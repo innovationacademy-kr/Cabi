@@ -55,15 +55,14 @@ jobs:
       - name: Dev S3에 업로드
         if: ${{ github.ref == 'refs/heads/dev' }}
         run: |
-          mkdir -p before-deploy
-          cp backend/build/libs/cabinet-*.jar before-deploy/
-          cp scripts/deploy-dev.sh before-deploy/deploy.sh
-          cp appspec.yml before-deploy/
-          cp Dockerfile.dev before-deploy/Dockerfile
-          cd before-deploy && zip -r before-deploy *
-          cd ../ && mkdir -p deploy
-          mv before-deploy/before-deploy.zip deploy/deploy.zip
-          aws s3 cp deploy/deploy.zip s3://${{ secrets.AWS_S3_DEV_BUCKET_NAME }}/deploy.zip
+          echo "${{ secrets.PINPOINT_APPLICATION_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-application/.env
+          echo "${{ secrets.PINPOINT_AGENT_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-agent/.env
+
+          cp backend/build/libs/cabinet-*.jar deploy-dev/pinpoint-application/build
+
+          zip -r deploy.zip deploy-dev
+
+          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_DEV_BUCKET_NAME }}/deploy.zip
 
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_DEV_APP_NAME }} \
