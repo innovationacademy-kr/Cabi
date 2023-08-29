@@ -4,6 +4,7 @@ import {
   myCabinetInfoState,
   targetCabinetInfoState,
   userState,
+  timeOverState,
 } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
@@ -55,6 +56,7 @@ export interface ICurrentModalStateInfo {
   passwordCheckModal: boolean;
   invitationCodeModal: boolean;
   extendModal: boolean;
+  cancelModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -79,7 +81,8 @@ export type TModalState =
   | "memoModal"
   | "passwordCheckModal"
   | "invitationCodeModal"
-  | "extendModal";
+  | "extendModal"
+  | "cancelModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -186,6 +189,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     passwordCheckModal: false,
     invitationCodeModal: false,
     extendModal: false,
+    cancelModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -248,7 +252,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       modalName = "passwordCheckModal";
     } else if (
       modalName === "lentModal" &&
-      cabinetViewData?.lentsLength &&
+      cabinetViewData?.status == "IN_SESSION" &&
       cabinetViewData.lentsLength >= 1
     ) {
       modalName = "invitationCodeModal";
@@ -305,7 +309,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   };
 
   const wrongCodeCounts = loadSharedWrongCodeCounts();
-  const [timeOver, setTimeOver] = useState(false);
+  const timeOver = useRecoilValue(timeOverState);
 
   return isAdmin ? (
     <>
@@ -345,7 +349,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       openModal={openModal}
       closeModal={closeModal}
       wrongCodeCounts={wrongCodeCounts}
-      setTimeOver={setTimeOver}
       timeOver={timeOver}
     />
   );

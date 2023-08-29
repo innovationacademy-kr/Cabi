@@ -10,6 +10,7 @@ import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ public class LentOptionalFetcher {
 	private final LentRepository lentRepository;
 	private final CabinetRepository cabinetRepository;
 	private final CabinetOptionalFetcher cabinetExceptionHandler;
+	private final TicketingSharedCabinet ticketingSharedCabinet;
 
 	public List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId) {
 		log.debug("Called findAllActiveLentByCabinetId: {}", cabinetId);
@@ -174,6 +176,28 @@ public class LentOptionalFetcher {
 		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
 	}
 
+	/**
+	 * Redis에서 유저가 대여대기중인 캐비넷을 가져옵니다.
+	 *
+	 * @param userId
+	 * @return 유저가 대여대기중인 cabinet Id
+	 */
+	public Long findCabinetIdByUserIdFromRedis(Long userId) {
+		log.debug("Called findActiveLentCabinetByUserIdFromRedis: {}", userId);
+		return ticketingSharedCabinet.findCabinetIdByUserId(userId);
+	}
+
+	/**
+	 * Redis에서 캐비넷을 대여대기중인 유저들의 user Ids를 가져옵니다.
+	 *
+	 * @param cabinetId 캐비넷 id
+	 * @return 해당 캐비넷을 대여대기중인 유저들의 user Ids
+	 */
+	public List<Long> findUserIdsByCabinetIdFromRedis(Long cabinetId) {
+		log.debug("Called findActiveLentUserIdsByCabinetId: {}", cabinetId);
+		return ticketingSharedCabinet.getUserIdsByCabinetId(cabinetId);
+	}
+
 	public List<LentHistory> findAllOverdueLent(LocalDateTime date, Pageable pageable) {
 		log.debug("Called findAllOverdueLent: {}", date);
 		return lentRepository.findAllOverdueLent(date, pageable);
@@ -182,5 +206,10 @@ public class LentOptionalFetcher {
 	public Integer countCabinetAllActiveLent(Long cabinetId) {
 		log.debug("Called countCabinetAllActiveLent: {}", cabinetId);
 		return lentRepository.countCabinetAllActiveLent(cabinetId);
+	}
+
+	public Long getSessionExpiredAtFromRedis(Long cabinetId) {
+		log.debug("Called getSessionExpiredAtFromRedis: {}", cabinetId);
+		return ticketingSharedCabinet.getSessionExpiredAt(cabinetId);
 	}
 }

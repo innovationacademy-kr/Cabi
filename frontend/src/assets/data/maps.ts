@@ -14,6 +14,7 @@ export enum additionalModalType {
   MODAL_OVERDUE_PENALTY = "MODAL_OVERDUE_PENALTY",
   MODAL_USE_EXTENSION = "MODAL_USE_EXTENSION",
   MODAL_OWN_EXTENSION = "MODAL_OWN_EXTENSION",
+  MODAL_CANCEL = "MODAL_CANCEL",
 }
 
 export const cabinetIconSrcMap = {
@@ -151,6 +152,10 @@ export const modalPropsMap = {
     type: "confirm",
     title: "연장권 정보",
     confirmMessage: "",
+  MODAL_CANCEL: {
+    type: "confirm",
+    title: "대기열 취소하기",
+    confirmMessage: "네, 취소할게요",
   },
 };
 
