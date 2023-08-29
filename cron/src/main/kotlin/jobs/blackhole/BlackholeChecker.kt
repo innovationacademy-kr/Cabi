@@ -15,7 +15,6 @@ import utils.ConfigLoader
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-// TODO: 로거 추가, 원래 서버에 요청 보내기
 private val log = KotlinLogging.logger {}
 interface BlackholeChecker: Sprinter<List<String>> {
     companion object {
