@@ -27,6 +27,6 @@ public class MyCabinetResponseDto {
 	private final Location location;
 	private final List<LentDto> lents;
 	// 공유사물함에 필요한 정보
-	private final Integer shareCode;
+	private final String shareCode;
 	private final Long sessionExpiredAt;
 }

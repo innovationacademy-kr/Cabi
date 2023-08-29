@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ShareCodeDto {
 
-	private Integer shareCode;
+	private String shareCode;
 }

@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.redis;
 
-import java.time.LocalDateTime;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -13,6 +12,8 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 
 @Component
@@ -54,11 +55,11 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
 		log.debug("Called onMessage: {}, {}", message.toString(), pattern);
-		String cabinetIdWithSuffix = message.toString().split(":")[0].split("\"")[1];
-		System.out.println("cabinetIdWithSuffix = " + cabinetIdWithSuffix);
-		Long cabinetId = Long.parseLong(cabinetIdWithSuffix);
+		String cabinetIdString = message.toString().split(":")[0];
+		log.debug("cabinetIdWithSuffix: {}", cabinetIdString);
+		Long cabinetId = Long.parseLong(cabinetIdString);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId); //
-		Long userCount = ticketingSharedCabinet.getSizeOfUsers(cabinetId);
+		Long userCount = ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString());
 		if (cabinetProperties.getShareMinUserCount() <= userCount
 				&& userCount <= cabinetProperties.getShareMaxUserCount()) {    // 2명 이상 4명 이하: 대여 성공
 			LocalDateTime now = LocalDateTime.now();

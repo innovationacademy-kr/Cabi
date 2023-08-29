@@ -87,7 +87,7 @@ public interface CabinetMapper {
 	@Mapping(target = "shareCode", source = "sessionShareCode")
 	@Mapping(target = "sessionExpiredAt", source = "sessionExpiredAt")
 	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents,
-			Integer sessionShareCode, Long sessionExpiredAt);
+			String sessionShareCode, Long sessionExpiredAt);
 
 	CabinetPreviewDto toCabinetPreviewDto(Cabinet cabinet, Integer userCount, String name);
 
