@@ -17,6 +17,14 @@ public interface LentService {
 	void startLentCabinet(Long userId, Long cabinetId);
 
 	/**
+	 * 공유사물함 대여를 합니다.
+	 *
+	 * @param userId    대여하려는 일반 user id
+	 * @param cabinetId 대여하려는 cabinet id
+	 */
+	void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode);
+
+	/**
 	 * 동아리 사물함 대여를 합니다.
 	 *
 	 * @param userId    대여하려는 동아리 user id
@@ -30,6 +38,13 @@ public interface LentService {
 	 * @param userId 반납하려는 user id
 	 */
 	void endLentCabinet(Long userId);
+
+	/**
+	 * 공유사물함 대기열에서 취소합니다.
+	 *
+	 * @param userId - 취소하려는 user id
+	 */
+	void cancelLentShareCabinet(Long userId, Long cabinetId);
 
 	/**
 	 * 사물함을 강제 반납 합니다. 유저가 벤이 되진 않습니다
