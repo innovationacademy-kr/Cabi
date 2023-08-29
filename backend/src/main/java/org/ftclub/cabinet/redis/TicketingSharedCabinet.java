@@ -21,19 +21,19 @@ public class TicketingSharedCabinet {
 	private static final Integer MAX_SHARE_CODE_TRY = 3;
 	private static final String SUFFIX = ":cabinet";
 
-	//	private final RedisTemplate<Long, Long> valueRedisTemplate;
 	private final HashOperations<Long, Long, Integer> valueHashOperations;
-	private final ValueOperations<Long, Long> valueOperations;	// TODO: redisTemplate 분리
+	private final ValueOperations<Long, Long> valueOperations;
 	private final RedisTemplate<String, Integer> shadowKeyRedisTemplate;
 
 	@Autowired
-	public TicketingSharedCabinet(RedisTemplate<Long, Long> valueRedisTemplate,
+	public TicketingSharedCabinet(RedisTemplate<Long, Object> valueHashRedisTemplate,
+								  RedisTemplate<Long, Long> valueRedisTemplate,
 								  RedisTemplate<String, Integer> shadowKeyRedisTemplate) {
 //		this.valueRedisTemplate = valueRedisTemplate;
 //		this.valueOperations = this.valueRedisTemplate.opsForValue();
 //		this.valueHashOperations = this.valueRedisTemplate.opsForHash();
 		this.valueOperations = valueRedisTemplate.opsForValue();
-		this.valueHashOperations = valueRedisTemplate.opsForHash();
+		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
 	}
 
@@ -129,10 +129,12 @@ public class TicketingSharedCabinet {
 	}
 
 	public Long findCabinetIdByUserId(Long userId) {
-		log.info("userId: {}", userId);
-		log.info("valueOperations.get(userId): {}", valueOperations.get(userId));
-
-		return valueOperations.get(userId);
+		String cabinetIdString = String.valueOf(valueOperations.get(userId));
+		if (cabinetIdString == null || cabinetIdString.equals("null")) {
+			log.info("cabinetIdString is null");
+			return null;
+		}
+		return Long.parseLong(cabinetIdString);
 	}
 
 	public ArrayList<Long> getUserIdsByCabinetId(Long cabinetId) {
