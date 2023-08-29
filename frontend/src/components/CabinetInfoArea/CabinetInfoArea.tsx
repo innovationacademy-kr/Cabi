@@ -140,6 +140,19 @@ const CabinetInfoArea: React.FC<{
               }
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
+            {isExtendable &&
+            !isMine &&
+            selectedCabinetInfo!.lentType === "PRIVATE" ? (
+              <ButtonContainer
+                onClick={() => {
+                  openModal("extendModal");
+                }}
+                text={"연장권 보유중"}
+                theme="line"
+                iconSrc="/src/assets/images/extensionTicket.svg"
+                iconAlt="연장권 아이콘"
+              />
+            ) : null}
             {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
             )}
@@ -161,12 +174,14 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.cabinetId === 0 ? "-" : expireDate}
       </CabinetLentDateInfoStyled>
       <CabinetInfoButtonsContainerStyled>
-        {isExtendable && selectedCabinetInfo!.lentType === "PRIVATE" ? (
+        {isExtendable &&
+        isMine &&
+        selectedCabinetInfo!.lentType === "PRIVATE" ? (
           <ButtonContainer
             onClick={() => {
               openModal("extendModal");
             }}
-            text={isMine ? "연장권 사용하기" : "연장권 보유중"}
+            text={"연장권 사용하기"}
             theme="line"
             iconSrc="/src/assets/images/extensionTicket.svg"
             iconAlt="연장권 아이콘"
