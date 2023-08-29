@@ -164,6 +164,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		log.debug("Called getMyLentInfoFromRedis: {}", user.getName());
 		Long userId = user.getUserId();
 		Long cabinetId = lentOptionalFetcher.findCabinetIdByUserIdFromRedis(userId);
+		log.debug("cabinetId: {}", cabinetId);
 		if (cabinetId == null) {
 			return null;
 		}

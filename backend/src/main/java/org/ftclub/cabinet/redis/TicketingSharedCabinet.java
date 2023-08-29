@@ -1,17 +1,18 @@
 package org.ftclub.cabinet.redis;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -22,12 +23,12 @@ public class TicketingSharedCabinet {
 
 	//	private final RedisTemplate<Long, Long> valueRedisTemplate;
 	private final HashOperations<Long, Long, Integer> valueHashOperations;
-	private final ValueOperations<Long, Long> valueOperations;
+	private final ValueOperations<Long, Long> valueOperations;	// TODO: redisTemplate 분리
 	private final RedisTemplate<String, Integer> shadowKeyRedisTemplate;
 
 	@Autowired
 	public TicketingSharedCabinet(RedisTemplate<Long, Long> valueRedisTemplate,
-			RedisTemplate<String, Integer> shadowKeyRedisTemplate) {
+								  RedisTemplate<String, Integer> shadowKeyRedisTemplate) {
 //		this.valueRedisTemplate = valueRedisTemplate;
 //		this.valueOperations = this.valueRedisTemplate.opsForValue();
 //		this.valueHashOperations = this.valueRedisTemplate.opsForHash();
@@ -100,7 +101,7 @@ public class TicketingSharedCabinet {
 
 	public void setShadowKey(Long cabinetId) {
 		Random rand = new Random();
-		int shareCode = 1000 + rand.nextInt(9000); // TODO: random
+		int shareCode = 1000 + rand.nextInt(9000);
 //		int shareCode = 1000;
 		String key = cabinetId + SUFFIX;
 		shadowKeyRedisTemplate.opsForValue().set(key, shareCode);
@@ -128,15 +129,10 @@ public class TicketingSharedCabinet {
 	}
 
 	public Long findCabinetIdByUserId(Long userId) {
-		try {
-			System.out.println("userId = " + userId);
-			System.out.println("valueOperations.get(userId) = " + valueOperations.get(userId));
-			log.debug("userId type: {}", userId.getClass().getName());
-			return valueOperations.get(userId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		log.info("userId: {}", userId);
+		log.info("valueOperations.get(userId): {}", valueOperations.get(userId));
+
+		return valueOperations.get(userId);
 	}
 
 	public ArrayList<Long> getUserIdsByCabinetId(Long cabinetId) {
