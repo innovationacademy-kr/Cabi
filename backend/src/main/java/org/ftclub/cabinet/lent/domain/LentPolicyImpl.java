@@ -50,6 +50,8 @@ public class LentPolicyImpl implements LentPolicy {
 
 		LentType lentType = cabinet.getLentType();
 		switch (lentType) {
+//			case SHARE:
+//				return now.plusDays(getDaysForLentTermShare(4));
 			case PRIVATE:
 				return now.plusDays(getDaysForLentTermPrivate());
 			case CLUB:
@@ -204,7 +206,7 @@ public class LentPolicyImpl implements LentPolicy {
 			case ALL_BANNED_USER:
 				handleBannedUserResponse(status, banHistory.get(0));
 //			case SHARE_BANNED_USER:
-
+//				handleBannedUserResponse(status, banHistory.get(0));
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			case NOT_USER:

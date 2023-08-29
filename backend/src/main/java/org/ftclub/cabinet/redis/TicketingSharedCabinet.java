@@ -130,12 +130,14 @@ public class TicketingSharedCabinet {
 	}
 
 	public Long findCabinetIdByUserId(Long userId) {
-		try {
-			return valueOperations.get(userId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+//		try {
+//			return valueOperations.get(userId);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		return valueOperations.get(userId);
+
+//		return null;
 	}
 
 	public List<Long> getUserIdsByCabinetId(Long cabinetId) {

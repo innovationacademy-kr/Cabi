@@ -10,6 +10,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 @Getter
 @Configuration
@@ -46,6 +47,7 @@ public class RedisRepositoryConfig {
 		RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory());
 		redisTemplate.setKeySerializer(new JdkSerializationRedisSerializer());
+		redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
 //		redisTemplate.setKeySerializer(new StringRedisSerializer());
 		return redisTemplate;
 	}

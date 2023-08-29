@@ -36,7 +36,7 @@ public class LentServiceImpl implements LentService {
 	private final LentPolicy lentPolicy;
 	private final LentOptionalFetcher lentOptionalFetcher;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
-	private final UserOptionalFetcher userExceptionHandler;
+	private final UserOptionalFetcher userExceptionHandler; // todo : userExceptionHandler -> userOptionalFetcher (why userExceptionHandler?)
 	private final UserService userService;
 	private final BanHistoryRepository banHistoryRepository;
 	private final LentMapper lentMapper;
