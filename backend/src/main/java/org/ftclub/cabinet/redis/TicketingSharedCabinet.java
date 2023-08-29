@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class TicketingSharedCabinet {
 
 	private static final String MAX_SHARE_CODE_TRY = "3";
-	private static final String PASSWORD_CORRECT = "-1";
+	private static final String USER_ENTERED = "entered";
 	private static final String SHADOW_KEY_SUFFIX = ":shadow";
 	private static final String VALUE_KEY_SUFFIX = ":user";
 
@@ -72,7 +72,7 @@ public class TicketingSharedCabinet {
 
 	public Long getSizeOfUsers(String key) {
 		Map<String, String> entries = valueHashOperations.entries(key);
-		return entries.values().stream().filter(Objects::nonNull).filter(value -> value.equals(PASSWORD_CORRECT))
+		return entries.values().stream().filter(Objects::nonNull).filter(value -> value.equals(USER_ENTERED))
 				.count();
 	}
 
@@ -120,7 +120,7 @@ public class TicketingSharedCabinet {
 //			return null;
 //		}
 //		return Long.parseLong(cabinetIdString);
-		log.info("userId: {}", userId);
+		log.debug("userId: {}", userId);
 		String cabinetId = valueOperations.get(userId + VALUE_KEY_SUFFIX);
 		if (cabinetId == null) {
 			log.info("cabinetId is null");
@@ -131,7 +131,7 @@ public class TicketingSharedCabinet {
 
 	public ArrayList<String> getUserIdsByCabinetId(String cabinetId) {
 		Map<String, String> entries = valueHashOperations.entries(cabinetId);
-		return entries.entrySet().stream().filter(entry -> entry.getValue().equals("-1")).map(
+		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(USER_ENTERED)).map(
 				Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
 
