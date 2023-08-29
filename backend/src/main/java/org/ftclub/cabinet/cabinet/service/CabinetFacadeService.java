@@ -152,4 +152,5 @@ public interface CabinetFacadeService {
 	 * @param clubStatusRequestDto
 	 */
 	void updateCabinetClubStatus(CabinetClubStatusRequestDto clubStatusRequestDto);
+
 }

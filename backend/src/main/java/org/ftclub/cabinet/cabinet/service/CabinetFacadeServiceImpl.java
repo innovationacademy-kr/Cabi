@@ -238,7 +238,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 						entry.getValue()))
 				.collect(Collectors.toList());
 	}
-
+/**
+ * CACHE 적용되어 사용될 코드
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection2(String building,
 			Integer floor) {
@@ -295,7 +296,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				.collect(Collectors.toList());
 	}
 
-
+**/
 	private CabinetPreviewDto createCabinetPreviewDto(Cabinet cabinet,
 			List<LentHistory> lentHistories) {
 		String lentUserName = null;

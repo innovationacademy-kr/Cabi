@@ -51,8 +51,6 @@ public class CabinetController {
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
-
-//		return cabinetFacadeService.getCabinetsPerSectionDSL(building, floor);
 		return cabinetFacadeService.getCabinetsPerSectionDSL(building, floor);
 	}
 

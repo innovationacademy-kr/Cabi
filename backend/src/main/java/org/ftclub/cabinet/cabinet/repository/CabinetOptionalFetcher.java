@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.repository;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -88,6 +89,11 @@ public class CabinetOptionalFetcher {
 	public List<String> findAllSectionsByBuildingAndFloor(String building, Integer floor) {
 		log.debug("Called findAllSectionsByBuildingAndFloor: {}, {}", building, floor);
 		return cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor);
+	}
+
+	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus, LocalDateTime currentDate) {
+		log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}", cabinetStatus);
+		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus, currentDate);
 	}
 
 	/*-------------------------------------------GET--------------------------------------------*/

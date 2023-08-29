@@ -1,8 +1,10 @@
 package org.ftclub.cabinet.cabinet.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.User;
@@ -15,4 +17,6 @@ public interface CabinetComplexRepository {
 			String building, Integer floor);
 
 	List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor);
+
+	List<Cabinet> findAllCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus, LocalDateTime endedAt);
 }
