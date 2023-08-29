@@ -9,6 +9,7 @@ import {
 import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
+import { UserDto } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import {
@@ -16,6 +17,28 @@ import {
   axiosDeleteCurrentBanLog,
 } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
+
+const getDefaultCabinetInfo = (myInfo: UserDto): CabinetInfo => ({
+  building: "",
+  floor: 0,
+  cabinetId: 0,
+  visibleNum: 0,
+  lentType: CabinetType.PRIVATE,
+  title: null,
+  maxUser: 0,
+  status: CabinetStatus.AVAILABLE,
+  section: "",
+  lents: [
+    {
+      userId: myInfo.userId,
+      name: myInfo.name,
+      lentHistoryId: 0,
+      startedAt: new Date(),
+      expiredAt: new Date(),
+    },
+  ] as LentDto[],
+  statusNote: "",
+});
 
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
@@ -31,28 +54,9 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
 
   async function setTargetCabinetInfoToMyCabinet() {
     if (myInfo.cabinetId === null) {
+      const defaultCabinetInfo = getDefaultCabinetInfo(myInfo);
+      setTargetCabinetInfo(defaultCabinetInfo);
       setCurrentCabinetId(0);
-      setTargetCabinetInfo({
-        building: "",
-        floor: 0,
-        cabinetId: 0,
-        visibleNum: 0,
-        lentType: CabinetType.PRIVATE,
-        title: null,
-        maxUser: 0,
-        status: CabinetStatus.AVAILABLE,
-        section: "",
-        lents: [
-          {
-            userId: myInfo.userId,
-            name: myInfo.name,
-            lentHistoryId: 0,
-            startedAt: new Date(),
-            expiredAt: new Date(),
-          },
-        ] as LentDto[],
-        statusNote: "",
-      });
       return;
     }
     setCurrentCabinetId(myInfo.cabinetId);
