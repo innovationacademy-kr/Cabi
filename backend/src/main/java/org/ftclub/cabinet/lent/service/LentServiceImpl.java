@@ -69,8 +69,8 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
-	public void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode) {
-		log.info("Called startLentShareCabinet: {}, {}", userId, cabinetId);
+	public void startLentShareCabinet(Long userId, Long cabinetId, String shareCode) {
+		log.info("Called startLentShareCabinet: {}, {}, {}", userId, cabinetId, shareCode);
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		User user = userExceptionHandler.getUser(userId);
@@ -88,7 +88,7 @@ public class LentServiceImpl implements LentService {
 			cabinet.specifyStatus(CabinetStatus.IN_SESSION);
 			ticketingSharedCabinet.setShadowKey(cabinetId);
 		}
-		ticketingSharedCabinet.saveValue(cabinetId, userId, shareCode, hasShadowKey);
+		ticketingSharedCabinet.saveValue(cabinetId.toString(), userId.toString(), shareCode, hasShadowKey);
 		// 4번째 (마지막) 대여자인 경우
 		if (Objects.equals(ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString()),
 				cabinetProperties.getShareMaxUserCount())) {

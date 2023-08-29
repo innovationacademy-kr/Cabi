@@ -176,7 +176,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
-	public void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode) {
+	public void startLentShareCabinet(Long userId, Long cabinetId, String shareCode) {
 		lentService.startLentShareCabinet(userId, cabinetId, shareCode);
 	}
 

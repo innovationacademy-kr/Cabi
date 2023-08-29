@@ -38,24 +38,6 @@ public class TicketingSharedCabinet {
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
 	}
 
-//	/**
-//	 * @param key     : cabinetId + suffix
-//	 * @param hashKey : ${userName} 또는 "userCount"
-//	 */
-//	public void saveValue(Long key, Long hashKey) {
-//		if (isUserInValueKey(key, hashKey)) {
-//			valueHashOperations.put(key, hashKey, getValue(key, hashKey) + 1);
-//		} else {
-//			if (getSizeOfUsers(key) == 0) // (최초에) 방장이 들어온 경우
-//			{
-//				valueHashOperations.put(key, hashKey, -1);
-//			} else // 방장 이후 유저가 들어올려고 시도한 경우
-//			{
-//				valueHashOperations.put(key, hashKey, 1);
-//			}
-//		}
-//	}
-
 	/**
 	 * @param key          : cabinetId
 	 * @param hashKey      : userId
@@ -80,11 +62,11 @@ public class TicketingSharedCabinet {
 		return Objects.equals(shadowKeyRedisTemplate.opsForValue().get(key + SHADOW_KEY_SUFFIX), shareCode);
 	}
 
-	public boolean checkPwTrialCount(Long key, Long hashKey) {
-		return Objects.equals(valueHashOperations.get(key, hashKey), MAX_SHARE_CODE_TRY);
+	public boolean checkPwTrialCount(String key, String hashKey) {
+		return Objects.equals(valueHashOperations.get(key, hashKey), "3");
 	}
 
-	public Boolean isUserInValueKey(Long key, Long hashKey) {
+	public Boolean isUserInValueKey(String key, String hashKey) {
 		return valueHashOperations.hasKey(key, hashKey);
 	}
 
@@ -98,8 +80,8 @@ public class TicketingSharedCabinet {
 		return valueHashOperations.get(key, hashKey);
 	}
 
-	public Integer getShareCode(Long key) {
-		return shadowKeyRedisTemplate.opsForValue().get(key);
+	public String getShareCode(Long key) {
+		return shadowKeyRedisTemplate.opsForValue().get(key + SHADOW_KEY_SUFFIX);
 	}
 
 	public void setShadowKey(Long cabinetId) {
@@ -109,8 +91,8 @@ public class TicketingSharedCabinet {
 		String key = cabinetId + SHADOW_KEY_SUFFIX;
 		shadowKeyRedisTemplate.opsForValue().set(key, shareCode.toString());
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
-		System.out.println("set expire time");
-		shadowKeyRedisTemplate.expire(key, 5, TimeUnit.SECONDS);
+		log.debug("setShadowKey: {}, shareCode: {}", key, shareCode);
+		shadowKeyRedisTemplate.expire(key, 30, TimeUnit.SECONDS);    // TODO: 10분으로 수정
 	}
 
 	public Boolean isShadowKey(Long cabinetId) {
