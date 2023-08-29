@@ -38,6 +38,7 @@ public class TicketingSharedCabinet {
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
 	}
 
+
 	/**
 	 * @param key          : cabinetId
 	 * @param hashKey      : userId
@@ -46,7 +47,7 @@ public class TicketingSharedCabinet {
 	 */
 	public void saveValue(String key, String hashKey, String shareCode, boolean hasShadowKey) {
 		if (!hasShadowKey || isValidShareCode(Long.valueOf(key), shareCode)) { // 방장이거나 초대코드를 맞게 입력한 경우
-			valueHashOperations.put(key, hashKey, PASSWORD_CORRECT);    // userId를 hashKey로 하여 -1을 value로 저장 // TODO: -1 대신 새로운 플래그값 넣어도 될듯?
+			valueHashOperations.put(key, hashKey, USER_ENTERED);    // userId를 hashKey로 하여 -1을 value로 저장 // TODO: -1 대신 새로운 플래그값 넣어도 될듯?
 			valueOperations.set(hashKey + VALUE_KEY_SUFFIX, key);    // userId를 key로 하여 cabinetId를 value로 저장
 		} else { // 초대코드가 틀린 경우
 			if (valueHashOperations.hasKey(key, hashKey)) { // 이미 존재하는 유저인 경우
