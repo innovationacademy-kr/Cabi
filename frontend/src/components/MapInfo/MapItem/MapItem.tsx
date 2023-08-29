@@ -49,7 +49,7 @@ const ItemStyled = styled.div<{
   grid-row-end: ${({ info }) => info.rowEnd};
   background: ${({ info }) =>
     info.type === "cabinet"
-      ? "#9747ff"
+      ? "var(--main-color)"
       : info.type === "floorInfo"
       ? "transparent"
       : "#bcb9b9"};

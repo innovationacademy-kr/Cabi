@@ -175,7 +175,7 @@ const CabinetListItemStyled = styled.div<{
   ${({ status }) =>
     status === "PENDING" &&
     css`
-      border: 2px solid #9747ff;
+      border: 2px solid var(--main-color);
     `}
     .cabinetLabelTextWrap {
     display: flex;
