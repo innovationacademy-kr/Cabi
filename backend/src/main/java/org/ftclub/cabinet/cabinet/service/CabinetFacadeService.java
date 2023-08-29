@@ -49,8 +49,10 @@ public interface CabinetFacadeService {
 	 */
 	List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor);
 
-	List<CabinetsPerSectionResponseDto> getCabinetsPerSectionRefactor(String building, Integer floor);
+	List<CabinetsPerSectionResponseDto> getCabinetsPerSectionRefactor(String building,
+			Integer floor);
 
+	List<CabinetsPerSectionResponseDto> getCabinetsPerSectionDSL(String building, Integer floor);
 	/**
 	 * 사물함의 상태 메모를 업데이트합니다.
 	 *

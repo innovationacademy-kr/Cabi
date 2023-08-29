@@ -39,15 +39,27 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findById(cabinetId).orElse(null);
 	}
 
-	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor) {
-		log.debug("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building, floor);
-		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building, floor).stream()
+	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(
+			String building, Integer floor) {
+		log.debug("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building,
+				floor);
+		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building,
+						floor).stream()
 				.map(result -> {
 					Cabinet cabinet = (Cabinet) result[0];
 					LentHistory lentHistory = (LentHistory) result[1];
 					User user = (User) result[2];
 					return cabinetMapper.toActiveCabinetInfoEntitiesDto(cabinet, lentHistory, user);
 				}).collect(Collectors.toList());
+	}
+
+	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor2(
+			String building, Integer floor) {
+		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+	}
+
+	public List<Cabinet> findCabinetsByBuildingAndFloor2(String building, Integer floor) {
+		return cabinetRepository.findAllCabinetsByBuildingAndFloor(building, floor);
 	}
 
 	/**
