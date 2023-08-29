@@ -3,7 +3,6 @@ import { useRecoilValue } from "recoil";
 import {
   myCabinetInfoState,
   targetCabinetInfoState,
-  userState,
   timeOverState,
   userState,
 } from "@/recoil/atoms";
@@ -58,7 +57,6 @@ export interface ICurrentModalStateInfo {
   invitationCodeModal: boolean;
   extendModal: boolean;
   cancelModal: boolean;
-  extendModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -192,7 +190,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     invitationCodeModal: false,
     extendModal: false,
     cancelModal: false,
-    extendModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -343,8 +340,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         (cabinetViewData?.status === "AVAILABLE" ||
           cabinetViewData?.status === "LIMITED_AVAILABLE" ||
           cabinetViewData?.status === "IN_SESSION") &&
-        myCabinetInfo?.cabinetId !== 0 &&
-        cabinetViewData.cabinetId !== 0
+        !myCabinetInfo.cabinetId
       }
       isExtendable={true}
       // isExtendable={myInfo.extendable} // TODO: 연장권 구현 후 수정

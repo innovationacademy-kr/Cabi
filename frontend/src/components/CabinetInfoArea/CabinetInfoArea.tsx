@@ -20,7 +20,6 @@ import {
 import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import ExtendModal from "../Modals/ExtendModal/ExtendModal";
 import CancelModal from "../Modals/CancelModal/CancelModal";
 import ExtendModal from "../Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
@@ -207,10 +206,6 @@ const CabinetInfoArea: React.FC<{
           cabinetId={selectedCabinetInfo?.cabinetId}
         />
       )}
-      {userModal.extendModal && (
-        <ExtendModal
-          onClose={() => closeModal("extendModal")}
-          cabinetId={selectedCabinetInfo?.cabinetId}
       {userModal.cancelModal && (
         <CancelModal
           lentType={selectedCabinetInfo!.lentType}
