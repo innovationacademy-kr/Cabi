@@ -129,12 +129,19 @@ public class TicketingSharedCabinet {
 	}
 
 	public Long findCabinetIdByUserId(Long userId) {
-		String cabinetIdString = String.valueOf(valueOperations.get(userId));
-		if (cabinetIdString == null || cabinetIdString.equals("null")) {
-			log.info("cabinetIdString is null");
+//		String cabinetIdString = String.valueOf(valueOperations.get(userId));
+//		if (cabinetIdString == null || cabinetIdString.equals("null")) {
+//			log.info("cabinetIdString is null");
+//			return null;
+//		}
+//		return Long.parseLong(cabinetIdString);
+		log.info("userId: {}", userId);
+		Long cabinetId = valueOperations.get(userId);
+		if (cabinetId == null) {
+			log.info("cabinetId is null");
 			return null;
 		}
-		return Long.parseLong(cabinetIdString);
+		return cabinetId;
 	}
 
 	public ArrayList<Long> getUserIdsByCabinetId(Long cabinetId) {
