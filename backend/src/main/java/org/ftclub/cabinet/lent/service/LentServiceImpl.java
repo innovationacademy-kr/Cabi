@@ -36,7 +36,7 @@ public class LentServiceImpl implements LentService {
 	private final LentPolicy lentPolicy;
 	private final LentOptionalFetcher lentOptionalFetcher;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
-	private final UserOptionalFetcher userExceptionHandler; // todo : userExceptionHandler -> userOptionalFetcher (why userExceptionHandler?)
+	private final UserOptionalFetcher userOptionalFetcher;
 	private final UserService userService;
 	private final BanHistoryRepository banHistoryRepository;
 	private final LentMapper lentMapper;
@@ -48,7 +48,7 @@ public class LentServiceImpl implements LentService {
 		log.info("Called startLentCabinet: {}, {}", userId, cabinetId);
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
-		User user = userExceptionHandler.getUser(userId);
+		User user = userOptionalFetcher.getUser(userId);
 		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
 		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
 				now);
@@ -72,7 +72,7 @@ public class LentServiceImpl implements LentService {
 		log.info("Called startLentShareCabinet: {}, {}", userId, cabinetId);
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
-		User user = userExceptionHandler.getUser(userId);
+		User user = userOptionalFetcher.getUser(userId);
 		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
 		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
 				now);
@@ -165,7 +165,7 @@ public class LentServiceImpl implements LentService {
 
 	private LentHistory returnCabinetByUserId(Long userId) {
 		log.debug("Called returnCabinet: {}", userId);
-		userExceptionHandler.getUser(userId);
+		userOptionalFetcher.getUser(userId);
 		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
@@ -181,7 +181,7 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {
 		log.debug("Called assignLent: {}, {}", userId, cabinetId);
-		userExceptionHandler.getUser(userId);
+		userOptionalFetcher.getUser(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		lentOptionalFetcher.checkExistedSpace(cabinetId);
 		LocalDateTime expirationDate = lentPolicy.generateExpirationDate(LocalDateTime.now(),
