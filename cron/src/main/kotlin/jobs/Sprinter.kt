@@ -1,5 +1,5 @@
 package jobs
 
-interface Sprinter<T> {
+fun interface Sprinter<T> {
     fun sprint(): T
 }

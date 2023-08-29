@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
 
-const val PROFILE = "user"
-const val USERNAME = "login"
-const val EMAIL = "email"
-const val BLACKHOLED_AT = "blackholed_at"
+private const val PROFILE = "user"
+private const val USERNAME = "login"
+private const val EMAIL = "email"
+private const val BLACKHOLED_AT = "blackholed_at"
 
 class CursusUsersDeserializer(val node: JsonNode) {
     fun toUsers(): List<UserProfile> {

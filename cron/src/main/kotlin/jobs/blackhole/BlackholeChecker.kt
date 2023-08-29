@@ -16,6 +16,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 private val log = KotlinLogging.logger {}
+private const val AUTHORIZATION = "Authorization"
+private const val BEARER_PREFIX = "Bearer "
+private const val DEFAULT_PAGE = 1
 interface BlackholeChecker: Sprinter<List<String>> {
     companion object {
         @JvmStatic fun create(): BlackholeChecker {
@@ -27,9 +30,6 @@ interface BlackholeChecker: Sprinter<List<String>> {
 
 class BlackholeCheckerImpl(val config: BlackholeCheckerConfig): BlackholeChecker {
     companion object {
-        private val AUTHORIZATION = "Authorization"
-        private val BEARER_PREFIX = "Bearer "
-        private val DEFAULT_PAGE = 1
     }
     private val ftTokenFetcher: FtTokenFetcher = FtTokenFetcher.create()
     private val client = OkHttpClient()
