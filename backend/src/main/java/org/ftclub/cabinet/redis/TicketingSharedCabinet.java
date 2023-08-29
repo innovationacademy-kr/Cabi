@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 public class TicketingSharedCabinet {
 
 	private static final Integer MAX_SHARE_CODE_TRY = 3;
-
-	//	private final RedisTemplate<Long, Long> valueRedisTemplate;
 	private final HashOperations<Long, Long, Integer> valueHashOperations;
 	private final ValueOperations<Long, Long> valueOperations;
 	private final RedisTemplate<Long, Integer> shadowKeyRedisTemplate;
@@ -29,9 +27,6 @@ public class TicketingSharedCabinet {
 	@Autowired
 	public TicketingSharedCabinet(RedisTemplate<Long, Long> valueRedisTemplate,
 			RedisTemplate<Long, Integer> shadowKeyRedisTemplate) {
-//		this.valueRedisTemplate = valueRedisTemplate;
-//		this.valueOperations = this.valueRedisTemplate.opsForValue();
-//		this.valueHashOperations = this.valueRedisTemplate.opsForHash();
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
@@ -93,6 +88,9 @@ public class TicketingSharedCabinet {
 
 	public ArrayList<Long> getUserIdList(Long key) {
 		Map<Long, Integer> entries = valueHashOperations.entries(key);
+		if (entries == null) {
+			return new ArrayList<>();
+		}
 		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(-1)).map(
 				Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
@@ -134,11 +132,8 @@ public class TicketingSharedCabinet {
 
 	public Long findCabinetIdByUserId(Long userId) {
 		try {
-			System.out.println("userId = " + userId);
-			System.out.println("valueOperations.get(userId) = " + valueOperations.get(userId));
-			Long aLong = valueOperations.get(userId);
-			return aLong;
-		}catch (Exception e){
+			return valueOperations.get(userId);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;

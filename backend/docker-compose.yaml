@@ -14,6 +14,12 @@ services:
     ports:
       - "3307:3306"
     tty: true
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    tty: true
   gateway:
     container_name: nginx_gateway
     image: nginx:latest
