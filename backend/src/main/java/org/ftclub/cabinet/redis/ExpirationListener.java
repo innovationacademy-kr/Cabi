@@ -53,8 +53,10 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	 */
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
-		log.debug("Called onMessage: {}, {}", message, pattern);
-		Long cabinetId = Long.parseLong(message.toString());    // message는 key인 cabinetId가 담겨있다.
+		log.debug("Called onMessage: {}, {}", message.toString(), pattern);
+		String cabinetIdWithSuffix = message.toString().split(":")[0].split("\"")[1];
+		System.out.println("cabinetIdWithSuffix = " + cabinetIdWithSuffix);
+		Long cabinetId = Long.parseLong(cabinetIdWithSuffix);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId); //
 		Long userCount = ticketingSharedCabinet.getSizeOfUsers(cabinetId);
 		if (cabinetProperties.getShareMinUserCount() <= userCount

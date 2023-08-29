@@ -1,34 +1,33 @@
 package org.ftclub.cabinet.redis;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log4j2
 public class TicketingSharedCabinet {
 
 	private static final Integer MAX_SHARE_CODE_TRY = 3;
+	private static final String SUFFIX = ":cabinet";
 
 	//	private final RedisTemplate<Long, Long> valueRedisTemplate;
 	private final HashOperations<Long, Long, Integer> valueHashOperations;
 	private final ValueOperations<Long, Long> valueOperations;
-	private final RedisTemplate<Long, Integer> shadowKeyRedisTemplate;
+	private final RedisTemplate<String, Integer> shadowKeyRedisTemplate;
 
 	@Autowired
 	public TicketingSharedCabinet(RedisTemplate<Long, Long> valueRedisTemplate,
-			RedisTemplate<Long, Integer> shadowKeyRedisTemplate) {
+			RedisTemplate<String, Integer> shadowKeyRedisTemplate) {
 //		this.valueRedisTemplate = valueRedisTemplate;
 //		this.valueOperations = this.valueRedisTemplate.opsForValue();
 //		this.valueHashOperations = this.valueRedisTemplate.opsForHash();
@@ -69,12 +68,12 @@ public class TicketingSharedCabinet {
 			int trialCount =
 					valueHashOperations.get(key, hashKey) != null ? getValue(key, hashKey) : 0;
 			valueHashOperations.put(key, hashKey, trialCount + 1);    // trialCount를 1 증가시켜서 저장
-			throw new ServiceException(ExceptionStatus.WRONG_SHARE_CODE);
+//			throw new ServiceException(ExceptionStatus.WRONG_SHARE_CODE);
 		}
 	}
 
 	public boolean isValidShareCode(Long key, Integer shareCode) {
-		return Objects.equals(shadowKeyRedisTemplate.opsForValue().get(key), shareCode);
+		return Objects.equals(shadowKeyRedisTemplate.opsForValue().get(key + SUFFIX), shareCode);
 	}
 
 	public boolean checkPwTrialCount(Long key, Long hashKey) {
@@ -91,12 +90,6 @@ public class TicketingSharedCabinet {
 				.count();
 	}
 
-	public ArrayList<Long> getUserIdList(Long key) {
-		Map<Long, Integer> entries = valueHashOperations.entries(key);
-		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(-1)).map(
-				Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
-	}
-
 	public Integer getValue(Long key, Long hashKey) {
 		return valueHashOperations.get(key, hashKey);
 	}
@@ -107,20 +100,22 @@ public class TicketingSharedCabinet {
 
 	public void setShadowKey(Long cabinetId) {
 		Random rand = new Random();
-		int shareCode = 1000 + rand.nextInt(9000);
-		shadowKeyRedisTemplate.opsForValue().set(cabinetId, shareCode);
+		int shareCode = 1000 + rand.nextInt(9000); // TODO: random
+//		int shareCode = 1000;
+		String key = cabinetId + SUFFIX;
+		shadowKeyRedisTemplate.opsForValue().set(key, shareCode);
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		System.out.println("set expire time");
-		shadowKeyRedisTemplate.expire(cabinetId, 5, TimeUnit.SECONDS);
+		shadowKeyRedisTemplate.expire(key, 5, TimeUnit.SECONDS);
 	}
 
 	public Boolean isShadowKey(Long cabinetId) {
 		// 해당 키가 존재하는지 확인
-		return shadowKeyRedisTemplate.hasKey(cabinetId);
+		return shadowKeyRedisTemplate.hasKey(cabinetId + SUFFIX);
 	}
 
 	public void deleteShadowKey(Long cabinetId) {
-		shadowKeyRedisTemplate.delete(cabinetId);
+		shadowKeyRedisTemplate.delete(cabinetId + SUFFIX);
 	}
 
 	public void deleteUserInValueKey(Long key, Long hashKey) { // user를 지우는 delete
@@ -136,19 +131,21 @@ public class TicketingSharedCabinet {
 		try {
 			System.out.println("userId = " + userId);
 			System.out.println("valueOperations.get(userId) = " + valueOperations.get(userId));
-			Long aLong = valueOperations.get(userId);
-			return aLong;
-		}catch (Exception e){
+			log.debug("userId type: {}", userId.getClass().getName());
+			return valueOperations.get(userId);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public List<Long> getUserIdsByCabinetId(Long cabinetId) {
-		return getUserIdList(cabinetId);
+	public ArrayList<Long> getUserIdsByCabinetId(Long cabinetId) {
+		Map<Long, Integer> entries = valueHashOperations.entries(cabinetId);
+		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(-1)).map(
+				Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	public Long getSessionExpiredAt(Long cabinetId) {
-		return shadowKeyRedisTemplate.getExpire(cabinetId, TimeUnit.SECONDS);
+		return shadowKeyRedisTemplate.getExpire(cabinetId + SUFFIX, TimeUnit.SECONDS);
 	}
 }

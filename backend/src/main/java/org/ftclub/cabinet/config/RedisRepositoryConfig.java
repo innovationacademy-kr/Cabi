@@ -10,7 +10,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Getter
@@ -18,6 +18,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 @EnableRedisRepositories // Redis Repository 활성화
 public class RedisRepositoryConfig {
+
+	private final String PATTERN = "__keyevent@*__:expired";
 
 	@Value("${spring.redis.host}")
 	private String host;
@@ -29,6 +31,7 @@ public class RedisRepositoryConfig {
 			RedisConnectionFactory redisConnectionFactory) {
 		RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
 		redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
+//		redisMessageListenerContainer.addMessageListener(eventListener, new PatternTopic(PATTERN));
 		return redisMessageListenerContainer;
 	}
 
@@ -45,10 +48,14 @@ public class RedisRepositoryConfig {
 	 */
 	@Bean
 	public RedisTemplate<?, ?> redisTemplate() {
-		RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
+		RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
+		GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 		redisTemplate.setConnectionFactory(redisConnectionFactory());
-		redisTemplate.setKeySerializer(new JdkSerializationRedisSerializer());
-		redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
+		redisTemplate.setKeySerializer(genericJackson2JsonRedisSerializer);
+		redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
+		redisTemplate.setHashKeySerializer(genericJackson2JsonRedisSerializer);
+		redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
 		return redisTemplate;
 	}
 }

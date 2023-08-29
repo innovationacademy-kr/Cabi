@@ -207,7 +207,7 @@ public class LentServiceImpl implements LentService {
 	}
 
 	public void saveLentHistories(LocalDateTime now, Long cabinetId) {
-		ArrayList<Long> userIdList = ticketingSharedCabinet.getUserIdList(cabinetId);
+		ArrayList<Long> userIdList = ticketingSharedCabinet.getUserIdsByCabinetId(cabinetId);
 		LocalDateTime expiredAt = lentPolicy.generateSharedCabinetExpirationDate(now,
 				userIdList.size());
 
