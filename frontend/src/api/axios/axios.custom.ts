@@ -449,7 +449,7 @@ export const axiosLentClubUser = async (
 const axiosLentShareIdURL = "/v4/lent/cabinets/share/";
 export const axiosLentShareId = async (
   cabinetId: number | null,
-  shareCode: number
+  shareCode: string
 ): Promise<any> => {
   if (cabinetId === null) return;
   try {
