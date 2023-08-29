@@ -102,15 +102,6 @@ const CabinetInfoArea: React.FC<{
             </>
           ) : (
             <>
-              {selectedCabinetInfo!.lentType === "PRIVATE" && isExtendable ? (
-                <ButtonContainer
-                  onClick={() => {
-                    openModal("extendModal");
-                  }}
-                  text="연장권 사용"
-                  theme="line"
-                />
-              ) : null}
               <ButtonContainer
                 onClick={() => {
                   openModal("returnModal");
