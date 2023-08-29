@@ -1,5 +1,11 @@
 package org.ftclub.cabinet.redis;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -8,13 +14,6 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -31,13 +30,12 @@ public class TicketingSharedCabinet {
 
 	@Autowired
 	public TicketingSharedCabinet(RedisTemplate<String, Object> valueHashRedisTemplate,
-								  RedisTemplate<String, String> valueRedisTemplate,
-								  RedisTemplate<String, String> shadowKeyRedisTemplate) {
+			RedisTemplate<String, String> valueRedisTemplate,
+			RedisTemplate<String, String> shadowKeyRedisTemplate) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
 	}
-
 
 	/**
 	 * @param key          : cabinetId
@@ -46,9 +44,12 @@ public class TicketingSharedCabinet {
 	 * @param hasShadowKey : 최초 대여인지 아닌지 여부
 	 */
 	public void saveValue(String key, String hashKey, String shareCode, boolean hasShadowKey) {
-		if (!hasShadowKey || isValidShareCode(Long.valueOf(key), shareCode)) { // 방장이거나 초대코드를 맞게 입력한 경우
-			valueHashOperations.put(key, hashKey, USER_ENTERED);    // userId를 hashKey로 하여 -1을 value로 저장 // TODO: -1 대신 새로운 플래그값 넣어도 될듯?
-			valueOperations.set(hashKey + VALUE_KEY_SUFFIX, key);    // userId를 key로 하여 cabinetId를 value로 저장
+		if (!hasShadowKey || isValidShareCode(Long.valueOf(key),
+				shareCode)) { // 방장이거나 초대코드를 맞게 입력한 경우
+			valueHashOperations.put(key, hashKey,
+					USER_ENTERED);    // userId를 hashKey로 하여 -1을 value로 저장 // TODO: -1 대신 새로운 플래그값 넣어도 될듯?
+			valueOperations.set(hashKey + VALUE_KEY_SUFFIX,
+					key);    // userId를 key로 하여 cabinetId를 value로 저장
 		} else { // 초대코드가 틀린 경우
 			if (valueHashOperations.hasKey(key, hashKey)) { // 이미 존재하는 유저인 경우
 				valueHashOperations.increment(key, hashKey, 1L);    // trialCount를 1 증가시켜서 저장
@@ -60,7 +61,8 @@ public class TicketingSharedCabinet {
 	}
 
 	public boolean isValidShareCode(Long key, String shareCode) {
-		return Objects.equals(shadowKeyRedisTemplate.opsForValue().get(key + SHADOW_KEY_SUFFIX), shareCode);
+		return Objects.equals(shadowKeyRedisTemplate.opsForValue().get(key + SHADOW_KEY_SUFFIX),
+				shareCode);
 	}
 
 	public boolean checkPwTrialCount(String key, String hashKey) {
@@ -73,7 +75,8 @@ public class TicketingSharedCabinet {
 
 	public Long getSizeOfUsers(String key) {
 		Map<String, String> entries = valueHashOperations.entries(key);
-		return entries.values().stream().filter(Objects::nonNull).filter(value -> value.equals(USER_ENTERED))
+		return entries.values().stream().filter(Objects::nonNull)
+				.filter(value -> value.equals(USER_ENTERED))
 				.count();
 	}
 
@@ -93,7 +96,7 @@ public class TicketingSharedCabinet {
 		shadowKeyRedisTemplate.opsForValue().set(key, shareCode.toString());
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		log.debug("setShadowKey: {}, shareCode: {}", key, shareCode);
-		shadowKeyRedisTemplate.expire(key, 30, TimeUnit.SECONDS);    // TODO: 10분으로 수정
+		shadowKeyRedisTemplate.expire(key, 60, TimeUnit.SECONDS);    // TODO: 10분으로 수정
 	}
 
 	public Boolean isShadowKey(Long cabinetId) {
@@ -132,11 +135,16 @@ public class TicketingSharedCabinet {
 
 	public ArrayList<String> getUserIdsByCabinetId(String cabinetId) {
 		Map<String, String> entries = valueHashOperations.entries(cabinetId);
-		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(USER_ENTERED)).map(
-				Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
+		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(USER_ENTERED))
+				.map(
+						Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	public Long getSessionExpiredAt(Long cabinetId) {
 		return shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX, TimeUnit.SECONDS);
+	}
+
+	public ArrayList<String> findUsersInSessionByCabinetIdFromRedis(Long cabinetId) {
+		return new ArrayList<>(valueHashOperations.keys(cabinetId.toString()));
 	}
 }
