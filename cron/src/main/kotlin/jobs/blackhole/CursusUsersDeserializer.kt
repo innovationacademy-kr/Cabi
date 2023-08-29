@@ -9,12 +9,12 @@ private const val USERNAME = "login"
 private const val EMAIL = "email"
 private const val BLACKHOLED_AT = "blackholed_at"
 
-class CursusUsersDeserializer(val node: JsonNode) {
-    fun toUsers(): List<UserProfile> {
-        return node.map { toUserProfile(it) }
+object CursusUsersDeserializer {
+    fun toUsers(node: JsonNode): List<UserProfile> {
+        return node.map { toUser(it) }
     }
 
-    private fun toUserProfile(node: JsonNode): UserProfile {
+    fun toUser(node: JsonNode): UserProfile {
         val profile = node.get(PROFILE)
         return UserProfile(
             name = profile.get(USERNAME).asText(),
