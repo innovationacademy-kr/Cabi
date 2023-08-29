@@ -273,13 +273,12 @@ const CabinetRectangleStyled = styled.div<{
   ${({ cabinetStatus }) =>
     cabinetStatus === "PENDING" &&
     css`
-      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+      border: 2px solid var(--main-color);
     `}
   ${({ cabinetStatus }) =>
     cabinetStatus === "IN_SESSION" &&
     css`
-      border: 3px solid var(--main-color);
-      animation: ${Animation} 3.5s infinite;
+      animation: ${Animation} 2.5s infinite;
     `}
 `;
 

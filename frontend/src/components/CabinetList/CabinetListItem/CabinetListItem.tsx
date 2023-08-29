@@ -169,13 +169,12 @@ const CabinetListItemStyled = styled.div<{
     status === "IN_SESSION" &&
     css`
       animation: ${Animation} 2.5s infinite;
-      box-shadow: 0 -0.2em 1em #9747ff45, 0 0.5em 1.5em #9747ff45,
-        0 0.25em 0.5em hsla(190deg, 20%, 30%, 0.2);
     `}
   ${({ status }) =>
     status === "PENDING" &&
     css`
-      border: 2px solid #9747ff;
+      border: 2px solid var(--main-color);
+      box-shadow: 0 -0.2em 1em #9747ff45;
     `}
     .cabinetLabelTextWrap {
     display: flex;
@@ -205,11 +204,7 @@ const Animation = keyframes`
     background-color: var(--main-color);
   }
   50% {
-    background-color: #d9d9d9;
-    box-shadow: 0 -0.2em 1em #9747ff45, 0 0.5em 1.5em #9747ff45,
-        0 0.25em 0.3em -0.2em #7b7b7b,
-        0 0.25em 0.5em hsla(190deg, 20%, 30%, 0.2),
-        inset 0 -2px 2px rgb(255 255 255 / 23%);
+    background-color: #d6c5fa;
   }
 `;
 const CabinetIconNumberWrapperStyled = styled.div`
@@ -242,6 +237,11 @@ const CabinetNumberStyled = styled.p<{
     props.isMine &&
     css`
       color: var(--black);
+    `}
+  ${({ status }) =>
+    status === "PENDING" &&
+    css`
+      color: black;
     `}
 `;
 

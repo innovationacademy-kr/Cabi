@@ -25,7 +25,6 @@ const CabinetColorTable = () => {
       <ColorTableItemContainer color={"var(--full)"} text={"사용 중"} />
       <ColorTableItemContainer color={"var(--expired)"} text={"반납지연"} />
       <ColorTableItemContainer color={"var(--banned)"} text={"사용불가"} />
-      <ColorTableItemContainer color={"var(--session)"} text={"대기 중"} />
       <ColorTableItemContainer color={"var(--pending)"} text={"오픈예정"} />
     </ColorTableStyled>
   );
@@ -53,14 +52,9 @@ const ColorTableItemStyled = styled.div<{ color: string }>`
     margin-right: 5px;
     background-color: ${({ color }) => color};
     ${({ color }) =>
-      color === "var(--session)" &&
-      css`
-        border: 2px solid var(--main-color);
-      `}
-    ${({ color }) =>
       color === "var(--pending)" &&
       css`
-        background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+        border: 2px solid var(--main-color);
       `}
   }
 `;
