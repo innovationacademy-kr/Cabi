@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
@@ -123,12 +124,17 @@ public class LentServiceImpl implements LentService {
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
 		// delay
 		// 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원)) -> 내림 적용
-		Integer usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
-				cabinet.getCabinetId());
-		long daysRemaining =
-				lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * ((usersInShareCabinet - 1)
-						/ usersInShareCabinet);
-		lentHistory.setExpiredAt(LocalDateTime.now().plusDays(daysRemaining));
+		if (cabinet.getLentType().equals(LentType.SHARE)) {
+			Integer usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
+					cabinet.getCabinetId());
+			long daysRemaining =
+					lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * (
+							(usersInShareCabinet - 1)
+									/ usersInShareCabinet);
+			System.out.println("?????????? daysRemaining = " + daysRemaining);
+			lentHistory.setExpiredAt(LocalDateTime.now().plusDays(daysRemaining));
+		}
+
 		// scheduler
 	}
 
