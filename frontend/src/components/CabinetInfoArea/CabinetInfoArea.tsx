@@ -21,6 +21,7 @@ import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CancelModal from "../Modals/CancelModal/CancelModal";
+import ExtendModal from "../Modals/ExtendModal/ExtendModal";
 import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
 import CountTimeContainer from "./CountTime/CountTime.container";
 
@@ -30,6 +31,7 @@ const CabinetInfoArea: React.FC<{
   expireDate: string | null;
   isMine: boolean;
   isAvailable: boolean;
+  isExtendable: boolean;
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
@@ -41,6 +43,7 @@ const CabinetInfoArea: React.FC<{
   expireDate,
   isMine,
   isAvailable,
+  isExtendable,
   userModal,
   openModal,
   closeModal,
@@ -58,13 +61,17 @@ const CabinetInfoArea: React.FC<{
   ) : (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-        {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
+        {selectedCabinetInfo!.floor !== 0
+          ? selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section
+          : "-"}
       </TextStyled>
       <CabinetRectangleStyled
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={isMine}
       >
-        {selectedCabinetInfo!.visibleNum}
+        {selectedCabinetInfo!.visibleNum !== 0
+          ? selectedCabinetInfo!.visibleNum
+          : "-"}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}
@@ -133,6 +140,19 @@ const CabinetInfoArea: React.FC<{
               }
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
+            {isExtendable &&
+            !isMine &&
+            selectedCabinetInfo!.lentType === "PRIVATE" ? (
+              <ButtonContainer
+                onClick={() => {
+                  openModal("extendModal");
+                }}
+                text={"연장권 보유중"}
+                theme="line"
+                iconSrc="/src/assets/images/extensionTicket.svg"
+                iconAlt="연장권 아이콘"
+              />
+            ) : null}
             {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
             )}
@@ -141,6 +161,9 @@ const CabinetInfoArea: React.FC<{
                 초대 코드 입력 오류 초과로 <br />
                 입장이 제한된 상태입니다.
               </WarningMessageStyled>
+            )}
+            {selectedCabinetInfo.status == "PENDING" && (
+              <PendingMessageStyled>매일 13:00 오픈됩니다</PendingMessageStyled>
             )}
           </>
         )}
@@ -151,8 +174,23 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {expireDate}
+        {selectedCabinetInfo!.cabinetId === 0 ? "-" : expireDate}
       </CabinetLentDateInfoStyled>
+      <CabinetInfoButtonsContainerStyled>
+        {isExtendable &&
+        isMine &&
+        selectedCabinetInfo!.lentType === "PRIVATE" ? (
+          <ButtonContainer
+            onClick={() => {
+              openModal("extendModal");
+            }}
+            text={"연장권 사용하기"}
+            theme="line"
+            iconSrc="/src/assets/images/extensionTicket.svg"
+            iconAlt="연장권 아이콘"
+          />
+        ) : null}
+      </CabinetInfoButtonsContainerStyled>
       {userModal.unavailableModal && (
         <UnavailableModal
           status={additionalModalType.MODAL_UNAVAILABLE_ALREADY_LENT}
@@ -190,6 +228,12 @@ const CabinetInfoArea: React.FC<{
         <CancelModal
           lentType={selectedCabinetInfo!.lentType}
           closeModal={() => closeModal("cancelModal")}
+        />
+      )}
+      {userModal.extendModal && (
+        <ExtendModal
+          onClose={() => closeModal("extendModal")}
+          cabinetId={selectedCabinetInfo?.cabinetId}
         />
       )}
     </CabinetDetailAreaStyled>
@@ -263,13 +307,12 @@ const CabinetRectangleStyled = styled.div<{
   ${({ cabinetStatus }) =>
     cabinetStatus === "PENDING" &&
     css`
-      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+      border: 2px solid var(--main-color);
     `}
   ${({ cabinetStatus }) =>
     cabinetStatus === "IN_SESSION" &&
     css`
-      border: 3px solid var(--main-color);
-      animation: ${Animation} 3.5s infinite;
+      animation: ${Animation} 2.5s infinite;
     `}
 `;
 
@@ -278,7 +321,7 @@ const Animation = keyframes`
     background-color: var(--main-color);
   }
   50% {
-    background-color: #d9d9d9;
+    background-color: #d6c5fa;
   }
 `;
 
@@ -287,7 +330,7 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-height: 300px;
+  max-height: 255px;
   margin: 3vh 0;
   width: 100%;
 `;
@@ -303,6 +346,14 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
 
 const WarningMessageStyled = styled.p`
   color: red;
+  font-size: 1rem;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 26px;
+`;
+
+const PendingMessageStyled = styled.p`
   font-size: 1rem;
   margin-top: 8px;
   text-align: center;
