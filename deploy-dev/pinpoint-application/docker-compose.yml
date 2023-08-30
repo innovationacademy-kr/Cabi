@@ -12,6 +12,7 @@ services:
       - "${APP_PORT:-8085}:4242"
     volumes:
       - data-volume:/pinpoint-agent
+      - $HOME/logs/:logs/
     environment:
       JAVA_OPTS: "-javaagent:/pinpoint-agent/pinpoint-bootstrap-${PINPOINT_VERSION}.jar -Dpinpoint.agentId=${AGENT_ID} -Dpinpoint.applicationName=${APP_NAME} -Dpinpoint.profiler.profiles.active=${SPRING_PROFILES}"
     networks:
