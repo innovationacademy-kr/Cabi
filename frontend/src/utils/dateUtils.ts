@@ -27,8 +27,9 @@ export const getExpireDateString = (
 
 export const getExtendedDateString = (existExpireDate?: Date) => {
   let expireDate = existExpireDate ? new Date(existExpireDate) : new Date();
-  const addDays: string = import.meta.env.VITE_PRIVATE_LENT_PERIOD;
-  expireDate.setDate(expireDate.getDate() + parseInt(addDays) + 30); // TODO: env 에 import.meta.env.VITE_EXTENDED_LENT_PERIOD 추가
+  expireDate.setDate(
+    expireDate.getDate() + parseInt(import.meta.env.VITE_EXTENDED_LENT_PERIOD)
+  );
   return formatDate(expireDate);
 };
 
