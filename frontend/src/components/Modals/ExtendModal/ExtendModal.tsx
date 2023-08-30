@@ -21,7 +21,6 @@ import {
   axiosMyLentInfo, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
 } from "@/api/axios/axios.custom";
 import {
-  formatDate,
   getExtendedDateString,
   getLastDayofMonthString,
 } from "@/utils/dateUtils";
