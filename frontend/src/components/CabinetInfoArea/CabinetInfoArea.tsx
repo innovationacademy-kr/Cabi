@@ -162,6 +162,9 @@ const CabinetInfoArea: React.FC<{
                 입장이 제한된 상태입니다.
               </WarningMessageStyled>
             )}
+            {selectedCabinetInfo.status == "PENDING" && (
+              <PendingMessageStyled>매일 13:00 오픈됩니다</PendingMessageStyled>
+            )}
           </>
         )}
       </CabinetInfoButtonsContainerStyled>
@@ -304,13 +307,12 @@ const CabinetRectangleStyled = styled.div<{
   ${({ cabinetStatus }) =>
     cabinetStatus === "PENDING" &&
     css`
-      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
+      border: 2px solid var(--main-color);
     `}
   ${({ cabinetStatus }) =>
     cabinetStatus === "IN_SESSION" &&
     css`
-      border: 3px solid var(--main-color);
-      animation: ${Animation} 3.5s infinite;
+      animation: ${Animation} 2.5s infinite;
     `}
 `;
 
@@ -319,7 +321,7 @@ const Animation = keyframes`
     background-color: var(--main-color);
   }
   50% {
-    background-color: #d9d9d9;
+    background-color: #d6c5fa;
   }
 `;
 
@@ -344,6 +346,14 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
 
 const WarningMessageStyled = styled.p`
   color: red;
+  font-size: 1rem;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 26px;
+`;
+
+const PendingMessageStyled = styled.p`
   font-size: 1rem;
   margin-top: 8px;
   text-align: center;

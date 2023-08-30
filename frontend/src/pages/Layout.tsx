@@ -114,7 +114,7 @@ const WrapperStyled = styled.div`
 const MainStyled = styled.main`
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   user-select: none;
 `;
 
