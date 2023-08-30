@@ -123,7 +123,8 @@ public class LentPolicyImpl implements LentPolicy {
 		if (ret == LentPolicyStatus.FINE && ticketingSharedCabinet.isShadowKey(
 				cabinet.getCabinetId())) {
 			String passwordCount = ticketingSharedCabinet.getValue(cabinetId.toString(), userId.toString());
-			if (Integer.parseInt(passwordCount) >= 3) {
+			// 사물함을 빌릴 수 있는 유저면서, 해당 공유사물함에 처음 접근하는 유저인 경우
+			if (passwordCount != null && Integer.parseInt(passwordCount) >= 3) {
 				ret = LentPolicyStatus.SHARE_BANNED_USER;
 			}
 		}
