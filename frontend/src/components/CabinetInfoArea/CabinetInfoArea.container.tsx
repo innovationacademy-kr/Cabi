@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   myCabinetInfoState,
   targetCabinetInfoState,
@@ -15,6 +15,7 @@ import {
 } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import { axiosCabinetById, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
@@ -32,7 +33,6 @@ export interface ISelectedCabinetInfo {
   isAdmin: boolean;
   isLented: boolean;
   lentsLength: number;
-  sessionExpiredAt?: Date;
 }
 
 export interface IMultiSelectTargetInfo {
@@ -92,6 +92,11 @@ const setExpireDate = (date: Date | undefined) => {
   if (!date) return null;
   if (date.toString().slice(0, 4) === "9999") return null;
   return date.toString().slice(0, 10);
+};
+
+const setSessionExpireDate = (date: Date | undefined) => {
+  if (!date) return null;
+  return date;
 };
 
 const getCalcualtedTimeString = (expireTime: Date) => {
@@ -169,13 +174,19 @@ const loadSharedWrongCodeCounts = () => {
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
-  const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
-  const myCabinetInfo =
-    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
+    targetCabinetInfoState
+  );
+  const [myCabinetInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  // const myCabinetInfo =
+  //   useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet, toggleLent } = useMenu();
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
+  const [isTimeOver, setIsTimeOver] = useState(false);
+
   const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
     lentModal: false,
     unavailableModal: false,
@@ -206,7 +217,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         isAdmin: isAdmin,
         isLented: targetCabinetInfo.lents.length !== 0,
         lentsLength: targetCabinetInfo.lents.length,
-        sessionExpiredAt: targetCabinetInfo.sessionExpiredAt,
       }
     : null;
 
@@ -298,7 +308,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   };
 
   const wrongCodeCounts = loadSharedWrongCodeCounts();
-  const timeOver = useRecoilValue(timeOverState);
 
   return isAdmin ? (
     <>
@@ -332,7 +341,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       openModal={openModal}
       closeModal={closeModal}
       wrongCodeCounts={wrongCodeCounts}
-      timeOver={timeOver}
+      timeOver={isTimeOver}
     />
   );
 };
