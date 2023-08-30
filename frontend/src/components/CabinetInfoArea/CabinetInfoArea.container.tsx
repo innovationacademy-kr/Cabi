@@ -4,7 +4,6 @@ import {
   myCabinetInfoState,
   targetCabinetInfoState,
   timeOverState,
-  userState,
 } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
@@ -14,7 +13,6 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosCabinetById, axiosMyLentInfo } from "@/api/axios/axios.custom";
@@ -56,7 +54,6 @@ export interface ICurrentModalStateInfo {
   memoModal: boolean;
   passwordCheckModal: boolean;
   invitationCodeModal: boolean;
-  extendModal: boolean;
   cancelModal: boolean;
 }
 
@@ -82,7 +79,6 @@ export type TModalState =
   | "memoModal"
   | "passwordCheckModal"
   | "invitationCodeModal"
-  | "extendModal"
   | "cancelModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
@@ -114,7 +110,6 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
   const { lentType, title, maxUser, lents } = selectedCabinetInfo;
   if (lentType === "CLUB" && title) return title;
-  else if (maxUser === 0) return lents[0].name;
 
   // 그 외에는 유저리스트 반환
   const userNameList = new Array(maxUser)
@@ -199,7 +194,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     memoModal: false,
     passwordCheckModal: false,
     invitationCodeModal: false,
-    extendModal: false,
     cancelModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
@@ -267,12 +261,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       cabinetViewData.lentsLength >= 1
     ) {
       modalName = "invitationCodeModal";
-    } else if (
-      modalName === "extendModal" &&
-      cabinetViewData?.lentsLength &&
-      cabinetViewData.lentsLength >= 1
-    ) {
-      modalName = "extendModal";
     }
     setUserModal({
       ...userModal,
@@ -342,18 +330,13 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       selectedCabinetInfo={cabinetViewData}
       closeCabinet={closeCabinet}
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
-      isMine={
-        myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId ||
-        myCabinetInfo?.cabinetId === 0
-      }
+      isMine={myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId}
       isAvailable={
         (cabinetViewData?.status === "AVAILABLE" ||
           cabinetViewData?.status === "LIMITED_AVAILABLE" ||
           cabinetViewData?.status === "IN_SESSION") &&
         !myCabinetInfo.cabinetId
       }
-      isExtendable={true}
-      // isExtendable={myInfo.extendable} // TODO: 연장권 구현 후 수정
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
