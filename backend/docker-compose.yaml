@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   mariadb:
@@ -12,7 +12,7 @@ services:
       MARIADB_PASSWORD: YourPassword
       MARIADB_ROOT_PASSWORD: YourPassword
     ports:
-      - '3307:3306'
+      - "3307:3306"
     tty: true
   redis:
     container_name: redis
@@ -24,6 +24,6 @@ services:
     container_name: nginx_gateway
     image: nginx:latest
     ports:
-      - '80:80'
+      - "80:80"
     volumes:
       - ../dev/:/etc/nginx/conf.d/

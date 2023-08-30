@@ -2,6 +2,7 @@ package org.ftclub.cabinet.mapper;
 
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoDto;
@@ -71,7 +72,8 @@ public interface CabinetMapper {
 			List<CabinetPreviewDto> cabinets);
 
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
-	CabinetInfoResponseDto toCabinetInfoResponseDto(Cabinet cabinet, List<LentDto> lents);
+	CabinetInfoResponseDto toCabinetInfoResponseDto(Cabinet cabinet, List<LentDto> lents,
+			LocalDateTime sessionExpiredAt);
 
 	@Mapping(target = "totalLength", source = "totalLength")
 	CabinetPaginationDto toCabinetPaginationDtoList(List<CabinetDto> result,
@@ -87,7 +89,7 @@ public interface CabinetMapper {
 	@Mapping(target = "shareCode", source = "sessionShareCode")
 	@Mapping(target = "sessionExpiredAt", source = "sessionExpiredAt")
 	MyCabinetResponseDto toMyCabinetResponseDto(Cabinet cabinet, List<LentDto> lents,
-			Integer sessionShareCode, Long sessionExpiredAt);
+			String sessionShareCode, LocalDateTime sessionExpiredAt);
 
 	CabinetPreviewDto toCabinetPreviewDto(Cabinet cabinet, Integer userCount, String name);
 

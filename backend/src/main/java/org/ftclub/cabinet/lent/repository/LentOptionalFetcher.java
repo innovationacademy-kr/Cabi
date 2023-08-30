@@ -193,9 +193,9 @@ public class LentOptionalFetcher {
 	 * @param cabinetId 캐비넷 id
 	 * @return 해당 캐비넷을 대여대기중인 유저들의 user Ids
 	 */
-	public List<Long> findUserIdsByCabinetIdFromRedis(Long cabinetId) {
+	public List<String> findUserIdsByCabinetIdFromRedis(Long cabinetId) {
 		log.debug("Called findActiveLentUserIdsByCabinetId: {}", cabinetId);
-		return ticketingSharedCabinet.getUserIdsByCabinetId(cabinetId);
+		return ticketingSharedCabinet.getUserIdsByCabinetId(cabinetId.toString());
 	}
 
 	public List<LentHistory> findAllOverdueLent(LocalDateTime date, Pageable pageable) {
@@ -208,7 +208,7 @@ public class LentOptionalFetcher {
 		return lentRepository.countCabinetAllActiveLent(cabinetId);
 	}
 
-	public Long getSessionExpiredAtFromRedis(Long cabinetId) {
+	public LocalDateTime getSessionExpiredAtFromRedis(Long cabinetId) {
 		log.debug("Called getSessionExpiredAtFromRedis: {}", cabinetId);
 		return ticketingSharedCabinet.getSessionExpiredAt(cabinetId);
 	}
