@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.redis;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -140,8 +141,12 @@ public class TicketingSharedCabinet {
 						Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
 
-	public Long getSessionExpiredAt(Long cabinetId) {
-		return shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX, TimeUnit.SECONDS);
+	public LocalDateTime getSessionExpiredAt(Long cabinetId) {
+//		return shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX, TimeUnit.SECONDS);
+		LocalDateTime sessionExpiredAt = LocalDateTime.now().plusSeconds(
+				shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX, TimeUnit.SECONDS)
+						.longValue());
+		return sessionExpiredAt;
 	}
 
 	public ArrayList<String> findUsersInSessionByCabinetIdFromRedis(Long cabinetId) {

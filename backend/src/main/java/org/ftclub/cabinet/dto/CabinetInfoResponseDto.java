@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.dto;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,7 @@ public class CabinetInfoResponseDto {
 	@JsonUnwrapped
 	private final Location location;
 	private final List<LentDto> lents;
-	private final Long sessionExpiredAt;
+	private final LocalDateTime sessionExpiredAt;
 
 	public static boolean isValid(CabinetInfoResponseDto dto) {
 		return (dto != null && dto.cabinetId != null && dto.visibleNum != null
