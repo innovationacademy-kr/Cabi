@@ -49,10 +49,12 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
 		log.debug("Called getMyProfile: {}", user.getName());
-		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
-		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
+		User findUser = userOptionalFetcher.getUser(user.getUserId());
+		Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(findUser.getUserId());
+		BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(findUser.getUserId(),
 				LocalDateTime.now());
-		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory);
+		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
+				findUser.isExtensible());
 	}
 
 	@Override
