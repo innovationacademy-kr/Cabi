@@ -1,7 +1,8 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.util.List;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+
+import java.util.List;
 
 /**
  * 대여 관련된 서비스
@@ -22,7 +23,7 @@ public interface LentService {
 	 * @param userId    대여하려는 일반 user id
 	 * @param cabinetId 대여하려는 cabinet id
 	 */
-	void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode);
+	void startLentShareCabinet(Long userId, Long cabinetId, String shareCode);
 
 	/**
 	 * 동아리 사물함 대여를 합니다.
@@ -67,6 +68,13 @@ public interface LentService {
 	 * @param cabinetId 대여시킬 캐비넷 Id
 	 */
 	void assignLent(Long userId, Long cabinetId);
+
+	/**
+	 * Redis에 저장된 대여 정보를 DB에 저장하고 Redis에서 삭제합니다.
+	 *
+	 * @param cabinetIdString Redis에 저장된 대여 정보의 키
+	 */
+	void handleLentFromRedisExpired(String cabinetIdString);
 
 	/**
 	 * 현재 대여중인 모든 사물함의 대여기록을 가져옵니다.

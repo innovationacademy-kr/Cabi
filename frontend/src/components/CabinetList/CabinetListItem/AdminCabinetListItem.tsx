@@ -134,6 +134,11 @@ const CabinetListItemStyled = styled.div<{
 }>`
   position: relative;
   background-color: ${(props) => cabinetStatusColorMap[props.status]};
+  ${(props) =>
+    props.isMine &&
+    css`
+      background-color: var(--mine);
+    `}
   width: 80px;
   height: 80px;
   margin: 5px;
@@ -168,13 +173,13 @@ const CabinetListItemStyled = styled.div<{
     ${({ status }) =>
     status === "IN_SESSION" &&
     css`
-      animation: ${Animation} 2.5s infinite;
+      animation: ${Animation} 3.5s infinite;
+      border: 3px solid var(--main-color);
     `}
   ${({ status }) =>
     status === "PENDING" &&
     css`
-      border: 2px solid var(--main-color);
-      box-shadow: 0 -0.2em 1em #9747ff45;
+      background: linear-gradient(135deg, #dac6f4ea, var(--main-color));
     `}
     .cabinetLabelTextWrap {
     display: flex;
@@ -218,6 +223,11 @@ const CabinetLabelStyled = styled.p<{
   line-height: 1.25rem;
   letter-spacing: -0.02rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
+  ${(props) =>
+    props.isMine &&
+    css`
+      color: var(--black);
+    `}
 `;
 
 const CabinetNumberStyled = styled.p<{
@@ -226,10 +236,10 @@ const CabinetNumberStyled = styled.p<{
 }>`
   font-size: 0.875rem;
   color: ${(props) => cabinetLabelColorMap[props.status]};
-  ${({ status }) =>
-    status === "PENDING" &&
+  ${(props) =>
+    props.isMine &&
     css`
-      color: black;
+      color: var(--black);
     `}
 `;
 
@@ -243,6 +253,11 @@ const CabinetIconContainerStyled = styled.div<{
   background-image: url(${(props) => cabinetIconSrcMap[props.lentType]});
   background-size: contain;
   filter: ${(props) => cabinetFilterMap[props.status]};
+  ${(props) =>
+    props.isMine &&
+    css`
+      filter: none;
+    `};
 `;
 
 export default AdminCabinetListItem;

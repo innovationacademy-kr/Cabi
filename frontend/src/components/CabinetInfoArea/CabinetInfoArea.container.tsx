@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   myCabinetInfoState,
   targetCabinetInfoState,
   timeOverState,
-  userState,
 } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
@@ -14,9 +13,9 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import { axiosCabinetById, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
@@ -55,7 +54,6 @@ export interface ICurrentModalStateInfo {
   memoModal: boolean;
   passwordCheckModal: boolean;
   invitationCodeModal: boolean;
-  extendModal: boolean;
   cancelModal: boolean;
 }
 
@@ -81,7 +79,6 @@ export type TModalState =
   | "memoModal"
   | "passwordCheckModal"
   | "invitationCodeModal"
-  | "extendModal"
   | "cancelModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
@@ -97,6 +94,11 @@ const setExpireDate = (date: Date | undefined) => {
   return date.toString().slice(0, 10);
 };
 
+const setSessionExpireDate = (date: Date | undefined) => {
+  if (!date) return null;
+  return date;
+};
+
 const getCalcualtedTimeString = (expireTime: Date) => {
   const remainTime = calExpiredTime(expireTime);
   return remainTime < 0
@@ -108,7 +110,6 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
   const { lentType, title, maxUser, lents } = selectedCabinetInfo;
   if (lentType === "CLUB" && title) return title;
-  else if (maxUser === 0) return lents[0].name;
 
   // 그 외에는 유저리스트 반환
   const userNameList = new Array(maxUser)
@@ -173,14 +174,19 @@ const loadSharedWrongCodeCounts = () => {
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
-  const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
-  const myInfo = useRecoilValue<UserDto>(userState);
-  const myCabinetInfo =
-    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
+    targetCabinetInfoState
+  );
+  const [myCabinetInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  // const myCabinetInfo =
+  //   useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet, toggleLent } = useMenu();
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
+  const [isTimeOver, setIsTimeOver] = useState(false);
+
   const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
     lentModal: false,
     unavailableModal: false,
@@ -188,7 +194,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     memoModal: false,
     passwordCheckModal: false,
     invitationCodeModal: false,
-    extendModal: false,
     cancelModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
@@ -256,12 +261,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       cabinetViewData.lentsLength >= 1
     ) {
       modalName = "invitationCodeModal";
-    } else if (
-      modalName === "extendModal" &&
-      cabinetViewData?.lentsLength &&
-      cabinetViewData.lentsLength >= 1
-    ) {
-      modalName = "extendModal";
     }
     setUserModal({
       ...userModal,
@@ -309,7 +308,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   };
 
   const wrongCodeCounts = loadSharedWrongCodeCounts();
-  const timeOver = useRecoilValue(timeOverState);
 
   return isAdmin ? (
     <>
@@ -332,23 +330,18 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       selectedCabinetInfo={cabinetViewData}
       closeCabinet={closeCabinet}
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
-      isMine={
-        myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId ||
-        myCabinetInfo?.cabinetId === 0
-      }
+      isMine={myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId}
       isAvailable={
         (cabinetViewData?.status === "AVAILABLE" ||
           cabinetViewData?.status === "LIMITED_AVAILABLE" ||
           cabinetViewData?.status === "IN_SESSION") &&
         !myCabinetInfo.cabinetId
       }
-      isExtendable={true}
-      // isExtendable={myInfo.extendable} // TODO: 연장권 구현 후 수정
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
       wrongCodeCounts={wrongCodeCounts}
-      timeOver={timeOver}
+      timeOver={isTimeOver}
     />
   );
 };
