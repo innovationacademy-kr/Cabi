@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.redis;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -68,5 +69,10 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
 		}
 		ticketingSharedCabinet.deleteValueKey(cabinetId);
+		ArrayList<String> userIds = ticketingSharedCabinet.getUserIdsByCabinetId(
+				cabinetId.toString());
+		for (String userId : userIds) {
+			ticketingSharedCabinet.deleteValueKey(Long.valueOf(userId));
+		}
 	}
 }
