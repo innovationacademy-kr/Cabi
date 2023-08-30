@@ -3,8 +3,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { css, keyframes } from "styled-components";
 import {
   currentCabinetIdState,
+  myCabinetInfoState,
   targetCabinetInfoState,
-  userState,
 } from "@/recoil/atoms";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
@@ -14,15 +14,19 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import clockIcon from "@/assets/images/clock.svg";
-import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
-import { UserDto } from "@/types/dto/user.dto";
+import {
+  CabinetInfo,
+  CabinetPreviewInfo,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
-  const MY_INFO = useRecoilValue<UserDto>(userState);
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
   );
@@ -32,7 +36,9 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const { openCabinet, closeCabinet } = useMenu();
-  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
+  const isMine = myCabinetInfo
+    ? myCabinetInfo.cabinetId === props.cabinetId
+    : false;
 
   let cabinetLabelText = "";
 

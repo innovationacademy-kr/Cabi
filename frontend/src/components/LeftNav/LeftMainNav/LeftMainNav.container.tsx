@@ -12,13 +12,16 @@ import {
   currentFloorNumberState,
   currentMapFloorState,
   currentSectionNameState,
+  myCabinetInfoState,
   numberOfAdminWorkState,
   userState,
 } from "@/recoil/atoms";
 import { currentBuildingFloorState } from "@/recoil/selectors";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
-import { CabinetInfoByBuildingFloorDto } from "@/types/dto/cabinet.dto";
-import { UserDto } from "@/types/dto/user.dto";
+import {
+  CabinetInfoByBuildingFloorDto,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
 import { axiosCabinetByBuildingFloor } from "@/api/axios/axios.custom";
 import { removeCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
@@ -30,7 +33,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const setCurrentMapFloor = useSetRecoilState<number>(currentMapFloorState);
-  const myInfo = useRecoilValue<UserDto>(userState);
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
   const resetBuilding = useResetRecoilState(currentBuildingNameState);
@@ -69,7 +73,12 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       .catch((error) => {
         console.error(error);
       });
-  }, [currentBuilding, currentFloor, myInfo.cabinetId, numberOfAdminWork]);
+  }, [
+    currentBuilding,
+    currentFloor,
+    myCabinetInfo.cabinetId,
+    numberOfAdminWork,
+  ]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);

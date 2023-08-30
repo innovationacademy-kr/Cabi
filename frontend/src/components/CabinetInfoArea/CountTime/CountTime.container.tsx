@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  isCurrentSectionRenderState,
+  myCabinetInfoState,
+  targetCabinetInfoState,
+} from "@/recoil/atoms";
 import CodeAndTime from "@/components/CabinetInfoArea/CountTime/CodeAndTime";
 import CountTime from "@/components/CabinetInfoArea/CountTime/CountTime";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
@@ -45,6 +49,9 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
   const [myCabinetInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const [timeOver, setTimeOver] = useState(false);
+  const setIsCurrentSectionRender = useSetRecoilState(
+    isCurrentSectionRenderState
+  );
 
   const checkTimeOver = async () => {
     if (!timeOver && countDown <= 0) {
@@ -55,6 +62,8 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
 
         const { data: myLentInfo } = await axiosMyLentInfo();
         setMyLentInfo(myLentInfo);
+        setIsCurrentSectionRender(true);
+        console.log(setIsCurrentSectionRender);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
