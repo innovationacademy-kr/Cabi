@@ -342,8 +342,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
           cabinetViewData?.status === "IN_SESSION") &&
         !myCabinetInfo.cabinetId
       }
-      isExtendable={true}
-      // isExtendable={myInfo.extendable} // TODO: 연장권 구현 후 수정
+      isExtensible={myInfo.extensible}
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
