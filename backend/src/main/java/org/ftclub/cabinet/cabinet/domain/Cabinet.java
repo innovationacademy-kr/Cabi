@@ -224,7 +224,8 @@ public class Cabinet {
 			throw new DomainException(INVALID_STATUS);
 		}
 		if (userCount.equals(0)) {
-			this.status = CabinetStatus.AVAILABLE;
+			this.status = CabinetStatus.PENDING;
+//			this.status = CabinetStatus.AVAILABLE;
 			return;
 		}
 		if (userCount.equals(this.maxUser)) {

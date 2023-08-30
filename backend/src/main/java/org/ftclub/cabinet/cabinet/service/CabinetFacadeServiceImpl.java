@@ -100,7 +100,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				lentDtos, ticketingSharedCabinet.getSessionExpiredAt(cabinetId));
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -212,6 +211,54 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		return cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(), lentUserName);
 	}
 
+	@Override
+	public List<CabinetsPerSectionResponseDto> getCabinetsPerSectionDSL(String building,
+			Integer floor) {
+		log.debug("getCabinetsPerSection");
+		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor2(
+				building, floor);
+		List<Cabinet> allCabinetsByBuildingAndFloor = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(
+				building, floor);
+
+		Map<Cabinet, List<LentHistory>> cabinetLentHistories = currentLentCabinets.stream().
+				collect(Collectors.groupingBy(ActiveCabinetInfoEntities::getCabinet,
+						Collectors.mapping(ActiveCabinetInfoEntities::getLentHistory,
+								Collectors.toList())));
+
+		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new HashMap<>();
+		cabinetLentHistories.forEach((cabinet, lentHistories) -> {
+			String section = cabinet.getCabinetPlace().getLocation().getSection();
+			CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, lentHistories);
+			if (cabinetPreviewsBySection.containsKey(section)) {
+				cabinetPreviewsBySection.get(section).add(preview);
+			} else {
+				List<CabinetPreviewDto> previews = new ArrayList<>();
+				previews.add(preview);
+				cabinetPreviewsBySection.put(section, previews);
+			}
+		});
+		allCabinetsByBuildingAndFloor.forEach(cabinet -> {
+			if (!cabinetLentHistories.containsKey(cabinet)) {
+				String section = cabinet.getCabinetPlace().getLocation().getSection();
+				CabinetPreviewDto preview = createCabinetPreviewDto(cabinet,
+						Collections.emptyList());
+				if (cabinetPreviewsBySection.containsKey(section)) {
+					cabinetPreviewsBySection.get(section).add(preview);
+				} else {
+					List<CabinetPreviewDto> previews = new ArrayList<>();
+					previews.add(preview);
+					cabinetPreviewsBySection.put(section, previews);
+				}
+			}
+		});
+		cabinetPreviewsBySection.values().forEach(cabinetList -> cabinetList.sort(
+				Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
+		return cabinetPreviewsBySection.entrySet().stream()
+				.sorted(Comparator.comparing(entry -> entry.getValue().get(0).getVisibleNum()))
+				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
+						entry.getValue()))
+				.collect(Collectors.toList());
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -428,4 +475,65 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 //			cabinetService.updateLentType(cabinetId, lentType);
 //		}
 //	}
+
+
+	/**
+	 * CACHE 적용되어 사용될 코드
+	 @Transactional(readOnly = true)
+	 public List<CabinetsPerSectionResponseDto> getCabinetsPerSection2(String building,
+	 Integer floor) {
+	 log.debug("getCabinetsPerSection2");
+	 List<Cabinet> cabinetsByBuildingAndFloor2 = cabinetOptionalFetcher.findCabinetsByBuildingAndFloor2(
+	 building, floor);
+	 List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor2(
+	 building, floor);
+	 //		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+	 List<Cabinet> allCabinetsByBuildingAndFloor = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(
+	 building, floor);
+
+	 // 층별 / 건물로 가져온 Cabinet 은 cache
+	 // Cabinet 기준으로 lentHistory 를 조회
+	 // LentHistory와 연결된 User 조회
+
+	 Map<Cabinet, List<LentHistory>> cabinetLentHistories = currentLentCabinets.stream().
+	 collect(Collectors.groupingBy(ActiveCabinetInfoEntities::getCabinet,
+	 Collectors.mapping(ActiveCabinetInfoEntities::getLentHistory,
+	 Collectors.toList())));
+
+	 Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new HashMap<>();
+	 cabinetLentHistories.forEach((cabinet, lentHistories) -> {
+	 String section = cabinet.getCabinetPlace().getLocation().getSection();
+	 CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, lentHistories);
+	 if (cabinetPreviewsBySection.containsKey(section)) {
+	 cabinetPreviewsBySection.get(section).add(preview);
+	 } else {
+	 List<CabinetPreviewDto> previews = new ArrayList<>();
+	 previews.add(preview);
+	 cabinetPreviewsBySection.put(section, previews);
+	 }
+	 });
+	 allCabinetsByBuildingAndFloor.forEach(cabinet -> {
+	 if (!cabinetLentHistories.containsKey(cabinet)) {
+	 String section = cabinet.getCabinetPlace().getLocation().getSection();
+	 CabinetPreviewDto preview = createCabinetPreviewDto(cabinet,
+	 Collections.emptyList());
+	 if (cabinetPreviewsBySection.containsKey(section)) {
+	 cabinetPreviewsBySection.get(section).add(preview);
+	 } else {
+	 List<CabinetPreviewDto> previews = new ArrayList<>();
+	 previews.add(preview);
+	 cabinetPreviewsBySection.put(section, previews);
+	 }
+	 }
+	 });
+	 cabinetPreviewsBySection.values().forEach(cabinetList -> cabinetList.sort(
+	 Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
+	 return cabinetPreviewsBySection.entrySet().stream()
+	 .sorted(Comparator.comparing(entry -> entry.getValue().get(0).getVisibleNum()))
+	 .map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
+	 entry.getValue()))
+	 .collect(Collectors.toList());
+	 }
+
+	 **/
 }

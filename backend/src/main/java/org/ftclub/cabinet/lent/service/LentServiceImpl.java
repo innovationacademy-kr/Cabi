@@ -121,6 +121,9 @@ public class LentServiceImpl implements LentService {
 		// cabinetType도 인자로 전달하면 좋을 거 같습니다 (공유사물함 3일이내 반납 페널티)
 		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
+		// delay
+		
+		// scheduler
 	}
 
 	@Override
