@@ -35,7 +35,6 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
-  wrongCodeCounts: { [cabinetId: number]: number };
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -46,7 +45,6 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
-  wrongCodeCounts,
 }) => {
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
@@ -130,11 +128,7 @@ const CabinetInfoArea: React.FC<{
               }
               text="대여"
               theme="fill"
-              disabled={
-                !isAvailable ||
-                selectedCabinetInfo.lentType === "CLUB" ||
-                wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3
-              }
+              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
             {isExtendable &&
@@ -152,12 +146,6 @@ const CabinetInfoArea: React.FC<{
             ) : null}
             {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
-            )}
-            {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
-              <WarningMessageStyled>
-                초대 코드 입력 오류 초과로 <br />
-                입장이 제한된 상태입니다.
-              </WarningMessageStyled>
             )}
             {selectedCabinetInfo.status == "PENDING" && (
               <PendingMessageStyled>매일 13:00 오픈됩니다</PendingMessageStyled>

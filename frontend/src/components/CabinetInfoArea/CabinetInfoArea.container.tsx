@@ -91,11 +91,6 @@ const setExpireDate = (date: Date | undefined) => {
   return date.toString().slice(0, 10);
 };
 
-const setSessionExpireDate = (date: Date | undefined) => {
-  if (!date) return null;
-  return date;
-};
-
 const getCalcualtedTimeString = (expireTime: Date) => {
   const remainTime = calExpiredTime(expireTime);
   return remainTime < 0
@@ -151,24 +146,6 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
       : "var(--black)";
   // 빈 사물함
   else return "var(--black)";
-};
-
-const loadSharedWrongCodeCounts = () => {
-  const savedData = localStorage.getItem("wrongCodeCounts");
-  if (savedData) {
-    try {
-      const { data, expirationTime } = JSON.parse(savedData);
-      const ExpirationTime = new Date(expirationTime);
-      if (ExpirationTime > new Date()) {
-        return data;
-      } else {
-        localStorage.removeItem("wrongCodeCounts");
-      }
-    } catch (error) {
-      console.error("WrongCodeCounts:", error);
-    }
-  }
-  return {};
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
@@ -309,8 +286,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     return false;
   };
 
-  const wrongCodeCounts = loadSharedWrongCodeCounts();
-
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -347,7 +322,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
-      wrongCodeCounts={wrongCodeCounts}
     />
   );
 };
