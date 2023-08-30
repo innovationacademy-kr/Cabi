@@ -193,6 +193,28 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
+	public void handleLentFromRedisExpired(String cabinetIdString) {
+		Long cabinetId = Long.parseLong(cabinetIdString);
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
+		Long userCount = ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString());
+		if (cabinetProperties.getShareMinUserCount() <= userCount
+				&& userCount <= cabinetProperties.getShareMaxUserCount()) {    // 2명 이상 4명 이하: 대여 성공
+			LocalDateTime now = LocalDateTime.now();
+			cabinet.specifyStatus(CabinetStatus.FULL);
+			saveLentHistories(now, cabinetId);
+		} else {
+			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
+		}
+
+		ArrayList<String> userIds = ticketingSharedCabinet.getUserIdsByCabinetId(
+				cabinetId.toString());
+		for (String userId : userIds) {
+			ticketingSharedCabinet.deleteValueKey(Long.valueOf(userId));
+		}
+		ticketingSharedCabinet.deleteHashKey(cabinetId.toString());
+	}
+
+	@Override
 	public List<ActiveLentHistoryDto> getAllActiveLentHistories() {
 		log.debug("Called getAllActiveLentHistories");
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentHistories();

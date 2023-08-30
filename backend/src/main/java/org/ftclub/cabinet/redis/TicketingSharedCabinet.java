@@ -1,12 +1,5 @@
 package org.ftclub.cabinet.redis;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -15,6 +8,14 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -31,8 +32,8 @@ public class TicketingSharedCabinet {
 
 	@Autowired
 	public TicketingSharedCabinet(RedisTemplate<String, Object> valueHashRedisTemplate,
-			RedisTemplate<String, String> valueRedisTemplate,
-			RedisTemplate<String, String> shadowKeyRedisTemplate) {
+								  RedisTemplate<String, String> valueRedisTemplate,
+								  RedisTemplate<String, String> shadowKeyRedisTemplate) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
@@ -114,6 +115,10 @@ public class TicketingSharedCabinet {
 		valueOperations.getOperations().delete(hashKey + VALUE_KEY_SUFFIX);
 	}
 
+	public void deleteHashKey(String key) {
+		valueHashOperations.getOperations().delete(key);
+	}
+
 	public void deleteValueKey(Long key) {
 		valueOperations.getOperations().delete(key + VALUE_KEY_SUFFIX);
 	}
@@ -137,17 +142,15 @@ public class TicketingSharedCabinet {
 	public ArrayList<String> getUserIdsByCabinetId(String cabinetId) {
 		Map<String, String> entries = valueHashOperations.entries(cabinetId);
 		return entries.entrySet().stream().filter(entry -> entry.getValue().equals(USER_ENTERED))
-				.map(
-						Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
+				.map(Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	public LocalDateTime getSessionExpiredAt(Long cabinetId) {
 //		return shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX, TimeUnit.SECONDS);
 		if (isShadowKey(cabinetId)) {
-			LocalDateTime sessionExpiredAt = LocalDateTime.now().plusSeconds(
+			return LocalDateTime.now().plusSeconds(
 					shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX,
 							TimeUnit.SECONDS).longValue());
-			return sessionExpiredAt;
 		}
 		return null;
 	}
