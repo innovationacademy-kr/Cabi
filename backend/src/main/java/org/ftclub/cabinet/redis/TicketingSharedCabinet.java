@@ -97,7 +97,7 @@ public class TicketingSharedCabinet {
 		shadowKeyRedisTemplate.opsForValue().set(key, shareCode.toString());
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		log.debug("setShadowKey: {}, shareCode: {}", key, shareCode);
-		shadowKeyRedisTemplate.expire(key, 60, TimeUnit.SECONDS);    // TODO: 10분으로 수정
+		shadowKeyRedisTemplate.expire(key, 30, TimeUnit.SECONDS);    // TODO: 10분으로 수정
 	}
 
 	public Boolean isShadowKey(Long cabinetId) {
@@ -143,10 +143,13 @@ public class TicketingSharedCabinet {
 
 	public LocalDateTime getSessionExpiredAt(Long cabinetId) {
 //		return shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX, TimeUnit.SECONDS);
-		LocalDateTime sessionExpiredAt = LocalDateTime.now().plusSeconds(
-				shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX, TimeUnit.SECONDS)
-						.longValue());
-		return sessionExpiredAt;
+		if (isShadowKey(cabinetId)) {
+			LocalDateTime sessionExpiredAt = LocalDateTime.now().plusSeconds(
+					shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX,
+							TimeUnit.SECONDS).longValue());
+			return sessionExpiredAt;
+		}
+		return null;
 	}
 
 	public ArrayList<String> findUsersInSessionByCabinetIdFromRedis(Long cabinetId) {
