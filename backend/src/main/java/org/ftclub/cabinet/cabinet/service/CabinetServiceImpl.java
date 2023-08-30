@@ -8,6 +8,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
+import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
@@ -24,6 +25,7 @@ public class CabinetServiceImpl implements CabinetService {
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final UserOptionalFetcher userOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
+	private final CabinetProperties cabinetProperties;
 
 	/**
 	 * {@inheritDoc}
@@ -121,7 +123,8 @@ public class CabinetServiceImpl implements CabinetService {
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
 		cabinet.specifyLentType(lentType);
 		if (lentType == LentType.SHARE) {
-			cabinet.specifyMaxUser(3); // todo : policy에서 외부에서 설정된 properties 변수로 설정하게끔 수정
+			cabinet.specifyMaxUser(Math.toIntExact(
+					cabinetProperties.getShareMaxUserCount())); // todo : policy에서 외부에서 설정된 properties 변수로 설정하게끔 수정
 		} else { // club 도 1명으로 변경
 			cabinet.specifyMaxUser(1);
 		}
