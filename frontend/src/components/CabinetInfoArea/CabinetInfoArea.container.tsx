@@ -1,11 +1,6 @@
-import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  myCabinetInfoState,
-  targetCabinetInfoState,
-  timeOverState,
-  userState,
-} from "@/recoil/atoms";
+import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -14,10 +9,8 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { axiosCabinetById, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
@@ -190,7 +183,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
-  const [isTimeOver, setIsTimeOver] = useState(false);
 
   const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
     lentModal: false,
@@ -358,7 +350,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       openModal={openModal}
       closeModal={closeModal}
       wrongCodeCounts={wrongCodeCounts}
-      timeOver={isTimeOver}
     />
   );
 };

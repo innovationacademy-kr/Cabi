@@ -78,6 +78,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     currentFloor,
     myCabinetInfo.cabinetId,
     numberOfAdminWork,
+    myCabinetInfo.status,
   ]);
 
   const onClickFloorButton = (floor: number) => {
