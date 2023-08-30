@@ -1,5 +1,11 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -19,13 +25,6 @@ import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -88,7 +87,8 @@ public class LentServiceImpl implements LentService {
 			cabinet.specifyStatus(CabinetStatus.IN_SESSION);
 			ticketingSharedCabinet.setShadowKey(cabinetId);
 		}
-		ticketingSharedCabinet.saveValue(cabinetId.toString(), userId.toString(), shareCode, hasShadowKey);
+		ticketingSharedCabinet.saveValue(cabinetId.toString(), userId.toString(), shareCode,
+				hasShadowKey);
 		// 4번째 (마지막) 대여자인 경우
 		if (Objects.equals(ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString()),
 				cabinetProperties.getShareMaxUserCount())) {
@@ -122,7 +122,13 @@ public class LentServiceImpl implements LentService {
 		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
 		// delay
-		
+		// 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원)) -> 내림 적용
+		Integer usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
+				cabinet.getCabinetId());
+		long daysRemaining =
+				lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * ((usersInShareCabinet - 1)
+						/ usersInShareCabinet);
+		lentHistory.setExpiredAt(LocalDateTime.now().plusDays(daysRemaining));
 		// scheduler
 	}
 
@@ -233,12 +239,14 @@ public class LentServiceImpl implements LentService {
 	}
 
 	public void saveLentHistories(LocalDateTime now, Long cabinetId) {
-		ArrayList<String> userIdList = ticketingSharedCabinet.getUserIdsByCabinetId(cabinetId.toString());
+		ArrayList<String> userIdList = ticketingSharedCabinet.getUserIdsByCabinetId(
+				cabinetId.toString());
 		LocalDateTime expiredAt = lentPolicy.generateSharedCabinetExpirationDate(now,
 				userIdList.size());
 
 		// userId 반복문 돌면서 수행
-		userIdList.stream().map(userId -> LentHistory.of(now, expiredAt, Long.parseLong(userId), cabinetId))
+		userIdList.stream()
+				.map(userId -> LentHistory.of(now, expiredAt, Long.parseLong(userId), cabinetId))
 				.forEach(lentHistory -> {
 					lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 					lentRepository.save(lentHistory);
