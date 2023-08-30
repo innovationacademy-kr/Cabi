@@ -289,12 +289,17 @@ const CabinetRectangleStyled = styled.div<{
   border-radius: 10px;
   margin-top: 15px;
   margin-bottom: 3vh;
-  background-color: ${(props) => cabinetStatusColorMap[props.cabinetStatus]};
-  ${(props) =>
-    props.isMine &&
+  background-color: ${({ cabinetStatus, isMine }) =>
+    isMine && cabinetStatus !== "IN_SESSION"
+      ? "var(--mine)"
+      : cabinetStatusColorMap[cabinetStatus]};
+
+  ${({ cabinetStatus, isMine }) =>
+    cabinetStatus === "IN_SESSION" &&
     css`
-      background-color: var(--mine);
-    `};
+      animation: ${isMine ? Animation2 : Animation} 2.5s infinite;
+    `}
+
   font-size: 32px;
   color: ${(props) =>
     props.isMine
@@ -306,11 +311,6 @@ const CabinetRectangleStyled = styled.div<{
     css`
       border: 2px solid var(--main-color);
     `}
-  ${({ cabinetStatus }) =>
-    cabinetStatus === "IN_SESSION" &&
-    css`
-      animation: ${Animation} 2.5s infinite;
-    `}
 `;
 
 const Animation = keyframes`
@@ -319,6 +319,15 @@ const Animation = keyframes`
   }
   50% {
     background-color: #d6c5fa;
+  }
+`;
+
+const Animation2 = keyframes`
+  0%, 100% {
+    background-color: var(--mine);
+  }
+  50% {
+    background-color: #eeeeee;
   }
 `;
 
