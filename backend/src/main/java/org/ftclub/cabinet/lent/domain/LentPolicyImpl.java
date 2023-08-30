@@ -59,6 +59,15 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
+	public LocalDateTime generateExtendedExpirationDate(LocalDateTime now) {
+		log.info("Called generateExtendedExpirationDate now: {}, cabinet: {}", now);
+		if (!DateUtil.isSameDay(now)) {
+			throw new IllegalArgumentException("현재 시각이 아닙니다.");
+		}
+		return now.plusDays(getDaysForLentTermPrivate());
+	}
+
+	@Override
 	public void applyExpirationDate(LentHistory curHistory, LocalDateTime expiredAt) {
 		log.info(
 				"Called applyExpirationDate curHistory: {}, expiredAt: {}", curHistory, expiredAt);
@@ -174,6 +183,12 @@ public class LentPolicyImpl implements LentPolicy {
 	public Integer getDaysForLentTermShare(Integer totalUserCount) {
 		log.debug("Called getDaysForLentTermShare");
 		return cabinetProperties.getLentTermShare() * totalUserCount;
+	}
+
+	@Override
+	public int getDaysForTermExtend() {
+		log.debug("Called getDaysForTermExtend");
+		return cabinetProperties.getLentTermExtend();
 	}
 
 	@Override

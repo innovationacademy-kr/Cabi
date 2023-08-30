@@ -30,6 +30,12 @@ public interface LentPolicy {
 	LocalDateTime generateExpirationDate(LocalDateTime now, Cabinet cabinet);
 
 	/**
+	 * @param now
+	 * @return
+	 */
+	LocalDateTime generateExtendedExpirationDate(LocalDateTime now);
+
+	/**
 	 * 만료일을 @{@link LentHistory}에 적용시킵니다. 현재와 과거의 기록들에 적용합니다.
 	 *
 	 * @param curHistory 현재 대여 기록
@@ -69,6 +75,11 @@ public interface LentPolicy {
 	 * @return 공유 사물함을 대여 할 수 있는 날
 	 */
 	Integer getDaysForLentTermShare(Integer totalUserCount);
+
+	/**
+	 * @return 사물함 대여 기간 연장 가능한 날
+	 */
+	int getDaysForTermExtend();
 
 	/**
 	 * @return 만료가 임박하여 공유 사물함을 빌릴 수 없는 날

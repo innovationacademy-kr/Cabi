@@ -254,4 +254,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public void assignLent(Long userId, Long cabinetId) {
 		lentService.assignLent(userId, cabinetId);
 	}
+
+	@Override
+	public void extendLent(Long userId, Long cabinetId) {
+		log.info("Called extendLent userId: {}, cabinetId: {}", userId, cabinetId);
+		lentService.extendLentCabinet(userId, cabinetId);
+	}
 }
