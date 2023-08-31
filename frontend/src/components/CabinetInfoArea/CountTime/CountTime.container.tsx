@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
 import CodeAndTime from "@/components/CabinetInfoArea/CountTime/CodeAndTime";
 import CountTime from "@/components/CabinetInfoArea/CountTime/CountTime";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
@@ -17,7 +21,7 @@ const returnCountTime = (countDown: number) => {
 };
 
 const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
-  const calculateCountDown = (targetDate: Date | null) => {
+  const calculateCountDown = (targetDate: Date | undefined) => {
     if (!targetDate) return 0;
     if (typeof targetDate === "string") {
       targetDate = new Date(targetDate);
@@ -31,15 +35,13 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
   const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
     targetCabinetInfoState
   );
-
   const lastUpdatedTime = useRef<number>(Date.now());
-
   const initCountDown = calculateCountDown(targetCabinetInfo.sessionExpiredAt);
   const [countDown, setCountDown] = useState(initCountDown);
-
   const [myCabinetInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const [timeOver, setTimeOver] = useState(false);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
 
   const checkTimeOver = async () => {
     if (!timeOver && countDown <= 0) {
@@ -47,7 +49,7 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
       try {
         const { data } = await axiosCabinetById(targetCabinetInfo?.cabinetId);
         setTargetCabinetInfo(data);
-
+        setMyInfo({ ...myInfo, cabinetId: null });
         const { data: myLentInfo } = await axiosMyLentInfo();
         setMyLentInfo(myLentInfo);
       } catch (error) {

@@ -324,7 +324,7 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-height: 255px;
+  max-height: 320px;
   margin: 3vh 0;
   width: 100%;
 `;
