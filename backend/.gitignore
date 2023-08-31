@@ -41,3 +41,4 @@ application*.yml
 !application.yml
 
 **/static/docs
+/rabbitmq/
