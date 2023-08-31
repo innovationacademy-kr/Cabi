@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -9,6 +13,7 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
+import { UserDto } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
@@ -154,11 +159,11 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   );
   const [myCabinetInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const { closeCabinet, toggleLent } = useMenu();
+  const myInfo = useRecoilValue<UserDto>(userState);
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
+  const { closeCabinet, toggleLent } = useMenu();
   const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
-
   const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
     lentModal: false,
     unavailableModal: false,
