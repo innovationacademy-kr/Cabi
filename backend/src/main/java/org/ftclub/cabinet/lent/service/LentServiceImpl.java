@@ -5,14 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
+import org.ftclub.cabinet.config.SlackBotProperties;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
@@ -24,7 +26,9 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.utils.slackbot.SlackbotManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +46,7 @@ public class LentServiceImpl implements LentService {
 	private final LentMapper lentMapper;
 	private final TicketingSharedCabinet ticketingSharedCabinet;
 	private final CabinetProperties cabinetProperties;
+	private final SlackbotManager slackbotManager;
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
@@ -65,11 +70,13 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
 		lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 		lentRepository.save(lentHistory);
+
+		slackbotManager.sendSlackMessage(user.getName(), cabinet.getVisibleNum(), expiredAt);
 	}
 
 	@Override
-	public void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode) {
-		log.info("Called startLentShareCabinet: {}, {}", userId, cabinetId);
+	public void startLentShareCabinet(Long userId, Long cabinetId, String shareCode) {
+		log.info("Called startLentShareCabinet: {}, {}, {}", userId, cabinetId, shareCode);
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		User user = userOptionalFetcher.getUser(userId);
@@ -87,9 +94,10 @@ public class LentServiceImpl implements LentService {
 			cabinet.specifyStatus(CabinetStatus.IN_SESSION);
 			ticketingSharedCabinet.setShadowKey(cabinetId);
 		}
-		ticketingSharedCabinet.saveValue(cabinetId, userId, shareCode, hasShadowKey);
+		ticketingSharedCabinet.saveValue(cabinetId.toString(), userId.toString(), shareCode,
+				hasShadowKey);
 		// 4번째 (마지막) 대여자인 경우
-		if (Objects.equals(ticketingSharedCabinet.getSizeOfUsers(cabinetId),
+		if (Objects.equals(ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString()),
 				cabinetProperties.getShareMaxUserCount())) {
 			cabinet.specifyStatus(CabinetStatus.FULL);
 			saveLentHistories(now, cabinetId);
@@ -137,9 +145,9 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void cancelLentShareCabinet(Long userId, Long cabinetId) {
 		log.debug("Called cancelLentShareCabinet: {}, {}", userId, cabinetId);
-		ticketingSharedCabinet.deleteUserInValueKey(cabinetId, userId);
+		ticketingSharedCabinet.deleteUserInValueKey(cabinetId.toString(), userId);
 		// 유저가 나갔을 때, 해당 키에 다른 유저가 없다면 전체 키 삭제
-		if (ticketingSharedCabinet.getSizeOfUsers(cabinetId) == 0) {
+		if (ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString()) == 0) {
 			ticketingSharedCabinet.deleteShadowKey(cabinetId);
 			Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
@@ -165,6 +173,9 @@ public class LentServiceImpl implements LentService {
 
 	private LentHistory returnCabinetByUserId(Long userId) {
 		log.debug("Called returnCabinet: {}", userId);
+//		userOptionalFetcher.getUser(userId);
+		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserIdForUpdate(
+				userId);
 		userOptionalFetcher.getUser(userId);
 		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
@@ -192,6 +203,28 @@ public class LentServiceImpl implements LentService {
 	}
 
 	@Override
+	public void handleLentFromRedisExpired(String cabinetIdString) {
+		Long cabinetId = Long.parseLong(cabinetIdString);
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
+		Long userCount = ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString());
+		if (cabinetProperties.getShareMinUserCount() <= userCount
+				&& userCount <= cabinetProperties.getShareMaxUserCount()) {    // 2명 이상 4명 이하: 대여 성공
+			LocalDateTime now = LocalDateTime.now();
+			cabinet.specifyStatus(CabinetStatus.FULL);
+			saveLentHistories(now, cabinetId);
+		} else {
+			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
+		}
+
+		ArrayList<String> userIds = ticketingSharedCabinet.getUserIdsByCabinetId(
+				cabinetId.toString());
+		for (String userId : userIds) {
+			ticketingSharedCabinet.deleteValueKey(Long.valueOf(userId));
+		}
+		ticketingSharedCabinet.deleteHashKey(cabinetId.toString());
+	}
+
+	@Override
 	public List<ActiveLentHistoryDto> getAllActiveLentHistories() {
 		log.debug("Called getAllActiveLentHistories");
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentHistories();
@@ -206,13 +239,39 @@ public class LentServiceImpl implements LentService {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public void extendLentCabinet(Long userId) {
+		log.debug("Called extendLentCabinet: {}, {}", userId);
+
+		User user = userOptionalFetcher.getUser(userId);
+		if (!user.isExtensible()) {
+			throw new ServiceException(ExceptionStatus.EXTENSION_TICKET_NOT_FOUND);
+		}
+
+		List<LentHistory> activeLentHistories = lentOptionalFetcher.findAllActiveLentHistoriesByUserId(
+				userId);
+
+		if (activeLentHistories.isEmpty()) {
+			throw new ServiceException(ExceptionStatus.NO_LENT_CABINET);
+		}
+		LocalDateTime oldExpiredAt = activeLentHistories.get(0).getExpiredAt();
+
+		activeLentHistories.forEach(lentHistory -> {
+			lentHistory.setExpiredAt(
+					lentPolicy.generateExtendedExpirationDate(oldExpiredAt));
+		});
+		user.setExtensible(false);
+	}
+
 	public void saveLentHistories(LocalDateTime now, Long cabinetId) {
-		ArrayList<Long> userIdList = ticketingSharedCabinet.getUserIdList(cabinetId);
+		ArrayList<String> userIdList = ticketingSharedCabinet.getUserIdsByCabinetId(
+				cabinetId.toString());
 		LocalDateTime expiredAt = lentPolicy.generateSharedCabinetExpirationDate(now,
 				userIdList.size());
 
 		// userId 반복문 돌면서 수행
-		userIdList.stream().map(userId -> LentHistory.of(now, expiredAt, userId, cabinetId))
+		userIdList.stream()
+				.map(userId -> LentHistory.of(now, expiredAt, Long.parseLong(userId), cabinetId))
 				.forEach(lentHistory -> {
 					lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 					lentRepository.save(lentHistory);

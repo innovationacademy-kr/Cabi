@@ -21,6 +21,7 @@ export const userState = atom<UserDto>({
     cabinetId: null,
     userId: null,
     name: "default",
+    extensible: false,
   },
 });
 
@@ -159,9 +160,4 @@ export const bannedUserListState = atom<ITableData[]>({
 export const selectedClubInfoState = atom<ClubUserDto | null>({
   key: "selectedClub",
   default: null,
-});
-
-export const timeOverState = atom({
-  key: "timeOverState",
-  default: false,
 });

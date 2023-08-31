@@ -20,6 +20,7 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import {
   axiosCabinetById,
   axiosLentId,
+  axiosLentShareId,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 import { getExpireDateString } from "@/utils/dateUtils";
@@ -46,28 +47,26 @@ const LentModal: React.FC<{
   const formattedExpireDate = getExpireDateString(props.lentType);
   const privateLentDetail = `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.
     귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
-  const shareLentDetail = `${
-    targetCabinetInfo.lents.length > 0 &&
-    targetCabinetInfo.lents[0].expiredAt !== null
-      ? `대여기간은 <strong>${formattedExpireDate} 23:59</strong>까지 입니다.`
-      : ""
-  }
-대여 후 ${
-    import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD
-  }시간 이내 취소(반납) 시,
-${
-  import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY
-}시간의 대여 불가 패널티가 적용됩니다.
-“메모 내용”은 공유 인원끼리 공유됩니다.
-귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
+  const shareLentDetail = `<strong>대여 후 ${
+    10
+    // import.meta.env.VITE_SHARE_LENT_COUNTDOWN // TODO: .env 에 등록하기
+  }분 이내에</strong>
+  공유 인원 (2인~4인) 이 충족되지 않으면,
+  공유 사물함의 대여가 취소됩니다.
+  “메모 내용”은 공유 인원끼리 공유됩니다.
+  귀중품 분실 및 메모 내용의 유출에 책임지지 않습니다.`;
   const tryLentRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
     try {
-      await axiosLentId(currentCabinetId);
+      if (props.lentType == "SHARE")
+        await axiosLentShareId(currentCabinetId, "0");
+      else await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
-      setModalTitle("대여가 완료되었습니다");
+      if (props.lentType == "SHARE")
+        setModalTitle("공유 사물함 대기열에 입장하였습니다");
+      else setModalTitle("대여가 완료되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);

@@ -23,6 +23,7 @@ public enum ExceptionStatus {
 	NO_LENT_CABINET(HttpStatus.FORBIDDEN, "대여한 사물함이 없습니다"),
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다"),
 	OAUTH_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "인증 서버와 통신 중 에러가 발생했습니다"),
+	SLACK_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 서버와 통신 중 에러가 발생했습니다"),
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인 정보가 유효하지 않습니다\n다시 로그인해주세요"),
 	UNCHANGEABLE_CABINET(HttpStatus.BAD_REQUEST, "사물함의 상태를 변경할 수 없습니다."),
 	LENT_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 대여중인 사물함이 있습니다"),
@@ -41,7 +42,8 @@ public enum ExceptionStatus {
 	EXTERNAL_API_EXCEPTION(HttpStatus.BAD_REQUEST, "외부 API와 통신 중 에러가 발생했습니다"),
 	EXISTED_CLUB_USER(HttpStatus.CONFLICT, "이미 존재하는 동아리 유저입니다"),
 	CLUB_HAS_LENT_CABINET(HttpStatus.NOT_ACCEPTABLE, "대여 중인 사물함을 반납 후 삭제할 수 있습니다."),
-	;
+	HANEAPI_ERROR(HttpStatus.BAD_GATEWAY, "24HANE API 통신에 에러가 있습니다."),
+	EXTENSION_TICKET_NOT_FOUND(HttpStatus.BAD_REQUEST, "연장권이 존재하지 않습니다.");
 
 	final private int statusCode;
 	final private String message;

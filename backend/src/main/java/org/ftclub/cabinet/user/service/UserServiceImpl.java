@@ -15,6 +15,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
+import org.ftclub.cabinet.occupiedtime.UserMonthDataDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -125,6 +126,23 @@ public class UserServiceImpl implements UserService {
 		}
 		user.changeBlackholedAt(newBlackholedAt);
 		userRepository.save(user);
+	}
+
+	@Override
+	public void updateUserExtensible(List<UserMonthDataDto> extensibleUsers) {
+		log.info("Called updateUserExtensible size = {}", extensibleUsers.size());
+		List<String> extensibleUserNames = extensibleUsers.stream().map(UserMonthDataDto::getLogin)
+				.collect(Collectors.toList());
+
+		List<User> activeUsers = userRepository.findAllByDeletedAtIsNull();
+
+		activeUsers.forEach(user -> {
+			if (extensibleUserNames.contains(user.getName())){
+				user.setExtensible(true);
+			} else {
+				user.setExtensible(false);
+			}
+		});
 	}
 
 	@Override

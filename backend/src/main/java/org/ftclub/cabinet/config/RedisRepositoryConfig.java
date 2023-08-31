@@ -10,13 +10,15 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Getter
 @Configuration
 @RequiredArgsConstructor
 @EnableRedisRepositories // Redis Repository 활성화
 public class RedisRepositoryConfig {
+
+	private final String PATTERN = "__keyevent@*__:expired";
 
 	@Value("${spring.redis.host}")
 	private String host;
@@ -44,11 +46,14 @@ public class RedisRepositoryConfig {
 	 */
 	@Bean
 	public RedisTemplate<?, ?> redisTemplate() {
-		RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
+		RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
+//		GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+		StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 		redisTemplate.setConnectionFactory(redisConnectionFactory());
-		redisTemplate.setKeySerializer(new JdkSerializationRedisSerializer());
-		redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
-//		redisTemplate.setKeySerializer(new StringRedisSerializer());
+		redisTemplate.setKeySerializer(stringRedisSerializer);
+		redisTemplate.setValueSerializer(stringRedisSerializer);
+		redisTemplate.setHashKeySerializer(stringRedisSerializer);
+		redisTemplate.setHashValueSerializer(stringRedisSerializer);
 		return redisTemplate;
 	}
 }

@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
+import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
@@ -45,6 +46,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private final CabinetService cabinetService;
 	private final CabinetMapper cabinetMapper;
 	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final CabinetProperties cabinetProperties;
 
 	/*-------------------------------------------READ-------------------------------------------*/
 
@@ -98,10 +100,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public List<LentDto> getLentDtoListFromRedis(Long cabinetId) {
 		log.debug("Called getLentDtoListFromRedis: {}", cabinetId);
 
-		List<Long> userIds = lentOptionalFetcher.findUserIdsByCabinetIdFromRedis(cabinetId);
+		List<String> userIds = lentOptionalFetcher.findUserIdsByCabinetIdFromRedis(cabinetId);
 		return userIds.stream().map(
 				userId -> {
-					User user = userOptionalFetcher.findUser(userId);
+					User user = userOptionalFetcher.findUser(Long.valueOf(userId));
 					return new LentDto(
 							user.getUserId(),
 							user.getName(),
@@ -164,10 +166,13 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		log.debug("Called getMyLentInfoFromRedis: {}", user.getName());
 		Long userId = user.getUserId();
 		Long cabinetId = lentOptionalFetcher.findCabinetIdByUserIdFromRedis(userId);
+		log.debug("cabinetId: {}", cabinetId);
 		if (cabinetId == null) {
+			log.info("cabinetId is null");
 			return null;
 		}
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+		cabinet.specifyMaxUser(Math.toIntExact(cabinetProperties.getShareMaxUserCount()));
 		List<LentDto> lentDtoList = getLentDtoListFromRedis(cabinetId);
 		return cabinetMapper.toMyCabinetResponseDto(cabinet, lentDtoList,
 				ticketingSharedCabinet.getShareCode(cabinetId),
@@ -183,7 +188,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
-	public void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode) {
+	public void startLentShareCabinet(Long userId, Long cabinetId, String shareCode) {
 		lentService.startLentShareCabinet(userId, cabinetId, shareCode);
 	}
 
@@ -212,6 +217,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public void terminateLentCabinet(Long userId) {
+		log.debug("Called terminateLentCabinet {}", userId);
 		lentService.terminateLentCabinet(userId);
 	}
 
@@ -253,5 +259,11 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {
 		lentService.assignLent(userId, cabinetId);
+	}
+
+	@Override
+	public void extendLent(Long userId) {
+		log.info("Called extendLent userId: {}", userId);
+		lentService.extendLentCabinet(userId);
 	}
 }

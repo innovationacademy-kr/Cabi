@@ -132,6 +132,16 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
   }
 };
 
+const axiosExtendLentPeriodURL = "/v4/lent/cabinets/extend";
+export const axiosExtendLentPeriod = async (): Promise<any> => {
+  try {
+    const response = await instance.patch(axiosExtendLentPeriodURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Admin API
 const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
 export const axiosAdminAuthLogin = async (
@@ -440,6 +450,35 @@ export const axiosLentClubUser = async (
       cabinetId,
       statusNote,
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosLentShareIdURL = "/v4/lent/cabinets/share/";
+export const axiosLentShareId = async (
+  cabinetId: number | null,
+  shareCode: string
+): Promise<any> => {
+  if (cabinetId === null) return;
+  try {
+    const response = await instance.post(`${axiosLentShareIdURL}${cabinetId}`, {
+      shareCode,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCancelURL = "/v4/lent/cabinets/share/cancel/";
+export const axiosCancel = async (cabinetId: number | null): Promise<any> => {
+  if (cabinetId === null) {
+    return;
+  }
+  try {
+    const response = await instance.patch(`${axiosCancelURL}${cabinetId}`);
     return response;
   } catch (error) {
     throw error;

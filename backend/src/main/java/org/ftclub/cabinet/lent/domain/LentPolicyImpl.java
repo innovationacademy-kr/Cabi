@@ -61,6 +61,15 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
+	public LocalDateTime generateExtendedExpirationDate(LocalDateTime now) {
+		log.info("Called generateExtendedExpirationDate now: {}, cabinet: {}", now);
+		if (DateUtil.isPast(now)) {
+			throw new DomainException(ExceptionStatus.LENT_EXPIRED);
+		}
+		return now.plusDays(getDaysForLentTermPrivate());
+	}
+
+	@Override
 	public void applyExpirationDate(LentHistory curHistory, LocalDateTime expiredAt) {
 		log.info(
 				"Called applyExpirationDate curHistory: {}, expiredAt: {}", curHistory, expiredAt);
@@ -93,7 +102,7 @@ public class LentPolicyImpl implements LentPolicy {
 		}
 
 		// 유저가 페널티 2 종류 이상 받을 수 있나? <- 실제로 그럴리 없지만 lentPolicy 객체는 그런 사실을 모르고, 유연하게 구현?
-		if (userActiveBanList == null || userActiveBanList.size() == 0) {
+		if (userActiveBanList == null || userActiveBanList.isEmpty()) {
 			return LentPolicyStatus.FINE;
 		}
 		LentPolicyStatus ret = LentPolicyStatus.FINE;
@@ -127,8 +136,10 @@ public class LentPolicyImpl implements LentPolicy {
 		// 사물함을 빌릴 수 있는 유저라면 공유 사물함 비밀번호 입력 횟수를 확인
 		if (ret == LentPolicyStatus.FINE && ticketingSharedCabinet.isShadowKey(
 				cabinet.getCabinetId())) {
-			Integer passwordCount = ticketingSharedCabinet.getValue(cabinetId, userId);
-			if (passwordCount >= 3) {
+			String passwordCount = ticketingSharedCabinet.getValue(cabinetId.toString(),
+					userId.toString());
+			// 사물함을 빌릴 수 있는 유저면서, 해당 공유사물함에 처음 접근하는 유저인 경우
+			if (passwordCount != null && Integer.parseInt(passwordCount) >= 3) {
 				ret = LentPolicyStatus.SHARE_BANNED_USER;
 			}
 		}
@@ -176,6 +187,12 @@ public class LentPolicyImpl implements LentPolicy {
 	public Integer getDaysForLentTermShare(Integer totalUserCount) {
 		log.debug("Called getDaysForLentTermShare");
 		return cabinetProperties.getLentTermShare() * totalUserCount;
+	}
+
+	@Override
+	public int getDaysForTermExtend() {
+		log.debug("Called getDaysForTermExtend");
+		return cabinetProperties.getLentTermExtend();
 	}
 
 	@Override

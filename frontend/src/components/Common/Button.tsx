@@ -6,6 +6,8 @@ interface ButtonInterface {
   text: string;
   theme: string;
   disabled?: boolean;
+  iconSrc?: string;
+  iconAlt?: string;
 }
 
 const Button = (props: ButtonInterface) => {
@@ -15,6 +17,9 @@ const Button = (props: ButtonInterface) => {
       theme={props.theme}
       disabled={props.disabled}
     >
+      {props.iconSrc && (
+        <ButtonIconStyled src={props.iconSrc} alt={props.iconAlt || ""} />
+      )}
       {props.text}
     </ButtonContainerStyled>
   );
@@ -64,7 +69,7 @@ const ButtonContainerStyled = styled.button`
       color: var(--gray-color);
       border: 1px solid var(--gray-color);
     `}
-    ${(props) =>
+  ${(props) =>
     props.theme === "smallGrayLine" &&
     css`
       max-width: 200px;
@@ -74,6 +79,16 @@ const ButtonContainerStyled = styled.button`
       font-size: 14px;
       border: 1px solid var(--gray-color);
     `}
+
+  @media (max-height: 745px) {
+    margin-bottom: 8px;
+  }
+`;
+
+const ButtonIconStyled = styled.img`
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
 
   @media (max-height: 745px) {
     margin-bottom: 8px;

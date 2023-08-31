@@ -24,7 +24,7 @@ Configuration:
           - ref: console
       -
         name: org.ftclub.cabinet
-        level: info
+        level: debug
         additivity: false
         AppenderRef:
           - ref: console

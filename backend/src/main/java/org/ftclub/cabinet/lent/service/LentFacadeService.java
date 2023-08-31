@@ -40,7 +40,7 @@ public interface LentFacadeService {
 	 * @param cabinetId  대여하려는 cabinet id
 	 * @param shareCode 10분 간 유지되는 공유사물함 초대 코드
 	 */
-	void startLentShareCabinet(Long userId, Long cabinetId, Integer shareCode);
+	void startLentShareCabinet(Long userId, Long cabinetId, String shareCode);
 
 	/**
 	 * 동아리 사물함 대여를 합니다.
@@ -163,4 +163,11 @@ public interface LentFacadeService {
 	 * @param cabinetId 대여시킬 캐비넷 Id
 	 */
 	void assignLent(Long userId, Long cabinetId);
+
+	/**
+	 * 대여기간을 연장합니다.
+	 *
+	 * @param userId
+	 */
+	void extendLent(Long userId);
 }
