@@ -1,11 +1,24 @@
-import { useEffect, useRef } from "react";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { useEffect, useRef, useState } from "react";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
 import styled from "styled-components";
-import { currentSectionNameState } from "@/recoil/atoms";
+import {
+  currentBuildingNameState,
+  currentFloorCabinetState,
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
 import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import { CabinetInfoByBuildingFloorDto } from "@/types/dto/cabinet.dto";
+import { axiosCabinetByBuildingFloor } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const MainPage = () => {
@@ -36,6 +49,47 @@ const MainPage = () => {
   const currentSectionIndex = sectionList.findIndex(
     (sectionName) => sectionName === currentSectionName
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
+  const [currentFloor, setCurrentFloor] = useRecoilState<number>(
+    currentFloorNumberState
+  );
+  const setCurrentFloorData = useSetRecoilState<
+    CabinetInfoByBuildingFloorDto[]
+  >(currentFloorCabinetState);
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
+
+  const refreshCabinetList = async () => {
+    setIsLoading(true);
+    try {
+      await axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
+        .then((response) => {
+          setCurrentFloorData(response.data);
+          const sections = response.data.map(
+            (data: CabinetInfoByBuildingFloorDto) => data.section
+          );
+          let currentSectionFromPersist = undefined;
+          const recoilPersist = localStorage.getItem("recoil-persist");
+          if (recoilPersist) {
+            const recoilPersistObj = JSON.parse(recoilPersist);
+            if (Object.keys(recoilPersistObj).includes("CurrentSection")) {
+              currentSectionFromPersist = recoilPersistObj.CurrentSection;
+            }
+          }
+          currentSectionFromPersist &&
+          sections.includes(currentSectionFromPersist)
+            ? setCurrentSection(currentSectionFromPersist)
+            : setCurrentSection(response.data[0].section);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {});
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  };
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
@@ -74,21 +128,41 @@ const MainPage = () => {
   };
 
   return (
-    <WapperStyled
-      ref={mainWrapperRef}
-      onTouchStart={(e: React.TouchEvent) => {
-        touchStartPosX.current = e.changedTouches[0].screenX;
-        touchStartPosY.current = e.changedTouches[0].screenY;
-      }}
-      onTouchEnd={(e: React.TouchEvent) => {
-        swipeSection(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
-      }}
-    >
-      <SectionPaginationContainer />
-      <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={false} />
-      </CabinetListWrapperStyled>
-    </WapperStyled>
+    <>
+      {isLoading && <LoadingAnimation />}
+      <WapperStyled
+        ref={mainWrapperRef}
+        onTouchStart={(e: React.TouchEvent) => {
+          touchStartPosX.current = e.changedTouches[0].screenX;
+          touchStartPosY.current = e.changedTouches[0].screenY;
+        }}
+        onTouchEnd={(e: React.TouchEvent) => {
+          swipeSection(
+            e.changedTouches[0].screenX,
+            e.changedTouches[0].screenY
+          );
+        }}
+      >
+        <SectionPaginationContainer />
+        <CabinetListWrapperStyled>
+          <CabinetListContainer isAdmin={false} />
+          <RefreshButtonStyled
+            className="cabiButton"
+            title="새로고침"
+            id="refreshButton"
+            onClick={refreshCabinetList}
+            disable={false}
+          >
+            <ImgStyled
+              w="20px"
+              h="20px"
+              src="/src/assets/images/refreshIcon.svg"
+              alt="새로고침 버튼"
+            />
+          </RefreshButtonStyled>
+        </CabinetListWrapperStyled>
+      </WapperStyled>
+    </>
   );
 };
 
@@ -105,6 +179,26 @@ const CabinetListWrapperStyled = styled.div`
   justify-content: center;
   align-items: center;
   padding-bottom: 30px;
+`;
+
+const RefreshButtonStyled = styled.div<{
+  disable?: boolean;
+}>`
+  width: 32px;
+  height: 32px;
+  margin: 20px 0 0 20px;
+  cursor: pointer;
+  display: ${({ disable }) => (disable ? "none" : "block")};
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+`;
+
+const ImgStyled = styled.img<{ w?: string; h?: string }>`
+  width: ${({ w }) => (w ? w : "100%")};
+  height: ${({ h }) => (h ? h : "100%")};
 `;
 
 export default MainPage;
