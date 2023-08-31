@@ -13,6 +13,8 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
@@ -182,7 +184,7 @@ public class LentServiceImpl implements LentService {
 				cabinetId);
 		lentHistories.forEach(lentHistory -> lentHistory.endLent(LocalDateTime.now()));
 		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
-		log.info("cabinet status {}", cabinet.getStatus());
+		log.info("cabinet status {}",cabinet.getStatus());
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
 		return lentHistories;
@@ -196,6 +198,7 @@ public class LentServiceImpl implements LentService {
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(LocalDateTime.now());
+//		lentRepository.saveAndFlush(lentHistory);
 		cabinet.specifyStatusByUserCount(activeLentCount - 1); // policy로 빠질만한 부분인듯?
 		if (activeLentCount - 1 == 0) {
 			cabinet.writeMemo("");
@@ -252,6 +255,30 @@ public class LentServiceImpl implements LentService {
 						e.getDaysUntilExpiration(now)
 				))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public void extendLentCabinet(Long userId) {
+		log.debug("Called extendLentCabinet: {}, {}", userId);
+
+		User user = userOptionalFetcher.getUser(userId);
+		if (!user.isExtensible()) {
+			throw new ServiceException(ExceptionStatus.EXTENSION_TICKET_NOT_FOUND);
+		}
+
+		List<LentHistory> activeLentHistories = lentOptionalFetcher.findAllActiveLentHistoriesByUserId(
+				userId);
+
+		if (activeLentHistories.isEmpty()) {
+			throw new ServiceException(ExceptionStatus.NO_LENT_CABINET);
+		}
+		LocalDateTime oldExpiredAt = activeLentHistories.get(0).getExpiredAt();
+
+		activeLentHistories.forEach(lentHistory -> {
+			lentHistory.setExpiredAt(
+					lentPolicy.generateExtendedExpirationDate(oldExpiredAt));
+		});
+		user.setExtensible(false);
 	}
 
 	public void saveLentHistories(LocalDateTime now, Long cabinetId) {

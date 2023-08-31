@@ -1,8 +1,7 @@
 package org.ftclub.cabinet.lent.service;
 
-import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-
 import java.util.List;
+import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 
 /**
  * 대여 관련된 서비스
@@ -82,4 +81,13 @@ public interface LentService {
 	 * @return {@link ActiveLentHistoryDto}의 {@link List}
 	 */
 	List<ActiveLentHistoryDto> getAllActiveLentHistories();
+
+	/**
+	 * 현재 대여중인 사물함의 모든 대여기록을 가져온 후, expiredAt을 갱신시키고, user 의 is_extensible 을 false 한다
+	 *
+	 * @param userId
+	 */
+	void extendLentCabinet(Long userId);
+
+
 }

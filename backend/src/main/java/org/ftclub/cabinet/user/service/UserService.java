@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
+import org.ftclub.cabinet.occupiedtime.UserMonthDataDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 
@@ -36,6 +37,8 @@ public interface UserService {
 	void promoteAdminByEmail(String email);
 
 	void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt);
+
+	void updateUserExtensible(List<UserMonthDataDto> extensibleUsers);
 
 	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
 			LocalDateTime expiredAt);

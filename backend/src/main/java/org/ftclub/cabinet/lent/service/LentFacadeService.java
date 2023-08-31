@@ -163,4 +163,11 @@ public interface LentFacadeService {
 	 * @param cabinetId 대여시킬 캐비넷 Id
 	 */
 	void assignLent(Long userId, Long cabinetId);
+
+	/**
+	 * 대여기간을 연장합니다.
+	 *
+	 * @param userId
+	 */
+	void extendLent(Long userId);
 }

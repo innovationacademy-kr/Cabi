@@ -1,12 +1,19 @@
 package org.ftclub.cabinet.lent.domain;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
-import org.ftclub.cabinet.exception.*;
+import org.ftclub.cabinet.exception.CustomExceptionStatus;
+import org.ftclub.cabinet.exception.CustomServiceException;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
@@ -14,10 +21,6 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +33,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
-															 Integer totalUserCount) {
+			Integer totalUserCount) {
 		log.info("Called generateSharedCabinetExpirationDate now: {}, totalUserCount: {}", now,
 				totalUserCount);
 
@@ -56,6 +59,15 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
+	public LocalDateTime generateExtendedExpirationDate(LocalDateTime now) {
+		log.info("Called generateExtendedExpirationDate now: {}, cabinet: {}", now);
+		if (DateUtil.isPast(now)) {
+			throw new DomainException(ExceptionStatus.LENT_EXPIRED);
+		}
+		return now.plusDays(getDaysForLentTermPrivate());
+	}
+
+	@Override
 	public void applyExpirationDate(LentHistory curHistory, LocalDateTime expiredAt) {
 		log.info(
 				"Called applyExpirationDate curHistory: {}, expiredAt: {}", curHistory, expiredAt);
@@ -70,7 +82,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount,
-											  List<BanHistory> userActiveBanList) {
+			List<BanHistory> userActiveBanList) {
 		log.debug("Called verifyUserForLent");
 		if (!user.isUserRole(UserRole.USER)) {
 			return LentPolicyStatus.NOT_USER;
@@ -110,8 +122,8 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyUserForLentShare(User user, Cabinet cabinet,
-												   int userActiveLentCount,
-												   List<BanHistory> userActiveBanList) {
+			int userActiveLentCount,
+			List<BanHistory> userActiveBanList) {
 
 		LentPolicyStatus ret = verifyUserForLent(user, cabinet, userActiveLentCount,
 				userActiveBanList);
@@ -122,7 +134,8 @@ public class LentPolicyImpl implements LentPolicy {
 		// 사물함을 빌릴 수 있는 유저라면 공유 사물함 비밀번호 입력 횟수를 확인
 		if (ret == LentPolicyStatus.FINE && ticketingSharedCabinet.isShadowKey(
 				cabinet.getCabinetId())) {
-			String passwordCount = ticketingSharedCabinet.getValue(cabinetId.toString(), userId.toString());
+			String passwordCount = ticketingSharedCabinet.getValue(cabinetId.toString(),
+					userId.toString());
 			// 사물함을 빌릴 수 있는 유저면서, 해당 공유사물함에 처음 접근하는 유저인 경우
 			if (passwordCount != null && Integer.parseInt(passwordCount) >= 3) {
 				ret = LentPolicyStatus.SHARE_BANNED_USER;
@@ -172,6 +185,12 @@ public class LentPolicyImpl implements LentPolicy {
 	public Integer getDaysForLentTermShare(Integer totalUserCount) {
 		log.debug("Called getDaysForLentTermShare");
 		return cabinetProperties.getLentTermShare() * totalUserCount;
+	}
+
+	@Override
+	public int getDaysForTermExtend() {
+		log.debug("Called getDaysForTermExtend");
+		return cabinetProperties.getLentTermExtend();
 	}
 
 	@Override
