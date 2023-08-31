@@ -123,12 +123,6 @@ public class TicketingSharedCabinet {
 	}
 
 	public Long findCabinetIdByUserId(Long userId) {
-//		String cabinetIdString = String.valueOf(valueOperations.get(userId));
-//		if (cabinetIdString == null || cabinetIdString.equals("null")) {
-//			log.info("cabinetIdString is null");
-//			return null;
-//		}
-//		return Long.parseLong(cabinetIdString);
 		log.debug("userId: {}", userId);
 		String cabinetId = valueOperations.get(userId + VALUE_KEY_SUFFIX);
 		if (cabinetId == null) {
@@ -145,7 +139,6 @@ public class TicketingSharedCabinet {
 	}
 
 	public LocalDateTime getSessionExpiredAt(Long cabinetId) {
-//		return shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX, TimeUnit.SECONDS);
 		if (isShadowKey(cabinetId)) {
 			return LocalDateTime.now().plusSeconds(
 					shadowKeyRedisTemplate.getExpire(cabinetId + SHADOW_KEY_SUFFIX,
@@ -153,8 +146,4 @@ public class TicketingSharedCabinet {
 		}
 		return null;
 	}
-
-//	public ArrayList<String> findUsersInSessionByCabinetIdFromRedis(Long cabinetId) {
-//		return new ArrayList<>(valueHashOperations.keys(cabinetId.toString()));
-//	}
 }

@@ -126,21 +126,19 @@ public class LentServiceImpl implements LentService {
 		// cabinetType도 인자로 전달하면 좋을 거 같습니다 (공유사물함 3일이내 반납 페널티)
 		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
-		// delay
-		// 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원)) -> 내림 적용
+		// 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원))
 		if (cabinet.getLentType().equals(LentType.SHARE)) {
-			Integer usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
-					cabinet.getCabinetId());
-			Long daysUntilExpiration = lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * -1;
+			Double usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
+					cabinet.getCabinetId()).doubleValue();
+			Double daysUntilExpiration =
+					lentHistory.getDaysUntilExpiration(LocalDateTime.now()).doubleValue() * -1.0;
 			Double secondsRemaining =
-					daysUntilExpiration.doubleValue() * (usersInShareCabinet.doubleValue() / (
-							usersInShareCabinet.doubleValue() + 1.0) * 24.0 * 60.0 * 60.0);
-			System.out.println("hoursRemaining = " + secondsRemaining.longValue());
+					daysUntilExpiration * (usersInShareCabinet / (usersInShareCabinet + 1.0) * 24.0
+							* 60.0 * 60.0);
 			allActiveLentHistoriesByUserId.forEach(e -> {
 				e.setExpiredAt(LocalDateTime.now().plusSeconds(secondsRemaining.longValue()));
 			});
 		}
-		// scheduler
 	}
 
 	@Override
@@ -281,7 +279,6 @@ public class LentServiceImpl implements LentService {
 				cabinetId.toString());
 		LocalDateTime expiredAt = lentPolicy.generateSharedCabinetExpirationDate(now,
 				userIdList.size());
-
 		// userId 반복문 돌면서 수행
 		userIdList.stream()
 				.map(userId -> LentHistory.of(now, expiredAt, Long.parseLong(userId), cabinetId))

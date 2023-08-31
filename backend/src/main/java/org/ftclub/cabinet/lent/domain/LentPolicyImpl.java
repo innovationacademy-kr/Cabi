@@ -36,7 +36,6 @@ public class LentPolicyImpl implements LentPolicy {
 			Integer totalUserCount) {
 		log.info("Called generateSharedCabinetExpirationDate now: {}, totalUserCount: {}", now,
 				totalUserCount);
-
 		return now.plusDays(getDaysForLentTermShare(totalUserCount));
 	}
 
