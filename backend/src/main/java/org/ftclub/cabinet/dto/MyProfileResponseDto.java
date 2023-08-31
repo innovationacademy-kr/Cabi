@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.dto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,4 +15,5 @@ public class MyProfileResponseDto {
 	private final String name;
 	private final Long cabinetId;
 	private final LocalDateTime unbannedAt;
+	private final boolean isExtensible;
 }

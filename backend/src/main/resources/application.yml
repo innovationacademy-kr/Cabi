@@ -4,7 +4,7 @@ server:
   port: 4242
 spring:
   config:
-    import: classpath:application-auth.yml, classpath:application-mail.yml
+    import: classpath:application-auth.yml, classpath:application-mail.yml, classpath:application-slack.yml
     activate:
       on-profile: prod
 logging:
@@ -16,7 +16,7 @@ server:
   port: 4242
 spring:
   config:
-    import: classpath:application-auth.yml, classpath:application-mail.yml
+    import: classpath:application-auth.yml, classpath:application-mail.yml, classpath:application-slack.yml
     activate:
       on-profile: dev
 logging:
@@ -28,7 +28,7 @@ server:
   port: 2424
 spring:
   config:
-    import: classpath:application-auth.yml, classpath:application-mail.yml
+    import: classpath:application-auth.yml, classpath:application-mail.yml, classpath:application-slack.yml
     activate:
       on-profile: local
 logging:

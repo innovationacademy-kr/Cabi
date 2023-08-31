@@ -19,6 +19,7 @@ const PasswordCheckModal: React.FC<{
     onClickProceed,
     cancelBtnText,
     closeModal,
+    isLoading,
   } = modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
 
@@ -53,7 +54,7 @@ const PasswordCheckModal: React.FC<{
             }}
             text={proceedBtnText || "확인"}
             theme="fill"
-            disabled={password.length < 4}
+            disabled={password.length < 4 || isLoading}
           />
         </ButtonWrapperStyled>
       </ModalStyled>
@@ -164,7 +165,7 @@ const ButtonWrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 `;
 
 export default PasswordCheckModal;

@@ -1,7 +1,0 @@
-FROM amazoncorretto:11
-
-COPY cabinet-0.0.1-SNAPSHOT.jar .
-
-RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-
-CMD java -jar -Dspring.profiles.active=prod cabinet-0.0.1-SNAPSHOT.jar

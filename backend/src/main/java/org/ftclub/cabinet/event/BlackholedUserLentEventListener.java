@@ -9,13 +9,11 @@ import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
-//@EnableAsync
 @RequiredArgsConstructor
 public class BlackholedUserLentEventListener {
 
 	private final BlackholeManager blackholeManager;
 
-	//	@Async
 	@EventListener
 	public void handleBlackholedUserLentAttemptingEvent(UserBlackholeInfoDto userBlackholeInfoDto) {
 		log.info("Called handleBlackholedUserLentAttemptingEvent");

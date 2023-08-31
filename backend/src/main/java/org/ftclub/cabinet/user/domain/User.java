@@ -47,6 +47,9 @@ public class User {
 	@Column(name = "ROLE", length = 32, nullable = false)
 	private UserRole role;
 
+	@Column(name = "IS_EXTENSIBLE", nullable = false)
+	private boolean isExtensible = false;
+
 	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
 		this.name = name;
 		this.email = email;
@@ -99,5 +102,10 @@ public class User {
 		this.name = name;
 		ExceptionUtil.throwIfFalse(this.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+	}
+
+	public void setExtensible(boolean isExtensible) {
+		log.info("Called setExtensible - from {} to {}", this.isExtensible, isExtensible);
+		this.isExtensible = isExtensible;
 	}
 }

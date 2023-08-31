@@ -72,4 +72,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.blackholedAt IS NULL OR u.blackholedAt > CURRENT_TIMESTAMP")
 	List<User> findByNoRiskOfFallingIntoBlackholeUsers();
+
+	/**
+	 * 현재 Active 상태의 Cabi User를 모두 가져옵니다.
+	 *
+	 * @return {@Link User} 리스트
+	 */
+	List<User> findAllByDeletedAtIsNull();
 }

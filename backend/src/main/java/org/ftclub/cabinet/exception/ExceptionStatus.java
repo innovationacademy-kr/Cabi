@@ -23,6 +23,7 @@ public enum ExceptionStatus {
 	NO_LENT_CABINET(HttpStatus.FORBIDDEN, "대여한 사물함이 없습니다"),
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다"),
 	OAUTH_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "인증 서버와 통신 중 에러가 발생했습니다"),
+	SLACK_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 서버와 통신 중 에러가 발생했습니다"),
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인 정보가 유효하지 않습니다\n다시 로그인해주세요"),
 	UNCHANGEABLE_CABINET(HttpStatus.BAD_REQUEST, "사물함의 상태를 변경할 수 없습니다."),
 	LENT_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 대여중인 사물함이 있습니다"),
@@ -31,7 +32,8 @@ public enum ExceptionStatus {
 	INVALID_EXPIRED_AT(HttpStatus.BAD_REQUEST, "잘못된 만료일 입니다"),
 	INCORRECT_ARGUMENT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다"),
 	ALL_BANNED_USER(HttpStatus.BAD_REQUEST, "ALL 밴 상태의 유저입니다."),
-	SHARE_BANNED_USER(HttpStatus.BAD_REQUEST, "SHARE 밴 상태의 유저입니다."),
+	SHARE_BANNED_USER(HttpStatus.BAD_REQUEST, "초대코드를 3회 이상 틀린 유저입니다."),
+	WRONG_SHARE_CODE(HttpStatus.BAD_REQUEST, "초대코드가 유효하지 않습니다."),
 	NOT_FOUND_BAN_HISTORY(HttpStatus.NOT_FOUND, "현재 정지 상태인 유저가 아닙니다."),
 	BLACKHOLED_USER(HttpStatus.BAD_REQUEST, "블랙홀 상태의 유저입니다."),
 	BLACKHOLE_REFRESHING(HttpStatus.BAD_REQUEST, "블랙홀 갱신 중 입니다.\n잠시 후에 다시 시도해주세요."),
@@ -40,7 +42,8 @@ public enum ExceptionStatus {
 	EXTERNAL_API_EXCEPTION(HttpStatus.BAD_REQUEST, "외부 API와 통신 중 에러가 발생했습니다"),
 	EXISTED_CLUB_USER(HttpStatus.CONFLICT, "이미 존재하는 동아리 유저입니다"),
 	CLUB_HAS_LENT_CABINET(HttpStatus.NOT_ACCEPTABLE, "대여 중인 사물함을 반납 후 삭제할 수 있습니다."),
-	;
+	HANEAPI_ERROR(HttpStatus.BAD_GATEWAY, "24HANE API 통신에 에러가 있습니다."),
+	EXTENSION_TICKET_NOT_FOUND(HttpStatus.BAD_REQUEST, "연장권이 존재하지 않습니다.");
 
 	final private int statusCode;
 	final private String message;
