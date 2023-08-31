@@ -3,8 +3,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { css, keyframes } from "styled-components";
 import {
   currentCabinetIdState,
+  myCabinetInfoState,
   targetCabinetInfoState,
-  userState,
 } from "@/recoil/atoms";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
@@ -14,15 +14,19 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import clockIcon from "@/assets/images/clock.svg";
-import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
-import { UserDto } from "@/types/dto/user.dto";
+import {
+  CabinetInfo,
+  CabinetPreviewInfo,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
-  const MY_INFO = useRecoilValue<UserDto>(userState);
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
   );
@@ -32,7 +36,9 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const { openCabinet, closeCabinet } = useMenu();
-  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
+  const isMine = myCabinetInfo
+    ? myCabinetInfo.cabinetId === props.cabinetId
+    : false;
 
   let cabinetLabelText = "";
 
@@ -139,12 +145,17 @@ const CabinetListItemStyled = styled.div<{
   isSelected: boolean;
 }>`
   position: relative;
-  background-color: ${(props) => cabinetStatusColorMap[props.status]};
-  ${(props) =>
-    props.isMine &&
+  background-color: ${({ status, isMine }) =>
+    isMine && status !== "IN_SESSION"
+      ? "var(--mine)"
+      : cabinetStatusColorMap[status]};
+
+  ${({ status, isMine }) =>
+    status === "IN_SESSION" &&
     css`
-      background-color: var(--mine);
+      animation: ${isMine ? Animation2 : Animation} 2.5s infinite;
     `}
+
   width: 80px;
   height: 80px;
   margin: 5px;
@@ -154,8 +165,8 @@ const CabinetListItemStyled = styled.div<{
   justify-content: space-between;
   padding: 8px 8px 14px;
   transition: transform 0.2s, opacity 0.2s;
-
   cursor: pointer;
+
   ${({ isSelected }) =>
     isSelected &&
     css`
@@ -166,20 +177,17 @@ const CabinetListItemStyled = styled.div<{
     `}
 
   ${({ status }) =>
-    status === "IN_SESSION" &&
-    css`
-      animation: ${Animation} 2.5s infinite;
-    `}
-  ${({ status }) =>
     status === "PENDING" &&
     css`
       border: 2px solid var(--main-color);
       box-shadow: 0 -0.2em 1em #9747ff45;
     `}
-    .cabinetLabelTextWrap {
+    
+  .cabinetLabelTextWrap {
     display: flex;
     align-items: center;
   }
+
   .clockIconStyled {
     width: 16px;
     height: 16px;
@@ -191,6 +199,7 @@ const CabinetListItemStyled = styled.div<{
     margin-right: 4px;
     display: ${(props) => (props.status === "IN_SESSION" ? "block" : "none")};
   }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       opacity: 0.9;
@@ -207,6 +216,16 @@ const Animation = keyframes`
     background-color: #d6c5fa;
   }
 `;
+
+const Animation2 = keyframes`
+  0%, 100% {
+    background-color: var(--mine);
+  }
+  50% {
+    background-color: #eeeeee;
+  }
+`;
+
 const CabinetIconNumberWrapperStyled = styled.div`
   display: flex;
   justify-content: space-between;
