@@ -85,8 +85,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
 		if (lentHistories.isEmpty()) {
-			ArrayList<String> users = ticketingSharedCabinet.findUsersInSessionByCabinetIdFromRedis(
-					cabinetId);
+//			ArrayList<String> users = ticketingSharedCabinet.findUsersInSessionByCabinetIdFromRedis(
+//					cabinetId);
+			ArrayList<String> users = ticketingSharedCabinet.getUserIdsByCabinetId(
+					cabinetId.toString());
 			for (String user : users) {
 				String userName = userOptionalFetcher.findUser(Long.valueOf(user)).getName();
 				lentDtos.add(new LentDto(null, userName, null, null, null));
@@ -476,7 +478,6 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 //		}
 //	}
 
-
 	/**
 	 * CACHE 적용되어 사용될 코드
 	 @Transactional(readOnly = true)
@@ -534,6 +535,5 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 entry.getValue()))
 	 .collect(Collectors.toList());
 	 }
-
 	 **/
 }

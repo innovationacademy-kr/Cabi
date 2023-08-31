@@ -30,7 +30,6 @@ public class RedisRepositoryConfig {
 			RedisConnectionFactory redisConnectionFactory) {
 		RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
 		redisMessageListenerContainer.setConnectionFactory(redisConnectionFactory);
-//		redisMessageListenerContainer.addMessageListener(eventListener, new PatternTopic(PATTERN));
 		return redisMessageListenerContainer;
 	}
 
