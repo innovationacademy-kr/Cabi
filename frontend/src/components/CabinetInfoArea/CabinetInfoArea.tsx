@@ -132,7 +132,7 @@ const CabinetInfoArea: React.FC<{
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
             {isExtensible &&
-            !isMine &&
+            selectedCabinetInfo!.cabinetId === 0 &&
             selectedCabinetInfo!.lentType === "PRIVATE" ? (
               <ButtonContainer
                 onClick={() => {
