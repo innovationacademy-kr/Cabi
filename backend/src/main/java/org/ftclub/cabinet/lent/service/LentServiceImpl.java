@@ -119,6 +119,8 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void endLentCabinet(Long userId) {
 		log.debug("Called endLentCabinet: {}", userId);
+		List<LentHistory> allActiveLentHistoriesByUserId = lentRepository.findAllActiveLentHistoriesByUserId(
+				userId);
 		LentHistory lentHistory = returnCabinetByUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		// cabinetType도 인자로 전달하면 좋을 거 같습니다 (공유사물함 3일이내 반납 페널티)
@@ -130,21 +132,14 @@ public class LentServiceImpl implements LentService {
 			Integer usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
 					cabinet.getCabinetId());
 			Long daysUntilExpiration = lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * -1;
-			Double daysRemaining = Double.valueOf(Math.multiplyExact(daysUntilExpiration,
-					Math.floorMod(usersInShareCabinet, usersInShareCabinet + 1)));
-			System.out.println("daysRemaining = " + daysRemaining);
-			daysRemaining.longValue();
-
-//			lentHistory.setExpiredAt(LocalDateTime.now().plusDays(daysRemaining));
+			Double secondsRemaining =
+					daysUntilExpiration.doubleValue() * (usersInShareCabinet.doubleValue() / (
+							usersInShareCabinet.doubleValue() + 1.0) * 24.0 * 60.0 * 60.0);
+			System.out.println("hoursRemaining = " + secondsRemaining.longValue());
+			allActiveLentHistoriesByUserId.forEach(e -> {
+				e.setExpiredAt(LocalDateTime.now().plusSeconds(secondsRemaining.longValue()));
+			});
 		}
-//		Integer usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
-//				cabinet.getCabinetId());
-//		System.out.println("usersInShareCabinet = " + usersInShareCabinet);
-//		long daysRemaining =
-//				lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * (
-//						(usersInShareCabinet - 1)
-//								/ usersInShareCabinet);
-//		System.out.println("?????????? daysRemaining = " + daysRemaining);
 		// scheduler
 	}
 
@@ -184,7 +179,7 @@ public class LentServiceImpl implements LentService {
 				cabinetId);
 		lentHistories.forEach(lentHistory -> lentHistory.endLent(LocalDateTime.now()));
 		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
-		log.info("cabinet status {}",cabinet.getStatus());
+		log.info("cabinet status {}", cabinet.getStatus());
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
 		return lentHistories;
