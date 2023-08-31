@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.config.SlackBotProperties;
 import org.ftclub.cabinet.config.CabinetProperties;
@@ -123,11 +124,26 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void endLentCabinet(Long userId) {
 		log.debug("Called endLentCabinet: {}", userId);
+		List<LentHistory> allActiveLentHistoriesByUserId = lentRepository.findAllActiveLentHistoriesByUserId(
+				userId);
 		LentHistory lentHistory = returnCabinetByUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		// cabinetType도 인자로 전달하면 좋을 거 같습니다 (공유사물함 3일이내 반납 페널티)
 		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
+		// 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원))
+		if (cabinet.getLentType().equals(LentType.SHARE)) {
+			Double usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
+					cabinet.getCabinetId()).doubleValue();
+			Double daysUntilExpiration =
+					lentHistory.getDaysUntilExpiration(LocalDateTime.now()).doubleValue() * -1.0;
+			Double secondsRemaining =
+					daysUntilExpiration * (usersInShareCabinet / (usersInShareCabinet + 1.0) * 24.0
+							* 60.0 * 60.0);
+			allActiveLentHistoriesByUserId.forEach(e -> {
+				e.setExpiredAt(LocalDateTime.now().plusSeconds(secondsRemaining.longValue()));
+			});
+		}
 	}
 
 	@Override
@@ -166,6 +182,7 @@ public class LentServiceImpl implements LentService {
 				cabinetId);
 		lentHistories.forEach(lentHistory -> lentHistory.endLent(LocalDateTime.now()));
 		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
+//		log.info("cabinet status {}",cabinet.getStatus());
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
 		return lentHistories;
@@ -176,8 +193,6 @@ public class LentServiceImpl implements LentService {
 //		userOptionalFetcher.getUser(userId);
 		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserIdForUpdate(
 				userId);
-		userOptionalFetcher.getUser(userId);
-		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(LocalDateTime.now());
@@ -268,7 +283,6 @@ public class LentServiceImpl implements LentService {
 				cabinetId.toString());
 		LocalDateTime expiredAt = lentPolicy.generateSharedCabinetExpirationDate(now,
 				userIdList.size());
-
 		// userId 반복문 돌면서 수행
 		userIdList.stream()
 				.map(userId -> LentHistory.of(now, expiredAt, Long.parseLong(userId), cabinetId))
