@@ -132,6 +132,21 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
   }
 };
 
+const axiosExtendLentPeriodURL = "/v4/lent/cabinets/";
+export const axiosExtendLentPeriod = async (
+  cabinetId: number | null
+): Promise<any> => {
+  if (cabinetId === null) return;
+  try {
+    const response = await instance.patch(
+      `${axiosExtendLentPeriodURL}${cabinetId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Admin API
 const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
 export const axiosAdminAuthLogin = async (
