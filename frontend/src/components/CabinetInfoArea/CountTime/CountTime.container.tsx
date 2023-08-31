@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
-import { timeOverState } from "@/recoil/atoms";
+import {
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
 import CodeAndTime from "@/components/CabinetInfoArea/CountTime/CodeAndTime";
 import CountTime from "@/components/CabinetInfoArea/CountTime/CountTime";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { axiosCabinetById, axiosMyLentInfo } from "@/api/axios/axios.custom";
 
 const returnCountTime = (countDown: number) => {
   const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60))
@@ -15,20 +21,40 @@ const returnCountTime = (countDown: number) => {
 };
 
 const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
-  const [timeOver, setTimeOver] = useRecoilState(timeOverState);
-  const calculateCountDown = (targetDate: Date) => {
-    return targetDate.getTime() - new Date().getTime();
+  const calculateCountDown = (targetDate: Date | undefined) => {
+    if (!targetDate) return 0;
+    if (typeof targetDate === "string") {
+      targetDate = new Date(targetDate);
+    }
+    const currentTime = new Date().getTime();
+    const targetTime = targetDate.getTime();
+    if (targetTime <= currentTime) return 0;
+    return targetTime - currentTime + 2000;
   };
-  const endDate = new Date(); //임의 종료시간 설정
-  endDate.setMinutes(endDate.getMinutes(), endDate.getSeconds() + 10);
 
-  const initCountDown = calculateCountDown(endDate);
-  const [countDown, setCountDown] = useState(initCountDown);
+  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
+    targetCabinetInfoState
+  );
   const lastUpdatedTime = useRef<number>(Date.now());
+  const initCountDown = calculateCountDown(targetCabinetInfo.sessionExpiredAt);
+  const [countDown, setCountDown] = useState(initCountDown);
+  const [myCabinetInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [timeOver, setTimeOver] = useState(false);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
 
-  const checkTimeOver = () => {
+  const checkTimeOver = async () => {
     if (!timeOver && countDown <= 0) {
       setTimeOver(true);
+      try {
+        const { data } = await axiosCabinetById(targetCabinetInfo?.cabinetId);
+        setTargetCabinetInfo(data);
+        setMyInfo({ ...myInfo, cabinetId: null });
+        const { data: myLentInfo } = await axiosMyLentInfo();
+        setMyLentInfo(myLentInfo);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     }
   };
 

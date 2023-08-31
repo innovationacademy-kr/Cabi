@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { myCabinetInfoState } from "@/recoil/atoms";
 import alertImg from "@/assets/images/cautionSign.svg";
 import clockImg from "@/assets/images/clock.svg";
 import ticketImg from "@/assets/images/subtract.svg";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 
 interface CountTimeProps {
   minutes: string;
@@ -11,8 +14,9 @@ interface CountTimeProps {
 }
 
 const CodeAndTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
-  //초대코드 가져오기
-  const code = "4242";
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const code = myCabinetInfo.shareCode + "";
   const [copySuccess, setCopySuccess] = useState(false);
 
   const handleCopyClick = () => {

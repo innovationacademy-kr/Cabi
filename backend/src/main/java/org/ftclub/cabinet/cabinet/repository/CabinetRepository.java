@@ -17,7 +17,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
+public interface CabinetRepository extends JpaRepository<Cabinet, Long>, CabinetComplexRepository {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c "
@@ -68,19 +68,19 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"FROM Cabinet c " +
 			"WHERE c.lentType = :lentType")
 	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType,
-	                                       Pageable pageable);
+			Pageable pageable);
 
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.status = :status")
 	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status,
-	                                     Pageable pageable);
+			Pageable pageable);
 
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.visibleNum = :visibleNum")
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
-	                                         Pageable pageable);
+			Pageable pageable);
 
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
@@ -92,7 +92,8 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 			"FROM Cabinet c " +
 			"JOIN c.lentHistories lh ON lh.cabinetId = c.cabinetId " +
 			"JOIN lh.user u ON lh.userId = u.userId " +
-			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor " +
+			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor "
+			+
 			"AND lh.endedAt IS NULL")
 	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);
@@ -102,5 +103,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
-	List<Cabinet> findAllByBuildingAndFloor(@Param("building") String building, @Param("floor") Integer floor);
+	List<Cabinet> findAllByBuildingAndFloor(@Param("building") String building,
+			@Param("floor") Integer floor);
 }

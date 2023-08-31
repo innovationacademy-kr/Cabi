@@ -32,7 +32,11 @@ spring:
     lent:
       term:
         private: 21
-        share: 42
+        share: 15
+      limit:
+        share:
+          min-user-count: 2
+          max-user-count: 4
     penalty:
       day:
         share: 3
@@ -76,3 +80,6 @@ spring:
           starttls:
             enable: true
 
+  redis:
+    host: localhost
+    port: 6379

@@ -6,6 +6,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 // lentType을 LentType으로 변경 예정
 export interface MyCabinetInfoResponseDto extends CabinetInfo {
   memo: string; // 사물함 비밀번호와 관련된 메모
+  shareCode: number;
 }
 
 export interface CabinetBuildingFloorDto {
@@ -33,6 +34,7 @@ export interface CabinetInfo {
   section: string;
   lents: LentDto[];
   statusNote: string | null;
+  sessionExpiredAt?: Date;
 }
 
 export interface CabinetPreview {
