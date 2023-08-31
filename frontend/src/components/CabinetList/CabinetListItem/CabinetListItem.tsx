@@ -180,7 +180,6 @@ const CabinetListItemStyled = styled.div<{
     status === "PENDING" &&
     css`
       border: 2px solid var(--main-color);
-      box-shadow: 0 -0.2em 1em #9747ff45;
     `}
     
   .cabinetLabelTextWrap {
