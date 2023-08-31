@@ -1,5 +1,12 @@
 package org.ftclub.cabinet.redis;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -8,14 +15,6 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -32,8 +31,8 @@ public class TicketingSharedCabinet {
 
 	@Autowired
 	public TicketingSharedCabinet(RedisTemplate<String, Object> valueHashRedisTemplate,
-								  RedisTemplate<String, String> valueRedisTemplate,
-								  RedisTemplate<String, String> shadowKeyRedisTemplate) {
+			RedisTemplate<String, String> valueRedisTemplate,
+			RedisTemplate<String, String> shadowKeyRedisTemplate) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
@@ -155,7 +154,7 @@ public class TicketingSharedCabinet {
 		return null;
 	}
 
-	public ArrayList<String> findUsersInSessionByCabinetIdFromRedis(Long cabinetId) {
-		return new ArrayList<>(valueHashOperations.keys(cabinetId.toString()));
-	}
+//	public ArrayList<String> findUsersInSessionByCabinetIdFromRedis(Long cabinetId) {
+//		return new ArrayList<>(valueHashOperations.keys(cabinetId.toString()));
+//	}
 }

@@ -35,8 +35,6 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
-  wrongCodeCounts: { [cabinetId: number]: number };
-  timeOver: boolean;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -47,8 +45,6 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
-  wrongCodeCounts,
-  timeOver,
 }) => {
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
@@ -132,12 +128,7 @@ const CabinetInfoArea: React.FC<{
               }
               text="대여"
               theme="fill"
-              disabled={
-                !isAvailable ||
-                selectedCabinetInfo.lentType === "CLUB" ||
-                wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 ||
-                (selectedCabinetInfo.status == "IN_SESSION" && timeOver)
-              }
+              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
             {isExtendable &&
@@ -155,12 +146,6 @@ const CabinetInfoArea: React.FC<{
             ) : null}
             {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
-            )}
-            {wrongCodeCounts[selectedCabinetInfo?.cabinetId] >= 3 && (
-              <WarningMessageStyled>
-                초대 코드 입력 오류 초과로 <br />
-                입장이 제한된 상태입니다.
-              </WarningMessageStyled>
             )}
             {selectedCabinetInfo.status == "PENDING" && (
               <PendingMessageStyled>매일 13:00 오픈됩니다</PendingMessageStyled>
@@ -292,12 +277,17 @@ const CabinetRectangleStyled = styled.div<{
   border-radius: 10px;
   margin-top: 15px;
   margin-bottom: 3vh;
-  background-color: ${(props) => cabinetStatusColorMap[props.cabinetStatus]};
-  ${(props) =>
-    props.isMine &&
+  background-color: ${({ cabinetStatus, isMine }) =>
+    isMine && cabinetStatus !== "IN_SESSION"
+      ? "var(--mine)"
+      : cabinetStatusColorMap[cabinetStatus]};
+
+  ${({ cabinetStatus, isMine }) =>
+    cabinetStatus === "IN_SESSION" &&
     css`
-      background-color: var(--mine);
-    `};
+      animation: ${isMine ? Animation2 : Animation} 2.5s infinite;
+    `}
+
   font-size: 32px;
   color: ${(props) =>
     props.isMine
@@ -308,11 +298,6 @@ const CabinetRectangleStyled = styled.div<{
     cabinetStatus === "PENDING" &&
     css`
       border: 2px solid var(--main-color);
-    `}
-  ${({ cabinetStatus }) =>
-    cabinetStatus === "IN_SESSION" &&
-    css`
-      animation: ${Animation} 2.5s infinite;
     `}
 `;
 
@@ -325,12 +310,21 @@ const Animation = keyframes`
   }
 `;
 
+const Animation2 = keyframes`
+  0%, 100% {
+    background-color: var(--mine);
+  }
+  50% {
+    background-color: #eeeeee;
+  }
+`;
+
 const CabinetInfoButtonsContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-height: 255px;
+  max-height: 320px;
   margin: 3vh 0;
   width: 100%;
 `;

@@ -89,7 +89,7 @@ const InvitationCodeModalContainer: React.FC<{
       await axiosLentShareId(currentCabinetId, code);
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
-      setModalTitle("대여가 완료되었습니다");
+      setModalTitle("공유 사물함 대기열에 입장하였습니다");
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
         setTargetCabinetInfo(data);

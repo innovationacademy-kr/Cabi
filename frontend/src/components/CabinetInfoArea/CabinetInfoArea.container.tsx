@@ -1,11 +1,6 @@
-import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  myCabinetInfoState,
-  targetCabinetInfoState,
-  timeOverState,
-  userState,
-} from "@/recoil/atoms";
+import { useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -14,10 +9,8 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { axiosCabinetById, axiosMyLentInfo } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
@@ -98,11 +91,6 @@ const setExpireDate = (date: Date | undefined) => {
   return date.toString().slice(0, 10);
 };
 
-const setSessionExpireDate = (date: Date | undefined) => {
-  if (!date) return null;
-  return date;
-};
-
 const getCalcualtedTimeString = (expireTime: Date) => {
   const remainTime = calExpiredTime(expireTime);
   return remainTime < 0
@@ -160,37 +148,16 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
   else return "var(--black)";
 };
 
-const loadSharedWrongCodeCounts = () => {
-  const savedData = localStorage.getItem("wrongCodeCounts");
-  if (savedData) {
-    try {
-      const { data, expirationTime } = JSON.parse(savedData);
-      const ExpirationTime = new Date(expirationTime);
-      if (ExpirationTime > new Date()) {
-        return data;
-      } else {
-        localStorage.removeItem("wrongCodeCounts");
-      }
-    } catch (error) {
-      console.error("WrongCodeCounts:", error);
-    }
-  }
-  return {};
-};
-
 const CabinetInfoAreaContainer = (): JSX.Element => {
   const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
     targetCabinetInfoState
   );
   const [myCabinetInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  // const myCabinetInfo =
-  //   useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet, toggleLent } = useMenu();
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
-  const [isTimeOver, setIsTimeOver] = useState(false);
 
   const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
     lentModal: false,
@@ -319,8 +286,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     return false;
   };
 
-  const wrongCodeCounts = loadSharedWrongCodeCounts();
-
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -357,8 +322,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
-      wrongCodeCounts={wrongCodeCounts}
-      timeOver={isTimeOver}
     />
   );
 };

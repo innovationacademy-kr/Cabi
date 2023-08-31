@@ -17,26 +17,31 @@ const MapItem: React.FC<{
   const setCurrentFloor = useSetRecoilState(currentFloorNumberState);
   const floors = useRecoilValue<Array<number>>(currentBuildingFloorState);
   const { closeMap } = useMenu();
-  const onClick = () => {
+  const onClick = (info: ISectionInfo) => {
+    if (info.type === "floorInfo") return;
     if (pathname !== "main") navigate("main");
     setCurrentFloor(floor ? floor : floors[0]);
     selectSection(info.name);
     closeMap();
   };
   return (
-    <ItemStyled className="cabiButton" onClick={onClick} info={info}>
+    <ItemStyled
+      className="cabiButton"
+      onClick={() => onClick(info)}
+      info={info}
+    >
       {info.name}
     </ItemStyled>
   );
 };
 
 const ItemStyled = styled.div<{
-  onClick: React.MouseEventHandler;
+  onClick: Function;
   info: ISectionInfo;
 }>`
   padding: 3px;
   font-size: ${({ info }) => (info.type === "floorInfo" ? "1.8rem" : "0.8rem")};
-  cursor: pointer;
+  cursor: ${({ info }) => (info.type === "floorInfo" ? "default" : "pointer")};
   color: ${({ info }) => (info.type === "floorInfo" ? "#bcb9b9" : "white")};
   display: flex;
   justify-content: center;
