@@ -14,7 +14,7 @@ import org.ftclub.cabinet.exception.CustomServiceException;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.redis.TicketingSharedCabinet;
+import org.ftclub.cabinet.lent.repository.LentRedis;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -29,7 +29,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	private final CabinetProperties cabinetProperties;
 	private final ApplicationEventPublisher publisher;
-	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final LentRedis lentRedis;
 
 	@Override
 	public LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
@@ -133,9 +133,10 @@ public class LentPolicyImpl implements LentPolicy {
 		Long cabinetId = cabinet.getCabinetId();
 		Long userId = user.getUserId();
 		// 사물함을 빌릴 수 있는 유저라면 공유 사물함 비밀번호 입력 횟수를 확인
-		if (ret == LentPolicyStatus.FINE && ticketingSharedCabinet.isShadowKey(
+		if (ret == LentPolicyStatus.FINE && lentRedis.isShadowKey(
 				cabinet.getCabinetId())) {
-			String passwordCount = ticketingSharedCabinet.getValue(cabinetId.toString(),
+			String passwordCount = lentRedis.getPwTrialCountInRedis(
+					cabinetId.toString(),
 					userId.toString());
 			// 사물함을 빌릴 수 있는 유저면서, 해당 공유사물함에 처음 접근하는 유저인 경우
 			if (passwordCount != null && Integer.parseInt(passwordCount) >= 3) {

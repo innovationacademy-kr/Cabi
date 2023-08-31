@@ -21,9 +21,9 @@ import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
+import org.ftclub.cabinet.lent.repository.LentRedis;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
-import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
@@ -45,7 +45,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;
 	private final CabinetMapper cabinetMapper;
-	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final LentRedis lentRedis;
 	private final CabinetProperties cabinetProperties;
 
 	/*-------------------------------------------READ-------------------------------------------*/
@@ -175,8 +175,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		cabinet.specifyMaxUser(Math.toIntExact(cabinetProperties.getShareMaxUserCount()));
 		List<LentDto> lentDtoList = getLentDtoListFromRedis(cabinetId);
 		return cabinetMapper.toMyCabinetResponseDto(cabinet, lentDtoList,
-				ticketingSharedCabinet.getShareCode(cabinetId),
-				ticketingSharedCabinet.getSessionExpiredAt(cabinetId));
+				lentRedis.getShareCode(cabinetId),
+				lentRedis.getSessionExpiredAtInRedis(cabinetId));
 	}
 
 

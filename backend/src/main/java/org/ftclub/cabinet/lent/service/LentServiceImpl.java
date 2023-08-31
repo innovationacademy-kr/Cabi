@@ -11,7 +11,6 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
-import org.ftclub.cabinet.config.SlackBotProperties;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -19,9 +18,9 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
+import org.ftclub.cabinet.lent.repository.LentRedis;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.mapper.LentMapper;
-import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
@@ -45,9 +44,10 @@ public class LentServiceImpl implements LentService {
 	private final UserService userService;
 	private final BanHistoryRepository banHistoryRepository;
 	private final LentMapper lentMapper;
-	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final LentRedis lentRedis;
 	private final CabinetProperties cabinetProperties;
 	private final SlackbotManager slackbotManager;
+
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
@@ -88,23 +88,23 @@ public class LentServiceImpl implements LentService {
 		lentPolicy.handlePolicyStatus(
 				lentPolicy.verifyUserForLentShare(user, cabinet, userActiveLentCount,
 						userActiveBanList), userActiveBanList);
-		boolean hasShadowKey = ticketingSharedCabinet.isShadowKey(cabinetId);
+		boolean hasShadowKey = lentRedis.isShadowKey(cabinetId);
 		if (!hasShadowKey) {// 최초 대여인 경우
 			lentPolicy.handlePolicyStatus(lentPolicy.verifyCabinetForLent(cabinet),
 					userActiveBanList);
 			cabinet.specifyStatus(CabinetStatus.IN_SESSION);
-			ticketingSharedCabinet.setShadowKey(cabinetId);
+			lentRedis.setShadowKey(cabinetId);
 		}
-		ticketingSharedCabinet.saveValue(cabinetId.toString(), userId.toString(), shareCode,
+		lentRedis.saveUserInRedis(cabinetId.toString(), userId.toString(), shareCode,
 				hasShadowKey);
 		// 4번째 (마지막) 대여자인 경우
-		if (Objects.equals(ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString()),
+		if (Objects.equals(lentRedis.getSizeOfUsersInSession(cabinetId.toString()),
 				cabinetProperties.getShareMaxUserCount())) {
 			cabinet.specifyStatus(CabinetStatus.FULL);
 			saveLentHistories(now, cabinetId);
 			// cabinetId에 대한 shadowKey, valueKey 삭제
-			ticketingSharedCabinet.deleteShadowKey(cabinetId);
-			ticketingSharedCabinet.deleteValueKey(cabinetId);
+			lentRedis.deleteShadowKey(cabinetId);
+			lentRedis.deleteUserIdInRedis(cabinetId);
 		}
 	}
 
@@ -161,10 +161,10 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void cancelLentShareCabinet(Long userId, Long cabinetId) {
 		log.debug("Called cancelLentShareCabinet: {}, {}", userId, cabinetId);
-		ticketingSharedCabinet.deleteUserInValueKey(cabinetId.toString(), userId);
+		lentRedis.deleteUserInRedis(cabinetId.toString(), userId.toString());
 		// 유저가 나갔을 때, 해당 키에 다른 유저가 없다면 전체 키 삭제
-		if (ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString()) == 0) {
-			ticketingSharedCabinet.deleteShadowKey(cabinetId);
+		if (lentRedis.getSizeOfUsersInSession(cabinetId.toString()) == 0) {
+			lentRedis.deleteShadowKey(cabinetId);
 			Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
 		}
@@ -221,7 +221,7 @@ public class LentServiceImpl implements LentService {
 	public void handleLentFromRedisExpired(String cabinetIdString) {
 		Long cabinetId = Long.parseLong(cabinetIdString);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
-		Long userCount = ticketingSharedCabinet.getSizeOfUsers(cabinetId.toString());
+		Long userCount = lentRedis.getSizeOfUsersInSession(cabinetId.toString());
 		if (cabinetProperties.getShareMinUserCount() <= userCount
 				&& userCount <= cabinetProperties.getShareMaxUserCount()) {    // 2명 이상 4명 이하: 대여 성공
 			LocalDateTime now = LocalDateTime.now();
@@ -231,12 +231,12 @@ public class LentServiceImpl implements LentService {
 			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
 		}
 
-		ArrayList<String> userIds = ticketingSharedCabinet.getUserIdsByCabinetId(
+		ArrayList<String> userIds = lentRedis.getUserIdsByCabinetIdInRedis(
 				cabinetId.toString());
 		for (String userId : userIds) {
-			ticketingSharedCabinet.deleteValueKey(Long.valueOf(userId));
+			lentRedis.deleteUserIdInRedis(Long.valueOf(userId));
 		}
-		ticketingSharedCabinet.deleteHashKey(cabinetId.toString());
+		lentRedis.deleteCabinetIdInRedis(cabinetId.toString());
 	}
 
 	@Override
@@ -279,7 +279,7 @@ public class LentServiceImpl implements LentService {
 	}
 
 	public void saveLentHistories(LocalDateTime now, Long cabinetId) {
-		ArrayList<String> userIdList = ticketingSharedCabinet.getUserIdsByCabinetId(
+		ArrayList<String> userIdList = lentRedis.getUserIdsByCabinetIdInRedis(
 				cabinetId.toString());
 		LocalDateTime expiredAt = lentPolicy.generateSharedCabinetExpirationDate(now,
 				userIdList.size());

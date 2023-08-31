@@ -31,9 +31,9 @@ import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
+import org.ftclub.cabinet.lent.repository.LentRedis;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
-import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.data.domain.Page;
@@ -52,7 +52,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	private final LentOptionalFetcher lentOptionalFetcher;
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
-	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final LentRedis lentRedis;
 	private final UserOptionalFetcher userOptionalFetcher;
 
 	/*-------------------------------------------READ-------------------------------------------*/
@@ -87,7 +87,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		if (lentHistories.isEmpty()) {
 //			ArrayList<String> users = ticketingSharedCabinet.findUsersInSessionByCabinetIdFromRedis(
 //					cabinetId);
-			ArrayList<String> users = ticketingSharedCabinet.getUserIdsByCabinetId(
+			ArrayList<String> users = lentRedis.getUserIdsByCabinetIdInRedis(
 					cabinetId.toString());
 			for (String user : users) {
 				String userName = userOptionalFetcher.findUser(Long.valueOf(user)).getName();
@@ -99,7 +99,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 			lentDtos.add(lentMapper.toLentDto(findUser, lentHistory));
 		}
 		return cabinetMapper.toCabinetInfoResponseDto(cabinetOptionalFetcher.findCabinet(cabinetId),
-				lentDtos, ticketingSharedCabinet.getSessionExpiredAt(cabinetId));
+				lentDtos, lentRedis.getSessionExpiredAtInRedis(cabinetId));
 	}
 
 	/**
