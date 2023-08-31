@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
+import org.ftclub.cabinet.config.SlackBotProperties;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -25,6 +26,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.utils.slackbot.SlackbotManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,7 @@ public class LentServiceImpl implements LentService {
 	private final LentMapper lentMapper;
 	private final TicketingSharedCabinet ticketingSharedCabinet;
 	private final CabinetProperties cabinetProperties;
+	private final SlackbotManager slackbotManager;
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
@@ -67,6 +70,8 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
 		lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 		lentRepository.save(lentHistory);
+
+		slackbotManager.sendSlackMessage(user.getName(), cabinet.getVisibleNum(), expiredAt);
 	}
 
 	@Override
@@ -123,9 +128,6 @@ public class LentServiceImpl implements LentService {
 		// cabinetType도 인자로 전달하면 좋을 거 같습니다 (공유사물함 3일이내 반납 페널티)
 		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
-		// delay
-
-		// scheduler
 	}
 
 	@Override
