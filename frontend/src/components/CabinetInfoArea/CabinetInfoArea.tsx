@@ -31,7 +31,7 @@ const CabinetInfoArea: React.FC<{
   expireDate: string | null;
   isMine: boolean;
   isAvailable: boolean;
-  isExtendable: boolean;
+  isExtensible: boolean;
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
@@ -41,7 +41,7 @@ const CabinetInfoArea: React.FC<{
   expireDate,
   isMine,
   isAvailable,
-  isExtendable,
+  isExtensible,
   userModal,
   openModal,
   closeModal,
@@ -131,8 +131,8 @@ const CabinetInfoArea: React.FC<{
               disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
             />
             <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
-            {isExtendable &&
-            !isMine &&
+            {isExtensible &&
+            selectedCabinetInfo!.cabinetId === 0 &&
             selectedCabinetInfo!.lentType === "PRIVATE" ? (
               <ButtonContainer
                 onClick={() => {
@@ -162,7 +162,7 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.cabinetId === 0 ? "-" : expireDate}
       </CabinetLentDateInfoStyled>
       <CabinetInfoButtonsContainerStyled>
-        {isExtendable &&
+        {isExtensible &&
         isMine &&
         selectedCabinetInfo!.lentType === "PRIVATE" ? (
           <ButtonContainer

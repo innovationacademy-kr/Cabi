@@ -18,10 +18,10 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import {
   axiosCabinetById,
+  axiosExtendLentPeriod,
   axiosMyLentInfo, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
 } from "@/api/axios/axios.custom";
 import {
-  formatDate,
   getExtendedDateString,
   getLastDayofMonthString,
 } from "@/utils/dateUtils";
@@ -36,13 +36,13 @@ const ExtendModal: React.FC<{
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [myLentInfo, setMyLentInfo] =
-      useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
   const setIsCurrentSectionRender = useSetRecoilState(
-      isCurrentSectionRenderState
+    isCurrentSectionRenderState
   );
   const formattedExtendedDate = getExtendedDateString(
-      myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
+    myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
   );
   const extendDetail = `사물함 연장권 사용 시,
   대여 기간이 <strong>${formattedExtendedDate} 23:59</strong>으로
@@ -51,20 +51,20 @@ const ExtendModal: React.FC<{
   연장권을 사용하시겠습니까?`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
 연장권은 <strong>${getLastDayofMonthString(
-      null
+    null
   )} 23:59</strong> 이후 만료됩니다.`;
   const getModalTitle = (cabinetId: number | null) => {
     return cabinetId === null
-        ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
-        : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].title;
+      ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
+      : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].title;
   };
   const getModalDetail = (cabinetId: number | null) => {
     return cabinetId === null ? extendInfoDetail : extendDetail;
   };
   const getModalProceedBtnText = (cabinetId: number | null) => {
     return cabinetId === null
-        ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].confirmMessage
-        : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].confirmMessage;
+      ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].confirmMessage
+      : modalPropsMap[additionalModalType.MODAL_USE_EXTENSION].confirmMessage;
   };
   const tryExtendRequest = async (e: React.MouseEvent) => {
     if (currentCabinetId === 0 || myInfo.cabinetId === null) {
@@ -74,7 +74,7 @@ const ExtendModal: React.FC<{
       return;
     }
     try {
-      // await axiosExtend(); // TODO: 연장권 api 생성 후 연결해야 함
+      await axiosExtendLentPeriod();
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       setModalTitle("연장되었습니다");
@@ -105,30 +105,30 @@ const ExtendModal: React.FC<{
     detail: getModalDetail(myInfo.cabinetId),
     proceedBtnText: getModalProceedBtnText(myInfo.cabinetId),
     onClickProceed:
-        myInfo.cabinetId === null
-            ? async (e: React.MouseEvent) => {
-              props.onClose();
-            }
-            : tryExtendRequest,
+      myInfo.cabinetId === null
+        ? async (e: React.MouseEvent) => {
+            props.onClose();
+          }
+        : tryExtendRequest,
     closeModal: props.onClose,
   };
 
   return (
-      <ModalPortal>
-        {!showResponseModal && <Modal modalContents={extendModalContents} />}
-        {showResponseModal &&
-            (hasErrorOnResponse ? (
-                <FailResponseModal
-                    modalTitle={modalTitle}
-                    closeModal={props.onClose}
-                />
-            ) : (
-                <SuccessResponseModal
-                    modalTitle={modalTitle}
-                    closeModal={props.onClose}
-                />
-            ))}
-      </ModalPortal>
+    <ModalPortal>
+      {!showResponseModal && <Modal modalContents={extendModalContents} />}
+      {showResponseModal &&
+        (hasErrorOnResponse ? (
+          <FailResponseModal
+            modalTitle={modalTitle}
+            closeModal={props.onClose}
+          />
+        ) : (
+          <SuccessResponseModal
+            modalTitle={modalTitle}
+            closeModal={props.onClose}
+          />
+        ))}
+    </ModalPortal>
   );
 };
 

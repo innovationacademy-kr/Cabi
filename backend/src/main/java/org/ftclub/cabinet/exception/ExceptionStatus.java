@@ -41,7 +41,8 @@ public enum ExceptionStatus {
 	EXTERNAL_API_EXCEPTION(HttpStatus.BAD_REQUEST, "외부 API와 통신 중 에러가 발생했습니다"),
 	EXISTED_CLUB_USER(HttpStatus.CONFLICT, "이미 존재하는 동아리 유저입니다"),
 	CLUB_HAS_LENT_CABINET(HttpStatus.NOT_ACCEPTABLE, "대여 중인 사물함을 반납 후 삭제할 수 있습니다."),
-	;
+	HANEAPI_ERROR(HttpStatus.BAD_GATEWAY, "24HANE API 통신에 에러가 있습니다."),
+	EXTENSION_TICKET_NOT_FOUND(HttpStatus.BAD_REQUEST, "연장권이 존재하지 않습니다.");
 
 	final private int statusCode;
 	final private String message;

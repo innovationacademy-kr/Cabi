@@ -170,6 +170,7 @@ CREATE TABLE `user` (
                         `email` varchar(255) DEFAULT NULL,
                         `name` varchar(32) NOT NULL,
                         `role` varchar(32) NOT NULL,
+                        `is_extensible` tinyint(1) DEFAULT 0 NOT NULL,
                         PRIMARY KEY (`user_id`),
                         UNIQUE KEY `UK_gj2fy3dcix7ph7k8684gka40c` (`name`),
                         UNIQUE KEY `UK_ob8kqyqqgmefl0aco34akdtpe` (`email`)
