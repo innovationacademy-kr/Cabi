@@ -20,6 +20,7 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import {
   axiosCabinetById,
   axiosLentId,
+  axiosLentShareId,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 import { getExpireDateString } from "@/utils/dateUtils";
@@ -57,11 +58,15 @@ const LentModal: React.FC<{
   const tryLentRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
     try {
-      await axiosLentId(currentCabinetId);
+      if (props.lentType == "SHARE")
+        await axiosLentShareId(currentCabinetId, "0");
+      else await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
-      setModalTitle("대여가 완료되었습니다");
+      if (props.lentType == "SHARE")
+        setModalTitle("공유 사물함 대기열에 입장하였습니다");
+      else setModalTitle("대여가 완료되었습니다");
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);

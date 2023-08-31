@@ -1,11 +1,6 @@
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
-import {
-  myCabinetInfoState,
-  targetCabinetInfoState,
-  timeOverState,
-  userState,
-} from "@/recoil/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -14,7 +9,6 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
@@ -154,33 +148,17 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
   else return "var(--black)";
 };
 
-const loadSharedWrongCodeCounts = () => {
-  const savedData = localStorage.getItem("wrongCodeCounts");
-  if (savedData) {
-    try {
-      const { data, expirationTime } = JSON.parse(savedData);
-      const ExpirationTime = new Date(expirationTime);
-      if (ExpirationTime > new Date()) {
-        return data;
-      } else {
-        localStorage.removeItem("wrongCodeCounts");
-      }
-    } catch (error) {
-      console.error("WrongCodeCounts:", error);
-    }
-  }
-  return {};
-};
-
 const CabinetInfoAreaContainer = (): JSX.Element => {
-  const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
-  const myInfo = useRecoilValue<UserDto>(userState);
-  const myCabinetInfo =
-    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
+    targetCabinetInfoState
+  );
+  const [myCabinetInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const { closeCabinet, toggleLent } = useMenu();
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
+
   const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
     lentModal: false,
     unavailableModal: false,
@@ -308,9 +286,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     return false;
   };
 
-  const wrongCodeCounts = loadSharedWrongCodeCounts();
-  const timeOver = useRecoilValue(timeOverState);
-
   return isAdmin ? (
     <>
       <AdminCabinetInfoArea
@@ -346,8 +321,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
-      wrongCodeCounts={wrongCodeCounts}
-      timeOver={timeOver}
     />
   );
 };

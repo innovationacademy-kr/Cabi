@@ -18,8 +18,8 @@ import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import {
   axiosCabinetById,
+  axiosCancel,
   axiosMyLentInfo,
-  axiosReturn,
 } from "@/api/axios/axios.custom";
 
 const CancelModal: React.FC<{
@@ -43,7 +43,7 @@ const CancelModal: React.FC<{
   const tryCancelRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
     try {
-      await axiosReturn();
+      await axiosCancel(currentCabinetId);
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: null });
       setIsCurrentSectionRender(true);

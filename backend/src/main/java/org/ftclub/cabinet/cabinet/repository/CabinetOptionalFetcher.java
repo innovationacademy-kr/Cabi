@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.repository;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -39,15 +40,27 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findById(cabinetId).orElse(null);
 	}
 
-	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor) {
-		log.debug("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building, floor);
-		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building, floor).stream()
+	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(
+			String building, Integer floor) {
+		log.debug("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building,
+				floor);
+		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building,
+						floor).stream()
 				.map(result -> {
 					Cabinet cabinet = (Cabinet) result[0];
 					LentHistory lentHistory = (LentHistory) result[1];
 					User user = (User) result[2];
 					return cabinetMapper.toActiveCabinetInfoEntitiesDto(cabinet, lentHistory, user);
 				}).collect(Collectors.toList());
+	}
+
+	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor2(
+			String building, Integer floor) {
+		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+	}
+
+	public List<Cabinet> findCabinetsByBuildingAndFloor2(String building, Integer floor) {
+		return cabinetRepository.findAllCabinetsByBuildingAndFloor(building, floor);
 	}
 
 	/**
@@ -76,6 +89,11 @@ public class CabinetOptionalFetcher {
 	public List<String> findAllSectionsByBuildingAndFloor(String building, Integer floor) {
 		log.debug("Called findAllSectionsByBuildingAndFloor: {}, {}", building, floor);
 		return cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor);
+	}
+
+	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus, LocalDateTime currentDate) {
+		log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}", cabinetStatus);
+		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus, currentDate);
 	}
 
 	/*-------------------------------------------GET--------------------------------------------*/
