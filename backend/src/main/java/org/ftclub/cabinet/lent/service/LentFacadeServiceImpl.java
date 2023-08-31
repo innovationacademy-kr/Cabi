@@ -209,6 +209,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 
 	@Override
 	public void terminateLentCabinet(Long userId) {
+		log.debug("Called terminateLentCabinet {}", userId );
 		lentService.terminateLentCabinet(userId);
 	}
 

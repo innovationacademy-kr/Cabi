@@ -92,6 +92,20 @@ public class LentOptionalFetcher {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NO_LENT_CABINET));
 	}
 
+	/**
+	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id에 {@link LentHistory}를 찾습니다.
+	 *
+	 * @param userId 찾고 싶은 user id
+	 * @return user id에 맞는 반납하지 않은 {@link LentHistory}
+	 * @Lock
+	 * @throws ServiceException NO_LENT_CABINET
+	 */
+	public LentHistory getActiveLentHistoryWithUserIdForUpdate(Long userId) {
+		log.debug("Called getActiveLentHistoryWithUserId: {}", userId);
+		return lentRepository.findFirstByUserIdAndEndedAtIsNullForUpdate(userId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NO_LENT_CABINET));
+	}
+
 
 	/**
 	 * 사물함에 남은 자리가 있는 지 확인합니다. 남은 자리가 없으면 throw합니다.

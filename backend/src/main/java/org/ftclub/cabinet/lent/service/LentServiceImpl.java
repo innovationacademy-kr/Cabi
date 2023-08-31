@@ -22,12 +22,12 @@ import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,15 +35,15 @@ import java.util.stream.Collectors;
 @Log4j2
 public class LentServiceImpl implements LentService {
 
-	private final UserService userService;
+	private final LentRepository lentRepository;
 	private final LentPolicy lentPolicy;
-	private final LentMapper lentMapper;
-	private final TicketingSharedCabinet ticketingSharedCabinet;
-	private final UserOptionalFetcher userOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
+	private final UserOptionalFetcher userOptionalFetcher;
+	private final UserService userService;
 	private final BanHistoryRepository banHistoryRepository;
-	private final LentRepository lentRepository;
+	private final LentMapper lentMapper;
+	private final TicketingSharedCabinet ticketingSharedCabinet;
 	private final CabinetProperties cabinetProperties;
 
 	@Override
@@ -164,6 +164,7 @@ public class LentServiceImpl implements LentService {
 				cabinetId);
 		lentHistories.forEach(lentHistory -> lentHistory.endLent(LocalDateTime.now()));
 		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
+//		log.info("cabinet status {}",cabinet.getStatus());
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
 		return lentHistories;
@@ -171,11 +172,12 @@ public class LentServiceImpl implements LentService {
 
 	private LentHistory returnCabinetByUserId(Long userId) {
 		log.debug("Called returnCabinet: {}", userId);
-		userOptionalFetcher.getUser(userId);
-		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(userId);
+//		userOptionalFetcher.getUser(userId);
+		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserIdForUpdate(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(LocalDateTime.now());
+//		lentRepository.saveAndFlush(lentHistory);
 		cabinet.specifyStatusByUserCount(activeLentCount - 1); // policy로 빠질만한 부분인듯?
 		if (activeLentCount - 1 == 0) {
 			cabinet.writeMemo("");
