@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -26,12 +25,6 @@ import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -134,13 +127,22 @@ public class LentServiceImpl implements LentService {
 		if (cabinet.getLentType().equals(LentType.SHARE)) {
 			Integer usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
 					cabinet.getCabinetId());
-			long daysRemaining =
-					lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * (
-							(usersInShareCabinet - 1)
-									/ usersInShareCabinet);
-			System.out.println("?????????? daysRemaining = " + daysRemaining);
-			lentHistory.setExpiredAt(LocalDateTime.now().plusDays(daysRemaining));
+			Long daysUntilExpiration = lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * -1;
+			Double daysRemaining = Double.valueOf(Math.multiplyExact(daysUntilExpiration,
+					Math.floorMod(usersInShareCabinet, usersInShareCabinet + 1)));
+			System.out.println("daysRemaining = " + daysRemaining);
+			daysRemaining.longValue();
+
+//			lentHistory.setExpiredAt(LocalDateTime.now().plusDays(daysRemaining));
 		}
+//		Integer usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
+//				cabinet.getCabinetId());
+//		System.out.println("usersInShareCabinet = " + usersInShareCabinet);
+//		long daysRemaining =
+//				lentHistory.getDaysUntilExpiration(LocalDateTime.now()) * (
+//						(usersInShareCabinet - 1)
+//								/ usersInShareCabinet);
+//		System.out.println("?????????? daysRemaining = " + daysRemaining);
 		// scheduler
 	}
 
@@ -180,7 +182,7 @@ public class LentServiceImpl implements LentService {
 				cabinetId);
 		lentHistories.forEach(lentHistory -> lentHistory.endLent(LocalDateTime.now()));
 		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
-		log.info("cabinet status {}",cabinet.getStatus());
+		log.info("cabinet status {}", cabinet.getStatus());
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
 		return lentHistories;
@@ -189,7 +191,8 @@ public class LentServiceImpl implements LentService {
 	private LentHistory returnCabinetByUserId(Long userId) {
 		log.debug("Called returnCabinet: {}", userId);
 //		userOptionalFetcher.getUser(userId);
-		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserIdForUpdate(userId);
+		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserIdForUpdate(
+				userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(LocalDateTime.now());
