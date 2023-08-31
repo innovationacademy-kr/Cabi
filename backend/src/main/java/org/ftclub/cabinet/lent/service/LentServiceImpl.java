@@ -134,7 +134,6 @@ public class LentServiceImpl implements LentService {
 			System.out.println("?????????? daysRemaining = " + daysRemaining);
 			lentHistory.setExpiredAt(LocalDateTime.now().plusDays(daysRemaining));
 		}
-
 		// scheduler
 	}
 
