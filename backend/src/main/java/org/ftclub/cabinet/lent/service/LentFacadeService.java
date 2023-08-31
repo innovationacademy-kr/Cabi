@@ -168,7 +168,6 @@ public interface LentFacadeService {
 	 * 대여기간을 연장합니다.
 	 *
 	 * @param userId
-	 * @param cabinetId
 	 */
-	void extendLent(Long userId, Long cabinetId);
+	void extendLent(Long userId);
 }

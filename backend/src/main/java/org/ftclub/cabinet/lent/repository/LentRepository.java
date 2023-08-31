@@ -36,8 +36,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	Optional<LentHistory> findFirstByUserIdAndEndedAtIsNull(@Param("userId") Long userId);
 
 	/**
-	 * 유저를 기준으로 아직 반납하지 않은 {@link LentHistory}중 하나를 가져옵니다.
-	 * X Lock을 걸어서 가져옵니다.
+	 * 유저를 기준으로 아직 반납하지 않은 {@link LentHistory}중 하나를 가져옵니다. X Lock을 걸어서 가져옵니다.
 	 *
 	 * @param userId 찾으려는 user id
 	 * @return 반납하지 않은 {@link LentHistory}의 {@link Optional}
@@ -138,7 +137,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"FROM LentHistory lh " +
 			"LEFT JOIN FETCH lh.user " +
 			"WHERE lh.cabinetId = :cabinetId and lh.endedAt is null")
-	List<LentHistory> findActiveLentHistoriesByCabinetIdWithUser(@Param("cabinetId") Long cabinetId);
+	List<LentHistory> findActiveLentHistoriesByCabinetIdWithUser(
+			@Param("cabinetId") Long cabinetId);
 
 	@Query("SELECT lh " +
 			"FROM LentHistory lh " +
@@ -187,4 +187,11 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			"FROM LentHistory lh " +
 			"WHERE lh.endedAt IS NULL")
 	List<LentHistory> findAllActiveLentHistories();
+
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.cabinetId "
+			+ "IN (SELECT lh2.cabinetId "
+			+ "FROM LentHistory lh2 WHERE lh2.userId = :userId AND lh2.endedAt IS NULL)")
+	List<LentHistory> findAllActiveLentHistoriesByUserId(@Param("userId") Long userId);
 }

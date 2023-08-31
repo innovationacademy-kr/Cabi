@@ -50,12 +50,11 @@ public class LentController {
 				shareCodeDto.getShareCode());
 	}
 
-	@PatchMapping("/cabinets/{cabinetId}")
+	@PatchMapping("/cabinets/extend")
 	public void extendLentCabinet(
-			@UserSession UserSessionDto user,
-			@PathVariable Long cabinetId) {
-		log.info("Called extendLentCabinet user: {}, cabinetId: {}", user, cabinetId);
-		lentFacadeService.extendLent(user.getUserId(), cabinetId);
+			@UserSession UserSessionDto user) {
+		log.info("Called extendLentCabinet user: {}, cabinetId: {}", user);
+		lentFacadeService.extendLent(user.getUserId());
 	}
 
 	@PatchMapping("/cabinets/share/cancel/{cabinetId}")
