@@ -116,7 +116,6 @@ public class LentPolicyImpl implements LentPolicy {
 		LentPolicyStatus ret = verifyUserForLent(user, cabinet, userActiveLentCount,
 				userActiveBanList);
 
-		// 유저가 패스워드를 3번 이상 틀린 경우
 		Long cabinetId = cabinet.getCabinetId();
 		Long userId = user.getUserId();
 		// 사물함을 빌릴 수 있는 유저라면 공유 사물함 비밀번호 입력 횟수를 확인
@@ -201,8 +200,8 @@ public class LentPolicyImpl implements LentPolicy {
 				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
 			case ALL_BANNED_USER:
 				handleBannedUserResponse(status, banHistory.get(0));
-//			case SHARE_BANNED_USER:
-
+			case SHARE_BANNED_USER:
+				throw new ServiceException(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED);
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			case NOT_USER:
