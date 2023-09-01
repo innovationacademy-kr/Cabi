@@ -39,13 +39,11 @@ public class BanPolicyImpl implements BanPolicy {
 	public LocalDateTime getBanDate(BanType banType, LocalDateTime endedAt, LocalDateTime expiredAt,
 			Long userId) {
 		log.debug("Called getBanDate");
-		if (banType == BanType.SHARE) {
-			return endedAt.plusDays(cabinetProperties.getPenaltyDayShare());
-		} else {
-			int currentBanDays = DateUtil.calculateTwoDateDiffAbs(endedAt, expiredAt).intValue();
-			int accumulateBanDays = getAccumulateBanDaysByUserId(userId).intValue();
-			return endedAt.plusDays(currentBanDays + accumulateBanDays);
-		}
+		Double currentBanDays = DateUtil.calculateTwoDateDiffCeil(expiredAt, endedAt)
+				.doubleValue();
+		Double squaredBanDays = Math.pow(currentBanDays, 2.0);
+		System.out.println("squaredBanDays = " + squaredBanDays);
+		return endedAt.plusDays(squaredBanDays.longValue());
 	}
 
 	@Override
