@@ -163,18 +163,18 @@ const CabinetInfoArea: React.FC<{
       </CabinetLentDateInfoStyled>
       <CabinetInfoButtonsContainerStyled>
         {isExtensible &&
-        isMine &&
-        selectedCabinetInfo!.lentType === "PRIVATE" ? (
-          <ButtonContainer
-            onClick={() => {
-              openModal("extendModal");
-            }}
-            text={"연장권 사용하기"}
-            theme="line"
-            iconSrc="/src/assets/images/extensionTicket.svg"
-            iconAlt="연장권 아이콘"
-          />
-        ) : null}
+          isMine &&
+          selectedCabinetInfo.status !== "IN_SESSION" && (
+            <ButtonContainer
+              onClick={() => {
+                openModal("extendModal");
+              }}
+              text={"연장권 사용하기"}
+              theme="line"
+              iconSrc="/src/assets/images/extensionTicket.svg"
+              iconAlt="연장권 아이콘"
+            />
+          )}
       </CabinetInfoButtonsContainerStyled>
       {userModal.unavailableModal && (
         <UnavailableModal
