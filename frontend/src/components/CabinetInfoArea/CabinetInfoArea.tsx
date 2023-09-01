@@ -118,19 +118,29 @@ const CabinetInfoArea: React.FC<{
           )
         ) : (
           <>
-            <ButtonContainer
-              onClick={() =>
-                openModal(
-                  selectedCabinetInfo.status == "IN_SESSION"
-                    ? "invitationCodeModal"
-                    : "lentModal"
-                )
-              }
-              text="대여"
-              theme="fill"
-              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
-            />
-            <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
+            {isMine && (
+              <>
+                <ButtonContainer
+                  onClick={() =>
+                    openModal(
+                      selectedCabinetInfo.status == "IN_SESSION"
+                        ? "invitationCodeModal"
+                        : "lentModal"
+                    )
+                  }
+                  text="대여"
+                  theme="fill"
+                  disabled={
+                    !isAvailable || selectedCabinetInfo.lentType === "CLUB"
+                  }
+                />
+                <ButtonContainer
+                  onClick={closeCabinet}
+                  text="닫기"
+                  theme="line"
+                />
+              </>
+            )}
             {isExtensible &&
             selectedCabinetInfo!.cabinetId === 0 &&
             selectedCabinetInfo!.lentType === "PRIVATE" ? (
