@@ -1,19 +1,12 @@
 package org.ftclub.cabinet.lent.domain;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
-import org.ftclub.cabinet.exception.CustomExceptionStatus;
-import org.ftclub.cabinet.exception.CustomServiceException;
-import org.ftclub.cabinet.exception.DomainException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.exception.*;
 import org.ftclub.cabinet.lent.repository.LentRedis;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
@@ -21,6 +14,10 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +30,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
-			Integer totalUserCount) {
+															 Integer totalUserCount) {
 		log.info("Called generateSharedCabinetExpirationDate now: {}, totalUserCount: {}", now,
 				totalUserCount);
 		return now.plusDays(getDaysForLentTermShare(totalUserCount))
@@ -90,7 +87,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount,
-			List<BanHistory> userActiveBanList) {
+											  List<BanHistory> userActiveBanList) {
 		log.debug("Called verifyUserForLent");
 		if (!user.isUserRole(UserRole.USER)) {
 			return LentPolicyStatus.NOT_USER;
@@ -130,8 +127,8 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyUserForLentShare(User user, Cabinet cabinet,
-			int userActiveLentCount,
-			List<BanHistory> userActiveBanList) {
+												   int userActiveLentCount,
+												   List<BanHistory> userActiveBanList) {
 
 		LentPolicyStatus ret = verifyUserForLent(user, cabinet, userActiveLentCount,
 				userActiveBanList);
@@ -229,8 +226,8 @@ public class LentPolicyImpl implements LentPolicy {
 				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
 			case ALL_BANNED_USER:
 				handleBannedUserResponse(status, banHistory.get(0));
-//			case SHARE_BANNED_USER:
-//				handleBannedUserResponse(status, banHistory.get(0));
+			case SHARE_BANNED_USER:
+				throw new ServiceException(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED);
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			case NOT_USER:
