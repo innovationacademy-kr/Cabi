@@ -158,7 +158,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		}
 		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
 		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList,
-				null, null);
+				null, null, lentRedis.getPreviousUser(myCabinet.getCabinetId().toString()));
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		List<LentDto> lentDtoList = getLentDtoListFromRedis(cabinetId);
 		return cabinetMapper.toMyCabinetResponseDto(cabinet, lentDtoList,
 				lentRedis.getShareCode(cabinetId),
-				lentRedis.getSessionExpiredAtInRedis(cabinetId));
+				lentRedis.getSessionExpiredAtInRedis(cabinetId), null);
 	}
 
 

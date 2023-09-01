@@ -28,14 +28,17 @@ public class LentRedis {
 	private final HashOperations<String, String, String> valueHashOperations;
 	private final ValueOperations<String, String> valueOperations;
 	private final RedisTemplate<String, String> shadowKeyRedisTemplate;
+	private final ValueOperations<String, String> previousUserRedisTemplate;
 
 	@Autowired
 	public LentRedis(RedisTemplate<String, Object> valueHashRedisTemplate,
 			RedisTemplate<String, String> valueRedisTemplate,
-			RedisTemplate<String, String> shadowKeyRedisTemplate) {
+			RedisTemplate<String, String> shadowKeyRedisTemplate,
+			RedisTemplate<String, String> previousUserRedisTemplate) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
+		this.previousUserRedisTemplate = previousUserRedisTemplate.opsForValue();
 	}
 
 	/**
@@ -162,5 +165,15 @@ public class LentRedis {
 							TimeUnit.SECONDS).longValue());
 		}
 		return null;
+	}
+
+	public void setPreviousUser(String cabinetId, String userName) {
+		log.debug("Called setPreviousUser: {}, {}", cabinetId, userName);
+		previousUserRedisTemplate.set(cabinetId, userName);
+	}
+
+	public String getPreviousUser(String cabinetId) {
+		log.debug("Called getPreviousUser: {}", cabinetId);
+		return previousUserRedisTemplate.get(cabinetId);
 	}
 }
