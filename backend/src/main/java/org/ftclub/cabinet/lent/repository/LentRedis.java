@@ -24,6 +24,7 @@ public class LentRedis {
 	private static final String USER_ENTERED = "entered";
 	private static final String SHADOW_KEY_SUFFIX = ":shadow";
 	private static final String VALUE_KEY_SUFFIX = ":user";
+	private static final String PREVIOUS_USER_SUFFIX = ":previousUser";
 
 	private final HashOperations<String, String, String> valueHashOperations;
 	private final ValueOperations<String, String> valueOperations;
@@ -169,11 +170,11 @@ public class LentRedis {
 
 	public void setPreviousUser(String cabinetId, String userName) {
 		log.debug("Called setPreviousUser: {}, {}", cabinetId, userName);
-		previousUserRedisTemplate.set(cabinetId, userName);
+		previousUserRedisTemplate.set(cabinetId + PREVIOUS_USER_SUFFIX, userName);
 	}
 
 	public String getPreviousUser(String cabinetId) {
 		log.debug("Called getPreviousUser: {}", cabinetId);
-		return previousUserRedisTemplate.get(cabinetId);
+		return previousUserRedisTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
 	}
 }

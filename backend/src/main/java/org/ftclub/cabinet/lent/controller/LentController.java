@@ -113,8 +113,6 @@ public class LentController {
 			@UserSession UserSessionDto user) {
 		log.info("Called getMyLentInfo user: {}", user);
 		MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user);
-		System.out.println("myCabinetResponseDto.getPreviousUserName() = "
-				+ myCabinetResponseDto.getPreviousUserName());
 		if (myCabinetResponseDto == null) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
