@@ -83,7 +83,9 @@ public interface LentService {
 	List<ActiveLentHistoryDto> getAllActiveLentHistories();
 
 	/**
-	 * 현재 대여중인 사물함의 모든 대여기록을 가져온 후, expiredAt을 갱신시키고, user 의 is_extensible 을 false 한다
+	 * 현재 대여중인 사물함의 모든 대여기록을 가져온 후, expiredAt을 갱신시키고, user 의 is_extensible 을 false 한다 userId로,
+	 * cabinet 을 조회하고, cabinetId로 LentHistory를 조회한다. LentHistory의 expiredAt을 user의 isExtensible로
+	 * 갱신한다.
 	 *
 	 * @param userId
 	 */
