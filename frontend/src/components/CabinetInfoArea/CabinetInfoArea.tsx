@@ -118,7 +118,7 @@ const CabinetInfoArea: React.FC<{
           )
         ) : (
           <>
-            {isMine && (
+            {selectedCabinetInfo!.cabinetId !== 0 && (
               <>
                 <ButtonContainer
                   onClick={() =>
