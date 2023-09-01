@@ -313,8 +313,9 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       closeCabinet={closeCabinet}
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
       isMine={
-        myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId ||
-        myCabinetInfo?.cabinetId === 0
+        (myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId ||
+          myCabinetInfo?.cabinetId === 0) &&
+        cabinetViewData?.status !== "AVAILABLE"
       }
       isAvailable={
         (cabinetViewData?.status === "AVAILABLE" ||
