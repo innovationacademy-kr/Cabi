@@ -5,7 +5,7 @@ import {
   useResetRecoilState,
   useSetRecoilState,
 } from "recoil";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   currentBuildingNameState,
   currentFloorCabinetState,
@@ -151,14 +151,9 @@ const MainPage = () => {
             title="새로고침"
             id="refreshButton"
             onClick={refreshCabinetList}
-            disable={false}
+            disable={isLoading}
           >
-            <ImgStyled
-              w="20px"
-              h="20px"
-              src="/src/assets/images/refreshIcon.svg"
-              alt="새로고침 버튼"
-            />
+            새로고침
           </RefreshButtonStyled>
         </CabinetListWrapperStyled>
       </WapperStyled>
@@ -181,24 +176,30 @@ const CabinetListWrapperStyled = styled.div`
   padding-bottom: 30px;
 `;
 
-const RefreshButtonStyled = styled.div<{
+const RefreshButtonStyled = styled.button<{
   disable?: boolean;
 }>`
-  width: 32px;
-  height: 32px;
-  margin: 20px 0 0 20px;
-  cursor: pointer;
-  display: ${({ disable }) => (disable ? "none" : "block")};
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      opacity: 0.9;
-    }
+  max-width: 150px;
+  width: 100%;
+  height: 45px;
+  padding: 10px 40px 10px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 30px;
+  margin: 30px;
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
   }
-`;
-
-const ImgStyled = styled.img<{ w?: string; h?: string }>`
-  width: ${({ w }) => (w ? w : "100%")};
-  height: ${({ h }) => (h ? h : "100%")};
+  &:last-child {
+    margin-bottom: 0;
+  }
+  @media (max-height: 745px) {
+    margin-bottom: 8px;
+  }
 `;
 
 export default MainPage;
