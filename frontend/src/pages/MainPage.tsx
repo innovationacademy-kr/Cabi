@@ -151,7 +151,6 @@ const MainPage = () => {
             title="새로고침"
             id="refreshButton"
             onClick={refreshCabinetList}
-            disable={isLoading}
           >
             새로고침
           </RefreshButtonStyled>
@@ -176,9 +175,7 @@ const CabinetListWrapperStyled = styled.div`
   padding-bottom: 30px;
 `;
 
-const RefreshButtonStyled = styled.button<{
-  disable?: boolean;
-}>`
+const RefreshButtonStyled = styled.button`
   max-width: 150px;
   width: 100%;
   height: 45px;
@@ -190,13 +187,6 @@ const RefreshButtonStyled = styled.button<{
   font-size: 16px;
   border-radius: 30px;
   margin: 30px;
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  &:last-child {
-    margin-bottom: 0;
-  }
   @media (max-height: 745px) {
     margin-bottom: 8px;
   }
