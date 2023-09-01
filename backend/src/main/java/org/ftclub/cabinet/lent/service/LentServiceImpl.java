@@ -103,7 +103,13 @@ public class LentServiceImpl implements LentService {
 			saveLentHistories(now, cabinetId);
 			// cabinetId에 대한 shadowKey, valueKey 삭제
 			lentRedis.deleteShadowKey(cabinetId);
-			lentRedis.deleteUserIdInRedis(cabinetId);
+//			lentRedis.deleteUserIdInRedis(cabinetId);
+			ArrayList<String> userIds = lentRedis.getUserIdsByCabinetIdInRedis(
+					cabinetId.toString());
+			for (String id : userIds) {
+				lentRedis.deleteUserIdInRedis(Long.valueOf(id));
+			}
+			lentRedis.deleteCabinetIdInRedis(cabinetId.toString());
 		}
 	}
 
@@ -234,7 +240,6 @@ public class LentServiceImpl implements LentService {
 		} else {
 			cabinet.specifyStatus(CabinetStatus.AVAILABLE);
 		}
-
 		ArrayList<String> userIds = lentRedis.getUserIdsByCabinetIdInRedis(
 				cabinetId.toString());
 		for (String userId : userIds) {
