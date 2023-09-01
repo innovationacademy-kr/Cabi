@@ -71,7 +71,6 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
 		lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 		lentRepository.save(lentHistory);
-
 		slackbotManager.sendSlackMessage(user.getName(), cabinet.getVisibleNum(), expiredAt);
 	}
 
@@ -140,8 +139,13 @@ public class LentServiceImpl implements LentService {
 			Double secondsRemaining =
 					daysUntilExpiration * (usersInShareCabinet / (usersInShareCabinet + 1.0) * 24.0
 							* 60.0 * 60.0);
+			LocalDateTime expiredAt = LocalDateTime.now().plusSeconds(
+							secondsRemaining.longValue())
+					.withHour(23)
+					.withMinute(59)
+					.withSecond(0); // 23:59:59
 			allActiveLentHistoriesByUserId.forEach(e -> {
-				e.setExpiredAt(LocalDateTime.now().plusSeconds(secondsRemaining.longValue()));
+				e.setExpiredAt(expiredAt);
 			});
 		}
 	}
