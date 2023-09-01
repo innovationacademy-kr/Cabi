@@ -272,15 +272,24 @@ public class LentServiceImpl implements LentService {
 			throw new ServiceException(ExceptionStatus.EXTENSION_TICKET_NOT_FOUND);
 		}
 
-		List<LentHistory> activeLentHistories = lentOptionalFetcher.findAllActiveLentHistoriesByUserId(
-				userId);
-
-		if (activeLentHistories.isEmpty()) {
+		Cabinet lentCabinet = cabinetOptionalFetcher.findLentCabinetByUserId(userId);
+		if (lentCabinet == null) {
 			throw new ServiceException(ExceptionStatus.NO_LENT_CABINET);
 		}
-		LocalDateTime oldExpiredAt = activeLentHistories.get(0).getExpiredAt();
 
-		activeLentHistories.forEach(lentHistory -> {
+		Long cabinetId = lentCabinet.getCabinetId();
+		List<LentHistory> allActiveLentByCabinetId = lentOptionalFetcher.findAllActiveLentByCabinetId(
+				cabinetId);
+		int lentHistorySize = allActiveLentByCabinetId.size();
+
+		// 공유사물함에서 1명일 때 연장권 사용 방지
+		LentType lentType = lentCabinet.getLentType();
+		if (lentType.equals(LentType.SHARE) && lentHistorySize == 1) {
+			throw new ServiceException(ExceptionStatus.EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED);
+		}
+
+		LocalDateTime oldExpiredAt = allActiveLentByCabinetId.get(0).getExpiredAt();
+		allActiveLentByCabinetId.forEach(lentHistory -> {
 			lentHistory.setExpiredAt(
 					lentPolicy.generateExtendedExpirationDate(oldExpiredAt));
 		});

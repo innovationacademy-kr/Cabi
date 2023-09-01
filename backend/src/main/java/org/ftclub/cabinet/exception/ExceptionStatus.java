@@ -44,7 +44,9 @@ public enum ExceptionStatus {
 	EXISTED_CLUB_USER(HttpStatus.CONFLICT, "이미 존재하는 동아리 유저입니다"),
 	CLUB_HAS_LENT_CABINET(HttpStatus.NOT_ACCEPTABLE, "대여 중인 사물함을 반납 후 삭제할 수 있습니다."),
 	HANEAPI_ERROR(HttpStatus.BAD_GATEWAY, "24HANE API 통신에 에러가 있습니다."),
-	EXTENSION_TICKET_NOT_FOUND(HttpStatus.BAD_REQUEST, "연장권이 존재하지 않습니다.");
+	EXTENSION_TICKET_NOT_FOUND(HttpStatus.BAD_REQUEST, "연장권이 존재하지 않습니다."),
+	EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "연장권은 1명일 때 사용할 수 없습니다."),
+	;
 
 	final private int statusCode;
 	final private String message;

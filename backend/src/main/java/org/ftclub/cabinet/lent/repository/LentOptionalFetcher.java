@@ -228,7 +228,8 @@ public class LentOptionalFetcher {
 	}
 
 	/**
-	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id를 통해 {@link LentHistory}를 찾습니다.
+	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id를 통해 {@link LentHistory}를 찾습니다. CABINET JOIN 없이,
+	 * LentHistory의 subquery를 통해 찾습니다.
 	 *
 	 * @param userId 찾고 싶은 LentHistory 의 user id
 	 * @return user id에 맞는 반납하지 않은 {@link LentHistory}
