@@ -118,19 +118,29 @@ const CabinetInfoArea: React.FC<{
           )
         ) : (
           <>
-            <ButtonContainer
-              onClick={() =>
-                openModal(
-                  selectedCabinetInfo.status == "IN_SESSION"
-                    ? "invitationCodeModal"
-                    : "lentModal"
-                )
-              }
-              text="대여"
-              theme="fill"
-              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
-            />
-            <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
+            {selectedCabinetInfo!.cabinetId !== 0 && (
+              <>
+                <ButtonContainer
+                  onClick={() =>
+                    openModal(
+                      selectedCabinetInfo.status == "IN_SESSION"
+                        ? "invitationCodeModal"
+                        : "lentModal"
+                    )
+                  }
+                  text="대여"
+                  theme="fill"
+                  disabled={
+                    !isAvailable || selectedCabinetInfo.lentType === "CLUB"
+                  }
+                />
+                <ButtonContainer
+                  onClick={closeCabinet}
+                  text="닫기"
+                  theme="line"
+                />
+              </>
+            )}
             {isExtensible &&
             selectedCabinetInfo!.cabinetId === 0 &&
             selectedCabinetInfo!.lentType === "PRIVATE" ? (
@@ -163,18 +173,18 @@ const CabinetInfoArea: React.FC<{
       </CabinetLentDateInfoStyled>
       <CabinetInfoButtonsContainerStyled>
         {isExtensible &&
-        isMine &&
-        selectedCabinetInfo!.lentType === "PRIVATE" ? (
-          <ButtonContainer
-            onClick={() => {
-              openModal("extendModal");
-            }}
-            text={"연장권 사용하기"}
-            theme="line"
-            iconSrc="/src/assets/images/extensionTicket.svg"
-            iconAlt="연장권 아이콘"
-          />
-        ) : null}
+          isMine &&
+          selectedCabinetInfo.status !== "IN_SESSION" && (
+            <ButtonContainer
+              onClick={() => {
+                openModal("extendModal");
+              }}
+              text={"연장권 사용하기"}
+              theme="line"
+              iconSrc="/src/assets/images/extensionTicket.svg"
+              iconAlt="연장권 아이콘"
+            />
+          )}
       </CabinetInfoButtonsContainerStyled>
       {userModal.unavailableModal && (
         <UnavailableModal
