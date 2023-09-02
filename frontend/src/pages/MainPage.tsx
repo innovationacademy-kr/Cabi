@@ -12,13 +12,23 @@ import {
   currentFloorNumberState,
   currentSectionNameState,
 } from "@/recoil/atoms";
-import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import {
+  currentCabinetIdState,
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
 import { CabinetInfoByBuildingFloorDto } from "@/types/dto/cabinet.dto";
-import { axiosCabinetByBuildingFloor } from "@/api/axios/axios.custom";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { UserDto } from "@/types/dto/user.dto";
+import {
+  axiosCabinetByBuildingFloor,
+  axiosMyLentInfo,
+} from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const MainPage = () => {
@@ -58,9 +68,23 @@ const MainPage = () => {
     CabinetInfoByBuildingFloorDto[]
   >(currentFloorCabinetState);
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
+  const myInfo = useRecoilValue<UserDto>(userState);
+  const [myCabinetInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
 
   const refreshCabinetList = async () => {
     setIsLoading(true);
+    if (
+      myInfo.cabinetId !== myCabinetInfo.cabinetId &&
+      myCabinetInfo.cabinetId
+    ) {
+      try {
+        const { data: myLentInfo } = await axiosMyLentInfo();
+        setMyLentInfo(myLentInfo);
+      } catch (error) {
+        throw error;
+      }
+    }
     try {
       await axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
         .then((response) => {

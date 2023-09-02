@@ -5,7 +5,6 @@ import {
   isCurrentSectionRenderState,
   myCabinetInfoState,
   targetCabinetInfoState,
-  userState,
 } from "@/recoil/atoms";
 import { IModalContents } from "@/components/Modals/Modal";
 import ModalPortal from "@/components/Modals/ModalPortal";
@@ -33,7 +32,6 @@ const InvitationCodeModalContainer: React.FC<{
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [code, setCode] = useState("");
-  const [myInfo, setMyInfo] = useRecoilState(userState);
   const setTargetCabinetInfo = useSetRecoilState(targetCabinetInfoState);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
@@ -87,7 +85,6 @@ const InvitationCodeModalContainer: React.FC<{
   const tryLentRequest = async () => {
     try {
       await axiosLentShareId(currentCabinetId, code);
-      setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       setModalTitle("공유 사물함 대기열에 입장하였습니다");
       try {

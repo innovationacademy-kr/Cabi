@@ -37,7 +37,8 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     useState<boolean>(false);
   const { openCabinet, closeCabinet } = useMenu();
   const isMine = myCabinetInfo
-    ? myCabinetInfo.cabinetId === props.cabinetId
+    ? myCabinetInfo.cabinetId === props.cabinetId &&
+      props.status !== "AVAILABLE"
     : false;
 
   let cabinetLabelText = "";
