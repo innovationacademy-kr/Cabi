@@ -25,6 +25,23 @@ export const getExpireDateString = (
   return formatDate(expireDate);
 };
 
+// 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원))
+export const getShortenedExpireDateString = (
+  lentType: string,
+  currentNumUsers: number,
+  existExpireDate: Date | undefined
+) => {
+  if (lentType != "SHARE" || existExpireDate === undefined) return;
+  const dayInMilisec = 1000 * 60 * 60 * 24;
+  const expireDateInMilisec = new Date(existExpireDate).getTime();
+  let secondUntilExpire = expireDateInMilisec - new Date().getTime();
+  let daysUntilExpire = Math.ceil(secondUntilExpire / dayInMilisec) - 1;
+  let dateRemainig =
+    (daysUntilExpire * (currentNumUsers - 1)) / currentNumUsers;
+  let newExpireDate = new Date().getTime() + dateRemainig * dayInMilisec;
+  return formatDate(new Date(newExpireDate));
+};
+
 export const getExtendedDateString = (existExpireDate?: Date) => {
   let expireDate = existExpireDate ? new Date(existExpireDate) : new Date();
   expireDate.setDate(
