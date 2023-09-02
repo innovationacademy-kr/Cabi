@@ -34,6 +34,7 @@ public enum ExceptionStatus {
 	INCORRECT_ARGUMENT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다"),
 	ALL_BANNED_USER(HttpStatus.BAD_REQUEST, "ALL 밴 상태의 유저입니다."),
 	SHARE_BANNED_USER(HttpStatus.BAD_REQUEST, "초대코드를 3회 이상 틀린 유저입니다."),
+	LENT_PENDING(HttpStatus.BAD_REQUEST, "오픈 예정인 사물함입니다."),
 	WRONG_SHARE_CODE(HttpStatus.BAD_REQUEST, "초대코드가 유효하지 않습니다."),
 	NOT_FOUND_BAN_HISTORY(HttpStatus.NOT_FOUND, "현재 정지 상태인 유저가 아닙니다."),
 	BLACKHOLED_USER(HttpStatus.BAD_REQUEST, "블랙홀 상태의 유저입니다."),
