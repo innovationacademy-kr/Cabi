@@ -112,31 +112,6 @@ const InvitationCodeModalContainer: React.FC<{
     }
   };
 
-  const onSendCode = async () => {
-    try {
-      //초대코드 받아오는 api 넣어야 함.
-      const sharedCode = "4242";
-
-      if (code === sharedCode) {
-        await tryLentRequest();
-      } else {
-        const updatedCounts = {
-          ...sharedWrongCodeCounts,
-          [String(props.cabinetId)]:
-            (sharedWrongCodeCounts[String(props.cabinetId)] || 0) + 1,
-        };
-        saveSharedWrongCodeCounts(updatedCounts);
-        setModalTitle("일치하지 않는 초대 코드입니다.");
-        setHasErrorOnResponse(true);
-        setShowResponseModal(true);
-      }
-    } catch (error: any) {
-      setModalTitle(error.response.data.message);
-      setHasErrorOnResponse(true);
-      setShowResponseModal(true);
-    }
-  };
-
   const InvititaionCodeModalContents: IModalContents = {
     type: "hasProceedBtn",
     icon: checkIcon,
