@@ -5,7 +5,7 @@ import {
   useResetRecoilState,
   useSetRecoilState,
 } from "recoil";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import {
   currentBuildingNameState,
   currentCabinetIdState,
@@ -27,6 +27,7 @@ import {
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import {
   axiosCabinetByBuildingFloor,
+  axiosMyInfo,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
