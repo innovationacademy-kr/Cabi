@@ -62,7 +62,8 @@ const LentModal: React.FC<{
         await axiosLentShareId(currentCabinetId, "0");
       else await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
-      setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
+      if (props.lentType != "SHARE")
+        setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       if (props.lentType == "SHARE")
         setModalTitle("공유 사물함 대기열에 입장하였습니다");
