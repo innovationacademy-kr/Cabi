@@ -58,18 +58,7 @@ class BlackholeUpdaterImpl(private val config: BlackholeUpdaterConfig): Blackhol
             .map { toUsers(it) } // get profile
             .map(::filterUpdateUsers) // update
             .forEach(::updateUsers)
-//            .forEach { tempFileWrite(it) } // print
     }
-
-//    private fun tempFileWrite(users: List<UserProfile>) {
-//        val file = File("temp.txt")
-//        val writer = BufferedWriter(FileWriter(file, true))
-//        users.forEach {
-//            writer.write(it.toString())
-//            writer.newLine()
-//        }
-//        writer.close()
-//    }
 
     private fun filterUpdateUsers(users: List<UserProfile>): List<UserProfile> {
         val filtered = dbManager.filterRequiredUpdate(users)
