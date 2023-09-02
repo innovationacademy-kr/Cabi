@@ -25,14 +25,13 @@ interface FtTokenFetcher: Sprinter<String> {
     fun refresh(): String
 }
 
+private val clientSecret = "client_secret"
+private val clientId = "client_id"
+private val grantType = "grant_type"
+private val scope = "scope"
+private val accessTokenKey = "access_token"
+
 class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
-    companion object {
-        private val clientSecret = "client_secret"
-        private val clientId = "client_id"
-        private val grantType = "grant_type"
-        private val scope = "scope"
-        private val accessTokenKey = "access_token"
-    }
     private val client = OkHttpClient()
     private var token: String? = null
 
