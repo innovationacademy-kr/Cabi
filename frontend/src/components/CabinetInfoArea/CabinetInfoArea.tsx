@@ -183,6 +183,10 @@ const CabinetInfoArea: React.FC<{
               theme="line"
               iconSrc="/src/assets/images/extensionTicket.svg"
               iconAlt="연장권 아이콘"
+              disabled={
+                selectedCabinetInfo.lentsLength <= 1 &&
+                selectedCabinetInfo.lentType === "SHARE"
+              }
             />
           )}
       </CabinetInfoButtonsContainerStyled>
