@@ -173,7 +173,7 @@ public class LentRedis {
 		previousUserRedisTemplate.set(cabinetId + PREVIOUS_USER_SUFFIX, userName);
 	}
 
-	public String getPreviousUser(String cabinetId) {
+	public String getPreviousUserName(String cabinetId) {
 		log.debug("Called getPreviousUser: {}", cabinetId);
 		return previousUserRedisTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
 	}
