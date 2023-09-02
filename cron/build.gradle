@@ -37,7 +37,7 @@ test {
 }
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain{languageVersion.set(JavaLanguageVersion.of(17))}
 }
 
 application {
