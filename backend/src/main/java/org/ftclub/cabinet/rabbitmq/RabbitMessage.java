@@ -14,6 +14,9 @@ import lombok.ToString;
 @Builder
 @ToString
 public class RabbitMessage {
+
+	//cabinetID or Entity
+	//UserID or Entity
 	private String id;
 	private String fName;
 	private String lName;

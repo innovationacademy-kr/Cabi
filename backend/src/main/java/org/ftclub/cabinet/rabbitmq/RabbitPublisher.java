@@ -12,7 +12,12 @@ public class RabbitPublisher {
 	private final RabbitTemplate rabbitTemplate;
 	private final TopicExchange topicExchange;
 
-	public void sendMessage(RabbitMessage message){
+	public void sendMessage(RabbitMessage message) {
 		rabbitTemplate.convertAndSend(topicExchange.getName(), "hello.key.1", message);
 	}
+
+	public void sendMessage2(RabbitMessage message) {
+		rabbitTemplate.convertAndSend(topicExchange.getName(), "hello.key.2", message);
+	}
+
 }
