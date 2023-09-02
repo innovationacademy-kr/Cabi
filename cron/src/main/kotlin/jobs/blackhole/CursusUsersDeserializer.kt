@@ -3,6 +3,7 @@ package jobs.blackhole
 import com.fasterxml.jackson.databind.JsonNode
 import mu.KotlinLogging
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 private val log = KotlinLogging.logger {}
@@ -11,8 +12,11 @@ private const val PROFILE = "user"
 private const val USERNAME = "login"
 private const val EMAIL = "email"
 private const val BLACKHOLED_AT = "blackholed_at"
+private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" // 2023-08-29T23:58:16.887Z
 
 object CursusUsersDeserializer {
+    val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
+
     fun toUsers(node: List<JsonNode>): List<UserProfile> {
         log.info { "called toUsers" }
         return node.map { toUser(it) }
@@ -29,7 +33,7 @@ object CursusUsersDeserializer {
 
     private fun parseDate(date: String): LocalDateTime? =
         try {
-            LocalDateTime.parse(date)
+            LocalDateTime.parse(date, formatter)
         } catch (e: DateTimeParseException) {
             null
         }
