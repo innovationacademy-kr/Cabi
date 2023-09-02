@@ -19,6 +19,8 @@ interface FtTokenFetcher: Sprinter<String>{
             return FtTokenFetcherImpl(config);
         }
     }
+
+    fun refresh(): String
 }
 
 class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
@@ -30,9 +32,21 @@ class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
         private val accessTokenKey = "access_token"
     }
     private val client = OkHttpClient()
+    private var token: String? = null
 
     override fun sprint(): String {
         log.info { "fetching token start" }
+        token = token ?: fetchToken()
+        return token!!
+    }
+
+    override fun refresh(): String {
+        log.info { "refreshing token start" }
+        token = fetchToken()
+        return token!!
+    }
+
+    private fun fetchToken(): String {
         val request = generateRequest(generateBody())
         val response = client.newCall(request).execute()
         if (response.code() != 200) {
