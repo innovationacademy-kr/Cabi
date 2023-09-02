@@ -11,14 +11,25 @@ import {
   currentFloorCabinetState,
   currentFloorNumberState,
   currentSectionNameState,
+  myCabinetInfoState,
+  userState,
 } from "@/recoil/atoms";
 import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
-import { CabinetInfoByBuildingFloorDto } from "@/types/dto/cabinet.dto";
-import { axiosCabinetByBuildingFloor } from "@/api/axios/axios.custom";
+import {
+  CabinetInfoByBuildingFloorDto,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
+import { UserDto, UserInfo } from "@/types/dto/user.dto";
+import {
+  axiosCabinetByBuildingFloor,
+  axiosCabinetById,
+  axiosMyInfo,
+  axiosMyLentInfo,
+} from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const MainPage = () => {
@@ -54,11 +65,14 @@ const MainPage = () => {
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
   );
+
   const setCurrentFloorData = useSetRecoilState<
     CabinetInfoByBuildingFloorDto[]
   >(currentFloorCabinetState);
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
 
+  const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
+  const setUser = useSetRecoilState<UserDto>(userState);
   const refreshCabinetList = async () => {
     setIsLoading(true);
     try {
@@ -85,6 +99,14 @@ const MainPage = () => {
           console.error(error);
         })
         .finally(() => {});
+      // 내 사물함과 연장권 정보 업데이트를 위해 myInfo 요청
+      try {
+        const { data: myInfo } = await axiosMyInfo();
+        setMyInfoData(myInfo);
+        setUser(myInfo);
+      } catch (error) {
+        console.error(error);
+      }
     } catch (error) {
       console.log(error);
     }
