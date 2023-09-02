@@ -77,6 +77,14 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 */
 	List<LentHistory> findByCabinetId(@Param("cabinetId") Long cabinetId, Pageable pageable);
 
+	/***
+	 * 사물함을 기준으로 가장 최근에 반납한 {@link LentHistory} 를 가져옵니다.
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @return 반납한 {@link LentHistory}의 {@link Optional}
+	 */
+	Optional<LentHistory> findFirstByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(
+			@Param("cabinetId") Long cabinetId);
+
 	/**
 	 * 유저가 빌리고 있는 사물함의 개수를 가져옵니다.
 	 *
@@ -195,4 +203,5 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "IN (SELECT lh2.cabinetId "
 			+ "FROM LentHistory lh2 WHERE lh2.userId = :userId AND lh2.endedAt IS NULL)")
 	List<LentHistory> findAllActiveLentHistoriesByUserId(@Param("userId") Long userId);
+
 }

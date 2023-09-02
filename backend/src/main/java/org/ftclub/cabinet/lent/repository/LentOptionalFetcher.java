@@ -2,6 +2,7 @@ package org.ftclub.cabinet.lent.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -237,5 +238,10 @@ public class LentOptionalFetcher {
 	public List<LentHistory> findAllActiveLentHistoriesByUserId(Long userId) {
 		log.debug("Called findAllActiveLentHistoriesByUserId: {}", userId);
 		return lentRepository.findAllActiveLentHistoriesByUserId(userId);
+	}
+
+	public Optional<LentHistory> findPreviousLentHistoryByCabinetId(Long cabinetId) {
+		log.debug("Called findPreviousLentUserNameByCabinetId: {}", cabinetId);
+		return lentRepository.findFirstByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(cabinetId);
 	}
 }

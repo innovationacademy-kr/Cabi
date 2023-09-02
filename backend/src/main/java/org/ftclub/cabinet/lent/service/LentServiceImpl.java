@@ -154,6 +154,8 @@ public class LentServiceImpl implements LentService {
 				e.setExpiredAt(expiredAt);
 			});
 		}
+		lentRedis.setPreviousUser(cabinet.getCabinetId().toString(),
+				lentHistory.getUser().getName());
 	}
 
 	@Override
