@@ -35,7 +35,7 @@ class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
     private var token: String? = null
 
     override fun sprint(): String {
-        log.info { "fetching token start" }
+        log.info { "token fetcher start" }
         token = token ?: fetchToken()
         return token!!
     }
@@ -47,6 +47,7 @@ class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
     }
 
     private fun fetchToken(): String {
+        log.info("fetching token start")
         val request = generateRequest(generateBody())
         val response = client.newCall(request).execute()
         if (response.code() != 200) {

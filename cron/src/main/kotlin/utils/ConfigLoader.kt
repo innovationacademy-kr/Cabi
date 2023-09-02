@@ -1,7 +1,6 @@
 package utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import jdk.nashorn.internal.runtime.regexp.joni.Config.log
 import jobs.Configuration
 import kotlin.reflect.KClass
 
