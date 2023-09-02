@@ -47,11 +47,12 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
     if (!timeOver && countDown <= 0) {
       setTimeOver(true);
       try {
-        const { data } = await axiosCabinetById(targetCabinetInfo?.cabinetId);
+        const { data } = await axiosCabinetById(targetCabinetInfo.cabinetId);
         setTargetCabinetInfo(data);
-        setMyInfo({ ...myInfo, cabinetId: null });
         const { data: myLentInfo } = await axiosMyLentInfo();
         setMyLentInfo(myLentInfo);
+        if (myLentInfo.status == "FULL")
+          setMyInfo({ ...myInfo, cabinetId: targetCabinetInfo.cabinetId });
       } catch (error) {
         console.error("Error fetching data:", error);
       }

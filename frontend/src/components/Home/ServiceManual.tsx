@@ -30,8 +30,9 @@ const ServiceManual = ({
             </span>{" "}
             대여할 수 있습니다.
             <br />
-            연체 시 연체되는 <span className="redColor">일 수만큼 페널티</span>
-            가 부과됩니다.
+            연체 시 연체되는{" "}
+            <span className="redColor">일의 제곱 수만큼 페널티</span>가<br />
+            부과됩니다.
           </p>
         </article>
         <article className="article">
@@ -43,23 +44,21 @@ const ServiceManual = ({
             1개의 사물함을 최대{" "}
             <span>{import.meta.env.VITE_SHARE_MAX_USER}인</span>이 사용합니다.
             <br />
-            <span>{import.meta.env.VITE_SHARE_LENT_PERIOD}일간</span> 대여할 수
-            있습니다.
+            대여한{" "}
+            <span>
+              인원수 * {import.meta.env.VITE_SHARE_LENT_PERIOD}일간
+            </span>{" "}
+            대여할 수 있습니다.
             <br />
             사물함 제목과 메모는 대여자들끼리 공유됩니다.
             <br />
-            대여 후{" "}
-            <span className="redColor">
-              {import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD}시간
-            </span>{" "}
-            내 반납 시,
+            대여 후 <span className="redColor">대여 만료기간</span> 내 반납 시,
             <br />
-            {import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY}시간 동안 공유
-            사물함 대여가
-            <span className="redColor"> 불가능</span>합니다.
-            <br />
-            연체 시 연체되는 <span className="redColor">일 수만큼 페널티</span>
-            가 부과됩니다.
+            <span className="redColor"> 잔여 기간의 절반</span>으로 대여기간이
+            감소됩니다. <br />
+            연체 시 연체되는{" "}
+            <span className="redColor">일의 제곱 수만큼 페널티</span>가<br />
+            부과됩니다.
           </p>
         </article>
         <article className="article">
