@@ -56,6 +56,7 @@ spring:
       no-risk-of-blackhole: 0 42 1 1 * * # 매월 1일 1시 42분 0초
 
   mail:
+    display-sender-name: "42CABI"
     soonoverdue:
       term: -1
       subject: "42CABI 사물함 연체 예정 알림"
