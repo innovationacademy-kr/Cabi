@@ -1,23 +1,9 @@
 package jobs.blackhole
 
-import jobs.blackhole.Users.blackholedAt
-import jobs.blackhole.Users.deletedAt
-import jobs.blackhole.Users.email
-import jobs.blackhole.Users.name
-import jobs.blackhole.Users.role
-import jobs.blackhole.Users.userId
-import org.jetbrains.exposed.dao.LongEntity
-import org.jetbrains.exposed.dao.LongEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.javatime.datetime
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import utils.DbManager
-import java.sql.ResultSet
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 private object Users : Table("user") {

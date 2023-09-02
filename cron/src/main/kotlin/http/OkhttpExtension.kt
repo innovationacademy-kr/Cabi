@@ -3,8 +3,11 @@ package http
 import com.squareup.okhttp.Request
 import com.squareup.okhttp.Response
 
+// request
 private val AUTHORIZATION = "Authorization"
 private val BEARER_PREFIX = "Bearer "
+
+// response
 private val TOTAL_INDEX = "X-Total"
 private val PAGE_INDEX = "X-Page"
 private val PAGE_SIZE_INDEX = "X-Per-Page"
