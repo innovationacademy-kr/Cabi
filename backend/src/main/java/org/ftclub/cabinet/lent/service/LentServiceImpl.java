@@ -197,6 +197,8 @@ public class LentServiceImpl implements LentService {
 //		log.info("cabinet status {}",cabinet.getStatus());
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
+		lentRedis.setPreviousUser(cabinet.getCabinetId().toString(),
+				lentHistories.get(0).getUser().getName());
 		return lentHistories;
 	}
 
@@ -213,6 +215,8 @@ public class LentServiceImpl implements LentService {
 			cabinet.writeMemo("");
 			cabinet.writeTitle("");
 		}
+		lentRedis.setPreviousUser(cabinet.getCabinetId().toString(),
+				lentHistory.getUser().getName());
 		return lentHistory;
 	}
 
