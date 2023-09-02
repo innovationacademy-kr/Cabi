@@ -10,7 +10,6 @@ import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.redis.TicketingSharedCabinet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +27,7 @@ public class LentOptionalFetcher {
 
 	private final CabinetRepository cabinetRepository;
 	private final CabinetOptionalFetcher cabinetExceptionHandler;
-	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final LentRedis lentRedis;
 
 	public List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId) {
 		log.debug("Called findAllActiveLentByCabinetId: {}", cabinetId);
@@ -199,7 +198,7 @@ public class LentOptionalFetcher {
 	 */
 	public Long findCabinetIdByUserIdFromRedis(Long userId) {
 		log.debug("Called findActiveLentCabinetByUserIdFromRedis: {}", userId);
-		return ticketingSharedCabinet.findCabinetIdByUserId(userId);
+		return lentRedis.findCabinetIdByUserIdInRedis(userId);
 	}
 
 	/**
@@ -210,7 +209,7 @@ public class LentOptionalFetcher {
 	 */
 	public List<String> findUserIdsByCabinetIdFromRedis(Long cabinetId) {
 		log.debug("Called findActiveLentUserIdsByCabinetId: {}", cabinetId);
-		return ticketingSharedCabinet.getUserIdsByCabinetId(cabinetId.toString());
+		return lentRedis.getUserIdsByCabinetIdInRedis(cabinetId.toString());
 	}
 
 	public List<LentHistory> findAllOverdueLent(LocalDateTime date, Pageable pageable) {
@@ -225,11 +224,12 @@ public class LentOptionalFetcher {
 
 	public LocalDateTime getSessionExpiredAtFromRedis(Long cabinetId) {
 		log.debug("Called getSessionExpiredAtFromRedis: {}", cabinetId);
-		return ticketingSharedCabinet.getSessionExpiredAt(cabinetId);
+		return lentRedis.getSessionExpiredAtInRedis(cabinetId);
 	}
 
 	/**
-	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id를 통해 {@link LentHistory}를 찾습니다.
+	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id를 통해 {@link LentHistory}를 찾습니다. CABINET JOIN 없이,
+	 * LentHistory의 subquery를 통해 찾습니다.
 	 *
 	 * @param userId 찾고 싶은 LentHistory 의 user id
 	 * @return user id에 맞는 반납하지 않은 {@link LentHistory}

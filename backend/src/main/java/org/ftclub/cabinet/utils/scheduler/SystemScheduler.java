@@ -92,8 +92,8 @@ public class SystemScheduler {
 	/**
 	 * 매월 1일 01시 42분에 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 처리를 트리거하는 메소드 2초 간격으로 블랙홀 검증
 	 */
-//	@Scheduled(cron = "${spring.schedule.cron.cabinet-release-time}")
-//	@Scheduled(fixedRate = 30000) // 30 seconds
+	//현재 5분마다 도는 로직  0 */5 * * * *
+	@Scheduled(cron = "${spring.schedule.cron.cabinet-release-time}")
 	public void releasePendingCabinet() {
 		log.info("releasePendingCabinet {}", LocalDateTime.now());
 		releaseManager.releasingCabinets();

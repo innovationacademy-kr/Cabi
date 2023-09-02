@@ -1,26 +1,23 @@
 package org.ftclub.cabinet.lent.domain;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
-import org.ftclub.cabinet.exception.CustomExceptionStatus;
-import org.ftclub.cabinet.exception.CustomServiceException;
-import org.ftclub.cabinet.exception.DomainException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.redis.TicketingSharedCabinet;
+import org.ftclub.cabinet.exception.*;
+import org.ftclub.cabinet.lent.repository.LentRedis;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -29,14 +26,17 @@ public class LentPolicyImpl implements LentPolicy {
 
 	private final CabinetProperties cabinetProperties;
 	private final ApplicationEventPublisher publisher;
-	private final TicketingSharedCabinet ticketingSharedCabinet;
+	private final LentRedis lentRedis;
 
 	@Override
 	public LocalDateTime generateSharedCabinetExpirationDate(LocalDateTime now,
-			Integer totalUserCount) {
+															 Integer totalUserCount) {
 		log.info("Called generateSharedCabinetExpirationDate now: {}, totalUserCount: {}", now,
 				totalUserCount);
-		return now.plusDays(getDaysForLentTermShare(totalUserCount));
+		return now.plusDays(getDaysForLentTermShare(totalUserCount))
+				.withHour(23)
+				.withMinute(59)
+				.withSecond(0);
 	}
 
 	@Override
@@ -49,10 +49,11 @@ public class LentPolicyImpl implements LentPolicy {
 
 		LentType lentType = cabinet.getLentType();
 		switch (lentType) {
-//			case SHARE:
-//				return now.plusDays(getDaysForLentTermShare(4));
 			case PRIVATE:
-				return now.plusDays(getDaysForLentTermPrivate());
+				return now.plusDays(getDaysForLentTermPrivate())
+						.withHour(23)
+						.withMinute(59)
+						.withSecond(0);
 			case CLUB:
 				return DateUtil.getInfinityDate();
 		}
@@ -65,7 +66,10 @@ public class LentPolicyImpl implements LentPolicy {
 		if (DateUtil.isPast(now)) {
 			throw new DomainException(ExceptionStatus.LENT_EXPIRED);
 		}
-		return now.plusDays(getDaysForLentTermPrivate());
+		return now.plusDays(getDaysForLentTermPrivate())
+				.withHour(23)
+				.withMinute(59)
+				.withSecond(0);
 	}
 
 	@Override
@@ -83,7 +87,7 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyUserForLent(User user, Cabinet cabinet, int userActiveLentCount,
-			List<BanHistory> userActiveBanList) {
+											  List<BanHistory> userActiveBanList) {
 		log.debug("Called verifyUserForLent");
 		if (!user.isUserRole(UserRole.USER)) {
 			return LentPolicyStatus.NOT_USER;
@@ -123,8 +127,8 @@ public class LentPolicyImpl implements LentPolicy {
 
 	@Override
 	public LentPolicyStatus verifyUserForLentShare(User user, Cabinet cabinet,
-			int userActiveLentCount,
-			List<BanHistory> userActiveBanList) {
+												   int userActiveLentCount,
+												   List<BanHistory> userActiveBanList) {
 
 		LentPolicyStatus ret = verifyUserForLent(user, cabinet, userActiveLentCount,
 				userActiveBanList);
@@ -133,9 +137,10 @@ public class LentPolicyImpl implements LentPolicy {
 		Long cabinetId = cabinet.getCabinetId();
 		Long userId = user.getUserId();
 		// 사물함을 빌릴 수 있는 유저라면 공유 사물함 비밀번호 입력 횟수를 확인
-		if (ret == LentPolicyStatus.FINE && ticketingSharedCabinet.isShadowKey(
+		if (ret == LentPolicyStatus.FINE && lentRedis.isShadowKey(
 				cabinet.getCabinetId())) {
-			String passwordCount = ticketingSharedCabinet.getValue(cabinetId.toString(),
+			String passwordCount = lentRedis.getPwTrialCountInRedis(
+					cabinetId.toString(),
 					userId.toString());
 			// 사물함을 빌릴 수 있는 유저면서, 해당 공유사물함에 처음 접근하는 유저인 경우
 			if (passwordCount != null && Integer.parseInt(passwordCount) >= 3) {
@@ -221,8 +226,8 @@ public class LentPolicyImpl implements LentPolicy {
 				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
 			case ALL_BANNED_USER:
 				handleBannedUserResponse(status, banHistory.get(0));
-//			case SHARE_BANNED_USER:
-//				handleBannedUserResponse(status, banHistory.get(0));
+			case SHARE_BANNED_USER:
+				throw new ServiceException(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED);
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
 			case NOT_USER:

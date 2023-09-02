@@ -113,10 +113,12 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
           disable={true}
         />
       )}
-      <TopNavButton
-        onClick={clickMyCabinet}
-        imgSrc="/src/assets/images/myCabinetIcon.svg"
-      />
+      {!isAdmin && (
+        <TopNavButton
+          onClick={clickMyCabinet}
+          imgSrc="/src/assets/images/myCabinetIcon.svg"
+        />
+      )}
       <TopNavButton onClick={toggleMap} imgSrc="/src/assets/images/map.svg" />
     </NaviButtonsStyled>
   );

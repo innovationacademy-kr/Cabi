@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.redis;
 
+import org.ftclub.cabinet.lent.repository.LentRedis;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,15 +15,15 @@ public class RedisRepositoryTest {
 //	private RedisTemplate<String, String> shadowKeyRedisTemplate;
 
 	@Autowired
-	private TicketingSharedCabinet ticketingSharedCabinet;
+	private LentRedis lentRedis;
 
 	@Test
 	void test() {
 		Long cabinetId = 16L;
 
-		ticketingSharedCabinet.setShadowKey(cabinetId);
-		ticketingSharedCabinet.saveValue(16L, 1234L, 1000, false);
-		ticketingSharedCabinet.saveValue(16L, 5678L, 1000, true);
+		lentRedis.setShadowKey(cabinetId);
+		lentRedis.saveUserInRedis(16L, 1234L, 1000, false);
+		lentRedis.saveUserInRedis(16L, 5678L, 1000, true);
 
 		try {
 			Thread.sleep(10000);
