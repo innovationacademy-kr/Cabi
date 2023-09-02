@@ -90,49 +90,21 @@ const InvitationCodeModalContainer: React.FC<{
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       setModalTitle("공유 사물함 대기열에 입장하였습니다");
-      try {
-        const { data } = await axiosCabinetById(currentCabinetId);
-        setTargetCabinetInfo(data);
-      } catch (error) {
-        saveSharedWrongCodeCounts(updatedCounts);
-        throw error;
-      }
-      try {
-        const { data: myLentInfo } = await axiosMyLentInfo();
-        setMyLentInfo(myLentInfo);
-      } catch (error) {
-        throw error;
-      }
+
+      // 병렬적으로 cabinet 과 lent info 불러오기
+      const [cabinetData, myLentData] = await Promise.all([
+        axiosCabinetById(currentCabinetId),
+        axiosMyLentInfo(),
+      ]);
+
+      setTargetCabinetInfo(cabinetData.data);
+      setMyLentInfo(myLentData.data);
     } catch (error: any) {
-      setModalTitle(error.response.data.message);
+      const errorMessage = error.response.data.message;
+      setModalTitle(errorMessage);
       setHasErrorOnResponse(true);
-      throw error;
+      saveSharedWrongCodeCounts(updatedCounts);
     } finally {
-      setShowResponseModal(true);
-    }
-  };
-
-  const onSendCode = async () => {
-    try {
-      //초대코드 받아오는 api 넣어야 함.
-      const sharedCode = "4242";
-
-      if (code === sharedCode) {
-        await tryLentRequest();
-      } else {
-        const updatedCounts = {
-          ...sharedWrongCodeCounts,
-          [String(props.cabinetId)]:
-            (sharedWrongCodeCounts[String(props.cabinetId)] || 0) + 1,
-        };
-        saveSharedWrongCodeCounts(updatedCounts);
-        setModalTitle("일치하지 않는 초대 코드입니다.");
-        setHasErrorOnResponse(true);
-        setShowResponseModal(true);
-      }
-    } catch (error: any) {
-      setModalTitle(error.response.data.message);
-      setHasErrorOnResponse(true);
       setShowResponseModal(true);
     }
   };
