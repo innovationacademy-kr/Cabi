@@ -31,7 +31,7 @@ public class EmailSender {
 		MimeMessage message = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-		helper.setFrom(gmailProperties.getUsername());
+		helper.setFrom(gmailProperties.getDisplaySenderName() + " <" + gmailProperties.getUsername() + ">");
 		helper.setTo(to);
 		helper.setSubject(subject);
 

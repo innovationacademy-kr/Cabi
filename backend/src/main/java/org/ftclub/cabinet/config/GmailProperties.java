@@ -17,6 +17,9 @@ public class GmailProperties {
 	@Value("${spring.mail.port}")
 	private int mailServerPort;
 
+	@Value("${spring.mail.display-sender-name}")
+	private String displaySenderName;
+
 	@Value("${spring.mail.username}")
 	private String username;
 
