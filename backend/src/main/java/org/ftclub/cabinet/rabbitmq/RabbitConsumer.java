@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class RabbitConsumer {
 
-//	@RabbitListener(queues = "#{queue.name}")
-//	public void consume(RabbitMessage message){
-//		log.info("{}", message);
-//	}
+	@RabbitListener(queues = "${spring.rabbitmq.queue-name}")
+	public void consume(RabbitMessage message) {
+		log.info("{}", message);
+		log.info("uid = {}", message.getUserId());
+		log.info("cid = {}", message.getCabinetId());
+	}
 }

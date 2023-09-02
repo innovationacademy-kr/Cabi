@@ -27,8 +27,9 @@ public class RabbitmqController {
 			@UserSession UserSessionDto user,
 			@PathVariable Long cabinetId) {
 		log.info("Called startLentCabinet user: {}, cabinetId: {}", user, cabinetId);
-		RabbitMessage rabbitMessage = RabbitMessage.builder().id("1").fName("First Name")
-				.lName("Last Name").build();
+		RabbitMessage rabbitMessage =
+				RabbitMessage.builder().cabinetId(cabinetId)
+						.userId(user.getUserId()).build();
 		rabbitPublisher.sendMessage(rabbitMessage);
 /*
 		IntStream.range(0, 100).forEachOrdered(n -> {

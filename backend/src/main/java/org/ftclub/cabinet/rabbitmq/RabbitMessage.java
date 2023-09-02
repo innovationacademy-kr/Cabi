@@ -16,8 +16,10 @@ import lombok.ToString;
 public class RabbitMessage {
 
 	//cabinetID or Entity
+	private Long cabinetId;
+	private Long userId;
 	//UserID or Entity
-	private String id;
-	private String fName;
-	private String lName;
+//	private String id;
+//	private String fName;
+//	private String lName;
 }
