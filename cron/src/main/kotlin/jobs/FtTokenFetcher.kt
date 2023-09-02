@@ -10,9 +10,11 @@ import com.squareup.okhttp.Request
 import com.squareup.okhttp.RequestBody
 import mu.KotlinLogging
 import utils.ConfigLoader
+import utils.Configuration
+import utils.Sprinter
 
 private val log = KotlinLogging.logger {}
-interface FtTokenFetcher: Sprinter<String>{
+interface FtTokenFetcher: Sprinter<String> {
     companion object {
         @JvmStatic fun create(): FtTokenFetcher {
             val config = ConfigLoader.create(FtTokenConfig::class)

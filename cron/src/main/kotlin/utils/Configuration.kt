@@ -1,3 +1,3 @@
-package jobs
+package utils
 
 interface Configuration

@@ -14,7 +14,8 @@ fun main(args: Array<String>) {
     }
     try {
         mapping[args[0]]?.let {
-            println(it().sprint())
+            val result = it().sprint()
+            if (result !is Unit) print(result)
         }?: throw Exception("해당 명령어는 존재하지 않습니다.")
     } catch (e: Exception) {
         println(e.message)

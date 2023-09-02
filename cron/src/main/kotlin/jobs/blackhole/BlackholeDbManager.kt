@@ -1,59 +1,70 @@
 package jobs.blackhole
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonSetter
-import jobs.Configuration
-import jobs.Sprinter
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
+import jobs.blackhole.Users.blackholedAt
+import jobs.blackhole.Users.deletedAt
+import jobs.blackhole.Users.email
+import jobs.blackhole.Users.name
+import jobs.blackhole.Users.role
+import jobs.blackhole.Users.userId
+import org.jetbrains.exposed.dao.LongEntity
+import org.jetbrains.exposed.dao.LongEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.LongIdTable
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
-import utils.ConfigLoader
+import utils.DbManager
 import java.sql.ResultSet
+import java.time.LocalDate
+import java.time.LocalDateTime
 
-interface BlackholeDbManager: Sprinter<String> {
-    companion object {
-        @JvmStatic fun create(): BlackholeDbManager {
-            val config = ConfigLoader.create(BlackholeDbConfig::class)
-            return BlackholeDbManagerImpl(config)
-        }
-    }
+private object Users : Table("user") {
+    val userId: Column<Long> = long("user_id").autoIncrement()
+    val name: Column<String> = varchar("name", 100)
+    val email: Column<String> = varchar("email", 100)
+    val role: Column<String> = varchar("role", 100)
+    val blackholedAt: Column<LocalDateTime?> = datetime("blackholed_at").nullable()
+    val deletedAt: Column<LocalDateTime?>  = datetime("deleted_at").nullable()
 }
 
-class BlackholeDbManagerImpl(config: BlackholeDbConfig): BlackholeDbManager {
-    init {
-        println("${config.url}, ${config.driverClassName}, ${config.username}, ${config.password}")
-        Database.connect(
-            url = config.url,
-            driver = config.driverClassName,
-            user = config.username,
-            password = config.password
-        )
-    }
+private fun ResultRow.toUserProfile() =
+    UserProfile(
+        name = this[Users.name],
+        email = this[Users.email],
+        blackholedAt = this[Users.blackholedAt],
+    )
 
-    override fun sprint(): String {
-        var result: ResultSet? = null
+
+class BlackholeDbManager {
+    private val dbManager: DbManager = DbManager()
+
+    fun filterRequiredUpdate(users: List<UserProfile>): List<UserProfile> {
+        dbManager.connect()
+        val queryRst: ArrayList<UserProfile> = ArrayList()
         transaction {
             addLogger(StdOutSqlLogger)
-            val conn = TransactionManager.current().connection
-            val query = "select name from user where user_id = 1"
-            result = conn.prepareStatement(query,false).executeQuery()
+            Users.select { Users.email inList users.map { it.email } }
+                .forEach { queryRst.add(it.toUserProfile()) }
         }
-        result!!.next()
-        return result!!.getString("name")
+        return users.filter { user ->
+            queryRst.stream().anyMatch {
+                (it.email == user.email)
+                    .and(it.name == user.name)
+                    .and(it.blackholedAt != user.blackholedAt)
+        }}
+    }
+
+    fun updateBlackholedUsers(users: List<UserProfile>) {
+        dbManager.connect()
+        transaction {
+            addLogger(StdOutSqlLogger)
+            users.forEach { user ->
+                Users.update({ (Users.email eq user.email) and (Users.name eq user.name) }) {
+                    it[Users.blackholedAt] = user.blackholedAt
+                }
+            }
+        }
     }
 }
-
-data class BlackholeDbConfig
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-constructor(
-    @JsonSetter("url")
-    val url: String,
-    @JsonSetter("driverClassName")
-    val driverClassName: String,
-    @JsonSetter("username")
-    val username: String,
-    @JsonSetter("password")
-    val password: String
-): Configuration

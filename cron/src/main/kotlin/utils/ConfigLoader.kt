@@ -1,7 +1,6 @@
 package utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import jobs.Configuration
 import kotlin.reflect.KClass
 
 object ConfigLoader {
