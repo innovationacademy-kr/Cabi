@@ -14,7 +14,7 @@ private const val EMAIL = "email"
 private const val BLACKHOLED_AT = "blackholed_at"
 private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" // 2023-08-29T23:58:16.887Z
 
-object CursusUsersDeserializer {
+internal object CursusUsersDeserializer {
     val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
 
     fun toUsers(node: List<JsonNode>): List<UserProfile> {
@@ -39,7 +39,7 @@ object CursusUsersDeserializer {
         }
 }
 
-data class UserProfile(
+internal data class UserProfile(
     val name: String,
     val email: String,
     val blackholedAt: LocalDateTime?

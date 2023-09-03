@@ -16,16 +16,24 @@ import utils.Sprinter
 import jobs.blackhole.CursusUsersDeserializer.toUsers
 import mu.KotlinLogging
 import utils.ConfigLoader
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
 import java.util.stream.Stream
 
 private val log = KotlinLogging.logger {}
 
 private val DEFAULT_INDEX = 1
 private val SLEEP_TIME = 60 * 5 * 1000L
-interface BlackholeUpdater: Sprinter<Unit> {
+
+/**
+ * BlackholeUpdater
+ * 블랙홀 업데이트를 수행한다.
+ * 1. ft token을 가져온다.
+ * 2. ft api를 호출하여 블랙홀 유저들을 가져온다.
+ * 3. db에 저장된 블랙홀 유저들과 비교하여 업데이트가 필요한 유저들을 필터링한다.
+ * 4. 업데이트가 필요한 유저들을 업데이트한다.
+ *
+ * 3번까지 시도해보고 실패하면 서버가 잘못된 것으로 판단하여 종료한다.
+ */
+sealed interface BlackholeUpdater: Sprinter<Unit> {
 companion object {
         @JvmStatic fun create(): BlackholeUpdater {
             val config = ConfigLoader.create(BlackholeUpdaterConfig::class)
@@ -42,7 +50,7 @@ private data class ResponseUsers(
     fun isLastPage() = totalPages + 1 == currentPage
 }
 
-class BlackholeUpdaterImpl(private val config: BlackholeUpdaterConfig): BlackholeUpdater {
+internal class BlackholeUpdaterImpl(private val config: BlackholeUpdaterConfig): BlackholeUpdater {
     private val client = OkHttpClient()
     private val mapper = ObjectMapper()
     private val ftTokenFetcher: FtTokenFetcher = FtTokenFetcher.create()
@@ -110,7 +118,7 @@ class BlackholeUpdaterImpl(private val config: BlackholeUpdaterConfig): Blackhol
     }
 }
 
-data class BlackholeUpdaterConfig(
+internal data class BlackholeUpdaterConfig(
     @JsonSetter("formatUrl")
     val formatUrl: String,
 ): Configuration

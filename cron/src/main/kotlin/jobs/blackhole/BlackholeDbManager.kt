@@ -22,10 +22,15 @@ private fun ResultRow.toUserProfile() =
         blackholedAt = this[Users.blackholedAt],
     )
 
-
-class BlackholeDbManager {
+/**
+ * BlackholeDbManager
+ */
+internal class BlackholeDbManager {
     private val dbManager: DbManager = DbManager()
 
+    /**
+     * 블랙홀 업데이트가 필요한 유저들을 필터링한다. (db select)
+     */
     fun filterRequiredUpdate(users: List<UserProfile>): List<UserProfile> {
         dbManager.connect()
         val queryRst: ArrayList<UserProfile> = ArrayList()
@@ -42,6 +47,9 @@ class BlackholeDbManager {
         }}
     }
 
+    /**
+     * 블랙홀 업데이트가 필요한 유저들을 업데이트한다. (db set)
+     */
     fun updateBlackholedUsers(users: List<UserProfile>) {
         dbManager.connect()
         transaction {

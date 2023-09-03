@@ -1,6 +1,5 @@
 package jobs
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -14,7 +13,16 @@ import utils.Configuration
 import utils.Sprinter
 
 private val log = KotlinLogging.logger {}
-interface FtTokenFetcher: Sprinter<String> {
+
+/**
+ * FtTokenFetcher
+ * ft token을 가져온다.
+ * 1. ft token을 가져온다.
+ * 2. 가져온 ft token를 저장해놓는다 (캐싱)
+ * 3. 가져온 ft token을 반환한다.
+ * 4. refresh()를 사용하여 캐싱된 ft token을 갱신할 수 있다.
+ */
+sealed interface FtTokenFetcher: Sprinter<String> {
     companion object {
         @JvmStatic fun create(): FtTokenFetcher {
             val config = ConfigLoader.create(FtTokenConfig::class)
@@ -22,6 +30,10 @@ interface FtTokenFetcher: Sprinter<String> {
         }
     }
 
+    /**
+     * ft token을 다시 가져온다..
+     *
+     */
     fun refresh(): String
 }
 
@@ -31,7 +43,7 @@ private val grantType = "grant_type"
 private val scope = "scope"
 private val accessTokenKey = "access_token"
 
-class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
+internal class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
     private val client = OkHttpClient()
     private var token: String? = null
 
@@ -78,8 +90,7 @@ class FtTokenFetcherImpl(val FtTokenConfig: FtTokenConfig): FtTokenFetcher {
     }
 }
 
-data class FtTokenConfig
-@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+internal data class FtTokenConfig
 constructor(
     @JsonSetter("url")
     val url: String,
