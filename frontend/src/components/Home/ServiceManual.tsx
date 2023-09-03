@@ -110,13 +110,14 @@ const WrapperStyled = styled.div`
 `;
 
 const TitleContainerStyled = styled.div`
-  width: 70%;
+  width: 80%;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   border-bottom: 2px solid #d9d9d9;
-  margin-bottom: 100px;
+  margin-bottom: 70px;
   color: var(--main-color);
   font-weight: 700;
   .logo {
@@ -135,8 +136,8 @@ const TitleContainerStyled = styled.div`
 `;
 
 const WrapSectionStyled = styled.div`
-  width: 70%;
-  max-width: 1500px;
+  width: 80%;
+  max-width: 1000px;
   .subtitle {
     font-size: 2.5rem;
     line-height: 1.4;
@@ -147,16 +148,14 @@ const WrapSectionStyled = styled.div`
 
 const InfoSectionStyled = styled.section`
   display: flex;
-  margin-top: 40px;
-  margin-bottom: 60px;
+  margin: 40px 0 60px 0;
   width: 100%;
   max-width: 1500px;
   .article {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 60px;
-    margin-top: 10px;
+    align-items: center;
+    margin: 10px 40px 60px 0;
     :hover {
       transition: all 0.3s ease-in-out;
       margin-top: 6px;
@@ -181,7 +180,7 @@ const InfoSectionStyled = styled.section`
   }
   .redColor {
     color: #ef8172;
-    margin: 20px 0 0 135px;
+    margin-top: 15px;
   }
   .article > p > span {
     font-weight: 700;

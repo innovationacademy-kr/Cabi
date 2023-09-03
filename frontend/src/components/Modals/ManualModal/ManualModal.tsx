@@ -83,7 +83,6 @@ const ManualModal: React.FC<ModalProps> = ({
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
-  left: 75px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -122,8 +121,8 @@ const ModalWrapper = styled.div<{
   transform-origin: center;
   position: fixed;
   bottom: 0;
-  max-width: 1500px;
-  width: 72%;
+  max-width: 1000px;
+  width: 70%;
   height: 75%;
   background: ${(props) => props.background};
   padding: 40px 50px;
@@ -133,6 +132,10 @@ const ModalWrapper = styled.div<{
       ? "6px solid #9747FF"
       : "none"};
   border-bottom: none;
+  overflow-y: auto;
+  @media screen and (max-width: 650px) {
+    width: 100%;
+  }
 `;
 
 const ModalContent = styled.div<{
@@ -163,6 +166,14 @@ const ModalContent = styled.div<{
         : "none"};
     border-radius: ${(props) =>
       props.contentStatus === ContentStatus.PENDING ? "50px" : "0px"};
+  }
+  @media screen and (max-width: 650px) {
+    font-size: 25px;
+    .contentImg {
+      width: 60px;
+      height: 60px;
+      margin-top: 10px;
+    }
   }
 `;
 
@@ -245,6 +256,10 @@ const ManualContentStyeld = styled.div<{
   a {
     font-weight: bold;
     color: ${(props) => props.color};
+  }
+  @media screen and (max-width: 650px) {
+    line-height: 1.4;
+    font-size: 16px;
   }
 `;
 

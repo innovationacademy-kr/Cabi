@@ -45,26 +45,24 @@ const MaunalContentBoxStyled = styled.div<{
   contentStatus: ContentStatus;
 }>`
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 280px;
+  height: 280px;
   border-radius: 40px;
   background: ${(props) => props.background};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-size: 32px;
+  font-size: 28px;
   color: white;
   padding: 25px;
-  margin-right: 40px;
   font-weight: bold;
   cursor: pointer;
-
   .clockImg {
     width: 35px;
     height: 35px;
     filter: brightness(100);
     margin-right: 10px;
-    margin-top: 170px;
+    margin-top: 160px;
   }
 
   .contentImg {
@@ -100,17 +98,24 @@ const MaunalContentBoxStyled = styled.div<{
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.EXTENSION &&
     css`
-      width: 960px;
+      width: 900px;
       color: black;
+      @media screen and (max-width: 1000px) {
+        width: 280px;
+        .peopleImg {
+          display: none;
+        }
+        font-size: 21px;
+      }
     `}
   
     p {
-    margin-top: 90px;
+    margin-top: 80px;
     ${({ contentStatus }) =>
       (contentStatus === ContentStatus.PENDING ||
         contentStatus === ContentStatus.IN_SESSION) &&
       css`
-        margin-top: 170px;
+        margin-top: 160px;
       `}
   }
 
@@ -136,17 +141,17 @@ const MaunalContentBoxStyled = styled.div<{
     box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
     p {
       transition: all 0.3s ease-in-out;
-      margin-top: 85px;
+      margin-top: 75px;
       ${({ contentStatus }) =>
         (contentStatus === ContentStatus.PENDING ||
           contentStatus === ContentStatus.IN_SESSION) &&
         css`
-          margin-top: 165px;
+          margin-top: 155px;
         `}
     }
     .clockImg {
       transition: all 0.3s ease-in-out;
-      margin-top: 165px;
+      margin-top: 155px;
     }
   }
 `;

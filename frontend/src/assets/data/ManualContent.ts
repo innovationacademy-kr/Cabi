@@ -42,7 +42,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     &nbsp;&nbsp;&nbsp;&nbsp; 대여 만료 기간 이내 반납 시, <strong>잔여 기간의 인원수 / 1</strong>만큼 대여 기간이 감소됩니다.
     <br/><br/>
     ◦ 페널티<br/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 연체 시 연체되는 일의 <strong>제곱 수만큼</strong> 페널티가 부과됩니다.
+    &nbsp;&nbsp;&nbsp;&nbsp; 연체 시 연체되는 일의 <strong>제곱 수만큼</strong> 페널티가 부과됩니다.<br /><br />
   `,
     pointColor: "#f8f684",
   },
@@ -94,7 +94,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     대기 시간 동안 <strong>공유 인원(2인~4인)</strong>이 형성되지 않으면 공유 사물함 대여는 <strong>취소</strong>됩니다.<br/>
     대기 시간 내 <strong>4명</strong>의 공유 인원이 형성되면 <strong>즉시</strong> 대여가 완료됩니다.<br/>
     대여 과정에서 생성된 <strong>초대 코드</strong>를 사용하여 공유 사물함에 입장할 수 있습니다.<br/>
-    초대 코드를 <strong>3번 이상</strong> 잘못 입력하면 <strong>입장이 제한</strong>됩니다.
+    초대 코드를 <strong>3번 이상</strong> 잘못 입력하면 <strong>입장이 제한</strong>됩니다.<br /><br />
     `,
     pointColor: "#47ffa7",
   },
@@ -106,7 +106,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     &nbsp;&nbsp;&nbsp;&nbsp;월 출석 시간이 <strong>120시간</strong> 이상일 시 연장권이 부여됩니다.<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;연장권은 <strong>매달 2일</strong> 지급됩니다.<br/><br/>
     ◦ 연장권 사용<br/>
-    &nbsp;&nbsp;&nbsp;&nbsp; 연장권 사용 시, 대여 만료 기간이 <strong>1달(31)</strong> 연장됩니다.<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp; 연장권 사용 시, 대여 만료 기간이 <strong>1달(31일)</strong> 연장됩니다.<br/>
     &nbsp;&nbsp;&nbsp;&nbsp; 연장권은 <strong>해당 월의 마지막 날</strong>까지 사용 가능합니다.`,
     pointColor: "#9747FF",
   },
