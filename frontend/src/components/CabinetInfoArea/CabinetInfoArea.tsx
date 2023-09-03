@@ -17,6 +17,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import alertImg from "@/assets/images/cautionSign.svg";
 import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -86,7 +87,6 @@ const CabinetInfoArea: React.FC<{
                 }}
                 text="대기열 취소"
                 theme="fill"
-                //disabled={timeOver}
               />
               <ButtonContainer
                 onClick={closeCabinet}
@@ -189,6 +189,18 @@ const CabinetInfoArea: React.FC<{
               }
             />
           )}
+        <HoverBox
+          canUseExtendTicket={
+            !(
+              selectedCabinetInfo.lentsLength <= 1 &&
+              selectedCabinetInfo.lentType === "SHARE"
+            )
+          }
+        >
+          <AlertImgStyled src={alertImg} />
+          공유사물함을 단독으로 이용 시, <br />
+          연장권을 사용할 수 없습니다.
+        </HoverBox>
       </CabinetInfoButtonsContainerStyled>
       {userModal.unavailableModal && (
         <UnavailableModal
@@ -333,7 +345,37 @@ const Animation2 = keyframes`
   }
 `;
 
-const CabinetInfoButtonsContainerStyled = styled.div`
+const HoverBox = styled.div<{
+  canUseExtendTicket?: boolean;
+}>`
+  position: absolute;
+  top: 50%;
+  width: 270px;
+  height: 80px;
+  padding: 10px;
+  background-color: rgba(73, 73, 73, 0.99);
+  border-radius: 10px;
+  box-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  opacity: ${(props) => (props.canUseExtendTicket ? "1" : "0")};
+`;
+
+const AlertImgStyled = styled.img`
+  width: 20px;
+  height: 20px;
+  filter: invert(99%) sepia(100%) saturate(3%) hue-rotate(32deg)
+    brightness(104%) contrast(100%);
+`;
+
+const CabinetInfoButtonsContainerStyled = styled.div<{
+  canUseExtendTicket?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -341,6 +383,9 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   max-height: 320px;
   margin: 3vh 0;
   width: 100%;
+  &:hover ${HoverBox} {
+    opacity: ${(props) => (props.canUseExtendTicket ? "0" : "1")};
+  }
 `;
 
 const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
