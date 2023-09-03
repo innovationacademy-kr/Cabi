@@ -26,11 +26,11 @@ dependencies {
     implementation "org.jetbrains.exposed:exposed-java-time:${exposedVersion}"
     runtimeOnly "org.mariadb.jdbc:mariadb-java-client:${mariadbVersion}"
     implementation "com.zaxxer:HikariCP:5.0.1"
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.10")
-    implementation("org.slf4j:slf4j-api:1.7.30")
-    implementation 'org.slf4j:slf4j-simple:1.7.25'
+    implementation "io.github.microutils:kotlin-logging-jvm:2.0.10"
+    implementation "org.slf4j:slf4j-api:1.7.30"
+    implementation "org.slf4j:slf4j-simple:1.7.25"
 
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation "org.jetbrains.kotlin:kotlin-test"
     testRuntimeOnly "com.h2database:h2:${h2Version}"
 }
 
@@ -48,9 +48,21 @@ test {
 }
 
 kotlin {
-    jvmToolchain{languageVersion.set(JavaLanguageVersion.of(17))}
+    jvmToolchain(17)
 }
 
 application {
-    mainClassName = 'MainKt'
+    mainClass.set("MainKt")
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'MainKt'
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
