@@ -132,9 +132,9 @@ const ModalWrapper = styled.div<{
       ? "6px solid #9747FF"
       : "none"};
   border-bottom: none;
-  overflow-y: auto;
   @media screen and (max-width: 650px) {
     width: 100%;
+    overflow-y: auto;
   }
 `;
 
