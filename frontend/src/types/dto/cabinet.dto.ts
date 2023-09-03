@@ -36,7 +36,7 @@ export interface CabinetInfo {
   lents: LentDto[];
   statusNote: string | null;
   sessionExpiredAt?: Date;
-  previousUserName: string | null;
+  previousUserName?: string | null;
 }
 
 export interface CabinetPreview {
