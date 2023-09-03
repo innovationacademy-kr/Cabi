@@ -7,6 +7,7 @@ import CabinetType from "@/types/enum/cabinet.type.enum";
 export interface MyCabinetInfoResponseDto extends CabinetInfo {
   memo: string; // 사물함 비밀번호와 관련된 메모
   shareCode: number;
+  previousUserName: string;
 }
 
 export interface CabinetBuildingFloorDto {

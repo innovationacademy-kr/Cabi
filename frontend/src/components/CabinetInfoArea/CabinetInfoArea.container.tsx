@@ -327,6 +327,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
+      previousUserName={myCabinetInfo.previousUserName}
     />
   );
 };
