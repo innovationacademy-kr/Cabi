@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 import MaunalContentBox from "@/components/Home/ManualContentBox";
+import ManualModal from "@/components/Modals/ManualModal/ManualModal";
+import ContentStatus from "@/types/enum/content.status.enum";
 
 const ServiceManual = ({
   lentStartHandler,
@@ -8,7 +10,12 @@ const ServiceManual = ({
   lentStartHandler: React.MouseEventHandler;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const openModal = () => {
+  const [selectedContent, setSelectedContent] = useState<ContentStatus>(
+    ContentStatus.PRIVATE
+  );
+
+  const openModal = (contentStatus: ContentStatus) => {
+    setSelectedContent(contentStatus);
     setIsModalOpen(true);
   };
 
@@ -30,28 +37,43 @@ const ServiceManual = ({
           개인, 공유, 동아리 사물함.
         </p>
         <InfoSectionStyled className="section">
-          <article className="article">
-            <MaunalContentBox contentStatus={"private"} />
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.PRIVATE)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.PRIVATE} />
           </article>
-          <article className="article">
-            <MaunalContentBox contentStatus={"share"} />
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.SHARE)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.SHARE} />
           </article>
-          <article className="article">
-            <MaunalContentBox contentStatus={"club"} />
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.CLUB)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.CLUB} />
           </article>
         </InfoSectionStyled>
         <p className="subtitle">
           공정한 대여를 위한
           <br />
-          새로운 사물함 상태.
+          새로운 사물함 서비스.
         </p>
         <InfoSectionStyled className="section">
-          <article className="article">
-            <MaunalContentBox contentStatus={"pending"} />
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.PENDING)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.PENDING} />
             <p className="redColor">new</p>
           </article>
-          <article className="article">
-            <MaunalContentBox contentStatus={"in_session"} />
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.IN_SESSION)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
             <p className="redColor">new</p>
           </article>
         </InfoSectionStyled>
@@ -61,12 +83,20 @@ const ServiceManual = ({
           사용할 수 있는 방법.
         </p>
         <InfoSectionStyled className="section">
-          <article className="article">
-            <MaunalContentBox contentStatus={"extension"} />
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.EXTENSION)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.EXTENSION} />
           </article>
         </InfoSectionStyled>
       </WrapSectionStyled>
       <button onClick={lentStartHandler}>시작하기</button>
+      <ManualModal
+        isOpen={isModalOpen}
+        contentStatus={selectedContent}
+        onClose={closeModal}
+      />
     </WrapperStyled>
   );
 };
@@ -76,7 +106,7 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 70px 0;
+  padding: 60px 0;
 `;
 
 const TitleContainerStyled = styled.div`
@@ -122,11 +152,19 @@ const InfoSectionStyled = styled.section`
   width: 100%;
   max-width: 1500px;
   .article {
-    //width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: 70px;
+    margin-bottom: 60px;
+    margin-top: 10px;
+    :hover {
+      transition: all 0.3s ease-in-out;
+      margin-top: 6px;
+      .redColor {
+        transition: all 0.3s ease-in-out;
+        font-weight: 700;
+      }
+    }
   }
   .article > h3 {
     min-width: 200px;
@@ -143,16 +181,11 @@ const InfoSectionStyled = styled.section`
   }
   .redColor {
     color: #ef8172;
-    margin: 20px 0 0 140px;
+    margin: 20px 0 0 135px;
   }
   .article > p > span {
     font-weight: 700;
   }
-`;
-
-const AtagStyled = styled.a`
-  text-decoration: underline;
-  font-weight: 700;
 `;
 
 export default ServiceManual;
