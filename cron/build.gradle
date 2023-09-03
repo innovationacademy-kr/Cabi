@@ -34,6 +34,15 @@ dependencies {
     testRuntimeOnly "com.h2database:h2:${h2Version}"
 }
 
+tasks.register('copyMainConfig', Copy) {
+    from '../config/cron/src/resources/config'
+    into 'src/main/resources/config'
+}
+
+tasks.named('processResources') {
+    dependsOn 'copyMainConfig'
+}
+
 test {
     useJUnitPlatform()
 }
