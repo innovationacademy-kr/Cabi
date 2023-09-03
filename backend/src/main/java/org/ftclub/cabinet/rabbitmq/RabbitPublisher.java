@@ -16,8 +16,4 @@ public class RabbitPublisher {
 		rabbitTemplate.convertAndSend(topicExchange.getName(), "hello.key.1", message);
 	}
 
-	public void sendMessage2(RabbitMessage message) {
-		rabbitTemplate.convertAndSend(topicExchange.getName(), "hello.key.2", message);
-	}
-
 }
