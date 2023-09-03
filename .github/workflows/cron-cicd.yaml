@@ -47,5 +47,5 @@ jobs:
         run: |
           cd cron
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew jar
         shell: bash
