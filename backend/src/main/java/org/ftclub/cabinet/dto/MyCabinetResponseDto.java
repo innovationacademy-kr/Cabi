@@ -30,4 +30,5 @@ public class MyCabinetResponseDto {
 	// 공유사물함에 필요한 정보
 	private final String shareCode;
 	private final LocalDateTime sessionExpiredAt;
+	private final String previousUserName;
 }

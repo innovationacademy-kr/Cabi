@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.lent.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -156,9 +157,19 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		if (myCabinet == null) { // 대여 기록이 없거나 대여 대기 중인 경우
 			return getMyLentInfoFromRedis(user);
 		}
-		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
+		Long cabinetId = myCabinet.getCabinetId();
+		List<LentDto> lentDtoList = getLentDtoList(cabinetId);
+		String previousUserName = lentRedis.getPreviousUserName(
+				myCabinet.getCabinetId().toString());
+		if (previousUserName == null) {
+			Optional<LentHistory> previousLentHistory = lentOptionalFetcher.findPreviousLentHistoryByCabinetId(
+					cabinetId);
+			if (previousLentHistory.isPresent()) {
+				previousUserName = previousLentHistory.get().getUser().getName();
+			}
+		}
 		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList,
-				null, null);
+				null, null, previousUserName);
 	}
 
 	@Override
@@ -176,7 +187,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		List<LentDto> lentDtoList = getLentDtoListFromRedis(cabinetId);
 		return cabinetMapper.toMyCabinetResponseDto(cabinet, lentDtoList,
 				lentRedis.getShareCode(cabinetId),
-				lentRedis.getSessionExpiredAtInRedis(cabinetId));
+				lentRedis.getSessionExpiredAtInRedis(cabinetId), null);
 	}
 
 
