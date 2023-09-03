@@ -154,6 +154,8 @@ public class LentServiceImpl implements LentService {
 				e.setExpiredAt(expiredAt);
 			});
 		}
+		lentRedis.setPreviousUser(cabinet.getCabinetId().toString(),
+				lentHistory.getUser().getName());
 	}
 
 	@Override
@@ -189,28 +191,36 @@ public class LentServiceImpl implements LentService {
 		log.debug("Called returnCabinetByCabinetId: {}", cabinetId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
-				cabinetId);
+				cabinetId); // todo : 현재 returnCabinetByCabinetId는 개인사물함 반납에 대해서만 사용되고 있기 때문에 lentHistory에 대한 list로 받을 필요가 없음 - 추후 추가 확인 후 로직 수정 필요
 		lentHistories.forEach(lentHistory -> lentHistory.endLent(LocalDateTime.now()));
+		userService.banUser(lentHistories.get(0).getUserId(), cabinet.getLentType(),
+				lentHistories.get(0).getStartedAt(),
+				lentHistories.get(0).getEndedAt(), lentHistories.get(0).getExpiredAt());
 		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
 //		log.info("cabinet status {}",cabinet.getStatus());
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
+		lentRedis.setPreviousUser(cabinet.getCabinetId().toString(),
+				lentHistories.get(0).getUser().getName());
 		return lentHistories;
 	}
 
 	private LentHistory returnCabinetByUserId(Long userId) {
 		log.debug("Called returnCabinet: {}", userId);
-//		userOptionalFetcher.getUser(userId);
 		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserIdForUpdate(
 				userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(LocalDateTime.now());
+		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
+				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
 		cabinet.specifyStatusByUserCount(activeLentCount - 1); // policy로 빠질만한 부분인듯?
 		if (activeLentCount - 1 == 0) {
 			cabinet.writeMemo("");
 			cabinet.writeTitle("");
 		}
+		lentRedis.setPreviousUser(cabinet.getCabinetId().toString(),
+				lentHistory.getUser().getName());
 		return lentHistory;
 	}
 
