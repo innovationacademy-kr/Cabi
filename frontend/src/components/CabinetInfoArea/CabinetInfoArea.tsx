@@ -172,8 +172,8 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.cabinetId === 0 ? "-" : expireDate}
       </CabinetLentDateInfoStyled>
       <CabinetInfoButtonsContainerStyled>
-        {isExtensible &&
-          isMine &&
+        {isMine &&
+          isExtensible &&
           selectedCabinetInfo.status !== "IN_SESSION" && (
             <ButtonContainer
               onClick={() => {
@@ -189,18 +189,22 @@ const CabinetInfoArea: React.FC<{
               }
             />
           )}
-        <HoverBox
-          canUseExtendTicket={
-            !(
-              selectedCabinetInfo.lentsLength <= 1 &&
-              selectedCabinetInfo.lentType === "SHARE"
-            )
-          }
-        >
-          <AlertImgStyled src={alertImg} />
-          공유사물함을 단독으로 이용 시, <br />
-          연장권을 사용할 수 없습니다.
-        </HoverBox>
+        {isMine &&
+          selectedCabinetInfo.lentsLength <= 1 &&
+          selectedCabinetInfo.lentType === "SHARE" &&
+          selectedCabinetInfo.status !== "IN_SESSION" && (
+            <HoverBox
+              canUseExtendTicket={
+                isMine &&
+                selectedCabinetInfo.lentsLength <= 1 &&
+                selectedCabinetInfo.lentType === "SHARE"
+              }
+            >
+              <AlertImgStyled src={alertImg} />
+              공유사물함을 단독으로 이용 시, <br />
+              연장권을 사용할 수 없습니다.
+            </HoverBox>
+          )}
       </CabinetInfoButtonsContainerStyled>
       {userModal.unavailableModal && (
         <UnavailableModal
@@ -363,7 +367,7 @@ const HoverBox = styled.div<{
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  opacity: ${(props) => (props.canUseExtendTicket ? "1" : "0")};
+  opacity: ${(props) => (props.canUseExtendTicket ? "0" : "1")};
 `;
 
 const AlertImgStyled = styled.img`
