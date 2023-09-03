@@ -30,6 +30,7 @@ const ServiceManual = ({
           42Cabi <span>이용 안내서</span>
         </h1>
       </TitleContainerStyled>
+
       <WrapSectionStyled>
         <p className="subtitle">
           가능성의 확장
@@ -91,6 +92,7 @@ const ServiceManual = ({
           </article>
         </InfoSectionStyled>
       </WrapSectionStyled>
+
       <button onClick={lentStartHandler}>시작하기</button>
       <ManualModal
         isOpen={isModalOpen}

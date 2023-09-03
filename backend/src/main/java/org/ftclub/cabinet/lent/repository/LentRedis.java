@@ -24,18 +24,22 @@ public class LentRedis {
 	private static final String USER_ENTERED = "entered";
 	private static final String SHADOW_KEY_SUFFIX = ":shadow";
 	private static final String VALUE_KEY_SUFFIX = ":user";
+	private static final String PREVIOUS_USER_SUFFIX = ":previousUser";
 
 	private final HashOperations<String, String, String> valueHashOperations;
 	private final ValueOperations<String, String> valueOperations;
 	private final RedisTemplate<String, String> shadowKeyRedisTemplate;
+	private final ValueOperations<String, String> previousUserRedisTemplate;
 
 	@Autowired
 	public LentRedis(RedisTemplate<String, Object> valueHashRedisTemplate,
 			RedisTemplate<String, String> valueRedisTemplate,
-			RedisTemplate<String, String> shadowKeyRedisTemplate) {
+			RedisTemplate<String, String> shadowKeyRedisTemplate,
+			RedisTemplate<String, String> previousUserRedisTemplate) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
+		this.previousUserRedisTemplate = previousUserRedisTemplate.opsForValue();
 	}
 
 	/**
@@ -56,6 +60,7 @@ public class LentRedis {
 					cabinetId);    // userId를 key로 하여 cabinetId를 value로 저장
 		} else { // 초대코드가 틀린 경우
 			if (valueHashOperations.hasKey(cabinetId, userId)) { // 이미 존재하는 유저인 경우
+				System.out.println("value : " + valueHashOperations.get(cabinetId, userId));
 				valueHashOperations.increment(cabinetId, userId, 1L);    // trialCount를 1 증가시켜서 저장
 			} else { // 존재하지 않는 유저인 경우
 				valueHashOperations.put(cabinetId, userId, "1");    // trialCount를 1로 저장
@@ -161,5 +166,15 @@ public class LentRedis {
 							TimeUnit.SECONDS).longValue());
 		}
 		return null;
+	}
+
+	public void setPreviousUser(String cabinetId, String userName) {
+		log.debug("Called setPreviousUser: {}, {}", cabinetId, userName);
+		previousUserRedisTemplate.set(cabinetId + PREVIOUS_USER_SUFFIX, userName);
+	}
+
+	public String getPreviousUserName(String cabinetId) {
+		log.debug("Called getPreviousUser: {}", cabinetId);
+		return previousUserRedisTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
 	}
 }

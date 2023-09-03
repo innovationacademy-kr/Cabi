@@ -1,11 +1,34 @@
-import { useEffect, useRef } from "react";
-import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import styled from "styled-components";
-import { currentSectionNameState } from "@/recoil/atoms";
-import { currentCabinetIdState, targetCabinetInfoState } from "@/recoil/atoms";
+import { useEffect, useRef, useState } from "react";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
+import styled, { css } from "styled-components";
+import {
+  currentBuildingNameState,
+  currentFloorCabinetState,
+  currentFloorNumberState,
+  currentSectionNameState,
+} from "@/recoil/atoms";
+import {
+  currentCabinetIdState,
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
+import { CabinetInfoByBuildingFloorDto } from "@/types/dto/cabinet.dto";
+import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { UserDto } from "@/types/dto/user.dto";
+import {
+  axiosCabinetByBuildingFloor,
+  axiosMyLentInfo,
+} from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const MainPage = () => {
@@ -36,6 +59,61 @@ const MainPage = () => {
   const currentSectionIndex = sectionList.findIndex(
     (sectionName) => sectionName === currentSectionName
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
+  const [currentFloor, setCurrentFloor] = useRecoilState<number>(
+    currentFloorNumberState
+  );
+  const setCurrentFloorData = useSetRecoilState<
+    CabinetInfoByBuildingFloorDto[]
+  >(currentFloorCabinetState);
+  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
+  const myInfo = useRecoilValue<UserDto>(userState);
+  const [myCabinetInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+
+  const refreshCabinetList = async () => {
+    setIsLoading(true);
+    if (
+      myInfo.cabinetId !== myCabinetInfo.cabinetId &&
+      myCabinetInfo.cabinetId
+    ) {
+      try {
+        const { data: myLentInfo } = await axiosMyLentInfo();
+        setMyLentInfo(myLentInfo);
+      } catch (error) {
+        throw error;
+      }
+    }
+    try {
+      await axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
+        .then((response) => {
+          setCurrentFloorData(response.data);
+          const sections = response.data.map(
+            (data: CabinetInfoByBuildingFloorDto) => data.section
+          );
+          let currentSectionFromPersist = undefined;
+          const recoilPersist = localStorage.getItem("recoil-persist");
+          if (recoilPersist) {
+            const recoilPersistObj = JSON.parse(recoilPersist);
+            if (Object.keys(recoilPersistObj).includes("CurrentSection")) {
+              currentSectionFromPersist = recoilPersistObj.CurrentSection;
+            }
+          }
+          currentSectionFromPersist &&
+          sections.includes(currentSectionFromPersist)
+            ? setCurrentSection(currentSectionFromPersist)
+            : setCurrentSection(response.data[0].section);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {});
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  };
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
@@ -74,21 +152,35 @@ const MainPage = () => {
   };
 
   return (
-    <WapperStyled
-      ref={mainWrapperRef}
-      onTouchStart={(e: React.TouchEvent) => {
-        touchStartPosX.current = e.changedTouches[0].screenX;
-        touchStartPosY.current = e.changedTouches[0].screenY;
-      }}
-      onTouchEnd={(e: React.TouchEvent) => {
-        swipeSection(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
-      }}
-    >
-      <SectionPaginationContainer />
-      <CabinetListWrapperStyled>
-        <CabinetListContainer isAdmin={false} />
-      </CabinetListWrapperStyled>
-    </WapperStyled>
+    <>
+      {isLoading && <LoadingAnimation />}
+      <WapperStyled
+        ref={mainWrapperRef}
+        onTouchStart={(e: React.TouchEvent) => {
+          touchStartPosX.current = e.changedTouches[0].screenX;
+          touchStartPosY.current = e.changedTouches[0].screenY;
+        }}
+        onTouchEnd={(e: React.TouchEvent) => {
+          swipeSection(
+            e.changedTouches[0].screenX,
+            e.changedTouches[0].screenY
+          );
+        }}
+      >
+        <SectionPaginationContainer />
+        <CabinetListWrapperStyled>
+          <CabinetListContainer isAdmin={false} />
+          <RefreshButtonStyled
+            className="cabiButton"
+            title="새로고침"
+            id="refreshButton"
+            onClick={refreshCabinetList}
+          >
+            새로고침
+          </RefreshButtonStyled>
+        </CabinetListWrapperStyled>
+      </WapperStyled>
+    </>
   );
 };
 
@@ -105,6 +197,23 @@ const CabinetListWrapperStyled = styled.div`
   justify-content: center;
   align-items: center;
   padding-bottom: 30px;
+`;
+
+const RefreshButtonStyled = styled.button`
+  max-width: 150px;
+  width: 100%;
+  height: 45px;
+  padding: 10px 40px 10px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 30px;
+  margin: 30px;
+  @media (max-height: 745px) {
+    margin-bottom: 8px;
+  }
 `;
 
 export default MainPage;

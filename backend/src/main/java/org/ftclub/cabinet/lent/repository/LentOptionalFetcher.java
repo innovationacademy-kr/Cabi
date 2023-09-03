@@ -2,6 +2,7 @@ package org.ftclub.cabinet.lent.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -228,7 +229,8 @@ public class LentOptionalFetcher {
 	}
 
 	/**
-	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id를 통해 {@link LentHistory}를 찾습니다.
+	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id를 통해 {@link LentHistory}를 찾습니다. CABINET JOIN 없이,
+	 * LentHistory의 subquery를 통해 찾습니다.
 	 *
 	 * @param userId 찾고 싶은 LentHistory 의 user id
 	 * @return user id에 맞는 반납하지 않은 {@link LentHistory}
@@ -236,5 +238,10 @@ public class LentOptionalFetcher {
 	public List<LentHistory> findAllActiveLentHistoriesByUserId(Long userId) {
 		log.debug("Called findAllActiveLentHistoriesByUserId: {}", userId);
 		return lentRepository.findAllActiveLentHistoriesByUserId(userId);
+	}
+
+	public Optional<LentHistory> findPreviousLentHistoryByCabinetId(Long cabinetId) {
+		log.debug("Called findPreviousLentUserNameByCabinetId: {}", cabinetId);
+		return lentRepository.findFirstByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(cabinetId);
 	}
 }

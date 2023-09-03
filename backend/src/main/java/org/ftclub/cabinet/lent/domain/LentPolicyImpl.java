@@ -36,7 +36,10 @@ public class LentPolicyImpl implements LentPolicy {
 			Integer totalUserCount) {
 		log.info("Called generateSharedCabinetExpirationDate now: {}, totalUserCount: {}", now,
 				totalUserCount);
-		return now.plusDays(getDaysForLentTermShare(totalUserCount));
+		return now.plusDays(getDaysForLentTermShare(totalUserCount))
+				.withHour(23)
+				.withMinute(59)
+				.withSecond(0);
 	}
 
 	@Override
@@ -49,10 +52,11 @@ public class LentPolicyImpl implements LentPolicy {
 
 		LentType lentType = cabinet.getLentType();
 		switch (lentType) {
-//			case SHARE:
-//				return now.plusDays(getDaysForLentTermShare(4));
 			case PRIVATE:
-				return now.plusDays(getDaysForLentTermPrivate());
+				return now.plusDays(getDaysForLentTermPrivate())
+						.withHour(23)
+						.withMinute(59)
+						.withSecond(0);
 			case CLUB:
 				return DateUtil.getInfinityDate();
 		}
@@ -65,7 +69,10 @@ public class LentPolicyImpl implements LentPolicy {
 		if (DateUtil.isPast(now)) {
 			throw new DomainException(ExceptionStatus.LENT_EXPIRED);
 		}
-		return now.plusDays(getDaysForLentTermPrivate());
+		return now.plusDays(getDaysForLentTermPrivate())
+				.withHour(23)
+				.withMinute(59)
+				.withSecond(0);
 	}
 
 	@Override
@@ -222,10 +229,12 @@ public class LentPolicyImpl implements LentPolicy {
 				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
 			case ALL_BANNED_USER:
 				handleBannedUserResponse(status, banHistory.get(0));
-//			case SHARE_BANNED_USER:
-//				handleBannedUserResponse(status, banHistory.get(0));
+			case SHARE_BANNED_USER:
+				throw new ServiceException(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED);
 			case BLACKHOLED_USER:
 				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
+			case PENDING_CABINET:
+				throw new ServiceException(ExceptionStatus.LENT_PENDING);
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:
