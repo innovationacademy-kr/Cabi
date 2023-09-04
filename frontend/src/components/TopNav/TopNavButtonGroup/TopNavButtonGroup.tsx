@@ -96,15 +96,12 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   }
   const clickMyCabinet = () => {
     if (myInfo.cabinetId === null && !myCabinetInfo?.cabinetId) {
-      console.log("clickMyCabinet myInfo.cabinetId === null");
       setTargetCabinetInfoToMyCabinet();
       toggleCabinet();
     } else if (currentCabinetId !== myInfo.cabinetId) {
-      console.log("clickMyCabinet currentCabinetId !== myInfo.cabinetId");
       setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
-      console.log("clickMyCabinet else");
       toggleCabinet();
     }
   };
