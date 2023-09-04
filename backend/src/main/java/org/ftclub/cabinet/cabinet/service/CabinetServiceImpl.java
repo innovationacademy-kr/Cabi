@@ -124,7 +124,7 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.specifyLentType(lentType);
 		if (lentType == LentType.SHARE) {
 			cabinet.specifyMaxUser(Math.toIntExact(
-					cabinetProperties.getShareMaxUserCount())); // todo : policy에서 외부에서 설정된 properties 변수로 설정하게끔 수정
+					cabinetProperties.getShareMaxUserCount()));
 		} else { // club 도 1명으로 변경
 			cabinet.specifyMaxUser(1);
 		}

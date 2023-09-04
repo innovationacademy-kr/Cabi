@@ -1,12 +1,5 @@
 package org.ftclub.cabinet.lent.repository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -15,6 +8,14 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
@@ -33,9 +34,9 @@ public class LentRedis {
 
 	@Autowired
 	public LentRedis(RedisTemplate<String, Object> valueHashRedisTemplate,
-			RedisTemplate<String, String> valueRedisTemplate,
-			RedisTemplate<String, String> shadowKeyRedisTemplate,
-			RedisTemplate<String, String> previousUserRedisTemplate) {
+					 RedisTemplate<String, String> valueRedisTemplate,
+					 RedisTemplate<String, String> shadowKeyRedisTemplate,
+					 RedisTemplate<String, String> previousUserRedisTemplate) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
@@ -49,7 +50,7 @@ public class LentRedis {
 	 * @param hasShadowKey : 최초 대여인지 아닌지 여부
 	 */
 	public void saveUserInRedis(String cabinetId, String userId, String shareCode,
-			boolean hasShadowKey) {
+								boolean hasShadowKey) {
 		log.debug("called saveUserInRedis: {}, {}, {}, {}", cabinetId, userId, shareCode,
 				hasShadowKey);
 		if (!hasShadowKey || isValidShareCode(Long.valueOf(cabinetId),
@@ -111,7 +112,7 @@ public class LentRedis {
 		shadowKeyRedisTemplate.opsForValue().set(shadowKey, shareCode.toString());
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		log.debug("called setShadowKey: {}, shareCode: {}", shadowKey, shareCode);
-		shadowKeyRedisTemplate.expire(shadowKey, 30, TimeUnit.SECONDS);    // TODO: 10분으로 수정
+		shadowKeyRedisTemplate.expire(shadowKey, 10, TimeUnit.MINUTES);
 	}
 
 	public Boolean isShadowKey(Long cabinetId) {
