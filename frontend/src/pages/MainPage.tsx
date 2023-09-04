@@ -21,12 +21,15 @@ import CabinetListContainer from "@/components/CabinetList/CabinetList.container
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
 import {
+  CabinetBuildingFloorDto,
   CabinetInfoByBuildingFloorDto,
+  CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import {
   axiosCabinetByBuildingFloor,
+  axiosCabinetById,
   axiosMyInfo,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
@@ -70,12 +73,14 @@ const MainPage = () => {
     CabinetInfoByBuildingFloorDto[]
   >(currentFloorCabinetState);
   const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
-  const myInfo = useRecoilValue<UserDto>(userState);
+  const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
   const [myCabinetInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
 
+  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
+    targetCabinetInfoState
+  );
   const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
-  const setUser = useSetRecoilState<UserDto>(userState);
   const refreshCabinetList = async () => {
     setIsLoading(true);
     if (
@@ -85,42 +90,40 @@ const MainPage = () => {
       try {
         const { data: myLentInfo } = await axiosMyLentInfo();
         setMyLentInfo(myLentInfo);
+        setMyInfo(myLentInfo.cabinetId);
       } catch (error) {
         throw error;
       }
     }
     try {
       await axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
-        .then((response) => {
+        .then(async (response) => {
           setCurrentFloorData(response.data);
-          const sections = response.data.map(
-            (data: CabinetInfoByBuildingFloorDto) => data.section
-          );
-          let currentSectionFromPersist = undefined;
-          const recoilPersist = localStorage.getItem("recoil-persist");
-          if (recoilPersist) {
-            const recoilPersistObj = JSON.parse(recoilPersist);
-            if (Object.keys(recoilPersistObj).includes("CurrentSection")) {
-              currentSectionFromPersist = recoilPersistObj.CurrentSection;
+          let targetCabinet = null;
+          for (const cluster of response.data) {
+            targetCabinet = cluster.cabinets.find(
+              (cabinet: CabinetPreviewInfo) =>
+                cabinet.cabinetId === targetCabinetInfo?.cabinetId
+            );
+            if (targetCabinet) break;
+          }
+          if (
+            targetCabinet &&
+            (targetCabinet.userCount !== targetCabinetInfo.lents.length ||
+              targetCabinet.status !== targetCabinetInfo.status)
+          ) {
+            try {
+              let fullInfo = await axiosCabinetById(targetCabinet.cabinetId);
+              setTargetCabinetInfo(fullInfo.data);
+            } catch (error) {
+              console.log(error);
             }
           }
-          currentSectionFromPersist &&
-          sections.includes(currentSectionFromPersist)
-            ? setCurrentSection(currentSectionFromPersist)
-            : setCurrentSection(response.data[0].section);
         })
         .catch((error) => {
           console.error(error);
         })
         .finally(() => {});
-      // 내 사물함과 연장권 정보 업데이트를 위해 myInfo 요청
-      try {
-        const { data: myInfo } = await axiosMyInfo();
-        setMyInfoData(myInfo);
-        setUser(myInfo);
-      } catch (error) {
-        console.error(error);
-      }
     } catch (error) {
       console.log(error);
     }

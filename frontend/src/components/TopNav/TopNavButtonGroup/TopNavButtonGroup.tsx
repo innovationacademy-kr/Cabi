@@ -1,20 +1,25 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
   currentCabinetIdState,
+  myCabinetInfoState,
   targetCabinetInfoState,
+  targetUserInfoState,
   userState,
 } from "@/recoil/atoms";
 import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
-import { CabinetInfo } from "@/types/dto/cabinet.dto";
+import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
+import { UserInfo } from "@/types/dto/user.dto";
 import { UserDto } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import {
   axiosCabinetById,
   axiosDeleteCurrentBanLog,
+  axiosMyInfo,
+  axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
@@ -45,14 +50,19 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
-  const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
+
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const myInfo = useRecoilValue(userState);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
+  const [myInfoData, setMyInfoData] =
+    useRecoilState<UserInfo>(targetUserInfoState);
   const { pathname } = useLocation();
   const navigator = useNavigate();
 
-  async function setTargetCabinetInfoToMyCabinet() {
+  const setTargetCabinetInfoToMyCabinet = async () => {
     if (myInfo.cabinetId === null) {
       const defaultCabinetInfo = getDefaultCabinetInfo(myInfo);
       setTargetCabinetInfo(defaultCabinetInfo);
@@ -60,23 +70,41 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
       return;
     }
     setCurrentCabinetId(myInfo.cabinetId);
+    setMyInfoData(myInfoData);
     try {
       const { data } = await axiosCabinetById(myInfo.cabinetId);
       setTargetCabinetInfo(data);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  const clickMyCabinet = () => {
-    if (myInfo.cabinetId === null) {
-      setTargetCabinetInfoToMyCabinet();
-      toggleCabinet();
-    } else if (currentCabinetId !== myInfo.cabinetId) {
-      setTargetCabinetInfoToMyCabinet();
-      openCabinet();
-    } else {
-      toggleCabinet();
+  const clickMyCabinet = async () => {
+    try {
+      const { data: myInfo } = await axiosMyInfo();
+      setMyInfo(myInfo);
+    } catch (error: any) {
+      throw error;
+    } finally {
+      if (myInfo.cabinetId === null) {
+        setTargetCabinetInfoToMyCabinet();
+        toggleCabinet();
+      } else if (currentCabinetId !== myInfo.cabinetId) {
+        setTargetCabinetInfoToMyCabinet();
+        openCabinet();
+      } else {
+        toggleCabinet();
+      }
+      try {
+        const { data: myLentInfo } = await axiosMyLentInfo();
+        if (myLentInfo) {
+          setMyLentInfo(myLentInfo);
+          setMyInfo({ ...myInfo, cabinetId: myLentInfo.cabinetId });
+          setTargetCabinetInfo(myLentInfo);
+        }
+      } catch (error) {
+        throw error;
+      }
     }
   };
 
