@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import {
   ICurrentModalStateInfo,
@@ -36,6 +37,7 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
+  previousUserName: string | null;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -46,7 +48,13 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
+  previousUserName,
 }) => {
+  const [showPreviousUser, setShowPreviousUser] = useState(false);
+
+  const handleLinkTextClick = () => {
+    setShowPreviousUser(!showPreviousUser);
+  };
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
       <CabiLogoStyled src={cabiLogo} />
@@ -114,6 +122,22 @@ const CabinetInfoArea: React.FC<{
                 text="닫기"
                 theme="grayLine"
               />
+              <LinkTextStyled onClick={handleLinkTextClick}>
+                {showPreviousUser ? (
+                  previousUserName
+                ) : (
+                  <>
+                    <ImageStyled
+                      src="/src/assets/images/happyCcabi.png"
+                      alt=""
+                    />
+                    <HoverTextStyled>
+                      이전 <br />
+                      대여자
+                    </HoverTextStyled>
+                  </>
+                )}
+              </LinkTextStyled>
             </>
           )
         ) : (
@@ -269,6 +293,39 @@ const CabinetDetailAreaStyled = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+`;
+
+const LinkTextStyled = styled.div`
+  position: absolute;
+  bottom: 3%;
+  right: 7%;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 0.875rem;
+  color: var(--gray-color);
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const HoverTextStyled = styled.div`
+  width: 50px;
+  display: none;
+  position: absolute;
+  bottom: 35px;
+  right: -10px;
+  color: var(--gray-color);
+  text-align: center;
+  line-height: 1.2;
+`;
+
+const ImageStyled = styled.img`
+  width: 30px;
+  height: 30px;
+
+  &:hover + ${HoverTextStyled} {
+    display: block;
+  }
 `;
 
 const CabiLogoStyled = styled.img`
