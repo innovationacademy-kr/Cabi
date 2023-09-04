@@ -48,32 +48,63 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const myInfo = useRecoilValue(userState);
-  const myCabinetInfo = useRecoilValue(myCabinetInfoState);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
+  const [myCabinetInfo, setMyCabinetInfo] = useRecoilState(myCabinetInfoState);
   const { pathname } = useLocation();
   const navigator = useNavigate();
+  const defaultCabinetInfo = getDefaultCabinetInfo(myInfo);
+  const resetCabinetInfo = () => {
+    setMyCabinetInfo({
+      ...defaultCabinetInfo,
+      memo: "",
+      shareCode: 0,
+      previousUserName: "",
+    });
+    setTargetCabinetInfo(defaultCabinetInfo);
+    setCurrentCabinetId(0);
+  };
   async function setTargetCabinetInfoToMyCabinet() {
-    if (myInfo.cabinetId === null) {
-      const defaultCabinetInfo = getDefaultCabinetInfo(myInfo);
-      setTargetCabinetInfo(defaultCabinetInfo);
-      setCurrentCabinetId(0);
+    if (myInfo.cabinetId === null && !myCabinetInfo?.cabinetId) {
+      resetCabinetInfo();
     } else setCurrentCabinetId(myInfo.cabinetId);
+    setMyInfo((prev) => ({ ...prev, cabinetId: null }));
     try {
       if (!myCabinetInfo?.cabinetId) return;
       const { data } = await axiosCabinetById(myCabinetInfo.cabinetId);
-      setTargetCabinetInfo(data);
+      if (data.lents.length === 0 && myInfo.cabinetId !== null) {
+        resetCabinetInfo();
+        setMyInfo((prev) => ({ ...prev, cabinetId: null }));
+      } else {
+        setMyCabinetInfo((prev) => ({
+          ...data,
+          memo: "",
+          shareCode: prev.shareCode,
+          previousUserName: prev.previousUserName,
+        }));
+        const doesNameExist = data.lents.some(
+          (lent: LentDto) => lent.name === myInfo.name
+        );
+        if (doesNameExist) {
+          setTargetCabinetInfo(data);
+          setCurrentCabinetId(data.cabinetId);
+          setMyInfo((prev) => ({ ...prev, cabinetId: data.cabinetId }));
+        } else resetCabinetInfo();
+      }
     } catch (error) {
       console.log(error);
     }
   }
   const clickMyCabinet = () => {
-    if (myInfo.cabinetId === null) {
+    if (myInfo.cabinetId === null && !myCabinetInfo?.cabinetId) {
+      console.log("clickMyCabinet myInfo.cabinetId === null");
       setTargetCabinetInfoToMyCabinet();
       toggleCabinet();
     } else if (currentCabinetId !== myInfo.cabinetId) {
+      console.log("clickMyCabinet currentCabinetId !== myInfo.cabinetId");
       setTargetCabinetInfoToMyCabinet();
       openCabinet();
     } else {
+      console.log("clickMyCabinet else");
       toggleCabinet();
     }
   };
