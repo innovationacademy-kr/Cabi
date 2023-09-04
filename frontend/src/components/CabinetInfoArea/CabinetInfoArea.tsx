@@ -165,18 +165,29 @@ const CabinetInfoArea: React.FC<{
                 />
               </>
             )}
-            {isExtensible &&
-            selectedCabinetInfo!.cabinetId === 0 &&
+            {selectedCabinetInfo!.cabinetId === 0 &&
             selectedCabinetInfo!.lentType === "PRIVATE" ? (
-              <ButtonContainer
-                onClick={() => {
-                  openModal("extendModal");
-                }}
-                text={"연장권 보유중"}
-                theme="line"
-                iconSrc="/src/assets/images/extensionTicket.svg"
-                iconAlt="연장권 아이콘"
-              />
+              <>
+                <ButtonContainer
+                  onClick={() => {
+                    openModal("extendModal");
+                  }}
+                  text={isExtensible ? "연장권 보유중" : "연장권 미보유"}
+                  theme={isExtensible ? "line" : "grayLine"}
+                  iconSrc={
+                    isExtensible
+                      ? "/src/assets/images/extensionTicket.svg"
+                      : "/src/assets/images/extensionTicketGray.svg"
+                  }
+                  iconAlt="연장권 아이콘"
+                  disabled={!isExtensible}
+                />
+                <ButtonContainer
+                  onClick={closeCabinet}
+                  text="닫기"
+                  theme="line"
+                />
+              </>
             ) : null}
             {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
@@ -212,17 +223,6 @@ const CabinetInfoArea: React.FC<{
                 selectedCabinetInfo.lentType === "SHARE"
               }
             />
-          )}
-        {!isExtensible &&
-          selectedCabinetInfo!.cabinetId === 0 &&
-          selectedCabinetInfo!.lentType === "PRIVATE" && (
-            <ButtonWrapperStyled>
-              <ButtonContainerStyled>
-                사물함을 대여하시면
-                <br />
-                사물함 정보가 표시됩니다.
-              </ButtonContainerStyled>
-            </ButtonWrapperStyled>
           )}
         {isMine &&
           selectedCabinetInfo.lentsLength <= 1 &&
