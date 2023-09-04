@@ -89,7 +89,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
             />
           </ButtonWrapperStyled>
         )}
-        {type === "panaltyBtn" && (
+        {type === "penaltyBtn" && (
           <ButtonWrapperStyled>
             <Button
               onClick={(e) => {

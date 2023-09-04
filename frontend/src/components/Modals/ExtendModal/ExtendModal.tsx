@@ -103,7 +103,7 @@ const ExtendModal: React.FC<{
   };
 
   const extendModalContents: IModalContents = {
-    type: myInfo.cabinetId === null ? "panaltyBtn" : "hasProceedBtn",
+    type: myInfo.cabinetId === null ? "penaltyBtn" : "hasProceedBtn",
     icon: checkIcon,
     title: getModalTitle(myInfo.cabinetId),
     detail: getModalDetail(myInfo.cabinetId),
