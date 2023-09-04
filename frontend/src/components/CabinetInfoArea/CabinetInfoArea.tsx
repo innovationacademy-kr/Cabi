@@ -193,7 +193,7 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo!.cabinetId === 0 ? "-" : expireDate}
+        {selectedCabinetInfo!.cabinetId === 0 ? "" : expireDate}
       </CabinetLentDateInfoStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine &&
@@ -212,6 +212,17 @@ const CabinetInfoArea: React.FC<{
                 selectedCabinetInfo.lentType === "SHARE"
               }
             />
+          )}
+        {!isExtensible &&
+          selectedCabinetInfo!.cabinetId === 0 &&
+          selectedCabinetInfo!.lentType === "PRIVATE" && (
+            <ButtonWrapperStyled>
+              <ButtonContainerStyled>
+                사물함을 대여하시면
+                <br />
+                사물함 정보가 표시됩니다.
+              </ButtonContainerStyled>
+            </ButtonWrapperStyled>
           )}
         {isMine &&
           selectedCabinetInfo.lentsLength <= 1 &&
@@ -403,6 +414,46 @@ const Animation2 = keyframes`
   }
   50% {
     background-color: #eeeeee;
+  }
+`;
+
+export const DetailStyled = styled.p`
+  margin-top: 20px;
+  letter-spacing: -0.02rem;
+  line-height: 1.5rem;
+  font-size: 14px;
+  font-weight: 300;
+  white-space: break-spaces;
+`;
+
+const ButtonWrapperStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ButtonContainerStyled = styled.button`
+  max-width: 400px;
+  width: 110%;
+  height: 80px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+  background: var(--white);
+  color: var(--main-color);
+  border: 1px solid var(--main-color);
+  @media (max-height: 745px) {
+    margin-bottom: 8px;
   }
 `;
 
