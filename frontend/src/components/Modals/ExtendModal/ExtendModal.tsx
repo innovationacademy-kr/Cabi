@@ -75,7 +75,11 @@ const ExtendModal: React.FC<{
     }
     try {
       await axiosExtendLentPeriod();
-      setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
+      setMyInfo({
+        ...myInfo,
+        cabinetId: currentCabinetId,
+        extensible: false,
+      });
       setIsCurrentSectionRender(true);
       setModalTitle("연장되었습니다");
       try {

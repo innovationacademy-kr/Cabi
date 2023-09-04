@@ -87,23 +87,20 @@ const InvitationCodeModalContainer: React.FC<{
       await axiosLentShareId(currentCabinetId, code);
       setIsCurrentSectionRender(true);
       setModalTitle("공유 사물함 대기열에 입장하였습니다");
-      try {
-        const { data } = await axiosCabinetById(currentCabinetId);
-        setTargetCabinetInfo(data);
-      } catch (error) {
-        saveSharedWrongCodeCounts(updatedCounts);
-        throw error;
-      }
-      try {
-        const { data: myLentInfo } = await axiosMyLentInfo();
-        setMyLentInfo(myLentInfo);
-      } catch (error) {
-        throw error;
-      }
+
+      // 병렬적으로 cabinet 과 lent info 불러오기
+      const [cabinetData, myLentData] = await Promise.all([
+        axiosCabinetById(currentCabinetId),
+        axiosMyLentInfo(),
+      ]);
+
+      setTargetCabinetInfo(cabinetData.data);
+      setMyLentInfo(myLentData.data);
     } catch (error: any) {
-      setModalTitle(error.response.data.message);
+      const errorMessage = error.response.data.message;
+      setModalTitle(errorMessage);
       setHasErrorOnResponse(true);
-      throw error;
+      saveSharedWrongCodeCounts(updatedCounts);
     } finally {
       setShowResponseModal(true);
     }

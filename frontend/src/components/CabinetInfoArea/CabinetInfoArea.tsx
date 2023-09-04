@@ -18,6 +18,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
+import alertImg from "@/assets/images/cautionSign.svg";
 import cabiLogo from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -164,18 +165,29 @@ const CabinetInfoArea: React.FC<{
                 />
               </>
             )}
-            {isExtensible &&
-            selectedCabinetInfo!.cabinetId === 0 &&
+            {selectedCabinetInfo!.cabinetId === 0 &&
             selectedCabinetInfo!.lentType === "PRIVATE" ? (
-              <ButtonContainer
-                onClick={() => {
-                  openModal("extendModal");
-                }}
-                text={"연장권 보유중"}
-                theme="line"
-                iconSrc="/src/assets/images/extensionTicket.svg"
-                iconAlt="연장권 아이콘"
-              />
+              <>
+                <ButtonContainer
+                  onClick={() => {
+                    openModal("extendModal");
+                  }}
+                  text={isExtensible ? "연장권 보유중" : "연장권 미보유"}
+                  theme={isExtensible ? "line" : "grayLine"}
+                  iconSrc={
+                    isExtensible
+                      ? "/src/assets/images/extensionTicket.svg"
+                      : "/src/assets/images/extensionTicketGray.svg"
+                  }
+                  iconAlt="연장권 아이콘"
+                  disabled={!isExtensible}
+                />
+                <ButtonContainer
+                  onClick={closeCabinet}
+                  text="닫기"
+                  theme="line"
+                />
+              </>
             ) : null}
             {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
@@ -192,11 +204,11 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {selectedCabinetInfo!.cabinetId === 0 ? "-" : expireDate}
+        {selectedCabinetInfo!.cabinetId === 0 ? "" : expireDate}
       </CabinetLentDateInfoStyled>
       <CabinetInfoButtonsContainerStyled>
-        {isExtensible &&
-          isMine &&
+        {isMine &&
+          isExtensible &&
           selectedCabinetInfo.status !== "IN_SESSION" && (
             <ButtonContainer
               onClick={() => {
@@ -206,7 +218,28 @@ const CabinetInfoArea: React.FC<{
               theme="line"
               iconSrc="/src/assets/images/extensionTicket.svg"
               iconAlt="연장권 아이콘"
+              disabled={
+                selectedCabinetInfo.lentsLength <= 1 &&
+                selectedCabinetInfo.lentType === "SHARE"
+              }
             />
+          )}
+        {isMine &&
+          isExtensible &&
+          selectedCabinetInfo.lentsLength <= 1 &&
+          selectedCabinetInfo.lentType === "SHARE" &&
+          selectedCabinetInfo.status !== "IN_SESSION" && (
+            <HoverBox
+              canUseExtendTicket={
+                isMine &&
+                selectedCabinetInfo.lentsLength <= 1 &&
+                selectedCabinetInfo.lentType === "SHARE"
+              }
+            >
+              <AlertImgStyled src={alertImg} />
+              공유사물함을 단독으로 이용 시, <br />
+              연장권을 사용할 수 없습니다.
+            </HoverBox>
           )}
       </CabinetInfoButtonsContainerStyled>
       {userModal.unavailableModal && (
@@ -385,7 +418,77 @@ const Animation2 = keyframes`
   }
 `;
 
-const CabinetInfoButtonsContainerStyled = styled.div`
+export const DetailStyled = styled.p`
+  margin-top: 20px;
+  letter-spacing: -0.02rem;
+  line-height: 1.5rem;
+  font-size: 14px;
+  font-weight: 300;
+  white-space: break-spaces;
+`;
+
+const ButtonWrapperStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ButtonContainerStyled = styled.button`
+  max-width: 400px;
+  width: 110%;
+  height: 80px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+  background: var(--white);
+  color: var(--main-color);
+  border: 1px solid var(--main-color);
+  @media (max-height: 745px) {
+    margin-bottom: 8px;
+  }
+`;
+
+const HoverBox = styled.div<{
+  canUseExtendTicket?: boolean;
+}>`
+  position: absolute;
+  top: 50%;
+  width: 270px;
+  height: 80px;
+  padding: 10px;
+  background-color: rgba(73, 73, 73, 0.99);
+  border-radius: 10px;
+  box-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  opacity: ${(props) => (props.canUseExtendTicket ? "0" : "1")};
+`;
+
+const AlertImgStyled = styled.img`
+  width: 20px;
+  height: 20px;
+  filter: invert(99%) sepia(100%) saturate(3%) hue-rotate(32deg)
+    brightness(104%) contrast(100%);
+`;
+
+const CabinetInfoButtonsContainerStyled = styled.div<{
+  canUseExtendTicket?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -393,6 +496,9 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   max-height: 320px;
   margin: 3vh 0;
   width: 100%;
+  &:hover ${HoverBox} {
+    opacity: ${(props) => (props.canUseExtendTicket ? "0" : "1")};
+  }
 `;
 
 const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
