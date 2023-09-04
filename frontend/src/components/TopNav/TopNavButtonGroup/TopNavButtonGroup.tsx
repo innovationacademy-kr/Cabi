@@ -1,25 +1,21 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
   currentCabinetIdState,
   myCabinetInfoState,
   targetCabinetInfoState,
-  targetUserInfoState,
   userState,
 } from "@/recoil/atoms";
 import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
-import { CabinetInfo, MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
-import { UserInfo } from "@/types/dto/user.dto";
 import { UserDto } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import {
   axiosCabinetById,
   axiosDeleteCurrentBanLog,
-  axiosMyInfo,
-  axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
@@ -44,83 +40,54 @@ const getDefaultCabinetInfo = (myInfo: UserDto): CabinetInfo => ({
   ] as LentDto[],
   statusNote: "",
 });
-
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
     currentCabinetIdState
   );
-
-  const setMyLentInfo =
-    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState<CabinetInfo>(
+  const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
-  const [myInfo, setMyInfo] = useRecoilState(userState);
-  const [myInfoData, setMyInfoData] =
-    useRecoilState<UserInfo>(targetUserInfoState);
+  const myInfo = useRecoilValue(userState);
+  const myCabinetInfo = useRecoilValue(myCabinetInfoState);
   const { pathname } = useLocation();
   const navigator = useNavigate();
-
-  const setTargetCabinetInfoToMyCabinet = async () => {
+  async function setTargetCabinetInfoToMyCabinet() {
     if (myInfo.cabinetId === null) {
       const defaultCabinetInfo = getDefaultCabinetInfo(myInfo);
       setTargetCabinetInfo(defaultCabinetInfo);
       setCurrentCabinetId(0);
-      return;
-    }
-    setCurrentCabinetId(myInfo.cabinetId);
-    setMyInfoData(myInfoData);
+    } else setCurrentCabinetId(myInfo.cabinetId);
     try {
-      const { data } = await axiosCabinetById(myInfo.cabinetId);
+      if (!myCabinetInfo?.cabinetId) return;
+      const { data } = await axiosCabinetById(myCabinetInfo.cabinetId);
       setTargetCabinetInfo(data);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const clickMyCabinet = async () => {
-    try {
-      const { data: myInfo } = await axiosMyInfo();
-      setMyInfo(myInfo);
-    } catch (error: any) {
-      throw error;
-    } finally {
-      if (myInfo.cabinetId === null) {
-        setTargetCabinetInfoToMyCabinet();
-        toggleCabinet();
-      } else if (currentCabinetId !== myInfo.cabinetId) {
-        setTargetCabinetInfoToMyCabinet();
-        openCabinet();
-      } else {
-        toggleCabinet();
-      }
-      try {
-        const { data: myLentInfo } = await axiosMyLentInfo();
-        if (myLentInfo) {
-          setMyLentInfo(myLentInfo);
-          setMyInfo({ ...myInfo, cabinetId: myLentInfo.cabinetId });
-          setTargetCabinetInfo(myLentInfo);
-        }
-      } catch (error) {
-        throw error;
-      }
+  }
+  const clickMyCabinet = () => {
+    if (myInfo.cabinetId === null) {
+      setTargetCabinetInfoToMyCabinet();
+      toggleCabinet();
+    } else if (currentCabinetId !== myInfo.cabinetId) {
+      setTargetCabinetInfoToMyCabinet();
+      openCabinet();
+    } else {
+      toggleCabinet();
     }
   };
-
   const searchBarOn = () => {
     document.getElementById("searchBar")!.classList.add("on");
     document.getElementById("topNavLogo")!.classList.add("pushOut");
     document.getElementById("topNavButtonGroup")!.classList.add("pushOut");
     document.getElementById("topNavWrap")!.classList.add("pushOut");
   };
-
   const clickSearchButton = () => {
     if (!pathname.includes("search")) navigator("search");
     closeAll();
     searchBarOn();
   };
-
   return (
     <NaviButtonsStyled id="topNavButtonGroup">
       {import.meta.env.VITE_UNBAN === "true" && (
