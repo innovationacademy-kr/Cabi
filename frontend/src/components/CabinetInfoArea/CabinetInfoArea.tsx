@@ -225,6 +225,7 @@ const CabinetInfoArea: React.FC<{
             />
           )}
         {isMine &&
+          isExtensible &&
           selectedCabinetInfo.lentsLength <= 1 &&
           selectedCabinetInfo.lentType === "SHARE" &&
           selectedCabinetInfo.status !== "IN_SESSION" && (
