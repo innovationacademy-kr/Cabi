@@ -22,11 +22,7 @@ spring:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
-      hibernate:
-        globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-        format_sql: true
-    defer-datasource-initialization: true
+      globally_quoted_identifiers: true
 
   cabinet:
     lent:
@@ -76,6 +72,6 @@ spring:
           auth: true
           starttls:
             enable: true
-            
+
 webhook:
   discord-admin: https://discord.com/api/webhooks/for-test
