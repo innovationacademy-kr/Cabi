@@ -13,6 +13,7 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_OR_ADMIN;
 @Slf4j
 @Aspect
 @Component
+@Profile("prod")
 @RequiredArgsConstructor
 public class AdminApiLogAspect {
 
@@ -100,7 +102,7 @@ public class AdminApiLogAspect {
 		}
 		// 결과
 		String message = sb.append(responseString).toString();
-		
+
 		logParser.parseToDiscordAlarmMessage(message);
 		log.info(message);
 	}
