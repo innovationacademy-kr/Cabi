@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.log;
+package org.ftclub.cabinet.alarm;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,9 +16,9 @@ public class DiscordWebHookMessenger {
 		this.discordWebHookUrl = discordWebHookUrl;
 	}
 
-	public void sendMessage(String message) {
+	public void sendMessage(DiscordAlarmMessage message) {
 		Map<String, String> body = new HashMap<>();
-		body.put(DISCORD_WEBHOOK_MESSAGE_KEY, message);
+		body.put(DISCORD_WEBHOOK_MESSAGE_KEY, message.toString());
 
 		WebClient.create().post()
 				.uri(discordWebHookUrl)
