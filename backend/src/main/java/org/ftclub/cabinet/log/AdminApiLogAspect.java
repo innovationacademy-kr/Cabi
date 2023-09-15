@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.ftclub.cabinet.alarm.DiscordAlarmMessage;
+import org.ftclub.cabinet.alarm.DiscordWebHookMessenger;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.auth.domain.CookieManager;
@@ -40,6 +42,7 @@ public class AdminApiLogAspect {
 	private final TokenValidator tokenValidator;
 	private final JwtProperties jwtProperties;
 	private final LogParser logParser;
+	private final DiscordWebHookMessenger discordWebHookMessenger;
 
 	@AfterReturning(
 			pointcut = ADMIN_CUD_POINTCUT,
@@ -103,7 +106,8 @@ public class AdminApiLogAspect {
 		// 결과
 		String message = sb.append(responseString).toString();
 
-		logParser.parseToDiscordAlarmMessage(message);
+		DiscordAlarmMessage discordAlarmMessage = logParser.parseToDiscordAlarmMessage(message);
+		discordWebHookMessenger.sendMessage(discordAlarmMessage);
 		log.info(message);
 	}
 }
