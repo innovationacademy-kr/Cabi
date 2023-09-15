@@ -1,11 +1,8 @@
 package org.ftclub.cabinet.lent.service;
 
-import static org.ftclub.cabinet.exception.ExceptionStatus.ALL_BANNED_USER;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +54,8 @@ public class LentServiceImpl implements LentService {
 		// 대여 가능한 유저인지 확인
 		LentPolicyStatus userPolicyStatus = lentPolicy.verifyUserForLent(user, cabinet,
 				userActiveLentCount, userActiveBanList);
-		handlePolicyStatus(userPolicyStatus, userActiveBanList); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
+		handlePolicyStatus(userPolicyStatus,
+				userActiveBanList); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
 		List<LentHistory> cabinetActiveLentHistories = lentRepository.findAllActiveLentByCabinetId(
 				cabinetId);
 
@@ -65,7 +63,8 @@ public class LentServiceImpl implements LentService {
 		LentPolicyStatus cabinetPolicyStatus = lentPolicy.verifyCabinetForLent(cabinet,
 				cabinetActiveLentHistories,
 				now);
-		handlePolicyStatus(cabinetPolicyStatus, userActiveBanList); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
+		handlePolicyStatus(cabinetPolicyStatus,
+				userActiveBanList); // UserPolicyStatus 와 LentPolicyStatus 가 분리해야 하지않는가? 23/8/15
 
 		// 캐비넷 상태 변경
 		cabinet.specifyStatusByUserCount(cabinetActiveLentHistories.size() + 1);
@@ -124,6 +123,9 @@ public class LentServiceImpl implements LentService {
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
 		lentHistories.forEach(lentHistory -> lentHistory.endLent(LocalDateTime.now()));
+		userService.banUser(lentHistories.get(0).getUserId(), cabinet.getLentType(),
+				lentHistories.get(0).getStartedAt(),
+				lentHistories.get(0).getEndedAt(), lentHistories.get(0).getExpiredAt());
 		cabinet.specifyStatusByUserCount(0); // policy로 빼는게..?
 		cabinet.writeMemo("");
 		cabinet.writeTitle("");
@@ -137,6 +139,8 @@ public class LentServiceImpl implements LentService {
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
 		lentHistory.endLent(LocalDateTime.now());
+		userService.banUser(userId, cabinet.getLentType(), lentHistory.getStartedAt(),
+				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
 		cabinet.specifyStatusByUserCount(activeLentCount - 1); // policy로 빠질만한 부분인듯?
 		if (activeLentCount - 1 == 0) {
 			cabinet.writeMemo("");
@@ -210,7 +214,6 @@ public class LentServiceImpl implements LentService {
 
 	private void handleBannedUserResponse(LentPolicyStatus status, BanHistory banHistory) {
 		log.info("Called handleBannedUserResponse: {}", status);
-
 
 		LocalDateTime unbannedAt = banHistory.getUnbannedAt();
 		String unbannedTimeString = unbannedAt.format(
