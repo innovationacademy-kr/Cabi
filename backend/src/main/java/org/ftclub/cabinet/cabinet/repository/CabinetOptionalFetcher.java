@@ -49,11 +49,6 @@ public class CabinetOptionalFetcher {
 				}).collect(Collectors.toList());
 	}
 
-	public List<Cabinet> findCabinetByBuildingAndFloorWithLentHistoryAndUser(String building, Integer floor) {
-		log.info("Called findCabinetByBuildingAndFloorWithLentHistoryAndUser: {}, {}", building, floor);
-		return cabinetRepository.findCabinetByBuildingAndFloorWithLentHistoryAndUser(building, floor);
-	}
-
 	/**
 	 * 유저 ID로 사물함을 찾습니다.
 	 *
