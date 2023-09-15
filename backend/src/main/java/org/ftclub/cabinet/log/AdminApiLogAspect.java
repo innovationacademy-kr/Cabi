@@ -1,6 +1,12 @@
 package org.ftclub.cabinet.log;
 
+import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_ONLY;
+import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_OR_ADMIN;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.lang.reflect.Method;
+import java.util.Objects;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -22,13 +28,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
-import java.util.Objects;
-
-import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_ONLY;
-import static org.ftclub.cabinet.auth.domain.AuthLevel.USER_OR_ADMIN;
-
+/**
+ * 어드민 유저가 Get 요청을 제외한 API 호출 시 로그를 남기는 Aspect
+ */
 @Slf4j
 @Aspect
 @Component
@@ -44,8 +46,14 @@ public class AdminApiLogAspect {
 	private final LogParser logParser;
 	private final DiscordWebHookMessenger discordWebHookMessenger;
 
-	@AfterReturning(
-			pointcut = ADMIN_CUD_POINTCUT,
+	/**
+	 * 어드민 유저가 Get 요청을 제외한 API 호출 및 요청 정상 처리 시 로그를 남기는 메소드
+	 * @param joinPoint joinPoint 객체
+	 * @param authGuard 어드민 유저를 판단하기 위한 AuthGuard 어노테이션
+	 * @param ret API 호출의 응답 객체
+	 * @throws JsonProcessingException Discord WebHook 메시지를 JSON으로 변환하는 과정에서 발생할 수 있는 예외
+	 */
+	@AfterReturning(pointcut = ADMIN_CUD_POINTCUT,
 			returning = "ret", argNames = "joinPoint,authGuard,ret")
 	public void adminApiSuccessLog(JoinPoint joinPoint, AuthGuard authGuard, Object ret)
 			throws JsonProcessingException {
@@ -57,8 +65,14 @@ public class AdminApiLogAspect {
 		sendLogMessage(joinPoint, responseString);
 	}
 
-	@AfterThrowing(
-			pointcut = ADMIN_CUD_POINTCUT,
+	/**
+	 * 어드민 유저가 Get 요청을 제외한 API 호출 및 요청 실패(예외) 시 로그를 남기는 메소드
+	 * @param joinPoint joinPoint 객체
+	 * @param authGuard 어드민 유저를 판단하기 위한 AuthGuard 어노테이션
+	 * @param exception API 호출의 예외 객체
+	 * @throws JsonProcessingException Discord WebHook 메시지를 JSON으로 변환하는 과정에서 발생할 수 있는 예외
+	 */
+	@AfterThrowing(pointcut = ADMIN_CUD_POINTCUT,
 			throwing = "exception", argNames = "joinPoint,authGuard, exception")
 	public void adminApiThrowingLog(JoinPoint joinPoint, AuthGuard authGuard, Exception exception)
 			throws JsonProcessingException {
@@ -70,8 +84,13 @@ public class AdminApiLogAspect {
 		sendLogMessage(joinPoint, responseString);
 	}
 
-	private void sendLogMessage(JoinPoint joinPoint, String responseString)
-			throws JsonProcessingException {
+	/**
+	 * joinPoint 객체와 HttpServletRequest로부터 로그 메시지를 생성해서, Discord WebHook으로 전송하고 로그를 남기는 메소드
+	 * @param joinPoint joinPoint 객체
+	 * @param responseString API 호출의 결과를 저장한 문자열
+	 * @throws JsonProcessingException Discord WebHook 메시지를 JSON으로 변환하는 과정에서 발생할 수 있는 예외
+	 */
+	private void sendLogMessage(JoinPoint joinPoint, String responseString) throws JsonProcessingException {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
 
@@ -85,13 +104,13 @@ public class AdminApiLogAspect {
 		String[] parameterNames = discoverer.getParameterNames(method);
 
 		StringBuilder sb = new StringBuilder();
-		// 누가
+		// 어드민 사용자
 		sb.append(name).append("#");
-		// 어떤 메소드를
+		// 메소드
 		sb.append(className).append("#")
 				.append(request.getMethod()).append("#")
 				.append(methodName).append("#");
-		// 어떤 파라미터로
+		// 파라미터
 		if (Objects.nonNull(parameterNames)) {
 			for (int i = 0; i < args.length; i++) {
 				sb.append("{").append(parameterNames[i]).append("=");
