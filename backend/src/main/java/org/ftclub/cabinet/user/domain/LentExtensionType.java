@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.lent_extension.domain;
+package org.ftclub.cabinet.user.domain;
 
 /**
  * 연장권 종류

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.lent_extension.domain;
+package org.ftclub.cabinet.user.domain;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.user.domain.User;
 
 @Entity
 @Table(name = "LENT_EXTENSION")
