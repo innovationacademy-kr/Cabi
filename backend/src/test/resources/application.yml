@@ -76,4 +76,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
+            
+webhook:
+  discord-admin: https://discord.com/api/webhooks/for-test
