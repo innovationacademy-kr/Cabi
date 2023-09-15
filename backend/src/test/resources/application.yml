@@ -8,25 +8,17 @@ spring:
     port: 2424
 
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:;MODE=MySQL
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3310/test_db
     username: root
     password: test_password
-
-  sql:
-    init:
-      mode: embedded
 
   jpa:
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
-      hibernate:
-        globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-        format_sql: true
-    defer-datasource-initialization: true
+      globally_quoted_identifiers: true
 
   cabinet:
     lent:
@@ -56,7 +48,6 @@ spring:
       no-risk-of-blackhole: 0 42 1 1 * * # 매월 1일 1시 42분 0초
 
   mail:
-    display-sender-name: "42CABI"
     soonoverdue:
       term: -1
       subject: "42CABI 사물함 연체 예정 알림"
@@ -76,4 +67,5 @@ spring:
           auth: true
           starttls:
             enable: true
-
+webhook:
+  discord-admin: https://discord.com/api/webhooks/for-test
