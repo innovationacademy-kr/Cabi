@@ -5,7 +5,10 @@ import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
+import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.UserRole;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 public interface UserService {
 
@@ -67,4 +70,12 @@ public interface UserService {
 	 * @return {@link List<UserBlackholeInfoDto>}
 	 */
 	List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo();
+
+	List<LentExtension> getLentExtensionByUserId(Long userId);
+
+	List<LentExtension> getLentExtensionNotExpiredByUserId(Long userId);
+
+	Page<LentExtension> getAllLentExtension(PageRequest pageable);
+
+	Page<LentExtension> getAllActiveLentExtension(PageRequest pageable);
 }

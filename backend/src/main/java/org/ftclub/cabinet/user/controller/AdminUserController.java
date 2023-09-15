@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ClubUserListDto;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
@@ -113,5 +114,21 @@ public class AdminUserController {
 		log.info("Called updateClub");
 		String clubName = body.get("clubName");
 		userFacadeService.updateClubUser(clubId, clubName);
+	}
+
+	@GetMapping("/lent-extension")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public LentExtensionPaginationDto getAllLentExtension(@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		log.info("Called getAllLentExtension");
+		return userFacadeService.getAllLentExtension(page, size);
+	}
+
+	@GetMapping("/lent-extension/active")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public LentExtensionPaginationDto getAllActiveLentExtension(@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size) {
+		log.info("Called getAllActiveLentExtension");
+		return userFacadeService.getAllActiveLentExtension(page, size);
 	}
 }

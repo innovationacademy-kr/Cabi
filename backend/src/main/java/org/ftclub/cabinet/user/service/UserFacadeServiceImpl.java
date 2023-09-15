@@ -12,6 +12,8 @@ import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.ClubUserListDto;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
+import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -32,6 +34,7 @@ import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -236,10 +239,42 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		userService.deleteClubUser(userId, LocalDateTime.now());
 	}
 
-
 	@Override
 	public void updateClubUser(Long clubId, String clubName) {
 		log.debug("Called updateClubUser");
 		userService.updateClubUser(clubId, clubName);
+	}
+	@Override
+	public LentExtensionPaginationDto getAllLentExtension(Integer page, Integer size) {
+		PageRequest pageable = PageRequest.of(page, size, Sort.by("expiredAt"));
+		List<LentExtensionResponseDto> result = userService.getAllLentExtension(pageable).stream()
+				.map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
+		return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
+	}
+
+	@Override
+	public LentExtensionPaginationDto getAllActiveLentExtension(Integer page, Integer size) {
+		PageRequest pageable = PageRequest.of(page, size, Sort.by("expiredAt"));
+		List<LentExtensionResponseDto> result = userService.getAllActiveLentExtension(pageable)
+				.stream().map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
+		return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
+	}
+
+	@Override
+	public LentExtensionPaginationDto getMyLentExtension(UserSessionDto userSessionDto) {
+		log.debug("Called getMyLentExtension");
+		List<LentExtensionResponseDto> result =
+				userService.getLentExtensionByUserId(userSessionDto.getUserId())
+					.stream().map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
+		return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
+	}
+
+	@Override
+	public LentExtensionPaginationDto getMyActiveLentExtension(UserSessionDto userSessionDto) {
+		log.debug("Called getMyActiveLentExtension");
+		List<LentExtensionResponseDto> result =
+				userService.getLentExtensionNotExpiredByUserId(userSessionDto.getUserId())
+					.stream().map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
+		return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
 	}
 }

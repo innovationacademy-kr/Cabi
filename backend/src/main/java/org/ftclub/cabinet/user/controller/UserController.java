@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.UserSession;
@@ -34,5 +35,19 @@ public class UserController {
 	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
 		log.info("Called getMyProfile: {}", userSessionDto.getName());
 		return userFacadeService.getMyProfile(userSessionDto);
+	}
+
+	@GetMapping("/me/lent-extensions")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public LentExtensionPaginationDto getMyLentExtension(@UserSession UserSessionDto userSessionDto) {
+		log.info("Called getMyLentExtension: {}", userSessionDto.getName());
+		return userFacadeService.getMyLentExtension(userSessionDto);
+	}
+
+	@GetMapping("/me/lent-extensions/active")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public LentExtensionPaginationDto getMyActiveLentExtension(@UserSession UserSessionDto userSessionDto) {
+		log.info("Called getMyActiveLentExtension: {}", userSessionDto.getName());
+		return userFacadeService.getMyActiveLentExtension(userSessionDto);
 	}
 }
