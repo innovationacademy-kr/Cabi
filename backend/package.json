@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "artillery": "^2.0.0-36"
+  }
+}
