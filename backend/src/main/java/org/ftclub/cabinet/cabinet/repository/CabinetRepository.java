@@ -97,19 +97,16 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);
 
-<<<<<<< Updated upstream
-
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
 	List<Cabinet> findAllByBuildingAndFloor(@Param("building") String building, @Param("floor") Integer floor);
-=======
+
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"LEFT JOIN FETCH c.lentHistories lh " +
 			"LEFT JOIN FETCH lh.user u " +
 			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor ")
 	List<Cabinet> findCabinetByBuildingAndFloorWithLentHistoryAndUser(String building, Integer floor);
->>>>>>> Stashed changes
 }
