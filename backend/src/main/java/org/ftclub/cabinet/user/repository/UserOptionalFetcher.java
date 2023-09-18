@@ -39,6 +39,11 @@ public class UserOptionalFetcher {
 		return userRepository.findAll();
 	}
 
+	public List<User> findAllActiveUsers() {
+		log.debug("Called findAllActiveUsers");
+		return userRepository.findAllByDeletedAtIsNull();
+	}
+
 	/**
 	 * 유저가 존재하는지 확인하고 존재하지 않으면 null을 반환합니다.
 	 *

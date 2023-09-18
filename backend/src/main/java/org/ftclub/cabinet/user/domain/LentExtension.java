@@ -35,7 +35,7 @@ public class LentExtension {
 	private int extensionPeriod;
 	@Column(name = "expired_at", nullable = false)
 	private LocalDateTime expiredAt;
-	@Column(name = "lent_extension_type")
+	@Column(name = "type")
 	private LentExtensionType lentExtensionType;
 
 
@@ -43,4 +43,18 @@ public class LentExtension {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
+	protected LentExtension(String name, int extensionPeriod, LocalDateTime expiredAt,
+			LentExtensionType lentExtensionType) {
+		this.name = name;
+		this.extensionPeriod = extensionPeriod;
+		this.expiredAt = expiredAt;
+		this.lentExtensionType = lentExtensionType;
+	}
+
+	public static LentExtension of(String name, int extensionPeriod, LocalDateTime expiredAt,
+			LentExtensionType lentExtensionType) {
+		LentExtension lentExtension = new LentExtension(name, extensionPeriod, expiredAt,
+				lentExtensionType);
+		return lentExtension;
+	}
 }

@@ -78,4 +78,6 @@ public interface UserService {
 	Page<LentExtension> getAllLentExtension(PageRequest pageable);
 
 	Page<LentExtension> getAllActiveLentExtension(PageRequest pageable);
+
+	public void issueLentExtension();
 }

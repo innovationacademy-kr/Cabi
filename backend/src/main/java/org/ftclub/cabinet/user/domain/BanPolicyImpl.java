@@ -25,25 +25,25 @@ public class BanPolicyImpl implements BanPolicy {
 		if (checkAlreadyExpired(endedAt, expiredAt)) {
 			return BanType.ALL;
 		}
-		if (lentType == LentType.SHARE) {
-			Long dateDiff = DateUtil.calculateTwoDateDiffAbs(startAt, endedAt);
-			if (dateDiff < cabinetProperties.getPenaltyDayShare()) {
-				return BanType.SHARE;
-			}
-		}
+		//share BAN 비활성화
+//		if (lentType == LentType.SHARE) {
+//			Long dateDiff = DateUtil.calculateTwoDateDiffAbs(startAt, endedAt);
+//			if (dateDiff < cabinetProperties.getPenaltyDayShare()) {
+//				return BanType.SHARE;
+//			}
+//		}
 		return BanType.NONE;
 	}
 
 	@Override
-	public LocalDateTime getBanDate(BanType banType, LocalDateTime endedAt, LocalDateTime expiredAt, Long userId) {
+	public LocalDateTime getBanDate(BanType banType, LocalDateTime endedAt, LocalDateTime expiredAt,
+			Long userId) {
 		log.debug("Called getBanDate");
-		if (banType == BanType.SHARE) {
-			return endedAt.plusDays(cabinetProperties.getPenaltyDayShare());
-		} else {
-			int currentBanDays = DateUtil.calculateTwoDateDiffAbs(endedAt, expiredAt).intValue();
-			int accumulateBanDays = getAccumulateBanDaysByUserId(userId).intValue();
-			return endedAt.plusDays(currentBanDays + accumulateBanDays);
-		}
+		Double currentBanDays = DateUtil.calculateTwoDateDiffCeil(expiredAt, endedAt)
+				.doubleValue();
+		Double squaredBanDays = Math.pow(currentBanDays, 2.0);
+		System.out.println("squaredBanDays = " + squaredBanDays);
+		return endedAt.plusDays(squaredBanDays.longValue());
 	}
 
 	@Override

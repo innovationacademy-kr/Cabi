@@ -10,17 +10,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
+import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
+import org.ftclub.cabinet.occupiedtime.UserMonthDataDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanPolicy;
 import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.user.domain.LentExtensionType;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
@@ -45,6 +49,8 @@ public class UserServiceImpl implements UserService {
 	private final UserOptionalFetcher userOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
 	private final LentExtensionRepository lentExtensionRepository;
+	private final OccupiedTimeManager occupiedTimeManager;
+	private final CabinetProperties cabinetProperties;
 
 	@Override
 	public boolean checkUserExists(String email) {
@@ -197,7 +203,7 @@ public class UserServiceImpl implements UserService {
 		User clubUser = userOptionalFetcher.getClubUser(clubId);
 		clubUser.changeName(clubName);
 	}
-	
+
 	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
 		log.info("Called getAllRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
@@ -237,5 +243,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<LentExtension> getLentExtensionNotExpiredByUserId(Long userId) {
 		return lentExtensionRepository.findAllByUserIdNotExpired(userId);
+	}
+
+	@Override
+	public void issueLentExtension() {
+		log.debug("Called issueLentExtension");
+		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.metLimitTimeUser(
+				occupiedTimeManager.getUserLastMonthOccupiedTime());
+		LocalDateTime now = LocalDateTime.now();
+		userMonthDataDtos.stream().forEach(userMonthDataDto -> {
+			LentExtension lentExtension = LentExtension.of("lentExtension",
+					cabinetProperties.getLentExtendTerm(),
+					LocalDateTime.of(now.getYear(), now.getMonth(),
+							now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
+					LentExtensionType.ALL);
+			lentExtensionRepository.save(lentExtension);
+		});
 	}
 }
