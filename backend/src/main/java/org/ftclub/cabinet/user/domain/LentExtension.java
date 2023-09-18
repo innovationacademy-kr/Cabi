@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,23 +39,27 @@ public class LentExtension {
 	@Column(name = "type")
 	private LentExtensionType lentExtensionType;
 
-
 	@JoinColumn(name = "USER_ID", insertable = false, updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
+	@NotNull
+	@Column(name = "USER_ID", nullable = false)
+	private Long userId;
+
 	protected LentExtension(String name, int extensionPeriod, LocalDateTime expiredAt,
-			LentExtensionType lentExtensionType) {
+			LentExtensionType lentExtensionType, Long userId) {
 		this.name = name;
 		this.extensionPeriod = extensionPeriod;
 		this.expiredAt = expiredAt;
 		this.lentExtensionType = lentExtensionType;
+		this.userId = userId;
 	}
 
 	public static LentExtension of(String name, int extensionPeriod, LocalDateTime expiredAt,
-			LentExtensionType lentExtensionType) {
+			LentExtensionType lentExtensionType, Long userId) {
 		LentExtension lentExtension = new LentExtension(name, extensionPeriod, expiredAt,
-				lentExtensionType);
+				lentExtensionType, userId);
 		return lentExtension;
 	}
 }

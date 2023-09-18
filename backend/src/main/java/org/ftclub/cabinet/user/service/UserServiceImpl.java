@@ -256,7 +256,8 @@ public class UserServiceImpl implements UserService {
 					cabinetProperties.getLentExtendTerm(),
 					LocalDateTime.of(now.getYear(), now.getMonth(),
 							now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
-					LentExtensionType.ALL);
+					LentExtensionType.ALL,
+					userOptionalFetcher.findUserByName(userMonthDataDto.getLogin()).getUserId());
 			lentExtensionRepository.save(lentExtension);
 		});
 	}
