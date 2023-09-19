@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,4 +34,9 @@ public interface LentExtensionRepository extends JpaRepository<LentExtension, Lo
 			"AND le.expiredAt > CURRENT_TIMESTAMP " +
 			"ORDER BY le.expiredAt ASC")
 	List<LentExtension> findAllByUserIdNotExpired(Long userId);
+
+	@Query("SELECT le " +
+			"FROM LentExtension le " +
+			"WHERE le.user.userId =:userId ")
+	Optional<LentExtension> findOneByUserId(Long userId);
 }

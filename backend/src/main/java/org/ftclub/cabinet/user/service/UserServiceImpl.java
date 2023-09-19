@@ -17,14 +17,11 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.occupiedtime.UserMonthDataDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanPolicy;
 import org.ftclub.cabinet.user.domain.BanType;
-import org.ftclub.cabinet.user.domain.LentExtension;
-import org.ftclub.cabinet.user.domain.LentExtensionType;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
@@ -32,9 +29,6 @@ import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -224,49 +218,5 @@ public class UserServiceImpl implements UserService {
 				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
-	}
-
-	@Override
-	public Page<LentExtension> getAllLentExtension(PageRequest pageable) {
-		return lentExtensionRepository.findAll(pageable);
-	}
-
-	@Override
-	public Page<LentExtension> getAllActiveLentExtension(PageRequest pageable) {
-		return lentExtensionRepository.findAllNotExpired(pageable);
-	}
-
-	@Override
-	public List<LentExtension> getLentExtensionByUserId(Long userId) {
-		return lentExtensionRepository.findAllByUserId(userId);
-	}
-
-	@Override
-	public List<LentExtension> getLentExtensionNotExpiredByUserId(Long userId) {
-		return lentExtensionRepository.findAllByUserIdNotExpired(userId);
-	}
-
-	@Override
-	public void issueLentExtension() {
-		log.debug("Called issueLentExtension");
-		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.metLimitTimeUser(
-				occupiedTimeManager.getUserLastMonthOccupiedTime());
-		LocalDateTime now = LocalDateTime.now();
-		userMonthDataDtos.stream().forEach(userMonthDataDto -> {
-			LentExtension lentExtension = LentExtension.of("lentExtension",
-					cabinetProperties.getLentExtendTerm(),
-					LocalDateTime.of(now.getYear(), now.getMonth(),
-							now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
-					LentExtensionType.ALL,
-					userOptionalFetcher.findUserByName(userMonthDataDto.getLogin()).getUserId());
-			lentExtensionRepository.save(lentExtension);
-		});
-	}
-
-	@Override
-	@Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
-	public void deleteLentExtension() {
-		log.debug("Called deleteExtension");
-		lentExtensionRepository.deleteAll();
 	}
 }

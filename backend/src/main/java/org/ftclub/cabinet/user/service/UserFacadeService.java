@@ -196,4 +196,6 @@ public interface UserFacadeService {
 	LentExtensionPaginationDto getMyLentExtension(UserSessionDto userSessionDto);
 
 	LentExtensionPaginationDto getMyActiveLentExtension(UserSessionDto userSessionDto);
+
+	void useLentExtension(UserSessionDto userSessionDto);
 }

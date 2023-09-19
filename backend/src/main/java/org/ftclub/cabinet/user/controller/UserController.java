@@ -8,6 +8,7 @@ import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.UserSession;
+import org.ftclub.cabinet.user.service.LentExtensionService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ public class UserController {
 
 	private final UserFacadeService userFacadeService;
 	private final UserService userService;
+	private final LentExtensionService lentExtensionService;
 
 	/**
 	 * 현재 로그인한 유저의 프로필을 반환합니다. 전체 사물함 뷰에서 본인의 사물함을 표시하기 위해 사용됩니다.
@@ -55,10 +57,18 @@ public class UserController {
 		return userFacadeService.getMyActiveLentExtension(userSessionDto);
 	}
 
+	@GetMapping("/me/lent-extensions/use")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void useLentExtension(
+			@UserSession UserSessionDto userSessionDto) {
+		log.info("Called useLentExtension");
+		userFacadeService.useLentExtension(userSessionDto);
+	}
+
 //	@GetMapping("/me/lent-extensions/test")
 //	public void testIssueLentExtension() {
 //		log.info("Called testIssueLentExtension");
-//		userService.issueLentExtension();
-//		userService.deleteLentExtension();
+//		lentExtensionService.issueLentExtension();
+////		lentExtensionService.deleteLentExtension();
 //	}
 }
