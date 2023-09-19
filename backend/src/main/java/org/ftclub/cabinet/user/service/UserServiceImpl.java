@@ -34,6 +34,7 @@ import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -260,5 +261,12 @@ public class UserServiceImpl implements UserService {
 					userOptionalFetcher.findUserByName(userMonthDataDto.getLogin()).getUserId());
 			lentExtensionRepository.save(lentExtension);
 		});
+	}
+
+	@Override
+	@Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
+	public void deleteLentExtension() {
+		log.debug("Called deleteExtension");
+		lentExtensionRepository.deleteAll();
 	}
 }

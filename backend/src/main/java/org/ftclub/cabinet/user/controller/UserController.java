@@ -55,9 +55,10 @@ public class UserController {
 		return userFacadeService.getMyActiveLentExtension(userSessionDto);
 	}
 
-	@GetMapping("/me/lent-extensions/test")
-	public void testIssueLentExtension() {
-		log.info("Called testIssueLentExtension");
-		userService.issueLentExtension();
-	}
+//	@GetMapping("/me/lent-extensions/test")
+//	public void testIssueLentExtension() {
+//		log.info("Called testIssueLentExtension");
+//		userService.issueLentExtension();
+//		userService.deleteLentExtension();
+//	}
 }
