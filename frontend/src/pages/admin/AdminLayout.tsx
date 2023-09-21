@@ -54,7 +54,7 @@ const Layout = (): JSX.Element => {
         <LoadingAnimation />
       ) : (
         <WrapperStyled>
-          <LeftNav isAdmin={true} isVisible={isMainPage} />
+          <LeftNav isAdmin={true} isVisible={isMainPage} isProfile={false} />
           <MainStyled>
             <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
