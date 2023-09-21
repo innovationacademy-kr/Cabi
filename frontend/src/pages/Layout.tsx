@@ -29,6 +29,7 @@ const Layout = (): JSX.Element => {
   const isRootPath: boolean = location.pathname === "/";
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
+  const isProfilePage: boolean = location.pathname.includes("profile");
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -77,7 +78,7 @@ const Layout = (): JSX.Element => {
         <LoadingAnimation />
       ) : (
         <WrapperStyled>
-          <LeftNav isVisible={isMainPage} />
+          <LeftNav isVisible={isMainPage} isProfile={isProfilePage} />
           <MainStyled>
             <MenuBgStyled onClick={handleClickBg} id="menuBg" />
             <Outlet />
