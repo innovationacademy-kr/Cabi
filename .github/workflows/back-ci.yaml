@@ -17,6 +17,20 @@ jobs:
         with:
           java-version: "11"
           distribution: "corretto"
+      - name: Setup SSH key to access private submodule
+        run: |
+          mkdir -p ~/.ssh
+          echo '${{ secrets.CONFIG_DEV_PRIVATE_KEY }}' | base64 -d > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+      # 리포지토리로 체크아웃을 진행하고 서브모듈을 참조하여 clone한다.
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodule: true
+      # submodule의 내용을 update한다.
+      - name: Update config submodule
+        run: |
+          git submodule update --init
 
       - name: Application YML 생성
         run: |
@@ -41,7 +55,7 @@ jobs:
           cd backend
           mkdir -p build/generated-snippets/
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew build -x test
         shell: bash
 
       - name: Configure AWS credentials
