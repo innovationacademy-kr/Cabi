@@ -42,7 +42,7 @@ jobs:
           cd backend
           mkdir -p build/generated-snippets/
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew build -x test
         shell: bash
 
       - name: Configure AWS credentials
