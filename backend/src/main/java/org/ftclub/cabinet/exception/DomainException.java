@@ -12,4 +12,9 @@ public class DomainException extends RuntimeException{
 	public DomainException(ExceptionStatus status) {
 		this.status = status;
 	}
+
+	@Override
+	public String getMessage() {
+		return status.getMessage();
+	}
 }

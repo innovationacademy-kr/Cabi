@@ -97,7 +97,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
 	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);
 
-
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
