@@ -5,12 +5,11 @@ import LeftSectionNavContainer from "@/components/LeftNav/LeftSectionNav/LeftSec
 const LeftNav: React.FC<{
   isVisible: boolean;
   isAdmin?: boolean;
-  isProfile: boolean;
-}> = ({ isAdmin, isVisible, isProfile }) => {
+}> = ({ isAdmin, isVisible }) => {
   return (
     <LeftNavWrapStyled id="leftNavWrap">
       <LeftMainNavContainer isAdmin={isAdmin} />
-      <LeftSectionNavContainer isVisible={isVisible} isProfile={isProfile} />
+      <LeftSectionNavContainer isVisible={isVisible} />
     </LeftNavWrapStyled>
   );
 };

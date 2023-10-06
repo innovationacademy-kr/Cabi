@@ -5,13 +5,7 @@ import { currentFloorSectionState } from "@/recoil/selectors";
 import LeftSectionNav from "@/components/LeftNav/LeftSectionNav/LeftSectionNav";
 import useMenu from "@/hooks/useMenu";
 
-const LeftSectionNavContainer = ({
-  isVisible,
-  isProfile,
-}: {
-  isVisible: boolean;
-  isProfile: boolean;
-}) => {
+const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
   const floorSection = useRecoilValue<Array<string>>(currentFloorSectionState);
   const [currentFloorSection, setCurrentFloorSection] = useRecoilState<string>(
     currentSectionNameState
@@ -19,6 +13,7 @@ const LeftSectionNavContainer = ({
   const navigator = useNavigate();
   const { pathname } = useLocation();
   const { closeLeftNav } = useMenu();
+  const isProfilePage: boolean = location.pathname.includes("profile");
 
   const onClickSection = (section: string) => {
     closeLeftNav();
@@ -55,7 +50,7 @@ const LeftSectionNavContainer = ({
     <LeftSectionNav
       pathname={pathname}
       isVisible={isVisible}
-      isProfile={isProfile}
+      isProfile={isProfilePage}
       currentFloorSection={currentFloorSection}
       floorSection={floorSection}
       onClickSection={onClickSection}
