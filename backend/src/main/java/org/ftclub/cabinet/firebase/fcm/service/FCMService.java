@@ -47,11 +47,10 @@ public class FCMService {
 		log.info(
 				"called sendOverdueMessage token = {}, name = {}, daysLeftFromExpireDate = {}",
 				token, name, daysLeftFromExpireDate);
-		System.out.println(domainProperties.getFeHost() + "/" + ICON_FILE_PATH);
 		Message message = Message.builder()
 				.putData("title", "<CABI> 연체 알림")
 				.putData("body", name + "님, 대여한 사물함이 " + Math.abs(daysLeftFromExpireDate) + "일 연체되었습니다.")
-				.putData("icon", domainProperties.getFeHost() + "/" + ICON_FILE_PATH)
+				.putData("icon", domainProperties.getFeHost() + ICON_FILE_PATH)
 				.putData("click_action", domainProperties.getFeHost())
 				.setToken(token)
 				.build();
@@ -70,7 +69,7 @@ public class FCMService {
 		Message message = Message.builder()
 				.putData("title", "<CABI> 연체 예정 알림")
 				.putData("body", "대여한 사물함이 " + daysLeftFromExpireDate + "일 후 연체됩니다.")
-				.putData("icon", domainProperties.getFeHost() + "/" + ICON_FILE_PATH)
+				.putData("icon", domainProperties.getFeHost() + ICON_FILE_PATH)
 				.putData("click_action", domainProperties.getFeHost())
 				.setToken(token)
 				.build();
