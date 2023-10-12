@@ -5,6 +5,7 @@ import com.google.firebase.messaging.Message;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.redis.service.RedisService;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueType;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FCMService {
 	private final RedisService redisService;
+	private final DomainProperties domainProperties;
+	private static final String ICON_FILE_PATH = "/src/assets/images/logo.svg";
 
 
 	public void sendPushMessage(String name, OverdueType overdueType, Long daysLeftFromExpireDate) {
@@ -44,9 +47,12 @@ public class FCMService {
 		log.info(
 				"called sendOverdueMessage token = {}, name = {}, daysLeftFromExpireDate = {}",
 				token, name, daysLeftFromExpireDate);
+		System.out.println(domainProperties.getFeHost() + "/" + ICON_FILE_PATH);
 		Message message = Message.builder()
 				.putData("title", "<CABI> 연체 알림")
-				.putData("content", name + "님, 대여한 사물함이 " + Math.abs(daysLeftFromExpireDate) + "일 연체되었습니다.")
+				.putData("body", name + "님, 대여한 사물함이 " + Math.abs(daysLeftFromExpireDate) + "일 연체되었습니다.")
+				.putData("icon", domainProperties.getFeHost() + "/" + ICON_FILE_PATH)
+				.putData("click_action", domainProperties.getFeHost())
 				.setToken(token)
 				.build();
 
@@ -63,7 +69,9 @@ public class FCMService {
 		}
 		Message message = Message.builder()
 				.putData("title", "<CABI> 연체 예정 알림")
-				.putData("content", "대여한 사물함이 " + daysLeftFromExpireDate + "일 후 연체됩니다.")
+				.putData("body", "대여한 사물함이 " + daysLeftFromExpireDate + "일 후 연체됩니다.")
+				.putData("icon", domainProperties.getFeHost() + "/" + ICON_FILE_PATH)
+				.putData("click_action", domainProperties.getFeHost())
 				.setToken(token)
 				.build();
 
