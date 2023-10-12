@@ -39,10 +39,10 @@ jobs:
       #   run: npm run lint --prefix frontend
       - name: Dev env 파일 생성
         if: ${{ github.ref == 'refs/heads/dev' }}
-        run: echo ./config/frontend/dev.env > ./frontend/.env
+        run: cat ./config/frontend/dev.env > ./frontend/.env
       - name: Main env 파일 생성
         if: ${{ github.ref == 'refs/heads/main' }}
-        run: echo ./config/frontend/main.env > ./frontend/.env
+        run: cat ./config/frontend/main.env > ./frontend/.env
       - name: 빌드 체크
         run: npm run build --prefix frontend
       # - name: 단위 테스트 체크
