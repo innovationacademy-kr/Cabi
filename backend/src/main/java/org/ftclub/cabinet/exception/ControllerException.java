@@ -14,4 +14,9 @@ public class ControllerException extends RuntimeException {
     public ControllerException(ExceptionStatus status) {
         this.status = status;
     }
+
+    @Override
+    public String getMessage() {
+    	return status.getMessage();
+    }
 }
