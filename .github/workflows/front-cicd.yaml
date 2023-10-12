@@ -9,6 +9,11 @@ jobs:
   frontend-CI:
     runs-on: ubuntu-latest
     steps:
+      - name: Make ssh file
+        run: |
+          mkdir -p ~/.ssh
+          echo '${{ secrets.SSH_CONFIG }}' | base64 -d > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
       - name: 체크아웃
         uses: actions/checkout@v2
         with:
