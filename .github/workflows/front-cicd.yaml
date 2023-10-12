@@ -17,7 +17,7 @@ jobs:
       - name: 체크아웃
         uses: actions/checkout@v3
         with:
-          submodules: true
+          submodule: true
       - name: 서브모듈 업데이트
         run: |
           git submodule update --init config
