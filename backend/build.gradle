@@ -96,6 +96,29 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
+tasks.register('copyMainConfig', Copy) {
+    from '../config/backend/src/main/resources'
+    into 'src/main/resources'
+}
+
+tasks.register('copyTestConfig', Copy) {
+    from '../config/backend/src/main/resources/test/resources'
+    into 'src/test/resources'
+}
+
+tasks.named('processResources') {
+    dependsOn 'copyMainConfig'
+}
+
+tasks.named('processTestResources') {
+    dependsOn 'copyTestConfig'
+}
+
+tasks.named('compileJava') {
+    dependsOn 'compileQuerydsl'
+}
+
+
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
