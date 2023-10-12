@@ -13,14 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Disabled
 class CabinetApplicationTests {
 
-	@PersistenceContext
-	EntityManager em;
+    @PersistenceContext
+    EntityManager em;
 
-	@Test
-	void healthcheck() {
-		em.createQuery("select c from Cabinet c", Cabinet.class)
-				.getResultList()
-				.forEach(System.out::println);
-	}
+    @Test
+    void healthcheck() {
+        em.createQuery("select c from Cabinet c", Cabinet.class)
+                .getResultList()
+                .forEach(System.out::println);
+    }
 
 }
