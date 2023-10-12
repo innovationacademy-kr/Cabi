@@ -21,6 +21,7 @@ services:
       - pinpoint-agent
 
   redis:
+    container_name: "redis"
     image: redis:latest
     restart: always
     ports:
