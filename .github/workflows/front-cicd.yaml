@@ -15,7 +15,7 @@ jobs:
           echo '${{ secrets.SSH_CONFIG }}' | base64 -d > ~/.ssh/id_rsa
           chmod 400 ~/.ssh/id_rsa
       - name: 체크아웃
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
       - name: 서브모듈 업데이트
