@@ -20,10 +20,10 @@ public class FCMTestController {
 	private final RedisService redisService;
 	private final FCMService fcmService;
 
-	@PostMapping("test/{token}")
-	public void test(@PathVariable("token") String token) {
-		log.info("called test token = {}", token);
-		redisService.save("sichoi", token, Duration.ofDays(1));
+	@PostMapping("test/{name}/{token}")
+	public void test(@PathVariable("name") String name, @PathVariable("token") String token) {
+		log.info("called test, name: {}, token: {}", name, token);
+		redisService.save(name, token, Duration.ofDays(1));
 	}
 
 	@PostMapping("test2/{name}")
