@@ -8,17 +8,20 @@ import org.springframework.data.domain.PageRequest;
 
 public interface LentExtensionService {
 
-	List<LentExtension> getLentExtensionByUserId(Long userId);
+    List<LentExtension> getLentExtensionByUserId(Long userId);
 
-	List<LentExtension> getLentExtensionNotExpiredByUserId(Long userId);
+    List<LentExtension> getLentExtensionNotExpiredByUserId(Long userId);
 
-	Page<LentExtension> getAllLentExtension(PageRequest pageable);
+    Page<LentExtension> getAllLentExtension(PageRequest pageable);
 
-	Page<LentExtension> getAllActiveLentExtension(PageRequest pageable);
+    Page<LentExtension> getAllActiveLentExtension(PageRequest pageable);
 
-	public void issueLentExtension();
+    void issueLentExtension();
 
-	public void deleteLentExtension();
+    void deleteLentExtension();
 
-	public void useLentExtension(UserSessionDto userSessionDto);
+    void useLentExtension(UserSessionDto userSessionDto);
+
+    void assignLentExtension(String username);
+
 }
