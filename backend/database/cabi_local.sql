@@ -89,6 +89,7 @@ CREATE TABLE `cabinet` (
   `title` varchar(64) DEFAULT NULL,
   `memo` varchar(64) DEFAULT NULL,
   `version` bigint(20) DEFAULT 1,
+--   'reserved_lent_type' varchar(32) DEFAULT NULL,
   PRIMARY KEY (`cabinet_id`),
   KEY `FKah76pjwfflx2q114ixtihoa3g` (`cabinet_place_id`),
   CONSTRAINT `FKah76pjwfflx2q114ixtihoa3g` FOREIGN KEY (`cabinet_place_id`) REFERENCES `cabinet_place` (`cabinet_place_id`)
