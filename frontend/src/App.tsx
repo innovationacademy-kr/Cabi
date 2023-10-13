@@ -7,7 +7,9 @@ import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import ProfilePage from "./pages/ProfilePage";
 import "./firebase-messaging-sw"
+
 
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
@@ -29,7 +31,8 @@ function App(): React.ReactElement {
             <Route path="login" element={<LoginPage />} />
             <Route path="home" element={<HomePage />} />
             <Route path="main" element={<MainPage />} />
-            <Route path="log" element={<LogPage />} />
+            <Route path="profile/log" element={<LogPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
