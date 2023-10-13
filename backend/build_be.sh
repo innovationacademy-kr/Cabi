@@ -36,7 +36,7 @@ fi
 echo -en $CYAN
 if [ "$arg" == "build" ] || [ "$arg" == "re" ] || [ "$arg" == "all" ]; then
     echo "Build with Gradle"
-    ./gradlew clean build -x test
+    ./gradlew build -x test
 fi
 
 echo -en $CYAN
