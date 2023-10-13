@@ -19,6 +19,20 @@ services:
       - pinpoint
     depends_on:
       - pinpoint-agent
+      - redis
+
+  redis:
+    container_name: "redis"
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      timeout: 20s
+      retries: 10
+    networks:
+      - pinpoint
 
   pinpoint-agent:
     build:
