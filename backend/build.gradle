@@ -19,6 +19,7 @@ sourceCompatibility = '11'
 
 ext {
     snippetsDir = file('build/generated-snippets')
+    snippetsDir.mkdirs()
     outputDocs = file('src/main/resources/static/docs')
 }
 
