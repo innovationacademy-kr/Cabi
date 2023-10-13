@@ -9,8 +9,19 @@ jobs:
   frontend-CI:
     runs-on: ubuntu-latest
     steps:
+      - name: Make ssh file
+        run: |
+          mkdir -p ~/.ssh
+          echo '${{ secrets.SSH_CONFIG }}' | base64 -d > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
       - name: 체크아웃
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          submodule: true
+      - name: 서브모듈 업데이트
+        run: |
+          git submodule update --init config
+
       - name: Node.js 16.x Version
         uses: actions/setup-node@v1
         with:
@@ -28,10 +39,10 @@ jobs:
       #   run: npm run lint --prefix frontend
       - name: Dev env 파일 생성
         if: ${{ github.ref == 'refs/heads/dev' }}
-        run: echo "${{ secrets.FRONTEND_DEV_ENV }}" | base64 --decode > frontend/.env
+        run: cat ./config/frontend/dev.env > ./frontend/.env
       - name: Main env 파일 생성
         if: ${{ github.ref == 'refs/heads/main' }}
-        run: echo "${{ secrets.FRONTEND_MAIN_ENV }}" | base64 --decode > frontend/.env
+        run: cat ./config/frontend/main.env > ./frontend/.env
       - name: 빌드 체크
         run: npm run build --prefix frontend
       # - name: 단위 테스트 체크
