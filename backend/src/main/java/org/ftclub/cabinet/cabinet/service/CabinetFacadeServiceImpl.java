@@ -1,5 +1,12 @@
 package org.ftclub.cabinet.cabinet.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -7,7 +14,21 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
+import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
+import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
+import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetPreviewDto;
+import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
+import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
+import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
+import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentHistoryDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -18,9 +39,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,14 +109,18 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor) {
+	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
+			Integer floor) {
 		log.debug("getCabinetsPerSection");
-		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
-		List<Cabinet> allCabinetsByBuildingAndFloor = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(building, floor);
+		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher.findCabinetsActiveLentHistoriesByBuildingAndFloor(
+				building, floor);
+		List<Cabinet> allCabinetsByBuildingAndFloor = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(
+				building, floor);
 
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = currentLentCabinets.stream().
 				collect(Collectors.groupingBy(ActiveCabinetInfoEntities::getCabinet,
-						Collectors.mapping(ActiveCabinetInfoEntities::getLentHistory, Collectors.toList())));
+						Collectors.mapping(ActiveCabinetInfoEntities::getLentHistory,
+								Collectors.toList())));
 
 		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new HashMap<>();
 		cabinetLentHistories.forEach((cabinet, lentHistories) -> {
@@ -115,7 +137,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		allCabinetsByBuildingAndFloor.forEach(cabinet -> {
 			if (!cabinetLentHistories.containsKey(cabinet)) {
 				String section = cabinet.getCabinetPlace().getLocation().getSection();
-				CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, Collections.emptyList());
+				CabinetPreviewDto preview = createCabinetPreviewDto(cabinet,
+						Collections.emptyList());
 				if (cabinetPreviewsBySection.containsKey(section)) {
 					cabinetPreviewsBySection.get(section).add(preview);
 				} else {
@@ -125,41 +148,50 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				}
 			}
 		});
-		cabinetPreviewsBySection.values().forEach(cabinetList -> cabinetList.sort(Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
+		cabinetPreviewsBySection.values().forEach(cabinetList -> cabinetList.sort(
+				Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
 		return cabinetPreviewsBySection.entrySet().stream()
 				.sorted(Comparator.comparing(entry -> entry.getValue().get(0).getVisibleNum()))
-				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))
+				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
+						entry.getValue()))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSectionRefactor(String building,
 			Integer floor) {
-		List<Cabinet> cabinets = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(building, floor);
+		List<Cabinet> cabinets = cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(building,
+				floor);
 		Map<String, List<CabinetPreviewDto>> map = new HashMap<>();
 		cabinets.forEach(cabinet -> {
 			List<LentHistory> lentHistories = lentOptionalFetcher
 					.findActiveLentByCabinetIdWithUser(cabinet.getCabinetId());
 			String section = cabinet.getCabinetPlace().getLocation().getSection();
 			if (map.containsKey(section)) {
-				map.get(section).add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
-						lentHistories.isEmpty() ? null : lentHistories.get(0).getUser().getName()));
-			}
-			else {
+				map.get(section)
+						.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
+								lentHistories.isEmpty() ? null
+										: lentHistories.get(0).getUser().getName()));
+			} else {
 				List<CabinetPreviewDto> cabinetPreviewDtoList = new ArrayList<>();
-				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
-						lentHistories.isEmpty() ? null : lentHistories.get(0).getUser().getName()));
+				cabinetPreviewDtoList.add(
+						cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
+								lentHistories.isEmpty() ? null
+										: lentHistories.get(0).getUser().getName()));
 				map.put(section, cabinetPreviewDtoList);
 			}
 		});
-		map.forEach((key, value) -> value.sort(Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
+		map.forEach(
+				(key, value) -> value.sort(Comparator.comparing(CabinetPreviewDto::getVisibleNum)));
 		return map.entrySet().stream()
 				.sorted(Comparator.comparing(entry -> entry.getValue().get(0).getVisibleNum()))
-				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))
+				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
+						entry.getValue()))
 				.collect(Collectors.toList());
 	}
 
-	private CabinetPreviewDto createCabinetPreviewDto(Cabinet cabinet, List<LentHistory> lentHistories) {
+	private CabinetPreviewDto createCabinetPreviewDto(Cabinet cabinet,
+			List<LentHistory> lentHistories) {
 		String lentUserName = null;
 		if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
 			lentUserName = lentHistories.get(0).getUser().getName();
@@ -174,7 +206,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType, Integer page,
-	                                                           Integer size) {
+			Integer size) {
 		log.debug("getCabinetPaginationByLentType");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -195,7 +227,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page,
-	                                                         Integer size) {
+			Integer size) {
 		log.debug("getCabinetPaginationByStatus");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -215,7 +247,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum, Integer page,
-	                                                             Integer size) {
+			Integer size) {
 		log.debug("getCabinetPaginationByVisibleNum");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -236,7 +268,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId, Integer page,
-	                                                                  Integer size) {
+			Integer size) {
 		log.debug("getCabinetLentHistoriesPagination");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -351,6 +383,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		CabinetStatus status = cabinetStatusRequestDto.getStatus();
 		LentType lentType = cabinetStatusRequestDto.getLentType();
 		for (Long cabinetId : cabinetStatusRequestDto.getCabinetIds()) {
+			Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+			if (cabinet.getStatus() == CabinetStatus.FULL) {
+				// go into 에약 변경
+			}
 			if (status != null) {
 				cabinetService.updateStatus(cabinetId, cabinetStatusRequestDto.getStatus());
 			}

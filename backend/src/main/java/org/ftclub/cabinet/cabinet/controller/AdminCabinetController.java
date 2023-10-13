@@ -256,5 +256,4 @@ public class AdminCabinetController {
 		log.info("Called getCabinetLentHistories: {}", cabinetId);
 		return cabinetFacadeService.getCabinetLentHistoriesPagination(cabinetId, page, size);
 	}
-
 }
