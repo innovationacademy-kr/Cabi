@@ -10,6 +10,7 @@ interface ILeftMainNav {
   onClickLentLogButton: React.MouseEventHandler;
   onClickSearchButton: React.MouseEventHandler;
   onClickClubButton: React.MouseEventHandler;
+  onClickProfileButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -23,6 +24,7 @@ const LeftMainNav = ({
   onClickLentLogButton,
   onClickSearchButton,
   onClickClubButton,
+  onClickProfileButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -58,75 +60,66 @@ const LeftMainNav = ({
       <BottomSectionStyled>
         <BottomBtnsStyled>
           {isAdmin && (
-            <BottomBtnStyled
-              className={
-                pathname.includes("search")
-                  ? "active cabiButton"
-                  : " cabiButton"
-              }
-              src={"/src/assets/images/search.svg"}
-              onClick={onClickSearchButton}
-            >
-              <div></div>
-              Search
-            </BottomBtnStyled>
-          )}
-          {!isAdmin && (
-            <BottomBtnStyled
-              className={
-                pathname.includes("log") ? "active cabiButton" : " cabiButton"
-              }
-              src={"/src/assets/images/log.svg"}
-              onClick={onClickLentLogButton}
-            >
-              <div></div>
-              Log
-            </BottomBtnStyled>
-          )}
-          <BottomBtnStyled
-            src={"/src/assets/images/slack.svg"}
-            className="cabiButton"
-          >
-            <a
-              href="https://42born2code.slack.com/archives/C02V6GE8LD7"
-              target="_blank"
-              title="슬랙 캐비닛 채널 새창으로 열기"
-            >
-              <div></div>
-              Contact
-            </a>
-          </BottomBtnStyled>
-          <BottomBtnStyled
-            src={"/src/assets/images/clubIconGray.svg"}
-            className="cabiButton"
-          >
-            {isAdmin ? (
-              <>
-                <a onClick={onClickClubButton}>
+            <>
+              <BottomBtnStyled
+                className={
+                  pathname.includes("search")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                src={"/src/assets/images/search.svg"}
+                onClick={onClickSearchButton}
+              >
+                <div></div>
+                Search
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                src={"/src/assets/images/slack.svg"}
+                className="cabiButton"
+              >
+                <a
+                  href="https://42born2code.slack.com/archives/C02V6GE8LD7"
+                  target="_blank"
+                  title="슬랙 캐비닛 채널 새창으로 열기"
+                >
                   <div></div>
-                  Club
+                  Contact
                 </a>
-              </>
-            ) : (
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLSfp-d7qq8gTvmQe5i6Gtv_mluNSICwuv5pMqeTBqt9NJXXP7w/closedform"
-                target="_blank"
-                title="동아리 사물함 사용 신청서 새창으로 열기"
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                src={"/src/assets/images/clubIconGray.svg"}
+                className="cabiButton"
+                onClick={onClickClubButton}
               >
                 <div></div>
                 Club
-              </a>
-            )}
-          </BottomBtnStyled>
-
-          <BottomBtnStyled
-            className="cabiButton"
-            onClick={onClickLogoutButton}
-            src={"/src/assets/images/close-square.svg"}
-          >
-            <div></div>
-            Logout
-          </BottomBtnStyled>
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className="cabiButton"
+                onClick={onClickLogoutButton}
+                src={"/src/assets/images/close-square.svg"}
+              >
+                <div></div>
+                Logout
+              </BottomBtnStyled>
+            </>
+          )}
+          {!isAdmin && (
+            <>
+              <BottomBtnStyled
+                className={
+                  pathname.includes("profile")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                src={"/src/assets/images/profile-circle.svg"}
+                onClick={onClickProfileButton}
+              >
+                <div></div>
+                Profile
+              </BottomBtnStyled>
+            </>
+          )}
         </BottomBtnsStyled>
       </BottomSectionStyled>
     </LeftNavStyled>
