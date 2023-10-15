@@ -8,9 +8,7 @@ import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.UserSession;
-import org.ftclub.cabinet.user.service.LentExtensionService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
-import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,51 +22,42 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class UserController {
 
-	private final UserFacadeService userFacadeService;
-	private final UserService userService;
-	private final LentExtensionService lentExtensionService;
+    private final UserFacadeService userFacadeService;
 
-	/**
-	 * 현재 로그인한 유저의 프로필을 반환합니다. 전체 사물함 뷰에서 본인의 사물함을 표시하기 위해 사용됩니다.
-	 *
-	 * @param userSessionDto 현재 로그인한 유저의 세션 정보
-	 * @return {@link MyProfileResponseDto} 현재 로그인한 유저의 프로필
-	 */
-	@GetMapping("/me")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
-		log.info("Called getMyProfile: {}", userSessionDto.getName());
-		return userFacadeService.getMyProfile(userSessionDto);
-	}
+    /**
+     * 현재 로그인한 유저의 프로필을 반환합니다. 전체 사물함 뷰에서 본인의 사물함을 표시하기 위해 사용됩니다.
+     *
+     * @param userSessionDto 현재 로그인한 유저의 세션 정보
+     * @return {@link MyProfileResponseDto} 현재 로그인한 유저의 프로필
+     */
+    @GetMapping("/me")
+    @AuthGuard(level = AuthLevel.USER_ONLY)
+    public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
+        log.info("Called getMyProfile: {}", userSessionDto.getName());
+        return userFacadeService.getMyProfile(userSessionDto);
+    }
 
-	@GetMapping("/me/lent-extensions")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public LentExtensionPaginationDto getMyLentExtension(
-			@UserSession UserSessionDto userSessionDto) {
-		log.info("Called getMyLentExtension: {}", userSessionDto.getName());
-		return userFacadeService.getMyLentExtension(userSessionDto);
-	}
+    @GetMapping("/me/lent-extensions")
+    @AuthGuard(level = AuthLevel.USER_ONLY)
+    public LentExtensionPaginationDto getMyLentExtension(
+            @UserSession UserSessionDto userSessionDto) {
+        log.info("Called getMyLentExtension: {}", userSessionDto.getName());
+        return userFacadeService.getMyLentExtension(userSessionDto);
+    }
 
-	@GetMapping("/me/lent-extensions/active")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public LentExtensionPaginationDto getMyActiveLentExtension(
-			@UserSession UserSessionDto userSessionDto) {
-		log.info("Called getMyActiveLentExtension: {}", userSessionDto.getName());
-		return userFacadeService.getMyActiveLentExtension(userSessionDto);
-	}
+    @GetMapping("/me/lent-extensions/active")
+    @AuthGuard(level = AuthLevel.USER_ONLY)
+    public LentExtensionPaginationDto getMyActiveLentExtension(
+            @UserSession UserSessionDto userSessionDto) {
+        log.info("Called getMyActiveLentExtension: {}", userSessionDto.getName());
+        return userFacadeService.getMyActiveLentExtension(userSessionDto);
+    }
 
-	@GetMapping("/me/lent-extensions/use")
-	@AuthGuard(level = AuthLevel.USER_ONLY)
-	public void useLentExtension(
-			@UserSession UserSessionDto userSessionDto) {
-		log.info("Called useLentExtension");
-		userFacadeService.useLentExtension(userSessionDto);
-	}
-
-//	@GetMapping("/me/lent-extensions/test")
-//	public void testIssueLentExtension() {
-//		log.info("Called testIssueLentExtension");
-//		lentExtensionService.issueLentExtension();
-////		lentExtensionService.deleteLentExtension();
-//	}
+    @GetMapping("/me/lent-extensions/use")
+    @AuthGuard(level = AuthLevel.USER_ONLY)
+    public void useLentExtension(
+            @UserSession UserSessionDto userSessionDto) {
+        log.info("Called useLentExtension");
+        userFacadeService.useLentExtension(userSessionDto);
+    }
 }
