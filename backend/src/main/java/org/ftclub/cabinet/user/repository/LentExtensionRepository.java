@@ -40,8 +40,6 @@ public interface LentExtensionRepository extends JpaRepository<LentExtension, Lo
             "WHERE le.user.userId =:userId ")
     Optional<LentExtension> findOneByUserId(Long userId);
 
-//	@Query("DELETE le " +
-//			"FROM LentExtension le " +
-//			"WHERE d.user.userId =:userId ")
-//	void deleteByUserId(Long userId);
+    Optional<LentExtension> findLentExtensionByUserIdAndUsedAtIsNull(Long userId);
+
 }
