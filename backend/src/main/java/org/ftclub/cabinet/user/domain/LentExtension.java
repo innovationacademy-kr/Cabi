@@ -41,6 +41,8 @@ public class LentExtension {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type")
     private LentExtensionType lentExtensionType;
+    @Column(name = "used_at")
+    private LocalDateTime usedAt;
 
     @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -64,5 +66,9 @@ public class LentExtension {
         LentExtension lentExtension = new LentExtension(name, extensionPeriod, expiredAt,
                 lentExtensionType, userId);
         return lentExtension;
+    }
+
+    public void use() {
+        this.usedAt = LocalDateTime.now();
     }
 }
