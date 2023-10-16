@@ -28,7 +28,7 @@ jobs:
           distribution: "corretto"
       - name: Setup SSH key to access private submodule
         run: |
-          mkdir -p ~/.ssh
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
           echo '${{ secrets.CONFIG_DEV_PRIVATE_KEY }}' | base64 -d > ~/.ssh/id_rsa
           chmod 400 ~/.ssh/id_rsa
       # 리포지토리로 체크아웃을 진행하고 서브모듈을 참조하여 clone한다.
