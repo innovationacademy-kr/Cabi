@@ -16,8 +16,6 @@ import org.ftclub.cabinet.user.domain.LentExtensionType;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -33,26 +31,6 @@ public class LentExtensionServiceImpl implements LentExtensionService {
     private final UserOptionalFetcher userOptionalFetcher;
     private final CabinetProperties cabinetProperties;
     private final OccupiedTimeManager occupiedTimeManager;
-
-    @Override
-    public Page<LentExtension> getAllLentExtension(PageRequest pageable) {
-        return lentExtensionRepository.findAll(pageable);
-    }
-
-    @Override
-    public Page<LentExtension> getAllActiveLentExtension(PageRequest pageable) {
-        return lentExtensionRepository.findAllNotExpired(pageable);
-    }
-
-    @Override
-    public List<LentExtension> getLentExtensionByUserId(Long userId) {
-        return lentExtensionRepository.findAllByUserId(userId);
-    }
-
-    @Override
-    public List<LentExtension> getLentExtensionNotExpiredByUserId(Long userId) {
-        return lentExtensionRepository.findAllByUserIdNotExpired(userId);
-    }
 
     @Override
     @Scheduled(cron = "${spring.schedule.cron.extension-issue-time}")
@@ -95,15 +73,16 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 
     @Override
     public void useLentExtension(UserSessionDto userSessionDto) {
-        log.debug("Called useLentExtension {}", userSessionDto);
+        log.debug("Called useLentExtension {}", userSessionDto.getName());
 
-        LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(
-                userSessionDto.getUserId());
         LentExtension findLentExtension = lentExtensionOptionalFetcher.getAvailableLentExtensionByUserId(
                 userSessionDto.getUserId());
 
+        LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(
+                userSessionDto.getUserId());
         findLentExtension.use();
         long extensionPeriod = findLentExtension.getExtensionPeriod();
         lentHistory.setExpiredAt(lentHistory.getExpiredAt().plusDays(extensionPeriod));
     }
+
 }
