@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
@@ -14,7 +15,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import lombok.extern.log4j.Log4j2;
 
 @Entity
 @Table(name = "USER")
@@ -36,6 +36,9 @@ public class User {
 	@Email
 	@Column(name = "EMAIL", unique = true)
 	private String email;
+
+	@Column(name = "DEVICE_TOKEN")
+	private String deviceToken;
 
 	@Column(name = "BLACKHOLED_AT")
 	private LocalDateTime blackholedAt = null;
