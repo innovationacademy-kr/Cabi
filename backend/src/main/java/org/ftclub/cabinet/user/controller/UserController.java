@@ -37,6 +37,12 @@ public class UserController {
         return userFacadeService.getMyProfile(userSessionDto);
     }
 
+    /**
+     * 현재 로그인한 유저의 모든 연장권 정보를 리턴합니다.
+     *
+     * @param userSessionDto 현재 로그인한 유저의 세션 정보
+     * @return {@link LentExtensionPaginationDto} 현재 로그인한 유저의 연장권 정보
+     */
     @GetMapping("/me/lent-extensions")
     @AuthGuard(level = AuthLevel.USER_ONLY)
     public LentExtensionPaginationDto getMyLentExtension(
@@ -45,6 +51,12 @@ public class UserController {
         return userFacadeService.getMyLentExtension(userSessionDto);
     }
 
+    /**
+     * 현재 로그인한 유저의 사용가능한 연장권 정보를 리턴합니다.
+     *
+     * @param userSessionDto 현재 로그인한 유저의 세션 정보
+     * @return {@link LentExtensionPaginationDto} 현재 로그인한 유저의 활성화중인 연장권 정보
+     */
     @GetMapping("/me/lent-extensions/active")
     @AuthGuard(level = AuthLevel.USER_ONLY)
     public LentExtensionPaginationDto getMyActiveLentExtension(
@@ -53,6 +65,11 @@ public class UserController {
         return userFacadeService.getMyActiveLentExtension(userSessionDto);
     }
 
+    /**
+     * 현재 로그인한 유저의 연장권을 사용합니다.
+     *
+     * @param userSessionDto 현재 로그인한 유저의 세션 정보
+     */
     @GetMapping("/me/lent-extensions/use")
     @AuthGuard(level = AuthLevel.USER_ONLY)
     public void useLentExtension(
