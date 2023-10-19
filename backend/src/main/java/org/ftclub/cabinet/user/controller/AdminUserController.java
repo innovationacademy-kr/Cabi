@@ -119,7 +119,7 @@ public class AdminUserController {
         userFacadeService.updateClubUser(clubId, clubName);
     }
 
-    @GetMapping("/lent-extension")
+    @GetMapping("/lent-extensions")
     @AuthGuard(level = AuthLevel.ADMIN_ONLY)
     public LentExtensionPaginationDto getAllLentExtension(@RequestParam("page") Integer page,
             @RequestParam("size") Integer size) {
@@ -127,7 +127,7 @@ public class AdminUserController {
         return userFacadeService.getAllLentExtension(page, size);
     }
 
-    @GetMapping("/lent-extension/active")
+    @GetMapping("/lent-extensions/active")
     @AuthGuard(level = AuthLevel.ADMIN_ONLY)
     public LentExtensionPaginationDto getAllActiveLentExtension(@RequestParam("page") Integer page,
             @RequestParam("size") Integer size) {
@@ -135,7 +135,7 @@ public class AdminUserController {
         return userFacadeService.getAllActiveLentExtension(page, size);
     }
 
-    @PostMapping("/lent-extension/{user}")
+    @PostMapping("/lent-extensions/{user}")
     @AuthGuard(level = AuthLevel.ADMIN_ONLY)
     public void issueLentExtension(@PathVariable("user") String username) {
         log.info("Called issueLentExtension");
