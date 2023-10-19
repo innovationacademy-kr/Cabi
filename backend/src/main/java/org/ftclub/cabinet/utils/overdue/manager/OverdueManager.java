@@ -7,10 +7,8 @@ import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
-import org.ftclub.cabinet.config.MailOverdueProperties;
+import org.ftclub.cabinet.alarm.mail.config.MailAlarmProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.firebase.fcm.service.FCMService;
-import org.ftclub.cabinet.utils.mail.EmailSender;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class OverdueManager {
 
 	private final CabinetService cabinetService;
-	private final MailOverdueProperties mailOverdueProperties;
+	private final MailAlarmProperties mailAlarmProperties;
 	private final ApplicationEventPublisher eventPublisher;
 
 
@@ -43,7 +41,7 @@ public class OverdueManager {
 		if (isExpired) {
 			return OverdueType.OVERDUE;
 		}
-		if (mailOverdueProperties.getSoonOverdueTerm().equals(daysLeftFromExpireDate)) {
+		if (mailAlarmProperties.getSoonOverdueTerm().equals(daysLeftFromExpireDate)) {
 			return OverdueType.SOON_OVERDUE;
 		}
 		return OverdueType.NONE;

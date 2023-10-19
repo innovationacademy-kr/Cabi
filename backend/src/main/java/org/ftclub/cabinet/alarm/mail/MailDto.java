@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.alarm.domain;
+package org.ftclub.cabinet.alarm.mail;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.config;
+package org.ftclub.cabinet.alarm.mail.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class MailOverdueProperties {
+public class MailAlarmProperties {
 
 	@Value("${spring.mail.lentSuccess.subject}")
 	private String lentSuccessMailSubject;

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.utils.mail;
+package org.ftclub.cabinet.alarm.mail;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

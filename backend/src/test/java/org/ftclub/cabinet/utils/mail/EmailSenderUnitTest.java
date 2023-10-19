@@ -11,6 +11,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.ftclub.cabinet.alarm.mail.EmailSender;
 import org.ftclub.cabinet.config.GmailProperties;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

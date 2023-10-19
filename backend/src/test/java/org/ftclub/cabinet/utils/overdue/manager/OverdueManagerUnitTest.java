@@ -11,9 +11,9 @@ import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.config.GmailProperties;
-import org.ftclub.cabinet.config.MailOverdueProperties;
+import org.ftclub.cabinet.alarm.mail.config.MailAlarmProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.utils.mail.EmailSender;
+import org.ftclub.cabinet.alarm.mail.EmailSender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ public class OverdueManagerUnitTest {
 	@Mock
 	private EmailSender emailSender = mock(EmailSender.class);
 	@Mock(lenient = true)
-	private MailOverdueProperties mailOverdueProperties = mock(MailOverdueProperties.class);
+	private MailAlarmProperties mailAlarmProperties = mock(MailAlarmProperties.class);
 	@InjectMocks
 	private OverdueManager overdueManager;
 	private static ActiveLentHistoryDto activeLentHistoryDto;
@@ -64,12 +64,12 @@ public class OverdueManagerUnitTest {
 	@BeforeEach
 	@DisplayName("테스트 전에 mailOverdueProperties를 설정한다.")
 	void setUp() {
-		given(mailOverdueProperties.getSoonOverdueMailSubject()).willReturn("42CABI 사물함 연체 예정 알림");
-		given(mailOverdueProperties.getSoonOverdueMailTemplateUrl()).willReturn(
+		given(mailAlarmProperties.getSoonOverdueMailSubject()).willReturn("42CABI 사물함 연체 예정 알림");
+		given(mailAlarmProperties.getSoonOverdueMailTemplateUrl()).willReturn(
 				"mail/soonOverdue.html");
-		given(mailOverdueProperties.getOverdueMailSubject()).willReturn("42CABI 사물함 연체 알림");
-		given(mailOverdueProperties.getOverdueMailTemplateUrl()).willReturn("mail/overdue.html");
-		given(mailOverdueProperties.getSoonOverdueTerm()).willReturn(-1L);
+		given(mailAlarmProperties.getOverdueMailSubject()).willReturn("42CABI 사물함 연체 알림");
+		given(mailAlarmProperties.getOverdueMailTemplateUrl()).willReturn("mail/overdue.html");
+		given(mailAlarmProperties.getSoonOverdueTerm()).willReturn(-1L);
 	}
 
 	@Test
@@ -125,13 +125,13 @@ public class OverdueManagerUnitTest {
 				CabinetStatus.OVERDUE
 		);
 
-		then(mailOverdueProperties).should().getOverdueMailSubject();
-		then(mailOverdueProperties).should().getOverdueMailTemplateUrl();
+		then(mailAlarmProperties).should().getOverdueMailSubject();
+		then(mailAlarmProperties).should().getOverdueMailTemplateUrl();
 		then(emailSender).should().sendMail(
 				activeLentHistoryDto.getName(),
 				activeLentHistoryDto.getEmail(),
-				mailOverdueProperties.getOverdueMailSubject(),
-				mailOverdueProperties.getOverdueMailTemplateUrl(),
+				mailAlarmProperties.getOverdueMailSubject(),
+				mailAlarmProperties.getOverdueMailTemplateUrl(),
 				new LentExpirationAlarm(activeLentHistoryDto.getDaysLeftFromExpireDate())
 		);
 	}
@@ -149,13 +149,13 @@ public class OverdueManagerUnitTest {
 				CabinetStatus.OVERDUE
 		);
 
-		then(mailOverdueProperties).should().getSoonOverdueMailSubject();
-		then(mailOverdueProperties).should().getSoonOverdueMailTemplateUrl();
+		then(mailAlarmProperties).should().getSoonOverdueMailSubject();
+		then(mailAlarmProperties).should().getSoonOverdueMailTemplateUrl();
 		then(emailSender).should().sendMail(
 				activeLentHistoryDto.getName(),
 				activeLentHistoryDto.getEmail(),
-				mailOverdueProperties.getSoonOverdueMailSubject(),
-				mailOverdueProperties.getSoonOverdueMailTemplateUrl(),
+				mailAlarmProperties.getSoonOverdueMailSubject(),
+				mailAlarmProperties.getSoonOverdueMailTemplateUrl(),
 				new LentExpirationImminentAlarm(activeLentHistoryDto.getDaysLeftFromExpireDate())
 		);
 	}
@@ -173,22 +173,22 @@ public class OverdueManagerUnitTest {
 				CabinetStatus.OVERDUE
 		);
 
-		then(mailOverdueProperties).should(never()).getSoonOverdueMailSubject();
-		then(mailOverdueProperties).should(never()).getSoonOverdueMailTemplateUrl();
-		then(mailOverdueProperties).should(never()).getOverdueMailSubject();
-		then(mailOverdueProperties).should(never()).getOverdueMailTemplateUrl();
+		then(mailAlarmProperties).should(never()).getSoonOverdueMailSubject();
+		then(mailAlarmProperties).should(never()).getSoonOverdueMailTemplateUrl();
+		then(mailAlarmProperties).should(never()).getOverdueMailSubject();
+		then(mailAlarmProperties).should(never()).getOverdueMailTemplateUrl();
 		then(emailSender).should(never()).sendMail(
 				activeLentHistoryDto.getName(),
 				activeLentHistoryDto.getEmail(),
-				mailOverdueProperties.getSoonOverdueMailSubject(),
-				mailOverdueProperties.getSoonOverdueMailTemplateUrl(),
+				mailAlarmProperties.getSoonOverdueMailSubject(),
+				mailAlarmProperties.getSoonOverdueMailTemplateUrl(),
 				null
 		);
 		then(emailSender).should(never()).sendMail(
 				activeLentHistoryDto.getName(),
 				activeLentHistoryDto.getEmail(),
-				mailOverdueProperties.getOverdueMailSubject(),
-				mailOverdueProperties.getOverdueMailTemplateUrl(),
+				mailAlarmProperties.getOverdueMailSubject(),
+				mailAlarmProperties.getOverdueMailTemplateUrl(),
 				null
 		);
 	}

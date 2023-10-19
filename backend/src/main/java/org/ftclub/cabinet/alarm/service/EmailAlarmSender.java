@@ -10,12 +10,12 @@ import org.ftclub.cabinet.alarm.domain.ExtensionIssuanceAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
 import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
-import org.ftclub.cabinet.alarm.domain.MailDto;
-import org.ftclub.cabinet.config.MailOverdueProperties;
+import org.ftclub.cabinet.alarm.mail.MailDto;
+import org.ftclub.cabinet.alarm.mail.config.MailAlarmProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.utils.mail.EmailSender;
+import org.ftclub.cabinet.alarm.mail.EmailSender;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class EmailAlarmSender {
 
 	private final EmailSender emailSender;
-	private final MailOverdueProperties mailOverdueProperties;
+	private final MailAlarmProperties mailAlarmProperties;
 
 	void send(User user, AlarmEvent alarmEvent) {
 		Alarm alarm = alarmEvent.getAlarm();
@@ -41,24 +41,24 @@ public class EmailAlarmSender {
 
 	private MailDto getMailDto(Alarm alarm) {
 		if (alarm instanceof LentSuccessAlarm) {
-			return new MailDto(mailOverdueProperties.getSoonOverdueMailSubject(),
-					mailOverdueProperties.getSoonOverdueMailTemplateUrl());
+			return new MailDto(mailAlarmProperties.getSoonOverdueMailSubject(),
+					mailAlarmProperties.getSoonOverdueMailTemplateUrl());
 		}
 		else if (alarm instanceof LentExpirationAlarm) {
-			return new MailDto(mailOverdueProperties.getOverdueMailSubject(),
-					mailOverdueProperties.getOverdueMailTemplateUrl());
+			return new MailDto(mailAlarmProperties.getOverdueMailSubject(),
+					mailAlarmProperties.getOverdueMailTemplateUrl());
 		}
 		else if (alarm instanceof LentExpirationImminentAlarm) {
-			return new MailDto(mailOverdueProperties.getSoonOverdueMailSubject(),
-					mailOverdueProperties.getSoonOverdueMailTemplateUrl());
+			return new MailDto(mailAlarmProperties.getSoonOverdueMailSubject(),
+					mailAlarmProperties.getSoonOverdueMailTemplateUrl());
 		}
 		else if (alarm instanceof ExtensionIssuanceAlarm) {
-			return new MailDto(mailOverdueProperties.getExtensionIssuanceMailSubject(),
-					mailOverdueProperties.getExtensionIssuanceMailTemplateUrl());
+			return new MailDto(mailAlarmProperties.getExtensionIssuanceMailSubject(),
+					mailAlarmProperties.getExtensionIssuanceMailTemplateUrl());
 		}
 		else if (alarm instanceof ExtensionExpirationImminentAlarm) {
-			return new MailDto(mailOverdueProperties.getExtensionExpirationImminentMailSubject(),
-					mailOverdueProperties.getExtensionExpirationImminentMailTemplateUrl());
+			return new MailDto(mailAlarmProperties.getExtensionExpirationImminentMailSubject(),
+					mailAlarmProperties.getExtensionExpirationImminentMailTemplateUrl());
 		}
 		else throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
 	}
