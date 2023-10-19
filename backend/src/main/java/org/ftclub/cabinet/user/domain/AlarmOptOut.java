@@ -30,4 +30,18 @@ public class AlarmOptOut {
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "ALARM_TYPE", length = 32)
 	private AlarmType alarmType;
+
+	protected AlarmOptOut(User user, AlarmType alarmType) {
+		this.user = user;
+		this.alarmType = alarmType;
+	}
+
+	public static AlarmOptOut of(User user, AlarmType alarmType) {
+		return new AlarmOptOut(user, alarmType);
+	}
+
+	private boolean isValid() {
+		return user != null && alarmType != null;
+	}
+
 }
