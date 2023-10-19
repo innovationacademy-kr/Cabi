@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.ftclub.cabinet.alarm.domain.AlarmType;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 
 import javax.persistence.*;
 
@@ -37,7 +40,10 @@ public class AlarmOptOut {
 	}
 
 	public static AlarmOptOut of(User user, AlarmType alarmType) {
-		return new AlarmOptOut(user, alarmType);
+		AlarmOptOut alarmOptOut = new AlarmOptOut(user, alarmType);
+		ExceptionUtil.throwIfFalse(alarmOptOut.isValid(),
+				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		return alarmOptOut;
 	}
 
 	private boolean isValid() {
