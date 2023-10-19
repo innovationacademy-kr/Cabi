@@ -31,7 +31,7 @@ public class AlarmOptOut {
 	@Column(name = "ALARM_TYPE", length = 32)
 	private AlarmType alarmType;
 
-	protected AlarmOptOut(User user, AlarmType alarmType) {
+	private AlarmOptOut(User user, AlarmType alarmType) {
 		this.user = user;
 		this.alarmType = alarmType;
 	}
