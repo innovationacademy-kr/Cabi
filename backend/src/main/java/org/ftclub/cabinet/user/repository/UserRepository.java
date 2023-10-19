@@ -72,4 +72,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.blackholedAt IS NULL OR u.blackholedAt > CURRENT_TIMESTAMP")
 	List<User> findByNoRiskOfFallingIntoBlackholeUsers();
+
+	/**
+	 * 유저의 id로 OptOut 테이블과 결합된 유저 정보를 찾습니다.
+	 */
+	@Query("SELECT u FROM User u "
+			+ "JOIN AlarmOptOut o ON u.userId = o.user.userId "
+			+ "WHERE u.userId = :id")
+	Optional<User> findUserWithOptOutById(@Param("id") Long id);
 }

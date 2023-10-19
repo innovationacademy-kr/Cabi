@@ -1,15 +1,14 @@
 package org.ftclub.cabinet.alarm.domain;
 
 import lombok.AllArgsConstructor;
-import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
-
-import java.time.LocalDateTime;
+import lombok.Getter;
 
 /**
  * 대여 만료 임박 알람
  */
+@Getter
 @AllArgsConstructor
 public class LentExpirationImminentAlarm implements Alarm {
-	private final CabinetPlace cabinetPlace;
-	private final LocalDateTime lentExpirationDate;
+
+	private final Long daysLeftFromExpireDate;
 }

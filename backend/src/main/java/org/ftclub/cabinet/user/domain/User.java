@@ -1,5 +1,21 @@
 package org.ftclub.cabinet.user.domain;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Set;
+import java.util.regex.Pattern;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,13 +24,6 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
-
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "USER")
@@ -49,6 +58,9 @@ public class User {
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "ROLE", length = 32, nullable = false)
 	private UserRole role;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<AlarmOptOut> alarmOptOuts;
 
 	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
 		this.name = name;

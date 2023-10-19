@@ -26,13 +26,13 @@ public class AlarmOptOut {
 	@Column(name = "ID")
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "USER_ID", nullable = false)
-	private User user;
-
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "ALARM_TYPE", length = 32)
 	private AlarmType alarmType;
+
+	@ManyToOne
+	@JoinColumn(name = "USER_ID", nullable = false)
+	private User user;
 
 	private AlarmOptOut(User user, AlarmType alarmType) {
 		this.user = user;
@@ -49,5 +49,4 @@ public class AlarmOptOut {
 	private boolean isValid() {
 		return user != null && alarmType != null;
 	}
-
 }
