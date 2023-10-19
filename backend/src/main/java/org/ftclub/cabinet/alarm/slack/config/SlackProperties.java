@@ -8,13 +8,8 @@ import org.springframework.stereotype.Component;
 @Getter
 public class SlackProperties {
 
-    private final String authorization = "Authorization";
-    private final String contentType = "CONTENT_TYPE";
     private final String applicationForm = "application/x-www-form-urlencoded";
     private final String bearer = "Bearer ";
-    //    private final String SLACK_ERROR_MESSAGE = "Slack API Response Error";
-//    private final String ERROR_RESPONSE = "error";
-    private final String INTRA42_EMAIL_DOMAIN = "@student.42seoul.kr";
 
     @Value("${slack.token.singing-secret}")
     private String singingSecert;

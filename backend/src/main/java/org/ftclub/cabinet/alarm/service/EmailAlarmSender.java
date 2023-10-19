@@ -35,7 +35,7 @@ public class EmailAlarmSender {
 			log.info("{} ({})에게 메일을 성공적으로 보냈습니다.", user.getName(), user.getEmail());
 		} catch (MessagingException e) {
 			log.error("메일 전송 중 오류가 발생했습니다: {}", e.getMessage());
-			throw new ServiceException(ExceptionStatus.MAIL_SEND_FAIL);
+			throw new ServiceException(ExceptionStatus.MAIL_BAD_GATEWAY);
 		}
 	}
 
