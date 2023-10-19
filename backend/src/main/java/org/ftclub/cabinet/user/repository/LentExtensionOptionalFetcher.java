@@ -19,19 +19,22 @@ public class LentExtensionOptionalFetcher {
     private final LentExtensionRepository lentExtensionRepository;
 
     /*-------------------------------------------FIND-------------------------------------------*/
+    @Transactional(readOnly = true)
     public Page<LentExtension> findAllLentExtension(PageRequest pageable) {
         return lentExtensionRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
     public Page<LentExtension> findAllNotExpired(PageRequest pageable) {
         return lentExtensionRepository.findAllNotExpired(pageable);
     }
 
+    @Transactional(readOnly = true)
     public List<LentExtension> findLentExtensionByUserId(Long userId) {
         return lentExtensionRepository.findAllByUserIdSortAscending(userId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LentExtension> findLentExtensionNotExpiredByUserId(Long userId) {
         return lentExtensionRepository.findAllByUserIdNotExpiredSortAscending(userId);
     }
