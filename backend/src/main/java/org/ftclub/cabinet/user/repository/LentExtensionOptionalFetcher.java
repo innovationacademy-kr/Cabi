@@ -9,6 +9,7 @@ import org.ftclub.cabinet.user.domain.LentExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +28,12 @@ public class LentExtensionOptionalFetcher {
     }
 
     public List<LentExtension> findLentExtensionByUserId(Long userId) {
-        return lentExtensionRepository.findAllByUserId(userId);
+        return lentExtensionRepository.findAllByUserIdSortAscending(userId);
     }
 
+    @Transactional
     public List<LentExtension> findLentExtensionNotExpiredByUserId(Long userId) {
-        return lentExtensionRepository.findAllByUserIdNotExpired(userId);
+        return lentExtensionRepository.findAllByUserIdNotExpiredSortAscending(userId);
     }
 
 
