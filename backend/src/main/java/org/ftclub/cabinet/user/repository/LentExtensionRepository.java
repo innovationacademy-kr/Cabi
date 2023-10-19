@@ -26,14 +26,14 @@ public interface LentExtensionRepository extends JpaRepository<LentExtension, Lo
             "FROM LentExtension le " +
             "WHERE le.user.userId =:userId " +
             "ORDER BY le.expiredAt ASC")
-    List<LentExtension> findAllByUserId(@Param("userId") Long userId);
+    List<LentExtension> findAllByUserIdSortAscending(@Param("userId") Long userId);
 
     @Query("SELECT le " +
             "FROM LentExtension le " +
             "WHERE le.user.userId =:userId " +
             "AND le.expiredAt > CURRENT_TIMESTAMP " +
             "ORDER BY le.expiredAt ASC")
-    List<LentExtension> findAllByUserIdNotExpired(Long userId);
+    List<LentExtension> findAllByUserIdNotExpiredSortAscending(Long userId);
 
     @Query("SELECT le " +
             "FROM LentExtension le " +
