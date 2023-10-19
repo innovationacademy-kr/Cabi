@@ -18,6 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 
 @Entity
 @Table(name = "LENT_EXTENSION")
@@ -65,7 +67,15 @@ public class LentExtension {
             LentExtensionType lentExtensionType, Long userId) {
         LentExtension lentExtension = new LentExtension(name, extensionPeriod, expiredAt,
                 lentExtensionType, userId);
+        if (!lentExtension.isValid()) {
+            throw new DomainException(ExceptionStatus.INVALID_STATUS);
+        }
         return lentExtension;
+    }
+
+    private boolean isValid() {
+        return name != null && extensionPeriod > 0 && expiredAt != null &&
+                lentExtensionType != null && userId != null;
     }
 
     public void use() {

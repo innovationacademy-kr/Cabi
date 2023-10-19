@@ -44,7 +44,7 @@ public class LentExtensionOptionalFetcher {
     public LentExtension getAvailableLentExtensionByUserId(Long userId) {
         log.debug("Called findLentExtensionByUserId: {}", userId);
         return lentExtensionRepository.findLentExtensionByUserIdAndUsedAtIsNull(userId).orElseThrow(
-                () -> new ServiceException(ExceptionStatus.EXTENSION_TICKET_NOT_FOUND));
+                () -> new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND));
     }
 
 }

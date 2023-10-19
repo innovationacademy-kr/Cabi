@@ -6,11 +6,11 @@ import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.config.CabinetProperties;
+import org.ftclub.cabinet.dto.UserMonthDataDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.occupiedtime.UserMonthDataDto;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensionType;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
@@ -36,7 +36,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
     @Scheduled(cron = "${spring.schedule.cron.extension-issue-time}")
     public void issueLentExtension() {
         log.debug("Called issueLentExtension");
-        List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.metLimitTimeUser(
+        List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
                 occupiedTimeManager.getUserLastMonthOccupiedTime());
         LocalDateTime now = LocalDateTime.now();
         userMonthDataDtos.stream().forEach(userMonthDataDto -> {
