@@ -77,7 +77,7 @@ public class EmailSenderUnitTest {
 	void 실패_sendMail_개발환경() throws MessagingException, MailException {
 		given(gmailProperties.getIsProduction()).willReturn(false);
 
-		emailSender.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate());
+		emailSender.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate(), null);
 
 		then(javaMailSender).should(never()).send(
 				any(MimeMessage.class)
@@ -92,7 +92,7 @@ public class EmailSenderUnitTest {
 		MimeMessage mimeMessage = new MimeMessage((javax.mail.Session) null);
 		given(javaMailSender.createMimeMessage()).willReturn(mimeMessage);
 
-		emailSender.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate());
+		emailSender.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate(), null);
 
 		then(javaMailSender).should().send(
 				any(MimeMessage.class)

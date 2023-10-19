@@ -25,8 +25,6 @@ import org.springframework.stereotype.Component;
  */
 public class OverdueManager {
 
-	private final EmailSender emailSender;
-	private final FCMService fcmService;
 	private final CabinetService cabinetService;
 	private final MailOverdueProperties mailOverdueProperties;
 	private final ApplicationEventPublisher eventPublisher;
