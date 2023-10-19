@@ -24,20 +24,25 @@ public class SlackApiManager {
     private final SlackFeignClient slackFeignClient;
 
     public SlackUserInfo requestSlackUserInfo(String email) {
+
         log.info("Called requestSlackUserInfo email={}", email);
+
         try {
             SlackResponse slackResponse = slackFeignClient.getUserInfoByEmail(
-                    slackProperties.getContentType(),
-                    slackProperties.getBearer() + slackProperties.getAppToken(), email);
+                    slackProperties.getApplicationForm(),
+                    slackProperties.getBearer() + slackProperties.getAppToken(),
+                    email);
+
             String RESPONSE_ERROR_MSG = "error";
             if (slackResponse.getOk().equals(RESPONSE_ERROR_MSG)) {
                 log.error("Slack Response ERROR Error {} ", slackResponse);
-                throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);
+                throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
             }
+
             return slackResponse.getSlackUserInfo();
         } catch (FeignClientException e) {
             log.error("{}", e.getMessage());
-            throw new ServiceException(ExceptionStatus.SLACK_BAD_GATEWAY);
+            throw new ServiceException(ExceptionStatus.SLACK_REQUEST_BAD_GATEWAY);
         }
     }
 
@@ -53,7 +58,7 @@ public class SlackApiManager {
             methods.chatPostMessage(request);
         } catch (SlackApiException | IOException e) {
             log.error("{}", e.getMessage());
-            throw new ServiceException(ExceptionStatus.SLACK_BAD_GATEWAY);
+            throw new ServiceException(ExceptionStatus.SLACK_MESSAGE_SEND_BAD_GATEWAY);
         }
     }
 }
