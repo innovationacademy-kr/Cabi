@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class AlarmEvent {
-	private final Long id;
+	private final Long receiverId;
 	private final Alarm alarm;
 
-	private AlarmEvent(Long id, Alarm alarm) {
-		this.id = id;
+	private AlarmEvent(Long receiverId, Alarm alarm) {
+		this.receiverId = receiverId;
 		this.alarm = alarm;
 	}
 
