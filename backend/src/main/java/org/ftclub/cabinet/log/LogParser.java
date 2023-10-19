@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.log;
 
-import org.ftclub.cabinet.alarm.DiscordAlarmMessage;
+import org.ftclub.cabinet.alarm.discord.DiscordAlarmMessage;
 import org.springframework.stereotype.Component;
 
 @Component

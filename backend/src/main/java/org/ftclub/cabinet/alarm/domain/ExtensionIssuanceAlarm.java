@@ -11,7 +11,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class ExtensionIssuanceAlarm implements Alarm {
+
 	private final String extensionName;
 	private final LocalDateTime extensionExpirationDate;
-	private final int daysToExtend; // .. ?
+	private final Integer daysToExtend;
 }

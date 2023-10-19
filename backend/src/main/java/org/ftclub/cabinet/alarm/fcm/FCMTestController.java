@@ -1,10 +1,10 @@
-package org.ftclub.cabinet.firebase;
+package org.ftclub.cabinet.alarm.fcm;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import org.ftclub.cabinet.firebase.fcm.service.FCMService;
+import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
 import org.ftclub.cabinet.redis.service.RedisService;
 import org.ftclub.cabinet.utils.overdue.manager.OverdueType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +29,7 @@ public class FCMTestController {
 	@PostMapping("test2/{name}")
 	public void test2(@PathVariable("name") String name) {
 		log.info("called test2");
-		fcmService.sendPushMessage(name, OverdueType.OVERDUE, 1L);
+		LentExpirationAlarm alarm = new LentExpirationAlarm(1L);
+		fcmService.sendPushMessage(name, alarm, new FCMDto("title", "%d"));
 	}
 }

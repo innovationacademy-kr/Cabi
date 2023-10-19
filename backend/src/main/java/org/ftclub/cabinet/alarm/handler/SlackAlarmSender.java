@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.alarm.service;
+package org.ftclub.cabinet.alarm.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;

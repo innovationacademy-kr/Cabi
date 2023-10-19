@@ -13,5 +13,6 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 public class LentSuccessAlarm implements Alarm {
 
 	private final Location location;
+	private final Integer visibleNum;
 	private final LocalDateTime lentExpirationDate;
 }

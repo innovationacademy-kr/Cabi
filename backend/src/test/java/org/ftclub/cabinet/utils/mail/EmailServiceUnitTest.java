@@ -11,8 +11,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.ftclub.cabinet.alarm.mail.EmailSender;
-import org.ftclub.cabinet.config.GmailProperties;
+import org.ftclub.cabinet.alarm.mail.EmailService;
+import org.ftclub.cabinet.alarm.mail.config.GmailProperties;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 
 @ExtendWith(MockitoExtension.class)
-public class EmailSenderUnitTest {
+public class EmailServiceUnitTest {
 
 	@Getter
 	@AllArgsConstructor
@@ -48,7 +48,7 @@ public class EmailSenderUnitTest {
 	private GmailProperties gmailProperties = mock(GmailProperties.class);
 
 	@InjectMocks
-	private EmailSender emailSender;
+	private EmailService emailService;
 
 
 	@BeforeAll
@@ -78,7 +78,7 @@ public class EmailSenderUnitTest {
 	void 실패_sendMail_개발환경() throws MessagingException, MailException {
 		given(gmailProperties.getIsProduction()).willReturn(false);
 
-		emailSender.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate(), null);
+		emailService.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate(), null);
 
 		then(javaMailSender).should(never()).send(
 				any(MimeMessage.class)
@@ -93,7 +93,7 @@ public class EmailSenderUnitTest {
 		MimeMessage mimeMessage = new MimeMessage((javax.mail.Session) null);
 		given(javaMailSender.createMimeMessage()).willReturn(mimeMessage);
 
-		emailSender.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate(), null);
+		emailService.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate(), null);
 
 		then(javaMailSender).should().send(
 				any(MimeMessage.class)

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class ExtensionExpirationImminentAlarm implements Alarm {
+
 	private final String extensionName;
 	private final LocalDateTime extensionExpirationDate;
 }

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.alarm.service;
+package org.ftclub.cabinet.alarm.handler;
 
 import static org.ftclub.cabinet.alarm.domain.AlarmType.EMAIL;
 import static org.ftclub.cabinet.alarm.domain.AlarmType.PUSH;

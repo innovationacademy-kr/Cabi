@@ -80,7 +80,7 @@ public class LentServiceImpl implements LentService {
 		lentPolicy.applyExpirationDate(lentHistory, cabinetActiveLentHistories, expiredAt);
 		lentRepository.save(lentHistory);
 		eventPublisher.publishEvent(AlarmEvent.of(userId,
-				new LentSuccessAlarm(cabinet.getCabinetPlace().getLocation(), expiredAt)));
+				new LentSuccessAlarm(cabinet.getCabinetPlace().getLocation(), cabinet.getVisibleNum(), expiredAt)));
 	}
 
 	@Override

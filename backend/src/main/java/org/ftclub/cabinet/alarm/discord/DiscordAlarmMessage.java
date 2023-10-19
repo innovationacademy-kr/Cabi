@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.alarm;
+package org.ftclub.cabinet.alarm.discord;
 
 import lombok.Builder;
 import lombok.Getter;
