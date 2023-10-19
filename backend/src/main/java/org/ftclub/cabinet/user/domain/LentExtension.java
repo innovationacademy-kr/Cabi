@@ -39,7 +39,7 @@ public class LentExtension {
     @Column(name = "expired_at", nullable = false)
     private LocalDateTime expiredAt;
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private LentExtensionType lentExtensionType;
     @Column(name = "used_at")
     private LocalDateTime usedAt;
