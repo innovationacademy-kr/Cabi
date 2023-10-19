@@ -18,6 +18,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 ext {
+    set('springCloudVersion', "2021.0.8")
     snippetsDir = file('build/generated-snippets')
     snippetsDir.mkdirs()
     outputDocs = file('src/main/resources/static/docs')
@@ -55,6 +56,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // spring-cloud - openfeign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    // slack
+    implementation group: 'com.slack.api', name: 'slack-api-client', version: '1.30.0'
+    implementation("com.slack.api:bolt-jetty:1.30.0")
+
 
     // querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
@@ -96,6 +105,13 @@ dependencies {
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 
 tasks.register('copyMainConfig', Copy) {
     from '../config/backend/src/main/resources'
