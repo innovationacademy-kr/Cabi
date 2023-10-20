@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import { ReactComponent as LoginImg } from "@/assets/images/loginImg.svg";
 
 const LoginTemplate = (props: {
   url: string;
@@ -23,7 +24,7 @@ const LoginTemplate = (props: {
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled>
-          <img src={imgSrc} alt="" />
+          <LoginImg fill="var(--main-color)" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>

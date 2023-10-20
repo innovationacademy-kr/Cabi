@@ -1,7 +1,24 @@
+import { useState } from "react";
 import styled from "styled-components";
+import ThemeColor from "@/components/Profile/ThemeColor";
 
 const ProfilePage = () => {
-  return <WrapperStyled>내 정보 여기에 넣어주세용</WrapperStyled>;
+  const handleBackgroundClick = () => {};
+
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  return (
+    <WrapperStyled>
+      {showColorPicker && (
+        <BackgroundOverlayStyled onClick={handleBackgroundClick} />
+      )}
+      <ItemStyeld>
+        <ThemeColor
+          showColorPicker={showColorPicker}
+          setShowColorPicker={setShowColorPicker}
+        />
+      </ItemStyeld>
+    </WrapperStyled>
+  );
 };
 
 const WrapperStyled = styled.div`
@@ -15,4 +32,17 @@ const WrapperStyled = styled.div`
   }
 `;
 
+const BackgroundOverlayStyled = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 0;
+`;
+
+const ItemStyeld = styled.div`
+  z-index: 1;
+`;
 export default ProfilePage;

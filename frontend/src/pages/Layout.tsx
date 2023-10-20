@@ -55,12 +55,21 @@ const Layout = (): JSX.Element => {
     }
   };
 
+  const savedColor = localStorage.getItem("mainColor");
+  const root: HTMLElement = document.documentElement;
+
   useEffect(() => {
     if (!token && !isLoginPage) navigate("/login");
     else if (token) {
       getMyInfo();
     }
   }, []);
+
+  useEffect(() => {
+    root.style.setProperty("--main-color", savedColor);
+    if (savedColor !== "#9747ff")
+      root.style.setProperty("--lightpurple-color", "#7b7b7b");
+  }, [savedColor]);
 
   const { closeAll } = useMenu();
 

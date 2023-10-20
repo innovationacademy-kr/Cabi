@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import CabinetColorTable from "@/components/LeftNav/CabinetColorTable/CabinetColorTable";
+import { ReactComponent as LinkImg } from "@/assets/images/link.svg";
 
 interface ILeftSectionNav {
   isVisible: boolean;
@@ -72,14 +73,14 @@ const LeftSectionNav = ({
           title="슬랙 캐비닛 채널 새창으로 열기"
         >
           문의하기
-          <img src="/src/assets/images/link.svg" alt="" />
+          <LinkImg stroke="var(--gray-color)" />
         </SectionLinkStyled>
         <SectionLinkStyled
           onClick={() => onClickClubForm()}
           title="동아리 사물함 사용 신청서 새창으로 열기"
         >
           동아리 신청서
-          <img src="/src/assets/images/link.svg" alt="" />
+          <LinkImg stroke="var(--gray-color)" />
         </SectionLinkStyled>
       </ProfileLeftNavOptionStyled>
     </>
@@ -146,7 +147,7 @@ const SectionLinkStyled = styled.div`
   display: flex;
   align-items: center;
   color: var(--gray-color);
-  & img {
+  & svg {
     width: 15px;
     height: 15px;
     margin-left: auto;
@@ -154,10 +155,9 @@ const SectionLinkStyled = styled.div`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--main-color);
-    }
-    &:hover img {
-      filter: invert(33%) sepia(55%) saturate(3554%) hue-rotate(230deg)
-        brightness(99%) contrast(107%);
+      svg {
+        stroke: var(--main-color);
+      }
     }
   }
 `;

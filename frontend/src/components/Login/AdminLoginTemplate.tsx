@@ -5,6 +5,7 @@ import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import { additionalModalType } from "@/assets/data/maps";
+import { ReactComponent as AdminLoginImg } from "@/assets/images/adminLoginImg.svg";
 import { axiosAdminAuthLogin } from "@/api/axios/axios.custom";
 
 const AdminLoginTemplate = (props: {
@@ -66,7 +67,7 @@ const AdminLoginTemplate = (props: {
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled>
-          <img src={imgSrc} alt="" />
+          <AdminLoginImg fill="var(--main-color)" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
