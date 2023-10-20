@@ -15,7 +15,7 @@ import org.ftclub.cabinet.alarm.domain.ExtensionIssuanceAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
 import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
 import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
-import org.ftclub.cabinet.alarm.fcm.FCMDto;
+import org.ftclub.cabinet.alarm.dto.FCMDto;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.alarm.mail.config;
+package org.ftclub.cabinet.alarm.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

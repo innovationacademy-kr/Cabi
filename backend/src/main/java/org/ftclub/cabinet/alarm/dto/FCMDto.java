@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.alarm.fcm;
+package org.ftclub.cabinet.alarm.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

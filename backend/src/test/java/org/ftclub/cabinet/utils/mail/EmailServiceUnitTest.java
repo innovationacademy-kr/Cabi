@@ -9,11 +9,12 @@ import static org.mockito.Mockito.never;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.ftclub.cabinet.alarm.mail.EmailService;
-import org.ftclub.cabinet.alarm.mail.config.GmailProperties;
-import org.junit.jupiter.api.BeforeAll;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
+import org.ftclub.cabinet.alarm.handler.EmailAlarmSender;
+import org.ftclub.cabinet.alarm.config.GmailProperties;
+import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.domain.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,18 +30,8 @@ import org.thymeleaf.context.Context;
 @ExtendWith(MockitoExtension.class)
 public class EmailServiceUnitTest {
 
-	@Getter
-	@AllArgsConstructor
-	private static class Mail {
-
-		String name;
-		String to;
-		String subject;
-		String template;
-	}
-
-	private static Mail mail;
-
+	private String name = "testUser";
+	private String email = "testEamil@test.com";
 	private JavaMailSender javaMailSender = mock(JavaMailSender.class);
 	@Mock
 	private ITemplateEngine templateEngine;
@@ -48,19 +39,8 @@ public class EmailServiceUnitTest {
 	private GmailProperties gmailProperties = mock(GmailProperties.class);
 
 	@InjectMocks
-	private EmailService emailService;
+	private EmailAlarmSender emailAlarmSender;
 
-
-	@BeforeAll
-	@DisplayName("테스트 전에 메일 대상에 대한 정보를 설정한다.")
-	static void setupBeforeAll() {
-		mail = new Mail(
-				"은빅임",
-				"은비킴의CPP.student.42seoul.kr",
-				"플랜비는없는데요.은비는있어요",
-				"mail/overdue"
-		);
-	}
 
 	@BeforeEach
 	@DisplayName("테스트 전에 gmailProperties를 설정한다.")
@@ -78,11 +58,10 @@ public class EmailServiceUnitTest {
 	void 실패_sendMail_개발환경() throws MessagingException, MailException {
 		given(gmailProperties.getIsProduction()).willReturn(false);
 
-		emailService.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate(), null);
+		emailAlarmSender.send(User.of(name, email, null, UserRole.USER),
+				AlarmEvent.of(1L, new LentExpirationAlarm(1L)));
 
-		then(javaMailSender).should(never()).send(
-				any(MimeMessage.class)
-		);
+		then(javaMailSender).should(never()).send(any(MimeMessage.class));
 	}
 
 	@Test
@@ -93,10 +72,9 @@ public class EmailServiceUnitTest {
 		MimeMessage mimeMessage = new MimeMessage((javax.mail.Session) null);
 		given(javaMailSender.createMimeMessage()).willReturn(mimeMessage);
 
-		emailService.sendMail(mail.getName(), mail.getTo(), mail.getSubject(), mail.getTemplate(), null);
+		emailAlarmSender.send(User.of(name, email, null, UserRole.USER),
+				AlarmEvent.of(1L, new LentExpirationAlarm(1L)));
 
-		then(javaMailSender).should().send(
-				any(MimeMessage.class)
-		);
+		then(javaMailSender).should().send(any(MimeMessage.class));
 	}
 }
