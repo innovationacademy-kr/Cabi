@@ -133,15 +133,15 @@ asciidoctor {
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
 }
-
-tasks.register('copyDocument', Copy) {
-    dependsOn asciidoctor
-    from file("${asciidoctor.outputDir}")
-    into file("${outputDocs}")
-}
+//
+//tasks.register('copyDocument', Copy) {
+//    dependsOn asciidoctor
+//    from file("${asciidoctor.outputDir}")
+//    into file("${outputDocs}")
+//}
 
 build {
-    dependsOn copyDocument
+//    dependsOn copyDocument
 }
 
 jar {
