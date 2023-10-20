@@ -11,6 +11,7 @@ import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -24,6 +25,7 @@ import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
+import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -42,6 +44,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;
 	private final CabinetMapper cabinetMapper;
+	private final UserService userService;
 
 
 	/*-------------------------------------------READ-------------------------------------------*/

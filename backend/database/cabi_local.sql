@@ -189,7 +189,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
+
 -- Dumping data for table `user`
 --
 
@@ -197,6 +197,27 @@ LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `lent_extension`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `lent_extension`
+(
+    `lent_extension_id` bigint auto_increment,
+    `user_id`           bigint      not null,
+    `name`              varchar(64) not null,
+    `extension_period`  int         not null,
+    `type`              varchar(32) not null,
+    `expired_at`        datetime(6) not null,
+    `used_at`           datetime(6) null,
+    PRIMARY KEY (lent_extension_id),
+    CONSTRAINT lent_extension_user_user_id_fk
+        FOREIGN KEY (user_id) REFERENCES user (user_id)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
