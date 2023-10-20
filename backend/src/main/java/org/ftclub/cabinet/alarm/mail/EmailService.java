@@ -49,8 +49,7 @@ public class EmailService {
 			String building = ((LentSuccessAlarm) alarm).getLocation().getBuilding();
 			Integer floor = ((LentSuccessAlarm) alarm).getLocation().getFloor();
 			Integer visibleNum = ((LentSuccessAlarm) alarm).getVisibleNum();
-			String locationString = building + " " + floor + "층 " + visibleNum + "번";
-			context.setVariable("location", locationString);
+			context.setVariable("location", building + " " + floor + "층 " + visibleNum + "번");
 			context.setVariable("expireDate", ((LentSuccessAlarm) alarm).getLentExpirationDate());
 		}
 		else if (alarm instanceof LentExpirationAlarm) {

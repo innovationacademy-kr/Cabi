@@ -8,5 +8,5 @@ import lombok.Getter;
 public class FCMDto {
 
 	private final String title;
-	private final String format;
+	private final String body;
 }
