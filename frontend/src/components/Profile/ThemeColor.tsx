@@ -1,64 +1,24 @@
 import React from "react";
-import { useEffect, useState } from "react";
 import { TwitterPicker } from "react-color";
 import styled from "styled-components";
 
 const ThemeColor: React.FC<{
   showColorPicker: boolean;
   setShowColorPicker: React.Dispatch<React.SetStateAction<boolean>>;
-  handleChange: Function;
-}> = ({ showColorPicker, setShowColorPicker }) => {
-  const savedColor = localStorage.getItem("mainColor");
-  const [mainColor, setMainColor] = useState<string>(
-    savedColor ? savedColor : "#9747ff"
-  );
-
-  const root: HTMLElement = document.documentElement;
-
-  const handleChange = (mainColor: { hex: string }) => {
-    const selectedColor: string = mainColor.hex;
-    setMainColor(selectedColor);
-  };
-
-  const handleReset = () => {
-    const defaultColor = "#9747ff";
-    setMainColor(defaultColor);
-    root.style.setProperty("--main-color", defaultColor);
-    root.style.setProperty("--lightpurple-color", "#b18cff");
-    localStorage.setItem("mainColor", defaultColor);
-  };
-
-  const handleSave = () => {
-    localStorage.setItem("mainColor", mainColor);
-    root.style.setProperty("--main-color", mainColor);
-    toggleColorPicker(true);
-  };
-
-  const handleCancel = () => {
-    const savedColor = localStorage.getItem("mainColor");
-    root.style.setProperty("--main-color", savedColor);
-    toggleColorPicker(true);
-  };
-
-  const toggleColorPicker = (isChange: boolean) => {
-    if (isChange) setShowColorPicker(!showColorPicker);
-  };
-
-  const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
-    if (mainColor !== localStorage.getItem("mainColor")) {
-      e.returnValue =
-        "변경된 색상이 저장되지 않을 수 있습니다. 계속하시겠습니까?";
-    }
-  };
-
-  useEffect(() => {
-    root.style.setProperty("--main-color", mainColor);
-    window.addEventListener("beforeunload", confirmBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", confirmBeforeUnload);
-    };
-  }, [mainColor]);
-
+  handleChange: (mainColor: { hex: string }) => void;
+  handleReset: Function;
+  handleSave: Function;
+  handleCancel: Function;
+  mainColor: string;
+}> = ({
+  showColorPicker,
+  setShowColorPicker,
+  handleChange,
+  handleReset,
+  handleSave,
+  handleCancel,
+  mainColor,
+}) => {
   return (
     <ThemeColorStyled>
       <TableTopStyled>
@@ -66,19 +26,21 @@ const ThemeColor: React.FC<{
         {showColorPicker ? (
           <>
             <BtnWrapStyled>
-              <SaveBtnStyled onClick={handleSave}>저장</SaveBtnStyled>
-              <ResetBtnStyled onClick={handleCancel}>취소</ResetBtnStyled>
+              <SaveBtnStyled onClick={() => handleSave()}>저장</SaveBtnStyled>
+              <ResetBtnStyled onClick={() => handleCancel()}>
+                취소
+              </ResetBtnStyled>
             </BtnWrapStyled>
           </>
         ) : (
-          <ResetBtnStyled onClick={handleReset}>초기화</ResetBtnStyled>
+          <ResetBtnStyled onClick={() => handleReset()}>초기화</ResetBtnStyled>
         )}
       </TableTopStyled>
       <TableBodyStyled>
         <ColorSelectStyled>
           메인 컬러
           <MainColorButtonStyled
-            onClick={() => toggleColorPicker(!showColorPicker)}
+            onClick={() => setShowColorPicker(!showColorPicker)}
           />
         </ColorSelectStyled>
         {showColorPicker && (

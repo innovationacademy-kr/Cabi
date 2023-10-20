@@ -1,20 +1,16 @@
 import { useState } from "react";
 import styled from "styled-components";
-import ThemeColor from "@/components/Profile/ThemeColor";
+import ThemeColorContainer from "@/components/Profile/ThemeColor.container";
 
 const ProfilePage = () => {
-  const handleBackgroundClick = () => {};
-
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showThemeChange, setShowThemeChange] = useState(false);
   return (
     <WrapperStyled>
-      {showColorPicker && (
-        <BackgroundOverlayStyled onClick={handleBackgroundClick} />
-      )}
+      {showThemeChange && <BackgroundOverlayStyled />}
       <ItemStyeld>
-        <ThemeColor
-          showColorPicker={showColorPicker}
-          setShowColorPicker={setShowColorPicker}
+        <ThemeColorContainer
+          showColorPicker={showThemeChange}
+          setShowColorPicker={setShowThemeChange}
         />
       </ItemStyeld>
     </WrapperStyled>
