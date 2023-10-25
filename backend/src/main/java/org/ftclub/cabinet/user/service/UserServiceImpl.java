@@ -10,11 +10,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.config.CabinetProperties;
+import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
-import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
+import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -24,6 +26,7 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
+import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,9 @@ public class UserServiceImpl implements UserService {
 	private final BanPolicy banPolicy;
 	private final UserOptionalFetcher userOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
+	private final LentExtensionRepository lentExtensionRepository;
+	private final OccupiedTimeManager occupiedTimeManager;
+	private final CabinetProperties cabinetProperties;
 
 	@Override
 	public boolean checkUserExists(String email) {
@@ -192,7 +198,7 @@ public class UserServiceImpl implements UserService {
 		User clubUser = userOptionalFetcher.getClubUser(clubId);
 		clubUser.changeName(clubName);
 	}
-	
+
 	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
 		log.info("Called getAllRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
