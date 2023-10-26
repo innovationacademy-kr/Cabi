@@ -119,6 +119,11 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
+  const onClickProfileButton = () => {
+    navigator("profile");
+    closeAll();
+  };
+
   const onClickLogoutButton = (): void => {
     const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
@@ -148,6 +153,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickSearchButton={onClickSearchButton}
       onClickLogoutButton={onClickLogoutButton}
       onClickClubButton={onClickClubButton}
+      onClickProfileButton={onClickProfileButton}
       isAdmin={isAdmin}
     />
   );

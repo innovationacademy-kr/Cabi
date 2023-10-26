@@ -19,6 +19,7 @@ sourceCompatibility = '11'
 
 ext {
     snippetsDir = file('build/generated-snippets')
+    snippetsDir.mkdirs()
     outputDocs = file('src/main/resources/static/docs')
 }
 
@@ -49,21 +50,23 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
     implementation 'org.modelmapper:modelmapper:3.1.1'
-
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-    //  Monitoring
+    // Monitoring
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-core:1.11.2'
     implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
 
     // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
@@ -74,18 +77,10 @@ dependencies {
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
-    // slack
-    implementation("com.slack.api:bolt-jetty:1.30.0")
-
-
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.9'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-
-    // redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'it.ozimov:embedded-redis:0.7.2' // 테스트 용도로 내장 서버 Redis 환경 구성
 
     // test
     testCompileOnly 'org.projectlombok:lombok'
@@ -102,6 +97,29 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
+tasks.register('copyMainConfig', Copy) {
+    from '../config/backend/src/main/resources'
+    into 'src/main/resources'
+}
+
+tasks.register('copyTestConfig', Copy) {
+    from '../config/backend/src/main/resources/test/resources'
+    into 'src/test/resources'
+}
+
+tasks.named('processResources') {
+    dependsOn 'copyMainConfig'
+}
+
+tasks.named('processTestResources') {
+    dependsOn 'copyTestConfig'
+}
+
+tasks.named('compileJava') {
+    dependsOn 'compileQuerydsl'
+}
+
+
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
@@ -115,15 +133,15 @@ asciidoctor {
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
 }
-
-tasks.register('copyDocument', Copy) {
-    dependsOn asciidoctor
-    from file("${asciidoctor.outputDir}")
-    into file("${outputDocs}")
-}
+//
+//tasks.register('copyDocument', Copy) {
+//    dependsOn asciidoctor
+//    from file("${asciidoctor.outputDir}")
+//    into file("${outputDocs}")
+//}
 
 build {
-    dependsOn copyDocument
+//    dependsOn copyDocument
 }
 
 jar {

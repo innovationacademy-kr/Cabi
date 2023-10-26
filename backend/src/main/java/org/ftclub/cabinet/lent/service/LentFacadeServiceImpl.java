@@ -13,6 +13,7 @@ import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -28,6 +29,7 @@ import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
+import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -48,6 +50,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private final CabinetMapper cabinetMapper;
 	private final LentRedis lentRedis;
 	private final CabinetProperties cabinetProperties;
+    private final UserService userService;
 
 	/*-------------------------------------------READ-------------------------------------------*/
 
@@ -267,14 +270,9 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 				cabinetInfoRequestDto.getMemo());
 	}
 
+
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {
 		lentService.assignLent(userId, cabinetId);
-	}
-
-	@Override
-	public void extendLent(Long userId) {
-		log.info("Called extendLent userId: {}", userId);
-		lentService.extendLentCabinet(userId);
 	}
 }

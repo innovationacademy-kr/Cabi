@@ -36,8 +36,7 @@ fi
 echo -en $CYAN
 if [ "$arg" == "build" ] || [ "$arg" == "re" ] || [ "$arg" == "all" ]; then
     echo "Build with Gradle"
-    mkdir -p build/generated-snippets
-    ./gradlew build --exclude-task test
+    ./gradlew build -x test
 fi
 
 echo -en $CYAN
