@@ -197,12 +197,6 @@ public class LentPolicyImpl implements LentPolicy {
 	}
 
 	@Override
-	public int getDaysForTermExtend() {
-		log.debug("Called getDaysForTermExtend");
-		return cabinetProperties.getLentTermExtend();
-	}
-
-	@Override
 	public Integer getDaysForNearExpiration() {
 		log.debug("Called getDaysForNearExpiration");
 		return cabinetProperties.getPenaltyDayShare() + cabinetProperties.getPenaltyDayPadding();

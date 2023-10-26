@@ -77,11 +77,6 @@ public interface LentPolicy {
 	Integer getDaysForLentTermShare(Integer totalUserCount);
 
 	/**
-	 * @return 사물함 대여 기간 연장 가능한 날
-	 */
-	int getDaysForTermExtend();
-
-	/**
 	 * @return 만료가 임박하여 공유 사물함을 빌릴 수 없는 날
 	 */
 	Integer getDaysForNearExpiration();

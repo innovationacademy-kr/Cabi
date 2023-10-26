@@ -39,7 +39,6 @@ public class LentController {
 		log.info("Called startLentCabinet user: {}, cabinetId: {}", user, cabinetId);
 		lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
 	}
-
 	@PostMapping("/cabinets/share/{cabinetId}")
 	public void startLentShareCabinet(
 			@UserSession UserSessionDto user,
@@ -48,13 +47,6 @@ public class LentController {
 		log.info("Called startLentShareCabinet user: {}, cabinetId: {}", user, cabinetId);
 		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId,
 				shareCodeDto.getShareCode());
-	}
-
-	@PatchMapping("/cabinets/extend")
-	public void extendLentCabinet(
-			@UserSession UserSessionDto user) {
-		log.info("Called extendLentCabinet user: {}, cabinetId: {}", user);
-		lentFacadeService.extendLent(user.getUserId());
 	}
 
 	@PatchMapping("/cabinets/share/cancel/{cabinetId}")

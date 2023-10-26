@@ -38,8 +38,6 @@ public interface UserService {
 
 	void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt);
 
-	void updateUserExtensible(List<UserMonthDataDto> extensibleUsers);
-
 	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
 			LocalDateTime expiredAt);
 

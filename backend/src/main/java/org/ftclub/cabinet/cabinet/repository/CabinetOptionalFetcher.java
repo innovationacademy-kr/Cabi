@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.cabinet.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -17,9 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * CabinetService를 위한 ExceptionService
@@ -62,22 +61,23 @@ public class CabinetOptionalFetcher {
     public List<Cabinet> findCabinetsByBuildingAndFloor2(String building, Integer floor) {
         return cabinetRepository.findAllCabinetsByBuildingAndFloor(building, floor);
     }
-	/**
-	 * 유저 ID로 사물함을 찾습니다.
-	 *
-	 * @param userId 유저ID
-	 * @return 사물함 엔티티
-	 * @throws ServiceException 사물함을 찾을 수 없는 경우
-	 */
-	public Cabinet findLentCabinetByUserId(Long userId) {
-		log.debug("Called findLentCabinetByUserId: {}", userId);
-		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
-	}
 
-	public List<String> findAllBuildings() {
-		log.debug("Called findAllBuildings");
-		return cabinetRepository.findAllBuildings();
-	}
+    /**
+     * 유저 ID로 사물함을 찾습니다.
+     *
+     * @param userId 유저ID
+     * @return 사물함 엔티티
+     * @throws ServiceException 사물함을 찾을 수 없는 경우
+     */
+    public Cabinet findLentCabinetByUserId(Long userId) {
+        log.debug("Called findLentCabinetByUserId: {}", userId);
+        return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
+    }
+
+    public List<String> findAllBuildings() {
+        log.debug("Called findAllBuildings");
+        return cabinetRepository.findAllBuildings();
+    }
 
     public List<Integer> findAllFloorsByBuilding(String building) {
         log.debug("Called findAllFloorsByBuilding: {}", building);
@@ -90,10 +90,11 @@ public class CabinetOptionalFetcher {
         return cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor);
     }
 
-	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus, LocalDateTime currentDate) {
-		log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}", cabinetStatus);
-		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus, currentDate);
-	}
+    public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus,
+                                                                               LocalDateTime currentDate) {
+        log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}", cabinetStatus);
+        return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus, currentDate);
+    }
 
     public Page<Cabinet> findPaginationByLentType(LentType lentType, PageRequest pageable) {
         log.debug("Called findPaginationByLentType: {}", lentType);
@@ -120,17 +121,6 @@ public class CabinetOptionalFetcher {
     }
     /*-------------------------------------------GET--------------------------------------------*/
 
-    /**
-     * 유저 ID로 사물함을 찾습니다.
-     *
-     * @param userId 유저ID
-     * @return 사물함 엔티티
-     * @throws ServiceException 사물함을 찾을 수 없는 경우
-     */
-    public Cabinet findLentCabinetByUserId(Long userId) {
-        log.debug("Called findLentCabinetByUserId: {}", userId);
-        return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
-    }
 
     /**
      * 사물함 ID로 변경 사항이 예정된 사물함을 찾습니다.
@@ -189,16 +179,16 @@ public class CabinetOptionalFetcher {
         return cabinet;
     }
 
-	/**
-	 * 사물함 ID로 위치(빌딩, 층, 섹션) 정보를 찾습니다.
-	 *
-	 * @param cabinetId 사물함 ID
-	 * @return 위치 엔티티
-	 * @throws ServiceException 사물함을 찾을 수 없는 경우
-	 */
-	public Location getLocation(Long cabinetId) {
-		log.debug("Called getLocation: {}", cabinetId);
-		return cabinetRepository.findLocationById(cabinetId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-	}
+    /**
+     * 사물함 ID로 위치(빌딩, 층, 섹션) 정보를 찾습니다.
+     *
+     * @param cabinetId 사물함 ID
+     * @return 위치 엔티티
+     * @throws ServiceException 사물함을 찾을 수 없는 경우
+     */
+    public Location getLocation(Long cabinetId) {
+        log.debug("Called getLocation: {}", cabinetId);
+        return cabinetRepository.findLocationById(cabinetId)
+                .orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+    }
 }

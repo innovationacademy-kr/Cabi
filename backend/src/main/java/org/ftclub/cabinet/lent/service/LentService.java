@@ -89,7 +89,5 @@ public interface LentService {
 	 *
 	 * @param userId
 	 */
-	void extendLentCabinet(Long userId);
-
 
 }

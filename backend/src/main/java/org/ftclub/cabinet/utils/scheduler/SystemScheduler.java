@@ -8,7 +8,6 @@ import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.occupiedtime.UserMonthDataDto;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
@@ -99,10 +98,10 @@ public class SystemScheduler {
 		releaseManager.releasingCabinets();
 	}
 
-	@Scheduled(cron = "${spring.schedule.cron.extensible-user-check}")
-	public void checkUserQualifyForExtensible(){
-		log.info("called checkUserQualifyForExtensible");
-		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.metLimitTimeUser(occupiedTimeManager.getUserLastMonthOccupiedTime());
-		userService.updateUserExtensible(userMonthDataDtos);
-	}
+//	@Scheduled(cron = "${spring.schedule.cron.extensible-user-check}")
+//	public void checkUserQualifyForExtensible(){
+//		log.info("called checkUserQualifyForExtensible");
+//		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.metLimitTimeUser(occupiedTimeManager.getUserLastMonthOccupiedTime());
+//		userService.updateUserExtensible(userMonthDataDtos);
+//	}
 }

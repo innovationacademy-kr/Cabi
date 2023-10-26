@@ -13,8 +13,6 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
@@ -26,7 +24,6 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
-import org.ftclub.cabinet.utils.slackbot.SlackbotManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +43,6 @@ public class LentServiceImpl implements LentService {
 	private final LentMapper lentMapper;
 	private final LentRedis lentRedis;
 	private final CabinetProperties cabinetProperties;
-	private final SlackbotManager slackbotManager;
 
 
 	@Override
@@ -71,7 +67,6 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
 		lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 		lentRepository.save(lentHistory);
-		slackbotManager.sendSlackMessage(user.getName(), cabinet.getVisibleNum(), expiredAt);
 	}
 
 	@Override
@@ -268,39 +263,6 @@ public class LentServiceImpl implements LentService {
 				.collect(Collectors.toList());
 	}
 
-	@Override
-	public void extendLentCabinet(Long userId) {
-		log.debug("Called extendLentCabinet: {}, {}", userId);
-
-		User user = userOptionalFetcher.getUser(userId);
-		if (!user.isExtensible()) {
-			throw new ServiceException(ExceptionStatus.EXTENSION_TICKET_NOT_FOUND);
-		}
-
-		Cabinet lentCabinet = cabinetOptionalFetcher.findLentCabinetByUserId(userId);
-		if (lentCabinet == null) {
-			throw new ServiceException(ExceptionStatus.NO_LENT_CABINET);
-		}
-
-		Long cabinetId = lentCabinet.getCabinetId();
-		List<LentHistory> allActiveLentByCabinetId = lentOptionalFetcher.findAllActiveLentByCabinetId(
-				cabinetId);
-		int lentHistorySize = allActiveLentByCabinetId.size();
-
-		// 공유사물함에서 1명일 때 연장권 사용 방지
-		LentType lentType = lentCabinet.getLentType();
-		if (lentType.equals(LentType.SHARE) && lentHistorySize == 1) {
-			throw new ServiceException(ExceptionStatus.EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED);
-		}
-
-		LocalDateTime oldExpiredAt = allActiveLentByCabinetId.get(0).getExpiredAt();
-		allActiveLentByCabinetId.forEach(lentHistory -> {
-			lentHistory.setExpiredAt(
-					lentPolicy.generateExtendedExpirationDate(oldExpiredAt));
-		});
-		user.setExtensible(false);
-	}
-
 	public void saveLentHistories(LocalDateTime now, Long cabinetId) {
 		ArrayList<String> userIdList = lentRedis.getUserIdsByCabinetIdInRedis(
 				cabinetId.toString());
@@ -315,3 +277,4 @@ public class LentServiceImpl implements LentService {
 				});
 	}
 }
+

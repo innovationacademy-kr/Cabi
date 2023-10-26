@@ -50,6 +50,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
         });
     }
 
+
     @Override
     public void assignLentExtension(String username) {
         log.debug("Called assignLentExtension {}", username);
