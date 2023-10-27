@@ -76,7 +76,7 @@ public class DateUtil {
 	 * @return day1 - day2
 	 */
 	public static Long calculateTwoDateDiff(LocalDateTime day1, LocalDateTime day2) {
-		return Duration.between(day2, day1).toDays();
+		return Duration.between(day2, day1).toDays() + 1;
 	}
 
 	/**
@@ -117,10 +117,11 @@ public class DateUtil {
 
 	/**
 	 * now 가 서버의 현재 시간보다 과거인지 확입합니다.
+	 *
 	 * @param now
 	 * @return
 	 */
-	public static boolean isPast(LocalDateTime now){
+	public static boolean isPast(LocalDateTime now) {
 		LocalDate currentServerDate = LocalDate.now();
 		return currentServerDate.isAfter(now.toLocalDate());
 	}
