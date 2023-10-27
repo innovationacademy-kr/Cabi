@@ -143,13 +143,17 @@ class LentHistoryUnitTest {
 	void getDaysDiffEndedAndExpired_성공_조기반납() {
 		LentHistory lentHistory = LentHistory.of(
 				LocalDateTime.now(),
-				LocalDateTime.now().plusDays(3),
+				LocalDateTime.now()
+						.plusDays(3)
+						.withHour(23)
+						.withMinute(59)
+						.withSecond(59),
 				1L,
 				1L);
 
 		lentHistory.endLent(LocalDateTime.now()); // 바로 반납
 
-		assertEquals(-3, lentHistory.getDaysDiffEndedAndExpired());
+		assertEquals(-2, lentHistory.getDaysDiffEndedAndExpired());
 	}
 
 

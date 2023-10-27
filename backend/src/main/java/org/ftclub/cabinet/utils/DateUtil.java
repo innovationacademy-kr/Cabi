@@ -76,7 +76,7 @@ public class DateUtil {
 	 * @return day1 - day2
 	 */
 	public static Long calculateTwoDateDiff(LocalDateTime day1, LocalDateTime day2) {
-		return Duration.between(day2, day1).toDays() + 1;
+		return Duration.between(day2, day1).toDays();
 	}
 
 	/**
