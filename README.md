@@ -1,6 +1,6 @@
 <div align="center">
 <a href="https://cabi.oopy.io/">
-  <img src="https://user-images.githubusercontent.com/45951630/151654792-3e064ca8-f2e6-4a13-945a-626705152957.png" width="400px" alt="42Cabi" />
+  <img src="https://github.com/innovationacademy-kr/42cabi/assets/13278955/83bfed83-e148-44e5-8389-b49598725ce4" width="400px" alt="42Cabi" />
 </a>
   
 [![GitHub Stars](https://img.shields.io/github/stars/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/innovationacademy-kr/42cabi/stargazers) [![GitHub Stars](https://img.shields.io/github/issues/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/innovationacademy-kr/42cabi/issues) [![Current Version](https://img.shields.io/badge/version-4.0.0-black?style=for-the-badge)](https://github.com/IgorAntun/node-chat) [![GitHub License](https://img.shields.io/github/license/innovationacademy-kr/42cabi?style=for-the-badge)](https://github.com/IgorAntun/node-chat/issues)
