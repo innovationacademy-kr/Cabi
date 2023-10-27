@@ -40,7 +40,11 @@ class LentPolicyUnitTest {
 	@DisplayName("성공: 만료일자 설정 - 개인사물함")
 	void 성공_개인사물함_generateExpirationDate() {
 		LocalDateTime current = LocalDateTime.now();
-		LocalDateTime expect = LocalDateTime.now().plusDays(21);
+		LocalDateTime expect = LocalDateTime.now()
+				.plusDays(21)
+				.withHour(23)
+				.withMinute(59)
+				.withSecond(59);
 		given(cabinetProperties.getLentTermPrivate()).willReturn(21);
 
 		Cabinet cabinet = mock(Cabinet.class);
@@ -223,9 +227,9 @@ class LentPolicyUnitTest {
 
 	/**
 	 * @See {@link LentPolicyImpl#verifyUserForLent(User, Cabinet, int, List)}
-	 *
+	 * <p>
 	 * 설계 상의 문제로 테스트 코드 비활성화 처리 해두었습니다.
- 	 */
+	 */
 //	@Test
 //	@DisplayName("실패: 블랙홀 유저")
 //	void 실패_BLACKHOLED_USER_verifyUserForLent() {
@@ -239,7 +243,6 @@ class LentPolicyUnitTest {
 //
 //		assertEquals(LentPolicyStatus.BLACKHOLED_USER, result);
 //	}
-
 	@Test
 	@DisplayName("실패: ALL BAN 유저")
 	void 실패_ALL_BANNED_USER_verifyUserForLent() {
@@ -316,7 +319,7 @@ class LentPolicyUnitTest {
 
 	/**
 	 * @See {@link LentPolicyImpl#verifyUserForLent(User, Cabinet, int, List)}
-	 *
+	 * <p>
 	 * 설계 상의 문제로 테스트 코드 비활성화 처리 해두었습니다.
 	 */
 //	@Test
@@ -334,7 +337,6 @@ class LentPolicyUnitTest {
 //
 //		assertEquals(LentPolicyStatus.FINE, result);
 //	}
-
 	@Test
 	@DisplayName("실패: FULL캐비넷 대여시도")
 	void 실패_FULL_verifyCabinetForLent() {

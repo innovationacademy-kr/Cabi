@@ -117,10 +117,11 @@ public class DateUtil {
 
 	/**
 	 * now 가 서버의 현재 시간보다 과거인지 확입합니다.
+	 *
 	 * @param now
 	 * @return
 	 */
-	public static boolean isPast(LocalDateTime now){
+	public static boolean isPast(LocalDateTime now) {
 		LocalDate currentServerDate = LocalDate.now();
 		return currentServerDate.isAfter(now.toLocalDate());
 	}

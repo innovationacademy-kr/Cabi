@@ -62,7 +62,10 @@ public class LentPolicyImpl implements LentPolicy {
 		LentType lentType = cabinet.getLentType();
 		switch (lentType) {
 			case PRIVATE:
-				return now.plusDays(getDaysForLentTermPrivate());
+				return now.plusDays(getDaysForLentTermPrivate())
+						.withHour(23)
+						.withMinute(59)
+						.withSecond(59);
 			case SHARE:
 				if (activeLentHistories.isEmpty()) {
 					return DateUtil.getInfinityDate();
