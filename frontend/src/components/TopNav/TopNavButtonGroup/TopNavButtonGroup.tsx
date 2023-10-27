@@ -19,7 +19,7 @@ import {
 } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
-const getDefaultCabinetInfo = (myInfo: UserDto): CabinetInfo => ({
+export const getDefaultCabinetInfo = (myInfo: UserDto): CabinetInfo => ({
   building: "",
   floor: 0,
   cabinetId: 0,

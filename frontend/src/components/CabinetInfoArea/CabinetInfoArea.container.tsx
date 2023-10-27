@@ -85,7 +85,7 @@ export type TModalState =
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
-const calExpiredTime = (expireTime: Date) =>
+export const calExpiredTime = (expireTime: Date) =>
   Math.floor(
     (expireTime.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
   );
@@ -118,7 +118,9 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   return userNameList;
 };
 
-const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
+export const getDetailMessage = (
+  selectedCabinetInfo: CabinetInfo
+): string | null => {
   const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
@@ -136,7 +138,9 @@ const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
   else return null;
 };
 
-const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
+export const getDetailMessageColor = (
+  selectedCabinetInfo: CabinetInfo
+): string => {
   const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
