@@ -2,6 +2,7 @@ package org.ftclub.cabinet.lent.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -24,8 +25,10 @@ import org.springframework.stereotype.Service;
 public class LentOptionalFetcher {
 
 	private final LentRepository lentRepository;
+
 	private final CabinetRepository cabinetRepository;
 	private final CabinetOptionalFetcher cabinetExceptionHandler;
+	private final LentRedis lentRedis;
 
 	public List<LentHistory> findAllActiveLentByCabinetId(Long cabinetId) {
 		log.debug("Called findAllActiveLentByCabinetId: {}", cabinetId);
@@ -87,6 +90,20 @@ public class LentOptionalFetcher {
 	public LentHistory getActiveLentHistoryWithUserId(Long userId) {
 		log.debug("Called getActiveLentHistoryWithUserId: {}", userId);
 		return lentRepository.findFirstByUserIdAndEndedAtIsNull(userId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NO_LENT_CABINET));
+	}
+
+	/**
+	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id에 {@link LentHistory}를 찾습니다.
+	 *
+	 * @param userId 찾고 싶은 user id
+	 * @return user id에 맞는 반납하지 않은 {@link LentHistory}
+	 * @throws ServiceException NO_LENT_CABINET
+	 * @Lock
+	 */
+	public LentHistory getActiveLentHistoryWithUserIdForUpdate(Long userId) {
+		log.debug("Called getActiveLentHistoryWithUserId: {}", userId);
+		return lentRepository.findFirstByUserIdAndEndedAtIsNullForUpdate(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NO_LENT_CABINET));
 	}
 
@@ -174,6 +191,28 @@ public class LentOptionalFetcher {
 		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
 	}
 
+	/**
+	 * Redis에서 유저가 대여대기중인 캐비넷을 가져옵니다.
+	 *
+	 * @param userId
+	 * @return 유저가 대여대기중인 cabinet Id
+	 */
+	public Long findCabinetIdByUserIdFromRedis(Long userId) {
+		log.debug("Called findActiveLentCabinetByUserIdFromRedis: {}", userId);
+		return lentRedis.findCabinetIdByUserIdInRedis(userId);
+	}
+
+	/**
+	 * Redis에서 캐비넷을 대여대기중인 유저들의 user Ids를 가져옵니다.
+	 *
+	 * @param cabinetId 캐비넷 id
+	 * @return 해당 캐비넷을 대여대기중인 유저들의 user Ids
+	 */
+	public List<String> findUserIdsByCabinetIdFromRedis(Long cabinetId) {
+		log.debug("Called findActiveLentUserIdsByCabinetId: {}", cabinetId);
+		return lentRedis.getUserIdsByCabinetIdInRedis(cabinetId.toString());
+	}
+
 	public List<LentHistory> findAllOverdueLent(LocalDateTime date, Pageable pageable) {
 		log.debug("Called findAllOverdueLent: {}", date);
 		return lentRepository.findAllOverdueLent(date, pageable);
@@ -182,5 +221,27 @@ public class LentOptionalFetcher {
 	public Integer countCabinetAllActiveLent(Long cabinetId) {
 		log.debug("Called countCabinetAllActiveLent: {}", cabinetId);
 		return lentRepository.countCabinetAllActiveLent(cabinetId);
+	}
+
+	public LocalDateTime getSessionExpiredAtFromRedis(Long cabinetId) {
+		log.debug("Called getSessionExpiredAtFromRedis: {}", cabinetId);
+		return lentRedis.getSessionExpiredAtInRedis(cabinetId);
+	}
+
+	/**
+	 * 아직 반납하지 않은 {@link LentHistory} 중에서 user id를 통해 {@link LentHistory}를 찾습니다. CABINET JOIN 없이,
+	 * LentHistory의 subquery를 통해 찾습니다.
+	 *
+	 * @param userId 찾고 싶은 LentHistory 의 user id
+	 * @return user id에 맞는 반납하지 않은 {@link LentHistory}
+	 */
+	public List<LentHistory> findAllActiveLentHistoriesByUserId(Long userId) {
+		log.debug("Called findAllActiveLentHistoriesByUserId: {}", userId);
+		return lentRepository.findAllActiveLentHistoriesByUserId(userId);
+	}
+
+	public Optional<LentHistory> findPreviousLentHistoryByCabinetId(Long cabinetId) {
+		log.debug("Called findPreviousLentUserNameByCabinetId: {}", cabinetId);
+		return lentRepository.findFirstByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(cabinetId);
 	}
 }

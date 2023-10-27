@@ -12,6 +12,9 @@ export enum additionalModalType {
   MODAL_ADMIN_CLUB_EDIT = "MODAL_ADMIN_CLUB_EDIT",
   MODAL_ADMIN_CLUB_DELETE = "MODAL_ADMIN_CLUB_DELETE",
   MODAL_OVERDUE_PENALTY = "MODAL_OVERDUE_PENALTY",
+  MODAL_USE_EXTENSION = "MODAL_USE_EXTENSION",
+  MODAL_OWN_EXTENSION = "MODAL_OWN_EXTENSION",
+  MODAL_CANCEL = "MODAL_CANCEL",
 }
 
 export const cabinetIconSrcMap = {
@@ -27,6 +30,8 @@ export const cabinetLabelColorMap = {
   [CabinetStatus.OVERDUE]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
+  [CabinetStatus.IN_SESSION]: "var(--white)",
+  [CabinetStatus.PENDING]: "var(--main-color)",
   MINE: "var(--black)",
 };
 
@@ -37,6 +42,8 @@ export const cabinetStatusColorMap = {
   [CabinetStatus.OVERDUE]: "var(--expired)",
   [CabinetStatus.BROKEN]: "var(--broken)",
   [CabinetStatus.BANNED]: "var(--banned)",
+  [CabinetStatus.IN_SESSION]: "var(--session)",
+  [CabinetStatus.PENDING]: "var(--pending)",
   MINE: "var(--mine)",
 };
 
@@ -131,6 +138,26 @@ export const modalPropsMap = {
     title: "패널티 안내",
     confirmMessage: "오늘 하루동안 보지않기",
   },
+  MODAL_INVITATION_CODE: {
+    type: "confirm",
+    title: "초대 코드",
+    confirmMessage: "대여하기",
+  },
+  MODAL_USE_EXTENSION: {
+    type: "confirm",
+    title: "연장권 사용",
+    confirmMessage: "연장하기",
+  },
+  MODAL_OWN_EXTENSION: {
+    type: "confirm",
+    title: "연장권 정보",
+    confirmMessage: "",
+  },
+  MODAL_CANCEL: {
+    type: "confirm",
+    title: "대기열 취소하기",
+    confirmMessage: "네, 취소할게요",
+  },
 };
 
 export const cabinetFilterMap = {
@@ -140,6 +167,8 @@ export const cabinetFilterMap = {
   [CabinetStatus.OVERDUE]: "brightness(100)",
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
+  [CabinetStatus.IN_SESSION]: "brightness(100)",
+  [CabinetStatus.PENDING]: "none",
 };
 
 export const cabinetStatusLabelMap = {
@@ -149,6 +178,8 @@ export const cabinetStatusLabelMap = {
   [CabinetStatus.OVERDUE]: "사용 가능",
   [CabinetStatus.BANNED]: "사용 불가",
   [CabinetStatus.BROKEN]: "사용 불가",
+  [CabinetStatus.IN_SESSION]: "대기중",
+  [CabinetStatus.PENDING]: "오픈 예정",
 };
 
 export const cabinetTypeLabelMap = {

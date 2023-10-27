@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { myCabinetInfoState, targetCabinetInfoState } from "@/recoil/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  myCabinetInfoState,
+  targetCabinetInfoState,
+  userState,
+} from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
 import CabinetInfoArea from "@/components/CabinetInfoArea/CabinetInfoArea";
 import AdminLentLog from "@/components/LentLog/AdminLentLog";
@@ -9,6 +13,7 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
+import { UserDto } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import useMenu from "@/hooks/useMenu";
@@ -37,6 +42,8 @@ export interface IMultiSelectTargetInfo {
     OVERDUE: number;
     FULL: number;
     BROKEN: number;
+    IN_SESSION: number;
+    PENDING: number;
   };
 }
 
@@ -46,6 +53,9 @@ export interface ICurrentModalStateInfo {
   returnModal: boolean;
   memoModal: boolean;
   passwordCheckModal: boolean;
+  invitationCodeModal: boolean;
+  extendModal: boolean;
+  cancelModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -59,6 +69,8 @@ interface ICount {
   FULL: number;
   OVERDUE: number;
   BROKEN: number;
+  IN_SESSION: number;
+  PENDING: number;
 }
 
 export type TModalState =
@@ -66,7 +78,10 @@ export type TModalState =
   | "unavailableModal"
   | "returnModal"
   | "memoModal"
-  | "passwordCheckModal";
+  | "passwordCheckModal"
+  | "invitationCodeModal"
+  | "extendModal"
+  | "cancelModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -92,6 +107,7 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
   const { lentType, title, maxUser, lents } = selectedCabinetInfo;
   if (lentType === "CLUB" && title) return title;
+  else if (maxUser === 0) return lents[0].name;
 
   // 그 외에는 유저리스트 반환
   const userNameList = new Array(maxUser)
@@ -138,11 +154,14 @@ const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
 };
 
 const CabinetInfoAreaContainer = (): JSX.Element => {
-  const targetCabinetInfo = useRecoilValue(targetCabinetInfoState);
-  const myCabinetInfo =
-    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const { closeCabinet, toggleLent } = useMenu();
+  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
+    targetCabinetInfoState
+  );
+  const [myCabinetInfo, setMyLentInfo] =
+    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const myInfo = useRecoilValue<UserDto>(userState);
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
+  const { closeCabinet, toggleLent } = useMenu();
   const { isSameStatus, isSameType } = useMultiSelect();
   const isAdmin = document.location.pathname.indexOf("/admin") > -1;
   const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
@@ -151,6 +170,9 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     returnModal: false,
     memoModal: false,
     passwordCheckModal: false,
+    invitationCodeModal: false,
+    extendModal: false,
+    cancelModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -185,7 +207,14 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         else result[cabinet.status]++;
         return result;
       },
-      { AVAILABLE: 0, FULL: 0, OVERDUE: 0, BROKEN: 0 }
+      {
+        AVAILABLE: 0,
+        FULL: 0,
+        OVERDUE: 0,
+        BROKEN: 0,
+        IN_SESSION: 0,
+        PENDING: 0,
+      }
     );
 
   const multiSelectInfo: IMultiSelectTargetInfo | null = isMultiSelect
@@ -204,6 +233,18 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       targetCabinetInfo.lents.length === 1
     ) {
       modalName = "passwordCheckModal";
+    } else if (
+      modalName === "lentModal" &&
+      cabinetViewData?.status == "IN_SESSION" &&
+      cabinetViewData.lentsLength >= 1
+    ) {
+      modalName = "invitationCodeModal";
+    } else if (
+      modalName === "extendModal" &&
+      cabinetViewData?.lentsLength &&
+      cabinetViewData.lentsLength >= 1
+    ) {
+      modalName = "extendModal";
     }
     setUserModal({
       ...userModal,
@@ -271,14 +312,22 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       selectedCabinetInfo={cabinetViewData}
       closeCabinet={closeCabinet}
       expireDate={setExpireDate(cabinetViewData?.expireDate)}
-      isMine={myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId}
-      isAvailable={
-        cabinetViewData?.status === "AVAILABLE" ||
-        cabinetViewData?.status === "LIMITED_AVAILABLE"
+      isMine={
+        myCabinetInfo?.cabinetId === cabinetViewData?.cabinetId &&
+        myCabinetInfo?.cabinetId !== 0 &&
+        cabinetViewData?.status !== "AVAILABLE"
       }
+      isAvailable={
+        (cabinetViewData?.status === "AVAILABLE" ||
+          cabinetViewData?.status === "LIMITED_AVAILABLE" ||
+          cabinetViewData?.status === "IN_SESSION") &&
+        !myCabinetInfo.cabinetId
+      }
+      isExtensible={myInfo.extensible}
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
+      previousUserName={myCabinetInfo.previousUserName}
     />
   );
 };

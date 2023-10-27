@@ -47,6 +47,8 @@ const TYPE_OPTIONS = [
 const STATUS_OPTIONS = [
   { name: "사용 가능", value: CabinetStatus.AVAILABLE },
   { name: "사용 불가", value: CabinetStatus.BROKEN },
+  { name: "오픈 예정", value: CabinetStatus.PENDING },
+  { name: "대기중", value: CabinetStatus.IN_SESSION },
 ];
 
 const StatusModal = ({

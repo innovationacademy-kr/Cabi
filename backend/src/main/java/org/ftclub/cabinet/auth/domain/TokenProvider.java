@@ -1,8 +1,15 @@
 package org.ftclub.cabinet.auth.domain;
 
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
+import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
@@ -12,14 +19,6 @@ import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.stereotype.Component;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
-import static org.ftclub.cabinet.exception.ExceptionStatus.UNAUTHORIZED_USER;
 
 /**
  * API 제공자에 따라 JWT 토큰을 생성하는 클래스입니다.

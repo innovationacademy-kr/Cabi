@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,27 @@ public class CabinetOptionalFetcher {
                 }).collect(Collectors.toList());
     }
 
+    public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor2(
+            String building, Integer floor) {
+        return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+    }
+
+    public List<Cabinet> findCabinetsByBuildingAndFloor2(String building, Integer floor) {
+        return cabinetRepository.findAllCabinetsByBuildingAndFloor(building, floor);
+    }
+
+    /**
+     * 유저 ID로 사물함을 찾습니다.
+     *
+     * @param userId 유저ID
+     * @return 사물함 엔티티
+     * @throws ServiceException 사물함을 찾을 수 없는 경우
+     */
+    public Cabinet findLentCabinetByUserId(Long userId) {
+        log.debug("Called findLentCabinetByUserId: {}", userId);
+        return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
+    }
+
     public List<String> findAllBuildings() {
         log.debug("Called findAllBuildings");
         return cabinetRepository.findAllBuildings();
@@ -66,6 +88,12 @@ public class CabinetOptionalFetcher {
     public List<String> findAllSectionsByBuildingAndFloor(String building, Integer floor) {
         log.debug("Called findAllSectionsByBuildingAndFloor: {}, {}", building, floor);
         return cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor);
+    }
+
+    public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus,
+                                                                               LocalDateTime currentDate) {
+        log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}", cabinetStatus);
+        return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus, currentDate);
     }
 
     public Page<Cabinet> findPaginationByLentType(LentType lentType, PageRequest pageable) {
@@ -93,17 +121,6 @@ public class CabinetOptionalFetcher {
     }
     /*-------------------------------------------GET--------------------------------------------*/
 
-    /**
-     * 유저 ID로 사물함을 찾습니다.
-     *
-     * @param userId 유저ID
-     * @return 사물함 엔티티
-     * @throws ServiceException 사물함을 찾을 수 없는 경우
-     */
-    public Cabinet findLentCabinetByUserId(Long userId) {
-        log.debug("Called findLentCabinetByUserId: {}", userId);
-        return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
-    }
 
     /**
      * 사물함 ID로 변경 사항이 예정된 사물함을 찾습니다.

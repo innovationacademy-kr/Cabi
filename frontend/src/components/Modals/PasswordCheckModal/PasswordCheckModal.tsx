@@ -165,7 +165,7 @@ const ButtonWrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 `;
 
 export default PasswordCheckModal;

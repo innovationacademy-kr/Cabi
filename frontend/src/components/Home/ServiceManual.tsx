@@ -1,94 +1,104 @@
+import { useState } from "react";
 import styled from "styled-components";
+import MaunalContentBox from "@/components/Home/ManualContentBox";
+import ManualModal from "@/components/Modals/ManualModal/ManualModal";
+import ContentStatus from "@/types/enum/content.status.enum";
 
 const ServiceManual = ({
   lentStartHandler,
 }: {
   lentStartHandler: React.MouseEventHandler;
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedContent, setSelectedContent] = useState<ContentStatus>(
+    ContentStatus.PRIVATE
+  );
+
+  const openModal = (contentStatus: ContentStatus) => {
+    setSelectedContent(contentStatus);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <WrapperStyled id="infoWrap">
       <TitleContainerStyled className="titleContainer">
-        <div className="logo">
-          <img src="/src/assets/images/logo.svg" alt="" />
-        </div>
         <h1 className="title">
           42Cabi <span>이용 안내서</span>
         </h1>
-        <p className="subtitle">캐비닛 대여 전 알아둘 3가지</p>
       </TitleContainerStyled>
-      <InfoSectionStyled className="section">
-        <article className="article">
-          <div>
-            <img src="/src/assets/images/privateIcon.svg" alt="" />
-          </div>
-          <h3>개인 사물함</h3>
-          <p>
-            <span>1인</span>이 1개의 사물함을 사용합니다.
-            <br />
-            최대 <span>
-              {import.meta.env.VITE_PRIVATE_LENT_PERIOD}일간
-            </span>{" "}
-            대여할 수 있습니다.
-            <br />
-            연체 시 연체되는 <span className="redColor">일 수만큼 페널티</span>
-            가 부과됩니다.
-          </p>
-        </article>
-        <article className="article">
-          <div>
-            <img src="/src/assets/images/shareIcon.svg" alt="" />
-          </div>
-          <h3>공유 사물함</h3>
-          <p>
-            1개의 사물함을 최대{" "}
-            <span>{import.meta.env.VITE_SHARE_MAX_USER}인</span>이 사용합니다.
-            <br />
-            <span>{import.meta.env.VITE_SHARE_LENT_PERIOD}일간</span> 대여할 수
-            있습니다.
-            <br />
-            사물함 제목과 메모는 대여자들끼리 공유됩니다.
-            <br />
-            대여 후{" "}
-            <span className="redColor">
-              {import.meta.env.VITE_SHARE_EARLY_RETURN_PERIOD}시간
-            </span>{" "}
-            내 반납 시,
-            <br />
-            {import.meta.env.VITE_SHARE_EARLY_RETURN_PENALTY}시간 동안 공유
-            사물함 대여가
-            <span className="redColor"> 불가능</span>합니다.
-            <br />
-            연체 시 연체되는 <span className="redColor">일 수만큼 페널티</span>
-            가 부과됩니다.
-          </p>
-        </article>
-        <article className="article">
-          <div>
-            <img src="/src/assets/images/clubIcon.svg" alt="" />
-          </div>
-          <h3>동아리 사물함</h3>
-          <p>
-            모집 기간에만 대여할 수 있습니다.
-            <br />
-            새로운 기수가 들어올 때 갱신됩니다.
-            <br />
-            사물함 대여는{" "}
-            <AtagStyled
-              href="https://42born2code.slack.com/archives/C02V6GE8LD7"
-              target="_blank"
-              title="슬랙 캐비닛 채널 새창으로 열기"
-            >
-              슬랙 캐비닛 채널
-            </AtagStyled>
-            로 문의주세요.
-            <br />
-            상세 페이지가 제공되지 않습니다.
-            <br />
-            비밀번호는 동아리 내에서 공유하여 이용하세요.
-          </p>
-        </article>
-      </InfoSectionStyled>
+
+      <WrapSectionStyled>
+        <p className="subtitle">
+          가능성의 확장
+          <br />
+          개인, 공유, 동아리 사물함.
+        </p>
+        <InfoSectionStyled className="section">
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.PRIVATE)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.PRIVATE} />
+          </article>
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.SHARE)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.SHARE} />
+          </article>
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.CLUB)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.CLUB} />
+          </article>
+        </InfoSectionStyled>
+        <p className="subtitle">
+          공정한 대여를 위한
+          <br />
+          새로운 사물함 서비스.
+        </p>
+        <InfoSectionStyled className="section">
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.PENDING)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.PENDING} />
+            <p className="redColor">new</p>
+          </article>
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.IN_SESSION)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.IN_SESSION} />
+            <p className="redColor">new</p>
+          </article>
+        </InfoSectionStyled>
+        <p className="subtitle">
+          사물함을 더 오래
+          <br />
+          사용할 수 있는 방법.
+        </p>
+        <InfoSectionStyled className="section">
+          <article
+            className="article"
+            onClick={() => openModal(ContentStatus.EXTENSION)}
+          >
+            <MaunalContentBox contentStatus={ContentStatus.EXTENSION} />
+          </article>
+        </InfoSectionStyled>
+      </WrapSectionStyled>
+
       <button onClick={lentStartHandler}>시작하기</button>
+      <ManualModal
+        isOpen={isModalOpen}
+        contentStatus={selectedContent}
+        onClose={closeModal}
+      />
     </WrapperStyled>
   );
 };
@@ -98,17 +108,20 @@ const WrapperStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 70px 0;
+  padding: 60px 0;
 `;
 
 const TitleContainerStyled = styled.div`
-  width: 600px;
+  width: 80%;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  padding-bottom: 70px;
-  border-bottom: 2px solid var(--main-color);
+  align-items: flex-start;
+  border-bottom: 2px solid #d9d9d9;
+  margin-bottom: 70px;
+  color: var(--main-color);
+  font-weight: 700;
   .logo {
     width: 35px;
     height: 35px;
@@ -120,39 +133,39 @@ const TitleContainerStyled = styled.div`
     margin-bottom: 20px;
   }
   .title > span {
-    font-weight: 700;
+    color: black;
   }
+`;
+
+const WrapSectionStyled = styled.div`
+  width: 80%;
+  max-width: 1000px;
   .subtitle {
-    font-size: 1.5rem;
-    color: var(--lightpurple-color);
+    font-size: 2.5rem;
+    line-height: 1.4;
+    text-align: left;
+    font-weight: bold;
   }
 `;
 
 const InfoSectionStyled = styled.section`
   display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-  width: 90%;
+  margin: 40px 0 60px 0;
+  width: 100%;
   max-width: 1500px;
   .article {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 70px;
-  }
-  .article > div {
-    width: 58px;
-    height: 58px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(113, 46, 255, 0.1);
-    border-radius: 50%;
-  }
-  .article > div > img {
-    width: 24px;
-    height: 24px;
+    margin: 10px 40px 60px 0;
+    :hover {
+      transition: all 0.3s ease-in-out;
+      margin-top: 6px;
+      .redColor {
+        transition: all 0.3s ease-in-out;
+        font-weight: 700;
+      }
+    }
   }
   .article > h3 {
     min-width: 200px;
@@ -168,16 +181,12 @@ const InfoSectionStyled = styled.section`
     text-align: center;
   }
   .redColor {
-    color: var(--expired);
+    color: #ef8172;
+    margin-top: 15px;
   }
   .article > p > span {
     font-weight: 700;
   }
-`;
-
-const AtagStyled = styled.a`
-  text-decoration: underline;
-  font-weight: 700;
 `;
 
 export default ServiceManual;
