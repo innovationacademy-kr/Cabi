@@ -56,7 +56,14 @@ public class LentPolicyImpl implements LentPolicy {
 				return now.plusDays(getDaysForLentTermPrivate())
 						.withHour(23)
 						.withMinute(59)
-						.withSecond(0);
+						.withSecond(59);
+			case SHARE:
+				if (activeLentHistories.isEmpty()) {
+					return DateUtil.getInfinityDate();
+				}
+				LentHistory lentHistory = activeLentHistories.get(0);
+				return generateSharedCabinetExpirationDate(now,
+						cabinet.getStatus(), lentHistory);
 			case CLUB:
 				return DateUtil.getInfinityDate();
 		}

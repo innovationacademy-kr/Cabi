@@ -1,17 +1,5 @@
 package org.ftclub.cabinet.lent.domain;
 
-import static javax.persistence.FetchType.LAZY;
-
-import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -203,7 +191,7 @@ public class LentHistory {
 	 */
 	public Long getDaysDiffEndedAndExpired() {
 		if (isSetExpiredAt() && isSetEndedAt()) {
-			return DateUtil.calculateTwoDateDiff(endedAt, expiredAt);
+			return DateUtil.calculateTwoDateDiff(endedAt, expiredAt) + 1;
 		}
 		return null;
 	}
