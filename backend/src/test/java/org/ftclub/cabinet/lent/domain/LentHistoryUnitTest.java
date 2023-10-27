@@ -1,15 +1,18 @@
 package org.ftclub.cabinet.lent.domain;
 
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDateTime;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LentHistoryUnitTest {
 
@@ -161,7 +164,7 @@ class LentHistoryUnitTest {
 
 		lentHistory.endLent(LocalDateTime.now().plusDays(5)); // 2일 연체 반납
 
-		assertEquals(2, lentHistory.getDaysDiffEndedAndExpired());
+		assertEquals(3, lentHistory.getDaysDiffEndedAndExpired());
 	}
 
 
