@@ -17,35 +17,36 @@ import org.thymeleaf.context.Context;
 @Log4j2
 public class EmailSender {
 
-	private final JavaMailSender javaMailSender;
-	private final ITemplateEngine templateEngine;
-	private final GmailProperties gmailProperties;
+    private final JavaMailSender javaMailSender;
+    private final ITemplateEngine templateEngine;
+    private final GmailProperties gmailProperties;
 
-	public void sendMail(String name, String to, String subject, String template)
-			throws MessagingException, MailException {
-		log.info("called EmailSender for {}, {}, {}", name, to, subject);
-		if (gmailProperties.getIsProduction() == false) {
-			log.debug("개발 환경이므로 메일을 보내지 않습니다.");
-			return;
-		}
-		MimeMessage message = javaMailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+    public void sendMail(String name, String to, String subject, String template)
+            throws MessagingException, MailException {
+        log.info("called EmailSender for {}, {}, {}", name, to, subject);
+        if (!gmailProperties.getIsProduction()) {
+            log.info("개발 환경이므로 메일을 보내지 않습니다.");
+            return;
+        }
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-		helper.setFrom(gmailProperties.getDisplaySenderName() + " <" + gmailProperties.getUsername() + ">");
-		helper.setTo(to);
-		helper.setSubject(subject);
+        helper.setFrom(gmailProperties.getDisplaySenderName() + " <" + gmailProperties.getUsername()
+                + ">");
+        helper.setTo(to);
+        helper.setSubject(subject);
 
-		Context context = new Context();
-		context.setVariable("name", name);
+        Context context = new Context();
+        context.setVariable("name", name);
 
-		String htmlContent = templateEngine.process(template, context);
-		helper.setText(htmlContent, true);
+        String htmlContent = templateEngine.process(template, context);
+        helper.setText(htmlContent, true);
 
-		try {
-			javaMailSender.send(message);
-			log.info("{} ({})에게 메일을 성공적으로 보냈습니다.", name, to);
-		} catch (MailException e) {
-			log.error("메일 전송 중 오류가 발생했습니다: {}", e.getMessage());
-		}
-	}
+        try {
+            javaMailSender.send(message);
+            log.info("{} ({})에게 메일을 성공적으로 보냈습니다.", name, to);
+        } catch (MailException e) {
+            log.error("메일 전송 중 오류가 발생했습니다: {}", e.getMessage());
+        }
+    }
 }
