@@ -87,7 +87,8 @@ export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
 const calExpiredTime = (expireTime: Date) =>
   Math.floor(
-    (expireTime.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+    (expireTime.setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) /
+      (1000 * 60 * 60 * 24)
   );
 
 const setExpireDate = (date: Date | undefined) => {
@@ -98,6 +99,7 @@ const setExpireDate = (date: Date | undefined) => {
 
 const getCalcualtedTimeString = (expireTime: Date) => {
   const remainTime = calExpiredTime(expireTime);
+  console.log(remainTime);
   return remainTime < 0
     ? `반납일이 ${-remainTime}일 지났습니다`
     : `반납일이 ${remainTime}일 남았습니다`;
