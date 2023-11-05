@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: 체크아웃
         uses: actions/checkout@v3
-        with:
-          submodule: true
 
       - name: JDK 11 설정
         uses: actions/setup-java@v3
