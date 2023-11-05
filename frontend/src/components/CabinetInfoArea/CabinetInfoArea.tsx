@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled, { css } from "styled-components";
 import {
   ICurrentModalStateInfo,
   ISelectedCabinetInfo,
@@ -377,15 +377,7 @@ const CabinetRectangleStyled = styled.div<{
   margin-top: 15px;
   margin-bottom: 3vh;
   background-color: ${({ cabinetStatus, isMine }) =>
-    isMine && cabinetStatus !== "IN_SESSION"
-      ? "var(--mine)"
-      : cabinetStatusColorMap[cabinetStatus]};
-
-  ${({ cabinetStatus, isMine }) =>
-    cabinetStatus === "IN_SESSION" &&
-    css`
-      animation: ${isMine ? Animation2 : Animation} 2.5s infinite;
-    `}
+    isMine ? "var(--mine)" : cabinetStatusColorMap[cabinetStatus]};
 
   font-size: 32px;
   color: ${(props) =>
@@ -393,29 +385,20 @@ const CabinetRectangleStyled = styled.div<{
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
-  ${({ cabinetStatus }) =>
-    cabinetStatus === "PENDING" &&
+
+  ${({ cabinetStatus, isMine }) =>
+    cabinetStatus === "IN_SESSION" &&
+    !isMine &&
     css`
       border: 2px solid var(--main-color);
     `}
-`;
 
-const Animation = keyframes`
-  0%, 100% {
-    background-color: var(--main-color);
-  }
-  50% {
-    background-color: #eeeeee;
-  }
-`;
-
-const Animation2 = keyframes`
-  0%, 100% {
-    background-color: var(--mine);
-  }
-  50% {
-    background-color: #eeeeee;
-  }
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "PENDING" &&
+    css`
+      border: 5px double var(--white);
+      line-height: 70px;
+    `}
 `;
 
 export const DetailStyled = styled.p`

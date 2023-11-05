@@ -270,25 +270,15 @@ const CabinetRectangleStyled = styled.div<{
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
-  ${({ cabinetStatus }) =>
-    cabinetStatus === "PENDING" &&
-    css`
-      border: 2px solid var(--main-color);
-    `}
-  ${({ cabinetStatus }) =>
-    cabinetStatus === "IN_SESSION" &&
-    css`
-      animation: ${Animation} 2.5s infinite;
-    `}
-`;
 
-const Animation = keyframes`
-  0%, 100% {
-    background-color: var(--main-color);
-  }
-  50% {
-    background-color: #d9d9d9;
-  }
+  ${({ cabinetStatus }) => css`
+    border: ${cabinetStatus === "IN_SESSION"
+      ? "2px solid var(--main-color)"
+      : cabinetStatus === "PENDING"
+      ? "5px double var(--white)"
+      : "none"};
+    ${cabinetStatus === "PENDING" && "line-height: 70px;"};
+  `}
 `;
 
 const CabinetInfoButtonsContainerStyled = styled.div`
