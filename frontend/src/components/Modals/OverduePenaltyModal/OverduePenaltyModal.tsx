@@ -3,8 +3,8 @@ import Modal from "@/components/Modals/Modal";
 import { IModalContents } from "@/components/Modals/Modal";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import errorIcon from "@/assets/images/errorIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import IconType from "@/types/enum/icon.type.enum";
 import { getFormatDate } from "@/utils/dateUtils";
 
 const OverduePenaltyModal: React.FC<{
@@ -48,13 +48,13 @@ const OverduePenaltyModal: React.FC<{
 
   const modalContents: IModalContents = {
     type: "penaltyBtn",
-    icon: errorIcon,
     title: modalPropsMap[additionalModalType.MODAL_OVERDUE_PENALTY].title,
     detail: penaltyDateDetail,
     proceedBtnText:
       modalPropsMap[additionalModalType.MODAL_OVERDUE_PENALTY].confirmMessage,
     onClickProceed: hideForOneDay,
     closeModal: props.closeModal,
+    iconType: IconType.ERRORICON,
   };
 
   return (

@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import { IModalContents } from "@/components/Modals/Modal";
+import { ReactComponent as CheckIcon } from "@/assets/images/checkIcon.svg";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
 const PasswordCheckModal: React.FC<{
@@ -10,7 +11,6 @@ const PasswordCheckModal: React.FC<{
 }> = ({ modalContents, password }) => {
   const {
     type,
-    icon,
     iconScaleEffect,
     title,
     detail,
@@ -20,6 +20,7 @@ const PasswordCheckModal: React.FC<{
     cancelBtnText,
     closeModal,
     isLoading,
+    iconType,
   } = modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
 
@@ -34,8 +35,10 @@ const PasswordCheckModal: React.FC<{
         }}
       />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
-        {icon && (
-          <ModalIconImgStyled src={icon} iconScaleEffect={iconScaleEffect} />
+        {iconType === "CHECKICON" && (
+          <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
+            <CheckIcon stroke="var(--main-color)" />
+          </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>
         {detail && (
@@ -107,22 +110,24 @@ const ModalStyled = styled.div`
   padding: 40px 20px;
 `;
 
-const ModalIconImgStyled = styled.img<{ iconScaleEffect: boolean | undefined }>`
-  width: 70px;
-  margin-bottom: 20px;
-  ${(props) =>
-    props.iconScaleEffect &&
-    css`
-      animation: scaleUpModalIcon 1s;
-      @keyframes scaleUpModalIcon {
-        0% {
-          width: 0px;
-        }
-        100% {
-          width: 70px;
-        }
-      }
-    `}
+const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
+  svg {
+    width: 70px;
+    margin-bottom: 20px;
+    animation: ${(props) =>
+      props.iconScaleEffect &&
+      css`
+        scaleUpModalIcon 1s;
+      `};
+  }
+  @keyframes scaleUpModalIcon {
+    0% {
+      transform: scale(0.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 `;
 
 export const DetailStyled = styled.p`

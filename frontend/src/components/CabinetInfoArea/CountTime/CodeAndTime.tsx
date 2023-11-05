@@ -3,8 +3,7 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/recoil/atoms";
 import alertImg from "@/assets/images/cautionSign.svg";
-import clockImg from "@/assets/images/clock.svg";
-import ticketImg from "@/assets/images/subtract.svg";
+import { ReactComponent as ClockImg } from "@/assets/images/clock2.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 
 interface CountTimeProps {
@@ -35,7 +34,7 @@ const CodeAndTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
       </CodeStyled>
       <TimeStyled>
         <ClockStyled>
-          <ClockImgStyled src={clockImg} />
+          <ClockImg stroke="var(--main-color)" />
           제한시간
         </ClockStyled>
         {isTimeOver ? (
@@ -93,7 +92,8 @@ const CodeAndTimeStyled = styled.div`
 const CodeStyled = styled.div<{ copySuccess: boolean }>`
   width: 185px;
   height: 48px;
-  background-image: url(${ticketImg});
+  background-color: var(--main-color);
+  mask-image: url("data:image/svg+xml,%3Csvg width='184' height='48' viewBox='0 0 184 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0 0H184V14.4C184 14.4 184 14.4 184 14.4C178.766 14.4 174.523 18.6981 174.523 24C174.523 29.3019 178.766 33.6 184 33.6C184 33.6 184 33.6 184 33.6V48H0V33.6C5.2335 33.5998 9.47603 29.3018 9.47603 24C9.47603 18.6982 5.2335 14.4002 0 14.4V0Z' fill='%239747FF'/%3E%3C/svg%3E%0A");
   color: white;
   display: flex;
   justify-content: center;
@@ -115,12 +115,9 @@ const ClockStyled = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 10px;
-`;
-
-const ClockImgStyled = styled.img`
-  width: 15px;
-  height: 15px;
-  margin-bottom: 3px;
+  svg {
+    margin-bottom: 3px;
+  }
 `;
 
 const CountDownStyled = styled.div`

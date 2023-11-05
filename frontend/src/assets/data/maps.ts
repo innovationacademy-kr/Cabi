@@ -30,8 +30,8 @@ export const cabinetLabelColorMap = {
   [CabinetStatus.OVERDUE]: "var(--white)",
   [CabinetStatus.BROKEN]: "var(--white)",
   [CabinetStatus.BANNED]: "var(--white)",
-  [CabinetStatus.IN_SESSION]: "var(--white)",
-  [CabinetStatus.PENDING]: "var(--main-color)",
+  [CabinetStatus.IN_SESSION]: "var(--main-color)",
+  [CabinetStatus.PENDING]: "var(--white)",
   MINE: "var(--black)",
 };
 
@@ -167,8 +167,8 @@ export const cabinetFilterMap = {
   [CabinetStatus.OVERDUE]: "brightness(100)",
   [CabinetStatus.BROKEN]: "brightness(100)",
   [CabinetStatus.BANNED]: "brightness(100)",
-  [CabinetStatus.IN_SESSION]: "brightness(100)",
-  [CabinetStatus.PENDING]: "none",
+  [CabinetStatus.IN_SESSION]: "none",
+  [CabinetStatus.PENDING]: "brightness(100)",
 };
 
 export const cabinetStatusLabelMap = {

@@ -19,8 +19,26 @@ const ServiceManual = ({
     setIsModalOpen(true);
   };
 
+  const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      //setModalIsOpen(false);
+
+      //onClose();
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 400);
+    }
+  };
+
   const closeModal = () => {
-    setIsModalOpen(false);
+    setTimeout(() => {
+      setIsModalOpen(false);
+    }, 400);
+
+    //onClose();
+    // setTimeout(() => {
+    //   onClose();
+    // }, 400);
   };
 
   return (
@@ -97,7 +115,9 @@ const ServiceManual = ({
       <ManualModal
         isOpen={isModalOpen}
         contentStatus={selectedContent}
-        onClose={closeModal}
+        closeModal={closeModal}
+        setIsModalOpen={setIsModalOpen}
+        handleModalClick={handleModalClick}
       />
     </WrapperStyled>
   );

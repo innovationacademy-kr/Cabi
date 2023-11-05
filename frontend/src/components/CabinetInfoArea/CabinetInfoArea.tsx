@@ -405,7 +405,7 @@ const Animation = keyframes`
     background-color: var(--main-color);
   }
   50% {
-    background-color: #d6c5fa;
+    background-color: #eeeeee;
   }
 `;
 

@@ -1,5 +1,7 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
+import { ReactComponent as ManualPeopleImg } from "@/assets/images/manualPeople.svg";
+import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
 
 interface MaunalContentBoxProps {
@@ -15,11 +17,7 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       contentStatus={contentStatus}
     >
       {contentStatus === ContentStatus.EXTENSION && (
-        <img
-          className="peopleImg"
-          src="/src/assets/images/manualPeople.svg"
-          alt=""
-        />
+        <ManualPeopleImg className="peopleImg" fill="var(--main-color)" />
       )}
       {contentStatus !== ContentStatus.PENDING &&
         contentStatus !== ContentStatus.IN_SESSION && (
@@ -31,11 +29,7 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
         )}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyeld>
-      <img
-        className="moveButton"
-        src="/src/assets/images/moveButton.svg"
-        alt=""
-      />
+      <MoveBtnImg className="moveButton" />
     </MaunalContentBoxStyled>
   );
 };
@@ -74,7 +68,7 @@ const MaunalContentBoxStyled = styled.div<{
   }
 
   .peopleImg {
-    width: 210px;
+    width: 220px;
     height: 500px;
     z-index: 1;
     position: absolute;
@@ -125,14 +119,12 @@ const MaunalContentBoxStyled = styled.div<{
     position: absolute;
     right: 35px;
     bottom: 35px;
-    filter: brightness(
-      ${(props) =>
-        props.contentStatus === ContentStatus.PENDING
-          ? "none"
-          : props.contentStatus === ContentStatus.EXTENSION
-          ? "0"
-          : "100"}
-    );
+    stroke: ${(props) =>
+      props.contentStatus === ContentStatus.PENDING
+        ? "var(--main-color)"
+        : props.contentStatus === ContentStatus.EXTENSION
+        ? "black"
+        : "white"};
     cursor: pointer;
   }
 
