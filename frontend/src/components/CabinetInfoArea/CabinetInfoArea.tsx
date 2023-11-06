@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import styled, { css } from "styled-components";
 import {
   ICurrentModalStateInfo,
@@ -37,7 +36,6 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
-  previousUserName: string | null;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -48,13 +46,7 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
-  previousUserName,
 }) => {
-  const [showPreviousUser, setShowPreviousUser] = useState(false);
-
-  const handleLinkTextClick = () => {
-    setShowPreviousUser(!showPreviousUser);
-  };
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
       <CabiLogoStyled src={cabiLogo} />
@@ -122,22 +114,6 @@ const CabinetInfoArea: React.FC<{
                 text="닫기"
                 theme="grayLine"
               />
-              <LinkTextStyled onClick={handleLinkTextClick}>
-                {showPreviousUser ? (
-                  previousUserName
-                ) : (
-                  <>
-                    <ImageStyled
-                      src="/src/assets/images/happyCcabi.png"
-                      alt=""
-                    />
-                    <HoverTextStyled>
-                      이전 <br />
-                      대여자
-                    </HoverTextStyled>
-                  </>
-                )}
-              </LinkTextStyled>
             </>
           )
         ) : (
@@ -307,19 +283,6 @@ const CabinetDetailAreaStyled = styled.div`
   align-items: center;
 `;
 
-const LinkTextStyled = styled.div`
-  position: absolute;
-  bottom: 3%;
-  right: 7%;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 0.875rem;
-  color: var(--gray-color);
-  :hover {
-    cursor: pointer;
-  }
-`;
-
 const HoverTextStyled = styled.div`
   width: 50px;
   display: none;
@@ -329,15 +292,6 @@ const HoverTextStyled = styled.div`
   color: var(--gray-color);
   text-align: center;
   line-height: 1.2;
-`;
-
-const ImageStyled = styled.img`
-  width: 30px;
-  height: 30px;
-
-  &:hover + ${HoverTextStyled} {
-    display: block;
-  }
 `;
 
 const CabiLogoStyled = styled.img`
@@ -491,15 +445,6 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   line-height: 28px;
   white-space: pre-line;
   text-align: center;
-`;
-
-const WarningMessageStyled = styled.p`
-  color: red;
-  font-size: 1rem;
-  margin-top: 8px;
-  text-align: center;
-  font-weight: 700;
-  line-height: 26px;
 `;
 
 const PendingMessageStyled = styled.p`
