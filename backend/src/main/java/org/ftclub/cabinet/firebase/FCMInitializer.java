@@ -12,7 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
+//@Component
 public class FCMInitializer {
 
 	@Value("${firebase.messaging.credentials.path}")

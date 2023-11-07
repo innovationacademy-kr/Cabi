@@ -69,7 +69,7 @@ public class OverdueManager {
 		try {
 			emailSender.sendMail(activeLent.getName(), activeLent.getEmail(), subject,
 					template);
-			fcmService.sendPushMessage(activeLent.getName(), overdueType, activeLent.getDaysLeftFromExpireDate());
+//			fcmService.sendPushMessage(activeLent.getName(), overdueType, activeLent.getDaysLeftFromExpireDate());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
