@@ -6,7 +6,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.config.MailOverdueProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.firebase.fcm.service.FCMService;
+//import org.ftclub.cabinet.firebase.fcm.service.FCMService;
 import org.ftclub.cabinet.utils.mail.EmailSender;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class OverdueManager {
 
 	private final EmailSender emailSender;
-	private final FCMService fcmService;
+//	private final FCMService fcmService;
 	private final CabinetService cabinetService;
 	private final MailOverdueProperties mailOverdueProperties;
 
