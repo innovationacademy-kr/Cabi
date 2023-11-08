@@ -194,7 +194,7 @@ const BottomBtnsStyled = styled.ul`
   text-align: center;
 `;
 
-const BottomBtnStyled = styled.li`
+const BottomBtnStyled = styled.li<{ src: string }>`
   width: 100%;
   min-height: 48px;
   line-height: 1.125rem;
@@ -217,6 +217,7 @@ const BottomBtnStyled = styled.li`
     height: 24px;
     margin: 0 auto;
     margin-bottom: 4px;
+    background-image: url(${(props) => props.src});
   }
   &.active {
     color: var(--main-color);
