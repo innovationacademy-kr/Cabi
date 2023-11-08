@@ -23,8 +23,7 @@ export const getExpireDateString = (
 
   if (!existExpireDate)
     expireDate.setDate(expireDate.getDate() + parseInt(addDays));
-    return formatDate(expireDate, "/");
-  }
+  return formatDate(expireDate, "/");
 };
 
 // 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원))
@@ -56,12 +55,6 @@ export const getLastDayofMonthString = (date: Date | null, divider: string) => {
   if (date === null) date = new Date();
   let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
   return formatDate(lastDay, divider);
-};
-
-export const getLastDayofMonthString = (date: Date | null) => {
-  if (date === null) date = new Date();
-  let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  return formatDate(lastDay);
 };
 
 export const getTotalPage = (totalLength: number, size: number) => {
