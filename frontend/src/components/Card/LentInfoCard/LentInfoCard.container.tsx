@@ -1,6 +1,7 @@
 import { useRecoilValue } from "recoil";
 import { myCabinetInfoState } from "@/recoil/atoms";
 import LentInfoCard from "@/components/Card/LentInfoCard/LentInfoCard";
+import { getDefaultCabinetInfo } from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 
@@ -22,10 +23,7 @@ const LentInfoCardContainer = () => {
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     const { lents } = selectedCabinetInfo;
-    // 동아리 사물함인 경우 cabinet_title 에 있는 동아리 이름 반환
-    // if (lentType === "CLUB" && title) return TitleStyled;
     if (lents.length === 0) return "";
-    // 그 외에는 유저리스트 반환
     return new Array(lents.length)
       .fill(null)
       .map((_, idx) => lents[idx])
@@ -33,7 +31,9 @@ const LentInfoCardContainer = () => {
       .join(", ");
   };
 
-  const cabinetLentInfo: MyCabinetInfo | null = myCabinetInfo
+  const defaultCabinetInfo: CabinetInfo = getDefaultCabinetInfo();
+
+  const cabinetLentInfo: MyCabinetInfo = myCabinetInfo
     ? {
         floor: myCabinetInfo.floor,
         section: myCabinetInfo.section,
@@ -49,7 +49,18 @@ const LentInfoCardContainer = () => {
         isLented: myCabinetInfo.lents.length !== 0,
         previousUserName: myCabinetInfo.previousUserName,
       }
-    : null;
+    : {
+        floor: defaultCabinetInfo.floor,
+        section: defaultCabinetInfo.section,
+        cabinetId: defaultCabinetInfo.cabinetId,
+        visibleNum: defaultCabinetInfo.visibleNum,
+        lentType: defaultCabinetInfo.lentType,
+        userCount: 0,
+        userNameList: "",
+        expireDate: undefined,
+        isLented: false,
+        previousUserName: "",
+      };
 
   return <LentInfoCard cabinetInfo={cabinetLentInfo} />;
 };

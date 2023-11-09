@@ -11,11 +11,7 @@ import { cabinetIconSrcMap } from "@/assets/data/maps";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { formatDate, getRemainingTime } from "@/utils/dateUtils";
 
-const LentInfoCard = ({
-  cabinetInfo,
-}: {
-  cabinetInfo: MyCabinetInfo | null;
-}) => {
+const LentInfoCard = ({ cabinetInfo }: { cabinetInfo: MyCabinetInfo }) => {
   const calculateFontSize = (userCount: number): string => {
     const baseSize = 1;
     const decrement = 0.2;
@@ -36,28 +32,28 @@ const LentInfoCard = ({
       <>
         <CabinetInfoWrapper>
           <CabinetRectangleStyled isMine={cabinetInfo?.cabinetId !== 0}>
-            {cabinetInfo!.visibleNum !== 0 ? cabinetInfo!.visibleNum : "-"}
+            {cabinetInfo.visibleNum !== 0 ? cabinetInfo.visibleNum : "-"}
           </CabinetRectangleStyled>
           <CabinetInfoDetailStyled>
             <CabinetInfoTextStyled
               fontSize="1rem"
               fontColor="var(--gray-color)"
             >
-              {cabinetInfo!.floor !== 0
-                ? cabinetInfo!.floor + "층 - " + cabinetInfo!.section
+              {cabinetInfo.floor !== 0
+                ? cabinetInfo.floor + "층 - " + cabinetInfo.section
                 : ""}
             </CabinetInfoTextStyled>
             {cabinetInfo?.isLented && (
               <CabinetUserListWrapper>
                 <CabinetIconStyled
-                  title={cabinetInfo!.lentType}
-                  cabinetType={cabinetInfo!.lentType}
+                  title={cabinetInfo.lentType}
+                  cabinetType={cabinetInfo.lentType}
                 />
                 <CabinetInfoTextStyled
-                  fontSize={calculateFontSize(cabinetInfo!.userCount)}
+                  fontSize={calculateFontSize(cabinetInfo.userCount)}
                   fontColor="black"
                 >
-                  {cabinetInfo!.userNameList}
+                  {cabinetInfo.userNameList}
                 </CabinetInfoTextStyled>
               </CabinetUserListWrapper>
             )}
@@ -69,7 +65,7 @@ const LentInfoCard = ({
             <ContentDeatilStyled>
               {cabinetInfo?.isLented
                 ? `${
-                    cabinetInfo!.lentType === "PRIVATE"
+                    cabinetInfo.lentType === "PRIVATE"
                       ? parseInt(import.meta.env.VITE_PRIVATE_LENT_PERIOD)
                       : parseInt(import.meta.env.VITE_SHARE_LENT_PERIOD)
                   }일`
