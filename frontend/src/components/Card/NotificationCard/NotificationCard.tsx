@@ -4,7 +4,6 @@ import {
   CardContentWrapper,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
-import PillButton from "@/components/Common/PillButton";
 import ToggleSwitch from "@/components/Common/ToggleSwitch";
 
 const NotificationCard = () => {
