@@ -107,7 +107,7 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
   const { lentType, title, maxUser, lents } = selectedCabinetInfo;
   if (lentType === "CLUB" && title) return title;
-  else if (maxUser === 0) return lents[0].name;
+  else if (maxUser === 0) return "";
 
   // 그 외에는 유저리스트 반환
   const userNameList = new Array(maxUser)
@@ -193,7 +193,10 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         status: targetCabinetInfo.status,
         lentType: targetCabinetInfo.lentType,
         userNameList: getCabinetUserList(targetCabinetInfo),
-        expireDate: targetCabinetInfo.lents[0]?.expiredAt,
+        expireDate:
+          targetCabinetInfo.lents.length !== 0
+            ? targetCabinetInfo.lents[0].expiredAt
+            : undefined,
         detailMessage: getDetailMessage(targetCabinetInfo),
         detailMessageColor: getDetailMessageColor(targetCabinetInfo),
         isAdmin: isAdmin,

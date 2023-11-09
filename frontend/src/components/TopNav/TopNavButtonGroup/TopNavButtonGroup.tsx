@@ -29,15 +29,7 @@ export const getDefaultCabinetInfo = (myInfo: UserDto): CabinetInfo => ({
   maxUser: 0,
   status: CabinetStatus.AVAILABLE,
   section: "",
-  lents: [
-    {
-      userId: myInfo.userId,
-      name: myInfo.name,
-      lentHistoryId: 0,
-      startedAt: new Date(),
-      expiredAt: new Date(),
-    },
-  ] as LentDto[],
+  lents: [] as LentDto[],
   statusNote: "",
 });
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
