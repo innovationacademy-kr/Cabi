@@ -14,7 +14,7 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myCabinetInfo, setMyCabinetInfo] = useRecoilState(myCabinetInfoState);
   const myInfo = useRecoilValue(userState);
-  const defaultCabinetInfo = getDefaultCabinetInfo(myInfo);
+  const defaultCabinetInfo = getDefaultCabinetInfo();
 
   useEffect(() => {
     setIsLoading(true);
