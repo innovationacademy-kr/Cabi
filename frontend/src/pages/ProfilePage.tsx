@@ -1,31 +1,20 @@
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { myCabinetInfoState, userState } from "@/recoil/atoms";
+import { userState } from "@/recoil/atoms";
 import ExtensionCardContainer from "@/components/Card/ExtensionCard/ExtensionCard.container";
 import LentInfoCardContainer from "@/components/Card/LentInfoCard/LentInfoCard.container";
 import NotificationCardContainer from "@/components/Card/NotificationCard/NotificationCard.container";
 import ProfileCardContainer from "@/components/Card/ProfileCard/ProfileCard.container";
 import ThemeColorCardContainer from "@/components/Card/ThemeColorCard/ThemeColorCard.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { getDefaultCabinetInfo } from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [myCabinetInfo, setMyCabinetInfo] = useRecoilState(myCabinetInfoState);
   const myInfo = useRecoilValue(userState);
-  const defaultCabinetInfo = getDefaultCabinetInfo();
 
   useEffect(() => {
     setIsLoading(true);
-    if (!myCabinetInfo) {
-      setMyCabinetInfo({
-        ...defaultCabinetInfo,
-        memo: "",
-        shareCode: 0,
-        previousUserName: "",
-      });
-    }
     setIsLoading(false);
   }, []);
 
