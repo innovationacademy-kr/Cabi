@@ -3,26 +3,18 @@ import { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
 import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
-import { ReactComponent as TimerImg } from "@/assets/images/timer.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
 
 interface ModalProps {
-  isOpen: boolean;
   contentStatus: ContentStatus;
-  closeModal: () => void;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleModalClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const ManualModal: React.FC<ModalProps> = ({
-  isOpen,
   contentStatus,
-  closeModal,
   setIsModalOpen,
-  handleModalClick,
 }) => {
-  if (!isOpen) return null;
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(isOpen);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const contentData = manualContentData[contentStatus];
 
   const isCabinetType =
@@ -30,45 +22,34 @@ const ManualModal: React.FC<ModalProps> = ({
     contentStatus === ContentStatus.SHARE ||
     contentStatus === ContentStatus.CLUB;
 
-  const isPending = contentStatus === ContentStatus.PENDING;
+  const isIcon =
+    contentStatus !== ContentStatus.PENDING &&
+    contentStatus !== ContentStatus.IN_SESSION;
 
-  // const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-  //   if (e.target === e.currentTarget) {
-  //     //setModalIsOpen(false);
-
-  //     //onClose();
-  //     setTimeout(() => {
-  //       setIsModalOpen(false);
-  //     }, 400);
-  //   }
-  // };
-
-  // const closeModal = () => {
-  //   setModalIsOpen(false);
-  //   setIsModalOpen(false);
-
-  //   //onClose();
-  //   // setTimeout(() => {
-  //   //   onClose();
-  //   // }, 400);
-  // };
+  const closeModal = () => {
+    if (modalIsOpen) {
+      setModalIsOpen(false);
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 400);
+    }
+  };
 
   return (
-    <ModalOverlay onClick={handleModalClick}>
+    <ModalOverlay onClick={closeModal}>
       <ModalWrapper
         background={contentData.background}
         contentStatus={contentStatus}
-        isOpen={modalIsOpen}
+        className={modalIsOpen ? "open" : "close"}
       >
         <ModalContent contentStatus={contentStatus}>
           <CloseButton contentStatus={contentStatus} onClick={closeModal}>
             <MoveBtnImg stroke="white" />
           </CloseButton>
           <BasicInfo>
-            {!isPending && (
+            {isIcon && (
               <img className="contentImg" src={contentData.imagePath} alt="" />
             )}
-            {isPending && <TimerImg stroke="var(--main-color)" />}
             {isCabinetType && (
               <BoxInfoWrap>
                 <BoxInfo1>
@@ -130,10 +111,14 @@ const CloseModalAni = keyframes`
 const ModalWrapper = styled.div<{
   background: string;
   contentStatus: ContentStatus;
-  isOpen: boolean;
 }>`
-  animation: ${(props) => (props.isOpen ? OpenModalAni : CloseModalAni)} 0.4s
-    ease-in-out;
+  &.open {
+    animation: ${OpenModalAni} 0.4s ease-in-out;
+  }
+
+  &.close {
+    animation: ${CloseModalAni} 0.4s ease-in-out;
+  }
   transform-origin: center;
   position: fixed;
   bottom: 0;
@@ -147,7 +132,9 @@ const ModalWrapper = styled.div<{
   border-radius: 40px 40px 0 0;
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
-      ? "6px solid var(--main-color)"
+      ? "10px double var(--white)"
+      : props.contentStatus === ContentStatus.IN_SESSION
+      ? "5px solid var(--main-color)"
       : "none"};
   border-bottom: none;
   @media screen and (max-width: 700px) {
@@ -163,7 +150,7 @@ const ModalContent = styled.div<{
   display: flex;
   flex-direction: column;
   color: ${(props) =>
-    props.contentStatus === ContentStatus.PENDING
+    props.contentStatus === ContentStatus.IN_SESSION
       ? "var(--main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
       ? "black"
@@ -210,7 +197,7 @@ const CloseButton = styled.div<{
   svg {
     transform: scaleX(-1);
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.PENDING
+      props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "black"

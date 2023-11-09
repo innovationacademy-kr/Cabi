@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import styled, { css, keyframes } from "styled-components";
+import styled, { css } from "styled-components";
 import {
   currentFloorNumberState,
   currentSectionNameState,

@@ -116,7 +116,7 @@ const ClockStyled = styled.div`
   align-items: center;
   font-size: 10px;
   svg {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
 `;
 

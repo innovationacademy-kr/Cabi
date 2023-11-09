@@ -1,5 +1,6 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
+import { ReactComponent as ClockImg } from "@/assets/images/clock3.svg";
 import { ReactComponent as ManualPeopleImg } from "@/assets/images/manualPeople.svg";
 import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
@@ -25,7 +26,10 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
         )}
       <ContentTextStyeld>
         {contentStatus === ContentStatus.IN_SESSION && (
-          <img className="clockImg" src="/src/assets/images/clock.svg" alt="" />
+          <ClockImg
+            stroke="var(--main-color)"
+            className="clockImg"
+          />
         )}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyeld>
@@ -33,6 +37,12 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
     </MaunalContentBoxStyled>
   );
 };
+
+const Rotation = keyframes`
+ to {
+		transform : rotate(360deg)
+	}
+`;
 
 const MaunalContentBoxStyled = styled.div<{
   background: string;
@@ -53,10 +63,9 @@ const MaunalContentBoxStyled = styled.div<{
   cursor: pointer;
   .clockImg {
     width: 35px;
-    height: 35px;
-    filter: brightness(100);
     margin-right: 10px;
     margin-top: 160px;
+    animation: ${Rotation} 1s linear infinite;
   }
 
   .contentImg {
@@ -79,14 +88,14 @@ const MaunalContentBoxStyled = styled.div<{
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.PENDING &&
     css`
-      border: 5px solid var(--main-color);
-      color: var(--main-color);
+      border: 10px double var(--white);
     `}
 
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.IN_SESSION &&
     css`
-      animation: ${Animation} 3s infinite;
+      border: 5px solid var(--main-color);
+      color: var(--main-color);
     `}
 
   ${({ contentStatus }) =>
@@ -120,7 +129,7 @@ const MaunalContentBoxStyled = styled.div<{
     right: 35px;
     bottom: 35px;
     stroke: ${(props) =>
-      props.contentStatus === ContentStatus.PENDING
+      props.contentStatus === ContentStatus.IN_SESSION
         ? "var(--main-color)"
         : props.contentStatus === ContentStatus.EXTENSION
         ? "black"
@@ -145,15 +154,6 @@ const MaunalContentBoxStyled = styled.div<{
       transition: all 0.3s ease-in-out;
       margin-top: 155px;
     }
-  }
-`;
-
-const Animation = keyframes`
-  0%, 100% {
-    background-color: var(--main-color);
-  }
-  50% {
-    background-color: #eeeeee;
   }
 `;
 

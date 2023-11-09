@@ -74,7 +74,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   [ContentStatus.PENDING]: {
     contentTitle: "오픈예정",
     imagePath: "",
-    background: "white",
+    background: "var(--main-color)",
     contentText: `사물함 반납 시, 해당 사물함은 즉시 <strong>오픈예정</strong> 상태가 됩니다.<br />
     오픈예정 상태의 사물함은 대여가 불가능합니다.<br />
     <strong>반납일 기준 다음 날 오후 1시(13시)</strong> 사용가능 상태가 됩니다.<br/>
@@ -84,19 +84,19 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     title="슬랙 캐비닛 채널 새창으로 열기"
   >
     슬랙 캐비닛 채널</a>에서 확인하세요.`,
-    pointColor: "var(--main-color)",
+    pointColor: "var(--white)",
   },
   [ContentStatus.IN_SESSION]: {
     contentTitle: "대기중",
     imagePath: "/src/assets/images/clock.svg",
-    background: "var(--main-color)",
+    background: "#F5F5F7",
     contentText: `공유 사물함 대여시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
     대기 시간 동안 <strong>공유 인원(2인~4인)</strong>이 형성되지 않으면 공유 사물함 대여는 취소됩니다.<br/>
     대기 시간 내 <strong>4명</strong>의 공유 인원이 형성되면 즉시 대여가 완료됩니다.<br/>
     대여 과정에서 생성된 <strong>초대 코드</strong>를 사용하여 공유 사물함에 입장할 수 있습니다.<br/>
     초대 코드를 <strong>3번 이상</strong> 잘못 입력하면 <strong>입장이 제한</strong>됩니다.<br /><br />
     `,
-    pointColor: "white",
+    pointColor: "var(--main-color)",
   },
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",

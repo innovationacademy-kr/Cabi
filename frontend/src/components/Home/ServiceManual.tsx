@@ -19,28 +19,6 @@ const ServiceManual = ({
     setIsModalOpen(true);
   };
 
-  const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      //setModalIsOpen(false);
-
-      //onClose();
-      setTimeout(() => {
-        setIsModalOpen(false);
-      }, 400);
-    }
-  };
-
-  const closeModal = () => {
-    setTimeout(() => {
-      setIsModalOpen(false);
-    }, 400);
-
-    //onClose();
-    // setTimeout(() => {
-    //   onClose();
-    // }, 400);
-  };
-
   return (
     <WrapperStyled id="infoWrap">
       <TitleContainerStyled className="titleContainer">
@@ -112,13 +90,12 @@ const ServiceManual = ({
       </WrapSectionStyled>
 
       <button onClick={lentStartHandler}>시작하기</button>
-      <ManualModal
-        isOpen={isModalOpen}
-        contentStatus={selectedContent}
-        closeModal={closeModal}
-        setIsModalOpen={setIsModalOpen}
-        handleModalClick={handleModalClick}
-      />
+      {isModalOpen && (
+        <ManualModal
+          contentStatus={selectedContent}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </WrapperStyled>
   );
 };

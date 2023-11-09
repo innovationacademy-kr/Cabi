@@ -283,17 +283,6 @@ const CabinetDetailAreaStyled = styled.div`
   align-items: center;
 `;
 
-const HoverTextStyled = styled.div`
-  width: 50px;
-  display: none;
-  position: absolute;
-  bottom: 35px;
-  right: -10px;
-  color: var(--gray-color);
-  text-align: center;
-  line-height: 1.2;
-`;
-
 const CabiLogoStyled = styled.img`
   width: 35px;
   height: 35px;
