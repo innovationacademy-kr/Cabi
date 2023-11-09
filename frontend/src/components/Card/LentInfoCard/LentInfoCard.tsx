@@ -16,10 +16,20 @@ const LentInfoCard = ({
 }: {
   cabinetInfo: MyCabinetInfo | null;
 }) => {
+  const calculateFontSize = (userCount: number): string => {
+    const baseSize = 1;
+    const decrement = 0.2;
+    const minSize = 0.6;
+    const calculatedSize = Math.max(
+      baseSize - (userCount - 1) * decrement,
+      minSize
+    );
+    return `${calculatedSize}rem`;
+  };
   return (
     <Card
       title={"대여정보"}
-      gridArea="lentInfo"
+      gridArea={"lentInfo"}
       width={"350px"}
       height={"366px"}
     >
@@ -43,7 +53,10 @@ const LentInfoCard = ({
                   title={cabinetInfo!.lentType}
                   cabinetType={cabinetInfo!.lentType}
                 />
-                <CabinetInfoTextStyled fontSize="1rem" fontColor="black">
+                <CabinetInfoTextStyled
+                  fontSize={calculateFontSize(cabinetInfo!.userCount)}
+                  fontColor="black"
+                >
                   {cabinetInfo!.userNameList}
                 </CabinetInfoTextStyled>
               </CabinetUserListWrapper>
@@ -95,7 +108,7 @@ const LentInfoCard = ({
 
 const CabinetInfoWrapper = styled.div`
   display: flex;
-  width: 80%;
+  width: 85%;
   margin: 10px 0 15px 0;
   align-items: center;
 `;

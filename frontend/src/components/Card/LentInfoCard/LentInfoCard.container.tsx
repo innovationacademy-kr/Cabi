@@ -10,6 +10,7 @@ export interface MyCabinetInfo {
   cabinetId: number;
   visibleNum: number;
   lentType: CabinetType;
+  userCount: number;
   userNameList: string;
   expireDate?: Date;
   isLented: boolean;
@@ -39,6 +40,7 @@ const LentInfoCardContainer = () => {
         cabinetId: myCabinetInfo.cabinetId,
         visibleNum: myCabinetInfo.visibleNum,
         lentType: myCabinetInfo.lentType,
+        userCount: myCabinetInfo.lents.length,
         userNameList: getCabinetUserList(myCabinetInfo),
         expireDate:
           myCabinetInfo.lents.length !== 0
