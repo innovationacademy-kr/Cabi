@@ -18,7 +18,7 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import alertImg from "@/assets/images/cautionSign.svg";
-import cabiLogo from "@/assets/images/logo.svg";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CancelModal from "../Modals/CancelModal/CancelModal";
@@ -49,7 +49,9 @@ const CabinetInfoArea: React.FC<{
 }) => {
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
-      <CabiLogoStyled src={cabiLogo} />
+      <CabiLogoStyled>
+        <LogoImg />
+      </CabiLogoStyled>
       <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
         사물함을 <br />
         선택해주세요
@@ -283,10 +285,15 @@ const CabinetDetailAreaStyled = styled.div`
   align-items: center;
 `;
 
-const CabiLogoStyled = styled.img`
+const CabiLogoStyled = styled.div`
   width: 35px;
   height: 35px;
   margin-bottom: 10px;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`

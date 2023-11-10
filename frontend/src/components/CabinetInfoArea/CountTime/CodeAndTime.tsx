@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { myCabinetInfoState } from "@/recoil/atoms";
 import alertImg from "@/assets/images/cautionSign.svg";
-import { ReactComponent as ClockImg } from "@/assets/images/clock2.svg";
+import { ReactComponent as ClockImg } from "@/assets/images/clock.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 
 interface CountTimeProps {
@@ -116,6 +116,8 @@ const ClockStyled = styled.div`
   align-items: center;
   font-size: 10px;
   svg {
+    width: 20px;
+    height: 20px;
     margin-bottom: 4px;
   }
 `;

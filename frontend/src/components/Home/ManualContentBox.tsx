@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
-import { ReactComponent as ClockImg } from "@/assets/images/clock3.svg";
+import { ReactComponent as ClockImg } from "@/assets/images/clock.svg";
 import { ReactComponent as ManualPeopleImg } from "@/assets/images/manualPeople.svg";
 import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
@@ -26,10 +26,7 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
         )}
       <ContentTextStyeld>
         {contentStatus === ContentStatus.IN_SESSION && (
-          <ClockImg
-            stroke="var(--main-color)"
-            className="clockImg"
-          />
+          <ClockImg stroke="var(--main-color)" className="clockImg" />
         )}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyeld>
