@@ -27,8 +27,6 @@ public class FCMInitializer {
 	@PostConstruct
 	public void initialize() throws IOException {
 		Path currentPath = Paths.get("").toAbsolutePath().normalize();
-		log.info(credentialsPath);
-		log.info(currentPath + credentialsPath);
 		Resource resource = resourceLoader.getResource("file:" + currentPath + credentialsPath);
 		try (InputStream inputStream = resource.getInputStream()) {
 			FirebaseOptions options = FirebaseOptions.builder()
