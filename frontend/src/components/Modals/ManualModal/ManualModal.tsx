@@ -269,11 +269,13 @@ const ManualContentStyeld = styled.div<{
   @media screen and (max-width: 800px) {
     line-height: 1.7;
     font-size: 18px;
+    margin-left: 10px;
   }
   @media screen and (max-width: 400px) {
     line-height: 1.6;
     font-size: 14px;
     margin-top: 20px;
+    margin-left: 3px;
   }
 `;
 
