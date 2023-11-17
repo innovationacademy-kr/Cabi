@@ -64,7 +64,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
                 lentExtensionOptionalFetcher.findLentExtensionByUserId(user.getUserId())
                 .stream().filter(lentExtension -> lentExtension.getUsedAt() == null
                         && lentExtension.getExpiredAt().isAfter(LocalDateTime.now()))
-                .toList();
+                .collect(Collectors.toList());
         boolean isLentExtensionAvailable = !lentExtensionNotExpiredByUserId.isEmpty();
         return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, isLentExtensionAvailable);
     }
@@ -97,7 +97,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         PageRequest pageable = PageRequest.of(page, size);
         Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
         List<UserProfileDto> userProfileDtoList = users.stream()
-                .map(userMapper::toUserProfileDto).toList();
+                .map(userMapper::toUserProfileDto).collect(Collectors.toList());
         return userMapper.toUserProfilePaginationDto(userProfileDtoList,
                 users.getTotalElements());
     }

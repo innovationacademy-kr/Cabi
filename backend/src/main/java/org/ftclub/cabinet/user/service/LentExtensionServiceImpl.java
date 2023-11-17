@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -83,7 +84,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
                 .filter(lentExtension ->
                         lentExtension.getExpiredAt().isBefore(LocalDateTime.now())
                                 && lentExtension.getUsedAt() == null)
-                .toList();
+                .collect(Collectors.toList());
         if (findLentExtension.isEmpty()) {
             throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
         }
