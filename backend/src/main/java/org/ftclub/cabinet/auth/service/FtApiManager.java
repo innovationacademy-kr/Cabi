@@ -46,12 +46,12 @@ public class FtApiManager {
                                 return objectMapper.readTree(response)
                                         .get(ftApiProperties.getAccessTokenName()).asText();
                             } catch (Exception e) {
-                                log.error(e.getMessage());
+                                log.error("{}", e.getMessage());
                                 throw new RuntimeException();
                             }
                         })
                         .onErrorResume(e -> {
-                            log.error(e.getMessage());
+                            log.error("{}", e.getMessage());
                             throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
                         })
                         .block();

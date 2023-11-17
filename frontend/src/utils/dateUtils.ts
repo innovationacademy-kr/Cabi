@@ -2,12 +2,13 @@ export const padTo2Digits = (num: number) => {
   return num.toString().padStart(2, "0");
 };
 
-export const formatDate = (date: Date) => {
+export const formatDate = (date: Date | null, divider: string) => {
+  if (date === null) return "";
   return [
     date.getFullYear(),
     padTo2Digits(date.getMonth() + 1),
     padTo2Digits(date.getDate()),
-  ].join("/");
+  ].join(divider);
 };
 
 export const getExpireDateString = (
@@ -22,7 +23,7 @@ export const getExpireDateString = (
 
   if (!existExpireDate)
     expireDate.setDate(expireDate.getDate() + parseInt(addDays));
-  return formatDate(expireDate);
+  return formatDate(expireDate, "/");
 };
 
 // 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원))
@@ -39,7 +40,7 @@ export const getShortenedExpireDateString = (
   let dateRemainig =
     (daysUntilExpire * (currentNumUsers - 1)) / currentNumUsers;
   let newExpireDate = new Date().getTime() + dateRemainig * dayInMilisec;
-  return formatDate(new Date(newExpireDate));
+  return formatDate(new Date(newExpireDate), "/");
 };
 
 export const getExtendedDateString = (existExpireDate?: Date) => {
@@ -47,23 +48,32 @@ export const getExtendedDateString = (existExpireDate?: Date) => {
   expireDate.setDate(
     expireDate.getDate() + parseInt(import.meta.env.VITE_EXTENDED_LENT_PERIOD)
   );
-  return formatDate(expireDate);
+  return formatDate(expireDate, "/");
 };
 
-export const getLastDayofMonthString = (date: Date | null) => {
+export const getLastDayofMonthString = (date: Date | null, divider: string) => {
   if (date === null) date = new Date();
   let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  return formatDate(lastDay);
+  return formatDate(lastDay, divider);
 };
 
 export const getTotalPage = (totalLength: number, size: number) => {
   return Math.ceil(totalLength / size);
 };
 
-export const getFormatDate1 = (date: Date | null): string => {
-  if (!date) return "";
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  return `${year}/${month}/${day}`;
+export const calExpiredTime = (expireTime: Date) =>
+  Math.floor(
+    (expireTime.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+export const getRemainingTime = (expireTime: Date | undefined) => {
+  if (!expireTime) return 0;
+  const remainTime = calExpiredTime(new Date(expireTime));
+  return remainTime < 0 ? -remainTime : remainTime;
+};
+
+export const getExpireDate = (date: Date | undefined) => {
+  if (!date) return null;
+  if (date.toString().slice(0, 4) === "9999") return null;
+  return date.toString().slice(0, 10);
 };
