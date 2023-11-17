@@ -127,10 +127,8 @@ public class LentRedis {
 
 	public void deleteUserInRedis(String cabinetId, String userId) { // user를 지우는 delete
 		log.debug("called deleteUserInRedis: {}, {}", cabinetId, userId);
-		if (isUserInRedis(cabinetId, userId)) {
 			valueHashOperations.delete(cabinetId, userId);
 			valueOperations.getOperations().delete(userId + VALUE_KEY_SUFFIX);
-		}
 	}
 
 	public void deleteCabinetIdInRedis(String cabinetId) {
