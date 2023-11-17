@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { myCabinetInfoState } from "@/recoil/atoms";
+import { myCabinetInfoState, targetUserInfoState } from "@/recoil/atoms";
 import LentInfoCard from "@/components/Card/LentInfoCard/LentInfoCard";
 import { getDefaultCabinetInfo } from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -16,10 +16,13 @@ export interface MyCabinetInfo {
   expireDate?: Date;
   isLented: boolean;
   previousUserName: string;
+  status: string;
 }
 
 const LentInfoCardContainer = () => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
+  const targetUserInfo = useRecoilValue(targetUserInfoState);
+  const bannedAt = targetUserInfo ? !!targetUserInfo.bannedAt : false;
 
   const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
     const { lents } = selectedCabinetInfo;
@@ -48,6 +51,7 @@ const LentInfoCardContainer = () => {
             : undefined,
         isLented: myCabinetInfo.lents.length !== 0,
         previousUserName: myCabinetInfo.previousUserName,
+        status: myCabinetInfo.status,
       }
     : {
         floor: defaultCabinetInfo.floor,
@@ -60,9 +64,10 @@ const LentInfoCardContainer = () => {
         expireDate: undefined,
         isLented: false,
         previousUserName: "",
+        status: defaultCabinetInfo.status,
       };
 
-  return <LentInfoCard cabinetInfo={cabinetLentInfo} />;
+  return <LentInfoCard cabinetInfo={cabinetLentInfo} bannedAt={bannedAt} />;
 };
 
 export default LentInfoCardContainer;

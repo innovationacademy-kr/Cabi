@@ -27,7 +27,7 @@ export const getDefaultCabinetInfo = () => ({
   lentType: CabinetType.PRIVATE,
   title: null,
   maxUser: 0,
-  status: CabinetStatus.AVAILABLE,
+  status: CabinetStatus.PENDING,
   section: "",
   lents: [] as LentDto[],
   statusNote: "",

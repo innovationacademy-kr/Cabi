@@ -7,11 +7,22 @@ import {
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/components/Card/LentInfoCard/LentInfoCard.container";
-import { cabinetIconSrcMap } from "@/assets/data/maps";
+import {
+  cabinetIconSrcMap,
+  cabinetLabelColorMap,
+  cabinetStatusColorMap,
+} from "@/assets/data/maps";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { formatDate, getRemainingTime } from "@/utils/dateUtils";
 
-const LentInfoCard = ({ cabinetInfo }: { cabinetInfo: MyCabinetInfo }) => {
+const LentInfoCard = ({
+  cabinetInfo,
+  bannedAt,
+}: {
+  cabinetInfo: MyCabinetInfo;
+  bannedAt: boolean;
+}) => {
   const calculateFontSize = (userCount: number): string => {
     const baseSize = 1;
     const decrement = 0.2;
@@ -31,8 +42,15 @@ const LentInfoCard = ({ cabinetInfo }: { cabinetInfo: MyCabinetInfo }) => {
     >
       <>
         <CabinetInfoWrapper>
-          <CabinetRectangleStyled isMine={cabinetInfo?.cabinetId !== 0}>
-            {cabinetInfo.visibleNum !== 0 ? cabinetInfo.visibleNum : "-"}
+          <CabinetRectangleStyled
+            status={cabinetInfo.status as CabinetStatus}
+            banned={!!bannedAt}
+          >
+            {cabinetInfo.visibleNum !== 0
+              ? cabinetInfo.visibleNum
+              : !!bannedAt
+              ? "!"
+              : "-"}
           </CabinetRectangleStyled>
           <CabinetInfoDetailStyled>
             <CabinetInfoTextStyled
@@ -110,14 +128,26 @@ const CabinetInfoWrapper = styled.div`
 `;
 
 const CabinetRectangleStyled = styled.div<{
-  isMine: boolean;
+  status: CabinetStatus;
+  banned?: boolean;
 }>`
   width: 60px;
   height: 60px;
   line-height: 60px;
   border-radius: 10px;
   margin-right: 20px;
-  background-color: var(--mine);
+  background-color: ${(props) =>
+    props.banned
+      ? "var(--expired)"
+      : props.status === "FULL"
+      ? "var(--mine)"
+      : cabinetStatusColorMap[props.status]};
+  color: ${(props) =>
+    props.banned
+      ? "var(--white)"
+      : props.status && props.status !== "PENDING"
+      ? cabinetLabelColorMap[props.status]
+      : "var(--black)"};
   font-size: 32px;
   text-align: center;
 `;
@@ -125,7 +155,7 @@ const CabinetRectangleStyled = styled.div<{
 const CabinetInfoDetailStyled = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const CabinetInfoTextStyled = styled.div<{
@@ -147,10 +177,8 @@ const CabinetUserListWrapper = styled.div`
 `;
 
 const CabinetIconStyled = styled.div<{ cabinetType: CabinetType }>`
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  min-height: 24px;
+  width: 18px;
+  height: 18px;
   margin-right: 10px;
   background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
   background-size: contain;
