@@ -19,23 +19,22 @@ export interface MyCabinetInfo {
   status: string;
 }
 
+const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
+  const { lents } = selectedCabinetInfo;
+  if (lents.length === 0) return "";
+  return new Array(lents.length)
+    .fill(null)
+    .map((_, idx) => lents[idx])
+    .map((info) => (info ? info.name : ""))
+    .join(", ");
+};
+
 const LentInfoCardContainer = () => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
   const targetUserInfo = useRecoilValue(targetUserInfoState);
+
   const bannedAt = targetUserInfo ? !!targetUserInfo.bannedAt : false;
-
-  const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
-    const { lents } = selectedCabinetInfo;
-    if (lents.length === 0) return "";
-    return new Array(lents.length)
-      .fill(null)
-      .map((_, idx) => lents[idx])
-      .map((info) => (info ? info.name : ""))
-      .join(", ");
-  };
-
   const defaultCabinetInfo: CabinetInfo = getDefaultCabinetInfo();
-
   const cabinetLentInfo: MyCabinetInfo = myCabinetInfo
     ? {
         floor: myCabinetInfo.floor,
