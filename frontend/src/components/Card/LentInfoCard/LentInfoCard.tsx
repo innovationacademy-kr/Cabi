@@ -7,11 +7,7 @@ import {
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/components/Card/LentInfoCard/LentInfoCard.container";
-import {
-  cabinetIconSrcMap,
-  cabinetLabelColorMap,
-  cabinetStatusColorMap,
-} from "@/assets/data/maps";
+import { cabinetIconSrcMap } from "@/assets/data/maps";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { formatDate, getRemainingTime } from "@/utils/dateUtils";
@@ -25,8 +21,8 @@ const LentInfoCard = ({
 }) => {
   const calculateFontSize = (userCount: number): string => {
     const baseSize = 1;
-    const decrement = 0.05;
-    const minSize = 0.8;
+    const decrement = 0.2;
+    const minSize = 0.6;
     const calculatedSize = Math.max(
       baseSize - (userCount - 1) * decrement,
       minSize
@@ -43,6 +39,7 @@ const LentInfoCard = ({
       <>
         <CabinetInfoWrapper>
           <CabinetRectangleStyled
+            isLented={cabinetInfo.isLented}
             status={cabinetInfo.status as CabinetStatus}
             banned={!!bannedAt}
           >
@@ -128,6 +125,7 @@ const CabinetInfoWrapper = styled.div`
 `;
 
 const CabinetRectangleStyled = styled.div<{
+  isLented: boolean;
   status: CabinetStatus;
   banned?: boolean;
 }>`
@@ -139,15 +137,10 @@ const CabinetRectangleStyled = styled.div<{
   background-color: ${(props) =>
     props.banned
       ? "var(--expired)"
-      : props.status === "FULL"
+      : props.isLented
       ? "var(--mine)"
-      : cabinetStatusColorMap[props.status]};
-  color: ${(props) =>
-    props.banned
-      ? "var(--white)"
-      : props.status && props.status !== "PENDING"
-      ? cabinetLabelColorMap[props.status]
-      : "var(--black)"};
+      : "var(--full)"};
+  color: ${(props) => (props.banned ? "var(--white)" : "var(--black)")};
   font-size: 32px;
   text-align: center;
 `;
