@@ -1,6 +1,5 @@
 import React from "react";
 import { TwitterPicker } from "react-color";
-import { CirclePicker } from "react-color";
 import styled from "styled-components";
 
 const ThemeColor: React.FC<{
