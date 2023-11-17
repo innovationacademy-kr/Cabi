@@ -1,6 +1,6 @@
 enum IconType {
-  CHECKICON = "CHECKICON",
-  ERRORICON = "ERRORICON",
+  CHECKICON = "CHECK",
+  ERRORICON = "ERROR",
 }
 
 export default IconType;

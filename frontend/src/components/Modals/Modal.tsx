@@ -67,12 +67,12 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         }}
       />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
-        {iconType === "CHECKICON" && (
+        {iconType === "CHECK" && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
             <CheckIcon stroke="var(--main-color)" />
           </ModalIconImgStyled>
         )}
-        {iconType === "ERRORICON" && !isClubLentModal && (
+        {iconType === "ERROR" && !isClubLentModal && (
           <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
             <ErrorIcon stroke="var(--main-color)" />
           </ModalIconImgStyled>
