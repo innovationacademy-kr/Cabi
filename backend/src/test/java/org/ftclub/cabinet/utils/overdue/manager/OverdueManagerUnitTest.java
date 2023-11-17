@@ -5,6 +5,8 @@ import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.config.GmailProperties;
 import org.ftclub.cabinet.config.MailOverdueProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.mail.EmailSender;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -104,11 +106,30 @@ public class OverdueManagerUnitTest {
 				activeLentHistoryDto.getDaysLeftFromExpireDate()), OverdueType.NONE);
 	}
 
+	/**
+	 * 이 테스트에 대한 내용은 매우 중대해서 모두가 읽어야 함*******************************************
+	 * 현재 유닛 테스트에서 처리되지 않은 흐름이 있음(FcmManager).
+	 * 그러나 해당 로직에 대한 호출을 검증하지 않은(까먹은) 상태로 nullPointerException이 발생했음에도 테스트가 통과하는 문제가 발생함.
+	 * 이 문제는 해당 익셉션이 발생하더라도 테스트에서 검증하는 호출들이 모두 이루어졌기 때문임.
+	 * 따라서 유닛 테스트를 작성할 때에 놓치는 부분이 없이(혹은 이후에 로직을 추가하더라도 테스트에 잘) 작성해야함.
+	 *
+	 * ++
+	 *
+	 * 현재 익셉션에 대해 e.printStackTrace를 안의 계층에서 호출해버린다.
+	 * 이 경우에, 어떠한 익셉션이 발생했음에도 불구하고 코드의 흐름은 정상적으로 실행되기 때문에,
+	 * 테스트가 정상적으로 실행된 것 처럼 테스트가 파악하게 된다.
+	 * -> 이 경우에 아래의 레이어에서 exception을 함부로 try-catch로 처리하고 끝내는 것이 아니라,
+	 * 상위 레이어의 exception으로 래핑해서 처리하는 방식을 선택해야할 것이다.
+	 * */
 	@Test
 	@DisplayName("성공: OVERDUE 상태에서 연체 처리")
 	void 성공_handleOverdue_OVERDUE() throws MessagingException, MailException {
+
 		given(activeLentHistoryDto.getIsExpired()).willReturn(true);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(1L);
+		given(activeLentHistoryDto.getUserId()).willReturn(1L);
+		given(activeLentHistoryDto.getName()).willReturn("hello");
+		given(activeLentHistoryDto.getEmail()).willReturn("hello");
 
 		overdueManager.handleOverdue(activeLentHistoryDto);
 
