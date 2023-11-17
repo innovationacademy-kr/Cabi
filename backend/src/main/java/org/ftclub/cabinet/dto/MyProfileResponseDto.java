@@ -15,5 +15,5 @@ public class MyProfileResponseDto {
 	private final String name;
 	private final Long cabinetId;
 	private final LocalDateTime unbannedAt;
-	private final boolean isExtensible;
+	private final boolean extensible;
 }

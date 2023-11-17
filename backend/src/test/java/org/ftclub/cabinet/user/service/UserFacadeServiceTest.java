@@ -39,6 +39,7 @@ import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -93,6 +94,9 @@ public class UserFacadeServiceTest {
 	private LentOptionalFetcher lentOptionalFetcher;
 
 	@Mock(lenient = true)
+	private LentExtensionOptionalFetcher lentExtensionOptionalFetcher;
+
+	@Mock(lenient = true)
 	private UserMapper userMapper;
 	@Mock(lenient = true)
 	private CabinetMapper cabinetMapper;
@@ -109,10 +113,13 @@ public class UserFacadeServiceTest {
 		given(lentOptionalFetcher.findActiveLentCabinetByUserId(1L)).willReturn(cabinet1);
 		given(userOptionalFetcher.findRecentActiveBanHistory(1L, LocalDateTime.now()))
 				.willReturn(null);
+		given(lentExtensionOptionalFetcher.findLentExtensionByUserId(1L)).willReturn(
+				new ArrayList<>()
+		);
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(
 				userSessionDto.getUserId(), userSessionDto.getName(),
-				cabinet1.getCabinetId(), null);
-		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null))
+				cabinet1.getCabinetId(), null, false);
+		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null, false))
 				.willReturn(myProfileResponseDto);
 
 		// when
@@ -136,8 +143,10 @@ public class UserFacadeServiceTest {
 		given(lentOptionalFetcher.findActiveLentCabinetByUserId(2L)).willReturn(null);
 		given(userOptionalFetcher.findRecentActiveBanHistory(eq(2L), any())).willReturn(
 				banHistory1);
-		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1)).willReturn(
-				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1)));
+		given(lentExtensionOptionalFetcher.findLentExtensionByUserId(1L)).willReturn(new ArrayList<>());
+		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1, false))
+				.willReturn(new MyProfileResponseDto(
+						2L, "testUser2", null, testDate.plusDays(1), false));
 
 		// when
 		MyProfileResponseDto myProfile = userFacadeService.getMyProfile(userSessionDto);

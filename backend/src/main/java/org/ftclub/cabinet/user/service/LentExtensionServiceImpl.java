@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserMonthDataDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
@@ -73,17 +74,23 @@ public class LentExtensionServiceImpl implements LentExtensionService {
     }
 
     @Override
-    public void useLentExtension(UserSessionDto userSessionDto) {
-        log.debug("Called useLentExtension {}", userSessionDto.getName());
+    public void useLentExtension(Long userId, String username) {
+        log.debug("Called useLentExtension {}", username);
 
-        LentExtension findLentExtension = lentExtensionOptionalFetcher.getAvailableLentExtensionByUserId(
-                userSessionDto.getUserId());
-
-        LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(
-                userSessionDto.getUserId());
-        findLentExtension.use();
-        long extensionPeriod = findLentExtension.getExtensionPeriod();
-        lentHistory.setExpiredAt(lentHistory.getExpiredAt().plusDays(extensionPeriod));
+        List<LentExtension> findLentExtension =
+                lentExtensionOptionalFetcher.findLentExtensionByUserId(userId)
+                .stream()
+                .filter(lentExtension ->
+                        lentExtension.getExpiredAt().isBefore(LocalDateTime.now())
+                                && lentExtension.getUsedAt() == null)
+                .toList();
+        if (findLentExtension.isEmpty()) {
+            throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
+        }
+        LentExtension lentExtension = findLentExtension.get(0);
+        LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserId(userId);
+        lentExtension.use();
+        lentHistory.setExpiredAt(lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod()));
     }
 
 }

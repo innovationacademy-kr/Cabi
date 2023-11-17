@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.BanHistory;
+import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
@@ -58,7 +60,13 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
         BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
                 LocalDateTime.now());
-        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory);
+        List<LentExtension> lentExtensionNotExpiredByUserId =
+                lentExtensionOptionalFetcher.findLentExtensionByUserId(user.getUserId())
+                .stream().filter(lentExtension -> lentExtension.getUsedAt() == null
+                        && lentExtension.getExpiredAt().isAfter(LocalDateTime.now()))
+                .toList();
+        boolean isLentExtensionAvailable = !lentExtensionNotExpiredByUserId.isEmpty();
+        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, isLentExtensionAvailable);
     }
 
     @Override
@@ -89,8 +97,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         PageRequest pageable = PageRequest.of(page, size);
         Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
         List<UserProfileDto> userProfileDtoList = users.stream()
-                .map(u -> userMapper.toUserProfileDto(u)).collect(
-                        Collectors.toList());
+                .map(userMapper::toUserProfileDto).toList();
         return userMapper.toUserProfilePaginationDto(userProfileDtoList,
                 users.getTotalElements());
     }
@@ -106,7 +113,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         PageRequest pageable = PageRequest.of(page, size);
         Page<User> users = userOptionalFetcher.findUsersByPartialName(name, pageable);
         List<UserCabinetDto> userCabinetDtoList = new ArrayList<>();
-        users.toList().stream().forEach(user -> {
+        users.toList().forEach(user -> {
             BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(
                     user.getUserId(), LocalDateTime.now());
             //todo : banhistory join으로 한번에 가능
@@ -251,19 +258,18 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     @Override
     public LentExtensionPaginationDto getAllLentExtension(Integer page, Integer size) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by("expiredAt"));
-        List<LentExtensionResponseDto> result = lentExtensionOptionalFetcher.findAllLentExtension(
-                        pageable)
-                .stream()
-                .map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
+        List<LentExtensionResponseDto> result =
+                lentExtensionOptionalFetcher.findAllLentExtension(pageable).stream()
+                        .map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
         return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
     }
 
     @Override
     public LentExtensionPaginationDto getAllActiveLentExtension(Integer page, Integer size) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by("expiredAt"));
-        List<LentExtensionResponseDto> result = lentExtensionOptionalFetcher.findAllNotExpired(
-                        pageable)
-                .stream().map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
+        List<LentExtensionResponseDto> result =
+                lentExtensionOptionalFetcher.findAllNotExpired(pageable).stream()
+                        .map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
         return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
     }
 
@@ -272,7 +278,9 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         log.debug("Called getMyLentExtension");
         List<LentExtensionResponseDto> result =
                 lentExtensionOptionalFetcher.findLentExtensionByUserId(userSessionDto.getUserId())
-                        .stream().map(userMapper::toLentExtensionResponseDto)
+                        .stream()
+                        .sorted(Comparator.comparing(LentExtension::getExpiredAt))
+                        .map(userMapper::toLentExtensionResponseDto)
                         .collect(Collectors.toList());
         return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
     }
@@ -281,9 +289,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     public LentExtensionPaginationDto getMyActiveLentExtension(UserSessionDto userSessionDto) {
         log.debug("Called getMyActiveLentExtension");
         List<LentExtensionResponseDto> result =
-                lentExtensionOptionalFetcher.findLentExtensionNotExpiredByUserId(
-                                userSessionDto.getUserId())
-                        .stream().map(userMapper::toLentExtensionResponseDto)
+                lentExtensionOptionalFetcher.findLentExtensionByUserId(userSessionDto.getUserId())
+                        .parallelStream()
+                        .filter(lentExtension -> lentExtension.getUsedAt() == null &&
+                                lentExtension.getExpiredAt().isAfter(LocalDateTime.now()))
+                        .map(userMapper::toLentExtensionResponseDto)
                         .collect(Collectors.toList());
         return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
     }
@@ -291,6 +301,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     @Override
     public void useLentExtension(UserSessionDto userSessionDto) {
         log.debug("Called useLentExtension");
-        lentExtensionService.useLentExtension(userSessionDto);
+        lentExtensionService.useLentExtension(userSessionDto.getUserId(), userSessionDto.getName());
     }
 }
