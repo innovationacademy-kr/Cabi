@@ -1,13 +1,12 @@
 package org.ftclub.cabinet.auth.domain;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 클라이언트의 쿠키를 관리하는 클래스입니다.
@@ -48,7 +47,7 @@ public class CookieManager {
 	 * @param serverName 쿠키 도메인
 	 */
 	public void setCookieToClient(HttpServletResponse res, Cookie cookie, String path,
-	                              String serverName) {
+			String serverName) {
 		cookie.setMaxAge(60 * 60 * 24 * jwtProperties.getExpiryDays());
 		cookie.setPath(path);
 		if (serverName.equals(domainProperties.getLocal())) {
@@ -56,6 +55,7 @@ public class CookieManager {
 		} else {
 			cookie.setDomain(domainProperties.getCookieDomain());
 		}
+		System.out.println("?????????????????????? cookie domain = " + cookie.getDomain());
 		res.addCookie(cookie);
 	}
 

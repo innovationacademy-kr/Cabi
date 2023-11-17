@@ -5,6 +5,7 @@ import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.ClubUserListDto;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -187,4 +188,14 @@ public interface UserFacadeService {
 	void deleteClubUser(Long clubId);
 
 	void updateClubUser(Long clubId, String clubName);
+
+	LentExtensionPaginationDto getAllLentExtension(Integer page, Integer size);
+
+	LentExtensionPaginationDto getAllActiveLentExtension(Integer page, Integer size);
+
+	LentExtensionPaginationDto getMyLentExtension(UserSessionDto userSessionDto);
+
+	LentExtensionPaginationDto getMyActiveLentExtension(UserSessionDto userSessionDto);
+
+	void useLentExtension(UserSessionDto userSessionDto);
 }

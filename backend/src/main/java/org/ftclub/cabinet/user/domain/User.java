@@ -33,21 +33,18 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Log4j2
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID")
-	private Long userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID")
+    private Long userId;
 
-	@NotNull
-	@Column(name = "NAME", length = 32, unique = true, nullable = false)
-	private String name;
+    @NotNull
+    @Column(name = "NAME", length = 32, unique = true, nullable = false)
+    private String name;
 
-	@Email
-	@Column(name = "EMAIL", unique = true)
-	private String email;
-
-	@Column(name = "DEVICE_TOKEN")
-	private String deviceToken;
+    @Email
+    @Column(name = "EMAIL", unique = true)
+    private String email;
 
 	@Column(name = "BLACKHOLED_AT")
 	private LocalDateTime blackholedAt = null;

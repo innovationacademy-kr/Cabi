@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface ColorTableItemContainerProps {
   color: string;
@@ -22,6 +22,7 @@ const CabinetColorTable = () => {
     <ColorTableStyled>
       <ColorTableItemContainer color={"var(--mine)"} text={"내 사물함"} />
       <ColorTableItemContainer color={"var(--available)"} text={"사용가능"} />
+      <ColorTableItemContainer color={"var(--pending)"} text={"오픈예정"} />
       <ColorTableItemContainer color={"var(--full)"} text={"사용 중"} />
       <ColorTableItemContainer color={"var(--expired)"} text={"반납지연"} />
       <ColorTableItemContainer color={"var(--banned)"} text={"사용불가"} />
@@ -50,6 +51,11 @@ const ColorTableItemStyled = styled.div<{ color: string }>`
     border-radius: 5px;
     margin-right: 5px;
     background-color: ${({ color }) => color};
+    ${({ color }) =>
+      color === "var(--pending)" &&
+      css`
+        border: 2px solid var(--main-color);
+      `}
   }
 `;
 

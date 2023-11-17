@@ -46,6 +46,12 @@ public enum ExceptionStatus {
 	SLACK_MESSAGE_SEND_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 메세지 전송 중 에러가 발생했습니다"),
 	SLACK_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "슬랙 아이디를 찾을 수 없습니다."),
 	NOT_FOUND_ALARM(HttpStatus.BAD_REQUEST, "알람이 존재하지 않습니다"),
+	SHARE_CODE_TRIAL_EXCEEDED(HttpStatus.BAD_REQUEST, "초대 코드 입력 오류 초과로 입장이 제한된 상태입니다."),
+	LENT_PENDING(HttpStatus.BAD_REQUEST, "오픈 예정인 사물함입니다."),
+	WRONG_SHARE_CODE(HttpStatus.BAD_REQUEST, "초대코드가 유효하지 않습니다."),
+	HANEAPI_ERROR(HttpStatus.BAD_GATEWAY, "24HANE API 통신에 에러가 있습니다."),
+	EXTENSION_NOT_FOUND(HttpStatus.BAD_REQUEST, "연장권이 존재하지 않습니다."),
+	EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "연장권은 1명일 때 사용할 수 없습니다."),
 	;
 
 	final private int statusCode;

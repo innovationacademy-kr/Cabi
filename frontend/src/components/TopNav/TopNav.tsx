@@ -96,9 +96,10 @@ const TopNavContainerStyled = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--main-color);
+  background-color: white;
+  border-bottom: 1px solid #bcbcbc;
   padding: 0 28px;
-  color: var(--white);
+  color: var(--gray-color);
   z-index: 10;
 `;
 

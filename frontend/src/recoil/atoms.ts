@@ -10,8 +10,8 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import { ClubUserDto } from "@/types/dto/lent.dto";
+import { UserDto, UserInfo } from "@/types/dto/user.dto";
 
 const { persistAtom } = recoilPersist();
 
@@ -21,6 +21,7 @@ export const userState = atom<UserDto>({
     cabinetId: null,
     userId: null,
     name: "default",
+    extensible: false,
   },
 });
 

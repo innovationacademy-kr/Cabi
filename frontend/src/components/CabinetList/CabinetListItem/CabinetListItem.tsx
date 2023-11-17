@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import {
   currentCabinetIdState,
+  myCabinetInfoState,
   targetCabinetInfoState,
-  userState,
 } from "@/recoil/atoms";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
@@ -13,15 +13,20 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import { CabinetInfo, CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
-import { UserDto } from "@/types/dto/user.dto";
+import clockIcon from "@/assets/images/clock.svg";
+import {
+  CabinetInfo,
+  CabinetPreviewInfo,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosCabinetById } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
-  const MY_INFO = useRecoilValue<UserDto>(userState);
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
   );
@@ -31,12 +36,19 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const { openCabinet, closeCabinet } = useMenu();
-  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
+  const isMine = myCabinetInfo
+    ? myCabinetInfo.cabinetId === props.cabinetId &&
+      props.status !== "AVAILABLE"
+    : false;
 
   let cabinetLabelText = "";
 
-  if (props.status !== "BANNED" && props.status !== "BROKEN") {
-    //사용불가가 아닌 모든 경우
+  if (
+    props.status !== "BANNED" &&
+    props.status !== "BROKEN" &&
+    props.status != "IN_SESSION" &&
+    props.status != "PENDING"
+  ) {
     if (props.lentType === "PRIVATE") cabinetLabelText = props.name;
     else if (props.lentType === "SHARE") {
       cabinetLabelText =
@@ -46,8 +58,9 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     } else if (props.lentType === "CLUB")
       cabinetLabelText = props.title ? props.title : "동아리";
   } else {
-    //사용불가인 경우
-    cabinetLabelText = "사용불가";
+    if (props.status === "IN_SESSION") cabinetLabelText = "대기중";
+    else if (props.status === "PENDING") cabinetLabelText = "오픈예정";
+    else cabinetLabelText = "사용불가";
   }
 
   const handleCloseUnavailableModal = (e: { stopPropagation: () => void }) => {
@@ -110,7 +123,12 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
         status={props.status}
         isMine={isMine}
       >
-        {cabinetLabelText}
+        <span className="cabinetLabelTextWrap">
+          {props.status === "IN_SESSION" && (
+            <span className="clockIconStyled" />
+          )}
+          {cabinetLabelText}
+        </span>
       </CabinetLabelStyled>
       {showUnavailableModal && (
         <UnavailableModal
@@ -128,12 +146,17 @@ const CabinetListItemStyled = styled.div<{
   isSelected: boolean;
 }>`
   position: relative;
-  background-color: ${(props) => cabinetStatusColorMap[props.status]};
-  ${(props) =>
-    props.isMine &&
+  background-color: ${({ status, isMine }) =>
+    isMine && status !== "IN_SESSION"
+      ? "var(--mine)"
+      : cabinetStatusColorMap[status]};
+
+  ${({ status, isMine }) =>
+    status === "IN_SESSION" &&
     css`
-      background-color: var(--mine);
+      animation: ${isMine ? Animation2 : Animation} 2.5s infinite;
     `}
+
   width: 80px;
   height: 80px;
   margin: 5px;
@@ -144,6 +167,7 @@ const CabinetListItemStyled = styled.div<{
   padding: 8px 8px 14px;
   transition: transform 0.2s, opacity 0.2s;
   cursor: pointer;
+
   ${({ isSelected }) =>
     isSelected &&
     css`
@@ -152,11 +176,53 @@ const CabinetListItemStyled = styled.div<{
       box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
         0px 4px 4px rgba(0, 0, 0, 0.25);
     `}
+
+  ${({ status }) =>
+    status === "PENDING" &&
+    css`
+      border: 2px solid var(--main-color);
+    `}
+    
+  .cabinetLabelTextWrap {
+    display: flex;
+    align-items: center;
+  }
+
+  .clockIconStyled {
+    width: 16px;
+    height: 16px;
+    background-image: url(${clockIcon});
+    filter: ${(props) =>
+      props.status === "IN_SESSION" && !props.isMine
+        ? "brightness(100)"
+        : "brightness(0)"};
+    margin-right: 4px;
+    display: ${(props) => (props.status === "IN_SESSION" ? "block" : "none")};
+  }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       opacity: 0.9;
       transform: scale(1.05);
     }
+  }
+`;
+
+const Animation = keyframes`
+  0%, 100% {
+    background-color: var(--main-color);
+  }
+  50% {
+    background-color: #d6c5fa;
+  }
+`;
+
+const Animation2 = keyframes`
+  0%, 100% {
+    background-color: var(--mine);
+  }
+  50% {
+    background-color: #eeeeee;
   }
 `;
 
@@ -190,6 +256,11 @@ const CabinetNumberStyled = styled.p<{
     props.isMine &&
     css`
       color: var(--black);
+    `}
+  ${({ status }) =>
+    status === "PENDING" &&
+    css`
+      color: black;
     `}
 `;
 

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import CabinetColorTable from "@/components/LeftNav/CabinetColorTable/CabinetColorTable";
+import { ReactComponent as LinkImg } from "@/assets/images/link.svg";
 
 interface ILeftSectionNav {
   isVisible: boolean;

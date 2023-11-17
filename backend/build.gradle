@@ -83,7 +83,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
-    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.9'
@@ -149,15 +148,15 @@ asciidoctor {
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
 }
-
-tasks.register('copyDocument', Copy) {
-    dependsOn asciidoctor
-    from file("${asciidoctor.outputDir}")
-    into file("${outputDocs}")
-}
+//
+//tasks.register('copyDocument', Copy) {
+//    dependsOn asciidoctor
+//    from file("${asciidoctor.outputDir}")
+//    into file("${outputDocs}")
+//}
 
 build {
-    dependsOn copyDocument
+//    dependsOn copyDocument
 }
 
 jar {

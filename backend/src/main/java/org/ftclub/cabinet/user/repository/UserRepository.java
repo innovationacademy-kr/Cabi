@@ -80,4 +80,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "JOIN AlarmOptOut o ON u.userId = o.user.userId "
 			+ "WHERE u.userId = :id")
 	Optional<User> findUserWithOptOutById(@Param("id") Long id);
+
+	/**
+	 * 현재 Active 상태의 Cabi User를 모두 가져옵니다.
+	 *
+	 * @return {@Link User} 리스트
+	 */
+	List<User> findAllByDeletedAtIsNull();
 }

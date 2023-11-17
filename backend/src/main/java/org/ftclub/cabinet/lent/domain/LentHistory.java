@@ -1,5 +1,17 @@
 package org.ftclub.cabinet.lent.domain;
 
+import static javax.persistence.FetchType.LAZY;
+
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +23,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.ExceptionUtil;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
-
-import static javax.persistence.FetchType.LAZY;
 
 /**
  * lent의 기록을 관리하기 위한 data mapper
@@ -38,7 +45,7 @@ public class LentHistory {
      */
     @Version
     @Getter(AccessLevel.NONE)
-    private Long version = 1L;
+    private final Long version = 1L;
 
     /**
      * 대여 시작일
@@ -79,7 +86,7 @@ public class LentHistory {
     private Cabinet cabinet;
 
     protected LentHistory(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-                          Long cabinetId) {
+            Long cabinetId) {
         this.startedAt = startedAt;
         this.expiredAt = expiredAt;
         this.userId = userId;
@@ -94,7 +101,7 @@ public class LentHistory {
      * @return 인자 정보를 담고있는 {@link LentHistory}
      */
     public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-                                 Long cabinetId) {
+            Long cabinetId) {
         LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
         if (!lentHistory.isValid()) {
             throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -110,7 +117,7 @@ public class LentHistory {
 
     private boolean isValid() {
         return this.startedAt != null && this.userId != null && this.cabinetId != null
-            && this.expiredAt != null;
+                && this.expiredAt != null;
     }
 
     /**
@@ -154,7 +161,7 @@ public class LentHistory {
         log.info("setExpiredAt : {}", expiredAt);
         this.expiredAt = expiredAt;
         ExceptionUtil.throwIfFalse(this.isValid(),
-            new DomainException(ExceptionStatus.INVALID_STATUS));
+                new DomainException(ExceptionStatus.INVALID_STATUS));
     }
 
     /**
@@ -167,10 +174,7 @@ public class LentHistory {
         if (expiredAt == null) {
             return false;
         }
-        if (expiredAt.isEqual(DateUtil.getInfinityDate())) {
-            return false;
-        }
-        return true;
+        return !expiredAt.isEqual(DateUtil.getInfinityDate());
     }
 
     /**
@@ -182,10 +186,7 @@ public class LentHistory {
         if (getEndedAt() == null) {
             return false;
         }
-        if (getEndedAt().isEqual(DateUtil.getInfinityDate())) {
-            return false;
-        }
-        return true;
+        return !getEndedAt().isEqual(DateUtil.getInfinityDate());
     }
 
 
@@ -196,7 +197,7 @@ public class LentHistory {
      */
     public Long getDaysDiffEndedAndExpired() {
         if (isSetExpiredAt() && isSetEndedAt()) {
-            return DateUtil.calculateTwoDateDiff(endedAt, expiredAt);
+            return DateUtil.calculateTwoDateDiff(endedAt, expiredAt) + 1;
         }
         return null;
     }
@@ -234,9 +235,9 @@ public class LentHistory {
     public void endLent(LocalDateTime now) {
         log.info("setEndLent : {}", now);
         ExceptionUtil.throwIfFalse((this.isEndLentValid(now)),
-            new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+                new DomainException(ExceptionStatus.INVALID_ARGUMENT));
         this.endedAt = now;
         ExceptionUtil.throwIfFalse((this.isValid()),
-            new DomainException(ExceptionStatus.INVALID_STATUS));
+                new DomainException(ExceptionStatus.INVALID_STATUS));
     }
 }
