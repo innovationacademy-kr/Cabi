@@ -16,7 +16,7 @@ const ProfilePage = () => {
   useEffect(() => {
     setIsLoading(true);
     setIsLoading(false);
-  }, []);
+  }, [myInfo]);
 
   return (
     <>
