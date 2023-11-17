@@ -14,8 +14,8 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosLentShareId,
@@ -108,7 +108,6 @@ const InvitationCodeModalContainer: React.FC<{
 
   const InvititaionCodeModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
     title: modalPropsMap["MODAL_INVITATION_CODE"].title,
     detail: `공유 사물함 입장을 위한
     초대 코드를 입력해 주세요.
@@ -119,6 +118,7 @@ const InvitationCodeModalContainer: React.FC<{
       <PasswordContainer onChange={onChange} password={code} />
     ),
     closeModal: props.onClose,
+    iconType: IconType.CHECKICON,
   };
 
   return (

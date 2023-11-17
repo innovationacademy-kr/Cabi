@@ -14,8 +14,8 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosExtendLentPeriod,
@@ -105,7 +105,6 @@ const ExtendModal: React.FC<{
 
   const extendModalContents: IModalContents = {
     type: myInfo.cabinetId === null ? "penaltyBtn" : "hasProceedBtn",
-    icon: checkIcon,
     title: getModalTitle(myInfo.cabinetId),
     detail: getModalDetail(myInfo.cabinetId),
     proceedBtnText: getModalProceedBtnText(myInfo.cabinetId),
@@ -116,6 +115,7 @@ const ExtendModal: React.FC<{
           }
         : tryExtendRequest,
     closeModal: props.onClose,
+    iconType: IconType.CHECKICON,
   };
 
   return (

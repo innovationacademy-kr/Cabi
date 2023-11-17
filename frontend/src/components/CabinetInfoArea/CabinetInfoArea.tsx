@@ -1,6 +1,5 @@
 import React from "react";
-import { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled, { css } from "styled-components";
 import {
   ICurrentModalStateInfo,
   ISelectedCabinetInfo,
@@ -19,7 +18,7 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import alertImg from "@/assets/images/cautionSign.svg";
-import cabiLogo from "@/assets/images/logo.svg";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import CancelModal from "../Modals/CancelModal/CancelModal";
@@ -37,7 +36,6 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
-  previousUserName: string | null;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -48,16 +46,12 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
-  previousUserName,
 }) => {
-  const [showPreviousUser, setShowPreviousUser] = useState(false);
-
-  const handleLinkTextClick = () => {
-    setShowPreviousUser(!showPreviousUser);
-  };
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
-      <CabiLogoStyled src={cabiLogo} />
+      <CabiLogoStyled>
+        <LogoImg />
+      </CabiLogoStyled>
       <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
         사물함을 <br />
         선택해주세요
@@ -122,22 +116,6 @@ const CabinetInfoArea: React.FC<{
                 text="닫기"
                 theme="grayLine"
               />
-              <LinkTextStyled onClick={handleLinkTextClick}>
-                {showPreviousUser ? (
-                  previousUserName
-                ) : (
-                  <>
-                    <ImageStyled
-                      src="/src/assets/images/happyCcabi.png"
-                      alt=""
-                    />
-                    <HoverTextStyled>
-                      이전 <br />
-                      대여자
-                    </HoverTextStyled>
-                  </>
-                )}
-              </LinkTextStyled>
             </>
           )
         ) : (
@@ -307,43 +285,15 @@ const CabinetDetailAreaStyled = styled.div`
   align-items: center;
 `;
 
-const LinkTextStyled = styled.div`
-  position: absolute;
-  bottom: 3%;
-  right: 7%;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 0.875rem;
-  color: var(--gray-color);
-  :hover {
-    cursor: pointer;
-  }
-`;
-
-const HoverTextStyled = styled.div`
-  width: 50px;
-  display: none;
-  position: absolute;
-  bottom: 35px;
-  right: -10px;
-  color: var(--gray-color);
-  text-align: center;
-  line-height: 1.2;
-`;
-
-const ImageStyled = styled.img`
-  width: 30px;
-  height: 30px;
-
-  &:hover + ${HoverTextStyled} {
-    display: block;
-  }
-`;
-
-const CabiLogoStyled = styled.img`
+const CabiLogoStyled = styled.div`
   width: 35px;
   height: 35px;
   margin-bottom: 10px;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
@@ -377,15 +327,7 @@ const CabinetRectangleStyled = styled.div<{
   margin-top: 15px;
   margin-bottom: 3vh;
   background-color: ${({ cabinetStatus, isMine }) =>
-    isMine && cabinetStatus !== "IN_SESSION"
-      ? "var(--mine)"
-      : cabinetStatusColorMap[cabinetStatus]};
-
-  ${({ cabinetStatus, isMine }) =>
-    cabinetStatus === "IN_SESSION" &&
-    css`
-      animation: ${isMine ? Animation2 : Animation} 2.5s infinite;
-    `}
+    isMine ? "var(--mine)" : cabinetStatusColorMap[cabinetStatus]};
 
   font-size: 32px;
   color: ${(props) =>
@@ -393,29 +335,20 @@ const CabinetRectangleStyled = styled.div<{
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
-  ${({ cabinetStatus }) =>
-    cabinetStatus === "PENDING" &&
+
+  ${({ cabinetStatus, isMine }) =>
+    cabinetStatus === "IN_SESSION" &&
+    !isMine &&
     css`
       border: 2px solid var(--main-color);
     `}
-`;
 
-const Animation = keyframes`
-  0%, 100% {
-    background-color: var(--main-color);
-  }
-  50% {
-    background-color: #d6c5fa;
-  }
-`;
-
-const Animation2 = keyframes`
-  0%, 100% {
-    background-color: var(--mine);
-  }
-  50% {
-    background-color: #eeeeee;
-  }
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "PENDING" &&
+    css`
+      border: 5px double var(--white);
+      line-height: 70px;
+    `}
 `;
 
 export const DetailStyled = styled.p`
@@ -508,15 +441,6 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   line-height: 28px;
   white-space: pre-line;
   text-align: center;
-`;
-
-const WarningMessageStyled = styled.p`
-  color: red;
-  font-size: 1rem;
-  margin-top: 8px;
-  text-align: center;
-  font-weight: 700;
-  line-height: 26px;
 `;
 
 const PendingMessageStyled = styled.p`

@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import {
-  isCurrentSectionRenderState,
-  targetUserInfoState,
-  numberOfAdminWorkState,
   bannedUserListState,
+  isCurrentSectionRenderState,
+  numberOfAdminWorkState,
+  targetUserInfoState,
 } from "@/recoil/atoms";
 import Modal, { IModalContents } from "@/components/Modals/Modal";
-import {
-  SuccessResponseModal,
-  FailResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
-import checkIcon from "@/assets/images/checkIcon.svg";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import { handleBannedUserList } from "@/utils/tableUtils";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosDeleteCurrentBanLog,
   axiosGetBannedUserList,
 } from "@/api/axios/axios.custom";
+import { handleBannedUserList } from "@/utils/tableUtils";
 
 const BanModal: React.FC<{
   userId: number | null;
@@ -65,12 +65,12 @@ const BanModal: React.FC<{
 
   const returnModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
     title: modalPropsMap[additionalModalType.MODAL_BAN].title,
     detail: returnDetail,
     proceedBtnText: modalPropsMap[additionalModalType.MODAL_BAN].confirmMessage,
     onClickProceed: tryReturnRequest,
     closeModal: props.closeModal,
+    iconType: IconType.CHECKICON,
   };
 
   return (

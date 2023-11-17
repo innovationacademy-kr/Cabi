@@ -13,7 +13,6 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import clockIcon from "@/assets/images/clock.svg";
 import {
   CabinetInfo,
   CabinetPreviewInfo,
@@ -147,15 +146,7 @@ const CabinetListItemStyled = styled.div<{
 }>`
   position: relative;
   background-color: ${({ status, isMine }) =>
-    isMine && status !== "IN_SESSION"
-      ? "var(--mine)"
-      : cabinetStatusColorMap[status]};
-
-  ${({ status, isMine }) =>
-    status === "IN_SESSION" &&
-    css`
-      animation: ${isMine ? Animation2 : Animation} 2.5s infinite;
-    `}
+    isMine ? "var(--mine)" : cabinetStatusColorMap[status]};
 
   width: 80px;
   height: 80px;
@@ -180,6 +171,13 @@ const CabinetListItemStyled = styled.div<{
   ${({ status }) =>
     status === "PENDING" &&
     css`
+      border: 5px double var(--white);
+    `}
+
+  ${({ status, isMine }) =>
+    status === "IN_SESSION" &&
+    !isMine &&
+    css`  
       border: 2px solid var(--main-color);
     `}
     
@@ -190,14 +188,17 @@ const CabinetListItemStyled = styled.div<{
 
   .clockIconStyled {
     width: 16px;
-    height: 16px;
-    background-image: url(${clockIcon});
-    filter: ${(props) =>
-      props.status === "IN_SESSION" && !props.isMine
-        ? "brightness(100)"
-        : "brightness(0)"};
+    height: 17px;
+    background-color: var(--main-color);
+    mask-image: url("data:image/svg+xml,%3Csvg width='16' height='17' viewBox='0 0 16 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14.6668 8.49967C14.6668 12.1797 11.6802 15.1663 8.00016 15.1663C4.32016 15.1663 1.3335 12.1797 1.3335 8.49967C1.3335 4.81967 4.32016 1.83301 8.00016 1.83301C11.6802 1.83301 14.6668 4.81967 14.6668 8.49967Z' stroke='%239747FF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10.4734 10.6202L8.40675 9.38684C8.04675 9.1735 7.75342 8.66017 7.75342 8.24017V5.50684' stroke='%239747FF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
     margin-right: 4px;
     display: ${(props) => (props.status === "IN_SESSION" ? "block" : "none")};
+    ${({ status, isMine }) =>
+      status === "IN_SESSION" &&
+      css`
+        animation: ${Rotation} 1s linear infinite;
+        background-color: ${isMine ? "var(--black)" : "var(--main-color)"};
+      `}
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -208,22 +209,10 @@ const CabinetListItemStyled = styled.div<{
   }
 `;
 
-const Animation = keyframes`
-  0%, 100% {
-    background-color: var(--main-color);
-  }
-  50% {
-    background-color: #d6c5fa;
-  }
-`;
-
-const Animation2 = keyframes`
-  0%, 100% {
-    background-color: var(--mine);
-  }
-  50% {
-    background-color: #eeeeee;
-  }
+const Rotation = keyframes`
+ to {
+		transform : rotate(360deg)
+	}
 `;
 
 const CabinetIconNumberWrapperStyled = styled.div`
@@ -258,7 +247,7 @@ const CabinetNumberStyled = styled.p<{
       color: var(--black);
     `}
   ${({ status }) =>
-    status === "PENDING" &&
+    status === "IN_SESSION" &&
     css`
       color: black;
     `}

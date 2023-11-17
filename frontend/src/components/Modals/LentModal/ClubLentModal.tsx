@@ -14,7 +14,6 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosCabinetById, axiosLentClubUser } from "@/api/axios/axios.custom";
 
@@ -55,7 +54,6 @@ const ClubLentModal: React.FC<{
 
   const ClubLentModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: "",
     title: "동아리 선택",
     detail: "사물함을 대여할 동아리를 선택해주세요.",
     proceedBtnText: modalPropsMap[CabinetType.CLUB].confirmMessage,

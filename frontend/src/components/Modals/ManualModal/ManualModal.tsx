@@ -1,22 +1,20 @@
 import React from "react";
 import { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
+import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
 
 interface ModalProps {
-  isOpen: boolean;
   contentStatus: ContentStatus;
-  onClose: () => void;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ManualModal: React.FC<ModalProps> = ({
-  isOpen,
   contentStatus,
-  onClose,
+  setIsModalOpen,
 }) => {
-  if (!isOpen) return null;
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(isOpen);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(true);
   const contentData = manualContentData[contentStatus];
 
   const isCabinetType =
@@ -24,35 +22,34 @@ const ManualModal: React.FC<ModalProps> = ({
     contentStatus === ContentStatus.SHARE ||
     contentStatus === ContentStatus.CLUB;
 
-  const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
+  const isIcon =
+    contentStatus !== ContentStatus.PENDING &&
+    contentStatus !== ContentStatus.IN_SESSION;
+
+  const closeModal = () => {
+    if (modalIsOpen) {
       setModalIsOpen(false);
       setTimeout(() => {
-        onClose();
+        setIsModalOpen(false);
       }, 400);
     }
   };
 
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setTimeout(() => {
-      onClose();
-    }, 400);
-  };
-
   return (
-    <ModalOverlay onClick={handleModalClick}>
+    <ModalOverlay onClick={closeModal}>
       <ModalWrapper
         background={contentData.background}
         contentStatus={contentStatus}
-        isOpen={modalIsOpen}
+        className={modalIsOpen ? "open" : "close"}
       >
         <ModalContent contentStatus={contentStatus}>
           <CloseButton contentStatus={contentStatus} onClick={closeModal}>
-            <img src="/src/assets/images/moveButton.svg" alt="" />
+            <MoveBtnImg stroke="white" />
           </CloseButton>
           <BasicInfo>
-            <img className="contentImg" src={contentData.imagePath} alt="" />
+            {isIcon && (
+              <img className="contentImg" src={contentData.imagePath} alt="" />
+            )}
             {isCabinetType && (
               <BoxInfoWrap>
                 <BoxInfo1>
@@ -114,27 +111,35 @@ const CloseModalAni = keyframes`
 const ModalWrapper = styled.div<{
   background: string;
   contentStatus: ContentStatus;
-  isOpen: boolean;
 }>`
-  animation: ${(props) => (props.isOpen ? OpenModalAni : CloseModalAni)} 0.4s
-    ease-in-out;
+  &.open {
+    animation: ${OpenModalAni} 0.4s ease-in-out;
+  }
+
+  &.close {
+    animation: ${CloseModalAni} 0.4s ease-in-out;
+  }
   transform-origin: center;
   position: fixed;
   bottom: 0;
   max-width: 1000px;
+  min-width: 330px;
   width: 70%;
   height: 75%;
+  overflow-y: auto;
   background: ${(props) => props.background};
-  padding: 40px 50px;
+  padding: 30px 70px;
   border-radius: 40px 40px 0 0;
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
-      ? "6px solid #9747FF"
+      ? "10px double var(--white)"
+      : props.contentStatus === ContentStatus.IN_SESSION
+      ? "5px solid var(--main-color)"
       : "none"};
   border-bottom: none;
-  @media screen and (max-width: 650px) {
+  @media screen and (max-width: 700px) {
     width: 100%;
-    overflow-y: auto;
+    padding: 30px 30px;
   }
 `;
 
@@ -145,7 +150,7 @@ const ModalContent = styled.div<{
   display: flex;
   flex-direction: column;
   color: ${(props) =>
-    props.contentStatus === ContentStatus.PENDING
+    props.contentStatus === ContentStatus.IN_SESSION
       ? "var(--main-color)"
       : props.contentStatus === ContentStatus.EXTENSION
       ? "black"
@@ -153,26 +158,30 @@ const ModalContent = styled.div<{
   font-size: 40px;
   font-weight: bold;
   align-items: flex-start;
+  .svg {
+    width: 80px;
+    height: 80px;
+  }
   .contentImg {
     width: 80px;
     height: 80px;
     filter: ${(props) =>
       props.contentStatus === ContentStatus.EXTENSION
         ? "brightness(0)"
+        : props.contentStatus === ContentStatus.PENDING
+        ? "brightness(0)"
         : "brightness(100)"};
-    background-color: ${(props) =>
-      props.contentStatus === ContentStatus.PENDING
-        ? "var(--main-color)"
-        : "none"};
-    border-radius: ${(props) =>
-      props.contentStatus === ContentStatus.PENDING ? "50px" : "0px"};
   }
-  @media screen and (max-width: 650px) {
+  @media screen and (max-width: 400px) {
     font-size: 25px;
     .contentImg {
       width: 60px;
       height: 60px;
       margin-top: 10px;
+    }
+    svg {
+      width: 60px;
+      height: 60px;
     }
   }
 `;
@@ -183,16 +192,16 @@ const CloseButton = styled.div<{
   width: 60px;
   height: 15px;
   cursor: pointer;
-  margin-bottom: 40px;
+  margin-bottom: 60px;
   align-self: flex-end;
-  img {
-    filter: ${(props) =>
-      props.contentStatus === ContentStatus.EXTENSION
-        ? "brightness(0)"
-        : props.contentStatus === ContentStatus.PENDING
-        ? "none"
-        : "brightness(100)"};
+  svg {
     transform: scaleX(-1);
+    stroke: ${(props) =>
+      props.contentStatus === ContentStatus.IN_SESSION
+        ? "var(--main-color)"
+        : props.contentStatus === ContentStatus.EXTENSION
+        ? "black"
+        : "white"};
   }
 `;
 
@@ -246,7 +255,7 @@ const BoxInfo2 = styled.div`
 const ManualContentStyeld = styled.div<{
   color: string;
 }>`
-  margin: 40px 0 0 10px;
+  margin: 40px 0 0 20px;
   font-size: 20px;
   line-height: 1.9;
   font-weight: 350;
@@ -257,9 +266,16 @@ const ManualContentStyeld = styled.div<{
     font-weight: bold;
     color: ${(props) => props.color};
   }
-  @media screen and (max-width: 650px) {
-    line-height: 1.4;
-    font-size: 16px;
+  @media screen and (max-width: 800px) {
+    line-height: 1.7;
+    font-size: 18px;
+    margin-left: 10px;
+  }
+  @media screen and (max-width: 400px) {
+    line-height: 1.6;
+    font-size: 14px;
+    margin-top: 20px;
+    margin-left: 3px;
   }
 `;
 

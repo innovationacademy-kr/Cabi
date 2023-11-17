@@ -19,7 +19,7 @@
   --broken: #3c3c3c;
   --banned: #3c3c3c;
   --session: #eeeeee;
-  --pending: #eeeeee;
+  --pending: var(--main-color);
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;

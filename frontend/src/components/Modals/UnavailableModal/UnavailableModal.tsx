@@ -3,8 +3,8 @@ import Modal from "@/components/Modals/Modal";
 import { IModalContents } from "@/components/Modals/Modal";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import errorIcon from "@/assets/images/errorIcon.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import IconType from "@/types/enum/icon.type.enum";
 
 const UnavailableModal: React.FC<{
   status: CabinetStatus | additionalModalType;
@@ -12,9 +12,9 @@ const UnavailableModal: React.FC<{
 }> = (props) => {
   const modalContents: IModalContents = {
     type: "noBtn",
-    icon: errorIcon,
     title: modalPropsMap[additionalModalType.MODAL_OVERDUE_PENALTY].title,
     closeModal: props.closeModal,
+    iconType: IconType.CHECKICON,
   };
 
   return (
