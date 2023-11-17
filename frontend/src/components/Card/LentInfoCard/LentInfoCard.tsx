@@ -25,8 +25,8 @@ const LentInfoCard = ({
 }) => {
   const calculateFontSize = (userCount: number): string => {
     const baseSize = 1;
-    const decrement = 0.2;
-    const minSize = 0.6;
+    const decrement = 0.05;
+    const minSize = 0.8;
     const calculatedSize = Math.max(
       baseSize - (userCount - 1) * decrement,
       minSize
