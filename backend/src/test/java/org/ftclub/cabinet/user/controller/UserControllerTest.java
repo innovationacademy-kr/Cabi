@@ -35,7 +35,7 @@ public class UserControllerTest {
 	public void testGetMyProfile_대여_사물함_없는_경우() throws Exception {
 		// penaltyuser2 대여 중인 사물함 x 벤 기록 x
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(4L, "penaltyuser2",
-				null, null);
+				null, null, false);
 
 		String userToken = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
 				LocalDateTime.now(), DateUtil.getInfinityDate(), "penaltyuser2", "user.domain.com");
@@ -54,7 +54,7 @@ public class UserControllerTest {
 	public void testGetMyProfile_대여_사물함_있는_경우() throws Exception {
 		// lentuser1 대여 중인 사물함 3번
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(5L, "lentuser1",
-				3L, null);
+				3L, null, false);
 
 		String userToken = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
 				LocalDateTime.now(), DateUtil.getInfinityDate(), "lentuser1", "user.domain.com");
