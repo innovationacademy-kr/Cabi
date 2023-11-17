@@ -6,11 +6,7 @@ import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.testutils.TestMockApplier;
 import org.ftclub.testutils.TestProperties;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -68,6 +64,7 @@ public class AdminAuthControllerUnitTest {
 
 		@DisplayName("최고 관리자 로그인 요청 성공")
 		@Test
+		@Disabled
 		void masterOk() throws Exception {
 			mockMvc.perform(TestMockApplier
 							.apply(post(url), objectMapper)

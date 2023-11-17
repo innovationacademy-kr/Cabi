@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -13,6 +14,8 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicy;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
@@ -98,7 +101,6 @@ public class LentServiceImpl implements LentService {
 			saveLentHistories(now, cabinetId);
 			// cabinetId에 대한 shadowKey, valueKey 삭제
 			lentRedis.deleteShadowKey(cabinetId);
-//			lentRedis.deleteUserIdInRedis(cabinetId);
 			ArrayList<String> userIds = lentRedis.getUserIdsByCabinetIdInRedis(
 					cabinetId.toString());
 			for (String id : userIds) {
@@ -168,6 +170,9 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void cancelLentShareCabinet(Long userId, Long cabinetId) {
 		log.debug("Called cancelLentShareCabinet: {}, {}", userId, cabinetId);
+		if (!lentRedis.isUserInRedis(cabinetId.toString(), userId.toString())) {
+			throw new DomainException(ExceptionStatus.NOT_FOUND_USER);
+		}
 		lentRedis.deleteUserInRedis(cabinetId.toString(), userId.toString());
 		// 유저가 나갔을 때, 해당 키에 다른 유저가 없다면 전체 키 삭제
 		if (lentRedis.getSizeOfUsersInSession(cabinetId.toString()) == 0) {
