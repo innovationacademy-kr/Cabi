@@ -31,20 +31,6 @@ public class LentExtensionOptionalFetcher {
 
     @Transactional(readOnly = true)
     public List<LentExtension> findLentExtensionByUserId(Long userId) {
-        return lentExtensionRepository.findAllByUserIdSortAscending(userId);
+        return lentExtensionRepository.findAllByUserId(userId);
     }
-
-    @Transactional(readOnly = true)
-    public List<LentExtension> findLentExtensionNotExpiredByUserId(Long userId) {
-        return lentExtensionRepository.findAllByUserIdNotExpiredSortAscending(userId);
-    }
-
-
-    /*-------------------------------------------GET--------------------------------------------*/
-    public LentExtension getAvailableLentExtensionByUserId(Long userId) {
-        log.debug("Called findLentExtensionByUserId: {}", userId);
-        return lentExtensionRepository.findLentExtensionByUserIdAndUsedAtIsNull(userId).orElseThrow(
-                () -> new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND));
-    }
-
 }
