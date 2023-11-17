@@ -51,7 +51,8 @@ const ExtendModal: React.FC<{
   연장권을 사용하시겠습니까?`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
 연장권은 <strong>${getLastDayofMonthString(
-    null
+    null,
+    "/"
   )} 23:59</strong> 이후 만료됩니다.`;
   const getModalTitle = (cabinetId: number | null) => {
     return cabinetId === null

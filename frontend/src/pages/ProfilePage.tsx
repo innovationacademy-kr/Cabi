@@ -1,44 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import ThemeColorContainer from "@/components/Profile/ThemeColor.container";
+import { userState } from "@/recoil/atoms";
+import ExtensionCardContainer from "@/components/Card/ExtensionCard/ExtensionCard.container";
+import LentInfoCardContainer from "@/components/Card/LentInfoCard/LentInfoCard.container";
+import NotificationCardContainer from "@/components/Card/NotificationCard/NotificationCard.container";
+import ProfileCardContainer from "@/components/Card/ProfileCard/ProfileCard.container";
+import ThemeColorCardContainer from "@/components/Card/ThemeColorCard/ThemeColorCard.container";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 
 const ProfilePage = () => {
-  const [showThemeChange, setShowThemeChange] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const myInfo = useRecoilValue(userState);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setIsLoading(false);
+  }, [myInfo]);
+
   return (
-    <WrapperStyled>
-      {showThemeChange && <BackgroundOverlayStyled />}
-      <ItemStyeld>
-        <ThemeColorContainer
-          showColorPicker={showThemeChange}
-          setShowColorPicker={setShowThemeChange}
-        />
-      </ItemStyeld>
-    </WrapperStyled>
+    <>
+      {isLoading ? (
+        <LoadingAnimation />
+      ) : (
+        <CardGridWrapper>
+          <ProfileCardContainer name={myInfo.name} />
+          <ExtensionCardContainer extensible={myInfo.extensible} />
+          <LentInfoCardContainer />
+          <ThemeColorCardContainer />
+          <NotificationCardContainer />
+        </CardGridWrapper>
+      )}
+    </>
   );
 };
 
-const WrapperStyled = styled.div`
-  display: flex;
-  flex-direction: column;
+const CardGridWrapper = styled.div`
+  display: grid;
+  padding: 60px 0;
   justify-content: center;
   align-items: center;
-  padding: 70px 0;
-  @media screen and (max-width: 768px) {
-    padding: 40px 20px;
+  width: 100%;
+  grid-gap: 20px;
+  grid-template-columns: 350px 350px;
+  grid-template-rows: 163px 183px 215px;
+  grid-template-areas: "profile lentInfo" // h: 163px h: 366px
+    "extension lentInfo" // h: 183px
+    "theme notification"; // h: 215px h: 215px
+
+  @media (max-width: 768px) {
+    grid-template-columns: 350px;
+    grid-template-rows: 163px 366px 183px 215px 215px;
+    grid-template-areas:
+      "profile"
+      "lentInfo"
+      "extension"
+      "theme"
+      "notification";
   }
 `;
 
-const BackgroundOverlayStyled = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 0;
-`;
-
-const ItemStyeld = styled.div`
-  z-index: 1;
-`;
 export default ProfilePage;

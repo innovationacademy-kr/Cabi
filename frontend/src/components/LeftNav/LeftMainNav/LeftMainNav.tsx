@@ -72,53 +72,58 @@ const LeftMainNav = ({
                     ? "active cabiButton"
                     : " cabiButton"
                 }
+                src={"/src/assets/images/search.svg"}
                 onClick={onClickSearchButton}
               >
-                <SearchImg stroke="var(--gray-color)" />
+                <div></div>
                 Search
               </BottomBtnStyled>
-              <BottomBtnStyled className="cabiButton">
+              <BottomBtnStyled
+                src={"/src/assets/images/slack.svg"}
+                className="cabiButton"
+              >
                 <a
                   href="https://42born2code.slack.com/archives/C02V6GE8LD7"
                   target="_blank"
                   title="슬랙 캐비닛 채널 새창으로 열기"
                 >
-                  <SlackImg stroke="var(--gray-color)" />
+                  <div></div>
                   Contact
                 </a>
               </BottomBtnStyled>
               <BottomBtnStyled
-                className={
-                  pathname.includes("club")
-                    ? "active cabiButton"
-                    : " cabiButton"
-                }
+                src={"/src/assets/images/clubIconGray.svg"}
+                className="cabiButton"
                 onClick={onClickClubButton}
               >
-                <CulbImg stroke="var(--gray-color)" />
+                <div></div>
                 Club
               </BottomBtnStyled>
               <BottomBtnStyled
                 className="cabiButton"
                 onClick={onClickLogoutButton}
+                src={"/src/assets/images/close-square.svg"}
               >
-                <LogoutImg stroke="var(--gray-color)" />
+                <div></div>
                 Logout
               </BottomBtnStyled>
             </>
           )}
           {!isAdmin && (
-            <BottomBtnStyled
-              className={
-                pathname.includes("profile")
-                  ? "active cabiButton"
-                  : " cabiButton"
-              }
-              onClick={onClickProfileButton}
-            >
-              <ProfileImg stroke="var(--gray-color)" />
-              Profile
-            </BottomBtnStyled>
+            <>
+              <BottomBtnStyled
+                className={
+                  pathname.includes("profile")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                src={"/src/assets/images/profile-circle.svg"}
+                onClick={onClickProfileButton}
+              >
+                <div></div>
+                Profile
+              </BottomBtnStyled>
+            </>
           )}
         </BottomBtnsStyled>
       </BottomSectionStyled>
@@ -189,7 +194,7 @@ const BottomBtnsStyled = styled.ul`
   text-align: center;
 `;
 
-const BottomBtnStyled = styled.li`
+const BottomBtnStyled = styled.li<{ src: string }>`
   width: 100%;
   min-height: 48px;
   line-height: 1.125rem;
@@ -212,6 +217,7 @@ const BottomBtnStyled = styled.li`
     height: 24px;
     margin: 0 auto;
     margin-bottom: 4px;
+    background-image: url(${(props) => props.src});
   }
   &.active {
     color: var(--main-color);
