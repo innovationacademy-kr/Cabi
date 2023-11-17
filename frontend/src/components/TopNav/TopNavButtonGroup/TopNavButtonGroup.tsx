@@ -32,6 +32,7 @@ export const getDefaultCabinetInfo = () => ({
   lents: [] as LentDto[],
   statusNote: "",
 });
+
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const { toggleCabinet, toggleMap, openCabinet, closeAll } = useMenu();
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState(
