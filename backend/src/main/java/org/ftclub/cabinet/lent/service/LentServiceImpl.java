@@ -98,7 +98,6 @@ public class LentServiceImpl implements LentService {
 			saveLentHistories(now, cabinetId);
 			// cabinetId에 대한 shadowKey, valueKey 삭제
 			lentRedis.deleteShadowKey(cabinetId);
-//			lentRedis.deleteUserIdInRedis(cabinetId);
 			ArrayList<String> userIds = lentRedis.getUserIdsByCabinetIdInRedis(
 					cabinetId.toString());
 			for (String id : userIds) {
