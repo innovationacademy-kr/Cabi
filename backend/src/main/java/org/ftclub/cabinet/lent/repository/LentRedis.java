@@ -34,9 +34,9 @@ public class LentRedis {
 
 	@Autowired
 	public LentRedis(RedisTemplate<String, Object> valueHashRedisTemplate,
-					 RedisTemplate<String, String> valueRedisTemplate,
-					 RedisTemplate<String, String> shadowKeyRedisTemplate,
-					 RedisTemplate<String, String> previousUserRedisTemplate) {
+			RedisTemplate<String, String> valueRedisTemplate,
+			RedisTemplate<String, String> shadowKeyRedisTemplate,
+			RedisTemplate<String, String> previousUserRedisTemplate) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
@@ -50,7 +50,7 @@ public class LentRedis {
 	 * @param hasShadowKey : 최초 대여인지 아닌지 여부
 	 */
 	public void saveUserInRedis(String cabinetId, String userId, String shareCode,
-								boolean hasShadowKey) {
+			boolean hasShadowKey) {
 		log.debug("called saveUserInRedis: {}, {}, {}, {}", cabinetId, userId, shareCode,
 				hasShadowKey);
 		if (!hasShadowKey || isValidShareCode(Long.valueOf(cabinetId),
@@ -127,8 +127,8 @@ public class LentRedis {
 
 	public void deleteUserInRedis(String cabinetId, String userId) { // user를 지우는 delete
 		log.debug("called deleteUserInRedis: {}, {}", cabinetId, userId);
-			valueHashOperations.delete(cabinetId, userId);
-			valueOperations.getOperations().delete(userId + VALUE_KEY_SUFFIX);
+		valueHashOperations.delete(cabinetId, userId);
+		valueOperations.getOperations().delete(userId + VALUE_KEY_SUFFIX);
 	}
 
 	public void deleteCabinetIdInRedis(String cabinetId) {
