@@ -99,7 +99,6 @@ const setExpireDate = (date: Date | undefined) => {
 
 const getCalcualtedTimeString = (expireTime: Date) => {
   const remainTime = calExpiredTime(expireTime);
-  console.log(remainTime);
   return remainTime < 0
     ? `반납일이 ${-remainTime}일 지났습니다`
     : `반납일이 ${remainTime}일 남았습니다`;
