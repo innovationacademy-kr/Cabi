@@ -111,7 +111,7 @@ public class LentRedis {
 		shadowKeyRedisTemplate.opsForValue().set(shadowKey, shareCode.toString());
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		log.debug("called setShadowKey: {}, shareCode: {}", shadowKey, shareCode);
-		shadowKeyRedisTemplate.expire(shadowKey, 10, TimeUnit.MINUTES);
+		shadowKeyRedisTemplate.expire(shadowKey, 30, TimeUnit.SECONDS);
 	}
 
 	public Boolean isShadowKey(Long cabinetId) {
