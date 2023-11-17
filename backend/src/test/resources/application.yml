@@ -1,0 +1,177 @@
+#directory -> "/src/test/resources"
+management:
+  server:
+    port: 2424
+  info:
+    java:
+      enabled: true
+  health:
+    mail:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+spring:
+  mail:
+    display-sender-name: "42CABI"
+    soonoverdue:
+      term: -1
+      subject: "42CABI 사물함 연체 예정 알림"
+      template: "mail/soonoverdue"
+    overdue:
+      term: 1
+      subject: "42CABI 사물함 연체 알림"
+      template: "mail/overdue"
+
+    host: smtp.gmail.com
+    port: 587
+    username: test_email@gmail.com
+    password: test_password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    #------------------------------OAUTH 2.0------------------------------
+  oauth2:
+    client:
+      registration:
+        google:
+          name: google
+          grant-type: code
+          token-grant-type: authorization_code
+          access-token-name: access_token
+          scope: email
+        ft:
+          name: ft
+          grant-type: code
+          token-grant-type: authorization_code
+          access-token-name: access_token
+          scope: public
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://accounts.google.com/o/oauth2/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+          ft:
+            authorization-uri: https://api.intra.42.fr/oauth/authorize
+            token-uri: https://api.intra.42.fr/oauth/token
+            user-info-uri: https://api.intra.42.fr/v2/me
+            users-info-uri: https://api.intra.42.fr/v2/users
+
+    #------------------------------JWT, TOKEN------------------------------
+    jwt:
+      token:
+        main-token-name: access_token
+        admin-token-name: admin_access_token
+        expiry: 28 #days
+        main-provider: ft
+        admin-provider: google
+
+    #------------------------------DOMAIN, URL------------------------------
+    domain-name:
+      cookie-domain: cabi.42seoul.io
+      local: localhost
+      dev: dev.cabi.42seoul.io
+      main: cabi.42seoul.io
+      admin-email: gmail.com
+      user-email: student.42seoul.kr
+
+    #------------------------------MASTER------------------------------
+    master:
+      id: masterid
+      password: masterpw
+      domain: localhost
+      email: ${spring.oauth2.master.id}@${spring.oauth2.master.domain}
+
+  production: false # 배포 환경에서는 true
+  server:
+    fe-host: http://localhost
+    be-host: http://localhost
+
+  redis:
+    host: localhost
+    port: 6379
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:;MODE=MySQL
+    username: root
+    password: test_password
+    ddl-auto: create
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        globally_quoted_identifiers: true
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  logging:
+    config: classpath:log4j2.xml
+
+  cabinet:
+    lent:
+      term:
+        private: 31
+        share: 25
+        extend: 31
+      limit:
+        share:
+          min-user-count: 2
+          max-user-count: 4
+    penalty:
+      day:
+        share: 3
+        padding: 2
+  urls:
+    admin-login-callback: ${spring.server.be-host}/v4/admin/auth/login/callback
+    user-login-callback: ${spring.server.be-host}/v4/auth/login/callback
+  auth:
+    ft:
+      client-id: client-id
+      client-secret: client-secret
+    google:
+      client-id: client-id
+      client-secret: client-secret
+    jwt-secret-key: jwt-secret-key
+  hane:
+    url: hanetokenurl
+    token: hanetoken
+    limit-time: 432000
+  schedule:
+    cron:
+      leave-absence: 0 0 0 * * * # 매일 0시 0분 0초
+      risk-of-blackhole: 0 42 0 * * MON # 매주 월요일 0시 42분 0초
+      no-risk-of-blackhole: 0 42 1 1 * * # 매월 1일 1시 42분 0초
+      extensible-user-check: 0 0 0 2 * * # 매월 2일 0시 0분 0초
+      cabinet-release-time: 0 */5 * * * * # 매일 0시 0분 0초
+      extension-delete-time: 30 59 23 L * ? # 매월 마지막날 23시 59분 30초
+      extension-issue-time: 0 0 0 2 * * # 매월 2일 0시 0분 0초
+
+server:
+  port: 2424
+
+webhook:
+  discord-admin: this-is-discord-webhook-url
+
+firebase:
+  messaging:
+    credentials:
+      path: "/config/backend/src/main/resources/local/cabi-firebase-8dd70-firebase-adminsdk-ufh6y-11a82baadb.json"
+
+slack:
+  token:
+    singing_secret: secret
+    bot-token: bottoken
+    app-token: apptoken
+  channel:
+    cabi: cabi
+    random: random

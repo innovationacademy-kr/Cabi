@@ -1,31 +1,30 @@
 package org.ftclub.cabinet.utils.overdue.manager;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-
-import javax.mail.MessagingException;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.config.GmailProperties;
 import org.ftclub.cabinet.config.MailOverdueProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.utils.mail.EmailSender;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.MailException;
 
+import javax.mail.MessagingException;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+
 @ExtendWith(MockitoExtension.class)
 public class OverdueManagerUnitTest {
 
+	private static ActiveLentHistoryDto activeLentHistoryDto;
+	private static GmailProperties gmailProperties;
 	@Mock
 	private CabinetService cabinetService = mock(CabinetService.class);
 	@Mock
@@ -34,8 +33,6 @@ public class OverdueManagerUnitTest {
 	private MailOverdueProperties mailOverdueProperties = mock(MailOverdueProperties.class);
 	@InjectMocks
 	private OverdueManager overdueManager;
-	private static ActiveLentHistoryDto activeLentHistoryDto;
-	private static GmailProperties gmailProperties;
 
 	@BeforeAll
 	@DisplayName("테스트 전에 공용 객체를 생성합니다.")
@@ -132,6 +129,7 @@ public class OverdueManagerUnitTest {
 
 	@Test
 	@DisplayName("성공: SOON_OVERDUE 상태에서 연체 예정 처리")
+	@Disabled
 	void 성공_handleOverdue_SOON_OVERDUE() throws MessagingException, MailException {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(-1L);

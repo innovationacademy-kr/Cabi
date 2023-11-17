@@ -1,36 +1,11 @@
 package org.ftclub.cabinet.user.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
-import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.dto.ClubUserListDto;
-import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
-import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
-import org.ftclub.cabinet.dto.UserBlockedInfoDto;
-import org.ftclub.cabinet.dto.UserCabinetDto;
-import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
-import org.ftclub.cabinet.dto.UserProfileDto;
-import org.ftclub.cabinet.dto.UserProfilePaginationDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -49,6 +24,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class UserFacadeServiceTest {
@@ -111,7 +98,7 @@ public class UserFacadeServiceTest {
 				.willReturn(null);
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(
 				userSessionDto.getUserId(), userSessionDto.getName(),
-				cabinet1.getCabinetId(), null);
+				cabinet1.getCabinetId(), null, true);
 		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null))
 				.willReturn(myProfileResponseDto);
 
@@ -137,7 +124,7 @@ public class UserFacadeServiceTest {
 		given(userOptionalFetcher.findRecentActiveBanHistory(eq(2L), any())).willReturn(
 				banHistory1);
 		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1)).willReturn(
-				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1)));
+				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1), true));
 
 		// when
 		MyProfileResponseDto myProfile = userFacadeService.getMyProfile(userSessionDto);
