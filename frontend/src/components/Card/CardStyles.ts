@@ -15,6 +15,7 @@ export const CardContentStyled = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 5px 0 5px 0;
+  padding: 0 10px 0 10px;
 `;
 
 export const ContentInfoStyled = styled.div`
