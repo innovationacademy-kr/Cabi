@@ -12,6 +12,17 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { formatDate, getRemainingTime } from "@/utils/dateUtils";
 
+const calculateFontSize = (userCount: number): string => {
+  const baseSize = 1;
+  const decrement = 0.2;
+  const minSize = 0.6;
+  const calculatedSize = Math.max(
+    baseSize - (userCount - 1) * decrement,
+    minSize
+  );
+  return `${calculatedSize}rem`;
+};
+
 const LentInfoCard = ({
   cabinetInfo,
   bannedAt,
@@ -19,16 +30,6 @@ const LentInfoCard = ({
   cabinetInfo: MyCabinetInfo;
   bannedAt: boolean;
 }) => {
-  const calculateFontSize = (userCount: number): string => {
-    const baseSize = 1;
-    const decrement = 0.2;
-    const minSize = 0.6;
-    const calculatedSize = Math.max(
-      baseSize - (userCount - 1) * decrement,
-      minSize
-    );
-    return `${calculatedSize}rem`;
-  };
   return (
     <Card
       title={"대여정보"}
