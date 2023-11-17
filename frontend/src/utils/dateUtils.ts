@@ -60,7 +60,7 @@ export const getTotalPage = (totalLength: number, size: number) => {
   return Math.ceil(totalLength / size);
 };
 
-export const getFormatDate = (date: Date | null): string => {
+export const getFormatDate1 = (date: Date | null): string => {
   if (!date) return "";
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");

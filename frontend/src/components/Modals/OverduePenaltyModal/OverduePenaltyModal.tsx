@@ -5,7 +5,7 @@ import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import IconType from "@/types/enum/icon.type.enum";
-import { getFormatDate } from "@/utils/dateUtils";
+import { getFormatDate1 } from "@/utils/dateUtils";
 
 const OverduePenaltyModal: React.FC<{
   status: CabinetStatus | additionalModalType;
@@ -14,7 +14,7 @@ const OverduePenaltyModal: React.FC<{
 }> = (props) => {
   const unbannedAtDate = props.unbannedAt ? new Date(props.unbannedAt) : null;
 
-  const penaltyDateDetail = `패널티 기간은 <strong> ${getFormatDate(
+  const penaltyDateDetail = `패널티 기간은 <strong> ${getFormatDate1(
     unbannedAtDate
   )} 23:59</strong> 까지 입니다.
     해당 기간까지 대여를 하실 수 없습니다.`;
