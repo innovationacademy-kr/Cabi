@@ -5,7 +5,6 @@ import ModalPortal from "@/components/Modals/ModalPortal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import IconType from "@/types/enum/icon.type.enum";
-import { getFormatDate } from "@/utils/dateUtils";
 import { formatDate } from "@/utils/dateUtils";
 
 const OverduePenaltyModal: React.FC<{
