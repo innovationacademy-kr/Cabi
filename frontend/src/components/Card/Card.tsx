@@ -103,6 +103,9 @@ export const CardButtonStyled = styled.div<{
   border-radius: 5px;
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
   margin-left: 10px;
+  &:hover {
+    text-decoration: ${(props) => (props.isClickable ? "underline" : "none")};
+  }
 `;
 
 export default Card;
