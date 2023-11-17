@@ -61,7 +61,6 @@ public class LentRedis {
 					cabinetId);    // userId를 key로 하여 cabinetId를 value로 저장
 		} else { // 초대코드가 틀린 경우
 			if (valueHashOperations.hasKey(cabinetId, userId)) { // 이미 존재하는 유저인 경우
-				System.out.println("value : " + valueHashOperations.get(cabinetId, userId));
 				valueHashOperations.increment(cabinetId, userId, 1L);    // trialCount를 1 증가시켜서 저장
 			} else { // 존재하지 않는 유저인 경우
 				valueHashOperations.put(cabinetId, userId, "1");    // trialCount를 1로 저장
@@ -128,8 +127,10 @@ public class LentRedis {
 
 	public void deleteUserInRedis(String cabinetId, String userId) { // user를 지우는 delete
 		log.debug("called deleteUserInRedis: {}, {}", cabinetId, userId);
-		valueHashOperations.delete(cabinetId, userId);
-		valueOperations.getOperations().delete(userId + VALUE_KEY_SUFFIX);
+		if (isUserInRedis(cabinetId, userId)) {
+			valueHashOperations.delete(cabinetId, userId);
+			valueOperations.getOperations().delete(userId + VALUE_KEY_SUFFIX);
+		}
 	}
 
 	public void deleteCabinetIdInRedis(String cabinetId) {
