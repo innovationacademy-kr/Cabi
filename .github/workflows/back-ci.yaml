@@ -67,8 +67,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.DOCKER_IMAGE }}
-          flavor: |
-            latest=true
+          tags: latest
 
       - name: Build and push Docker image
         if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
