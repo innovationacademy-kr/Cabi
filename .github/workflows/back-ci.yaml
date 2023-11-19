@@ -8,20 +8,6 @@ on:
 jobs:
   backend-CI:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - environment: dev
-            s3_bucket: dev.cabi-server-deploy
-            codedeploy_app: cabi-dev
-            codedeploy_group: cabi-dev-group
-            docker_image: ccabi/cabi-dev
-          - environment: main
-            s3_bucket: main.cabi-server-deploy
-            codedeploy_app: cabi-main
-            codedeploy_group: cabi-main-group
-            docker_image: ccabi/cabi-main
-
     steps:
       - name: 체크아웃
         uses: actions/checkout@v3
@@ -31,6 +17,24 @@ jobs:
         with:
           java-version: "11"
           distribution: "corretto"
+
+      - name: Setup Dev Environment
+        if: ${{ 'refs/heads/dev' == github.ref }}
+        run: |
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+          echo "S3_BUCKET=dev.cabi-server-deploy" >> $GITHUB_ENV
+          echo "CODEDEPLOY_APP=cabi-dev" >> $GITHUB_ENV
+          echo "CODEDEPLOY_GROUP=cabi-dev-group" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=ccabi/cabi-dev" >> $GITHUB_ENV
+
+      - name: Setup Main Environment
+        if: ${{ 'refs/heads/main' == github.ref }}
+        run: |
+          echo "ENVIRONMENT=main" >> $GITHUB_ENV
+          echo "S3_BUCKET=main.cabi-server-deploy" >> $GITHUB_ENV
+          echo "CODEDEPLOY_APP=cabi-main" >> $GITHUB_ENV
+          echo "CODEDEPLOY_GROUP=cabi-main-group" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=ccabi/cabi-main" >> $GITHUB_ENV
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -51,33 +55,33 @@ jobs:
         shell: bash
 
       - name: Log in to Docker Hub
-        if: ${{ format('refs/heads/{0}', matrix.environment) == github.ref }}
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Extract metadata (tags, labels) for Docker
-        if: ${{ format('refs/heads/{0}', matrix.environment) == github.ref }}
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ matrix.docker_image }}
+          images: ${{ env.DOCKER_IMAGE }}
           flavor: |
             latest=true
 
       - name: Build and push Docker image
-        if: ${{ format('refs/heads/{0}', matrix.environment) == github.ref }}
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./deploy-${{ matrix.environment }}/pinpoint-application/Dockerfile
+          file: ./deploy-${{ env.ENVIRONMENT }}/pinpoint-application/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Configure AWS credentials
-        if: ${{ format('refs/heads/{0}', matrix.environment) == github.ref }}
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -85,21 +89,21 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload to S3 and deploy
-        if: ${{ format('refs/heads/{0}', matrix.environment) == github.ref }}
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
         run: |
-          env_file="deploy-${{ matrix.environment }}/pinpoint-application/.env"
-          agent_env_file="deploy-${{ matrix.environment }}/pinpoint-agent/.env"
-          echo "${{ secrets[format('PINPOINT_APPLICATION_{0}_ENV', matrix.environment)] }}" | base64 --decode > $env_file
-          echo "${{ secrets[format('PINPOINT_AGENT_{0}_ENV', matrix.environment)] }}" | base64 --decode > $agent_env_file
+          env_file="deploy-${{ env.ENVIRONMENT }}/pinpoint-application/.env"
+          agent_env_file="deploy-${{ env.ENVIRONMENT }}/pinpoint-agent/.env"
+          echo "${{ secrets[format('PINPOINT_APPLICATION_{0}_ENV', env.ENVIRONMENT)] }}" | base64 --decode > $env_file
+          echo "${{ secrets[format('PINPOINT_AGENT_{0}_ENV', env.ENVIRONMENT)] }}" | base64 --decode > $agent_env_file
 
-          mkdir -p deploy && cp -r deploy-${{ matrix.environment }}/* deploy/
+          mkdir -p deploy && cp -r deploy-${{ env.ENVIRONMENT }}/* deploy/
           zip -r deploy.zip deploy
 
-          aws s3 cp deploy.zip s3://${{ matrix.s3_bucket }}/deploy.zip
+          aws s3 cp deploy.zip s3://${{ env.S3_BUCKET }}/deploy.zip
 
           aws deploy create-deployment \
-            --application-name ${{ matrix.codedeploy_app }} \
+            --application-name ${{ ENV.CODEDEPLOY_APP }} \
             --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --deployment-group-name ${{ matrix.codedeploy_group }} \
+            --deployment-group-name ${{ ENV.CODEDEPLOY_GROUP }} \
             --file-exists-behavior OVERWRITE \
-            --s3-location bucket=${{ matrix.s3_bucket }},bundleType=zip,key=deploy.zip
+            --s3-location bucket=${{ env.S3_BUCKET }},bundleType=zip,key=deploy.zip
