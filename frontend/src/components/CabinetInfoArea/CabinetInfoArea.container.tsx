@@ -85,9 +85,10 @@ export type TModalState =
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
-const calExpiredTime = (expireTime: Date) =>
+export const calExpiredTime = (expireTime: Date) =>
   Math.floor(
-    (expireTime.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+    (expireTime.setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) /
+      (1000 * 60 * 60 * 24)
   );
 
 const setExpireDate = (date: Date | undefined) => {
@@ -107,7 +108,7 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   // 동아리 사물함인 경우 cabinet_title에 있는 동아리 이름 반환
   const { lentType, title, maxUser, lents } = selectedCabinetInfo;
   if (lentType === "CLUB" && title) return title;
-  else if (maxUser === 0) return lents[0].name;
+  else if (maxUser === 0) return "";
 
   // 그 외에는 유저리스트 반환
   const userNameList = new Array(maxUser)
@@ -118,7 +119,9 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   return userNameList;
 };
 
-const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
+export const getDetailMessage = (
+  selectedCabinetInfo: CabinetInfo
+): string | null => {
   const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
@@ -136,7 +139,9 @@ const getDetailMessage = (selectedCabinetInfo: CabinetInfo): string | null => {
   else return null;
 };
 
-const getDetailMessageColor = (selectedCabinetInfo: CabinetInfo): string => {
+export const getDetailMessageColor = (
+  selectedCabinetInfo: CabinetInfo
+): string => {
   const { status, lentType, lents } = selectedCabinetInfo;
   // 밴, 고장 사물함
   if (status === CabinetStatus.BANNED || status === CabinetStatus.BROKEN)
@@ -189,7 +194,10 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
         status: targetCabinetInfo.status,
         lentType: targetCabinetInfo.lentType,
         userNameList: getCabinetUserList(targetCabinetInfo),
-        expireDate: targetCabinetInfo.lents[0]?.expiredAt,
+        expireDate:
+          targetCabinetInfo.lents.length !== 0
+            ? targetCabinetInfo.lents[0].expiredAt
+            : undefined,
         detailMessage: getDetailMessage(targetCabinetInfo),
         detailMessageColor: getDetailMessageColor(targetCabinetInfo),
         isAdmin: isAdmin,
@@ -327,7 +335,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
-      previousUserName={myCabinetInfo.previousUserName}
     />
   );
 };

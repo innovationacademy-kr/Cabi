@@ -34,9 +34,9 @@ public class LentRedis {
 
 	@Autowired
 	public LentRedis(RedisTemplate<String, Object> valueHashRedisTemplate,
-					 RedisTemplate<String, String> valueRedisTemplate,
-					 RedisTemplate<String, String> shadowKeyRedisTemplate,
-					 RedisTemplate<String, String> previousUserRedisTemplate) {
+			RedisTemplate<String, String> valueRedisTemplate,
+			RedisTemplate<String, String> shadowKeyRedisTemplate,
+			RedisTemplate<String, String> previousUserRedisTemplate) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
@@ -50,7 +50,7 @@ public class LentRedis {
 	 * @param hasShadowKey : 최초 대여인지 아닌지 여부
 	 */
 	public void saveUserInRedis(String cabinetId, String userId, String shareCode,
-								boolean hasShadowKey) {
+			boolean hasShadowKey) {
 		log.debug("called saveUserInRedis: {}, {}, {}, {}", cabinetId, userId, shareCode,
 				hasShadowKey);
 		if (!hasShadowKey || isValidShareCode(Long.valueOf(cabinetId),
@@ -61,7 +61,6 @@ public class LentRedis {
 					cabinetId);    // userId를 key로 하여 cabinetId를 value로 저장
 		} else { // 초대코드가 틀린 경우
 			if (valueHashOperations.hasKey(cabinetId, userId)) { // 이미 존재하는 유저인 경우
-				System.out.println("value : " + valueHashOperations.get(cabinetId, userId));
 				valueHashOperations.increment(cabinetId, userId, 1L);    // trialCount를 1 증가시켜서 저장
 			} else { // 존재하지 않는 유저인 경우
 				valueHashOperations.put(cabinetId, userId, "1");    // trialCount를 1로 저장
@@ -112,7 +111,7 @@ public class LentRedis {
 		shadowKeyRedisTemplate.opsForValue().set(shadowKey, shareCode.toString());
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		log.debug("called setShadowKey: {}, shareCode: {}", shadowKey, shareCode);
-		shadowKeyRedisTemplate.expire(shadowKey, 10, TimeUnit.MINUTES);
+		shadowKeyRedisTemplate.expire(shadowKey, 30, TimeUnit.SECONDS);
 	}
 
 	public Boolean isShadowKey(Long cabinetId) {

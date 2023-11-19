@@ -14,9 +14,9 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosLentId,
@@ -93,13 +93,13 @@ const LentModal: React.FC<{
 
   const lentModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
     title: modalPropsMap[CabinetStatus.AVAILABLE].title,
     detail: props.lentType === "PRIVATE" ? privateLentDetail : shareLentDetail,
     proceedBtnText: modalPropsMap[CabinetStatus.AVAILABLE].confirmMessage,
     onClickProceed: tryLentRequest,
     closeModal: props.closeModal,
     isLoading: isLoading,
+    iconType: IconType.CHECKICON,
   };
 
   return (

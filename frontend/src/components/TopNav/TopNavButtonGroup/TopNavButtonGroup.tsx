@@ -19,7 +19,7 @@ import {
 } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
-const getDefaultCabinetInfo = (myInfo: UserDto): CabinetInfo => ({
+export const getDefaultCabinetInfo = () => ({
   building: "",
   floor: 0,
   cabinetId: 0,
@@ -27,17 +27,9 @@ const getDefaultCabinetInfo = (myInfo: UserDto): CabinetInfo => ({
   lentType: CabinetType.PRIVATE,
   title: null,
   maxUser: 0,
-  status: CabinetStatus.AVAILABLE,
+  status: CabinetStatus.PENDING,
   section: "",
-  lents: [
-    {
-      userId: myInfo.userId,
-      name: myInfo.name,
-      lentHistoryId: 0,
-      startedAt: new Date(),
-      expiredAt: new Date(),
-    },
-  ] as LentDto[],
+  lents: [] as LentDto[],
   statusNote: "",
 });
 const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
@@ -52,7 +44,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [myCabinetInfo, setMyCabinetInfo] = useRecoilState(myCabinetInfoState);
   const { pathname } = useLocation();
   const navigator = useNavigate();
-  const defaultCabinetInfo = getDefaultCabinetInfo(myInfo);
+  const defaultCabinetInfo = getDefaultCabinetInfo();
   const resetCabinetInfo = () => {
     setMyCabinetInfo({
       ...defaultCabinetInfo,

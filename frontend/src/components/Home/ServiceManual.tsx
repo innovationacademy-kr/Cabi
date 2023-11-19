@@ -19,10 +19,6 @@ const ServiceManual = ({
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <WrapperStyled id="infoWrap">
       <TitleContainerStyled className="titleContainer">
@@ -94,11 +90,12 @@ const ServiceManual = ({
       </WrapSectionStyled>
 
       <button onClick={lentStartHandler}>시작하기</button>
-      <ManualModal
-        isOpen={isModalOpen}
-        contentStatus={selectedContent}
-        onClose={closeModal}
-      />
+      {isModalOpen && (
+        <ManualModal
+          contentStatus={selectedContent}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </WrapperStyled>
   );
 };

@@ -8,7 +8,7 @@ public interface LentExtensionService {
 
     void deleteLentExtension();
 
-    void useLentExtension(UserSessionDto userSessionDto);
+    void useLentExtension(Long userId, String username);
 
     void assignLentExtension(String username);
 

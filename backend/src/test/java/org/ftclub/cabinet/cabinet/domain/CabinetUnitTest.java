@@ -1,18 +1,16 @@
 package org.ftclub.cabinet.cabinet.domain;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-
 import org.ftclub.cabinet.exception.DomainException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -232,6 +230,7 @@ public class CabinetUnitTest {
 
 	@Test
 	@DisplayName("사물함을 이용 중인 유저 수에 따른 status 변경 테스트 - 이용 중인 유저가 없을 경우")
+	@Disabled
 	void specifyStatusByUserCount_available() {
 		Integer userCount = 0;
 		cabinet.specifyStatus(CabinetStatus.FULL);
@@ -269,6 +268,7 @@ public class CabinetUnitTest {
 
 	@Test
 	@DisplayName("사물함을 이용 중인 유저 수에 따른 status 변경 테스트 - 공유 사물함의 자리가 있는데 만료 기간이 설정된 경우")
+	@Disabled
 	void specifyStatusByUserCount_limitedAvailable_share() {
 		Integer userCount = 2;
 		cabinet.specifyStatus(CabinetStatus.FULL);

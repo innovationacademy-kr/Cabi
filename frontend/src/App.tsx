@@ -8,8 +8,6 @@ import MainPage from "@/pages/MainPage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import ProfilePage from "./pages/ProfilePage";
-import "./firebase-messaging-sw"
-
 
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));

@@ -38,7 +38,7 @@ public interface UserMapper {
 	@Mapping(target = "userId", source = "user.userId")
 	@Mapping(target = "cabinetId", source = "cabinet.cabinetId")
 	MyProfileResponseDto toMyProfileResponseDto(UserSessionDto user, Cabinet cabinet,
-			BanHistory banHistory);
+			BanHistory banHistory, boolean extensible);
 
 	BlockedUserPaginationDto toBlockedUserPaginationDto(List<UserBlockedInfoDto> result,
 			Long totalLength);

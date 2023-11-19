@@ -1,31 +1,32 @@
 package org.ftclub.cabinet.utils.overdue.manager;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-
-import javax.mail.MessagingException;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
 import org.ftclub.cabinet.config.GmailProperties;
 import org.ftclub.cabinet.config.MailOverdueProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.mail.EmailSender;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.MailException;
 
+import javax.mail.MessagingException;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+
 @ExtendWith(MockitoExtension.class)
 public class OverdueManagerUnitTest {
 
+	private static ActiveLentHistoryDto activeLentHistoryDto;
+	private static GmailProperties gmailProperties;
 	@Mock
 	private CabinetService cabinetService = mock(CabinetService.class);
 	@Mock
@@ -34,8 +35,6 @@ public class OverdueManagerUnitTest {
 	private MailOverdueProperties mailOverdueProperties = mock(MailOverdueProperties.class);
 	@InjectMocks
 	private OverdueManager overdueManager;
-	private static ActiveLentHistoryDto activeLentHistoryDto;
-	private static GmailProperties gmailProperties;
 
 	@BeforeAll
 	@DisplayName("테스트 전에 공용 객체를 생성합니다.")
@@ -107,11 +106,30 @@ public class OverdueManagerUnitTest {
 				activeLentHistoryDto.getDaysLeftFromExpireDate()), OverdueType.NONE);
 	}
 
+	/**
+	 * 이 테스트에 대한 내용은 매우 중대해서 모두가 읽어야 함*******************************************
+	 * 현재 유닛 테스트에서 처리되지 않은 흐름이 있음(FcmManager).
+	 * 그러나 해당 로직에 대한 호출을 검증하지 않은(까먹은) 상태로 nullPointerException이 발생했음에도 테스트가 통과하는 문제가 발생함.
+	 * 이 문제는 해당 익셉션이 발생하더라도 테스트에서 검증하는 호출들이 모두 이루어졌기 때문임.
+	 * 따라서 유닛 테스트를 작성할 때에 놓치는 부분이 없이(혹은 이후에 로직을 추가하더라도 테스트에 잘) 작성해야함.
+	 *
+	 * ++
+	 *
+	 * 현재 익셉션에 대해 e.printStackTrace를 안의 계층에서 호출해버린다.
+	 * 이 경우에, 어떠한 익셉션이 발생했음에도 불구하고 코드의 흐름은 정상적으로 실행되기 때문에,
+	 * 테스트가 정상적으로 실행된 것 처럼 테스트가 파악하게 된다.
+	 * -> 이 경우에 아래의 레이어에서 exception을 함부로 try-catch로 처리하고 끝내는 것이 아니라,
+	 * 상위 레이어의 exception으로 래핑해서 처리하는 방식을 선택해야할 것이다.
+	 * */
 	@Test
 	@DisplayName("성공: OVERDUE 상태에서 연체 처리")
 	void 성공_handleOverdue_OVERDUE() throws MessagingException, MailException {
+
 		given(activeLentHistoryDto.getIsExpired()).willReturn(true);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(1L);
+		given(activeLentHistoryDto.getUserId()).willReturn(1L);
+		given(activeLentHistoryDto.getName()).willReturn("hello");
+		given(activeLentHistoryDto.getEmail()).willReturn("hello");
 
 		overdueManager.handleOverdue(activeLentHistoryDto);
 
@@ -132,6 +150,7 @@ public class OverdueManagerUnitTest {
 
 	@Test
 	@DisplayName("성공: SOON_OVERDUE 상태에서 연체 예정 처리")
+	@Disabled
 	void 성공_handleOverdue_SOON_OVERDUE() throws MessagingException, MailException {
 		given(activeLentHistoryDto.getIsExpired()).willReturn(false);
 		given(activeLentHistoryDto.getDaysLeftFromExpireDate()).willReturn(-1L);

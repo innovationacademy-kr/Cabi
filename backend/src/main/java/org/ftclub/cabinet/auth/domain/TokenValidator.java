@@ -123,7 +123,6 @@ public class TokenValidator {
 		if (email == null) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
 		}
-		System.out.println("Hellowsdafasdf");
 		switch (authLevel) {
 			case USER_OR_ADMIN:
 				return true;

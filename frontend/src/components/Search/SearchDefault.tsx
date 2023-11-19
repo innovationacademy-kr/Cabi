@@ -1,9 +1,10 @@
 import styled from "styled-components";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 
 const SearchDefault = () => (
   <WraaperStyled>
     <SearchDefaultStyled>
-      <img src="/src/assets/images/logo.svg" alt="로고" />
+      <LogoImg />
       <p>
         Intra ID 또는 사물함 번호를
         <br />
@@ -25,16 +26,19 @@ const SearchDefaultStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  & > img {
-    width: 35px;
-    height: 35px;
-  }
   & > p {
     margin-top: 10px;
     font-size: 1.125rem;
     color: var(--gray-color);
     text-align: center;
     line-height: 1.75rem;
+  }
+  svg {
+    width: 35px;
+    height: 35px;
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
   }
 `;
 
