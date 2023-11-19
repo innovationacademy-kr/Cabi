@@ -1,8 +1,6 @@
 FROM amazoncorretto:11
 
-COPY build/cabinet-0.0.1-SNAPSHOT.jar cabi.jar
-
-RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+ENV TZ=Asia/Seoul
 
 COPY build/cabinet-0.0.1-SNAPSHOT.jar cabi.jar
 

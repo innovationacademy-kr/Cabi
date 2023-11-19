@@ -61,7 +61,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' }}
         uses: docker/build-push-action@v5
         with:
-          context: ./deploy-dev/pinpoint-application
+          context: .
           file: ./deploy-dev/pinpoint-application/Dockerfile
           push: true
           tags: ${{ steps.meta-dev.outputs.tags }}
@@ -71,7 +71,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: docker/build-push-action@v5
         with:
-          context: ./deploy-main/pinpoint-application
+          context: .
           file: ./deploy-main/pinpoint-application/Dockerfile
           push: true
           tags: ${{ steps.meta-main.outputs.tags }}
