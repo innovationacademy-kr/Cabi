@@ -45,14 +45,14 @@ jobs:
 
       - name: Extract dev metadata (tags, labels) for Docker
         if: ${{ github.ref == 'refs/heads/dev' }}
-        id: meta
+        id: meta-dev
         uses: docker/metadata-action@v5
         with:
           images: ccabi/cabi-dev
 
       - name: Extract main metadata (tags, labels) for Docker
         if: ${{ github.ref == 'refs/heads/main' }}
-        id: meta
+        id: meta-main
         uses: docker/metadata-action@v5
         with:
           images: ccabi/cabi-main
@@ -64,8 +64,8 @@ jobs:
           context: ./deploy-dev/pinpoint-application
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-dev.outputs.tags }}
+          labels: ${{ steps.meta-dev.outputs.labels }}
 
       - name: Build and push Docker main image
         if: ${{ github.ref == 'refs/heads/main' }}
@@ -74,8 +74,8 @@ jobs:
           context: ./deploy-main/pinpoint-application
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-main.outputs.tags }}
+          labels: ${{ steps.meta-main.outputs.labels }}
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
