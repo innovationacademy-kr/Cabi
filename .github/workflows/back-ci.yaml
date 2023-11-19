@@ -10,17 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          - environment: dev
-            s3_bucket: ${{ secrets.AWS_S3_DEV_BUCKET_NAME }}
-            codedeploy_app: ${{ secrets.AWS_CODEDEPLOY_DEV_APP_NAME }}
-            codedeploy_group: ${{ secrets.AWS_CODEDEPLOY_DEV_GROUP_NAME }}
-            docker_image: ccabi/cabi-dev
-          - environment: main
-            s3_bucket: ${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}
-            codedeploy_app: ${{ secrets.AWS_CODEDEPLOY_MAIN_APP_NAME }}
-            codedeploy_group: ${{ secrets.AWS_CODEDEPLOY_MAIN_GROUP_NAME }}
-            docker_image: ccabi/cabi-main
+        environment: [dev, main]
+    env:
+      AWS_S3_BUCKET_NAME: ${{ secrets['AWS_S3_' + matrix.environment + '_BUCKET_NAME'] }}
+      AWS_CODEDEPLOY_APP_NAME: ${{ secrets['AWS_CODEDEPLOY_' + matrix.environment + '_APP_NAME'] }}
+      AWS_CODEDEPLOY_GROUP_NAME: ${{ secrets['AWS_CODEDEPLOY_' + matrix.environment + '_GROUP_NAME'] }}
+      DOCKER_IMAGE: ccabi/cabi-${{ matrix.environment }}
 
     steps:
       - name: 체크아웃
