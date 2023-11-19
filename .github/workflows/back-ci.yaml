@@ -48,14 +48,14 @@ jobs:
         id: meta-dev
         uses: docker/metadata-action@v5
         with:
-          images: ccabi/cabi-dev
+          images: ccabi/cabi-dev:latest
 
       - name: Extract main metadata (tags, labels) for Docker
         if: ${{ github.ref == 'refs/heads/main' }}
         id: meta-main
         uses: docker/metadata-action@v5
         with:
-          images: ccabi/cabi-main
+          images: ccabi/cabi-main:latest
 
       - name: Build and push Docker dev image
         if: ${{ github.ref == 'refs/heads/dev' }}
