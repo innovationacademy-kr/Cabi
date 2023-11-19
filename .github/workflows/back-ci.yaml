@@ -36,6 +36,47 @@ jobs:
           ./gradlew build -x test
         shell: bash
 
+      - name: Log in to Docker Hub
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract dev metadata (tags, labels) for Docker
+        if: ${{ github.ref == 'refs/heads/dev' }}
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ccabi/cabi-dev
+
+      - name: Extract main metadata (tags, labels) for Docker
+        if: ${{ github.ref == 'refs/heads/main' }}
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ccabi/cabi-main
+
+      - name: Build and push Docker dev image
+        if: ${{ github.ref == 'refs/heads/dev' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: ./deploy-dev/pinpoint-application
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push Docker main image
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: docker/build-push-action@v5
+        with:
+          context: ./deploy-main/pinpoint-application
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         uses: aws-actions/configure-aws-credentials@v1
@@ -49,8 +90,6 @@ jobs:
         run: |
           echo "${{ secrets.PINPOINT_APPLICATION_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-application/.env
           echo "${{ secrets.PINPOINT_AGENT_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-agent/.env
-
-          cp backend/build/libs/cabinet-*.jar deploy-dev/pinpoint-application/build
 
           mkdir -p deploy && cp -r deploy-dev/* deploy/
           zip -r deploy.zip deploy
@@ -69,8 +108,6 @@ jobs:
         run: |
           echo "${{ secrets.PINPOINT_APPLICATION_PROD_ENV }}" | base64 --decode > deploy-main/pinpoint-application/.env
           echo "${{ secrets.PINPOINT_AGENT_PROD_ENV }}" | base64 --decode > deploy-main/pinpoint-agent/.env
-
-          cp backend/build/libs/cabinet-*.jar deploy-main/pinpoint-application/build
 
           mkdir -p deploy && cp -r deploy-main/* deploy/
           zip -r deploy.zip deploy
