@@ -62,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./deploy-dev/pinpoint-application
-          file: ./Dockerfile
+          file: ./deploy-dev/pinpoint-application/Dockerfile
           push: true
           tags: ${{ steps.meta-dev.outputs.tags }}
           labels: ${{ steps.meta-dev.outputs.labels }}
@@ -72,7 +72,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./deploy-main/pinpoint-application
-          file: ./Dockerfile
+          file: ./deploy-main/pinpoint-application/Dockerfile
           push: true
           tags: ${{ steps.meta-main.outputs.tags }}
           labels: ${{ steps.meta-main.outputs.labels }}
