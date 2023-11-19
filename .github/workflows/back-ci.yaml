@@ -50,7 +50,7 @@ jobs:
         with:
           images: ccabi/cabi-dev
           flavor: |
-            latest=auto
+            latest=true
 
       - name: Extract main metadata (tags, labels) for Docker
         if: ${{ github.ref == 'refs/heads/main' }}
@@ -59,7 +59,7 @@ jobs:
         with:
           images: ccabi/cabi-main
           flavor: |
-            latest=auto
+            latest=true
 
       - name: Build and push Docker dev image
         if: ${{ github.ref == 'refs/heads/dev' }}
