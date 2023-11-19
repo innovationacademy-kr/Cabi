@@ -8,6 +8,20 @@ on:
 jobs:
   backend-CI:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - environment: dev
+            s3_bucket: ${{ secrets.AWS_S3_DEV_BUCKET_NAME }}
+            codedeploy_app: ${{ secrets.AWS_CODEDEPLOY_DEV_APP_NAME }}
+            codedeploy_group: ${{ secrets.AWS_CODEDEPLOY_DEV_GROUP_NAME }}
+            docker_image: ccabi/cabi-dev
+          - environment: main
+            s3_bucket: ${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}
+            codedeploy_app: ${{ secrets.AWS_CODEDEPLOY_MAIN_APP_NAME }}
+            codedeploy_group: ${{ secrets.AWS_CODEDEPLOY_MAIN_GROUP_NAME }}
+            docker_image: ccabi/cabi-main
+
     steps:
       - name: 체크아웃
         uses: actions/checkout@v3
@@ -37,90 +51,55 @@ jobs:
         shell: bash
 
       - name: Log in to Docker Hub
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/' + matrix.environment }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract dev metadata (tags, labels) for Docker
-        if: ${{ github.ref == 'refs/heads/dev' }}
-        id: meta-dev
+      - name: Extract metadata (tags, labels) for Docker
+        if: ${{ github.ref == 'refs/heads/' + matrix.environment }}
+        id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ccabi/cabi-dev
+          images: ${{ matrix.docker_image }}
           flavor: |
             latest=true
 
-      - name: Extract main metadata (tags, labels) for Docker
-        if: ${{ github.ref == 'refs/heads/main' }}
-        id: meta-main
-        uses: docker/metadata-action@v5
-        with:
-          images: ccabi/cabi-main
-          flavor: |
-            latest=true
-
-      - name: Build and push Docker dev image
-        if: ${{ github.ref == 'refs/heads/dev' }}
+      - name: Build and push Docker image
+        if: ${{ github.ref == 'refs/heads/' + matrix.environment }}
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./deploy-dev/pinpoint-application/Dockerfile
+          file: ./deploy-${{ matrix.environment }}/pinpoint-application/Dockerfile
           push: true
-          tags: ${{ steps.meta-dev.outputs.tags }}
-          labels: ${{ steps.meta-dev.outputs.labels }}
-
-      - name: Build and push Docker main image
-        if: ${{ github.ref == 'refs/heads/main' }}
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./deploy-main/pinpoint-application/Dockerfile
-          push: true
-          tags: ${{ steps.meta-main.outputs.tags }}
-          labels: ${{ steps.meta-main.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Configure AWS credentials
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/' + matrix.environment }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Dev S3에 업로드
-        if: ${{ github.ref == 'refs/heads/dev' }}
+      - name: Upload to S3 and deploy
+        if: ${{ github.ref == 'refs/heads/' + matrix.environment }}
         run: |
-          echo "${{ secrets.PINPOINT_APPLICATION_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-application/.env
-          echo "${{ secrets.PINPOINT_AGENT_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-agent/.env
+          env_file="deploy-${{ matrix.environment }}/pinpoint-application/.env"
+          agent_env_file="deploy-${{ matrix.environment }}/pinpoint-agent/.env"
+          echo "${{ secrets['PINPOINT_APPLICATION_' + matrix.environment + '_ENV'] }}" | base64 --decode > $env_file
+          echo "${{ secrets['PINPOINT_AGENT_' + matrix.environment + '_ENV'] }}" | base64 --decode > $agent_env_file
 
-          mkdir -p deploy && cp -r deploy-dev/* deploy/
+          mkdir -p deploy && cp -r deploy-${{ matrix.environment }}/* deploy/
           zip -r deploy.zip deploy
 
-          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_DEV_BUCKET_NAME }}/deploy.zip
+          aws s3 cp deploy.zip s3://${{ matrix.s3_bucket }}/deploy.zip
 
           aws deploy create-deployment \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_DEV_APP_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_DEV_GROUP_NAME }} \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_S3_DEV_BUCKET_NAME }},bundleType=zip,key=deploy.zip
-
-      - name: Main S3에 업로드
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: |
-          echo "${{ secrets.PINPOINT_APPLICATION_PROD_ENV }}" | base64 --decode > deploy-main/pinpoint-application/.env
-          echo "${{ secrets.PINPOINT_AGENT_PROD_ENV }}" | base64 --decode > deploy-main/pinpoint-agent/.env
-
-          mkdir -p deploy && cp -r deploy-main/* deploy/
-          zip -r deploy.zip deploy
-
-          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}/deploy.zip
-
-          aws deploy create-deployment \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_MAIN_APP_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_MAIN_GROUP_NAME }} \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_S3_MAIN_BUCKET_NAME }},bundleType=zip,key=deploy.zip
+            --application-name ${{ matrix.codedeploy_app }} \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name ${{ matrix.codedeploy_group }} \
+            --file-exists-behavior OVERWRITE \
+            --s3-location bucket=${{ matrix.s3_bucket }},bundleType=zip,key=deploy.zip
