@@ -1,44 +1,38 @@
-#directory -> "/src/test/resources"
-management:
-  server:
-    port: 2424
-  info:
-    java:
-      enabled: true
-  health:
-    mail:
-      enabled: false
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
+server:
+  port: 2424
 
 spring:
-  mail:
-    display-sender-name: "42CABI"
-    soonoverdue:
-      term: -1
-      subject: "42CABI 사물함 연체 예정 알림"
-      template: "mail/soonoverdue"
-    overdue:
-      term: 1
-      subject: "42CABI 사물함 연체 알림"
-      template: "mail/overdue"
+  production: false # 배포 환경에서는 true
+  server:
+    fe-host: http://localhost
+    be-host: http://localhost
 
-    host: smtp.gmail.com
-    port: 587
-    username: test_email@gmail.com
+  redis:
+    host: localhost
+    port: 6379
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:;MODE=MySQL
+    username: root
     password: test_password
+
+  sql:
+    init:
+      mode: embedded
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-    #------------------------------OAUTH 2.0------------------------------
+      hibernate:
+        globally_quoted_identifiers: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: true
+    defer-datasource-initialization: true
+
+  #------------------------------OAUTH 2.0------------------------------
   oauth2:
     client:
       registration:
@@ -85,66 +79,82 @@ spring:
 
     #------------------------------MASTER------------------------------
     master:
-      id: masterid
-      password: masterpw
-      domain: localhost
+      id: master_id
+      password: master_password
+      domain: cabi.42seoul.io
       email: ${spring.oauth2.master.id}@${spring.oauth2.master.domain}
 
-  production: false # 배포 환경에서는 true
-  server:
-    fe-host: http://localhost
-    be-host: http://localhost
+  mail:
+    display-sender-name: "Cabi"
+    lentSuccess:
+      template: "mail/lentsuccess"
+      subject: "Cabi 사물함 대여 성공 알림"
+    soonOverdue:
+      term: -1
+      template: "mail/soonoverdue"
+      subject: "Cabi 사물함 연체 예정 알림"
+    overdue:
+      template: "mail/overdue"
+      subject: "Cabi 사물함 연체 알림"
+    extensionIssuance:
+      template: "mail/extensionIssuance"
+      subject: "Cabi 사물함 연장권 발급 알림"
+    extensionExpiration:
+      term: -1
+      template: "mail/extensionExpiration"
+      subject: "Cabi 사물함 연장권 만료 알림"
+    announcement:
+      template: "mail/announcement"
+      subject: "Cabi 공지사항 안내"
 
-  redis:
-    host: localhost
-    port: 6379
-
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:;MODE=MySQL
-    username: root
-    password: test_password
-    ddl-auto: create
-
-  jpa:
+    host: smtp.gmail.com
+    port: 587
+    username: example@gmail.com
+    password: example_password
     properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
-        globally_quoted_identifiers: true
-        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
-  logging:
-    config: classpath:log4j2.xml
+  fcm:
+    lentSuccess:
+      template: "%s 자리의 사물함 대여에 성공했습니다."
+    soonOverdue:
+      template: "대여한 사물함이 %d일 후에 연체됩니다."
+    overdue:
+      template: "대여한 사물함이 %d일 연체되었습니다."
+    extensionIssuance:
+      template: "%d일 짜리 %s 연장권이 발급 되었습니다."
+    extensionExpiration:
+      template: "%s 연장권이 %t일에 만료됩니다."
+    announcement:
+      template: "새로운 공지사항이 있으니 확인해주세요."
 
   cabinet:
     lent:
       term:
-        private: 31
-        share: 25
-        extend: 31
-      limit:
-        share:
-          min-user-count: 2
-          max-user-count: 4
+        private: 21
+        share: 42
     penalty:
       day:
         share: 3
         padding: 2
-  urls:
-    admin-login-callback: ${spring.server.be-host}/v4/admin/auth/login/callback
-    user-login-callback: ${spring.server.be-host}/v4/auth/login/callback
   auth:
     ft:
-      client-id: client-id
-      client-secret: client-secret
+      client-id: cliend_id
+      client-secret: client_secret
     google:
-      client-id: client-id
-      client-secret: client-secret
-    jwt-secret-key: jwt-secret-key
+      client-id: client_id
+      client-secret: client_secret
+    jwt-secret-key: jwt_secret_key_must_be_long_jwt_secret_key_must_be_long_jwt_secret_key_must_be_long_jwt_secret_key_must_be_long
+  urls:
+    admin-login-callback: ${spring.server.fe-host}/v4/admin/auth/login/callback
+    user-login-callback: ${spring.server.fe-host}/v4/auth/login/callback
   hane:
-    url: hanetokenurl
-    token: hanetoken
+    url: https://api.24hoursarenotenough.42seoul.kr/ext/cabi42/permonth
+    token: jwt_secret_key_must_be_long_jwt_secret_key_must_be_long_jwt_secret_key_must_be_long_jwt_secret_key_must_be_long
     limit-time: 432000
   schedule:
     cron:
@@ -156,22 +166,36 @@ spring:
       extension-delete-time: 30 59 23 L * ? # 매월 마지막날 23시 59분 30초
       extension-issue-time: 0 0 0 2 * * # 매월 2일 0시 0분 0초
 
-server:
-  port: 2424
+management:
+  server:
+    port: 2424
+  info:
+    java:
+      enabled: true
+  health:
+    mail:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 webhook:
-  discord-admin: this-is-discord-webhook-url
+  discord-admin: https://discord.com/api/webhooks/for-test
 
 firebase:
   messaging:
     credentials:
-      path: "/config/backend/src/main/resources/local/cabi-firebase-8dd70-firebase-adminsdk-ufh6y-11a82baadb.json"
+      path: "/config/backend/src/main/resources/local/firebase-example.json"
 
 slack:
   token:
-    singing_secret: secret
-    bot-token: bottoken
-    app-token: apptoken
+    singing_secret: signing_secret
+    bot-token: bot_token
+    app-token: app_token
   channel:
-    cabi: cabi
-    random: random
+    cabi: cabi_channel
+    random: random_channel
