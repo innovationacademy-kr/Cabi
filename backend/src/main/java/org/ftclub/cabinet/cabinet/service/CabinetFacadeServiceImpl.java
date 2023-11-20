@@ -21,6 +21,7 @@ import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
@@ -466,6 +467,20 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		cabinetService.updateClub(cabinetClubStatusRequestDto.getCabinetId(),
 				cabinetClubStatusRequestDto.getUserId(),
 				cabinetClubStatusRequestDto.getStatusNote());
+	}
+
+	@Override
+	@Transactional
+	public CabinetPendingResponseDto getPendingCabinets() {
+		log.debug("getPendingCabinets");
+		List<CabinetInfoResponseDto> cabinetInfoResponseDtos = new ArrayList<>();
+		// pending 상태인 사물함들의 cabinetId를 가져온다.
+		List<Long> pendingCabinetsId = cabinetOptionalFetcher.findPendingCabinets();
+		// 해당 cabinetId들을 이용해 순회를 돌면서 cabinetInfoResponseDto를 가져온다.
+		for (Long pendingCabinetId : pendingCabinetsId) {
+			cabinetInfoResponseDtos.add(getCabinetInfo(pendingCabinetId));
+		}
+		return new CabinetPendingResponseDto(cabinetInfoResponseDtos);
 	}
 
 //	/**

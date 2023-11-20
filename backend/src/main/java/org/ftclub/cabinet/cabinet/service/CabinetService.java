@@ -98,4 +98,10 @@ public interface CabinetService {
 	void updateStatusNote(Long cabinetId, String statusNote);
 
 	void updateClub(Long cabinetId, Long userId, String statusNote);
+
+//	/**
+//	 *
+//	 * @return pending 상태인 사물함들의 cabinetId 리스트
+//	 */
+//	List<Long> getPendingCabinets();
 }

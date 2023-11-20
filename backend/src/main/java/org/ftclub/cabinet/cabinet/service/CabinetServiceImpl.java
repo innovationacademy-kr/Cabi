@@ -165,4 +165,9 @@ public class CabinetServiceImpl implements CabinetService {
 		cabinet.writeStatusNote(statusNote);
 		cabinet.specifyLentType(LentType.CLUB);
 	}
+
+//	@Override
+//	public List<Long> getPendingCabinets() {
+//		return cabinetOptionalFetcher.findPendingCabinets();
+//	}
 }
