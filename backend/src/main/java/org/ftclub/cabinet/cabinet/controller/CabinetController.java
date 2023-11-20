@@ -8,6 +8,7 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,5 +68,12 @@ public class CabinetController {
 			@PathVariable("cabinetId") Long cabinetId) {
 		log.info("Called getCabinetInfo {}", cabinetId);
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
+	}
+
+	@GetMapping("/pending")
+	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
+	public CabinetPendingResponseDto getPendingCabinets() {
+		log.info("Called getPendingCabinets");
+		return cabinetFacadeService.getPendingCabinets();
 	}
 }
