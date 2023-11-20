@@ -10,5 +10,5 @@ import lombok.ToString;
 @ToString
 public class CabinetPendingResponseDto {
 
-	private final List<CabinetInfoResponseDto> cabinetInfoResponseDtos;
+	private final List<List<CabinetPreviewDto>> cabinetInfoResponseDtos;
 }

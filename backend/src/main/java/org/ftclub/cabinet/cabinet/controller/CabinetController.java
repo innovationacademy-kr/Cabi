@@ -71,7 +71,7 @@ public class CabinetController {
 	}
 
 	@GetMapping("/pending")
-	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
+//	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public CabinetPendingResponseDto getPendingCabinets() {
 		log.info("Called getPendingCabinets");
 		return cabinetFacadeService.getPendingCabinets();

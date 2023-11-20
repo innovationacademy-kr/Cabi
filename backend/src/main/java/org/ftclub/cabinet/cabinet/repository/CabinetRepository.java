@@ -107,6 +107,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 
 	@Query("SELECT c.cabinetId " +
 			"FROM Cabinet c " +
-			"WHERE c.status = org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING")
-	Optional<List<Long>> findPendingCabinets();
+			"WHERE c.status = org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING AND c.cabinetPlace.location.floor = :floor")
+	Optional<List<Long>> findPendingCabinets(@Param("floor") Integer floor);
 }

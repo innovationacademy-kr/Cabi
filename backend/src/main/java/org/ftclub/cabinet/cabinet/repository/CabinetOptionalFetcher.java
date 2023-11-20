@@ -194,8 +194,8 @@ public class CabinetOptionalFetcher {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
-	public List<Long> findPendingCabinets() {
+	public List<Long> findPendingCabinets(Integer floor) {
 		log.debug("Called findPendingCabinets");
-		return cabinetRepository.findPendingCabinets().orElse(null);
+		return cabinetRepository.findPendingCabinets(floor).orElse(null);
 	}
 }

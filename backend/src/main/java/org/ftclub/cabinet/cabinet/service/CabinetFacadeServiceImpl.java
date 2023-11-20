@@ -473,14 +473,20 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional
 	public CabinetPendingResponseDto getPendingCabinets() {
 		log.debug("getPendingCabinets");
-		List<CabinetInfoResponseDto> cabinetInfoResponseDtos = new ArrayList<>();
-		// pending 상태인 사물함들의 cabinetId를 가져온다.
-		List<Long> pendingCabinetsId = cabinetOptionalFetcher.findPendingCabinets();
-		// 해당 cabinetId들을 이용해 순회를 돌면서 cabinetInfoResponseDto를 가져온다.
-		for (Long pendingCabinetId : pendingCabinetsId) {
-			cabinetInfoResponseDtos.add(getCabinetInfo(pendingCabinetId));
+		List<List<CabinetPreviewDto>> cabinetPreviewDtos = new ArrayList<>();
+		for (int i = 2; i <= 5; i++) {
+			List<CabinetPreviewDto> cabinetPreviewDtoList = new ArrayList<>();
+			// pending 상태인 사물함들의 cabinetId를 가져온다.
+			List<Long> pendingCabinetsIdByFloor = cabinetOptionalFetcher.findPendingCabinets(i);
+			// 해당 cabinetId들을 이용해 순회를 돌면서 cabinetInfoResponseDto를 가져온다.
+			for (Long pendingCabinetId : pendingCabinetsIdByFloor) {
+				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinetOptionalFetcher.findCabinet(pendingCabinetId),
+						0, ""));
+			}
+			cabinetPreviewDtos.add(cabinetPreviewDtoList);
 		}
-		return new CabinetPendingResponseDto(cabinetInfoResponseDtos);
+
+		return new CabinetPendingResponseDto(cabinetPreviewDtos);
 	}
 
 //	/**
