@@ -469,6 +469,10 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				cabinetClubStatusRequestDto.getStatusNote());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+
 	@Override
 	@Transactional
 	public CabinetPendingResponseDto getPendingCabinets() {
@@ -478,7 +482,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 			List<CabinetPreviewDto> cabinetPreviewDtoList = new ArrayList<>();
 			// pending 상태인 사물함들의 cabinetId를 가져온다.
 			List<Long> pendingCabinetsIdByFloor = cabinetOptionalFetcher.findPendingCabinets(i);
-			// 해당 cabinetId들을 이용해 순회를 돌면서 cabinetInfoResponseDto를 가져온다.
+			// 순회를 돌면서 cabinetPreviewDto를 가져온다.
 			for (Long pendingCabinetId : pendingCabinetsIdByFloor) {
 				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinetOptionalFetcher.findCabinet(pendingCabinetId),
 						0, ""));

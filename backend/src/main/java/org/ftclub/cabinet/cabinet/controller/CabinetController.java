@@ -70,6 +70,12 @@ public class CabinetController {
 		return cabinetFacadeService.getCabinetInfo(cabinetId);
 	}
 
+	/**
+	 * 오픈 예정인 사물함들의 정보를 가져옵니다.
+	 *
+	 * @return 오픈 예정인 사물함들의 정보를 반환합니다.
+	 */
+
 	@GetMapping("/pending")
 //	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
 	public CabinetPendingResponseDto getPendingCabinets() {

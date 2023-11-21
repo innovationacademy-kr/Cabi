@@ -154,6 +154,8 @@ public interface CabinetFacadeService {
 	void updateCabinetClubStatus(CabinetClubStatusRequestDto clubStatusRequestDto);
 
 	/**
+	 * 오픈 예정인 사물함 정보를 층별로 가져옵니다.
+	 *
 	 * @return 오픈 예정인 사물함 정보
 	 */
 	CabinetPendingResponseDto getPendingCabinets();
