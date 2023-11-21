@@ -131,6 +131,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
       )}
       {!isAdmin && (
         <TopNavButton
+          disable={!myInfo.cabinetId}
           onClick={clickMyCabinet}
           imgSrc="/src/assets/images/myCabinetIcon.svg"
         />
