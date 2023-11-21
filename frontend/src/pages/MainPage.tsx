@@ -31,6 +31,7 @@ import {
   axiosCabinetById,
   axiosMyLentInfo,
 } from "@/api/axios/axios.custom";
+import useCabinetListRefresh from "@/hooks/useCabinetListRefresh";
 import useMenu from "@/hooks/useMenu";
 
 const MainPage = () => {
@@ -61,10 +62,15 @@ const MainPage = () => {
   const currentSectionIndex = sectionList.findIndex(
     (sectionName) => sectionName === currentSectionName
   );
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const [currentFloor, setCurrentFloor] = useRecoilState<number>(
     currentFloorNumberState
+  );
+  const { refreshCabinetList, isLoading } = useCabinetListRefresh(
+    currentBuilding,
+    currentFloor
   );
 
   const setCurrentFloorData = useSetRecoilState<
@@ -77,54 +83,56 @@ const MainPage = () => {
   const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
     targetCabinetInfoState
   );
-  const refreshCabinetList = async () => {
-    setIsLoading(true);
-    if (
-      myInfo.cabinetId !== myCabinetInfo.cabinetId &&
-      myCabinetInfo.cabinetId
-    ) {
-      try {
-        const { data: myLentInfo } = await axiosMyLentInfo();
-        setMyLentInfo(myLentInfo);
-        setMyInfo(myLentInfo.cabinetId);
-      } catch (error) {
-        throw error;
-      }
-    }
-    try {
-      await axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
-        .then(async (response) => {
-          setCurrentFloorData(response.data);
-          let targetCabinet = null;
-          for (const cluster of response.data) {
-            targetCabinet = cluster.cabinets.find(
-              (cabinet: CabinetPreviewInfo) =>
-                cabinet.cabinetId === targetCabinetInfo?.cabinetId
-            );
-            if (targetCabinet) break;
-          }
-          if (
-            targetCabinet &&
-            (targetCabinet.userCount !== targetCabinetInfo.lents.length ||
-              targetCabinet.status !== targetCabinetInfo.status)
-          ) {
-            try {
-              let fullInfo = await axiosCabinetById(targetCabinet.cabinetId);
-              setTargetCabinetInfo(fullInfo.data);
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {});
-    } catch (error) {
-      console.log(error);
-    }
-    setIsLoading(false);
-  };
+  // const refreshCabinetList = async () => {
+  //   setIsLoading(true);
+  //   if (
+  //     myInfo.cabinetId !== myCabinetInfo.cabinetId &&
+  //     myCabinetInfo.cabinetId
+  //   ) {
+  //     try {
+  //       const { data: myLentInfo } = await axiosMyLentInfo();
+  //       setMyLentInfo(myLentInfo);
+  //       setMyInfo(myLentInfo.cabinetId);
+  //     } catch (error) {
+  //       throw error;
+  //     }
+  //   }
+  //   try {
+  //     await axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
+  //       .then(async (response) => {
+  //         setCurrentFloorData(response.data);
+  //         let targetCabinet = null;
+  //         for (const cluster of response.data) {
+  //           targetCabinet = cluster.cabinets.find(
+  //             (cabinet: CabinetPreviewInfo) =>
+  //               cabinet.cabinetId === targetCabinetInfo?.cabinetId
+  //           );
+  //           if (targetCabinet) break;
+  //         }
+  //         console.log(targetCabinet);
+  //         console.log(targetCabinetInfo);
+  //         if (
+  //           targetCabinet &&
+  //           (targetCabinet.userCount !== targetCabinetInfo.lents.length ||
+  //             targetCabinet.status !== targetCabinetInfo.status)
+  //         ) {
+  //           try {
+  //             let fullInfo = await axiosCabinetById(targetCabinet.cabinetId);
+  //             setTargetCabinetInfo(fullInfo.data);
+  //           } catch (error) {
+  //             console.log(error);
+  //           }
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //       })
+  //       .finally(() => {});
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   setIsLoading(false);
+  // };
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
