@@ -88,7 +88,7 @@ const BackgroundOverlayStyled = styled.div`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 0;
+  z-index: 1;
 `;
 
 const ThemeColorCardWrapper = styled.div`
