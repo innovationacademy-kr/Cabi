@@ -26,7 +26,7 @@ const ProfilePage = () => {
         <CardGridWrapper>
           <ProfileCardContainer name={myInfo.name} />
           <ExtensionCardContainer extensible={myInfo.extensible} />
-          <LentInfoCardContainer />
+          <LentInfoCardContainer name={myInfo.name} />
           <ThemeColorCardContainer />
           <NotificationCardContainer />
         </CardGridWrapper>

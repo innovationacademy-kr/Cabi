@@ -79,21 +79,13 @@ const LentInfoCard = ({
           <CardContentStyled>
             <ContentInfoStyled>사용 기간</ContentInfoStyled>
             <ContentDeatilStyled>
-              {cabinetInfo?.isLented
-                ? `${
-                    cabinetInfo.lentType === "PRIVATE"
-                      ? parseInt(import.meta.env.VITE_PRIVATE_LENT_PERIOD)
-                      : parseInt(import.meta.env.VITE_SHARE_LENT_PERIOD)
-                  }일`
-                : "-"}
+              {cabinetInfo?.isLented ? `${cabinetInfo.dateUsed}일` : "-"}
             </ContentDeatilStyled>
           </CardContentStyled>
           <CardContentStyled>
             <ContentInfoStyled>남은 기간</ContentInfoStyled>
             <ContentDeatilStyled>
-              {cabinetInfo?.expireDate
-                ? getRemainingTime(cabinetInfo?.expireDate) + "일"
-                : "-"}
+              {cabinetInfo?.expireDate ? `${cabinetInfo.dateLeft}일` : "-"}
             </ContentDeatilStyled>
           </CardContentStyled>
           <CardContentStyled>
