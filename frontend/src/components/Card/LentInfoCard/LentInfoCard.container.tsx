@@ -47,57 +47,37 @@ const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
 };
 
 const LentInfoCardContainer = ({ name }: { name: string | null }) => {
-  let dateUsed;
-  let dateLeft;
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
   const targetUserInfo = useRecoilValue(targetUserInfoState);
   const bannedAt = targetUserInfo ? !!targetUserInfo.bannedAt : false;
 
+  let dateUsed, dateLeft, expireDate, isLented;
   if (name && myCabinetInfo.lents.length !== 0) {
     const lentInfo = findLentInfoByName(myCabinetInfo.lents, name);
     if (lentInfo) {
       dateUsed = calculateDateUsed(lentInfo.startedAt);
       dateLeft = getRemainingTime(lentInfo.expiredAt);
+      expireDate = lentInfo.expiredAt;
+      isLented = true;
     }
   }
 
-  const defaultCabinetInfo: CabinetInfo = getDefaultCabinetInfo();
-  const cabinetLentInfo: MyCabinetInfo = myCabinetInfo
-    ? {
-        name: name,
-        floor: myCabinetInfo.floor,
-        section: myCabinetInfo.section,
-        cabinetId: myCabinetInfo.cabinetId,
-        visibleNum: myCabinetInfo.visibleNum,
-        lentType: myCabinetInfo.lentType,
-        userCount: myCabinetInfo.lents.length,
-        userNameList: getCabinetUserList(myCabinetInfo),
-        dateUsed: dateUsed,
-        dateLeft: dateLeft,
-        expireDate:
-          myCabinetInfo.lents.length !== 0
-            ? myCabinetInfo.lents[0].expiredAt
-            : undefined,
-        isLented: myCabinetInfo.lents.length !== 0,
-        previousUserName: myCabinetInfo.previousUserName,
-        status: myCabinetInfo.status,
-      }
-    : {
-        name: name,
-        floor: defaultCabinetInfo.floor,
-        section: defaultCabinetInfo.section,
-        cabinetId: defaultCabinetInfo.cabinetId,
-        visibleNum: defaultCabinetInfo.visibleNum,
-        lentType: defaultCabinetInfo.lentType,
-        userCount: 0,
-        userNameList: "",
-        dateUsed: 0,
-        dateLeft: 0,
-        expireDate: undefined,
-        isLented: false,
-        previousUserName: "",
-        status: defaultCabinetInfo.status,
-      };
+  const cabinetInfoBase =
+    myCabinetInfo.lents.length !== 0 ? myCabinetInfo : getDefaultCabinetInfo();
+  const userNameList = getCabinetUserList(myCabinetInfo);
+
+  const cabinetLentInfo: MyCabinetInfo = {
+    ...cabinetInfoBase,
+    name,
+    userCount: myCabinetInfo.lents.length,
+    userNameList,
+    dateUsed,
+    dateLeft,
+    expireDate,
+    isLented: isLented ?? myCabinetInfo.lents.length !== 0,
+    previousUserName: myCabinetInfo?.previousUserName || "",
+    status: myCabinetInfo?.status || cabinetInfoBase.status,
+  };
 
   return <LentInfoCard cabinetInfo={cabinetLentInfo} bannedAt={bannedAt} />;
 };
