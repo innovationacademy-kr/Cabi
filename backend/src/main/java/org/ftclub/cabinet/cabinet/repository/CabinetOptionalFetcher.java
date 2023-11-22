@@ -204,4 +204,9 @@ public class CabinetOptionalFetcher {
 		log.debug("Called findPendingCabinets");
 		return cabinetRepository.findPendingCabinets(floor).orElse(null);
 	}
+
+	public List<Long> findAvailableCabinets(Integer floor) {
+		log.debug("Called findAvailableCabinets");
+		return cabinetRepository.findAvailableCabinets(floor).orElse(null);
+	}
 }

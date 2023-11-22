@@ -416,6 +416,12 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinetOptionalFetcher.findCabinet(pendingCabinetId),
 						0, ""));
 			}
+			// available 상태인 사물함들의 cabinetId를 가져온다.
+			List<Long> availableCabinetsIdByFloor = cabinetOptionalFetcher.findAvailableCabinets(i);
+			for (Long availableCabinetId : availableCabinetsIdByFloor) {
+				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinetOptionalFetcher.findCabinet(availableCabinetId),
+						0, ""));
+			}
 			cabinetPreviewDtos.add(cabinetPreviewDtoList);
 		}
 
