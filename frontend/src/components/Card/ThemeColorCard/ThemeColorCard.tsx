@@ -99,7 +99,6 @@ const MainColorButtonStyled = styled.button`
   width: 28px;
   height: 28px;
   background-color: var(--main-color);
-  margin: 0 10px 5px 0;
   border-radius: 8px;
 `;
 
