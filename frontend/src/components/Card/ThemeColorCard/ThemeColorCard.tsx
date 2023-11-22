@@ -61,20 +61,23 @@ const ThemeColorCard = ({
                 ]
           }
         >
-          <CardContentWrapper>
-            <CardContentStyled>
-              <ContentInfoStyled>메인 컬러</ContentInfoStyled>
-              <MainColorButtonStyled
-                onClick={() => setShowColorPicker(!showColorPicker)}
-              />
-            </CardContentStyled>
+          <>
+            <CardContentWrapper>
+              <CardContentStyled>
+                <ContentInfoStyled>메인 컬러</ContentInfoStyled>
+                <MainColorButtonStyled
+                  onClick={() => setShowColorPicker(!showColorPicker)}
+                />
+              </CardContentStyled>
+            </CardContentWrapper>
             {showColorPicker && (
               <TwitterPicker
                 color={mainColor}
+                triangle={"top-right"}
                 onChangeComplete={handleChange}
               />
             )}
-          </CardContentWrapper>
+          </>
         </Card>
       </ThemeColorCardWrapper>
     </>
