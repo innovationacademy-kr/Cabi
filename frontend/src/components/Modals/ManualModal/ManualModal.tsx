@@ -22,9 +22,11 @@ const ManualModal: React.FC<ModalProps> = ({
     contentStatus === ContentStatus.SHARE ||
     contentStatus === ContentStatus.CLUB;
 
-  const isIcon =
-    contentStatus !== ContentStatus.PENDING &&
-    contentStatus !== ContentStatus.IN_SESSION;
+  const hasImage =
+    contentStatus === ContentStatus.EXTENSION ||
+    contentStatus === ContentStatus.PRIVATE ||
+    contentStatus === ContentStatus.SHARE ||
+    contentStatus === ContentStatus.CLUB;
 
   const closeModal = () => {
     if (modalIsOpen) {
@@ -51,25 +53,26 @@ const ManualModal: React.FC<ModalProps> = ({
           <CloseButton contentStatus={contentStatus} onClick={closeModal}>
             <MoveBtnImg stroke="white" />
           </CloseButton>
-          <BasicInfo>
-            {isIcon && (
+          {hasImage && (
+            <BasicInfo>
               <img className="contentImg" src={contentData.imagePath} alt="" />
-            )}
-            {isCabinetType && (
-              <BoxInfoWrap>
-                <BoxInfo1>
-                  대여기간
-                  <br />
-                  <strong>{contentData.rentalPeriod} </strong>
-                </BoxInfo1>
-                <BoxInfo2>
-                  사용인원
-                  <br />
-                  <strong>{contentData.capacity}</strong>
-                </BoxInfo2>
-              </BoxInfoWrap>
-            )}
-          </BasicInfo>
+
+              {isCabinetType && (
+                <BoxInfoWrap>
+                  <BoxInfo1>
+                    대여기간
+                    <br />
+                    <strong>{contentData.rentalPeriod} </strong>
+                  </BoxInfo1>
+                  <BoxInfo2>
+                    사용인원
+                    <br />
+                    <strong>{contentData.capacity}</strong>
+                  </BoxInfo2>
+                </BoxInfoWrap>
+              )}
+            </BasicInfo>
+          )}
           {contentData.contentTitle}
           <ManualContentStyeld color={contentData.pointColor}>
             <div
@@ -90,7 +93,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 0;
+  z-index: 2;
 `;
 
 const OpenModalAni = keyframes`
@@ -134,7 +137,7 @@ const ModalWrapper = styled.div<{
   height: 75%;
   overflow-y: auto;
   background: ${(props) => props.background};
-  padding: 30px 70px;
+  padding: 15px 70px;
   border-radius: 40px 40px 0 0;
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
@@ -152,6 +155,7 @@ const ModalWrapper = styled.div<{
 const ModalContent = styled.div<{
   contentStatus: ContentStatus;
 }>`
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -200,6 +204,7 @@ const CloseButton = styled.div<{
   cursor: pointer;
   margin-bottom: 45px;
   align-self: flex-end;
+  z-index: 1;
   svg {
     transform: scaleX(-1);
     stroke: ${(props) =>
@@ -217,6 +222,7 @@ const CloseButton = styled.div<{
 
 const BasicInfo = styled.div`
   width: 100%;
+  height: 80px;
   margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
@@ -275,6 +281,9 @@ const ManualContentStyeld = styled.div<{
   a {
     font-weight: bold;
     color: ${(props) => props.color};
+  }
+  div {
+    margin-bottom: 30px;
   }
   @media screen and (max-width: 800px) {
     line-height: 1.7;

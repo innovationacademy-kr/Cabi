@@ -23,7 +23,8 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
       import.meta.env.VITE_PRIVATE_LENT_PERIOD
     }일</strong>간 대여할 수 있습니다.<br/><br/>
     ◦ 페널티<br/>
-    연체 시 연체되는 일의 <strong>제곱 수만큼</strong> 페널티가 부과됩니다.
+    연체 시 연체되는 일의 <strong>제곱 수만큼</strong> 페널티가 부과됩니다.<br />
+    연체 페널티는 누적됩니다.
   `,
     pointColor: "white",
   },
@@ -31,8 +32,10 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     contentTitle: "공유 사물함",
     imagePath: "/src/assets/images/shareIcon.svg",
     background: "linear-gradient(to bottom, #7EBFFB, #406EE4)",
-    rentalPeriod: "20일 * N명",
-    capacity: "2~4인",
+    rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 * n명`,
+    capacity: `${import.meta.env.VITE_SHARE_MIN_USER} ~ ${
+      import.meta.env.VITE_SHARE_MAX_USER
+    }인`,
     contentText: `◦ 이용 방법<br/>
     1개의 사물함을 <strong>최대 ${
       import.meta.env.VITE_SHARE_MAX_USER
@@ -42,7 +45,8 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     대여 만료 기간 이내 반납 시,<br/><strong>잔여 기간의 인원수 / 1</strong>만큼 대여 기간이 감소됩니다.
     <br/><br/>
     ◦ 페널티<br/>
-    연체 시 연체되는 일의 <strong>제곱 수만큼</strong> 페널티가 부과됩니다.<br /><br />
+    연체 시 연체되는 일의 <strong>제곱 수만큼</strong> 페널티가 부과됩니다.<br />
+    연체 페널티는 누적됩니다.
   `,
     pointColor: "#white",
   },
@@ -91,8 +95,14 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     imagePath: "/src/assets/images/clock.svg",
     background: "#F5F5F7",
     contentText: `공유 사물함 대여시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
-    대기 시간 동안 <strong>공유 인원(2인~4인)</strong>이 형성되지 않으면 공유 사물함 대여는 취소됩니다.<br/>
-    대기 시간 내 <strong>4명</strong>의 공유 인원이 형성되면 즉시 대여가 완료됩니다.<br/>
+    대기 시간 동안 <strong>공유 인원(${
+      import.meta.env.VITE_SHARE_MIN_USER
+    }인 ~ ${
+      import.meta.env.VITE_SHARE_MAX_USER
+    }인)</strong>이 형성되지 않으면 공유 사물함 대여는 취소됩니다.<br/>
+    대기 시간 내 <strong>${
+      import.meta.env.VITE_SHARE_MAX_USER
+    }인</strong>의 공유 인원이 형성되면 즉시 대여가 완료됩니다.<br/>
     대여 과정에서 생성된 <strong>초대 코드</strong>를 사용하여 공유 사물함에 입장할 수 있습니다.<br/>
     초대 코드를 <strong>3번 이상</strong> 잘못 입력하면 <strong>입장이 제한</strong>됩니다.<br /><br />
     `,
@@ -103,10 +113,13 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     imagePath: "/src/assets/images/extensionTicket.svg",
     background: "#F5F5F7",
     contentText: `◦ 연장권 취득 조건<br/>
-    월 출석 시간이 <strong>120시간</strong> 이상일 시 연장권이 부여됩니다.<br/>
+    월 출석 시간이 <strong>기준 시간</strong> 이상일 시 연장권이 부여됩니다.<br/>
+    출석 시간 기준은 기본적으로 <strong>지원금 산정 기준</strong>과 동일합니다.<br/>
     연장권은 <strong>매달 2일</strong> 지급됩니다.<br/><br/>
     ◦ 연장권 사용<br/>
-    연장권 사용 시, 대여 만료 기간이 <strong>1달(31일)</strong> 연장됩니다.<br/>
+    연장권 사용 시, 대여 만료 기간이 <strong>${
+      import.meta.env.VITE_EXTENDED_LENT_PERIOD
+    }일</strong> 연장됩니다.<br/>
     연장권은 <strong>해당 월의 마지막 날</strong>까지 사용 가능합니다.`,
     pointColor: "black",
   },
