@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
   currentCabinetIdState,
@@ -10,7 +10,6 @@ import {
 import TopNavButton from "@/components/TopNav/TopNavButtonGroup/TopNavButton/TopNavButton";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
-import { UserDto } from "@/types/dto/user.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import {
