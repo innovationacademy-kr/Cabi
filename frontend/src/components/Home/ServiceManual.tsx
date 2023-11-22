@@ -157,7 +157,7 @@ const InfoSectionStyled = styled.section`
     margin: 10px 40px 60px 0;
     :hover {
       transition: all 0.3s ease-in-out;
-      margin-top: 6px;
+      transform: translateY(-6px);
       .redColor {
         transition: all 0.3s ease-in-out;
         font-weight: 700;
