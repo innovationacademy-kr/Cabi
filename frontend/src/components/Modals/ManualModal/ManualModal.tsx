@@ -85,7 +85,6 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
 `;
 
 const OpenModalAni = keyframes`
@@ -189,10 +188,10 @@ const ModalContent = styled.div<{
 const CloseButton = styled.div<{
   contentStatus: ContentStatus;
 }>`
-  width: 60px;
-  height: 15px;
+  width: 80px;
+  height: 40px;
   cursor: pointer;
-  margin-bottom: 60px;
+  margin-bottom: 45px;
   align-self: flex-end;
   svg {
     transform: scaleX(-1);
@@ -202,6 +201,10 @@ const CloseButton = styled.div<{
         : props.contentStatus === ContentStatus.EXTENSION
         ? "black"
         : "white"};
+  }
+  :hover {
+    transition: all 0.3s ease-in-out;
+    transform: translateY(-5px);
   }
 `;
 

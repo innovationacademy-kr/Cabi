@@ -149,7 +149,7 @@ const MaunalContentBoxStyled = styled.div<{
     }
     .clockImg {
       transition: all 0.3s ease-in-out;
-      transform: translateY(75px);
+      margin-top: 145px;
     }
   }
 `;
