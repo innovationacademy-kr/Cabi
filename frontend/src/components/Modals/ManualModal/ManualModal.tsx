@@ -35,12 +35,17 @@ const ManualModal: React.FC<ModalProps> = ({
     }
   };
 
+  const handleWrapperClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <ModalOverlay onClick={closeModal}>
       <ModalWrapper
         background={contentData.background}
         contentStatus={contentStatus}
         className={modalIsOpen ? "open" : "close"}
+        onClick={handleWrapperClick}
       >
         <ModalContent contentStatus={contentStatus}>
           <CloseButton contentStatus={contentStatus} onClick={closeModal}>
@@ -85,6 +90,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 0;
 `;
 
 const OpenModalAni = keyframes`
@@ -111,6 +117,7 @@ const ModalWrapper = styled.div<{
   background: string;
   contentStatus: ContentStatus;
 }>`
+  z-index: 999;
   &.open {
     animation: ${OpenModalAni} 0.4s ease-in-out;
   }
