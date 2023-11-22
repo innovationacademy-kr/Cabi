@@ -51,14 +51,13 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
   const targetUserInfo = useRecoilValue(targetUserInfoState);
   const bannedAt = targetUserInfo ? !!targetUserInfo.bannedAt : false;
 
-  let dateUsed, dateLeft, expireDate, isLented;
+  let dateUsed, dateLeft, expireDate;
   if (name && myCabinetInfo.lents) {
     const lentInfo = findLentInfoByName(myCabinetInfo.lents, name);
     if (lentInfo) {
       dateUsed = calculateDateUsed(lentInfo.startedAt);
       dateLeft = getRemainingTime(lentInfo.expiredAt);
       expireDate = lentInfo.expiredAt;
-      isLented = true;
     }
   }
 
@@ -70,15 +69,16 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
   const cabinetLentInfo: MyCabinetInfo = {
     ...cabinetInfoBase,
     name,
-    userCount: myCabinetInfo.lents ? myCabinetInfo.lents.length : 0,
+    userCount: userNameList ? myCabinetInfo.lents.length : 0,
     userNameList,
     dateUsed,
     dateLeft,
     expireDate,
-    isLented: myCabinetInfo.lents.length ? true : false,
+    isLented: userNameList ? true : false,
     previousUserName: myCabinetInfo?.previousUserName || "",
     status: myCabinetInfo.status || cabinetInfoBase.status,
   };
+
   return <LentInfoCard cabinetInfo={cabinetLentInfo} bannedAt={bannedAt} />;
 };
 
