@@ -10,7 +10,7 @@ import { MyCabinetInfo } from "@/components/Card/LentInfoCard/LentInfoCard.conta
 import { cabinetIconSrcMap } from "@/assets/data/maps";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { formatDate, getRemainingTime } from "@/utils/dateUtils";
+import { formatDate } from "@/utils/dateUtils";
 
 const calculateFontSize = (userCount: number): string => {
   const baseSize = 1;
@@ -79,7 +79,9 @@ const LentInfoCard = ({
           <CardContentStyled>
             <ContentInfoStyled>사용 기간</ContentInfoStyled>
             <ContentDeatilStyled>
-              {cabinetInfo?.isLented ? `${cabinetInfo.dateUsed}일` : "-"}
+              {cabinetInfo?.isLented && cabinetInfo.status != "IN_SESSION"
+                ? `${cabinetInfo.dateUsed}일`
+                : "-"}
             </ContentDeatilStyled>
           </CardContentStyled>
           <CardContentStyled>
@@ -124,13 +126,15 @@ const CabinetRectangleStyled = styled.div<{
 }>`
   width: 60px;
   height: 60px;
-  line-height: 60px;
+  line-height: ${(props) => (props.status === "IN_SESSION" ? "52px" : "60px")};
+  border: ${(props) =>
+    props.status === "IN_SESSION" && "4px solid var(--main-color);"};
   border-radius: 10px;
   margin-right: 20px;
   background-color: ${(props) =>
     props.banned
       ? "var(--expired)"
-      : props.isLented
+      : props.isLented && props.status !== "IN_SESSION"
       ? "var(--mine)"
       : "var(--full)"};
   color: ${(props) => (props.banned ? "var(--white)" : "var(--black)")};
