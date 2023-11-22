@@ -38,7 +38,7 @@ const calculateDateUsed = (startedAt: Date) => {
 
 const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
   const { lents } = selectedCabinetInfo;
-  if (lents.length === 0) return "";
+  if (!lents || lents.length === 0) return "";
   return new Array(lents.length)
     .fill(null)
     .map((_, idx) => lents[idx])
@@ -52,7 +52,7 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
   const bannedAt = targetUserInfo ? !!targetUserInfo.bannedAt : false;
 
   let dateUsed, dateLeft, expireDate, isLented;
-  if (name && myCabinetInfo.lents.length !== 0) {
+  if (name && myCabinetInfo.lents) {
     const lentInfo = findLentInfoByName(myCabinetInfo.lents, name);
     if (lentInfo) {
       dateUsed = calculateDateUsed(lentInfo.startedAt);
@@ -62,23 +62,23 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
     }
   }
 
-  const cabinetInfoBase =
-    myCabinetInfo.lents.length !== 0 ? myCabinetInfo : getDefaultCabinetInfo();
+  const cabinetInfoBase = myCabinetInfo.lents
+    ? myCabinetInfo
+    : getDefaultCabinetInfo();
   const userNameList = getCabinetUserList(myCabinetInfo);
 
   const cabinetLentInfo: MyCabinetInfo = {
     ...cabinetInfoBase,
     name,
-    userCount: myCabinetInfo.lents.length,
+    userCount: myCabinetInfo.lents ? myCabinetInfo.lents.length : 0,
     userNameList,
     dateUsed,
     dateLeft,
     expireDate,
-    isLented: isLented ?? myCabinetInfo.lents.length !== 0,
+    isLented: myCabinetInfo.lents.length ? true : false,
     previousUserName: myCabinetInfo?.previousUserName || "",
-    status: myCabinetInfo?.status || cabinetInfoBase.status,
+    status: myCabinetInfo.status || cabinetInfoBase.status,
   };
-
   return <LentInfoCard cabinetInfo={cabinetLentInfo} bannedAt={bannedAt} />;
 };
 
