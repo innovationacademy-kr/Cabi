@@ -44,8 +44,6 @@ const ReturnModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  console.log(myLentInfo);
-  console.log();
   const formattedExpireDate = getExpireDateString(
     "myCabinet",
     myLentInfo.lents.length ? myLentInfo.lents[0].expiredAt : undefined
