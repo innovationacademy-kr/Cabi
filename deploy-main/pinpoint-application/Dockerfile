@@ -1,9 +1,7 @@
 FROM amazoncorretto:11
 
-COPY build/cabinet-0.0.1-SNAPSHOT.jar cabi.jar
+ENV TZ=Asia/Seoul
 
-RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
-
-COPY build/cabinet-0.0.1-SNAPSHOT.jar cabi.jar
+COPY backend/build/libs/cabinet-0.0.1-SNAPSHOT.jar cabi.jar
 
 CMD java -jar -Dspring.profiles.active=prod ${JAVA_OPTS} cabi.jar --spring.config.location=file:/resources/application-prod.yml
