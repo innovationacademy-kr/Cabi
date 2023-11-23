@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
@@ -20,6 +21,7 @@ const MainPage = () => {
   const touchStartPosY = useRef(0);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
   const { closeAll } = useMenu();
+  const navigator = useNavigate();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
   const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
@@ -37,6 +39,16 @@ const MainPage = () => {
   );
 
   useEffect(() => {
+    const recoilPersist = localStorage.getItem("recoil-persist");
+    if (recoilPersist) {
+      const { CurrentFloor, CurrentSection } = JSON.parse(recoilPersist);
+      if (!CurrentFloor || !CurrentSection) {
+        navigator("/home");
+      }
+    } else {
+      navigator("/home");
+    }
+
     closeAll();
     resetTargetCabinetInfo();
     resetCurrentCabinetId();
