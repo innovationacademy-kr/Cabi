@@ -13,8 +13,19 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const myInfo = useRecoilValue(userState);
 
+  const updateLocalStorage = () => {
+    const recoilPersist = localStorage.getItem("recoil-persist");
+    if (recoilPersist) {
+      let recoilPersistObj = JSON.parse(recoilPersist);
+      delete recoilPersistObj.CurrentFloor;
+      delete recoilPersistObj.CurrentSection;
+      localStorage.setItem("recoil-persist", JSON.stringify(recoilPersistObj));
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
+    updateLocalStorage();
     setIsLoading(false);
   }, [myInfo]);
 
