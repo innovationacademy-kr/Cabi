@@ -39,13 +39,7 @@ const MainPage = () => {
   );
 
   useEffect(() => {
-    const recoilPersist = localStorage.getItem("recoil-persist");
-    if (recoilPersist) {
-      const { CurrentFloor, CurrentSection } = JSON.parse(recoilPersist);
-      if (!CurrentFloor || !CurrentSection) {
-        navigator("/home");
-      }
-    } else {
+    if (!currentFloor) {
       navigator("/home");
     }
 
