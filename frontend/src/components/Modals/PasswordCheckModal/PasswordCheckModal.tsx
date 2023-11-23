@@ -134,7 +134,7 @@ export const DetailStyled = styled.p`
   margin-top: 20px;
   letter-spacing: -0.02rem;
   line-height: 1.5rem;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 300;
   white-space: break-spaces;
 `;

@@ -144,10 +144,14 @@ const NotionBtn = styled.button`
   width: 120px;
   height: 40px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #333333;
   background: white;
   border: 1px solid #d9d9d9;
+  :hover {
+    color: black;
+    font-weight: 400;
+  }
 `;
 
 const WrapSectionStyled = styled.div`

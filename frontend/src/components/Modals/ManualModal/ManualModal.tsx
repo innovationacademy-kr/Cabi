@@ -165,7 +165,7 @@ const ModalContent = styled.div<{
       : props.contentStatus === ContentStatus.EXTENSION
       ? "black"
       : "white"};
-  font-size: 40px;
+  font-size: 2.5rem;
   font-weight: bold;
   align-items: flex-start;
   .svg {
@@ -183,7 +183,7 @@ const ModalContent = styled.div<{
         : "brightness(100)"};
   }
   @media screen and (max-width: 400px) {
-    font-size: 25px;
+    font-size: 1.5rem;
     .contentImg {
       width: 60px;
       height: 60px;
@@ -205,6 +205,8 @@ const CloseButton = styled.div<{
   margin-bottom: 45px;
   align-self: flex-end;
   z-index: 1;
+  transition: all 0.3s ease-in-out;
+  text-align: right;
   svg {
     transform: scaleX(-1);
     stroke: ${(props) =>
@@ -215,8 +217,7 @@ const CloseButton = styled.div<{
         : "white"};
   }
   :hover {
-    transition: all 0.3s ease-in-out;
-    transform: translateY(-5px);
+    transform: translateX(-16px);
   }
 `;
 
@@ -237,7 +238,7 @@ const BoxInfo1 = styled.div`
   height: 80px;
   border: 1px solid white;
   border-radius: 15px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
   display: flex;
   align-items: center;
@@ -255,7 +256,7 @@ const BoxInfo2 = styled.div`
   height: 80px;
   border: 1px solid white;
   border-radius: 15px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
   display: flex;
   align-items: center;
@@ -272,8 +273,8 @@ const ManualContentStyeld = styled.div<{
   color: string;
 }>`
   margin: 40px 0 0 20px;
-  font-size: 20px;
-  line-height: 1.9;
+  font-size: 1.25rem;
+  line-height: 1.7;
   font-weight: 350;
   strong {
     color: ${(props) => props.color};
@@ -282,19 +283,30 @@ const ManualContentStyeld = styled.div<{
     font-weight: bold;
     color: ${(props) => props.color};
   }
-  div {
+  & > div {
     margin-bottom: 30px;
+  }
+  span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 2.5;
+  }
+  div > div {
+    margin-left: 24px;
   }
   @media screen and (max-width: 800px) {
     line-height: 1.7;
-    font-size: 18px;
+    font-size: 1.125rem;
     margin-left: 10px;
   }
   @media screen and (max-width: 400px) {
     line-height: 1.6;
-    font-size: 14px;
+    font-size: 0.875rem;
     margin-top: 20px;
     margin-left: 3px;
+    span {
+      font-size: 1.2rem;
+    }
   }
 `;
 

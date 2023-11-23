@@ -53,7 +53,7 @@ const MaunalContentBoxStyled = styled.div<{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-size: 28px;
+  font-size: 1.75rem;
   color: white;
   padding: 25px;
   font-weight: bold;
