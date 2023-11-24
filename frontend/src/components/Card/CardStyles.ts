@@ -25,6 +25,6 @@ export const ContentInfoStyled = styled.div`
 
 export const ContentDeatilStyled = styled.div`
   display: flex;
-  margin: 0 10px 5px 0;
+  margin: 5px 10px 5px 10px;
   font-weight: bold;
 `;

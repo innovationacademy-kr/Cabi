@@ -27,7 +27,7 @@ const ServiceManual = ({
     <WrapperStyled id="infoWrap">
       <TitleContainerStyled className="titleContainer">
         <h1 className="title">
-          42Cabi <span>이용 안내서</span>
+          Cabi <span>이용 안내서</span>
         </h1>
         <NotionBtn className="button" onClick={openNotionLink}>
           상세보기

@@ -1,38 +1,19 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
-  useSetRecoilState,
-} from "recoil";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
   currentBuildingNameState,
   currentCabinetIdState,
-  currentFloorCabinetState,
   currentFloorNumberState,
   currentSectionNameState,
-  myCabinetInfoState,
   targetCabinetInfoState,
-  userState,
 } from "@/recoil/atoms";
 import { currentFloorSectionState } from "@/recoil/selectors";
 import CabinetListContainer from "@/components/CabinetList/CabinetList.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import SectionPaginationContainer from "@/components/SectionPagination/SectionPagination.container";
-import {
-  CabinetBuildingFloorDto,
-  CabinetInfoByBuildingFloorDto,
-  CabinetPreviewInfo,
-  MyCabinetInfoResponseDto,
-} from "@/types/dto/cabinet.dto";
-import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import {
-  axiosCabinetByBuildingFloor,
-  axiosCabinetById,
-  axiosMyInfo,
-  axiosMyLentInfo,
-} from "@/api/axios/axios.custom";
+import useCabinetListRefresh from "@/hooks/useCabinetListRefresh";
 import useMenu from "@/hooks/useMenu";
 
 const MainPage = () => {
@@ -40,11 +21,28 @@ const MainPage = () => {
   const touchStartPosY = useRef(0);
   const mainWrapperRef = useRef<HTMLDivElement>(null);
   const { closeAll } = useMenu();
-
+  const navigator = useNavigate();
   const resetTargetCabinetInfo = useResetRecoilState(targetCabinetInfoState);
   const resetCurrentCabinetId = useResetRecoilState(currentCabinetIdState);
+  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
+  const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
+    currentSectionNameState
+  );
+  const currentSectionIndex = sectionList.findIndex(
+    (sectionName) => sectionName === currentSectionName
+  );
+  const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
+  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
+  const { refreshCabinetList, isLoading } = useCabinetListRefresh(
+    currentBuilding,
+    currentFloor
+  );
 
   useEffect(() => {
+    if (!currentFloor) {
+      navigator("/home");
+    }
+
     closeAll();
     resetTargetCabinetInfo();
     resetCurrentCabinetId();
@@ -55,80 +53,6 @@ const MainPage = () => {
       resetCurrentCabinetId();
     };
   }, []);
-
-  const sectionList = useRecoilValue<Array<string>>(currentFloorSectionState);
-  const [currentSectionName, setCurrentSectionName] = useRecoilState<string>(
-    currentSectionNameState
-  );
-  const currentSectionIndex = sectionList.findIndex(
-    (sectionName) => sectionName === currentSectionName
-  );
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
-  const [currentFloor, setCurrentFloor] = useRecoilState<number>(
-    currentFloorNumberState
-  );
-
-  const setCurrentFloorData = useSetRecoilState<
-    CabinetInfoByBuildingFloorDto[]
-  >(currentFloorCabinetState);
-  const setCurrentSection = useSetRecoilState<string>(currentSectionNameState);
-  const [myInfo, setMyInfo] = useRecoilState<UserDto>(userState);
-  const [myCabinetInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-
-  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
-    targetCabinetInfoState
-  );
-  const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
-  const refreshCabinetList = async () => {
-    setIsLoading(true);
-    if (
-      myInfo.cabinetId !== myCabinetInfo.cabinetId &&
-      myCabinetInfo.cabinetId
-    ) {
-      try {
-        const { data: myLentInfo } = await axiosMyLentInfo();
-        setMyLentInfo(myLentInfo);
-        setMyInfo(myLentInfo.cabinetId);
-      } catch (error) {
-        throw error;
-      }
-    }
-    try {
-      await axiosCabinetByBuildingFloor(currentBuilding, currentFloor)
-        .then(async (response) => {
-          setCurrentFloorData(response.data);
-          let targetCabinet = null;
-          for (const cluster of response.data) {
-            targetCabinet = cluster.cabinets.find(
-              (cabinet: CabinetPreviewInfo) =>
-                cabinet.cabinetId === targetCabinetInfo?.cabinetId
-            );
-            if (targetCabinet) break;
-          }
-          if (
-            targetCabinet &&
-            (targetCabinet.userCount !== targetCabinetInfo.lents.length ||
-              targetCabinet.status !== targetCabinetInfo.status)
-          ) {
-            try {
-              let fullInfo = await axiosCabinetById(targetCabinet.cabinetId);
-              setTargetCabinetInfo(fullInfo.data);
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {});
-    } catch (error) {
-      console.log(error);
-    }
-    setIsLoading(false);
-  };
 
   const swipeSection = (touchEndPosX: number, touchEndPosY: number) => {
     const touchOffsetX = Math.round(touchEndPosX - touchStartPosX.current);
