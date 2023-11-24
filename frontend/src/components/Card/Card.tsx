@@ -104,7 +104,8 @@ export const CardButtonStyled = styled.div<{
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
   margin-left: 10px;
   &:hover {
-    text-decoration: ${(props) => (props.isClickable ? "underline" : "none")};
+    color: var(--black);
+    font-weight: 400;
   }
 `;
 
