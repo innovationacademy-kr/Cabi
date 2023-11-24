@@ -4,7 +4,7 @@ export const CardContentWrapper = styled.div`
   background-color: var(--white);
   border-radius: 10px;
   padding: 15px 0;
-  margin: 5px 5px 10px 5px;
+  margin: 5px 5px 5px 5px;
   width: 90%;
   display: flex;
   flex-direction: column;
