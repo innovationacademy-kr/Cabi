@@ -3,6 +3,8 @@ package org.ftclub.cabinet.cabinet.service;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toList;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -412,12 +415,15 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	public CabinetPendingResponseDto getPendingCabinets() {
 		log.debug("getPendingCabinets");
 		List<Cabinet> allCabinets = cabinetOptionalFetcher.findAllCabinetsByBuilding(BUILDING_SAEROM);
-		Map<Integer, List<CabinetPreviewDto>> cabintFloorMap = allCabinets.parallelStream()
-				.filter(cabinet -> cabinet.isStatus(CabinetStatus.PENDING))
+		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap = allCabinets.parallelStream()
+				.filter(cabinet -> cabinet.isStatus(PENDING) || cabinet.isStatus(AVAILABLE))
 				.collect(groupingBy(cabinet -> cabinet.getCabinetPlace().getLocation().getFloor(),
 						mapping(cabinet -> cabinetMapper.toCabinetPreviewDto(cabinet, 0, null),
 								toList())));
-		return cabinetMapper.toCabinetPendingResponseDto(cabintFloorMap);
+		if (cabinetFloorMap.size() != 5) {
+			IntStream.rangeClosed(2, 5).forEach(floor -> cabinetFloorMap.putIfAbsent(floor, new ArrayList<>()));
+		}
+		return cabinetMapper.toCabinetPendingResponseDto(cabinetFloorMap);
 	}
 
 	/*--------------------------------------------CUD--------------------------------------------*/
