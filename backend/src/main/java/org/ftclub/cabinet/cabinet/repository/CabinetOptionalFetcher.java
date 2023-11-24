@@ -93,7 +93,8 @@ public class CabinetOptionalFetcher {
 	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
 			CabinetStatus cabinetStatus,
 			LocalDateTime currentDate) {
-		log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}", cabinetStatus);
+		log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}, {}",
+				cabinetStatus, currentDate);
 		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus,
 				currentDate);
 	}
