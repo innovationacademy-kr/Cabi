@@ -1,5 +1,9 @@
 package org.ftclub.cabinet.cabinet.service;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 
+	private static final String BUILDING_SAEROM = "새롬관";
 	private final CabinetService cabinetService;
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentOptionalFetcher lentOptionalFetcher;
@@ -133,7 +138,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				building, floor);
 
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = currentLentCabinets.stream().
-				collect(Collectors.groupingBy(ActiveCabinetInfoEntities::getCabinet,
+				collect(groupingBy(ActiveCabinetInfoEntities::getCabinet,
 						Collectors.mapping(ActiveCabinetInfoEntities::getLentHistory,
 								Collectors.toList())));
 
@@ -224,7 +229,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				building, floor);
 
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = currentLentCabinets.stream().
-				collect(Collectors.groupingBy(ActiveCabinetInfoEntities::getCabinet,
+				collect(groupingBy(ActiveCabinetInfoEntities::getCabinet,
 						Collectors.mapping(ActiveCabinetInfoEntities::getLentHistory,
 								Collectors.toList())));
 
@@ -406,26 +411,13 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional
 	public CabinetPendingResponseDto getPendingCabinets() {
 		log.debug("getPendingCabinets");
-		List<List<CabinetPreviewDto>> cabinetPreviewDtos = new ArrayList<>();
-		for (int i = 2; i <= 5; i++) {
-			List<CabinetPreviewDto> cabinetPreviewDtoList = new ArrayList<>();
-			// pending 상태인 사물함들의 cabinetId를 가져온다.
-			List<Long> pendingCabinetsIdByFloor = cabinetOptionalFetcher.findPendingCabinets(i);
-			// 순회를 돌면서 cabinetPreviewDto를 가져온다.
-			for (Long pendingCabinetId : pendingCabinetsIdByFloor) {
-				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinetOptionalFetcher.findCabinet(pendingCabinetId),
-						0, ""));
-			}
-			// available 상태인 사물함들의 cabinetId를 가져온다.
-			List<Long> availableCabinetsIdByFloor = cabinetOptionalFetcher.findAvailableCabinets(i);
-			for (Long availableCabinetId : availableCabinetsIdByFloor) {
-				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinetOptionalFetcher.findCabinet(availableCabinetId),
-						0, ""));
-			}
-			cabinetPreviewDtos.add(cabinetPreviewDtoList);
-		}
-
-		return new CabinetPendingResponseDto(cabinetPreviewDtos);
+		List<Cabinet> allCabinets = cabinetOptionalFetcher.findAllCabinetsByBuilding(BUILDING_SAEROM);
+		Map<Integer, List<CabinetPreviewDto>> cabintFloorMap = allCabinets.parallelStream()
+				.filter(cabinet -> cabinet.isStatus(CabinetStatus.PENDING))
+				.collect(groupingBy(cabinet -> cabinet.getCabinetPlace().getLocation().getFloor(),
+						mapping(cabinet -> cabinetMapper.toCabinetPreviewDto(cabinet, 0, null),
+								toList())));
+		return cabinetMapper.toCabinetPendingResponseDto(cabintFloorMap);
 	}
 
 	/*--------------------------------------------CUD--------------------------------------------*/

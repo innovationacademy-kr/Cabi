@@ -102,16 +102,12 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
-	List<Cabinet> findAllByBuildingAndFloor(@Param("building") String building,
-			@Param("floor") Integer floor);
+	List<Cabinet> findAllByBuildingAndFloor(
+			@Param("building") String building, @Param("floor") Integer floor);
 
-	@Query("SELECT c.cabinetId " +
+	@EntityGraph(attributePaths = {"cabinetPlace"})
+	@Query("SELECT c " +
 			"FROM Cabinet c " +
-			"WHERE c.status = org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING AND c.cabinetPlace.location.floor = :floor")
-	Optional<List<Long>> findPendingCabinets(@Param("floor") Integer floor);
-
-	@Query("SELECT c.cabinetId " +
-			"FROM Cabinet c " +
-			"WHERE c.status = org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE AND c.cabinetPlace.location.floor = :floor")
-	Optional<List<Long>> findAvailableCabinets(@Param("floor") Integer floor);
+			"WHERE c.cabinetPlace.location.building =: building")
+	List<Cabinet> findAllCabinetsByBuilding(@Param("building") String building);
 }
