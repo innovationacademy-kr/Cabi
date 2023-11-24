@@ -42,7 +42,7 @@ const ExtendModal: React.FC<{
     isCurrentSectionRenderState
   );
   const formattedExtendedDate = getExtendedDateString(
-    myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
+    myLentInfo.lents.length ? myLentInfo.lents[0].expiredAt : undefined
   );
   const extendDetail = `사물함 연장권 사용 시,
   대여 기간이 <strong>${formattedExtendedDate} 23:59</strong>으로

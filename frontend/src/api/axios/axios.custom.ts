@@ -23,6 +23,36 @@ export const axiosMyInfo = async (): Promise<any> => {
   }
 };
 
+const axiosMyExtensionsInfoURL = "/v4/users/me/lent-extensions";
+export const axiosMyExtensionsInfo = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyExtensionsInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosActiveExtensionInfoURL = "/v4/users/me/lent-extensions/active";
+export const axiosActiveExtensionInfo = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosActiveExtensionInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUseExtensionURL = "/v4/users/me/lent-extensions/use";
+export const axiosUseExtension = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosUseExtensionURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
 export const axiosBuildingFloor = async (): Promise<any> => {

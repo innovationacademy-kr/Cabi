@@ -132,7 +132,7 @@ const WrapperStyled = styled.div<{ isSelected: boolean }>`
   height: 110px;
   border-radius: 10px;
   padding: 25px;
-  background-color: var(--lightgary-color);
+  background-color: var(--lightgray-color);
   display: flex;
   align-items: center;
   transition: transform 0.2s, opacity 0.2s;
@@ -166,7 +166,7 @@ const RectangleStyled = styled.div<{
       : props.status
       ? cabinetStatusColorMap[props.status]
       : "var(--full)"};
-  font-size: 26px;
+  font-size: 1.625rem;
   color: ${(props) =>
     props.banned
       ? "var(--white)"
@@ -185,7 +185,7 @@ const TextWrapper = styled.div`
 `;
 
 const LocationStyled = styled.p`
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 28px;
   color: var(--gray-color);
 `;
@@ -213,7 +213,7 @@ const IconStyled = styled.div<{ lentType?: CabinetType }>`
 
 const NameStyled = styled.span`
   line-height: 28px;
-  font-size: 14px;
+  font-size: 0.875rem;
   margin-left: 4px;
   & strong {
     color: var(--main-color);

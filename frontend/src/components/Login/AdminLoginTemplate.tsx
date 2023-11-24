@@ -248,7 +248,7 @@ const CardInputStyled = styled.input<{ isFocus: boolean }>`
   text-align: left;
   padding-left: 15px;
   font-family: var(--main-font);
-  font-size: 14px;
+  font-size: 0.875rem;
   letter-spacing: 0.05rem;
   width: 100%;
   height: 48px;

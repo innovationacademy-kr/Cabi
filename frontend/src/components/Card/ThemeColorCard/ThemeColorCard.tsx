@@ -27,6 +27,18 @@ const ThemeColorCard = ({
   handleCancel,
   mainColor,
 }: ThemeColorProps) => {
+  const customColors = [
+    "#FF4589",
+    "#FF8B5B",
+    "#FFC74C",
+    "#00cec9",
+    "#00C2AB",
+    "#74b9ff",
+    "#0984e3",
+    "#0D4C92",
+    "#a29bfe",
+    "#9747FF",
+  ];
   return (
     <>
       {showColorPicker && <BackgroundOverlayStyled />}
@@ -61,20 +73,24 @@ const ThemeColorCard = ({
                 ]
           }
         >
-          <CardContentWrapper>
-            <CardContentStyled>
-              <ContentInfoStyled>메인 컬러</ContentInfoStyled>
-              <MainColorButtonStyled
-                onClick={() => setShowColorPicker(!showColorPicker)}
-              />
-            </CardContentStyled>
+          <>
+            <CardContentWrapper>
+              <CardContentStyled>
+                <ContentInfoStyled>메인 컬러</ContentInfoStyled>
+                <MainColorButtonStyled
+                  onClick={() => setShowColorPicker(!showColorPicker)}
+                />
+              </CardContentStyled>
+            </CardContentWrapper>
             {showColorPicker && (
               <TwitterPicker
                 color={mainColor}
+                triangle={"top-right"}
                 onChangeComplete={handleChange}
+                colors={customColors}
               />
             )}
-          </CardContentWrapper>
+          </>
         </Card>
       </ThemeColorCardWrapper>
     </>
@@ -88,7 +104,7 @@ const BackgroundOverlayStyled = styled.div`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 0;
+  z-index: 1;
 `;
 
 const ThemeColorCardWrapper = styled.div`
@@ -99,7 +115,6 @@ const MainColorButtonStyled = styled.button`
   width: 28px;
   height: 28px;
   background-color: var(--main-color);
-  margin: 0 10px 5px 0;
   border-radius: 8px;
 `;
 

@@ -7,14 +7,21 @@ import {
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { MyCabinetInfo } from "@/components/Card/LentInfoCard/LentInfoCard.container";
-import {
-  cabinetIconSrcMap,
-  cabinetLabelColorMap,
-  cabinetStatusColorMap,
-} from "@/assets/data/maps";
+import { cabinetIconSrcMap } from "@/assets/data/maps";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { formatDate, getRemainingTime } from "@/utils/dateUtils";
+import { formatDate } from "@/utils/dateUtils";
+
+const calculateFontSize = (userCount: number): string => {
+  const baseSize = 1;
+  const decrement = 0.2;
+  const minSize = 0.6;
+  const calculatedSize = Math.max(
+    baseSize - (userCount - 1) * decrement,
+    minSize
+  );
+  return `${calculatedSize}rem`;
+};
 
 const LentInfoCard = ({
   cabinetInfo,
@@ -23,16 +30,6 @@ const LentInfoCard = ({
   cabinetInfo: MyCabinetInfo;
   bannedAt: boolean;
 }) => {
-  const calculateFontSize = (userCount: number): string => {
-    const baseSize = 1;
-    const decrement = 0.2;
-    const minSize = 0.6;
-    const calculatedSize = Math.max(
-      baseSize - (userCount - 1) * decrement,
-      minSize
-    );
-    return `${calculatedSize}rem`;
-  };
   return (
     <Card
       title={"대여정보"}
@@ -43,6 +40,7 @@ const LentInfoCard = ({
       <>
         <CabinetInfoWrapper>
           <CabinetRectangleStyled
+            isLented={cabinetInfo.isLented}
             status={cabinetInfo.status as CabinetStatus}
             banned={!!bannedAt}
           >
@@ -81,21 +79,15 @@ const LentInfoCard = ({
           <CardContentStyled>
             <ContentInfoStyled>사용 기간</ContentInfoStyled>
             <ContentDeatilStyled>
-              {cabinetInfo?.isLented
-                ? `${
-                    cabinetInfo.lentType === "PRIVATE"
-                      ? parseInt(import.meta.env.VITE_PRIVATE_LENT_PERIOD)
-                      : parseInt(import.meta.env.VITE_SHARE_LENT_PERIOD)
-                  }일`
+              {cabinetInfo?.isLented && cabinetInfo.status != "IN_SESSION"
+                ? `${cabinetInfo.dateUsed}일`
                 : "-"}
             </ContentDeatilStyled>
           </CardContentStyled>
           <CardContentStyled>
             <ContentInfoStyled>남은 기간</ContentInfoStyled>
             <ContentDeatilStyled>
-              {cabinetInfo?.expireDate
-                ? getRemainingTime(cabinetInfo?.expireDate) + "일"
-                : "-"}
+              {cabinetInfo?.expireDate ? `${cabinetInfo.dateLeft}일` : "-"}
             </ContentDeatilStyled>
           </CardContentStyled>
           <CardContentStyled>
@@ -128,27 +120,25 @@ const CabinetInfoWrapper = styled.div`
 `;
 
 const CabinetRectangleStyled = styled.div<{
+  isLented: boolean;
   status: CabinetStatus;
   banned?: boolean;
 }>`
   width: 60px;
   height: 60px;
-  line-height: 60px;
+  line-height: ${(props) => (props.status === "IN_SESSION" ? "52px" : "60px")};
+  border: ${(props) =>
+    props.status === "IN_SESSION" && "4px solid var(--main-color);"};
   border-radius: 10px;
   margin-right: 20px;
   background-color: ${(props) =>
     props.banned
       ? "var(--expired)"
-      : props.status === "FULL"
+      : props.isLented && props.status !== "IN_SESSION"
       ? "var(--mine)"
-      : cabinetStatusColorMap[props.status]};
-  color: ${(props) =>
-    props.banned
-      ? "var(--white)"
-      : props.status && props.status !== "PENDING"
-      ? cabinetLabelColorMap[props.status]
-      : "var(--black)"};
-  font-size: 32px;
+      : "var(--full)"};
+  color: ${(props) => (props.banned ? "var(--white)" : "var(--black)")};
+  font-size: 2rem;
   text-align: center;
 `;
 
