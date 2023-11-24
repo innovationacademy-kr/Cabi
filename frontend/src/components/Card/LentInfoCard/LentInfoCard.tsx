@@ -148,7 +148,7 @@ const CabinetRectangleStyled = styled.div<{
       : props.status && props.status !== "PENDING"
       ? cabinetLabelColorMap[props.status]
       : "var(--black)"};
-  font-size: 32px;
+  font-size: 2rem;
   text-align: center;
 `;
 

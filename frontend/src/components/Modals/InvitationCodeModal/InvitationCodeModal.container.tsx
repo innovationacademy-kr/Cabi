@@ -115,7 +115,7 @@ const InvitationCodeModalContainer: React.FC<{
     proceedBtnText: modalPropsMap["MODAL_INVITATION_CODE"].confirmMessage,
     onClickProceed: tryLentRequest,
     renderAdditionalComponent: () => (
-      <PasswordContainer onChange={onChange} password={code} />
+      <PasswordContainer onChange={onChange} password={code} tryLentRequest={tryLentRequest}/>
     ),
     closeModal: props.onClose,
     iconType: IconType.CHECKICON,

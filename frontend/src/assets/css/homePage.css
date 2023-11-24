@@ -17,7 +17,7 @@
 
 @media screen and (max-width: 425px) {
   #infoWrap .title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   #infoWrap .subtitle {
     font-size: 1.25rem;
@@ -25,5 +25,8 @@
   #infoWrap .article > p {
     font-size: 0.875rem;
     letter-spacing: -0.02rem;
+  }
+  #infoWrap .button {
+    width: 100px;
   }
 }

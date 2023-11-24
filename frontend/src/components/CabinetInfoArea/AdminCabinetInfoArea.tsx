@@ -271,7 +271,7 @@ const CabinetRectangleStyled = styled.div<{
     css`
       background-color: var(--mine);
     `};
-  font-size: 32px;
+  font-size: 2rem;
   color: ${(props) =>
     props.isMine
       ? cabinetLabelColorMap["MINE"]

@@ -223,7 +223,7 @@ const RefreshButtonStyled = styled.button`
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 16px;
+  font-size: 1rem;
   border-radius: 30px;
   margin: 30px;
   @media (max-height: 745px) {
