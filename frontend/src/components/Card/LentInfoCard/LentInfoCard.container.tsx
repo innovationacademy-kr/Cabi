@@ -81,14 +81,14 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
   const cabinetLentInfo: MyCabinetInfo = {
     ...cabinetInfoBase,
     name,
-    userCount: userNameList ? myCabinetInfo.lents.length : 0,
+    userCount: myCabinetInfo ? myCabinetInfo.lents.length : 0,
     userNameList,
     dateUsed,
     dateLeft,
     expireDate,
-    isLented: userNameList ? true : false,
+    isLented: myCabinetInfo ? true : false,
     previousUserName: myCabinetInfo?.previousUserName || "",
-    status: myCabinetInfo.status || cabinetInfoBase.status,
+    status: myCabinetInfo.status || "",
   };
 
   return <LentInfoCard cabinetInfo={cabinetLentInfo} bannedAt={bannedAt} />;
