@@ -16,5 +16,6 @@ public class MyProfileResponseDto {
 	private final String name;
 	private final Long cabinetId;
 	private final LocalDateTime unbannedAt;
-	private final LentExtension lentExtension;
+//	private final LentExtension lentExtension;
+	private final LentExtensionResponseDto lentExtensionResponseDto;
 }

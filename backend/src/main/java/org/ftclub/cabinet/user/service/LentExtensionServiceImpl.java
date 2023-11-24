@@ -82,7 +82,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
                 lentExtensionOptionalFetcher.findLentExtensionByUserId(userId)
                 .stream()
                 .filter(lentExtension ->
-                        lentExtension.getExpiredAt().isBefore(LocalDateTime.now())
+                        lentExtension.getExpiredAt().isAfter(LocalDateTime.now())
                                 && lentExtension.getUsedAt() == null)
                 .collect(Collectors.toList());
         if (findLentExtension.isEmpty()) {
