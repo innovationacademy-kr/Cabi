@@ -108,6 +108,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
-			"WHERE c.cabinetPlace.location.building =: building")
+			"WHERE c.cabinetPlace.location.building = :building")
 	List<Cabinet> findAllCabinetsByBuilding(@Param("building") String building);
 }
