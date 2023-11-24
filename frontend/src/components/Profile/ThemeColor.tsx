@@ -70,7 +70,7 @@ const ThemeColor: React.FC<{
 const ThemeColorStyled = styled.div`
   width: 350px;
   height: 215px;
-  background-color: var(--lightgary-color);
+  background-color: var(--lightgray-color);
   border-radius: 10px;
   padding: 30px;
 `;
