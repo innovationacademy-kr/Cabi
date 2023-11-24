@@ -21,7 +21,7 @@ export const userState = atom<UserDto>({
     cabinetId: null,
     userId: null,
     name: "default",
-    lentExtension: null,
+    lentExtensionResponseDto: null,
   },
 });
 
