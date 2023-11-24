@@ -60,13 +60,15 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         Cabinet cabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
         BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
                 LocalDateTime.now());
-        List<LentExtension> lentExtensionNotExpiredByUserId =
-                lentExtensionOptionalFetcher.findLentExtensionByUserId(user.getUserId())
-                .stream().filter(lentExtension -> lentExtension.getUsedAt() == null
-                        && lentExtension.getExpiredAt().isAfter(LocalDateTime.now()))
-                .collect(Collectors.toList());
-        boolean isLentExtensionAvailable = !lentExtensionNotExpiredByUserId.isEmpty();
-        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, isLentExtensionAvailable);
+        LentExtension lentExtension = lentExtensionOptionalFetcher.findLentExtensionByUserId(
+                user.getUserId()).get(0);
+//        List<LentExtension> lentExtensionNotExpiredByUserId =
+//                lentExtensionOptionalFetcher.findLentExtensionByUserId(user.getUserId())
+//                .stream().filter(lentExtension -> lentExtension.getUsedAt() == null
+//                        && lentExtension.getExpiredAt().isAfter(LocalDateTime.now()))
+//                .collect(Collectors.toList());
+//        boolean isLentExtensionAvailable = !lentExtensionNotExpiredByUserId.isEmpty();
+        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, lentExtension);
     }
 
     @Override
