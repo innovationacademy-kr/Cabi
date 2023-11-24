@@ -176,8 +176,7 @@ const CabinetListItemStyled = styled.div<{
 
   ${({ status, isMine }) =>
     status === "IN_SESSION" &&
-    !isMine &&
-    css`  
+    css`
       border: 2px solid var(--main-color);
     `}
     
