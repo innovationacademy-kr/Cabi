@@ -6,7 +6,7 @@ import {
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import { LentExtensionDto } from "@/types/dto/lent.dto";
-import { formatDate, getLastDayofMonthString } from "@/utils/dateUtils";
+import { formatDate } from "@/utils/dateUtils";
 
 interface ExtensionProps {
   extensionInfo: LentExtensionDto | null;

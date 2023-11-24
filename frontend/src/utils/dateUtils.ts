@@ -43,18 +43,14 @@ export const getShortenedExpireDateString = (
   return formatDate(new Date(newExpireDate), "/");
 };
 
-export const getExtendedDateString = (existExpireDate?: Date) => {
-  let expireDate = existExpireDate ? new Date(existExpireDate) : new Date();
-  expireDate.setDate(
-    expireDate.getDate() + parseInt(import.meta.env.VITE_EXTENDED_LENT_PERIOD)
-  );
+export const getExtendedDateString = (
+  existExpireDate: Date | undefined,
+  dateToExtend: number | undefined
+) => {
+  if (existExpireDate === undefined || dateToExtend === undefined) return;
+  let expireDate = new Date(existExpireDate);
+  expireDate.setDate(expireDate.getDate() + dateToExtend);
   return formatDate(expireDate, "/");
-};
-
-export const getLastDayofMonthString = (date: Date | null, divider: string) => {
-  if (date === null) date = new Date();
-  let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  return formatDate(lastDay, divider);
 };
 
 export const getTotalPage = (totalLength: number, size: number) => {
