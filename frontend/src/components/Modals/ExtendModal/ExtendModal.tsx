@@ -79,7 +79,7 @@ const ExtendModal: React.FC<{
       setMyInfo({
         ...myInfo,
         cabinetId: currentCabinetId,
-        extensible: false,
+        lentExtension: null,
       });
       setIsCurrentSectionRender(true);
       setModalTitle("연장되었습니다");

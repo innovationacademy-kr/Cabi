@@ -331,7 +331,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
           cabinetViewData?.status === "IN_SESSION") &&
         !myCabinetInfo.cabinetId
       }
-      isExtensible={myInfo.extensible}
+      isExtensible={!!myInfo.extensionInfo}
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}

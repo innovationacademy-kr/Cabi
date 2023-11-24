@@ -5,14 +5,15 @@ import {
   ContentDeatilStyled,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
-import { getLastDayofMonthString } from "@/utils/dateUtils";
+import { LentExtensionDto } from "@/types/dto/lent.dto";
+import { formatDate, getLastDayofMonthString } from "@/utils/dateUtils";
 
 interface ExtensionProps {
-  extensible: boolean;
+  extensionInfo: LentExtensionDto | null;
   button: IButtonProps;
 }
 
-const ExtensionCard = ({ extensible, button }: ExtensionProps) => {
+const ExtensionCard = ({ extensionInfo, button }: ExtensionProps) => {
   return (
     <Card
       title={"연장권"}
@@ -25,15 +26,15 @@ const ExtensionCard = ({ extensible, button }: ExtensionProps) => {
         <CardContentStyled>
           <ContentInfoStyled>사용 기한</ContentInfoStyled>
           <ContentDeatilStyled>
-            {extensible ? getLastDayofMonthString(null, ".") : "-"}
+            {!!extensionInfo
+              ? formatDate(new Date(extensionInfo.expiredAt), ".")
+              : "-"}
           </ContentDeatilStyled>
         </CardContentStyled>
         <CardContentStyled>
           <ContentInfoStyled>연장 기간</ContentInfoStyled>
           <ContentDeatilStyled>
-            {extensible
-              ? parseInt(import.meta.env.VITE_EXTENDED_LENT_PERIOD) + "일"
-              : "-"}
+            {!!extensionInfo ? extensionInfo.extensionPeriod + "일" : "-"}
           </ContentDeatilStyled>
         </CardContentStyled>
       </CardContentWrapper>
