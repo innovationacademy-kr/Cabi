@@ -76,7 +76,7 @@ const ButtonContainerStyled = styled.button`
       height: 40px;
       background: var(--white);
       color: var(--gray-color);
-      font-size: 14px;
+      font-size: 0.875rem;
       border: 1px solid var(--gray-color);
     `}
 

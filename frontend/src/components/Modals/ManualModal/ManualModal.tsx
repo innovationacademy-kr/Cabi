@@ -22,9 +22,11 @@ const ManualModal: React.FC<ModalProps> = ({
     contentStatus === ContentStatus.SHARE ||
     contentStatus === ContentStatus.CLUB;
 
-  const isIcon =
-    contentStatus !== ContentStatus.PENDING &&
-    contentStatus !== ContentStatus.IN_SESSION;
+  const hasImage =
+    contentStatus === ContentStatus.EXTENSION ||
+    contentStatus === ContentStatus.PRIVATE ||
+    contentStatus === ContentStatus.SHARE ||
+    contentStatus === ContentStatus.CLUB;
 
   const closeModal = () => {
     if (modalIsOpen) {
@@ -35,36 +37,42 @@ const ManualModal: React.FC<ModalProps> = ({
     }
   };
 
+  const handleWrapperClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <ModalOverlay onClick={closeModal}>
       <ModalWrapper
         background={contentData.background}
         contentStatus={contentStatus}
         className={modalIsOpen ? "open" : "close"}
+        onClick={handleWrapperClick}
       >
         <ModalContent contentStatus={contentStatus}>
           <CloseButton contentStatus={contentStatus} onClick={closeModal}>
             <MoveBtnImg stroke="white" />
           </CloseButton>
-          <BasicInfo>
-            {isIcon && (
+          {hasImage && (
+            <BasicInfo>
               <img className="contentImg" src={contentData.imagePath} alt="" />
-            )}
-            {isCabinetType && (
-              <BoxInfoWrap>
-                <BoxInfo1>
-                  대여기간
-                  <br />
-                  <strong>{contentData.rentalPeriod} </strong>
-                </BoxInfo1>
-                <BoxInfo2>
-                  사용인원
-                  <br />
-                  <strong>{contentData.capacity}</strong>
-                </BoxInfo2>
-              </BoxInfoWrap>
-            )}
-          </BasicInfo>
+
+              {isCabinetType && (
+                <BoxInfoWrap>
+                  <BoxInfo1>
+                    대여기간
+                    <br />
+                    <strong>{contentData.rentalPeriod} </strong>
+                  </BoxInfo1>
+                  <BoxInfo2>
+                    사용인원
+                    <br />
+                    <strong>{contentData.capacity}</strong>
+                  </BoxInfo2>
+                </BoxInfoWrap>
+              )}
+            </BasicInfo>
+          )}
           {contentData.contentTitle}
           <ManualContentStyeld color={contentData.pointColor}>
             <div
@@ -85,7 +93,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 2;
 `;
 
 const OpenModalAni = keyframes`
@@ -112,6 +120,7 @@ const ModalWrapper = styled.div<{
   background: string;
   contentStatus: ContentStatus;
 }>`
+  z-index: 999;
   &.open {
     animation: ${OpenModalAni} 0.4s ease-in-out;
   }
@@ -128,7 +137,7 @@ const ModalWrapper = styled.div<{
   height: 75%;
   overflow-y: auto;
   background: ${(props) => props.background};
-  padding: 30px 70px;
+  padding: 15px 70px;
   border-radius: 40px 40px 0 0;
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
@@ -146,6 +155,7 @@ const ModalWrapper = styled.div<{
 const ModalContent = styled.div<{
   contentStatus: ContentStatus;
 }>`
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -155,7 +165,7 @@ const ModalContent = styled.div<{
       : props.contentStatus === ContentStatus.EXTENSION
       ? "black"
       : "white"};
-  font-size: 40px;
+  font-size: 2.5rem;
   font-weight: bold;
   align-items: flex-start;
   .svg {
@@ -173,7 +183,7 @@ const ModalContent = styled.div<{
         : "brightness(100)"};
   }
   @media screen and (max-width: 400px) {
-    font-size: 25px;
+    font-size: 1.5rem;
     .contentImg {
       width: 60px;
       height: 60px;
@@ -189,11 +199,14 @@ const ModalContent = styled.div<{
 const CloseButton = styled.div<{
   contentStatus: ContentStatus;
 }>`
-  width: 60px;
-  height: 15px;
+  width: 80px;
+  height: 40px;
   cursor: pointer;
-  margin-bottom: 60px;
+  margin-bottom: 45px;
   align-self: flex-end;
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
+  text-align: right;
   svg {
     transform: scaleX(-1);
     stroke: ${(props) =>
@@ -203,10 +216,14 @@ const CloseButton = styled.div<{
         ? "black"
         : "white"};
   }
+  :hover {
+    transform: translateX(-16px);
+  }
 `;
 
 const BasicInfo = styled.div`
   width: 100%;
+  height: 80px;
   margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
@@ -221,7 +238,7 @@ const BoxInfo1 = styled.div`
   height: 80px;
   border: 1px solid white;
   border-radius: 15px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
   display: flex;
   align-items: center;
@@ -239,7 +256,7 @@ const BoxInfo2 = styled.div`
   height: 80px;
   border: 1px solid white;
   border-radius: 15px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 400;
   display: flex;
   align-items: center;
@@ -256,8 +273,8 @@ const ManualContentStyeld = styled.div<{
   color: string;
 }>`
   margin: 40px 0 0 20px;
-  font-size: 20px;
-  line-height: 1.9;
+  font-size: 1.25rem;
+  line-height: 1.7;
   font-weight: 350;
   strong {
     color: ${(props) => props.color};
@@ -266,16 +283,30 @@ const ManualContentStyeld = styled.div<{
     font-weight: bold;
     color: ${(props) => props.color};
   }
+  & > div {
+    margin-bottom: 30px;
+  }
+  span {
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 2.5;
+  }
+  div > div {
+    margin-left: 24px;
+  }
   @media screen and (max-width: 800px) {
     line-height: 1.7;
-    font-size: 18px;
+    font-size: 1.125rem;
     margin-left: 10px;
   }
   @media screen and (max-width: 400px) {
     line-height: 1.6;
-    font-size: 14px;
+    font-size: 0.875rem;
     margin-top: 20px;
     margin-left: 3px;
+    span {
+      font-size: 1.2rem;
+    }
   }
 `;
 

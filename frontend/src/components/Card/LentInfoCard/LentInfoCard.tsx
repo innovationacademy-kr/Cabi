@@ -138,7 +138,7 @@ const CabinetRectangleStyled = styled.div<{
       ? "var(--mine)"
       : "var(--full)"};
   color: ${(props) => (props.banned ? "var(--white)" : "var(--black)")};
-  font-size: 32px;
+  font-size: 2rem;
   text-align: center;
 `;
 
