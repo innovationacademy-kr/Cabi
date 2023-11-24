@@ -115,7 +115,7 @@ const LentInfoCard = ({
 const CabinetInfoWrapper = styled.div`
   display: flex;
   width: 85%;
-  margin: 10px 0 15px 0;
+  margin: 9px 0 9px 0;
   align-items: center;
 `;
 
@@ -137,7 +137,12 @@ const CabinetRectangleStyled = styled.div<{
       : props.isLented && props.status !== "IN_SESSION"
       ? "var(--mine)"
       : "var(--full)"};
-  color: ${(props) => (props.banned ? "var(--white)" : "var(--black)")};
+  color: ${(props) =>
+    props.banned
+      ? "var(--white)"
+      : props.status === "IN_SESSION"
+      ? "var(--main-color)"
+      : "var(--black)"};
   font-size: 2rem;
   text-align: center;
 `;
