@@ -15,7 +15,7 @@ export interface MyCabinetInfo {
   visibleNum: number;
   lentType: CabinetType;
   userCount: number;
-  userNameList: string;
+  userNameList: JSX.Element;
   dateUsed?: number;
   dateLeft?: number;
   expireDate?: Date;
@@ -36,14 +36,26 @@ const calculateDateUsed = (startedAt: Date) => {
   return diffDays;
 };
 
-const getCabinetUserList = (selectedCabinetInfo: CabinetInfo): string => {
+const getCabinetUserList = (
+  selectedCabinetInfo: CabinetInfo,
+  myName: string | null
+): JSX.Element => {
   const { lents } = selectedCabinetInfo;
-  if (!lents || lents.length === 0) return "";
-  return new Array(lents.length)
-    .fill(null)
-    .map((_, idx) => lents[idx])
-    .map((info) => (info ? info.name : ""))
-    .join(", ");
+  if (!myName || !lents || lents.length === 0) return <></>;
+
+  return (
+    <>
+      {lents.map((info, idx) => (
+        <span
+          key={idx}
+          style={{ fontWeight: info.name === myName ? "bold" : "normal" }}
+        >
+          {info.name}
+          {idx < lents.length - 1 ? ", " : ""}
+        </span>
+      ))}
+    </>
+  );
 };
 
 const LentInfoCardContainer = ({ name }: { name: string | null }) => {
@@ -64,7 +76,7 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
   const cabinetInfoBase = myCabinetInfo.lents
     ? myCabinetInfo
     : getDefaultCabinetInfo();
-  const userNameList = getCabinetUserList(myCabinetInfo);
+  const userNameList = getCabinetUserList(myCabinetInfo, name);
 
   const cabinetLentInfo: MyCabinetInfo = {
     ...cabinetInfoBase,
