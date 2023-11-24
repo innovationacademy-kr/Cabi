@@ -329,7 +329,7 @@ const CabinetRectangleStyled = styled.div<{
   background-color: ${({ cabinetStatus, isMine }) =>
     isMine ? "var(--mine)" : cabinetStatusColorMap[cabinetStatus]};
 
-  font-size: 32px;
+  font-size: 2rem;
   color: ${(props) =>
     props.isMine
       ? cabinetLabelColorMap["MINE"]
@@ -355,7 +355,7 @@ export const DetailStyled = styled.p`
   margin-top: 20px;
   letter-spacing: -0.02rem;
   line-height: 1.5rem;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 300;
   white-space: break-spaces;
 `;
@@ -402,7 +402,7 @@ const HoverBox = styled.div<{
   background-color: rgba(73, 73, 73, 0.99);
   border-radius: 10px;
   box-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.5);
-  font-size: 14px;
+  font-size: 0.875rem;
   text-align: center;
   color: white;
   display: flex;

@@ -61,7 +61,7 @@ const HoverBox = styled.div`
   background-color: rgba(73, 73, 73, 0.99);
   border-radius: 10px;
   box-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.5);
-  font-size: 12px;
+  font-size: 0.75rem;
   color: white;
   display: flex;
   flex-direction: column;
@@ -98,7 +98,7 @@ const CodeStyled = styled.div<{ copySuccess: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 0.875rem;
   letter-spacing: 3.5px;
   cursor: pointer;
   user-select: none;
@@ -114,7 +114,7 @@ const ClockStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 10px;
+  font-size: 0.625rem;
   svg {
     width: 20px;
     height: 20px;
@@ -123,14 +123,14 @@ const ClockStyled = styled.div`
 `;
 
 const CountDownStyled = styled.div`
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: bold;
   margin-left: 15px;
   letter-spacing: 4px;
 `;
 
 const CountEndStyled = styled.div`
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-left: 15px;
 `;

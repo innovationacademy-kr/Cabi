@@ -116,7 +116,7 @@ const LeftMainNav = ({
               }
               onClick={onClickProfileButton}
             >
-              <ProfileImg stroke="var(--gray-color)" />
+              <ProfileImg stroke="var(--gray-color)" width={32} height={32} />
               Profile
             </BottomBtnStyled>
           )}

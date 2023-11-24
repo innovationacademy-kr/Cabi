@@ -19,12 +19,19 @@ const ServiceManual = ({
     setIsModalOpen(true);
   };
 
+  const openNotionLink = () => {
+    window.open("https://cabi.oopy.io/0bbb08a2-241c-444b-8a96-6b33c3796451");
+  };
+
   return (
     <WrapperStyled id="infoWrap">
       <TitleContainerStyled className="titleContainer">
         <h1 className="title">
-          42Cabi <span>이용 안내서</span>
+          Cabi <span>이용 안내서</span>
         </h1>
+        <NotionBtn className="button" onClick={openNotionLink}>
+          상세보기
+        </NotionBtn>
       </TitleContainerStyled>
 
       <WrapSectionStyled>
@@ -112,9 +119,8 @@ const TitleContainerStyled = styled.div`
   width: 80%;
   max-width: 1000px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 2px solid #d9d9d9;
   margin-bottom: 70px;
   color: var(--main-color);
@@ -131,6 +137,20 @@ const TitleContainerStyled = styled.div`
   }
   .title > span {
     color: black;
+  }
+`;
+
+const NotionBtn = styled.button`
+  width: 120px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #333333;
+  background: white;
+  border: 1px solid #d9d9d9;
+  :hover {
+    color: black;
+    font-weight: 400;
   }
 `;
 
@@ -157,7 +177,7 @@ const InfoSectionStyled = styled.section`
     margin: 10px 40px 60px 0;
     :hover {
       transition: all 0.3s ease-in-out;
-      margin-top: 6px;
+      transform: translateY(-6px);
       .redColor {
         transition: all 0.3s ease-in-out;
         font-weight: 700;
