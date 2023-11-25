@@ -338,7 +338,6 @@ const CabinetRectangleStyled = styled.div<{
 
   ${({ cabinetStatus, isMine }) =>
     cabinetStatus === "IN_SESSION" &&
-    !isMine &&
     css`
       border: 2px solid var(--main-color);
     `}
