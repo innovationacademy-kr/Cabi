@@ -97,10 +97,10 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
         setTargetCabinetInfo(selectCabinetData);
 
         if (myCabinetInfo.cabinetId === cabinetId) {
-          const isUserIdMatching = selectCabinetData.lents.some(
+          const isLentedByMyUserId = selectCabinetData.lents.some(
             (user: { userId: number }) => user.userId === myInfo.userId
           );
-          if (status !== selectCabinetData.status || !isUserIdMatching) {
+          if (status !== selectCabinetData.status || !isLentedByMyUserId) {
             const { data: myCabinetData } = await axiosMyLentInfo();
             setMyLentInfo(myCabinetData);
           }
