@@ -2,7 +2,10 @@ import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { css, keyframes } from "styled-components";
 import {
+  currentBuildingNameState,
   currentCabinetIdState,
+  currentFloorCabinetState,
+  currentFloorNumberState,
   myCabinetInfoState,
   targetCabinetInfoState,
 } from "@/recoil/atoms";
@@ -20,7 +23,11 @@ import {
 } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import { axiosCabinetById } from "@/api/axios/axios.custom";
+import {
+  axiosCabinetByBuildingFloor,
+  axiosCabinetById,
+  axiosMyLentInfo,
+} from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
 const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
@@ -29,9 +36,11 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const [currentCabinetId, setCurrentCabinetId] = useRecoilState<number | null>(
     currentCabinetIdState
   );
+
   const setTargetCabinetInfo = useSetRecoilState<CabinetInfo>(
     targetCabinetInfoState
   );
+
   const [showUnavailableModal, setShowUnavailableModal] =
     useState<boolean>(false);
   const { openCabinet, closeCabinet } = useMenu();
@@ -40,6 +49,8 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
       props.status !== "AVAILABLE"
     : false;
 
+  const setMyLentInfo =
+    useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   let cabinetLabelText = "";
 
   if (
@@ -67,17 +78,33 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     setShowUnavailableModal(false);
   };
 
+  const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
+  const currentFloor = useRecoilValue<number>(currentFloorNumberState);
+  const setCurrentFloorData = useSetRecoilState(currentFloorCabinetState);
+
   const selectCabinetOnClick = (status: CabinetStatus, cabinetId: number) => {
     if (currentCabinetId === cabinetId) {
       closeCabinet();
       return;
     }
-
     setCurrentCabinetId(cabinetId);
+
     async function getData(cabinetId: number) {
       try {
-        const { data } = await axiosCabinetById(cabinetId);
-        setTargetCabinetInfo(data);
+        const { data: selectCabinetData } = await axiosCabinetById(cabinetId);
+        setTargetCabinetInfo(selectCabinetData);
+        if (status !== selectCabinetData.status) {
+          if (myCabinetInfo.cabinetId === cabinetId) {
+            const { data: myCabinetData } = await axiosMyLentInfo();
+            setMyLentInfo(myCabinetData);
+          } else {
+            const { data: floorData } = await axiosCabinetByBuildingFloor(
+              currentBuilding,
+              currentFloor
+            );
+            setCurrentFloorData(floorData);
+          }
+        }
       } catch (error) {
         console.log(error);
       }
@@ -174,10 +201,9 @@ const CabinetListItemStyled = styled.div<{
       border: 5px double var(--white);
     `}
 
-  ${({ status, isMine }) =>
+  ${({ status }) =>
     status === "IN_SESSION" &&
-    !isMine &&
-    css`  
+    css`
       border: 2px solid var(--main-color);
     `}
     
