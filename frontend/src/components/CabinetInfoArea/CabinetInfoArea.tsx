@@ -187,23 +187,6 @@ const CabinetInfoArea: React.FC<{
       <CabinetInfoButtonsContainerStyled>
         {isMine &&
           isExtensible &&
-          selectedCabinetInfo.status !== "IN_SESSION" && (
-            <ButtonContainer
-              onClick={() => {
-                openModal("extendModal");
-              }}
-              text={"연장권 사용하기"}
-              theme="line"
-              iconSrc="/src/assets/images/extensionTicket.svg"
-              iconAlt="연장권 아이콘"
-              disabled={
-                selectedCabinetInfo.lentsLength <= 1 &&
-                selectedCabinetInfo.lentType === "SHARE"
-              }
-            />
-          )}
-        {isMine &&
-          isExtensible &&
           selectedCabinetInfo.lentsLength <= 1 &&
           selectedCabinetInfo.lentType === "SHARE" &&
           selectedCabinetInfo.status !== "IN_SESSION" && (
@@ -218,6 +201,23 @@ const CabinetInfoArea: React.FC<{
               공유사물함을 단독으로 이용 시, <br />
               연장권을 사용할 수 없습니다.
             </HoverBox>
+          )}
+        {isMine &&
+          isExtensible &&
+          selectedCabinetInfo.status !== "IN_SESSION" && (
+            <ButtonContainer
+              onClick={() => {
+                openModal("extendModal");
+              }}
+              text={"연장권 사용하기"}
+              theme="line"
+              iconSrc="/src/assets/images/extensionTicket.svg"
+              iconAlt="연장권 아이콘"
+              disabled={
+                selectedCabinetInfo.lentsLength <= 1 &&
+                selectedCabinetInfo.lentType === "SHARE"
+              }
+            />
           )}
       </CabinetInfoButtonsContainerStyled>
       {userModal.unavailableModal && (
@@ -359,42 +359,9 @@ export const DetailStyled = styled.p`
   white-space: break-spaces;
 `;
 
-const ButtonWrapperStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const ButtonContainerStyled = styled.button`
-  max-width: 400px;
-  width: 110%;
-  height: 80px;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  &:last-child {
-    margin-bottom: 0;
-  }
-  background: var(--white);
-  color: var(--main-color);
-  border: 1px solid var(--main-color);
-  @media (max-height: 745px) {
-    margin-bottom: 8px;
-  }
-`;
-
 const HoverBox = styled.div<{
   canUseExtendTicket?: boolean;
 }>`
-  position: absolute;
-  top: 50%;
   width: 270px;
   height: 80px;
   padding: 10px;
