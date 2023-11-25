@@ -62,15 +62,14 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
                 LocalDateTime.now());
 
-        List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionService.getActiveLentExtensionList(
-                user);
-
-        if (lentExtensionResponseDtos.isEmpty()) {
-            return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, null);
-        }
+        LentExtensionResponseDto lentExtensionResponseDto =
+                userMapper.toLentExtensionResponseDto(
+                        lentExtensionOptionalFetcher.findActiveLentExtensionByUserId(
+                                user.getUserId())
+                );
 
         return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-                lentExtensionResponseDtos.get(0));
+                lentExtensionResponseDto);
     }
 
     @Override
