@@ -54,16 +54,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     private final LentExtensionService lentExtensionService;
     private final LentExtensionOptionalFetcher lentExtensionOptionalFetcher;
 
-    private List<LentExtensionResponseDto> getMyActiveLentExtension(UserSessionDto userSessionDto) {
-        log.debug("Called getMyActiveLentExtension");
-        return lentExtensionOptionalFetcher.findLentExtensionByUserId(userSessionDto.getUserId())
-                .parallelStream()
-                .filter(lentExtension -> lentExtension.getUsedAt() == null &&
-                        lentExtension.getExpiredAt().isAfter(LocalDateTime.now()))
-                .map(userMapper::toLentExtensionResponseDto)
-                .collect(Collectors.toList());
-    }
-
     @Override
     public MyProfileResponseDto getMyProfile(UserSessionDto user) {
         log.debug("Called getMyProfile: {}", user.getName());
@@ -72,12 +62,13 @@ public class UserFacadeServiceImpl implements UserFacadeService {
         BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(user.getUserId(),
                 LocalDateTime.now());
 
-        List<LentExtensionResponseDto> lentExtensionResponseDtos = getMyActiveLentExtension(user);
+        List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionService.getActiveLentExtensionList(
+                user);
 
         if (lentExtensionResponseDtos.isEmpty()) {
             return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, null);
         }
-        
+
         return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
                 lentExtensionResponseDtos.get(0));
     }
@@ -301,7 +292,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
     @Override
     public LentExtensionPaginationDto getMyActiveLentExtensionPage(UserSessionDto userSessionDto) {
         log.debug("Called getMyActiveLentExtension");
-        List<LentExtensionResponseDto> result = getMyActiveLentExtension(userSessionDto);
+        List<LentExtensionResponseDto> result = lentExtensionService.getActiveLentExtensionList(
+                userSessionDto);
         return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
     }
 
