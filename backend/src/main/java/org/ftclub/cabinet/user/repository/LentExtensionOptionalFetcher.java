@@ -34,6 +34,6 @@ public class LentExtensionOptionalFetcher {
 
     @Transactional(readOnly = true)
     public LentExtension findActiveLentExtensionByUserId(Long userId) {
-        return lentExtensionRepository.findByUserId(userId).orElse(null);
+        return lentExtensionRepository.findByUserIdAndUsedAtIsNull(userId).orElse(null);
     }
 }
