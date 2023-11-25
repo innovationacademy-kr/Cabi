@@ -62,7 +62,7 @@ public class UserController {
     public LentExtensionPaginationDto getMyActiveLentExtension(
             @UserSession UserSessionDto userSessionDto) {
         log.info("Called getMyActiveLentExtension: {}", userSessionDto.getName());
-        return userFacadeService.getMyActiveLentExtension(userSessionDto);
+        return userFacadeService.getMyActiveLentExtensionPage(userSessionDto);
     }
 
     /**

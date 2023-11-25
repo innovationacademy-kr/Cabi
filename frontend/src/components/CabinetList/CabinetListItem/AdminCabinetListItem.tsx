@@ -29,7 +29,6 @@ const AdminCabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
     selectedTypeOnSearchState
   );
   const { openCabinet, closeCabinet } = useMenu();
-  //  const isMine = MY_INFO ? MY_INFO.cabinetId === props.cabinetId : false;
   const { isMultiSelect, clickCabinetOnMultiSelectMode, containsCabinet } =
     useMultiSelect();
 
@@ -171,9 +170,8 @@ const CabinetListItemStyled = styled.div<{
       border: 5px double var(--white);
     `}
 
-    ${({ status, isMine }) =>
+    ${({ status }) =>
     status === "IN_SESSION" &&
-    !isMine &&
     css`
       border: 2px solid var(--main-color);
     `}
