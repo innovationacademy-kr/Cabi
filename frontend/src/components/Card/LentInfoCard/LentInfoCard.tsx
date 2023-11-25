@@ -126,15 +126,15 @@ const CabinetRectangleStyled = styled.div<{
 }>`
   width: 60px;
   height: 60px;
-  line-height: ${(props) => (props.status === "IN_SESSION" ? "52px" : "60px")};
+  line-height: ${(props) => (props.status === "IN_SESSION" ? "56px" : "60px")};
   border: ${(props) =>
-    props.status === "IN_SESSION" && "4px solid var(--main-color);"};
+    props.status === "IN_SESSION" && "2px solid var(--main-color);"};
   border-radius: 10px;
   margin-right: 20px;
   background-color: ${(props) =>
     props.banned
       ? "var(--expired)"
-      : props.isLented && props.status !== "IN_SESSION"
+      : props.isLented
       ? "var(--mine)"
       : "var(--full)"};
   color: ${(props) => (props.banned ? "var(--white)" : "var(--black)")};
