@@ -93,22 +93,17 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
       try {
         const { data: selectCabinetData } = await axiosCabinetById(cabinetId);
         setTargetCabinetInfo(selectCabinetData);
-
-        if (
-          status !== selectCabinetData.status &&
-          myCabinetInfo.cabinetId !== cabinetId
-        ) {
-          const { data: floorData } = await axiosCabinetByBuildingFloor(
-            currentBuilding,
-            currentFloor
-          );
-          setCurrentFloorData(floorData);
-        } else if (
-          myCabinetInfo.cabinetId === cabinetId &&
-          status !== selectCabinetData.status
-        ) {
-          const { data: myCabinetData } = await axiosMyLentInfo();
-          setMyLentInfo(myCabinetData);
+        if (status !== selectCabinetData.status) {
+          if (myCabinetInfo.cabinetId === cabinetId) {
+            const { data: myCabinetData } = await axiosMyLentInfo();
+            setMyLentInfo(myCabinetData);
+          } else {
+            const { data: floorData } = await axiosCabinetByBuildingFloor(
+              currentBuilding,
+              currentFloor
+            );
+            setCurrentFloorData(floorData);
+          }
         }
       } catch (error) {
         console.log(error);
