@@ -5,6 +5,7 @@ import {
   isCurrentSectionRenderState,
   myCabinetInfoState,
   targetCabinetInfoState,
+  userState,
 } from "@/recoil/atoms";
 import { IModalContents } from "@/components/Modals/Modal";
 import ModalPortal from "@/components/Modals/ModalPortal";
@@ -38,6 +39,7 @@ const InvitationCodeModalContainer: React.FC<{
   );
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regex = /^[0-9]{0,4}$/;
@@ -51,6 +53,7 @@ const InvitationCodeModalContainer: React.FC<{
   const tryLentRequest = async () => {
     try {
       await axiosLentShareId(currentCabinetId, code);
+      setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       setModalTitle("공유 사물함 대기열에 입장하였습니다");
 
