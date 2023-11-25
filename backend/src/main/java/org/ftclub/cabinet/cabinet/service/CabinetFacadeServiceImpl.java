@@ -21,6 +21,7 @@ import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
@@ -398,7 +399,36 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
                 .collect(Collectors.toList());
     }
 
-    /*--------------------------------------------CUD--------------------------------------------*/
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public CabinetPendingResponseDto getPendingCabinets() {
+		log.debug("getPendingCabinets");
+		List<List<CabinetPreviewDto>> cabinetPreviewDtos = new ArrayList<>();
+		for (int i = 2; i <= 5; i++) {
+			List<CabinetPreviewDto> cabinetPreviewDtoList = new ArrayList<>();
+			// pending 상태인 사물함들의 cabinetId를 가져온다.
+			List<Long> pendingCabinetsIdByFloor = cabinetOptionalFetcher.findPendingCabinets(i);
+			// 순회를 돌면서 cabinetPreviewDto를 가져온다.
+			for (Long pendingCabinetId : pendingCabinetsIdByFloor) {
+				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinetOptionalFetcher.findCabinet(pendingCabinetId),
+						0, ""));
+			}
+			// available 상태인 사물함들의 cabinetId를 가져온다.
+			List<Long> availableCabinetsIdByFloor = cabinetOptionalFetcher.findAvailableCabinets(i);
+			for (Long availableCabinetId : availableCabinetsIdByFloor) {
+				cabinetPreviewDtoList.add(cabinetMapper.toCabinetPreviewDto(cabinetOptionalFetcher.findCabinet(availableCabinetId),
+						0, ""));
+			}
+			cabinetPreviewDtos.add(cabinetPreviewDtoList);
+		}
+
+		return new CabinetPendingResponseDto(cabinetPreviewDtos);
+	}
+
+	/*--------------------------------------------CUD--------------------------------------------*/
 
     /**
      * {@inheritDoc}

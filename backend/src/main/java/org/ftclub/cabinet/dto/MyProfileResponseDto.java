@@ -3,6 +3,7 @@ package org.ftclub.cabinet.dto;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.ftclub.cabinet.user.domain.LentExtension;
 
 /**
  * 내 프로필 정보와 대여 중인 사물함의 ID를 반환하는 DTO입니다.
@@ -15,5 +16,5 @@ public class MyProfileResponseDto {
 	private final String name;
 	private final Long cabinetId;
 	private final LocalDateTime unbannedAt;
-	private final boolean extensible;
+	private final LentExtensionResponseDto lentExtensionResponseDto;
 }
