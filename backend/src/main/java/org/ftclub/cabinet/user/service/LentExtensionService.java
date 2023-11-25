@@ -16,4 +16,7 @@ public interface LentExtensionService {
 
     List<LentExtensionResponseDto> getActiveLentExtensionList(UserSessionDto userSessionDto);
 
+    LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto);
+
+
 }
