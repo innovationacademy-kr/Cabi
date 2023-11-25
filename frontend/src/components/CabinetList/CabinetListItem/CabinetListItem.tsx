@@ -8,6 +8,7 @@ import {
   currentFloorNumberState,
   myCabinetInfoState,
   targetCabinetInfoState,
+  userState,
 } from "@/recoil/atoms";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
@@ -81,6 +82,7 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const currentFloor = useRecoilValue<number>(currentFloorNumberState);
   const setCurrentFloorData = useSetRecoilState(currentFloorCabinetState);
+  const myInfo = useRecoilValue(userState);
 
   const selectCabinetOnClick = (status: CabinetStatus, cabinetId: number) => {
     if (currentCabinetId === cabinetId) {
@@ -93,17 +95,21 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
       try {
         const { data: selectCabinetData } = await axiosCabinetById(cabinetId);
         setTargetCabinetInfo(selectCabinetData);
-        if (status !== selectCabinetData.status) {
-          if (myCabinetInfo.cabinetId === cabinetId) {
+
+        if (myCabinetInfo.cabinetId === cabinetId) {
+          const isLentedByMyUserId = selectCabinetData.lents.some(
+            (user: { userId: number }) => user.userId === myInfo.userId
+          );
+          if (status !== selectCabinetData.status || !isLentedByMyUserId) {
             const { data: myCabinetData } = await axiosMyLentInfo();
             setMyLentInfo(myCabinetData);
-          } else {
-            const { data: floorData } = await axiosCabinetByBuildingFloor(
-              currentBuilding,
-              currentFloor
-            );
-            setCurrentFloorData(floorData);
           }
+        } else if (status !== selectCabinetData.status) {
+          const { data: floorData } = await axiosCabinetByBuildingFloor(
+            currentBuilding,
+            currentFloor
+          );
+          setCurrentFloorData(floorData);
         }
       } catch (error) {
         console.log(error);
