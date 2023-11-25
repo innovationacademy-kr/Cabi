@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Card, { IButtonProps } from "@/components/Card/Card";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 
 type ProfileProps = {
   name: string | null;
@@ -16,7 +17,12 @@ const ProfileCard = ({ name, button }: ProfileProps) => {
       buttons={[button]}
     >
       <ProfileContent>
-        <ProfileImage src="/src/assets/images/logo.png" alt="Profile Avatar" />
+        <LogoStyled id="topNavLogo" className="cabiButton">
+          <LogoDivStyled>
+            <LogoImg className="cabiButton" />
+          </LogoDivStyled>
+        </LogoStyled>
+        {/* <ProfileImage src="/src/assets/images/logo.png" alt="Profile Avatar" /> */}
         <ProfileDetailWrapper>
           <ProfileDetail>{name}</ProfileDetail>
           <EmailDetail>{name}@student.42seoul.kr</EmailDetail>
@@ -33,6 +39,27 @@ const ProfileContent = styled.div`
   justify-content: flex-start;
   padding: 10px;
   width: 90%;
+`;
+
+const LogoStyled = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 60px;
+  border-radius: 10px;
+  margin-right: 20px;
+  background-color: var(--white);
+`;
+
+const LogoDivStyled = styled.div`
+  width: 45px;
+  height: 45px;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 const ProfileImage = styled.img`
