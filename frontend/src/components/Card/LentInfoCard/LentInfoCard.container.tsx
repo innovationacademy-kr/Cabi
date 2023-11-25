@@ -86,7 +86,7 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
     dateUsed,
     dateLeft,
     expireDate,
-    isLented: myCabinetInfo ? true : false,
+    isLented: myCabinetInfo && myCabinetInfo.lents.length ? true : false,
     previousUserName: myCabinetInfo?.previousUserName || "",
     status: myCabinetInfo.status || "",
   };
