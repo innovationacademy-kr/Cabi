@@ -77,6 +77,14 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 */
 	List<LentHistory> findByCabinetId(@Param("cabinetId") Long cabinetId, Pageable pageable);
 
+	/**
+	 * 캐비넷의 대여 중인 {@link LentHistory}들을 가져옵니다.(공유 사물함의 경우를 포함하여 리스트로 반환)
+	 *
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @return {@link LentHistory}들의 정보
+	 */
+	List<LentHistory> findActiveLentHistoriesByCabinetId(@Param("cabinetId") Long cabinetId);
+
 	/***
 	 * 사물함을 기준으로 가장 최근에 반납한 {@link LentHistory} 를 가져옵니다.
 	 * @param cabinetId 찾으려는 cabinet id

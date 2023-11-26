@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.UserMonthDataDto;

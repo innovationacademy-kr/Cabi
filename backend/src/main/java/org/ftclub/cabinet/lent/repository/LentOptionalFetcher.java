@@ -170,6 +170,15 @@ public class LentOptionalFetcher {
 
 	/**
 	 * @param cabinetId 캐비넷 id
+	 * @return 캐비넷을 현재 대여 중인 기록(공유 사물함의 경우를 포함하여 리스트로 반환)
+	 */
+	public List<LentHistory> findActiveLentHistoriesByCabinetId(Long cabinetId) {
+		log.debug("Called findByCabinetId: {}", cabinetId);
+		return lentRepository.findActiveLentHistoriesByCabinetId(cabinetId);
+	}
+
+	/**
+	 * @param cabinetId 캐비넷 id
 	 * @return 캐비넷이 대여된 총 횟수
 	 */
 	public int countCabinetAllLent(Long cabinetId) {
