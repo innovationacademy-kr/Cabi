@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { myCabinetInfoState, targetUserInfoState } from "@/recoil/atoms";
+import { myCabinetInfoState } from "@/recoil/atoms";
 import LentInfoCard from "@/components/Card/LentInfoCard/LentInfoCard";
 import { getDefaultCabinetInfo } from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";

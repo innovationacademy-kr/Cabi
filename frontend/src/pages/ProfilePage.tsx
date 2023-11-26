@@ -8,7 +8,6 @@ import NotificationCardContainer from "@/components/Card/NotificationCard/Notifi
 import ProfileCardContainer from "@/components/Card/ProfileCard/ProfileCard.container";
 import ThemeColorCardContainer from "@/components/Card/ThemeColorCard/ThemeColorCard.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { UserInfo } from "@/types/dto/user.dto";
 import { axiosMyInfo } from "@/api/axios/axios.custom";
 
 const ProfilePage = () => {
