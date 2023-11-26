@@ -359,6 +359,7 @@ const HoverBox = styled.div<{
   justify-content: space-around;
   align-items: center;
   transition: opacity 0.3s ease;
+  line-height: 1.2;
 `;
 
 const ButtonHoverWrapper = styled.div`
