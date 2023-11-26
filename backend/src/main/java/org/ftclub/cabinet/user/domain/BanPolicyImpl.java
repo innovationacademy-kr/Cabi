@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class BanPolicyImpl implements BanPolicy {
 
-	private final CabinetProperties cabinetProperties;
 	private final BanHistoryRepository banHistoryRepository;
 
 	@Override
@@ -25,13 +23,6 @@ public class BanPolicyImpl implements BanPolicy {
 		if (checkAlreadyExpired(endedAt, expiredAt)) {
 			return BanType.ALL;
 		}
-		//share BAN 비활성화
-//		if (lentType == LentType.SHARE) {
-//			Long dateDiff = DateUtil.calculateTwoDateDiffAbs(startAt, endedAt);
-//			if (dateDiff < cabinetProperties.getPenaltyDayShare()) {
-//				return BanType.SHARE;
-//			}
-//		}
 		return BanType.NONE;
 	}
 
@@ -42,7 +33,6 @@ public class BanPolicyImpl implements BanPolicy {
 		Double currentBanDays = DateUtil.calculateTwoDateDiffCeil(expiredAt, endedAt)
 				.doubleValue();
 		Double squaredBanDays = Math.pow(currentBanDays, 2.0);
-		System.out.println("squaredBanDays = " + squaredBanDays);
 		return endedAt.plusDays(squaredBanDays.longValue());
 	}
 
