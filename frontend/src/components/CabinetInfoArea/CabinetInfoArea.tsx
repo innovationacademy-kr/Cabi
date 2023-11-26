@@ -315,7 +315,7 @@ const CabinetRectangleStyled = styled.div<{
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
 
-  ${({ cabinetStatus, isMine }) =>
+  ${({ cabinetStatus }) =>
     cabinetStatus === "IN_SESSION" &&
     css`
       border: 2px solid var(--main-color);
