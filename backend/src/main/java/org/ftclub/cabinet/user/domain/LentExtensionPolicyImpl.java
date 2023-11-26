@@ -29,7 +29,7 @@ public class LentExtensionPolicyImpl implements LentExtensionPolicy {
 
 		LentHistory lentHistory = lentHistories.get(0);
 		LocalDateTime expiredAt = lentHistory.getExpiredAt();
-		if (banPolicy.checkAlreadyExpired(expiredAt, LocalDateTime.now())) {
+		if (banPolicy.checkAlreadyExpired(LocalDateTime.now(), expiredAt)) {
 			throw new DomainException(ExceptionStatus.EXTENSION_LENT_DELAYED);
 		}
 	}
