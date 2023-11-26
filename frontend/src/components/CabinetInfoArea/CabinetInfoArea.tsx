@@ -143,30 +143,6 @@ const CabinetInfoArea: React.FC<{
                 />
               </>
             )}
-            {selectedCabinetInfo!.cabinetId === 0 &&
-            selectedCabinetInfo!.lentType === "PRIVATE" ? (
-              <>
-                <ButtonContainer
-                  onClick={() => {
-                    openModal("extendModal");
-                  }}
-                  text={isExtensible ? "연장권 보유중" : "연장권 미보유"}
-                  theme={isExtensible ? "line" : "grayLine"}
-                  iconSrc={
-                    isExtensible
-                      ? "/src/assets/images/extensionTicket.svg"
-                      : "/src/assets/images/extensionTicketGray.svg"
-                  }
-                  iconAlt="연장권 아이콘"
-                  disabled={!isExtensible}
-                />
-                <ButtonContainer
-                  onClick={closeCabinet}
-                  text="닫기"
-                  theme="line"
-                />
-              </>
-            ) : null}
             {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
             )}
@@ -382,6 +358,7 @@ const HoverBox = styled.div<{
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  transition: opacity 0.3s ease;
 `;
 
 const ButtonHoverWrapper = styled.div`
