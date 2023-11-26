@@ -74,22 +74,22 @@ const ThemeColorCard = ({
           }
         >
           <>
-            <CardContentWrapper>
+            <CardContentWrapper style={{ height: "70px" }}>
               <CardContentStyled>
                 <ContentInfoStyled>메인 컬러</ContentInfoStyled>
                 <MainColorButtonStyled
                   onClick={() => setShowColorPicker(!showColorPicker)}
                 />
               </CardContentStyled>
+              {showColorPicker && (
+                <TwitterPicker
+                  color={mainColor}
+                  triangle={"hide"}
+                  onChangeComplete={handleChange}
+                  colors={customColors}
+                />
+              )}
             </CardContentWrapper>
-            {showColorPicker && (
-              <TwitterPicker
-                color={mainColor}
-                triangle={"top-right"}
-                onChangeComplete={handleChange}
-                colors={customColors}
-              />
-            )}
           </>
         </Card>
       </ThemeColorCardWrapper>
