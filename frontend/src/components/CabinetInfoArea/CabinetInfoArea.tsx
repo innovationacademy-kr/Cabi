@@ -5,7 +5,11 @@ import {
   ISelectedCabinetInfo,
   TModalState,
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
+import CountTimeContainer from "@/components/CabinetInfoArea/CountTime/CountTime.container";
 import ButtonContainer from "@/components/Common/Button";
+import CancelModal from "@/components/Modals/CancelModal/CancelModal";
+import ExtendModal from "@/components/Modals/ExtendModal/ExtendModal";
+import InvitationCodeModalContainer from "@/components/Modals/InvitationCodeModal/InvitationCodeModal.container";
 import LentModal from "@/components/Modals/LentModal/LentModal";
 import MemoModalContainer from "@/components/Modals/MemoModal/MemoModal.container";
 import PasswordCheckModalContainer from "@/components/Modals/PasswordCheckModal/PasswordCheckModal.container";
@@ -18,13 +22,10 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import alertImg from "@/assets/images/cautionSign.svg";
+import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.svg";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import CancelModal from "../Modals/CancelModal/CancelModal";
-import ExtendModal from "../Modals/ExtendModal/ExtendModal";
-import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
-import CountTimeContainer from "./CountTime/CountTime.container";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
