@@ -96,7 +96,9 @@ const ExtendModal: React.FC<{
       }
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      setModalTitle(error.response.data.message);
+      error.response
+        ? setModalTitle(error.response.data.message)
+        : setModalTitle(error.data.message);
     } finally {
       setShowResponseModal(true);
     }
