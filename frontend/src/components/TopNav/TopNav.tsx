@@ -118,7 +118,7 @@ const LogoDivStyled = styled.div`
 const BuildingSelectBoxStyled = styled.span`
   position: relative;
   margin-left: 40px;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-family: var(--building-font);
   cursor: pointer;
   & > div {

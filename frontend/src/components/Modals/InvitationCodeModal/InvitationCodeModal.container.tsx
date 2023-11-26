@@ -39,34 +39,6 @@ const InvitationCodeModalContainer: React.FC<{
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
 
-  const loadSharedWrongCodeCounts = () => {
-    const savedData = localStorage.getItem("wrongCodeCounts");
-    if (savedData) {
-      try {
-        const { data, expirationTime } = JSON.parse(savedData);
-        const ExpirationTime = new Date(expirationTime);
-        if (ExpirationTime > new Date()) {
-          return data;
-        } else {
-          localStorage.removeItem("wrongCodeCounts");
-        }
-      } catch (error) {
-        console.error("WrongCodeCounts:", error);
-      }
-    }
-    return {};
-  };
-
-  const saveSharedWrongCodeCounts = (data: any) => {
-    const expirationTime = new Date(
-      new Date().getTime() + 10 * 60 * 1000
-    ).toString();
-    const dataToSave = JSON.stringify({ data, expirationTime });
-    localStorage.setItem("wrongCodeCounts", dataToSave);
-  };
-
-  const [sharedWrongCodeCounts] = useState(loadSharedWrongCodeCounts);
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regex = /^[0-9]{0,4}$/;
     if (!regex.test(e.target.value)) {
@@ -74,12 +46,6 @@ const InvitationCodeModalContainer: React.FC<{
       return;
     }
     setCode(e.target.value);
-  };
-
-  const updatedCounts = {
-    ...sharedWrongCodeCounts,
-    [String(props.cabinetId)]:
-      (sharedWrongCodeCounts[String(props.cabinetId)] || 0) + 1,
   };
 
   const tryLentRequest = async () => {
@@ -100,7 +66,6 @@ const InvitationCodeModalContainer: React.FC<{
       const errorMessage = error.response.data.message;
       setModalTitle(errorMessage);
       setHasErrorOnResponse(true);
-      saveSharedWrongCodeCounts(updatedCounts);
     } finally {
       setShowResponseModal(true);
     }
@@ -115,7 +80,11 @@ const InvitationCodeModalContainer: React.FC<{
     proceedBtnText: modalPropsMap["MODAL_INVITATION_CODE"].confirmMessage,
     onClickProceed: tryLentRequest,
     renderAdditionalComponent: () => (
-      <PasswordContainer onChange={onChange} password={code} />
+      <PasswordContainer
+        onChange={onChange}
+        password={code}
+        tryLentRequest={tryLentRequest}
+      />
     ),
     closeModal: props.onClose,
     iconType: IconType.CHECKICON,

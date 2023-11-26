@@ -1,16 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
-import { selectedClubInfoState } from "@/recoil/atoms";
 import styled from "styled-components";
+import { selectedClubInfoState } from "@/recoil/atoms";
 import Button from "@/components/Common/Button";
-import {
-  SuccessResponseModal,
-  FailResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import { axiosCreateClubUser, axiosDeleteClubUser, axiosEditClubUser } from "@/api/axios/axios.custom";
 import { ClubUserDto } from "@/types/dto/lent.dto";
+import {
+  axiosCreateClubUser,
+  axiosDeleteClubUser,
+  axiosEditClubUser,
+} from "@/api/axios/axios.custom";
 
 interface ClubModalContainerInterface {
   type: string;
@@ -25,36 +29,35 @@ const ClubModal = ({
   onClose,
   onReload,
 }: ClubModalContainerInterface) => {
-  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(selectedClubInfoState);
+  const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
+    selectedClubInfoState
+  );
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [newClubName, setNewClubName] = useState("");
 
-  const modalData = modalPropsMap[
-    additionalModalType[
-      `MODAL_ADMIN_CLUB_${type}` as keyof typeof additionalModalType
-    ]
-  ];
-  
+  const modalData =
+    modalPropsMap[
+      additionalModalType[
+        `MODAL_ADMIN_CLUB_${type}` as keyof typeof additionalModalType
+      ]
+    ];
+
   useEffect(() => {
-    if (type === "EDIT")
-      setNewClubName(selectedClubInfo?.name || "");
-  }, [selectedClubInfo, type])
+    if (type === "EDIT") setNewClubName(selectedClubInfo?.name || "");
+  }, [selectedClubInfo, type]);
 
   const handleClickSave = async () => {
     if (type === "CREATE") {
       document.getElementById("unselect-input")?.focus();
-      if (newClubName)
-        await createClubRequest(newClubName);
-    }
-    else if (type === "EDIT" && selectedClubInfo) {
+      if (newClubName) await createClubRequest(newClubName);
+    } else if (type === "EDIT" && selectedClubInfo) {
       if (selectedClubInfo.name !== newClubName) {
-          const updatedClubInfo = { ...selectedClubInfo, name: newClubName };
-          await editClubRequest(updatedClubInfo);
+        const updatedClubInfo = { ...selectedClubInfo, name: newClubName };
+        await editClubRequest(updatedClubInfo);
       }
-    }
-    else if (type === "DELETE" && selectedClubInfo !== null) 
+    } else if (type === "DELETE" && selectedClubInfo !== null)
       await deleteClubRequest(selectedClubInfo.userId);
   };
 
@@ -101,56 +104,65 @@ const ClubModal = ({
   return (
     <ModalPortal>
       <BackgroundStyled onClick={onClose} />
-      {!showResponseModal && <ModalContainerStyled>
-        <H2Styled>{modalData.title}</H2Styled>
-        <ContentSectionStyled>
-          <ContentItemSectionStyled>
-            {type === "CREATE" && <ContentItemWrapperStyled isVisible={true}>
-              <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
-              <ContentItemInputStyled
-                onKeyUp={(e: any) => { if (e.key === "Enter") { handleClickSave(); }}}
-                value={newClubName}
-                onChange={(e) => setNewClubName(e.target.value)}
-                maxLength={MAX_INPUT_LENGTH}
-              />
-            </ContentItemWrapperStyled>}
-            {type === "EDIT" && <ContentItemWrapperStyled isVisible={true}>
-              <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
-              <ContentItemInputStyled
-                onKeyUp={(e: any) => { if (e.key === "Enter") { handleClickSave(); }}}
-                value={newClubName}
-                onChange={(e) => setNewClubName(e.target.value)}
-                maxLength={MAX_INPUT_LENGTH}
-              />
-            </ContentItemWrapperStyled>}
-            {type === "DELETE" && <ContentItemTitleStyled>{selectedClubInfo?.name} 동아리를 <strong>삭제</strong> 하시겠습니까?</ContentItemTitleStyled>}
-          </ContentItemSectionStyled>
-        </ContentSectionStyled>
-        <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
-        <ButtonWrapperStyled>
-          <Button
-            onClick={handleClickSave}
-            text={modalData.confirmMessage}
-            theme="fill"
-          />
-          <Button
-            onClick={onClose}
-            text={"닫기"}
-            theme={"line"}
-          />
-        </ButtonWrapperStyled>
-      </ModalContainerStyled>}
+      {!showResponseModal && (
+        <ModalContainerStyled>
+          <H2Styled>{modalData.title}</H2Styled>
+          <ContentSectionStyled>
+            <ContentItemSectionStyled>
+              {type === "CREATE" && (
+                <ContentItemWrapperStyled isVisible={true}>
+                  <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
+                  <ContentItemInputStyled
+                    onKeyUp={(e: any) => {
+                      if (e.key === "Enter") {
+                        handleClickSave();
+                      }
+                    }}
+                    value={newClubName}
+                    onChange={(e) => setNewClubName(e.target.value)}
+                    maxLength={MAX_INPUT_LENGTH}
+                  />
+                </ContentItemWrapperStyled>
+              )}
+              {type === "EDIT" && (
+                <ContentItemWrapperStyled isVisible={true}>
+                  <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
+                  <ContentItemInputStyled
+                    onKeyUp={(e: any) => {
+                      if (e.key === "Enter") {
+                        handleClickSave();
+                      }
+                    }}
+                    value={newClubName}
+                    onChange={(e) => setNewClubName(e.target.value)}
+                    maxLength={MAX_INPUT_LENGTH}
+                  />
+                </ContentItemWrapperStyled>
+              )}
+              {type === "DELETE" && (
+                <ContentItemTitleStyled>
+                  {selectedClubInfo?.name} 동아리를 <strong>삭제</strong>{" "}
+                  하시겠습니까?
+                </ContentItemTitleStyled>
+              )}
+            </ContentItemSectionStyled>
+          </ContentSectionStyled>
+          <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
+          <ButtonWrapperStyled>
+            <Button
+              onClick={handleClickSave}
+              text={modalData.confirmMessage}
+              theme="fill"
+            />
+            <Button onClick={onClose} text={"닫기"} theme={"line"} />
+          </ButtonWrapperStyled>
+        </ModalContainerStyled>
+      )}
       {showResponseModal &&
-      (hasErrorOnResponse ? (
-          <FailResponseModal
-            modalTitle={modalTitle}
-            closeModal={onClose}
-          />
+        (hasErrorOnResponse ? (
+          <FailResponseModal modalTitle={modalTitle} closeModal={onClose} />
         ) : (
-          <SuccessResponseModal
-            modalTitle={modalTitle}
-            closeModal={onClose}
-          />
+          <SuccessResponseModal modalTitle={modalTitle} closeModal={onClose} />
         ))}
     </ModalPortal>
   );
@@ -207,7 +219,7 @@ const ContentItemWrapperStyled = styled.div<{ isVisible: boolean }>`
 `;
 
 const ContentItemTitleStyled = styled.h3`
-  font-size: 18px;
+  font-size: 1.125rem;
   margin-bottom: 8px;
 `;
 
@@ -218,7 +230,7 @@ const ContentItemInputStyled = styled.input`
   border-radius: 10px;
   text-align: start;
   text-indent: 20px;
-  font-size: 18px;
+  font-size: 1.125rem;
   /* cursor: input; */
   color: black;
 

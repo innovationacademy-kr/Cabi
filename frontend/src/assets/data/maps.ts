@@ -156,7 +156,7 @@ export const modalPropsMap = {
   MODAL_CANCEL: {
     type: "confirm",
     title: "대기열 취소하기",
-    confirmMessage: "네, 취소할게요",
+    confirmMessage: "확인",
   },
 };
 

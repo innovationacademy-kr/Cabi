@@ -4,7 +4,7 @@ export const CardContentWrapper = styled.div`
   background-color: var(--white);
   border-radius: 10px;
   padding: 15px 0;
-  margin: 5px 5px 10px 5px;
+  margin: 5px 5px 5px 5px;
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -25,6 +25,6 @@ export const ContentInfoStyled = styled.div`
 
 export const ContentDeatilStyled = styled.div`
   display: flex;
-  margin: 0 10px 5px 0;
+  margin: 5px 10px 5px 10px;
   font-weight: bold;
 `;

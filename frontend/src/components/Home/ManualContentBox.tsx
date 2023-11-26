@@ -53,7 +53,7 @@ const MaunalContentBoxStyled = styled.div<{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-size: 28px;
+  font-size: 1.75rem;
   color: white;
   padding: 25px;
   font-weight: bold;
@@ -139,7 +139,7 @@ const MaunalContentBoxStyled = styled.div<{
     box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
     p {
       transition: all 0.3s ease-in-out;
-      margin-top: 75px;
+      transform: translateY(-5px);
       ${({ contentStatus }) =>
         (contentStatus === ContentStatus.PENDING ||
           contentStatus === ContentStatus.IN_SESSION) &&
@@ -149,7 +149,7 @@ const MaunalContentBoxStyled = styled.div<{
     }
     .clockImg {
       transition: all 0.3s ease-in-out;
-      margin-top: 155px;
+      margin-top: 145px;
     }
   }
 `;

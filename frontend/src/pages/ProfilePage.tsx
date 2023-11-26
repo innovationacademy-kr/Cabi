@@ -13,8 +13,19 @@ const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const myInfo = useRecoilValue(userState);
 
+  const updateLocalStorage = () => {
+    const recoilPersist = localStorage.getItem("recoil-persist");
+    if (recoilPersist) {
+      let recoilPersistObj = JSON.parse(recoilPersist);
+      delete recoilPersistObj.CurrentFloor;
+      delete recoilPersistObj.CurrentSection;
+      localStorage.setItem("recoil-persist", JSON.stringify(recoilPersistObj));
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
+    updateLocalStorage();
     setIsLoading(false);
   }, [myInfo]);
 
@@ -25,8 +36,10 @@ const ProfilePage = () => {
       ) : (
         <CardGridWrapper>
           <ProfileCardContainer name={myInfo.name} />
-          <ExtensionCardContainer extensible={myInfo.extensible} />
-          <LentInfoCardContainer />
+          <ExtensionCardContainer
+            extensionInfo={myInfo.lentExtensionResponseDto}
+          />
+          <LentInfoCardContainer name={myInfo.name} />
           <ThemeColorCardContainer />
           <NotificationCardContainer />
         </CardGridWrapper>

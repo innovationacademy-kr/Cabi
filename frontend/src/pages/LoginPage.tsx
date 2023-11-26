@@ -7,7 +7,7 @@ const LoginPage = () => {
   return (
     <LoginTemplate
       url={url}
-      pageTitle="42Cabi"
+      pageTitle="Cabi"
       pageSubTitle="여러분의 일상을 가볍게"
       imgSrc="/src/assets/images/loginImg.svg"
     />
