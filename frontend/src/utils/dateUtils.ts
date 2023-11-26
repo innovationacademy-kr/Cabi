@@ -44,10 +44,10 @@ export const getShortenedExpireDateString = (
 };
 
 export const getExtendedDateString = (
-  existExpireDate: Date | undefined,
+  existExpireDate: Date | undefined | null,
   dateToExtend: number | undefined
 ) => {
-  if (existExpireDate === undefined || dateToExtend === undefined) return;
+  if (!existExpireDate || dateToExtend === undefined) return;
   let expireDate = new Date(existExpireDate);
   expireDate.setDate(expireDate.getDate() + dateToExtend);
   return formatDate(expireDate, "/");

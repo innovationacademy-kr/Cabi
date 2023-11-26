@@ -175,6 +175,7 @@ const H2Styled = styled.h2`
   font-size: 1.25rem;
   line-height: 1.75rem;
   white-space: break-spaces;
+  word-break: keep-all;
 `;
 
 const BackgroundStyled = styled.div`

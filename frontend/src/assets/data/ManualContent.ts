@@ -36,7 +36,9 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     contentTitle: "공유 사물함",
     imagePath: "/src/assets/images/shareIcon.svg",
     background: "linear-gradient(to bottom, #7EBFFB, #406EE4)",
-    rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 + n * 15`,
+    rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 + n * ${
+      import.meta.env.VITE_SHARE_BONUS_PER_PERSON
+    }`,
     capacity: `${import.meta.env.VITE_SHARE_MIN_USER} ~ ${
       import.meta.env.VITE_SHARE_MAX_USER
     }인`,
@@ -45,7 +47,9 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
       import.meta.env.VITE_SHARE_MAX_USER
     }인</strong>이 사용합니다.<br/><strong>${
       import.meta.env.VITE_SHARE_LENT_PERIOD
-    }일 + 대여한 인원수 * 15일</strong>간 대여할 수 있습니다.<br/>사물함 제목과 메모는 대여자들끼리 공유됩니다.<br/>
+    }일 + 대여한 인원수 * ${
+      import.meta.env.VITE_SHARE_BONUS_PER_PERSON
+    }일</strong>간 대여할 수 있습니다.<br/>사물함 제목과 메모는 대여자들끼리 공유됩니다.<br/>
     대여 만료 기간 이내 반납 시,<br/><strong>잔여 기간의 인원수 / 1</strong>만큼 대여 기간이 감소됩니다.
     <br/><br/>
     </div>
@@ -119,7 +123,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",
-    imagePath: "/src/assets/images/extensionTicket.svg",
+    imagePath: "/src/assets/images/extension.svg",
     background: "#F5F5F7",
     contentText: `<span>◦ 연장권 취득 조건</span><br/>
     <div>
