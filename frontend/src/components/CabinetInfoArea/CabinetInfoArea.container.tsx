@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   myCabinetInfoState,
   targetCabinetInfoState,
+  targetUserInfoState,
   userState,
 } from "@/recoil/atoms";
 import AdminCabinetInfoArea from "@/components/CabinetInfoArea/AdminCabinetInfoArea";
@@ -165,6 +166,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const [myCabinetInfo, setMyLentInfo] =
     useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const myInfo = useRecoilValue<UserDto>(userState);
+  const targetUserInfo = useRecoilValue(targetUserInfoState);
   const { isMultiSelect, targetCabinetInfoList } = useMultiSelect();
   const { closeCabinet, toggleLent } = useMenu();
   const { isSameStatus, isSameType } = useMultiSelect();
@@ -331,7 +333,11 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
           cabinetViewData?.status === "IN_SESSION") &&
         !myCabinetInfo.cabinetId
       }
-      isExtensible={!!myInfo.lentExtensionResponseDto}
+      isExtensible={
+        !!myInfo.lentExtensionResponseDto && targetUserInfo
+          ? !!targetUserInfo.bannedAt
+          : false
+      }
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
