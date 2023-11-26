@@ -8,11 +8,13 @@ import NotificationCardContainer from "@/components/Card/NotificationCard/Notifi
 import ProfileCardContainer from "@/components/Card/ProfileCard/ProfileCard.container";
 import ThemeColorCardContainer from "@/components/Card/ThemeColorCard/ThemeColorCard.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import { UserInfo } from "@/types/dto/user.dto";
 import { axiosMyInfo } from "@/api/axios/axios.custom";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
+  const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
 
   const updateLocalStorage = () => {
     const recoilPersist = localStorage.getItem("recoil-persist");
@@ -27,6 +29,7 @@ const ProfilePage = () => {
   const getMyInfo = async () => {
     try {
       const { data: myInfo } = await axiosMyInfo();
+      setMyInfoData(myInfo);
       setMyInfo(myInfo);
     } catch (error) {
       throw error;
@@ -52,7 +55,10 @@ const ProfilePage = () => {
           <ExtensionCardContainer
             extensionInfo={myInfo.lentExtensionResponseDto}
           />
-          <LentInfoCardContainer name={myInfo.name} />
+          <LentInfoCardContainer
+            name={myInfo.name}
+            banned={!!myInfoData?.unbannedAt}
+          />
           <ThemeColorCardContainer />
           <NotificationCardContainer />
         </CardGridWrapper>

@@ -25,10 +25,10 @@ const calculateFontSize = (userCount: number): string => {
 
 const LentInfoCard = ({
   cabinetInfo,
-  bannedAt,
+  banned,
 }: {
   cabinetInfo: MyCabinetInfo;
-  bannedAt: boolean;
+  banned: boolean;
 }) => {
   return (
     <Card
@@ -42,11 +42,11 @@ const LentInfoCard = ({
           <CabinetRectangleStyled
             isLented={cabinetInfo.isLented}
             status={cabinetInfo.status as CabinetStatus}
-            banned={!!bannedAt}
+            banned={!!banned}
           >
             {cabinetInfo.visibleNum !== 0
               ? cabinetInfo.visibleNum
-              : !!bannedAt
+              : !!banned
               ? "!"
               : "-"}
           </CabinetRectangleStyled>

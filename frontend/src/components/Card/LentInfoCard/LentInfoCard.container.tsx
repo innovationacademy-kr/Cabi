@@ -58,10 +58,14 @@ const getCabinetUserList = (
   );
 };
 
-const LentInfoCardContainer = ({ name }: { name: string | null }) => {
+const LentInfoCardContainer = ({
+  name,
+  banned,
+}: {
+  name: string | null;
+  banned: boolean;
+}) => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
-  const targetUserInfo = useRecoilValue(targetUserInfoState);
-  const bannedAt = targetUserInfo ? !!targetUserInfo.bannedAt : false;
 
   let dateUsed, dateLeft, expireDate;
   if (name && myCabinetInfo.lents) {
@@ -91,7 +95,7 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
     status: myCabinetInfo.status || "",
   };
 
-  return <LentInfoCard cabinetInfo={cabinetLentInfo} bannedAt={bannedAt} />;
+  return <LentInfoCard cabinetInfo={cabinetLentInfo} banned={banned} />;
 };
 
 export default LentInfoCardContainer;
