@@ -5,7 +5,11 @@ import {
   ISelectedCabinetInfo,
   TModalState,
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
+import CountTimeContainer from "@/components/CabinetInfoArea/CountTime/CountTime.container";
 import ButtonContainer from "@/components/Common/Button";
+import CancelModal from "@/components/Modals/CancelModal/CancelModal";
+import ExtendModal from "@/components/Modals/ExtendModal/ExtendModal";
+import InvitationCodeModalContainer from "@/components/Modals/InvitationCodeModal/InvitationCodeModal.container";
 import LentModal from "@/components/Modals/LentModal/LentModal";
 import MemoModalContainer from "@/components/Modals/MemoModal/MemoModal.container";
 import PasswordCheckModalContainer from "@/components/Modals/PasswordCheckModal/PasswordCheckModal.container";
@@ -18,13 +22,10 @@ import {
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
 import alertImg from "@/assets/images/cautionSign.svg";
+import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.svg";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import CancelModal from "../Modals/CancelModal/CancelModal";
-import ExtendModal from "../Modals/ExtendModal/ExtendModal";
-import InvitationCodeModalContainer from "../Modals/InvitationCodeModal/InvitationCodeModal.container";
-import CountTimeContainer from "./CountTime/CountTime.container";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -47,6 +48,16 @@ const CabinetInfoArea: React.FC<{
   openModal,
   closeModal,
 }) => {
+  const isExtensionVisible =
+    isMine &&
+    isExtensible &&
+    selectedCabinetInfo &&
+    selectedCabinetInfo.status !== "IN_SESSION";
+  const isHoverBoxVisible =
+    selectedCabinetInfo &&
+    selectedCabinetInfo.lentsLength <= 1 &&
+    selectedCabinetInfo.lentType === "SHARE";
+
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
       <CabiLogoStyled>
@@ -143,30 +154,6 @@ const CabinetInfoArea: React.FC<{
                 />
               </>
             )}
-            {selectedCabinetInfo!.cabinetId === 0 &&
-            selectedCabinetInfo!.lentType === "PRIVATE" ? (
-              <>
-                <ButtonContainer
-                  onClick={() => {
-                    openModal("extendModal");
-                  }}
-                  text={isExtensible ? "연장권 보유중" : "연장권 미보유"}
-                  theme={isExtensible ? "line" : "grayLine"}
-                  iconSrc={
-                    isExtensible
-                      ? "/src/assets/images/extensionTicket.svg"
-                      : "/src/assets/images/extensionTicketGray.svg"
-                  }
-                  iconAlt="연장권 아이콘"
-                  disabled={!isExtensible}
-                />
-                <ButtonContainer
-                  onClick={closeCabinet}
-                  text="닫기"
-                  theme="line"
-                />
-              </>
-            ) : null}
             {selectedCabinetInfo.status == "IN_SESSION" && (
               <CountTimeContainer isMine={false} />
             )}
@@ -184,29 +171,29 @@ const CabinetInfoArea: React.FC<{
       <CabinetLentDateInfoStyled textColor="var(--black)">
         {selectedCabinetInfo!.cabinetId === 0 ? "" : expireDate}
       </CabinetLentDateInfoStyled>
-      <CabinetInfoButtonsContainerStyled>
-        {isMine &&
-          isExtensible &&
-          selectedCabinetInfo.status !== "IN_SESSION" && (
-            <ButtonContainer
+      <ButtonHoverWrapper>
+        <CabinetInfoButtonsContainerStyled>
+          {isExtensionVisible && (
+            <ButtonContainerStyled
               onClick={() => {
                 openModal("extendModal");
               }}
-              text={"연장권 사용하기"}
               theme="line"
-              iconSrc="/src/assets/images/extensionTicket.svg"
-              iconAlt="연장권 아이콘"
               disabled={
                 selectedCabinetInfo.lentsLength <= 1 &&
                 selectedCabinetInfo.lentType === "SHARE"
               }
-            />
+            >
+              <ExtensionImg
+                stroke="var(--main-color)"
+                width={24}
+                height={24}
+                style={{ marginRight: "10px" }}
+              />
+              {"연장권 사용하기"}
+            </ButtonContainerStyled>
           )}
-        {isMine &&
-          isExtensible &&
-          selectedCabinetInfo.lentsLength <= 1 &&
-          selectedCabinetInfo.lentType === "SHARE" &&
-          selectedCabinetInfo.status !== "IN_SESSION" && (
+          {isExtensionVisible && isHoverBoxVisible && (
             <HoverBox
               canUseExtendTicket={
                 isMine &&
@@ -219,7 +206,8 @@ const CabinetInfoArea: React.FC<{
               연장권을 사용할 수 없습니다.
             </HoverBox>
           )}
-      </CabinetInfoButtonsContainerStyled>
+        </CabinetInfoButtonsContainerStyled>
+      </ButtonHoverWrapper>
       {userModal.unavailableModal && (
         <UnavailableModal
           status={additionalModalType.MODAL_UNAVAILABLE_ALREADY_LENT}
@@ -279,6 +267,7 @@ const NotSelectedStyled = styled.div`
 
 const CabinetDetailAreaStyled = styled.div`
   height: 100%;
+  max-width: 330px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -336,7 +325,7 @@ const CabinetRectangleStyled = styled.div<{
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
 
-  ${({ cabinetStatus, isMine }) =>
+  ${({ cabinetStatus }) =>
     cabinetStatus === "IN_SESSION" &&
     css`
       border: 2px solid var(--main-color);
@@ -359,42 +348,13 @@ export const DetailStyled = styled.p`
   white-space: break-spaces;
 `;
 
-const ButtonWrapperStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const ButtonContainerStyled = styled.button`
-  max-width: 400px;
-  width: 110%;
-  height: 80px;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  &:last-child {
-    margin-bottom: 0;
-  }
-  background: var(--white);
-  color: var(--main-color);
-  border: 1px solid var(--main-color);
-  @media (max-height: 745px) {
-    margin-bottom: 8px;
-  }
-`;
-
 const HoverBox = styled.div<{
   canUseExtendTicket?: boolean;
 }>`
   position: absolute;
-  top: 50%;
+  opacity: 0;
+  visibility: hidden;
+  top: -120%;
   width: 270px;
   height: 80px;
   padding: 10px;
@@ -408,7 +368,18 @@ const HoverBox = styled.div<{
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  opacity: ${(props) => (props.canUseExtendTicket ? "0" : "1")};
+  transition: opacity 0.3s ease;
+  line-height: 1.2;
+`;
+
+const ButtonHoverWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  &:hover ${HoverBox} {
+    opacity: 1;
+    visibility: visible;
+  }
 `;
 
 const AlertImgStyled = styled.img`
@@ -424,13 +395,11 @@ const CabinetInfoButtonsContainerStyled = styled.div<{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  position: relative;
   align-items: center;
   max-height: 320px;
   margin: 3vh 0;
   width: 100%;
-  &:hover ${HoverBox} {
-    opacity: ${(props) => (props.canUseExtendTicket ? "0" : "1")};
-  }
 `;
 
 const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
@@ -448,6 +417,32 @@ const PendingMessageStyled = styled.p`
   text-align: center;
   font-weight: 700;
   line-height: 26px;
+`;
+
+const ButtonContainerStyled = styled.button`
+  max-width: 240px;
+  width: 100%;
+  height: 60px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  ${(props) =>
+    props.theme === "line" &&
+    css`
+      background: var(--white);
+      color: var(--main-color);
+      border: 1px solid var(--main-color);
+    `}
+  @media (max-height: 745px) {
+    margin-bottom: 8px;
+  }
 `;
 
 export default CabinetInfoArea;
