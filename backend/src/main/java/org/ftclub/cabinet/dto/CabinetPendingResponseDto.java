@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.dto;
 
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,5 +11,5 @@ import lombok.ToString;
 @ToString
 public class CabinetPendingResponseDto {
 
-	private final List<List<CabinetPreviewDto>> cabinetInfoResponseDtos;
+	private final Map<Integer, List<CabinetPreviewDto>> cabinetInfoResponseDtos;
 }

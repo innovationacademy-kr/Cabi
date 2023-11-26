@@ -36,16 +36,16 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     contentTitle: "공유 사물함",
     imagePath: "/src/assets/images/shareIcon.svg",
     background: "linear-gradient(to bottom, #7EBFFB, #406EE4)",
-    rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 * n명`,
+    rentalPeriod: `${import.meta.env.VITE_SHARE_LENT_PERIOD}일 + n * 15`,
     capacity: `${import.meta.env.VITE_SHARE_MIN_USER} ~ ${
       import.meta.env.VITE_SHARE_MAX_USER
     }인`,
     contentText: `<span>◦ 이용 방법</span><br/>
     <div>1개의 사물함을 <strong>최대 ${
       import.meta.env.VITE_SHARE_MAX_USER
-    }인</strong>이 사용합니다.<br/><strong>대여한 인원수 * ${
+    }인</strong>이 사용합니다.<br/><strong>${
       import.meta.env.VITE_SHARE_LENT_PERIOD
-    }일</strong>간 대여할 수 있습니다.<br/>사물함 제목과 메모는 대여자들끼리 공유됩니다.<br/>
+    }일 + 대여한 인원수 * 15일</strong>간 대여할 수 있습니다.<br/>사물함 제목과 메모는 대여자들끼리 공유됩니다.<br/>
     대여 만료 기간 이내 반납 시,<br/><strong>잔여 기간의 인원수 / 1</strong>만큼 대여 기간이 감소됩니다.
     <br/><br/>
     </div>

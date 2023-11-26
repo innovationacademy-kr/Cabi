@@ -93,7 +93,8 @@ public class CabinetOptionalFetcher {
 	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
 			CabinetStatus cabinetStatus,
 			LocalDateTime currentDate) {
-		log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}", cabinetStatus);
+		log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}, {}",
+				cabinetStatus, currentDate);
 		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus,
 				currentDate);
 	}
@@ -194,19 +195,7 @@ public class CabinetOptionalFetcher {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
-	/**
-	 * 충별로 오픈 예정인 사물함들을 찾습니다.
-	 * @param floor 층
-	 * @return 오픈 예정인 사물함들의 ID 리스트
-	 */
-
-	public List<Long> findPendingCabinets(Integer floor) {
-		log.debug("Called findPendingCabinets");
-		return cabinetRepository.findPendingCabinets(floor).orElse(null);
-	}
-
-	public List<Long> findAvailableCabinets(Integer floor) {
-		log.debug("Called findAvailableCabinets");
-		return cabinetRepository.findAvailableCabinets(floor).orElse(null);
+	public List<Cabinet> findAllCabinetsByBuilding(String building) {
+		return cabinetRepository.findAllCabinetsByBuilding(building);
 	}
 }
