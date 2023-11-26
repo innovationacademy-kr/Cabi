@@ -12,6 +12,8 @@ public class CabinetProperties {
 	private Integer lentTermPrivate;
 	@Value("${spring.cabinet.lent.term.share}")
 	private Integer lentTermShare;
+	@Value("${spring.cabinet.lent.term.share-basic}")
+	private Integer lentTermShareBasic;
 	@Value("${spring.cabinet.lent.term.extend}")
 	private Integer lentExtendTerm;
 	@Value("${spring.cabinet.penalty.day.share}")
