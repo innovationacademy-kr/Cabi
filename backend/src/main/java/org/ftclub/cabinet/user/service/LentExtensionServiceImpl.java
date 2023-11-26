@@ -84,6 +84,18 @@ public class LentExtensionServiceImpl implements LentExtensionService {
     }
 
     @Override
+    public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
+        LentExtensionResponseDto lentExtensionResponseDto = null;
+        LentExtension activeLentExtensionByUserId = lentExtensionOptionalFetcher.findActiveLentExtensionByUserId(
+                userSessionDto.getUserId());
+        if (activeLentExtensionByUserId != null) {
+            lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
+                    activeLentExtensionByUserId);
+        }
+        return lentExtensionResponseDto;
+    }
+
+    @Override
     @Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
     public void deleteLentExtension() {
         log.debug("Called deleteExtension");

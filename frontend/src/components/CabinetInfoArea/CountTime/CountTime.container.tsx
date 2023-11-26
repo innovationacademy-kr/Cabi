@@ -29,7 +29,7 @@ const CountTimeContainer = ({ isMine }: { isMine: boolean }) => {
     const currentTime = new Date().getTime();
     const targetTime = targetDate.getTime();
     if (targetTime <= currentTime) return 0;
-    return targetTime - currentTime;
+    return targetTime - currentTime + 1500;
   };
 
   const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(

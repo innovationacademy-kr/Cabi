@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,5 +27,5 @@ public interface LentExtensionRepository extends JpaRepository<LentExtension, Lo
             "WHERE le.userId =:userId ")
     List<LentExtension> findAllByUserId(@Param("userId") Long userId);
 
-    LentExtension findByUserId(@Param("userId") Long userId);
+    Optional<LentExtension> findByUserIdAndUsedAtIsNull(@Param("userId") Long userId);
 }
