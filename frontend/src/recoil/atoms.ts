@@ -22,6 +22,7 @@ export const userState = atom<UserDto>({
     userId: null,
     name: "default",
     lentExtensionResponseDto: null,
+    unbannedAt: null,
   },
 });
 

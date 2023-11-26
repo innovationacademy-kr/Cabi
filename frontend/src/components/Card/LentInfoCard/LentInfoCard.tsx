@@ -14,8 +14,8 @@ import { formatDate } from "@/utils/dateUtils";
 
 const calculateFontSize = (userCount: number): string => {
   const baseSize = 1;
-  const decrement = 0.2;
-  const minSize = 0.6;
+  const decrement = 0.1;
+  const minSize = 0.7;
   const calculatedSize = Math.max(
     baseSize - (userCount - 1) * decrement,
     minSize
@@ -25,10 +25,10 @@ const calculateFontSize = (userCount: number): string => {
 
 const LentInfoCard = ({
   cabinetInfo,
-  bannedAt,
+  unbannedAt,
 }: {
   cabinetInfo: MyCabinetInfo;
-  bannedAt: boolean;
+  unbannedAt: Date | null | undefined;
 }) => {
   return (
     <Card
@@ -42,37 +42,36 @@ const LentInfoCard = ({
           <CabinetRectangleStyled
             isLented={cabinetInfo.isLented}
             status={cabinetInfo.status as CabinetStatus}
-            banned={!!bannedAt}
+            banned={!!unbannedAt}
           >
             {cabinetInfo.visibleNum !== 0
               ? cabinetInfo.visibleNum
-              : !!bannedAt
+              : !!unbannedAt
               ? "!"
               : "-"}
           </CabinetRectangleStyled>
           <CabinetInfoDetailStyled>
             <CabinetInfoTextStyled
-              fontSize="1rem"
+              fontSize={cabinetInfo.floor !== 0 ? "1rem" : "0.9rem"}
               fontColor="var(--gray-color)"
             >
               {cabinetInfo.floor !== 0
                 ? cabinetInfo.floor + "층 - " + cabinetInfo.section
-                : ""}
+                : "대여 중이 아닌 사용자"}
             </CabinetInfoTextStyled>
-            {cabinetInfo?.isLented && (
-              <CabinetUserListWrapper>
-                <CabinetIconStyled
-                  title={cabinetInfo.lentType}
-                  cabinetType={cabinetInfo.lentType}
-                />
-                <CabinetInfoTextStyled
-                  fontSize={calculateFontSize(cabinetInfo.userCount)}
-                  fontColor="black"
-                >
-                  {cabinetInfo.userNameList}
-                </CabinetInfoTextStyled>
-              </CabinetUserListWrapper>
-            )}
+
+            <CabinetUserListWrapper>
+              <CabinetIconStyled
+                title={cabinetInfo.lentType}
+                cabinetType={cabinetInfo.lentType}
+              />
+              <CabinetInfoTextStyled
+                fontSize={calculateFontSize(cabinetInfo.userCount)}
+                fontColor="black"
+              >
+                {cabinetInfo.userNameList}
+              </CabinetInfoTextStyled>
+            </CabinetUserListWrapper>
           </CabinetInfoDetailStyled>
         </CabinetInfoWrapper>
         <CardContentWrapper>
@@ -91,9 +90,13 @@ const LentInfoCard = ({
             </ContentDeatilStyled>
           </CardContentStyled>
           <CardContentStyled>
-            <ContentInfoStyled>종료 일자</ContentInfoStyled>
+            <ContentInfoStyled>
+              {!!unbannedAt ? "패널티 종료 일자" : "종료 일자"}
+            </ContentInfoStyled>
             <ContentDeatilStyled>
-              {cabinetInfo?.expireDate
+              {!!unbannedAt
+                ? formatDate(new Date(unbannedAt), ".")
+                : cabinetInfo?.expireDate
                 ? formatDate(new Date(cabinetInfo?.expireDate), ".")
                 : "-"}
             </ContentDeatilStyled>
@@ -126,15 +129,15 @@ const CabinetRectangleStyled = styled.div<{
 }>`
   width: 60px;
   height: 60px;
-  line-height: ${(props) => (props.status === "IN_SESSION" ? "52px" : "60px")};
+  line-height: ${(props) => (props.status === "IN_SESSION" ? "56px" : "60px")};
   border: ${(props) =>
-    props.status === "IN_SESSION" && "4px solid var(--main-color);"};
+    props.status === "IN_SESSION" && "2px solid var(--main-color);"};
   border-radius: 10px;
   margin-right: 20px;
   background-color: ${(props) =>
     props.banned
       ? "var(--expired)"
-      : props.isLented && props.status !== "IN_SESSION"
+      : props.isLented
       ? "var(--mine)"
       : "var(--full)"};
   color: ${(props) =>

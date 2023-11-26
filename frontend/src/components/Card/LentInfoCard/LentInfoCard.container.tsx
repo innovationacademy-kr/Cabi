@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { myCabinetInfoState, targetUserInfoState } from "@/recoil/atoms";
+import { myCabinetInfoState } from "@/recoil/atoms";
 import LentInfoCard from "@/components/Card/LentInfoCard/LentInfoCard";
 import { getDefaultCabinetInfo } from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
@@ -41,7 +41,12 @@ const getCabinetUserList = (
   myName: string | null
 ): JSX.Element => {
   const { lents } = selectedCabinetInfo;
-  if (!myName || !lents || lents.length === 0) return <></>;
+  if (!myName || !lents || lents.length === 0)
+    return (
+      <>
+        <span style={{ fontWeight: "bold" }}>{myName}</span>
+      </>
+    );
 
   return (
     <>
@@ -58,10 +63,14 @@ const getCabinetUserList = (
   );
 };
 
-const LentInfoCardContainer = ({ name }: { name: string | null }) => {
+const LentInfoCardContainer = ({
+  name,
+  unbannedAt,
+}: {
+  name: string | null;
+  unbannedAt: Date | null | undefined;
+}) => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
-  const targetUserInfo = useRecoilValue(targetUserInfoState);
-  const bannedAt = targetUserInfo ? !!targetUserInfo.bannedAt : false;
 
   let dateUsed, dateLeft, expireDate;
   if (name && myCabinetInfo.lents) {
@@ -81,7 +90,7 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
   const cabinetLentInfo: MyCabinetInfo = {
     ...cabinetInfoBase,
     name,
-    userCount: myCabinetInfo ? myCabinetInfo.lents.length : 0,
+    userCount: myCabinetInfo ? myCabinetInfo.lents.length : 1,
     userNameList,
     dateUsed,
     dateLeft,
@@ -91,7 +100,7 @@ const LentInfoCardContainer = ({ name }: { name: string | null }) => {
     status: myCabinetInfo.status || "",
   };
 
-  return <LentInfoCard cabinetInfo={cabinetLentInfo} bannedAt={bannedAt} />;
+  return <LentInfoCard cabinetInfo={cabinetLentInfo} unbannedAt={unbannedAt} />;
 };
 
 export default LentInfoCardContainer;

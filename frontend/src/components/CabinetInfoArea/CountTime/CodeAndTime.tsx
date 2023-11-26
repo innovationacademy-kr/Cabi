@@ -67,6 +67,8 @@ const HoverBox = styled.div`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 `;
 
 const CodeAndTimeStyled = styled.div`
