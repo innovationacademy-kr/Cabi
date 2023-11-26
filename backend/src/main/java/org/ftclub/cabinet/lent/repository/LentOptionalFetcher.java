@@ -174,7 +174,7 @@ public class LentOptionalFetcher {
 	 */
 	public List<LentHistory> findActiveLentHistoriesByCabinetId(Long cabinetId) {
 		log.debug("Called findByCabinetId: {}", cabinetId);
-		return lentRepository.findActiveLentHistoriesByCabinetId(cabinetId);
+		return lentRepository.findLentHistoriesByCabinetIdAndEndedAtIsNull(cabinetId);
 	}
 
 	/**
