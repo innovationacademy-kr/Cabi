@@ -119,7 +119,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
   },
   [ContentStatus.EXTENSION]: {
     contentTitle: "연장권 이용방법 안내서",
-    imagePath: "/src/assets/images/extensionTicket.svg",
+    imagePath: "/src/assets/images/extension.svg",
     background: "#F5F5F7",
     contentText: `<span>◦ 연장권 취득 조건</span><br/>
     <div>
