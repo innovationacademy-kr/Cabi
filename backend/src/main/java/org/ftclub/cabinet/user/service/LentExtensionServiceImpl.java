@@ -125,7 +125,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		Cabinet cabinet = cabinetOptionalFetcher.getLentCabinetByUserId(userId);
 		List<LentHistory> activeLentHistories = lentOptionalFetcher.findActiveLentHistoriesByCabinetId(
 				cabinet.getCabinetId());
-		lentExtensionPolicy.verifyLentExtension(activeLentHistories);
+		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
 		LentExtension lentExtension = findLentExtension.get(0);
 		lentExtension.use();
