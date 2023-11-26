@@ -22,7 +22,6 @@ const ProfileCard = ({ name, button }: ProfileProps) => {
             <LogoImg className="cabiButton" />
           </LogoDivStyled>
         </LogoStyled>
-        {/* <ProfileImage src="/src/assets/images/logo.png" alt="Profile Avatar" /> */}
         <ProfileDetailWrapper>
           <ProfileDetail>{name}</ProfileDetail>
           <EmailDetail>{name}@student.42seoul.kr</EmailDetail>
@@ -62,18 +61,12 @@ const LogoDivStyled = styled.div`
   }
 `;
 
-const ProfileImage = styled.img`
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  margin-right: 20px;
-`;
-
 const ProfileDetailWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  line-height: 1.2;
 `;
 
 const ProfileDetail = styled.div`
@@ -82,6 +75,7 @@ const ProfileDetail = styled.div`
 
 const EmailDetail = styled(ProfileDetail)`
   font-size: 0.9rem;
+  color: var(--gray-color);
 `;
 
 export default ProfileCard;
