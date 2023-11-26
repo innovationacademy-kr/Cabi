@@ -184,42 +184,44 @@ const CabinetInfoArea: React.FC<{
       <CabinetLentDateInfoStyled textColor="var(--black)">
         {selectedCabinetInfo!.cabinetId === 0 ? "" : expireDate}
       </CabinetLentDateInfoStyled>
-      <CabinetInfoButtonsContainerStyled>
-        {isMine &&
-          isExtensible &&
-          selectedCabinetInfo.lentsLength <= 1 &&
-          selectedCabinetInfo.lentType === "SHARE" &&
-          selectedCabinetInfo.status !== "IN_SESSION" && (
-            <HoverBox
-              canUseExtendTicket={
-                isMine &&
-                selectedCabinetInfo.lentsLength <= 1 &&
-                selectedCabinetInfo.lentType === "SHARE"
-              }
-            >
-              <AlertImgStyled src={alertImg} />
-              공유사물함을 단독으로 이용 시, <br />
-              연장권을 사용할 수 없습니다.
-            </HoverBox>
-          )}
-        {isMine &&
-          isExtensible &&
-          selectedCabinetInfo.status !== "IN_SESSION" && (
-            <ButtonContainer
-              onClick={() => {
-                openModal("extendModal");
-              }}
-              text={"연장권 사용하기"}
-              theme="line"
-              iconSrc="/src/assets/images/extensionTicket.svg"
-              iconAlt="연장권 아이콘"
-              disabled={
-                selectedCabinetInfo.lentsLength <= 1 &&
-                selectedCabinetInfo.lentType === "SHARE"
-              }
-            />
-          )}
-      </CabinetInfoButtonsContainerStyled>
+      <ButtonHoverWrapper>
+        <CabinetInfoButtonsContainerStyled>
+          {isMine &&
+            isExtensible &&
+            selectedCabinetInfo.status !== "IN_SESSION" && (
+              <ButtonContainer
+                onClick={() => {
+                  openModal("extendModal");
+                }}
+                text={"연장권 사용하기"}
+                theme="line"
+                iconSrc="/src/assets/images/extensionTicket.svg"
+                iconAlt="연장권 아이콘"
+                disabled={
+                  selectedCabinetInfo.lentsLength <= 1 &&
+                  selectedCabinetInfo.lentType === "SHARE"
+                }
+              />
+            )}
+          {isMine &&
+            isExtensible &&
+            selectedCabinetInfo.lentsLength <= 1 &&
+            selectedCabinetInfo.lentType === "SHARE" &&
+            selectedCabinetInfo.status !== "IN_SESSION" && (
+              <HoverBox
+                canUseExtendTicket={
+                  isMine &&
+                  selectedCabinetInfo.lentsLength <= 1 &&
+                  selectedCabinetInfo.lentType === "SHARE"
+                }
+              >
+                <AlertImgStyled src={alertImg} />
+                공유사물함을 단독으로 이용 시, <br />
+                연장권을 사용할 수 없습니다.
+              </HoverBox>
+            )}
+        </CabinetInfoButtonsContainerStyled>
+      </ButtonHoverWrapper>
       {userModal.unavailableModal && (
         <UnavailableModal
           status={additionalModalType.MODAL_UNAVAILABLE_ALREADY_LENT}
@@ -279,6 +281,7 @@ const NotSelectedStyled = styled.div`
 
 const CabinetDetailAreaStyled = styled.div`
   height: 100%;
+  max-width: 330px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -362,6 +365,10 @@ export const DetailStyled = styled.p`
 const HoverBox = styled.div<{
   canUseExtendTicket?: boolean;
 }>`
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  top: -120%;
   width: 270px;
   height: 80px;
   padding: 10px;
@@ -375,7 +382,16 @@ const HoverBox = styled.div<{
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  opacity: ${(props) => (props.canUseExtendTicket ? "0" : "1")};
+`;
+
+const ButtonHoverWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  &:hover ${HoverBox} {
+    opacity: 1;
+    visibility: visible;
+  }
 `;
 
 const AlertImgStyled = styled.img`
@@ -391,13 +407,11 @@ const CabinetInfoButtonsContainerStyled = styled.div<{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  position: relative;
   align-items: center;
   max-height: 320px;
   margin: 3vh 0;
   width: 100%;
-  &:hover ${HoverBox} {
-    opacity: ${(props) => (props.canUseExtendTicket ? "0" : "1")};
-  }
 `;
 
 const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
