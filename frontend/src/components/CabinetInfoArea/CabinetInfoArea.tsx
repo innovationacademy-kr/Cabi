@@ -382,6 +382,8 @@ const HoverBox = styled.div<{
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  transition: opacity 0.3s ease;
+  line-height: 1.2;
 `;
 
 const ButtonHoverWrapper = styled.div`
