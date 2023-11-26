@@ -54,7 +54,7 @@ const ProfilePage = () => {
           />
           <LentInfoCardContainer
             name={myInfo.name}
-            banned={!!myInfo.unbannedAt}
+            unbannedAt={myInfo.unbannedAt}
           />
           <ThemeColorCardContainer />
           <NotificationCardContainer />

@@ -41,7 +41,12 @@ const getCabinetUserList = (
   myName: string | null
 ): JSX.Element => {
   const { lents } = selectedCabinetInfo;
-  if (!myName || !lents || lents.length === 0) return <></>;
+  if (!myName || !lents || lents.length === 0)
+    return (
+      <>
+        <span style={{ fontWeight: "bold" }}>{myName}</span>
+      </>
+    );
 
   return (
     <>
@@ -60,10 +65,10 @@ const getCabinetUserList = (
 
 const LentInfoCardContainer = ({
   name,
-  banned,
+  unbannedAt,
 }: {
   name: string | null;
-  banned: boolean;
+  unbannedAt: Date | null | undefined;
 }) => {
   const myCabinetInfo = useRecoilValue(myCabinetInfoState);
 
@@ -85,7 +90,7 @@ const LentInfoCardContainer = ({
   const cabinetLentInfo: MyCabinetInfo = {
     ...cabinetInfoBase,
     name,
-    userCount: myCabinetInfo ? myCabinetInfo.lents.length : 0,
+    userCount: myCabinetInfo ? myCabinetInfo.lents.length : 1,
     userNameList,
     dateUsed,
     dateLeft,
@@ -95,7 +100,7 @@ const LentInfoCardContainer = ({
     status: myCabinetInfo.status || "",
   };
 
-  return <LentInfoCard cabinetInfo={cabinetLentInfo} banned={banned} />;
+  return <LentInfoCard cabinetInfo={cabinetLentInfo} unbannedAt={unbannedAt} />;
 };
 
 export default LentInfoCardContainer;
