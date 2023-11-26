@@ -14,7 +14,6 @@ import { axiosMyInfo } from "@/api/axios/axios.custom";
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
-  const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
 
   const updateLocalStorage = () => {
     const recoilPersist = localStorage.getItem("recoil-persist");
@@ -29,7 +28,6 @@ const ProfilePage = () => {
   const getMyInfo = async () => {
     try {
       const { data: myInfo } = await axiosMyInfo();
-      setMyInfoData(myInfo);
       setMyInfo(myInfo);
     } catch (error) {
       throw error;
@@ -57,7 +55,7 @@ const ProfilePage = () => {
           />
           <LentInfoCardContainer
             name={myInfo.name}
-            banned={!!myInfoData?.unbannedAt}
+            banned={!!myInfo.unbannedAt}
           />
           <ThemeColorCardContainer />
           <NotificationCardContainer />
