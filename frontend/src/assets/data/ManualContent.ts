@@ -50,7 +50,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     }일 + 대여한 인원수 * ${
       import.meta.env.VITE_SHARE_BONUS_PER_PERSON
     }일</strong>간 대여할 수 있습니다.<br/>사물함 제목과 메모는 대여자들끼리 공유됩니다.<br/>
-    대여 만료 기간 이내 반납 시,<br/><strong>잔여 기간의 인원수 / 1</strong>만큼 대여 기간이 감소됩니다.
+    대여 만료 기간 이내 반납 시,<br/><strong>1 / 잔여 기간의 인원수</strong>만큼 대여 기간이 감소됩니다.
     <br/><br/>
     </div>
     <span>◦ 페널티</span><br/>
