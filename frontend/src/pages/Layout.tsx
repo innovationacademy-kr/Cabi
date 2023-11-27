@@ -45,7 +45,10 @@ const Layout = (): JSX.Element => {
       const {
         data: myInfo,
         headers: { date: serverTime },
+        headers: header,
       } = await axiosMyInfo();
+      console.log(header);
+      console.log(serverTime);
       console.log(new Date(serverTime));
       setServerTime(new Date(serverTime)); // 접속 후 최초 서버 시간을 가져옴
       setMyInfoData(myInfo);
