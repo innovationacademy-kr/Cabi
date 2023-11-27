@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
  * 모든 응답에 X-Current-Time 헤더를 추가하는 필터
  */
 @Component
-@Order(1)
 @WebFilter("/*")
 public class TimeResponseFilter implements Filter {
 
