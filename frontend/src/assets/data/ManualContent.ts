@@ -50,8 +50,8 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     }일 + 대여한 인원수 * ${
       import.meta.env.VITE_SHARE_BONUS_PER_PERSON
     }일</strong>간 대여할 수 있습니다.<br/>사물함 제목과 메모는 대여자들끼리 공유됩니다.<br/>
-    대여 만료 기간 이내 반납 시,<br/><strong>1 / 잔여 기간의 인원수</strong>만큼 대여 기간이 감소됩니다.
-    <br/><br/>
+    대여 만료 기간 이내 반납 시,<br/><strong>(잔여 인원 / 기존 인원) * 기존 잔여 기간</strong>으로 잔여 기간이 산정됩니다.
+    <br/>대여 인원 확정 후, 공유 사물함 중도 참여는 불가능합니다.<br/><br/> 
     </div>
     <span>◦ 페널티</span><br/>
     <div>
@@ -92,7 +92,8 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     contentTitle: "오픈예정",
     imagePath: "",
     background: "var(--main-color)",
-    contentText: `사물함 반납 시, 해당 사물함은 즉시 <strong>오픈예정</strong> 상태가 됩니다.<br />
+    contentText: `<span>◦ 상세 내용</span><br/>
+    <div>사물함 반납 시, 해당 사물함은 오픈예정 상태로 변경됩니다.<br />
     오픈예정 상태의 사물함은 대여가 불가능합니다.<br />
     <strong>반납일 기준 다음 날 오후 1시(13시)</strong> 사용가능 상태가 됩니다.<br/>
     당일 오픈되는 사물함은 <a
@@ -100,24 +101,26 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     target="_blank"
     title="슬랙 캐비닛 채널 새창으로 열기"
   >
-    슬랙 캐비닛 채널</a>에서 확인하세요.`,
+    슬랙 캐비닛 채널</a>에서 확인하세요.</div>`,
     pointColor: "var(--white)",
   },
   [ContentStatus.IN_SESSION]: {
     contentTitle: "대기중",
     imagePath: "/src/assets/images/clock.svg",
     background: "#F5F5F7",
-    contentText: `공유 사물함 대여시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
+    contentText: `<span>◦ 상세 내용</span><br/>
+    <div>공유 사물함 대여 시 <strong>10분</strong>간의 대기 시간이 발생합니다.<br/>
+    대여 과정에서 생성된 <strong>초대 코드</strong>를 통해 공유 사물함에 입장할 수 있습니다.<br/>
+    <strong>${
+      import.meta.env.VITE_SHARE_MAX_USER
+    }인</strong>의 공유 인원이 형성되면 즉시 대여가 완료됩니다.<br/>
     대기 시간 동안 <strong>공유 인원(${
       import.meta.env.VITE_SHARE_MIN_USER
     }인 ~ ${
       import.meta.env.VITE_SHARE_MAX_USER
-    }인)</strong>이 형성되지 않으면 공유 사물함 대여는 취소됩니다.<br/>
-    대기 시간 내 <strong>${
-      import.meta.env.VITE_SHARE_MAX_USER
-    }인</strong>의 공유 인원이 형성되면 즉시 대여가 완료됩니다.<br/>
-    대여 과정에서 생성된 <strong>초대 코드</strong>를 사용하여 공유 사물함에 입장할 수 있습니다.<br/>
-    초대 코드를 <strong>3번 이상</strong> 잘못 입력하면 <strong>입장이 제한</strong>됩니다.<br /><br />
+    }인)</strong>이 형성되지 않으면<br/>사물함 대여가 취소되며, 공유 사물함은 다시 대여 가능 상태가 됩니다.<br/><br/></div>
+    <span>◦ 주의 사항</span><br/>
+    <div>초대 코드를 <strong>3번 이상</strong> 잘못 입력하면 <strong>입장이 제한</strong>됩니다.</div>
     `,
     pointColor: "var(--main-color)",
   },
@@ -136,7 +139,9 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연장권 사용 시, 대여 만료 기간이 <strong>${
       import.meta.env.VITE_EXTENDED_LENT_PERIOD
     }일</strong> 연장됩니다.<br/>
-    연장권은 <strong>해당 월의 마지막 날</strong>까지 사용 가능합니다.
+    개인 및 공유 사물함에 적용 가능합니다.<br/>
+    연장권은 <strong>해당 월의 마지막 날</strong>까지 사용 가능합니다.<br/>
+    공유 사물함에 한 명만 남거나 연체된 상태라면 연장권 사용이 불가합니다.
     </div>`,
     pointColor: "black",
   },
