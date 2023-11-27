@@ -415,7 +415,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		log.debug("getPendingCabinets");
 		List<Cabinet> allCabinets = cabinetOptionalFetcher.findAllCabinetsByBuilding(BUILDING_SAEROM);
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap = allCabinets.parallelStream()
-				.filter(cabinet -> cabinet.isStatus(PENDING) || cabinet.isStatus(AVAILABLE))
+				.filter(cabinet -> !cabinet.isLentType(LentType.CLUB)
+                        && (cabinet.isStatus(PENDING) || cabinet.isStatus(AVAILABLE)))
 				.collect(groupingBy(cabinet -> cabinet.getCabinetPlace().getLocation().getFloor(),
 						mapping(cabinet -> cabinetMapper.toCabinetPreviewDto(cabinet, 0, null),
 								Collectors.toList())));
