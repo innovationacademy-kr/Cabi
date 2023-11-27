@@ -54,7 +54,7 @@ const BarChart = ({ data }: { data: IRentInfo[] }) => (
       padding={0.3}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
-      colors={["#595959", "#ff4e4e", "#e2e4e3", "#9747ff"]}
+      colors={["#595959", "#ff4e4e", "#e2e4e3", "var(--main-color)"]}
       borderColor={{
         from: "color",
         modifiers: [["darker", 1.6]],

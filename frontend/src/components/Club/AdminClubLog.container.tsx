@@ -33,6 +33,7 @@ const AdminClubLogContainer = (props: any) => {
   }, [page, totalPage, shouldFetchData]);
 
   const onClickPrev = () => {
+    if (totalPage === 0) return;
     if (page === 0) {
       setPage(totalPage - 1);
     } else {
@@ -41,6 +42,7 @@ const AdminClubLogContainer = (props: any) => {
   };
 
   const onClickNext = () => {
+    if (totalPage === 0) return;
     if (page == totalPage - 1) {
       setPage(0);
     } else {

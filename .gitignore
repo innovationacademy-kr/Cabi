@@ -55,3 +55,4 @@ ib_logfile*
 ibdata*
 ibtmp*
 *nohup.out
+/backend/src/main/resources/test/resources/

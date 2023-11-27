@@ -20,6 +20,9 @@ public class DomainProperties {
 	@Value("${spring.oauth2.domain-name.main}")
 	private String main;
 
+	@Value("${spring.server.be-host}")
+	private String beHost;
+
 	@Value("${spring.server.fe-host}")
 	private String feHost;
 

@@ -12,13 +12,16 @@ import {
   currentFloorNumberState,
   currentMapFloorState,
   currentSectionNameState,
+  myCabinetInfoState,
   numberOfAdminWorkState,
   userState,
 } from "@/recoil/atoms";
 import { currentBuildingFloorState } from "@/recoil/selectors";
 import LeftMainNav from "@/components/LeftNav/LeftMainNav/LeftMainNav";
-import { CabinetInfoByBuildingFloorDto } from "@/types/dto/cabinet.dto";
-import { UserDto } from "@/types/dto/user.dto";
+import {
+  CabinetInfoByBuildingFloorDto,
+  MyCabinetInfoResponseDto,
+} from "@/types/dto/cabinet.dto";
 import { axiosCabinetByBuildingFloor } from "@/api/axios/axios.custom";
 import { removeCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
@@ -30,7 +33,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   );
   const currentBuilding = useRecoilValue<string>(currentBuildingNameState);
   const setCurrentMapFloor = useSetRecoilState<number>(currentMapFloorState);
-  const myInfo = useRecoilValue<UserDto>(userState);
+  const myCabinetInfo =
+    useRecoilValue<MyCabinetInfoResponseDto>(myCabinetInfoState);
   const resetCurrentFloor = useResetRecoilState(currentFloorNumberState);
   const resetCurrentSection = useResetRecoilState(currentSectionNameState);
   const resetBuilding = useResetRecoilState(currentBuildingNameState);
@@ -69,7 +73,13 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       .catch((error) => {
         console.error(error);
       });
-  }, [currentBuilding, currentFloor, myInfo.cabinetId, numberOfAdminWork]);
+  }, [
+    currentBuilding,
+    currentFloor,
+    myCabinetInfo?.cabinetId,
+    numberOfAdminWork,
+    myCabinetInfo?.status,
+  ]);
 
   const onClickFloorButton = (floor: number) => {
     setCurrentFloor(floor);
@@ -109,6 +119,16 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
+  const onClickProfileButton = () => {
+    navigator("profile");
+    closeAll();
+  };
+
+  const onClickPendingButton = () => {
+    navigator("pending");
+    closeAll();
+  };
+
   const onClickLogoutButton = (): void => {
     const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
@@ -138,6 +158,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickSearchButton={onClickSearchButton}
       onClickLogoutButton={onClickLogoutButton}
       onClickClubButton={onClickClubButton}
+      onClickProfileButton={onClickProfileButton}
+      onClickPendingButton={onClickPendingButton}
       isAdmin={isAdmin}
     />
   );

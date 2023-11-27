@@ -47,6 +47,8 @@ const TYPE_OPTIONS = [
 const STATUS_OPTIONS = [
   { name: "사용 가능", value: CabinetStatus.AVAILABLE },
   { name: "사용 불가", value: CabinetStatus.BROKEN },
+  { name: "오픈 예정", value: CabinetStatus.PENDING },
+  { name: "대기중", value: CabinetStatus.IN_SESSION },
 ];
 
 const StatusModal = ({
@@ -212,7 +214,7 @@ const ContentItemWrapperStyled = styled.div<{
 `;
 
 const ContentItemTitleStyled = styled.h3`
-  font-size: 18px;
+  font-size: 1.125rem;
   margin-bottom: 8px;
 `;
 
@@ -226,7 +228,7 @@ const ContentItemContainerStyled = styled.div<{ mode: string }>`
   border-radius: 10px;
   text-align: start;
   padding-left: 20px;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: var(--main-color);
   & > p {
     padding-left: 10px;
@@ -250,7 +252,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   padding: 0;
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 17px;
   width: max-content;
   height: auto;

@@ -17,6 +17,42 @@ const axiosMyInfoURL = "/v4/users/me";
 export const axiosMyInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyInfoURL);
+    console.log(response);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosMyExtensionsInfoURL = "/v4/users/me/lent-extensions";
+export const axiosMyExtensionsInfo = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyExtensionsInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosActiveExtensionInfoURL = "/v4/users/me/lent-extensions/active";
+export const axiosActiveExtensionInfo = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosActiveExtensionInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUseExtensionURL = "/v4/users/me/lent-extensions/use";
+export const axiosUseExtension = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosUseExtensionURL, {
+      validateStatus: function (status) {
+        return status < 500;
+      },
+    });
+    if (response.status === 401) throw response;
     return response;
   } catch (error) {
     throw error;
@@ -126,6 +162,16 @@ export const axiosMyLentLog = async (page: number): Promise<any> => {
     const response = await instance.get(axiosMyLentLogURL, {
       params: { page: page, size: 10 },
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosExtendLentPeriodURL = "/v4/lent/cabinets/extend";
+export const axiosExtendLentPeriod = async (): Promise<any> => {
+  try {
+    const response = await instance.patch(axiosExtendLentPeriodURL);
     return response;
   } catch (error) {
     throw error;
@@ -440,6 +486,45 @@ export const axiosLentClubUser = async (
       cabinetId,
       statusNote,
     });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosLentShareIdURL = "/v4/lent/cabinets/share/";
+export const axiosLentShareId = async (
+  cabinetId: number | null,
+  shareCode: string
+): Promise<any> => {
+  if (cabinetId === null) return;
+  try {
+    const response = await instance.post(`${axiosLentShareIdURL}${cabinetId}`, {
+      shareCode,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosCancelURL = "/v4/lent/cabinets/share/cancel/";
+export const axiosCancel = async (cabinetId: number | null): Promise<any> => {
+  if (cabinetId === null) {
+    return;
+  }
+  try {
+    const response = await instance.patch(`${axiosCancelURL}${cabinetId}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetPendingCabinetsURL = "/v4/cabinets/pending";
+export const axiosGetPendingCabinets = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosGetPendingCabinetsURL);
     return response;
   } catch (error) {
     throw error;

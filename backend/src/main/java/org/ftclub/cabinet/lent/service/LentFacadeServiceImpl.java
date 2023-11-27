@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.lent.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -8,9 +9,11 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
+import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -20,10 +23,13 @@ import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
+import org.ftclub.cabinet.lent.repository.LentRedis;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
+import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -42,7 +48,9 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private final LentMapper lentMapper;
 	private final CabinetService cabinetService;
 	private final CabinetMapper cabinetMapper;
-
+	private final LentRedis lentRedis;
+	private final CabinetProperties cabinetProperties;
+    private final UserService userService;
 
 	/*-------------------------------------------READ-------------------------------------------*/
 
@@ -56,8 +64,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByUserId(userId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalElements());
+		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByUserId(userId,
+				pageable);
+		return generateLentHistoryPaginationDto(lentHistories.toList(),
+				lentHistories.getTotalElements());
 	}
 
 	@Override
@@ -66,8 +76,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		log.debug("Called getAllCabinetLentHistories: {}", cabinetId);
 		cabinetOptionalFetcher.getCabinet(cabinetId);
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId, pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(), lentHistories.getTotalElements());
+		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId,
+				pageable);
+		return generateLentHistoryPaginationDto(lentHistories.toList(),
+				lentHistories.getTotalElements());
 	}
 
 	@Override
@@ -86,6 +98,23 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 //						e.getStartedAt(),
 //						e.getExpiredAt()))
 //				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<LentDto> getLentDtoListFromRedis(Long cabinetId) {
+		log.debug("Called getLentDtoListFromRedis: {}", cabinetId);
+
+		List<String> userIds = lentOptionalFetcher.findUserIdsByCabinetIdFromRedis(cabinetId);
+		return userIds.stream().map(
+				userId -> {
+					User user = userOptionalFetcher.findUser(Long.valueOf(userId));
+					return new LentDto(
+							user.getUserId(),
+							user.getName(),
+							null,
+							null,
+							null);
+				}).collect(Collectors.toList());
 	}
 
 	/**
@@ -128,18 +157,53 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
 		log.debug("Called getMyLentInfo: {}", user.getName());
 		Cabinet myCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
-		if (myCabinet == null) {
+		if (myCabinet == null) { // 대여 기록이 없거나 대여 대기 중인 경우
+			return getMyLentInfoFromRedis(user);
+		}
+		Long cabinetId = myCabinet.getCabinetId();
+		List<LentDto> lentDtoList = getLentDtoList(cabinetId);
+		String previousUserName = lentRedis.getPreviousUserName(
+				myCabinet.getCabinetId().toString());
+		if (previousUserName == null) {
+			Optional<LentHistory> previousLentHistory = lentOptionalFetcher.findPreviousLentHistoryByCabinetId(
+					cabinetId);
+			if (previousLentHistory.isPresent()) {
+				previousUserName = previousLentHistory.get().getUser().getName();
+			}
+		}
+		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList,
+				null, null, previousUserName);
+	}
+
+	@Override
+	public MyCabinetResponseDto getMyLentInfoFromRedis(@UserSession UserSessionDto user) {
+		log.debug("Called getMyLentInfoFromRedis: {}", user.getName());
+		Long userId = user.getUserId();
+		Long cabinetId = lentOptionalFetcher.findCabinetIdByUserIdFromRedis(userId);
+		log.debug("cabinetId: {}", cabinetId);
+		if (cabinetId == null) {
+			log.info("cabinetId is null");
 			return null;
 		}
-		List<LentDto> lentDtoList = getLentDtoList(myCabinet.getCabinetId());
-		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList);
+		Cabinet cabinet = cabinetOptionalFetcher.getCabinet(cabinetId);
+		cabinet.specifyMaxUser(Math.toIntExact(cabinetProperties.getShareMaxUserCount()));
+		List<LentDto> lentDtoList = getLentDtoListFromRedis(cabinetId);
+		return cabinetMapper.toMyCabinetResponseDto(cabinet, lentDtoList,
+				lentRedis.getShareCode(cabinetId),
+				lentRedis.getSessionExpiredAtInRedis(cabinetId), null);
 	}
+
 
 	/*--------------------------------------------CUD--------------------------------------------*/
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		lentService.startLentCabinet(userId, cabinetId);
+	}
+
+	@Override
+	public void startLentShareCabinet(Long userId, Long cabinetId, String shareCode) {
+		lentService.startLentShareCabinet(userId, cabinetId, shareCode);
 	}
 
 	@Override
@@ -161,7 +225,13 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
+	public void cancelLentShareCabinet(Long userId, Long cabinetId) {
+		lentService.cancelLentShareCabinet(userId, cabinetId);
+	}
+
+	@Override
 	public void terminateLentCabinet(Long userId) {
+		log.debug("Called terminateLentCabinet {}", userId);
 		lentService.terminateLentCabinet(userId);
 	}
 

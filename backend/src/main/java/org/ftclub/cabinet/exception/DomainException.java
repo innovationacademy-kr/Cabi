@@ -3,7 +3,8 @@ package org.ftclub.cabinet.exception;
 import lombok.Getter;
 
 @Getter
-public class DomainException extends RuntimeException{
+public class DomainException extends RuntimeException {
+
 	final ExceptionStatus status;
 
 	/**
@@ -11,5 +12,10 @@ public class DomainException extends RuntimeException{
 	 */
 	public DomainException(ExceptionStatus status) {
 		this.status = status;
+	}
+
+	@Override
+	public String getMessage() {
+		return status.getMessage();
 	}
 }

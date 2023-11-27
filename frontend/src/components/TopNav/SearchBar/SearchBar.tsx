@@ -206,14 +206,14 @@ const SearchBarStyled = styled.div`
 const SearchBarInputStyled = styled.input`
   width: 300px;
   height: 40px;
-  border: 1px solid var(--white);
+  border: 1px solid #7b7b7b;
   border-radius: 10px;
   text-align: left;
   padding: 0 20px;
-  color: var(--white);
+  color: #7b7b7b;
   background-color: rgba(255, 255, 255, 0.2);
   &::placeholder {
-    color: var(--white);
+    color: #7b7b7b;
   }
 `;
 

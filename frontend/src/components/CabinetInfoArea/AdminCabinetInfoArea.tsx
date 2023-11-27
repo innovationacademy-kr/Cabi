@@ -20,7 +20,7 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import cabiLogo from "@/assets/images/logo.svg";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -64,7 +64,9 @@ const AdminCabinetInfoArea: React.FC<{
   )
     return (
       <NotSelectedStyled>
-        <CabiLogoStyled src={cabiLogo} />
+        <CabiLogoStyled>
+          <LogoImg />
+        </CabiLogoStyled>
         <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
           사물함/유저를 <br />
           선택해주세요
@@ -208,10 +210,15 @@ const CabinetDetailAreaStyled = styled.div`
   align-items: center;
 `;
 
-const CabiLogoStyled = styled.img`
+const CabiLogoStyled = styled.div`
   width: 35px;
   height: 35px;
   margin-bottom: 10px;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
@@ -264,12 +271,21 @@ const CabinetRectangleStyled = styled.div<{
     css`
       background-color: var(--mine);
     `};
-  font-size: 32px;
+  font-size: 2rem;
   color: ${(props) =>
     props.isMine
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
+
+  ${({ cabinetStatus }) => css`
+    border: ${cabinetStatus === "IN_SESSION"
+      ? "2px solid var(--main-color)"
+      : cabinetStatus === "PENDING"
+      ? "5px double var(--white)"
+      : "none"};
+    ${cabinetStatus === "PENDING" && "line-height: 70px;"};
+  `}
 `;
 
 const CabinetInfoButtonsContainerStyled = styled.div`

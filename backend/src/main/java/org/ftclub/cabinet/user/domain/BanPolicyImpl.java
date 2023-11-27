@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class BanPolicyImpl implements BanPolicy {
 
-	private final CabinetProperties cabinetProperties;
 	private final BanHistoryRepository banHistoryRepository;
 
 	@Override
@@ -25,25 +23,17 @@ public class BanPolicyImpl implements BanPolicy {
 		if (checkAlreadyExpired(endedAt, expiredAt)) {
 			return BanType.ALL;
 		}
-		if (lentType == LentType.SHARE) {
-			Long dateDiff = DateUtil.calculateTwoDateDiffAbs(startAt, endedAt);
-			if (dateDiff < cabinetProperties.getPenaltyDayShare()) {
-				return BanType.SHARE;
-			}
-		}
 		return BanType.NONE;
 	}
 
 	@Override
-	public LocalDateTime getBanDate(BanType banType, LocalDateTime endedAt, LocalDateTime expiredAt, Long userId) {
+	public LocalDateTime getBanDate(BanType banType, LocalDateTime endedAt, LocalDateTime expiredAt,
+			Long userId) {
 		log.debug("Called getBanDate");
-		if (banType == BanType.SHARE) {
-			return endedAt.plusDays(cabinetProperties.getPenaltyDayShare());
-		} else {
-			int currentBanDays = DateUtil.calculateTwoDateDiffAbs(endedAt, expiredAt).intValue();
-			int accumulateBanDays = getAccumulateBanDaysByUserId(userId).intValue();
-			return endedAt.plusDays(currentBanDays + accumulateBanDays);
-		}
+		Double currentBanDays = DateUtil.calculateTwoDateDiffCeil(expiredAt, endedAt)
+				.doubleValue();
+		Double squaredBanDays = Math.pow(currentBanDays, 2.0);
+		return endedAt.plusDays(squaredBanDays.longValue());
 	}
 
 	@Override

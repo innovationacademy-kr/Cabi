@@ -135,6 +135,7 @@ public class DateUtil {
 	 */
 	public static Long calculateTwoDateDiffCeil(LocalDateTime day1, LocalDateTime day2) {
 		long diffInMillis = Duration.between(day1, day2).toMillis();
+		System.out.println("diffInMillis = " + diffInMillis);
 		return (long) Math.ceil(diffInMillis / 1000.0 / 60 / 60 / 24);
 	}
 }

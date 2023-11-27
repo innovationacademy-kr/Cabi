@@ -21,7 +21,9 @@ const SectionPagination: React.FC<{
   const paginationIndexBar = sectionList.map((sectionName, index) => (
     <IndexRectangleStyled
       key={sectionName}
-      filledColor={sectionName === currentSectionName ? "#9747FF" : "#D9D9D9"}
+      filledColor={
+        sectionName === currentSectionName ? "var(--main-color)" : "#D9D9D9"
+      }
       onClick={() => changeSectionOnClickIndexButton(index)}
       className="cabiButton"
     />

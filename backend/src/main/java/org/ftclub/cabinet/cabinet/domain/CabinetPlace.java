@@ -45,6 +45,10 @@ public class CabinetPlace {
 	 */
 	@Embedded
 	private MapArea mapArea;
+	/* 양방향 매핑
+	@OneToMany(mappedBy = "cabinetPlace")
+	private List<Cabinet> cabinets;
+*/
 
 	protected CabinetPlace(Location location, SectionFormation sectionFormation, MapArea mapArea) {
 		this.location = location;

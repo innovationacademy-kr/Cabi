@@ -5,7 +5,11 @@ import {
   ISelectedCabinetInfo,
   TModalState,
 } from "@/components/CabinetInfoArea/CabinetInfoArea.container";
+import CountTimeContainer from "@/components/CabinetInfoArea/CountTime/CountTime.container";
 import ButtonContainer from "@/components/Common/Button";
+import CancelModal from "@/components/Modals/CancelModal/CancelModal";
+import ExtendModal from "@/components/Modals/ExtendModal/ExtendModal";
+import InvitationCodeModalContainer from "@/components/Modals/InvitationCodeModal/InvitationCodeModal.container";
 import LentModal from "@/components/Modals/LentModal/LentModal";
 import MemoModalContainer from "@/components/Modals/MemoModal/MemoModal.container";
 import PasswordCheckModalContainer from "@/components/Modals/PasswordCheckModal/PasswordCheckModal.container";
@@ -17,7 +21,9 @@ import {
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
-import cabiLogo from "@/assets/images/logo.svg";
+import alertImg from "@/assets/images/cautionSign.svg";
+import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.svg";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 
@@ -27,6 +33,7 @@ const CabinetInfoArea: React.FC<{
   expireDate: string | null;
   isMine: boolean;
   isAvailable: boolean;
+  isExtensible: boolean;
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
@@ -36,13 +43,26 @@ const CabinetInfoArea: React.FC<{
   expireDate,
   isMine,
   isAvailable,
+  isExtensible,
   userModal,
   openModal,
   closeModal,
 }) => {
+  const isExtensionVisible =
+    isMine &&
+    isExtensible &&
+    selectedCabinetInfo &&
+    selectedCabinetInfo.status !== "IN_SESSION";
+  const isHoverBoxVisible =
+    selectedCabinetInfo &&
+    selectedCabinetInfo.lentsLength <= 1 &&
+    selectedCabinetInfo.lentType === "SHARE";
+
   return selectedCabinetInfo === null ? (
     <NotSelectedStyled>
-      <CabiLogoStyled src={cabiLogo} />
+      <CabiLogoStyled>
+        <LogoImg />
+      </CabiLogoStyled>
       <TextStyled fontSize="1.125rem" fontColor="var(--gray-color)">
         사물함을 <br />
         선택해주세요
@@ -51,13 +71,17 @@ const CabinetInfoArea: React.FC<{
   ) : (
     <CabinetDetailAreaStyled>
       <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-        {selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section}
+        {selectedCabinetInfo!.floor !== 0
+          ? selectedCabinetInfo!.floor + "F - " + selectedCabinetInfo!.section
+          : "-"}
       </TextStyled>
       <CabinetRectangleStyled
         cabinetStatus={selectedCabinetInfo!.status}
         isMine={isMine}
       >
-        {selectedCabinetInfo!.visibleNum}
+        {selectedCabinetInfo!.visibleNum !== 0
+          ? selectedCabinetInfo!.visibleNum
+          : "-"}
       </CabinetRectangleStyled>
       <CabinetTypeIconStyled
         title={selectedCabinetInfo!.lentType}
@@ -68,34 +92,74 @@ const CabinetInfoArea: React.FC<{
       </TextStyled>
       <CabinetInfoButtonsContainerStyled>
         {isMine ? (
-          <>
-            <ButtonContainer
-              onClick={() => {
-                openModal("returnModal");
-              }}
-              text="반납"
-              theme="fill"
-            />
-            <ButtonContainer
-              onClick={() => openModal("memoModal")}
-              text="메모관리"
-              theme="line"
-            />
-            <ButtonContainer
-              onClick={closeCabinet}
-              text="닫기"
-              theme="grayLine"
-            />
-          </>
+          selectedCabinetInfo.status === "IN_SESSION" ? (
+            <>
+              <ButtonContainer
+                onClick={() => {
+                  openModal("cancelModal");
+                }}
+                text="대기열 취소"
+                theme="fill"
+              />
+              <ButtonContainer
+                onClick={closeCabinet}
+                text="닫기"
+                theme="grayLine"
+              />
+              <CountTimeContainer isMine={true} />
+            </>
+          ) : (
+            <>
+              <ButtonContainer
+                onClick={() => {
+                  openModal("returnModal");
+                }}
+                text="반납"
+                theme="fill"
+              />
+              <ButtonContainer
+                onClick={() => openModal("memoModal")}
+                text="메모관리"
+                theme="line"
+              />
+              <ButtonContainer
+                onClick={closeCabinet}
+                text="닫기"
+                theme="grayLine"
+              />
+            </>
+          )
         ) : (
           <>
-            <ButtonContainer
-              onClick={() => openModal("lentModal")}
-              text="대여"
-              theme="fill"
-              disabled={!isAvailable || selectedCabinetInfo.lentType === "CLUB"}
-            />
-            <ButtonContainer onClick={closeCabinet} text="닫기" theme="line" />
+            {selectedCabinetInfo!.cabinetId !== 0 && (
+              <>
+                <ButtonContainer
+                  onClick={() =>
+                    openModal(
+                      selectedCabinetInfo.status == "IN_SESSION"
+                        ? "invitationCodeModal"
+                        : "lentModal"
+                    )
+                  }
+                  text="대여"
+                  theme="fill"
+                  disabled={
+                    !isAvailable || selectedCabinetInfo.lentType === "CLUB"
+                  }
+                />
+                <ButtonContainer
+                  onClick={closeCabinet}
+                  text="닫기"
+                  theme="line"
+                />
+              </>
+            )}
+            {selectedCabinetInfo.status == "IN_SESSION" && (
+              <CountTimeContainer isMine={false} />
+            )}
+            {selectedCabinetInfo.status == "PENDING" && (
+              <PendingMessageStyled>매일 13:00 오픈됩니다</PendingMessageStyled>
+            )}
           </>
         )}
       </CabinetInfoButtonsContainerStyled>
@@ -105,8 +169,45 @@ const CabinetInfoArea: React.FC<{
         {selectedCabinetInfo!.detailMessage}
       </CabinetLentDateInfoStyled>
       <CabinetLentDateInfoStyled textColor="var(--black)">
-        {expireDate}
+        {selectedCabinetInfo!.cabinetId === 0 ? "" : expireDate}
       </CabinetLentDateInfoStyled>
+      <ButtonHoverWrapper>
+        <CabinetInfoButtonsContainerStyled>
+          {isExtensionVisible && (
+            <ButtonContainerStyled
+              onClick={() => {
+                openModal("extendModal");
+              }}
+              theme="line"
+              disabled={
+                selectedCabinetInfo.lentsLength <= 1 &&
+                selectedCabinetInfo.lentType === "SHARE"
+              }
+            >
+              <ExtensionImg
+                stroke="var(--main-color)"
+                width={24}
+                height={24}
+                style={{ marginRight: "10px" }}
+              />
+              {"연장권 사용하기"}
+            </ButtonContainerStyled>
+          )}
+          {isExtensionVisible && isHoverBoxVisible && (
+            <HoverBox
+              canUseExtendTicket={
+                isMine &&
+                selectedCabinetInfo.lentsLength <= 1 &&
+                selectedCabinetInfo.lentType === "SHARE"
+              }
+            >
+              <AlertImgStyled src={alertImg} />
+              공유사물함을 단독으로 이용 시, <br />
+              연장권을 사용할 수 없습니다.
+            </HoverBox>
+          )}
+        </CabinetInfoButtonsContainerStyled>
+      </ButtonHoverWrapper>
       {userModal.unavailableModal && (
         <UnavailableModal
           status={additionalModalType.MODAL_UNAVAILABLE_ALREADY_LENT}
@@ -134,6 +235,24 @@ const CabinetInfoArea: React.FC<{
           onClose={() => closeModal("passwordCheckModal")}
         />
       )}
+      {userModal.invitationCodeModal && (
+        <InvitationCodeModalContainer
+          onClose={() => closeModal("invitationCodeModal")}
+          cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
+      {userModal.cancelModal && (
+        <CancelModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={() => closeModal("cancelModal")}
+        />
+      )}
+      {userModal.extendModal && (
+        <ExtendModal
+          onClose={() => closeModal("extendModal")}
+          cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
     </CabinetDetailAreaStyled>
   );
 };
@@ -148,16 +267,22 @@ const NotSelectedStyled = styled.div`
 
 const CabinetDetailAreaStyled = styled.div`
   height: 100%;
+  max-width: 330px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 `;
 
-const CabiLogoStyled = styled.img`
+const CabiLogoStyled = styled.div`
   width: 35px;
   height: 35px;
   margin-bottom: 10px;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
@@ -190,26 +315,89 @@ const CabinetRectangleStyled = styled.div<{
   border-radius: 10px;
   margin-top: 15px;
   margin-bottom: 3vh;
-  background-color: ${(props) => cabinetStatusColorMap[props.cabinetStatus]};
-  ${(props) =>
-    props.isMine &&
-    css`
-      background-color: var(--mine);
-    `};
-  font-size: 32px;
+  background-color: ${({ cabinetStatus, isMine }) =>
+    isMine ? "var(--mine)" : cabinetStatusColorMap[cabinetStatus]};
+
+  font-size: 2rem;
   color: ${(props) =>
     props.isMine
       ? cabinetLabelColorMap["MINE"]
       : cabinetLabelColorMap[props.cabinetStatus]};
   text-align: center;
+
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "IN_SESSION" &&
+    css`
+      border: 2px solid var(--main-color);
+    `}
+
+  ${({ cabinetStatus }) =>
+    cabinetStatus === "PENDING" &&
+    css`
+      border: 5px double var(--white);
+      line-height: 70px;
+    `}
 `;
 
-const CabinetInfoButtonsContainerStyled = styled.div`
+export const DetailStyled = styled.p`
+  margin-top: 20px;
+  letter-spacing: -0.02rem;
+  line-height: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 300;
+  white-space: break-spaces;
+`;
+
+const HoverBox = styled.div<{
+  canUseExtendTicket?: boolean;
+}>`
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  top: -120%;
+  width: 270px;
+  height: 80px;
+  padding: 10px;
+  background-color: rgba(73, 73, 73, 0.99);
+  border-radius: 10px;
+  box-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.5);
+  font-size: 0.875rem;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  transition: opacity 0.3s ease;
+  line-height: 1.2;
+`;
+
+const ButtonHoverWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  &:hover ${HoverBox} {
+    opacity: 1;
+    visibility: visible;
+  }
+`;
+
+const AlertImgStyled = styled.img`
+  width: 20px;
+  height: 20px;
+  filter: invert(99%) sepia(100%) saturate(3%) hue-rotate(32deg)
+    brightness(104%) contrast(100%);
+`;
+
+const CabinetInfoButtonsContainerStyled = styled.div<{
+  canUseExtendTicket?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  position: relative;
   align-items: center;
-  max-height: 210px;
+  max-height: 320px;
   margin: 3vh 0;
   width: 100%;
 `;
@@ -221,6 +409,40 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   line-height: 28px;
   white-space: pre-line;
   text-align: center;
+`;
+
+const PendingMessageStyled = styled.p`
+  font-size: 1rem;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 26px;
+`;
+
+const ButtonContainerStyled = styled.button`
+  max-width: 240px;
+  width: 100%;
+  height: 60px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  ${(props) =>
+    props.theme === "line" &&
+    css`
+      background: var(--white);
+      color: var(--main-color);
+      border: 1px solid var(--main-color);
+    `}
+  @media (max-height: 745px) {
+    margin-bottom: 8px;
+  }
 `;
 
 export default CabinetInfoArea;

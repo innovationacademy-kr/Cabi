@@ -3,6 +3,7 @@ import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
 import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
 interface IBuildingListItem {
@@ -34,7 +35,7 @@ const TopNav: React.FC<{
   buildingsList: Array<string>;
   buildingClicked: boolean;
   setBuildingClicked: React.Dispatch<boolean>;
-  onClickLogo: React.MouseEventHandler<HTMLImageElement>;
+  onClickLogo: React.MouseEventHandler<SVGSVGElement>;
   setCurrentBuildingName: SetterOrUpdater<string>;
   isAdmin?: boolean;
 }> = (props) => {
@@ -57,12 +58,7 @@ const TopNav: React.FC<{
     <TopNavContainerStyled id="topNavWrap">
       <LogoStyled id="topNavLogo" className="cabiButton">
         <LogoDivStyled>
-          <img
-            className="cabiButton"
-            onClick={onClickLogo}
-            src="/src/assets/images/logo.svg"
-            alt=""
-          />
+          <LogoImg className="cabiButton" onClick={onClickLogo} />
         </LogoDivStyled>
         <BuildingSelectBoxStyled ref={buildingDom} className="cabiButton">
           <div
@@ -96,9 +92,10 @@ const TopNavContainerStyled = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--main-color);
+  background-color: white;
+  border-bottom: 1px solid #bcbcbc;
   padding: 0 28px;
-  color: var(--white);
+  color: var(--gray-color);
   z-index: 10;
 `;
 
@@ -111,12 +108,17 @@ const LogoDivStyled = styled.div`
   width: 35px;
   height: 35px;
   cursor: pointer;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 const BuildingSelectBoxStyled = styled.span`
   position: relative;
   margin-left: 40px;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-family: var(--building-font);
   cursor: pointer;
   & > div {

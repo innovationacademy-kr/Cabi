@@ -18,4 +18,9 @@ public class CustomServiceException extends RuntimeException {
     public CustomExceptionStatus getStatus() {
         return status;
     }
+
+    @Override
+    public String getMessage() {
+    	return status.getMessage();
+    }
 }

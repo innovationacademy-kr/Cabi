@@ -30,6 +30,10 @@ LentPolicyStatus {
 	 */
 	BROKEN_CABINET,
 	/**
+	 * 대여 가능하도록 풀릴 사물함
+	 */
+	PENDING_CABINET,
+	/**
 	 * 내부 에러
 	 */
 	INTERNAL_ERROR,
@@ -46,7 +50,9 @@ LentPolicyStatus {
 	 */
 	ALL_BANNED_USER,
 	/**
-	 * share 벤 기록(패널티)이 있음
+	 * shareCode를 3회 이상 틀린 유저
 	 */
-	SHARE_BANNED_USER, BLACKHOLED_USER,
+	SHARE_BANNED_USER,
+	BLACKHOLED_USER,
+
 }

@@ -41,3 +41,6 @@ application*.yml
 !application.yml
 
 **/static/docs
+
+### Firebase ###
+*firebase*.json

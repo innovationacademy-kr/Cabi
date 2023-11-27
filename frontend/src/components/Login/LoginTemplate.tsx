@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import { ReactComponent as LoginImg } from "@/assets/images/loginImg.svg";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 
 const LoginTemplate = (props: {
   url: string;
@@ -23,7 +25,7 @@ const LoginTemplate = (props: {
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled>
-          <img src={imgSrc} alt="" />
+          <LoginImg fill="var(--main-color)" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
@@ -35,7 +37,7 @@ const LoginTemplate = (props: {
       <RightSectionStyled className="rightLoginPage">
         <LoginCardStyled className="modal">
           <CardLogoStyled>
-            <img src="/src/assets/images/logo.svg" alt="" />
+            <LogoImg />
           </CardLogoStyled>
           <CardTitleBoxStyled>
             <CardTitleStyled>{pageTitle}</CardTitleStyled>
@@ -128,6 +130,11 @@ const LoginCardStyled = styled.div`
 const CardLogoStyled = styled.div`
   width: 70px;
   height: 70px;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 const CardTitleBoxStyled = styled.div`

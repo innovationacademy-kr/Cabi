@@ -5,6 +5,8 @@ import styled from "styled-components";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import { additionalModalType } from "@/assets/data/maps";
+import { ReactComponent as AdminLoginImg } from "@/assets/images/adminLoginImg.svg";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import { axiosAdminAuthLogin } from "@/api/axios/axios.custom";
 
 const AdminLoginTemplate = (props: {
@@ -66,7 +68,7 @@ const AdminLoginTemplate = (props: {
           </LoginTitleStyled>
         </TopContentsStyled>
         <LoginImgStyled>
-          <img src={imgSrc} alt="" />
+          <AdminLoginImg fill="var(--main-color)" />
         </LoginImgStyled>
         <BottomContentsStyled>
           <p>
@@ -78,7 +80,7 @@ const AdminLoginTemplate = (props: {
       <RightSectionStyled className="rightLoginPage">
         <LoginCardStyled className="modal">
           <CardLogoStyled>
-            <img src="/src/assets/images/logo.svg" alt="" />
+            <LogoImg />
           </CardLogoStyled>
           <CardTitleBoxStyled>
             <CardTitleStyled>{pageTitle}</CardTitleStyled>
@@ -212,6 +214,11 @@ const LoginCardStyled = styled.div`
 const CardLogoStyled = styled.div`
   width: 70px;
   height: 70px;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 const CardTitleBoxStyled = styled.div`
@@ -241,7 +248,7 @@ const CardInputStyled = styled.input<{ isFocus: boolean }>`
   text-align: left;
   padding-left: 15px;
   font-family: var(--main-font);
-  font-size: 14px;
+  font-size: 0.875rem;
   letter-spacing: 0.05rem;
   width: 100%;
   height: 48px;

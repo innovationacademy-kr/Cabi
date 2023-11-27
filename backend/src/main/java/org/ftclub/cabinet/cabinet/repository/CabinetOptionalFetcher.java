@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -38,15 +39,27 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findById(cabinetId).orElse(null);
 	}
 
-	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(String building, Integer floor) {
-		log.debug("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building, floor);
-		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building, floor).stream()
+	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(
+			String building, Integer floor) {
+		log.debug("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building,
+				floor);
+		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building,
+						floor).stream()
 				.map(result -> {
 					Cabinet cabinet = (Cabinet) result[0];
 					LentHistory lentHistory = (LentHistory) result[1];
 					User user = (User) result[2];
 					return cabinetMapper.toActiveCabinetInfoEntitiesDto(cabinet, lentHistory, user);
 				}).collect(Collectors.toList());
+	}
+
+	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor2(
+			String building, Integer floor) {
+		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+	}
+
+	public List<Cabinet> findCabinetsByBuildingAndFloor2(String building, Integer floor) {
+		return cabinetRepository.findAllCabinetsByBuildingAndFloor(building, floor);
 	}
 
 	/**
@@ -77,7 +90,40 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor);
 	}
 
+	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
+			CabinetStatus cabinetStatus,
+			LocalDateTime currentDate) {
+		log.debug("Called findAllCabinetsByCabinetStatusAndBeforeEndedAt: {}, {}",
+				cabinetStatus, currentDate);
+		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus,
+				currentDate);
+	}
+
+	public Page<Cabinet> findPaginationByLentType(LentType lentType, PageRequest pageable) {
+		log.debug("Called findPaginationByLentType: {}", lentType);
+		return cabinetRepository.findPaginationByLentType(lentType, pageable);
+	}
+
+	public Page<Cabinet> findPaginationByStatus(CabinetStatus status, PageRequest pageable) {
+		log.debug("Called findPaginationByStatus: {}", status);
+		return cabinetRepository.findPaginationByStatus(status, pageable);
+	}
+
+	public Page<Cabinet> findPaginationByVisibleNum(Integer visibleNum, PageRequest pageable) {
+		log.debug("Called findPaginationByVisibleNum: {}", visibleNum);
+		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
+	}
+
+	public List<Cabinet> findAllCabinetsByLocation(Location location) {
+		log.debug("Called findAllCabinetsByLocation: {}", location);
+		return cabinetRepository.findAllCabinetsByLocation(location);
+	}
+
+	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
+		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
+	}
 	/*-------------------------------------------GET--------------------------------------------*/
+
 
 	/**
 	 * 사물함 ID로 변경 사항이 예정된 사물함을 찾습니다.
@@ -149,27 +195,7 @@ public class CabinetOptionalFetcher {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
-	public Page<Cabinet> findPaginationByLentType(LentType lentType, PageRequest pageable) {
-		log.debug("Called findPaginationByLentType: {}", lentType);
-		return cabinetRepository.findPaginationByLentType(lentType, pageable);
-	}
-
-	public Page<Cabinet> findPaginationByStatus(CabinetStatus status, PageRequest pageable) {
-		log.debug("Called findPaginationByStatus: {}", status);
-		return cabinetRepository.findPaginationByStatus(status, pageable);
-	}
-
-	public Page<Cabinet> findPaginationByVisibleNum(Integer visibleNum, PageRequest pageable) {
-		log.debug("Called findPaginationByVisibleNum: {}", visibleNum);
-		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
-	}
-
-	public List<Cabinet> findAllCabinetsByLocation(Location location) {
-		log.debug("Called findAllCabinetsByLocation: {}", location);
-		return cabinetRepository.findAllCabinetsByLocation(location);
-	}
-
-	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
-		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
+	public List<Cabinet> findAllCabinetsByBuilding(String building) {
+		return cabinetRepository.findAllCabinetsByBuilding(building);
 	}
 }

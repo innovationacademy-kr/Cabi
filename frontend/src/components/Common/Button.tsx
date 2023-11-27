@@ -6,6 +6,8 @@ interface ButtonInterface {
   text: string;
   theme: string;
   disabled?: boolean;
+  iconSrc?: string;
+  iconAlt?: string;
 }
 
 const Button = (props: ButtonInterface) => {
@@ -64,14 +66,14 @@ const ButtonContainerStyled = styled.button`
       color: var(--gray-color);
       border: 1px solid var(--gray-color);
     `}
-    ${(props) =>
+  ${(props) =>
     props.theme === "smallGrayLine" &&
     css`
       max-width: 200px;
       height: 40px;
       background: var(--white);
       color: var(--gray-color);
-      font-size: 14px;
+      font-size: 0.875rem;
       border: 1px solid var(--gray-color);
     `}
 

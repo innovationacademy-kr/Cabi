@@ -19,6 +19,7 @@ sourceCompatibility = '11'
 
 ext {
     snippetsDir = file('build/generated-snippets')
+    snippetsDir.mkdirs()
     outputDocs = file('src/main/resources/static/docs')
 }
 
@@ -53,15 +54,19 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-    //  Monitoring
+    // Monitoring
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-core:1.11.2'
     implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
 
     // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
@@ -69,7 +74,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
-    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.9'
@@ -92,6 +96,20 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
+tasks.register('copyMainConfig', Copy) {
+    from '../config/backend/src/main/resources'
+    into 'src/main/resources'
+}
+
+tasks.named('processResources') {
+    dependsOn 'copyMainConfig'
+}
+
+tasks.named('compileJava') {
+    dependsOn 'compileQuerydsl'
+}
+
+
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
@@ -105,15 +123,15 @@ asciidoctor {
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
 }
-
-tasks.register('copyDocument', Copy) {
-    dependsOn asciidoctor
-    from file("${asciidoctor.outputDir}")
-    into file("${outputDocs}")
-}
+//
+//tasks.register('copyDocument', Copy) {
+//    dependsOn asciidoctor
+//    from file("${asciidoctor.outputDir}")
+//    into file("${outputDocs}")
+//}
 
 build {
-    dependsOn copyDocument
+//    dependsOn copyDocument
 }
 
 jar {
