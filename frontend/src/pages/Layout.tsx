@@ -42,9 +42,11 @@ const Layout = (): JSX.Element => {
 
   const getMyInfo = async () => {
     try {
-      const { data: myInfo, headers: headers } = await axiosMyInfo();
-      console.log(headers.get("Date"));
-      setServerTime(new Date(headers.get("Date"))); // 접속 후 최초 서버 시간을 가져옴
+      const {
+        data: myInfo,
+        headers: { date: serverTime },
+      } = await axiosMyInfo();
+      setServerTime(new Date(serverTime)); // 접속 후 최초 서버 시간을 가져옴
       setMyInfoData(myInfo);
       setUser(myInfo);
       setIsValidToken(true);
