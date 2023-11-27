@@ -50,10 +50,10 @@ const PendingPage = () => {
 
   return (
     <WrapperStyled>
-      <HeaderStyled>오픈 예정 사물함</HeaderStyled>
-      <SubHeaderStyled>
+      <HeaderStyled>사용 가능 사물함</HeaderStyled>
+      {/* <SubHeaderStyled>
         <span>매일 오후 1시</span> 일괄적으로 오픈됩니다.{" "}
-      </SubHeaderStyled>
+      </SubHeaderStyled> */}
       <Timer observeOpenTime={() => setIsOpenTime(true)} />
       {isLoaded && pendingCabinets ? (
         Object.entries(pendingCabinets).map(([key, value]) => (
