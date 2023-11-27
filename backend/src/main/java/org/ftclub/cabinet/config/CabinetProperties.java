@@ -24,4 +24,6 @@ public class CabinetProperties {
 	private Long shareMinUserCount;
 	@Value("${spring.cabinet.lent.limit.share.max-user-count}")
 	private Long shareMaxUserCount;
+	@Value("${spring.cabinet.in-session.term}")
+	private Integer inSessionTerm;
 }

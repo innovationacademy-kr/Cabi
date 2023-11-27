@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.lent.repository;
 
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,19 @@ public class LentRedis {
 	private final ValueOperations<String, String> valueOperations;
 	private final RedisTemplate<String, String> shadowKeyRedisTemplate;
 	private final ValueOperations<String, String> previousUserRedisTemplate;
+	private final CabinetProperties cabinetProperties;
 
 	@Autowired
 	public LentRedis(RedisTemplate<String, Object> valueHashRedisTemplate,
 			RedisTemplate<String, String> valueRedisTemplate,
 			RedisTemplate<String, String> shadowKeyRedisTemplate,
-			RedisTemplate<String, String> previousUserRedisTemplate) {
+			RedisTemplate<String, String> previousUserRedisTemplate,
+			CabinetProperties cabinetProperties) {
 		this.valueOperations = valueRedisTemplate.opsForValue();
 		this.valueHashOperations = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyRedisTemplate = shadowKeyRedisTemplate;
 		this.previousUserRedisTemplate = previousUserRedisTemplate.opsForValue();
+		this.cabinetProperties = cabinetProperties;
 	}
 
 	/**
@@ -111,7 +115,8 @@ public class LentRedis {
 		shadowKeyRedisTemplate.opsForValue().set(shadowKey, shareCode.toString());
 		// 해당 키가 처음 생성된 것이라면 timeToLive 설정
 		log.debug("called setShadowKey: {}, shareCode: {}", shadowKey, shareCode);
-		shadowKeyRedisTemplate.expire(shadowKey, 30, TimeUnit.SECONDS);
+		shadowKeyRedisTemplate.expire(shadowKey, cabinetProperties.getInSessionTerm(), TimeUnit.MINUTES);
+//		shadowKeyRedisTemplate.expire(shadowKey, 30, TimeUnit.SECONDS);
 	}
 
 	public Boolean isShadowKey(Long cabinetId) {
