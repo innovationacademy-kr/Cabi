@@ -18,6 +18,7 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
+import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
 import org.ftclub.cabinet.user.domain.LentExtensionType;
@@ -80,22 +81,25 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	public List<LentExtensionResponseDto> getActiveLentExtensionList(
 			UserSessionDto userSessionDto) {
 		log.debug("Called getLentExtensionList {}", userSessionDto.getName());
-		return lentExtensionOptionalFetcher.findLentExtensionByUserId(userSessionDto.getUserId())
-				.parallelStream()
-				.filter(lentExtension -> lentExtension.getUsedAt() == null &&
-						lentExtension.getExpiredAt().isAfter(LocalDateTime.now()))
-				.map(userMapper::toLentExtensionResponseDto)
-				.collect(Collectors.toList());
+
+		LentExtensions lentExtensions = LentExtensions.builder()
+				.lentExtensions(lentExtensionOptionalFetcher.findActiveLentExtensionsByUserId(
+						userSessionDto.getUserId())).build();
+
+		return lentExtensions.getLentExtensions().stream()
+				.map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
 	}
 
 	@Override
 	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
 		LentExtensionResponseDto lentExtensionResponseDto = null;
-		LentExtension activeLentExtensionByUserId = lentExtensionOptionalFetcher.findActiveLentExtensionByUserId(
+		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findActiveLentExtensionsByUserId(
 				userSessionDto.getUserId());
-		if (activeLentExtensionByUserId != null) {
+		LentExtensions lentExtensions = LentExtensions.builder()
+				.lentExtensions(activeLentExtensionsByUserId).build();
+		if (lentExtensions.hasActiveLentExtensions()) {
 			lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
-					activeLentExtensionByUserId);
+					lentExtensions.getImminentActiveLentExtension());
 		}
 		return lentExtensionResponseDto;
 	}
@@ -112,13 +116,11 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called useLentExtension {}", username);
 
 		List<LentExtension> findLentExtension =
-				lentExtensionOptionalFetcher.findLentExtensionByUserId(userId)
-						.stream()
-						.filter(lentExtension ->
-								lentExtension.getExpiredAt().isAfter(LocalDateTime.now())
-										&& lentExtension.getUsedAt() == null)
-						.collect(Collectors.toList());
-		if (findLentExtension.isEmpty()) {
+				lentExtensionOptionalFetcher.findLentExtensionByUserId(userId);
+
+		LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
+				.build();
+		if (!lentExtensions.hasActiveLentExtensions()) {
 			throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
 		}
 
@@ -127,7 +129,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 				cabinet.getCabinetId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-		LentExtension lentExtension = findLentExtension.get(0);
+		LentExtension lentExtension = lentExtensions.getImminentActiveLentExtension();
 		lentExtension.use();
 		// 연장
 		activeLentHistories

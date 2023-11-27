@@ -27,5 +27,5 @@ public interface LentExtensionRepository extends JpaRepository<LentExtension, Lo
             "WHERE le.userId =:userId ")
     List<LentExtension> findAllByUserId(@Param("userId") Long userId);
 
-    Optional<LentExtension> findByUserIdAndUsedAtIsNull(@Param("userId") Long userId);
+    List<LentExtension> findAllByUserIdAndUsedAtIsNull(@Param("userId") Long userId);
 }
