@@ -39,7 +39,7 @@ const FloorContainer = ({
         </FlootCabinetsContainerStyled>
       ) : (
         <NoPendingCabinetMessageStyled isToggled={isToggled}>
-          <p>해당 층에는 오픈 예정인 사물함이 없습니다 </p>
+          <p>해당 층에는 사용 가능한 사물함이 없습니다 </p>
           <img src="/src/assets/images/sadCcabi.png" alt="noPending" />
         </NoPendingCabinetMessageStyled>
       )}
