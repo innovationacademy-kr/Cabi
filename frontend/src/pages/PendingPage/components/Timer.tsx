@@ -10,7 +10,7 @@ const Timer = ({ observeOpenTime }: { observeOpenTime: () => void }) => {
 
   useEffect(() => {
     if (serverTime.toLocaleTimeString() === openTime) observeOpenTime();
-  }, [serverTime]); //
+  }, [serverTime]);
 
   const formattedTime = serverTime.toLocaleTimeString().substring(2, 11);
 

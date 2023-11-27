@@ -14,7 +14,9 @@ const PendingPage = () => {
   >([[]]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isOpenTime, setIsOpenTime] = useState<boolean>(false);
-  const [isCurrentSectionRender] = useRecoilState(isCurrentSectionRenderState);
+  const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
+    isCurrentSectionRenderState
+  );
 
   const getPendingCabinets = async () => {
     try {
@@ -36,6 +38,7 @@ const PendingPage = () => {
   useEffect(() => {
     // CabinetInfoArea 컴포넌트에서 사물함 정보가 갱신되면 사물함 정보를 다시 가져온다.
     getPendingCabinets();
+    setIsCurrentSectionRender(false);
   }, [isCurrentSectionRender]);
 
   useEffect(() => {
