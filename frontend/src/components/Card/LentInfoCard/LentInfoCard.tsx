@@ -15,8 +15,8 @@ import { formatDate } from "@/utils/dateUtils";
 const calculateFontSize = (userCount: number): string => {
   const baseSize = 1;
   if (userCount === 0) return `${baseSize}rem`;
-  const decrement = 0.1;
-  const minSize = 0.7;
+  const decrement = 0.13335;
+  const minSize = 0.59;
   const calculatedSize = Math.max(
     baseSize - (userCount - 1) * decrement,
     minSize
