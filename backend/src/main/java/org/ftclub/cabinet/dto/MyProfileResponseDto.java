@@ -19,7 +19,7 @@ public class MyProfileResponseDto {
 	private final Long cabinetId;
 	private final LocalDateTime unbannedAt;
 	private final String date = LocalDateTime.now().format(
-			DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US)
+			DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss 'KST'", Locale.US)
 	);
 	private final LentExtensionResponseDto lentExtensionResponseDto;
 }
