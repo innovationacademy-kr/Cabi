@@ -81,4 +81,8 @@ public class LentExtension {
     public void use() {
         this.usedAt = LocalDateTime.now();
     }
+
+    public int compareTo(LentExtension lentExtension) {
+        return this.expiredAt.compareTo(lentExtension.expiredAt);
+    }
 }
