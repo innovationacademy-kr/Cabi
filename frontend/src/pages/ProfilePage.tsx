@@ -40,7 +40,7 @@ const ProfilePage = () => {
     setTimeout(() => {
       setIsLoading(false);
     }, 350);
-  }, []);
+  }, [myInfo]);
 
   return (
     <>
