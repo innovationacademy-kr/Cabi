@@ -7,16 +7,21 @@ import Timer from "@/pages/PendingPage/components/Timer";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import { axiosGetPendingCabinets } from "@/api/axios/axios.custom";
+import useDebounce from "@/hooks/useDebounce";
 
 const PendingPage = () => {
   const [pendingCabinets, setPendingCabinets] = useState<
     CabinetPreviewInfo[][]
   >([[]]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isOpenTime, setIsOpenTime] = useState<boolean>(false);
   const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
     isCurrentSectionRenderState
   );
+  const { debounce } = useDebounce();
+
+  const isShowingLoadingAnimation = !isRefreshing && isLoaded;
 
   const getPendingCabinets = async () => {
     try {
@@ -26,6 +31,18 @@ const PendingPage = () => {
     } catch (error) {
       throw error;
     }
+  };
+
+  const refreshPendingCabinets = () => {
+    setIsRefreshing(true);
+    debounce(
+      "refresh",
+      () => {
+        getPendingCabinets();
+        setIsRefreshing(false);
+      },
+      500
+    );
   };
 
   useEffect(() => {
@@ -51,11 +68,16 @@ const PendingPage = () => {
   return (
     <WrapperStyled>
       <HeaderStyled>사용 가능 사물함</HeaderStyled>
-      {/* <SubHeaderStyled>
-        <span>매일 오후 1시</span> 일괄적으로 오픈됩니다.{" "}
-      </SubHeaderStyled> */}
+      <SubHeaderStyled>
+        <h2>
+          <span>매일 오후 1시</span> 사용 가능한 사물함이 업데이트됩니다.
+        </h2>
+        <RefreshButtonStyled onClick={refreshPendingCabinets}>
+          <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+        </RefreshButtonStyled>
+      </SubHeaderStyled>
       <Timer observeOpenTime={() => setIsOpenTime(true)} />
-      {isLoaded && pendingCabinets ? (
+      {isShowingLoadingAnimation && pendingCabinets ? (
         Object.entries(pendingCabinets).map(([key, value]) => (
           <FloorContainer
             key={key}
@@ -85,7 +107,10 @@ const HeaderStyled = styled.h1`
   margin-top: 50px;
 `;
 
-const SubHeaderStyled = styled.h2`
+const SubHeaderStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   font-size: 1.2rem;
   color: var(--lightpurple-color);
@@ -97,6 +122,25 @@ const SubHeaderStyled = styled.h2`
     font-weight: 700;
     text-decoration: underline;
   }
+`;
+
+const RefreshButtonStyled = styled.button`
+  margin-top: 30px;
+  margin-bottom: 20px;
+  background-color: transparent;
+  width: 35px;
+  height: 0px;
+  img {
+    width: 35px;
+    height: 35px;
+  }
+  &:hover {
+    opacity: 0.7;
+  }
+  &:active {
+    transform: scale(0.8);
+  }
+  transition: all 0.3s ease;
 `;
 
 const FooterStyled = styled.footer`
