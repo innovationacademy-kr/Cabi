@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 
 @Service
 @RequiredArgsConstructor
@@ -396,7 +396,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<Cabinet> allCabinets = cabinetOptionalFetcher.findAllCabinetsByBuilding(BUILDING_SAEROM);
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap = allCabinets.parallelStream()
 				.filter(cabinet -> !cabinet.isLentType(LentType.CLUB)
-						&& (cabinet.isStatus(PENDING)))
+						&& (cabinet.isStatus(AVAILABLE)))
 				.collect(groupingBy(cabinet -> cabinet.getCabinetPlace().getLocation().getFloor(),
 						mapping(cabinet -> cabinetMapper.toCabinetPreviewDto(cabinet, 0, null),
 								Collectors.toList())));
