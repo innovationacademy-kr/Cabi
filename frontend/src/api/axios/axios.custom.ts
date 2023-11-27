@@ -17,7 +17,6 @@ const axiosMyInfoURL = "/v4/users/me";
 export const axiosMyInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyInfoURL);
-    console.log(response.headers.get("Date"));
     return response;
   } catch (error) {
     throw error;
