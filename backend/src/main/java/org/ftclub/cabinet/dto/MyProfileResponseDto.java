@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.dto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.ftclub.cabinet.user.domain.LentExtension;
@@ -16,5 +18,8 @@ public class MyProfileResponseDto {
 	private final String name;
 	private final Long cabinetId;
 	private final LocalDateTime unbannedAt;
+	private final String date = LocalDateTime.now().format(
+			DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss 'KST'", Locale.US)
+	);
 	private final LentExtensionResponseDto lentExtensionResponseDto;
 }

@@ -44,9 +44,11 @@ const Layout = (): JSX.Element => {
     try {
       const {
         data: myInfo,
-        headers: { date: serverTime },
+        data: { date: serverTime },
       } = await axiosMyInfo();
-      setServerTime(new Date(serverTime)); // 접속 후 최초 서버 시간을 가져옴
+
+      const formattedServerTime = serverTime.split(" KST")[0];
+      setServerTime(new Date(formattedServerTime)); // 접속 후 최초 서버 시간을 가져옴
       setMyInfoData(myInfo);
       setUser(myInfo);
       setIsValidToken(true);
