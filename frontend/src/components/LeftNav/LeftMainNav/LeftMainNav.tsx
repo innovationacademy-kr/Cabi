@@ -70,7 +70,7 @@ const LeftMainNav = ({
             }
             onClick={onClickPendingButton}
           >
-            오픈예정
+            사용가능
           </TopBtnStyled>
         </TopBtnsStyled>
       </TopSectionStyled>
