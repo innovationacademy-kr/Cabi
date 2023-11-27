@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * 모든 응답에 X-Current-Time 헤더를 추가하는 필터
+ */
 @Component
 @Order(1)
 @WebFilter("/*")
@@ -22,16 +25,8 @@ public class TimeResponseFilter implements Filter {
 			throws IOException, ServletException {
 
 		String currentTime = LocalDateTime.now().toString();
-		// ServletResponse를 HttpServletResponse로 캐스트합니다.
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-
-		// 응답 헤더에 현재 시간을 추가합니다.
 		httpServletResponse.addHeader("X-Current-Time", currentTime);
-
-//		 다음 필터 또는 서블릿으로 요청을 전달합니다.
-//		chain.doFilter(request, httpServletResponse);
-
-		// 다음 필터 또는 서블릿으로 요청을 전달합니다.
 		chain.doFilter(request, response);
 	}
 
