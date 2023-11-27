@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { set } from "react-ga";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
@@ -19,7 +20,8 @@ const PendingPage = () => {
   const getPendingCabinets = async () => {
     try {
       const response = await axiosGetPendingCabinets();
-      setPendingCabinets(response);
+      const pendingCabinets = response.data.cabinetInfoResponseDtos;
+      setPendingCabinets(pendingCabinets);
     } catch (error) {
       throw error;
     }
@@ -33,10 +35,12 @@ const PendingPage = () => {
   }, []);
 
   useEffect(() => {
+    // CabinetInfoArea 컴포넌트에서 사물함 정보가 갱신되면 사물함 정보를 다시 가져온다.
     getPendingCabinets();
   }, [isCurrentSectionRender]);
 
   useEffect(() => {
+    // 오프 타임이 되면 업데이트 된 사물함 정보를 다시 가져온다.
     if (isOpenTime) {
       getPendingCabinets();
     }
@@ -46,7 +50,7 @@ const PendingPage = () => {
     <WrapperStyled>
       <HeaderStyled>오픈 예정 사물함</HeaderStyled>
       <SubHeaderStyled>
-        <span>매일 오후 1시</span> 일괄적으로 오픈됩니다.
+        <span>매일 오후 1시</span> 일괄적으로 오픈됩니다.{" "}
       </SubHeaderStyled>
       <Timer observeOpenTime={() => setIsOpenTime(true)} />
       {isLoaded && pendingCabinets ? (

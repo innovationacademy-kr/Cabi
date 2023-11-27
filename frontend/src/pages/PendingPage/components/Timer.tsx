@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { serverTimeState } from "@/recoil/atoms";
 
 const openTime = "오후 1:00:00";
 
 const Timer = ({ observeOpenTime }: { observeOpenTime: () => void }) => {
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [serverTime] = useRecoilState<Date>(serverTimeState);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 500);
+    if (serverTime.toLocaleTimeString() === openTime) observeOpenTime();
+  }, [serverTime]); //
 
-    if (currentTime.toLocaleTimeString() === openTime) observeOpenTime();
-
-    return () => clearInterval(intervalId);
-  }, [currentTime, observeOpenTime]); //
-
-  const formattedTime = currentTime.toLocaleTimeString().substring(2, 11);
+  const formattedTime = serverTime.toLocaleTimeString().substring(2, 11);
 
   return (
     <>
