@@ -162,3 +162,8 @@ export const selectedClubInfoState = atom<ClubUserDto | null>({
   key: "selectedClub",
   default: null,
 });
+
+export const serverTimeState = atom<Date>({
+  key: "serverTime",
+  default: new Date(),
+});

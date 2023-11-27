@@ -519,3 +519,13 @@ export const axiosCancel = async (cabinetId: number | null): Promise<any> => {
     throw error;
   }
 };
+
+const axiosGetPendingCabinetsURL = "/v4/cabinets/pending";
+export const axiosGetPendingCabinets = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosGetPendingCabinetsURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

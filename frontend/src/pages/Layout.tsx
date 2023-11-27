@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { set } from "react-ga";
 import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
-import { userState } from "@/recoil/atoms";
+import { serverTimeState, userState } from "@/recoil/atoms";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LeftNav from "@/components/LeftNav/LeftNav";
@@ -21,6 +22,7 @@ const Layout = (): JSX.Element => {
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
+  const setServerTime = useSetRecoilState<Date>(serverTimeState);
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +42,11 @@ const Layout = (): JSX.Element => {
 
   const getMyInfo = async () => {
     try {
-      const { data: myInfo } = await axiosMyInfo();
+      const {
+        data: myInfo,
+        headers: { date: serverTime },
+      } = await axiosMyInfo();
+      setServerTime(new Date(serverTime)); // 접속 후 최초 서버 시간을 가져옴
       setMyInfoData(myInfo);
       setUser(myInfo);
       setIsValidToken(true);
@@ -62,6 +68,12 @@ const Layout = (): JSX.Element => {
     if (!token && !isLoginPage) navigate("/login");
     else if (token) {
       getMyInfo();
+      // 서버 시간
+      const serverTimer = setInterval(() => {
+        setServerTime((prevTime) => new Date(prevTime.getTime() + 1000));
+      }, 1000);
+
+      return () => clearInterval(serverTimer);
     }
   }, []);
 

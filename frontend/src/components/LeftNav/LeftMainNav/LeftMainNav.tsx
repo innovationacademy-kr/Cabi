@@ -16,6 +16,7 @@ interface ILeftMainNav {
   onClickSearchButton: React.MouseEventHandler;
   onClickClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
+  onClickPendingButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -30,6 +31,7 @@ const LeftMainNav = ({
   onClickSearchButton,
   onClickClubButton,
   onClickProfileButton,
+  onClickPendingButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -60,6 +62,16 @@ const LeftMainNav = ({
                 {floor + "층"}
               </TopBtnStyled>
             ))}
+          <TopBtnStyled
+            className={
+              pathname.includes("pending")
+                ? "leftNavButtonActive cabiButton"
+                : "cabiButton"
+            }
+            onClick={onClickPendingButton}
+          >
+            오픈예정
+          </TopBtnStyled>
         </TopBtnsStyled>
       </TopSectionStyled>
       <BottomSectionStyled>
