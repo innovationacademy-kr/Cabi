@@ -85,8 +85,10 @@ const LentInfoCard = ({
             </ContentDeatilStyled>
           </CardContentStyled>
           <CardContentStyled>
-            <ContentInfoStyled>남은 기간</ContentInfoStyled>
-            <ContentDeatilStyled>
+            <ContentInfoStyled>
+              {cabinetInfo?.status === "OVERDUE" ? "연체 기간" : "남은 기간"}
+            </ContentInfoStyled>
+            <ContentDeatilStyled status={cabinetInfo.status as CabinetStatus}>
               {cabinetInfo?.expireDate ? `${cabinetInfo.dateLeft}일` : "-"}
             </ContentDeatilStyled>
           </CardContentStyled>

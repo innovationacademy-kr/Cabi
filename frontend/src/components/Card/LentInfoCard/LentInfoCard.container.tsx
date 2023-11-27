@@ -4,6 +4,7 @@ import LentInfoCard from "@/components/Card/LentInfoCard/LentInfoCard";
 import { getDefaultCabinetInfo } from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentDto } from "@/types/dto/lent.dto";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { getRemainingTime } from "@/utils/dateUtils";
 
@@ -21,7 +22,7 @@ export interface MyCabinetInfo {
   expireDate?: Date;
   isLented: boolean;
   previousUserName: string;
-  status: string;
+  status: CabinetStatus;
 }
 
 const findLentInfoByName = (lents: LentDto[], name: string) => {
