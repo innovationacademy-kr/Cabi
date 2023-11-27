@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import { set } from "react-ga";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
+import FloorContainer from "@/pages/PendingPage/components/FloorContainer";
+import Timer from "@/pages/PendingPage/components/Timer";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
 import { axiosGetPendingCabinets } from "@/api/axios/axios.custom";
-import FloorContainer from "./components/FloorContainer";
-import Timer from "./components/Timer";
 
 const PendingPage = () => {
   const [pendingCabinets, setPendingCabinets] = useState<
