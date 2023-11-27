@@ -39,7 +39,7 @@ const CancelModal: React.FC<{
     isCurrentSectionRenderState
   );
   const cancelDetail = `제한 시간 내 2명 이상이 되면 대여가 완료됩니다.
-대기 취소 하시겠습니까?`;
+대기 취소하시겠습니까?`;
   const tryCancelRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
     try {
