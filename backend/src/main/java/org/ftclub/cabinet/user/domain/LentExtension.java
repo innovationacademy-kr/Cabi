@@ -83,4 +83,8 @@ public class LentExtension {
 	public void delete(LocalDateTime at) {
 		this.deletedAt = at;
 	}
+
+	public boolean isDeleted() {
+		return this.deletedAt == null;
+	}
 }

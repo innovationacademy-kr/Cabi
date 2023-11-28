@@ -1,9 +1,5 @@
 package org.ftclub.cabinet.user.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -18,15 +14,20 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
 import org.ftclub.cabinet.user.domain.LentExtensionType;
+import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -108,7 +109,12 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	@Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
 	public void deleteLentExtension() {
 		log.debug("Called deleteExtension");
-		lentExtensionRepository.deleteAll();
+		LocalDateTime now = LocalDateTime.now();
+		lentExtensionOptionalFetcher.findAllNotExpired().forEach(e -> {
+			if (e.getExpiredAt().isBefore(now)) {
+				e.delete(now);
+			}
+		});
 	}
 
 	@Override
