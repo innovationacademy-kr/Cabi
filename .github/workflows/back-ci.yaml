@@ -18,6 +18,24 @@ jobs:
           java-version: "11"
           distribution: "corretto"
 
+      - name: Setup Dev Environment
+        if: ${{ 'refs/heads/dev' == github.ref }}
+        run: |
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+          echo "S3_BUCKET=dev.cabi-server-deploy" >> $GITHUB_ENV
+          echo "CODEDEPLOY_APP=cabi-dev" >> $GITHUB_ENV
+          echo "CODEDEPLOY_GROUP=cabi-dev-group" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=ccabi/cabi-dev" >> $GITHUB_ENV
+
+      - name: Setup Main Environment
+        if: ${{ 'refs/heads/main' == github.ref }}
+        run: |
+          echo "ENVIRONMENT=main" >> $GITHUB_ENV
+          echo "S3_BUCKET=main.cabi-server-deploy" >> $GITHUB_ENV
+          echo "CODEDEPLOY_APP=cabi-main" >> $GITHUB_ENV
+          echo "CODEDEPLOY_GROUP=cabi-main-group" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=ccabi/cabi-main" >> $GITHUB_ENV
+
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -36,50 +54,55 @@ jobs:
           ./gradlew build -x test
         shell: bash
 
+      - name: Log in to Docker Hub
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_IMAGE }}
+          tags: latest
+
+      - name: Build and push Docker image
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./deploy-${{ env.ENVIRONMENT }}/pinpoint-application/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
       - name: Configure AWS credentials
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Dev S3에 업로드
-        if: ${{ github.ref == 'refs/heads/dev' }}
+      - name: Upload to S3 and deploy
+        if: ${{ format('refs/heads/{0}', env.ENVIRONMENT) == github.ref }}
         run: |
-          echo "${{ secrets.PINPOINT_APPLICATION_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-application/.env
-          echo "${{ secrets.PINPOINT_AGENT_DEV_ENV }}" | base64 --decode > deploy-dev/pinpoint-agent/.env
+          env_file="deploy-${{ env.ENVIRONMENT }}/pinpoint-application/.env"
+          agent_env_file="deploy-${{ env.ENVIRONMENT }}/pinpoint-agent/.env"
+          echo "${{ secrets[format('PINPOINT_APPLICATION_{0}_ENV', env.ENVIRONMENT)] }}" | base64 --decode > $env_file
+          echo "${{ secrets[format('PINPOINT_AGENT_{0}_ENV', env.ENVIRONMENT)] }}" | base64 --decode > $agent_env_file
 
-          cp backend/build/libs/cabinet-*.jar deploy-dev/pinpoint-application/build
-
-          mkdir -p deploy && cp -r deploy-dev/* deploy/
+          mkdir -p deploy && cp -r deploy-${{ env.ENVIRONMENT }}/* deploy/
           zip -r deploy.zip deploy
 
-          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_DEV_BUCKET_NAME }}/deploy.zip
+          aws s3 cp deploy.zip s3://${{ env.S3_BUCKET }}/deploy.zip
 
           aws deploy create-deployment \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_DEV_APP_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_DEV_GROUP_NAME }} \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_S3_DEV_BUCKET_NAME }},bundleType=zip,key=deploy.zip
-
-      - name: Main S3에 업로드
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: |
-          echo "${{ secrets.PINPOINT_APPLICATION_PROD_ENV }}" | base64 --decode > deploy-main/pinpoint-application/.env
-          echo "${{ secrets.PINPOINT_AGENT_PROD_ENV }}" | base64 --decode > deploy-main/pinpoint-agent/.env
-
-          cp backend/build/libs/cabinet-*.jar deploy-main/pinpoint-application/build
-
-          mkdir -p deploy && cp -r deploy-main/* deploy/
-          zip -r deploy.zip deploy
-
-          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_MAIN_BUCKET_NAME }}/deploy.zip
-
-          aws deploy create-deployment \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_MAIN_APP_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_MAIN_GROUP_NAME }} \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_S3_MAIN_BUCKET_NAME }},bundleType=zip,key=deploy.zip
+            --application-name ${{ ENV.CODEDEPLOY_APP }} \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name ${{ ENV.CODEDEPLOY_GROUP }} \
+            --file-exists-behavior OVERWRITE \
+            --s3-location bucket=${{ env.S3_BUCKET }},bundleType=zip,key=deploy.zip

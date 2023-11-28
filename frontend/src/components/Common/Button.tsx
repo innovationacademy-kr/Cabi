@@ -17,9 +17,6 @@ const Button = (props: ButtonInterface) => {
       theme={props.theme}
       disabled={props.disabled}
     >
-      {props.iconSrc && (
-        <ButtonIconStyled src={props.iconSrc} alt={props.iconAlt || ""} />
-      )}
       {props.text}
     </ButtonContainerStyled>
   );
@@ -76,19 +73,9 @@ const ButtonContainerStyled = styled.button`
       height: 40px;
       background: var(--white);
       color: var(--gray-color);
-      font-size: 14px;
+      font-size: 0.875rem;
       border: 1px solid var(--gray-color);
     `}
-
-  @media (max-height: 745px) {
-    margin-bottom: 8px;
-  }
-`;
-
-const ButtonIconStyled = styled.img`
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
 
   @media (max-height: 745px) {
     margin-bottom: 8px;

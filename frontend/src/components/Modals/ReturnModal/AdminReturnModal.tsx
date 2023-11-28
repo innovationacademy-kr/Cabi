@@ -18,10 +18,10 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { UserInfo } from "@/types/dto/user.dto";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosBundleReturn,
   axiosCabinetById,
@@ -192,17 +192,16 @@ const AdminReturnModal: React.FC<{
   const returnModalContents: IModalContents = isMultiSelect
     ? {
         type: "hasProceedBtn",
-        icon: checkIcon,
         title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
         detail: getBundleReturnDetail(),
         proceedBtnText:
           modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].confirmMessage,
         onClickProceed: tryBundleReturnRequest,
         closeModal: props.closeModal,
+        iconType: IconType.CHECKICON,
       }
     : {
         type: "hasProceedBtn",
-        icon: checkIcon,
         title: modalPropsMap[additionalModalType.MODAL_ADMIN_RETURN].title,
         detail: getReturnDetail(props.lentType!),
         proceedBtnText:
@@ -214,6 +213,7 @@ const AdminReturnModal: React.FC<{
             ? tryShareReturnRequest
             : tryReturnRequest,
         closeModal: props.closeModal,
+        iconType: IconType.CHECKICON,
       };
 
   return (

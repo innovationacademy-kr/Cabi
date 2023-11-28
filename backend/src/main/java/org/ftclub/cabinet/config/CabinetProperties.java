@@ -12,6 +12,8 @@ public class CabinetProperties {
 	private Integer lentTermPrivate;
 	@Value("${spring.cabinet.lent.term.share}")
 	private Integer lentTermShare;
+	@Value("${spring.cabinet.lent.term.share-basic}")
+	private Integer lentTermShareBasic;
 	@Value("${spring.cabinet.lent.term.extend}")
 	private Integer lentExtendTerm;
 	@Value("${spring.cabinet.penalty.day.share}")
@@ -22,4 +24,6 @@ public class CabinetProperties {
 	private Long shareMinUserCount;
 	@Value("${spring.cabinet.lent.limit.share.max-user-count}")
 	private Long shareMaxUserCount;
+	@Value("${spring.cabinet.in-session.term}")
+	private Integer inSessionTerm;
 }

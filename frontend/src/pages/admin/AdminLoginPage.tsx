@@ -7,7 +7,7 @@ const LoginPage = () => {
   return (
     <AdminLoginTemplate
       url={url}
-      pageTitle="42Cabi Admin"
+      pageTitle="Cabi Admin"
       pageSubTitle="관리자 페이지"
       imgSrc="/src/assets/images/adminLoginImg.svg"
     />

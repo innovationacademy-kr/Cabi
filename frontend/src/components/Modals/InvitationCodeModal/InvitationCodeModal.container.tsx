@@ -5,6 +5,7 @@ import {
   isCurrentSectionRenderState,
   myCabinetInfoState,
   targetCabinetInfoState,
+  userState,
 } from "@/recoil/atoms";
 import { IModalContents } from "@/components/Modals/Modal";
 import ModalPortal from "@/components/Modals/ModalPortal";
@@ -14,8 +15,8 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosLentShareId,
@@ -38,34 +39,7 @@ const InvitationCodeModalContainer: React.FC<{
   );
   const setMyLentInfo =
     useSetRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-
-  const loadSharedWrongCodeCounts = () => {
-    const savedData = localStorage.getItem("wrongCodeCounts");
-    if (savedData) {
-      try {
-        const { data, expirationTime } = JSON.parse(savedData);
-        const ExpirationTime = new Date(expirationTime);
-        if (ExpirationTime > new Date()) {
-          return data;
-        } else {
-          localStorage.removeItem("wrongCodeCounts");
-        }
-      } catch (error) {
-        console.error("WrongCodeCounts:", error);
-      }
-    }
-    return {};
-  };
-
-  const saveSharedWrongCodeCounts = (data: any) => {
-    const expirationTime = new Date(
-      new Date().getTime() + 10 * 60 * 1000
-    ).toString();
-    const dataToSave = JSON.stringify({ data, expirationTime });
-    localStorage.setItem("wrongCodeCounts", dataToSave);
-  };
-
-  const [sharedWrongCodeCounts] = useState(loadSharedWrongCodeCounts);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const regex = /^[0-9]{0,4}$/;
@@ -76,15 +50,10 @@ const InvitationCodeModalContainer: React.FC<{
     setCode(e.target.value);
   };
 
-  const updatedCounts = {
-    ...sharedWrongCodeCounts,
-    [String(props.cabinetId)]:
-      (sharedWrongCodeCounts[String(props.cabinetId)] || 0) + 1,
-  };
-
   const tryLentRequest = async () => {
     try {
       await axiosLentShareId(currentCabinetId, code);
+      setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       setModalTitle("공유 사물함 대기열에 입장하였습니다");
 
@@ -100,7 +69,6 @@ const InvitationCodeModalContainer: React.FC<{
       const errorMessage = error.response.data.message;
       setModalTitle(errorMessage);
       setHasErrorOnResponse(true);
-      saveSharedWrongCodeCounts(updatedCounts);
     } finally {
       setShowResponseModal(true);
     }
@@ -108,7 +76,6 @@ const InvitationCodeModalContainer: React.FC<{
 
   const InvititaionCodeModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
     title: modalPropsMap["MODAL_INVITATION_CODE"].title,
     detail: `공유 사물함 입장을 위한
     초대 코드를 입력해 주세요.
@@ -116,9 +83,14 @@ const InvitationCodeModalContainer: React.FC<{
     proceedBtnText: modalPropsMap["MODAL_INVITATION_CODE"].confirmMessage,
     onClickProceed: tryLentRequest,
     renderAdditionalComponent: () => (
-      <PasswordContainer onChange={onChange} password={code} />
+      <PasswordContainer
+        onChange={onChange}
+        password={code}
+        tryLentRequest={tryLentRequest}
+      />
     ),
     closeModal: props.onClose,
+    iconType: IconType.CHECKICON,
   };
 
   return (

@@ -15,4 +15,5 @@ cd /home/ec2-user/deploy/zip/
 cd pinpoint-application
 
 docker compose down --rmi all
+docker compose pull
 docker compose up -d

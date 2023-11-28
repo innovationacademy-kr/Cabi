@@ -1,14 +1,19 @@
 import ExtensionCard from "@/components/Card/ExtensionCard/ExtensionCard";
+import { LentExtensionDto } from "@/types/dto/lent.dto";
 
-const ExtensionCardContainer = ({ extensible }: { extensible: boolean }) => {
+const ExtensionCardContainer = ({
+  extensionInfo,
+}: {
+  extensionInfo: LentExtensionDto | null;
+}) => {
   return (
     <ExtensionCard
-      extensible={extensible}
+      extensionInfo={extensionInfo}
       button={{
-        label: extensible ? "보유중" : "미보유",
+        label: !!extensionInfo ? "보유중" : "미보유",
         onClick: () => {},
         isClickable: false,
-        isExtensible: extensible,
+        isExtensible: !!extensionInfo,
       }}
     />
   );

@@ -124,6 +124,11 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
+  const onClickPendingButton = () => {
+    navigator("pending");
+    closeAll();
+  };
+
   const onClickLogoutButton = (): void => {
     const adminToken = isAdmin ? "admin_" : "";
     if (import.meta.env.VITE_IS_LOCAL === "true") {
@@ -154,6 +159,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickLogoutButton={onClickLogoutButton}
       onClickClubButton={onClickClubButton}
       onClickProfileButton={onClickProfileButton}
+      onClickPendingButton={onClickPendingButton}
       isAdmin={isAdmin}
     />
   );

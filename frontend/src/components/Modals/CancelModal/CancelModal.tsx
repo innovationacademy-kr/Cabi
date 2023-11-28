@@ -14,8 +14,8 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosCancel,
@@ -39,7 +39,7 @@ const CancelModal: React.FC<{
     isCurrentSectionRenderState
   );
   const cancelDetail = `제한 시간 내 2명 이상이 되면 대여가 완료됩니다.
-대기 취소 하시겠습니까?`;
+대기 취소하시겠습니까?`;
   const tryCancelRequest = async (e: React.MouseEvent) => {
     setIsLoading(true);
     try {
@@ -73,7 +73,6 @@ const CancelModal: React.FC<{
 
   const returnModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
     title: modalPropsMap[additionalModalType.MODAL_CANCEL].title,
     detail: cancelDetail,
     proceedBtnText:
@@ -81,6 +80,7 @@ const CancelModal: React.FC<{
     onClickProceed: tryCancelRequest,
     closeModal: props.closeModal,
     isLoading: isLoading,
+    iconType: IconType.CHECKICON,
   };
 
   return (

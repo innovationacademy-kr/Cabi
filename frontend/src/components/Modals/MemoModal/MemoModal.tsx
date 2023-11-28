@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import Button from "@/components/Common/Button";
-import CabinetType from "@/types/enum/cabinet.type.enum";
 import ModalPortal from "@/components/Modals/ModalPortal";
+import CabinetType from "@/types/enum/cabinet.type.enum";
 
 export interface MemoModalInterface {
   cabinetType: CabinetType;
@@ -165,7 +165,7 @@ const ContentItemWrapperStyled = styled.div<{ isVisible: boolean }>`
 `;
 
 const ContentItemTitleStyled = styled.h3`
-  font-size: 18px;
+  font-size: 1.125rem;
   margin-bottom: 8px;
 `;
 
@@ -178,7 +178,7 @@ const ContentItemInputStyled = styled.input<{
   border-radius: 10px;
   text-align: start;
   text-indent: 20px;
-  font-size: 18px;
+  font-size: 1.125rem;
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
   &::placeholder {
@@ -204,7 +204,7 @@ const WriteModeButtonStyled = styled.button<{ mode: string }>`
   padding: 0;
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 17px;
   width: max-content;
   height: auto;

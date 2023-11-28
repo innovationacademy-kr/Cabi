@@ -4,9 +4,11 @@ import styled from "styled-components";
 const PasswordContainer = ({
   onChange,
   password,
+  tryLentRequest,
 }: {
   onChange: React.ChangeEventHandler;
   password: string;
+  tryLentRequest?: () => void;
 }) => {
   const [list, setList] = useState(["", "", "", ""]);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -22,6 +24,12 @@ const PasswordContainer = ({
     setList([...temp]);
     if (inputRef.current) inputRef.current.focus();
   }, [password]);
+
+  const handleEnterPress = () => {
+    console.log(password.length);
+    if (tryLentRequest && password.length == 4) tryLentRequest();
+  };
+
   return (
     <>
       <PasswordStyled>
@@ -36,7 +44,16 @@ const PasswordContainer = ({
           </PasswordNumber>
         ))}
       </PasswordStyled>
-      <Input ref={inputRef} onChange={onChange} maxLength={4} />
+      <Input
+        ref={inputRef}
+        onChange={onChange}
+        maxLength={4}
+        onKeyUp={(e: any) => {
+          if (e.key === "Enter") {
+            handleEnterPress();
+          }
+        }}
+      />
     </>
   );
 };

@@ -14,9 +14,9 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosLentId,
@@ -62,8 +62,7 @@ const LentModal: React.FC<{
         await axiosLentShareId(currentCabinetId, "0");
       else await axiosLentId(currentCabinetId);
       //userCabinetId 세팅
-      if (props.lentType != "SHARE")
-        setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
+      setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
       if (props.lentType == "SHARE")
         setModalTitle("공유 사물함 대기열에 입장하였습니다");
@@ -93,13 +92,13 @@ const LentModal: React.FC<{
 
   const lentModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
     title: modalPropsMap[CabinetStatus.AVAILABLE].title,
     detail: props.lentType === "PRIVATE" ? privateLentDetail : shareLentDetail,
     proceedBtnText: modalPropsMap[CabinetStatus.AVAILABLE].confirmMessage,
     onClickProceed: tryLentRequest,
     closeModal: props.closeModal,
     isLoading: isLoading,
+    iconType: IconType.CHECKICON,
   };
 
   return (

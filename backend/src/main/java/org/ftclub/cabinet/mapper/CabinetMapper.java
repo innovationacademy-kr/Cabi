@@ -4,6 +4,7 @@ import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoDto;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
@@ -11,6 +12,7 @@ import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
@@ -95,4 +97,6 @@ public interface CabinetMapper {
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	CabinetSimpleDto toCabinetSimpleDto(Cabinet cabinet);
 
+	CabinetPendingResponseDto toCabinetPendingResponseDto(
+			Map<Integer, List<CabinetPreviewDto>> cabinetInfoResponseDtos);
 }

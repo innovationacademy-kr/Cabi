@@ -16,8 +16,8 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
@@ -82,7 +82,6 @@ const PasswordCheckModalContainer: React.FC<{
 
   const passwordCheckModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
     title: modalPropsMap["PASSWORD_CHECK"].title,
     detail: `비밀번호는 <strong>1111</strong>로 초기화해서
     반납하시는 것을 권장합니다.`,
@@ -93,6 +92,7 @@ const PasswordCheckModalContainer: React.FC<{
     ),
     closeModal: props.onClose,
     isLoading: isLoading,
+    iconType: IconType.CHECKICON,
   };
 
   return (
