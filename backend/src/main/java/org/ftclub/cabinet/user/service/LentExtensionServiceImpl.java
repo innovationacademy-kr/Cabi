@@ -1,9 +1,5 @@
 package org.ftclub.cabinet.user.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -18,15 +14,20 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
 import org.ftclub.cabinet.user.domain.LentExtensionType;
+import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +84,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called getLentExtensionList {}", userSessionDto.getName());
 
 		LentExtensions lentExtensions = LentExtensions.builder()
-				.lentExtensions(lentExtensionOptionalFetcher.findActiveLentExtensionsByUserId(
+				.lentExtensions(lentExtensionOptionalFetcher.findActiveByUserId(
 						userSessionDto.getUserId())).build();
 
 		return lentExtensions.getLentExtensions().stream()
@@ -93,7 +94,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	@Override
 	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
 		LentExtensionResponseDto lentExtensionResponseDto = null;
-		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findActiveLentExtensionsByUserId(
+		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findActiveByUserId(
 				userSessionDto.getUserId());
 		LentExtensions lentExtensions = LentExtensions.builder()
 				.lentExtensions(activeLentExtensionsByUserId).build();
@@ -106,9 +107,13 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 
 	@Override
 	@Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
-	public void deleteLentExtension() {
+	public void deleteExpiredExtensions() {
 		log.debug("Called deleteExtension");
-		lentExtensionRepository.deleteAll();
+		LocalDateTime now = LocalDateTime.now();
+
+		lentExtensionOptionalFetcher.findAllNotExpiredAndNotDeleted().stream()
+				.filter(e -> e.isExpiredSince(now))
+				.forEach(e -> e.delete(now));
 	}
 
 	@Override
@@ -116,7 +121,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called useLentExtension {}", username);
 
 		List<LentExtension> findLentExtension =
-				lentExtensionOptionalFetcher.findLentExtensionByUserId(userId);
+				lentExtensionOptionalFetcher.findNotDeletedByUserId(userId);
 
 		LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
 				.build();

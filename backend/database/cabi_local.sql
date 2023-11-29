@@ -212,6 +212,7 @@ CREATE TABLE `lent_extension`
     `type`              varchar(32) not null,
     `expired_at`        datetime(6) not null,
     `used_at`           datetime(6) null,
+    `deleted_at`           datetime(6) null,
     PRIMARY KEY (lent_extension_id),
     CONSTRAINT lent_extension_user_user_id_fk
         FOREIGN KEY (user_id) REFERENCES user (user_id)
