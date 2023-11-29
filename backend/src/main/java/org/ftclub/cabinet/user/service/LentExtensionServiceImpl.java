@@ -84,7 +84,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called getLentExtensionList {}", userSessionDto.getName());
 
 		LentExtensions lentExtensions = LentExtensions.builder()
-				.lentExtensions(lentExtensionOptionalFetcher.findActiveLentExtensionsByUserId(
+				.lentExtensions(lentExtensionOptionalFetcher.findActiveByUserId(
 						userSessionDto.getUserId())).build();
 
 		return lentExtensions.getLentExtensions().stream()
@@ -94,7 +94,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	@Override
 	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
 		LentExtensionResponseDto lentExtensionResponseDto = null;
-		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findActiveLentExtensionsByUserId(
+		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findActiveByUserId(
 				userSessionDto.getUserId());
 		LentExtensions lentExtensions = LentExtensions.builder()
 				.lentExtensions(activeLentExtensionsByUserId).build();
@@ -111,13 +111,9 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called deleteExtension");
 		LocalDateTime now = LocalDateTime.now();
 
-		List<LentExtension> allNotExpired = lentExtensionOptionalFetcher.findAllNotExpired();
-		allNotExpired.forEach(e -> {
-			if (e.getExpiredAt().isBefore(now)) {
-				e.delete(now);
-			}
-		});
-		System.out.println(allNotExpired);
+		lentExtensionOptionalFetcher.findAllNotExpiredAndNotDeleted().stream()
+				.filter(e -> e.isExpiredSince(now))
+				.forEach(e -> e.delete(now));
 	}
 
 	@Override
@@ -125,7 +121,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called useLentExtension {}", username);
 
 		List<LentExtension> findLentExtension =
-				lentExtensionOptionalFetcher.findLentExtensionByUserId(userId);
+				lentExtensionOptionalFetcher.findNotDeletedByUserId(userId);
 
 		LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
 				.build();

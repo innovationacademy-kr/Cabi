@@ -21,33 +21,35 @@ public class LentExtensionOptionalFetcher {
 
 	/*-------------------------------------------FIND-------------------------------------------*/
 	@Transactional(readOnly = true)
-	public Page<LentExtension> findAllLentExtension(PageRequest pageable) {
+	public Page<LentExtension> findAllNotDeleted(PageRequest pageable) {
 		return new PageImpl<>(lentExtensionRepository.findAll(pageable)
 				.stream().filter(e -> !e.isDeleted()).collect(Collectors.toList()));
 	}
 
 	@Transactional(readOnly = true)
-	public Page<LentExtension> findAllNotExpired(PageRequest pageable) {
+	public Page<LentExtension> findAllNotExpiredAndNotDeleted(PageRequest pageable) {
 		return lentExtensionRepository.findAllNotExpired(pageable)
 				.stream().filter(e -> !e.isUsed() && !e.isDeleted())
 				.collect(Collectors.collectingAndThen(Collectors.toList(), PageImpl::new));
 	}
 
 	@Transactional(readOnly = true)
-	public List<LentExtension> findAllNotExpired() {
+	public List<LentExtension> findAllNotExpiredAndNotDeleted() {
 		return lentExtensionRepository.findAll()
 				.stream().filter(e -> !e.isUsed() && !e.isDeleted())
 				.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
-	public List<LentExtension> findLentExtensionByUserId(Long userId) {
+	public List<LentExtension> findNotDeletedByUserId(Long userId) {
 		return lentExtensionRepository.findAllByUserId(userId)
 				.stream().filter(e -> !e.isDeleted()).collect(Collectors.toList());
 	}
 
+	// Active라는 표현 자체가 비즈니스적 의미를 담고 있으므로 변경해야할 필요가 있음.
+	// 추후 리팩터링 필요.
 	@Transactional(readOnly = true)
-	public List<LentExtension> findActiveLentExtensionsByUserId(Long userId) {
+	public List<LentExtension> findActiveByUserId(Long userId) {
 		return lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId)
 				.stream().filter(e -> !e.isDeleted()).collect(Collectors.toList());
 	}

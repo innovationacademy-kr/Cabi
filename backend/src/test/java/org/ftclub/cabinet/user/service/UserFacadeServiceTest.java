@@ -98,10 +98,10 @@ public class UserFacadeServiceTest {
 		given(lentOptionalFetcher.findActiveLentCabinetByUserId(1L)).willReturn(cabinet1);
 		given(userOptionalFetcher.findRecentActiveBanHistory(1L, LocalDateTime.now()))
 				.willReturn(null);
-		given(lentExtensionOptionalFetcher.findLentExtensionByUserId(userSessionDto.getUserId()))
+		given(lentExtensionOptionalFetcher.findNotDeletedByUserId(userSessionDto.getUserId()))
 				.willReturn(null);
 
-		LentExtension lentExtension = lentExtensionOptionalFetcher.findLentExtensionByUserId(
+		LentExtension lentExtension = lentExtensionOptionalFetcher.findNotDeletedByUserId(
 				userSessionDto.getUserId()).get(0);
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(
 				userSessionDto.getUserId(), userSessionDto.getName(),
@@ -131,10 +131,10 @@ public class UserFacadeServiceTest {
 		given(lentOptionalFetcher.findActiveLentCabinetByUserId(2L)).willReturn(null);
 		given(userOptionalFetcher.findRecentActiveBanHistory(eq(2L), any())).willReturn(
 				banHistory1);
-		given(lentExtensionOptionalFetcher.findLentExtensionByUserId(userSessionDto.getUserId()))
+		given(lentExtensionOptionalFetcher.findNotDeletedByUserId(userSessionDto.getUserId()))
 				.willReturn(null);
 
-		LentExtension lentExtension = lentExtensionOptionalFetcher.findLentExtensionByUserId(
+		LentExtension lentExtension = lentExtensionOptionalFetcher.findNotDeletedByUserId(
 				userSessionDto.getUserId()).get(0);
 
 		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1, null)).willReturn(

@@ -243,7 +243,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public LentExtensionPaginationDto getAllLentExtension(Integer page, Integer size) {
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("expiredAt"));
 		List<LentExtensionResponseDto> result =
-				lentExtensionOptionalFetcher.findAllLentExtension(pageable).stream()
+				lentExtensionOptionalFetcher.findAllNotDeleted(pageable).stream()
 						.map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
 		return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
 	}
@@ -252,7 +252,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public LentExtensionPaginationDto getAllActiveLentExtension(Integer page, Integer size) {
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("expiredAt"));
 		List<LentExtensionResponseDto> result =
-				lentExtensionOptionalFetcher.findAllNotExpired(pageable).stream()
+				lentExtensionOptionalFetcher.findAllNotExpiredAndNotDeleted(pageable).stream()
 						.map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
 		return userMapper.toLentExtensionPaginationDto(result, (long) result.size());
 	}
@@ -261,7 +261,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public LentExtensionPaginationDto getMyLentExtension(UserSessionDto userSessionDto) {
 		log.debug("Called getMyLentExtension");
 		List<LentExtensionResponseDto> result =
-				lentExtensionOptionalFetcher.findLentExtensionByUserId(userSessionDto.getUserId())
+				lentExtensionOptionalFetcher.findNotDeletedByUserId(userSessionDto.getUserId())
 						.stream()
 						.sorted(Comparator.comparing(LentExtension::getExpiredAt))
 						.map(userMapper::toLentExtensionResponseDto)

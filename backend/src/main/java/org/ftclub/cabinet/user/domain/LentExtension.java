@@ -84,6 +84,10 @@ public class LentExtension {
 		this.deletedAt = at;
 	}
 
+	public boolean isExpiredSince(LocalDateTime at) {
+		return this.expiredAt.isBefore(at);
+	}
+
 	public boolean isDeleted() {
 		return this.deletedAt != null;
 	}
