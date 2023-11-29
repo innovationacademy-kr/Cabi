@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class AlarmProperties {
 
 	/*===================== lentSuccess =========================*/
-	@Value("${spring.subject.lentSuccess}")
+	@Value("${spring.mail.lentSuccess.subject}")
 	private String lentSuccessSubject;
 
 	@Value("${spring.mail.lentSuccess.template}")
@@ -19,7 +19,7 @@ public class AlarmProperties {
 	private String lentSuccessFcmTemplate;
 
 	/*======================= overdue ===========================*/
-	@Value("${spring.subject.overdue}")
+	@Value("${spring.mail.overdue.subject}")
 	private String overdueSubject;
 
 	@Value("${spring.mail.overdue.template}")
@@ -32,7 +32,7 @@ public class AlarmProperties {
 	@Value("${spring.mail.soonOverdue.term}")
 	private Long soonOverdueTerm;
 
-	@Value("${spring.subject.soonOverdue}")
+	@Value("${spring.mail.soonOverdue.subject}")
 	private String soonOverdueSubject;
 
 	@Value("${spring.mail.soonOverdue.template}")
@@ -42,7 +42,7 @@ public class AlarmProperties {
 	private String soonOverdueFcmTemplate;
 
 	/*================== extensionIssuance ======================*/
-	@Value("${spring.subject.extensionIssuance}")
+	@Value("${spring.mail.extensionIssuance.subject}")
 	private String extensionIssuanceSubject;
 
 	@Value("${spring.mail.extensionIssuance.template}")
@@ -55,7 +55,7 @@ public class AlarmProperties {
 	@Value("${spring.mail.extensionExpiration.term}")
 	private Long extensionExpirationTerm;
 
-	@Value("${spring.subject.extensionExpiration}")
+	@Value("${spring.mail.extensionExpiration.subject}")
 	private String extensionExpirationImminentSubject;
 
 	@Value("${spring.mail.extensionExpiration.template}")
@@ -65,7 +65,7 @@ public class AlarmProperties {
 	private String extensionExpirationImminentFcmTemplate;
 
 	/*==================== announcement =========================*/
-	@Value("${spring.subject.announcement}")
+	@Value("${spring.mail.announcement.subject}")
 	private String announcementSubject;
 
 	@Value("${spring.mail.announcement.template}")
