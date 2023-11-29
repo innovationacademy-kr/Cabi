@@ -34,7 +34,7 @@ public class LentExtensionOptionalFetcher {
 	@Transactional(readOnly = true)
 	public List<LentExtension> findAllNotExpired() {
 		return lentExtensionRepository.findAll()
-				.stream().filter(e -> e.getUsedAt() == null)
+				.stream().filter(e -> !e.isUsed())
 				.collect(Collectors.toList());
 	}
 

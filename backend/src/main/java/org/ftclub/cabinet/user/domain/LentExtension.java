@@ -87,4 +87,8 @@ public class LentExtension {
 	public boolean isDeleted() {
 		return this.deletedAt != null;
 	}
+
+	public boolean isUsed() {
+		return this.usedAt != null;
+	}
 }
