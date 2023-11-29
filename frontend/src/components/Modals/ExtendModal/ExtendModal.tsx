@@ -14,17 +14,14 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
-  axiosExtendLentPeriod,
-  axiosMyLentInfo, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
+  axiosMyLentInfo,
+  axiosUseExtension, // axiosExtend, // TODO: 연장권 api 생성 후 연결해야 함
 } from "@/api/axios/axios.custom";
-import {
-  getExtendedDateString,
-  getLastDayofMonthString,
-} from "@/utils/dateUtils";
+import { getExtendedDateString } from "@/utils/dateUtils";
 
 const ExtendModal: React.FC<{
   onClose: () => void;
@@ -42,7 +39,12 @@ const ExtendModal: React.FC<{
     isCurrentSectionRenderState
   );
   const formattedExtendedDate = getExtendedDateString(
-    myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
+    myLentInfo.lents[0].expiredAt,
+    myInfo.lentExtensionResponseDto?.extensionPeriod
+  );
+  const extensionExpiredDate = getExtendedDateString(
+    myInfo.lentExtensionResponseDto?.expiredAt,
+    0
   );
   const extendDetail = `사물함 연장권 사용 시,
   대여 기간이 <strong>${formattedExtendedDate} 23:59</strong>으로
@@ -50,10 +52,7 @@ const ExtendModal: React.FC<{
   연장권 사용은 취소할 수 없습니다.
   연장권을 사용하시겠습니까?`;
   const extendInfoDetail = `사물함을 대여하시면 연장권 사용이 가능합니다.
-연장권은 <strong>${getLastDayofMonthString(
-    null,
-    "/"
-  )} 23:59</strong> 이후 만료됩니다.`;
+연장권은 <strong>${extensionExpiredDate} 23:59</strong> 이후 만료됩니다.`;
   const getModalTitle = (cabinetId: number | null) => {
     return cabinetId === null
       ? modalPropsMap[additionalModalType.MODAL_OWN_EXTENSION].title
@@ -75,11 +74,11 @@ const ExtendModal: React.FC<{
       return;
     }
     try {
-      await axiosExtendLentPeriod();
+      await axiosUseExtension();
       setMyInfo({
         ...myInfo,
         cabinetId: currentCabinetId,
-        extensible: false,
+        lentExtensionResponseDto: null,
       });
       setIsCurrentSectionRender(true);
       setModalTitle("연장되었습니다");
@@ -97,7 +96,9 @@ const ExtendModal: React.FC<{
       }
     } catch (error: any) {
       setHasErrorOnResponse(true);
-      setModalTitle(error.response.data.message);
+      error.response
+        ? setModalTitle(error.response.data.message)
+        : setModalTitle(error.data.message);
     } finally {
       setShowResponseModal(true);
     }
@@ -105,7 +106,6 @@ const ExtendModal: React.FC<{
 
   const extendModalContents: IModalContents = {
     type: myInfo.cabinetId === null ? "penaltyBtn" : "hasProceedBtn",
-    icon: checkIcon,
     title: getModalTitle(myInfo.cabinetId),
     detail: getModalDetail(myInfo.cabinetId),
     proceedBtnText: getModalProceedBtnText(myInfo.cabinetId),
@@ -116,6 +116,7 @@ const ExtendModal: React.FC<{
           }
         : tryExtendRequest,
     closeModal: props.onClose,
+    iconType: IconType.CHECKICON,
   };
 
   return (

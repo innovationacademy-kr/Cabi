@@ -1,5 +1,8 @@
 import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
+import { ReactComponent as ClockImg } from "@/assets/images/clock.svg";
+import { ReactComponent as ManualPeopleImg } from "@/assets/images/manualPeople.svg";
+import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
 
 interface MaunalContentBoxProps {
@@ -15,11 +18,7 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
       contentStatus={contentStatus}
     >
       {contentStatus === ContentStatus.EXTENSION && (
-        <img
-          className="peopleImg"
-          src="/src/assets/images/manualPeople.svg"
-          alt=""
-        />
+        <ManualPeopleImg className="peopleImg" fill="var(--main-color)" />
       )}
       {contentStatus !== ContentStatus.PENDING &&
         contentStatus !== ContentStatus.IN_SESSION && (
@@ -27,18 +26,20 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
         )}
       <ContentTextStyeld>
         {contentStatus === ContentStatus.IN_SESSION && (
-          <img className="clockImg" src="/src/assets/images/clock.svg" alt="" />
+          <ClockImg stroke="var(--main-color)" className="clockImg" />
         )}
         <p>{contentData.contentTitle}</p>
       </ContentTextStyeld>
-      <img
-        className="moveButton"
-        src="/src/assets/images/moveButton.svg"
-        alt=""
-      />
+      <MoveBtnImg className="moveButton" />
     </MaunalContentBoxStyled>
   );
 };
+
+const Rotation = keyframes`
+ to {
+		transform : rotate(360deg)
+	}
+`;
 
 const MaunalContentBoxStyled = styled.div<{
   background: string;
@@ -52,17 +53,16 @@ const MaunalContentBoxStyled = styled.div<{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-size: 28px;
+  font-size: 1.75rem;
   color: white;
   padding: 25px;
   font-weight: bold;
   cursor: pointer;
   .clockImg {
     width: 35px;
-    height: 35px;
-    filter: brightness(100);
     margin-right: 10px;
     margin-top: 160px;
+    animation: ${Rotation} 1s linear infinite;
   }
 
   .contentImg {
@@ -74,7 +74,7 @@ const MaunalContentBoxStyled = styled.div<{
   }
 
   .peopleImg {
-    width: 210px;
+    width: 220px;
     height: 500px;
     z-index: 1;
     position: absolute;
@@ -85,14 +85,14 @@ const MaunalContentBoxStyled = styled.div<{
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.PENDING &&
     css`
-      border: 5px solid var(--main-color);
-      color: var(--main-color);
+      border: 10px double var(--white);
     `}
 
   ${({ contentStatus }) =>
     contentStatus === ContentStatus.IN_SESSION &&
     css`
-      animation: ${Animation} 3s infinite;
+      border: 5px solid var(--main-color);
+      color: var(--main-color);
     `}
 
   ${({ contentStatus }) =>
@@ -125,14 +125,12 @@ const MaunalContentBoxStyled = styled.div<{
     position: absolute;
     right: 35px;
     bottom: 35px;
-    filter: brightness(
-      ${(props) =>
-        props.contentStatus === ContentStatus.PENDING
-          ? "none"
-          : props.contentStatus === ContentStatus.EXTENSION
-          ? "0"
-          : "100"}
-    );
+    stroke: ${(props) =>
+      props.contentStatus === ContentStatus.IN_SESSION
+        ? "var(--main-color)"
+        : props.contentStatus === ContentStatus.EXTENSION
+        ? "black"
+        : "white"};
     cursor: pointer;
   }
 
@@ -141,7 +139,7 @@ const MaunalContentBoxStyled = styled.div<{
     box-shadow: 10px 10px 25px 0 rgba(0, 0, 0, 0.2);
     p {
       transition: all 0.3s ease-in-out;
-      margin-top: 75px;
+      transform: translateY(-5px);
       ${({ contentStatus }) =>
         (contentStatus === ContentStatus.PENDING ||
           contentStatus === ContentStatus.IN_SESSION) &&
@@ -151,17 +149,8 @@ const MaunalContentBoxStyled = styled.div<{
     }
     .clockImg {
       transition: all 0.3s ease-in-out;
-      margin-top: 155px;
+      margin-top: 145px;
     }
-  }
-`;
-
-const Animation = keyframes`
-  0%, 100% {
-    background-color: var(--main-color);
-  }
-  50% {
-    background-color: #eeeeee;
   }
 `;
 

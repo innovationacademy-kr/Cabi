@@ -1,28 +1,17 @@
 package org.ftclub.cabinet.mapper;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
-import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.Grid;
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
-import org.ftclub.cabinet.cabinet.domain.MapArea;
-import org.ftclub.cabinet.cabinet.domain.SectionFormation;
+import org.ftclub.cabinet.cabinet.domain.*;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetPreviewDto;
-import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class CabinetMapperTest {
@@ -72,7 +61,7 @@ class CabinetMapperTest {
 				LocalDateTime.now());
 		List<LentDto> lentDtos = List.of(lentDto1, lentDto2);
 		CabinetInfoResponseDto cabinetInfoResponseDto = cabinetMapper.toCabinetInfoResponseDto(
-				cabinet, lentDtos);
+				cabinet, lentDtos, LocalDateTime.now());
 		assertEquals(cabinet.getCabinetId(), cabinetInfoResponseDto.getCabinetId());
 		assertEquals(cabinet.getStatus(), cabinetInfoResponseDto.getStatus());
 		assertEquals(cabinet.getMaxUser(), cabinetInfoResponseDto.getMaxUser());

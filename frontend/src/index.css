@@ -8,7 +8,7 @@
   --lightpurple-color: #b18cff;
   --line-color: #bcbcbc;
   --gray-color: #7b7b7b;
-  --lightgary-color: #f5f5f5;
+  --lightgray-color: #f5f5f5;
   --bg-shadow: rgba(0, 0, 0, 0.4);
 
   /* cabinet color variable */
@@ -19,7 +19,7 @@
   --broken: #3c3c3c;
   --banned: #3c3c3c;
   --session: #eeeeee;
-  --pending: #eeeeee;
+  --pending: var(--main-color);
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;

@@ -4,6 +4,9 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+
+import java.util.List;
 
 public interface CabinetService {
 

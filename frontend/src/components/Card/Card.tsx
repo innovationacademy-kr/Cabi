@@ -58,7 +58,7 @@ export const CardStyled = styled.div<{
 }>`
   width: ${(props) => props.width};
   border-radius: 10px;
-  background-color: var(--lightgary-color);
+  background-color: var(--lightgray-color);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,8 +101,12 @@ export const CardButtonStyled = styled.div<{
   padding: 5px 15px;
   border: none;
   border-radius: 5px;
+  font-weight: 350;
   cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
   margin-left: 10px;
+  &:hover {
+    font-weight: ${(props) => props.isClickable && 400};
+  }
 `;
 
 export default Card;

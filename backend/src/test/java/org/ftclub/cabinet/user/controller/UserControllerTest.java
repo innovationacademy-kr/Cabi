@@ -1,12 +1,5 @@
 package org.ftclub.cabinet.user.controller;
 
-import static org.ftclub.testutils.TestUtils.mockRequest;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDateTime;
-import javax.servlet.http.Cookie;
-import javax.transaction.Transactional;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.utils.DateUtil;
@@ -18,6 +11,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+
+import static org.ftclub.testutils.TestUtils.mockRequest;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,7 +36,7 @@ public class UserControllerTest {
 	public void testGetMyProfile_대여_사물함_없는_경우() throws Exception {
 		// penaltyuser2 대여 중인 사물함 x 벤 기록 x
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(4L, "penaltyuser2",
-				null, null);
+				null, null, true);
 
 		String userToken = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
 				LocalDateTime.now(), DateUtil.getInfinityDate(), "penaltyuser2", "user.domain.com");
@@ -54,7 +55,7 @@ public class UserControllerTest {
 	public void testGetMyProfile_대여_사물함_있는_경우() throws Exception {
 		// lentuser1 대여 중인 사물함 3번
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(5L, "lentuser1",
-				3L, null);
+				3L, null, true);
 
 		String userToken = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
 				LocalDateTime.now(), DateUtil.getInfinityDate(), "lentuser1", "user.domain.com");

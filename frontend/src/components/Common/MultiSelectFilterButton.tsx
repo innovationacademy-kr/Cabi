@@ -51,7 +51,7 @@ const FilterTextWrapperStyled = styled.div<{ isClicked: boolean }>`
   align-items: center;
   color: ${({ isClicked }) =>
     isClicked ? "var(--main-color)" : "var(--line-color)"};
-  font-size: 16px;
+  font-size: 1rem;
 `;
 
 const FilterIconStyled = styled.img`

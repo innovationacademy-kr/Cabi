@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import clockImg from "@/assets/images/clock.svg";
+import { ReactComponent as ClockImg } from "@/assets/images/clock.svg";
 
 interface CountTimeProps {
   minutes: string;
@@ -11,7 +11,7 @@ const CountTime = ({ minutes, seconds, isTimeOver }: CountTimeProps) => {
   return (
     <CountTimeStyled>
       <ClockStyled>
-        <ClockImgStyled src={clockImg} />
+        <ClockImg stroke="var(--main-color)" />
         제한시간
       </ClockStyled>
       {isTimeOver ? (
@@ -42,24 +42,23 @@ const ClockStyled = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 10px;
-`;
-
-const ClockImgStyled = styled.img`
-  width: 15px;
-  height: 15px;
-  margin-bottom: 3px;
+  font-size: 0.625rem;
+  svg {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 4px;
+  }
 `;
 
 const CountDownStyled = styled.div`
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: bold;
   margin-left: 15px;
   letter-spacing: 4px;
 `;
 
 const CountEndStyled = styled.div`
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-left: 15px;
 `;

@@ -2,6 +2,9 @@ import React, { ReactElement } from "react";
 import styled, { css } from "styled-components";
 import AdminClubLogContainer from "@/components/Club/AdminClubLog.container";
 import Button from "@/components/Common/Button";
+import { ReactComponent as CheckIcon } from "@/assets/images/checkIcon.svg";
+import { ReactComponent as ErrorIcon } from "@/assets/images/errorIcon.svg";
+import IconType from "@/types/enum/icon.type.enum";
 import useMultiSelect from "@/hooks/useMultiSelect";
 
 /**
@@ -19,10 +22,10 @@ import useMultiSelect from "@/hooks/useMultiSelect";
  * @property {React.MouseEventHandler} closeModal : 모달 닫는 함수
  * @property {boolean} isClubLentModal : 동아리 (CLUB) 대여 모달인지 여부
  * @property {boolean} isLoading : 로딩중 요청 버튼 비활성화 감지를 위한 변수
+ * @property {boolean} isCheckIcon : checkIcon인지 errorIcon인지 감지를 위한 변수
  */
 export interface IModalContents {
   type: string;
-  icon?: string;
   iconScaleEffect?: boolean;
   title?: string;
   detail?: string;
@@ -33,12 +36,12 @@ export interface IModalContents {
   closeModal: React.MouseEventHandler;
   isClubLentModal?: boolean;
   isLoading?: boolean;
+  iconType?: string;
 }
 
 const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
   const {
     type,
-    icon,
     iconScaleEffect,
     title,
     detail,
@@ -49,6 +52,7 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
     closeModal,
     isClubLentModal,
     isLoading,
+    iconType,
   } = props.modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
 
@@ -63,8 +67,15 @@ const Modal: React.FC<{ modalContents: IModalContents }> = (props) => {
         }}
       />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
-        {icon && (
-          <ModalIconImgStyled src={icon} iconScaleEffect={iconScaleEffect} />
+        {iconType === "CHECK" && (
+          <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
+            <CheckIcon stroke="var(--main-color)" />
+          </ModalIconImgStyled>
+        )}
+        {iconType === "ERROR" && !isClubLentModal && (
+          <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
+            <ErrorIcon stroke="var(--main-color)" />
+          </ModalIconImgStyled>
         )}
         <H2Styled>{title}</H2Styled>
         {isClubLentModal && <AdminClubLogContainer size={5} />}
@@ -130,29 +141,31 @@ const ModalStyled = styled.div`
   padding: 40px 20px;
 `;
 
-const ModalIconImgStyled = styled.img<{ iconScaleEffect: boolean | undefined }>`
-  width: 70px;
-  margin-bottom: 20px;
-  ${(props) =>
-    props.iconScaleEffect &&
-    css`
-      animation: scaleUpModalIcon 1s;
-      @keyframes scaleUpModalIcon {
-        0% {
-          width: 0px;
-        }
-        100% {
-          width: 70px;
-        }
-      }
-    `}
+const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
+  svg {
+    width: 70px;
+    margin-bottom: 20px;
+    animation: ${(props) =>
+      props.iconScaleEffect &&
+      css`
+        scaleUpModalIcon 1s;
+      `};
+  }
+  @keyframes scaleUpModalIcon {
+    0% {
+      transform: scale(0.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 `;
 
 export const DetailStyled = styled.p`
   margin-top: 20px;
   letter-spacing: -0.02rem;
   line-height: 1.5rem;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 300;
   white-space: break-spaces;
 `;
@@ -162,6 +175,7 @@ const H2Styled = styled.h2`
   font-size: 1.25rem;
   line-height: 1.75rem;
   white-space: break-spaces;
+  word-break: keep-all;
 `;
 
 const BackgroundStyled = styled.div`

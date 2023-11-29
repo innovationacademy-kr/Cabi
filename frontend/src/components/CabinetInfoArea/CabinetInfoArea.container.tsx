@@ -87,7 +87,8 @@ export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
 export const calExpiredTime = (expireTime: Date) =>
   Math.floor(
-    (expireTime.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+    (expireTime.setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) /
+      (1000 * 60 * 60 * 24)
   );
 
 const setExpireDate = (date: Date | undefined) => {
@@ -330,11 +331,10 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
           cabinetViewData?.status === "IN_SESSION") &&
         !myCabinetInfo.cabinetId
       }
-      isExtensible={myInfo.extensible}
+      isExtensible={!!myInfo.lentExtensionResponseDto && !myInfo.unbannedAt}
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
-      previousUserName={myCabinetInfo.previousUserName}
     />
   );
 };

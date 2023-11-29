@@ -66,3 +66,11 @@ export interface CabinetClubStatusRequestDto {
   cabinetId: number;
   statusNote: string | null;
 }
+
+export interface LentExtensionDto {
+  lentExtensionId: number;
+  name: string;
+  extensionPeriod: number;
+  expiredAt: Date;
+  extensionType: string;
+}

@@ -13,9 +13,10 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
+import { getDefaultCabinetInfo } from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { additionalModalType, modalPropsMap } from "@/assets/data/maps";
-import checkIcon from "@/assets/images/checkIcon.svg";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
+import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
   axiosMyLentInfo,
@@ -45,15 +46,17 @@ const ReturnModal: React.FC<{
   );
   const formattedExpireDate = getExpireDateString(
     "myCabinet",
-    myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
+    myLentInfo.lents.length ? myLentInfo.lents[0].expiredAt : undefined
   );
   const shortenedExpireDateString = getShortenedExpireDateString(
     myLentInfo.lentType,
-    myLentInfo.lents ? myLentInfo.lents.length : 0,
-    myLentInfo.lents ? myLentInfo.lents[0].expiredAt : undefined
+    myLentInfo.lents.length ? myLentInfo.lents.length : 0,
+    myLentInfo.lents.length ? myLentInfo.lents[0].expiredAt : undefined
   );
   const returnDetail = `${
-    myLentInfo && myLentInfo.lents[0].expiredAt === null
+    myLentInfo &&
+    myLentInfo.lents.length &&
+    myLentInfo.lents[0].expiredAt === null
       ? ""
       : myLentInfo.lentType === "SHARE" && myLentInfo.lents.length > 1
       ? `대여기간 이내 취소(반납) 시,
@@ -80,7 +83,16 @@ const ReturnModal: React.FC<{
       //userLentInfo 세팅
       try {
         const { data: myLentInfo } = await axiosMyLentInfo();
-        setMyLentInfo(myLentInfo);
+        if (myLentInfo) {
+          setMyLentInfo(myLentInfo);
+        } else {
+          setMyLentInfo({
+            ...getDefaultCabinetInfo(),
+            memo: "",
+            shareCode: 0,
+            previousUserName: "",
+          });
+        }
       } catch (error) {
         throw error;
       }
@@ -100,7 +112,6 @@ const ReturnModal: React.FC<{
 
   const returnModalContents: IModalContents = {
     type: "hasProceedBtn",
-    icon: checkIcon,
     title: modalPropsMap[additionalModalType.MODAL_RETURN].title,
     detail: returnDetail,
     proceedBtnText:
@@ -108,6 +119,7 @@ const ReturnModal: React.FC<{
     onClickProceed: tryReturnRequest,
     closeModal: props.closeModal,
     isLoading: isLoading,
+    iconType: IconType.CHECKICON,
   };
 
   return (

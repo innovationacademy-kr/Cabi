@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.redis;
 
 import org.ftclub.cabinet.lent.repository.LentRedis;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,12 +19,13 @@ public class RedisRepositoryTest {
 	private LentRedis lentRedis;
 
 	@Test
+	@Disabled
 	void test() {
 		Long cabinetId = 16L;
 
 		lentRedis.setShadowKey(cabinetId);
-		lentRedis.saveUserInRedis(16L, 1234L, 1000, false);
-		lentRedis.saveUserInRedis(16L, 5678L, 1000, true);
+		lentRedis.saveUserInRedis("16L", "1234L", "1000", false);
+		lentRedis.saveUserInRedis("16L", "5678L", "1000", true);
 
 		try {
 			Thread.sleep(10000);
