@@ -107,9 +107,10 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 
 	@Override
 	@Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
-	public void deleteLentExtension() {
+	public void deleteExpiredExtensions() {
 		log.debug("Called deleteExtension");
 		LocalDateTime now = LocalDateTime.now();
+
 		lentExtensionOptionalFetcher.findAllNotExpired().forEach(e -> {
 			if (e.getExpiredAt().isBefore(now)) {
 				e.delete(now);

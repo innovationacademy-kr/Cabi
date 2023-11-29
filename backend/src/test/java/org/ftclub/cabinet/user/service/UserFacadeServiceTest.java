@@ -10,11 +10,7 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
-import org.ftclub.cabinet.user.domain.AdminRole;
-import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.LentExtension;
-import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.user.domain.*;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.junit.jupiter.api.Disabled;
@@ -109,8 +105,8 @@ public class UserFacadeServiceTest {
 				userSessionDto.getUserId()).get(0);
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(
 				userSessionDto.getUserId(), userSessionDto.getName(),
-				cabinet1.getCabinetId(), null, lentExtension);
-		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null, lentExtension))
+				cabinet1.getCabinetId(), null, null);
+		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null, null))
 				.willReturn(myProfileResponseDto);
 
 		// when
@@ -141,8 +137,8 @@ public class UserFacadeServiceTest {
 		LentExtension lentExtension = lentExtensionOptionalFetcher.findLentExtensionByUserId(
 				userSessionDto.getUserId()).get(0);
 
-		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1, lentExtension)).willReturn(
-				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1), lentExtension));
+		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1, null)).willReturn(
+				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1), null));
 
 		// when
 		MyProfileResponseDto myProfile = userFacadeService.getMyProfile(userSessionDto);
