@@ -102,8 +102,4 @@ const NoPendingCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
   }
 `;
 
-const LoadingContainerStyled = styled.div`
-  margin-top: 30px;
-`;
-
 export default FloorContainer;
