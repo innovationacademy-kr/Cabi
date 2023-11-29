@@ -111,11 +111,13 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called deleteExtension");
 		LocalDateTime now = LocalDateTime.now();
 
-		lentExtensionOptionalFetcher.findAllNotExpired().forEach(e -> {
+		List<LentExtension> allNotExpired = lentExtensionOptionalFetcher.findAllNotExpired();
+		allNotExpired.forEach(e -> {
 			if (e.getExpiredAt().isBefore(now)) {
 				e.delete(now);
 			}
 		});
+		System.out.println(allNotExpired);
 	}
 
 	@Override
