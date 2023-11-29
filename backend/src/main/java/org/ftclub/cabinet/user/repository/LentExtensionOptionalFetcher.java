@@ -28,13 +28,15 @@ public class LentExtensionOptionalFetcher {
 
 	@Transactional(readOnly = true)
 	public Page<LentExtension> findAllNotExpired(PageRequest pageable) {
-		return lentExtensionRepository.findAllNotExpired(pageable);
+		return lentExtensionRepository.findAllNotExpired(pageable)
+				.stream().filter(e -> !e.isUsed() && !e.isDeleted())
+				.collect(Collectors.collectingAndThen(Collectors.toList(), PageImpl::new));
 	}
 
 	@Transactional(readOnly = true)
 	public List<LentExtension> findAllNotExpired() {
 		return lentExtensionRepository.findAll()
-				.stream().filter(e -> !e.isUsed())
+				.stream().filter(e -> !e.isUsed() && !e.isDeleted())
 				.collect(Collectors.toList());
 	}
 
