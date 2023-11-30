@@ -48,7 +48,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 		LentExtensionResponseDto activeLentExtension = lentExtensionService.getActiveLentExtension(
 				user);
-		System.out.println(activeLentExtension);
 
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
 				activeLentExtension);
