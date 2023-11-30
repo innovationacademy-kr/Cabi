@@ -10,18 +10,25 @@ import {
   CabinetPreviewInfo,
   PendingCabinetsInfo,
 } from "@/types/dto/cabinet.dto";
-import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosGetPendingCabinets } from "@/api/axios/axios.custom";
 import useDebounce from "@/hooks/useDebounce";
 
+enum PendingCabinetsType {
+  ALL = "ALL",
+  PRIVATE = "PRIVATE",
+  SHARE = "SHARE",
+}
+
 const toggleList = [
-  { name: "전체", key: CabinetType.ALL },
-  { name: "개인", key: CabinetType.PRIVATE },
-  { name: "공유", key: CabinetType.SHARE },
+  { name: "전체", key: PendingCabinetsType.ALL },
+  { name: "개인", key: PendingCabinetsType.PRIVATE },
+  { name: "공유", key: PendingCabinetsType.SHARE },
 ];
 
 const PendingPage = () => {
-  const [toggleType, setToggleType] = useState<CabinetType>(CabinetType.ALL);
+  const [toggleType, setToggleType] = useState<PendingCabinetsType>(
+    PendingCabinetsType.ALL
+  );
   const [cabinets, setCabinets] = useState<PendingCabinetsInfo>({});
   const [pendingCabinets, setPendingCabinets] = useState<PendingCabinetsInfo>(
     {}
@@ -53,11 +60,11 @@ const PendingPage = () => {
           ])
         );
 
-      const privateCabinets = filterCabinetsByType(CabinetType.PRIVATE);
-      const sharedCabinets = filterCabinetsByType(CabinetType.SHARE);
+      const privateCabinets = filterCabinetsByType(PendingCabinetsType.PRIVATE);
+      const sharedCabinets = filterCabinetsByType(PendingCabinetsType.SHARE);
 
       const updatedCabinets =
-        toggleType === CabinetType.ALL
+        toggleType === PendingCabinetsType.ALL
           ? pendingCabinets
           : filterCabinetsByType(toggleType);
 
@@ -103,9 +110,11 @@ const PendingPage = () => {
   }, [isOpenTime]);
 
   useEffect(() => {
-    if (toggleType === CabinetType.ALL) setCabinets(pendingCabinets);
-    else if (toggleType === CabinetType.PRIVATE) setCabinets(privateCabinets);
-    else if (toggleType === CabinetType.SHARE) setCabinets(sharedCabinets);
+    if (toggleType === PendingCabinetsType.ALL) setCabinets(pendingCabinets);
+    else if (toggleType === PendingCabinetsType.PRIVATE)
+      setCabinets(privateCabinets);
+    else if (toggleType === PendingCabinetsType.SHARE)
+      setCabinets(sharedCabinets);
   }, [toggleType]);
 
   return (
