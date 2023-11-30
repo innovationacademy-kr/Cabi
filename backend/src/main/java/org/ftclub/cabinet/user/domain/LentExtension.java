@@ -78,7 +78,7 @@ public class LentExtension {
 	}
 
 
-	public boolean isExpiredSince(LocalDateTime at) {
+	public boolean isExpiredBefore(LocalDateTime at) {
 		return this.expiredAt.isBefore(at);
 	}
 

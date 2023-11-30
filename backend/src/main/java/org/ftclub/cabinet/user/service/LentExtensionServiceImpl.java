@@ -52,7 +52,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
 				occupiedTimeManager.getUserLastMonthOccupiedTime());
 		LocalDateTime now = LocalDateTime.now();
-		userMonthDataDtos.stream().forEach(userMonthDataDto -> {
+		userMonthDataDtos.forEach(userMonthDataDto -> {
 			LentExtension lentExtension = LentExtension.of("lentExtension",
 					cabinetProperties.getLentExtendTerm(),
 					LocalDateTime.of(now.getYear(), now.getMonth(),
@@ -94,13 +94,13 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	@Override
 	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
 		LentExtensionResponseDto lentExtensionResponseDto = null;
-		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findAllByUserIdUsedAtIsNull(
+		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findAllByUserId(
 				userSessionDto.getUserId());
 		LentExtensions lentExtensions = LentExtensions.builder()
 				.lentExtensions(activeLentExtensionsByUserId).build();
-		if (lentExtensions.hasActiveLentExtensions()) {
+		if (lentExtensions.hasActiveLentExtension()) {
 			lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
-					lentExtensions.getImminentActiveLentExtension());
+					lentExtensions.findImminentActiveLentExtension());
 		}
 		return lentExtensionResponseDto;
 	}
@@ -114,7 +114,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 
 		LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
 				.build();
-		if (!lentExtensions.hasActiveLentExtensions()) {
+		if (lentExtensions.isEmpty()) {
 			throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
 		}
 
@@ -123,7 +123,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 				cabinet.getCabinetId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-		LentExtension lentExtension = lentExtensions.getImminentActiveLentExtension();
+		LentExtension lentExtension = lentExtensions.findImminentActiveLentExtension();
 		lentExtension.use();
 		// 연장
 		activeLentHistories
