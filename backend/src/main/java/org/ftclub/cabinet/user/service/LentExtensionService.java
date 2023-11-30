@@ -9,8 +9,6 @@ public interface LentExtensionService {
 
 	void issueLentExtension();
 
-	void deleteExpiredExtensions();
-
 	void useLentExtension(Long userId, String username);
 
 	void assignLentExtension(String username);

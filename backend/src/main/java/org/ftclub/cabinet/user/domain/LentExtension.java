@@ -36,8 +36,6 @@ public class LentExtension {
 	private LentExtensionType lentExtensionType;
 	@Column(name = "used_at")
 	private LocalDateTime usedAt;
-	@Column(name = "deleted_at")
-	private LocalDateTime deletedAt;
 
 	@JoinColumn(name = "USER_ID", insertable = false, updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -54,7 +52,6 @@ public class LentExtension {
 		this.expiredAt = expiredAt;
 		this.lentExtensionType = lentExtensionType;
 		this.userId = userId;
-		this.deletedAt = null;
 	}
 
 	public static LentExtension of(String name, int extensionPeriod, LocalDateTime expiredAt,
@@ -80,16 +77,9 @@ public class LentExtension {
 		return this.expiredAt.compareTo(lentExtension.expiredAt);
 	}
 
-	public void delete(LocalDateTime at) {
-		this.deletedAt = at;
-	}
 
-	public boolean isExpiredSince(LocalDateTime at) {
+	public boolean isExpiredBefore(LocalDateTime at) {
 		return this.expiredAt.isBefore(at);
-	}
-
-	public boolean isDeleted() {
-		return this.deletedAt != null;
 	}
 
 	public boolean isUsed() {

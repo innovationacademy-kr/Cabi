@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,36 +19,27 @@ public class LentExtensionOptionalFetcher {
 
 	/*-------------------------------------------FIND-------------------------------------------*/
 	@Transactional(readOnly = true)
-	public Page<LentExtension> findAllNotDeleted(PageRequest pageable) {
-		return new PageImpl<>(lentExtensionRepository.findAll(pageable)
-				.stream().filter(e -> !e.isDeleted()).collect(Collectors.toList()));
+	public Page<LentExtension> findAllPaged(PageRequest pageable) {
+		return lentExtensionRepository.findAll(pageable);
 	}
 
 	@Transactional(readOnly = true)
-	public Page<LentExtension> findAllNotExpiredAndNotDeleted(PageRequest pageable) {
-		return lentExtensionRepository.findAllNotExpired(pageable)
-				.stream().filter(e -> !e.isUsed() && !e.isDeleted())
-				.collect(Collectors.collectingAndThen(Collectors.toList(), PageImpl::new));
+	public Page<LentExtension> findAllNotExpiredPaged(PageRequest pageable) {
+		return lentExtensionRepository.findAllNotExpired(pageable);
 	}
 
 	@Transactional(readOnly = true)
-	public List<LentExtension> findAllNotExpiredAndNotDeleted() {
-		return lentExtensionRepository.findAll()
-				.stream().filter(e -> !e.isUsed() && !e.isDeleted())
-				.collect(Collectors.toList());
+	public List<LentExtension> findAllNotExpired() {
+		return lentExtensionRepository.findAll();
 	}
 
 	@Transactional(readOnly = true)
-	public List<LentExtension> findNotDeletedByUserId(Long userId) {
-		return lentExtensionRepository.findAllByUserId(userId)
-				.stream().filter(e -> !e.isDeleted()).collect(Collectors.toList());
+	public List<LentExtension> findAllByUserId(Long userId) {
+		return lentExtensionRepository.findAllByUserId(userId);
 	}
 
-	// Active라는 표현 자체가 비즈니스적 의미를 담고 있으므로 변경해야할 필요가 있음.
-	// 추후 리팩터링 필요.
 	@Transactional(readOnly = true)
-	public List<LentExtension> findActiveByUserId(Long userId) {
-		return lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId)
-				.stream().filter(e -> !e.isDeleted()).collect(Collectors.toList());
+	public List<LentExtension> findAllByUserIdUsedAtIsNull(Long userId) {
+		return lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId);
 	}
 }

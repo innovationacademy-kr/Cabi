@@ -52,7 +52,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
 				occupiedTimeManager.getUserLastMonthOccupiedTime());
 		LocalDateTime now = LocalDateTime.now();
-		userMonthDataDtos.stream().forEach(userMonthDataDto -> {
+		userMonthDataDtos.forEach(userMonthDataDto -> {
 			LentExtension lentExtension = LentExtension.of("lentExtension",
 					cabinetProperties.getLentExtendTerm(),
 					LocalDateTime.of(now.getYear(), now.getMonth(),
@@ -84,7 +84,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called getLentExtensionList {}", userSessionDto.getName());
 
 		LentExtensions lentExtensions = LentExtensions.builder()
-				.lentExtensions(lentExtensionOptionalFetcher.findActiveByUserId(
+				.lentExtensions(lentExtensionOptionalFetcher.findAllByUserIdUsedAtIsNull(
 						userSessionDto.getUserId())).build();
 
 		return lentExtensions.getLentExtensions().stream()
@@ -94,26 +94,15 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	@Override
 	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
 		LentExtensionResponseDto lentExtensionResponseDto = null;
-		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findActiveByUserId(
+		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findAllByUserId(
 				userSessionDto.getUserId());
 		LentExtensions lentExtensions = LentExtensions.builder()
 				.lentExtensions(activeLentExtensionsByUserId).build();
-		if (lentExtensions.hasActiveLentExtensions()) {
+		if (lentExtensions.hasActiveLentExtension()) {
 			lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
-					lentExtensions.getImminentActiveLentExtension());
+					lentExtensions.findImminentActiveLentExtension());
 		}
 		return lentExtensionResponseDto;
-	}
-
-	@Override
-	@Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
-	public void deleteExpiredExtensions() {
-		log.debug("Called deleteExtension");
-		LocalDateTime now = LocalDateTime.now();
-
-		lentExtensionOptionalFetcher.findAllNotExpiredAndNotDeleted().stream()
-				.filter(e -> e.isExpiredSince(now))
-				.forEach(e -> e.delete(now));
 	}
 
 	@Override
@@ -121,11 +110,11 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called useLentExtension {}", username);
 
 		List<LentExtension> findLentExtension =
-				lentExtensionOptionalFetcher.findNotDeletedByUserId(userId);
+				lentExtensionOptionalFetcher.findAllByUserId(userId);
 
 		LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
 				.build();
-		if (!lentExtensions.hasActiveLentExtensions()) {
+		if (lentExtensions.isEmpty()) {
 			throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
 		}
 
@@ -134,7 +123,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 				cabinet.getCabinetId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-		LentExtension lentExtension = lentExtensions.getImminentActiveLentExtension();
+		LentExtension lentExtension = lentExtensions.findImminentActiveLentExtension();
 		lentExtension.use();
 		// 연장
 		activeLentHistories
