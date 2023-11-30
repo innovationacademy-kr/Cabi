@@ -84,7 +84,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called getLentExtensionList {}", userSessionDto.getName());
 
 		LentExtensions lentExtensions = LentExtensions.builder()
-				.lentExtensions(lentExtensionOptionalFetcher.findActiveByUserId(
+				.lentExtensions(lentExtensionOptionalFetcher.findAllByUserIdUsedAtIsNull(
 						userSessionDto.getUserId())).build();
 
 		return lentExtensions.getLentExtensions().stream()
@@ -94,7 +94,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	@Override
 	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
 		LentExtensionResponseDto lentExtensionResponseDto = null;
-		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findActiveByUserId(
+		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findAllByUserIdUsedAtIsNull(
 				userSessionDto.getUserId());
 		LentExtensions lentExtensions = LentExtensions.builder()
 				.lentExtensions(activeLentExtensionsByUserId).build();
@@ -106,22 +106,11 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	}
 
 	@Override
-	@Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
-	public void deleteExpiredExtensions() {
-		log.debug("Called deleteExtension");
-		LocalDateTime now = LocalDateTime.now();
-
-		lentExtensionOptionalFetcher.findAllNotExpiredAndNotDeleted().stream()
-				.filter(e -> e.isExpiredSince(now))
-				.forEach(e -> e.delete(now));
-	}
-
-	@Override
 	public void useLentExtension(Long userId, String username) {
 		log.debug("Called useLentExtension {}", username);
 
 		List<LentExtension> findLentExtension =
-				lentExtensionOptionalFetcher.findNotDeletedByUserId(userId);
+				lentExtensionOptionalFetcher.findAllByUserId(userId);
 
 		LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
 				.build();
