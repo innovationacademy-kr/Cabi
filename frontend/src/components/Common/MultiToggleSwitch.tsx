@@ -1,29 +1,38 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import CabinetType from "@/types/enum/cabinet.type.enum";
 
-interface MultiToggleSwitchProps {
-  cabinetType: CabinetType;
-  onChange: (CabinetType: CabinetType) => void;
+interface toggleItem {
+  name: string;
+  key: string;
 }
 
-const MultiToggleSwitch: React.FC<MultiToggleSwitchProps> = ({
-  cabinetType,
-  onChange,
-}) => {
+interface MultiToggleSwitchProps<T> {
+  initialState: T; // 초기값
+  setState: React.Dispatch<React.SetStateAction<T>>; // 상태를 변경하는 dispatcher
+  toggleList: toggleItem[]; // 토글 리스트
+}
+
+const MultiToggleSwitch = <T,>({
+  initialState,
+  setState,
+  toggleList,
+}: MultiToggleSwitchProps<T>) => {
   useEffect(() => {
     const buttons = document.querySelectorAll("button");
 
     buttons.forEach((button) => {
-      if (button.className === cabinetType) {
+      if (button.className === initialState) {
         button.style.color = "white";
         button.style.backgroundColor = "var(--main-color)";
       }
     });
   }, []);
 
-  function changeTargetButton(e: any) {
+  function switchToggle(e: any) {
     const target = e.target;
+
+    if (target === e.currentTarget) return;
+
     const buttons = document.querySelectorAll("button");
 
     buttons.forEach((button) => {
@@ -34,14 +43,16 @@ const MultiToggleSwitch: React.FC<MultiToggleSwitchProps> = ({
     target.style.color = "white";
     target.style.backgroundColor = "var(--main-color)";
 
-    onChange(target.className);
+    setState(target.className);
   }
 
   return (
-    <WrapperStyled onClick={changeTargetButton}>
-      <button className={CabinetType.ALL}>전체</button>
-      <button className={CabinetType.PRIVATE}>개인</button>
-      <button className={CabinetType.SHARE}>공유</button>
+    <WrapperStyled onClick={switchToggle}>
+      {toggleList.map((item) => (
+        <button key={item.key} className={item.key}>
+          {item.name}
+        </button>
+      ))}
     </WrapperStyled>
   );
 };
@@ -51,15 +62,17 @@ const WrapperStyled = styled.div`
   display: flex;
   align-items: center;
   background-color: var(--lightgray-color);
+
   border-radius: 10px;
   button {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: fit-content;
+    min-width: 50px;
     border-radius: 10px;
     font-size: 0.9rem;
     height: 30px;
-    width: 50px;
     font-weight: 500;
     background-color: transparent;
     color: black;

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { set } from "react-ga";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import FloorContainer from "@/pages/PendingPage/components/FloorContainer";
-import MultiToggleSwitch from "@/pages/PendingPage/components/MultiToggleSwitch";
 import PendingCountdown from "@/pages/PendingPage/components/PendingCountdown";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import MultiToggleSwitch from "@/components/Common/MultiToggleSwitch";
 import {
   CabinetPreviewInfo,
   PendingCabinetsInfo,
@@ -14,6 +13,12 @@ import {
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import { axiosGetPendingCabinets } from "@/api/axios/axios.custom";
 import useDebounce from "@/hooks/useDebounce";
+
+const toggleList = [
+  { name: "전체", key: CabinetType.ALL },
+  { name: "개인", key: CabinetType.PRIVATE },
+  { name: "공유", key: CabinetType.SHARE },
+];
 
 const PendingPage = () => {
   const [toggleType, setToggleType] = useState<CabinetType>(CabinetType.ALL);
@@ -32,8 +37,6 @@ const PendingPage = () => {
     isCurrentSectionRenderState
   );
   const { debounce } = useDebounce();
-
-  const isShowingLoadingAnimation = !isRefreshing && isLoaded;
 
   const getPendingCabinets = async () => {
     try {
@@ -108,7 +111,11 @@ const PendingPage = () => {
   return (
     <WrapperStyled>
       <UtilsSectionStyled>
-        <MultiToggleSwitch cabinetType={toggleType} onChange={setToggleType} />
+        <MultiToggleSwitch
+          initialState={toggleType}
+          setState={setToggleType}
+          toggleList={toggleList}
+        />
       </UtilsSectionStyled>
       <HeaderStyled>사용 가능 사물함</HeaderStyled>
       <SubHeaderStyled>
@@ -116,11 +123,15 @@ const PendingPage = () => {
           <span>매일 오후 1시</span> 사용 가능한 사물함이 업데이트됩니다.
         </h2>
         <RefreshButtonStyled onClick={refreshPendingCabinets}>
-          <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+          {isRefreshing ? (
+            <LoadingAnimation />
+          ) : (
+            <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+          )}
         </RefreshButtonStyled>
       </SubHeaderStyled>
       <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} />
-      {isShowingLoadingAnimation && cabinets ? (
+      {isLoaded && cabinets ? (
         Object.entries(cabinets).map(([key, value]) => (
           <FloorContainer
             key={key}
@@ -166,6 +177,7 @@ const SubHeaderStyled = styled.div`
   line-height: 1.5;
   word-break: keep-all;
   margin: 25px 10px 0px 10px;
+  color: var(--main-color);
   span {
     font-weight: 700;
     text-decoration: underline;
@@ -181,6 +193,9 @@ const RefreshButtonStyled = styled.button`
   img {
     width: 35px;
     height: 35px;
+  }
+  div {
+    margin-top: 11px;
   }
   &:hover {
     opacity: 0.7;
