@@ -194,17 +194,13 @@ const SubHeaderStyled = styled.div`
 `;
 
 const RefreshButtonStyled = styled.button`
-  margin-top: 30px;
-  margin-bottom: 20px;
+  margin-top: 40px;
   background-color: transparent;
   width: 35px;
-  height: 0px;
+  height: 35px;
   img {
     width: 35px;
     height: 35px;
-  }
-  div {
-    margin-top: 11px;
   }
   &:hover {
     opacity: 0.7;
