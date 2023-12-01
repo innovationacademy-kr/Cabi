@@ -58,7 +58,7 @@ const LineChart = ({ data }: { data: IMonthlyData[] }) => (
         reverse: false,
       }}
       curve={"linear"}
-      colors={["purple", "red"]}
+      colors={["var(--main-color)", "red"]}
       yFormat=" >0"
       axisRight={null}
       axisBottom={{
