@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -164,7 +165,7 @@ public class LentOptionalFetcher {
 		return lentRepository.findByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(cabinetId);
 	}
 
-	public List<LentHistory> findAllLentHistoriesByCabinetIds(List<Long> cabinetIds) {
-		return lentRepository.findAllByCabinetIdIn(cabinetIds);
+	public List<LentHistory> findAllByCabinetIdsAfterDate(LocalDate date, List<Long> cabinetIds) {
+		return lentRepository.findAllByCabinetIdsAfterDate(date, cabinetIds);
 	}
 }

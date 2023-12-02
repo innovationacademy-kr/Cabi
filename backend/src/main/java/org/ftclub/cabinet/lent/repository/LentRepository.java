@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -162,9 +163,15 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * 여러 사물함들의 대여 기록을 모두 가져옵니다.
 	 *
 	 * @param cabinetIds 조회하고자 하는 사물함의 Id {@link List}
+	 * @param date       조회하고자 하는 날짜(시간 제외)
 	 * @return 조회하고자 하는 사물함들 {@link LentHistory}의 {@link List}
 	 */
-	List<LentHistory> findAllByCabinetIdIn(List<Long> cabinetIds);
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "WHERE lh.cabinetId IN :cabinetIds "
+			+ "AND DATE(lh.endedAt) >= DATE(:date)")
+	List<LentHistory> findAllByCabinetIdsAfterDate(@Param("date") LocalDate date,
+			@Param("cabinetIds") List<Long> cabinetIds);
 
 	/**
 	 * 연체되어 있는 사물함을 모두 가져옵니다.

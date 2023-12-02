@@ -292,9 +292,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		final LocalDate yesterday = LocalDateTime.now().minusDays(1).toLocalDate();
 		List<Cabinet> buildingCabinets =
 				cabinetOptionalFetcher.findPendingCabinetsNotLentTypeAndStatus(
-						building,
-						LentType.CLUB,
-						List.of(CabinetStatus.AVAILABLE, CabinetStatus.PENDING));
+						building, LentType.CLUB, List.of(AVAILABLE, PENDING));
 		List<Long> cabinetIds = buildingCabinets.stream()
 				.filter(cabinet -> cabinet.isStatus(PENDING))
 				.map(Cabinet::getCabinetId).collect(Collectors.toList());
@@ -302,7 +300,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				cabinetOptionalFetcher.findAllFloorsByBuilding(building).stream()
 						.collect(toMap(key -> key, value -> new ArrayList<>()));
 		Map<Long, List<LentHistory>> lentHistoriesMap =
-				lentOptionalFetcher.findAllLentHistoriesByCabinetIds(cabinetIds)
+				lentOptionalFetcher.findAllByCabinetIdsAfterDate(yesterday, cabinetIds)
 					.stream().collect(groupingBy(LentHistory::getCabinetId));
 		buildingCabinets.forEach(cabinet -> {
 			Integer floor = cabinet.getCabinetPlace().getLocation().getFloor();
