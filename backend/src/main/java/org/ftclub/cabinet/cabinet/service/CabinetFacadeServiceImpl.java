@@ -2,7 +2,6 @@ package org.ftclub.cabinet.cabinet.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -105,17 +104,16 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				allCabinetsByVisibleNum.getTotalElements());
 	}
 
-	private CabinetPreviewDto createCabinetPreviewDto(Cabinet cabinet, List<LentHistory> lentHistories) {
-		String lentUserName = null;
+	private String checkCabinetTitle(Cabinet cabinet, List<LentHistory> lentHistories) {
 		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
 			// 12/2 패치 : 개인 사물함도 타이틀이 있을 경우 타이틀을 노출합니다.
-			lentUserName = cabinet.getTitle();
+			return cabinet.getTitle();
 		}
 		else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
-			lentUserName = lentHistories.get(0).getUser().getName();
+			return lentHistories.get(0).getUser().getName();
 
 		}
-		return cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(), lentUserName);
+		return null;
 	}
 
 	/**
@@ -140,8 +138,9 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 					String section = cabinet.getCabinetPlace().getLocation().getSection();
 					List<LentHistory> lentHistories =
 							cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
-					CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, lentHistories);
-					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>()).add(preview);
+					String title = checkCabinetTitle(cabinet, lentHistories);
+					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>())
+							.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(), title));
 		});
 		return cabinetPreviewsBySection.entrySet().stream()
 				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))
@@ -163,7 +162,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		Page<Cabinet> cabinets = cabinetOptionalFetcher.findPaginationByLentType(lentType,
 				pageable);
 		List<CabinetDto> cabinetDtos = cabinets.toList().stream()
-				.map((cabinet) -> cabinetMapper.toCabinetDto(cabinet))
+				.map(cabinetMapper::toCabinetDto)
 				.collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(cabinetDtos,
 				cabinets.getTotalElements());
@@ -297,6 +296,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 						LentType.CLUB,
 						List.of(CabinetStatus.AVAILABLE, CabinetStatus.PENDING));
 		List<Long> cabinetIds = buildingCabinets.stream()
+				.filter(cabinet -> cabinet.isStatus(PENDING))
 				.map(Cabinet::getCabinetId).collect(Collectors.toList());
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
 				cabinetOptionalFetcher.findAllFloorsByBuilding(building).stream()

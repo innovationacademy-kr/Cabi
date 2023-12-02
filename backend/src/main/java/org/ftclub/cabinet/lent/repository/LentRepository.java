@@ -176,7 +176,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "FROM LentHistory lh "
 			+ "WHERE lh.expiredAt < :date AND lh.endedAt is null "
 			+ "ORDER BY lh.expiredAt ASC")
-	List<LentHistory> findAllOverdueLentHistories(@Param("date") LocalDateTime date, Pageable pageable);
+	List<LentHistory> findAllExpiredAtBeforeAndEndedAtIsNull(
+			@Param("date") LocalDateTime date, Pageable pageable);
 
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
