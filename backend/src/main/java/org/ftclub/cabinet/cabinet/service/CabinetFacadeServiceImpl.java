@@ -122,8 +122,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
-	                                                                    Integer floor) {
+	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor) {
 		log.debug("getCabinetsPerSection");
 		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher
 				.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
@@ -135,12 +134,14 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<Cabinet> allCabinetsOnSection =
 				cabinetOptionalFetcher.findAllCabinetsByBuildingAndFloor(building, floor);
 		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
-		allCabinetsOnSection.forEach(cabinet -> {
-			String section = cabinet.getCabinetPlace().getLocation().getSection();
-			List<LentHistory> lentHistories =
-					cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
-			CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, lentHistories);
-			cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>()).add(preview);
+		allCabinetsOnSection.stream()
+				.sorted(Comparator.comparing(Cabinet::getVisibleNum))
+				.forEach(cabinet -> {
+					String section = cabinet.getCabinetPlace().getLocation().getSection();
+					List<LentHistory> lentHistories =
+							cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
+					CabinetPreviewDto preview = createCabinetPreviewDto(cabinet, lentHistories);
+					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>()).add(preview);
 		});
 		return cabinetPreviewsBySection.entrySet().stream()
 				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))

@@ -87,7 +87,7 @@ public class CabinetOptionalFetcher {
 	}
 
 	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
-		return cabinetRepository.findAllByBuildingAndFloorOrderByVisibleNum(building, floor);
+		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
 	}
 	/*-------------------------------------------GET--------------------------------------------*/
 

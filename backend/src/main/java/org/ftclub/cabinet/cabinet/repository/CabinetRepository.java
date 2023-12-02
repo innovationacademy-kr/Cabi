@@ -71,9 +71,8 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "JOIN FETCH c.cabinetPlace p "
-			+ "WHERE p.location.building = :building AND p.location.floor = :floor "
-			+ "ORDER BY c.visibleNum ASC")
-	List<Cabinet> findAllByBuildingAndFloorOrderByVisibleNum(
+			+ "WHERE p.location.building = :building AND p.location.floor = :floor")
+	List<Cabinet> findAllByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);
 
 	@Query("SELECT c "
