@@ -42,7 +42,7 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 			List<Long> availableCabinetsId = statisticsRepository.getAvailableCabinetsId(floor);
 			Integer unused = 0;
 			for (Long cabinetId : availableCabinetsId) {
-				if (lentRepository.countCabinetActiveLent(cabinetId) > 0) {
+				if (lentRepository.countByCabinetIdAndEndedAtIsNull(cabinetId) > 0) {
 					used++;
 				} else {
 					unused++;

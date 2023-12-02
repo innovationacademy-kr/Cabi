@@ -2,19 +2,15 @@ package org.ftclub.cabinet.cabinet.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.mapper.CabinetMapper;
-import org.ftclub.cabinet.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -41,25 +37,7 @@ public class CabinetOptionalFetcher {
 
 	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(
 			String building, Integer floor) {
-		log.debug("Called findCabinetsActiveLentHistoriesByBuildingAndFloor: {}, {}", building,
-				floor);
-		return cabinetRepository.findCabinetActiveLentHistoryUserListByBuildingAndFloor(building,
-						floor).stream()
-				.map(result -> {
-					Cabinet cabinet = (Cabinet) result[0];
-					LentHistory lentHistory = (LentHistory) result[1];
-					User user = (User) result[2];
-					return cabinetMapper.toActiveCabinetInfoEntitiesDto(cabinet, lentHistory, user);
-				}).collect(Collectors.toList());
-	}
-
-	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor2(
-			String building, Integer floor) {
 		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
-	}
-
-	public List<Cabinet> findCabinetsByBuildingAndFloor2(String building, Integer floor) {
-		return cabinetRepository.findAllCabinetsByBuildingAndFloor(building, floor);
 	}
 
 	/**
@@ -71,7 +49,7 @@ public class CabinetOptionalFetcher {
 	 */
 	public Cabinet findLentCabinetByUserId(Long userId) {
 		log.debug("Called findLentCabinetByUserId: {}", userId);
-		return cabinetRepository.findLentCabinetByUserId(userId).orElse(null);
+		return cabinetRepository.findByUserIdAndEndedAtIsNull(userId).orElse(null);
 	}
 
 	public List<String> findAllBuildings() {
@@ -82,12 +60,6 @@ public class CabinetOptionalFetcher {
 	public List<Integer> findAllFloorsByBuilding(String building) {
 		log.debug("Called findAllFloorsByBuilding: {}", building);
 		return cabinetRepository.findAllFloorsByBuilding(building);
-	}
-
-	//	deprecated
-	public List<String> findAllSectionsByBuildingAndFloor(String building, Integer floor) {
-		log.debug("Called findAllSectionsByBuildingAndFloor: {}, {}", building, floor);
-		return cabinetRepository.findAllSectionsByBuildingAndFloor(building, floor);
 	}
 
 	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
@@ -114,13 +86,8 @@ public class CabinetOptionalFetcher {
 		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
 	}
 
-	public List<Cabinet> findAllCabinetsByLocation(Location location) {
-		log.debug("Called findAllCabinetsByLocation: {}", location);
-		return cabinetRepository.findAllCabinetsByLocation(location);
-	}
-
 	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
-		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
+		return cabinetRepository.findAllByBuildingAndFloorOrderByVisibleNum(building, floor);
 	}
 	/*-------------------------------------------GET--------------------------------------------*/
 
@@ -136,7 +103,7 @@ public class CabinetOptionalFetcher {
 	 */
 	public Cabinet getCabinetForUpdate(Long cabinetId) {
 		log.debug("Called getCabinetForUpdate: {}", cabinetId);
-		return cabinetRepository.findByIdForUpdate(cabinetId)
+		return cabinetRepository.findByCabinetIdForUpdate(cabinetId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
@@ -162,7 +129,7 @@ public class CabinetOptionalFetcher {
 	 */
 	public Cabinet getLentCabinetByUserId(Long userId) {
 		log.debug("Called getLentCabinetByUserId: {}", userId);
-		return cabinetRepository.findLentCabinetByUserId(userId)
+		return cabinetRepository.findByUserIdAndEndedAtIsNull(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
@@ -175,27 +142,17 @@ public class CabinetOptionalFetcher {
 	 */
 	public Cabinet getClubCabinet(Long cabinetId) {
 		log.debug("Called getClubCabinet: {}", cabinetId);
-		Cabinet cabinet = getCabinet(cabinetId);
+		Cabinet cabinet = cabinetRepository.findById(cabinetId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 		if (!cabinet.isLentType(LentType.CLUB)) {
 			throw new ServiceException(ExceptionStatus.NOT_FOUND_CABINET);
 		}
 		return cabinet;
 	}
 
-	/**
-	 * 사물함 ID로 위치(빌딩, 층, 섹션) 정보를 찾습니다.
-	 *
-	 * @param cabinetId 사물함 ID
-	 * @return 위치 엔티티
-	 * @throws ServiceException 사물함을 찾을 수 없는 경우
-	 */
-	public Location getLocation(Long cabinetId) {
-		log.debug("Called getLocation: {}", cabinetId);
-		return cabinetRepository.findLocationById(cabinetId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-	}
-
-	public List<Cabinet> findAllCabinetsByBuilding(String building) {
-		return cabinetRepository.findAllCabinetsByBuilding(building);
+	public List<Cabinet> findPendingCabinets(
+			String building, LentType lentType, List<CabinetStatus> cabinetStatuses) {
+		return cabinetRepository.findAllByBuildingAndLentTypeNotAndStatusIn(
+				building, lentType, cabinetStatuses);
 	}
 }

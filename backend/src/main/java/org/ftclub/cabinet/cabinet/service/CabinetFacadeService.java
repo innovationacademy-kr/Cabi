@@ -50,11 +50,6 @@ public interface CabinetFacadeService {
 	 */
 	List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor);
 
-	List<CabinetsPerSectionResponseDto> getCabinetsPerSectionRefactor(String building,
-			Integer floor);
-
-	List<CabinetsPerSectionResponseDto> getCabinetsPerSectionDSL(String building, Integer floor);
-
 	/**
 	 * 사물함의 상태 메모를 업데이트합니다.
 	 *
@@ -94,15 +89,6 @@ public interface CabinetFacadeService {
 	 * @param cabinetStatusRequestDto 사물함 ID 리스트 dto
 	 */
 	void updateCabinetBundleStatus(CabinetStatusRequestDto cabinetStatusRequestDto);
-
-//	/**
-//	 * 사물함의 대여 타입을 업데이트합니다.
-//	 *
-//	 * @param cabinetIds 사물함 ID 리스트
-//	 * @param lentType   변경할 대여 타입
-//	 */
-//	void updateCabinetBundleLentType(List<Long> cabinetIds, LentType lentType);
-
 
 	/**
 	 * 대여 타입에 따른 사물함 페이지네이션을 가져옵니다.
@@ -158,6 +144,6 @@ public interface CabinetFacadeService {
 	 *
 	 * @return 오픈 예정인 사물함 정보
 	 */
-	CabinetPendingResponseDto getPendingCabinets();
+	CabinetPendingResponseDto getPendingCabinets(String building);
 
 }
