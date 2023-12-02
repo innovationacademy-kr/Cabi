@@ -291,7 +291,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		log.debug("getPendingCabinets");
 		final LocalDate yesterday = LocalDateTime.now().minusDays(1).toLocalDate();
 		List<Cabinet> buildingCabinets =
-				cabinetOptionalFetcher.findPendingCabinets(
+				cabinetOptionalFetcher.findPendingCabinetsNotLentTypeAndStatus(
 						building,
 						LentType.CLUB,
 						List.of(CabinetStatus.AVAILABLE, CabinetStatus.PENDING));

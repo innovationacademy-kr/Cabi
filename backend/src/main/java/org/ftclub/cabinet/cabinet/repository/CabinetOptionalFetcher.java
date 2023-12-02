@@ -150,7 +150,15 @@ public class CabinetOptionalFetcher {
 		return cabinet;
 	}
 
-	public List<Cabinet> findPendingCabinets(
+	/**
+	 * building과 status에 맞고 lentType이 아닌 사물함을 찾습니다.
+	 *
+	 * @param building 건물 이름
+	 * @param lentType 사물함 타입
+	 * @param cabinetStatuses 사물함 상태 {@link List}
+	 * @return {@link Cabinet} {@link List}
+	 */
+	public List<Cabinet> findPendingCabinetsNotLentTypeAndStatus(
 			String building, LentType lentType, List<CabinetStatus> cabinetStatuses) {
 		return cabinetRepository.findAllByBuildingAndLentTypeNotAndStatusIn(
 				building, lentType, cabinetStatuses);
