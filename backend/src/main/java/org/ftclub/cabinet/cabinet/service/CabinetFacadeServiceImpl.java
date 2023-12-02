@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.RequiredArgsConstructor;
@@ -288,9 +289,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional
 	public CabinetPendingResponseDto getPendingCabinets(String building) {
 		log.debug("getPendingCabinets");
-		final LocalDateTime pendingLimit = LocalDateTime.of(
-				LocalDateTime.now().toLocalDate().minusDays(1),
-				LocalTime.of(13, 0, 0));
+		final LocalDate yesterday = LocalDateTime.now().minusDays(1).toLocalDate();
 		List<Cabinet> buildingCabinets =
 				cabinetOptionalFetcher.findPendingCabinets(
 						building,
@@ -313,7 +312,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				LocalDateTime latestEndedAt = lentHistoriesMap.get(cabinet.getCabinetId()).stream()
 						.map(LentHistory::getEndedAt)
 						.max(LocalDateTime::compareTo).orElse(null);
-				if (latestEndedAt != null && latestEndedAt.isAfter(pendingLimit)) {
+				if (latestEndedAt != null && latestEndedAt.toLocalDate().isEqual(yesterday)) {
 					cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 				}
 			}
