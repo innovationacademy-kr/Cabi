@@ -1,13 +1,14 @@
 package org.ftclub.cabinet.user.domain;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Getter
 @ToString
@@ -23,7 +24,7 @@ public class LentExtensions {
 
 		lentExtensions.removeIf(lentExtension ->
 				lentExtension.getUsedAt() != null ||
-						lentExtension.getExpiredAt().isBefore(currentTime)
+						lentExtension.isExpiredBefore(currentTime)
 		);
 	}
 
@@ -31,11 +32,11 @@ public class LentExtensions {
 		lentExtensions.sort(Comparator.comparing(LentExtension::getExpiredAt));
 	}
 
-	public boolean hasActiveLentExtensions() {
-		return lentExtensions != null && !lentExtensions.isEmpty();
+	public boolean isEmpty() {
+		return lentExtensions == null || lentExtensions.isEmpty();
 	}
 
-	public LentExtension getImminentActiveLentExtension() {
+	public LentExtension findImminentActiveLentExtension() {
 		filterActiveLentExtensions();
 		sortImminentASC();
 		return lentExtensions.get(0);
@@ -46,5 +47,9 @@ public class LentExtensions {
 		return lentExtensions;
 	}
 
-
+	public boolean hasActiveLentExtension() {
+		return !this.isEmpty()
+				&& lentExtensions.parallelStream()
+				.anyMatch(e -> !e.isExpiredBefore(LocalDateTime.now()) && !e.isUsed());
+	}
 }

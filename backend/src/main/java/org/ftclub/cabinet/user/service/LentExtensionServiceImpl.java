@@ -1,9 +1,5 @@
 package org.ftclub.cabinet.user.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -18,15 +14,20 @@ import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
 import org.ftclub.cabinet.user.domain.LentExtensionType;
+import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +52,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
 				occupiedTimeManager.getUserLastMonthOccupiedTime());
 		LocalDateTime now = LocalDateTime.now();
-		userMonthDataDtos.stream().forEach(userMonthDataDto -> {
+		userMonthDataDtos.forEach(userMonthDataDto -> {
 			LentExtension lentExtension = LentExtension.of("lentExtension",
 					cabinetProperties.getLentExtendTerm(),
 					LocalDateTime.of(now.getYear(), now.getMonth(),
@@ -83,7 +84,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called getLentExtensionList {}", userSessionDto.getName());
 
 		LentExtensions lentExtensions = LentExtensions.builder()
-				.lentExtensions(lentExtensionOptionalFetcher.findActiveLentExtensionsByUserId(
+				.lentExtensions(lentExtensionOptionalFetcher.findAllByUserIdUsedAtIsNull(
 						userSessionDto.getUserId())).build();
 
 		return lentExtensions.getLentExtensions().stream()
@@ -93,22 +94,15 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	@Override
 	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
 		LentExtensionResponseDto lentExtensionResponseDto = null;
-		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findActiveLentExtensionsByUserId(
+		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findAllByUserId(
 				userSessionDto.getUserId());
 		LentExtensions lentExtensions = LentExtensions.builder()
 				.lentExtensions(activeLentExtensionsByUserId).build();
-		if (lentExtensions.hasActiveLentExtensions()) {
+		if (lentExtensions.hasActiveLentExtension()) {
 			lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
-					lentExtensions.getImminentActiveLentExtension());
+					lentExtensions.findImminentActiveLentExtension());
 		}
 		return lentExtensionResponseDto;
-	}
-
-	@Override
-	@Scheduled(cron = "${spring.schedule.cron.extension-delete-time}")
-	public void deleteLentExtension() {
-		log.debug("Called deleteExtension");
-		lentExtensionRepository.deleteAll();
 	}
 
 	@Override
@@ -116,20 +110,20 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		log.debug("Called useLentExtension {}", username);
 
 		List<LentExtension> findLentExtension =
-				lentExtensionOptionalFetcher.findLentExtensionByUserId(userId);
+				lentExtensionOptionalFetcher.findAllByUserId(userId);
 
 		LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
 				.build();
-		if (!lentExtensions.hasActiveLentExtensions()) {
+		if (lentExtensions.isEmpty()) {
 			throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
 		}
 
 		Cabinet cabinet = cabinetOptionalFetcher.getLentCabinetByUserId(userId);
-		List<LentHistory> activeLentHistories = lentOptionalFetcher.findActiveLentHistoriesByCabinetId(
+		List<LentHistory> activeLentHistories = lentOptionalFetcher.findAllActiveLentHistoriesByCabinetId(
 				cabinet.getCabinetId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-		LentExtension lentExtension = lentExtensions.getImminentActiveLentExtension();
+		LentExtension lentExtension = lentExtensions.findImminentActiveLentExtension();
 		lentExtension.use();
 		// 연장
 		activeLentHistories

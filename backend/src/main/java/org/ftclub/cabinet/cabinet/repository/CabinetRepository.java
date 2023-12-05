@@ -6,10 +6,8 @@ import javax.persistence.LockModeType;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.cabinet.domain.Location;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -19,95 +17,70 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CabinetRepository extends JpaRepository<Cabinet, Long>, CabinetComplexRepository {
 
+	/**
+	 * 모든 빌딩을 조회한다.
+	 *
+	 * @return 빌딩 {@link List}
+	 */
+	@Query("SELECT DISTINCT p.location.building "
+			+ "FROM CabinetPlace p ")
+	List<String> findAllBuildings();
+
+	/**
+	 * 빌딩의 모든 층을 조회한다.
+	 *
+	 * @param building 빌딩
+	 * @return 층 {@link List}
+	 */
+	@Query("SELECT DISTINCT p.location.floor "
+			+ "FROM CabinetPlace p "
+			+ "WHERE p.location.building = :building")
+	List<Integer> findAllFloorsByBuilding(@Param("building") String building);
+
+	/**
+	 * cabinetId로 사물함을 조회한다.(조회 이후 업데이트를 위해 X Lock을 건다.)
+	 *
+	 * @param cabinetId 사물함 ID
+	 * @return 사물함 {@link Optional}
+	 */
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "WHERE c.cabinetId = :cabinetId")
-	Optional<Cabinet> findByIdForUpdate(@Param("cabinetId") Long cabinetId);
+	Optional<Cabinet> findByCabinetIdForUpdate(@Param("cabinetId") Long cabinetId);
 
-	@Query("SELECT DISTINCT p.location.floor "
-			+ "FROM Cabinet c "
-			+ "JOIN c.cabinetPlace p "
-			+ "WHERE p.location.building = :building")
-	List<Integer> findAllFloorsByBuilding(@Param("building") String building);
-
-	@Query("SELECT DISTINCT p.location.building "
-			+ "FROM Cabinet c "
-			+ "JOIN c.cabinetPlace p")
-	List<String> findAllBuildings();
-
-	@Query("SELECT DISTINCT p.location.section "
-			+ "FROM Cabinet c "
-			+ "JOIN c.cabinetPlace p "
-			+ "WHERE p.location.building = :building AND p.location.floor = :floor")
-	List<String> findAllSectionsByBuildingAndFloor(
-			@Param("building") String building,
-			@Param("floor") Integer floor);
-
-	@Query("SELECT p.location "
-			+ "FROM Cabinet c "
-			+ "JOIN c.cabinetPlace p "
-			+ "WHERE c.cabinetId = :cabinetId")
-	Optional<Location> findLocationById(@Param("cabinetId") Long cabinetId);
-
-
-	@Query(value = "SELECT AUTO_INCREMENT "
-			+ "FROM information_schema.TABLES "
-			+ "WHERE TABLE_SCHEMA = (SELECT DATABASE()) AND TABLE_NAME = 'cabinet'",
-			nativeQuery = true)
-	Optional<Long> getNextCabinetId();
-
+	/**
+	 * userId로 현재 대여 중인 사물함을 조회한다.
+	 *
+	 * @param userId 사용자 ID
+	 * @return 사물함 {@link Optional}
+	 */
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
 			"LEFT JOIN LentHistory lh ON c.cabinetId = lh.cabinetId " +
 			"LEFT JOIN User u ON u.userId = lh.userId " +
 			"WHERE u.userId = :userId AND lh.endedAt IS NULL")
-	Optional<Cabinet> findLentCabinetByUserId(@Param("userId") Long userId);
+	Optional<Cabinet> findByUserIdAndEndedAtIsNull(@Param("userId") Long userId);
 
-	@Query("SELECT c " +
-			"FROM Cabinet c " +
-			"WHERE c.lentType = :lentType")
-	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType,
-			Pageable pageable);
+	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType, Pageable pageable);
 
-	@Query("SELECT c " +
-			"FROM Cabinet c " +
-			"WHERE c.status = :status")
-	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status,
-			Pageable pageable);
+	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status, Pageable pageable);
 
-	@Query("SELECT c " +
-			"FROM Cabinet c " +
-			"WHERE c.visibleNum = :visibleNum")
-	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
-			Pageable pageable);
+	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum, Pageable pageable);
 
-	@Query("SELECT c " +
-			"FROM Cabinet c " +
-			"WHERE c.cabinetPlace.location = :location")
-	List<Cabinet> findAllCabinetsByLocation(@Param("location") Location location);
-
-	@EntityGraph(attributePaths = {"cabinetPlace"})
-	@Query("SELECT DISTINCT c, lh, u " +
-			"FROM Cabinet c " +
-			"JOIN c.lentHistories lh ON lh.cabinetId = c.cabinetId " +
-			"JOIN lh.user u ON lh.userId = u.userId " +
-			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor "
-			+
-			"AND lh.endedAt IS NULL")
-	List<Object[]> findCabinetActiveLentHistoryUserListByBuildingAndFloor(
-			@Param("building") String building, @Param("floor") Integer floor);
-
-	@EntityGraph(attributePaths = {"cabinetPlace"})
-	@Query("SELECT c " +
-			"FROM Cabinet c " +
-			"WHERE c.cabinetPlace.location.building = :building AND c.cabinetPlace.location.floor = :floor")
+	@Query("SELECT c "
+			+ "FROM Cabinet c "
+			+ "JOIN FETCH c.cabinetPlace p "
+			+ "WHERE p.location.building = :building AND p.location.floor = :floor")
 	List<Cabinet> findAllByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);
 
-	@EntityGraph(attributePaths = {"cabinetPlace"})
-	@Query("SELECT c " +
-			"FROM Cabinet c " +
-			"WHERE c.cabinetPlace.location.building = :building")
-	List<Cabinet> findAllCabinetsByBuilding(@Param("building") String building);
+	@Query("SELECT c "
+			+ "FROM Cabinet c "
+			+ "JOIN FETCH c.cabinetPlace p "
+			+ "WHERE p.location.building = :building "
+			+ "AND c.lentType <> :lentType "
+			+ "AND c.status IN (:status)")
+	List<Cabinet> findAllByBuildingAndLentTypeNotAndStatusIn(@Param("building") String building,
+			@Param("lentType") LentType lentType, @Param("status") List<CabinetStatus> status);
 }
