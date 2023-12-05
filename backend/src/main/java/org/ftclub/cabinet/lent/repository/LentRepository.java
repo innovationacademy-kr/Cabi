@@ -89,7 +89,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @param cabinetId 찾으려는 cabinet id
 	 * @return 반납한 {@link LentHistory}의 {@link Optional}
 	 */
-	Optional<LentHistory> findByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(
+	List<LentHistory> findByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(
 			@Param("cabinetId") Long cabinetId);
 
 	/**
