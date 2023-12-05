@@ -160,7 +160,7 @@ public class LentOptionalFetcher {
 		return lentRepository.findAllActiveLentHistoriesByUserId(userId);
 	}
 
-	public Optional<LentHistory> findPreviousLentHistoryByCabinetId(Long cabinetId) {
+	public List<LentHistory> findPreviousLentHistoryByCabinetId(Long cabinetId) {
 		log.debug("Called findPreviousLentUserNameByCabinetId: {}", cabinetId);
 		return lentRepository.findByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(cabinetId);
 	}

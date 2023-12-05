@@ -149,10 +149,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		String previousUserName = lentRedis.getPreviousUserName(
 				myCabinet.getCabinetId().toString());
 		if (previousUserName == null) {
-			Optional<LentHistory> previousLentHistory = lentOptionalFetcher.findPreviousLentHistoryByCabinetId(
+			List<LentHistory> previousLentHistory = lentOptionalFetcher.findPreviousLentHistoryByCabinetId(
 					cabinetId);
-			if (previousLentHistory.isPresent()) {
-				previousUserName = previousLentHistory.get().getUser().getName();
+			if (!previousLentHistory.isEmpty()) {
+				previousUserName = previousLentHistory.get(0).getUser().getName();
 			}
 		}
 		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList,
