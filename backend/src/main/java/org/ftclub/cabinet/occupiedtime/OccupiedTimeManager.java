@@ -30,6 +30,16 @@ public class OccupiedTimeManager {
 	private final HaneProperties haneProperties;
 	private final UserOptionalFetcher userOptionalFetcher;
 
+	public List<UserMonthDataDto> filterCustomUserMonthlyTime(UserMonthDataDto[] userMonthDataDtoList){
+		List<User> allCabiUsers = userOptionalFetcher.findAllActiveUsers();
+		return Arrays.stream(userMonthDataDtoList)
+				.filter(dto -> allCabiUsers.stream()
+						.anyMatch(user -> user.getName().equals(dto.getLogin())))
+				.filter(dto -> dto.getMonthAccumationTime() >= haneProperties.getLimitTimeSeconds() &&
+						dto.getMonthAccumationTime() < 432000)
+				.collect(Collectors.toList());
+	}
+
 	public List<UserMonthDataDto> filterToMetUserMonthlyTime(
 			UserMonthDataDto[] userMonthDataDtoList) {
 		List<User> allCabiUsers = userOptionalFetcher.findAllActiveUsers();
