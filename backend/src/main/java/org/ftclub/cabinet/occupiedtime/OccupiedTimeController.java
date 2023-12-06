@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * FOR TEST ONLY
  */
+
+	/*
 @RestController
 @RequestMapping("/v4/calc")
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class OccupiedTimeController {
 
 	}
 
-	/*
+
 
     @GetMapping("/data")
     public List<UserMonthDataDto> previousMeet() {
@@ -97,4 +99,5 @@ public class OccupiedTimeController {
     }
 
  */
-}
+//}
+
