@@ -12,7 +12,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.UtilException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,7 +36,7 @@ public class OccupiedTimeManager {
 		List<UserMonthDataDto> userMonthData = Arrays.stream(userMonthDataDtoList)
 				.filter(dto -> allCabiUsers.stream()
 						.anyMatch(user -> user.getName().equals(dto.getLogin())))
-				.filter(dto -> dto.getMonthAccumationTime() > haneProperties.getLimit_time())
+				.filter(dto -> dto.getMonthAccumationTime() > haneProperties.getLimitTimeSeconds())
 				.collect(Collectors.toList());
 		return userMonthData;
 	}
