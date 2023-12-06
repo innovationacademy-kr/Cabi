@@ -34,7 +34,9 @@ function App(): React.ReactElement {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="pending" element={<PendingPage />} />
           </Route>
+          제가 만약 이런 곳에다가
           {/* admin용 라우터 */}
+          이렇게 냅다 글을 쓰면 어떨 것 같으세요?
           <Route path="/admin/" element={<AdminLayout />}>
             <Route path="login" element={<AdminLoginPage />} />
             <Route path="home" element={<AdminHomePage />} />
