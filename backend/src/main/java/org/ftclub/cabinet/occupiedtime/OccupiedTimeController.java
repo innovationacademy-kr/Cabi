@@ -1,7 +1,11 @@
 package org.ftclub.cabinet.occupiedtime;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.dto.UserMonthDataDto;
+import org.ftclub.cabinet.user.service.LentExtensionService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,9 +17,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Log4j2
 public class OccupiedTimeController {
-/*
-    private final OccupiedTimeManager occupiedTimeManager;
 
+    private final OccupiedTimeManager occupiedTimeManager;
+	private final LentExtensionService lentExtensionService;
+
+	@GetMapping("/data")
+	public List<UserMonthDataDto> test(){
+		return occupiedTimeManager.filterCustomUserMonthlyTime(occupiedTimeManager.getUserLastMonthOccupiedTime());
+	}
+
+	@GetMapping("/ongoing")
+	public String bulk(){
+		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterCustomUserMonthlyTime(
+				occupiedTimeManager.getUserLastMonthOccupiedTime());
+		userMonthDataDtos.forEach(dto -> {
+			lentExtensionService.assignLentExtension(dto.getLogin());
+		});
+		return "ok";
+
+	}
+
+	/*
 
     @GetMapping("/data")
     public List<UserMonthDataDto> previousMeet() {
