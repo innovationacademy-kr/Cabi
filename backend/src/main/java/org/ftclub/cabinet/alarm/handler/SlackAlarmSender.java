@@ -39,9 +39,8 @@ public class SlackAlarmSender {
 		log.info("slack alarm Event : user = {}, alarmEvent = {}", user.getName(), alarmEvent);
 
 		SlackUserInfo slackUserInfo = slackApiManager.requestSlackUserInfo(user.getEmail());
-		log.debug("slackUserInfo = {}", slackUserInfo);
 		String id = slackUserInfo.getId();
-		log.debug("slack id = {}", id);
+
 		if (StringUtils.isEmpty(id)) {
 			throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
 		}
