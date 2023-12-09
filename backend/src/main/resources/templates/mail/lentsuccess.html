@@ -10,13 +10,13 @@
 <body>
 
 <div>
-  <h1> 🚨 사물함 대여 연체 알림 🚨 </h1>
+  <h1> 🚨 사물함 대여 성공 알림 🚨 </h1>
 </div>
 <br>
 <div>
-  <b th:text="${name}"></b>님, 이용 중인 사물함이 연체되었습니다. <br><br>
+  <b th:text="${name}"></b>님, <b th:text="${location}"></b>의 사물함 대여에 성공했습니다. <br><br>
 
-  현재 <b th:text="${overdueDays}"></b>일 연체 되었으며, 확인 후 반납 부탁드립니다.<br><br>
+  대여 기간은 <b th:text="${expireDate}"></b>까지 이며 기한 만료 전 반납 부탁드립니다.<br><br>
 
   <span style="color:red">연체한 일 수의 제곱 일수 만큼 패널티가 주어집니다.</span><br>
   패널티 일수 만큼 사물함 이용이 불가합니다.<br>

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -27,8 +29,15 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.service.UserService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +55,7 @@ public class LentServiceImpl implements LentService {
 	private final LentMapper lentMapper;
 	private final LentRedis lentRedis;
 	private final CabinetProperties cabinetProperties;
-
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Override
 	public void startLentCabinet(Long userId, Long cabinetId) {
@@ -70,6 +79,8 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = LentHistory.of(now, expiredAt, userId, cabinetId);
 		lentPolicy.applyExpirationDate(lentHistory, expiredAt);
 		lentRepository.save(lentHistory);
+		eventPublisher.publishEvent(AlarmEvent.of(userId,
+				new LentSuccessAlarm(cabinet.getCabinetPlace().getLocation(), cabinet.getVisibleNum(), expiredAt)));
 	}
 
 	@Override
