@@ -5,6 +5,7 @@ import com.google.firebase.messaging.Message;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.alarm.domain.Alarm;
@@ -23,7 +24,7 @@ import org.ftclub.cabinet.redis.service.RedisService;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Component;
 
-@Slf4j
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class PushAlarmSender {

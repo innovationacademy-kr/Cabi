@@ -7,6 +7,7 @@ import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import feign.FeignException.FeignClientException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.slack.config.SlackApiConfig;
 import org.ftclub.cabinet.alarm.slack.config.SlackProperties;
 import org.ftclub.cabinet.alarm.slack.dto.SlackResponse;
 import org.ftclub.cabinet.alarm.slack.dto.SlackUserInfo;
@@ -23,6 +24,7 @@ public class SlackApiManager {
 
 	private final SlackProperties slackProperties;
 	private final SlackFeignClient slackFeignClient;
+	private final MethodsClient slackApi;
 
 	public SlackUserInfo requestSlackUserInfo(String email) {
 
@@ -52,13 +54,13 @@ public class SlackApiManager {
 		log.info("Called sendMessage channelId={}, message={}", channelId, message);
 		try {
 			// token으로 그때그때 instance를 get해오는 게 아니고, 빈으로 등록해서 사용하는게 낫지 않나요?
-			MethodsClient methods = Slack.getInstance().methods(slackProperties.getAppToken());
+//			slackApi = Slack.getInstance().methods(slackProperties.getAppToken());
 
 			ChatPostMessageRequest request = ChatPostMessageRequest.builder()
 					.channel(channelId) // DM & channel
 					.text(message)
 					.build();
-			methods.chatPostMessage(request);
+			slackApi.chatPostMessage(request);
 		} catch (SlackApiException | IOException e) {
 			log.error("{}", e.getMessage());
 			throw new ServiceException(ExceptionStatus.SLACK_MESSAGE_SEND_BAD_GATEWAY);

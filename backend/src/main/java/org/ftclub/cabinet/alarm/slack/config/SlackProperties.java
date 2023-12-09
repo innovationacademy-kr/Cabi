@@ -12,7 +12,7 @@ public class SlackProperties {
     private final String bearer = "Bearer ";
 
     @Value("${slack.token.singing-secret}")
-    private String singingSecert;
+    private String singingSecret;
     @Value("${slack.token.bot-token")
     private String botToken;
     @Value("${slack.token.app-token")

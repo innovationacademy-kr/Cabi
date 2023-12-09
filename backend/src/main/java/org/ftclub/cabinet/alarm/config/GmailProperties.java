@@ -11,24 +11,24 @@ public class GmailProperties {
 	@Value("${spring.production}")
 	private Boolean isProduction;
 
-	@Value("${spring.mail.host}")
+	@Value("${alarm.mail.host}")
 	private String mailServerHost;
 
-	@Value("${spring.mail.port}")
+	@Value("${alarm.mail.port}")
 	private int mailServerPort;
 
-	@Value("${spring.mail.display-sender-name}")
+	@Value("${alarm.mail.display-sender-name}")
 	private String displaySenderName;
 
-	@Value("${spring.mail.username}")
+	@Value("${alarm.mail.username}")
 	private String username;
 
-	@Value("${spring.mail.password}")
+	@Value("${alarm.mail.password}")
 	private String password;
 
-	@Value("${spring.mail.properties.mail.smtp.auth}")
+	@Value("${alarm.mail.properties.mail.smtp.auth}")
 	private Boolean useAuth;
 
-	@Value("${spring.mail.properties.mail.smtp.starttls.enable}")
+	@Value("${alarm.mail.properties.mail.smtp.starttls.enable}")
 	private Boolean useStartTls;
 }

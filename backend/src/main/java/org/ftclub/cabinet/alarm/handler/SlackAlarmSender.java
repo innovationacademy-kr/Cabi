@@ -1,7 +1,23 @@
 package org.ftclub.cabinet.alarm.handler;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.slack.api.Slack;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.config.AlarmProperties;
+import org.ftclub.cabinet.alarm.domain.Alarm;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.AnnouncementAlarm;
+import org.ftclub.cabinet.alarm.domain.ExtensionExpirationImminentAlarm;
+import org.ftclub.cabinet.alarm.domain.ExtensionIssuanceAlarm;
+import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
+import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
+import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
+import org.ftclub.cabinet.alarm.dto.FCMDto;
+import org.ftclub.cabinet.alarm.dto.SlackDto;
 import org.ftclub.cabinet.alarm.slack.SlackApiManager;
 import org.ftclub.cabinet.alarm.slack.dto.SlackUserInfo;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -10,24 +26,66 @@ import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class SlackAlarmSender {
 
 	private final SlackApiManager slackApiManager;
+	private final AlarmProperties alarmProperties;
 
-	// 접근지정자가 없습니다.
-	void send(User user, AlarmEvent alarmEvent) {
+
+	public void send(User user, AlarmEvent alarmEvent) {
+		log.info("slack alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
+
 		SlackUserInfo slackUserInfo = slackApiManager.requestSlackUserInfo(user.getEmail());
 		String id = slackUserInfo.getId();
 		if (StringUtils.isEmpty(id)) {
 			throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
 		}
 
-		// toString을 이용하는 것이 아니라 직접적으로 메시지(String)으로 변환하는 메서드를 두는 게 좋을 것 같습니다.
-		// 개인적인 느낌으로는 toString은 내부적으로 보는 내용이고, 메시지는 외부적으로 보는 내용 같은 느낌이라...
-		// 이후에 작성하는 부분이 생길 때에도 toString을 override 하게하는 것 보다 인터페이스에서 명시적으로 강제하는게 좋을 것 같습니다.
-		// 그리고 파라미터 뒤집혀있네요 id, alarm.toString()이어야 함
-		slackApiManager.sendMessage(alarmEvent.getAlarm().toString(), id);
+		SlackDto slackDto = messageParse(alarmEvent.getAlarm());
+		slackApiManager.sendMessage(id, slackDto.getContent());
 	}
+
+	private SlackDto messageParse(Alarm alarm) {
+		if (alarm instanceof LentSuccessAlarm) {
+			String building = ((LentSuccessAlarm) alarm).getLocation().getBuilding();
+			Integer floor = ((LentSuccessAlarm) alarm).getLocation().getFloor();
+			Integer visibleNum = ((LentSuccessAlarm) alarm).getVisibleNum();
+			String body = String.format(alarmProperties.getLentSuccessMailTemplateUrl(),
+					building + " " + floor + "층 " + visibleNum + "번");
+			return new SlackDto(body);
+		} else if (alarm instanceof LentExpirationImminentAlarm) {
+			Long daysAfterFromExpireDate = ((LentExpirationImminentAlarm) alarm).getDaysAfterFromExpireDate();
+			String body = String.format(alarmProperties.getSoonOverdueSlackTemplate(),
+					Math.abs(daysAfterFromExpireDate));
+			return new SlackDto(body);
+		} else if (alarm instanceof LentExpirationAlarm) {
+			Long daysLeftFromExpireDate = ((LentExpirationAlarm) alarm).getDaysLeftFromExpireDate();
+			String body = String.format(alarmProperties.getOverdueSlackTemplate(),
+					Math.abs(daysLeftFromExpireDate));
+			return new SlackDto(body);
+		} else if (alarm instanceof ExtensionIssuanceAlarm) {
+			Integer daysToExtend = ((ExtensionIssuanceAlarm) alarm).getDaysToExtend();
+			String extensionName = ((ExtensionIssuanceAlarm) alarm).getExtensionName();
+			String body = String.format(alarmProperties.getExtensionIssuanceMailTemplateUrl(),
+					daysToExtend, extensionName);
+			return new SlackDto(body);
+		} else if (alarm instanceof ExtensionExpirationImminentAlarm) {
+			String extensionName = ((ExtensionExpirationImminentAlarm) alarm).getExtensionName();
+			LocalDateTime extensionExpireDate = ((ExtensionExpirationImminentAlarm) alarm).getExtensionExpirationDate();
+			String body = String.format(
+					alarmProperties.getExtensionExpirationImminentMailTemplateUrl(),
+					extensionName, extensionExpireDate);
+			return new SlackDto(body);
+		} else if (alarm instanceof AnnouncementAlarm) {
+			String body = alarmProperties.getAnnouncementMailTemplateUrl();
+			return new SlackDto(body);
+		} else {
+			throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
+		}
+	}
+
+
 }
