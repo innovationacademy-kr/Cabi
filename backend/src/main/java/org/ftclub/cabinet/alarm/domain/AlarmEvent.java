@@ -1,8 +1,10 @@
 package org.ftclub.cabinet.alarm.domain;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class AlarmEvent {
 	private final Long receiverId;
 	private final Alarm alarm;

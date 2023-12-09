@@ -27,9 +27,7 @@ public class SlackApiManager {
 	private final MethodsClient slackApi;
 
 	public SlackUserInfo requestSlackUserInfo(String email) {
-
 		log.info("Called requestSlackUserInfo email={}", email);
-
 		try {
 			SlackResponse slackResponse = slackFeignClient.getUserInfoByEmail(
 					slackProperties.getApplicationForm(),
@@ -37,8 +35,10 @@ public class SlackApiManager {
 					email);
 
 			// getOK()인데 Error일 수 있는 부분이 의아합니다.
-			String RESPONSE_ERROR_MSG = "error";
-			if (slackResponse.getOk().equals(RESPONSE_ERROR_MSG)) {
+			String RESPONSE_ERROR_MESSAGE = "error";
+			String RESPONSE_NOT_FOUND = "false";
+			String slackResponseCode = slackResponse.getOk();
+			if (slackResponseCode.equals(RESPONSE_ERROR_MESSAGE) || slackResponseCode.equals(RESPONSE_NOT_FOUND)) {
 				log.error("Slack Response ERROR Error {} ", slackResponse);
 				throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
 			}

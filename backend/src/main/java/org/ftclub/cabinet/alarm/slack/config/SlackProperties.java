@@ -11,15 +11,15 @@ public class SlackProperties {
     private final String applicationForm = "application/x-www-form-urlencoded";
     private final String bearer = "Bearer ";
 
-    @Value("${slack.token.singing-secret}")
+    @Value("${alarm.slack.token.singing-secret}")
     private String singingSecret;
-    @Value("${slack.token.bot-token")
+    @Value("${alarm.slack.token.bot-token}")
     private String botToken;
-    @Value("${slack.token.app-token")
+    @Value("${alarm.slack.token.app-token}")
     private String appToken;
-    @Value("${slack.channel.cabi")
+    @Value("${alarm.slack.channel.cabi}")
     private String cabiChannelId;
-    @Value("${slack.channel.ramdom")
+    @Value("${alarm.slack.channel.random}")
     private String randomChannelId;
 
 }

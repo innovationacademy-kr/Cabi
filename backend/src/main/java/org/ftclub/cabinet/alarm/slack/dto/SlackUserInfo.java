@@ -5,21 +5,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SlackUserInfo {
-
-	// 접근 지정자가 없습니다.
-	String id;
-	String name;
-	// 얘는 뭔가요?
+	private String id;
+	private String name;
 	@JsonAlias("real_name")
-	String realName;
+	private String realName;
 	@JsonAlias("team_id")
-	String teamId;
-	Boolean deleted;
+	private String teamId;
+	private Boolean deleted;
 }
 

@@ -36,10 +36,12 @@ public class SlackAlarmSender {
 
 
 	public void send(User user, AlarmEvent alarmEvent) {
-		log.info("slack alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
+		log.info("slack alarm Event : user = {}, alarmEvent = {}", user.getName(), alarmEvent);
 
 		SlackUserInfo slackUserInfo = slackApiManager.requestSlackUserInfo(user.getEmail());
+		log.debug("slackUserInfo = {}", slackUserInfo);
 		String id = slackUserInfo.getId();
+		log.debug("slack id = {}", id);
 		if (StringUtils.isEmpty(id)) {
 			throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
 		}
@@ -49,11 +51,12 @@ public class SlackAlarmSender {
 	}
 
 	private SlackDto messageParse(Alarm alarm) {
+		log.debug("alarm = {}", alarm);
 		if (alarm instanceof LentSuccessAlarm) {
 			String building = ((LentSuccessAlarm) alarm).getLocation().getBuilding();
 			Integer floor = ((LentSuccessAlarm) alarm).getLocation().getFloor();
 			Integer visibleNum = ((LentSuccessAlarm) alarm).getVisibleNum();
-			String body = String.format(alarmProperties.getLentSuccessMailTemplateUrl(),
+			String body = String.format(alarmProperties.getLentSuccessSlackTemplate(),
 					building + " " + floor + "층 " + visibleNum + "번");
 			return new SlackDto(body);
 		} else if (alarm instanceof LentExpirationImminentAlarm) {
@@ -69,18 +72,18 @@ public class SlackAlarmSender {
 		} else if (alarm instanceof ExtensionIssuanceAlarm) {
 			Integer daysToExtend = ((ExtensionIssuanceAlarm) alarm).getDaysToExtend();
 			String extensionName = ((ExtensionIssuanceAlarm) alarm).getExtensionName();
-			String body = String.format(alarmProperties.getExtensionIssuanceMailTemplateUrl(),
+			String body = String.format(alarmProperties.getExtensionIssuanceSlackTemplate(),
 					daysToExtend, extensionName);
 			return new SlackDto(body);
 		} else if (alarm instanceof ExtensionExpirationImminentAlarm) {
 			String extensionName = ((ExtensionExpirationImminentAlarm) alarm).getExtensionName();
 			LocalDateTime extensionExpireDate = ((ExtensionExpirationImminentAlarm) alarm).getExtensionExpirationDate();
 			String body = String.format(
-					alarmProperties.getExtensionExpirationImminentMailTemplateUrl(),
+					alarmProperties.getExtensionExpirationImminentSlackTemplate(),
 					extensionName, extensionExpireDate);
 			return new SlackDto(body);
 		} else if (alarm instanceof AnnouncementAlarm) {
-			String body = alarmProperties.getAnnouncementMailTemplateUrl();
+			String body = alarmProperties.getAnnouncementSlackTemplate();
 			return new SlackDto(body);
 		} else {
 			throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
