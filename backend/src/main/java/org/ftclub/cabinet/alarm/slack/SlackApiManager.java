@@ -1,13 +1,11 @@
 package org.ftclub.cabinet.alarm.slack;
 
-import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import feign.FeignException.FeignClientException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.alarm.slack.config.SlackApiConfig;
 import org.ftclub.cabinet.alarm.slack.config.SlackProperties;
 import org.ftclub.cabinet.alarm.slack.dto.SlackResponse;
 import org.ftclub.cabinet.alarm.slack.dto.SlackUserInfo;
@@ -33,16 +31,7 @@ public class SlackApiManager {
 					slackProperties.getApplicationForm(),
 					slackProperties.getBearer() + slackProperties.getAppToken(),
 					email);
-
-			// getOK()인데 Error일 수 있는 부분이 의아합니다.
-			String RESPONSE_ERROR_MESSAGE = "error";
-			String RESPONSE_NOT_FOUND = "false";
-			String slackResponseCode = slackResponse.getOk();
-			if (slackResponseCode.equals(RESPONSE_ERROR_MESSAGE) || slackResponseCode.equals(RESPONSE_NOT_FOUND)) {
-				log.error("Slack Response ERROR Error {} ", slackResponse);
-				throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
-			}
-
+			slackResponse.responseCheck();
 			return slackResponse.getSlackUserInfo();
 		} catch (FeignClientException e) {
 			log.error("{}", e.getMessage());
