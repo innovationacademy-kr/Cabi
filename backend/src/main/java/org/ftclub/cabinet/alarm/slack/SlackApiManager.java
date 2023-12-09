@@ -24,6 +24,11 @@ public class SlackApiManager {
 	private final SlackFeignClient slackFeignClient;
 	private final MethodsClient slackApi;
 
+	/**
+	 * email 주소로, Slack 고유 ID를 가져옵니다.
+	 * @param email
+	 * @return
+	 */
 	public SlackUserInfo requestSlackUserInfo(String email) {
 		log.info("Called requestSlackUserInfo email={}", email);
 		try {
@@ -42,14 +47,12 @@ public class SlackApiManager {
 	public void sendMessage(String channelId, String message) {
 		log.info("Called sendMessage channelId={}, message={}", channelId, message);
 		try {
-			// token으로 그때그때 instance를 get해오는 게 아니고, 빈으로 등록해서 사용하는게 낫지 않나요?
-//			slackApi = Slack.getInstance().methods(slackProperties.getAppToken());
-
 			ChatPostMessageRequest request = ChatPostMessageRequest.builder()
 					.channel(channelId) // DM & channel
 					.text(message)
 					.build();
 			slackApi.chatPostMessage(request);
+
 		} catch (SlackApiException | IOException e) {
 			log.error("{}", e.getMessage());
 			throw new ServiceException(ExceptionStatus.SLACK_MESSAGE_SEND_BAD_GATEWAY);
