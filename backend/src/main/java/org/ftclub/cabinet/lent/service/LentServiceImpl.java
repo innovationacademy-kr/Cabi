@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class LentServiceImpl implements LentService {
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		User user = userOptionalFetcher.getUser(userId);
-		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
+		int userActiveLentCount = lentRepository.countByUserIdAndEndedAtIsNull(userId);
 		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
 				now);
 		// 대여 가능한 유저인지 확인
@@ -78,7 +79,7 @@ public class LentServiceImpl implements LentService {
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(cabinetId);
 		User user = userOptionalFetcher.getUser(userId);
-		int userActiveLentCount = lentRepository.countUserActiveLent(userId);
+		int userActiveLentCount = lentRepository.countByUserIdAndEndedAtIsNull(userId);
 		List<BanHistory> userActiveBanList = banHistoryRepository.findUserActiveBanList(userId,
 				now);
 		// 대여 가능한 유저인지 확인
@@ -126,8 +127,8 @@ public class LentServiceImpl implements LentService {
 	@Override
 	public void endLentCabinet(Long userId) {
 		log.debug("Called endLentCabinet: {}", userId);
-		List<LentHistory> allActiveLentHistoriesByUserId = lentRepository.findAllActiveLentHistoriesByUserId(
-				userId);
+		List<LentHistory> allActiveLentHistoriesByUserId =
+				lentOptionalFetcher.findAllActiveLentHistoriesByUserId(userId);
 		LentHistory lentHistory = returnCabinetByUserId(userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
 		// cabinetType도 인자로 전달하면 좋을 거 같습니다 (공유사물함 3일이내 반납 페널티)
@@ -135,15 +136,14 @@ public class LentServiceImpl implements LentService {
 				lentHistory.getEndedAt(), lentHistory.getExpiredAt());
 		// 공유 사물함 반납 시 남은 대여일 수 차감 (원래 남은 대여일 수 * (남은 인원 / 원래 있던 인원))
 		if (cabinet.getLentType().equals(LentType.SHARE)) {
-			Double usersInShareCabinet = lentRepository.countCabinetAllActiveLent(
-					cabinet.getCabinetId()).doubleValue();
-			Double daysUntilExpiration =
+			double usersInShareCabinet = lentRepository.countByCabinetIdAndEndedAtIsNull(
+					cabinet.getCabinetId());
+			double daysUntilExpiration =
 					lentHistory.getDaysUntilExpiration(LocalDateTime.now()).doubleValue() * -1.0;
-			Double secondsRemaining =
+			double secondsRemaining =
 					daysUntilExpiration * (usersInShareCabinet / (usersInShareCabinet + 1.0) * 24.0
 							* 60.0 * 60.0);
-			LocalDateTime expiredAt = LocalDateTime.now().plusSeconds(
-							secondsRemaining.longValue())
+			LocalDateTime expiredAt = LocalDateTime.now().plusSeconds(Math.round(secondsRemaining))
 					.withHour(23)
 					.withMinute(59)
 					.withSecond(0); // 23:59:59
@@ -151,8 +151,7 @@ public class LentServiceImpl implements LentService {
 				e.setExpiredAt(expiredAt);
 			});
 		}
-		lentRedis.setPreviousUser(cabinet.getCabinetId().toString(),
-				lentHistory.getUser().getName());
+		lentRedis.setPreviousUser(cabinet.getCabinetId().toString(), lentHistory.getUser().getName());
 	}
 
 	@Override
@@ -207,7 +206,7 @@ public class LentServiceImpl implements LentService {
 		LentHistory lentHistory = lentOptionalFetcher.getActiveLentHistoryWithUserIdForUpdate(
 				userId);
 		Cabinet cabinet = cabinetOptionalFetcher.getCabinetForUpdate(lentHistory.getCabinetId());
-		int activeLentCount = lentRepository.countCabinetActiveLent(lentHistory.getCabinetId());
+		int activeLentCount = lentRepository.countByCabinetIdAndEndedAtIsNull(lentHistory.getCabinetId());
 		lentHistory.endLent(LocalDateTime.now());
 		cabinet.specifyStatusByUserCount(activeLentCount - 1); // policy로 빠질만한 부분인듯?
 		if (activeLentCount - 1 == 0) {

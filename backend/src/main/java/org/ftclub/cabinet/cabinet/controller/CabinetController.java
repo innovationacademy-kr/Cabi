@@ -52,7 +52,7 @@ public class CabinetController {
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
 			@PathVariable("building") String building,
 			@PathVariable("floor") Integer floor) {
-		return cabinetFacadeService.getCabinetsPerSectionDSL(building, floor);
+		return cabinetFacadeService.getCabinetsPerSection(building, floor);
 	}
 
 	/**
@@ -75,10 +75,10 @@ public class CabinetController {
 	 *
 	 * @return 오픈 예정인 사물함들의 정보를 반환합니다.
 	 */
-	@GetMapping("/pending")
+	@GetMapping("/buildings/{building}/pending")
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
-	public CabinetPendingResponseDto getPendingCabinets() {
+	public CabinetPendingResponseDto getPendingCabinets(@PathVariable("building") String building) {
 		log.info("Called getPendingCabinets");
-		return cabinetFacadeService.getPendingCabinets();
+		return cabinetFacadeService.getPendingCabinets(building);
 	}
 }

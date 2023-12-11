@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,10 @@ public class FCMInitializer {
 
 	@PostConstruct
 	public void initialize() throws IOException {
-		Path currentPath = Paths.get("").toAbsolutePath().normalize();
+
+		Path currentPath = Paths.get(new ClassPathResource("/").getFile().getPath())
+				.getParent().getParent().getParent().getParent().getParent()
+				.toAbsolutePath().normalize();
 		Resource resource = resourceLoader.getResource("file:" + currentPath + credentialsPath);
 		try (InputStream inputStream = resource.getInputStream()) {
 			FirebaseOptions options = FirebaseOptions.builder()

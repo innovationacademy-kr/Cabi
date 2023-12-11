@@ -23,6 +23,7 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+import org.hibernate.annotations.BatchSize;
 
 /**
  * lent의 기록을 관리하기 위한 data mapper
@@ -33,6 +34,7 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Getter
 @ToString(exclude = {"user", "cabinet"})
 @Log4j2
+@BatchSize(size = 200)
 public class LentHistory {
 
     @Id

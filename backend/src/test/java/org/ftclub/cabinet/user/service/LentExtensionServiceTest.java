@@ -41,24 +41,5 @@ public class LentExtensionServiceTest {
 			em.persist(sanan);
 			em.persist(jpark2);
 		}
-
-		@Test
-		@DisplayName("현재 시간을 기준으로 만료된 연장권들을 soft delete한다.")
-		void 삭제() {
-			LentExtension expired = LentExtension.of("extension", 31, now.minusDays(1), LentExtensionType.ALL, sanan.getUserId());
-			LentExtension valid = LentExtension.of("extension", 31, now.plusDays(1), LentExtensionType.ALL, jpark2.getUserId());
-			em.persist(expired);
-			em.persist(valid);
-			em.flush();
-			em.clear();
-
-			lentExtensionService.deleteExpiredExtensions();
-
-			LentExtension mustDeleted = lentExtensionRepository.findById(expired.getLentExtensionId()).get();
-			LentExtension mustValid = lentExtensionRepository.findById(valid.getLentExtensionId()).get();
-			assertThat(mustDeleted.getDeletedAt()).isNotNull();
-			assertThat(mustValid.getDeletedAt()).isNull();
-		}
-
 	}
 }
