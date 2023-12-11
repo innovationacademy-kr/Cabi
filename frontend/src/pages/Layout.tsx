@@ -47,8 +47,8 @@ const Layout = (): JSX.Element => {
         data: { date: serverTime },
       } = await axiosMyInfo();
 
-      const formattedServerTime = serverTime.split(" KST")[0]; // 서버 시간을 Date 객체로 변환하기 위해 KST 제거
-      setServerTime(new Date(formattedServerTime)); // 접속 후(세션 초기화 후) 최초 서버 시간을 가져옴
+      const formattedServerTime = serverTime.split(" KST")[0];
+      setServerTime(new Date(formattedServerTime)); // 접속 후 최초 서버 시간을 가져옴
       setMyInfoData(myInfo);
       setUser(myInfo);
       setIsValidToken(true);
