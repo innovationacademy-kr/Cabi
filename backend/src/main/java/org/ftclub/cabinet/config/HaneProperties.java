@@ -14,6 +14,6 @@ public class HaneProperties {
 	@Value("${spring.hane.url}")
 	private String url;
 
-	@Value("${spring.hane.limit-time}")
+	@Value("${spring.hane.limit-hours}")
 	private int limit_time;
 }
