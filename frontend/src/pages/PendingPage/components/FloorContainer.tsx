@@ -58,8 +58,10 @@ const FloorTitleStyled = styled.h2<{ isToggled: boolean }>`
   font-size: 1.1rem;
   color: var(--black);
   padding-left: 5px;
-  padding-right: 5px;
+
   border-bottom: 1.5px solid #d9d9d9;
+  div {
+  }
   button {
     z-index: 2;
     height: 30px;
@@ -67,6 +69,7 @@ const FloorTitleStyled = styled.h2<{ isToggled: boolean }>`
     background: url(/src/assets/images/select.svg) no-repeat 100%;
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
+    margin-right: 5px;
   }
 `;
 
@@ -97,6 +100,10 @@ const NoPendingCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
     aspect-ratio: 1 / 1;
     margin-left: 8px;
   }
+`;
+
+const LoadingContainerStyled = styled.div`
+  margin-top: 30px;
 `;
 
 export default FloorContainer;
