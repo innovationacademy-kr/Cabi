@@ -17,7 +17,6 @@ const axiosMyInfoURL = "/v4/users/me";
 export const axiosMyInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyInfoURL);
-    console.log(response);
     return response;
   } catch (error) {
     throw error;
@@ -521,7 +520,7 @@ export const axiosCancel = async (cabinetId: number | null): Promise<any> => {
   }
 };
 
-const axiosGetPendingCabinetsURL = "/v4/cabinets/pending";
+const axiosGetPendingCabinetsURL = "/v4/cabinets/buildings/새롬관/pending";
 export const axiosGetPendingCabinets = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosGetPendingCabinetsURL);
