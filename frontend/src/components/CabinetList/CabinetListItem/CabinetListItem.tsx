@@ -62,9 +62,10 @@ const CabinetListItem = (props: CabinetPreviewInfo): JSX.Element => {
   ) {
     if (props.lentType === "PRIVATE") cabinetLabelText = props.name;
     else if (props.lentType === "SHARE") {
-      cabinetLabelText = !!props.title
-        ? props.title
-        : `${props.userCount} / ${props.maxUser}`;
+      cabinetLabelText =
+        !!props.title
+          ? props.title
+          : `${props.userCount} / ${props.maxUser}`;
     } else if (props.lentType === "CLUB")
       cabinetLabelText = props.title ? props.title : "동아리";
   } else {

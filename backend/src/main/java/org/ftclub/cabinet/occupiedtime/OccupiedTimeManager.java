@@ -12,7 +12,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.UtilException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,13 +30,23 @@ public class OccupiedTimeManager {
 	private final HaneProperties haneProperties;
 	private final UserOptionalFetcher userOptionalFetcher;
 
+	public List<UserMonthDataDto> filterCustomUserMonthlyTime(UserMonthDataDto[] userMonthDataDtoList){
+		List<User> allCabiUsers = userOptionalFetcher.findAllActiveUsers();
+		return Arrays.stream(userMonthDataDtoList)
+				.filter(dto -> allCabiUsers.stream()
+						.anyMatch(user -> user.getName().equals(dto.getLogin())))
+				.filter(dto -> dto.getMonthAccumationTime() >= haneProperties.getLimitTimeSeconds() &&
+						dto.getMonthAccumationTime() < 432000)
+				.collect(Collectors.toList());
+	}
+
 	public List<UserMonthDataDto> filterToMetUserMonthlyTime(
 			UserMonthDataDto[] userMonthDataDtoList) {
 		List<User> allCabiUsers = userOptionalFetcher.findAllActiveUsers();
 		List<UserMonthDataDto> userMonthData = Arrays.stream(userMonthDataDtoList)
 				.filter(dto -> allCabiUsers.stream()
 						.anyMatch(user -> user.getName().equals(dto.getLogin())))
-				.filter(dto -> dto.getMonthAccumationTime() > haneProperties.getLimit_time())
+				.filter(dto -> dto.getMonthAccumationTime() > haneProperties.getLimitTimeSeconds())
 				.collect(Collectors.toList());
 		return userMonthData;
 	}

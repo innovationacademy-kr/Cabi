@@ -2,7 +2,7 @@ package org.ftclub.cabinet.auth.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.ftclub.cabinet.config.JwtProperties;
@@ -20,7 +20,7 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.*;
 /**
  * {@link AuthGuard} 어노테이션이 붙은 메소드나 클래스에 대해 인증을 검사하는 클래스입니다.
  */
-@Slf4j
+@Log4j2
 @Aspect
 @Component
 @RequiredArgsConstructor
