@@ -13,22 +13,22 @@ import java.security.Key;
 @Getter
 public class JwtProperties {
 
-    @Value("${spring.auth.jwt-secret-key}")
+    @Value("${cabinet.jwt.jwt-secret-key}")
     private String secret;
 
-    @Value("${spring.oauth2.jwt.token.main-token-name}")
+    @Value("${cabinet.jwt.token.main-token-name}")
     private String mainTokenName;
 
-    @Value("${spring.oauth2.jwt.token.main-provider}")
+    @Value("${cabinet.jwt.token.main-provider}")
     private String mainProviderName;
 
-    @Value("${spring.oauth2.jwt.token.admin-token-name}")
+    @Value("${cabinet.jwt.token.admin-token-name}")
     private String adminTokenName;
 
-    @Value("${spring.oauth2.jwt.token.admin-provider}")
+    @Value("${cabinet.jwt.token.admin-provider}")
     private String adminProviderName;
 
-    @Value("${spring.oauth2.jwt.token.expiry}")
+    @Value("${cabinet.jwt.token.expiry}")
     private Integer expiryDays;
 
     public Key getSigningKey() {

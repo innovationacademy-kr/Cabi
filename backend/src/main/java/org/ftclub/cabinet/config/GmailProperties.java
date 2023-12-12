@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Getter
 public class GmailProperties {
 
-	@Value("${spring.production}")
+	@Value("${cabinet.production}")
 	private Boolean isProduction;
 
 	@Value("${spring.mail.host}")
@@ -17,7 +17,7 @@ public class GmailProperties {
 	@Value("${spring.mail.port}")
 	private int mailServerPort;
 
-	@Value("${spring.mail.display-sender-name}")
+	@Value("${cabinet.alarm.mail.display-sender-name}")
 	private String displaySenderName;
 
 	@Value("${spring.mail.username}")

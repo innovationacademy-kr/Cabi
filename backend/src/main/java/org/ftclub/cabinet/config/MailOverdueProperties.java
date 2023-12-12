@@ -8,18 +8,18 @@ import org.springframework.stereotype.Component;
 @Getter
 public class MailOverdueProperties {
 
-	@Value("${alarm.mail.soonoverdue.term}")
+	@Value("${cabinet.alarm.mail.soonoverdue.term}")
 	private Long soonOverdueTerm;
 
-	@Value("${alarm.mail.overdue.subject}")
+	@Value("${cabinet.alarm.mail.overdue.subject}")
 	private String overdueMailSubject;
 
-	@Value("${alarm.mail.overdue.template}")
+	@Value("${cabinet.alarm.mail.overdue.template}")
 	private String overdueMailTemplateUrl;
 
-	@Value("${alarm.mail.soonoverdue.subject}")
+	@Value("${cabinet.alarm.mail.soonoverdue.subject}")
 	private String soonOverdueMailSubject;
 
-	@Value("${alarm.mail.soonoverdue.template}")
+	@Value("${cabinet.alarm.mail.soonoverdue.template}")
 	private String soonOverdueMailTemplateUrl;
 }

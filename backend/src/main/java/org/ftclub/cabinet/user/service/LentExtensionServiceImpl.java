@@ -46,7 +46,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	private final LentExtensionPolicy lentExtensionPolicy;
 
 	@Override
-	@Scheduled(cron = "${spring.schedule.cron.extension-issue-time}")
+	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
 	public void issueLentExtension() {
 		log.debug("Called issueLentExtension");
 		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
