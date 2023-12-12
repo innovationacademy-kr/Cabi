@@ -95,6 +95,26 @@ spring:
           auth: true
           starttls:
             enable: true
+    lentSuccess:
+      template: "mail/lentsuccess"
+      subject: "Cabi 사물함 대여 성공 알림"
+    soonOverdue:
+      term: -1
+      template: "mail/soonoverdue"
+      subject: "Cabi 사물함 연체 예정 알림"
+    overdue:
+      template: "mail/overdue"
+      subject: "Cabi 사물함 연체 알림"
+    extensionIssuance:
+      template: "mail/extensionIssuance"
+      subject: "Cabi 사물함 연장권 발급 알림"
+    extensionExpiration:
+      term: -1
+      template: "mail/extensionExpiration"
+      subject: "Cabi 사물함 연장권 만료 알림"
+    announcement:
+      template: "mail/announcement"
+      subject: "Cabi 공지사항 안내"
 
   cabinet:
     in-session:
@@ -138,29 +158,6 @@ spring:
       extension-delete-time: 30 59 23 L * ? # 매월 마지막날 23시 59분 30초
       extension-issue-time: 0 0 0 2 * * # 매월 2일 0시 0분 0초
 
-alarm:
-  mail:
-    lentSuccess:
-      template: "mail/lentsuccess"
-      subject: "Cabi 사물함 대여 성공 알림"
-    soonOverdue:
-      term: -1
-      template: "mail/soonoverdue"
-      subject: "Cabi 사물함 연체 예정 알림"
-    overdue:
-      template: "mail/overdue"
-      subject: "Cabi 사물함 연체 알림"
-    extensionIssuance:
-      template: "mail/extensionIssuance"
-      subject: "Cabi 사물함 연장권 발급 알림"
-    extensionExpiration:
-      term: -1
-      template: "mail/extensionExpiration"
-      subject: "Cabi 사물함 연장권 만료 알림"
-    announcement:
-      template: "mail/announcement"
-      subject: "Cabi 공지사항 안내"
-
   fcm:
     lentSuccess:
       template: "%s 자리의 사물함 대여에 성공했습니다."
@@ -198,8 +195,8 @@ webhook:
 firebase:
   messaging:
     credentials:
-      path: "/config/backend/src/main/resources/local/firebase-example.json"
-
+      path: "/config/backend/src/test/resources/firebase-example.json"
+      
 slack:
   token:
     singing_secret: signing_secret
