@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -23,12 +21,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
@@ -108,8 +106,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
 			// 12/2 패치 : 개인 사물함도 타이틀이 있을 경우 타이틀을 노출합니다.
 			return cabinet.getTitle();
-		}
-		else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
+		} else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
 			return lentHistories.get(0).getUser().getName();
 
 		}
@@ -120,6 +117,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building, Integer floor) {
 		log.debug("getCabinetsPerSection");
 		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher
@@ -141,7 +139,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 					String title = checkCabinetTitle(cabinet, lentHistories);
 					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>())
 							.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(), title));
-		});
+				});
 		return cabinetPreviewsBySection.entrySet().stream()
 				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList());
@@ -301,7 +299,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 						.collect(toMap(key -> key, value -> new ArrayList<>()));
 		Map<Long, List<LentHistory>> lentHistoriesMap =
 				lentOptionalFetcher.findAllByCabinetIdsAfterDate(yesterday, cabinetIds)
-					.stream().collect(groupingBy(LentHistory::getCabinetId));
+						.stream().collect(groupingBy(LentHistory::getCabinetId));
 		buildingCabinets.forEach(cabinet -> {
 			Integer floor = cabinet.getCabinetPlace().getLocation().getFloor();
 			if (cabinet.isStatus(AVAILABLE)) {
