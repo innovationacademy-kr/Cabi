@@ -131,14 +131,14 @@ const PendingPage = () => {
         <h2>
           <span>매일 오후 1시</span> 사용 가능한 사물함이 업데이트됩니다.
         </h2>
-        <RefreshButtonStyled onClick={refreshPendingCabinets}>
-          {isRefreshing ? (
-            <LoadingAnimation />
-          ) : (
-            <img src="/src/assets/images/refresh.svg" alt="새로고침" />
-          )}
-        </RefreshButtonStyled>
       </SubHeaderStyled>
+      <RefreshButtonStyled onClick={refreshPendingCabinets}>
+        {isRefreshing ? (
+          <LoadingAnimation />
+        ) : (
+          <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+        )}
+      </RefreshButtonStyled>
       <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} />
       {isLoaded && cabinets ? (
         Object.entries(cabinets).map(([key, value]) => (
@@ -194,14 +194,10 @@ const SubHeaderStyled = styled.div`
 `;
 
 const RefreshButtonStyled = styled.button`
-  margin-top: 40px;
   background-color: transparent;
+  margin-top: 40px;
   width: 35px;
-  height: 35px;
-  img {
-    width: 35px;
-    height: 35px;
-  }
+  min-height: 35px;
   &:hover {
     opacity: 0.7;
   }
