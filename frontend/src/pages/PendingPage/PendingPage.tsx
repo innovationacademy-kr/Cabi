@@ -194,7 +194,7 @@ const SubHeaderStyled = styled.div`
 `;
 
 const RefreshButtonStyled = styled.button`
-  background-color: transparent;
+  background-color: inherit;
   margin-top: 40px;
   width: 35px;
   min-height: 35px;
