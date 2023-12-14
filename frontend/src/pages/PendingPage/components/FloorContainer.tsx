@@ -25,9 +25,7 @@ const FloorContainer = ({
     <FloorContainerStyled>
       <FloorTitleStyled isToggled={isToggled}>
         <div>{floorNumber}층</div>
-        <button onClick={toggle}>
-          <img src="/src/assets/images/select.svg" alt="arrow" />
-        </button>
+        <button onClick={toggle}></button>
       </FloorTitleStyled>
       {pendingCabinetsList.length !== 0 ? (
         <FlootCabinetsContainerStyled isToggled={isToggled}>
@@ -63,17 +61,10 @@ const FloorTitleStyled = styled.h2<{ isToggled: boolean }>`
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
   button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 2;
-    height: 25px;
-    width: 25px;
-    img {
-      width: 15px;
-      height: 10px;
-    }
-    background-color: transparent;
+    height: 30px;
+    width: 10px;
+    background: url(/src/assets/images/select.svg) no-repeat 100%;
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
   }
