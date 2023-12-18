@@ -29,9 +29,7 @@ const MemoModal = ({
   const newMemo = useRef<HTMLInputElement>(null);
   const handleClickWriteMode = (e: any) => {
     setMode("write");
-    if (cabinetType === "PRIVATE" && newMemo.current) {
-      newMemo.current.select();
-    } else if (newTitle.current) {
+    if (newTitle.current) {
       newTitle.current.select();
     }
   };
@@ -39,13 +37,14 @@ const MemoModal = ({
     //사물함 제목, 사물함 비밀메모 update api 호출
     // onClose(e);
     document.getElementById("unselect-input")?.focus();
-    if (cabinetType === "SHARE" && newTitle.current!.value) {
+    if (newTitle.current!.value) {
       onSave(newTitle.current!.value, newMemo.current!.value);
     } else {
       onSave(null, newMemo.current!.value);
     }
     setMode("read");
   };
+
   return (
     <ModalPortal>
       <BackgroundStyled onClick={onClose} />
@@ -56,7 +55,7 @@ const MemoModal = ({
         <H2Styled>메모 관리</H2Styled>
         <ContentSectionStyled>
           <ContentItemSectionStyled>
-            <ContentItemWrapperStyled isVisible={cabinetType !== "PRIVATE"}>
+            <ContentItemWrapperStyled>
               <ContentItemTitleStyled>사물함 이름</ContentItemTitleStyled>
               <ContentItemInputStyled
                 onKeyUp={(e: any) => {
@@ -72,7 +71,7 @@ const MemoModal = ({
                 maxLength={MAX_INPUT_LENGTH}
               />
             </ContentItemWrapperStyled>
-            <ContentItemWrapperStyled isVisible={true}>
+            <ContentItemWrapperStyled>
               <ContentItemTitleStyled>비밀 메모</ContentItemTitleStyled>
               <ContentItemInputStyled
                 onKeyUp={(e: any) => {
@@ -157,8 +156,8 @@ const ContentItemSectionStyled = styled.div`
   width: 100%;
 `;
 
-const ContentItemWrapperStyled = styled.div<{ isVisible: boolean }>`
-  display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
+const ContentItemWrapperStyled = styled.div`
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 25px;
