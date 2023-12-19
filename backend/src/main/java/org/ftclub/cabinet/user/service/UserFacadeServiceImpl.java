@@ -1,15 +1,40 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.domain.AlarmType;
+import org.ftclub.cabinet.alarm.repository.AlarmOptOutRepository;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.ClubUserListDto;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
+import org.ftclub.cabinet.dto.LentExtensionResponseDto;
+import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserBlockedInfoDto;
+import org.ftclub.cabinet.dto.UserCabinetDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserProfileDto;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
-import org.ftclub.cabinet.user.domain.*;
+import org.ftclub.cabinet.user.domain.AdminRole;
+import org.ftclub.cabinet.user.domain.AlarmOptOut;
+import org.ftclub.cabinet.user.domain.BanHistory;
+import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.utils.DateUtil;
@@ -17,12 +42,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +56,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final CabinetMapper cabinetMapper;
 	private final LentExtensionService lentExtensionService;
 	private final LentExtensionOptionalFetcher lentExtensionOptionalFetcher;
+	private final AlarmOptOutRepository alarmOptOutRepository;
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
@@ -49,8 +69,12 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		LentExtensionResponseDto activeLentExtension = lentExtensionService.getActiveLentExtension(
 				user);
 
+		List<AlarmOptOut> alarmOptOuts = alarmOptOutRepository.findAllByUserId(user.getUserId());
+		List<AlarmType> alarmTypes = alarmOptOuts.stream().map(AlarmOptOut::getAlarmType)
+				.collect(Collectors.toList());
+
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				activeLentExtension);
+				activeLentExtension, alarmTypes);
 	}
 
 	@Override
@@ -72,7 +96,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
-	                                                                Integer size) {
+			Integer size) {
 		log.debug("Called getUserProfileListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
@@ -88,7 +112,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
-	                                                                 Integer size) {
+			Integer size) {
 		log.debug("Called findUserCabinetListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
@@ -178,8 +202,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
-	                    LocalDateTime endedAt,
-	                    LocalDateTime expiredAt) {
+			LocalDateTime endedAt,
+			LocalDateTime expiredAt) {
 		log.debug("Called banUser: {}", userId);
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
 	}

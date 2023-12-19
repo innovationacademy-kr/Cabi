@@ -15,8 +15,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 // @CrossOrigin(origins = {"*"}, allowedHeaders = {"*"}, originPatterns = {"*"})
 public class CabinetApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CabinetApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(CabinetApplication.class, args);
+	}
 
 }

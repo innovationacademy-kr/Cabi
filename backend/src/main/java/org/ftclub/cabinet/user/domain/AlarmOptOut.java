@@ -1,5 +1,15 @@
 package org.ftclub.cabinet.user.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +18,6 @@ import org.ftclub.cabinet.alarm.domain.AlarmType;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
-
-import javax.persistence.*;
 
 /**
  * 유저의 알람 수신 거부 정보 엔티티입니다.
