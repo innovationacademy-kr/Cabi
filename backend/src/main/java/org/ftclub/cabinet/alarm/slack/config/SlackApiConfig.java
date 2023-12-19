@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SlackApiConfig {
-	@Value("${alarm.slack.token.app-token}")
+	@Value("${slack.token.app-token}")
 	private String appToken;
 
 	@Bean
