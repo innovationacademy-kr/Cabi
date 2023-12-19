@@ -13,7 +13,6 @@ import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentEndMemoDto;
-import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -71,18 +70,6 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	}
 
 	@Override
-	public LentHistoryPaginationDto getAllCabinetLentHistories(Long cabinetId, Integer page,
-			Integer size) {
-		log.debug("Called getAllCabinetLentHistories: {}", cabinetId);
-		cabinetOptionalFetcher.getCabinet(cabinetId);
-		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		Page<LentHistory> lentHistories = lentOptionalFetcher.findPaginationByCabinetId(cabinetId,
-				pageable);
-		return generateLentHistoryPaginationDto(lentHistories.toList(),
-				lentHistories.getTotalElements());
-	}
-
-	@Override
 	public List<LentDto> getLentDtoList(Long cabinetId) {
 		log.debug("Called getLentDtoList: {}", cabinetId);
 		cabinetOptionalFetcher.getCabinet(cabinetId);
@@ -131,9 +118,8 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		log.debug("Called getMyLentLog: {}", user.getName());
 		PageRequest pageable = PageRequest.of(page, size,
 				Sort.by(Sort.Direction.DESC, "startedAt"));
-		List<LentHistory> myLentHistories = lentOptionalFetcher.findByUserIdAndEndedAtNotNull(
-				user.getUserId(),
-				pageable);
+		List<LentHistory> myLentHistories = lentOptionalFetcher.findAllByUserIdAndEndedAtNotNull(
+				user.getUserId(), pageable);
 		List<LentHistoryDto> result = myLentHistories.stream()
 				.map(lentHistory -> lentMapper.toLentHistoryDto(
 						lentHistory,
@@ -146,9 +132,7 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 	private LentHistoryPaginationDto generateLentHistoryPaginationDto(
 			List<LentHistory> lentHistories, Long totalLength) {
 		List<LentHistoryDto> lentHistoryDto = lentHistories.stream()
-				.map(e -> lentMapper.toLentHistoryDto(e,
-						e.getUser(),
-						e.getCabinet()))
+				.map(e -> lentMapper.toLentHistoryDto(e, e.getUser(), e.getCabinet()))
 				.collect(Collectors.toList());
 		return new LentHistoryPaginationDto(lentHistoryDto, totalLength);
 	}
@@ -165,10 +149,10 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 		String previousUserName = lentRedis.getPreviousUserName(
 				myCabinet.getCabinetId().toString());
 		if (previousUserName == null) {
-			Optional<LentHistory> previousLentHistory = lentOptionalFetcher.findPreviousLentHistoryByCabinetId(
+			List<LentHistory> previousLentHistory = lentOptionalFetcher.findPreviousLentHistoryByCabinetId(
 					cabinetId);
-			if (previousLentHistory.isPresent()) {
-				previousUserName = previousLentHistory.get().getUser().getName();
+			if (!previousLentHistory.isEmpty()) {
+				previousUserName = previousLentHistory.get(0).getUser().getName();
 			}
 		}
 		return cabinetMapper.toMyCabinetResponseDto(myCabinet, lentDtoList,
@@ -269,7 +253,6 @@ public class LentFacadeServiceImpl implements LentFacadeService {
 				cabinetInfoRequestDto.getTitle(),
 				cabinetInfoRequestDto.getMemo());
 	}
-
 
 	@Override
 	public void assignLent(Long userId, Long cabinetId) {

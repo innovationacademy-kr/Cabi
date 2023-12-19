@@ -44,35 +44,16 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
   const [myCabinetInfo, setMyCabinetInfo] = useRecoilState(myCabinetInfoState);
   const { pathname } = useLocation();
   const navigator = useNavigate();
-  const defaultCabinetInfo = getDefaultCabinetInfo();
-  const resetCabinetInfo = () => {
-    setMyCabinetInfo({
-      ...defaultCabinetInfo,
-      memo: "",
-      shareCode: 0,
-      previousUserName: "",
-    });
-    setTargetCabinetInfo(defaultCabinetInfo);
-    setCurrentCabinetId(0);
-  };
+
   async function setTargetCabinetInfoToMyCabinet() {
-    if (myInfo.cabinetId === null && !myCabinetInfo?.cabinetId) {
-      resetCabinetInfo();
-    } else setCurrentCabinetId(myInfo.cabinetId);
+    setCurrentCabinetId(myInfo.cabinetId);
     setMyInfo((prev) => ({ ...prev, cabinetId: null }));
     try {
       if (!myCabinetInfo?.cabinetId) return;
       const { data } = await axiosCabinetById(myCabinetInfo.cabinetId);
       if (data.lents.length === 0 && myInfo.cabinetId !== null) {
-        resetCabinetInfo();
         setMyInfo((prev) => ({ ...prev, cabinetId: null }));
       } else {
-        setMyCabinetInfo((prev) => ({
-          ...data,
-          memo: "",
-          shareCode: prev.shareCode,
-          previousUserName: prev.previousUserName,
-        }));
         const doesNameExist = data.lents.some(
           (lent: LentDto) => lent.name === myInfo.name
         );
@@ -80,7 +61,7 @@ const TopNavButtonGroup = ({ isAdmin }: { isAdmin?: boolean }) => {
           setTargetCabinetInfo(data);
           setCurrentCabinetId(data.cabinetId);
           setMyInfo((prev) => ({ ...prev, cabinetId: data.cabinetId }));
-        } else resetCabinetInfo();
+        }
       }
     } catch (error) {
       console.log(error);

@@ -157,18 +157,18 @@ class LentServiceImplTest {
 	@DisplayName("사물함 대여 가능한 사용자는 available, limited_available 상태의 사물함을 빌릴 수 있습니다 ")
 	void generalLentSituation() {
 		// given
-		int lentCountBefore = lentRepository.countUserActiveLent(normalUser1.getUserId());
+		int lentCountBefore = lentRepository.countByUserIdAndEndedAtIsNull(normalUser1.getUserId());
 		// when
 		lentService.startLentCabinet(normalUser1.getUserId(),
 				privateAvailableCabinet1.getCabinetId());
 		// then
-		int lentCountAfter = lentRepository.countUserActiveLent(normalUser1.getUserId());
-		LentHistory lentHistory = lentRepository.findFirstByUserIdAndEndedAtIsNull(
+		int lentCountAfter = lentRepository.countByUserIdAndEndedAtIsNull(normalUser1.getUserId());
+		LentHistory lentHistory = lentRepository.findByUserIdAndEndedAtIsNull(
 				normalUser1.getUserId()).orElseThrow(() -> new RuntimeException());
 		Assertions.assertEquals(lentCountAfter, lentCountBefore + 1L);
 		Assertions.assertEquals(CabinetStatus.FULL, privateAvailableCabinet1.getStatus());
 		Assertions.assertNotNull(
-				lentRepository.findFirstByUserIdAndEndedAtIsNull(normalUser1.getUserId())
+				lentRepository.findByUserIdAndEndedAtIsNull(normalUser1.getUserId())
 						.orElse(null));
 	}
 
@@ -246,7 +246,7 @@ class LentServiceImplTest {
 		// when
 		lentService.startLentCabinet(userId1, cabinetId);
 		assertEquals(CabinetStatus.AVAILABLE, cabinet.getStatus());
-		List<LentHistory> activeLentHistory = lentRepository.findAllActiveLentByCabinetId(
+		List<LentHistory> activeLentHistory = lentRepository.findAllByCabinetIdAndEndedAtIsNull(
 				cabinetId);
 		for (LentHistory lentHistory : activeLentHistory) {
 			assertEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
@@ -259,7 +259,7 @@ class LentServiceImplTest {
 
 		lentService.startLentCabinet(userId3, cabinetId);
 		assertEquals(CabinetStatus.FULL, cabinet.getStatus());
-		activeLentHistory = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+		activeLentHistory = lentRepository.findAllByCabinetIdAndEndedAtIsNull(cabinetId);
 		// then
 		for (LentHistory lentHistory : activeLentHistory) {
 			assertNotEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
@@ -282,7 +282,7 @@ class LentServiceImplTest {
 		lentService.startLentCabinet(userId2, cabinetId);
 		lentService.startLentCabinet(userId3, cabinetId);
 		assertEquals(CabinetStatus.FULL, cabinet.getStatus());
-		List<LentHistory> activeLentHistory = lentRepository.findAllActiveLentByCabinetId(
+		List<LentHistory> activeLentHistory = lentRepository.findAllByCabinetIdAndEndedAtIsNull(
 				cabinetId);
 		for (LentHistory lentHistory : activeLentHistory) {
 			assertNotEquals(DateUtil.getInfinityDate(), lentHistory.getExpiredAt());
@@ -293,9 +293,9 @@ class LentServiceImplTest {
 
 		lentService.startLentCabinet(userId4, cabinetId);
 		assertEquals(CabinetStatus.FULL, cabinet.getStatus());
-		LentHistory latestLentHistory = lentRepository.findFirstByCabinetIdAndEndedAtIsNull(
+		LentHistory latestLentHistory = lentRepository.findByCabinetIdAndEndedAtIsNull(
 				cabinetId).orElse(null);
-		activeLentHistory = lentRepository.findAllActiveLentByCabinetId(cabinetId);
+		activeLentHistory = lentRepository.findAllByCabinetIdAndEndedAtIsNull(cabinetId);
 		for (LentHistory lentHistory : activeLentHistory) {
 			assertEquals(latestLentHistory.getExpiredAt(), lentHistory.getExpiredAt());
 		}

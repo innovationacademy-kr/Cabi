@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.config;
 
-
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,13 +9,13 @@ import org.springframework.stereotype.Component;
 public class HaneProperties {
 	private static final int SIXTY = 60;
 
-	@Value("${spring.hane.token}")
+	@Value("${cabinet.hane.token}")
 	private String jwtToken;
 
-	@Value("${spring.hane.url}")
+	@Value("${cabinet.hane.url}")
 	private String url;
 
-	@Value("${spring.hane.limit-hours}")
+	@Value("${cabinet.hane.limit-hours}")
 	private int limitHours;
 
 	public int getLimitTimeSeconds() {

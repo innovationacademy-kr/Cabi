@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.alarm.config;
+package org.ftclub.cabinet.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,27 +8,27 @@ import org.springframework.stereotype.Component;
 @Getter
 public class GmailProperties {
 
-	@Value("${spring.production}")
+	@Value("${cabinet.production}")
 	private Boolean isProduction;
 
-	@Value("${alarm.mail.host}")
+	@Value("${spring.mail.host}")
 	private String mailServerHost;
 
-	@Value("${alarm.mail.port}")
+	@Value("${spring.mail.port}")
 	private int mailServerPort;
 
-	@Value("${alarm.mail.display-sender-name}")
+	@Value("${cabinet.alarm.mail.display-sender-name}")
 	private String displaySenderName;
 
-	@Value("${alarm.mail.username}")
+	@Value("${spring.mail.username}")
 	private String username;
 
-	@Value("${alarm.mail.password}")
+	@Value("${spring.mail.password}")
 	private String password;
 
-	@Value("${alarm.mail.properties.mail.smtp.auth}")
+	@Value("${spring.mail.properties.mail.smtp.auth}")
 	private Boolean useAuth;
 
-	@Value("${alarm.mail.properties.mail.smtp.starttls.enable}")
+	@Value("${spring.mail.properties.mail.smtp.starttls.enable}")
 	private Boolean useStartTls;
 }

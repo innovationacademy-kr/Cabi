@@ -46,7 +46,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	private final LentExtensionPolicy lentExtensionPolicy;
 
 	@Override
-	@Scheduled(cron = "${spring.schedule.cron.extension-issue-time}")
+	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
 	public void issueLentExtension() {
 		log.debug("Called issueLentExtension");
 		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
@@ -119,7 +119,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 		}
 
 		Cabinet cabinet = cabinetOptionalFetcher.getLentCabinetByUserId(userId);
-		List<LentHistory> activeLentHistories = lentOptionalFetcher.findActiveLentHistoriesByCabinetId(
+		List<LentHistory> activeLentHistories = lentOptionalFetcher.findAllActiveLentHistoriesByCabinetId(
 				cabinet.getCabinetId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
