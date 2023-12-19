@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.user.domain;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -29,7 +30,7 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString (exclude = {"alarmOptOuts"})
 @Log4j2
 public class User {
 
@@ -57,7 +58,7 @@ public class User {
 	private UserRole role;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<AlarmOptOut> alarmOptOuts;
+	private Set<AlarmOptOut> alarmOptOuts = new HashSet<>();
 
 	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
 		this.name = name;

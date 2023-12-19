@@ -23,6 +23,7 @@ import org.ftclub.cabinet.alarm.slack.dto.SlackUserInfo;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
@@ -35,6 +36,7 @@ public class SlackAlarmSender {
 	private final AlarmProperties alarmProperties;
 
 
+	@Async
 	public void send(User user, AlarmEvent alarmEvent) {
 		log.info("slack alarm Event : user = {}, alarmEvent = {}", user.getName(), alarmEvent);
 

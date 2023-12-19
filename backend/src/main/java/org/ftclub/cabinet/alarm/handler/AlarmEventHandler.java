@@ -35,7 +35,6 @@ public class AlarmEventHandler {
 		Set<AlarmType> alarmOptOuts = receiver.getAlarmOptOuts()
 				.stream().map(AlarmOptOut::getAlarmType).collect(Collectors.toSet());
 
-		// else-if가 아니어야 하는 것 아닌가?
 		if (alarmOptOuts.contains(SLACK)) {
 			slackAlarmSender.send(receiver, alarmEvent);
 		}

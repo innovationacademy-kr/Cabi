@@ -11,6 +11,7 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
@@ -28,6 +29,7 @@ public class EmailAlarmSender {
 	private final GmailProperties gmailProperties;
 	private final AlarmProperties alarmProperties;
 
+	@Async
 	public void send(User user, AlarmEvent alarmEvent) {
 		log.info("Email Alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
 		if (gmailProperties.getIsProduction() == false) {

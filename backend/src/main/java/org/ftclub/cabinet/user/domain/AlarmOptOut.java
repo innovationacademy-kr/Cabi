@@ -18,7 +18,7 @@ import javax.persistence.*;
 @Table(name = "ALARM_OPT_OUT")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"user"})
 public class AlarmOptOut {
 
 	@Id
