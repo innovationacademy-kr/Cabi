@@ -37,7 +37,7 @@ public class UserRepositoryTest {
 	@Test
 	public void testGetUser() {
 		Long userId = 9L;
-		Optional<User> user = userRepository.findUser(userId);
+		Optional<User> user = userRepository.findById(userId);
 
 		assertTrue(user.isPresent());
 		assertEquals("user1", user.get().getName());

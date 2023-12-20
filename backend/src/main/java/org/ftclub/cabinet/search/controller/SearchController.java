@@ -64,6 +64,4 @@ public class SearchController {
 		log.info("Called getCabinetsLentInfo {}", name);
 		return userFacadeService.findUserCabinetListByPartialName(name, page, size);
 	}
-
-
 }

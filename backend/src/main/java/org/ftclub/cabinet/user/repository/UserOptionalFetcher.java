@@ -53,7 +53,7 @@ public class UserOptionalFetcher {
      */
     public User findUser(Long userId) {
         log.debug("Called findUser: {}", userId);
-        return userRepository.findUser(userId).orElse(null);
+        return userRepository.findById(userId).orElse(null);
     }
 
     /**
@@ -172,7 +172,7 @@ public class UserOptionalFetcher {
      */
     public User getUser(Long userId) {
         log.debug("Called getUser: {}", userId);
-        return userRepository.findUser(userId)
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
     }
 
