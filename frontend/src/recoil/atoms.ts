@@ -23,6 +23,7 @@ export const userState = atom<UserDto>({
     name: "default",
     lentExtensionResponseDto: null,
     unbannedAt: null,
+    alarmTypes: null,
   },
 });
 

@@ -1,6 +1,17 @@
+import { AlarmInfo } from "@/types/dto/alarm.dto";
 import { CabinetInfo } from "@/types/dto/cabinet.dto";
 import { LentExtensionDto } from "@/types/dto/lent.dto";
 
+/**
+ * @description 유저 정보
+ * @interface
+ * @property {number} userId : 42 고유 ID
+ * @property {string} name : 42 로그인 ID (인트라 아이디)
+ * @property {number} cabinetId : 캐비닛 고유 ID
+ * @property {LentExtensionDto} lentExtensionResponseDto : 연장권 정보
+ * @property {Date} unbannedAt : 벤 해제 시간
+ * @property {AlarmInfo} alarm : 알림 정보
+ */
 export interface UserDto {
   userId: number | null; // 42 고유 ID
   name: string | null; // 42 로그인 ID
@@ -9,6 +20,7 @@ export interface UserDto {
   cabinetId: number | null; // 캐비닛 고유 ID
   lentExtensionResponseDto: LentExtensionDto | null;
   unbannedAt?: Date | null;
+  alarmTypes: AlarmInfo | null;
 }
 
 export interface UserInfo {
