@@ -57,6 +57,7 @@ const ProfilePage = () => {
             unbannedAt={myInfo.unbannedAt}
           />
           <ThemeColorCardContainer />
+          <NotificationCardContainer />
         </CardGridWrapper>
       )}
     </>
