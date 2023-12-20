@@ -1,9 +1,5 @@
 package org.ftclub.cabinet.auth.controller;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.TokenProvider;
@@ -16,6 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/v4/auth")
@@ -60,7 +61,7 @@ public class AuthController {
 	 */
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
-			HttpServletResponse res) throws IOException {
+	                          HttpServletResponse res) throws IOException {
 		authFacadeService.handleLogin(code, req, res, ftApiProperties, LocalDateTime.now());
 		res.sendRedirect(DomainProperties.getFeHost() + "/home");
 	}
@@ -73,22 +74,5 @@ public class AuthController {
 	@GetMapping("/logout")
 	public void logout(HttpServletResponse res) {
 		authFacadeService.logout(res, ftApiProperties);
-	}
-
-	@GetMapping("/challenge")
-	public void challengeLogin(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		// 유저 랜덤생성 && 유저 역할은 일반 유저
-		// 토큰 생성 및 response에 쿠키만들어서 심어주기
-		authFacadeService.handleTestLogin(req, ftApiProperties, res, LocalDateTime.now());
-		System.out.println("??????????????here??????????????????/");
-		res.sendRedirect(DomainProperties.getFeHost() + "/home");
-//		Map<String, Object> claims = tokenProvider
-//		String accessToken = tokenProvider.createTokenForTestUser(testUser, LocalDateTime.now());
-//		Cookie cookie = cookieManager.cookieOf("access_token",
-//				accessToken);
-//		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-//		System.out.println("?????????????????????? cookie domain = ");
-//		res.sendRedirect(DomainProperties.getLocal() + "/main");
-//		res.sendRedirect(DomainProperties.getFeHost() + "/home");
 	}
 }
