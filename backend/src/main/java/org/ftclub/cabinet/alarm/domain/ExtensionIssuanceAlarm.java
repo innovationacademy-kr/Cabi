@@ -1,8 +1,7 @@
 package org.ftclub.cabinet.alarm.domain;
 
-import lombok.AllArgsConstructor;
-
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -10,7 +9,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public class ExtensionIssuanceAlarm implements Alarm {
+public class ExtensionIssuanceAlarm implements Alarm, TransactionalAlarmEvent {
 
 	private final String extensionName;
 	private final LocalDateTime extensionExpirationDate;

@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class AnnouncementAlarm {
+public class AnnouncementAlarm implements Alarm, TransactionalAlarmEvent {
 
 	private final String announcementContent;
 }

@@ -10,7 +10,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
  */
 @Getter
 @AllArgsConstructor
-public class LentSuccessAlarm implements Alarm {
+public class LentSuccessAlarm implements Alarm, TransactionalAlarmEvent {
 
 	private final Location location;
 	private final Integer visibleNum;

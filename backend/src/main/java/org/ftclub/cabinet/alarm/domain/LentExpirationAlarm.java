@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class LentExpirationAlarm implements Alarm {
+public class LentExpirationAlarm implements Alarm, TransactionalAlarmEvent {
 
 	private final Long daysLeftFromExpireDate;
 }
