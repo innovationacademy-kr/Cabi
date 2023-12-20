@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/cabi.iml" filepath="$PROJECT_DIR$/.idea/cabi.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cabinet.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cabinet.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.ftclub.cabinet.main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.ftclub.cabinet.main.iml" />
     </modules>
   </component>
 </project>

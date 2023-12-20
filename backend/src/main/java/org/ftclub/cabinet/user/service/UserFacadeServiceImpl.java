@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.domain.AlarmType;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.alarm.repository.AlarmOptOutRepository;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -72,9 +73,11 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		List<AlarmOptOut> alarmOptOuts = alarmOptOutRepository.findAllByUserId(user.getUserId());
 		List<AlarmType> alarmTypes = alarmOptOuts.stream().map(AlarmOptOut::getAlarmType)
 				.collect(Collectors.toList());
+		AlarmTypeResponseDto alarmTypeResponseDto = AlarmTypeResponseDto.builder()
+				.alarmTypes(alarmTypes).build();
 
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				activeLentExtension, alarmTypes);
+				activeLentExtension, alarmTypeResponseDto);
 	}
 
 	@Override
