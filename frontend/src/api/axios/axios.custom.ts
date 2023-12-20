@@ -1,3 +1,4 @@
+import { AlarmInfo } from "@/types/dto/alarm.dto";
 import { ClubUserDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
@@ -52,6 +53,18 @@ export const axiosUseExtension = async (): Promise<any> => {
       },
     });
     if (response.status === 401) throw response;
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUpdateAlarmURL = "/v4/users/me/alarms";
+export const axiosUpdateAlarm = async (alarm: AlarmInfo): Promise<any> => {
+  try {
+    const response = await instance.put(axiosUpdateAlarmURL, {
+      alarm,
+    });
     return response;
   } catch (error) {
     throw error;
