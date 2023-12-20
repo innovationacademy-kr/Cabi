@@ -7,6 +7,7 @@ import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -19,8 +20,13 @@ public class BanHistoryQueryService {
     public BanHistory findRecentActiveBanHistory(Long userId, LocalDateTime now) {
         log.debug("Called findRecentActiveBanHistory: {}", userId);
 
-        List<BanHistory> banHistories = banHistoryRepository.findAll();
-
+        List<BanHistory> banHistories = banHistoryRepository.findByUserId(userId);
+        return banHistories.stream()
+                .filter(history -> history.getUnbannedAt().isAfter(now))
+                .sorted(Comparator.comparing(BanHistory::getUnbannedAt, Comparator.reverseOrder()))
+                .findFirst()
+                .orElse(null);
     }
+
 
 }

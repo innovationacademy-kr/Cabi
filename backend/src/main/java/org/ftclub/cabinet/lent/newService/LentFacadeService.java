@@ -48,7 +48,7 @@ public class LentFacadeService {
     public List<LentDto> getLentDtoList(Long cabinetId) {
         log.debug("Called getLentDtoList: {}", cabinetId);
         cabinetQueryService.getCabinet(cabinetId);
-
+        lentQueryService.findCabinetActiveLentHistory(cabinetId);
 //        cabinetOptionalFetcher.getCabinet(cabinetId);
 //        List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 //                cabinetId);

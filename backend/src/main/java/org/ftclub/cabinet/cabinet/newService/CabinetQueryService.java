@@ -3,7 +3,6 @@ package org.ftclub.cabinet.cabinet.newService;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
-import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.stereotype.Service;
