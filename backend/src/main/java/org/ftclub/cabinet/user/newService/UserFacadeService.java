@@ -24,11 +24,17 @@ public class UserFacadeService {
     public MyProfileResponseDto getMyProfile(UserSessionDto user) {
         log.debug("Called getMyProfile: {}", user.getName());
 
-        // Cabinet cabinet = lentService.findActiveLentCabinetByUserId();
+//        Cabinet cabinet = cabinetQueryService.findActiveLentCabinetByUserId();
         BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(), LocalDateTime.now());
         LentExtension lentExtension = lentExtensionQueryService.getActiveLentExtension(user);
 
-        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, LentExtensionResponseDto.builder().);
+        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
+                LentExtensionResponseDto.builder()
+                        .lentExtensionId(lentExtension.getLentExtensionId())
+                        .name(lentExtension.getName())
+                        .extensionPeriod(lentExtension.getExtensionPeriod())
+                        .expiredAt(lentExtension.getExpiredAt().toString())
+                        .lentExtensionType(lentExtension.getLentExtensionType()));
     }
 }
 
