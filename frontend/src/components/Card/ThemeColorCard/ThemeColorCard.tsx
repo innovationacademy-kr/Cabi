@@ -1,5 +1,3 @@
-import React from "react";
-import { TwitterPicker } from "react-color";
 import styled from "styled-components";
 import Card from "@/components/Card/Card";
 import {
@@ -7,25 +5,32 @@ import {
   CardContentWrapper,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
+import ColorPicker from "@/components/Card/ThemeColorCard/ColorPicker";
 
 interface ThemeColorProps {
   showColorPicker: boolean;
-  setShowColorPicker: React.Dispatch<React.SetStateAction<boolean>>;
-  handleChange: (mainColor: { hex: string }) => void;
+  handleChange: (mainColor: { hex: string }, type: string) => void;
   handleReset: () => void;
   handleSave: () => void;
   handleCancel: () => void;
   mainColor: string;
+  subColor: string;
+  mineColor: string;
+  handleColorButtonClick: (colorType: string) => void;
+  selectedColorType: string;
 }
 
 const ThemeColorCard = ({
   showColorPicker,
-  setShowColorPicker,
   handleChange,
   handleReset,
   handleSave,
   handleCancel,
   mainColor,
+  subColor,
+  mineColor,
+  handleColorButtonClick,
+  selectedColorType,
 }: ThemeColorProps) => {
   const customColors = [
     "#FF4589",
@@ -39,6 +44,7 @@ const ThemeColorCard = ({
     "#a29bfe",
     "#9747FF",
   ];
+
   return (
     <>
       {showColorPicker && <BackgroundOverlayStyled />}
@@ -74,19 +80,33 @@ const ThemeColorCard = ({
           }
         >
           <>
-            <CardContentWrapper style={{ height: "70px" }}>
+            <CardContentWrapper>
               <CardContentStyled>
                 <ContentInfoStyled>메인 컬러</ContentInfoStyled>
-                <MainColorButtonStyled
-                  onClick={() => setShowColorPicker(!showColorPicker)}
+                <ColorButtonStyled
+                  onClick={() => handleColorButtonClick("main")}
+                  color={mainColor}
+                />
+              </CardContentStyled>
+              <CardContentStyled>
+                <ContentInfoStyled>서브 컬러</ContentInfoStyled>
+                <ColorButtonStyled
+                  onClick={() => handleColorButtonClick("sub")}
+                  color={subColor}
+                />
+              </CardContentStyled>
+              <CardContentStyled>
+                <ContentInfoStyled>내 사물함</ContentInfoStyled>
+                <ColorButtonStyled
+                  onClick={() => handleColorButtonClick("mine")}
+                  color={mineColor}
                 />
               </CardContentStyled>
               {showColorPicker && (
-                <TwitterPicker
+                <ColorPicker
                   color={mainColor}
-                  triangle={"hide"}
-                  onChangeComplete={handleChange}
-                  colors={customColors}
+                  onChange={(color) => handleChange(color, selectedColorType)}
+                  customColors={customColors}
                 />
               )}
             </CardContentWrapper>
@@ -112,10 +132,10 @@ const ThemeColorCardWrapper = styled.div`
   align-self: start;
 `;
 
-const MainColorButtonStyled = styled.button`
+const ColorButtonStyled = styled.button<{ color: string }>`
   width: 28px;
   height: 28px;
-  background-color: var(--main-color);
+  background-color: ${(props) => props.color};
   border-radius: 8px;
 `;
 

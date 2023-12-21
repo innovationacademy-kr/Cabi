@@ -34,7 +34,10 @@ const AdminClubPage = () => {
       <SubTitleStyled>
         현재 등록된 동아리 목록을 확인할 수 있습니다.
       </SubTitleStyled>
-      <AdminClubLogContainer shouldFetchData={shouldFetchData} setShouldFetchData={setShouldFetchData} />
+      <AdminClubLogContainer
+        shouldFetchData={shouldFetchData}
+        setShouldFetchData={setShouldFetchData}
+      />
       <ButtonWrapperStyled>
         <Button
           text={"동아리 생성"}

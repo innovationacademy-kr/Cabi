@@ -10,6 +10,7 @@ import LeftNav from "@/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import AdminTopNavContainer from "@/components/TopNav/AdminTopNav.container";
 import UserInfoAreaContainer from "@/components/UserInfoArea/UserInfoArea.container";
+import ColorType from "@/types/enum/color.type.enum";
 import { getCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
 
@@ -39,11 +40,11 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
-  const savedColor = localStorage.getItem("mainColor");
+  const savedColor = localStorage.getItem("main-color");
   const root: HTMLElement = document.documentElement;
   useEffect(() => {
     root.style.setProperty("--main-color", savedColor);
-    if (savedColor !== "#9747ff")
+    if (savedColor !== ColorType.MAIN)
       root.style.setProperty("--lightpurple-color", "#7b7b7b");
   }, [savedColor]);
 
