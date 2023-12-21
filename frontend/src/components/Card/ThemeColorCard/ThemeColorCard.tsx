@@ -47,7 +47,7 @@ const ThemeColorCard = ({
           title={"테마 컬러"}
           gridArea={"theme"}
           width={"350px"}
-          height={"215px"}
+          height={"230px"}
           buttons={
             showColorPicker
               ? [
@@ -109,6 +109,7 @@ const BackgroundOverlayStyled = styled.div`
 
 const ThemeColorCardWrapper = styled.div`
   z-index: 1;
+  align-self: start;
 `;
 
 const MainColorButtonStyled = styled.button`
