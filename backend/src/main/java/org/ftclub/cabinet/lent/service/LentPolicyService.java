@@ -169,7 +169,7 @@ public class LentPolicyService {
 
 	public LocalDateTime adjustSharCabinetExpirationDate(int userCount, LocalDateTime now,
 			LentHistory lentHistory) {
-		log.debug("Called adjustExpriationDate");
+		log.debug("Called adjustSharCabinetExpirationDate");
 
 		double daysUntilExpiration = lentHistory.getDaysUntilExpiration(now) * -1;
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;

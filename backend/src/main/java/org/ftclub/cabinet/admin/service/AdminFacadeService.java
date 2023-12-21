@@ -224,7 +224,7 @@ public class AdminFacadeService {
 
 	@Transactional
 	public void endUserLent(Long userId) {
-		log.debug("Called endLentCabinet: {}", userId);
+		log.debug("Called endUserLent: {}", userId);
 
 		LocalDateTime now = LocalDateTime.now();
 		LentHistory userLentHistory = lentQueryService.findUserActiveLentHistoryWithLock(userId);
@@ -260,9 +260,13 @@ public class AdminFacadeService {
 
 		LocalDateTime now = LocalDateTime.now();
 		List<Cabinet> cabinets = cabinetQueryService.getCabinetsWithLock(cabinetIds);
+		List<LentHistory> lentHistories =
+				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
+		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()
+				.collect(Collectors.groupingBy(LentHistory::getCabinetId));
 		cabinets.forEach(cabinet -> {
 			List<LentHistory> cabinetLentHistories =
-					lentQueryService.findCabinetActiveLentHistories(cabinet.getCabinetId());
+					lentHistoriesByCabinetId.get(cabinet.getCabinetId());
 			cabinetLentHistories.forEach(lh -> lentCommandService.endLent(lh, now));
 			cabinetCommandService.changeUserCount(cabinet, 0);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
