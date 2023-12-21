@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.statistics.repository;
+package org.ftclub.cabinet.admin.repository;
 
 import java.util.List;
 import javax.transaction.Transactional;

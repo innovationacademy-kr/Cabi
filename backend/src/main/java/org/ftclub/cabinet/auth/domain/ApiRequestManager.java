@@ -57,7 +57,8 @@ public class ApiRequestManager {
 	}
 
 	/**
-	 * AccessToken 요청을 위한 RequestBodyMap을 생성합니다. Client Secret을 이용하여 AccessToken을 요청합니다.
+	 * AccessToken 요청을 위한 RequestBodyMap을 생성합니다.
+	 * Client Secret을 이용하여 AccessToken을 요청합니다.
 	 *
 	 * @return AccessToken 요청을 위한 RequestBodyMap
 	 */

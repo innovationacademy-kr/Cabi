@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.statistics.service;
+package org.ftclub.cabinet.admin.service;
 
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
@@ -11,7 +11,8 @@ import java.util.List;
 
 public interface StatisticsFacadeService {
 
-    List<CabinetFloorStatisticsResponseDto> getCabinetsCountOnAllFloors();
+	List<CabinetFloorStatisticsResponseDto> getCabinetsCountOnAllFloors();
 
-    LentsStatisticsResponseDto getCountOnLentAndReturn(LocalDateTime startDate, LocalDateTime endDate);
+	LentsStatisticsResponseDto getCountOnLentAndReturn(LocalDateTime startDate,
+			LocalDateTime endDate);
 }

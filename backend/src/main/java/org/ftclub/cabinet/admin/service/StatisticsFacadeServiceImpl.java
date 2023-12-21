@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.statistics.service;
+package org.ftclub.cabinet.admin.service;
 
 import static org.ftclub.cabinet.utils.ExceptionUtil.throwIfFalse;
 
@@ -14,7 +14,7 @@ import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentRepository;
-import org.ftclub.cabinet.statistics.repository.StatisticsRepository;
+import org.ftclub.cabinet.admin.repository.StatisticsRepository;
 import org.springframework.stereotype.Service;
 
 @Service

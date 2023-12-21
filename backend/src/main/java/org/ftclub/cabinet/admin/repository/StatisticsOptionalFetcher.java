@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.statistics.repository;
+package org.ftclub.cabinet.admin.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

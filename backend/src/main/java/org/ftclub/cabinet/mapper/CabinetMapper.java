@@ -10,11 +10,13 @@ import org.ftclub.cabinet.dto.ActiveCabinetInfoDto;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -96,6 +98,12 @@ public interface CabinetMapper {
 
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
 	CabinetSimpleDto toCabinetSimpleDto(Cabinet cabinet);
+
+	CabinetSimplePaginationDto toCabinetSimplePaginationDto(
+			List<CabinetSimpleDto> result, Long totalLength);
+
+	CabinetInfoPaginationDto toCabinetInfoPaginationDto(
+			List<CabinetInfoResponseDto> result, Long totalLength);
 
 	CabinetPendingResponseDto toCabinetPendingResponseDto(
 			Map<Integer, List<CabinetPreviewDto>> cabinetInfoResponseDtos);

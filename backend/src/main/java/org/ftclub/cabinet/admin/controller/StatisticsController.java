@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.statistics.controller;
+package org.ftclub.cabinet.admin.controller;
 
 import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
@@ -11,7 +11,7 @@ import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
-import org.ftclub.cabinet.statistics.service.StatisticsFacadeService;
+import org.ftclub.cabinet.admin.service.StatisticsFacadeService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;

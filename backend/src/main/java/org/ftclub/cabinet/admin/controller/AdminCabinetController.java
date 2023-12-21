@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.cabinet.controller;
+package org.ftclub.cabinet.admin.controller;
 
 import java.util.HashMap;
 import java.util.Map;

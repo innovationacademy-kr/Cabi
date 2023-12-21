@@ -1,24 +1,63 @@
 package org.ftclub.cabinet.auth.service;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.auth.domain.TokenProvider;
+import org.ftclub.cabinet.config.ApiProperties;
+import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.dto.MasterLoginDto;
+import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.springframework.stereotype.Service;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ftclub.cabinet.config.ApiProperties;
-import org.ftclub.cabinet.dto.MasterLoginDto;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Map;
 
-public interface AuthFacadeService {
+@Service
+@RequiredArgsConstructor
+public class AuthFacadeService {
 
-	void requestLoginToApi(HttpServletResponse res, ApiProperties apiProperties) throws IOException;
+	private final JwtProperties jwtProperties;
+	private final TokenProvider tokenProvider;
+	private final CookieManager cookieManager;
+	private final AuthService authService;
+	private final OauthService oauthService;
 
-	void handleLogin(String code, HttpServletRequest req, HttpServletResponse res,
-			ApiProperties apiProperties, LocalDateTime now);
+	public void requestLoginToApi(HttpServletResponse res, ApiProperties apiProperties)
+			throws IOException {
+		oauthService.sendCodeRequestToApi(res, apiProperties);
+	}
 
-	void masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
-			HttpServletResponse res, LocalDateTime now);
+	public void handleLogin(String code, HttpServletRequest req, HttpServletResponse res,
+	                        ApiProperties apiProperties, LocalDateTime now) {
+		String apiToken = oauthService.getTokenByCodeRequest(code, apiProperties);
+		JsonNode profile = oauthService.getProfileJsonByToken(apiToken, apiProperties);
+		Map<String, Object> claims = tokenProvider.makeClaimsByProviderProfile(
+				apiProperties.getProviderName(), profile);
+		authService.addUserIfNotExistsByClaims(claims);
+		String accessToken = tokenProvider.createToken(claims, now);
+		Cookie cookie = cookieManager.cookieOf(
+				tokenProvider.getTokenNameByProvider(apiProperties.getProviderName()), accessToken);
+		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+	}
 
-	void logout(HttpServletResponse res, ApiProperties apiProperties);
+	public void masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
+	                        HttpServletResponse res, LocalDateTime now) {
+		if (!authService.validateMasterLogin(masterLoginDto)) {
+			throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
+		}
+		String masterToken = tokenProvider.createMasterToken(now);
+		Cookie cookie = cookieManager.cookieOf(jwtProperties.getAdminTokenName(), masterToken);
+		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+	}
 
-	void handleTestLogin(HttpServletRequest req, ApiProperties apiProperties,
-			HttpServletResponse res, LocalDateTime now);
+	public void logout(HttpServletResponse res, ApiProperties apiProperties) {
+		cookieManager.deleteCookie(res,
+				tokenProvider.getTokenNameByProvider(apiProperties.getProviderName()));
+	}
 }

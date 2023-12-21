@@ -31,7 +31,7 @@ public class BanHistoryRepositoryTest {
 		// ban history 한 개 존재
 		Long userId = 1L;
 
-		List<BanHistory> activeBanList = banHistoryRepository.findUserActiveBanList(userId,
+		List<BanHistory> activeBanList = banHistoryRepository.findByUserIdAndUnbannedAt(userId,
 				testDate);
 
 		assertNotNull(activeBanList);

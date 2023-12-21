@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.regex.Pattern;
 
@@ -42,6 +43,11 @@ public class DateUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = sdf.parse(str, new ParsePosition(0));
 		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+	}
+
+	public static LocalDateTime convertStringToDate(String string) {
+		DateTimeFormatter formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+		return LocalDateTime.parse(string, formatter);
 	}
 
 	/**
@@ -137,5 +143,9 @@ public class DateUtil {
 		long diffInMillis = Duration.between(day1, day2).toMillis();
 		System.out.println("diffInMillis = " + diffInMillis);
 		return (long) Math.ceil(diffInMillis / 1000.0 / 60 / 60 / 24);
+	}
+
+	public static LocalDateTime setLastTime(LocalDateTime date) {
+		return date.withHour(23).withMinute(59).withSecond(59);
 	}
 }
