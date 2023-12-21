@@ -59,7 +59,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "WHERE c.cabinetId IN (:cabinetIds)")
-	List<Cabinet> findAllByIdsWithLock(List<Long> cabinetIds);
+	List<Cabinet> findAllByIdsWithLock(@Param("cabinetIds") List<Long> cabinetIds);
 
 	/**
 	 * userId로 현재 대여 중인 사물함을 조회한다.
@@ -67,11 +67,11 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	 * @param userId 사용자 ID
 	 * @return 사물함 {@link Optional}
 	 */
-	@Query("SELECT c " +
-			"FROM Cabinet c " +
-			"LEFT JOIN LentHistory lh ON c.cabinetId = lh.cabinetId " +
-			"LEFT JOIN User u ON u.userId = lh.userId " +
-			"WHERE u.userId = :userId AND lh.endedAt IS NULL")
+	@Query("SELECT c "
+			+ "FROM Cabinet c "
+			+ "LEFT JOIN LentHistory lh ON c.cabinetId = lh.cabinetId "
+			+ "LEFT JOIN User u ON u.userId = lh.userId "
+			+ "WHERE u.userId = :userId AND lh.endedAt IS NULL")
 	Optional<Cabinet> findByUserIdAndLentHistoryEndedAtIsNull(@Param("userId") Long userId);
 
 	/**
@@ -94,6 +94,8 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
 			Pageable pageable);
+
+	List<Cabinet> findAllByVisibleNum(@Param("visibleNum") Integer visibleNum);
 
 	@Query("SELECT c "
 			+ "FROM Cabinet c "

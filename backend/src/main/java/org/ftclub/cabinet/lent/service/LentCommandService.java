@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.lent.newService;
+package org.ftclub.cabinet.lent.service;
 
 import java.time.LocalDateTime;
 import java.util.List;

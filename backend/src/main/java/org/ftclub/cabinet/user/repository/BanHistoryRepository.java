@@ -23,8 +23,18 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 */
 	@Query("SELECT b FROM BanHistory b WHERE b.user.userId = :userId AND b.unbannedAt > :today")
 	List<BanHistory> findByUserIdAndUnbannedAt(
-			@Param("userId") Long userId,
-			@Param("today") LocalDateTime today);
+			@Param("userId") Long userId, @Param("today") LocalDateTime today);
+
+	/**
+	 * 유저 아이디 리스트로 현재 기준 active한 밴 히스토리를 가져옵니다.
+	 *
+	 * @param userIds 유저 고유 아이디 {@link List}
+	 * @param today   현재 날짜
+	 * @return active {@link BanHistory} 리스트
+	 */
+	@Query("SELECT b FROM BanHistory b WHERE b.user.userId IN :userIds AND b.unbannedAt > :today")
+	List<BanHistory> findByUserIdsAndUnbannedAt(
+			@Param("userIds") List<Long> userIds, @Param("today") LocalDateTime today);
 
 	/**
 	 * 유저 아이디로 밴 히스토리를 가져옵니다.

@@ -8,6 +8,8 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,5 +27,9 @@ public class UserQueryService {
 
 	public List<User> getUsers(List<Long> userIdsInCabinet) {
 		return userRepository.findAllByIds(userIdsInCabinet);
+	}
+
+	public Page<User> getUsers(String partialName, Pageable pageable) {
+		return userRepository.findPaginationByPartialName(partialName, pageable);
 	}
 }

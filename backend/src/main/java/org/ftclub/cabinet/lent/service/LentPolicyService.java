@@ -1,7 +1,8 @@
-package org.ftclub.cabinet.lent.newService;
+package org.ftclub.cabinet.lent.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -182,5 +183,16 @@ public class LentPolicyService {
 		long minUserCount = cabinetProperties.getShareMinUserCount();
 		long maxUserCount = cabinetProperties.getShareMaxUserCount();
 		return minUserCount <= userCount && userCount <= maxUserCount;
+	}
+
+	public void verifyAttemptCountOnShareCabinet(Long attemptCount) {
+		log.debug("Called verifyAttemptCountOnShareCabinet");
+
+		LentPolicyStatus status = LentPolicyStatus.FINE;
+		Long shareMaxAttemptCount = cabinetProperties.getShareMaxAttemptCount();
+		if (Objects.nonNull(attemptCount) && attemptCount >= shareMaxAttemptCount) {
+			status = LentPolicyStatus.SHARE_BANNED_USER;
+		}
+		handlePolicyStatus(status, null);
 	}
 }

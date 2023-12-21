@@ -9,10 +9,10 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.lent.newService.LentFacadeService;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.LentExtensionService;
 import org.ftclub.cabinet.user.service.UserFacadeService;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -51,16 +51,16 @@ public class AdminUserController {
 	/**
 	 * 유저의 대여 기록을 반환합니다.
 	 *
-	 * @param userId      유저 고유 아이디
-	 * @param pageRequest 페이지네이션 정보
+	 * @param userId   유저 고유 아이디
+	 * @param pageable 페이지네이션 정보
 	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
 	 */
 	@GetMapping("/{userId}/lent-histories")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public LentHistoryPaginationDto getLentHistoriesByUserId(@PathVariable("userId") Long userId,
-			@RequestBody PageRequest pageRequest) {
+	public LentHistoryPaginationDto getLentHistoriesByUserId(
+			@PathVariable("userId") Long userId, Pageable pageable) {
 		log.info("Called getLentHistoriesByUserId: {}", userId);
-		return lentFacadeService.getUserLentHistories(userId, pageRequest);
+		return lentFacadeService.getUserLentHistories(userId, pageable);
 	}
 
 	/**

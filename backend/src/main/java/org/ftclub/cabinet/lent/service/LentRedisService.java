@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.lent.newService;
+package org.ftclub.cabinet.lent.service;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -50,6 +50,15 @@ public class LentRedisService {
 
 	public boolean isInCabinetSession(Long cabinetId) {
 		return lentRedis.isExistShadowKey(cabinetId.toString());
+	}
+
+	public Long getAttemptCountOnShareCabinet(Long cabinetId, Long userId) {
+		String attemptCount =
+				lentRedis.getAttemptCountInCabinet(cabinetId.toString(), userId.toString());
+		if (Objects.isNull(attemptCount)) {
+			return null;
+		}
+		return Long.parseLong(attemptCount);
 	}
 
 	public void joinCabinetSession(Long cabinetId, Long userId, String shareCode) {

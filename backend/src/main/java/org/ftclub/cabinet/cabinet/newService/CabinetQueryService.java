@@ -7,6 +7,8 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,17 +17,25 @@ public class CabinetQueryService {
 
 	private final CabinetRepository cabinetRepository;
 
-	public Cabinet getCabinet(Long cabinetId) {
+	public Cabinet getCabinets(Long cabinetId) {
 		Optional<Cabinet> cabinet = cabinetRepository.findById(cabinetId);
 		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
-	public Cabinet getCabinetWithLock(Long cabinetId) {
+	public Cabinet getCabinetsWithLock(Long cabinetId) {
 		Optional<Cabinet> cabinet = cabinetRepository.findByIdWithLock(cabinetId);
 		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
-	public List<Cabinet> getCabinetWithLock(List<Long> cabinetIds) {
+	public List<Cabinet> getCabinets(Integer visibleNum) {
+		return cabinetRepository.findAllByVisibleNum(visibleNum);
+	}
+
+	public Page<Cabinet> getCabinets(Integer visibleNum, PageRequest pageable) {
+		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
+	}
+
+	public List<Cabinet> getCabinetsWithLock(List<Long> cabinetIds) {
 		return cabinetRepository.findAllByIdsWithLock(cabinetIds);
 	}
 
