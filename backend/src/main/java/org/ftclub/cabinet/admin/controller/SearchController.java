@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.search.controller;
+package org.ftclub.cabinet.admin.controller;
 
 import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 

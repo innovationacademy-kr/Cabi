@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.domain;
+package org.ftclub.cabinet.admin.domain;
 
 /**
  * 어드민의 권한을 나타내는 열거형 클래스입니다.
