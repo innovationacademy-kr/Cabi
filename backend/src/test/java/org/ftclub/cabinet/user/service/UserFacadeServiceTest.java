@@ -105,8 +105,8 @@ public class UserFacadeServiceTest {
 				userSessionDto.getUserId()).get(0);
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(
 				userSessionDto.getUserId(), userSessionDto.getName(),
-				cabinet1.getCabinetId(), null, null);
-		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null, null))
+				cabinet1.getCabinetId(), null, null, null);
+		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null, null, null))
 				.willReturn(myProfileResponseDto);
 
 		// when
@@ -137,8 +137,8 @@ public class UserFacadeServiceTest {
 		LentExtension lentExtension = lentExtensionOptionalFetcher.findAllByUserId(
 				userSessionDto.getUserId()).get(0);
 
-		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1, null)).willReturn(
-				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1), null));
+//		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1, null)).willReturn(
+//				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1), null));
 
 		// when
 		MyProfileResponseDto myProfile = userFacadeService.getMyProfile(userSessionDto);
