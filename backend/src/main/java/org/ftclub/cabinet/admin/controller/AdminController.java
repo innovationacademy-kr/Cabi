@@ -3,60 +3,57 @@ package org.ftclub.cabinet.admin.controller;
 import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.admin.newService.AdminFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
-import org.ftclub.cabinet.user.service.UserFacadeService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
+@RequestMapping("/v4/admin")
 @RequiredArgsConstructor
-//@RequestMapping("/v4/admin/search")
-@Log4j2
-public class SearchController {
+public class AdminController {
 
-	private final CabinetFacadeService cabinetFacadeService;
-	private final UserFacadeService userFacadeService;
+	private final AdminFacadeService adminFacadeService;
 
-	@GetMapping("/cabinets")
-	@AuthGuard(level = ADMIN_ONLY)
-	public CabinetInfoPaginationDto getCabinetsInfo(
-			@RequestParam("visibleNum") Integer visibleNum) {
-		log.info("Called getCabinetsInfo {}", visibleNum);
-		return cabinetFacadeService.getCabinetsInfo(visibleNum);
-	}
 
-	@GetMapping("/cabinets-simple")
+	@GetMapping("/search/cabinets-simple")
 	@AuthGuard(level = ADMIN_ONLY)
 	public CabinetSimplePaginationDto getCabinetsSimpleInfo(
 			@RequestParam("visibleNum") Integer visibleNum) {
 		log.info("Called getCabinetsInfo {}", visibleNum);
-		return cabinetFacadeService.getCabinetsSimpleInfoByVisibleNum(visibleNum);
+		return adminFacadeService.getCabinetsSimpleInfo(visibleNum);
 	}
 
-	@GetMapping("/users-simple")
+	@GetMapping("/search/cabinets")
+	@AuthGuard(level = ADMIN_ONLY)
+	public CabinetInfoPaginationDto getCabinetsInfo(
+			@RequestParam("visibleNum") Integer visibleNum) {
+		log.info("Called getCabinetsInfo {}", visibleNum);
+		return adminFacadeService.getCabinetInfo(visibleNum);
+	}
+
+	@GetMapping("/search/users-simple")
 	@AuthGuard(level = ADMIN_ONLY)
 	public UserProfilePaginationDto getUsersProfile(
-			@RequestParam("name") String name,
-			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
+			@RequestParam("name") String name, Pageable pageable) {
 		log.info("Called getUsersProfile {}", name);
-		return userFacadeService.getUserProfileListByPartialName(name, page, size);
+		return adminFacadeService.getUsersProfile(name, pageable);
 	}
 
-	@GetMapping("/users")
+	@GetMapping("/search/users")
 	@AuthGuard(level = ADMIN_ONLY)
 	public UserCabinetPaginationDto getCabinetsLentInfo(
-			@RequestParam("name") String name,
-			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
+			@RequestParam("name") String name, Pageable pageable) {
 		log.info("Called getCabinetsLentInfo {}", name);
-		return userFacadeService.findUserCabinetListByPartialName(name, page, size);
+		return adminFacadeService.getUserLentCabinetInfo(name, pageable);
 	}
 }

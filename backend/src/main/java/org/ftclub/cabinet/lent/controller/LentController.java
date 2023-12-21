@@ -9,7 +9,7 @@ import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.ShareCodeDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.lent.newService.LentFacadeService;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;

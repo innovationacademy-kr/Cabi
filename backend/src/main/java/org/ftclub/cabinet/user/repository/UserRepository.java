@@ -49,7 +49,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return {@link User} 리스트
 	 */
 	@Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
-	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
+	Page<User> findPaginationByPartialName(@Param("name") String name, Pageable pageable);
 
 	/**
 	 * 유저의 Id List로 유저들을 찾습니다.

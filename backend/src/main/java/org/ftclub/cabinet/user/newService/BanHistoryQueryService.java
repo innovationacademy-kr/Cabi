@@ -27,4 +27,10 @@ public class BanHistoryQueryService {
 
 		return banHistoryRepository.findByUserIdAndUnbannedAt(userId, date);
 	}
+
+	public List<BanHistory> findActiveBanHistories(List<Long> userIds, LocalDateTime date) {
+		log.debug("Called findActiveBanHistories: {}", userIds);
+
+		return banHistoryRepository.findByUserIdsAndUnbannedAt(userIds, date);
+	}
 }

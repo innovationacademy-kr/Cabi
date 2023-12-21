@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.domain.AdminUser;
 import org.ftclub.cabinet.admin.repository.AdminUserRepository;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -87,7 +87,7 @@ public class UserOptionalFetcher {
 	 */
 	public Page<User> findUsersByPartialName(String name, Pageable pageable) {
 		log.debug("Called findUsersByPartialName: {}", name);
-		return userRepository.findByPartialName(name, pageable);
+		return userRepository.findPaginationByPartialName(name, pageable);
 	}
 
 	/**

@@ -150,6 +150,15 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	List<LentHistory> findAllByCabinetIdAndEndedAtIsNull(@Param("cabinetId") Long cabinetId);
 
 	/**
+	 * 여러 사물함을 기준으로 아직 반납하지 않은 {@link LentHistory}를 모두 가져옵니다.
+	 *
+	 * @param cabinetIds 찾으려는 cabinet id {@link List}
+	 * @return 반납하지 않은 {@link LentHistory}의 {@link List}
+	 */
+	List<LentHistory> findAllByCabinetIdInAndEndedAtIsNull(
+			@Param("cabinetIds") List<Long> cabinetIds);
+
+	/**
 	 * 대여 중인 사물함을 모두 가져옵니다.
 	 *
 	 * @return 연체되어 있는 {@link LentHistory}의 {@link List}
@@ -169,6 +178,13 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "AND DATE(lh.endedAt) >= DATE(:date)")
 	List<LentHistory> findAllByCabinetIdsAfterDate(@Param("date") LocalDate date,
 			@Param("cabinetIds") List<Long> cabinetIds);
+
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "WHERE lh.userId IN (:userIds) AND lh.endedAt IS NULL")
+	List<LentHistory> findByUserIdsAndEndedAtIsNullJoinCabinet(
+			@Param("userIds") List<Long> userIds);
 
 	/**
 	 * 연체되어 있는 사물함을 모두 가져옵니다.

@@ -9,7 +9,7 @@ import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.exception.UtilException;
-import org.ftclub.cabinet.lent.newService.LentFacadeService;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

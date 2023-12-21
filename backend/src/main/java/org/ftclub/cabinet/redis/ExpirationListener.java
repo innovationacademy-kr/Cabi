@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.redis;
 
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.lent.newService.LentFacadeService;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
