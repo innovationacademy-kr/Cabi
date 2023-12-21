@@ -47,7 +47,19 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "WHERE c.cabinetId = :cabinetId")
-	Optional<Cabinet> findByCabinetIdForUpdate(@Param("cabinetId") Long cabinetId);
+	Optional<Cabinet> findByIdWithLock(@Param("cabinetId") Long cabinetId);
+
+	/**
+	 * cabinetId 리스트로 사물함을 조회한다.(조회 이후 업데이트를 위해 X Lock을 건다.)
+	 *
+	 * @param cabinetIds 사물함 ID 리스트
+	 * @return 사물함 {@link List}
+	 */
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT c "
+			+ "FROM Cabinet c "
+			+ "WHERE c.cabinetId IN (:cabinetIds)")
+	List<Cabinet> findAllByIdsWithLock(List<Long> cabinetIds);
 
 	/**
 	 * userId로 현재 대여 중인 사물함을 조회한다.
@@ -60,13 +72,28 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			"LEFT JOIN LentHistory lh ON c.cabinetId = lh.cabinetId " +
 			"LEFT JOIN User u ON u.userId = lh.userId " +
 			"WHERE u.userId = :userId AND lh.endedAt IS NULL")
-	Optional<Cabinet> findByUserIdAndEndedAtIsNull(@Param("userId") Long userId);
+	Optional<Cabinet> findByUserIdAndLentHistoryEndedAtIsNull(@Param("userId") Long userId);
+
+	/**
+	 * userId로 현재 대여 중인 사물함을 조회한다.
+	 *
+	 * @param userId 사용자 ID
+	 * @return 사물함 {@link Optional}
+	 */
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT c " +
+			"FROM Cabinet c " +
+			"LEFT JOIN LentHistory lh ON c.cabinetId = lh.cabinetId " +
+			"LEFT JOIN User u ON u.userId = lh.userId " +
+			"WHERE u.userId = :userId AND lh.endedAt IS NULL")
+	Optional<Cabinet> findByUserIdAndLentHistoryEndedAtIsNullWithLock(@Param("userId") Long userId);
 
 	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType, Pageable pageable);
 
 	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status, Pageable pageable);
 
-	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum, Pageable pageable);
+	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
+			Pageable pageable);
 
 	@Query("SELECT c "
 			+ "FROM Cabinet c "

@@ -8,11 +8,10 @@ import org.ftclub.cabinet.dto.LentEndMemoDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.ShareCodeDto;
-import org.ftclub.cabinet.dto.UpdateCabinetMemoDto;
-import org.ftclub.cabinet.dto.UpdateCabinetTitleDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.lent.newService.LentFacadeService;
 import org.ftclub.cabinet.user.domain.UserSession;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,6 +37,7 @@ public class LentController {
 		log.info("Called startLentCabinet user: {}, cabinetId: {}", user, cabinetId);
 		lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
 	}
+
 	@PostMapping("/cabinets/share/{cabinetId}")
 	public void startLentShareCabinet(
 			@UserSession UserSessionDto user,
@@ -54,14 +53,14 @@ public class LentController {
 			@UserSession UserSessionDto user,
 			@PathVariable Long cabinetId) {
 		log.info("Called cancelLentShareCabinet user: {}, cabinetId: {}", user, cabinetId);
-		lentFacadeService.cancelLentShareCabinet(user.getUserId(), cabinetId);
+		lentFacadeService.cancelShareCabinetLent(user.getUserId(), cabinetId);
 	}
 
 	@PatchMapping("/return")
 	public void endLent(
 			@UserSession UserSessionDto userSessionDto) {
 		log.info("Called endLent user: {}", userSessionDto);
-		lentFacadeService.endLentCabinet(userSessionDto);
+		lentFacadeService.endUserLent(userSessionDto.getUserId());
 	}
 
 	@PatchMapping("/return-memo")
@@ -70,25 +69,7 @@ public class LentController {
 			@Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
 		log.info("Called endLentWithMemo user: {}, lentEndMemoDto: {}", userSessionDto,
 				lentEndMemoDto);
-		lentFacadeService.endLentCabinetWithMemo(userSessionDto, lentEndMemoDto);
-	}
-
-	@PatchMapping("/me/memo")
-	public void updateCabinetMemo(
-			@UserSession UserSessionDto user,
-			@Valid @RequestBody UpdateCabinetMemoDto updateCabinetMemoDto) {
-		log.info("Called updateCabinetMemo user: {}, updateCabinetMemoDto: {}", user,
-				updateCabinetMemoDto);
-		lentFacadeService.updateCabinetMemo(user, updateCabinetMemoDto);
-	}
-
-	@PatchMapping("/me/cabinet-title")
-	public void updateCabinetTitle(
-			@UserSession UserSessionDto user,
-			@Valid @RequestBody UpdateCabinetTitleDto updateCabinetTitleDto) {
-		log.info("Called updateCabinetTitle user: {}, updateCabinetTitleDto: {}", user,
-				updateCabinetTitleDto);
-		lentFacadeService.updateCabinetTitle(user, updateCabinetTitleDto);
+		lentFacadeService.endUserLent(userSessionDto.getUserId(), lentEndMemoDto.getCabinetMemo());
 	}
 
 	@PatchMapping("/me/cabinet")
@@ -97,7 +78,8 @@ public class LentController {
 			@RequestBody CabinetInfoRequestDto cabinetInfoRequestDto) {
 		log.info("Called updateCabinetInfo user: {}, cabinetInfoRequestDto: {}", user,
 				cabinetInfoRequestDto);
-		lentFacadeService.updateCabinetInfo(user, cabinetInfoRequestDto);
+		lentFacadeService.updateLentCabinetInfo(user.getUserId(),
+				cabinetInfoRequestDto.getTitle(), cabinetInfoRequestDto.getMemo());
 	}
 
 	@GetMapping("/me")
@@ -114,9 +96,8 @@ public class LentController {
 	@GetMapping("/me/histories")
 	public LentHistoryPaginationDto getMyLentLog(
 			@UserSession UserSessionDto user,
-			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
-		log.info("Called getMyLentLog user: {}, page: {}, size: {}", user, page, size);
-		return lentFacadeService.getMyLentLog(user, page, size);
+			@RequestBody @Valid PageRequest pageRequest) {
+		log.info("Called getMyLentLog user: {}, pageable: {}", user, pageRequest);
+		return lentFacadeService.getMyLentLog(user, pageRequest);
 	}
 }

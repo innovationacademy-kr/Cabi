@@ -138,4 +138,8 @@ public class DateUtil {
 		System.out.println("diffInMillis = " + diffInMillis);
 		return (long) Math.ceil(diffInMillis / 1000.0 / 60 / 60 / 24);
 	}
+
+	public static LocalDateTime setLastTime(LocalDateTime date) {
+		return date.withHour(23).withMinute(59).withSecond(59);
+	}
 }
