@@ -1,7 +1,10 @@
 package org.ftclub.cabinet.user.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -67,7 +70,7 @@ class UserServiceUnitTest {
 
 		boolean result = userService.checkUserExists("user1@student.42seoul.kr");
 
-		assertEquals(true, result);
+		assertTrue(result);
 		then(userOptionalFetcher).should(times(1)).findUserByEmail("user1@student.42seoul.kr");
 	}
 
@@ -79,7 +82,7 @@ class UserServiceUnitTest {
 
 		boolean result = userService.checkUserExists("notUser@student.42seoul.kr");
 
-		assertEquals(false, result);
+		assertFalse(result);
 		then(userOptionalFetcher).should(times(1)).findUserByEmail("notUser@student.42seoul.kr");
 	}
 
@@ -103,7 +106,7 @@ class UserServiceUnitTest {
 
 		boolean result = userService.checkAdminUserExists("admin@admin.com");
 
-		assertEquals(true, result);
+		assertTrue(result);
 		then(userOptionalFetcher).should(times(1)).findAdminUserByEmail("admin@admin.com");
 	}
 
@@ -115,7 +118,7 @@ class UserServiceUnitTest {
 
 		boolean result = userService.checkAdminUserExists("notAdmin@admin.com");
 
-		assertEquals(false, result);
+		assertFalse(result);
 		then(userOptionalFetcher).should(times(1)).findAdminUserByEmail("notAdmin@admin.com");
 	}
 
@@ -531,12 +534,12 @@ class UserServiceUnitTest {
 		BanHistory banHistory = mock(BanHistory.class);
 		list.add(banHistory);
 
-		given(banHistoryRepository.findUserActiveBanList(userId, now)).willReturn(list);
+		given(banHistoryRepository.findByUserIdAndUnbannedAt(userId, now)).willReturn(list);
 
 		boolean result = userService.checkUserIsBanned(userId, now);
 
-		then(banHistoryRepository).should(times(1)).findUserActiveBanList(userId, now);
-		assertEquals(result, true);
+		then(banHistoryRepository).should(times(1)).findByUserIdAndUnbannedAt(userId, now);
+		assertTrue(result);
 	}
 
 	@Test
@@ -546,12 +549,12 @@ class UserServiceUnitTest {
 		Long userId = 2L;
 		LocalDateTime now = LocalDateTime.now();
 
-		given(banHistoryRepository.findUserActiveBanList(userId, now)).willReturn(list);
+		given(banHistoryRepository.findByUserIdAndUnbannedAt(userId, now)).willReturn(list);
 
 		boolean result = userService.checkUserIsBanned(userId, now);
 
-		then(banHistoryRepository).should(times(1)).findUserActiveBanList(userId, now);
-		assertEquals(result, false);
+		then(banHistoryRepository).should(times(1)).findByUserIdAndUnbannedAt(userId, now);
+		assertFalse(result);
 	}
 
 	@Test
@@ -578,6 +581,6 @@ class UserServiceUnitTest {
 		AdminRole result = userService.getAdminUserRole(email);
 
 		then(userOptionalFetcher).should(times(1)).findAdminUserRoleByEmail(email);
-		assertEquals(result, null);
+		assertNull(result);
 	}
 }

@@ -24,8 +24,8 @@ public class RedisRepositoryTest {
 		Long cabinetId = 16L;
 
 		lentRedis.setShadowKey(cabinetId);
-		lentRedis.saveUserInRedis("16L", "1234L", "1000", false);
-		lentRedis.saveUserInRedis("16L", "5678L", "1000", true);
+		lentRedis.attemptJoinCabinet("16L", "1234L", "1000", false);
+		lentRedis.attemptJoinCabinet("16L", "5678L", "1000", true);
 
 		try {
 			Thread.sleep(10000);

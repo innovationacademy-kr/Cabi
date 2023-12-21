@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
-import org.ftclub.cabinet.lent.service.LentService;
+import org.ftclub.cabinet.lent.newService.LentFacadeService;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
@@ -28,7 +28,7 @@ public class SystemScheduler {
 
     private final LeaveAbsenceManager leaveAbsenceManager;
 	private final OverdueManager overdueManager;
-	private final LentService lentService;
+	private final LentFacadeService lentFacadeService;
 	private final UserService userService;
 	private final BlackholeManager blackholeManager;
 	private final ReleaseManager releaseManager;
@@ -41,7 +41,7 @@ public class SystemScheduler {
     @Scheduled(cron = "${cabinet.schedule.cron.leave-absence}")
     public void checkAllLents() {
         log.info("called checkAllLents");
-        List<ActiveLentHistoryDto> activeLents = lentService.getAllActiveLentHistories();
+        List<ActiveLentHistoryDto> activeLents = lentFacadeService.getAllActiveLentHistories();
         for (ActiveLentHistoryDto activeLent : activeLents) {
             overdueManager.handleOverdue(activeLent);
 /*

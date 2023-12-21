@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean checkUserIsBanned(Long userId, LocalDateTime today) {
 		log.debug("Called checkUserIsBanned: {}", userId);
-		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
+		List<BanHistory> banHistory = banHistoryRepository.findByUserIdAndUnbannedAt(userId,
 				today);
 		return (banHistory.size() != 0);
 	}

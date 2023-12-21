@@ -22,7 +22,7 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @return active {@link BanHistory} 리스트
 	 */
 	@Query("SELECT b FROM BanHistory b WHERE b.user.userId = :userId AND b.unbannedAt > :today")
-	List<BanHistory> findUserActiveBanList(
+	List<BanHistory> findByUserIdAndUnbannedAt(
 			@Param("userId") Long userId,
 			@Param("today") LocalDateTime today);
 

@@ -89,8 +89,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @param cabinetId 찾으려는 cabinet id
 	 * @return 반납한 {@link LentHistory}의 {@link Optional}
 	 */
-	List<LentHistory> findByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(
-			@Param("cabinetId") Long cabinetId);
+	List<LentHistory> findByCabinetIdAndEndedAtIsNotNull(@Param("cabinetId") Long cabinetId);
 
 	/**
 	 * 유저를 기준으로 아직 반납하지 않은 {@link LentHistory}중 하나를 가져옵니다.
@@ -113,19 +112,17 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	Optional<LentHistory> findByUserIdAndEndedAtIsNullForUpdate(@Param("userId") Long userId);
 
 	/**
-	 * 사물함의 대여기록 {@link LentHistory}들을 모두 가져옵니다.
-	 * {@link Pageable}이 적용되었습니다.
+	 * 사물함의 대여기록 {@link LentHistory}들을 모두 가져옵니다. {@link Pageable}이 적용되었습니다.
 	 *
-	 * @param cabinetId   찾으려는 cabinet id
-	 * @param pageable pagination 정보
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @param pageable  pagination 정보
 	 * @return {@link LentHistory}의 {@link Page}
 	 */
 	Page<LentHistory> findPaginationByCabinetId(
 			@Param("cabinetId") Long cabinetId, Pageable pageable);
 
 	/**
-	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 모두 가져옵니다.
-	 * {@link Pageable}이 적용되었습니다.
+	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 모두 가져옵니다. {@link Pageable}이 적용되었습니다.
 	 *
 	 * @param userId   찾으려는 user id
 	 * @param pageable pagination 정보
@@ -134,8 +131,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	Page<LentHistory> findPaginationByUserId(@Param("userId") Long userId, Pageable pageable);
 
 	/**
-	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 가져옵니다.(현재 빌리고 반납하지 않은 기록은 표시하지 않습니다.)
-	 * {@link Pageable}이 적용되었습니다.
+	 * 유저가 지금까지 빌렸던 {@link LentHistory}들을 가져옵니다.(현재 빌리고 반납하지 않은 기록은 표시하지 않습니다.) {@link Pageable}이
+	 * 적용되었습니다.
 	 *
 	 * @param userId   찾으려는 user id
 	 * @param pageable pagination 정보

@@ -52,6 +52,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
 
 	/**
+	 * 유저의 Id List로 유저들을 찾습니다.
+	 *
+	 * @param userIds 유저 Id {@link List}
+	 * @return {@link User} 리스트
+	 */
+	@Query("SELECT u FROM User u "
+			+ "WHERE u.userId IN :userIds AND u.deletedAt IS NULL")
+	List<User> findAllByIds(List<Long> userIds);
+
+	/**
 	 *
 	 */
 	Page<User> findAllByRoleAndDeletedAtIsNull(@Param("role") UserRole role, Pageable pageable);

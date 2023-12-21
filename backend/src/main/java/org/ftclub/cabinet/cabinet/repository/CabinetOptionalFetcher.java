@@ -49,7 +49,7 @@ public class CabinetOptionalFetcher {
 	 */
 	public Cabinet findLentCabinetByUserId(Long userId) {
 		log.debug("Called findLentCabinetByUserId: {}", userId);
-		return cabinetRepository.findByUserIdAndEndedAtIsNull(userId).orElse(null);
+		return cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId).orElse(null);
 	}
 
 	public List<String> findAllBuildings() {
@@ -103,7 +103,7 @@ public class CabinetOptionalFetcher {
 	 */
 	public Cabinet getCabinetForUpdate(Long cabinetId) {
 		log.debug("Called getCabinetForUpdate: {}", cabinetId);
-		return cabinetRepository.findByCabinetIdForUpdate(cabinetId)
+		return cabinetRepository.findByIdWithLock(cabinetId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
@@ -129,7 +129,7 @@ public class CabinetOptionalFetcher {
 	 */
 	public Cabinet getLentCabinetByUserId(Long userId) {
 		log.debug("Called getLentCabinetByUserId: {}", userId);
-		return cabinetRepository.findByUserIdAndEndedAtIsNull(userId)
+		return cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
@@ -153,8 +153,8 @@ public class CabinetOptionalFetcher {
 	/**
 	 * building과 status에 맞고 lentType이 아닌 사물함을 찾습니다.
 	 *
-	 * @param building 건물 이름
-	 * @param lentType 사물함 타입
+	 * @param building        건물 이름
+	 * @param lentType        사물함 타입
 	 * @param cabinetStatuses 사물함 상태 {@link List}
 	 * @return {@link Cabinet} {@link List}
 	 */
