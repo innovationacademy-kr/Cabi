@@ -1,8 +1,8 @@
-package org.ftclub.cabinet.user.repository;
+package org.ftclub.cabinet.admin.repository;
 
 import java.util.Optional;
-import org.ftclub.cabinet.user.domain.AdminRole;
-import org.ftclub.cabinet.user.domain.AdminUser;
+import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.domain.AdminUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,6 +29,7 @@ public interface AdminUserRepository extends JpaRepository<AdminUser, Long> {
 
 	/**
 	 * 유저의 이메일로 어드민 유저를 찾고 어드민 유저의 권한을 반환합니다.
+	 *
 	 * @param email
 	 * @return {@link AdminRole}
 	 */

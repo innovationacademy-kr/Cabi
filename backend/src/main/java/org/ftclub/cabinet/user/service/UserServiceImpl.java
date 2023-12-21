@@ -17,14 +17,14 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.user.domain.AdminRole;
-import org.ftclub.cabinet.user.domain.AdminUser;
+import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.domain.AdminUser;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanPolicy;
 import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.user.repository.AdminUserRepository;
+import org.ftclub.cabinet.admin.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean checkUserIsBanned(Long userId, LocalDateTime today) {
 		log.debug("Called checkUserIsBanned: {}", userId);
-		List<BanHistory> banHistory = banHistoryRepository.findUserActiveBanList(userId,
+		List<BanHistory> banHistory = banHistoryRepository.findByUserIdAndUnbannedAt(userId,
 				today);
 		return (banHistory.size() != 0);
 	}

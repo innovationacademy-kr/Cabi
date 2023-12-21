@@ -16,7 +16,7 @@ import org.ftclub.cabinet.config.GoogleApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.exception.DomainException;
-import org.ftclub.cabinet.user.domain.AdminRole;
+import org.ftclub.cabinet.admin.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.stereotype.Component;
 

@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
+import org.ftclub.cabinet.admin.domain.AdminRole;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -137,7 +138,8 @@ public class UserFacadeServiceTest {
 		LentExtension lentExtension = lentExtensionOptionalFetcher.findAllByUserId(
 				userSessionDto.getUserId()).get(0);
 
-		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1, null)).willReturn(
+		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1,
+				null)).willReturn(
 				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1), null));
 
 		// when

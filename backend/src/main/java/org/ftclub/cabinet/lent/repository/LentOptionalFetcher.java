@@ -3,7 +3,6 @@ package org.ftclub.cabinet.lent.repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -118,7 +117,7 @@ public class LentOptionalFetcher {
 	 */
 	public Cabinet findActiveLentCabinetByUserId(Long userId) {
 		log.debug("Called findActiveLentCabinetByUserId: {}", userId);
-		return cabinetRepository.findByUserIdAndEndedAtIsNull(userId).orElse(null);
+		return cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId).orElse(null);
 	}
 
 	/**
@@ -129,7 +128,7 @@ public class LentOptionalFetcher {
 	 */
 	public Long findCabinetIdByUserIdFromRedis(Long userId) {
 		log.debug("Called findActiveLentCabinetByUserIdFromRedis: {}", userId);
-		return lentRedis.findCabinetIdByUserIdInRedis(userId);
+		return Long.valueOf(lentRedis.findCabinetByUser(userId.toString()));
 	}
 
 	/**
@@ -140,7 +139,7 @@ public class LentOptionalFetcher {
 	 */
 	public List<String> findUserIdsByCabinetIdFromRedis(Long cabinetId) {
 		log.debug("Called findActiveLentUserIdsByCabinetId: {}", cabinetId);
-		return lentRedis.getUserIdsByCabinetIdInRedis(cabinetId.toString());
+		return lentRedis.getAllUserInCabinet(cabinetId.toString());
 	}
 
 	public List<LentHistory> findAllOverdueLent(LocalDateTime date, Pageable pageable) {
@@ -162,7 +161,7 @@ public class LentOptionalFetcher {
 
 	public List<LentHistory> findPreviousLentHistoryByCabinetId(Long cabinetId) {
 		log.debug("Called findPreviousLentUserNameByCabinetId: {}", cabinetId);
-		return lentRepository.findByCabinetIdAndEndedAtIsNotNullOrderByEndedAtDesc(cabinetId);
+		return lentRepository.findByCabinetIdAndEndedAtIsNotNull(cabinetId);
 	}
 
 	public List<LentHistory> findAllByCabinetIdsAfterDate(LocalDate date, List<Long> cabinetIds) {

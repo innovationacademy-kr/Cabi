@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
-import org.ftclub.cabinet.user.domain.AdminRole;
+import org.ftclub.cabinet.admin.domain.AdminRole;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestUtils;
@@ -31,7 +31,8 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class TokenValidatorUnitTest {
 
-	static final Key mockSigningKey = TestUtils.getSigningKey("SECRET_KEY_MUST_BE_VERYVERYVERYVERYVERYVERYVERYVERYVERY_LONG");
+	static final Key mockSigningKey = TestUtils.getSigningKey(
+			"SECRET_KEY_MUST_BE_VERYVERYVERYVERYVERYVERYVERYVERYVERY_LONG");
 	@Spy
 	@InjectMocks
 	TokenValidator tokenValidator;
@@ -54,7 +55,8 @@ public class TokenValidatorUnitTest {
 	@Test
 	@DisplayName("성공: 유효한 토큰 - 유저인 경우")
 	void 성공_isValidRequestWithLevel() throws JsonProcessingException {
-		String userToken = TestUtils.getTestUserTokenByName(mockSigningKey, LocalDateTime.now(), DateUtil.getInfinityDate(),
+		String userToken = TestUtils.getTestUserTokenByName(mockSigningKey, LocalDateTime.now(),
+				DateUtil.getInfinityDate(),
 				"name", "domainname.com");
 		request.addHeader("Authorization", "Bearer " + userToken);
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
@@ -104,7 +106,8 @@ public class TokenValidatorUnitTest {
 	@DisplayName("실패: 유효하지 않은 토큰인 경우")
 	void 실패_isValidRequestWithLevel() throws JsonProcessingException {
 		request.addHeader("Authorization", "Bearer " + "token");
-		given(tokenValidator.isTokenValid("token", jwtProperties.getSigningKey())).willReturn(false);
+		given(tokenValidator.isTokenValid("token", jwtProperties.getSigningKey())).willReturn(
+				false);
 
 		assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.ADMIN_ONLY));
 		assertFalse(tokenValidator.isValidRequestWithLevel(request, AuthLevel.USER_OR_ADMIN));
@@ -135,7 +138,8 @@ public class TokenValidatorUnitTest {
 	@DisplayName("성공: 만료기한과 시그니처가 정상인 경우")
 	void 성공_isTokenValid() {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
-		String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(), LocalDateTime.now(), DateUtil.getInfinityDate(), "name", "domainname.com");
+		String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), DateUtil.getInfinityDate(), "name", "domainname.com");
 
 		assertTrue(tokenValidator.isTokenValid(token, jwtProperties.getSigningKey()));
 	}
@@ -143,10 +147,12 @@ public class TokenValidatorUnitTest {
 	@Test
 	@DisplayName("실패: 시그니처가 잘못된 경우")
 	void 실패_isTokenValid() {
-		Key wrongKey = TestUtils.getSigningKey("WRONG_KEY_IS_MUST_BE_VERYVERYVERYVERYVERYVERY_LONG_TOO");
+		Key wrongKey = TestUtils.getSigningKey(
+				"WRONG_KEY_IS_MUST_BE_VERYVERYVERYVERYVERYVERY_LONG_TOO");
 		Key rightKey = mockSigningKey;
 		given(jwtProperties.getSigningKey()).willReturn(rightKey);
-		String wrongKeyToken = TestUtils.getTestUserTokenByName(wrongKey, LocalDateTime.now(), DateUtil.getInfinityDate(), "name", "domainname.com");
+		String wrongKeyToken = TestUtils.getTestUserTokenByName(wrongKey, LocalDateTime.now(),
+				DateUtil.getInfinityDate(), "name", "domainname.com");
 
 		assertFalse(tokenValidator.isTokenValid(wrongKeyToken, jwtProperties.getSigningKey()));
 	}
@@ -156,7 +162,8 @@ public class TokenValidatorUnitTest {
 	void 실패_isTokenValid2() {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
 		String expiredToken = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
-				LocalDateTime.now().plusDays(-1000), DateUtil.getInfinityDate(), "name", "domainname.com");
+				LocalDateTime.now().plusDays(-1000), DateUtil.getInfinityDate(), "name",
+				"domainname.com");
 
 		assertFalse(tokenValidator.isTokenValid(expiredToken, jwtProperties.getSigningKey()));
 	}
@@ -165,7 +172,8 @@ public class TokenValidatorUnitTest {
 	@DisplayName("성공: 토큰의 페이로드를 JSON으로 변환")
 	void 성공_getPayloadJson() throws JsonProcessingException {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
-		String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(), LocalDateTime.now(), DateUtil.getInfinityDate(),
+		String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), DateUtil.getInfinityDate(),
 				"sanan", "domainname.com");
 		JsonNode payloadJson = tokenValidator.getPayloadJson(token);
 
@@ -176,7 +184,8 @@ public class TokenValidatorUnitTest {
 	@DisplayName("실패: 페이로드에 찾는 키가 없을 때")
 	void 실패_getPayloadJson() throws JsonProcessingException {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
-		String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(), LocalDateTime.now(), DateUtil.getInfinityDate(),
+		String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), DateUtil.getInfinityDate(),
 				"sanan", "domainname.com");
 
 		JsonNode payloadJson = tokenValidator.getPayloadJson(token);
@@ -190,7 +199,8 @@ public class TokenValidatorUnitTest {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
 		given(masterProperties.getDomain()).willReturn("master.domain.com");
 		given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
-		String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(), LocalDateTime.now(), DateUtil.getInfinityDate(),
+		String token = TestUtils.getTestUserTokenByName(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), DateUtil.getInfinityDate(),
 				"sanan", "domainname.com");
 
 		assertTrue(tokenValidator.isTokenAuthenticatable(token, AuthLevel.USER_ONLY));
@@ -205,7 +215,8 @@ public class TokenValidatorUnitTest {
 		given(jwtProperties.getSigningKey()).willReturn(mockSigningKey);
 		given(masterProperties.getDomain()).willReturn("master.domain.com");
 		given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
-		String adminToken = TestUtils.getTestAdminToken(jwtProperties.getSigningKey(), LocalDateTime.now(), "sanan", "admin.domain.com");
+		String adminToken = TestUtils.getTestAdminToken(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), "sanan", "admin.domain.com");
 
 		assertTrue(tokenValidator.isTokenAuthenticatable(adminToken, AuthLevel.ADMIN_ONLY));
 		assertTrue(tokenValidator.isTokenAuthenticatable(adminToken, AuthLevel.USER_OR_ADMIN));
@@ -220,7 +231,8 @@ public class TokenValidatorUnitTest {
 		given(masterProperties.getDomain()).willReturn("master.domain.com");
 		given(domainProperties.getAdminEmailDomain()).willReturn("admin.domain.com");
 		given(userService.getAdminUserRole("sanan@master.domain.com")).willReturn(AdminRole.MASTER);
-		String masterToken = TestUtils.getTestMasterToken(jwtProperties.getSigningKey(), LocalDateTime.now(), "sanan", "master.domain.com");
+		String masterToken = TestUtils.getTestMasterToken(jwtProperties.getSigningKey(),
+				LocalDateTime.now(), "sanan", "master.domain.com");
 
 		assertTrue(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.ADMIN_ONLY));
 		assertTrue(tokenValidator.isTokenAuthenticatable(masterToken, AuthLevel.USER_OR_ADMIN));

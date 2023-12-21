@@ -18,11 +18,11 @@ public class CabinetFacadeService {
      * <p>
      * 존재하는 모든 건물들을 가져오고, 각 건물별 층 정보들을 가져옵니다.
      */
-    @Transactional(readOnly = true)
-    public List<BuildingFloorsDto> getBuildingFloorsResponse() {
-        log.debug("getBuildingFloorsResponse");
-
-    }
+//    @Transactional(readOnly = true)
+//    public List<BuildingFloorsDto> getBuildingFloorsResponse() {
+//        log.debug("getBuildingFloorsResponse");
+//
+//    }
 
 
 }

@@ -49,21 +49,31 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return {@link User} 리스트
 	 */
 	@Query("SELECT u FROM User u WHERE u.name LIKE %:name%")
-	Page<User> findByPartialName(@Param("name") String name, Pageable pageable);
+	Page<User> findPaginationByPartialName(@Param("name") String name, Pageable pageable);
+
+	/**
+	 * 유저의 Id List로 유저들을 찾습니다.
+	 *
+	 * @param userIds 유저 Id {@link List}
+	 * @return {@link User} 리스트
+	 */
+	@Query("SELECT u FROM User u "
+			+ "WHERE u.userId IN :userIds AND u.deletedAt IS NULL")
+	List<User> findAllByIds(List<Long> userIds);
 
 	/**
 	 *
 	 */
 	Page<User> findAllByRoleAndDeletedAtIsNull(@Param("role") UserRole role, Pageable pageable);
 
-	 /**
+	/**
 	 * 블랙홀에 빠질 위험이 있는 유저들의 정보를 조회합니다. blackholedAt이 현재 시간보다 과거인 유저들을 블랙홀에 빠질 위험이 있는 유저로 판단합니다.
 	 *
 	 * @return {@link User} 리스트
 	 */
 	@Query("SELECT u FROM User u WHERE u.blackholedAt IS NOT NULL OR u.blackholedAt <= CURRENT_TIMESTAMP")
 	List<User> findByRiskOfFallingIntoBlackholeUsers();
-	
+
 	/**
 	 * 블랙홀에 빠질 위험이 없는 유저들의 정보를 조회합니다. blackholedAt이 null이거나 현재 시간보다 미래인 유저들을 블랙홀에 빠질 위험이 없는 유저로
 	 * 판단합니다.

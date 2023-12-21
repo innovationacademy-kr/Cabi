@@ -56,7 +56,7 @@ public class UserRepositoryTest {
 	public void testFindByPartialName() {
 		String partialName = "lent";
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<User> users = userRepository.findByPartialName(partialName, pageable);
+		Page<User> users = userRepository.findPaginationByPartialName(partialName, pageable);
 
 		assertNotNull(users);
 		assertEquals(2, users.getTotalElements());

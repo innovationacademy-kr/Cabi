@@ -9,7 +9,7 @@ import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.exception.UtilException;
-import org.ftclub.cabinet.lent.service.LentService;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import org.springframework.web.client.HttpClientErrorException;
 public class BlackholeManager {
 
 	private final FtApiManager ftApiManager;
-	private final LentService lentService;
+	private final LentFacadeService lentFacadeService;
 	private final UserService userService;
 
 	/**
@@ -61,11 +61,7 @@ public class BlackholeManager {
 	private boolean isBlackholed(LocalDateTime blackholedAtDate) {
 		log.info("isBlackholed {} {}", blackholedAtDate);
 		LocalDateTime now = LocalDateTime.now();
-		if (blackholedAtDate == null || blackholedAtDate.isAfter(now)) {
-			return false;
-		} else {
-			return true;
-		}
+		return blackholedAtDate != null && !blackholedAtDate.isAfter(now);
 	}
 
 	/**
@@ -76,7 +72,7 @@ public class BlackholeManager {
 	 */
 	private void handleNotCadet(UserBlackholeInfoDto userBlackholeInfoDto, LocalDateTime now) {
 		log.warn("{}는 카뎃이 아닙니다.", userBlackholeInfoDto);
-		lentService.terminateLentCabinet(userBlackholeInfoDto.getUserId());
+		lentFacadeService.endUserLent(userBlackholeInfoDto.getUserId());
 		userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
 	}
 
@@ -88,7 +84,7 @@ public class BlackholeManager {
 	private void handleBlackholed(UserBlackholeInfoDto userBlackholeInfoDto) {
 		log.info("{}는 블랙홀에 빠졌습니다.", userBlackholeInfoDto);
 		LocalDateTime now = LocalDateTime.now();
-		lentService.terminateLentCabinet(userBlackholeInfoDto.getUserId());
+		lentFacadeService.endUserLent(userBlackholeInfoDto.getUserId());
 		userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
 	}
 
@@ -116,7 +112,7 @@ public class BlackholeManager {
 		log.error("handleBlackhole HttpClientErrorException {}", e.getStatusCode());
 		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
 			log.warn("{}는 42에서 찾을 수 없습니다.", userBlackholeInfoDto);
-			lentService.terminateLentCabinet(userBlackholeInfoDto.getUserId());
+			lentFacadeService.endUserLent(userBlackholeInfoDto.getUserId());
 			userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
 		}
 	}
@@ -192,10 +188,10 @@ public class BlackholeManager {
 		} catch (ServiceException e) {
 			if (e.getStatus().equals(ExceptionStatus.NO_LENT_CABINET)) {
 				userService.deleteUser(userInfoDto.getUserId(), now);
-			}
-			else if (e.getStatus().equals(ExceptionStatus.OAUTH_BAD_GATEWAY))
+			} else if (e.getStatus().equals(ExceptionStatus.OAUTH_BAD_GATEWAY)) {
 				log.info("handleBlackhole ServiceException {}", e.getStatus());
-				throw new UtilException(e.getStatus());
+			}
+			throw new UtilException(e.getStatus());
 		} catch (Exception e) {
 			log.error("handleBlackhole Exception: {}", userInfoDto, e);
 		}

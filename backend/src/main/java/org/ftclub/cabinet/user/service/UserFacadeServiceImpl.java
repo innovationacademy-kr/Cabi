@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.admin.domain.AdminRole;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
@@ -72,7 +73,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
-	                                                                Integer size) {
+			Integer size) {
 		log.debug("Called getUserProfileListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
@@ -88,7 +89,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
-	                                                                 Integer size) {
+			Integer size) {
 		log.debug("Called findUserCabinetListByPartialName: {}", name);
 		// todo - size가 0일 때 모든 데이터를 가져오기
 		if (size <= 0) {
@@ -178,8 +179,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 	@Override
 	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
-	                    LocalDateTime endedAt,
-	                    LocalDateTime expiredAt) {
+			LocalDateTime endedAt,
+			LocalDateTime expiredAt) {
 		log.debug("Called banUser: {}", userId);
 		userService.banUser(userId, lentType, startedAt, endedAt, expiredAt);
 	}
