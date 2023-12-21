@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 @RequiredArgsConstructor
-public class CookieManager {
+public class AuthCookieManager {
 
 	private final DomainProperties domainProperties;
 	private final JwtProperties jwtProperties;
@@ -42,8 +42,7 @@ public class CookieManager {
 	 * 쿠키를 설정합니다.
 	 *
 	 * @param res        요청 시의 서블렛 {@link HttpServletResponse}
-	 * @param name       쿠키 이름
-	 * @param value      쿠키 값
+	 * @param cookie     쿠키
 	 * @param path       쿠키 사용 경로
 	 * @param serverName 쿠키 도메인
 	 */

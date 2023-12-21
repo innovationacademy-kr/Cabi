@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Configuration;
 public class OauthConfig {
 	public static final String FT_OAUTH_20_SERVICE = "ftOauth20Service";
 	public static final String GOOGLE_OAUTH_20_SERVICE = "googleOauth20Service";
+	public static final String USER_TOKEN_NAME = "access_token";
+	public static final String ADMIN_TOKEN_NAME = "admin_access_token";
+
 
 	@Bean
 	@Qualifier(FT_OAUTH_20_SERVICE)
@@ -29,6 +32,7 @@ public class OauthConfig {
 		return new ServiceBuilder(googleApiProperties.getClientId())
 				.apiSecret(googleApiProperties.getClientSecret())
 				.callback(googleApiProperties.getRedirectUri())
+				.defaultScope("profile email")
 				.build(GoogleApi20.instance());
 	}
 }

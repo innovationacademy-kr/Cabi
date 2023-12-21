@@ -1,11 +1,9 @@
 package org.ftclub.cabinet.utils.scheduler;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
+import org.ftclub.cabinet.dto.UserBlackholeDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
 import org.ftclub.cabinet.user.service.UserService;
@@ -16,6 +14,9 @@ import org.ftclub.cabinet.utils.release.ReleaseManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 시스템 스케줄러
@@ -61,8 +62,8 @@ public class SystemScheduler {
 	@Scheduled(cron = "${cabinet.schedule.cron.risk-of-blackhole}")
 	public void checkRiskOfBlackhole() {
 		log.info("called checkRiskOfBlackhole");
-		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
-		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
+		List<UserBlackholeDto> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
+		for (UserBlackholeDto blackholeInfo : blackholeInfos) {
 			blackholeManager.handleBlackhole(blackholeInfo);
 			try {
 				Thread.sleep(DELAY_TIME);
@@ -78,8 +79,8 @@ public class SystemScheduler {
 	@Scheduled(cron = "${cabinet.schedule.cron.no-risk-of-blackhole}")
 	public void checkNoRiskOfBlackhole() {
 		log.info("called checkNoRiskOfBlackhole");
-		List<UserBlackholeInfoDto> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
-		for (UserBlackholeInfoDto blackholeInfo : blackholeInfos) {
+		List<UserBlackholeDto> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
+		for (UserBlackholeDto blackholeInfo : blackholeInfos) {
 			blackholeManager.handleBlackhole(blackholeInfo);
 			try {
 				Thread.sleep(DELAY_TIME);

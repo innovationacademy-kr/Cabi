@@ -1,12 +1,13 @@
 package org.ftclub.cabinet.user.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.dto.UserBlackholeDto;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface UserService {
 
@@ -39,7 +40,7 @@ public interface UserService {
 	void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt);
 
 	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
-			LocalDateTime expiredAt);
+	             LocalDateTime expiredAt);
 
 	void deleteRecentBanHistory(Long userId, LocalDateTime today);
 
@@ -58,16 +59,16 @@ public interface UserService {
 	/**
 	 * 블랙홀에 빠질 위험이 있는 유저들의 블랙홀 정보를 가져옵니다.
 	 *
-	 * @return {@link List<UserBlackholeInfoDto>}
+	 * @return {@link List< UserBlackholeDto >}
 	 */
-	List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo();
+	List<UserBlackholeDto> getAllRiskOfBlackholeInfo();
 
 	/**
 	 * 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 정보를 가져옵니다.
 	 *
-	 * @return {@link List<UserBlackholeInfoDto>}
+	 * @return {@link List< UserBlackholeDto >}
 	 */
-	List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo();
+	List<UserBlackholeDto> getAllNoRiskOfBlackholeInfo();
 
 	/**
 	 * userId로 유저와 AlarmStatus 정보를 가져옵니다.
@@ -76,5 +77,4 @@ public interface UserService {
 	 * @return
 	 */
 	User getUserByIdWithAlarmStatus(Long userId);
-
 }

@@ -13,13 +13,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.Cookie;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class CookieManagerUnitTest {
+public class AuthCookieManagerUnitTest {
 
 	@Mock
 	DomainProperties domainProperties = mock(DomainProperties.class);
@@ -28,7 +27,7 @@ public class CookieManagerUnitTest {
 	JwtProperties jwtProperties = mock(JwtProperties.class);
 
 	@InjectMocks
-	CookieManager cookieManager;
+	AuthCookieManager authCookieManager;
 
 	MockHttpServletRequest request = new MockHttpServletRequest();
 
@@ -40,7 +39,7 @@ public class CookieManagerUnitTest {
 		Cookie expect = new Cookie("name", "value");
 		request.setCookies(expect);
 
-		String result = cookieManager.getCookieValue(request, "name");
+		String result = authCookieManager.getCookieValue(request, "name");
 
 		assertEquals(expect.getValue(), result);
 	}
@@ -51,9 +50,9 @@ public class CookieManagerUnitTest {
 		Cookie expect = new Cookie("name", "value");
 		request.setCookies(expect);
 
-		String result = cookieManager.getCookieValue(request, "name2");
+		String result = authCookieManager.getCookieValue(request, "name2");
 
-		assertEquals(null, result);
+		assertNull(result);
 	}
 
 	@Test
@@ -65,12 +64,12 @@ public class CookieManagerUnitTest {
 		String path = "/";
 		Cookie cookie = new Cookie("name", "value");
 
-		cookieManager.setCookieToClient(response, cookie, path, serverName);
+		authCookieManager.setCookieToClient(response, cookie, path, serverName);
 
 		assertEquals(60 * 60 * 24 * jwtProperties.getExpiryDays(), cookie.getMaxAge());
 		assertEquals(path, cookie.getPath());
 		assertEquals(domainProperties.getLocal(), cookie.getDomain());
-		assertTrue(response.getCookie("name") != null);
+		assertNotNull(response.getCookie("name"));
 	}
 
 	@Test
@@ -83,21 +82,21 @@ public class CookieManagerUnitTest {
 		String path = "/";
 		Cookie cookie = new Cookie("name", "value");
 
-		cookieManager.setCookieToClient(response, cookie, path, serverName);
+		authCookieManager.setCookieToClient(response, cookie, path, serverName);
 
 		assertEquals(60 * 60 * 24 * jwtProperties.getExpiryDays(), cookie.getMaxAge());
 		assertEquals(path, cookie.getPath());
 		assertEquals(domainProperties.getCookieDomain(), cookie.getDomain());
-		assertTrue(response.getCookie("name") != null);
+		assertNotNull(response.getCookie("name"));
 	}
 
 	@Test
 	@DisplayName("성공: 쿠키 지우기")
 	void 성공_deleteCookie() {
-		cookieManager.deleteCookie(response, "name");
+		authCookieManager.deleteCookie(response, "name");
 		Cookie cookie = response.getCookie("name");
 
 		assertEquals(0, cookie.getMaxAge());
-		assertEquals(null, cookie.getValue());
+		assertNull(cookie.getValue());
 	}
 }

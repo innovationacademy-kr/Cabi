@@ -1,14 +1,14 @@
 package org.ftclub.cabinet.auth.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.domain.CookieManager;
-import org.ftclub.cabinet.auth.domain.TokenProvider;
-import org.ftclub.cabinet.config.ApiProperties;
-import org.ftclub.cabinet.config.JwtProperties;
+import org.ftclub.cabinet.admin.domain.AdminUser;
+import org.ftclub.cabinet.auth.domain.*;
+import org.ftclub.cabinet.config.DomainProperties;
+import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -16,48 +16,63 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
 public class AuthFacadeService {
 
-	private final JwtProperties jwtProperties;
+	private final FtOauthService ftOauthService;
+	private final GoogleOauthService googleOauthService;
 	private final TokenProvider tokenProvider;
-	private final CookieManager cookieManager;
-	private final AuthService authService;
-	private final OauthService oauthService;
+	private final AuthCookieManager authCookieManager;
+	private final DomainProperties domainProperties;
+	private final MasterProperties masterProperties;
 
-	public void requestLoginToApi(HttpServletResponse res, ApiProperties apiProperties)
-			throws IOException {
-		oauthService.sendCodeRequestToApi(res, apiProperties);
+	public void requestUserLogin(HttpServletResponse res) throws IOException {
+		ftOauthService.requestLogin(res);
 	}
 
-	public void handleLogin(String code, HttpServletRequest req, HttpServletResponse res,
-	                        ApiProperties apiProperties, LocalDateTime now) {
-		String apiToken = oauthService.getTokenByCodeRequest(code, apiProperties);
-		JsonNode profile = oauthService.getProfileJsonByToken(apiToken, apiProperties);
-		Map<String, Object> claims = tokenProvider.makeClaimsByProviderProfile(
-				apiProperties.getProviderName(), profile);
-		authService.addUserIfNotExistsByClaims(claims);
-		String accessToken = tokenProvider.createToken(claims, now);
-		Cookie cookie = cookieManager.cookieOf(
-				tokenProvider.getTokenNameByProvider(apiProperties.getProviderName()), accessToken);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+	public void requestAdminLogin(HttpServletResponse res) throws IOException {
+		googleOauthService.requestLogin(res);
+	}
+
+	public void handleUserLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
+		FtProfile profile = ftOauthService.getProfileByCode(code);
+		User user = null/*userCommandService.createUserIfNotExists(profile)*/;
+		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
+		Cookie cookie = authCookieManager.cookieOf(OauthConfig.USER_TOKEN_NAME, token);
+		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		res.sendRedirect(domainProperties.getFeHost() + "/home");
+	}
+
+	public void handleAdminLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
+		GoogleProfile profile = googleOauthService.getProfileByCode(code);
+		AdminUser admin = null/*userCommandService.createUserIfNotExists(profile)*/;
+		String token = tokenProvider.createAdminToken(admin, LocalDateTime.now());
+		Cookie cookie = authCookieManager.cookieOf(OauthConfig.ADMIN_TOKEN_NAME, token);
+		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		res.sendRedirect(domainProperties.getFeHost() + "/admin/home");
 	}
 
 	public void masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
 	                        HttpServletResponse res, LocalDateTime now) {
-		if (!authService.validateMasterLogin(masterLoginDto)) {
-			throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
-		}
+		// TODO : 서비스로 빼기
+		if (!masterLoginDto.getId().equals(masterProperties.getId())
+				|| !masterLoginDto.getPassword().equals(masterProperties.getPassword()))
+			throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 		String masterToken = tokenProvider.createMasterToken(now);
-		Cookie cookie = cookieManager.cookieOf(jwtProperties.getAdminTokenName(), masterToken);
-		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		Cookie cookie = authCookieManager.cookieOf(OauthConfig.ADMIN_TOKEN_NAME, masterToken);
+		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
 	}
 
-	public void logout(HttpServletResponse res, ApiProperties apiProperties) {
-		cookieManager.deleteCookie(res,
-				tokenProvider.getTokenNameByProvider(apiProperties.getProviderName()));
+	public void userLogout(HttpServletResponse res) {
+		Cookie userCookie = authCookieManager.cookieOf(OauthConfig.USER_TOKEN_NAME, "");
+		authCookieManager.setCookieToClient(res, userCookie, "/", res.getHeader("host"));
+	}
+
+	public void adminLogout(HttpServletResponse res) {
+		Cookie adminCookie = authCookieManager.cookieOf(OauthConfig.ADMIN_TOKEN_NAME, "");
+		authCookieManager.setCookieToClient(res, adminCookie, "/", res.getHeader("host"));
 	}
 }

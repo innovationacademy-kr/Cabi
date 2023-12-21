@@ -1,11 +1,12 @@
 package org.ftclub.cabinet.utils.blackhole.manager;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.service.FtApiManager;
-import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
+import org.ftclub.cabinet.auth.domain.FtApiManager;
+import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.auth.service.FtOauthService;
+import org.ftclub.cabinet.dto.UserBlackholeDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.exception.UtilException;
@@ -15,12 +16,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 @Log4j2
 public class BlackholeManager {
 
+	private static String ACCESS_TOKEN;
 	private final FtApiManager ftApiManager;
+	private final FtOauthService ftOauthService;
 	private final LentFacadeService lentFacadeService;
 	private final UserService userService;
 
@@ -67,53 +72,53 @@ public class BlackholeManager {
 	/**
 	 * 카뎃이 아닌 유저를 강제 반납 및 삭제 처리한다.
 	 *
-	 * @param userBlackholeInfoDto 유저 정보 {@link UserBlackholeInfoDto}
-	 * @param now                  현재 시간
+	 * @param userBlackholeDto 유저 정보 {@link UserBlackholeDto}
+	 * @param now              현재 시간
 	 */
-	private void handleNotCadet(UserBlackholeInfoDto userBlackholeInfoDto, LocalDateTime now) {
-		log.warn("{}는 카뎃이 아닙니다.", userBlackholeInfoDto);
-		lentFacadeService.endUserLent(userBlackholeInfoDto.getUserId());
-		userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
+	private void handleNotCadet(UserBlackholeDto userBlackholeDto, LocalDateTime now) {
+		log.warn("{}는 카뎃이 아닙니다.", userBlackholeDto);
+		lentFacadeService.endUserLent(userBlackholeDto.getUserId());
+		userService.deleteUser(userBlackholeDto.getUserId(), now);
 	}
 
 	/**
 	 * 블랙홀에 빠진 유저를 강제 반납 및 삭제 처리한다.
 	 *
-	 * @param userBlackholeInfoDto 유저 정보 {@link UserBlackholeInfoDto}
+	 * @param userBlackholeDto 유저 정보 {@link UserBlackholeDto}
 	 */
-	private void handleBlackholed(UserBlackholeInfoDto userBlackholeInfoDto) {
-		log.info("{}는 블랙홀에 빠졌습니다.", userBlackholeInfoDto);
+	private void handleBlackholed(UserBlackholeDto userBlackholeDto) {
+		log.info("{}는 블랙홀에 빠졌습니다.", userBlackholeDto);
 		LocalDateTime now = LocalDateTime.now();
-		lentFacadeService.endUserLent(userBlackholeInfoDto.getUserId());
-		userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
+		lentFacadeService.endUserLent(userBlackholeDto.getUserId());
+		userService.deleteUser(userBlackholeDto.getUserId(), now);
 	}
 
 	/**
 	 * 블랙홀에 빠지지 않은 유저의 블랙홀 날짜를 갱신한다.
 	 *
-	 * @param userBlackholeInfoDto 유저 정보 {@link UserBlackholeInfoDto}
-	 * @param newBlackholedAt      갱신된 블랙홀 날짜
+	 * @param userBlackholeDto 유저 정보 {@link UserBlackholeDto}
+	 * @param newBlackholedAt  갱신된 블랙홀 날짜
 	 */
-	private void handleNotBlackholed(UserBlackholeInfoDto userBlackholeInfoDto,
-			LocalDateTime newBlackholedAt) {
-		log.info("{}는 블랙홀에 빠지지 않았습니다.", userBlackholeInfoDto);
-		userService.updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), newBlackholedAt);
+	private void handleNotBlackholed(UserBlackholeDto userBlackholeDto,
+	                                 LocalDateTime newBlackholedAt) {
+		log.info("{}는 블랙홀에 빠지지 않았습니다.", userBlackholeDto);
+		userService.updateUserBlackholedAt(userBlackholeDto.getUserId(), newBlackholedAt);
 	}
 
 	/**
 	 * 유저 정보 조회 결과 해당 유저를 42에서 찾을 수 없다면, 강제 반납 및 삭제 처리한다.
 	 *
-	 * @param userBlackholeInfoDto 유저 정보 {@link UserBlackholeInfoDto}
-	 * @param now                  현재 시간
-	 * @param e                    HttpClientErrorException
+	 * @param userBlackholeDto 유저 정보 {@link UserBlackholeDto}
+	 * @param now              현재 시간
+	 * @param e                HttpClientErrorException
 	 */
-	private void handleHttpClientError(UserBlackholeInfoDto userBlackholeInfoDto, LocalDateTime now,
-			HttpClientErrorException e) {
+	private void handleHttpClientError(UserBlackholeDto userBlackholeDto, LocalDateTime now,
+	                                   HttpClientErrorException e) {
 		log.error("handleBlackhole HttpClientErrorException {}", e.getStatusCode());
 		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-			log.warn("{}는 42에서 찾을 수 없습니다.", userBlackholeInfoDto);
-			lentFacadeService.endUserLent(userBlackholeInfoDto.getUserId());
-			userService.deleteUser(userBlackholeInfoDto.getUserId(), now);
+			log.warn("{}는 42에서 찾을 수 없습니다.", userBlackholeDto);
+			lentFacadeService.endUserLent(userBlackholeDto.getUserId());
+			userService.deleteUser(userBlackholeDto.getUserId(), now);
 		}
 	}
 
@@ -165,7 +170,7 @@ public class BlackholeManager {
 	 * @param userInfoDto
 	 */
 
-	public void handleBlackhole(UserBlackholeInfoDto userInfoDto) {
+	public void handleBlackhole(UserBlackholeDto userInfoDto) {
 		log.info("called handleBlackhole {}", userInfoDto);
 		LocalDateTime now = LocalDateTime.now();
 		try {
@@ -197,22 +202,13 @@ public class BlackholeManager {
 		}
 	}
 
-	// 따로 분리할 필요 없을듯..
+	public void handleBlackHoledUser(UserBlackholeDto dto) {
+		LocalDateTime now = LocalDateTime.now();
+		try {
+			FtProfile ftProfile = ftOauthService.getProfileByIntraName(ACCESS_TOKEN, dto.getName());
 
-	/**
-	 * 블랙홀 갱신 후 처리
-	 * <p>
-	 * 블랙홀일 경우 반납 및 삭제 처리 블랙홀이 아닐경우 유저 정보(블랙홀일자) 업데이트
-	 *
-	 * @param userBlackholeInfoDto
-	 */
-	public void blackholeRefresher(UserBlackholeInfoDto userBlackholeInfoDto) {
-		LocalDateTime refreshedBlackholedAt = refreshBlackholedAt(userBlackholeInfoDto.getName());
-		if (isBlackholed(refreshedBlackholedAt)) {
-			handleBlackholed(userBlackholeInfoDto);
-			throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
-		} else {
-			updateUserBlackholedAt(userBlackholeInfoDto.getUserId(), refreshedBlackholedAt);
+		} catch (Exception e) {
+			log.error("handleBlackHoledUser Exception: {}", dto, e);
 		}
 	}
 }

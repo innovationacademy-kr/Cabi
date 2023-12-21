@@ -1,21 +1,22 @@
 package org.ftclub.cabinet.log;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.domain.CookieManager;
+import org.ftclub.cabinet.auth.domain.AuthCookieManager;
 import org.ftclub.cabinet.auth.domain.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -26,12 +27,12 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 	private static final List<String> IP_HEADERS = Arrays.asList("X-Forwarded-For",
 			"Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR");
 	private final TokenValidator tokenValidator;
-	private final CookieManager cookieManager;
+	private final AuthCookieManager authCookieManager;
 	private final JwtProperties jwtProperties;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-			Object handler) {
+	                         Object handler) {
 		MDC.put(USER_ID, getUserId(request));
 		return true;
 	}
@@ -39,7 +40,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) {
+	                       ModelAndView modelAndView) {
 		String ip = getClientIpAddr(request);
 		String action = request.getRequestURI();
 		int status = response.getStatus();
@@ -48,7 +49,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-			Object handler, Exception ex) throws Exception {
+	                            Object handler, Exception ex) throws Exception {
 		MDC.remove(USER_ID);
 		MDC.clear();
 	}
@@ -66,7 +67,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 		String ret = null;
 		try {
 			ret = tokenValidator.getPayloadJson(
-							cookieManager.getCookieValue(request, jwtProperties.getMainTokenName()))
+							authCookieManager.getCookieValue(request, jwtProperties.getMainTokenName()))
 					.get("name")
 					.asText();
 		} catch (Exception ignore) {

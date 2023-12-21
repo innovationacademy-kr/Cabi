@@ -1,14 +1,7 @@
 package org.ftclub.cabinet.utils.leave.absence;
 
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-
 import com.fasterxml.jackson.databind.JsonNode;
-import java.time.LocalDateTime;
-import org.ftclub.cabinet.auth.service.FtApiManager;
+import org.ftclub.cabinet.auth.domain.FtApiManager;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.user.service.UserService;
@@ -23,9 +16,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
+
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+
 @ExtendWith(MockitoExtension.class)
 public class LeaveAbsenceManagerUnitTest {
 
+	@Mock(lenient = true)
+	FtApiProperties ftApiProperties = mock(FtApiProperties.class);
 	@InjectMocks
 	private LeaveAbsenceManager leaveAbsenceManager;
 	@Mock
@@ -34,9 +37,6 @@ public class LeaveAbsenceManagerUnitTest {
 	private LentService lentService = mock(LentService.class);
 	@Mock
 	private UserService userService = mock(UserService.class);
-
-	@Mock(lenient = true)
-	FtApiProperties ftApiProperties = mock(FtApiProperties.class);
 
 	@BeforeEach
 	@DisplayName("테스트 전에 API 정보를 설정한다.")

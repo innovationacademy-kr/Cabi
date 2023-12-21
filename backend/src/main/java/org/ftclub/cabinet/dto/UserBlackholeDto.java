@@ -1,10 +1,11 @@
 package org.ftclub.cabinet.dto;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.ftclub.cabinet.user.domain.User;
+
+import java.time.LocalDateTime;
 
 /**
  * 유저의 식별자, 이름, 이메일, 블랙홀 날짜를 반환하는 DTO입니다.
@@ -12,18 +13,19 @@ import org.ftclub.cabinet.user.domain.User;
 @AllArgsConstructor
 @Getter
 @ToString
-public class UserBlackholeInfoDto {
+public class UserBlackholeDto {
 
 	private final Long userId;
 	private final String name;
 	private final String email;
 	private final LocalDateTime blackHoledAt;
 
-	public static UserBlackholeInfoDto of(Long userId, String name, String email,
-			LocalDateTime blackHoledAt) {
-		return new UserBlackholeInfoDto(userId, name, email, blackHoledAt);
+	public static UserBlackholeDto of(Long userId, String name, String email,
+	                                  LocalDateTime blackHoledAt) {
+		return new UserBlackholeDto(userId, name, email, blackHoledAt);
 	}
-	public static UserBlackholeInfoDto of(User user) {
-		return new UserBlackholeInfoDto(user.getUserId(), user.getName(), user.getEmail(), user.getBlackholedAt());
+
+	public static UserBlackholeDto of(User user) {
+		return new UserBlackholeDto(user.getUserId(), user.getName(), user.getEmail(), user.getBlackholedAt());
 	}
 }

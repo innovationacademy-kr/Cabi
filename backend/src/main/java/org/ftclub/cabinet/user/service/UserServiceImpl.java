@@ -1,12 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
 import io.netty.util.internal.StringUtil;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.admin.domain.AdminRole;
@@ -15,22 +9,25 @@ import org.ftclub.cabinet.admin.repository.AdminUserRepository;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
-import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
+import org.ftclub.cabinet.dto.UserBlackholeDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.BanPolicy;
-import org.ftclub.cabinet.user.domain.BanType;
-import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.user.domain.*;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -154,8 +151,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
-			LocalDateTime endedAt,
-			LocalDateTime expiredAt) {
+	                    LocalDateTime endedAt,
+	                    LocalDateTime expiredAt) {
 		log.debug("Called banUser: {}", userId);
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);
 		if (banType == BanType.NONE) {
@@ -200,23 +197,23 @@ public class UserServiceImpl implements UserService {
 		clubUser.changeName(clubName);
 	}
 
-	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
+	public List<UserBlackholeDto> getAllRiskOfBlackholeInfo() {
 		log.info("Called getAllRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
 				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
-				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+				.map(user -> UserBlackholeDto.of(user.getUserId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo() {
+	public List<UserBlackholeDto> getAllNoRiskOfBlackholeInfo() {
 		log.info("Called getAllNoRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByNoRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
 				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
-				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+				.map(user -> UserBlackholeDto.of(user.getUserId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
 	}
