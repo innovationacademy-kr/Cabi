@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -33,6 +35,7 @@ import org.ftclub.cabinet.user.newService.BanHistoryCommandService;
 import org.ftclub.cabinet.user.newService.BanHistoryQueryService;
 import org.ftclub.cabinet.user.newService.BanPolicyService;
 import org.ftclub.cabinet.user.newService.UserQueryService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +58,7 @@ public class LentFacadeService {
 
 	private final LentPolicyService lentPolicyService;
 	private final BanPolicyService banPolicyService;
+	private final ApplicationEventPublisher eventPublisher;
 
 	private final LentMapper lentMapper;
 	private final CabinetMapper cabinetMapper;
@@ -197,6 +201,10 @@ public class LentFacadeService {
 			lentRedisService.clearCabinetSession(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
 			cabinetCommandService.changeUserCount(cabinet, userIdsInCabinet.size());
+
+			LentSuccessAlarm alarm = new LentSuccessAlarm(
+					cabinet.getCabinetPlace().getLocation(), cabinet.getVisibleNum(), expiredAt);
+			eventPublisher.publishEvent(AlarmEvent.of(userId, alarm));
 		}
 	}
 
