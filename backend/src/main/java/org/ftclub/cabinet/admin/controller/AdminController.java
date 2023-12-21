@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.admin.newService.AdminFacadeService;
+import org.ftclub.cabinet.admin.service.AdminFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;

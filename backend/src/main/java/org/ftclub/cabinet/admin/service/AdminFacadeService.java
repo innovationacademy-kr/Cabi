@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.newService;
+package org.ftclub.cabinet.admin.service;
 
 import static java.util.stream.Collectors.toList;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
