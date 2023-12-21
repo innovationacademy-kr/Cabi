@@ -70,11 +70,11 @@ public interface UserService {
 	List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo();
 
 	/**
-	 * userId로 유저와 AlarmOptIn 정보를 가져옵니다.
+	 * userId로 유저와 AlarmStatus 정보를 가져옵니다.
 	 *
 	 * @param userId
 	 * @return
 	 */
-	User getUserWithAlarmOptIn(Long userId);
+	User getUserByIdWithAlarmStatus(Long userId);
 
 }

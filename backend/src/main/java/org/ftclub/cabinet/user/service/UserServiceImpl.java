@@ -221,8 +221,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUserWithAlarmOptIn(Long userId) {
-		return userRepository.findUserWithOptInById(userId)
+	public User getUserByIdWithAlarmStatus(Long userId) {
+		return userRepository.findUserByIdWithAlarmStatus(userId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 	}
 }

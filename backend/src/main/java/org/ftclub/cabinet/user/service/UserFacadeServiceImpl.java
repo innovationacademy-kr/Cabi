@@ -4,13 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.alarm.domain.AlarmType;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.alarm.service.AlarmCommandService;
 import org.ftclub.cabinet.alarm.service.AlarmQueryService;
@@ -36,7 +33,6 @@ import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
-import org.ftclub.cabinet.user.domain.AlarmOptIn;
 import org.ftclub.cabinet.user.domain.AlarmStatus;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
@@ -76,13 +72,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 
 		LentExtensionResponseDto activeLentExtension = lentExtensionService.getActiveLentExtension(
 				user);
-
-//		List<AlarmOptIn> alarmOptIns = alarmQueryService.findAllAlarmOptInByUserId(
-//				user.getUserId());
-//		List<AlarmType> alarmTypes = alarmOptIns.stream().map(AlarmOptIn::getAlarmType)
-//				.collect(Collectors.toList());
-//		AlarmTypeResponseDto alarmTypeResponseDto = AlarmTypeResponseDto.builder()
-//				.alarmTypes(alarmTypes).build();
 
 		AlarmStatus userAlarmStatus = alarmQueryService.findAlarmStatusByUserId(
 				user.getUserId());
@@ -328,13 +317,6 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public void updateAlarmState(UserSessionDto user, UpdateAlarmRequestDto dto) {
 		log.debug("Called updateAlarmState");
 
-		User findUser = userService.getUserWithAlarmOptIn(user.getUserId());
-		Set<AlarmOptIn> alarmOptIns = findUser.getAlarmOptIns();
-		List<AlarmType> currentAlarmTypes = alarmOptIns.stream().map(AlarmOptIn::getAlarmType)
-				.collect(Collectors.toList());
-
-		Map<AlarmType, Boolean> changedAlarmStatus = dto.getAlarmTypeStatus();
-		alarmCommandService.updateAlarmStatus(findUser, currentAlarmTypes, changedAlarmStatus);
 		alarmCommandService.updateAlarmStatusRe(dto, alarmQueryService.findAlarmStatusByUserId(
 				user.getUserId()));
 	}
