@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -16,6 +17,23 @@ import org.springframework.stereotype.Service;
 public class CabinetQueryService {
 
 	private final CabinetRepository cabinetRepository;
+
+
+	public List<String> getAllBuildings() {
+		return cabinetRepository.findAllBuildings();
+	}
+
+	public List<Integer> getAllFloorsByBuilding(String building) {
+		return cabinetRepository.findAllFloorsByBuilding(building);
+	}
+
+	public int countCabinets(CabinetStatus status, Integer floor) {
+		return cabinetRepository.countByStatusAndFloor(status, floor);
+	}
+
+	public List<Integer> getAllFloorsByBuildings(List<String> buildings) {
+		return cabinetRepository.findAllFloorsByBuildings(buildings);
+	}
 
 	public Cabinet getCabinets(Long cabinetId) {
 		Optional<Cabinet> cabinet = cabinetRepository.findById(cabinetId);

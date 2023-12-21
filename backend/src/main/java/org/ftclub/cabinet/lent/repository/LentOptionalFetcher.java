@@ -144,7 +144,7 @@ public class LentOptionalFetcher {
 
 	public List<LentHistory> findAllOverdueLent(LocalDateTime date, Pageable pageable) {
 		log.debug("Called findAllOverdueLent: {}", date);
-		return lentRepository.findAllExpiredAtBeforeAndEndedAtIsNull(date, pageable);
+		return lentRepository.findAllExpiredAtBeforeAndEndedAtIsNull(date, pageable).toList();
 	}
 
 	/**

@@ -2,7 +2,6 @@ package org.ftclub.cabinet.statistics.controller;
 
 import static org.mockito.Mockito.mock;
 
-import org.ftclub.cabinet.admin.controller.StatisticsController;
 import org.ftclub.cabinet.admin.service.StatisticsFacadeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

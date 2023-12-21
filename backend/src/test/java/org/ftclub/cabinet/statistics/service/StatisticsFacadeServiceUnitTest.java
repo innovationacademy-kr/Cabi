@@ -17,7 +17,6 @@ import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentRepository;
-import org.ftclub.cabinet.admin.repository.StatisticsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,13 +91,14 @@ class StatisticsFacadeServiceUnitTest {
 	public void 대여_반납_개수_세기_성공() {
 		LocalDateTime startDate = LocalDateTime.of(2023, 1, 1, 0, 0); // 2023-01-01
 		LocalDateTime endDate = LocalDateTime.of(2023, 6, 1, 0, 0); // 2023-06-01
-		given(lentRepository.countLentByTimeDuration(startDate, endDate))
+		given(lentRepository.countLentFromStartDateToEndDate(startDate, endDate))
 				.willReturn(12);
-		given(lentRepository.countReturnByTimeDuration(startDate, endDate))
+		given(lentRepository.countReturnFromStartDateToEndDate(startDate, endDate))
 				.willReturn(2);
 		LentsStatisticsResponseDto lentsStatisticsResponseDtoOrigin = new LentsStatisticsResponseDto(
-				startDate, endDate, lentRepository.countLentByTimeDuration(startDate, endDate),
-				lentRepository.countReturnByTimeDuration(startDate, endDate));
+				startDate, endDate,
+				lentRepository.countLentFromStartDateToEndDate(startDate, endDate),
+				lentRepository.countReturnFromStartDateToEndDate(startDate, endDate));
 
 		LentsStatisticsResponseDto lentsStatisticsResponseDtoTested = statisticsFacadeService.getCountOnLentAndReturn(
 				startDate, endDate);
@@ -107,8 +107,8 @@ class StatisticsFacadeServiceUnitTest {
 				lentsStatisticsResponseDtoOrigin.getLentStartCount());
 		assertThat(lentsStatisticsResponseDtoTested.getLentEndCount()).isEqualTo(
 				lentsStatisticsResponseDtoOrigin.getLentEndCount());
-		then(lentRepository).should(times(2)).countLentByTimeDuration(startDate, endDate);
-		then(lentRepository).should(times(2)).countReturnByTimeDuration(startDate, endDate);
+		then(lentRepository).should(times(2)).countLentFromStartDateToEndDate(startDate, endDate);
+		then(lentRepository).should(times(2)).countReturnFromStartDateToEndDate(startDate, endDate);
 	}
 
 	@Test
@@ -120,7 +120,7 @@ class StatisticsFacadeServiceUnitTest {
 		Assertions.assertThrows(ServiceException.class, () -> {
 			statisticsFacadeService.getCountOnLentAndReturn(startDate, endDate);
 		});
-		then(lentRepository).should(times(0)).countLentByTimeDuration(startDate, endDate);
-		then(lentRepository).should(times(0)).countReturnByTimeDuration(startDate, endDate);
+		then(lentRepository).should(times(0)).countLentFromStartDateToEndDate(startDate, endDate);
+		then(lentRepository).should(times(0)).countReturnFromStartDateToEndDate(startDate, endDate);
 	}
 }
