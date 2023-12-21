@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -13,7 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.domain.AlarmType;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
-import org.ftclub.cabinet.alarm.repository.AlarmOptInRepository;
+import org.ftclub.cabinet.alarm.service.AlarmCommandService;
+import org.ftclub.cabinet.alarm.service.AlarmQueryService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
@@ -37,6 +37,7 @@ import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.AlarmOptIn;
+import org.ftclub.cabinet.user.domain.AlarmStatus;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.User;
@@ -62,7 +63,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final CabinetMapper cabinetMapper;
 	private final LentExtensionService lentExtensionService;
 	private final LentExtensionOptionalFetcher lentExtensionOptionalFetcher;
-	private final AlarmOptInRepository alarmOptInRepository;
+	private final AlarmCommandService alarmCommandService;
+	private final AlarmQueryService alarmQueryService;
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
@@ -75,14 +77,20 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		LentExtensionResponseDto activeLentExtension = lentExtensionService.getActiveLentExtension(
 				user);
 
-		List<AlarmOptIn> alarmOptIns = alarmOptInRepository.findAllByUserId(user.getUserId());
-		List<AlarmType> alarmTypes = alarmOptIns.stream().map(AlarmOptIn::getAlarmType)
-				.collect(Collectors.toList());
-		AlarmTypeResponseDto alarmTypeResponseDto = AlarmTypeResponseDto.builder()
-				.alarmTypes(alarmTypes).build();
+//		List<AlarmOptIn> alarmOptIns = alarmQueryService.findAllAlarmOptInByUserId(
+//				user.getUserId());
+//		List<AlarmType> alarmTypes = alarmOptIns.stream().map(AlarmOptIn::getAlarmType)
+//				.collect(Collectors.toList());
+//		AlarmTypeResponseDto alarmTypeResponseDto = AlarmTypeResponseDto.builder()
+//				.alarmTypes(alarmTypes).build();
+
+		AlarmStatus userAlarmStatus = alarmQueryService.findAlarmStatusByUserId(
+				user.getUserId());
+		AlarmTypeResponseDto.builder().alarmStatus(userAlarmStatus).build();
 
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				activeLentExtension, alarmTypeResponseDto);
+				activeLentExtension,
+				AlarmTypeResponseDto.builder().alarmStatus(userAlarmStatus).build());
 	}
 
 	@Override
@@ -325,21 +333,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		List<AlarmType> currentAlarmTypes = alarmOptIns.stream().map(AlarmOptIn::getAlarmType)
 				.collect(Collectors.toList());
 
-		Map<AlarmType, Boolean> alarmTypeStatus = dto.getAlarmTypeStatus();
-		//alarmTypeStatus 의 key 값을 순회하며 true일경우  currentAlarmTypes에 없으면 추가, 있으면 아무일도 하지 않는다
-		//false일 경우 currentAlarmTypes에 있으면 삭제, 없으면 아무일도 하지 않는다
-		for (Entry<AlarmType, Boolean> entry : alarmTypeStatus.entrySet()) {
-			if (entry.getValue()) {
-				if (!currentAlarmTypes.contains(entry.getKey())) {
-					alarmOptInRepository.save(AlarmOptIn.of(findUser, entry.getKey()));
-				}
-			} else {
-				if (currentAlarmTypes.contains(entry.getKey())) {
-					alarmOptInRepository.deleteAlarmOptInByUserAndAlarmType(findUser.getUserId(),
-							entry.getKey());
-				}
-			}
-		}
+		Map<AlarmType, Boolean> changedAlarmStatus = dto.getAlarmTypeStatus();
+		alarmCommandService.updateAlarmStatus(findUser, currentAlarmTypes, changedAlarmStatus);
+		alarmCommandService.updateAlarmStatusRe(dto, alarmQueryService.findAlarmStatusByUserId(
+				user.getUserId()));
 	}
 
 }

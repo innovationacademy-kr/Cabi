@@ -7,8 +7,8 @@ import lombok.ToString;
 import org.ftclub.cabinet.alarm.domain.AlarmType;
 
 @ToString
-@Getter
 @AllArgsConstructor
+@Getter
 public class UpdateAlarmRequestDto {
 
 	private final boolean slack;

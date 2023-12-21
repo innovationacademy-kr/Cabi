@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface AlarmOptInRepository extends JpaRepository<AlarmOptIn, Long> {
 
 	@Query("SELECT ao FROM AlarmOptIn ao WHERE ao.user.userId = :userId")
-	List<AlarmOptIn> findAllByUserId(Long userId);
+	List<AlarmOptIn> findAllByUserId(@Param("userId") Long userId);
 
 	@Modifying
 	@Query("DELETE FROM AlarmOptIn ao WHERE ao.user.userId = :userId AND ao.alarmType = :alarmType")
