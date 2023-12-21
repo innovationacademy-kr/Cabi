@@ -10,6 +10,7 @@ import org.ftclub.cabinet.dto.ActiveCabinetInfoDto;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
@@ -19,6 +20,7 @@ import org.ftclub.cabinet.dto.CabinetSimpleDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
@@ -107,4 +109,10 @@ public interface CabinetMapper {
 
 	CabinetPendingResponseDto toCabinetPendingResponseDto(
 			Map<Integer, List<CabinetPreviewDto>> cabinetInfoResponseDtos);
+
+	CabinetFloorStatisticsResponseDto toCabinetFloorStatisticsResponseDto(Integer floor,
+			Integer total, Integer used, Integer overdue, Integer unused, Integer disabled);
+
+	LentsStatisticsResponseDto toLentsStatisticsResponseDto(LocalDateTime startDate,
+			LocalDateTime endDate, int lentStartCount, int lentEndCount);
 }

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,5 +34,11 @@ public class BanHistoryQueryService {
 		log.debug("Called findActiveBanHistories: {}", userIds);
 
 		return banHistoryRepository.findByUserIdsAndUnbannedAt(userIds, date);
+	}
+
+	public Page<BanHistory> findActiveBanHistories(LocalDateTime now, Pageable pageable) {
+		log.debug("Called findActiveBanHistories: {}", now);
+
+		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
 	}
 }

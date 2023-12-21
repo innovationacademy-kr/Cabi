@@ -8,6 +8,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -36,6 +37,30 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			+ "FROM CabinetPlace p "
 			+ "WHERE p.location.building = :building")
 	List<Integer> findAllFloorsByBuilding(@Param("building") String building);
+
+	/**
+	 * 여러 층에 걸쳐 CabinetStatus에 맞는 사물함의 개수를 조회한다.
+	 *
+	 * @param status 사물함 상태
+	 * @param floor  층
+	 * @return 사물함 개수 {@link List}
+	 */
+	@Query("SELECT count(c) "
+			+ "FROM Cabinet c "
+			+ "JOIN c.cabinetPlace p "
+			+ "WHERE c.status = :status AND p.location.floor = :floor")
+	int countByStatusAndFloor(@Param("status") CabinetStatus status, @Param("floor") Integer floor);
+
+	/**
+	 * 빌딩 리스트의 모든 층을 조회한다.
+	 *
+	 * @param buildings 빌딩 {@link List}
+	 * @return 층 {@link List}
+	 */
+	@Query("SELECT DISTINCT p.location.floor "
+			+ "FROM CabinetPlace p "
+			+ "WHERE p.location.building IN (:buildings)")
+	List<Integer> findAllFloorsByBuildings(@Param("buildings") List<String> buildings);
 
 	/**
 	 * cabinetId로 사물함을 조회한다.(조회 이후 업데이트를 위해 X Lock을 건다.)
@@ -95,6 +120,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
 			Pageable pageable);
 
+	@EntityGraph(attributePaths = {"cabinetPlace"})
 	List<Cabinet> findAllByVisibleNum(@Param("visibleNum") Integer visibleNum);
 
 	@Query("SELECT c "
