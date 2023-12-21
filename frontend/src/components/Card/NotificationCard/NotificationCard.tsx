@@ -28,7 +28,7 @@ const NotificationCard = ({
       title={"알림"}
       gridArea="notification"
       width={"350px"}
-      height={"215px"}
+      height={"230px"}
       buttons={buttons}
     >
       <CardContentWrapper>

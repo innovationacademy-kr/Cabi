@@ -83,7 +83,14 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                   isClickable: true,
                 },
               ]
-            : []
+            : [
+                {
+                  label: "-",
+                  isClickable: false,
+                  color: "var(--lightgray-color)",
+                  backgroundColor: "var(--lightgray-color)",
+                },
+              ]
         }
         onToggleChange={handleToggleChange}
       />

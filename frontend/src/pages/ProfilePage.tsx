@@ -72,14 +72,14 @@ const CardGridWrapper = styled.div`
   width: 100%;
   grid-gap: 20px;
   grid-template-columns: 350px 350px;
-  grid-template-rows: 163px 183px 215px;
+  grid-template-rows: 163px 183px 230px;
   grid-template-areas: "profile lentInfo" // h: 163px h: 366px
     "extension lentInfo" // h: 183px
-    "theme notification"; // h: 215px h: 215px
+    "theme notification"; // h: 230px h: 230px;
 
   @media (max-width: 768px) {
     grid-template-columns: 350px;
-    grid-template-rows: 163px 366px 183px 215px 215px;
+    grid-template-rows: 163px 366px 183px 230px 230px;
     grid-template-areas:
       "profile"
       "lentInfo"
