@@ -67,13 +67,13 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	@Query("SELECT count(lh) "
 			+ "FROM LentHistory lh "
 			+ "WHERE lh.startedAt < :endDate AND lh.startedAt >= :startDate")
-	int countLentByTimeDuration(@Param("startDate") LocalDateTime startDate,
+	int countLentFromStartDateToEndDate(@Param("startDate") LocalDateTime startDate,
 			@Param("endDate") LocalDateTime endDate);
 
 	@Query("SELECT count(lh) "
 			+ "FROM LentHistory lh "
 			+ "WHERE lh.endedAt < :endDate AND lh.endedAt >= :startDate")
-	int countReturnByTimeDuration(@Param("startDate") LocalDateTime startDate,
+	int countReturnFromStartDateToEndDate(@Param("startDate") LocalDateTime startDate,
 			@Param("endDate") LocalDateTime endDate);
 
 	/**
@@ -155,7 +155,12 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @param cabinetIds 찾으려는 cabinet id {@link List}
 	 * @return 반납하지 않은 {@link LentHistory}의 {@link List}
 	 */
-	List<LentHistory> findAllByCabinetIdInAndEndedAtIsNull(
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.user "
+			+ "WHERE lh.cabinetId IN (:cabinetIds) "
+			+ "AND lh.endedAt IS NULL ")
+	List<LentHistory> findAllByCabinetIdInAndEndedAtIsNullJoinUser(
 			@Param("cabinetIds") List<Long> cabinetIds);
 
 	/**
@@ -194,9 +199,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 */
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
-			+ "WHERE lh.expiredAt < :date AND lh.endedAt is null "
-			+ "ORDER BY lh.expiredAt ASC")
-	List<LentHistory> findAllExpiredAtBeforeAndEndedAtIsNull(
+			+ "WHERE lh.expiredAt < :date AND lh.endedAt IS NULL")
+	Page<LentHistory> findAllExpiredAtBeforeAndEndedAtIsNull(
 			@Param("date") LocalDateTime date, Pageable pageable);
 
 	@Query("SELECT lh "

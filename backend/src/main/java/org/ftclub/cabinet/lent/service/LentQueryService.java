@@ -1,5 +1,9 @@
 package org.ftclub.cabinet.lent.service;
 
+import static java.util.stream.Collectors.toList;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -23,7 +27,7 @@ public class LentQueryService {
 	}
 
 	public List<LentHistory> findCabinetsActiveLentHistories(List<Long> cabinetIds) {
-		return lentRepository.findAllByCabinetIdInAndEndedAtIsNull(cabinetIds);
+		return lentRepository.findAllByCabinetIdInAndEndedAtIsNullJoinUser(cabinetIds);
 	}
 
 	public int countUserActiveLent(Long userId) {
@@ -32,6 +36,14 @@ public class LentQueryService {
 
 	public int countCabinetUser(Long cabinetId) {
 		return lentRepository.countByCabinetIdAndEndedAtIsNull(cabinetId);
+	}
+
+	public int countLentOnDuration(LocalDateTime startDate, LocalDateTime endDate) {
+		return lentRepository.countLentFromStartDateToEndDate(startDate, endDate);
+	}
+
+	public int countReturnOnDuration(LocalDateTime startDate, LocalDateTime endDate) {
+		return lentRepository.countReturnFromStartDateToEndDate(startDate, endDate);
 	}
 
 	public LentHistory findUserActiveLentHistoryWithLock(Long userId) {
@@ -44,5 +56,10 @@ public class LentQueryService {
 
 	public List<LentHistory> findAllActiveLentHistories() {
 		return lentRepository.findAllByEndedAtIsNull();
+	}
+
+	public List<LentHistory> findOverdueLentHistories(LocalDateTime now, Pageable pageable) {
+		return lentRepository.findAllExpiredAtBeforeAndEndedAtIsNull(now, pageable).stream()
+				.sorted(Comparator.comparing(LentHistory::getExpiredAt)).collect(toList());
 	}
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.admin.repository.StatisticsRepository;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
@@ -14,7 +15,6 @@ import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentRepository;
-import org.ftclub.cabinet.admin.repository.StatisticsRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -71,8 +71,8 @@ public class StatisticsFacadeServiceImpl implements StatisticsFacadeService {
 		log.debug("Called getCountOnLentAndReturn");
 		throwIfFalse(startDate.isBefore(endDate),
 				new ServiceException(ExceptionStatus.INVALID_ARGUMENT));
-		Integer lentStartCount = lentRepository.countLentByTimeDuration(startDate, endDate);
-		Integer lentEndCount = lentRepository.countReturnByTimeDuration(startDate, endDate);
+		Integer lentStartCount = lentRepository.countLentFromStartDateToEndDate(startDate, endDate);
+		Integer lentEndCount = lentRepository.countReturnFromStartDateToEndDate(startDate, endDate);
 		return new LentsStatisticsResponseDto(startDate, endDate, lentStartCount, lentEndCount);
 	}
 }

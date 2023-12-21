@@ -1,6 +1,10 @@
 package org.ftclub.cabinet.admin.newService;
 
 import static java.util.stream.Collectors.toList;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.BROKEN;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.OVERDUE;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -12,17 +16,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserCabinetDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
@@ -33,6 +44,8 @@ import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.newService.BanHistoryQueryService;
 import org.ftclub.cabinet.user.newService.UserQueryService;
+import org.ftclub.cabinet.utils.DateUtil;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -81,8 +94,12 @@ public class AdminFacadeService {
 		List<CabinetInfoResponseDto> result = cabinets.stream()
 				.map(cabinet -> {
 					Long cabinetId = cabinet.getCabinetId();
-					List<LentDto> lents = lentHistoriesByCabinetId.get(cabinetId).stream()
-							.map(lh -> lentMapper.toLentDto(lh.getUser(), lh)).collect(toList());
+					List<LentDto> lents = null;
+					if (lentHistoriesByCabinetId.containsKey(cabinetId)) {
+						lents = lentHistoriesByCabinetId.get(cabinetId).stream()
+								.map(lh -> lentMapper.toLentDto(lh.getUser(), lh))
+								.collect(toList());
+					}
 					LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
 					return cabinetMapper.toCabinetInfoResponseDto(cabinet, lents, sessionExpiredAt);
 				}).sorted(Comparator.comparingInt(o -> o.getLocation().getFloor()))
@@ -135,5 +152,59 @@ public class AdminFacadeService {
 			return cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto);
 		}).collect(toList());
 		return cabinetMapper.toUserCabinetPaginationDto(result, users.getTotalElements());
+	}
+
+	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
+		log.debug("Called getCabinetsInfoOnAllFloors");
+
+		List<String> buildings = cabinetQueryService.getAllBuildings();
+		List<Integer> floors = cabinetQueryService.getAllFloorsByBuildings(buildings);
+		return floors.stream().map(floor -> {
+			Integer used = cabinetQueryService.countCabinets(FULL, floor);
+			Integer unused = cabinetQueryService.countCabinets(AVAILABLE, floor);
+			Integer overdue = cabinetQueryService.countCabinets(OVERDUE, floor);
+			Integer disabled = cabinetQueryService.countCabinets(BROKEN, floor);
+			Integer total = used + overdue + unused + disabled;
+			return cabinetMapper.toCabinetFloorStatisticsResponseDto(
+					floor, total, used, overdue, unused, disabled);
+		}).collect(Collectors.toList());
+	}
+
+	public LentsStatisticsResponseDto getLentCountStatistics(
+			LocalDateTime startDate, LocalDateTime endDate) {
+		log.debug("Called getLentCountStatistics startDate : {} endDate : {}", startDate, endDate);
+
+		ExceptionUtil.throwIfFalse(startDate.isBefore(endDate),
+				new ServiceException(ExceptionStatus.INVALID_ARGUMENT));
+		int lentStartCount = lentQueryService.countLentOnDuration(startDate, endDate);
+		int lentEndCount = lentQueryService.countReturnOnDuration(startDate, endDate);
+		return cabinetMapper.toLentsStatisticsResponseDto(
+				startDate, endDate, lentStartCount, lentEndCount);
+	}
+
+	public BlockedUserPaginationDto getAllBanUsers(Pageable pageable) {
+		log.debug("Called getAllBanUsers");
+
+		LocalDateTime now = LocalDateTime.now();
+		Page<BanHistory> banHistories =
+				banHistoryQueryService.findActiveBanHistories(now, pageable);
+		List<UserBlockedInfoDto> result = banHistories.stream()
+				.map(b -> userMapper.toUserBlockedInfoDto(b, b.getUser()))
+				.collect(Collectors.toList());
+		return userMapper.toBlockedUserPaginationDto(result, banHistories.getTotalElements());
+	}
+
+	public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
+		log.debug("Called getOverdueUsers");
+
+		LocalDateTime now = LocalDateTime.now();
+		List<LentHistory> lentHistories = lentQueryService.findOverdueLentHistories(now, pageable);
+		List<OverdueUserCabinetDto> result = lentHistories.stream()
+				.map(lh -> {
+					Long overdueDays = DateUtil.calculateTwoDateDiff(now, lh.getExpiredAt());
+					return cabinetMapper.toOverdueUserCabinetDto(
+							lh, lh.getUser(), lh.getCabinet(), overdueDays);
+				}).collect(Collectors.toList());
+		return cabinetMapper.toOverdueUserCabinetPaginationDto(result, (long) lentHistories.size());
 	}
 }
