@@ -10,7 +10,6 @@ import static org.mockito.Mockito.times;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.ftclub.cabinet.admin.repository.StatisticsRepository;
 import org.ftclub.cabinet.admin.service.StatisticsFacadeServiceImpl;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
