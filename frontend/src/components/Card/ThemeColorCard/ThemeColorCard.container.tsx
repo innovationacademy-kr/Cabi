@@ -3,18 +3,21 @@ import ThemeColorCard from "@/components/Card/ThemeColorCard/ThemeColorCard";
 import ColorType from "@/types/enum/color.type.enum";
 
 const ThemeColorCardContainer = () => {
-  const savedMainColor = localStorage.getItem("main-color") || ColorType.MAIN;
-  const savedSubColor = localStorage.getItem("sub-color") || ColorType.SUB;
-  const savedMineColor = localStorage.getItem("mine-color") || ColorType.MINE;
+  const savedMainColor =
+    localStorage.getItem("main-color") || "var(--default-main-color)";
+  const savedSubColor =
+    localStorage.getItem("sub-color") || "var(--default-sub-color)";
+  const savedMineColor =
+    localStorage.getItem("mine-color") || "var(--default-mine-color)";
 
   const [mainColor, setMainColor] = useState<string>(
-    savedMainColor ? savedMainColor : ColorType.MAIN
+    savedMainColor ? savedMainColor : "var(--default-main-color)"
   );
   const [subColor, setSubColor] = useState<string>(
-    savedSubColor ? savedSubColor : ColorType.SUB
+    savedSubColor ? savedSubColor : "var(--default-sub-color)"
   );
   const [mineColor, setMineColor] = useState<string>(
-    savedMineColor ? savedMineColor : ColorType.MINE
+    savedMineColor ? savedMineColor : "var(--default-mine-color)"
   );
 
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -22,25 +25,25 @@ const ThemeColorCardContainer = () => {
 
   const handleChange = (mainColor: { hex: string }, type: string) => {
     const selectedColor: string = mainColor.hex;
-    if (type === "main") {
+    if (type === ColorType.MAIN) {
       setMainColor(selectedColor);
-    } else if (type === "sub") {
+    } else if (type === ColorType.SUB) {
       setSubColor(selectedColor);
-    } else if (type === "mine") {
+    } else if (type === ColorType.MINE) {
       setMineColor(selectedColor);
     }
   };
 
   const handleReset = () => {
-    setMainColor(ColorType.MAIN);
-    setSubColor(ColorType.SUB);
-    setMineColor(ColorType.MINE);
-    root.style.setProperty("--main-color", ColorType.MAIN);
-    root.style.setProperty("--sub-color", ColorType.SUB);
-    root.style.setProperty("--mine", ColorType.MINE);
-    localStorage.setItem("main-color", ColorType.MAIN);
-    localStorage.setItem("sub-color", ColorType.SUB);
-    localStorage.setItem("mine-color", ColorType.MINE);
+    setMainColor("var(--default-main-color)");
+    setSubColor("var(--default-sub-color)");
+    setMineColor("var(--default-mine-color)");
+    root.style.setProperty("--main-color", "var(--default-main-color)");
+    root.style.setProperty("--sub-color", "var(--default-sub-color)");
+    root.style.setProperty("--mine", "var(--default-mine-color)");
+    localStorage.setItem("main-color", "var(--default-main-color)");
+    localStorage.setItem("sub-color", "var(--default-sub-color)");
+    localStorage.setItem("mine-color", "var(--default-mine-color)");
   };
 
   const handleSave = () => {

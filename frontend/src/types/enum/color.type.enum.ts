@@ -1,7 +1,7 @@
 enum ColorType {
-  MAIN = "#9747ff",
-  SUB = "#b18cff",
-  MINE = "#47ffa7",
+  MAIN = "MAIN",
+  SUB = "SUB",
+  MINE = "MINE",
 }
 
 export default ColorType;

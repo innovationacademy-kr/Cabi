@@ -21,6 +21,10 @@
   --session: #eeeeee;
   --pending: var(--main-color);
 
+  --default-main-color: #9747ff;
+  --default-sub-color: #b18cff;
+  --default-mine-color: #47ffa7;
+
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;
   --building-font: "Do Hyeon", sans-serif;

@@ -7,6 +7,7 @@ import {
 } from "@/components/Card/CardStyles";
 import ColorPicker from "@/components/Card/ThemeColorCard/ColorPicker";
 import { customColors } from "@/assets/data/customColors";
+import ColorType from "@/types/enum/color.type.enum";
 
 interface ThemeColorProps {
   showColorPicker: boolean;
@@ -72,21 +73,21 @@ const ThemeColorCard = ({
               <CardContentStyled>
                 <ContentInfoStyled>메인 컬러</ContentInfoStyled>
                 <ColorButtonStyled
-                  onClick={() => handleColorButtonClick("main")}
+                  onClick={() => handleColorButtonClick(ColorType.MAIN)}
                   color={mainColor}
                 />
               </CardContentStyled>
               <CardContentStyled>
                 <ContentInfoStyled>서브 컬러</ContentInfoStyled>
                 <ColorButtonStyled
-                  onClick={() => handleColorButtonClick("sub")}
+                  onClick={() => handleColorButtonClick(ColorType.SUB)}
                   color={subColor}
                 />
               </CardContentStyled>
               <CardContentStyled>
                 <ContentInfoStyled>내 사물함</ContentInfoStyled>
                 <ColorButtonStyled
-                  onClick={() => handleColorButtonClick("mine")}
+                  onClick={() => handleColorButtonClick(ColorType.MINE)}
                   color={mineColor}
                 />
               </CardContentStyled>

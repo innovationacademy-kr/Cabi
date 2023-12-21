@@ -44,7 +44,7 @@ const Layout = (): JSX.Element => {
   const root: HTMLElement = document.documentElement;
   useEffect(() => {
     root.style.setProperty("--main-color", savedColor);
-    if (savedColor !== ColorType.MAIN)
+    if (savedColor !== var(--default-main-color))
       root.style.setProperty("--sub-color", "#7b7b7b");
   }, [savedColor]);
 
