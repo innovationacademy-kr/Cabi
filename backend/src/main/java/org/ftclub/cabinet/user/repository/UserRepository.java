@@ -74,12 +74,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> findByNoRiskOfFallingIntoBlackholeUsers();
 
 	/**
-	 * 유저의 id로 OptOut 테이블과 결합된 유저 정보를 찾습니다.
+	 * 유저의 id로 OptIn 테이블과 결합된 유저 정보를 찾습니다.
 	 */
 	@Query("SELECT u FROM User u "
-			+ "LEFT JOIN AlarmOptOut o ON u.userId = o.user.userId "
+			+ "LEFT JOIN AlarmOptIn o ON u.userId = o.user.userId "
 			+ "WHERE u.userId = :id")
-	Optional<User> findUserWithOptOutById(@Param("id") Long id);
+	Optional<User> findUserWithOptInById(@Param("id") Long id);
 
 	/**
 	 * 현재 Active 상태의 Cabi User를 모두 가져옵니다.

@@ -13,7 +13,7 @@ import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.AlarmType;
 import org.ftclub.cabinet.alarm.domain.TransactionalAlarmEvent;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.user.domain.AlarmOptOut;
+import org.ftclub.cabinet.user.domain.AlarmOptIn;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.context.event.EventListener;
@@ -47,18 +47,18 @@ public class AlarmEventHandler {
 	}
 
 	private void eventProceed(AlarmEvent alarmEvent) {
-		User receiver = userRepository.findUserWithOptOutById(alarmEvent.getReceiverId())
+		User receiver = userRepository.findUserWithOptInById(alarmEvent.getReceiverId())
 				.orElseThrow(() -> new ServiceException(NOT_FOUND_USER));
-		Set<AlarmType> alarmOptOuts = receiver.getAlarmOptOuts()
-				.stream().map(AlarmOptOut::getAlarmType).collect(Collectors.toSet());
+		Set<AlarmType> alarmOptIns = receiver.getAlarmOptIns()
+				.stream().map(AlarmOptIn::getAlarmType).collect(Collectors.toSet());
 
-		if (alarmOptOuts.contains(SLACK)) {
+		if (alarmOptIns.contains(SLACK)) {
 			slackAlarmSender.send(receiver, alarmEvent);
 		}
-		if (alarmOptOuts.contains(EMAIL)) {
+		if (alarmOptIns.contains(EMAIL)) {
 			emailAlarmSender.send(receiver, alarmEvent);
 		}
-		if (alarmOptOuts.contains(PUSH)) {
+		if (alarmOptIns.contains(PUSH)) {
 			pushAlarmSender.send(receiver, alarmEvent);
 		}
 	}

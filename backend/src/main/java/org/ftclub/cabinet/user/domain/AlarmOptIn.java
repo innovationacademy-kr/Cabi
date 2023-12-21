@@ -23,11 +23,11 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
  * 유저의 알람 수신 거부 정보 엔티티입니다.
  */
 @Entity
-@Table(name = "ALARM_OPT_OUT")
+@Table(name = "ALARM_OPT_IN")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(exclude = {"user"})
-public class AlarmOptOut {
+public class AlarmOptIn {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,19 +42,20 @@ public class AlarmOptOut {
 	@JoinColumn(name = "USER_ID", nullable = false)
 	private User user;
 
-	private AlarmOptOut(User user, AlarmType alarmType) {
+	private AlarmOptIn(User user, AlarmType alarmType) {
 		this.user = user;
 		this.alarmType = alarmType;
 	}
 
-	public static AlarmOptOut of(User user, AlarmType alarmType) {
-		AlarmOptOut alarmOptOut = new AlarmOptOut(user, alarmType);
-		ExceptionUtil.throwIfFalse(alarmOptOut.isValid(),
+	public static AlarmOptIn of(User user, AlarmType alarmType) {
+		AlarmOptIn alarmOptIn = new AlarmOptIn(user, alarmType);
+		ExceptionUtil.throwIfFalse(alarmOptIn.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
-		return alarmOptOut;
+		return alarmOptIn;
 	}
 
 	private boolean isValid() {
 		return user != null && alarmType != null;
 	}
+
 }
