@@ -15,7 +15,6 @@ const ColorPicker = ({ color, onChange, customColors }: ColorPickerProps) => {
         triangle={"hide"}
         onChangeComplete={onChange}
         colors={customColors}
-        // width="100%"
       />
     </TwitterPickerWrapper>
   );

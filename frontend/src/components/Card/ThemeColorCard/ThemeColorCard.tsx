@@ -6,8 +6,8 @@ import {
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import ColorPicker from "@/components/Card/ThemeColorCard/ColorPicker";
+import { themeColorData } from "@/assets/data/colorInfo";
 import { customColors } from "@/assets/data/customColors";
-import ColorType from "@/types/enum/color.type.enum";
 
 interface ThemeColorProps {
   showColorPicker: boolean;
@@ -42,7 +42,7 @@ const ThemeColorCard = ({
           title={"테마 컬러"}
           gridArea={"theme"}
           width={"350px"}
-          height={"230px"}
+          height={showColorPicker ? "330px" : "230px"}
           buttons={
             showColorPicker
               ? [
@@ -70,27 +70,16 @@ const ThemeColorCard = ({
         >
           <>
             <CardContentWrapper>
-              <CardContentStyled>
-                <ContentInfoStyled>메인 컬러</ContentInfoStyled>
-                <ColorButtonStyled
-                  onClick={() => handleColorButtonClick(ColorType.MAIN)}
-                  color={mainColor}
-                />
-              </CardContentStyled>
-              <CardContentStyled>
-                <ContentInfoStyled>서브 컬러</ContentInfoStyled>
-                <ColorButtonStyled
-                  onClick={() => handleColorButtonClick(ColorType.SUB)}
-                  color={subColor}
-                />
-              </CardContentStyled>
-              <CardContentStyled>
-                <ContentInfoStyled>내 사물함</ContentInfoStyled>
-                <ColorButtonStyled
-                  onClick={() => handleColorButtonClick(ColorType.MINE)}
-                  color={mineColor}
-                />
-              </CardContentStyled>
+              {themeColorData.map(({ title, type, getColor }) => (
+                <CardContentStyled key={type}>
+                  <ContentInfoStyled>{title}</ContentInfoStyled>
+                  <ColorButtonStyled
+                    onClick={() => handleColorButtonClick(type)}
+                    color={getColor({ mainColor, subColor, mineColor })}
+                    isClickable={showColorPicker}
+                  />
+                </CardContentStyled>
+              ))}
               {showColorPicker && (
                 <ColorPicker
                   color={mainColor}
@@ -121,11 +110,15 @@ const ThemeColorCardWrapper = styled.div`
   align-self: start;
 `;
 
-const ColorButtonStyled = styled.button<{ color: string }>`
+const ColorButtonStyled = styled.button<{
+  color: string;
+  isClickable: boolean;
+}>`
   width: 28px;
   height: 28px;
   background-color: ${(props) => props.color};
   border-radius: 8px;
+  cursor: ${(props) => (props.isClickable ? "not-allowed" : "pointer")};
 `;
 
 export default ThemeColorCard;

@@ -10,70 +10,60 @@ const ThemeColorCardContainer = () => {
   const savedMineColor =
     localStorage.getItem("mine-color") || "var(--default-mine-color)";
 
-  const [mainColor, setMainColor] = useState<string>(
-    savedMainColor ? savedMainColor : "var(--default-main-color)"
-  );
-  const [subColor, setSubColor] = useState<string>(
-    savedSubColor ? savedSubColor : "var(--default-sub-color)"
-  );
-  const [mineColor, setMineColor] = useState<string>(
-    savedMineColor ? savedMineColor : "var(--default-mine-color)"
-  );
+  const [mainColor, setMainColor] = useState<string>(savedMainColor);
+  const [subColor, setSubColor] = useState<string>(savedSubColor);
+  const [mineColor, setMineColor] = useState<string>(savedMineColor);
 
   const [showColorPicker, setShowColorPicker] = useState(false);
   const root: HTMLElement = document.documentElement;
 
-  const handleChange = (mainColor: { hex: string }, type: string) => {
+  const handleChange = (mainColor: { hex: string }, colorType: string) => {
     const selectedColor: string = mainColor.hex;
-    if (type === ColorType.MAIN) {
+    if (colorType === ColorType.MAIN) {
       setMainColor(selectedColor);
-    } else if (type === ColorType.SUB) {
+    } else if (colorType === ColorType.SUB) {
       setSubColor(selectedColor);
-    } else if (type === ColorType.MINE) {
+    } else if (colorType === ColorType.MINE) {
       setMineColor(selectedColor);
     }
   };
 
+  const setColorsAndLocalStorage = (
+    main: string,
+    sub: string,
+    mine: string
+  ) => {
+    setMainColor(main);
+    setSubColor(sub);
+    setMineColor(mine);
+    root.style.setProperty("--main-color", main);
+    root.style.setProperty("--sub-color", sub);
+    root.style.setProperty("--mine", mine);
+    localStorage.setItem("main-color", main);
+    localStorage.setItem("sub-color", sub);
+    localStorage.setItem("mine-color", mine);
+  };
+
   const handleReset = () => {
-    setMainColor("var(--default-main-color)");
-    setSubColor("var(--default-sub-color)");
-    setMineColor("var(--default-mine-color)");
-    root.style.setProperty("--main-color", "var(--default-main-color)");
-    root.style.setProperty("--sub-color", "var(--default-sub-color)");
-    root.style.setProperty("--mine", "var(--default-mine-color)");
-    localStorage.setItem("main-color", "var(--default-main-color)");
-    localStorage.setItem("sub-color", "var(--default-sub-color)");
-    localStorage.setItem("mine-color", "var(--default-mine-color)");
+    setColorsAndLocalStorage(
+      "var(--default-main-color)",
+      "var(--default-sub-color)",
+      "var(--default-mine-color)"
+    );
   };
 
   const handleSave = () => {
-    localStorage.setItem("main-color", mainColor);
-    root.style.setProperty("--main-color", mainColor);
-    localStorage.setItem("sub-color", subColor);
-    root.style.setProperty("--sub-color", subColor);
-    localStorage.setItem("mine-color", mineColor);
-    root.style.setProperty("--mine", mineColor);
+    setColorsAndLocalStorage(mainColor, subColor, mineColor);
     toggleColorPicker(true);
   };
 
   const handleCancel = () => {
-    root.style.setProperty("--main-color", savedMainColor);
-    root.style.setProperty("--mine", savedMineColor);
-    setMainColor(savedMainColor);
-    setSubColor(savedSubColor);
-    setMineColor(savedMineColor);
+    setColorsAndLocalStorage(savedMainColor, savedSubColor, savedMineColor);
     toggleColorPicker(true);
   };
 
   const toggleColorPicker = (isChange: boolean) => {
     if (isChange) setShowColorPicker(!showColorPicker);
-  };
-
-  const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
-    {
-      e.returnValue =
-        "변경된 색상이 저장되지 않을 수 있습니다. 계속하시겠습니까?";
-    }
   };
 
   const [selectedColorType, setSelectedColorType] = useState<string>("");
@@ -87,11 +77,28 @@ const ThemeColorCardContainer = () => {
   useEffect(() => {
     root.style.setProperty("--main-color", mainColor);
     root.style.setProperty("--mine", mineColor);
+    const confirmBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (
+        mainColor !== savedMainColor ||
+        subColor !== savedSubColor ||
+        mineColor !== savedMineColor
+      ) {
+        e.returnValue =
+          "변경된 색상이 저장되지 않을 수 있습니다. 페이지를 나가시겠습니까?";
+      }
+    };
     window.addEventListener("beforeunload", confirmBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", confirmBeforeUnload);
     };
-  }, [mainColor, mineColor]);
+  }, [
+    mainColor,
+    mineColor,
+    savedMainColor,
+    savedMineColor,
+    subColor,
+    savedSubColor,
+  ]);
 
   return (
     <ThemeColorCard
