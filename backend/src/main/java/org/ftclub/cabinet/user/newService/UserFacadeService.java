@@ -1,16 +1,26 @@
 package org.ftclub.cabinet.user.newService;
 
+import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.dto.LentExtensionResponseDto;
-import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
+import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.exception.ControllerException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.domain.UserRole;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,22 +29,42 @@ public class UserFacadeService {
 
     private final BanHistoryQueryService banHistoryQueryService;
     private final LentExtensionQueryService lentExtensionQueryService;
+    private final CabinetQueryService cabinetQueryService;
+    private final UserQueryService userQueryService;
+    private final UserCommandService userCommandService;
     private final UserMapper userMapper;
 
     public MyProfileResponseDto getMyProfile(UserSessionDto user) {
         log.debug("Called getMyProfile: {}", user.getName());
 
-//        Cabinet cabinet = cabinetQueryService.findActiveLentCabinetByUserId();
+        Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
         BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(), LocalDateTime.now());
         LentExtension lentExtension = lentExtensionQueryService.getActiveLentExtension(user);
+        LentExtensionResponseDto lentExtensionResponseDto = LentExtensionResponseDto.builder()
+                .lentExtensionId(lentExtension.getLentExtensionId())
+                .name(lentExtension.getName())
+                .extensionPeriod(lentExtension.getExtensionPeriod())
+                .expiredAt(lentExtension.getExpiredAt().toString())
+                .lentExtensionType(lentExtension.getLentExtensionType())
+                .build();
 
-        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-                LentExtensionResponseDto.builder()
-                        .lentExtensionId(lentExtension.getLentExtensionId())
-                        .name(lentExtension.getName())
-                        .extensionPeriod(lentExtension.getExtensionPeriod())
-                        .expiredAt(lentExtension.getExpiredAt().toString())
-                        .lentExtensionType(lentExtension.getLentExtensionType()));
+        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, lentExtensionResponseDto);
+    }
+
+    public void createClubUser(String clubName) {
+        log.debug("Called createClubUser: {}", clubName);
+        User user = userQueryService.findUser(clubName);
+        if (StringUtil.isNullOrEmpty(clubName)) {
+            throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
+        } else if (user != null && user.getDeletedAt() == null) {
+            throw new ControllerException(ExceptionStatus.EXISTED_CLUB_USER);
+        } else if (user != null) {
+            user.setDeletedAt(null);
+        } else {
+            String randomUUID = UUID.randomUUID().toString();
+            User newUser = User.of(clubName, randomUUID + "@ftc.co.kr", null, UserRole.CLUB);
+            userCommandService.createUser(newUser);
+        }
     }
 }
 
