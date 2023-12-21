@@ -33,11 +33,12 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   };
 
   const handleSave = async () => {
+    if (!currentAlarms) return;
     try {
       await axiosUpdateAlarm({
-        email: currentAlarms?.email ?? false,
-        push: currentAlarms?.push ?? false,
-        slack: currentAlarms?.slack ?? false,
+        email: currentAlarms.email,
+        push: currentAlarms.push,
+        slack: currentAlarms.slack,
       });
       setOriginalAlarms(currentAlarms);
       setModalTitle("설정이 저장되었습니다");
@@ -84,6 +85,7 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
                 },
               ]
             : [
+                // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
                 {
                   label: "-",
                   isClickable: false,
