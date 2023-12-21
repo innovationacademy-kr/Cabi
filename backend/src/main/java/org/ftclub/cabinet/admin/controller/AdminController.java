@@ -4,6 +4,7 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.service.AdminFacadeService;
@@ -14,12 +15,16 @@ import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.ReturnCabinetsRequestDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -120,5 +125,23 @@ public class AdminController {
 	public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
 		log.info("Called getOverdueUsers");
 		return adminFacadeService.getOverdueUsers(pageable);
+	}
+
+	/*-----------------------------------------  Lent  -------------------------------------------*/
+
+	@PatchMapping("/return-cabinets")
+	@AuthGuard(level = ADMIN_ONLY)
+	public void terminateLentCabinets(
+			@Valid @RequestBody ReturnCabinetsRequestDto returnCabinetsRequestDto) {
+		log.info("Called terminateLentCabinets returnCabinetsRequestDto={}",
+				returnCabinetsRequestDto);
+		adminFacadeService.endCabinetLent(returnCabinetsRequestDto.getCabinetIds());
+	}
+
+	@PatchMapping("/return-users/{userId}")
+	@AuthGuard(level = ADMIN_ONLY)
+	public void terminateLentUser(@PathVariable("userId") Long userId) {
+		log.info("Called terminateLentUser userId={}", userId);
+		adminFacadeService.endUserLent(userId);
 	}
 }

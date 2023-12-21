@@ -228,7 +228,7 @@ public class LentFacadeService {
 	}
 
 	@Transactional
-	public void endUserLent(Long userId) {
+	public void endUserLent(Long userId, String... memo) {
 		log.debug("Called endLentCabinet: {}", userId);
 
 		LocalDateTime now = LocalDateTime.now();
@@ -243,6 +243,9 @@ public class LentFacadeService {
 		lentCommandService.endLent(userLentHistory, now);
 		lentRedisService.setPreviousUserName(
 				cabinet.getCabinetId(), userLentHistory.getUser().getName());
+		if (memo.length == 1) {
+			cabinetCommandService.updateMemo(cabinet, memo[0]);
+		}
 
 		LocalDateTime endedAt = userLentHistory.getEndedAt();
 		BanType banType = banPolicyService.verifyBan(endedAt, userLentHistory.getExpiredAt());
@@ -257,56 +260,6 @@ public class LentFacadeService {
 			cabinetLentHistories.stream().filter(lh -> !lh.equals(userLentHistory))
 					.forEach(lh -> lentCommandService.setExpiredAt(lh, expiredAt));
 		}
-	}
-
-	@Transactional
-	public void endUserLent(Long userId, String memo) {
-		log.debug("Called endLentCabinet: {}", userId);
-
-		LocalDateTime now = LocalDateTime.now();
-		LentHistory userLentHistory = lentQueryService.findUserActiveLentHistoryWithLock(userId);
-		List<LentHistory> cabinetLentHistories =
-				lentQueryService.findCabinetActiveLentHistories(userLentHistory.getCabinetId());
-		Cabinet cabinet =
-				cabinetQueryService.getCabinetsWithLock(userLentHistory.getCabinetId());
-
-		int userRemainCount = cabinetLentHistories.size() - 1;
-		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
-		cabinetCommandService.updateMemo(cabinet, memo);
-		lentCommandService.endLent(userLentHistory, now);
-		lentRedisService.setPreviousUserName(
-				cabinet.getCabinetId(), userLentHistory.getUser().getName());
-
-		LocalDateTime endedAt = userLentHistory.getEndedAt();
-		BanType banType = banPolicyService.verifyBan(endedAt, userLentHistory.getExpiredAt());
-		if (!banType.equals(BanType.NONE)) {
-			LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(
-					endedAt, userLentHistory.getExpiredAt());
-			banHistoryCommandService.banUser(userId, endedAt, unbannedAt, banType);
-		}
-		if (cabinet.isLentType(SHARE)) {
-			LocalDateTime expiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
-					userRemainCount, now, userLentHistory);
-			cabinetLentHistories.stream().filter(lh -> !lh.equals(userLentHistory))
-					.forEach(lh -> lentCommandService.setExpiredAt(lh, expiredAt));
-		}
-	}
-
-	@Transactional
-	public void endCabinetLent(List<Long> cabinetIds) {
-		log.debug("Called endCabinetsLent: {}", cabinetIds);
-
-		LocalDateTime now = LocalDateTime.now();
-		List<Cabinet> cabinets = cabinetQueryService.getCabinetsWithLock(cabinetIds);
-		cabinets.forEach(cabinet -> {
-			List<LentHistory> cabinetLentHistories =
-					lentQueryService.findCabinetActiveLentHistories(cabinet.getCabinetId());
-			cabinetLentHistories.forEach(lh -> lentCommandService.endLent(lh, now));
-			cabinetCommandService.changeUserCount(cabinet, 0);
-			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
-			lentRedisService.setPreviousUserName(
-					cabinet.getCabinetId(), cabinetLentHistories.get(0).getUser().getName());
-		});
 	}
 
 	@Transactional
