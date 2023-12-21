@@ -91,7 +91,7 @@ const SubTitleStyled = styled.div`
   font-size: 1.2rem;
   letter-spacing: -0.02rem;
   margin-bottom: 5px;
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
 `;
 
 const ButtonWrapperStyled = styled.div`

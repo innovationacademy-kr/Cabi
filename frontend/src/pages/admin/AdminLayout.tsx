@@ -45,7 +45,7 @@ const Layout = (): JSX.Element => {
   useEffect(() => {
     root.style.setProperty("--main-color", savedColor);
     if (savedColor !== ColorType.MAIN)
-      root.style.setProperty("--lightpurple-color", "#7b7b7b");
+      root.style.setProperty("--sub-color", "#7b7b7b");
   }, [savedColor]);
 
   const { closeAll } = useMenu();

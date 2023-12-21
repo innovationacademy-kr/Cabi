@@ -84,7 +84,7 @@ const Layout = (): JSX.Element => {
 
   useEffect(() => {
     root.style.setProperty("--main-color", savedMainColor);
-    root.style.setProperty("--lightpurple-color", savedSubColor);
+    root.style.setProperty("--sub-color", savedSubColor);
     root.style.setProperty("--mine", savedMineColor);
   }, [savedMainColor, savedSubColor, savedMineColor]);
 

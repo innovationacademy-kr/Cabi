@@ -27,7 +27,7 @@ const LoadingAnimationStyled = styled.div`
   position: relative;
   width: 6px;
   height: 24px;
-  background: var(--lightpurple-color);
+  background: var(--sub-color);
   animation: ${pulse} 0.75s infinite;
   animation-delay: 0.25s;
   &:before,
@@ -37,7 +37,7 @@ const LoadingAnimationStyled = styled.div`
     display: block;
     width: 6px;
     height: 16px;
-    background: var(--lightpurple-color);
+    background: var(--sub-color);
     top: 50%;
     transform: translateY(-50%);
     animation: ${pulse} 0.75s infinite;

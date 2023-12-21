@@ -36,7 +36,7 @@ const ThemeColorCardContainer = () => {
     setSubColor(ColorType.SUB);
     setMineColor(ColorType.MINE);
     root.style.setProperty("--main-color", ColorType.MAIN);
-    root.style.setProperty("--lightpurple-color", ColorType.SUB);
+    root.style.setProperty("--sub-color", ColorType.SUB);
     root.style.setProperty("--mine", ColorType.MINE);
     localStorage.setItem("main-color", ColorType.MAIN);
     localStorage.setItem("sub-color", ColorType.SUB);
@@ -47,7 +47,7 @@ const ThemeColorCardContainer = () => {
     localStorage.setItem("main-color", mainColor);
     root.style.setProperty("--main-color", mainColor);
     localStorage.setItem("sub-color", subColor);
-    root.style.setProperty("--lightpurple-color", subColor);
+    root.style.setProperty("--sub-color", subColor);
     localStorage.setItem("mine-color", mineColor);
     root.style.setProperty("--mine", mineColor);
     toggleColorPicker(true);
