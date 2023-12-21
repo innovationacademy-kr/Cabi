@@ -219,4 +219,10 @@ public class UserServiceImpl implements UserService {
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
 	}
+
+	@Override
+	public User getUserWithAlarmOptIn(Long userId) {
+		return userRepository.findUserWithOptInById(userId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+	}
 }

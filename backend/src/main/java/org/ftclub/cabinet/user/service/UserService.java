@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
-import org.ftclub.cabinet.occupiedtime.UserMonthDataDto;
 import org.ftclub.cabinet.user.domain.AdminRole;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 
 public interface UserService {
@@ -68,4 +68,13 @@ public interface UserService {
 	 * @return {@link List<UserBlackholeInfoDto>}
 	 */
 	List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo();
+
+	/**
+	 * userId로 유저와 AlarmOptIn 정보를 가져옵니다.
+	 *
+	 * @param userId
+	 * @return
+	 */
+	User getUserWithAlarmOptIn(Long userId);
+
 }

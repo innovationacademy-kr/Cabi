@@ -6,10 +6,13 @@ import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
+import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.service.UserFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -78,12 +81,12 @@ public class UserController {
 		userFacadeService.useLentExtension(userSessionDto);
 	}
 
-//	@PutMapping("/me/alarms")
-//	@AuthGuard(level = AuthLevel.USER_ONLY)
-//	public void updateMyProfile(
-//			@UserSession UserSessionDto userSessionDto,
-//			@RequestBody UpdateAlarmRequestDto updateAlarmRequestDto) {
-//		log.info("Called updateMyProfile");
-//		userFacadeService.updateMyProfile(userSessionDto);
-//	}
+	@PutMapping("/me/alarms")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void updateMyProfile(
+			@UserSession UserSessionDto userSessionDto,
+			@RequestBody UpdateAlarmRequestDto updateAlarmRequestDto) {
+		log.info("Called updateMyProfile");
+		userFacadeService.updateAlarmState(userSessionDto, updateAlarmRequestDto);
+	}
 }
