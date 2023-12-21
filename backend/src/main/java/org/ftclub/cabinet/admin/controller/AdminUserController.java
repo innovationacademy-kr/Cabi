@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.controller;
+package org.ftclub.cabinet.admin.controller;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
