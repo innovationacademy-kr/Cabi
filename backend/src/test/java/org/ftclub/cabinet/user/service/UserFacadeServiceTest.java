@@ -138,8 +138,9 @@ public class UserFacadeServiceTest {
 		LentExtension lentExtension = lentExtensionOptionalFetcher.findAllByUserId(
 				userSessionDto.getUserId()).get(0);
 
-//		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1, null)).willReturn(
-//				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1), null));
+		given(userMapper.toMyProfileResponseDto(userSessionDto, null, banHistory1,
+				null)).willReturn(
+				new MyProfileResponseDto(2L, "testUser2", null, testDate.plusDays(1), null));
 
 		// when
 		MyProfileResponseDto myProfile = userFacadeService.getMyProfile(userSessionDto);
