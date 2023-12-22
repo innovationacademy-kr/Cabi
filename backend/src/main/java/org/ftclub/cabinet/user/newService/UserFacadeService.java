@@ -15,7 +15,10 @@ import org.ftclub.cabinet.user.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +71,16 @@ public class UserFacadeService {
             User newUser = User.of(clubName, randomUUID + "@ftc.co.kr", null, UserRole.CLUB);
             userCommandService.createUser(newUser);
         }
+    }
+
+    public LentExtensionPaginationDto getMyLentExtension(UserSessionDto userSessionDto) {
+        log.debug("Called getMyLentExtension");
+
+        List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.getMyLentExtensionSorted(userSessionDto.getUserId())
+                .stream()
+                .map(userMapper::toLentExtensionResponseDto)
+                .collect(Collectors.toList());
+        return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos, (long) lentExtensionResponseDtos.size());
     }
 }
 

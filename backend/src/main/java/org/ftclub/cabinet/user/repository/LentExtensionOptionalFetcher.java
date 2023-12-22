@@ -35,7 +35,7 @@ public class LentExtensionOptionalFetcher {
 
 	@Transactional(readOnly = true)
 	public List<LentExtension> findAllByUserId(Long userId) {
-		return lentExtensionRepository.findAllByUserId(userId);
+		return lentExtensionRepository.findAll(userId);
 	}
 
 	@Transactional(readOnly = true)
