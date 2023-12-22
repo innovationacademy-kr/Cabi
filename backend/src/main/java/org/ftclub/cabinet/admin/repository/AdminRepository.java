@@ -1,31 +1,32 @@
 package org.ftclub.cabinet.admin.repository;
 
-import java.util.Optional;
+import org.ftclub.cabinet.admin.domain.Admin;
 import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.domain.AdminUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface AdminUserRepository extends JpaRepository<AdminUser, Long> {
+import java.util.Optional;
+
+public interface AdminRepository extends JpaRepository<Admin, Long> {
 
 	/**
 	 * 관리자 아이디로 관리자 정보를 가져옵니다.
 	 *
 	 * @param adminUserId 관리자 고유 Id
-	 * @return {@link AdminUser}
+	 * @return {@link Admin}
 	 */
-	@Query("SELECT au FROM AdminUser au WHERE au.adminUserId = :adminUserId")
-	Optional<AdminUser> findAdminUser(@Param("adminUserId") Long adminUserId);
+	@Query("SELECT au FROM Admin au WHERE au.adminId = :adminUserId")
+	Optional<Admin> findAdminUser(@Param("adminUserId") Long adminUserId);
 
 	/**
 	 * 관리자 이메일로 관리자 정보를 가져옵니다.
 	 *
 	 * @param email 관리자 이메일
-	 * @return {@link AdminUser}
+	 * @return {@link Admin}
 	 */
-	@Query("SELECT au FROM AdminUser au WHERE au.email = :email")
-	Optional<AdminUser> findAdminUserByEmail(@Param("email") String email);
+	@Query("SELECT au FROM Admin au WHERE au.email = :email")
+	Optional<Admin> findAdminUserByEmail(@Param("email") String email);
 
 	/**
 	 * 유저의 이메일로 어드민 유저를 찾고 어드민 유저의 권한을 반환합니다.
@@ -33,6 +34,6 @@ public interface AdminUserRepository extends JpaRepository<AdminUser, Long> {
 	 * @param email
 	 * @return {@link AdminRole}
 	 */
-	@Query("SELECT au.role FROM AdminUser au WHERE au.email = :email")
+	@Query("SELECT au.role FROM Admin au WHERE au.email = :email")
 	Optional<AdminRole> findAdminUserRoleByEmail(@Param("email") String email);
 }

@@ -1,147 +1,137 @@
 package org.ftclub.cabinet.admin.controller;
 
-import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.auth.domain.AuthGuard;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.dto.ClubUserListDto;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.user.service.LentExtensionService;
+import org.ftclub.cabinet.user.service.UserFacadeService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import javax.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.admin.service.AdminFacadeService;
-import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
-import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
-import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
-import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
-import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
-import org.ftclub.cabinet.dto.ReturnCabinetsRequestDto;
-import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
-import org.ftclub.cabinet.dto.UserProfilePaginationDto;
-import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.HashMap;
 
-@Slf4j
+/**
+ * 관리자가 유저를 관리할 때 사용하는 컨트롤러입니다.
+ */
 @RestController
-@RequestMapping("/v4/admin")
 @RequiredArgsConstructor
+@RequestMapping("/v4/admin/users")
+@Log4j2
 public class AdminController {
 
-	private final AdminFacadeService adminFacadeService;
-
-
-	/*----------------------------------------  Search  ------------------------------------------*/
-	@GetMapping("/search/cabinets-simple")
-	@AuthGuard(level = ADMIN_ONLY)
-	public CabinetSimplePaginationDto getCabinetsSimpleInfo(
-			@RequestParam("visibleNum") Integer visibleNum) {
-		log.info("Called getCabinetsSimpleInfo {}", visibleNum);
-		return adminFacadeService.getCabinetsSimpleInfo(visibleNum);
-	}
-
-	@GetMapping("/search/cabinets")
-	@AuthGuard(level = ADMIN_ONLY)
-	public CabinetInfoPaginationDto getCabinetsInfo(
-			@RequestParam("visibleNum") Integer visibleNum) {
-		log.info("Called getCabinetsInfo {}", visibleNum);
-		return adminFacadeService.getCabinetInfo(visibleNum);
-	}
-
-	@GetMapping("/search/users-simple")
-	@AuthGuard(level = ADMIN_ONLY)
-	public UserProfilePaginationDto getUsersProfile(
-			@RequestParam("name") String name, Pageable pageable) {
-		log.info("Called getUsersProfile {}", name);
-		return adminFacadeService.getUsersProfile(name, pageable);
-	}
-
-	@GetMapping("/search/users")
-	@AuthGuard(level = ADMIN_ONLY)
-	public UserCabinetPaginationDto getCabinetsLentInfo(
-			@RequestParam("name") String name, Pageable pageable) {
-		log.info("Called getCabinetsLentInfo {}", name);
-		return adminFacadeService.getUserLentCabinetInfo(name, pageable);
-	}
-
-	/*--------------------------------------  Statistics  ----------------------------------------*/
+	private final UserFacadeService userFacadeService;
+	private final LentFacadeService lentFacadeService;
+	private final LentExtensionService lentExtensionService;
 
 	/**
-	 * 전 층의 사물함 정보를 가져옵니다.
+	 * 현재 유저가 차단된 상태일 때, 차단을 해제합니다.
 	 *
-	 * @return 전 층의 사물함 정보를 반환합니다.
+	 * @param userId 유저 고유 아이디
 	 */
-	@GetMapping("/statistics/buildings/floors/cabinets")
-	@AuthGuard(level = ADMIN_ONLY)
-	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
-		log.info("Called getCabinetsInfoOnAllFloors");
-		return adminFacadeService.getAllCabinetsInfo();
+	@DeleteMapping("/{userId}/ban-history")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
+		log.info("Called deleteBanHistoryByUserId: {}", userId);
+		userFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
 	}
 
 	/**
-	 * 현재일자 기준, 입력한 기간 동안 발생한 대여 및 반납의 횟수를 가져옵니다.
+	 * 유저의 대여 기록을 반환합니다.
 	 *
-	 * @param startDate 입력할 기간의 시작일
-	 * @param endDate   입력할 기간의 종료일
-	 * @return 현재일자 기준, 입력한 기간 동안 발생한 대여 및 반납의 횟수를 반환합니다.
+	 * @param userId   유저 고유 아이디
+	 * @param pageable 페이지네이션 정보
+	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
 	 */
-	@GetMapping("/statistics/lent-histories")
-	@AuthGuard(level = ADMIN_ONLY)
-	public LentsStatisticsResponseDto getLentCountStatistics(
-			@RequestParam("startDate") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime startDate,
-			@RequestParam("endDate") @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime endDate) {
-		log.info("Called getCountOnLentAndReturn startDate : {} endDate : {}", startDate, endDate);
-		return adminFacadeService.getLentCountStatistics(startDate, endDate);
+	@GetMapping("/{userId}/lent-histories")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public LentHistoryPaginationDto getLentHistoriesByUserId(
+			@PathVariable("userId") Long userId, Pageable pageable) {
+		log.info("Called getLentHistoriesByUserId: {}", userId);
+		return lentFacadeService.getUserLentHistories(userId, pageable);
 	}
 
 	/**
-	 * 차단당한 유저 정보를 가져옵니다.
+	 * 유저를 어드민으로 승격시킵니다.
 	 *
-	 * @param pageable 페이지 정보
-	 * @return 차단당한 유저 정보를 반환합니다.
+	 * @param email 유저 이메일
+	 * @return redirect:cabi.42seoul.io/admin/login
 	 */
-	@GetMapping("/statistics/users/banned")
-	@AuthGuard(level = ADMIN_ONLY)
-	public BlockedUserPaginationDto getUsersBannedInfo(Pageable pageable) {
-		log.info("Called getUsersBannedInfo");
-		return adminFacadeService.getAllBanUsers(pageable);
+	@GetMapping("/admins/promote")
+	@AuthGuard(level = AuthLevel.MASTER_ONLY)
+	public void promoteUserToAdmin(@RequestParam("email") String email) {
+		log.info("Called promoteUserToAdmin: {}", email);
+		userFacadeService.promoteUserToAdmin(email);
 	}
 
 	/**
-	 * 연체중인 유저 리스트를 가져옵니다.
+	 * 동아리 유저를 생성합니다.
 	 *
-	 * @param pageable 페이지 정보
-	 * @return 연체중인 유저 리스트를 반환합니다.
+	 * @param body 동아리 이름
 	 */
-	@GetMapping("/statistics/users/overdue")
-	@AuthGuard(level = ADMIN_ONLY)
-	public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
-		log.info("Called getOverdueUsers");
-		return adminFacadeService.getOverdueUsers(pageable);
+	@PostMapping("/club")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void createClubUser(@RequestBody HashMap<String, String> body) {
+		log.info("Called createClub");
+		String clubName = body.get("clubName");
+		userFacadeService.createClubUser(clubName);
 	}
 
-	/*-----------------------------------------  Lent  -------------------------------------------*/
-
-	@PatchMapping("/return-cabinets")
-	@AuthGuard(level = ADMIN_ONLY)
-	public void terminateLentCabinets(
-			@Valid @RequestBody ReturnCabinetsRequestDto returnCabinetsRequestDto) {
-		log.info("Called terminateLentCabinets returnCabinetsRequestDto={}",
-				returnCabinetsRequestDto);
-		adminFacadeService.endCabinetLent(returnCabinetsRequestDto.getCabinetIds());
+	/**
+	 * 동아리 유저를 삭제합니다.
+	 *
+	 * @param clubId 동아리 고유 아이디
+	 */
+	@DeleteMapping("/club/{clubId}")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void deleteClubUser(@PathVariable("clubId") Long clubId) {
+		log.info("Called deleteClub");
+		userFacadeService.deleteClubUser(clubId);
 	}
 
-	@PatchMapping("/return-users/{userId}")
-	@AuthGuard(level = ADMIN_ONLY)
-	public void terminateLentUser(@PathVariable("userId") Long userId) {
-		log.info("Called terminateLentUser userId={}", userId);
-		adminFacadeService.endUserLent(userId);
+	@GetMapping("/clubs")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public ClubUserListDto findClubs(@RequestParam("page") Integer page,
+	                                 @RequestParam("size") Integer size) {
+		log.info("Called getClubs");
+		return userFacadeService.findAllClubUser(page, size);
+	}
+
+	@PatchMapping("/club/{clubId}")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void updateClubUser(@PathVariable("clubId") Long clubId,
+	                           @RequestBody HashMap<String, String> body) {
+		log.info("Called updateClub");
+		String clubName = body.get("clubName");
+		userFacadeService.updateClubUser(clubId, clubName);
+	}
+
+	@GetMapping("/lent-extensions")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public LentExtensionPaginationDto getAllLentExtension(@RequestParam("page") Integer page,
+	                                                      @RequestParam("size") Integer size) {
+		log.info("Called getAllLentExtension");
+		return userFacadeService.getAllLentExtension(page, size);
+	}
+
+	@GetMapping("/lent-extensions/active")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public LentExtensionPaginationDto getAllActiveLentExtension(@RequestParam("page") Integer page,
+	                                                            @RequestParam("size") Integer size) {
+		log.info("Called getAllActiveLentExtension");
+		return userFacadeService.getAllActiveLentExtension(page, size);
+	}
+
+	@PostMapping("/lent-extensions/{user}")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void issueLentExtension(@PathVariable("user") String username) {
+		log.info("Called issueLentExtension");
+		lentExtensionService.assignLentExtension(username);
+
 	}
 }

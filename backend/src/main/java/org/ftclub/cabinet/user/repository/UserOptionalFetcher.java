@@ -1,13 +1,10 @@
 package org.ftclub.cabinet.user.repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.admin.domain.Admin;
 import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.domain.AdminUser;
-import org.ftclub.cabinet.admin.repository.AdminUserRepository;
+import org.ftclub.cabinet.admin.repository.AdminRepository;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -19,13 +16,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class UserOptionalFetcher {
 
 	private final UserRepository userRepository;
-	private final AdminUserRepository adminUserRepository;
+	private final AdminRepository adminRepository;
 	private final BanHistoryRepository banHistoryRepository;
 
 	/*-------------------------------------------FIND-------------------------------------------*/
@@ -94,22 +95,22 @@ public class UserOptionalFetcher {
 	 * 어드민 유저 아이디로 어드민 유저를 찾습니다.
 	 *
 	 * @param adminUserId 어드민 유저 아이디
-	 * @return {@link AdminUser}
+	 * @return {@link Admin}
 	 */
-	public AdminUser findAdminUser(Long adminUserId) {
+	public Admin findAdminUser(Long adminUserId) {
 		log.debug("Called findAdminUser: {}", adminUserId);
-		return adminUserRepository.findAdminUser(adminUserId).orElse(null);
+		return adminRepository.findAdminUser(adminUserId).orElse(null);
 	}
 
 	/**
 	 * 어드민 유저의 이메일로 어드민 유저를 찾습니다.
 	 *
 	 * @param email 어드민 유저의 이메일
-	 * @return {@link AdminUser}
+	 * @return {@link Admin}
 	 */
-	public AdminUser findAdminUserByEmail(String email) {
+	public Admin findAdminUserByEmail(String email) {
 		log.debug("Called findAdminUserByEmail: {}", email);
-		return adminUserRepository.findAdminUserByEmail(email).orElse(null);
+		return adminRepository.findAdminUserByEmail(email).orElse(null);
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class UserOptionalFetcher {
 	 */
 	public AdminRole findAdminUserRoleByEmail(String email) {
 		log.debug("Called findAdminUserRoleByEmail: {}", email);
-		return adminUserRepository.findAdminUserRoleByEmail(email)
+		return adminRepository.findAdminUserRoleByEmail(email)
 				.orElse(null);
 	}
 
@@ -209,11 +210,11 @@ public class UserOptionalFetcher {
 	 * 관리자가 존재하는지 확인하고 존재하지 않으면 예외를 발생시킵니다.
 	 *
 	 * @param adminUserId 관리자의 고유 ID
-	 * @return {@link AdminUser}
+	 * @return {@link Admin}
 	 */
-	public AdminUser getAdminUser(Long adminUserId) {
+	public Admin getAdminUser(Long adminUserId) {
 		log.debug("Called getAdminUser: {}", adminUserId);
-		return adminUserRepository.findAdminUser(adminUserId)
+		return adminRepository.findAdminUser(adminUserId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
 
@@ -223,9 +224,9 @@ public class UserOptionalFetcher {
 	 * @param adminUserEmail 찾을 어드민 유저의 이메일 주소
 	 * @return {@link User}
 	 */
-	public AdminUser getAdminUserByEmail(String adminUserEmail) {
+	public Admin getAdminUserByEmail(String adminUserEmail) {
 		log.debug("Called getAdminUserByEmail: {}", adminUserEmail);
-		return adminUserRepository.findAdminUserByEmail(adminUserEmail)
+		return adminRepository.findAdminUserByEmail(adminUserEmail)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
 
