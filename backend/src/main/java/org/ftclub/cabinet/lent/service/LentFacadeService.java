@@ -228,11 +228,11 @@ public class LentFacadeService {
 	}
 
 	@Transactional
-	public void endUserLent(Long userId, String... memo) {
+	public void endUserLent(Long userId, String memo) {
 		log.debug("Called endLentCabinet: {}", userId);
 
 		LocalDateTime now = LocalDateTime.now();
-		LentHistory userLentHistory = lentQueryService.findUserActiveLentHistoryWithLock(userId);
+		LentHistory userLentHistory = lentQueryService.getUserActiveLentHistoryWithLock(userId);
 		List<LentHistory> cabinetLentHistories =
 				lentQueryService.findCabinetActiveLentHistories(userLentHistory.getCabinetId());
 		Cabinet cabinet =
@@ -243,8 +243,8 @@ public class LentFacadeService {
 		lentCommandService.endLent(userLentHistory, now);
 		lentRedisService.setPreviousUserName(
 				cabinet.getCabinetId(), userLentHistory.getUser().getName());
-		if (memo.length == 1) {
-			cabinetCommandService.updateMemo(cabinet, memo[0]);
+		if (Objects.nonNull(memo)) {
+			cabinetCommandService.updateMemo(cabinet, memo);
 		}
 
 		LocalDateTime endedAt = userLentHistory.getEndedAt();
