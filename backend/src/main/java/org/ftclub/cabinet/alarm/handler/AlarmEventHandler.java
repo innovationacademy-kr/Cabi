@@ -2,6 +2,7 @@ package org.ftclub.cabinet.alarm.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.TransactionalAlarmEvent;
 import org.ftclub.cabinet.user.domain.AlarmStatus;
@@ -22,9 +23,13 @@ public class AlarmEventHandler {
 	private final SlackAlarmSender slackAlarmSender;
 	private final EmailAlarmSender emailAlarmSender;
 	private final PushAlarmSender pushAlarmSender;
+	private final AlarmProperties alarmProperties;
 
 	@TransactionalEventListener
 	public void handleAlarmEventWithTransactional(TransactionalAlarmEvent transactionalAlarmEvent) {
+		if (!alarmProperties.getIsProduction()) {
+			return;
+		}
 		log.info("handleAlarmEventWithTransactional = {}", transactionalAlarmEvent);
 		if (!(transactionalAlarmEvent instanceof TransactionalAlarmEvent)) {
 			return;
@@ -36,6 +41,9 @@ public class AlarmEventHandler {
 	@EventListener
 	public void handleAlarmEvent(AlarmEvent alarmEvent) {
 		log.info("handleAlarmEvent = {}", alarmEvent);
+		if (!alarmProperties.getIsProduction()) {
+			return;
+		}
 		eventProceed(alarmEvent);
 	}
 
