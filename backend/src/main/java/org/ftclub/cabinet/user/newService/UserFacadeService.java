@@ -3,24 +3,19 @@ package org.ftclub.cabinet.user.newService;
 import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
+import org.ftclub.cabinet.alarm.service.AlarmQueryService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
 import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.mapper.UserMapper;
-import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.LentExtension;
-import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.ftclub.cabinet.user.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +28,7 @@ public class UserFacadeService {
     private final UserQueryService userQueryService;
     private final UserCommandService userCommandService;
     private final UserMapper userMapper;
+    private final AlarmQueryService alarmQueryService;
 
     public MyProfileResponseDto getMyProfile(UserSessionDto user) {
         log.debug("Called getMyProfile: {}", user.getName());
@@ -48,7 +44,14 @@ public class UserFacadeService {
                 .lentExtensionType(lentExtension.getLentExtensionType())
                 .build();
 
-        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, lentExtensionResponseDto);
+        AlarmStatus alarmStatus = alarmQueryService.findAlarmStatus(user.getUserId());
+        AlarmTypeResponseDto alarmTypeResponseDto = AlarmTypeResponseDto.builder()
+                .slack(alarmStatus.isSlack())
+                .email(alarmStatus.isEmail())
+                .push(alarmStatus.isPush())
+                .build();
+        
+        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory, lentExtensionResponseDto, alarmTypeResponseDto);
     }
 
     public void createClubUser(String clubName) {

@@ -55,7 +55,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		LentExtensionResponseDto activeLentExtension = lentExtensionService.getActiveLentExtension(
 				user);
 
-		AlarmStatus userAlarmStatus = alarmQueryService.findAlarmStatusByUserId(
+		AlarmStatus userAlarmStatus = alarmQueryService.findAlarmStatus(
 				user.getUserId());
 		AlarmTypeResponseDto.builder().alarmStatus(userAlarmStatus).build();
 
@@ -299,7 +299,7 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	public void updateAlarmState(UserSessionDto user, UpdateAlarmRequestDto dto) {
 		log.debug("Called updateAlarmState");
 
-		alarmCommandService.updateAlarmStatusRe(dto, alarmQueryService.findAlarmStatusByUserId(
+		alarmCommandService.updateAlarmStatusRe(dto, alarmQueryService.findAlarmStatus(
 				user.getUserId()));
 	}
 

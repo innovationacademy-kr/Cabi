@@ -15,7 +15,7 @@ public class AlarmQueryService {
 
 	private final AlarmStatusRepository alarmStatusRepository;
 
-	public AlarmStatus findAlarmStatusByUserId(Long userId) {
+	public AlarmStatus findAlarmStatus(Long userId) {
 		return alarmStatusRepository.findByUserId(userId).orElseThrow(() -> new ServiceException(
 				ExceptionStatus.NOT_FOUND_USER));
 	}

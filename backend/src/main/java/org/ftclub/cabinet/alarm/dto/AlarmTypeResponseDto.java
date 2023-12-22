@@ -7,6 +7,7 @@ import org.ftclub.cabinet.user.domain.AlarmStatus;
 
 @AllArgsConstructor
 @Getter
+@Builder
 public class AlarmTypeResponseDto {
 
 	private boolean slack;
