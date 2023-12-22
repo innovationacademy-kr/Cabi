@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.domain.AdminUser;
+import org.ftclub.cabinet.admin.domain.Admin;
 import org.ftclub.cabinet.auth.domain.AuthCookieManager;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
@@ -56,7 +56,7 @@ public class AuthFacadeService {
 
 	public void handleAdminLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
 		GoogleProfile profile = googleOauthService.getProfileByCode(code);
-		AdminUser admin = null/*userCommandService.createUserIfNotExists(profile)*/;
+		Admin admin = null/*userCommandService.createUserIfNotExists(profile)*/;
 		String token = tokenProvider.createAdminToken(admin, LocalDateTime.now());
 		Cookie cookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, token);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());

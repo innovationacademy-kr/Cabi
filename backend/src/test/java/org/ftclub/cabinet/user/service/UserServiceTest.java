@@ -1,17 +1,12 @@
 package org.ftclub.cabinet.user.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.time.LocalDateTime;
-import javax.transaction.Transactional;
-import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.admin.domain.Admin;
 import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.domain.AdminUser;
+import org.ftclub.cabinet.admin.repository.AdminRepository;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.admin.repository.AdminUserRepository;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.junit.jupiter.api.Disabled;
@@ -20,6 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -32,7 +32,7 @@ public class UserServiceTest {
 	@Autowired
 	private UserOptionalFetcher userOptionalFetcher;
 	@Autowired
-	private AdminUserRepository adminUserRepository;
+	private AdminRepository adminRepository;
 	@Autowired
 	private BanHistoryRepository banHistoryRepository;
 
@@ -48,9 +48,9 @@ public class UserServiceTest {
 	void 어드민_유저_생성() {
 		String adminEmail = "testAdmin@gmail.com";
 		userService.createAdminUser(adminEmail);
-		AdminUser adminUser = userOptionalFetcher.findAdminUserByEmail(adminEmail);
-		assertNotNull(adminUser);
-		assertEquals(AdminRole.NONE, adminUser.getRole());
+		Admin admin = userOptionalFetcher.findAdminUserByEmail(adminEmail);
+		assertNotNull(admin);
+		assertEquals(AdminRole.NONE, admin.getRole());
 	}
 
 	@Test
@@ -58,9 +58,9 @@ public class UserServiceTest {
 		String userEmail = "banuser1@student.42seoul.kr";
 		String falseEmail = "test";
 		boolean check = userService.checkUserExists(userEmail);
-		assertEquals(true, check);
+		assertTrue(check);
 		boolean checkFalse = userService.checkUserExists(falseEmail);
-		assertEquals(false, checkFalse);
+		assertFalse(checkFalse);
 	}
 
 	@Test
@@ -69,10 +69,10 @@ public class UserServiceTest {
 		String falseEmail = "test";
 
 		boolean check = userService.checkAdminUserExists(adminEmail);
-		assertEquals(true, check);
+		assertTrue(check);
 
 		boolean checkFalse = userService.checkAdminUserExists(falseEmail);
-		assertEquals(false, checkFalse);
+		assertFalse(checkFalse);
 	}
 
 	@Test
@@ -97,8 +97,8 @@ public class UserServiceTest {
 	void 어드민_권한_변경() {
 		Long adminUserId = 1L;
 		userService.updateAdminUserRole(adminUserId, AdminRole.ADMIN);
-		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
-		assertEquals(adminUser.getRole(), AdminRole.ADMIN);
+		Admin admin = userOptionalFetcher.getAdminUser(adminUserId);
+		assertEquals(admin.getRole(), AdminRole.ADMIN);
 	}
 
 	@Test
@@ -151,10 +151,10 @@ public class UserServiceTest {
 		userService.promoteAdminByEmail(adminEmail2);
 
 		//then
-		AdminUser adminUser1 = userOptionalFetcher.findAdminUser(adminId1);
-		AdminUser adminUser2 = userOptionalFetcher.findAdminUser(adminId2);
-		assertEquals(adminUser1.getRole(), AdminRole.ADMIN);
-		assertEquals(adminUser2.getRole(), AdminRole.ADMIN);
+		Admin admin1 = userOptionalFetcher.findAdminUser(adminId1);
+		Admin admin2 = userOptionalFetcher.findAdminUser(adminId2);
+		assertEquals(admin1.getRole(), AdminRole.ADMIN);
+		assertEquals(admin2.getRole(), AdminRole.ADMIN);
 	}
 
 	@Test
@@ -162,6 +162,6 @@ public class UserServiceTest {
 		// banuser1
 		Long userId = 1L;
 		boolean isBanned = userService.checkUserIsBanned(userId, testDate);
-		assertEquals(true, isBanned);
+		assertTrue(isBanned);
 	}
 }

@@ -1,39 +1,33 @@
 package org.ftclub.cabinet.admin.domain;
 
-import java.util.Objects;
-import java.util.regex.Pattern;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
-import lombok.extern.log4j.Log4j2;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * 관리자 엔티티 클래스입니다.
  */
 @Entity
-@Table(name = "ADMIN_USER")
+@Table(name = "ADMIN")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Log4j2
-public class AdminUser {
+public class Admin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ADMIN_USER_ID")
-	private Long adminUserId;
+	@Column(name = "ADMIN_ID")
+	private Long adminId;
 
 	/**
 	 * OAuth 방식을 사용하기 때문에 비밀번호 없이 이메일만 저장합니다.
@@ -50,16 +44,16 @@ public class AdminUser {
 	@Column(name = "ROLE", length = 16, nullable = false)
 	private AdminRole role = AdminRole.NONE;
 
-	protected AdminUser(String email, AdminRole role) {
+	protected Admin(String email, AdminRole role) {
 		this.email = email;
 		this.role = role;
 	}
 
-	public static AdminUser of(String email, AdminRole role) {
-		AdminUser adminUser = new AdminUser(email, role);
-		ExceptionUtil.throwIfFalse(adminUser.isValid(),
+	public static Admin of(String email, AdminRole role) {
+		Admin admin = new Admin(email, role);
+		ExceptionUtil.throwIfFalse(admin.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
-		return adminUser;
+		return admin;
 	}
 
 	private boolean isValid() {
@@ -74,11 +68,11 @@ public class AdminUser {
 		if (other == this) {
 			return true;
 		}
-		if (!(other instanceof AdminUser)) {
+		if (!(other instanceof Admin)) {
 			return false;
 		}
-		AdminUser adminUser = (AdminUser) other;
-		return Objects.equals(adminUserId, adminUser.adminUserId);
+		Admin admin = (Admin) other;
+		return Objects.equals(adminId, admin.adminId);
 	}
 
 	public void changeAdminRole(AdminRole role) {

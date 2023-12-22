@@ -3,9 +3,9 @@ package org.ftclub.cabinet.user.service;
 import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.admin.domain.Admin;
 import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.domain.AdminUser;
-import org.ftclub.cabinet.admin.repository.AdminUserRepository;
+import org.ftclub.cabinet.admin.repository.AdminRepository;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
-	private final AdminUserRepository adminUserRepository;
+	private final AdminRepository adminRepository;
 	private final BanHistoryRepository banHistoryRepository;
 	private final BanPolicy banPolicy;
 	private final UserOptionalFetcher userOptionalFetcher;
@@ -81,16 +81,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean checkAdminUserExists(String email) {
 		log.debug("Called checkAdminUserExists: {}", email);
-		AdminUser adminUser = userOptionalFetcher.findAdminUserByEmail(email);
-		return adminUser != null;
+		Admin admin = userOptionalFetcher.findAdminUserByEmail(email);
+		return admin != null;
 	}
 
 	/* createUser와 동일한 사유로 로직 수정했습니다. */
 	@Override
 	public void createAdminUser(String email) {
 		log.debug("Called createAdminUser: {}", email);
-		AdminUser adminUser = AdminUser.of(email, AdminRole.NONE);
-		adminUserRepository.save(adminUser);
+		Admin admin = Admin.of(email, AdminRole.NONE);
+		adminRepository.save(admin);
 	}
 
 	@Override
@@ -116,8 +116,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteAdminUser(Long adminUserId) {
 		log.debug("Called deleteAdminUser: {}", adminUserId);
-		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
-		adminUserRepository.delete(adminUser);
+		Admin admin = userOptionalFetcher.getAdminUser(adminUserId);
+		adminRepository.delete(admin);
 	}
 
 	@Override
@@ -134,18 +134,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateAdminUserRole(Long adminUserId, AdminRole role) {
 		log.debug("Called updateAdminUserRole: {}", adminUserId);
-		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
-		adminUser.changeAdminRole(role);
-		adminUserRepository.save(adminUser);
+		Admin admin = userOptionalFetcher.getAdminUser(adminUserId);
+		admin.changeAdminRole(role);
+		adminRepository.save(admin);
 	}
 
 	@Override
 	public void promoteAdminByEmail(String email) {
 		log.debug("Called promoteAdminByEmail: {}", email);
-		AdminUser adminUser = userOptionalFetcher.getAdminUserByEmail(email);
-		if (adminUser.getRole() == AdminRole.NONE) {
-			adminUser.changeAdminRole(AdminRole.ADMIN);
-			adminUserRepository.save(adminUser);
+		Admin admin = userOptionalFetcher.getAdminUserByEmail(email);
+		if (admin.getRole() == AdminRole.NONE) {
+			admin.changeAdminRole(AdminRole.ADMIN);
+			adminRepository.save(admin);
 		}
 	}
 

@@ -4,8 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.domain.Admin;
 import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.domain.AdminUser;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.user.domain.User;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
-	
+
 	public static final String USER_TOKEN_NAME = "access_token";
 	public static final String ADMIN_TOKEN_NAME = "admin_access_token";
 	private final JwtProperties jwtProperties;
@@ -54,7 +54,7 @@ public class TokenProvider {
 	 * @param now   현재 시각
 	 * @return JWT 토큰
 	 */
-	public String createAdminToken(AdminUser admin, LocalDateTime now) {
+	public String createAdminToken(Admin admin, LocalDateTime now) {
 		Claims claims = Jwts.claims();
 		claims.put("email", admin.getEmail());
 		claims.put("role", admin.getRole());
