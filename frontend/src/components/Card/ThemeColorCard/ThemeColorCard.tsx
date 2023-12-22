@@ -72,7 +72,12 @@ const ThemeColorCard = ({
             <CardContentWrapper>
               {themeColorData.map(({ title, type, getColor }) => (
                 <CardContentStyled key={type}>
-                  <ContentInfoStyled>{title}</ContentInfoStyled>
+                  <ContentInfoStyled
+                    isSelected={type === selectedColorType && showColorPicker}
+                    selectedColor={getColor({ mainColor, subColor, mineColor })}
+                  >
+                    {title}
+                  </ContentInfoStyled>
                   <ColorButtonStyled
                     onClick={() => handleColorButtonClick(type)}
                     color={getColor({ mainColor, subColor, mineColor })}

@@ -4,7 +4,7 @@ import CabinetStatus from "@/types/enum/cabinet.status.enum";
 export const CardContentWrapper = styled.div`
   background-color: var(--white);
   border-radius: 10px;
-  padding: 15px 0;
+  padding: 10px 0;
   margin: 5px 5px 5px 5px;
   width: 90%;
   display: flex;
@@ -19,9 +19,20 @@ export const CardContentStyled = styled.div`
   padding: 0 10px 0 10px;
 `;
 
-export const ContentInfoStyled = styled.div`
+export const ContentInfoStyled = styled.div<{
+  isSelected?: boolean;
+  selectedColor?: string;
+}>`
   display: flex;
-  margin: 0 0 0 10px;
+  padding: 8px 10px;
+
+  ${(props) =>
+    props.isSelected &&
+    `
+    background-color: ${props.selectedColor};
+    color: white;
+    border-radius: 8px;
+  `}
 `;
 
 export const ContentDeatilStyled = styled.div<{
