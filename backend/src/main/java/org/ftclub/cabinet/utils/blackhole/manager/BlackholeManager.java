@@ -3,7 +3,7 @@ package org.ftclub.cabinet.utils.blackhole.manager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.FtProfile;
-import org.ftclub.cabinet.auth.service.ApplicationAccessTokenManager;
+import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
 import org.ftclub.cabinet.auth.service.FtOauthService;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Log4j2
 public class BlackholeManager {
 	private final FtOauthService ftOauthService;
-	private final ApplicationAccessTokenManager applicationAccessTokenManager;
+	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
 	private final UserService userService;
 
@@ -47,7 +47,7 @@ public class BlackholeManager {
 	public void handleBlackHole(UserBlackHoleEvent dto) {
 		LocalDateTime now = LocalDateTime.now();
 		try {
-			FtProfile recentProfile = ftOauthService.getProfileByIntraName(applicationAccessTokenManager.getFtAccessToken(), dto.getName());
+			FtProfile recentProfile = ftOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(), dto.getName());
 			if (!recentProfile.getRole().isInCursus())
 				terminateInvalidUser(dto, now);
 			userService.updateUserBlackholedAt(dto.getUserId(), recentProfile.getBlackHoledAt());
@@ -55,7 +55,7 @@ public class BlackholeManager {
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
 			if (status.equals(HttpStatus.UNAUTHORIZED) || status.equals(HttpStatus.FORBIDDEN))
-				applicationAccessTokenManager.refreshFtAccessToken();
+				tokenManager.refreshFtAccessToken();
 			if (status.equals(HttpStatus.NOT_FOUND))
 				terminateInvalidUser(dto, now);
 		} catch (ServiceException e) {
@@ -67,7 +67,7 @@ public class BlackholeManager {
 
 		} catch (Exception e) {
 			log.error("handleBlackHoledUser Exception: {}", dto, e);
-			applicationAccessTokenManager.refreshFtAccessToken();
+			tokenManager.refreshFtAccessToken();
 		}
 	}
 }

@@ -1,9 +1,11 @@
 package org.ftclub.cabinet.utils.leave.absence;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.domain.FtApiManager;
+import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
+import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
+import org.ftclub.cabinet.auth.service.FtOauthService;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -17,19 +19,16 @@ import java.time.LocalDateTime;
 @Log4j2
 public class LeaveAbsenceManager {
 
-	private final FtApiManager ftAPIManager;
+	private final FtOauthService ftOauthService;
+	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
 	private final UserService userService;
-
-	private Boolean isLeaveAbsence(JsonNode jsonUserInfo) {
-		return !jsonUserInfo.get("active?").asBoolean();
-	}
 
 	public void handleLeaveAbsence(Long userId, String name) {
 		log.info("called handleLeaveAbsence {} {}", userId, name);
 		try {
-			JsonNode jsonUserInfo = ftAPIManager.getFtUsersInfoByName(name);
-			if (isLeaveAbsence(jsonUserInfo)) {
+			FtProfile ftProfile = ftOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(), name);
+			if (ftProfile.getRole().equals(FtRole.INACTIVE)) {
 				lentFacadeService.endUserLent(userId);
 			}
 		} catch (HttpClientErrorException e) {
