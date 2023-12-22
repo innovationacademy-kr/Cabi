@@ -61,10 +61,12 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
   button {
+    all: initial;
+    cursor: pointer;
     z-index: 2;
     height: 30px;
-    width: 10px;
-    background: url(/src/assets/images/select.svg) no-repeat 100%;
+    width: 20px;
+    background: url(/src/assets/images/select.svg) no-repeat center center;
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
   }
