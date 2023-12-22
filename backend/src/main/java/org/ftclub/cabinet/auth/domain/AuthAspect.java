@@ -26,64 +26,64 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.*;
 @RequiredArgsConstructor
 public class AuthAspect {
 
-    private final TokenValidator tokenValidator;
+	private final TokenValidator tokenValidator;
 
-    private final CookieManager cookieManager;
+	private final AuthCookieManager authCookieManager;
 
-    private final JwtProperties jwtProperties;
+	private final JwtProperties jwtProperties;
 
-    /**
-     * {@link AuthGuard} 어노테이션이 붙은 곳을 {@link org.aspectj.lang.annotation.Pointcut}으로 인터셉트합니다.
-     * <p>
-     * 해당 포인트 컷이 실행되기 전({@link Before}에 아래 메서드를 실행합니다.
-     *
-     * @param authGuard 인터셉트 된 해당 {@link AuthGuard} - Level을 알아낼 수 있습니다.
-     */
-    @Before("@annotation(authGuard))")
-    public void AuthToken(AuthGuard authGuard) throws JsonProcessingException {
-        /**
-         * 현재 인터셉트 된 서블릿의 {@link HttpServletRequest}를 가져옵니다.
-         */
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                .getRequest();
-        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                .getResponse();
-        String mainTokenName = jwtProperties.getMainTokenName();
-        String adminTokenName = jwtProperties.getAdminTokenName();
+	/**
+	 * {@link AuthGuard} 어노테이션이 붙은 곳을 {@link org.aspectj.lang.annotation.Pointcut}으로 인터셉트합니다.
+	 * <p>
+	 * 해당 포인트 컷이 실행되기 전({@link Before}에 아래 메서드를 실행합니다.
+	 *
+	 * @param authGuard 인터셉트 된 해당 {@link AuthGuard} - Level을 알아낼 수 있습니다.
+	 */
+	@Before("@annotation(authGuard))")
+	public void AuthToken(AuthGuard authGuard) throws JsonProcessingException {
+		/**
+		 * 현재 인터셉트 된 서블릿의 {@link HttpServletRequest}를 가져옵니다.
+		 */
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getRequest();
+		HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getResponse();
+		String mainTokenName = jwtProperties.getMainTokenName();
+		String adminTokenName = jwtProperties.getAdminTokenName();
 
-        /**
-         * {@link AuthGuard}의 레벨에 따라서 토큰의 유무와 유효성을 검사합니다.
-         * <p>
-         *     ADMIN_ONLY: 관리자 토큰만 유효하면 됩니다.
-         *     USER_ONLY: 유저 토큰만 유효하면 됩니다.
-         *     USER_OR_ADMIN: 유저 토큰 혹은 관리자 토큰이 유효하면 됩니다.
-         * </p>
-         */
-        switch (authGuard.level()) {
-            case ADMIN_ONLY:
-                if (!tokenValidator.isValidRequestWithLevel(request, ADMIN_ONLY)) {
-                    cookieManager.deleteCookie(response, adminTokenName);
-                    throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
-                }
-                break;
-            case USER_ONLY:
-                if (!tokenValidator.isValidRequestWithLevel(request, USER_ONLY)) {
-                    cookieManager.deleteCookie(response, mainTokenName);
-                    throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
-                }
-                break;
-            case USER_OR_ADMIN:
-                if (!tokenValidator.isValidRequestWithLevel(request, USER_OR_ADMIN)) {
-                    cookieManager.deleteCookie(response, mainTokenName);
-                    cookieManager.deleteCookie(response, adminTokenName);
-                    throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
-                }
-                break;
-            case MASTER_ONLY:
-                if (!tokenValidator.isValidRequestWithLevel(request, MASTER_ONLY)) {
-                    cookieManager.deleteCookie(response, adminTokenName);
-                    throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
-                }
-        }
-    }
+		/**
+		 * {@link AuthGuard}의 레벨에 따라서 토큰의 유무와 유효성을 검사합니다.
+		 * <p>
+		 *     ADMIN_ONLY: 관리자 토큰만 유효하면 됩니다.
+		 *     USER_ONLY: 유저 토큰만 유효하면 됩니다.
+		 *     USER_OR_ADMIN: 유저 토큰 혹은 관리자 토큰이 유효하면 됩니다.
+		 * </p>
+		 */
+		switch (authGuard.level()) {
+			case ADMIN_ONLY:
+				if (!tokenValidator.isValidRequestWithLevel(request, ADMIN_ONLY)) {
+					authCookieManager.deleteCookie(response, adminTokenName);
+					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
+				}
+				break;
+			case USER_ONLY:
+				if (!tokenValidator.isValidRequestWithLevel(request, USER_ONLY)) {
+					authCookieManager.deleteCookie(response, mainTokenName);
+					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
+				}
+				break;
+			case USER_OR_ADMIN:
+				if (!tokenValidator.isValidRequestWithLevel(request, USER_OR_ADMIN)) {
+					authCookieManager.deleteCookie(response, mainTokenName);
+					authCookieManager.deleteCookie(response, adminTokenName);
+					throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
+				}
+				break;
+			case MASTER_ONLY:
+				if (!tokenValidator.isValidRequestWithLevel(request, MASTER_ONLY)) {
+					authCookieManager.deleteCookie(response, adminTokenName);
+					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
+				}
+		}
+	}
 }

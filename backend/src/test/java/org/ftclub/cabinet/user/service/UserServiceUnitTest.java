@@ -1,35 +1,15 @@
 package org.ftclub.cabinet.user.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import org.ftclub.cabinet.admin.domain.Admin;
+import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.repository.AdminRepository;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
-import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.domain.AdminUser;
-import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.BanPolicy;
-import org.ftclub.cabinet.user.domain.BanType;
-import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.admin.repository.AdminUserRepository;
+import org.ftclub.cabinet.user.domain.*;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
@@ -40,6 +20,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+
 @ExtendWith(MockitoExtension.class)
 class UserServiceUnitTest {
 
@@ -48,7 +41,7 @@ class UserServiceUnitTest {
 	@Mock
 	private UserRepository userRepository;
 	@Mock
-	private AdminUserRepository adminUserRepository;
+	private AdminRepository adminRepository;
 	@Mock
 	private BanHistoryRepository banHistoryRepository;
 	@Mock
@@ -100,9 +93,9 @@ class UserServiceUnitTest {
 	@Test
 	@DisplayName("어드민 존재 확인 성공 - 존재하는 어드민인 경우")
 	void checkAdminUserExists_성공_존재하는_어드민인_경우() {
-		AdminUser adminUser1 = mock(AdminUser.class);
+		Admin admin1 = mock(Admin.class);
 
-		given(userOptionalFetcher.findAdminUserByEmail("admin@admin.com")).willReturn(adminUser1);
+		given(userOptionalFetcher.findAdminUserByEmail("admin@admin.com")).willReturn(admin1);
 
 		boolean result = userService.checkAdminUserExists("admin@admin.com");
 
@@ -113,8 +106,8 @@ class UserServiceUnitTest {
 	@Test
 	@DisplayName("어드민 존재 확인 성공 - 존재하지 않는 어드민인 경우")
 	void checkAdminUserExists_성공_존재하지_않는_어드민인_경우() {
-		AdminUser adminUser = null;
-		given(userOptionalFetcher.findAdminUserByEmail("notAdmin@admin.com")).willReturn(adminUser);
+		Admin admin = null;
+		given(userOptionalFetcher.findAdminUserByEmail("notAdmin@admin.com")).willReturn(admin);
 
 		boolean result = userService.checkAdminUserExists("notAdmin@admin.com");
 
@@ -125,12 +118,12 @@ class UserServiceUnitTest {
 	@Test
 	@DisplayName("어드민 생성 성공")
 	void createAdminUser() {
-		AdminUser adminUser = AdminUser.of("newAdminUser@admin.com", AdminRole.ADMIN);
-		given(adminUserRepository.save(adminUser)).willReturn(adminUser);
+		Admin admin = Admin.of("newAdminUser@admin.com", AdminRole.ADMIN);
+		given(adminRepository.save(admin)).willReturn(admin);
 
 		userService.createAdminUser("newAdminUser@admin.com");
 
-		then(adminUserRepository).should(times(1)).save(adminUser);
+		then(adminRepository).should(times(1)).save(admin);
 	}
 
 	@Test
@@ -241,13 +234,13 @@ class UserServiceUnitTest {
 	@DisplayName("어드민 삭제 성공 - 존재하는 어드민 삭제")
 	void deleteAdminUser_성공_존재하는_어드민_삭제() {
 		Long adminId = 1L;
-		AdminUser adminUser = mock(AdminUser.class);
-		given(userOptionalFetcher.getAdminUser(adminId)).willReturn(adminUser);
+		Admin admin = mock(Admin.class);
+		given(userOptionalFetcher.getAdminUser(adminId)).willReturn(admin);
 
 		userService.deleteAdminUser(adminId);
 
 		then(userOptionalFetcher).should(times(1)).getAdminUser(adminId);
-		then(adminUserRepository).should(times(1)).delete(adminUser);
+		then(adminRepository).should(times(1)).delete(admin);
 	}
 
 	@Test
@@ -266,17 +259,17 @@ class UserServiceUnitTest {
 	void updateAdminUserRole_성공_존재하는_어드민_Role_변경() {
 		Long adminId = 1L;
 		AdminRole adminRole = AdminRole.MASTER;
-		AdminUser adminUser = mock(AdminUser.class);
-		given(userOptionalFetcher.getAdminUser(adminId)).willReturn(adminUser);
-		given(adminUser.getRole()).willReturn(adminRole);
+		Admin admin = mock(Admin.class);
+		given(userOptionalFetcher.getAdminUser(adminId)).willReturn(admin);
+		given(admin.getRole()).willReturn(adminRole);
 
 		userService.updateAdminUserRole(adminId, adminRole);
 
-		then(adminUser).should(times(1)).changeAdminRole(adminRole);
+		then(admin).should(times(1)).changeAdminRole(adminRole);
 		then(userOptionalFetcher).should(times(1)).getAdminUser(adminId);
-		then(adminUserRepository).should(times(1)).save(adminUser);
+		then(adminRepository).should(times(1)).save(admin);
 
-		assertEquals(adminRole, adminUser.getRole());
+		assertEquals(adminRole, admin.getRole());
 	}
 
 	@Test
@@ -296,34 +289,34 @@ class UserServiceUnitTest {
 	@DisplayName("어드민으로 승격 성공 - 권한이 없는 유저 어드민으로 승격")
 	void promoteAdminByEmail_성공_권한이_없는_유저_어드민으로_승격() {
 		String email = "noneAdmin@admin.com";
-		AdminUser adminUser = mock(AdminUser.class);
+		Admin admin = mock(Admin.class);
 
-		given(userOptionalFetcher.getAdminUserByEmail(email)).willReturn(adminUser);
-		given(adminUser.getRole()).willReturn(AdminRole.NONE);
+		given(userOptionalFetcher.getAdminUserByEmail(email)).willReturn(admin);
+		given(admin.getRole()).willReturn(AdminRole.NONE);
 
 		userService.promoteAdminByEmail(email);
 
 		then(userOptionalFetcher).should(times(1)).getAdminUserByEmail(email);
-		then(adminUser).should(times(1)).getRole();
-		then(adminUser).should(times(1)).changeAdminRole(AdminRole.ADMIN);
-		then(adminUserRepository).should(times(1)).save(adminUser);
+		then(admin).should(times(1)).getRole();
+		then(admin).should(times(1)).changeAdminRole(AdminRole.ADMIN);
+		then(adminRepository).should(times(1)).save(admin);
 	}
 
 	@Test
 	@DisplayName("어드민으로 승격 성공 - role이 NONE이 아닌 어드민")
 	void promoteAdminByEmail_성공_role이_NONE이_아닌_어드민() {
 		String email = "admin@admin.com";
-		AdminUser adminUser = mock(AdminUser.class);
+		Admin admin = mock(Admin.class);
 
-		given(userOptionalFetcher.getAdminUserByEmail(email)).willReturn(adminUser);
-		given(adminUser.getRole()).willReturn(AdminRole.ADMIN);
+		given(userOptionalFetcher.getAdminUserByEmail(email)).willReturn(admin);
+		given(admin.getRole()).willReturn(AdminRole.ADMIN);
 
 		userService.promoteAdminByEmail(email);
 
 		then(userOptionalFetcher).should(times(1)).getAdminUserByEmail(email);
-		then(adminUser).should(times(1)).getRole();
-		then(adminUser).should(times(0)).changeAdminRole(AdminRole.ADMIN);
-		then(adminUserRepository).should(times(0)).save(adminUser);
+		then(admin).should(times(1)).getRole();
+		then(admin).should(times(0)).changeAdminRole(AdminRole.ADMIN);
+		then(adminRepository).should(times(0)).save(admin);
 	}
 
 	@Test

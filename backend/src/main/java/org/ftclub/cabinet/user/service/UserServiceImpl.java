@@ -1,35 +1,33 @@
 package org.ftclub.cabinet.user.service;
 
 import io.netty.util.internal.StringUtil;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.admin.domain.Admin;
+import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.repository.AdminRepository;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
-import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
+import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.domain.AdminUser;
-import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.BanPolicy;
-import org.ftclub.cabinet.user.domain.BanType;
-import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.admin.repository.AdminUserRepository;
+import org.ftclub.cabinet.user.domain.*;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +36,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
-	private final AdminUserRepository adminUserRepository;
+	private final AdminRepository adminRepository;
 	private final BanHistoryRepository banHistoryRepository;
 	private final BanPolicy banPolicy;
 	private final UserOptionalFetcher userOptionalFetcher;
@@ -83,16 +81,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean checkAdminUserExists(String email) {
 		log.debug("Called checkAdminUserExists: {}", email);
-		AdminUser adminUser = userOptionalFetcher.findAdminUserByEmail(email);
-		return adminUser != null;
+		Admin admin = userOptionalFetcher.findAdminUserByEmail(email);
+		return admin != null;
 	}
 
 	/* createUser와 동일한 사유로 로직 수정했습니다. */
 	@Override
 	public void createAdminUser(String email) {
 		log.debug("Called createAdminUser: {}", email);
-		AdminUser adminUser = AdminUser.of(email, AdminRole.NONE);
-		adminUserRepository.save(adminUser);
+		Admin admin = Admin.of(email, AdminRole.NONE);
+		adminRepository.save(admin);
 	}
 
 	@Override
@@ -118,8 +116,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteAdminUser(Long adminUserId) {
 		log.debug("Called deleteAdminUser: {}", adminUserId);
-		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
-		adminUserRepository.delete(adminUser);
+		Admin admin = userOptionalFetcher.getAdminUser(adminUserId);
+		adminRepository.delete(admin);
 	}
 
 	@Override
@@ -136,25 +134,25 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateAdminUserRole(Long adminUserId, AdminRole role) {
 		log.debug("Called updateAdminUserRole: {}", adminUserId);
-		AdminUser adminUser = userOptionalFetcher.getAdminUser(adminUserId);
-		adminUser.changeAdminRole(role);
-		adminUserRepository.save(adminUser);
+		Admin admin = userOptionalFetcher.getAdminUser(adminUserId);
+		admin.changeAdminRole(role);
+		adminRepository.save(admin);
 	}
 
 	@Override
 	public void promoteAdminByEmail(String email) {
 		log.debug("Called promoteAdminByEmail: {}", email);
-		AdminUser adminUser = userOptionalFetcher.getAdminUserByEmail(email);
-		if (adminUser.getRole() == AdminRole.NONE) {
-			adminUser.changeAdminRole(AdminRole.ADMIN);
-			adminUserRepository.save(adminUser);
+		Admin admin = userOptionalFetcher.getAdminUserByEmail(email);
+		if (admin.getRole() == AdminRole.NONE) {
+			admin.changeAdminRole(AdminRole.ADMIN);
+			adminRepository.save(admin);
 		}
 	}
 
 	@Override
 	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
-			LocalDateTime endedAt,
-			LocalDateTime expiredAt) {
+	                    LocalDateTime endedAt,
+	                    LocalDateTime expiredAt) {
 		log.debug("Called banUser: {}", userId);
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);
 		if (banType == BanType.NONE) {
@@ -199,24 +197,32 @@ public class UserServiceImpl implements UserService {
 		clubUser.changeName(clubName);
 	}
 
-	public List<UserBlackholeInfoDto> getAllRiskOfBlackholeInfo() {
+	public List<UserBlackHoleEvent> getAllRiskOfBlackholeInfo() {
 		log.info("Called getAllRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
 				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
-				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+				.map(user -> UserBlackHoleEvent.of(user.getUserId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<UserBlackholeInfoDto> getAllNoRiskOfBlackholeInfo() {
+	public List<UserBlackHoleEvent> getAllNoRiskOfBlackholeInfo() {
 		log.info("Called getAllNoRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByNoRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
 				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
-				.map(user -> UserBlackholeInfoDto.of(user.getUserId(), user.getName(),
+				.map(user -> UserBlackHoleEvent.of(user.getUserId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public User getUserByIdWithAlarmStatus(Long userId) {
+		Optional<User> userByIdWithAlarmStatus = userRepository.findUserByIdWithAlarmStatus(userId);
+		System.out.println("userByIdWithAlarmStatus = " + userByIdWithAlarmStatus);
+		return userRepository.findUserByIdWithAlarmStatus(userId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 	}
 }

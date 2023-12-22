@@ -5,6 +5,7 @@ import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.BROKEN;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.OVERDUE;
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.newService.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetDto;
@@ -35,14 +38,19 @@ import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.service.LentCommandService;
+import org.ftclub.cabinet.lent.service.LentPolicyService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
+import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.newService.BanHistoryCommandService;
 import org.ftclub.cabinet.user.newService.BanHistoryQueryService;
+import org.ftclub.cabinet.user.newService.BanPolicyService;
 import org.ftclub.cabinet.user.newService.UserQueryService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.ExceptionUtil;
@@ -59,10 +67,16 @@ public class AdminFacadeService {
 	private final AdminQueryService adminQueryService;
 	private final AdminCommandService adminCommandService;
 	private final CabinetQueryService cabinetQueryService;
+	private final CabinetCommandService cabinetCommandService;
 	private final UserQueryService userQueryService;
 	private final BanHistoryQueryService banHistoryQueryService;
+	private final BanHistoryCommandService banHistoryCommandService;
 	private final LentQueryService lentQueryService;
+	private final LentCommandService lentCommandService;
 	private final LentRedisService lentRedisService;
+
+	private final LentPolicyService lentPolicyService;
+	private final BanPolicyService banPolicyService;
 
 	private final CabinetMapper cabinetMapper;
 	private final UserMapper userMapper;
@@ -155,7 +169,7 @@ public class AdminFacadeService {
 	}
 
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
-		log.debug("Called getCabinetsInfoOnAllFloors");
+		log.debug("Called getAllCabinetsInfo");
 
 		List<String> buildings = cabinetQueryService.getAllBuildings();
 		List<Integer> floors = cabinetQueryService.getAllFloorsByBuildings(buildings);
@@ -206,5 +220,58 @@ public class AdminFacadeService {
 							lh, lh.getUser(), lh.getCabinet(), overdueDays);
 				}).collect(Collectors.toList());
 		return cabinetMapper.toOverdueUserCabinetPaginationDto(result, (long) lentHistories.size());
+	}
+
+	@Transactional
+	public void endUserLent(Long userId) {
+		log.debug("Called endUserLent: {}", userId);
+
+		LocalDateTime now = LocalDateTime.now();
+		LentHistory userLentHistory = lentQueryService.getUserActiveLentHistoryWithLock(userId);
+		List<LentHistory> cabinetLentHistories =
+				lentQueryService.findCabinetActiveLentHistories(userLentHistory.getCabinetId());
+		Cabinet cabinet =
+				cabinetQueryService.getCabinetsWithLock(userLentHistory.getCabinetId());
+
+		int userRemainCount = cabinetLentHistories.size() - 1;
+		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
+		lentCommandService.endLent(userLentHistory, now);
+		lentRedisService.setPreviousUserName(
+				cabinet.getCabinetId(), userLentHistory.getUser().getName());
+
+		LocalDateTime endedAt = userLentHistory.getEndedAt();
+		BanType banType = banPolicyService.verifyBan(endedAt, userLentHistory.getExpiredAt());
+		if (!banType.equals(BanType.NONE)) {
+			LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(
+					endedAt, userLentHistory.getExpiredAt());
+			banHistoryCommandService.banUser(userId, endedAt, unbannedAt, banType);
+		}
+		if (cabinet.isLentType(SHARE)) {
+			LocalDateTime expiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
+					userRemainCount, now, userLentHistory);
+			cabinetLentHistories.stream().filter(lh -> !lh.equals(userLentHistory))
+					.forEach(lh -> lentCommandService.setExpiredAt(lh, expiredAt));
+		}
+	}
+
+	@Transactional
+	public void endCabinetLent(List<Long> cabinetIds) {
+		log.debug("Called endCabinetsLent: {}", cabinetIds);
+
+		LocalDateTime now = LocalDateTime.now();
+		List<Cabinet> cabinets = cabinetQueryService.getCabinetsWithLock(cabinetIds);
+		List<LentHistory> lentHistories =
+				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
+		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()
+				.collect(Collectors.groupingBy(LentHistory::getCabinetId));
+		cabinets.forEach(cabinet -> {
+			List<LentHistory> cabinetLentHistories =
+					lentHistoriesByCabinetId.get(cabinet.getCabinetId());
+			cabinetLentHistories.forEach(lh -> lentCommandService.endLent(lh, now));
+			cabinetCommandService.changeUserCount(cabinet, 0);
+			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
+			lentRedisService.setPreviousUserName(
+					cabinet.getCabinetId(), cabinetLentHistories.get(0).getUser().getName());
+		});
 	}
 }

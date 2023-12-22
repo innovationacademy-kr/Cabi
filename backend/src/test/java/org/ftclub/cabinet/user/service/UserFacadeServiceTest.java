@@ -106,8 +106,8 @@ public class UserFacadeServiceTest {
 				userSessionDto.getUserId()).get(0);
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(
 				userSessionDto.getUserId(), userSessionDto.getName(),
-				cabinet1.getCabinetId(), null, null);
-		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null, null))
+				cabinet1.getCabinetId(), null, null, null);
+		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null, null, null))
 				.willReturn(myProfileResponseDto);
 
 		// when

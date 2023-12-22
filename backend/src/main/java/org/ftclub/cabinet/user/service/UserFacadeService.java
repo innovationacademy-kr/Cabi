@@ -8,6 +8,7 @@ import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -198,4 +199,6 @@ public interface UserFacadeService {
 	LentExtensionPaginationDto getMyActiveLentExtensionPage(UserSessionDto userSessionDto);
 
 	void useLentExtension(UserSessionDto userSessionDto);
+
+	void updateAlarmState(UserSessionDto user, UpdateAlarmRequestDto dto);
 }

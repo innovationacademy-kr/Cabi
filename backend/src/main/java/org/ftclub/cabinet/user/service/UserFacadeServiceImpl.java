@@ -1,7 +1,16 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
+import org.ftclub.cabinet.alarm.service.AlarmCommandService;
+import org.ftclub.cabinet.alarm.service.AlarmQueryService;
 import org.ftclub.cabinet.admin.domain.AdminRole;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -19,12 +28,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -38,6 +41,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final CabinetMapper cabinetMapper;
 	private final LentExtensionService lentExtensionService;
 	private final LentExtensionOptionalFetcher lentExtensionOptionalFetcher;
+	private final AlarmCommandService alarmCommandService;
+	private final AlarmQueryService alarmQueryService;
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
@@ -50,8 +55,13 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		LentExtensionResponseDto activeLentExtension = lentExtensionService.getActiveLentExtension(
 				user);
 
+		AlarmStatus userAlarmStatus = alarmQueryService.findAlarmStatusByUserId(
+				user.getUserId());
+		AlarmTypeResponseDto.builder().alarmStatus(userAlarmStatus).build();
+
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				activeLentExtension);
+				activeLentExtension,
+				AlarmTypeResponseDto.builder().alarmStatus(userAlarmStatus).build());
 	}
 
 	@Override
@@ -283,4 +293,14 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		log.debug("Called useLentExtension");
 		lentExtensionService.useLentExtension(userSessionDto.getUserId(), userSessionDto.getName());
 	}
+
+	@Transactional
+	@Override
+	public void updateAlarmState(UserSessionDto user, UpdateAlarmRequestDto dto) {
+		log.debug("Called updateAlarmState");
+
+		alarmCommandService.updateAlarmStatusRe(dto, alarmQueryService.findAlarmStatusByUserId(
+				user.getUserId()));
+	}
+
 }

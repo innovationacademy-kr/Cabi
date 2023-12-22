@@ -3,6 +3,7 @@ package org.ftclub.cabinet.cabinet.newService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class CabinetQueryService {
@@ -69,8 +71,8 @@ public class CabinetQueryService {
 		return cabinet.orElse(null);
 	}
 
-//	public List<String> findAllBuildings() {
-//		log.debug("Called findAllBuildings");
-//
-//	}
+	public List<String> findAllBuildings() {
+		log.debug("Called findAllBuildings");
+		return cabinetRepository.findAllBuildings();
+	}
 }

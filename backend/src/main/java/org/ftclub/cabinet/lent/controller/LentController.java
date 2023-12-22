@@ -60,15 +60,15 @@ public class LentController {
 	public void endLent(
 			@UserSession UserSessionDto userSessionDto) {
 		log.info("Called endLent user: {}", userSessionDto);
-		lentFacadeService.endUserLent(userSessionDto.getUserId());
+		lentFacadeService.endUserLent(userSessionDto.getUserId(), null);
 	}
 
 	@PatchMapping("/return-memo")
 	public void endLentWithMemo(
 			@UserSession UserSessionDto userSessionDto,
 			@Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
-		log.info("Called endLentWithMemo user: {}, lentEndMemoDto: {}", userSessionDto,
-				lentEndMemoDto);
+		log.info("Called endLentWithMemo user: {}, lentEndMemoDto: {}",
+				userSessionDto, lentEndMemoDto);
 		lentFacadeService.endUserLent(userSessionDto.getUserId(), lentEndMemoDto.getCabinetMemo());
 	}
 

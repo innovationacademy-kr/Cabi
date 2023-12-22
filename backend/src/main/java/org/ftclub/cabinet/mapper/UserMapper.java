@@ -3,6 +3,7 @@ package org.ftclub.cabinet.mapper;
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
 
 import java.util.List;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.ClubUserListDto;
@@ -39,7 +40,8 @@ public interface UserMapper {
 	@Mapping(target = "name", source = "user.name")
 	@Mapping(target = "cabinetId", source = "cabinet.cabinetId")
 	MyProfileResponseDto toMyProfileResponseDto(UserSessionDto user, Cabinet cabinet,
-			BanHistory banHistory, LentExtensionResponseDto lentExtensionResponseDto);
+			BanHistory banHistory, LentExtensionResponseDto lentExtensionResponseDto,
+			AlarmTypeResponseDto alarmTypes);
 
 	BlockedUserPaginationDto toBlockedUserPaginationDto(List<UserBlockedInfoDto> result,
 			Long totalLength);

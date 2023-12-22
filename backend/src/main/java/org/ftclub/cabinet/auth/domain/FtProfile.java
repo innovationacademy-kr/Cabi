@@ -19,4 +19,5 @@ public class FtProfile {
 	private final String intraName;
 	private final String email;
 	private final LocalDateTime blackHoledAt;
+	private final FtRole role;
 }
