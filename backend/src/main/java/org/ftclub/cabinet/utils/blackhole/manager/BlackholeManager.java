@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.utils.blackhole.manager;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.FtProfile;
@@ -15,12 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.time.LocalDateTime;
-
 @Component
 @RequiredArgsConstructor
 @Log4j2
 public class BlackholeManager {
+
 	private final FtOauthService ftOauthService;
 	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
@@ -33,7 +33,7 @@ public class BlackholeManager {
 	 */
 	private void terminateInvalidUser(UserBlackHoleEvent userBlackHoleEvent, LocalDateTime now) {
 		log.info("{}는 유효하지 않은 사용자입니다.", userBlackHoleEvent);
-		lentFacadeService.endUserLent(userBlackHoleEvent.getUserId());
+		lentFacadeService.endUserLent(userBlackHoleEvent.getUserId(), null);
 		userService.deleteUser(userBlackHoleEvent.getUserId(), now);
 	}
 
@@ -48,20 +48,24 @@ public class BlackholeManager {
 		LocalDateTime now = LocalDateTime.now();
 		try {
 			FtProfile recentProfile = ftOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(), dto.getName());
-			if (!recentProfile.getRole().isInCursus())
+			if (!recentProfile.getRole().isInCursus()) {
 				terminateInvalidUser(dto, now);
+			}
 			userService.updateUserBlackholedAt(dto.getUserId(), recentProfile.getBlackHoledAt());
 
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
-			if (status.equals(HttpStatus.UNAUTHORIZED) || status.equals(HttpStatus.FORBIDDEN))
+			if (status.equals(HttpStatus.UNAUTHORIZED) || status.equals(HttpStatus.FORBIDDEN)) {
 				tokenManager.refreshFtAccessToken();
-			if (status.equals(HttpStatus.NOT_FOUND))
+			}
+			if (status.equals(HttpStatus.NOT_FOUND)) {
 				terminateInvalidUser(dto, now);
+			}
 		} catch (ServiceException e) {
 			ExceptionStatus status = e.getStatus();
-			if (status.equals(ExceptionStatus.NO_LENT_CABINET))
+			if (status.equals(ExceptionStatus.NO_LENT_CABINET)) {
 				userService.deleteUser(dto.getUserId(), now);
+			}
 			log.info("handleBlackholedUser ServiceException {}", e.getStatus());
 			throw new UtilException(e.getStatus());
 

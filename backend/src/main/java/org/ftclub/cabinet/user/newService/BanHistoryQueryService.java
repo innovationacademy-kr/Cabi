@@ -39,6 +39,6 @@ public class BanHistoryQueryService {
 	public Page<BanHistory> findActiveBanHistories(LocalDateTime now, Pageable pageable) {
 		log.debug("Called findActiveBanHistories: {}", now);
 
-		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
+		return banHistoryRepository.findPaginationActiveBanHistoriesJoinUser(pageable, now);
 	}
 }

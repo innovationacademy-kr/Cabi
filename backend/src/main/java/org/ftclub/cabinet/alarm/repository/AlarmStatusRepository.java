@@ -10,4 +10,10 @@ public interface AlarmStatusRepository extends JpaRepository<AlarmStatus, Long> 
 
 	@Query("SELECT als FROM AlarmStatus as als WHERE als.user.userId = :userId")
 	Optional<AlarmStatus> findByUserId(@Param("userId") Long userId);
+
+	@Query("SELECT a "
+			+ "FROM AlarmStatus a "
+			+ "JOIN FETCH a.user u "
+			+ "WHERE u.userId = (:userId)")
+	Optional<AlarmStatus> findByUserIdJoinUser(@Param("userId") Long userId);
 }

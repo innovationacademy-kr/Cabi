@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.springframework.data.domain.Page;
@@ -46,8 +48,9 @@ public class LentQueryService {
 		return lentRepository.countReturnFromStartDateToEndDate(startDate, endDate);
 	}
 
-	public LentHistory findUserActiveLentHistoryWithLock(Long userId) {
-		return lentRepository.findByUserIdAndEndedAtIsNullForUpdate(userId).orElse(null);
+	public LentHistory getUserActiveLentHistoryWithLock(Long userId) {
+		return lentRepository.findByUserIdAndEndedAtIsNullForUpdate(userId)
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_LENT_HISTORY));
 	}
 
 	public List<LentHistory> findUsersActiveLentHistoriesAndCabinet(List<Long> userIds) {

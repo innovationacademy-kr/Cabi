@@ -109,7 +109,6 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
 			+ "LEFT JOIN FETCH lh.user u "
-			+ "LEFT JOIN FETCH u.alarmStatus "
 			+ "WHERE lh.userId = :userId AND lh.endedAt is null")
 	Optional<LentHistory> findByUserIdAndEndedAtIsNullForUpdate(@Param("userId") Long userId);
 
@@ -160,7 +159,6 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
 			+ "LEFT JOIN FETCH lh.user u "
-			+ "LEFT JOIN FETCH u.alarmStatus "
 			+ "WHERE lh.cabinetId IN (:cabinetIds) "
 			+ "AND lh.endedAt IS NULL ")
 	List<LentHistory> findAllByCabinetIdInAndEndedAtIsNullJoinUser(

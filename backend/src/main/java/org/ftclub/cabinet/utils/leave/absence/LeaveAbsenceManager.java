@@ -29,12 +29,12 @@ public class LeaveAbsenceManager {
 		try {
 			FtProfile ftProfile = ftOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(), name);
 			if (ftProfile.getRole().equals(FtRole.INACTIVE)) {
-				lentFacadeService.endUserLent(userId);
+				lentFacadeService.endUserLent(userId, null);
 			}
 		} catch (HttpClientErrorException e) {
 			log.error("handleLeaveAbsence HttpClientErrorException {}", e.getStatusCode());
 			if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-				lentFacadeService.endUserLent(userId);
+				lentFacadeService.endUserLent(userId, null);
 				userService.deleteUser(userId, LocalDateTime.now());
 			}
 		} catch (Exception e) {

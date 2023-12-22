@@ -169,7 +169,7 @@ public class AdminFacadeService {
 	}
 
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
-		log.debug("Called getCabinetsInfoOnAllFloors");
+		log.debug("Called getAllCabinetsInfo");
 
 		List<String> buildings = cabinetQueryService.getAllBuildings();
 		List<Integer> floors = cabinetQueryService.getAllFloorsByBuildings(buildings);
@@ -227,7 +227,7 @@ public class AdminFacadeService {
 		log.debug("Called endUserLent: {}", userId);
 
 		LocalDateTime now = LocalDateTime.now();
-		LentHistory userLentHistory = lentQueryService.findUserActiveLentHistoryWithLock(userId);
+		LentHistory userLentHistory = lentQueryService.getUserActiveLentHistoryWithLock(userId);
 		List<LentHistory> cabinetLentHistories =
 				lentQueryService.findCabinetActiveLentHistories(userLentHistory.getCabinetId());
 		Cabinet cabinet =

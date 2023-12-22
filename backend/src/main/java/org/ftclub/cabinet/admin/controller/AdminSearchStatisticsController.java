@@ -1,20 +1,33 @@
 package org.ftclub.cabinet.admin.controller;
 
+import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.service.AdminFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
+import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
+import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.ReturnCabinetsRequestDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -68,7 +81,7 @@ public class AdminSearchStatisticsController {
 	@GetMapping("/statistics/buildings/floors/cabinets")
 	@AuthGuard(level = ADMIN_ONLY)
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
-		log.info("Called getCabinetsInfoOnAllFloors");
+		log.info("Called getAllCabinetsInfo");
 		return adminFacadeService.getAllCabinetsInfo();
 	}
 

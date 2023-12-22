@@ -115,6 +115,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 
 	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType, Pageable pageable);
 
+	@EntityGraph(attributePaths = {"cabinetPlace"})
 	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status, Pageable pageable);
 
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
