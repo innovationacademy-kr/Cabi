@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
@@ -75,5 +78,19 @@ public class CabinetFacadeService {
 				lentRedisService.getSessionExpired(cabinetId));
 	}
 
+	public CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum) {
+		log.debug("getCabinetsSimpleInfoByVisibleNum: {}", visibleNum);
+
+		List<Cabinet> cabinets = cabinetQueryService.getCabinets(visibleNum);
+
+		List<CabinetSimpleDto> cabinetSimpleDtos = cabinets.stream()
+				.map(cabinetMapper::toCabinetSimpleDto)
+				.collect(Collectors.toList());
+
+		return CabinetSimplePaginationDto.builder()
+				.totalLength((long) cabinets.size())
+				.result(cabinetSimpleDtos)
+				.build();
+	}
 
 }
