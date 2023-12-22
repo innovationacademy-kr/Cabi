@@ -195,9 +195,10 @@ const SubHeaderStyled = styled.div`
 
 const RefreshButtonStyled = styled.button`
   margin-top: 40px;
-  background-color: transparent;
+  background-color: initial;
   width: 35px;
   height: 35px;
+  padding: 0;
   img {
     width: 35px;
     height: 35px;
