@@ -66,12 +66,13 @@ const ThemeColorCardContainer = () => {
     if (isChange) setShowColorPicker(!showColorPicker);
   };
 
-  const [selectedColorType, setSelectedColorType] = useState<string>("");
+  const [selectedColorType, setSelectedColorType] = useState<string>(
+    ColorType.MAIN
+  );
 
   const handleColorButtonClick = (colorType: string) => {
-    if (showColorPicker) return;
     setSelectedColorType(colorType);
-    setShowColorPicker(!showColorPicker);
+    setShowColorPicker(true);
   };
 
   useEffect(() => {

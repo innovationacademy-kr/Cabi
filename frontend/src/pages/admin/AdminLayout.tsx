@@ -40,13 +40,15 @@ const Layout = (): JSX.Element => {
     }
   }, []);
 
-  const savedColor = localStorage.getItem("main-color");
+  const savedMainColor = localStorage.getItem("main-color");
+  const savedSubColor = localStorage.getItem("sub-color");
+  const savedMineColor = localStorage.getItem("mine-color");
   const root: HTMLElement = document.documentElement;
   useEffect(() => {
-    root.style.setProperty("--main-color", savedColor);
-    if (savedColor !== var(--default-main-color))
-      root.style.setProperty("--sub-color", "#7b7b7b");
-  }, [savedColor]);
+    root.style.setProperty("--main-color", savedMainColor);
+    root.style.setProperty("--sub-color", savedSubColor);
+    root.style.setProperty("--mine", savedMineColor);
+  }, [savedMainColor, savedSubColor, savedMineColor]);
 
   const { closeAll } = useMenu();
 

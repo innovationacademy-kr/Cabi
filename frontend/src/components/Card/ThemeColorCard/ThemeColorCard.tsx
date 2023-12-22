@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Card from "@/components/Card/Card";
 import {
   CardContentStyled,
@@ -75,13 +75,15 @@ const ThemeColorCard = ({
                   <ContentInfoStyled
                     isSelected={type === selectedColorType && showColorPicker}
                     selectedColor={getColor({ mainColor, subColor, mineColor })}
+                    onClick={() => handleColorButtonClick(type)}
                   >
                     {title}
                   </ContentInfoStyled>
                   <ColorButtonStyled
                     onClick={() => handleColorButtonClick(type)}
                     color={getColor({ mainColor, subColor, mineColor })}
-                    isClickable={showColorPicker}
+                    isSelected={type === selectedColorType && showColorPicker}
+                    showColorPicker={showColorPicker}
                   />
                 </CardContentStyled>
               ))}
@@ -117,13 +119,15 @@ const ThemeColorCardWrapper = styled.div`
 
 const ColorButtonStyled = styled.button<{
   color: string;
-  isClickable: boolean;
+  isSelected: boolean;
+  showColorPicker: boolean;
 }>`
   width: 28px;
   height: 28px;
   background-color: ${(props) => props.color};
   border-radius: 8px;
-  cursor: ${(props) => (props.isClickable ? "not-allowed" : "pointer")};
+  box-shadow: ${(props) =>
+    props.isSelected ? `${props.color} 0px 0px 4px` : "none"};
 `;
 
 export default ThemeColorCard;
