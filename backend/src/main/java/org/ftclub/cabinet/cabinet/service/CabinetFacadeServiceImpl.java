@@ -75,12 +75,23 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
 		log.debug("getBuildingFloorsResponse");
-		return cabinetOptionalFetcher.findAllBuildings().stream()
+		List<String> allBuildings = cabinetOptionalFetcher.findAllBuildings();
+		return allBuildings.stream()
 				.map(building -> {
 					List<Integer> floors = cabinetOptionalFetcher.findAllFloorsByBuilding(building);
 					return cabinetMapper.toBuildingFloorsDto(building, floors);
 				})
 				.collect(Collectors.toList());
+	}
+
+	private List<LentDto> findShareInSessionUsers(String cabinetId) {
+		List<LentDto> lentDtos = new ArrayList<>();
+		List<String> userIds = lentRedis.getAllUserInCabinet(cabinetId);
+		for (String userId : userIds) {
+			String userName = userOptionalFetcher.findUser(Long.valueOf(userId)).getName();
+			lentDtos.add(new LentDto(Long.valueOf(userId), userName, null, null, null));
+		}
+		return lentDtos;
 	}
 
 	/**
@@ -93,16 +104,14 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		List<LentDto> lentDtos = new ArrayList<>();
 		List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
 				cabinetId);
-		if (lentHistories.isEmpty()) {
-			List<String> users = lentRedis.getAllUserInCabinet(cabinetId.toString());
-			for (String user : users) {
-				String userName = userOptionalFetcher.findUser(Long.valueOf(user)).getName();
-				lentDtos.add(new LentDto(Long.valueOf(user), userName, null, null, null));
-			}
-		}
+		// 현재 대여중인 사물함이 아닌경우, 패스 (lentDto 에 Null)
 		for (LentHistory lentHistory : lentHistories) {
 			User findUser = lentHistory.getUser();
 			lentDtos.add(lentMapper.toLentDto(findUser, lentHistory));
+		}
+		if (lentHistories.isEmpty()) {
+			// 세션중인 공유사물함인지 확인
+			lentDtos = findShareInSessionUsers(cabinetId.toString());
 		}
 		return cabinetMapper.toCabinetInfoResponseDto(cabinetOptionalFetcher.findCabinet(cabinetId),
 				lentDtos, lentRedis.getCabinetExpiredAt(cabinetId.toString()));
