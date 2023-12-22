@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.alarm.domain.AlarmType;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
-import org.ftclub.cabinet.alarm.repository.AlarmOptOutRepository;
+import org.ftclub.cabinet.alarm.service.AlarmCommandService;
+import org.ftclub.cabinet.alarm.service.AlarmQueryService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
@@ -21,6 +22,7 @@ import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserCabinetDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
@@ -31,7 +33,7 @@ import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AdminRole;
-import org.ftclub.cabinet.user.domain.AlarmOptOut;
+import org.ftclub.cabinet.user.domain.AlarmStatus;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.User;
@@ -57,7 +59,8 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 	private final CabinetMapper cabinetMapper;
 	private final LentExtensionService lentExtensionService;
 	private final LentExtensionOptionalFetcher lentExtensionOptionalFetcher;
-	private final AlarmOptOutRepository alarmOptOutRepository;
+	private final AlarmCommandService alarmCommandService;
+	private final AlarmQueryService alarmQueryService;
 
 	@Override
 	public MyProfileResponseDto getMyProfile(UserSessionDto user) {
@@ -70,14 +73,13 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		LentExtensionResponseDto activeLentExtension = lentExtensionService.getActiveLentExtension(
 				user);
 
-		List<AlarmOptOut> alarmOptOuts = alarmOptOutRepository.findAllByUserId(user.getUserId());
-		List<AlarmType> alarmTypes = alarmOptOuts.stream().map(AlarmOptOut::getAlarmType)
-				.collect(Collectors.toList());
-		AlarmTypeResponseDto alarmTypeResponseDto = AlarmTypeResponseDto.builder()
-				.alarmTypes(alarmTypes).build();
+		AlarmStatus userAlarmStatus = alarmQueryService.findAlarmStatusByUserId(
+				user.getUserId());
+		AlarmTypeResponseDto.builder().alarmStatus(userAlarmStatus).build();
 
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				activeLentExtension, alarmTypeResponseDto);
+				activeLentExtension,
+				AlarmTypeResponseDto.builder().alarmStatus(userAlarmStatus).build());
 	}
 
 	@Override
@@ -309,4 +311,14 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		log.debug("Called useLentExtension");
 		lentExtensionService.useLentExtension(userSessionDto.getUserId(), userSessionDto.getName());
 	}
+
+	@Transactional
+	@Override
+	public void updateAlarmState(UserSessionDto user, UpdateAlarmRequestDto dto) {
+		log.debug("Called updateAlarmState");
+
+		alarmCommandService.updateAlarmStatusRe(dto, alarmQueryService.findAlarmStatusByUserId(
+				user.getUserId()));
+	}
+
 }

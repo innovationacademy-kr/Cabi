@@ -1,9 +1,7 @@
 package org.ftclub.cabinet.user.domain;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.regex.Pattern;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,7 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -30,22 +28,22 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString (exclude = {"alarmOptOuts"})
+@ToString(exclude = {"alarmStatus"})
 @Log4j2
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
-    private Long userId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "USER_ID")
+	private Long userId;
 
-    @NotNull
-    @Column(name = "NAME", length = 32, unique = true, nullable = false)
-    private String name;
+	@NotNull
+	@Column(name = "NAME", length = 32, unique = true, nullable = false)
+	private String name;
 
-    @Email
-    @Column(name = "EMAIL", unique = true)
-    private String email;
+	@Email
+	@Column(name = "EMAIL", unique = true)
+	private String email;
 
 	@Column(name = "BLACKHOLED_AT")
 	private LocalDateTime blackholedAt = null;
@@ -57,8 +55,8 @@ public class User {
 	@Column(name = "ROLE", length = 32, nullable = false)
 	private UserRole role;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<AlarmOptOut> alarmOptOuts = new HashSet<>();
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private AlarmStatus alarmStatus;
 
 	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
 		this.name = name;
@@ -68,7 +66,7 @@ public class User {
 	}
 
 	public static User of(String name, String email, LocalDateTime blackholedAt,
-	                      UserRole userRole) {
+			UserRole userRole) {
 		User user = new User(name, email, blackholedAt, userRole);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
