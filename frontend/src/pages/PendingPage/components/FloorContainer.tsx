@@ -24,7 +24,7 @@ const FloorContainer = ({
   return (
     <FloorContainerStyled>
       <FloorTitleStyled isToggled={isToggled}>
-        <div>{floorNumber}층</div>
+        <h2>{floorNumber}층</h2>
         <button onClick={toggle}></button>
       </FloorTitleStyled>
       {pendingCabinetsList.length !== 0 ? (
@@ -52,7 +52,7 @@ const FloorContainerStyled = styled.div`
   margin-top: 50px;
 `;
 
-const FloorTitleStyled = styled.h2<{ isToggled: boolean }>`
+const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   display: flex;
   justify-content: space-between;
   font-size: 1.1rem;
