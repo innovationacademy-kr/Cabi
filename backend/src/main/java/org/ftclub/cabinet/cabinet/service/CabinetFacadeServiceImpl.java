@@ -75,7 +75,8 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
 		log.debug("getBuildingFloorsResponse");
-		return cabinetOptionalFetcher.findAllBuildings().stream()
+		List<String> allBuildings = cabinetOptionalFetcher.findAllBuildings();
+		return allBuildings.stream()
 				.map(building -> {
 					List<Integer> floors = cabinetOptionalFetcher.findAllFloorsByBuilding(building);
 					return cabinetMapper.toBuildingFloorsDto(building, floors);
