@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth.domain;
+package org.ftclub.cabinet.auth.domain.scribejava;
 
 import com.github.scribejava.core.builder.api.DefaultApi20;
 

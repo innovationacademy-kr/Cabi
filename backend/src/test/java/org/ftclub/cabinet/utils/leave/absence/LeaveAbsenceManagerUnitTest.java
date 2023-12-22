@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.utils.leave.absence;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ftclub.cabinet.auth.domain.FtApiManager;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.user.service.UserService;

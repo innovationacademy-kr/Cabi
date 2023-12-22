@@ -42,7 +42,12 @@ public class AuthFacadeService {
 
 	public void handleUserLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
 		FtProfile profile = ftOauthService.getProfileByCode(code);
-		User user = null/*userCommandService.createUserIfNotExists(profile)*/;
+		// User user = userQueryService.findUserByName(profile.getIntraName());
+		// if (user.isEmpty) {
+		// 	user = userCommandService.createUser(profile);
+		// }
+		//
+		User user = null/*userCommandService.findUserOrCreate(profile)*/;
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
 		Cookie cookie = authCookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());

@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.FtRole;
-import org.ftclub.cabinet.auth.domain.OauthConfig;
+import org.ftclub.cabinet.auth.domain.scribejava.OauthConfig;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -114,8 +114,12 @@ public class FtOauthService {
 	}
 
 	private FtRole determineFtRole(JsonNode rootNode, LocalDateTime blackHoledAt) {
-		boolean isUserStaff = rootNode.get("staff").asBoolean();
+		boolean isUserStaff = rootNode.get("staff?").asBoolean();
+		boolean isActive = rootNode.get("active?").asBoolean();
 		JsonNode cursusUsersNode = rootNode.get("cursus_users");
+
+		if (!isActive)
+			return FtRole.INACTIVE;
 
 		if (isUserStaff)
 			return FtRole.STAFF;

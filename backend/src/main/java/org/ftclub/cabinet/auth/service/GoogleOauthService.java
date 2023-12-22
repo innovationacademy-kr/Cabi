@@ -10,7 +10,7 @@ import com.github.scribejava.core.oauth.OAuth20Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
-import org.ftclub.cabinet.auth.domain.OauthConfig;
+import org.ftclub.cabinet.auth.domain.scribejava.OauthConfig;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Qualifier;

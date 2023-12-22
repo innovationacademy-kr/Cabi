@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 @Log4j2
 @Component
 @RequiredArgsConstructor
-public class ApplicationAccessTokenManager {
+public class ApplicationTokenManager {
 	private static final int MAX_RETRY = 3;
 	private static String FT_ACCESS_TOKEN;
 	private final FtOauthService ftOauthService;
