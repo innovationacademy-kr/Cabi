@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.auth.controller;
+package org.ftclub.cabinet.admin.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.service.AuthFacadeService;
