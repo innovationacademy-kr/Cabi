@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.user.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.admin.domain.Admin;
@@ -15,10 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -131,7 +130,7 @@ public class UserOptionalFetcher {
 	 */
 	public Page<BanHistory> findPaginationActiveBanHistories(Pageable pageable, LocalDateTime now) {
 		log.debug("Called findPaginationActiveBanHistories");
-		return banHistoryRepository.findPaginationActiveBanHistories(pageable, now);
+		return banHistoryRepository.findPaginationActiveBanHistoriesJoinUser(pageable, now);
 	}
 
 	/**

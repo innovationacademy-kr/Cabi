@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.user.domain;
 
+import static javax.persistence.FetchType.LAZY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,19 +28,19 @@ public class AlarmStatus {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
-	private Long id;
+	@Column(name = "ALARM_STATUS_ID")
+	private Long alarmStatusId;
 
-	@Column(name = "slack", nullable = false)
+	@Column(name = "SLACK", nullable = false)
 	private boolean slack;
 
-	@Column(name = "email", nullable = false)
+	@Column(name = "EMAIL", nullable = false)
 	private boolean email;
 
-	@Column(name = "push", nullable = false)
+	@Column(name = "PUSH", nullable = false)
 	private boolean push;
 
-	@OneToOne
+	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "USER_ID", nullable = false)
 	private User user;
 
