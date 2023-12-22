@@ -43,8 +43,10 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @param userId 유저 고유 아이디
 	 * @return {@link BanHistory} 리스트
 	 */
-	@Query("SELECT b FROM BanHistory b WHERE b.user.userId = :userId")
-	List<BanHistory> findBanHistoriesByUserId(@Param("userId") Long userId);
+	@Query("SELECT bh"
+			+ " FROM BanHistory bh"
+			+ " WHERE bh.user.userId = :userId")
+	List<BanHistory> findByUserId(@Param("userId") Long userId);
 
 	/**
 	 * 현재 날짜 기준 active한 ban history를 가져옵니다.

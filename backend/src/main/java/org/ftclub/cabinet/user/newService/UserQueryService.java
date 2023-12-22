@@ -24,12 +24,16 @@ public class UserQueryService {
 		return user.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
 	}
 
-
 	public List<User> getUsers(List<Long> userIdsInCabinet) {
 		return userRepository.findAllByIds(userIdsInCabinet);
 	}
 
 	public Page<User> getUsers(String partialName, Pageable pageable) {
 		return userRepository.findPaginationByPartialName(partialName, pageable);
+	}
+
+	public User findUser(String name) {
+		Optional<User> user = userRepository.findByName(name);
+		return user.orElse(null);
 	}
 }

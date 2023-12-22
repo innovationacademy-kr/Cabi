@@ -49,12 +49,12 @@ public class FtOauthService {
 
 	public FtProfile getProfileByIntraName(String accessToken, String intraName) throws JsonProcessingException {
 		log.info("Called getProfileByIntraName {}", intraName);
-		String result = WebClient.create().get()
+		JsonNode result = WebClient.create().get()
 				.uri(ftApiProperties.getUsersInfoUri() + '/' + intraName)
 				.accept(MediaType.APPLICATION_JSON)
 				.headers(h -> h.setBearerAuth(accessToken))
 				.retrieve()
-				.bodyToMono(String.class)
+				.bodyToMono(JsonNode.class)
 				.block();
 		return convertJsonStringToProfile(result);
 	}
@@ -75,7 +75,7 @@ public class FtOauthService {
 		ftOAuth20Service.signRequest(accessToken, oAuthRequest);
 		try {
 			Response response = ftOAuth20Service.execute(oAuthRequest);
-			return convertJsonStringToProfile(response.getBody());
+			return convertJsonStringToProfile(objectMapper.readTree(response.getBody()));
 		} catch (Exception e) {
 			if (e instanceof IOException)
 				log.error("42 API 서버에서 프로필 정보를 가져오는데 실패했습니다."
@@ -95,8 +95,7 @@ public class FtOauthService {
 	 * @throws JsonProcessingException JSON 파싱 예외
 	 * @see <a href="https://api.intra.42.fr/apidoc/2.0/users/me.html">42 API에서 제공하는 Profile Json에 대한 정보</a>
 	 */
-	private FtProfile convertJsonStringToProfile(String jsonString) throws JsonProcessingException {
-		JsonNode rootNode = objectMapper.readTree(jsonString);
+	private FtProfile convertJsonStringToProfile(JsonNode rootNode) throws JsonProcessingException {
 		String intraName = rootNode.get("login").asText();
 		String email = rootNode.get("email").asText();
 		if (intraName == null || email == null)
@@ -130,8 +129,8 @@ public class FtOauthService {
 		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
 	}
 
-	private LocalDateTime determineBlackHoledAt(JsonNode cursusUsersNode) {
-		JsonNode blackHoledAtNode = cursusUsersNode.get(CURSUS_INDEX).get("blackholed_at");
+	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
+		JsonNode blackHoledAtNode = rootNode.get("cursus_users").get(CURSUS_INDEX).get("blackholed_at");
 		if (blackHoledAtNode.isNull() || blackHoledAtNode.isEmpty())
 			return null;
 		return DateUtil.convertStringToDate(blackHoledAtNode.asText());
