@@ -13,19 +13,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @ToString
-public class UserBlackholeDto {
+public class UserBlackHoleEvent {
 
 	private final Long userId;
 	private final String name;
 	private final String email;
 	private final LocalDateTime blackHoledAt;
 
-	public static UserBlackholeDto of(Long userId, String name, String email,
-	                                  LocalDateTime blackHoledAt) {
-		return new UserBlackholeDto(userId, name, email, blackHoledAt);
+	public static UserBlackHoleEvent of(Long userId, String name, String email,
+	                                    LocalDateTime blackHoledAt) {
+		return new UserBlackHoleEvent(userId, name, email, blackHoledAt);
 	}
 
-	public static UserBlackholeDto of(User user) {
-		return new UserBlackholeDto(user.getUserId(), user.getName(), user.getEmail(), user.getBlackholedAt());
+	public static UserBlackHoleEvent of(User user) {
+		return new UserBlackHoleEvent(user.getUserId(), user.getName(), user.getEmail(), user.getBlackholedAt());
 	}
 }

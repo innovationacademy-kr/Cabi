@@ -20,7 +20,9 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
-
+	
+	public static final String USER_TOKEN_NAME = "access_token";
+	public static final String ADMIN_TOKEN_NAME = "admin_access_token";
 	private final JwtProperties jwtProperties;
 	private final MasterProperties masterProperties;
 

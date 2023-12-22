@@ -3,7 +3,7 @@ package org.ftclub.cabinet.utils.scheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.dto.UserBlackholeDto;
+import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
 import org.ftclub.cabinet.user.service.UserService;
@@ -62,9 +62,9 @@ public class SystemScheduler {
 	@Scheduled(cron = "${cabinet.schedule.cron.risk-of-blackhole}")
 	public void checkRiskOfBlackhole() {
 		log.info("called checkRiskOfBlackhole");
-		List<UserBlackholeDto> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
-		for (UserBlackholeDto blackholeInfo : blackholeInfos) {
-			blackholeManager.handleBlackhole(blackholeInfo);
+		List<UserBlackHoleEvent> blackholeInfos = userService.getAllRiskOfBlackholeInfo();
+		for (UserBlackHoleEvent blackholeInfo : blackholeInfos) {
+			blackholeManager.handleBlackHole(blackholeInfo);
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {
@@ -79,9 +79,9 @@ public class SystemScheduler {
 	@Scheduled(cron = "${cabinet.schedule.cron.no-risk-of-blackhole}")
 	public void checkNoRiskOfBlackhole() {
 		log.info("called checkNoRiskOfBlackhole");
-		List<UserBlackholeDto> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
-		for (UserBlackholeDto blackholeInfo : blackholeInfos) {
-			blackholeManager.handleBlackhole(blackholeInfo);
+		List<UserBlackHoleEvent> blackholeInfos = userService.getAllNoRiskOfBlackholeInfo();
+		for (UserBlackHoleEvent blackholeInfo : blackholeInfos) {
+			blackholeManager.handleBlackHole(blackholeInfo);
 			try {
 				Thread.sleep(DELAY_TIME);
 			} catch (InterruptedException e) {

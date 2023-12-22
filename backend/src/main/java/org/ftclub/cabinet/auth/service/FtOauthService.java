@@ -11,6 +11,7 @@ import com.github.scribejava.core.oauth.OAuth20Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.domain.OauthConfig;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -30,9 +31,8 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 @Log4j2
 public class FtOauthService {
+	private static final int CURSUS_INDEX = 1;
 
-	private static final Integer MAX_RETRY = 3;
-	private static OAuth2AccessToken APPLICATION_ACCESS_TOKEN;
 	@Qualifier(OauthConfig.FT_OAUTH_20_SERVICE)
 	private final OAuth20Service ftOAuth20Service;
 	private final FtApiProperties ftApiProperties;
@@ -43,7 +43,7 @@ public class FtOauthService {
 		res.sendRedirect(url);
 	}
 
-	public OAuth2AccessToken getAccessToken() throws IOException, ExecutionException, InterruptedException {
+	public OAuth2AccessToken issueAccessTokenByCredentialsGrant() throws IOException, ExecutionException, InterruptedException {
 		return ftOAuth20Service.getAccessTokenClientCredentialsGrant();
 	}
 
@@ -52,7 +52,7 @@ public class FtOauthService {
 		String result = WebClient.create().get()
 				.uri(ftApiProperties.getUsersInfoUri() + '/' + intraName)
 				.accept(MediaType.APPLICATION_JSON)
-				.headers(h -> h.setBearerAuth(APPLICATION_ACCESS_TOKEN.toString()))
+				.headers(h -> h.setBearerAuth(accessToken))
 				.retrieve()
 				.bodyToMono(String.class)
 				.block();
@@ -102,14 +102,34 @@ public class FtOauthService {
 		if (intraName == null || email == null)
 			throw new ServiceException(ExceptionStatus.INCORRECT_ARGUMENT);
 
-		LocalDateTime blackHoledAt = DateUtil.convertStringToDate(rootNode
-				.get("cursus_users")
-				.get(1).get("blackholed_at").asText());
+		LocalDateTime blackHoledAt = determineBlackHoledAt(rootNode);
+		FtRole role = determineFtRole(rootNode, blackHoledAt);
 
 		return FtProfile.builder()
 				.intraName(intraName)
 				.email(email)
+				.role(role)
 				.blackHoledAt(blackHoledAt)
 				.build();
+	}
+
+	private FtRole determineFtRole(JsonNode rootNode, LocalDateTime blackHoledAt) {
+		boolean isUserStaff = rootNode.get("staff").asBoolean();
+		JsonNode cursusUsersNode = rootNode.get("cursus_users");
+
+		if (isUserStaff)
+			return FtRole.STAFF;
+
+		if (cursusUsersNode.size() < CURSUS_INDEX + 1)
+			return FtRole.PISCINER;
+
+		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
+	}
+
+	private LocalDateTime determineBlackHoledAt(JsonNode cursusUsersNode) {
+		JsonNode blackHoledAtNode = cursusUsersNode.get(CURSUS_INDEX).get("blackholed_at");
+		if (blackHoledAtNode.isNull() || blackHoledAtNode.isEmpty())
+			return null;
+		return DateUtil.convertStringToDate(blackHoledAtNode.asText());
 	}
 }

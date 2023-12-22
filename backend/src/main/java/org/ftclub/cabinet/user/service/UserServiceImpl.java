@@ -9,7 +9,7 @@ import org.ftclub.cabinet.admin.repository.AdminUserRepository;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
-import org.ftclub.cabinet.dto.UserBlackholeDto;
+import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -197,23 +197,23 @@ public class UserServiceImpl implements UserService {
 		clubUser.changeName(clubName);
 	}
 
-	public List<UserBlackholeDto> getAllRiskOfBlackholeInfo() {
+	public List<UserBlackHoleEvent> getAllRiskOfBlackholeInfo() {
 		log.info("Called getAllRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
 				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
-				.map(user -> UserBlackholeDto.of(user.getUserId(), user.getName(),
+				.map(user -> UserBlackHoleEvent.of(user.getUserId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public List<UserBlackholeDto> getAllNoRiskOfBlackholeInfo() {
+	public List<UserBlackHoleEvent> getAllNoRiskOfBlackholeInfo() {
 		log.info("Called getAllNoRiskOfBlackholeInfo");
 		List<User> users = userRepository.findByNoRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
 				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
-				.map(user -> UserBlackholeDto.of(user.getUserId(), user.getName(),
+				.map(user -> UserBlackHoleEvent.of(user.getUserId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
 	}

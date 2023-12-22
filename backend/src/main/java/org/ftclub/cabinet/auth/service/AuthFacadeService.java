@@ -2,7 +2,10 @@ package org.ftclub.cabinet.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.domain.AdminUser;
-import org.ftclub.cabinet.auth.domain.*;
+import org.ftclub.cabinet.auth.domain.AuthCookieManager;
+import org.ftclub.cabinet.auth.domain.FtProfile;
+import org.ftclub.cabinet.auth.domain.GoogleProfile;
+import org.ftclub.cabinet.auth.domain.TokenProvider;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
@@ -41,7 +44,7 @@ public class AuthFacadeService {
 		FtProfile profile = ftOauthService.getProfileByCode(code);
 		User user = null/*userCommandService.createUserIfNotExists(profile)*/;
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
-		Cookie cookie = authCookieManager.cookieOf(OauthConfig.USER_TOKEN_NAME, token);
+		Cookie cookie = authCookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
 		res.sendRedirect(domainProperties.getFeHost() + "/home");
 	}
@@ -50,7 +53,7 @@ public class AuthFacadeService {
 		GoogleProfile profile = googleOauthService.getProfileByCode(code);
 		AdminUser admin = null/*userCommandService.createUserIfNotExists(profile)*/;
 		String token = tokenProvider.createAdminToken(admin, LocalDateTime.now());
-		Cookie cookie = authCookieManager.cookieOf(OauthConfig.ADMIN_TOKEN_NAME, token);
+		Cookie cookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, token);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
 		res.sendRedirect(domainProperties.getFeHost() + "/admin/home");
 	}
@@ -62,17 +65,17 @@ public class AuthFacadeService {
 				|| !masterLoginDto.getPassword().equals(masterProperties.getPassword()))
 			throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 		String masterToken = tokenProvider.createMasterToken(now);
-		Cookie cookie = authCookieManager.cookieOf(OauthConfig.ADMIN_TOKEN_NAME, masterToken);
+		Cookie cookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, masterToken);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
 	}
 
 	public void userLogout(HttpServletResponse res) {
-		Cookie userCookie = authCookieManager.cookieOf(OauthConfig.USER_TOKEN_NAME, "");
+		Cookie userCookie = authCookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, "");
 		authCookieManager.setCookieToClient(res, userCookie, "/", res.getHeader("host"));
 	}
 
 	public void adminLogout(HttpServletResponse res) {
-		Cookie adminCookie = authCookieManager.cookieOf(OauthConfig.ADMIN_TOKEN_NAME, "");
+		Cookie adminCookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, "");
 		authCookieManager.setCookieToClient(res, adminCookie, "/", res.getHeader("host"));
 	}
 }

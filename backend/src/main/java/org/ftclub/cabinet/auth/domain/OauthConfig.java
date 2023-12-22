@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * ScribeJava 라이브러리를 이용한 OAuth2.0 서비스를 컨테이너에 등록하는 클래스입니다.
+ */
 @Configuration
 public class OauthConfig {
 	public static final String FT_OAUTH_20_SERVICE = "ftOauth20Service";
 	public static final String GOOGLE_OAUTH_20_SERVICE = "googleOauth20Service";
-	public static final String USER_TOKEN_NAME = "access_token";
-	public static final String ADMIN_TOKEN_NAME = "admin_access_token";
 
 
 	@Bean

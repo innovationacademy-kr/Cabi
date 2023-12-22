@@ -2,7 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import org.ftclub.cabinet.admin.domain.AdminRole;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.UserBlackholeDto;
+import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 
@@ -59,16 +59,16 @@ public interface UserService {
 	/**
 	 * 블랙홀에 빠질 위험이 있는 유저들의 블랙홀 정보를 가져옵니다.
 	 *
-	 * @return {@link List< UserBlackholeDto >}
+	 * @return {@link List<  UserBlackHoleEvent  >}
 	 */
-	List<UserBlackholeDto> getAllRiskOfBlackholeInfo();
+	List<UserBlackHoleEvent> getAllRiskOfBlackholeInfo();
 
 	/**
 	 * 블랙홀에 빠질 위험이 없는 유저들의 블랙홀 정보를 가져옵니다.
 	 *
-	 * @return {@link List< UserBlackholeDto >}
+	 * @return {@link List<  UserBlackHoleEvent  >}
 	 */
-	List<UserBlackholeDto> getAllNoRiskOfBlackholeInfo();
+	List<UserBlackHoleEvent> getAllNoRiskOfBlackholeInfo();
 
 	/**
 	 * userId로 유저와 AlarmStatus 정보를 가져옵니다.
