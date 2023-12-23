@@ -1,7 +1,7 @@
 enum SectionType {
   cabinet = "cabinet",
-  elevator = "elevator",
-  stairs = "stairs",
+  elevator = "E/V",
+  stairs = "Stairs",
   floorInfo = "floorInfo",
 }
 
