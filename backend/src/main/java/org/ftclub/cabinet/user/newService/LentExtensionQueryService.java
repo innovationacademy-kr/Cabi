@@ -28,12 +28,20 @@ public class LentExtensionQueryService {
                 .findImminentActiveLentExtension();
     }
 
-    public List<LentExtension> getMyLentExtensionSorted(Long userId) {
+    public List<LentExtension> getMyLentExtensionInLatestOrder(Long userId) {
         log.debug("Called getMyLentExtensionSorted: {}", userId);
 
         return lentExtensionRepository.findAll(userId)
                 .stream()
-                .sorted(Comparator.comparing(LentExtension::getExpiredAt))
+                .sorted(Comparator.comparing(LentExtension::getExpiredAt, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
+    }
+
+    public LentExtensions getActiveLentExtensionList(long userId) {
+        log.debug("Called getLentExtensionList {}", userId);
+
+        return LentExtensions.builder()
+                .lentExtensions(lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId))
+                .build();
     }
 }

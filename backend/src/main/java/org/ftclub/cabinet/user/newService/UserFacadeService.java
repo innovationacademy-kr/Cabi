@@ -6,6 +6,7 @@ import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.alarm.service.AlarmQueryService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
+import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -13,12 +14,11 @@ import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.AlarmStatus;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,14 +73,26 @@ public class UserFacadeService {
 //		}
 //	}
 
-    public LentExtensionPaginationDto getMyLentExtension(UserSessionDto userSessionDto) {
-        log.debug("Called getMyLentExtension");
+    public LentExtensionPaginationDto getMyLentExtension(UserSessionDto user) {
+        log.debug("Called getMyLentExtension : {}", user.getName());
 
-        List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.getMyLentExtensionSorted(userSessionDto.getUserId())
+        List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.getMyLentExtensionInLatestOrder(user.getUserId())
                 .stream()
                 .map(userMapper::toLentExtensionResponseDto)
                 .collect(Collectors.toList());
         return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos, (long) lentExtensionResponseDtos.size());
     }
+
+	public LentExtensionPaginationDto getMyActiveLentExtensionPage(UserSessionDto user) {
+		log.debug("Called getMyActiveLentExtension : {}", user.getName());
+
+		LentExtensions lentExtensions = lentExtensionQueryService.getActiveLentExtensionList(user.getUserId());
+		List<LentExtensionResponseDto> LentExtensionResponseDtos = lentExtensions.getLentExtensions()
+				.stream()
+				.map(userMapper::toLentExtensionResponseDto)
+				.collect(Collectors.toList());
+
+		return userMapper.toLentExtensionPaginationDto(LentExtensionResponseDtos, (long) LentExtensionResponseDtos.size());
+	}
 }
 
