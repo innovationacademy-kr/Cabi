@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.user.domain;
 
-import org.ftclub.cabinet.admin.domain.Admin;
-import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.exception.DomainException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

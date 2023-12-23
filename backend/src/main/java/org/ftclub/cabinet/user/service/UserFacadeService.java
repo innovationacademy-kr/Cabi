@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.ClubUserListDto;
@@ -12,7 +13,7 @@ import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 
@@ -47,7 +48,7 @@ public interface UserFacadeService {
 	 */
 	/*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
 	UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
-			Integer size);
+	                                                         Integer size);
 
 	/**
 	 * 유저 이름의 일부를 입력받아 해당 유저들의 캐비넷 정보를 반환합니다.
@@ -58,7 +59,7 @@ public interface UserFacadeService {
 	 * @return {@link UserCabinetPaginationDto} 해당하는 유저들의 캐비넷 정보
 	 */
 	UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
-			Integer size);
+	                                                          Integer size);
 
 	/**
 	 * 모든 유저의 정보를 가져옵니다.
@@ -153,7 +154,7 @@ public interface UserFacadeService {
 	 * @param expiredAt 대여 만료 날짜
 	 */
 	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
-			LocalDateTime expiredAt);
+	             LocalDateTime expiredAt);
 
 	/**
 	 * 유저의 정지를 해제합니다.

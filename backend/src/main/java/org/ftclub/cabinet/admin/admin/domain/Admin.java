@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.domain;
+package org.ftclub.cabinet.admin.admin.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;

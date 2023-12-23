@@ -89,6 +89,7 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.9'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
     // test

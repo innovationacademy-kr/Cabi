@@ -1,8 +1,5 @@
-package org.ftclub.cabinet.cabinet.controller;
+package org.ftclub.cabinet.admin.cabinet;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
@@ -10,21 +7,15 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
-import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetPaginationDto;
-import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 관리자가 사물함을 관리할 때 사용하는 컨트롤러입니다.
@@ -250,9 +241,9 @@ public class AdminCabinetController {
 	@GetMapping("/{cabinetId}/lent-histories")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public LentHistoryPaginationDto getCabinetLentHistories(@Valid
-	@PathVariable("cabinetId") Long cabinetId,
-			@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
+	                                                        @PathVariable("cabinetId") Long cabinetId,
+	                                                        @RequestParam("page") Integer page,
+	                                                        @RequestParam("size") Integer size) {
 		log.info("Called getCabinetLentHistories: {}", cabinetId);
 		return cabinetFacadeService.getCabinetLentHistoriesPagination(cabinetId, page, size);
 	}

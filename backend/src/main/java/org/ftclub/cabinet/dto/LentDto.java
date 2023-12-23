@@ -1,15 +1,16 @@
 package org.ftclub.cabinet.dto;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 /**
  * 대여 정보를 반환하는 DTO입니다.
  */
-@AllArgsConstructor
+@Builder
 @Getter
+@AllArgsConstructor
 public class LentDto {
 
 	private final Long userId;

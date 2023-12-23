@@ -1,12 +1,18 @@
 package org.ftclub.cabinet.cabinet.newService;
 
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.BROKEN;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +27,7 @@ public class CabinetCommandService {
 	}
 
 	public void changeUserCount(Cabinet cabinet, int userCount) {
-		if (cabinet.isStatus(CabinetStatus.BROKEN)) {
+		if (cabinet.isStatus(BROKEN)) {
 			throw new DomainException(INVALID_STATUS);
 		}
 		if (userCount == 0) {
@@ -30,7 +36,7 @@ public class CabinetCommandService {
 			cabinet.writeTitle("");
 		}
 		if (userCount == cabinet.getMaxUser()) {
-			cabinet.specifyStatus(CabinetStatus.FULL);
+			cabinet.specifyStatus(FULL);
 		}
 		cabinetRepository.save(cabinet);
 	}
@@ -43,5 +49,17 @@ public class CabinetCommandService {
 	public void updateMemo(Cabinet cabinet, String memo) {
 		cabinet.writeMemo(memo);
 		cabinetRepository.save(cabinet);
+	}
+
+	public void changeUserCount(List<Cabinet> cabinets, int userCount) {
+		cabinets.forEach(cabinet -> ExceptionUtil.throwIfFalse(!cabinet.isStatus(BROKEN),
+				new DomainException(INVALID_STATUS)));
+		List<Long> cabinetIds = cabinets.stream()
+				.map(Cabinet::getCabinetId).collect(Collectors.toList());
+		if (userCount == 0) {
+			cabinetRepository.updateStatusAndClearTitleAndMemoByCabinetIdsIn(cabinetIds, PENDING);
+		} else {
+			cabinetRepository.updateStatusByCabinetIdsIn(cabinetIds, FULL);
+		}
 	}
 }

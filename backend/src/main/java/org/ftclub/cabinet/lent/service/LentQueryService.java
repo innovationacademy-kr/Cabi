@@ -53,6 +53,10 @@ public class LentQueryService {
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_LENT_HISTORY));
 	}
 
+	public List<LentHistory> findUserActiveLentHistoriesInCabinet(Long userId) {
+		return lentRepository.findAllByCabinetIdWithSubQuery(userId);
+	}
+
 	public List<LentHistory> findUsersActiveLentHistoriesAndCabinet(List<Long> userIds) {
 		return lentRepository.findByUserIdsAndEndedAtIsNullJoinCabinet(userIds);
 	}
@@ -62,7 +66,8 @@ public class LentQueryService {
 	}
 
 	public List<LentHistory> findOverdueLentHistories(LocalDateTime now, Pageable pageable) {
-		return lentRepository.findAllExpiredAtBeforeAndEndedAtIsNull(now, pageable).stream()
+		return lentRepository.findAllExpiredAtBeforeAndEndedAtIsNullJoinUserAndCabinet(now,
+						pageable).stream()
 				.sorted(Comparator.comparing(LentHistory::getExpiredAt)).collect(toList());
 	}
 }

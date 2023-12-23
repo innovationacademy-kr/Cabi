@@ -4,8 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.domain.Admin;
-import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.user.domain.User;
@@ -37,7 +37,7 @@ public class TokenProvider {
 		Claims claims = Jwts.claims();
 		claims.put("email", user.getEmail());
 		claims.put("name", user.getName());
-		claims.put("blackholedAt", user.getBlackholedAt());
+		claims.put("blackholedAt", user.getBlackholedAt().toString());
 		claims.put("role", user.getRole());
 
 		return Jwts.builder()

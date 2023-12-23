@@ -4,9 +4,11 @@ import static org.mockito.Mockito.mock;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.ftclub.cabinet.admin.domain.AdminRole;
+
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +28,7 @@ import java.util.Map;
 public class TestUtils {
 
 	public static String getTestAdminToken(Key signingKey, LocalDateTime now, String emailName,
-			String emailDomain) {
+	                                       String emailDomain) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("email", emailName + "@" + emailDomain);
 		claim.put("role", AdminRole.ADMIN);
@@ -38,7 +40,7 @@ public class TestUtils {
 	}
 
 	public static String getTestMasterToken(Key signingKey, LocalDateTime now, String emailName,
-			String emailDomain) {
+	                                        String emailDomain) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("email", emailName + "@" + emailDomain);
 		claim.put("role", AdminRole.MASTER);
@@ -50,7 +52,7 @@ public class TestUtils {
 	}
 
 	public static String getTestUserTokenByName(Key signingKey, LocalDateTime now,
-			LocalDateTime blackholedAt, String name, String emailDomain) {
+	                                            LocalDateTime blackholedAt, String name, String emailDomain) {
 		Map<String, Object> claim = new HashMap<>();
 		claim.put("name", name);
 		claim.put("email", name + "@" + emailDomain);
@@ -81,7 +83,7 @@ public class TestUtils {
 	}
 
 	public static MockHttpServletRequestBuilder mockRequest(HttpMethod method, Cookie cookie,
-			String url, Object... uriVars) {
+	                                                        String url, Object... uriVars) {
 		if (method.equals(HttpMethod.GET)) {
 			return MockMvcRequestBuilders.get(url, uriVars)
 					.cookie(cookie)
