@@ -11,8 +11,8 @@ import org.ftclub.cabinet.auth.domain.TokenProvider;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
-import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.newService.UserCommandService;
 import org.ftclub.cabinet.user.newService.UserQueryService;
@@ -74,7 +74,7 @@ public class AuthFacadeService {
 		// TODO : 서비스로 빼기
 		if (!masterLoginDto.getId().equals(masterProperties.getId())
 				|| !masterLoginDto.getPassword().equals(masterProperties.getPassword()))
-			throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
+			throw new ServiceException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 		String masterToken = tokenProvider.createMasterToken(now);
 		Cookie cookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, masterToken);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
