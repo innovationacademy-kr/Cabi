@@ -1,35 +1,44 @@
 package org.ftclub.cabinet.admin.lent;
 
-import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.newService.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
+import org.ftclub.cabinet.dto.LentHistoryDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentCommandService;
 import org.ftclub.cabinet.lent.service.LentPolicyService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
+import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.newService.BanHistoryCommandService;
 import org.ftclub.cabinet.user.newService.BanPolicyService;
+import org.ftclub.cabinet.user.newService.UserQueryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class AdminLentFacadeService {
-
 	private final CabinetQueryService cabinetQueryService;
 	private final CabinetCommandService cabinetCommandService;
+	private final UserQueryService userQueryService;
 	private final BanHistoryCommandService banHistoryCommandService;
 	private final LentQueryService lentQueryService;
 	private final LentCommandService lentCommandService;
@@ -37,6 +46,22 @@ public class AdminLentFacadeService {
 
 	private final LentPolicyService lentPolicyService;
 	private final BanPolicyService banPolicyService;
+
+	private final LentMapper lentMapper;
+
+	@Transactional(readOnly = true)
+	public LentHistoryPaginationDto getUserLentHistories(Long userId, Pageable pageable) {
+		log.debug("Called getAllUserLentHistories: {}", userId);
+
+		userQueryService.getUser(userId);
+		Page<LentHistory> lentHistories =
+				lentQueryService.findUserActiveLentHistories(userId, pageable);
+		List<LentHistoryDto> result = lentHistories.stream()
+				.sorted(Comparator.comparing(LentHistory::getStartedAt))
+				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
+				.collect(Collectors.toList());
+		return lentMapper.toLentHistoryPaginationDto(result, lentHistories.getTotalElements());
+	}
 
 	@Transactional
 	public void endUserLent(Long userId) {
@@ -83,6 +108,9 @@ public class AdminLentFacadeService {
 		cabinets.forEach(cabinet -> {
 			List<LentHistory> cabinetLentHistories =
 					lentHistoriesByCabinetId.get(cabinet.getCabinetId());
+			cabinetLentHistories.forEach(lh -> lentCommandService.endLent(lh, now));
+			cabinetCommandService.changeUserCount(cabinet, 0);
+			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 			lentRedisService.setPreviousUserName(
 					cabinet.getCabinetId(), cabinetLentHistories.get(0).getUser().getName());
 		});

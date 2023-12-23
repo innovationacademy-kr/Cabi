@@ -248,7 +248,7 @@ class UserServiceUnitTest {
 	void deleteAdminUser_실패_존재하지_않는_어드민_삭제_시도() {
 		Long failId = -1L;
 		given(userOptionalFetcher.getAdminUser(failId)).willThrow(
-				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
+				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN));
 
 		assertThrows(ServiceException.class, () -> userService.deleteAdminUser(failId));
 		then(userOptionalFetcher).should(times(1)).getAdminUser(failId);
@@ -278,7 +278,7 @@ class UserServiceUnitTest {
 		Long failId = -1L;
 		AdminRole adminRole = AdminRole.MASTER;
 		given(userOptionalFetcher.getAdminUser(failId)).willThrow(
-				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
+				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN));
 
 		assertThrows(ServiceException.class,
 				() -> userService.updateAdminUserRole(failId, adminRole));
@@ -324,7 +324,7 @@ class UserServiceUnitTest {
 	void promoteAdminByEmail_실패_존재하지_않는_어드민_승격_시도() {
 		String failEmail = "fail@fail.com";
 		given(userOptionalFetcher.getAdminUserByEmail(failEmail)).willThrow(
-				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
+				new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN));
 
 		assertThrows(ServiceException.class, () -> userService.promoteAdminByEmail(failEmail));
 		then(userOptionalFetcher).should(times(1)).getAdminUserByEmail(failEmail);

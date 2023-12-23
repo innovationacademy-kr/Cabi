@@ -24,6 +24,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.userId = :userId AND u.deletedAt IS NULL")
 	Optional<User> findById(@Param("userId") Long userId);
 
+	@Query("SELECT u FROM User u WHERE u.userId = :userId AND u.role = :role AND u.deletedAt IS NULL")
+	Optional<User> findByIdAndRole(Long userId, UserRole role);
+
 	/**
 	 * 유저 이름으로 유저를 찾습니다.
 	 *

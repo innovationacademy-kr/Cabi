@@ -1,13 +1,5 @@
 package org.ftclub.cabinet.lent.service;
 
-import static org.ftclub.cabinet.cabinet.domain.LentType.PRIVATE;
-import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
@@ -17,13 +9,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.newService.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
-import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentHistoryDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.dto.UserVerifyRequestDto;
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
@@ -38,9 +24,17 @@ import org.ftclub.cabinet.user.newService.UserQueryService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.ftclub.cabinet.cabinet.domain.LentType.PRIVATE;
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 
 @Slf4j
 @Service
@@ -63,20 +57,6 @@ public class LentFacadeService {
 	private final LentMapper lentMapper;
 	private final CabinetMapper cabinetMapper;
 
-
-	@Transactional(readOnly = true)
-	public LentHistoryPaginationDto getUserLentHistories(Long userId, Pageable pageable) {
-		log.debug("Called getAllUserLentHistories: {}", userId);
-
-		userQueryService.getUser(userId);
-		Page<LentHistory> lentHistories =
-				lentQueryService.findUserActiveLentHistories(userId, pageable);
-		List<LentHistoryDto> result = lentHistories.stream()
-				.sorted(Comparator.comparing(LentHistory::getStartedAt))
-				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
-				.collect(Collectors.toList());
-		return lentMapper.toLentHistoryPaginationDto(result, lentHistories.getTotalElements());
-	}
 
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user, PageRequest pageable) {
