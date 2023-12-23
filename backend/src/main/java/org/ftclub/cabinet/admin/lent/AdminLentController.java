@@ -12,7 +12,7 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v4/admin/lent")
+@RequestMapping("/v4/admin")
 @Log4j2
 public class AdminLentController {
 	private final AdminLentFacadeService adminLentFacadeService;
