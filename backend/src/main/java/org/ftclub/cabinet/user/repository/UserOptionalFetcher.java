@@ -1,13 +1,10 @@
 package org.ftclub.cabinet.user.repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.admin.domain.Admin;
-import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.repository.AdminRepository;
+import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.repository.AdminRepository;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -18,6 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -98,7 +99,7 @@ public class UserOptionalFetcher {
 	 */
 	public Admin findAdminUser(Long adminUserId) {
 		log.debug("Called findAdminUser: {}", adminUserId);
-		return adminRepository.findAdminUser(adminUserId).orElse(null);
+		return adminRepository.findById(adminUserId).orElse(null);
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class UserOptionalFetcher {
 	 */
 	public Admin findAdminUserByEmail(String email) {
 		log.debug("Called findAdminUserByEmail: {}", email);
-		return adminRepository.findAdminUserByEmail(email).orElse(null);
+		return adminRepository.findByEmail(email).orElse(null);
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class UserOptionalFetcher {
 	 */
 	public AdminRole findAdminUserRoleByEmail(String email) {
 		log.debug("Called findAdminUserRoleByEmail: {}", email);
-		return adminRepository.findAdminUserRoleByEmail(email)
+		return adminRepository.findAdminRoleByEmail(email)
 				.orElse(null);
 	}
 
@@ -213,7 +214,7 @@ public class UserOptionalFetcher {
 	 */
 	public Admin getAdminUser(Long adminUserId) {
 		log.debug("Called getAdminUser: {}", adminUserId);
-		return adminRepository.findAdminUser(adminUserId)
+		return adminRepository.findById(adminUserId)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
 
@@ -225,7 +226,7 @@ public class UserOptionalFetcher {
 	 */
 	public Admin getAdminUserByEmail(String adminUserEmail) {
 		log.debug("Called getAdminUserByEmail: {}", adminUserEmail);
-		return adminRepository.findAdminUserByEmail(adminUserEmail)
+		return adminRepository.findByEmail(adminUserEmail)
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN_USER));
 	}
 

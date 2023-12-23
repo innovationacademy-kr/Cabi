@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.controller;
+package org.ftclub.cabinet.admin.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,15 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-/**
- * 관리자가 유저를 관리할 때 사용하는 컨트롤러입니다.
- */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin/users")
 @Log4j2
-public class AdminController {
-
+public class AdminUserController {
 	private final UserFacadeService userFacadeService;
 	private final LentFacadeService lentFacadeService;
 	private final LentExtensionService lentExtensionService;
@@ -41,20 +37,6 @@ public class AdminController {
 		userFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
 	}
 
-	/**
-	 * 유저의 대여 기록을 반환합니다.
-	 *
-	 * @param userId   유저 고유 아이디
-	 * @param pageable 페이지네이션 정보
-	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
-	 */
-	@GetMapping("/{userId}/lent-histories")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public LentHistoryPaginationDto getLentHistoriesByUserId(
-			@PathVariable("userId") Long userId, Pageable pageable) {
-		log.info("Called getLentHistoriesByUserId: {}", userId);
-		return lentFacadeService.getUserLentHistories(userId, pageable);
-	}
 
 	/**
 	 * 유저를 어드민으로 승격시킵니다.
@@ -66,6 +48,7 @@ public class AdminController {
 	@AuthGuard(level = AuthLevel.MASTER_ONLY)
 	public void promoteUserToAdmin(@RequestParam("email") String email) {
 		log.info("Called promoteUserToAdmin: {}", email);
+		//TODO ADMIN으로 옮기기
 		userFacadeService.promoteUserToAdmin(email);
 	}
 
@@ -127,11 +110,25 @@ public class AdminController {
 		return userFacadeService.getAllActiveLentExtension(page, size);
 	}
 
+	/**
+	 * 유저의 대여 기록을 반환합니다.
+	 *
+	 * @param userId   유저 고유 아이디
+	 * @param pageable 페이지네이션 정보
+	 * @return {@link LentHistoryPaginationDto} 유저의 대여 기록
+	 */
+	@GetMapping("/{userId}/lent-histories")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public LentHistoryPaginationDto getLentHistoriesByUserId(
+			@PathVariable("userId") Long userId, Pageable pageable) {
+		log.info("Called getLentHistoriesByUserId: {}", userId);
+		return lentFacadeService.getUserLentHistories(userId, pageable);
+	}
+
 	@PostMapping("/lent-extensions/{user}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void issueLentExtension(@PathVariable("user") String username) {
 		log.info("Called issueLentExtension");
 		lentExtensionService.assignLentExtension(username);
-
 	}
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
-import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.testutils.TestUtils;

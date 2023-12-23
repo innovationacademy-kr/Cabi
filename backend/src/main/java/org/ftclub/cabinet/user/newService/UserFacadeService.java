@@ -56,7 +56,7 @@ public class UserFacadeService {
 
 	public void createClubUser(String clubName) {
 		log.debug("Called createClubUser: {}", clubName);
-		User user = userQueryService.findUser(clubName);
+		User user = userQueryService.findUser(clubName).orElse(null);
 		if (StringUtil.isNullOrEmpty(clubName)) {
 			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
 		} else if (user != null && user.getDeletedAt() == null) {
