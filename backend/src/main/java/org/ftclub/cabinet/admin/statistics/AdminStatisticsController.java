@@ -2,14 +2,18 @@ package org.ftclub.cabinet.admin.statistics;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.admin.admin.service.AdminFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
+import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +24,7 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 @RequestMapping("/v4/admin/statistics")
 @RequiredArgsConstructor
 public class AdminStatisticsController {
-	private final AdminFacadeService adminFacadeService;
+	private final AdminStatisticsFacadeService adminStatisticsFacadeService;
 
 	/**
 	 * 전 층의 사물함 정보를 가져옵니다.
@@ -31,7 +35,7 @@ public class AdminStatisticsController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
 		log.info("Called getAllCabinetsInfo");
-		return adminFacadeService.getAllCabinetsInfo();
+		return adminStatisticsFacadeService.getAllCabinetsInfo();
 	}
 
 	/**
@@ -47,7 +51,7 @@ public class AdminStatisticsController {
 			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
 			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
 		log.info("Called getCountOnLentAndReturn startDate : {} endDate : {}", startDate, endDate);
-		return adminFacadeService.getLentCountStatistics(startDate, endDate);
+		return adminStatisticsFacadeService.getLentCountStatistics(startDate, endDate);
 	}
 
 	/**
@@ -60,7 +64,7 @@ public class AdminStatisticsController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public BlockedUserPaginationDto getUsersBannedInfo(Pageable pageable) {
 		log.info("Called getUsersBannedInfo");
-		return adminFacadeService.getAllBanUsers(pageable);
+		return adminStatisticsFacadeService.getAllBanUsers(pageable);
 	}
 
 	/**
@@ -73,24 +77,7 @@ public class AdminStatisticsController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
 		log.info("Called getOverdueUsers");
-		return adminFacadeService.getOverdueUsers(pageable);
+		return adminStatisticsFacadeService.getOverdueUsers(pageable);
 	}
 
-	/*-----------------------------------------  Lent  -------------------------------------------*/
-
-	@PatchMapping("/return-cabinets")
-	@AuthGuard(level = ADMIN_ONLY)
-	public void terminateLentCabinets(
-			@Valid @RequestBody ReturnCabinetsRequestDto returnCabinetsRequestDto) {
-		log.info("Called terminateLentCabinets returnCabinetsRequestDto={}",
-				returnCabinetsRequestDto);
-		adminFacadeService.endCabinetLent(returnCabinetsRequestDto.getCabinetIds());
-	}
-
-	@PatchMapping("/return-users/{userId}")
-	@AuthGuard(level = ADMIN_ONLY)
-	public void terminateLentUser(@PathVariable("userId") Long userId) {
-		log.info("Called terminateLentUser userId={}", userId);
-		adminFacadeService.endUserLent(userId);
-	}
 }

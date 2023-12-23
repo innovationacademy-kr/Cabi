@@ -2,7 +2,6 @@ package org.ftclub.cabinet.admin.search;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.admin.admin.service.AdminFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
@@ -21,14 +20,14 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 @RequestMapping("/v4/admin/search")
 @RequiredArgsConstructor
 public class AdminSearchController {
-	private final AdminFacadeService adminFacadeService;
+	private final AdminSearchFacadeService adminSearchFacadeService;
 
 	@GetMapping("/cabinets-simple")
 	@AuthGuard(level = ADMIN_ONLY)
 	public CabinetSimplePaginationDto getCabinetsSimpleInfo(
 			@RequestParam("visibleNum") Integer visibleNum) {
 		log.info("Called getCabinetsSimpleInfo {}", visibleNum);
-		return adminFacadeService.getCabinetsSimpleInfo(visibleNum);
+		return adminSearchFacadeService.getCabinetsSimpleInfo(visibleNum);
 	}
 
 	@GetMapping("/cabinets")
@@ -36,7 +35,7 @@ public class AdminSearchController {
 	public CabinetInfoPaginationDto getCabinetsInfo(
 			@RequestParam("visibleNum") Integer visibleNum) {
 		log.info("Called getCabinetsInfo {}", visibleNum);
-		return adminFacadeService.getCabinetInfo(visibleNum);
+		return adminSearchFacadeService.getCabinetInfo(visibleNum);
 	}
 
 	@GetMapping("/users-simple")
@@ -44,7 +43,7 @@ public class AdminSearchController {
 	public UserProfilePaginationDto getUsersProfile(
 			@RequestParam("name") String name, Pageable pageable) {
 		log.info("Called getUsersProfile {}", name);
-		return adminFacadeService.getUsersProfile(name, pageable);
+		return adminSearchFacadeService.getUsersProfile(name, pageable);
 	}
 
 	@GetMapping("/users")
@@ -52,6 +51,6 @@ public class AdminSearchController {
 	public UserCabinetPaginationDto getCabinetsLentInfo(
 			@RequestParam("name") String name, Pageable pageable) {
 		log.info("Called getCabinetsLentInfo {}", name);
-		return adminFacadeService.getUserLentCabinetInfo(name, pageable);
+		return adminSearchFacadeService.getUserLentCabinetInfo(name, pageable);
 	}
 }
