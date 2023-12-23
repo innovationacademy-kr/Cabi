@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.auth.domain;
 
-import static org.ftclub.cabinet.admin.domain.AdminRole.MASTER;
+import static org.ftclub.cabinet.admin.admin.domain.AdminRole.MASTER;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,9 +9,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+
 import java.security.Key;
 import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.config.DomainProperties;
@@ -19,7 +21,7 @@ import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.user.service.UserService;
 import org.springframework.stereotype.Component;
 

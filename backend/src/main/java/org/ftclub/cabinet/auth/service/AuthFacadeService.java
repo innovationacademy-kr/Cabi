@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.auth.domain.AuthCookieManager;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;

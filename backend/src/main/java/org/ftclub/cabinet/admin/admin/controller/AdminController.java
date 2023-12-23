@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.controller;
+package org.ftclub.cabinet.admin.admin.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
