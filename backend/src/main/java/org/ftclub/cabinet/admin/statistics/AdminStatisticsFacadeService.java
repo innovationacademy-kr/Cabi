@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AdminStatisticsFacadeService {
 
 	private final CabinetQueryService cabinetQueryService;
@@ -44,7 +45,6 @@ public class AdminStatisticsFacadeService {
 	private final CabinetMapper cabinetMapper;
 	private final UserMapper userMapper;
 
-	@Transactional(readOnly = true)
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
 		log.debug("Called getAllCabinetsInfo");
 
@@ -61,7 +61,6 @@ public class AdminStatisticsFacadeService {
 		}).collect(Collectors.toList());
 	}
 
-	@Transactional(readOnly = true)
 	public LentsStatisticsResponseDto getLentCountStatistics(
 			LocalDateTime startDate, LocalDateTime endDate) {
 		log.debug("Called getLentCountStatistics startDate : {} endDate : {}", startDate, endDate);

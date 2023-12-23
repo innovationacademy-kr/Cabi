@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Log4j2
+@Transactional(readOnly = true)
 public class AdminSearchFacadeService {
 
 	private final UserQueryService userQueryService;
@@ -55,7 +56,6 @@ public class AdminSearchFacadeService {
 	private final UserMapper userMapper;
 	private final LentMapper lentMapper;
 
-	@Transactional(readOnly = true)
 	public UserProfilePaginationDto getUsersProfile(String partialName, Pageable pageable) {
 		log.debug("Called getUsersProfile {}", partialName);
 
@@ -65,7 +65,6 @@ public class AdminSearchFacadeService {
 		return userMapper.toUserProfilePaginationDto(result, users.getTotalElements());
 	}
 
-	@Transactional(readOnly = true)
 	public UserCabinetPaginationDto getUserLentCabinetInfo(String partialName, Pageable pageable) {
 		log.debug("Called getUserLentCabinetInfo {}", partialName);
 
@@ -96,7 +95,6 @@ public class AdminSearchFacadeService {
 		return cabinetMapper.toUserCabinetPaginationDto(result, users.getTotalElements());
 	}
 
-	@Transactional(readOnly = true)
 	public CabinetSimplePaginationDto getCabinetsSimpleInfo(Integer visibleNum) {
 		log.debug("Called getCabinetSimpleInfo {}", visibleNum);
 
@@ -106,7 +104,6 @@ public class AdminSearchFacadeService {
 		return cabinetMapper.toCabinetSimplePaginationDto(result, (long) cabinets.size());
 	}
 
-	@Transactional(readOnly = true)
 	public CabinetInfoPaginationDto getCabinetInfo(Integer visibleNum) {
 		log.debug("Called getCabinetInfo {}", visibleNum);
 
