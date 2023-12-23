@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { currentFloorNumberState } from "@/recoil/atoms";
 import { currentBuildingFloorState } from "@/recoil/selectors";
 import { ISectionInfo } from "@/assets/data/mapPositionData";
+import { ReactComponent as StairsIcon } from "@/assets/images/stairs.svg";
+import SectionType from "@/types/enum/map.type.enum";
 import useMenu from "@/hooks/useMenu";
 
 const MapItem: React.FC<{
@@ -17,6 +19,7 @@ const MapItem: React.FC<{
   const setCurrentFloor = useSetRecoilState(currentFloorNumberState);
   const floors = useRecoilValue<Array<number>>(currentBuildingFloorState);
   const { closeMap } = useMenu();
+
   const onClick = (info: ISectionInfo) => {
     if (info.type === "floorInfo") return;
     if (pathname !== "main") navigate("main");
@@ -24,13 +27,23 @@ const MapItem: React.FC<{
     selectSection(info.name);
     closeMap();
   };
+
+  const renderMapItem = () => {
+    switch (info.type) {
+      case SectionType.stairs:
+        return <StairsIcon fill="var(--white)" />;
+      default:
+        return <>{info.name}</>;
+    }
+  };
+
   return (
     <ItemStyled
       className="cabiButton"
       onClick={() => onClick(info)}
       info={info}
     >
-      {info.name}
+      {renderMapItem()}
     </ItemStyled>
   );
 };
