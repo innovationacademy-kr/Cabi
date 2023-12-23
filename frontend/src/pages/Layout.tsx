@@ -10,7 +10,7 @@ import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LeftNav from "@/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import OverduePenaltyModal from "@/components/Modals/OverduePenaltyModal/OverduePenaltyModal";
-import TopNav from "@/components/TopNav/TopNav.container";
+import TopNavContainer from "@/components/TopNav/TopNav.container";
 import { additionalModalType } from "@/assets/data/maps";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import { axiosMyInfo } from "@/api/axios/axios.custom";
@@ -95,7 +95,7 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      {isValidToken && <TopNav setIsLoading={setIsLoading} />}
+      {isValidToken && <TopNavContainer setIsLoading={setIsLoading} />}
       {isLoading ? (
         <LoadingAnimation />
       ) : (
