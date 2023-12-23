@@ -35,7 +35,7 @@ public class AdminRepositoryTest {
 	@Test
 	@DisplayName("어드민 아이디로 어드민 유저 찾기 성공 - 어드민이 존재하는 경우")
 	public void findAdminUser_성공_어드민이_존재하는_경우() {
-		Optional<Admin> adminUser = adminRepository.findAdminUser(adminUserId);
+		Optional<Admin> adminUser = adminRepository.findById(adminUserId);
 
 		assertTrue(adminUser.isPresent());
 		assertEquals(adminUserId, adminUser.get().getAdminId());
@@ -46,7 +46,7 @@ public class AdminRepositoryTest {
 	@Test
 	@DisplayName("어드민 아이디로 어드민 유저 찾기 실패 - 어드민이 존재하지 않는 경우")
 	public void findAdminUser_실패_어드민이_존재하지_않는_경우() {
-		Optional<Admin> adminUser = adminRepository.findAdminUser(10000L);
+		Optional<Admin> adminUser = adminRepository.findById(10000L);
 
 		assertTrue(adminUser.isEmpty());
 	}
@@ -54,7 +54,7 @@ public class AdminRepositoryTest {
 	@Test
 	@DisplayName("어드민 이메일로 어드민 유저 찾기 성공 - 어드민이 존재하는 경우")
 	void findAdminUserByEmail_성공_어드민_유저가_존재하는_경우() {
-		Optional<Admin> adminUser = adminRepository.findAdminUserByEmail(
+		Optional<Admin> adminUser = adminRepository.findByEmail(
 				"adminTest@gmail.com");
 
 		assertTrue(adminUser.isPresent());
@@ -66,7 +66,7 @@ public class AdminRepositoryTest {
 	@Test
 	@DisplayName("어드민 이메일로 어드민 유저 찾기 실패 - 어드민이 존재하지 않는 경우")
 	public void findAdminUserByEmail_실패_어드민이_존재하지_않는_경우() {
-		Optional<Admin> adminUser = adminRepository.findAdminUserByEmail("test@gmail.com");
+		Optional<Admin> adminUser = adminRepository.findByEmail("test@gmail.com");
 
 		assertTrue(adminUser.isEmpty());
 	}
@@ -74,7 +74,7 @@ public class AdminRepositoryTest {
 	@Test
 	@DisplayName("유저의 이메일로 어드민 유저의 권한 찾기 성공 - 어드민이 존재하는 경우")
 	void findAdminUserRoleByEmail_성공_어드민이_존재하는_경우() {
-		Optional<AdminRole> adminRole = adminRepository.findAdminUserRoleByEmail(
+		Optional<AdminRole> adminRole = adminRepository.findAdminRoleByEmail(
 				"admin1@gmail.com");
 
 		assertTrue(adminRole.isPresent());
@@ -84,7 +84,7 @@ public class AdminRepositoryTest {
 	@Test
 	@DisplayName("유저의 이메일로 어드민 유저의 권한 찾기 실패 - 어드민이 존재하지 않는 경우")
 	public void findAdminUserRoleByEmail_실패_어드민이_존재하지_않는_경우() {
-		Optional<AdminRole> adminRole = adminRepository.findAdminUserRoleByEmail(
+		Optional<AdminRole> adminRole = adminRepository.findAdminRoleByEmail(
 				"test@gmail.com");
 
 		assertFalse(adminRole.isPresent());

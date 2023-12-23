@@ -28,6 +28,7 @@ public enum ExceptionStatus {
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인 정보가 유효하지 않습니다\n다시 로그인해주세요"),
 	UNCHANGEABLE_CABINET(HttpStatus.BAD_REQUEST, "사물함의 상태를 변경할 수 없습니다."),
 	LENT_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 대여중인 사물함이 있습니다"),
+	USER_ALREADY_EXISTED(HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다"),
 	INVALID_ARGUMENT(HttpStatus.BAD_REQUEST, "유효하지 않은 입력입니다"),
 	INVALID_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 상태변경입니다"),
 	SHARE_CODE_TRIAL_EXCEEDED(HttpStatus.BAD_REQUEST, "초대 코드 입력 오류 초과로 입장이 제한된 상태입니다."),

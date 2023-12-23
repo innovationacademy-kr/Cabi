@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.user.repository;
 
-import java.util.List;
-import java.util.Optional;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.data.domain.Page;
@@ -10,6 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -97,4 +98,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return {@Link User} 리스트
 	 */
 	List<User> findAllByDeletedAtIsNull();
+
+	/**
+	 * 유저의 이름과 이메일이 일치하는 유저가 존재하는지 확인합니다.
+	 *
+	 * @param name  유저 이름
+	 * @param email 유저 이메일
+	 * @return 존재 여부
+	 */
+	@Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END " +
+			"FROM User u " +
+			"WHERE u.name = :name AND u.email = :email")
+	boolean existsByNameAndEmail(String name, String email);
 }

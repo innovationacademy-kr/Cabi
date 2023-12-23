@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.user.newService;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -11,6 +9,9 @@ import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +33,7 @@ public class UserQueryService {
 		return userRepository.findPaginationByPartialName(partialName, pageable);
 	}
 
-	public User findUser(String name) {
-		Optional<User> user = userRepository.findByName(name);
-		return user.orElse(null);
+	public Optional<User> findUser(String name) {
+		return userRepository.findByName(name);
 	}
 }

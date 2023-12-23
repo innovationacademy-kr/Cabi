@@ -132,6 +132,5 @@ public class AdminController {
 	public void issueLentExtension(@PathVariable("user") String username) {
 		log.info("Called issueLentExtension");
 		lentExtensionService.assignLentExtension(username);
-
 	}
 }

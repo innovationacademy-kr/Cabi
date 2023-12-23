@@ -17,7 +17,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	 * @return {@link Admin}
 	 */
 	@Query("SELECT au FROM Admin au WHERE au.adminId = :adminUserId")
-	Optional<Admin> findAdminUser(@Param("adminUserId") Long adminUserId);
+	Optional<Admin> findById(@Param("adminUserId") Long adminUserId);
 
 	/**
 	 * 관리자 이메일로 관리자 정보를 가져옵니다.
@@ -26,7 +26,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	 * @return {@link Admin}
 	 */
 	@Query("SELECT au FROM Admin au WHERE au.email = :email")
-	Optional<Admin> findAdminUserByEmail(@Param("email") String email);
+	Optional<Admin> findByEmail(@Param("email") String email);
 
 	/**
 	 * 유저의 이메일로 어드민 유저를 찾고 어드민 유저의 권한을 반환합니다.
@@ -35,5 +35,5 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	 * @return {@link AdminRole}
 	 */
 	@Query("SELECT au.role FROM Admin au WHERE au.email = :email")
-	Optional<AdminRole> findAdminUserRoleByEmail(@Param("email") String email);
+	Optional<AdminRole> findAdminRoleByEmail(@Param("email") String email);
 }
