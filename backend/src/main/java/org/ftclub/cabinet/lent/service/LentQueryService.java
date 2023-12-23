@@ -62,7 +62,8 @@ public class LentQueryService {
 	}
 
 	public List<LentHistory> findOverdueLentHistories(LocalDateTime now, Pageable pageable) {
-		return lentRepository.findAllExpiredAtBeforeAndEndedAtIsNull(now, pageable).stream()
+		return lentRepository.findAllExpiredAtBeforeAndEndedAtIsNullJoinUserAndCabinet(now,
+						pageable).stream()
 				.sorted(Comparator.comparing(LentHistory::getExpiredAt)).collect(toList());
 	}
 }

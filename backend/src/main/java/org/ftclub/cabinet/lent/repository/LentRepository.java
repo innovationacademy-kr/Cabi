@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -188,6 +189,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
 			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
 			+ "WHERE lh.userId IN (:userIds) AND lh.endedAt IS NULL")
 	List<LentHistory> findByUserIdsAndEndedAtIsNullJoinCabinet(
 			@Param("userIds") List<Long> userIds);
@@ -198,12 +200,17 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @param date 연체의 기준 날짜/시간
 	 * @return 연체되어 있는 {@link LentHistory}의 {@link List}
 	 */
-	@Query("SELECT lh "
+	@Query(value = "SELECT lh "
 			+ "FROM LentHistory lh "
-			+ "WHERE lh.expiredAt < :date AND lh.endedAt IS NULL")
-	Page<LentHistory> findAllExpiredAtBeforeAndEndedAtIsNull(
+			+ "LEFT JOIN FETCH lh.user u "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.expiredAt < :date AND lh.endedAt IS NULL",
+			countQuery = "SELECT count(lh) FROM LentHistory lh "
+					+ "WHERE lh.expiredAt < :date AND lh.endedAt IS NULL")
+	Page<LentHistory> findAllExpiredAtBeforeAndEndedAtIsNullJoinUserAndCabinet(
 			@Param("date") LocalDateTime date, Pageable pageable);
-
+	
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
 			+ "WHERE lh.endedAt IS NULL "
@@ -211,4 +218,12 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "IN (SELECT lh2.cabinetId "
 			+ "FROM LentHistory lh2 WHERE lh2.userId = :userId AND lh2.endedAt IS NULL)")
 	List<LentHistory> findAllActiveLentHistoriesByUserId(@Param("userId") Long userId);
+
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("UPDATE LentHistory lh "
+			+ "SET lh.endedAt = :endedAt "
+			+ "WHERE lh.userId IN (:userIds) "
+			+ "AND lh.endedAt IS NULL")
+	void updateEndedAtByUserIdIn(@Param("userIds") List<Long> userIds,
+			@Param("endedAt") LocalDateTime endedAt);
 }

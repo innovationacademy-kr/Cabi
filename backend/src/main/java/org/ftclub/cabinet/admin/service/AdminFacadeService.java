@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.newService.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
@@ -132,27 +131,21 @@ public class AdminFacadeService {
 	}
 
 	@Transactional(readOnly = true)
-	public UserCabinetPaginationDto getUserLentCabinetInfo(String partialName,
-			Pageable pageable) {
+	public UserCabinetPaginationDto getUserLentCabinetInfo(String partialName, Pageable pageable) {
 		log.debug("Called getUserLentCabinetInfo {}", partialName);
 
 		LocalDateTime now = LocalDateTime.now();
 		Page<User> users = userQueryService.getUsers(partialName, pageable);
 		List<Long> userIds = users.stream().map(User::getUserId).collect(toList());
-		System.out.println("userIds = " + userIds);
 
 		List<BanHistory> activeBanHistories =
 				banHistoryQueryService.findActiveBanHistories(userIds, now);
-		System.out.println("activeBanHistories = " + activeBanHistories);
 		List<LentHistory> activeLentHistories =
 				lentQueryService.findUsersActiveLentHistoriesAndCabinet(userIds);
-		System.out.println("activeLentHistories = " + activeLentHistories);
 		Map<Long, List<BanHistory>> banHistoriesByUserId = activeBanHistories.stream()
 				.collect(Collectors.groupingBy(BanHistory::getUserId));
-		System.out.println("banHistoriesByUserId = " + banHistoriesByUserId);
 		Map<Long, List<LentHistory>> lentHistoriesByUserId = activeLentHistories.stream()
 				.collect(Collectors.groupingBy(LentHistory::getUserId));
-		System.out.println("lentHistoriesByUserId = " + lentHistoriesByUserId);
 
 		List<UserCabinetDto> result = users.stream().map(user -> {
 			List<BanHistory> banHistories = banHistoriesByUserId.get(user.getUserId());
@@ -214,11 +207,9 @@ public class AdminFacadeService {
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories = lentQueryService.findOverdueLentHistories(now, pageable);
 		List<OverdueUserCabinetDto> result = lentHistories.stream()
-				.map(lh -> {
-					Long overdueDays = DateUtil.calculateTwoDateDiff(now, lh.getExpiredAt());
-					return cabinetMapper.toOverdueUserCabinetDto(
-							lh, lh.getUser(), lh.getCabinet(), overdueDays);
-				}).collect(Collectors.toList());
+				.map(lh -> cabinetMapper.toOverdueUserCabinetDto(lh, lh.getUser(), lh.getCabinet(),
+						DateUtil.calculateTwoDateDiff(now, lh.getExpiredAt()))
+				).collect(Collectors.toList());
 		return cabinetMapper.toOverdueUserCabinetPaginationDto(result, (long) lentHistories.size());
 	}
 
@@ -267,11 +258,10 @@ public class AdminFacadeService {
 		cabinets.forEach(cabinet -> {
 			List<LentHistory> cabinetLentHistories =
 					lentHistoriesByCabinetId.get(cabinet.getCabinetId());
-			cabinetLentHistories.forEach(lh -> lentCommandService.endLent(lh, now));
-			cabinetCommandService.changeUserCount(cabinet, 0);
-			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 			lentRedisService.setPreviousUserName(
 					cabinet.getCabinetId(), cabinetLentHistories.get(0).getUser().getName());
 		});
+		lentCommandService.endLent(lentHistories, now);
+		cabinetCommandService.changeUserCount(cabinets, 0);
 	}
 }
