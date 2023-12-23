@@ -172,7 +172,7 @@ public class LentHistory {
 	public boolean isSetExpiredAt() {
 		LocalDateTime expiredAt = getExpiredAt();
 		if (expiredAt == null) {
-			return false;
+			throw new DomainException(ExceptionStatus.INTERNAL_SERVER_ERROR);
 		}
 		return !expiredAt.isEqual(DateUtil.getInfinityDate());
 	}

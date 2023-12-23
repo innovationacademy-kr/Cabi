@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.admin.search;
 
 import static java.util.stream.Collectors.toList;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.IN_SESSION;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -110,8 +111,7 @@ public class AdminSearchFacadeService {
 		log.debug("Called getCabinetInfo {}", visibleNum);
 
 		List<Cabinet> cabinets = cabinetQueryService.getCabinets(visibleNum);
-		List<Long> cabinetIds = cabinets.stream().map(Cabinet::getCabinetId)
-				.collect(toList());
+		List<Long> cabinetIds = cabinets.stream().map(Cabinet::getCabinetId).collect(toList());
 		List<LentHistory> lentHistories =
 				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
 		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()
@@ -125,10 +125,17 @@ public class AdminSearchFacadeService {
 						lents = lentHistoriesByCabinetId.get(cabinetId).stream()
 								.map(lh -> lentMapper.toLentDto(lh.getUser(), lh))
 								.collect(toList());
+					} else if (cabinet.isStatus(IN_SESSION)) {
+						List<Long> usersInCabinet =
+								lentRedisService.findUsersInCabinet(cabinet.getCabinetId());
+						List<User> users = userQueryService.getUsers(usersInCabinet);
+						lents = users.stream().map(user -> lentMapper.toLentDto(user, null))
+								.collect(toList());
 					}
 					LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
 					return cabinetMapper.toCabinetInfoResponseDto(cabinet, lents, sessionExpiredAt);
-				}).sorted(Comparator.comparingInt(o -> o.getLocation().getFloor()))
+				})
+				.sorted(Comparator.comparingInt(o -> o.getLocation().getFloor()))
 				.collect(toList());
 		return cabinetMapper.toCabinetInfoPaginationDto(result, (long) cabinets.size());
 	}
