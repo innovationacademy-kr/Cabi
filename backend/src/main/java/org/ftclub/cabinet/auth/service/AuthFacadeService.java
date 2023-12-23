@@ -52,7 +52,7 @@ public class AuthFacadeService {
 	public void handleUserLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
 		FtProfile profile = ftOauthService.getProfileByCode(code);
 		User user = userQueryService.findUser(profile.getIntraName())
-				.orElse(userCommandService.createUserByFtProfile(profile));
+				.orElseGet(() -> userCommandService.createUserByFtProfile(profile));
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
 		Cookie cookie = authCookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
@@ -62,7 +62,7 @@ public class AuthFacadeService {
 	public void handleAdminLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
 		GoogleProfile profile = googleOauthService.getProfileByCode(code);
 		Admin admin = adminQueryService.findByEmail(profile.getEmail())
-				.orElse(adminCommandService.createAdminByEmail(profile.getEmail()));
+				.orElseGet(() -> adminCommandService.createAdminByEmail(profile.getEmail()));
 		String token = tokenProvider.createAdminToken(admin, LocalDateTime.now());
 		Cookie cookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, token);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());

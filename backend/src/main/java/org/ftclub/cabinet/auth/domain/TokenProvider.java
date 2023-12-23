@@ -37,7 +37,7 @@ public class TokenProvider {
 		Claims claims = Jwts.claims();
 		claims.put("email", user.getEmail());
 		claims.put("name", user.getName());
-		claims.put("blackholedAt", user.getBlackholedAt());
+		claims.put("blackholedAt", user.getBlackholedAt().toString());
 		claims.put("role", user.getRole());
 
 		return Jwts.builder()
