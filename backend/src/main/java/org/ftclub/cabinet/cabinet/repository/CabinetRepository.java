@@ -69,6 +69,18 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	 * @param cabinetId 사물함 ID
 	 * @return 사물함 {@link Optional}
 	 */
+	@Query("SELECT c "
+			+ "FROM Cabinet c "
+			+ "JOIN FETCH c.cabinetPlace p "
+			+ "WHERE c.cabinetId = :cabinetId")
+	Optional<Cabinet> findById(@Param("cabinetId") Long cabinetId);
+
+	/**
+	 * cabinetId로 사물함을 조회한다.(조회 이후 업데이트를 위해 X Lock을 건다.)
+	 *
+	 * @param cabinetId 사물함 ID
+	 * @return 사물함 {@link Optional}
+	 */
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c "
 			+ "FROM Cabinet c "

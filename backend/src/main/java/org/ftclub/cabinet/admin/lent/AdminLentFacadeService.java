@@ -1,5 +1,12 @@
 package org.ftclub.cabinet.admin.lent;
 
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -23,19 +30,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
-
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class AdminLentFacadeService {
+
 	private final CabinetQueryService cabinetQueryService;
 	private final CabinetCommandService cabinetCommandService;
 	private final UserQueryService userQueryService;
@@ -68,13 +68,23 @@ public class AdminLentFacadeService {
 		log.debug("Called endUserLent: {}", userId);
 
 		LocalDateTime now = LocalDateTime.now();
-		LentHistory userLentHistory = lentQueryService.getUserActiveLentHistoryWithLock(userId);
-		List<LentHistory> cabinetLentHistories =
-				lentQueryService.findCabinetActiveLentHistories(userLentHistory.getCabinetId());
-		Cabinet cabinet =
-				cabinetQueryService.getCabinetsWithLock(userLentHistory.getCabinetId());
+		List<LentHistory> lentHistories =
+				lentQueryService.findUserActiveLentHistoriesInCabinet(userId);
+		Cabinet cabinet;
+		LentHistory userLentHistory;
+		if (!lentHistories.isEmpty()) {
+			cabinet = cabinetQueryService.getCabinets(lentHistories.get(0).getCabinetId());
+		} else {
+			Long cabinetId = lentRedisService.findCabinetJoinedUser(userId);
+			cabinet = cabinetQueryService.getCabinets(cabinetId);
+			List<Long> userIds = lentRedisService.findUsersInCabinet(cabinetId);
+			lentHistories = lentQueryService.findUsersActiveLentHistoriesAndCabinet(userIds);
+		}
+		userLentHistory = lentHistories.stream()
+				.filter(lh -> lh.getUserId().equals(userId)).findFirst()
+				.orElseThrow(() -> new RuntimeException("사용자가 빌린 사물함이 없습니다."));
 
-		int userRemainCount = cabinetLentHistories.size() - 1;
+		int userRemainCount = lentHistories.size() - 1;
 		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
 		lentCommandService.endLent(userLentHistory, now);
 		lentRedisService.setPreviousUserName(
@@ -90,7 +100,7 @@ public class AdminLentFacadeService {
 		if (cabinet.isLentType(SHARE)) {
 			LocalDateTime expiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
 					userRemainCount, now, userLentHistory);
-			cabinetLentHistories.stream().filter(lh -> !lh.equals(userLentHistory))
+			lentHistories.stream().filter(lh -> !lh.equals(userLentHistory))
 					.forEach(lh -> lentCommandService.setExpiredAt(lh, expiredAt));
 		}
 	}

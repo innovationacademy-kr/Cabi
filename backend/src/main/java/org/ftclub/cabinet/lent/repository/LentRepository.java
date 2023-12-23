@@ -113,6 +113,16 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "WHERE lh.userId = :userId AND lh.endedAt is null")
 	Optional<LentHistory> findByUserIdAndEndedAtIsNullForUpdate(@Param("userId") Long userId);
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.user u "
+			+ "WHERE lh.endedAt IS NULL "
+			+ "AND lh.cabinetId = ("
+			+ "     SELECT lh2.cabinetId FROM LentHistory lh2 "
+			+ "     WHERE lh2.userId = :userId AND lh2.endedAt IS NULL)")
+	List<LentHistory> findAllByCabinetIdWithSubQuery(@Param("userId") Long userId);
+
 	/**
 	 * 사물함의 대여기록 {@link LentHistory}들을 모두 가져옵니다. {@link Pageable}이 적용되었습니다.
 	 *
@@ -210,7 +220,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 					+ "WHERE lh.expiredAt < :date AND lh.endedAt IS NULL")
 	Page<LentHistory> findAllExpiredAtBeforeAndEndedAtIsNullJoinUserAndCabinet(
 			@Param("date") LocalDateTime date, Pageable pageable);
-	
+
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
 			+ "WHERE lh.endedAt IS NULL "
