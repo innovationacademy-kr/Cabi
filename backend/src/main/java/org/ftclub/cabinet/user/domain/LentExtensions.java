@@ -38,6 +38,8 @@ public class LentExtensions {
 
 	public LentExtension findImminentActiveLentExtension() {
 		filterActiveLentExtensions();
+		if (!this.hasActiveLentExtension())
+			return null;
 		sortImminentASC();
 		return lentExtensions.get(0);
 	}
