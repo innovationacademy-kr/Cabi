@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -42,6 +43,10 @@ public class CabinetQueryService {
 		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
+	public List<Cabinet> getCabinets(List<Long> cabinetIds) {
+		return cabinetRepository.findAllById(cabinetIds);
+	}
+
 	public Cabinet getCabinetsWithLock(Long cabinetId) {
 		Optional<Cabinet> cabinet = cabinetRepository.findByIdWithLock(cabinetId);
 		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
@@ -75,14 +80,22 @@ public class CabinetQueryService {
 		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
 	}
 
-	public List<String> findAllBuildings() {
-		log.debug("Called findAllBuildings");
-		return cabinetRepository.findAllBuildings();
-	}
 
 	public List<ActiveCabinetInfoEntities> findActiveCabinetInfoEntities(String building,
 			Integer floor) {
 		log.debug("Called findActiveCabinetInfoEntities");
 		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+	}
+
+	public List<Cabinet> findPendingCabinetsNotLentTypeAndStatus(
+			String building, LentType lentType, List<CabinetStatus> cabinetStatuses) {
+		log.debug("Called findPendingCabinetsNotLentTypeAndStatus");
+		return cabinetRepository.findAllByBuildingAndLentTypeNotAndStatusIn(building, lentType,
+				cabinetStatuses);
+	}
+
+	public Cabinet findActiveCabinetByUserId(Long userId) {
+		log.debug("Called findActiveLentCabinetByUserId: {}", userId);
+		return cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId).orElse(null);
 	}
 }

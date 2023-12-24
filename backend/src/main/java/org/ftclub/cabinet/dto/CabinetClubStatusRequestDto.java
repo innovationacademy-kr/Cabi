@@ -3,8 +3,10 @@ package org.ftclub.cabinet.dto;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
+@ToString
 @Getter
 public class CabinetClubStatusRequestDto {
 
