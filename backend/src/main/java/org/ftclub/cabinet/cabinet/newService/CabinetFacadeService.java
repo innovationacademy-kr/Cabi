@@ -1,15 +1,25 @@
 package org.ftclub.cabinet.cabinet.newService;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
+import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
@@ -78,6 +88,11 @@ public class CabinetFacadeService {
 				lentRedisService.getSessionExpired(cabinetId));
 	}
 
+	/**
+	 * @param visibleNum
+	 * @return
+	 */
+
 	public CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum) {
 		log.debug("getCabinetsSimpleInfoByVisibleNum: {}", visibleNum);
 
@@ -91,6 +106,55 @@ public class CabinetFacadeService {
 				.totalLength((long) cabinets.size())
 				.result(cabinetSimpleDtos)
 				.build();
+	}
+
+	private String checkCabinetTitle(Cabinet cabinet, List<LentHistory> lentHistories) {
+		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
+			return cabinet.getTitle();
+		} else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
+			return lentHistories.get(0).getUser().getName();
+		}
+		return null;
+	}
+
+
+	/**
+	 * 빌딩명과 층으로 섹션별 사물함 정보를 가져옵니다.
+	 *
+	 * @param building 빌딩 이름 (예: 새롬관)
+	 * @param floor    빌딩에 있는 층
+	 * @return 전달인자로 받은 건물,층 에 있는 모든 섹션별 사물함 정보
+	 */
+	@Transactional(readOnly = true)
+	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
+			Integer floor) {
+		log.debug("getCabinetsPerSection: {}, {}", building, floor);
+		List<ActiveCabinetInfoEntities> activeCabinetInfos = cabinetQueryService.findActiveCabinetInfoEntities(
+				building, floor);
+		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
+				collect(groupingBy(ActiveCabinetInfoEntities::getCabinet,
+						mapping(ActiveCabinetInfoEntities::getLentHistory,
+								Collectors.toList())));
+		List<Cabinet> allCabinetsOnSection =
+				cabinetQueryService.findAllCabinetsByBuildingAndFloor(building, floor);
+
+		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
+		allCabinetsOnSection.stream()
+				.sorted(Comparator.comparing(Cabinet::getVisibleNum))
+				.forEach(cabinet -> {
+					String section = cabinet.getCabinetPlace().getLocation().getSection();
+					List<LentHistory> lentHistories =
+							cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
+					String title = checkCabinetTitle(cabinet, lentHistories);
+					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>())
+							.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
+									title));
+				});
+
+		return cabinetPreviewsBySection.entrySet().stream()
+				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
+						entry.getValue()))
+				.collect(Collectors.toList());
 	}
 
 }

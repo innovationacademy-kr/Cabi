@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
+import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 public class CabinetQueryService {
 
 	private final CabinetRepository cabinetRepository;
-
 
 	public List<String> getAllBuildings() {
 		return cabinetRepository.findAllBuildings();
@@ -71,8 +71,18 @@ public class CabinetQueryService {
 		return cabinet.orElse(null);
 	}
 
+	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
+		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
+	}
+
 	public List<String> findAllBuildings() {
 		log.debug("Called findAllBuildings");
 		return cabinetRepository.findAllBuildings();
+	}
+
+	public List<ActiveCabinetInfoEntities> findActiveCabinetInfoEntities(String building,
+			Integer floor) {
+		log.debug("Called findActiveCabinetInfoEntities");
+		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
 	}
 }
