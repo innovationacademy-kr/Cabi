@@ -79,7 +79,7 @@ public class AdminLentFacadeService {
 			}
 			return;
 		}
-		Cabinet cabinet = cabinetQueryService.getCabinets(lentHistories.get(0).getCabinetId());
+		Cabinet cabinet = cabinetQueryService.findCabinets(lentHistories.get(0).getCabinetId());
 		LentHistory userLentHistory = lentHistories.stream()
 				.filter(lh -> lh.getUserId().equals(userId)).findFirst()
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_LENT_HISTORY));
@@ -110,7 +110,7 @@ public class AdminLentFacadeService {
 		log.debug("Called endCabinetsLent: {}", cabinetIds);
 
 		LocalDateTime now = LocalDateTime.now();
-		List<Cabinet> cabinets = cabinetQueryService.getCabinetsWithLock(cabinetIds);
+		List<Cabinet> cabinets = cabinetQueryService.findCabinetsWithLock(cabinetIds);
 		List<LentHistory> lentHistories =
 				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
 		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()

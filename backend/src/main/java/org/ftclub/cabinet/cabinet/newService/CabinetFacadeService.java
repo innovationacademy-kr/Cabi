@@ -109,7 +109,7 @@ public class CabinetFacadeService {
 	public CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum) {
 		log.debug("getCabinetsSimpleInfoByVisibleNum: {}", visibleNum);
 
-		List<Cabinet> cabinets = cabinetQueryService.getCabinets(visibleNum);
+		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
 
 		List<CabinetSimpleDto> cabinetSimpleDtos = cabinets.stream()
 				.map(cabinetMapper::toCabinetSimpleDto)
@@ -215,7 +215,7 @@ public class CabinetFacadeService {
 	@Transactional
 	public void updateCabinetStatusNote(Long cabinetId, String statusNote) {
 		log.debug("updateCabinetStatusNote: {}, {}", cabinetId, statusNote);
-		Cabinet cabinet = cabinetQueryService.getCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		cabinetCommandService.changeCabinetStatusNote(cabinet, statusNote);
 	}
 
@@ -229,14 +229,14 @@ public class CabinetFacadeService {
 	@Transactional
 	public void updateCabinetTitle(Long cabinetId, String title) {
 		log.debug("updateCabinetTitle: {}, {}", cabinetId, title);
-		Cabinet cabinet = cabinetQueryService.getCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		cabinetCommandService.updateTitle(cabinet, title);
 	}
 
 	@Transactional
 	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
 		log.debug("updateCabinetGrid: {}, {}, {}", cabinetId, row, col);
-		Cabinet cabinet = cabinetQueryService.getCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		cabinetCommandService.updateGrid(cabinet, Grid.of(row, col));
 	}
 
@@ -249,7 +249,7 @@ public class CabinetFacadeService {
 	@Transactional
 	public void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum) {
 		log.debug("updateCabinetVisibleNum: {}, {}", cabinetId, visibleNum);
-		Cabinet cabinet = cabinetQueryService.getCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		cabinetCommandService.updateVisibleNum(cabinet, visibleNum);
 	}
 
@@ -263,7 +263,7 @@ public class CabinetFacadeService {
 		CabinetStatus status = cabinetStatusRequestDto.getStatus();
 		LentType lentType = cabinetStatusRequestDto.getLentType();
 
-		List<Cabinet> cabinetsWithLock = cabinetQueryService.getCabinetsWithLock(
+		List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsWithLock(
 				cabinetStatusRequestDto.getCabinetIds());
 
 		for (Cabinet cabinet : cabinetsWithLock) {

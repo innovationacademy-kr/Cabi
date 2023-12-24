@@ -22,66 +22,80 @@ public class CabinetQueryService {
 
 	private final CabinetRepository cabinetRepository;
 
-	public List<String> findAllBuildings() {
-		return cabinetRepository.findAllBuildings();
+	public int countCabinets(CabinetStatus status, Integer floor) {
+		log.debug("Called countCabinets {} {}", status, floor);
+		return cabinetRepository.countByStatusAndFloor(status, floor);
 	}
 
+	/*------------------------------------------  GET  -------------------------------------------*/
+
+
 	public List<String> getAllBuildings() {
+		log.debug("Called getAllBuildings");
 		return cabinetRepository.getAllBuildings()
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BUILDING));
 	}
 
+	/*------------------------------------------  FIND  -------------------------------------------*/
+
+	public List<String> findAllBuildings() {
+		log.debug("Called findAllBuildings");
+		return cabinetRepository.findAllBuildings();
+	}
+
 	public List<Integer> findAllFloorsByBuilding(String building) {
+		log.debug("Called findAllFloorsByBuilding {}", building);
 		return cabinetRepository.findAllFloorsByBuilding(building);
 	}
 
-	public int countCabinets(CabinetStatus status, Integer floor) {
-		return cabinetRepository.countByStatusAndFloor(status, floor);
-	}
-
 	public List<Integer> findAllFloorsByBuildings(List<String> buildings) {
+		log.debug("Called findAllFloorsByBuildings");
 		return cabinetRepository.findAllFloorsByBuildings(buildings);
 	}
 
-	public Cabinet getCabinets(Long cabinetId) {
+	public Cabinet findCabinets(Long cabinetId) {
+		log.debug("Called findCabinets: {}", cabinetId);
 		Optional<Cabinet> cabinet = cabinetRepository.findById(cabinetId);
 		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
-	public List<Cabinet> getCabinets(List<Long> cabinetIds) {
-		return cabinetRepository.findAllById(cabinetIds);
-	}
-
-	public Cabinet getCabinetsWithLock(Long cabinetId) {
+	public Cabinet findCabinetsWithLock(Long cabinetId) {
+		log.debug("Called findCabinetsWithLock: {}", cabinetId);
 		Optional<Cabinet> cabinet = cabinetRepository.findByIdWithLock(cabinetId);
 		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
-	public List<Cabinet> getCabinets(Integer visibleNum) {
+	public List<Cabinet> findCabinets(Integer visibleNum) {
+		log.debug("Called findCabinets: {}", visibleNum);
 		return cabinetRepository.findAllByVisibleNum(visibleNum);
 	}
 
-	public Page<Cabinet> getCabinets(Integer visibleNum, PageRequest pageable) {
+	public Page<Cabinet> findCabinets(Integer visibleNum, PageRequest pageable) {
+		log.debug("Called findCabinets: {}", visibleNum);
 		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
 	}
 
-	public List<Cabinet> getCabinetsWithLock(List<Long> cabinetIds) {
+	public List<Cabinet> findCabinetsWithLock(List<Long> cabinetIds) {
+		log.debug("Called findCabinetsWithLock: {}", cabinetIds);
 		return cabinetRepository.findAllByIdsWithLock(cabinetIds);
 	}
 
 	public Cabinet getUserActiveCabinetWithLock(Long userId) {
+		log.debug("Called getUserActiveCabinetWithLock: {}", userId);
 		Optional<Cabinet> cabinet =
 				cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithLock(userId);
 		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
 	}
 
 	public Cabinet findUserActiveCabinet(Long userId) {
+		log.debug("Called findUserActiveCabinet: {}", userId);
 		Optional<Cabinet> cabinet =
 				cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId);
 		return cabinet.orElse(null);
 	}
 
 	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
+		log.debug("Called findAllCabinetsByBuildingAndFloor");
 		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
 	}
 

@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.lent.newService;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
@@ -16,9 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,8 @@ public class LentFacadeService2 {
 	private final LentMapper lentMapper;
 
 
-	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page, Integer size) {
+	public LentHistoryPaginationDto getAllUserLentHistories(Long userId, Integer page,
+			Integer size) {
 		log.debug("Called getAllUserLentHistories: {}", userId);
 		userQueryService.getUser(userId);
 
@@ -40,7 +40,8 @@ public class LentFacadeService2 {
 			size = Integer.MAX_VALUE;
 		}
 		PageRequest pageable = PageRequest.of(page, size, Sort.by("startedAt"));
-		Page<LentHistory> lentHistories = lentQueryService.findUserActiveLentHistories(userId, pageable);
+		Page<LentHistory> lentHistories = lentQueryService.findUserActiveLentHistories(userId,
+				pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
 				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
 				.collect(Collectors.toList());
@@ -49,7 +50,7 @@ public class LentFacadeService2 {
 
 	public List<LentDto> getLentDtoList(Long cabinetId) {
 		log.debug("Called getLentDtoList: {}", cabinetId);
-		cabinetQueryService.getCabinets(cabinetId);
+		cabinetQueryService.findCabinets(cabinetId);
 
 //        cabinetOptionalFetcher.getCabinet(cabinetId);
 //        List<LentHistory> lentHistories = lentOptionalFetcher.findAllActiveLentByCabinetId(
