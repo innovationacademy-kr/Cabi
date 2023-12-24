@@ -22,11 +22,11 @@ public class CabinetQueryService {
 
 	private final CabinetRepository cabinetRepository;
 
-	public List<String> getAllBuildings() {
+	public List<String> findAllBuildings() {
 		return cabinetRepository.findAllBuildings();
 	}
 
-	public List<Integer> getAllFloorsByBuilding(String building) {
+	public List<Integer> findAllFloorsByBuilding(String building) {
 		return cabinetRepository.findAllFloorsByBuilding(building);
 	}
 
@@ -34,7 +34,7 @@ public class CabinetQueryService {
 		return cabinetRepository.countByStatusAndFloor(status, floor);
 	}
 
-	public List<Integer> getAllFloorsByBuildings(List<String> buildings) {
+	public List<Integer> findAllFloorsByBuildings(List<String> buildings) {
 		return cabinetRepository.findAllFloorsByBuildings(buildings);
 	}
 

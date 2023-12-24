@@ -67,10 +67,10 @@ public class CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
 		log.debug("getBuildingFloorsResponse");
-		List<String> allBuildings = cabinetQueryService.getAllBuildings();
+		List<String> allBuildings = cabinetQueryService.findAllBuildings();
 		return allBuildings.stream()
 				.map(building -> cabinetMapper.toBuildingFloorsDto(building,
-						cabinetQueryService.getAllFloorsByBuilding(building))
+						cabinetQueryService.findAllFloorsByBuilding(building))
 				)
 				.collect(Collectors.toList());
 	}
