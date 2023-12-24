@@ -2,7 +2,6 @@ package org.ftclub.cabinet.user.newService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
@@ -18,30 +17,29 @@ import java.util.stream.Collectors;
 public class LentExtensionQueryService {
 
     private final LentExtensionRepository lentExtensionRepository;
-    public LentExtension getActiveLentExtension(UserSessionDto userSessionDto) {
-        log.debug("Called getActiveLentExtension: {}", userSessionDto.getName());
+    public LentExtension findActiveLentExtension(Long userId) {
+        log.debug("Called getActiveLentExtension: {}", userId);
 
-        List<LentExtension> lentExtensions = lentExtensionRepository.findAll(userSessionDto.getUserId());
         return LentExtensions.builder()
-                .lentExtensions(lentExtensions)
+                .lentExtensions(lentExtensionRepository.findAll(userId))
                 .build()
                 .findImminentActiveLentExtension();
     }
 
-    public List<LentExtension> getMyLentExtensionInLatestOrder(Long userId) {
+    public LentExtensions findActiveLentExtensions(Long userId) {
+        log.debug("Called getLentExtensionList {}", userId);
+
+        return LentExtensions.builder()
+                .lentExtensions(lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId))
+                .build();
+    }
+
+    public List<LentExtension> findLentExtensionsInLatestOrder(Long userId) {
         log.debug("Called getMyLentExtensionSorted: {}", userId);
 
         return lentExtensionRepository.findAll(userId)
                 .stream()
                 .sorted(Comparator.comparing(LentExtension::getExpiredAt, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
-    }
-
-    public LentExtensions getActiveLentExtensionList(long userId) {
-        log.debug("Called getLentExtensionList {}", userId);
-
-        return LentExtensions.builder()
-                .lentExtensions(lentExtensionRepository.findAllByUserIdAndUsedAtIsNull(userId))
-                .build();
     }
 }

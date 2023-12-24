@@ -2,15 +2,17 @@ package org.ftclub.cabinet.user.newService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.config.CabinetProperties;
-import org.ftclub.cabinet.user.domain.LentExtension;
-import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
-import org.ftclub.cabinet.user.domain.LentExtensionType;
-import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.user.domain.*;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +30,14 @@ public class LentExtensionCommandService {
 				policy.getExpiry(now),
 				type, user.getUserId());
 		return lentExtensionRepository.save(lentExtension);
+	}
+
+	public void useLentExtension(LentExtension lentExtension, List<LentHistory> lentHistories) {
+		log.debug("Called useLentExtension : {}", lentExtension.getLentExtensionId());
+
+		lentExtension.use();
+		lentHistories
+				.forEach(lentHistory -> lentHistory.setExpiredAt(
+						lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
 	}
 }
