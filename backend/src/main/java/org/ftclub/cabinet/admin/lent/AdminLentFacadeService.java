@@ -15,6 +15,8 @@ import org.ftclub.cabinet.cabinet.newService.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentCommandService;
 import org.ftclub.cabinet.lent.service.LentPolicyService;
@@ -70,19 +72,17 @@ public class AdminLentFacadeService {
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories =
 				lentQueryService.findUserActiveLentHistoriesInCabinet(userId);
-		Cabinet cabinet;
-		LentHistory userLentHistory;
-		if (!lentHistories.isEmpty()) {
-			cabinet = cabinetQueryService.getCabinets(lentHistories.get(0).getCabinetId());
-		} else {
+		if (lentHistories.isEmpty()) {
 			Long cabinetId = lentRedisService.findCabinetJoinedUser(userId);
-			cabinet = cabinetQueryService.getCabinets(cabinetId);
-			List<Long> userIds = lentRedisService.findUsersInCabinet(cabinetId);
-			lentHistories = lentQueryService.findUsersActiveLentHistoriesAndCabinet(userIds);
+			if (cabinetId != null) {
+				lentRedisService.deleteUserInCabinetSession(cabinetId, userId);
+			}
+			return;
 		}
-		userLentHistory = lentHistories.stream()
+		Cabinet cabinet = cabinetQueryService.getCabinets(lentHistories.get(0).getCabinetId());
+		LentHistory userLentHistory = lentHistories.stream()
 				.filter(lh -> lh.getUserId().equals(userId)).findFirst()
-				.orElseThrow(() -> new RuntimeException("사용자가 빌린 사물함이 없습니다."));
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_LENT_HISTORY));
 
 		int userRemainCount = lentHistories.size() - 1;
 		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
