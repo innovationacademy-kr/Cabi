@@ -58,7 +58,7 @@ public enum ExceptionStatus {
 	SLACK_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "슬랙 아이디를 찾을 수 없습니다."),
 	NOT_FOUND_ALARM(HttpStatus.BAD_REQUEST, "알람이 존재하지 않습니다"),
 	INVALID_LENT_TYPE(HttpStatus.BAD_REQUEST, "사물함의 대여 타입이 유효하지 않습니다."),
-	;
+	NOT_FOUND_BUILDING(HttpStatus.NOT_FOUND, "빌딩이 존재하지 않습니다.");
 
 	final private int statusCode;
 	final private String message;

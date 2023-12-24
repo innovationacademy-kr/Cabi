@@ -26,6 +26,11 @@ public class CabinetQueryService {
 		return cabinetRepository.findAllBuildings();
 	}
 
+	public List<String> getAllBuildings() {
+		return cabinetRepository.getAllBuildings()
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BUILDING));
+	}
+
 	public List<Integer> findAllFloorsByBuilding(String building) {
 		return cabinetRepository.findAllFloorsByBuilding(building);
 	}
