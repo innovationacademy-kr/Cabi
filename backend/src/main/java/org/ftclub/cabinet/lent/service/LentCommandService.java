@@ -2,6 +2,7 @@ package org.ftclub.cabinet.lent.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -40,6 +41,15 @@ public class LentCommandService {
 
 		lentHistory.endLent(now);
 		lentRepository.save(lentHistory);
+	}
+
+	public void endLent(List<LentHistory> lentHistories, LocalDateTime now) {
+		log.info("endLent lentHistories: {}, now: {}", lentHistories, now);
+
+		lentHistories.forEach(lentHistory -> lentHistory.isEndLentValid(now));
+		List<Long> userIds = lentHistories.stream()
+				.map(LentHistory::getUserId).collect(Collectors.toList());
+		lentRepository.updateEndedAtByUserIdIn(userIds, now);
 	}
 
 	public void setExpiredAt(LentHistory lentHistory, LocalDateTime expiredAt) {

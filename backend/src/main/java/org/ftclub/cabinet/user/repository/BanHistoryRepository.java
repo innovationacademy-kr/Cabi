@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -55,10 +54,8 @@ public interface BanHistoryRepository extends JpaRepository<BanHistory, Long> {
 	 * @param today    현재 날짜
 	 * @return active {@link BanHistory} 리스트
 	 */
-	@EntityGraph(attributePaths = {"user"})
-	@Query("SELECT b "
-			+ "FROM BanHistory b "
-			+ "WHERE b.unbannedAt > :today ")
+	@Query(value = "SELECT b FROM BanHistory b LEFT JOIN FETCH b.user WHERE b.unbannedAt > :today",
+			countQuery = "SELECT count(b) FROM BanHistory b WHERE b.unbannedAt > :today")
 	Page<BanHistory> findPaginationActiveBanHistoriesJoinUser(Pageable pageable,
 			@Param("today") LocalDateTime today);
 

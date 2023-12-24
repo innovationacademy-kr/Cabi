@@ -1,8 +1,8 @@
 package org.ftclub.cabinet.user.service;
 
-import org.ftclub.cabinet.admin.domain.Admin;
-import org.ftclub.cabinet.admin.domain.AdminRole;
-import org.ftclub.cabinet.admin.repository.AdminRepository;
+import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.repository.AdminRepository;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;

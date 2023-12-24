@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
-import org.ftclub.cabinet.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.user.domain.User;

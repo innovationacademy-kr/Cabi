@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -61,6 +62,18 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			+ "FROM CabinetPlace p "
 			+ "WHERE p.location.building IN (:buildings)")
 	List<Integer> findAllFloorsByBuildings(@Param("buildings") List<String> buildings);
+
+	/**
+	 * cabinetId로 사물함을 조회한다.(조회 이후 업데이트를 위해 X Lock을 건다.)
+	 *
+	 * @param cabinetId 사물함 ID
+	 * @return 사물함 {@link Optional}
+	 */
+	@Query("SELECT c "
+			+ "FROM Cabinet c "
+			+ "JOIN FETCH c.cabinetPlace p "
+			+ "WHERE c.cabinetId = :cabinetId")
+	Optional<Cabinet> findById(@Param("cabinetId") Long cabinetId);
 
 	/**
 	 * cabinetId로 사물함을 조회한다.(조회 이후 업데이트를 위해 X Lock을 건다.)
@@ -139,4 +152,18 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			+ "AND c.status IN (:status)")
 	List<Cabinet> findAllByBuildingAndLentTypeNotAndStatusIn(@Param("building") String building,
 			@Param("lentType") LentType lentType, @Param("status") List<CabinetStatus> status);
+
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("UPDATE Cabinet c "
+			+ "SET c.status = :status "
+			+ "WHERE c.cabinetId IN (:cabinetIds)")
+	void updateStatusByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
+			@Param("status") CabinetStatus status);
+
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("UPDATE Cabinet c "
+			+ "SET c.status = :status, c.title = '', c.memo = '' "
+			+ "WHERE c.cabinetId IN (:cabinetIds)")
+	void updateStatusAndClearTitleAndMemoByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
+			@Param("status") CabinetStatus status);
 }
