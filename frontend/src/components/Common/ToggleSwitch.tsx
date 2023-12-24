@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import styled, { css } from "styled-components";
+import React from "react";
+import styled from "styled-components";
 
 interface ToggleSwitchInterface {
   id: string;
@@ -14,14 +14,9 @@ const ToggleSwitch = ({
   checked = false,
   disabled,
 }: ToggleSwitchInterface) => {
-  const [isChecked, setIsChecked] = useState(checked);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newState = event.target.checked;
-    setIsChecked(newState);
-    if (onChange) {
-      onChange(newState);
-    }
+    if (onChange) onChange(newState);
   };
 
   return (
@@ -29,12 +24,12 @@ const ToggleSwitch = ({
       <InputStyled
         type="checkbox"
         id={id}
-        checked={isChecked}
+        checked={checked}
         onChange={handleChange}
         disabled={disabled}
       />
-      <ToggleSwitchStyled htmlFor={id} checked={isChecked} disabled={disabled}>
-        <ToggleKnobStyled checked={isChecked} />
+      <ToggleSwitchStyled htmlFor={id} checked={checked} disabled={disabled}>
+        <ToggleKnobStyled checked={checked} />
       </ToggleSwitchStyled>
     </ToggleSwitchContainerStyled>
   );
