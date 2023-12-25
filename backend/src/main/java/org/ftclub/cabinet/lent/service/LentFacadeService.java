@@ -37,7 +37,7 @@ import org.ftclub.cabinet.user.newService.BanPolicyService;
 import org.ftclub.cabinet.user.newService.UserQueryService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +64,7 @@ public class LentFacadeService {
 
 
 	@Transactional(readOnly = true)
-	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user, PageRequest pageable) {
+	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user, Pageable pageable) {
 		log.debug("Called getMyLentLog: {}", user.getName());
 
 		Page<LentHistory> lentHistories =
