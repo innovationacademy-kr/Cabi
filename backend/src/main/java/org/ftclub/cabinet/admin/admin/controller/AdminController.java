@@ -3,6 +3,8 @@ package org.ftclub.cabinet.admin.admin.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.admin.admin.service.AdminFacadeService;
+import org.ftclub.cabinet.auth.domain.AuthGuard;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,7 @@ public class AdminController {
 	 *
 	 * @param email 유저의 이메일
 	 */
+	@AuthGuard(level = AuthLevel.MASTER_ONLY)
 	@PostMapping("/{email}/promote")
 	public void promoteUserToAdmin(@PathVariable String email) {
 		adminFacadeService.promoteAdminByEmail(email);
