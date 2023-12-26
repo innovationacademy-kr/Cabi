@@ -85,13 +85,13 @@ public class CabinetFacadeService {
 		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
 				cabinetId);
 
-		cabinetActiveLentHistories.stream().map(lentHistory -> lentDtos.add(
+		cabinetActiveLentHistories.forEach(lentHistory -> lentDtos.add(
 				lentMapper.toLentDto(lentHistory.getUser(), lentHistory)));
 
 		if (cabinetActiveLentHistories.isEmpty()) {
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 			List<User> users = userQueryService.getUsers(usersInCabinet);
-			users.stream().map(user -> lentDtos.add(
+			users.forEach(user -> lentDtos.add(
 					LentDto.builder().userId(user.getUserId()).name(user.getName()).build()
 			));
 		}
