@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -26,7 +25,6 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"alarmStatus"})
 @Log4j2
 public class User {
 
@@ -106,5 +104,12 @@ public class User {
 		this.name = name;
 		ExceptionUtil.throwIfFalse(this.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+	}
+
+	public String getBlackholedAtString() {
+		if (blackholedAt == null) {
+			return null;
+		}
+		return blackholedAt.toString();
 	}
 }
