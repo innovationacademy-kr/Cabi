@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.mapper;
 
 import static org.mapstruct.NullValueMappingStrategy.RETURN_DEFAULT;
+import static org.mapstruct.NullValueMappingStrategy.RETURN_NULL;
 
 import java.util.List;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
 
 //@NullableMapper
 @Mapper(componentModel = "spring",
-		nullValueMappingStrategy = RETURN_DEFAULT,
+		nullValueMappingStrategy = RETURN_NULL,
 		nullValueMapMappingStrategy = RETURN_DEFAULT,
 		nullValueIterableMappingStrategy = RETURN_DEFAULT)
 @Component
