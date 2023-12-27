@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.user;
+package org.ftclub.cabinet.admin.user.service;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;

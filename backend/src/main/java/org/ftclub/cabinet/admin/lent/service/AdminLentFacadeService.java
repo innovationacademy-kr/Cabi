@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.lent;
+package org.ftclub.cabinet.admin.lent.service;
 
 import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 

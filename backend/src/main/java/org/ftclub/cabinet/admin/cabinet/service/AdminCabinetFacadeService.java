@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.cabinet;
+package org.ftclub.cabinet.admin.cabinet.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;

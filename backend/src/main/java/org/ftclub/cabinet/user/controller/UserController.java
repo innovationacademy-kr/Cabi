@@ -9,7 +9,7 @@ import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
-import org.ftclub.cabinet.user.service.UserFacadeService;
+import org.ftclub.cabinet.user.newService.UserFacadeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +36,7 @@ public class UserController {
 	@GetMapping("/me")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
-		return userFacadeService.getMyProfile(userSessionDto);
+		return userFacadeService.getProfile(userSessionDto);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class UserController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public LentExtensionPaginationDto getMyLentExtension(
 			@UserSession UserSessionDto userSessionDto) {
-		return userFacadeService.getMyLentExtension(userSessionDto);
+		return userFacadeService.getLentExtensions(userSessionDto);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class UserController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public LentExtensionPaginationDto getMyActiveLentExtension(
 			@UserSession UserSessionDto userSessionDto) {
-		return userFacadeService.getMyActiveLentExtensionPage(userSessionDto);
+		return userFacadeService.getActiveLentExtensionsPage(userSessionDto);
 	}
 
 	/**

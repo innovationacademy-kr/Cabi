@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.auth;
+package org.ftclub.cabinet.admin.auth.controller;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

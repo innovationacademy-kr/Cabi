@@ -1,8 +1,9 @@
-package org.ftclub.cabinet.admin.search;
+package org.ftclub.cabinet.admin.search.controller;
 
 import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.search.service.AdminSearchFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
 import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
