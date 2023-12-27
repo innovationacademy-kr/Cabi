@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.newService.CabinetCommandService;
@@ -22,6 +21,8 @@ import org.ftclub.cabinet.lent.service.LentCommandService;
 import org.ftclub.cabinet.lent.service.LentPolicyService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.newService.BanHistoryCommandService;
@@ -35,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 public class AdminLentFacadeService {
 
 	private final CabinetQueryService cabinetQueryService;
@@ -53,8 +54,6 @@ public class AdminLentFacadeService {
 
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getUserLentHistories(Long userId, Pageable pageable) {
-		log.debug("Called getAllUserLentHistories: {}", userId);
-
 		userQueryService.getUser(userId);
 		Page<LentHistory> lentHistories =
 				lentQueryService.findUserActiveLentHistories(userId, pageable);
@@ -67,8 +66,6 @@ public class AdminLentFacadeService {
 
 	@Transactional
 	public void endUserLent(Long userId) {
-		log.debug("Called endUserLent: {}", userId);
-
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories =
 				lentQueryService.findUserActiveLentHistoriesInCabinet(userId);
@@ -107,8 +104,6 @@ public class AdminLentFacadeService {
 
 	@Transactional
 	public void endCabinetLent(List<Long> cabinetIds) {
-		log.debug("Called endCabinetsLent: {}", cabinetIds);
-
 		LocalDateTime now = LocalDateTime.now();
 		List<Cabinet> cabinets = cabinetQueryService.findCabinetsWithLock(cabinetIds);
 		List<LentHistory> lentHistories =

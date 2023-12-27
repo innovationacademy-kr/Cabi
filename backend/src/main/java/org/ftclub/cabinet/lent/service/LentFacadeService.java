@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -25,6 +24,8 @@ import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.dto.UserVerifyRequestDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -41,9 +42,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Logging(level = LogLevel.DEBUG)
 public class LentFacadeService {
 
 	private final LentRedisService lentRedisService;
@@ -65,8 +66,6 @@ public class LentFacadeService {
 
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user, Pageable pageable) {
-		log.debug("Called getMyLentLog: {}", user.getName());
-
 		Page<LentHistory> lentHistories =
 				lentQueryService.findUserActiveLentHistories(user.getUserId(), pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
@@ -81,8 +80,6 @@ public class LentFacadeService {
 
 	@Transactional(readOnly = true)
 	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
-		log.debug("Called getMyLentInfo: {}", user.getName());
-
 		Cabinet userActiveCabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
 		Long cabinetId;
 		List<LentDto> lentDtoList;
@@ -112,8 +109,6 @@ public class LentFacadeService {
 
 	@Transactional(readOnly = true)
 	public List<ActiveLentHistoryDto> getAllActiveLentHistories() {
-		log.debug("Called getAllActiveLentHistories");
-
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories = lentQueryService.findAllActiveLentHistories();
 		return lentHistories.stream()
@@ -129,8 +124,6 @@ public class LentFacadeService {
 
 	@Transactional
 	public void startLentCabinet(Long userId, Long cabinetId) {
-		log.debug("Called startLentCabinet: {}, {}", userId, cabinetId);
-
 		LocalDateTime now = LocalDateTime.now();
 		User user = userQueryService.getUser(userId);
 		Cabinet cabinet = cabinetQueryService.findCabinetsWithLock(cabinetId);
@@ -153,8 +146,6 @@ public class LentFacadeService {
 
 	@Transactional
 	public void startLentShareCabinet(Long userId, Long cabinetId, String shareCode) {
-		log.info("Called startLentShareCabinet: {}, {}, {}", userId, cabinetId, shareCode);
-
 		LocalDateTime now = LocalDateTime.now();
 		Cabinet cabinet = cabinetQueryService.findCabinetsWithLock(cabinetId);
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
@@ -195,8 +186,6 @@ public class LentFacadeService {
 
 	@Transactional
 	public void startLentClubCabinet(Long userId, Long cabinetId) {
-		log.debug("Called startLentClubCabinet: {}, {}", userId, cabinetId);
-
 		LocalDateTime now = LocalDateTime.now();
 		// TODO : ClubUser 추가 이후 userId로 ClubUser 검증 로직 필요(Policy)
 		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
@@ -214,8 +203,6 @@ public class LentFacadeService {
 
 	@Transactional
 	public void endUserLent(Long userId, String memo) {
-		log.debug("Called endLentCabinet: {}", userId);
-
 		LocalDateTime now = LocalDateTime.now();
 		LentHistory userLentHistory = lentQueryService.getUserActiveLentHistoryWithLock(userId);
 		List<LentHistory> cabinetLentHistories =
@@ -249,8 +236,6 @@ public class LentFacadeService {
 
 	@Transactional
 	public void updateLentCabinetInfo(Long userId, String title, String memo) {
-		log.debug("Called updateLentCabinetInfo: {}, {}, {}", userId, title, memo);
-
 		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetWithLock(userId);
 		cabinetCommandService.updateTitle(cabinet, title);
 		cabinetCommandService.updateMemo(cabinet, memo);
@@ -258,8 +243,6 @@ public class LentFacadeService {
 
 	@Transactional
 	public void cancelShareCabinetLent(Long userId, Long cabinetId) {
-		log.debug("Called cancelShareCabinetLent: {}, {}", userId, cabinetId);
-
 		lentRedisService.deleteUserInCabinetSession(cabinetId, userId);
 		if (lentRedisService.isCabinetSessionEmpty(cabinetId)) {
 			Cabinet cabinet = cabinetQueryService.findCabinetsWithLock(cabinetId);
@@ -269,8 +252,6 @@ public class LentFacadeService {
 
 	@Transactional
 	public void shareCabinetSessionExpired(Long cabinetId) {
-		log.debug("Called shareCabinetSessionExpired: {}", cabinetId);
-
 		Cabinet cabinet = cabinetQueryService.findCabinetsWithLock(cabinetId);
 		List<Long> usersInCabinetSession = lentRedisService.getUsersInCabinetSession(cabinetId);
 		if (lentPolicyService.verifyUserCountOnShareCabinet(usersInCabinetSession.size())) {

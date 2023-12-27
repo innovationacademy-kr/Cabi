@@ -1,27 +1,30 @@
 package org.ftclub.cabinet.user.newService;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.user.domain.*;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
+import org.ftclub.cabinet.user.domain.LentExtensionType;
+import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 public class LentExtensionCommandService {
+
 	private final LentExtensionRepository lentExtensionRepository;
 
 	private final LentExtensionPolicy policy;
 	private final CabinetProperties cabinetProperties;
 
 	public LentExtension createLentExtension(User user, LentExtensionType type, LocalDateTime now) {
-		log.debug("Called assignLentExtension {}", user.getName());
 		LentExtension lentExtension = LentExtension.of(policy.getDefaultName(),
 				policy.getDefaultExtensionTerm(),
 				policy.getExpiry(now),
@@ -30,10 +33,9 @@ public class LentExtensionCommandService {
 	}
 
 	public void useLentExtension(LentExtension lentExtension, List<LentHistory> lentHistories) {
-		log.debug("Called useLentExtension : {}", lentExtension.getLentExtensionId());
-
 		lentExtension.use();
 		lentHistories.forEach(lentHistory ->
-				lentHistory.setExpiredAt(lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
+				lentHistory.setExpiredAt(
+						lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
 	}
 }

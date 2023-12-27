@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
@@ -24,7 +23,9 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
+import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetSimpleDto;
@@ -32,21 +33,27 @@ import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentHistoryDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.newService.UserQueryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Log4j2
 @Service
 @RequiredArgsConstructor
+@Logging(level = LogLevel.DEBUG)
 public class CabinetFacadeService {
 
 	private final CabinetCommandService cabinetCommandService;
@@ -66,7 +73,6 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
-		log.debug("getBuildingFloorsResponse");
 		List<String> allBuildings = cabinetQueryService.findAllBuildings();
 		return allBuildings.stream()
 				.map(building -> cabinetMapper.toBuildingFloorsDto(building,
@@ -79,7 +85,6 @@ public class CabinetFacadeService {
 	 * {@inheritDoc} 사물함 id로 사물함 정보를 가져옵니다. active 대여기록이 없는경우, IN_SESSION 상태의 사물함인지 확인합니다.
 	 */
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
-		log.debug("getCabinetInfo: {}", cabinetId);
 		List<LentDto> lentDtos = new ArrayList<>();
 
 		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
@@ -107,8 +112,6 @@ public class CabinetFacadeService {
 	 */
 
 	public CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum) {
-		log.debug("getCabinetsSimpleInfoByVisibleNum: {}", visibleNum);
-
 		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
 
 		List<CabinetSimpleDto> cabinetSimpleDtos = cabinets.stream()
@@ -132,7 +135,6 @@ public class CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor) {
-		log.debug("getCabinetsPerSection: {}, {}", building, floor);
 		List<ActiveCabinetInfoEntities> activeCabinetInfos = cabinetQueryService.findActiveCabinetInfoEntities(
 				building, floor);
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
@@ -172,8 +174,6 @@ public class CabinetFacadeService {
 
 	@Transactional
 	public CabinetPendingResponseDto getPendingCabinets(String building) {
-		log.debug("getPendingCabinets: {} ", building);
-
 		final LocalDate yesterday = LocalDateTime.now().minusDays(1).toLocalDate();
 		List<Cabinet> pendingCabinets =
 				cabinetQueryService.findPendingCabinetsNotLentTypeAndStatus(
@@ -204,6 +204,41 @@ public class CabinetFacadeService {
 		});
 		return cabinetMapper.toCabinetPendingResponseDto(cabinetFloorMap);
 	}
+
+	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType,
+			Pageable pageable) {
+		Page<Cabinet> cabinets = cabinetQueryService.findAllByLentType(lentType, pageable);
+		List<CabinetDto> result = cabinets.stream()
+				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
+		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
+	}
+
+	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
+			Pageable pageable) {
+		Page<Cabinet> cabinets = cabinetQueryService.findAllByStatus(status, pageable);
+		List<CabinetDto> result = cabinets.stream()
+				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
+		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
+	}
+
+	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum,
+			Pageable pageable) {
+		Page<Cabinet> cabinets = cabinetQueryService.findAllByVisibleNum(visibleNum, pageable);
+		List<CabinetDto> result = cabinets.stream()
+				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
+		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
+	}
+
+	public LentHistoryPaginationDto getLentHistoryPagination(Long cabinetId, Pageable pageable) {
+		Page<LentHistory> lentHistories = lentQueryService.findAllWithUserAndCabinetByCabinetId(
+				cabinetId, pageable);
+		List<LentHistoryDto> result = lentHistories.stream()
+				.sorted(Comparator.comparing(LentHistory::getStartedAt).reversed())
+				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
+				.collect(Collectors.toList());
+		return lentMapper.toLentHistoryPaginationDto(result, lentHistories.getTotalElements());
+	}
+
 	/*--------------------------------------------CUD--------------------------------------------*/
 
 	/**
@@ -214,7 +249,6 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetStatusNote(Long cabinetId, String statusNote) {
-		log.debug("updateCabinetStatusNote: {}, {}", cabinetId, statusNote);
 		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		cabinetCommandService.changeCabinetStatusNote(cabinet, statusNote);
 	}
@@ -228,14 +262,12 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetTitle(Long cabinetId, String title) {
-		log.debug("updateCabinetTitle: {}, {}", cabinetId, title);
 		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		cabinetCommandService.updateTitle(cabinet, title);
 	}
 
 	@Transactional
 	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
-		log.debug("updateCabinetGrid: {}, {}, {}", cabinetId, row, col);
 		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		cabinetCommandService.updateGrid(cabinet, Grid.of(row, col));
 	}
@@ -248,7 +280,6 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum) {
-		log.debug("updateCabinetVisibleNum: {}, {}", cabinetId, visibleNum);
 		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		cabinetCommandService.updateVisibleNum(cabinet, visibleNum);
 	}
@@ -258,8 +289,6 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetBundleStatus(CabinetStatusRequestDto cabinetStatusRequestDto) {
-		log.debug("updateCabinetBundleStatus: {}", cabinetStatusRequestDto.getCabinetIds());
-
 		CabinetStatus status = cabinetStatusRequestDto.getStatus();
 		LentType lentType = cabinetStatusRequestDto.getLentType();
 
@@ -284,8 +313,6 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateClub(CabinetClubStatusRequestDto dto) {
-		log.debug("updateClub: {}", dto);
-
 		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetWithLock(dto.getCabinetId());
 
 		Cabinet activeCabinetByUserId = cabinetQueryService.findActiveCabinetByUserId(
@@ -301,6 +328,4 @@ public class CabinetFacadeService {
 
 		cabinetCommandService.updateClubStatus(cabinet, clubName, dto.getStatusNote());
 	}
-
-
 }

@@ -11,12 +11,15 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRepository;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Logging(level = LogLevel.DEBUG)
 public class LentQueryService {
 
 	private final LentRepository lentRepository;
@@ -74,5 +77,10 @@ public class LentQueryService {
 
 	public List<LentHistory> findAllByCabinetIdsAfterDate(LocalDate date, List<Long> cabinetIds) {
 		return lentRepository.findAllByCabinetIdsAfterDate(date, cabinetIds);
+	}
+
+	public Page<LentHistory> findAllWithUserAndCabinetByCabinetId(Long cabinetId,
+			Pageable pageable) {
+		return lentRepository.findPaginationByCabinetIdJoinCabinetAndUser(cabinetId, pageable);
 	}
 }

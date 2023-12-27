@@ -37,7 +37,7 @@ public class LentOptionalFetcher {
 
 	public Page<LentHistory> findPaginationByCabinetId(Long cabinetId, PageRequest pageable) {
 		log.debug("Called findPaginationByCabinetId: {}", cabinetId);
-		return lentRepository.findPaginationByCabinetId(cabinetId, pageable);
+		return lentRepository.findPaginationByCabinetIdJoinCabinetAndUser(cabinetId, pageable);
 	}
 
 	public Page<LentHistory> findPaginationByUserId(Long userId, PageRequest pageable) {

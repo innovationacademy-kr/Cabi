@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
@@ -21,6 +20,8 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -32,10 +33,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Logging(level = LogLevel.DEBUG)
 public class AdminStatisticsFacadeService {
 
 	private final CabinetQueryService cabinetQueryService;
@@ -46,8 +47,6 @@ public class AdminStatisticsFacadeService {
 	private final UserMapper userMapper;
 
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
-		log.debug("Called getAllCabinetsInfo");
-
 		List<String> buildings = cabinetQueryService.getAllBuildings();
 		List<Integer> floors = cabinetQueryService.findAllFloorsByBuildings(buildings);
 		return floors.stream().map(floor -> {
@@ -63,8 +62,6 @@ public class AdminStatisticsFacadeService {
 
 	public LentsStatisticsResponseDto getLentCountStatistics(
 			LocalDateTime startDate, LocalDateTime endDate) {
-		log.debug("Called getLentCountStatistics startDate : {} endDate : {}", startDate, endDate);
-
 		ExceptionUtil.throwIfFalse(startDate.isBefore(endDate),
 				new ServiceException(ExceptionStatus.INVALID_ARGUMENT));
 		int lentStartCount = lentQueryService.countLentOnDuration(startDate, endDate);
@@ -74,8 +71,6 @@ public class AdminStatisticsFacadeService {
 	}
 
 	public BlockedUserPaginationDto getAllBanUsers(Pageable pageable) {
-		log.debug("Called getAllBanUsers");
-
 		LocalDateTime now = LocalDateTime.now();
 		Page<BanHistory> banHistories =
 				banHistoryQueryService.findActiveBanHistories(now, pageable);
@@ -86,8 +81,6 @@ public class AdminStatisticsFacadeService {
 	}
 
 	public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
-		log.debug("Called getOverdueUsers");
-
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories = lentQueryService.findOverdueLentHistories(now, pageable);
 		List<OverdueUserCabinetDto> result = lentHistories.stream()
