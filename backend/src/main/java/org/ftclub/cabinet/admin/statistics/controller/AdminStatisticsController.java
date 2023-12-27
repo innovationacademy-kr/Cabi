@@ -1,10 +1,11 @@
-package org.ftclub.cabinet.admin.statistics;
+package org.ftclub.cabinet.admin.statistics.controller;
 
 import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.statistics.service.AdminStatisticsFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;

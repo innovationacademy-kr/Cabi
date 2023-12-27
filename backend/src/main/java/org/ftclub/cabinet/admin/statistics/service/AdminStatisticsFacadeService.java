@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.statistics;
+package org.ftclub.cabinet.admin.statistics.service;
 
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.BROKEN;

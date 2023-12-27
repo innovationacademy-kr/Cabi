@@ -1,10 +1,12 @@
-package org.ftclub.cabinet.admin.user;
+package org.ftclub.cabinet.admin.user.controller;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.lent.AdminLentFacadeService;
+import org.ftclub.cabinet.admin.lent.service.AdminLentFacadeService;
+import org.ftclub.cabinet.admin.user.service.AdminLentExtensionFacadeService;
+import org.ftclub.cabinet.admin.user.service.AdminUserFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ClubUserListDto;

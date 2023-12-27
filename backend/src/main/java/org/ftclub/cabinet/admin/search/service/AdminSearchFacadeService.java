@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.search;
+package org.ftclub.cabinet.admin.search.service;
 
 import static java.util.stream.Collectors.toList;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.IN_SESSION;
