@@ -62,9 +62,7 @@ export const axiosUseExtension = async (): Promise<any> => {
 const axiosUpdateAlarmURL = "/v4/users/me/alarms";
 export const axiosUpdateAlarm = async (alarm: AlarmInfo): Promise<any> => {
   try {
-    const response = await instance.put(axiosUpdateAlarmURL, {
-      alarm,
-    });
+    const response = await instance.put(axiosUpdateAlarmURL, alarm);
     return response;
   } catch (error) {
     throw error;

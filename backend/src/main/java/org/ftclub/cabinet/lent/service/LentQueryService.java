@@ -2,6 +2,7 @@ package org.ftclub.cabinet.lent.service;
 
 import static java.util.stream.Collectors.toList;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -69,5 +70,9 @@ public class LentQueryService {
 		return lentRepository.findAllExpiredAtBeforeAndEndedAtIsNullJoinUserAndCabinet(now,
 						pageable).stream()
 				.sorted(Comparator.comparing(LentHistory::getExpiredAt)).collect(toList());
+	}
+
+	public List<LentHistory> findAllByCabinetIdsAfterDate(LocalDate date, List<Long> cabinetIds) {
+		return lentRepository.findAllByCabinetIdsAfterDate(date, cabinetIds);
 	}
 }

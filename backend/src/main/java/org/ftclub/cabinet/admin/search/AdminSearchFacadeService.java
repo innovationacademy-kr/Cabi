@@ -98,7 +98,7 @@ public class AdminSearchFacadeService {
 	public CabinetSimplePaginationDto getCabinetsSimpleInfo(Integer visibleNum) {
 		log.debug("Called getCabinetSimpleInfo {}", visibleNum);
 
-		List<Cabinet> cabinets = cabinetQueryService.getCabinets(visibleNum);
+		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
 		List<CabinetSimpleDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetSimpleDto).collect(toList());
 		return cabinetMapper.toCabinetSimplePaginationDto(result, (long) cabinets.size());
@@ -107,7 +107,7 @@ public class AdminSearchFacadeService {
 	public CabinetInfoPaginationDto getCabinetInfo(Integer visibleNum) {
 		log.debug("Called getCabinetInfo {}", visibleNum);
 
-		List<Cabinet> cabinets = cabinetQueryService.getCabinets(visibleNum);
+		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
 		List<Long> cabinetIds = cabinets.stream().map(Cabinet::getCabinetId).collect(toList());
 		List<LentHistory> lentHistories =
 				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);

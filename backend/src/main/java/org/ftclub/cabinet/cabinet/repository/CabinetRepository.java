@@ -28,6 +28,10 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			+ "FROM CabinetPlace p ")
 	List<String> findAllBuildings();
 
+	@Query("SELECT DISTINCT p.location.building "
+			+ "FROM CabinetPlace p ")
+	Optional<List<String>> getAllBuildings();
+
 	/**
 	 * 빌딩의 모든 층을 조회한다.
 	 *

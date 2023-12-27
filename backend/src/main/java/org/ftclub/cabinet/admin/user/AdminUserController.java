@@ -36,20 +36,6 @@ public class AdminUserController {
 		adminUserFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
 	}
 
-
-	/**
-	 * 유저를 어드민으로 승격시킵니다.
-	 *
-	 * @param email 유저 이메일
-	 * @return redirect:cabi.42seoul.io/admin/login
-	 */
-	@GetMapping("/admins/promote")
-	@AuthGuard(level = AuthLevel.MASTER_ONLY)
-	public void promoteUserToAdmin(@RequestParam("email") String email) {
-		log.info("Called promoteUserToAdmin: {}", email);
-		adminFacadeService.promoteAdminByEmail(email);
-	}
-
 	/**
 	 * 동아리 유저를 생성합니다.
 	 *

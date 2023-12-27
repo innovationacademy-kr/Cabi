@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
+import org.ftclub.cabinet.cabinet.domain.Grid;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.utils.ExceptionUtil;
@@ -61,5 +63,31 @@ public class CabinetCommandService {
 		} else {
 			cabinetRepository.updateStatusByCabinetIdsIn(cabinetIds, FULL);
 		}
+	}
+
+	public void changeCabinetStatusNote(Cabinet cabinet, String changedStatusNote) {
+		cabinet.writeStatusNote(changedStatusNote);
+	}
+
+	public void updateGrid(Cabinet cabinet, Grid modifedGrid) {
+		cabinet.coordinateGrid(modifedGrid);
+	}
+
+	public void updateVisibleNum(Cabinet cabinet, Integer visibleNum) {
+		cabinet.assignVisibleNum(visibleNum);
+	}
+
+	public void updateStatus(Cabinet cabinet, CabinetStatus status) {
+		cabinet.specifyStatus(status);
+	}
+
+	public void updateLentType(Cabinet cabinet, LentType lentType) {
+		cabinet.specifyLentType(lentType);
+	}
+
+	public void updateClubStatus(Cabinet cabinet, String clubName, String statusNote) {
+		cabinet.writeTitle(clubName);
+		cabinet.writeStatusNote(statusNote);
+		cabinet.specifyLentType(LentType.CLUB);
 	}
 }

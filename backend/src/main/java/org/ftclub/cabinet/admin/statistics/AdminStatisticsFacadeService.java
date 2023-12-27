@@ -49,7 +49,7 @@ public class AdminStatisticsFacadeService {
 		log.debug("Called getAllCabinetsInfo");
 
 		List<String> buildings = cabinetQueryService.getAllBuildings();
-		List<Integer> floors = cabinetQueryService.getAllFloorsByBuildings(buildings);
+		List<Integer> floors = cabinetQueryService.findAllFloorsByBuildings(buildings);
 		return floors.stream().map(floor -> {
 			Integer used = cabinetQueryService.countCabinets(FULL, floor);
 			Integer unused = cabinetQueryService.countCabinets(AVAILABLE, floor);
