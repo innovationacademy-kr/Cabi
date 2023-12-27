@@ -119,7 +119,7 @@ const IndexRectangleStyled = styled.div<{ filledColor: string }>`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       transform: scale(1.3);
-      background-color: var(--lightpurple-color);
+      background-color: var(--sub-color);
     }
   }
 `;
