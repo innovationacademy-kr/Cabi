@@ -2,10 +2,7 @@ package org.ftclub.cabinet.user.newService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.config.CabinetProperties;
-import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.user.domain.*;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
@@ -36,8 +33,7 @@ public class LentExtensionCommandService {
 		log.debug("Called useLentExtension : {}", lentExtension.getLentExtensionId());
 
 		lentExtension.use();
-		lentHistories
-				.forEach(lentHistory -> lentHistory.setExpiredAt(
-						lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
+		lentHistories.forEach(lentHistory ->
+				lentHistory.setExpiredAt(lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
 	}
 }

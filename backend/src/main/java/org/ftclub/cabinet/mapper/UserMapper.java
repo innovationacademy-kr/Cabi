@@ -14,6 +14,7 @@ import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
+import org.ftclub.cabinet.user.domain.AlarmStatus;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.LentExtension;
 import org.ftclub.cabinet.user.domain.User;
@@ -55,4 +56,6 @@ public interface UserMapper {
 
 	LentExtensionPaginationDto toLentExtensionPaginationDto(List<LentExtensionResponseDto> result,
 			Long totalLength);
+
+	AlarmTypeResponseDto toAlarmTypeResponseDto(AlarmStatus alarmStatus);
 }

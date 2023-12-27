@@ -51,39 +51,14 @@ public class UserFacadeService {
 				LocalDateTime.now()).orElse(null);
 		LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
 				user.getUserId());
-		LentExtensionResponseDto lentExtensionResponseDto = LentExtensionResponseDto.builder()
-				.lentExtensionId(lentExtension.getLentExtensionId())
-				.name(lentExtension.getName())
-				.extensionPeriod(lentExtension.getExtensionPeriod())
-				.expiredAt(lentExtension.getExpiredAt().toString())
-				.lentExtensionType(lentExtension.getLentExtensionType())
-				.build();
+		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
 
 		AlarmStatus alarmStatus = alarmQueryService.findAlarmStatus(user.getUserId());
-		AlarmTypeResponseDto alarmTypeResponseDto = AlarmTypeResponseDto.builder()
-				.alarmStatus(alarmStatus)
-				.build();
+		AlarmTypeResponseDto alarmTypeResponseDto = userMapper.toAlarmTypeResponseDto(alarmStatus);
 
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
 				lentExtensionResponseDto, alarmTypeResponseDto);
 	}
-
-	// 동아리 유저 생성부분은 AdminUserFacadeService에서 하므로 주석처리했습니다.
-//	public void createClubUser(String clubName) {
-//		log.debug("Called createClubUser: {}", clubName);
-//		User user = userQueryService.findUser(clubName).orElse(null);
-//		if (StringUtil.isNullOrEmpty(clubName)) {
-//			throw new ControllerException(ExceptionStatus.INVALID_ARGUMENT);
-//		} else if (user != null && user.getDeletedAt() == null) {
-//			throw new ControllerException(ExceptionStatus.EXISTED_CLUB_USER);
-//		} else if (user != null) {
-//			user.setDeletedAt(null);
-//		} else {
-//			String randomUUID = UUID.randomUUID().toString();
-//			User newUser = User.of(clubName, randomUUID + "@ftc.co.kr", null, UserRole.CLUB);
-//			userCommandService.save(newUser);
-//		}
-//	}
 
 	public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
 		log.debug("Called getMyLentExtension : {}", user.getName());
