@@ -22,7 +22,7 @@ import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
-import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.user.oldService.UserService;
 import org.springframework.stereotype.Component;
 
 /**

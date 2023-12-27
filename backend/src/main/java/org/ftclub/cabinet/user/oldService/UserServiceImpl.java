@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.service;
+package org.ftclub.cabinet.user.oldService;
 
 import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;

@@ -37,7 +37,7 @@ public class UserController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public MyProfileResponseDto getMyProfile(@UserSession UserSessionDto userSessionDto) {
 		log.info("Called getMyProfile: {}", userSessionDto.getName());
-		return userFacadeService.getMyProfile(userSessionDto);
+		return userFacadeService.getProfile(userSessionDto);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class UserController {
 	public LentExtensionPaginationDto getMyLentExtension(
 			@UserSession UserSessionDto userSessionDto) {
 		log.info("Called getMyLentExtension: {}", userSessionDto.getName());
-		return userFacadeService.getMyLentExtension(userSessionDto);
+		return userFacadeService.getLentExtensions(userSessionDto);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class UserController {
 	public LentExtensionPaginationDto getMyActiveLentExtension(
 			@UserSession UserSessionDto userSessionDto) {
 		log.info("Called getMyActiveLentExtension: {}", userSessionDto.getName());
-		return userFacadeService.getMyActiveLentExtensionPage(userSessionDto);
+		return userFacadeService.getActiveLentExtensionsPage(userSessionDto);
 	}
 
 	/**

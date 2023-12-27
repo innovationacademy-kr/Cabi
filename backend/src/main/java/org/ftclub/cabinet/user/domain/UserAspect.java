@@ -12,7 +12,7 @@ import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.user.oldService.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

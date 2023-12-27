@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.newService;
+package org.ftclub.cabinet.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,7 +23,8 @@ public class LentExtensionQueryService {
         return LentExtensions.builder()
                 .lentExtensions(lentExtensionRepository.findAll(userId))
                 .build()
-                .findImminentActiveLentExtension();
+                .findImminentActiveLentExtension()
+                .orElse(null);
     }
 
     public LentExtensions findActiveLentExtensions(Long userId) {

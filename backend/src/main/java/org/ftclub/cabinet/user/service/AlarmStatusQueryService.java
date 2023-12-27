@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.newService;
+package org.ftclub.cabinet.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

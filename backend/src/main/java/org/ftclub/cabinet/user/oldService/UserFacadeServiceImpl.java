@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.service;
+package org.ftclub.cabinet.user.oldService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

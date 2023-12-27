@@ -7,7 +7,7 @@ import org.ftclub.cabinet.auth.domain.FtRole;
 import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
 import org.ftclub.cabinet.auth.service.FtOauthService;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.user.service.UserService;
+import org.ftclub.cabinet.user.oldService.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;

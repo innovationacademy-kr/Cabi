@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.user.domain.LentExtensionType;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.newService.LentExtensionCommandService;
-import org.ftclub.cabinet.user.newService.UserQueryService;
+import org.ftclub.cabinet.user.service.LentExtensionCommandService;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

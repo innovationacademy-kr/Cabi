@@ -14,8 +14,8 @@ import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.newService.UserCommandService;
-import org.ftclub.cabinet.user.newService.UserQueryService;
+import org.ftclub.cabinet.user.service.UserCommandService;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;

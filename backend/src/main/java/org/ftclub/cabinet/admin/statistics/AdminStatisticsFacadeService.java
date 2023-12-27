@@ -24,7 +24,7 @@ import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.newService.BanHistoryQueryService;
+import org.ftclub.cabinet.user.service.BanHistoryQueryService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.springframework.data.domain.Page;
