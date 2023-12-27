@@ -6,8 +6,10 @@ import {
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import ColorPicker from "@/components/Card/ThemeColorCard/ColorPicker";
-import { themeColorData } from "@/assets/data/colorInfo";
-import { customColors } from "@/assets/data/customColors";
+import {
+  customColors,
+  themeColorData,
+} from "@/components/Card/ThemeColorCard/colorInfo";
 
 interface ThemeColorProps {
   showColorPicker: boolean;
