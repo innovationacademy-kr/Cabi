@@ -13,6 +13,7 @@ import OverduePenaltyModal from "@/components/Modals/OverduePenaltyModal/Overdue
 import TopNav from "@/components/TopNav/TopNav.container";
 import { additionalModalType } from "@/assets/data/maps";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
+import ColorType from "@/types/enum/color.type.enum";
 import { axiosMyInfo } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
@@ -63,7 +64,9 @@ const Layout = (): JSX.Element => {
     }
   };
 
-  const savedColor = localStorage.getItem("mainColor");
+  const savedMainColor = localStorage.getItem("main-color");
+  const savedSubColor = localStorage.getItem("sub-color");
+  const savedMineColor = localStorage.getItem("mine-color");
   const root: HTMLElement = document.documentElement;
 
   useEffect(() => {
@@ -80,10 +83,10 @@ const Layout = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    root.style.setProperty("--main-color", savedColor);
-    if (savedColor !== "#9747ff")
-      root.style.setProperty("--lightpurple-color", "#7b7b7b");
-  }, [savedColor]);
+    root.style.setProperty("--main-color", savedMainColor);
+    root.style.setProperty("--sub-color", savedSubColor);
+    root.style.setProperty("--mine", savedMineColor);
+  }, [savedMainColor, savedSubColor, savedMineColor]);
 
   const { closeAll } = useMenu();
 

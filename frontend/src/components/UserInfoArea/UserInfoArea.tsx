@@ -128,7 +128,7 @@ const LinkTextStyled = styled.div`
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 0.875rem;
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
   text-decoration: underline;
   :hover {
     cursor: pointer;

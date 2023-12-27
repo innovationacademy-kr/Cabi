@@ -181,7 +181,7 @@ const SubHeaderStyled = styled.div`
   align-items: center;
   text-align: center;
   font-size: 1.2rem;
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
   margin-top: 25px;
   line-height: 1.5;
   word-break: keep-all;
