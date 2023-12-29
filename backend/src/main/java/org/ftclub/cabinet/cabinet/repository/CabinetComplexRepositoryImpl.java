@@ -65,7 +65,7 @@ public class CabinetComplexRepositoryImpl implements CabinetComplexRepository {
 	@Override
 	public List<Cabinet> findAllCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus,
 			LocalDateTime currentDate) {
-		//LentHistory 에서, 오늘날짜 이전의 endedAt이면서, 중복되지 않는 레코드 와 cabinet 을 join 해서 가져온다.
+		//LentHistory 에서, 오늘날짜 이전의 endedAt이면서, 중복되지 않는 레코드와 cabinet 을 join 해서 가져온다.
 		//cabinetStatus 는 PENDING 이어야한다.
 		return queryFactory.selectFrom(cabinet)
 				.join(lentHistory)

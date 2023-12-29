@@ -2,12 +2,14 @@ package org.ftclub.cabinet.utils.overdue.manager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.domain.AlarmEvent;
+import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
+import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetService;
-import org.ftclub.cabinet.config.MailOverdueProperties;
+import org.ftclub.cabinet.alarm.config.AlarmProperties;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.firebase.fcm.service.FCMService;
-import org.ftclub.cabinet.utils.mail.EmailSender;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,10 +23,9 @@ import org.springframework.stereotype.Component;
  */
 public class OverdueManager {
 
-	private final EmailSender emailSender;
-	private final FCMService fcmService;
 	private final CabinetService cabinetService;
-	private final MailOverdueProperties mailOverdueProperties;
+	private final AlarmProperties alarmProperties;
+	private final ApplicationEventPublisher eventPublisher;
 
 
 	/**
@@ -40,7 +41,7 @@ public class OverdueManager {
 		if (isExpired) {
 			return OverdueType.OVERDUE;
 		}
-		if (mailOverdueProperties.getSoonOverdueTerm().equals(daysLeftFromExpireDate)) {
+		if (alarmProperties.getSoonOverdueTerm().equals(daysLeftFromExpireDate)) {
 			return OverdueType.SOON_OVERDUE;
 		}
 		return OverdueType.NONE;
@@ -48,7 +49,6 @@ public class OverdueManager {
 
 	public void handleOverdue(ActiveLentHistoryDto activeLent) {
 		log.info("called handleOverdue with {}", activeLent);
-		String subject = null, template = null;
 		OverdueType overdueType = getOverdueType(activeLent.getIsExpired(),
 				activeLent.getDaysLeftFromExpireDate());
 
@@ -56,22 +56,15 @@ public class OverdueManager {
 			case NONE:
 				return;
 			case SOON_OVERDUE:
-				subject = mailOverdueProperties.getSoonOverdueMailSubject();
-				template = mailOverdueProperties.getSoonOverdueMailTemplateUrl();
+				eventPublisher.publishEvent(AlarmEvent.of(activeLent.getUserId(),
+						new LentExpirationImminentAlarm(activeLent.getDaysLeftFromExpireDate())));
 				break;
 			case OVERDUE:
 				cabinetService.updateStatus(activeLent.getCabinetId(),
 						CabinetStatus.OVERDUE);
-				subject = mailOverdueProperties.getOverdueMailSubject();
-				template = mailOverdueProperties.getOverdueMailTemplateUrl();
+				eventPublisher.publishEvent(AlarmEvent.of(activeLent.getUserId(),
+						new LentExpirationAlarm(activeLent.getDaysLeftFromExpireDate())));
 				break;
-		}
-		try {
-			emailSender.sendMail(activeLent.getName(), activeLent.getEmail(), subject,
-					template);
-			fcmService.sendPushMessage(activeLent.getName(), overdueType, activeLent.getDaysLeftFromExpireDate());
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 }

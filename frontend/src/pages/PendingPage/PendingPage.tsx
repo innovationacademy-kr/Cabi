@@ -3,16 +3,40 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import FloorContainer from "@/pages/PendingPage/components/FloorContainer";
-import Timer from "@/pages/PendingPage/components/Timer";
+import PendingCountdown from "@/pages/PendingPage/components/PendingCountdown";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { CabinetPreviewInfo } from "@/types/dto/cabinet.dto";
+import MultiToggleSwitch from "@/components/Common/MultiToggleSwitch";
+import {
+  CabinetPreviewInfo,
+  PendingCabinetsInfo,
+} from "@/types/dto/cabinet.dto";
 import { axiosGetPendingCabinets } from "@/api/axios/axios.custom";
 import useDebounce from "@/hooks/useDebounce";
 
+enum PendingCabinetsType {
+  ALL = "ALL",
+  PRIVATE = "PRIVATE",
+  SHARE = "SHARE",
+}
+
+const toggleList = [
+  { name: "전체", key: PendingCabinetsType.ALL },
+  { name: "개인", key: PendingCabinetsType.PRIVATE },
+  { name: "공유", key: PendingCabinetsType.SHARE },
+];
+
 const PendingPage = () => {
-  const [pendingCabinets, setPendingCabinets] = useState<
-    CabinetPreviewInfo[][]
-  >([[]]);
+  const [toggleType, setToggleType] = useState<PendingCabinetsType>(
+    PendingCabinetsType.ALL
+  );
+  const [cabinets, setCabinets] = useState<PendingCabinetsInfo>({});
+  const [pendingCabinets, setPendingCabinets] = useState<PendingCabinetsInfo>(
+    {}
+  );
+  const [privateCabinets, setPrivateCabinets] = useState<PendingCabinetsInfo>(
+    {}
+  );
+  const [sharedCabinets, setSharedCabinets] = useState<PendingCabinetsInfo>({});
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [isOpenTime, setIsOpenTime] = useState<boolean>(false);
@@ -21,13 +45,33 @@ const PendingPage = () => {
   );
   const { debounce } = useDebounce();
 
-  const isShowingLoadingAnimation = !isRefreshing && isLoaded;
-
   const getPendingCabinets = async () => {
     try {
       const response = await axiosGetPendingCabinets();
       const pendingCabinets = response.data.cabinetInfoResponseDtos;
+
+      const filterCabinetsByType = (type: string) =>
+        Object.fromEntries(
+          Object.entries(pendingCabinets).map(([key, cabinets]: any) => [
+            key,
+            cabinets.filter(
+              (cabinet: CabinetPreviewInfo) => cabinet.lentType === type
+            ),
+          ])
+        );
+
+      const privateCabinets = filterCabinetsByType(PendingCabinetsType.PRIVATE);
+      const sharedCabinets = filterCabinetsByType(PendingCabinetsType.SHARE);
+
+      const updatedCabinets =
+        toggleType === PendingCabinetsType.ALL
+          ? pendingCabinets
+          : filterCabinetsByType(toggleType);
+
+      setCabinets(updatedCabinets);
       setPendingCabinets(pendingCabinets);
+      setPrivateCabinets(privateCabinets);
+      setSharedCabinets(sharedCabinets);
     } catch (error) {
       throw error;
     }
@@ -47,7 +91,7 @@ const PendingPage = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      // 새로고침 광클 방지를 위한 딜레이
+      // 새로고침 광클 방지를 위한 초기 로딩 딜레이
       setIsLoaded(true);
     }, 500);
   }, []);
@@ -65,20 +109,39 @@ const PendingPage = () => {
     }
   }, [isOpenTime]);
 
+  useEffect(() => {
+    if (toggleType === PendingCabinetsType.ALL) setCabinets(pendingCabinets);
+    else if (toggleType === PendingCabinetsType.PRIVATE)
+      setCabinets(privateCabinets);
+    else if (toggleType === PendingCabinetsType.SHARE)
+      setCabinets(sharedCabinets);
+  }, [toggleType]);
+
   return (
     <WrapperStyled>
+      <UtilsSectionStyled>
+        <MultiToggleSwitch
+          initialState={toggleType}
+          setState={setToggleType}
+          toggleList={toggleList}
+        />
+      </UtilsSectionStyled>
       <HeaderStyled>사용 가능 사물함</HeaderStyled>
       <SubHeaderStyled>
         <h2>
           <span>매일 오후 1시</span> 사용 가능한 사물함이 업데이트됩니다.
         </h2>
         <RefreshButtonStyled onClick={refreshPendingCabinets}>
-          <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+          {isRefreshing ? (
+            <LoadingAnimation />
+          ) : (
+            <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+          )}
         </RefreshButtonStyled>
       </SubHeaderStyled>
-      <Timer observeOpenTime={() => setIsOpenTime(true)} />
-      {isShowingLoadingAnimation && pendingCabinets ? (
-        Object.entries(pendingCabinets).map(([key, value]) => (
+      <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} />
+      {isLoaded && cabinets ? (
+        Object.entries(cabinets).map(([key, value]) => (
           <FloorContainer
             key={key}
             floorNumber={key} // 2층부터 시작
@@ -101,10 +164,15 @@ const WrapperStyled = styled.main`
   overflow-y: scroll;
 `;
 
+const UtilsSectionStyled = styled.section`
+  width: 70%;
+  margin-top: 50px;
+`;
+
 const HeaderStyled = styled.h1`
   font-size: 2rem;
   font-weight: 700;
-  margin-top: 50px;
+  margin-top: 30px;
 `;
 
 const SubHeaderStyled = styled.div`
@@ -113,11 +181,12 @@ const SubHeaderStyled = styled.div`
   align-items: center;
   text-align: center;
   font-size: 1.2rem;
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
   margin-top: 25px;
   line-height: 1.5;
   word-break: keep-all;
   margin: 25px 10px 0px 10px;
+  color: var(--main-color);
   span {
     font-weight: 700;
     text-decoration: underline;
@@ -125,11 +194,11 @@ const SubHeaderStyled = styled.div`
 `;
 
 const RefreshButtonStyled = styled.button`
-  margin-top: 30px;
-  margin-bottom: 20px;
-  background-color: transparent;
+  margin-top: 40px;
+  background-color: initial;
   width: 35px;
-  height: 0px;
+  height: 35px;
+  padding: 0;
   img {
     width: 35px;
     height: 35px;

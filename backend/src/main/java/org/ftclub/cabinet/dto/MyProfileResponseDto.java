@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 
 /**
  * 내 프로필 정보와 대여 중인 사물함의 ID를 반환하는 DTO입니다.
@@ -22,4 +22,5 @@ public class MyProfileResponseDto {
 			DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss 'KST'", Locale.US)
 	);
 	private final LentExtensionResponseDto lentExtensionResponseDto;
+	private final AlarmTypeResponseDto alarmTypes;
 }

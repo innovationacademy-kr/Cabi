@@ -16,7 +16,5 @@ public interface CabinetComplexRepository {
 	List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(
 			String building, Integer floor);
 
-	List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor);
-
 	List<Cabinet> findAllCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus, LocalDateTime endedAt);
 }

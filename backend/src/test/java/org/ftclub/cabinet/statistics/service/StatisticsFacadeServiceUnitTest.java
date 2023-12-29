@@ -57,7 +57,7 @@ class StatisticsFacadeServiceUnitTest {
 				.willReturn(floors);
 		given(statisticsRepository.getAvailableCabinetsId(any()))
 				.willReturn(availableCabinetsId);
-		given(lentRepository.countCabinetActiveLent(cabinetId))
+		given(lentRepository.countByCabinetIdAndEndedAtIsNull(cabinetId))
 				.willReturn(activeUserCount);
 		List<CabinetFloorStatisticsResponseDto> cabinetFloorStatisticsResponseDtosOrigin = new ArrayList<>();
 		for (Integer i = 2; i <= 5; i++) {

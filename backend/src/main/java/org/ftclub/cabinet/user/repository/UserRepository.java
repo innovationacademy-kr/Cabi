@@ -56,14 +56,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	Page<User> findAllByRoleAndDeletedAtIsNull(@Param("role") UserRole role, Pageable pageable);
 
-	 /**
+	/**
 	 * 블랙홀에 빠질 위험이 있는 유저들의 정보를 조회합니다. blackholedAt이 현재 시간보다 과거인 유저들을 블랙홀에 빠질 위험이 있는 유저로 판단합니다.
 	 *
 	 * @return {@link User} 리스트
 	 */
 	@Query("SELECT u FROM User u WHERE u.blackholedAt IS NOT NULL OR u.blackholedAt <= CURRENT_TIMESTAMP")
 	List<User> findByRiskOfFallingIntoBlackholeUsers();
-	
+
 	/**
 	 * 블랙홀에 빠질 위험이 없는 유저들의 정보를 조회합니다. blackholedAt이 null이거나 현재 시간보다 미래인 유저들을 블랙홀에 빠질 위험이 없는 유저로
 	 * 판단합니다.
@@ -72,6 +72,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.blackholedAt IS NULL OR u.blackholedAt > CURRENT_TIMESTAMP")
 	List<User> findByNoRiskOfFallingIntoBlackholeUsers();
+
+	/**
+	 * 유저의 id로 AlarmStatus 테이블과 결합된 유저 정보를 찾습니다.
+	 */
+	@Query("SELECT u FROM User u "
+			+ "LEFT JOIN AlarmStatus o ON u.userId = o.user.userId "
+			+ "WHERE u.userId = :id")
+	Optional<User> findUserByIdWithAlarmStatus(@Param("id") Long id);
 
 	/**
 	 * 현재 Active 상태의 Cabi User를 모두 가져옵니다.

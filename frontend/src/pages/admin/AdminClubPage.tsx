@@ -34,7 +34,10 @@ const AdminClubPage = () => {
       <SubTitleStyled>
         현재 등록된 동아리 목록을 확인할 수 있습니다.
       </SubTitleStyled>
-      <AdminClubLogContainer shouldFetchData={shouldFetchData} setShouldFetchData={setShouldFetchData} />
+      <AdminClubLogContainer
+        shouldFetchData={shouldFetchData}
+        setShouldFetchData={setShouldFetchData}
+      />
       <ButtonWrapperStyled>
         <Button
           text={"동아리 생성"}
@@ -88,7 +91,7 @@ const SubTitleStyled = styled.div`
   font-size: 1.2rem;
   letter-spacing: -0.02rem;
   margin-bottom: 5px;
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
 `;
 
 const ButtonWrapperStyled = styled.div`

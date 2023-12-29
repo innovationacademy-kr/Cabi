@@ -24,7 +24,7 @@ const FloorContainer = ({
   return (
     <FloorContainerStyled>
       <FloorTitleStyled isToggled={isToggled}>
-        <div>{floorNumber}층</div>
+        <h2>{floorNumber}층</h2>
         <button onClick={toggle}></button>
       </FloorTitleStyled>
       {pendingCabinetsList.length !== 0 ? (
@@ -52,24 +52,23 @@ const FloorContainerStyled = styled.div`
   margin-top: 50px;
 `;
 
-const FloorTitleStyled = styled.h2<{ isToggled: boolean }>`
+const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   display: flex;
   justify-content: space-between;
   font-size: 1.1rem;
   color: var(--black);
   padding-left: 5px;
-
+  padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
-  div {
-  }
   button {
+    all: initial;
+    cursor: pointer;
     z-index: 2;
     height: 30px;
-    width: 10px;
-    background: url(/src/assets/images/select.svg) no-repeat 100%;
+    width: 20px;
+    background: url(/src/assets/images/select.svg) no-repeat center center;
     transform: ${(props) =>
       props.isToggled ? "rotate(180deg)" : "rotate(0deg)"};
-    margin-right: 5px;
   }
 `;
 
@@ -100,10 +99,6 @@ const NoPendingCabinetMessageStyled = styled.div<{ isToggled: boolean }>`
     aspect-ratio: 1 / 1;
     margin-left: 8px;
   }
-`;
-
-const LoadingContainerStyled = styled.div`
-  margin-top: 30px;
 `;
 
 export default FloorContainer;

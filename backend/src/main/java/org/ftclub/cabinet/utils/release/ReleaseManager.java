@@ -21,8 +21,7 @@ public class ReleaseManager {
 
 	private List<Cabinet> getAllPendedYesterdayCabinet() {
 		return cabinetOptionalFetcher.findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
-				CabinetStatus.PENDING, LocalDateTime.from(
-						LocalDate.now().atStartOfDay()));
+				CabinetStatus.PENDING, LocalDateTime.from(LocalDate.now().atStartOfDay()));
 	}
 
 	private void releaseCabinets(List<Cabinet> cabinets) {

@@ -8,28 +8,28 @@ import org.springframework.stereotype.Component;
 @Getter
 public class DomainProperties {
 
-	@Value("${spring.oauth2.domain-name.cookie-domain}")
+	@Value("${cabinet.domain-name.cookie-domain}")
 	private String cookieDomain;
 
-	@Value("${spring.oauth2.domain-name.local}")
+	@Value("${cabinet.domain-name.local}")
 	private String local;
 
-	@Value("${spring.oauth2.domain-name.dev}")
+	@Value("${cabinet.domain-name.dev}")
 	private String dev;
 
-	@Value("${spring.oauth2.domain-name.main}")
+	@Value("${cabinet.domain-name.main}")
 	private String main;
 
-	@Value("${spring.server.be-host}")
+	@Value("${cabinet.server.be-host}")
 	private String beHost;
 
-	@Value("${spring.server.fe-host}")
+	@Value("${cabinet.server.fe-host}")
 	private String feHost;
 
-	@Value("${spring.oauth2.domain-name.admin-email}")
+	@Value("${cabinet.domain-name.admin-email}")
 	private String adminEmailDomain;
 
-	@Value("${spring.oauth2.domain-name.user-email}")
+	@Value("${cabinet.domain-name.user-email}")
 	private String userEmailDomain;
 }
 

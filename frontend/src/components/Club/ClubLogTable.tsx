@@ -88,7 +88,7 @@ const TbodyStyled = styled.tbody`
     background: #f9f6ff;
   }
   & > tr.selected {
-    background-color: var(--lightpurple-color);
+    background-color: var(--sub-color);
     color: var(--white);
     font-weight: 700;
   }
