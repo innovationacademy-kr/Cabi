@@ -1,8 +1,5 @@
 package org.ftclub.cabinet.auth.service;
 
-import static org.ftclub.cabinet.user.domain.UserRole.USER;
-
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.config.DomainProperties;
@@ -13,6 +10,10 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+
+import static org.ftclub.cabinet.user.domain.UserRole.USER;
 
 /**
  * Cabi 자체의 인증 서비스입니다.
@@ -55,6 +56,7 @@ public class AuthService {
 						DateUtil.stringToDate(blackHoledAtObject.toString()), USER);
 			}
 		}
+		throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 	}
 
 }
