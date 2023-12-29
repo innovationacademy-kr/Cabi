@@ -74,7 +74,9 @@ public class AuthFacadeService {
 		if (!masterLoginDto.getId().equals(masterProperties.getId())
 				|| !masterLoginDto.getPassword().equals(masterProperties.getPassword()))
 			throw new ServiceException(ExceptionStatus.UNAUTHORIZED_ADMIN);
-		String masterToken = tokenProvider.createMasterToken(now);
+		Admin master = adminQueryService.findByEmail(masterProperties.getEmail())
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.UNAUTHORIZED_ADMIN));
+		String masterToken = tokenProvider.createAdminToken(master, now);
 		Cookie cookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, masterToken);
 		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
 	}
