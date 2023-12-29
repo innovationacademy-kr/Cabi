@@ -128,7 +128,7 @@ public class TokenValidator {
 			case USER_OR_ADMIN:
 				return true;
 			case USER_ONLY:
-				return !isAdminEmail(email);
+				return userService.checkUserExists(email);
 			case ADMIN_ONLY:
 				return isAdminEmail(email);
 			case MASTER_ONLY:
