@@ -42,9 +42,9 @@ public class AlarmEventHandler {
 	@EventListener
 	public void handleAlarmEvent(AlarmEvent alarmEvent) {
 		log.info("handleAlarmEvent = {}", alarmEvent);
-		if (!alarmProperties.getIsProduction()) {
-			return;
-		}
+//		if (!alarmProperties.getIsProduction()) {
+//			return;
+//		}
 		eventProceed(alarmEvent);
 	}
 
