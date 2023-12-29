@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
-import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.user.domain.User;
@@ -58,23 +57,6 @@ public class TokenProvider {
 		Claims claims = Jwts.claims();
 		claims.put("email", admin.getEmail());
 		claims.put("role", admin.getRole());
-		return Jwts.builder()
-				.setClaims(claims)
-				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
-				.setExpiration(Timestamp.valueOf(now.plusDays(jwtProperties.getExpiryDays())))
-				.compact();
-	}
-
-	/**
-	 * JWT 토큰을 생성합니다.
-	 *
-	 * @param now 현재 시각
-	 * @return JWT 토큰
-	 */
-	public String createMasterToken(LocalDateTime now) {
-		Claims claims = Jwts.claims();
-		claims.put("email", masterProperties.getEmail());
-		claims.put("role", AdminRole.MASTER);
 		return Jwts.builder()
 				.setClaims(claims)
 				.signWith(jwtProperties.getSigningKey(), SignatureAlgorithm.HS256)
