@@ -148,6 +148,6 @@ public class TokenValidator {
 	private boolean isAdminEmail(String email) {
 		// TODO : 이메일 검증 로직 수정 : 현재는 도메인만 검증하고 있어서 뚫릴 가능성이 있을듯, 추후 검토 필요
 		AdminRole adminUserRole = userService.getAdminUserRole(email);
-		return adminUserRole != null && (adminUserRole.equals(MASTER) || adminUserRole.equals(AdminRole.ADMIN));
+		return adminUserRole.equals(MASTER) || adminUserRole.equals(AdminRole.ADMIN);
 	}
 }
