@@ -1,11 +1,10 @@
 package org.ftclub.cabinet.utils.blackhole.manager;
 
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.service.ApplicationTokenManager;
-import org.ftclub.cabinet.auth.service.FtOauthService;
+import org.ftclub.cabinet.auth.service.UserOauthService;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -16,12 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 @Log4j2
 public class BlackholeManager {
 
-	private final FtOauthService ftOauthService;
+	private final UserOauthService userOauthService;
 	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
 	private final UserService userService;
@@ -47,7 +48,7 @@ public class BlackholeManager {
 	public void handleBlackHole(UserBlackHoleEvent dto) {
 		LocalDateTime now = LocalDateTime.now();
 		try {
-			FtProfile recentProfile = ftOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(), dto.getName());
+			FtProfile recentProfile = userOauthService.getProfileByIntraName(tokenManager.getFtAccessToken(), dto.getName());
 			if (!recentProfile.getRole().isInCursus()) {
 				terminateInvalidUser(dto, now);
 			}

@@ -6,7 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.ftclub.cabinet.auth.domain.AuthCookieManager;
-import org.ftclub.cabinet.auth.domain.TokenValidator;
+import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.exception.ControllerException;

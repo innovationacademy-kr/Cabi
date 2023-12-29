@@ -1,6 +1,6 @@
 package org.ftclub.cabinet.user.controller;
 
-import org.ftclub.cabinet.auth.domain.TokenValidator;
+import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;

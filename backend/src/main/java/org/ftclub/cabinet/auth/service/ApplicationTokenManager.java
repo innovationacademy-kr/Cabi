@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 public class ApplicationTokenManager {
 	private static final int MAX_RETRY = 3;
 	private static String FT_ACCESS_TOKEN;
-	private final FtOauthService ftOauthService;
+	private final UserOauthService userOauthService;
 
 	@PostConstruct
 	private void init() {
@@ -32,7 +32,7 @@ public class ApplicationTokenManager {
 		int tryCount = 0;
 		while (++tryCount <= MAX_RETRY) {
 			try {
-				FT_ACCESS_TOKEN = ftOauthService.issueAccessTokenByCredentialsGrant().getAccessToken();
+				FT_ACCESS_TOKEN = userOauthService.issueAccessTokenByCredentialsGrant().getAccessToken();
 				break;
 			} catch (Exception e) {
 				log.error("42 OAuth 액세스 토큰을 발급하는 데에 실패했습니다. 현재 시도 횟수 : {}, {}", tryCount, e.getMessage());
