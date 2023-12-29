@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -26,10 +28,9 @@ import static org.ftclub.cabinet.auth.domain.AuthLevel.*;
 @RequiredArgsConstructor
 public class AuthAspect {
 
+	private static final String BEARER = "Bearer ";
 	private final TokenValidator tokenValidator;
-
 	private final AuthCookieManager authCookieManager;
-
 	private final JwtProperties jwtProperties;
 
 	/**
@@ -50,6 +51,7 @@ public class AuthAspect {
 				.getResponse();
 		String mainTokenName = jwtProperties.getMainTokenName();
 		String adminTokenName = jwtProperties.getAdminTokenName();
+		String token = extractToken(request);
 
 		/**
 		 * {@link AuthGuard}의 레벨에 따라서 토큰의 유무와 유효성을 검사합니다.
@@ -61,29 +63,37 @@ public class AuthAspect {
 		 */
 		switch (authGuard.level()) {
 			case ADMIN_ONLY:
-				if (!tokenValidator.isValidRequestWithLevel(request, ADMIN_ONLY)) {
+				if (!tokenValidator.isValidTokenWithLevel(token, ADMIN_ONLY)) {
 					authCookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 				}
 				break;
 			case USER_ONLY:
-				if (!tokenValidator.isValidRequestWithLevel(request, USER_ONLY)) {
+				if (!tokenValidator.isValidTokenWithLevel(token, USER_ONLY)) {
 					authCookieManager.deleteCookie(response, mainTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
 				}
 				break;
 			case USER_OR_ADMIN:
-				if (!tokenValidator.isValidRequestWithLevel(request, USER_OR_ADMIN)) {
+				if (!tokenValidator.isValidTokenWithLevel(token, USER_OR_ADMIN)) {
 					authCookieManager.deleteCookie(response, mainTokenName);
 					authCookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
 				}
 				break;
 			case MASTER_ONLY:
-				if (!tokenValidator.isValidRequestWithLevel(request, MASTER_ONLY)) {
+				if (!tokenValidator.isValidTokenWithLevel(token, MASTER_ONLY)) {
 					authCookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 				}
 		}
+	}
+
+	private String extractToken(HttpServletRequest request) {
+		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+		if (header == null || !header.startsWith(BEARER)) {
+			return null;
+		}
+		return header.substring(BEARER.length());
 	}
 }

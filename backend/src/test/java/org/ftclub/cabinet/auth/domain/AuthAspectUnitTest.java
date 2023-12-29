@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.auth.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -25,20 +26,18 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class AuthAspectUnitTest {
 
+	private final MockHttpServletRequest request = new MockHttpServletRequest();
+	private final MockHttpServletResponse response = new MockHttpServletResponse();
 	@Mock
 	TokenValidator tokenValidator = mock(TokenValidator.class);
-
 	@Mock
 	JwtProperties jwtProperties = mock(JwtProperties.class);
-
 	@Mock
 	AuthCookieManager authCookieManager = mock(AuthCookieManager.class);
 	@Mock
 	private AuthGuard authGuard = mock(AuthGuard.class);
 	@InjectMocks
 	private AuthAspect authAspect;
-	private final MockHttpServletRequest request = new MockHttpServletRequest();
-	private final MockHttpServletResponse response = new MockHttpServletResponse();
 
 	@BeforeEach
 	void setUp() {

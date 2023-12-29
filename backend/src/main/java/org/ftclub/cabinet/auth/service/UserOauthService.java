@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class FtOauthService {
+public class UserOauthService {
 	private static final int CURSUS_INDEX = 1;
 
 	@Qualifier(OauthConfig.FT_OAUTH_20_SERVICE)
@@ -67,7 +67,6 @@ public class FtOauthService {
 	 * @throws IOException          HTTP 통신에서 일어나는 입출력 예외
 	 * @throws ExecutionException   비동기 처리시 스레드에서 발생한 오류 처리 예외
 	 * @throws InterruptedException 비동기 처리시 스레드 종료를 위한 예외
-	 * @see <a href="https://stackoverflow.com/questions/2665569/in-what-cases-does-future-get-throw-executionexception-or-interruptedexception">위 예외에 대한 정보</a>
 	 */
 	public FtProfile getProfileByCode(String code) throws IOException, ExecutionException, InterruptedException {
 		OAuth2AccessToken accessToken = ftOAuth20Service.getAccessToken(code);
@@ -90,19 +89,19 @@ public class FtOauthService {
 	/**
 	 * String 형태의 JSON 데이터를 {@link FtProfile}로 변환합니다.
 	 *
-	 * @param jsonString String 형태의 JSON 데이터
+	 * @param jsonNode JSON 데이터
 	 * @return 유저 프로필 정보 {@link FtProfile}
 	 * @throws JsonProcessingException JSON 파싱 예외
 	 * @see <a href="https://api.intra.42.fr/apidoc/2.0/users/me.html">42 API에서 제공하는 Profile Json에 대한 정보</a>
 	 */
-	private FtProfile convertJsonStringToProfile(JsonNode rootNode) throws JsonProcessingException {
-		String intraName = rootNode.get("login").asText();
-		String email = rootNode.get("email").asText();
+	private FtProfile convertJsonStringToProfile(JsonNode jsonNode) throws JsonProcessingException {
+		String intraName = jsonNode.get("login").asText();
+		String email = jsonNode.get("email").asText();
 		if (intraName == null || email == null)
 			throw new ServiceException(ExceptionStatus.INCORRECT_ARGUMENT);
 
-		LocalDateTime blackHoledAt = determineBlackHoledAt(rootNode);
-		FtRole role = determineFtRole(rootNode, blackHoledAt);
+		LocalDateTime blackHoledAt = determineBlackHoledAt(jsonNode);
+		FtRole role = determineFtRole(jsonNode, blackHoledAt);
 
 		return FtProfile.builder()
 				.intraName(intraName)

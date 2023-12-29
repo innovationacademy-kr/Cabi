@@ -1,10 +1,8 @@
-package org.ftclub.cabinet.auth.domain;
+package org.ftclub.cabinet.auth.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
@@ -12,6 +10,9 @@ import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Component;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * API 제공자에 따라 JWT 토큰을 생성하는 클래스입니다.

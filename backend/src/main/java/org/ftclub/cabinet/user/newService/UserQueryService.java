@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.user.newService;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -13,6 +11,9 @@ import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +47,10 @@ public class UserQueryService {
 
 	public Optional<User> findUser(String name) {
 		return userRepository.findByName(name);
+	}
+
+	public Optional<User> findUserByEmail(String email) {
+		return userRepository.findByEmail(email);
 	}
 
 	public Page<User> findClubUsers(Pageable pageable) {

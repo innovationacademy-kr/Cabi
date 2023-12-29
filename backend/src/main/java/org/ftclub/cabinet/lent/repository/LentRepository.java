@@ -1,10 +1,5 @@
 package org.ftclub.cabinet.lent.repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import javax.persistence.LockModeType;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +9,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.LockModeType;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * {@link LentHistory}를 가져오기 위한 repository
@@ -69,13 +70,13 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "FROM LentHistory lh "
 			+ "WHERE lh.startedAt < :endDate AND lh.startedAt >= :startDate")
 	int countLentFromStartDateToEndDate(@Param("startDate") LocalDateTime startDate,
-			@Param("endDate") LocalDateTime endDate);
+	                                    @Param("endDate") LocalDateTime endDate);
 
 	@Query("SELECT count(lh) "
 			+ "FROM LentHistory lh "
 			+ "WHERE lh.endedAt < :endDate AND lh.endedAt >= :startDate")
 	int countReturnFromStartDateToEndDate(@Param("startDate") LocalDateTime startDate,
-			@Param("endDate") LocalDateTime endDate);
+	                                      @Param("endDate") LocalDateTime endDate);
 
 	/**
 	 * 사물함을 기준으로 아직 반납하지 않은 {@link LentHistory}중 하나를 가져옵니다.
@@ -130,11 +131,14 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @param pageable  pagination 정보
 	 * @return {@link LentHistory}의 {@link Page}
 	 */
-	@Query("SELECT lh "
+	@Query(value = "SELECT lh "
 			+ "FROM LentHistory lh "
 			+ "LEFT JOIN FETCH lh.user u "
 			+ "LEFT JOIN FETCH lh.cabinet c "
-			+ "WHERE lh.cabinetId = :cabinetId ")
+			+ "WHERE lh.cabinetId = :cabinetId ",
+			countQuery = "SELECT count(lh) "
+					+ "FROM LentHistory lh "
+					+ "WHERE lh.cabinetId = :cabinetId ")
 	Page<LentHistory> findPaginationByCabinetIdJoinCabinetAndUser(
 			@Param("cabinetId") Long cabinetId, Pageable pageable);
 
@@ -199,7 +203,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "WHERE lh.cabinetId IN :cabinetIds "
 			+ "AND DATE(lh.endedAt) >= DATE(:date)")
 	List<LentHistory> findAllByCabinetIdsAfterDate(@Param("date") LocalDate date,
-			@Param("cabinetIds") List<Long> cabinetIds);
+	                                               @Param("cabinetIds") List<Long> cabinetIds);
 
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
@@ -240,5 +244,5 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "WHERE lh.userId IN (:userIds) "
 			+ "AND lh.endedAt IS NULL")
 	void updateEndedAtByUserIdIn(@Param("userIds") List<Long> userIds,
-			@Param("endedAt") LocalDateTime endedAt);
+	                             @Param("endedAt") LocalDateTime endedAt);
 }

@@ -7,7 +7,6 @@ import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.AuthCookieManager;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
-import org.ftclub.cabinet.auth.domain.TokenProvider;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
@@ -33,8 +32,8 @@ public class AuthFacadeService {
 	private final UserCommandService userCommandService;
 	private final AdminQueryService adminQueryService;
 	private final AdminCommandService adminCommandService;
-	private final FtOauthService ftOauthService;
-	private final GoogleOauthService googleOauthService;
+	private final UserOauthService userOauthService;
+	private final AdminOauthService adminOauthService;
 
 	private final TokenProvider tokenProvider;
 	private final AuthCookieManager authCookieManager;
@@ -42,15 +41,15 @@ public class AuthFacadeService {
 	private final MasterProperties masterProperties;
 
 	public void requestUserLogin(HttpServletResponse res) throws IOException {
-		ftOauthService.requestLogin(res);
+		userOauthService.requestLogin(res);
 	}
 
 	public void requestAdminLogin(HttpServletResponse res) throws IOException {
-		googleOauthService.requestLogin(res);
+		adminOauthService.requestLogin(res);
 	}
 
 	public void handleUserLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
-		FtProfile profile = ftOauthService.getProfileByCode(code);
+		FtProfile profile = userOauthService.getProfileByCode(code);
 		User user = userQueryService.findUser(profile.getIntraName())
 				.orElseGet(() -> userCommandService.createUserByFtProfile(profile));
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
@@ -60,7 +59,7 @@ public class AuthFacadeService {
 	}
 
 	public void handleAdminLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
-		GoogleProfile profile = googleOauthService.getProfileByCode(code);
+		GoogleProfile profile = adminOauthService.getProfileByCode(code);
 		Admin admin = adminQueryService.findByEmail(profile.getEmail())
 				.orElseGet(() -> adminCommandService.createAdminByEmail(profile.getEmail()));
 		String token = tokenProvider.createAdminToken(admin, LocalDateTime.now());

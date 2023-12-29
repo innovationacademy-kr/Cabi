@@ -4,7 +4,7 @@ package org.ftclub.cabinet.log;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthCookieManager;
-import org.ftclub.cabinet.auth.domain.TokenValidator;
+import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;

@@ -2,7 +2,6 @@ package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.ftclub.cabinet.auth.domain.AuthCookieManager;
-import org.ftclub.cabinet.auth.domain.TokenProvider;
 import org.ftclub.cabinet.config.ApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
