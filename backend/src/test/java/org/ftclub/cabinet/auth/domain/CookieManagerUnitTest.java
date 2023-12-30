@@ -18,7 +18,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthCookieManagerUnitTest {
+public class CookieManagerUnitTest {
 
 	@Mock
 	DomainProperties domainProperties = mock(DomainProperties.class);
@@ -27,7 +27,7 @@ public class AuthCookieManagerUnitTest {
 	JwtProperties jwtProperties = mock(JwtProperties.class);
 
 	@InjectMocks
-	AuthCookieManager authCookieManager;
+	CookieManager cookieManager;
 
 	MockHttpServletRequest request = new MockHttpServletRequest();
 
@@ -39,7 +39,7 @@ public class AuthCookieManagerUnitTest {
 		Cookie expect = new Cookie("name", "value");
 		request.setCookies(expect);
 
-		String result = authCookieManager.getCookieValue(request, "name");
+		String result = cookieManager.getCookieValue(request, "name");
 
 		assertEquals(expect.getValue(), result);
 	}
@@ -50,7 +50,7 @@ public class AuthCookieManagerUnitTest {
 		Cookie expect = new Cookie("name", "value");
 		request.setCookies(expect);
 
-		String result = authCookieManager.getCookieValue(request, "name2");
+		String result = cookieManager.getCookieValue(request, "name2");
 
 		assertNull(result);
 	}
@@ -64,7 +64,7 @@ public class AuthCookieManagerUnitTest {
 		String path = "/";
 		Cookie cookie = new Cookie("name", "value");
 
-		authCookieManager.setCookieToClient(response, cookie, path, serverName);
+		cookieManager.setCookieToClient(response, cookie, path, serverName);
 
 		assertEquals(60 * 60 * 24 * jwtProperties.getExpiryDays(), cookie.getMaxAge());
 		assertEquals(path, cookie.getPath());
@@ -82,7 +82,7 @@ public class AuthCookieManagerUnitTest {
 		String path = "/";
 		Cookie cookie = new Cookie("name", "value");
 
-		authCookieManager.setCookieToClient(response, cookie, path, serverName);
+		cookieManager.setCookieToClient(response, cookie, path, serverName);
 
 		assertEquals(60 * 60 * 24 * jwtProperties.getExpiryDays(), cookie.getMaxAge());
 		assertEquals(path, cookie.getPath());
@@ -93,7 +93,7 @@ public class AuthCookieManagerUnitTest {
 	@Test
 	@DisplayName("성공: 쿠키 지우기")
 	void 성공_deleteCookie() {
-		authCookieManager.deleteCookie(response, "name");
+		cookieManager.deleteCookie(response, "name");
 		Cookie cookie = response.getCookie("name");
 
 		assertEquals(0, cookie.getMaxAge());

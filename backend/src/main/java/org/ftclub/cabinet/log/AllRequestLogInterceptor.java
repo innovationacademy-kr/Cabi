@@ -3,7 +3,7 @@ package org.ftclub.cabinet.log;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.auth.domain.AuthCookieManager;
+import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.slf4j.MDC;
@@ -27,7 +27,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 	private static final List<String> IP_HEADERS = Arrays.asList("X-Forwarded-For",
 			"Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR");
 	private final TokenValidator tokenValidator;
-	private final AuthCookieManager authCookieManager;
+	private final CookieManager cookieManager;
 	private final JwtProperties jwtProperties;
 
 	@Override
@@ -67,7 +67,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 		String ret = null;
 		try {
 			ret = tokenValidator.getPayloadJson(
-							authCookieManager.getCookieValue(request, jwtProperties.getMainTokenName()))
+							cookieManager.getCookieValue(request, jwtProperties.getMainTokenName()))
 					.get("name")
 					.asText();
 		} catch (Exception ignore) {

@@ -33,7 +33,7 @@ class AuthAspectUnitTest {
 	@Mock
 	JwtProperties jwtProperties = mock(JwtProperties.class);
 	@Mock
-	AuthCookieManager authCookieManager = mock(AuthCookieManager.class);
+	CookieManager cookieManager = mock(CookieManager.class);
 	@Mock
 	private AuthGuard authGuard = mock(AuthGuard.class);
 	@InjectMocks
@@ -65,7 +65,7 @@ class AuthAspectUnitTest {
 
 		exception = assertThrows(ControllerException.class, () -> authAspect.AuthToken(authGuard));
 		assertEquals(ExceptionStatus.UNAUTHORIZED_ADMIN, exception.getStatus());
-		then(authCookieManager).should().deleteCookie(response, jwtProperties.getAdminTokenName());
+		then(cookieManager).should().deleteCookie(response, jwtProperties.getAdminTokenName());
 	}
 
 	@Test
@@ -86,7 +86,7 @@ class AuthAspectUnitTest {
 
 		exception = assertThrows(ControllerException.class, () -> authAspect.AuthToken(authGuard));
 		assertEquals(ExceptionStatus.UNAUTHORIZED_USER, exception.getStatus());
-		then(authCookieManager).should().deleteCookie(response, jwtProperties.getMainTokenName());
+		then(cookieManager).should().deleteCookie(response, jwtProperties.getMainTokenName());
 	}
 
 	@Test
@@ -107,7 +107,7 @@ class AuthAspectUnitTest {
 
 		exception = assertThrows(ControllerException.class, () -> authAspect.AuthToken(authGuard));
 		assertEquals(ExceptionStatus.UNAUTHORIZED, exception.getStatus());
-		then(authCookieManager).should().deleteCookie(response, jwtProperties.getMainTokenName());
-		then(authCookieManager).should().deleteCookie(response, jwtProperties.getAdminTokenName());
+		then(cookieManager).should().deleteCookie(response, jwtProperties.getMainTokenName());
+		then(cookieManager).should().deleteCookie(response, jwtProperties.getAdminTokenName());
 	}
 }

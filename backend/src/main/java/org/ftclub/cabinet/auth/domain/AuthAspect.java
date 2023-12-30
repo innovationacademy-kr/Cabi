@@ -30,7 +30,7 @@ public class AuthAspect {
 
 	private static final String BEARER = "Bearer ";
 	private final TokenValidator tokenValidator;
-	private final AuthCookieManager authCookieManager;
+	private final CookieManager cookieManager;
 	private final JwtProperties jwtProperties;
 
 	/**
@@ -64,26 +64,26 @@ public class AuthAspect {
 		switch (authGuard.level()) {
 			case ADMIN_ONLY:
 				if (!tokenValidator.isValidTokenWithLevel(token, ADMIN_ONLY)) {
-					authCookieManager.deleteCookie(response, adminTokenName);
+					cookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 				}
 				break;
 			case USER_ONLY:
 				if (!tokenValidator.isValidTokenWithLevel(token, USER_ONLY)) {
-					authCookieManager.deleteCookie(response, mainTokenName);
+					cookieManager.deleteCookie(response, mainTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
 				}
 				break;
 			case USER_OR_ADMIN:
 				if (!tokenValidator.isValidTokenWithLevel(token, USER_OR_ADMIN)) {
-					authCookieManager.deleteCookie(response, mainTokenName);
-					authCookieManager.deleteCookie(response, adminTokenName);
+					cookieManager.deleteCookie(response, mainTokenName);
+					cookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
 				}
 				break;
 			case MASTER_ONLY:
 				if (!tokenValidator.isValidTokenWithLevel(token, MASTER_ONLY)) {
-					authCookieManager.deleteCookie(response, adminTokenName);
+					cookieManager.deleteCookie(response, adminTokenName);
 					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
 				}
 		}
