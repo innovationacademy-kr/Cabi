@@ -44,3 +44,6 @@ application*.yml
 
 ### Firebase ###
 *firebase*.json
+
+### Logging ###
+log4j2-*.xml
