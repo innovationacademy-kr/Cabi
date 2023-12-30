@@ -1,35 +1,28 @@
 package org.ftclub.cabinet.user.service;
 
 import io.netty.util.internal.StringUtil;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.repository.AlarmStatusRepository;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
+import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.repository.LentOptionalFetcher;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.user.domain.AdminRole;
-import org.ftclub.cabinet.user.domain.AdminUser;
-import org.ftclub.cabinet.user.domain.BanHistory;
-import org.ftclub.cabinet.user.domain.BanPolicy;
-import org.ftclub.cabinet.user.domain.BanType;
-import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
-import org.ftclub.cabinet.user.repository.AdminUserRepository;
-import org.ftclub.cabinet.user.repository.BanHistoryRepository;
-import org.ftclub.cabinet.user.repository.LentExtensionRepository;
-import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.ftclub.cabinet.user.repository.UserRepository;
+import org.ftclub.cabinet.user.domain.*;
+import org.ftclub.cabinet.user.repository.*;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +39,7 @@ public class UserServiceImpl implements UserService {
 	private final LentExtensionRepository lentExtensionRepository;
 	private final OccupiedTimeManager occupiedTimeManager;
 	private final CabinetProperties cabinetProperties;
+	private final AlarmStatusRepository alarmStatusRepository;
 
 	@Override
 	public boolean checkUserExists(String email) {
@@ -60,6 +54,9 @@ public class UserServiceImpl implements UserService {
 		log.debug("Called createUser: {}", email);
 		User user = User.of(name, email, blackholedAt, role);
 		userRepository.save(user);
+		UpdateAlarmRequestDto dto = new UpdateAlarmRequestDto(true, true, false);
+		AlarmStatus alarmStatus = AlarmStatus.of(user, dto);
+		alarmStatusRepository.save(alarmStatus);
 	}
 
 	@Override
@@ -153,8 +150,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void banUser(Long userId, LentType lentType, LocalDateTime startedAt,
-			LocalDateTime endedAt,
-			LocalDateTime expiredAt) {
+	                    LocalDateTime endedAt,
+	                    LocalDateTime expiredAt) {
 		log.debug("Called banUser: {}", userId);
 		BanType banType = banPolicy.verifyForBanType(lentType, startedAt, endedAt, expiredAt);
 		if (banType == BanType.NONE) {

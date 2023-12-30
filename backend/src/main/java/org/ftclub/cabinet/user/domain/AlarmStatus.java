@@ -1,18 +1,12 @@
 package org.ftclub.cabinet.user.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
+
+import javax.persistence.*;
 
 /**
  * 유저의 알람 수신 거부 정보 엔티티입니다.
@@ -26,7 +20,6 @@ public class AlarmStatus {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
 	private Long id;
 
 	@Column(name = "slack", nullable = false)

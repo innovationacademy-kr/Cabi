@@ -43,6 +43,7 @@ public class AuthService {
 		}
 		if (email.endsWith(domainProperties.getAdminEmailDomain())) {
 			userService.createAdminUser(email);
+			return;
 		}
 		if (email.endsWith(domainProperties.getUserEmailDomain())) {
 			String name = claims.get("name").toString();
@@ -55,6 +56,7 @@ public class AuthService {
 				userService.createUser(name, email,
 						DateUtil.stringToDate(blackHoledAtObject.toString()), USER);
 			}
+			return;
 		}
 		throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 	}
