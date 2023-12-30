@@ -1,0 +1,49 @@
+<Configuration status="info">
+  <Properties>
+    <Property name="pattern" value="%style{%d{yyyy-MM-dd HH:mm:ss}}{white} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%X}{normal, white} %style{%C{1}}{bright,yellow}: %msg%n%throwable"/>
+  </Properties>
+
+  <Appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${pattern}"/>
+    </Console>
+
+    <RollingFile name="rollingFile" fileName="logs/42cabi.log" filePattern="logs/42cabi-%d{yyyy-MM-dd}-%i.log.gz">
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="logs">
+          <IfFileName glob="42cabi-*.log.gz"/>
+          <IfLastModified age="30d"/>
+        </Delete>
+        <Max index="30"/>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+
+    <Http name="discordWebhook" url="${spring:webhook.discord-logging}" method="POST">
+      <Property name="Content-Type">application/json</Property>
+      <PatternLayout>
+        <Pattern>
+          {"content": "Profile: dev | %encode{%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level: %m%n}{JSON}"}
+        </Pattern>
+      </PatternLayout>
+      <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+    </Http>
+  </Appenders>
+
+  <Loggers>
+    <Logger name="org.springframework" level="info" additivity="false">
+      <AppenderRef ref="console"/>
+      <AppenderRef ref="rollingFile"/>
+      <AppenderRef ref="discordWebhook"/>
+    </Logger>
+
+    <Logger name="org.ftclub.cabinet" level="info" additivity="false">
+      <AppenderRef ref="console"/>
+      <AppenderRef ref="rollingFile"/>
+      <AppenderRef ref="discordWebhook"/>
+    </Logger>
+  </Loggers>
+</Configuration>
