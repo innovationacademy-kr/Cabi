@@ -262,6 +262,7 @@ public class LentServiceImpl implements LentService {
 		lentRedis.deleteCabinetIdInRedis(cabinetId.toString());
 	}
 
+	// TODO: 구조개선 필요 ActiveLentHistoryDto
 	@Override
 	public List<ActiveLentHistoryDto> getAllActiveLentHistories() {
 		log.debug("Called getAllActiveLentHistories");
