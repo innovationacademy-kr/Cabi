@@ -8,6 +8,7 @@ import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackholeInfoDto;
 import org.ftclub.cabinet.lent.service.LentService;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
+import org.ftclub.cabinet.user.service.LentExtensionService;
 import org.ftclub.cabinet.user.service.UserService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
@@ -33,6 +34,7 @@ public class SystemScheduler {
 	private final BlackholeManager blackholeManager;
 	private final ReleaseManager releaseManager;
 	private final OccupiedTimeManager occupiedTimeManager;
+	private final LentExtensionService lentExtensionService;
     private static final long DELAY_TIME = 2000;
 
     /**
@@ -97,6 +99,12 @@ public class SystemScheduler {
 	public void releasePendingCabinet() {
 		log.info("releasePendingCabinet {}", LocalDateTime.now());
 		releaseManager.releasingCabinets();
+	}
+
+	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
+	public void lentExtensionIssue(){
+		log.info("called lentExtensionIssue");
+		lentExtensionService.issueLentExtension();
 	}
 
 //	@Scheduled(cron = "${cabinet.schedule.cron.extensible-user-check}")
