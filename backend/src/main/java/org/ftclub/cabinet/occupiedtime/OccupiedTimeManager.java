@@ -61,8 +61,11 @@ public class OccupiedTimeManager {
 	public UserMonthDataDto[] getUserLastMonthOccupiedTime() {
 		LocalDateTime time = LocalDateTime.now();
 
-		String currentYear = String.valueOf(time.getYear());
 		String currentMonth = String.valueOf(time.minusMonths(1).getMonthValue());
+		String currentYear = String.valueOf(time.getYear());
+		if (currentMonth.equals("12")) {
+			currentYear = String.valueOf(time.minusYears(1).getYear());
+		}
 
 		String apiUrl = haneProperties.getUrl() + "?year=" + currentYear
 				+ "&month=" + currentMonth;
