@@ -36,8 +36,7 @@ public class EmailAlarmSender {
 			log.debug("개발 환경이므로 메일을 보내지 않습니다.");
 			return;
 		}
-		// parseMessageToMailDto등과 같이 동사가 먼저오는 이름이어야 할 것 같습니다.
-		MailDto mailDto = messageParse(user.getName(), alarmEvent.getAlarm());
+		MailDto mailDto = parseMessageToMailDto(user.getName(), alarmEvent.getAlarm());
 
 		try {
 			sendMessage(user.getEmail(), mailDto);
@@ -46,7 +45,7 @@ public class EmailAlarmSender {
 		}
 	}
 
-	private MailDto messageParse(String name, Alarm alarm) {
+	private MailDto parseMessageToMailDto(String name, Alarm alarm) {
 		Context context = new Context();
 		context.setVariable("name", name);
 		// private으로 각 알람별 메서드를 만들어서 호출하는 것이 좋을 것 같습니다.
@@ -70,8 +69,8 @@ public class EmailAlarmSender {
 			return new MailDto(alarmProperties.getOverdueSubject(),
 					alarmProperties.getOverdueMailTemplateUrl(), context);
 		} else if (alarm instanceof LentExpirationImminentAlarm) {
-			long overdueDays = ((LentExpirationImminentAlarm) alarm).getDaysAfterFromExpireDate();
-			context.setVariable("overdueDays", overdueDays);
+			String expirationDate = ((LentExpirationImminentAlarm) alarm).getExpirationDate();
+			context.setVariable("expireDate", expirationDate);
 			return new MailDto(alarmProperties.getSoonOverdueSubject(),
 					alarmProperties.getSoonOverdueMailTemplateUrl(), context);
 		} else if (alarm instanceof ExtensionIssuanceAlarm) {
