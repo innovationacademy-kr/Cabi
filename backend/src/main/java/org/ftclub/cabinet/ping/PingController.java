@@ -7,18 +7,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/ping")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class PingController {
-	private final LentExtensionService lentExtensionService;
+//	private final LentExtensionService lentExtensionService;
 
 	@RequestMapping
 	public String ping() {
 		return "pong";
 	}
 
-	@RequestMapping("/pong")
-	public String ok(){
-		lentExtensionService.issueLentExtension();
-		return "ok";
-	}
+//	@RequestMapping("/pong")
+//	public String ok(){
+//		lentExtensionService.issueLentExtension();
+//		return "ok";
+//	}
 }
