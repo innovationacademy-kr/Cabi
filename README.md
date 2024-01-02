@@ -170,8 +170,8 @@
 | [ 🌑 daewoole](https://github.com/LeeDaeWook) | [🐝 hyungnoh](https://github.com/YESHYUNGSEOK) | [원 jpark2](https://github.com/Z1park) | [🎨 jusohn](https://github.com/junyoung2015) | [🤓 seong-hui ](https://github.com/seong-hui) | [🚀 wchae](https://github.com/enaenen) |
 | --------------------------------------------- | ---------------------------------------------- | -------------------------------------- | -------------------------------------------- | --------------------------------------------- | -------------------------------------- |
 
-| [ 🐶 surlee](https://github.com/Elineely) | [ 🐣 hyowchoi](https://github.com/chyo1/) | [ 👽 sohyupar](https://github.com/saewoo1) | [ 🛼 jeekim](https://github.com/jnkeniaem) | [🍾 miyu](https://github.com/Minkyu01) | []() | []() |
-|-------------------------------------------|-------------------------------------------|--------------------------------------------|------|------|------|
+| [ 🐶 surlee](https://github.com/Elineely) | [ 🐣 hyowchoi](https://github.com/chyo1/) | [ 👽 sohyupar](https://github.com/saewoo1) | [🦝 jimchoi](https://github.com/jimchoi9) | [ 🛼 jeekim](https://github.com/jnkeniaem) | [🍾 miyu](https://github.com/Minkyu01) |
+| ----------------------------------------- | ----------------------------------------- | ------------------------------------------ | ----------------------------------------- | ------------------------------------------ | -------------------------------------- |
 
 | <a href="https://github.com/innovationacademy-kr"><img src="https://img.shields.io/badge/42Seoul-000000?style=flat-square&logo=42&logoColor=white" /></a> |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
