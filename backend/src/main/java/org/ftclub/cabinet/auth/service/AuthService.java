@@ -55,6 +55,7 @@ public class AuthService {
 				userService.createUser(name, email,
 						DateUtil.stringToDate(blackHoledAtObject.toString()), USER);
 			}
+			return;
 		}
 		throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 	}

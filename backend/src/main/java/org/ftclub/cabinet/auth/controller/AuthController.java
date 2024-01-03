@@ -75,20 +75,20 @@ public class AuthController {
 		authFacadeService.logout(res, ftApiProperties);
 	}
 
-	@GetMapping("/challenge")
-	public void challengeLogin(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		// 유저 랜덤생성 && 유저 역할은 일반 유저
-		// 토큰 생성 및 response에 쿠키만들어서 심어주기
-		authFacadeService.handleTestLogin(req, ftApiProperties, res, LocalDateTime.now());
-		System.out.println("??????????????here??????????????????/");
-		res.sendRedirect(DomainProperties.getFeHost() + "/home");
-//		Map<String, Object> claims = tokenProvider
-//		String accessToken = tokenProvider.createTokenForTestUser(testUser, LocalDateTime.now());
-//		Cookie cookie = cookieManager.cookieOf("access_token",
-//				accessToken);
-//		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-//		System.out.println("?????????????????????? cookie domain = ");
-//		res.sendRedirect(DomainProperties.getLocal() + "/main");
+//	@GetMapping("/challenge")
+//	public void challengeLogin(HttpServletRequest req, HttpServletResponse res) throws IOException {
+//		// 유저 랜덤생성 && 유저 역할은 일반 유저
+//		// 토큰 생성 및 response에 쿠키만들어서 심어주기
+//		authFacadeService.handleTestLogin(req, ftApiProperties, res, LocalDateTime.now());
+//		System.out.println("??????????????here??????????????????/");
 //		res.sendRedirect(DomainProperties.getFeHost() + "/home");
-	}
+////		Map<String, Object> claims = tokenProvider
+////		String accessToken = tokenProvider.createTokenForTestUser(testUser, LocalDateTime.now());
+////		Cookie cookie = cookieManager.cookieOf("access_token",
+////				accessToken);
+////		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+////		System.out.println("?????????????????????? cookie domain = ");
+////		res.sendRedirect(DomainProperties.getLocal() + "/main");
+////		res.sendRedirect(DomainProperties.getFeHost() + "/home");
+//	}
 }

@@ -63,6 +63,7 @@ public class User {
 		this.email = email;
 		this.blackholedAt = blackholedAt;
 		this.role = userRole;
+		this.alarmStatus = AlarmStatus.of(this);
 	}
 
 	public static User of(String name, String email, LocalDateTime blackholedAt,
