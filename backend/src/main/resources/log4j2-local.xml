@@ -20,6 +20,7 @@
     </Logger>
 
     <!-- SQL문 확인을 위한 설정 -->
+    <!--
     <Logger name="org.hibernate.type" level="debug" additivity="false">
       <AppenderRef ref="console"/>
     </Logger>
@@ -27,6 +28,7 @@
     <Logger name="org.hibernate.SQL" level="debug" additivity="false">
       <AppenderRef ref="console"/>
     </Logger>
+    -->
     <!-- SQL문 설정 끝 -->
   </Loggers>
 </Configuration>

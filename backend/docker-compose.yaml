@@ -32,6 +32,10 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    volumes:
+      - ../redis/data/:/data/
+      - ../redis/redis.conf:/user/local/etc/redis/redis.conf
+    command: redis-server /user/local/etc/redis/redis.conf
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       timeout: 20s
