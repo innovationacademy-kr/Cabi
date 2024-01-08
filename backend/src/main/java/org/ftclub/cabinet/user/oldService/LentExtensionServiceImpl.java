@@ -3,7 +3,7 @@ package org.ftclub.cabinet.user.oldService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.cabinet.repository.CabinetOptionalFetcher;
+import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.UserMonthDataDto;
@@ -34,97 +34,98 @@ import java.util.stream.Collectors;
 @Log4j2
 public class LentExtensionServiceImpl implements LentExtensionService {
 
-	private final LentExtensionRepository lentExtensionRepository;
-	private final LentExtensionOptionalFetcher lentExtensionOptionalFetcher;
-	private final LentOptionalFetcher lentOptionalFetcher;
-	private final UserOptionalFetcher userOptionalFetcher;
-	private final CabinetProperties cabinetProperties;
-	private final OccupiedTimeManager occupiedTimeManager;
-	private final UserMapper userMapper;
-	private final CabinetOptionalFetcher cabinetOptionalFetcher;
-	private final LentExtensionPolicy lentExtensionPolicy;
+    private final LentExtensionRepository lentExtensionRepository;
+    private final LentExtensionOptionalFetcher lentExtensionOptionalFetcher;
+    private final LentOptionalFetcher lentOptionalFetcher;
+    private final UserOptionalFetcher userOptionalFetcher;
+    private final CabinetProperties cabinetProperties;
+    private final OccupiedTimeManager occupiedTimeManager;
+    private final UserMapper userMapper;
+    private final CabinetQueryService cabinetQueryService;
+    //	private final CabinetOptionalFetcher cabinetOptionalFetcher;
+    private final LentExtensionPolicy lentExtensionPolicy;
 
-	//	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
-	@Override
-	public void issueLentExtension() {
-		log.debug("Called issueLentExtension");
-		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
-				occupiedTimeManager.getUserLastMonthOccupiedTime());
-		LocalDateTime now = LocalDateTime.now();
-		userMonthDataDtos.forEach(userMonthDataDto -> {
-			LentExtension lentExtension = LentExtension.of("lentExtension",
-					cabinetProperties.getLentExtendTerm(),
-					LocalDateTime.of(now.getYear(), now.getMonth(),
-							now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
-					LentExtensionType.ALL,
-					userOptionalFetcher.findUserByName(userMonthDataDto.getLogin()).getId());
-			lentExtensionRepository.save(lentExtension);
-		});
-	}
+    //	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
+    @Override
+    public void issueLentExtension() {
+        log.debug("Called issueLentExtension");
+        List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
+                occupiedTimeManager.getUserLastMonthOccupiedTime());
+        LocalDateTime now = LocalDateTime.now();
+        userMonthDataDtos.forEach(userMonthDataDto -> {
+            LentExtension lentExtension = LentExtension.of("lentExtension",
+                    cabinetProperties.getLentExtendTerm(),
+                    LocalDateTime.of(now.getYear(), now.getMonth(),
+                            now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
+                    LentExtensionType.ALL,
+                    userOptionalFetcher.findUserByName(userMonthDataDto.getLogin()).getId());
+            lentExtensionRepository.save(lentExtension);
+        });
+    }
 
 
-	@Override
-	public void assignLentExtension(String username) {
-		log.debug("Called assignLentExtension {}", username);
-		LocalDateTime now = LocalDateTime.now();
+    @Override
+    public void assignLentExtension(String username) {
+        log.debug("Called assignLentExtension {}", username);
+        LocalDateTime now = LocalDateTime.now();
 
-		LentExtension lentExtension = LentExtension.of("lentExtension",
-				cabinetProperties.getLentExtendTerm(),
-				LocalDateTime.of(now.getYear(), now.getMonth(),
-						now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
-				LentExtensionType.ALL,
-				userOptionalFetcher.findUserByName(username).getId());
-		lentExtensionRepository.save(lentExtension);
-	}
+        LentExtension lentExtension = LentExtension.of("lentExtension",
+                cabinetProperties.getLentExtendTerm(),
+                LocalDateTime.of(now.getYear(), now.getMonth(),
+                        now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
+                LentExtensionType.ALL,
+                userOptionalFetcher.findUserByName(username).getId());
+        lentExtensionRepository.save(lentExtension);
+    }
 
-	@Override
-	public List<LentExtensionResponseDto> getActiveLentExtensionList(
-			UserSessionDto userSessionDto) {
-		log.debug("Called getLentExtensionList {}", userSessionDto.getName());
+    @Override
+    public List<LentExtensionResponseDto> getActiveLentExtensionList(
+            UserSessionDto userSessionDto) {
+        log.debug("Called getLentExtensionList {}", userSessionDto.getName());
 
-		LentExtensions lentExtensions = LentExtensions.builder()
-				.lentExtensions(lentExtensionOptionalFetcher.findAllByUserIdUsedAtIsNull(
-						userSessionDto.getUserId())).build();
+        LentExtensions lentExtensions = LentExtensions.builder()
+                .lentExtensions(lentExtensionOptionalFetcher.findAllByUserIdUsedAtIsNull(
+                        userSessionDto.getUserId())).build();
 
-		return lentExtensions.getLentExtensions().stream()
-				.map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
-	}
+        return lentExtensions.getLentExtensions().stream()
+                .map(userMapper::toLentExtensionResponseDto).collect(Collectors.toList());
+    }
 
-	@Override
-	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
-		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findAllByUserId(
-				userSessionDto.getUserId());
-		LentExtensions lentExtensions = LentExtensions.builder()
-				.lentExtensions(activeLentExtensionsByUserId).build();
-		return userMapper.toLentExtensionResponseDto(
-				lentExtensions.findImminentActiveLentExtension().orElse(null));
-	}
+    @Override
+    public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
+        List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findAllByUserId(
+                userSessionDto.getUserId());
+        LentExtensions lentExtensions = LentExtensions.builder()
+                .lentExtensions(activeLentExtensionsByUserId).build();
+        return userMapper.toLentExtensionResponseDto(
+                lentExtensions.findImminentActiveLentExtension().orElse(null));
+    }
 
-	@Override
-	public void useLentExtension(Long userId, String username) {
-		log.debug("Called useLentExtension {}", username);
+    @Override
+    public void useLentExtension(Long userId, String username) {
+        log.debug("Called useLentExtension {}", username);
 
-		List<LentExtension> findLentExtension =
-				lentExtensionOptionalFetcher.findAllByUserId(userId);
+        List<LentExtension> findLentExtension =
+                lentExtensionOptionalFetcher.findAllByUserId(userId);
 
-		LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
-				.build();
-		if (lentExtensions.isEmpty()) {
-			throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
-		}
+        LentExtensions lentExtensions = LentExtensions.builder().lentExtensions(findLentExtension)
+                .build();
+        if (lentExtensions.isEmpty()) {
+            throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
+        }
 
-		Cabinet cabinet = cabinetOptionalFetcher.getLentCabinetByUserId(userId);
-		List<LentHistory> activeLentHistories = lentOptionalFetcher.findAllActiveLentHistoriesByCabinetId(
-				cabinet.getId());
-		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
+        Cabinet cabinet = cabinetQueryService.getUserActiveCabinet(userId);
+        List<LentHistory> activeLentHistories = lentOptionalFetcher.findAllActiveLentHistoriesByCabinetId(
+                cabinet.getId());
+        lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-		LentExtension lentExtension = lentExtensions.findImminentActiveLentExtension().orElse(null);
-		if (lentExtension == null)
-			return;
-		lentExtension.use();
-		// 연장
-		activeLentHistories
-				.forEach(lentHistory -> lentHistory.setExpiredAt(
-						lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
-	}
+        LentExtension lentExtension = lentExtensions.findImminentActiveLentExtension().orElse(null);
+        if (lentExtension == null)
+            return;
+        lentExtension.use();
+        // 연장
+        activeLentHistories
+                .forEach(lentHistory -> lentHistory.setExpiredAt(
+                        lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
+    }
 }

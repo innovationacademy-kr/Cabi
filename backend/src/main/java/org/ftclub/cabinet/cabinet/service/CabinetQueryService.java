@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +80,12 @@ public class CabinetQueryService {
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
+    public Cabinet getUserActiveCabinet(Long userId) {
+        Optional<Cabinet> cabinet =
+                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithLock(userId);
+        return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+    }
+
     public Cabinet findUserActiveCabinet(Long userId) {
         Optional<Cabinet> cabinet =
                 cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId);
@@ -115,5 +122,13 @@ public class CabinetQueryService {
 
     public Page<Cabinet> findAllByVisibleNum(Integer visibleNum, Pageable pageable) {
         return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
+    }
+
+    public List<Cabinet> findAllByBuildingAndFloor(String building, Integer floor) {
+        return cabinetRepository.findAllByBuildingAndFloor(building, floor);
+    }
+
+    public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus, LocalDateTime from) {
+        return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus, from);
     }
 }
