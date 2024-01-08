@@ -1,18 +1,5 @@
 package org.ftclub.cabinet.admin.search.service;
 
-<<<<<<< HEAD
-import static java.util.stream.Collectors.toList;
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.IN_SESSION;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-=======
->>>>>>> 3f3297013328376f063d03d50f9cf7b867f0926d
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
@@ -50,46 +37,38 @@ import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.IN_SESSION;
 @Transactional(readOnly = true)
 public class AdminSearchFacadeService {
 
-    private final UserQueryService userQueryService;
-    private final CabinetQueryService cabinetQueryService;
-    private final BanHistoryQueryService banHistoryQueryService;
-    private final LentQueryService lentQueryService;
-    private final LentRedisService lentRedisService;
+	private final UserQueryService userQueryService;
+	private final CabinetQueryService cabinetQueryService;
+	private final BanHistoryQueryService banHistoryQueryService;
+	private final LentQueryService lentQueryService;
+	private final LentRedisService lentRedisService;
 
 
-    private final CabinetMapper cabinetMapper;
-    private final UserMapper userMapper;
-    private final LentMapper lentMapper;
+	private final CabinetMapper cabinetMapper;
+	private final UserMapper userMapper;
+	private final LentMapper lentMapper;
 
-    public UserProfilePaginationDto getUsersProfile(String partialName, Pageable pageable) {
-        Page<User> users = userQueryService.getUsers(partialName, pageable);
-        List<UserProfileDto> result = users.stream()
-                .map(userMapper::toUserProfileDto).collect(toList());
-        return userMapper.toUserProfilePaginationDto(result, users.getTotalElements());
-    }
+	public UserProfilePaginationDto getUsersProfile(String partialName, Pageable pageable) {
+		Page<User> users = userQueryService.getUsers(partialName, pageable);
+		List<UserProfileDto> result = users.stream()
+				.map(userMapper::toUserProfileDto).collect(toList());
+		return userMapper.toUserProfilePaginationDto(result, users.getTotalElements());
+	}
 
-<<<<<<< HEAD
 	public UserCabinetPaginationDto getUserLentCabinetInfo(String partialName, Pageable pageable) {
 		LocalDateTime now = LocalDateTime.now();
 		Page<User> users = userQueryService.getUsers(partialName, pageable);
 		List<Long> userIds = users.stream().map(User::getId).collect(toList());
-=======
-    public UserCabinetPaginationDto getUserLentCabinetInfo(String partialName, Pageable pageable) {
-        LocalDateTime now = LocalDateTime.now();
-        Page<User> users = userQueryService.getUsers(partialName, pageable);
-        List<Long> userIds = users.stream().map(User::getUserId).collect(toList());
->>>>>>> 3f3297013328376f063d03d50f9cf7b867f0926d
 
-        List<BanHistory> activeBanHistories =
-                banHistoryQueryService.findActiveBanHistories(userIds, now);
-        List<LentHistory> activeLentHistories =
-                lentQueryService.findUsersActiveLentHistoriesAndCabinet(userIds);
-        Map<Long, List<BanHistory>> banHistoriesByUserId = activeBanHistories.stream()
-                .collect(Collectors.groupingBy(BanHistory::getUserId));
-        Map<Long, List<LentHistory>> lentHistoriesByUserId = activeLentHistories.stream()
-                .collect(Collectors.groupingBy(LentHistory::getUserId));
+		List<BanHistory> activeBanHistories =
+				banHistoryQueryService.findActiveBanHistories(userIds, now);
+		List<LentHistory> activeLentHistories =
+				lentQueryService.findUsersActiveLentHistoriesAndCabinet(userIds);
+		Map<Long, List<BanHistory>> banHistoriesByUserId = activeBanHistories.stream()
+				.collect(Collectors.groupingBy(BanHistory::getUserId));
+		Map<Long, List<LentHistory>> lentHistoriesByUserId = activeLentHistories.stream()
+				.collect(Collectors.groupingBy(LentHistory::getUserId));
 
-<<<<<<< HEAD
 		List<UserCabinetDto> result = users.stream().map(user -> {
 			List<BanHistory> banHistories = banHistoriesByUserId.get(user.getId());
 			List<LentHistory> lentHistories = lentHistoriesByUserId.get(user.getId());
@@ -103,30 +82,14 @@ public class AdminSearchFacadeService {
 		}).collect(toList());
 		return cabinetMapper.toUserCabinetPaginationDto(result, users.getTotalElements());
 	}
-=======
-        List<UserCabinetDto> result = users.stream().map(user -> {
-            List<BanHistory> banHistories = banHistoriesByUserId.get(user.getUserId());
-            List<LentHistory> lentHistories = lentHistoriesByUserId.get(user.getUserId());
-            BanHistory banHistory = (Objects.nonNull(banHistories) && !banHistories.isEmpty())
-                    ? banHistories.get(0) : null;
-            Cabinet cabinet = (Objects.nonNull(lentHistories) && !lentHistories.isEmpty())
-                    ? lentHistories.get(0).getCabinet() : null;
-            UserBlockedInfoDto blockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
-            CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
-            return cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto);
-        }).collect(toList());
-        return cabinetMapper.toUserCabinetPaginationDto(result, users.getTotalElements());
-    }
->>>>>>> 3f3297013328376f063d03d50f9cf7b867f0926d
 
-    public CabinetSimplePaginationDto getCabinetsSimpleInfo(Integer visibleNum) {
-        List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
-        List<CabinetSimpleDto> result = cabinets.stream()
-                .map(cabinetMapper::toCabinetSimpleDto).collect(toList());
-        return cabinetMapper.toCabinetSimplePaginationDto(result, (long) cabinets.size());
-    }
+	public CabinetSimplePaginationDto getCabinetsSimpleInfo(Integer visibleNum) {
+		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
+		List<CabinetSimpleDto> result = cabinets.stream()
+				.map(cabinetMapper::toCabinetSimpleDto).collect(toList());
+		return cabinetMapper.toCabinetSimplePaginationDto(result, (long) cabinets.size());
+	}
 
-<<<<<<< HEAD
 	public CabinetInfoPaginationDto getCabinetInfo(Integer visibleNum) {
 		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
 		List<Long> cabinetIds = cabinets.stream().map(Cabinet::getId).collect(toList());
@@ -157,36 +120,4 @@ public class AdminSearchFacadeService {
 				.collect(toList());
 		return cabinetMapper.toCabinetInfoPaginationDto(result, (long) cabinets.size());
 	}
-=======
-    public CabinetInfoPaginationDto getCabinetInfo(Integer visibleNum) {
-        List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
-        List<Long> cabinetIds = cabinets.stream().map(Cabinet::getCabinetId).collect(toList());
-        List<LentHistory> lentHistories =
-                lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
-        Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()
-                .collect(Collectors.groupingBy(LentHistory::getCabinetId));
-
-        List<CabinetInfoResponseDto> result = cabinets.stream()
-                .map(cabinet -> {
-                    Long cabinetId = cabinet.getCabinetId();
-                    List<LentDto> lents = null;
-                    if (lentHistoriesByCabinetId.containsKey(cabinetId)) {
-                        lents = lentHistoriesByCabinetId.get(cabinetId).stream()
-                                .map(lh -> lentMapper.toLentDto(lh.getUser(), lh))
-                                .collect(toList());
-                    } else if (cabinet.isStatus(IN_SESSION)) {
-                        List<Long> usersInCabinet =
-                                lentRedisService.findUsersInCabinet(cabinet.getCabinetId());
-                        List<User> users = userQueryService.getUsers(usersInCabinet);
-                        lents = users.stream().map(user -> lentMapper.toLentDto(user, null))
-                                .collect(toList());
-                    }
-                    LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
-                    return cabinetMapper.toCabinetInfoResponseDto(cabinet, lents, sessionExpiredAt);
-                })
-                .sorted(Comparator.comparingInt(o -> o.getLocation().getFloor()))
-                .collect(toList());
-        return cabinetMapper.toCabinetInfoPaginationDto(result, (long) cabinets.size());
-    }
->>>>>>> 3f3297013328376f063d03d50f9cf7b867f0926d
 }

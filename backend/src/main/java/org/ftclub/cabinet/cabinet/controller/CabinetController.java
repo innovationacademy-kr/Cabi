@@ -26,57 +26,58 @@ import java.util.List;
 @Logging
 public class CabinetController {
 
-    private final CabinetFacadeService cabinetFacadeService;
+	private final CabinetFacadeService cabinetFacadeService;
 
-    /**
-     * 모든 건물과 층에 대한 정보를 가져옵니다.
-     *
-     * @return 모든 건물과 층에 대한 정보를 반환합니다.
-     */
-    @GetMapping("/buildings/floors")
-    @AuthGuard(level = AuthLevel.USER_OR_ADMIN)
-    public List<BuildingFloorsDto> getBuildingFloorsResponse() {
-        return cabinetFacadeService.getBuildingFloorsResponse();
-    }
+	/**
+	 * 모든 건물과 층에 대한 정보를 가져옵니다.
+	 *
+	 * @return 모든 건물과 층에 대한 정보를 반환합니다.
+	 */
+	@GetMapping("/buildings/floors")
+	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
+	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
+		return cabinetFacadeService.getBuildingFloorsResponse();
+	}
 
-    /**
-     * 건물과 층에 해당하는 섹션별 사물함들의 정보를 가져옵니다.
-     *
-     * @param building 건물 이름
-     * @param floor    층
-     * @return 건물과 층에 해당하는 섹션별 사물함 정보를 반환합니다.
-     * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-     */
-    @GetMapping("/buildings/{building}/floors/{floor}")
-    @AuthGuard(level = AuthLevel.USER_OR_ADMIN)
-    public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
-            @PathVariable("building") String building,
-            @PathVariable("floor") Integer floor) {
-        return cabinetFacadeService.getCabinetsPerSection(building, floor);
-    }
+	/**
+	 * 건물과 층에 해당하는 섹션별 사물함들의 정보를 가져옵니다.
+	 *
+	 * @param building 건물 이름
+	 * @param floor    층
+	 * @return 건물과 층에 해당하는 섹션별 사물함 정보를 반환합니다.
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
+	@GetMapping("/buildings/{building}/floors/{floor}")
+	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
+	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(
+			@PathVariable("building") String building,
+			@PathVariable("floor") Integer floor) {
+		System.out.println("안녕하쇼");
+		return cabinetFacadeService.getCabinetsPerSection(building, floor);
+	}
 
-    /**
-     * 사물함의 정보를 가져옵니다.
-     *
-     * @param cabinetId 사물함 ID
-     * @return 사물함의 정보를 반환합니다.
-     * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-     */
-    @GetMapping("/{cabinetId}")
-    @AuthGuard(level = AuthLevel.USER_OR_ADMIN)
-    public CabinetInfoResponseDto getCabinetInfo(
-            @PathVariable("cabinetId") Long cabinetId) {
-        return cabinetFacadeService.getCabinetInfo(cabinetId);
-    }
+	/**
+	 * 사물함의 정보를 가져옵니다.
+	 *
+	 * @param cabinetId 사물함 ID
+	 * @return 사물함의 정보를 반환합니다.
+	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
+	 */
+	@GetMapping("/{cabinetId}")
+	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
+	public CabinetInfoResponseDto getCabinetInfo(
+			@PathVariable("cabinetId") Long cabinetId) {
+		return cabinetFacadeService.getCabinetInfo(cabinetId);
+	}
 
-    /**
-     * 오픈 예정인 사물함들의 정보를 가져옵니다.
-     *
-     * @return 오픈 예정인 사물함들의 정보를 반환합니다.
-     */
-    @GetMapping("/buildings/{building}/pending")
-    @AuthGuard(level = AuthLevel.USER_OR_ADMIN)
-    public CabinetPendingResponseDto getPendingCabinets(@PathVariable("building") String building) {
-        return cabinetFacadeService.getPendingCabinets(building);
-    }
+	/**
+	 * 오픈 예정인 사물함들의 정보를 가져옵니다.
+	 *
+	 * @return 오픈 예정인 사물함들의 정보를 반환합니다.
+	 */
+	@GetMapping("/buildings/{building}/pending")
+	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
+	public CabinetPendingResponseDto getPendingCabinets(@PathVariable("building") String building) {
+		return cabinetFacadeService.getPendingCabinets(building);
+	}
 }

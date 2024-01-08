@@ -85,12 +85,12 @@ create table cabinet
     row              int         null,
     lent_type        varchar(16) not null,
     max_user         int         not null,
-    memo             varchar(64) null,
     status           varchar(32) not null,
     status_note      varchar(64) null,
-    title            varchar(64) null,
     visible_num      int         null,
     cabinet_place_id bigint      null,
+    title            varchar(64) null,
+    memo             varchar(64) null,
     constraint FKip05uw7xaywjxlu4ljswturit
         foreign key (cabinet_place_id) references cabinet_place (id)
 ) ENGINE = InnoDB
@@ -99,6 +99,7 @@ create table cabinet
   COLLATE = utf8mb4_general_ci;
 
 LOCK TABLES `cabinet` WRITE;
+
 INSERT INTO `cabinet`
 VALUES (1, 0, 0, 'SHARE', 3, 'AVAILABLE', '', 89, 5, '', ''),
        (2, 1, 0, 'SHARE', 3, 'AVAILABLE', '', 90, 5, '', ''),
@@ -509,15 +510,15 @@ create table cabinet_place
 (
     id       bigint auto_increment
         primary key,
+    height   int          null,
+    width    int          null,
     building varchar(255) null,
     floor    int          null,
     section  varchar(255) null,
     end_x    int          null,
     end_y    int          null,
     start_x  int          null,
-    start_y  int          null,
-    height   int          null,
-    width    int          null
+    start_y  int          null
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 22
   DEFAULT CHARSET = utf8mb4
@@ -556,6 +557,47 @@ VALUES (1, 4, 4, '새롬관', 2, 'End of Cluster 1', 0, 0, 0, 0),
     ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+
+create table user
+(
+    id            bigint auto_increment
+        primary key,
+    blackholed_at datetime(6)  null,
+    deleted_at    datetime(6)  null,
+    email         varchar(255) null,
+    name          varchar(32)  not null,
+    role          varchar(32)  not null,
+    slack_alarm boolean default true null,
+    email_alarm boolean default true null,
+    push_alarm boolean default false null,
+
+        constraint UK_gj2fy3dcix7ph7k8684gka40c
+        unique (name),
+    constraint UK_ob8kqyqqgmefl0aco34akdtpe
+        unique (email)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user`
+    DISABLE KEYS */;
+/*!40000 ALTER TABLE `user`
+    ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 --
 -- Table structure for table `lent_history`
 --
@@ -589,42 +631,6 @@ LOCK TABLES `lent_history` WRITE;
     ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-
-create table user
-(
-    id            bigint auto_increment
-        primary key,
-    blackholed_at datetime(6)  null,
-    deleted_at    datetime(6)  null,
-    email         varchar(255) null,
-    name          varchar(32)  not null,
-    role          varchar(32)  not null,
-    constraint UK_gj2fy3dcix7ph7k8684gka40c
-        unique (name),
-    constraint UK_ob8kqyqqgmefl0aco34akdtpe
-        unique (email)
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user`
-    DISABLE KEYS */;
-/*!40000 ALTER TABLE `user`
-    ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 DROP TABLE IF EXISTS `lent_extension`;
 
@@ -632,12 +638,12 @@ create table lent_extension
 (
     id               bigint auto_increment
         primary key,
-    expired_at       datetime(6)  not null,
+    user_id          bigint       not null,
+    name             varchar(255) not null,
     extension_period int          not null,
     type             varchar(255) not null,
-    name             varchar(255) not null,
+    expired_at       datetime(6)  not null,
     used_at          datetime(6)  null,
-    user_id          bigint       not null,
     constraint FKc63p20x0ypp1j99gougq63mq7
         foreign key (user_id) references user (id)
 ) ENGINE = InnoDB
@@ -647,27 +653,6 @@ create table lent_extension
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 
-DROP TABLE IF EXISTS `alarm_status`;
-create table alarm_status
-(
-    id      bigint auto_increment
-        primary key,
-    email   bit    not null,
-    push    bit    not null,
-    slack   bit    not null,
-    user_id bigint not null,
-    constraint alarm_status_user_connect
-        foreign key (user_id) references user (id)
-);
-
-INSERT INTO alarm_status (email, push, slack, user_id)
-SELECT true  as email,
-       false as push,
-       true  as slack,
-       id
-FROM user
-WHERE deleted_at IS NULL;
---
 /*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE = @OLD_SQL_MODE */;

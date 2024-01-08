@@ -1,12 +1,5 @@
 package org.ftclub.cabinet.utils.release;
 
-<<<<<<< HEAD
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-=======
->>>>>>> 3f3297013328376f063d03d50f9cf7b867f0926d
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -24,33 +17,27 @@ import java.util.List;
 @Log4j2
 public class ReleaseManager {
 
-    private final CabinetOptionalFetcher cabinetOptionalFetcher;
-    private final CabinetFacadeService cabinetFacadeService;
+	private final CabinetOptionalFetcher cabinetOptionalFetcher;
+	private final CabinetFacadeService cabinetFacadeService;
 
-    private List<Cabinet> getAllPendedYesterdayCabinet() {
-        return cabinetOptionalFetcher.findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
-                CabinetStatus.PENDING, LocalDateTime.from(LocalDate.now().atStartOfDay()));
-    }
-
-    private void releaseCabinets(List<Cabinet> cabinets) {
-        for (Cabinet cabinet : cabinets) {
-            releaseCabinet(cabinet);
-        }
-    }
-
-<<<<<<< HEAD
-	private void releaseCabinet(Cabinet cabinet) {
-		cabinetService.updateStatus(cabinet.getId(), CabinetStatus.AVAILABLE);
+	private List<Cabinet> getAllPendedYesterdayCabinet() {
+		return cabinetOptionalFetcher.findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
+				CabinetStatus.PENDING, LocalDateTime.from(LocalDate.now().atStartOfDay()));
 	}
-=======
-    private void releaseCabinet(Cabinet cabinet) {
-        cabinetFacadeService.updateStatus(cabinet.getCabinetId(), CabinetStatus.AVAILABLE);
-    }
->>>>>>> 3f3297013328376f063d03d50f9cf7b867f0926d
+
+	private void releaseCabinets(List<Cabinet> cabinets) {
+		for (Cabinet cabinet : cabinets) {
+			releaseCabinet(cabinet);
+		}
+	}
+
+	private void releaseCabinet(Cabinet cabinet) {
+		cabinetFacadeService.updateStatus(cabinet.getId(), CabinetStatus.AVAILABLE);
+	}
 
 
-    public void releasingCabinets() {
-        List<Cabinet> cabinets = getAllPendedYesterdayCabinet();
-        releaseCabinets(cabinets);
-    }
+	public void releasingCabinets() {
+		List<Cabinet> cabinets = getAllPendedYesterdayCabinet();
+		releaseCabinets(cabinets);
+	}
 }
