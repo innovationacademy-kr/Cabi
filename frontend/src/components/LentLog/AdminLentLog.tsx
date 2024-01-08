@@ -55,7 +55,7 @@ const AdminLentLog = ({ lentType }: { lentType: string }) => {
 const GoBackButtonStyled = styled.div`
   position: absolute;
   top: 3%;
-  color: var(--lightpurple-color);
+  color: var(--sub-color);
   right: 6%;
   font-size: 0.875rem;
   text-decoration: underline;

@@ -69,7 +69,7 @@ const PasswordNumber = styled.div<{ val: string }>`
   height: 100%;
   border-radius: 10px;
   border: ${({ val }) =>
-    val ? "2px solid var(--main-color)" : "1px solid var(--lightpurple-color)"};
+    val ? "2px solid var(--main-color)" : "1px solid var(--sub-color)"};
   display: flex;
   justify-content: center;
   align-items: center;

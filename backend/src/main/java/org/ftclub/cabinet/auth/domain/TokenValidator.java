@@ -9,11 +9,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-
-import java.security.Key;
-import java.util.Base64;
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.config.DomainProperties;
@@ -24,6 +19,12 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.user.oldService.UserService;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.security.Key;
+import java.util.Base64;
+
+import static org.ftclub.cabinet.user.domain.AdminRole.MASTER;
 
 /**
  * 토큰의 유효성을 검사하는 클래스입니다.
@@ -129,7 +130,7 @@ public class TokenValidator {
 			case USER_OR_ADMIN:
 				return true;
 			case USER_ONLY:
-				return !isAdminEmail(email);
+				return userService.checkUserExists(email);
 			case ADMIN_ONLY:
 				return isAdminEmail(email);
 			case MASTER_ONLY:
@@ -148,7 +149,7 @@ public class TokenValidator {
 	 */
 	private boolean isAdminEmail(String email) {
 		// TODO : 이메일 검증 로직 수정 : 현재는 도메인만 검증하고 있어서 뚫릴 가능성이 있을듯, 추후 검토 필요
-		return email.endsWith(masterProperties.getDomain())
-				|| email.endsWith(domainProperties.getAdminEmailDomain());
+		AdminRole adminUserRole = userService.getAdminUserRole(email);
+		return adminUserRole.equals(MASTER) || adminUserRole.equals(AdminRole.ADMIN);
 	}
 }
