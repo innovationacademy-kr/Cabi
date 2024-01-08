@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
@@ -15,15 +14,17 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Logging(level = LogLevel.DEBUG)
 public class LentPolicyService {
 
 	private final CabinetProperties cabinetProperties;
@@ -70,8 +71,6 @@ public class LentPolicyService {
 	}
 
 	public void verifyUserForLent(UserVerifyRequestDto requestDto) {
-		log.debug("Called verifyUser");
-
 		LocalDateTime now = LocalDateTime.now();
 		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (!requestDto.getUserRole().equals(UserRole.USER)) {
@@ -104,8 +103,6 @@ public class LentPolicyService {
 	}
 
 	public void verifyCabinetForLent(CabinetStatus cabinetStatus, LentType lentType) {
-		log.debug("Called verifyCabinet");
-
 		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (lentType.equals(LentType.CLUB)) {
 			status = LentPolicyStatus.LENT_CLUB;
@@ -124,16 +121,12 @@ public class LentPolicyService {
 	}
 
 	public void verifyCabinetType(LentType cabinetLentType, LentType lentType) {
-		log.debug("Called verifyCabinetType");
-
 		if (!cabinetLentType.equals(lentType)) {
 			throw new ServiceException(ExceptionStatus.INVALID_LENT_TYPE);
 		}
 	}
 
 	public void verifyCabinetLentCount(LentType lentType, int maxUserCount, int lentCount) {
-		log.debug("Called verifyCabinetLentCount");
-
 		int maxLentCount = 1;
 		if (lentType.equals(LentType.SHARE)) {
 			maxLentCount = cabinetProperties.getShareMaxUserCount().intValue();
@@ -148,8 +141,6 @@ public class LentPolicyService {
 
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
 			int lentUserCount) {
-		log.debug("Called generateExpirationDate");
-
 		if (!DateUtil.isSameDay(now)) {
 			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
@@ -169,8 +160,6 @@ public class LentPolicyService {
 
 	public LocalDateTime adjustSharCabinetExpirationDate(int userCount, LocalDateTime now,
 			LentHistory lentHistory) {
-		log.debug("Called adjustSharCabinetExpirationDate");
-
 		double daysUntilExpiration = lentHistory.getDaysUntilExpiration(now) * -1;
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;
 		long secondsRemaining = Math.round(secondsUntilExpiration * userCount / (userCount + 1));
@@ -178,16 +167,12 @@ public class LentPolicyService {
 	}
 
 	public boolean verifyUserCountOnShareCabinet(int userCount) {
-		log.debug("Called verifyUserCountOnShareCabinet");
-
 		long minUserCount = cabinetProperties.getShareMinUserCount();
 		long maxUserCount = cabinetProperties.getShareMaxUserCount();
 		return minUserCount <= userCount && userCount <= maxUserCount;
 	}
 
 	public void verifyAttemptCountOnShareCabinet(Long attemptCount) {
-		log.debug("Called verifyAttemptCountOnShareCabinet");
-
 		LentPolicyStatus status = LentPolicyStatus.FINE;
 		Long shareMaxAttemptCount = cabinetProperties.getShareMaxAttemptCount();
 		if (Objects.nonNull(attemptCount) && attemptCount >= shareMaxAttemptCount) {

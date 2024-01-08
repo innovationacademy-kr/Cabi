@@ -1,10 +1,11 @@
 package org.ftclub.cabinet.admin.admin.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.admin.admin.service.AdminFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin/admins")
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 public class AdminController {
 
 	private final AdminFacadeService adminFacadeService;

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.admin.search;
+package org.ftclub.cabinet.admin.search.service;
 
 import static java.util.stream.Collectors.toList;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.IN_SESSION;
@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
 import org.ftclub.cabinet.dto.CabinetDto;
@@ -27,6 +26,8 @@ import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.mapper.UserMapper;
@@ -41,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 @Transactional(readOnly = true)
 public class AdminSearchFacadeService {
 
@@ -57,8 +58,6 @@ public class AdminSearchFacadeService {
 	private final LentMapper lentMapper;
 
 	public UserProfilePaginationDto getUsersProfile(String partialName, Pageable pageable) {
-		log.debug("Called getUsersProfile {}", partialName);
-
 		Page<User> users = userQueryService.getUsers(partialName, pageable);
 		List<UserProfileDto> result = users.stream()
 				.map(userMapper::toUserProfileDto).collect(toList());
@@ -66,8 +65,6 @@ public class AdminSearchFacadeService {
 	}
 
 	public UserCabinetPaginationDto getUserLentCabinetInfo(String partialName, Pageable pageable) {
-		log.debug("Called getUserLentCabinetInfo {}", partialName);
-
 		LocalDateTime now = LocalDateTime.now();
 		Page<User> users = userQueryService.getUsers(partialName, pageable);
 		List<Long> userIds = users.stream().map(User::getUserId).collect(toList());
@@ -96,8 +93,6 @@ public class AdminSearchFacadeService {
 	}
 
 	public CabinetSimplePaginationDto getCabinetsSimpleInfo(Integer visibleNum) {
-		log.debug("Called getCabinetSimpleInfo {}", visibleNum);
-
 		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
 		List<CabinetSimpleDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetSimpleDto).collect(toList());
@@ -105,8 +100,6 @@ public class AdminSearchFacadeService {
 	}
 
 	public CabinetInfoPaginationDto getCabinetInfo(Integer visibleNum) {
-		log.debug("Called getCabinetInfo {}", visibleNum);
-
 		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
 		List<Long> cabinetIds = cabinets.stream().map(Cabinet::getCabinetId).collect(toList());
 		List<LentHistory> lentHistories =

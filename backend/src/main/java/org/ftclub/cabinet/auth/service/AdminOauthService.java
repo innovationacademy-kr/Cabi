@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class GoogleOauthService {
+public class AdminOauthService {
 	@Qualifier(OauthConfig.GOOGLE_OAUTH_20_SERVICE)
 	private final OAuth20Service googleOAuth20Service;
 	private final ObjectMapper objectMapper;
@@ -48,12 +48,12 @@ public class GoogleOauthService {
 	 * @throws InterruptedException 비동기 처리시 스레드 종료를 위한 예외
 	 */
 	public GoogleProfile getProfileByCode(String code) throws IOException, ExecutionException, InterruptedException {
-		OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, googleOAuth20Service.getAuthorizationUrl());
 		OAuth2AccessToken accessToken = googleOAuth20Service.getAccessToken(code);
+		OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, "https://www.googleapis.com/oauth2/v2/userinfo");
 		googleOAuth20Service.signRequest(accessToken, oAuthRequest);
 		try {
 			Response response = googleOAuth20Service.execute(oAuthRequest);
-			return null;
+			return convertJsonStringToProfile(response.getBody());
 		} catch (Exception e) {
 			if (e instanceof IOException)
 				log.error("42 API 서버에서 프로필 정보를 가져오는데 실패했습니다."
@@ -61,6 +61,7 @@ public class GoogleOauthService {
 			if (e instanceof ExecutionException || e instanceof InterruptedException)
 				log.error("42 API 서버에서 프로필 정보를 비동기적으로 가져오는데 실패했습니다."
 						+ "code: {}, message: {}", code, e.getMessage());
+			e.printStackTrace();
 			throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

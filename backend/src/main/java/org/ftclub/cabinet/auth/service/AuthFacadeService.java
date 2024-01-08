@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.service.AdminCommandService;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
-import org.ftclub.cabinet.auth.domain.AuthCookieManager;
+import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
-import org.ftclub.cabinet.auth.domain.TokenProvider;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
@@ -33,39 +32,39 @@ public class AuthFacadeService {
 	private final UserCommandService userCommandService;
 	private final AdminQueryService adminQueryService;
 	private final AdminCommandService adminCommandService;
-	private final FtOauthService ftOauthService;
-	private final GoogleOauthService googleOauthService;
+	private final UserOauthService userOauthService;
+	private final AdminOauthService adminOauthService;
 
 	private final TokenProvider tokenProvider;
-	private final AuthCookieManager authCookieManager;
+	private final CookieManager cookieManager;
 	private final DomainProperties domainProperties;
 	private final MasterProperties masterProperties;
 
 	public void requestUserLogin(HttpServletResponse res) throws IOException {
-		ftOauthService.requestLogin(res);
+		userOauthService.requestLogin(res);
 	}
 
 	public void requestAdminLogin(HttpServletResponse res) throws IOException {
-		googleOauthService.requestLogin(res);
+		adminOauthService.requestLogin(res);
 	}
 
 	public void handleUserLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
-		FtProfile profile = ftOauthService.getProfileByCode(code);
+		FtProfile profile = userOauthService.getProfileByCode(code);
 		User user = userQueryService.findUser(profile.getIntraName())
 				.orElseGet(() -> userCommandService.createUserByFtProfile(profile));
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
-		Cookie cookie = authCookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
-		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
+		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
 		res.sendRedirect(domainProperties.getFeHost() + "/home");
 	}
 
 	public void handleAdminLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
-		GoogleProfile profile = googleOauthService.getProfileByCode(code);
+		GoogleProfile profile = adminOauthService.getProfileByCode(code);
 		Admin admin = adminQueryService.findByEmail(profile.getEmail())
 				.orElseGet(() -> adminCommandService.createAdminByEmail(profile.getEmail()));
 		String token = tokenProvider.createAdminToken(admin, LocalDateTime.now());
-		Cookie cookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, token);
-		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		Cookie cookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, token);
+		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
 		res.sendRedirect(domainProperties.getFeHost() + "/admin/home");
 	}
 
@@ -75,18 +74,20 @@ public class AuthFacadeService {
 		if (!masterLoginDto.getId().equals(masterProperties.getId())
 				|| !masterLoginDto.getPassword().equals(masterProperties.getPassword()))
 			throw new ServiceException(ExceptionStatus.UNAUTHORIZED_ADMIN);
-		String masterToken = tokenProvider.createMasterToken(now);
-		Cookie cookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, masterToken);
-		authCookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		Admin master = adminQueryService.findByEmail(masterProperties.getEmail())
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.UNAUTHORIZED_ADMIN));
+		String masterToken = tokenProvider.createAdminToken(master, now);
+		Cookie cookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, masterToken);
+		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
 	}
 
 	public void userLogout(HttpServletResponse res) {
-		Cookie userCookie = authCookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, "");
-		authCookieManager.setCookieToClient(res, userCookie, "/", res.getHeader("host"));
+		Cookie userCookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, "");
+		cookieManager.setCookieToClient(res, userCookie, "/", res.getHeader("host"));
 	}
 
 	public void adminLogout(HttpServletResponse res) {
-		Cookie adminCookie = authCookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, "");
-		authCookieManager.setCookieToClient(res, adminCookie, "/", res.getHeader("host"));
+		Cookie adminCookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, "");
+		cookieManager.setCookieToClient(res, adminCookie, "/", res.getHeader("host"));
 	}
 }

@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.auth.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -25,20 +26,18 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class AuthAspectUnitTest {
 
+	private final MockHttpServletRequest request = new MockHttpServletRequest();
+	private final MockHttpServletResponse response = new MockHttpServletResponse();
 	@Mock
 	TokenValidator tokenValidator = mock(TokenValidator.class);
-
 	@Mock
 	JwtProperties jwtProperties = mock(JwtProperties.class);
-
 	@Mock
-	AuthCookieManager authCookieManager = mock(AuthCookieManager.class);
+	CookieManager cookieManager = mock(CookieManager.class);
 	@Mock
 	private AuthGuard authGuard = mock(AuthGuard.class);
 	@InjectMocks
 	private AuthAspect authAspect;
-	private final MockHttpServletRequest request = new MockHttpServletRequest();
-	private final MockHttpServletResponse response = new MockHttpServletResponse();
 
 	@BeforeEach
 	void setUp() {
@@ -66,7 +65,7 @@ class AuthAspectUnitTest {
 
 		exception = assertThrows(ControllerException.class, () -> authAspect.AuthToken(authGuard));
 		assertEquals(ExceptionStatus.UNAUTHORIZED_ADMIN, exception.getStatus());
-		then(authCookieManager).should().deleteCookie(response, jwtProperties.getAdminTokenName());
+		then(cookieManager).should().deleteCookie(response, jwtProperties.getAdminTokenName());
 	}
 
 	@Test
@@ -87,7 +86,7 @@ class AuthAspectUnitTest {
 
 		exception = assertThrows(ControllerException.class, () -> authAspect.AuthToken(authGuard));
 		assertEquals(ExceptionStatus.UNAUTHORIZED_USER, exception.getStatus());
-		then(authCookieManager).should().deleteCookie(response, jwtProperties.getMainTokenName());
+		then(cookieManager).should().deleteCookie(response, jwtProperties.getMainTokenName());
 	}
 
 	@Test
@@ -108,7 +107,7 @@ class AuthAspectUnitTest {
 
 		exception = assertThrows(ControllerException.class, () -> authAspect.AuthToken(authGuard));
 		assertEquals(ExceptionStatus.UNAUTHORIZED, exception.getStatus());
-		then(authCookieManager).should().deleteCookie(response, jwtProperties.getMainTokenName());
-		then(authCookieManager).should().deleteCookie(response, jwtProperties.getAdminTokenName());
+		then(cookieManager).should().deleteCookie(response, jwtProperties.getMainTokenName());
+		then(cookieManager).should().deleteCookie(response, jwtProperties.getAdminTokenName());
 	}
 }

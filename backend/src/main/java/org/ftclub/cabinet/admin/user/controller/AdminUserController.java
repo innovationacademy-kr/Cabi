@@ -1,25 +1,33 @@
-package org.ftclub.cabinet.admin.user;
+package org.ftclub.cabinet.admin.user.controller;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.admin.admin.service.AdminFacadeService;
-import org.ftclub.cabinet.admin.lent.AdminLentFacadeService;
+import org.ftclub.cabinet.admin.lent.service.AdminLentFacadeService;
+import org.ftclub.cabinet.admin.user.service.AdminLentExtensionFacadeService;
+import org.ftclub.cabinet.admin.user.service.AdminUserFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/admin/users")
-@Log4j2
+@Logging
 public class AdminUserController {
-	private final AdminFacadeService adminFacadeService;
+
 	private final AdminUserFacadeService adminUserFacadeService;
 	private final AdminLentFacadeService adminLentFacadeService;
 	private final AdminLentExtensionFacadeService adminLentExtensionFacadeService;
@@ -32,7 +40,6 @@ public class AdminUserController {
 	@DeleteMapping("/{userId}/ban-history")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
-		log.info("Called deleteBanHistoryByUserId: {}", userId);
 		adminUserFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
 	}
 
@@ -44,7 +51,6 @@ public class AdminUserController {
 	@PostMapping("/club")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void createClubUser(@RequestBody HashMap<String, String> body) {
-		log.info("Called createClub");
 		String clubName = body.get("clubName");
 		adminUserFacadeService.createClubUser(clubName);
 	}
@@ -57,24 +63,19 @@ public class AdminUserController {
 	@DeleteMapping("/club/{clubId}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteClubUser(@PathVariable("clubId") Long clubId) {
-		log.info("Called deleteClub");
 		adminUserFacadeService.deleteClubUser(clubId);
 	}
 
 	@GetMapping("/clubs")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public ClubUserListDto findClubs(@RequestParam("page") Integer page,
-	                                 @RequestParam("size") Integer size) {
-		log.info("Called getClubs");
-		Pageable pageable = Pageable.ofSize(size).withPage(page);
+	public ClubUserListDto findClubs(@Valid Pageable pageable) {
 		return adminUserFacadeService.findAllClubUsers(pageable);
 	}
 
 	@PatchMapping("/club/{clubId}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateClubUser(@PathVariable("clubId") Long clubId,
-	                           @RequestBody HashMap<String, String> body) {
-		log.info("Called updateClub");
+			@RequestBody HashMap<String, String> body) {
 		String clubName = body.get("clubName");
 		adminUserFacadeService.updateClubUser(clubId, clubName);
 	}
@@ -107,14 +108,12 @@ public class AdminUserController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public LentHistoryPaginationDto getLentHistoriesByUserId(
 			@PathVariable("userId") Long userId, Pageable pageable) {
-		log.info("Called getLentHistoriesByUserId: {}", userId);
 		return adminLentFacadeService.getUserLentHistories(userId, pageable);
 	}
 
 	@PostMapping("/lent-extensions/{user}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void issueLentExtension(@PathVariable("user") String username) {
-		log.info("Called issueLentExtension");
 		adminLentExtensionFacadeService.assignLentExtension(username);
 	}
 }

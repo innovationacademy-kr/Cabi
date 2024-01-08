@@ -1,15 +1,20 @@
-package org.ftclub.cabinet.admin.auth;
+package org.ftclub.cabinet.admin.auth.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.auth.service.AuthFacadeService;
-import org.ftclub.cabinet.dto.MasterLoginDto;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.auth.service.AuthFacadeService;
+import org.ftclub.cabinet.dto.MasterLoginDto;
+import org.ftclub.cabinet.log.Logging;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 관리자 인증을 수행하는 컨트롤러 클래스입니다.
@@ -17,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @RequestMapping("/v4/admin/auth")
 @RequiredArgsConstructor
+@Logging
 public class AdminAuthController {
 
 	private final AuthFacadeService authFacadeService;
@@ -41,8 +47,8 @@ public class AdminAuthController {
 	 */
 	@PostMapping("/login")
 	public void masterLogin(HttpServletRequest req,
-	                        HttpServletResponse res,
-	                        @RequestBody MasterLoginDto masterLoginDto) {
+			HttpServletResponse res,
+			@RequestBody MasterLoginDto masterLoginDto) {
 		authFacadeService.masterLogin(masterLoginDto, req, res, LocalDateTime.now());
 	}
 
@@ -57,7 +63,7 @@ public class AdminAuthController {
 
 	@GetMapping("/login/callback")
 	public void loginCallback(@RequestParam String code, HttpServletRequest req,
-	                          HttpServletResponse res) throws IOException, ExecutionException, InterruptedException {
+			HttpServletResponse res) throws IOException, ExecutionException, InterruptedException {
 		authFacadeService.handleAdminLogin(req, res, code);
 	}
 

@@ -14,11 +14,14 @@ import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Logging(level = LogLevel.DEBUG)
 public class CabinetCommandService {
 
 	private final CabinetRepository cabinetRepository;

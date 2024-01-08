@@ -1,28 +1,26 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.repository.BanHistoryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 public class BanHistoryQueryService {
 
 	private final BanHistoryRepository banHistoryRepository;
 
 	public Optional<BanHistory> findRecentActiveBanHistory(Long userId, LocalDateTime now) {
-		log.debug("Called findRecentActiveBanHistory: {}", userId);
-
 		List<BanHistory> banHistories = banHistoryRepository.findByUserId(userId);
 		return banHistories.stream()
 				.filter(history -> history.getUnbannedAt().isAfter(now))
@@ -31,20 +29,14 @@ public class BanHistoryQueryService {
 	}
 
 	public List<BanHistory> findActiveBanHistories(Long userId, LocalDateTime date) {
-		log.debug("Called findActiveBanHistories: {}", userId);
-
 		return banHistoryRepository.findByUserIdAndUnbannedAt(userId, date);
 	}
 
 	public List<BanHistory> findActiveBanHistories(List<Long> userIds, LocalDateTime date) {
-		log.debug("Called findActiveBanHistories: {}", userIds);
-
 		return banHistoryRepository.findByUserIdsAndUnbannedAt(userIds, date);
 	}
 
 	public Page<BanHistory> findActiveBanHistories(LocalDateTime now, Pageable pageable) {
-		log.debug("Called findActiveBanHistories: {}", now);
-
 		return banHistoryRepository.findPaginationActiveBanHistoriesJoinUser(pageable, now);
 	}
 }

@@ -1,12 +1,17 @@
-package org.ftclub.cabinet.admin.statistics;
+package org.ftclub.cabinet.admin.statistics.controller;
 
+import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.admin.statistics.service.AdminStatisticsFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
 import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
 import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
 import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.ftclub.cabinet.auth.domain.AuthLevel.ADMIN_ONLY;
-
-@Slf4j
 @RestController
 @RequestMapping("/v4/admin/statistics")
 @RequiredArgsConstructor
+@Logging
 public class AdminStatisticsController {
+
 	private final AdminStatisticsFacadeService adminStatisticsFacadeService;
 
 	/**
@@ -34,7 +35,6 @@ public class AdminStatisticsController {
 	@GetMapping("/buildings/floors/cabinets")
 	@AuthGuard(level = ADMIN_ONLY)
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
-		log.info("Called getAllCabinetsInfo");
 		return adminStatisticsFacadeService.getAllCabinetsInfo();
 	}
 
@@ -50,7 +50,6 @@ public class AdminStatisticsController {
 	public LentsStatisticsResponseDto getLentCountStatistics(
 			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
 			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
-		log.info("Called getCountOnLentAndReturn startDate : {} endDate : {}", startDate, endDate);
 		return adminStatisticsFacadeService.getLentCountStatistics(startDate, endDate);
 	}
 
@@ -63,7 +62,6 @@ public class AdminStatisticsController {
 	@GetMapping("/users/banned")
 	@AuthGuard(level = ADMIN_ONLY)
 	public BlockedUserPaginationDto getUsersBannedInfo(Pageable pageable) {
-		log.info("Called getUsersBannedInfo");
 		return adminStatisticsFacadeService.getAllBanUsers(pageable);
 	}
 
@@ -76,7 +74,6 @@ public class AdminStatisticsController {
 	@GetMapping("/users/overdue")
 	@AuthGuard(level = ADMIN_ONLY)
 	public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
-		log.info("Called getOverdueUsers");
 		return adminStatisticsFacadeService.getOverdueUsers(pageable);
 	}
 

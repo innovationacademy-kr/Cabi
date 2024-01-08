@@ -1,6 +1,4 @@
-package org.ftclub.cabinet.auth.domain;
-
-import static org.ftclub.cabinet.admin.admin.domain.AdminRole.MASTER;
+package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,20 +9,20 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.config.DomainProperties;
+import org.ftclub.cabinet.admin.admin.domain.Admin;
+import org.ftclub.cabinet.admin.admin.domain.AdminRole;
+import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.admin.admin.domain.AdminRole;
-import org.ftclub.cabinet.user.oldService.UserService;
+import org.ftclub.cabinet.user.newService.UserQueryService;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 
-import static org.ftclub.cabinet.user.domain.AdminRole.MASTER;
+import static org.ftclub.cabinet.admin.admin.domain.AdminRole.MASTER;
 
 /**
  * 토큰의 유효성을 검사하는 클래스입니다.
@@ -36,34 +34,39 @@ import static org.ftclub.cabinet.user.domain.AdminRole.MASTER;
 @Slf4j
 public class TokenValidator {
 
-	private final MasterProperties masterProperties;
-	private final DomainProperties domainProperties;
 	private final JwtProperties jwtProperties;
-	private final UserService userService;
+
+	private final UserQueryService userQueryService;
+	private final AdminQueryService adminQueryService;
 
 	/**
 	 * 토큰의 유효성을 검사합니다.
-	 * <br>
-	 * 매 요청시 헤더에 Bearer 토큰으로 인증을 시도하기 때문에,
-	 * <br>
-	 * 헤더에 bearer 방식으로 유효하게 토큰이 전달되었는지 검사합니다.
-	 * <p>
-	 * USER_ONLY의 경우 검증하지 않습니다.
 	 *
-	 * @param req {@link HttpServletRequest}
+	 * @param token     검사할 토큰
+	 * @param authLevel 검사할 토큰의 레벨
 	 * @return 정상적인 방식의 토큰 요청인지, 유효한 토큰인지 여부
 	 */
-	public Boolean isValidRequestWithLevel(HttpServletRequest req, AuthLevel authLevel)
+	public boolean isValidTokenWithLevel(String token, AuthLevel authLevel)
 			throws JsonProcessingException {
-		String authHeader = req.getHeader("Authorization");
-		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-			return false;
+		String email = getPayloadJson(token).get("email").asText();
+		if (email == null) {
+			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
 		}
-		String token = authHeader.substring(7);
-		if (!isTokenValid(token, jwtProperties.getSigningKey())) {
+		if (!isTokenValid(token, jwtProperties.getSigningKey()))
 			return false;
+
+		switch (authLevel) {
+			case USER_OR_ADMIN:
+				return isUser(email) || isAdmin(email);
+			case USER_ONLY:
+				return isUser(email);
+			case ADMIN_ONLY:
+				return isAdmin(email);
+			case MASTER_ONLY:
+				return isMaster(email);
+			default:
+				throw new DomainException(ExceptionStatus.INVALID_STATUS);
 		}
-		return isTokenAuthenticatable(token, authLevel);
 	}
 
 	/**
@@ -76,7 +79,7 @@ public class TokenValidator {
 	 * @param token 검사할 토큰
 	 * @return 토큰이 만료되거나 유효한지 아닌지 여부
 	 */
-	public Boolean isTokenValid(String token, Key key) {
+	public boolean isTokenValid(String token, Key key) {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build()
 					.parseClaimsJws(token);
@@ -111,45 +114,26 @@ public class TokenValidator {
 	}
 
 	/**
-	 * 해당 토큰의 페이로드 정보가 인증 단계에 알맞는지 확인합니다.
-	 * <p>
-	 * MASTER의 경우 현재 정적으로 관리하므로 이메일만 검증합니다.
-	 * <p>
-	 *
-	 * @param token     토큰
-	 * @param authLevel 인증 단계
-	 * @return 페이로드 정보가 실제 DB와 일치하면 true를 반환합니다.
-	 */
-	public boolean isTokenAuthenticatable(String token, AuthLevel authLevel)
-			throws JsonProcessingException {
-		String email = getPayloadJson(token).get("email").asText();
-		if (email == null) {
-			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
-		}
-		switch (authLevel) {
-			case USER_OR_ADMIN:
-				return true;
-			case USER_ONLY:
-				return userService.checkUserExists(email);
-			case ADMIN_ONLY:
-				return isAdminEmail(email);
-			case MASTER_ONLY:
-				AdminRole role = userService.getAdminUserRole(email);
-				return role != null && role.equals(MASTER);
-			default:
-				throw new DomainException(ExceptionStatus.INVALID_STATUS);
-		}
-	}
-
-	/**
 	 * 해당 이메일이 관리자 이메일인지 확인합니다.
 	 *
 	 * @param email 관리자 이메일
 	 * @return 관리자 이메일이면 true를 반환합니다.
 	 */
-	private boolean isAdminEmail(String email) {
-		// TODO : 이메일 검증 로직 수정 : 현재는 도메인만 검증하고 있어서 뚫릴 가능성이 있을듯, 추후 검토 필요
-		AdminRole adminUserRole = userService.getAdminUserRole(email);
-		return adminUserRole.equals(MASTER) || adminUserRole.equals(AdminRole.ADMIN);
+	private boolean isAdmin(String email) {
+		AdminRole role = adminQueryService.findByEmail(email)
+				.map(Admin::getRole)
+				.orElse(null);
+		return role != null && (role.equals(AdminRole.ADMIN) || role.equals(MASTER));
+	}
+
+	private boolean isMaster(String email) {
+		AdminRole role = adminQueryService.findByEmail(email)
+				.map(Admin::getRole)
+				.orElse(null);
+		return role != null && role.equals(MASTER);
+	}
+
+	private boolean isUser(String email) {
+		return userQueryService.findUserByEmail(email).isPresent();
 	}
 }

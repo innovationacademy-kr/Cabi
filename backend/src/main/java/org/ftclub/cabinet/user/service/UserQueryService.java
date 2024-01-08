@@ -1,9 +1,10 @@
 package org.ftclub.cabinet.user.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.UserRepository;
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 public class UserQueryService {
 
 	private final UserRepository userRepository;
@@ -46,6 +47,10 @@ public class UserQueryService {
 
 	public Optional<User> findUser(String name) {
 		return userRepository.findByName(name);
+	}
+
+	public Optional<User> findUserByEmail(String email) {
+		return userRepository.findByEmail(email);
 	}
 
 	public Page<User> findClubUsers(Pageable pageable) {

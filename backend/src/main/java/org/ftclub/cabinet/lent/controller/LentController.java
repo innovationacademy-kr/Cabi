@@ -2,7 +2,6 @@ package org.ftclub.cabinet.lent.controller;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
@@ -12,6 +11,7 @@ import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.ShareCodeDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v4/lent")
-@Log4j2
+@Logging
 public class LentController {
 
 	private final LentFacadeService lentFacadeService;
@@ -37,7 +37,6 @@ public class LentController {
 	public void startLentCabinet(
 			@UserSession UserSessionDto user,
 			@PathVariable Long cabinetId) {
-		log.info("Called startLentCabinet user: {}, cabinetId: {}", user, cabinetId);
 		lentFacadeService.startLentCabinet(user.getUserId(), cabinetId);
 	}
 
@@ -47,7 +46,6 @@ public class LentController {
 			@UserSession UserSessionDto user,
 			@PathVariable Long cabinetId,
 			@Valid @RequestBody ShareCodeDto shareCodeDto) {
-		log.info("Called startLentShareCabinet user: {}, cabinetId: {}", user, cabinetId);
 		lentFacadeService.startLentShareCabinet(user.getUserId(), cabinetId,
 				shareCodeDto.getShareCode());
 	}
@@ -57,7 +55,6 @@ public class LentController {
 	public void cancelLentShareCabinet(
 			@UserSession UserSessionDto user,
 			@PathVariable Long cabinetId) {
-		log.info("Called cancelLentShareCabinet user: {}, cabinetId: {}", user, cabinetId);
 		lentFacadeService.cancelShareCabinetLent(user.getUserId(), cabinetId);
 	}
 
@@ -65,7 +62,6 @@ public class LentController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void endLent(
 			@UserSession UserSessionDto userSessionDto) {
-		log.info("Called endLent user: {}", userSessionDto);
 		lentFacadeService.endUserLent(userSessionDto.getUserId(), null);
 	}
 
@@ -74,8 +70,6 @@ public class LentController {
 	public void endLentWithMemo(
 			@UserSession UserSessionDto userSessionDto,
 			@Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
-		log.info("Called endLentWithMemo user: {}, lentEndMemoDto: {}",
-				userSessionDto, lentEndMemoDto);
 		lentFacadeService.endUserLent(userSessionDto.getUserId(), lentEndMemoDto.getCabinetMemo());
 	}
 
@@ -84,8 +78,6 @@ public class LentController {
 	public void updateCabinetInfo(
 			@UserSession UserSessionDto user,
 			@RequestBody CabinetInfoRequestDto cabinetInfoRequestDto) {
-		log.info("Called updateCabinetInfo user: {}, cabinetInfoRequestDto: {}", user,
-				cabinetInfoRequestDto);
 		lentFacadeService.updateLentCabinetInfo(user.getUserId(),
 				cabinetInfoRequestDto.getTitle(), cabinetInfoRequestDto.getMemo());
 	}
@@ -94,7 +86,6 @@ public class LentController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public ResponseEntity<MyCabinetResponseDto> getMyLentInfo(
 			@UserSession UserSessionDto user) {
-		log.info("Called getMyLentInfo user: {}", user);
 		MyCabinetResponseDto myCabinetResponseDto = lentFacadeService.getMyLentInfo(user);
 		if (myCabinetResponseDto == null) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -106,7 +97,6 @@ public class LentController {
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public LentHistoryPaginationDto getMyLentLog(
 			@UserSession UserSessionDto user, @Valid Pageable pageable) {
-		log.info("Called getMyLentLog user: {}, pageable: {}", user, pageable);
 		return lentFacadeService.getMyLentLog(user, pageable);
 	}
 }
