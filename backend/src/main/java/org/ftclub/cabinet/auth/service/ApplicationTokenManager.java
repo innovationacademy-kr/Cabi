@@ -19,6 +19,9 @@ public class ApplicationTokenManager {
 	private static String FT_ACCESS_TOKEN;
 	private final UserOauthService userOauthService;
 
+	/**
+	 * 서버가 시작될 때, 42 OAuth 액세스 토큰을 발급합니다.
+	 */
 	@PostConstruct
 	private void init() {
 		this.refreshFtAccessToken();
@@ -28,6 +31,10 @@ public class ApplicationTokenManager {
 		return FT_ACCESS_TOKEN;
 	}
 
+	/**
+	 * 42 OAuth 액세스 토큰을 새로 발급합니다.
+	 * 최대 3번까지 재시도합니다.
+	 */
 	public void refreshFtAccessToken() {
 		int tryCount = 0;
 		while (++tryCount <= MAX_RETRY) {
