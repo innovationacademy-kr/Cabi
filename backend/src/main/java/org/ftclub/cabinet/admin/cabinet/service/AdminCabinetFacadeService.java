@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.admin.cabinet.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
+import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminCabinetFacadeService {
 
-	private final CabinetQueryService cabinetQueryService;
+    private final CabinetQueryService cabinetQueryService;
 
-	private final CabinetMapper cabinetMapper;
+    private final CabinetMapper cabinetMapper;
 }
