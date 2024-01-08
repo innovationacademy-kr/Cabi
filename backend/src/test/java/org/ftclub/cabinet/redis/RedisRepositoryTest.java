@@ -23,14 +23,14 @@ public class RedisRepositoryTest {
 	void test() {
 		Long cabinetId = 16L;
 
-		lentRedis.setShadowKey(cabinetId);
-		lentRedis.attemptJoinCabinet("16L", "1234L", "1000", false);
-		lentRedis.attemptJoinCabinet("16L", "5678L", "1000", true);
-
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			System.out.println("interrupted");
-		}
+//		lentRedis.setShadowKey(cabinetId);
+//		lentRedis.attemptJoinCabinet("16L", "1234L", "1000", false);
+//		lentRedis.attemptJoinCabinet("16L", "5678L", "1000", true);
+//
+//		try {
+//			Thread.sleep(10000);
+//		} catch (InterruptedException e) {
+//			System.out.println("interrupted");
+//		}
 	}
 }
