@@ -76,8 +76,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
      *
      * @return {@link User} 리스트
      */
-    @Query("SELECT u FROM User u WHERE u.blackholedAt <= :blackholed")
-    List<User> findByBlackholedAtLessThanOrEqual(@Param("blackholedAt") LocalDateTime blackholed);
+    @Query("SELECT u FROM User u WHERE u.blackholedAt <= :blackholedAt")
+    List<User> findByBlackholedAtLessThanOrEqual(@Param("blackholedAt") LocalDateTime blackholedAt);
 
     /**
      * 블랙홀에 빠질 위험이 없는 유저들의 정보를 조회합니다. blackholedAt이 null이거나 현재 시간보다 미래인 유저들을 블랙홀에 빠질 위험이 없는 유저로
@@ -88,8 +88,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return {@link User} 리스트
      * @Param("endDate") LocalDateTime endDate);
      */
-    @Query("SELECT u FROM User u WHERE u.blackholedAt > :blackholed")
-    List<User> findByBlackholedAtAfter(@Param("blackholedAt") LocalDateTime blackholed);
+    @Query("SELECT u FROM User u WHERE u.blackholedAt > :blackholedAt")
+    List<User> findByBlackholedAtAfter(@Param("blackholedAt") LocalDateTime blackholedAt);
 
     /**
      * 현재 Active 상태의 Cabi User를 모두 가져옵니다.

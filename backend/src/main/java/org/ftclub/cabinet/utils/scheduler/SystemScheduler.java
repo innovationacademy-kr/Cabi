@@ -6,7 +6,7 @@ import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
-import org.ftclub.cabinet.user.service.LentExtensionQueryService;
+import org.ftclub.cabinet.user.service.LentExtensionManager;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.ftclub.cabinet.utils.blackhole.manager.BlackholeManager;
 import org.ftclub.cabinet.utils.leave.absence.LeaveAbsenceManager;
@@ -30,18 +30,14 @@ import java.util.stream.Collectors;
 public class SystemScheduler {
 
     private static final long DELAY_TIME = 2000;
+    private final UserQueryService userQueryService;
     private final LeaveAbsenceManager leaveAbsenceManager;
+    private final LentExtensionManager lentExtensionManager;
     private final OverdueManager overdueManager;
     private final LentFacadeService lentFacadeService;
     private final BlackholeManager blackholeManager;
     private final ReleaseManager releaseManager;
     private final OccupiedTimeManager occupiedTimeManager;
-
-//	private final LentExtensionService lentExtensionService;
-//	private final UserService userService;
-
-    private final LentExtensionQueryService lentExtensionQueryService;
-    private final UserQueryService userQueryService;
 
     /**
      * 매일 자정마다 대여 기록을 확인하여, 연체 메일 발송 및 휴학생 처리를 트리거하는 메소드 2초 간격으로 블랙홀 검증
@@ -118,7 +114,7 @@ public class SystemScheduler {
     @Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
     public void lentExtensionIssue() {
         log.info("called lentExtensionIssue");
-        lentExtensionService.issueLentExtension();
+        lentExtensionManager.issueLentExtension();
     }
 
 //	@Scheduled(cron = "${cabinet.schedule.cron.extensible-user-check}")
