@@ -85,25 +85,23 @@ public class CabinetFacadeService {
 	 * {@inheritDoc} 사물함 id로 사물함 정보를 가져옵니다. active 대여기록이 없는경우, IN_SESSION 상태의 사물함인지 확인합니다.
 	 */
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
-		List<LentDto> lentDtos = new ArrayList<>();
-
+		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
 				cabinetId);
+		List<LentDto> lentDtos = cabinetActiveLentHistories.stream()
+				.map(lentHistory -> lentMapper.toLentDto(lentHistory.getUser(), lentHistory))
+				.collect(Collectors.toList());
 
-		cabinetActiveLentHistories.forEach(lentHistory -> lentDtos.add(
-				lentMapper.toLentDto(lentHistory.getUser(), lentHistory)));
-
-		if (cabinetActiveLentHistories.isEmpty()) {
+		if (lentDtos.isEmpty()) {
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 			List<User> users = userQueryService.getUsers(usersInCabinet);
 			users.forEach(user -> lentDtos.add(
 					LentDto.builder().userId(user.getUserId()).name(user.getName()).build()
 			));
 		}
+		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
 
-		return cabinetMapper.toCabinetInfoResponseDto(
-				cabinetQueryService.findUserActiveCabinet(cabinetId), lentDtos,
-				lentRedisService.getSessionExpired(cabinetId));
+		return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
 	}
 
 	/**
