@@ -51,6 +51,10 @@ public class AlarmStatus {
 		this.push = push;
 	}
 
+	public static AlarmStatus of(User user) {
+		return new AlarmStatus(user, true, true, true);
+	}
+
 	public static AlarmStatus of(User user, UpdateAlarmRequestDto dto) {
 		return new AlarmStatus(user, dto.isSlack(), dto.isEmail(), dto.isPush());
 	}

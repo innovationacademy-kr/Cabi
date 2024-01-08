@@ -45,8 +45,8 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentExtensionPolicy lentExtensionPolicy;
 
+//	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
 	@Override
-	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
 	public void issueLentExtension() {
 		log.debug("Called issueLentExtension");
 		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
