@@ -95,7 +95,7 @@ public class UserFacadeServiceTest {
 		// given
 		given(userSessionDto.getUserId()).willReturn(1L);
 		given(userSessionDto.getName()).willReturn("testUser1");
-		given(cabinet1.getCabinetId()).willReturn(1L);
+		given(cabinet1.getId()).willReturn(1L);
 		given(lentOptionalFetcher.findActiveLentCabinetByUserId(1L)).willReturn(cabinet1);
 		given(userOptionalFetcher.findRecentActiveBanHistory(1L, LocalDateTime.now()))
 				.willReturn(null);
@@ -106,7 +106,7 @@ public class UserFacadeServiceTest {
 				userSessionDto.getUserId()).get(0);
 		MyProfileResponseDto myProfileResponseDto = new MyProfileResponseDto(
 				userSessionDto.getUserId(), userSessionDto.getName(),
-				cabinet1.getCabinetId(), null, null, null);
+				cabinet1.getId(), null, null, null);
 		given(userMapper.toMyProfileResponseDto(userSessionDto, cabinet1, null, null, null))
 				.willReturn(myProfileResponseDto);
 
@@ -296,11 +296,11 @@ public class UserFacadeServiceTest {
 					add(user2);
 					add(user3);
 				}}));
-		given(userOptionalFetcher.findRecentActiveBanHistory(user1.getUserId(), testDate))
+		given(userOptionalFetcher.findRecentActiveBanHistory(user1.getId(), testDate))
 				.willReturn(banHistory1);
-		given(userOptionalFetcher.findRecentActiveBanHistory(user2.getUserId(), testDate))
+		given(userOptionalFetcher.findRecentActiveBanHistory(user2.getId(), testDate))
 				.willReturn(banHistory2);
-		given(userOptionalFetcher.findRecentActiveBanHistory(user3.getUserId(), testDate))
+		given(userOptionalFetcher.findRecentActiveBanHistory(user3.getId(), testDate))
 				.willReturn(banHistory3);
 		given(userMapper.toUserBlockedInfoDto(banHistory1, user1))
 				.willReturn(new UserBlockedInfoDto(1L, "testUser1",
@@ -311,11 +311,11 @@ public class UserFacadeServiceTest {
 		given(userMapper.toUserBlockedInfoDto(banHistory3, user3))
 				.willReturn(new UserBlockedInfoDto(3L, "testUser3",
 						testDate.minusDays(3), testDate.plusDays(3)));
-		given(cabinetOptionalFetcher.findLentCabinetByUserId(user1.getUserId()))
+		given(cabinetOptionalFetcher.findLentCabinetByUserId(user1.getId()))
 				.willReturn(cabinet1);
-		given(cabinetOptionalFetcher.findLentCabinetByUserId(user2.getUserId()))
+		given(cabinetOptionalFetcher.findLentCabinetByUserId(user2.getId()))
 				.willReturn(cabinet2);
-		given(cabinetOptionalFetcher.findLentCabinetByUserId(user3.getUserId()))
+		given(cabinetOptionalFetcher.findLentCabinetByUserId(user3.getId()))
 				.willReturn(cabinet3);
 		UserBlockedInfoDto userBlockedInfoDto1 = new UserBlockedInfoDto(1L, "testUser1",
 				testDate.minusDays(1), testDate.plusDays(1));

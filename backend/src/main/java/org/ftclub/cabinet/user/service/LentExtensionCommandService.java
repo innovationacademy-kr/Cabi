@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -28,7 +29,7 @@ public class LentExtensionCommandService {
 		LentExtension lentExtension = LentExtension.of(policy.getDefaultName(),
 				policy.getDefaultExtensionTerm(),
 				policy.getExpiry(now),
-				type, user.getUserId());
+				type, user.getId());
 		return lentExtensionRepository.save(lentExtension);
 	}
 

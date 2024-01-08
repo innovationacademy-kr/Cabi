@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
@@ -67,7 +68,7 @@ public class AdminSearchFacadeService {
 	public UserCabinetPaginationDto getUserLentCabinetInfo(String partialName, Pageable pageable) {
 		LocalDateTime now = LocalDateTime.now();
 		Page<User> users = userQueryService.getUsers(partialName, pageable);
-		List<Long> userIds = users.stream().map(User::getUserId).collect(toList());
+		List<Long> userIds = users.stream().map(User::getId).collect(toList());
 
 		List<BanHistory> activeBanHistories =
 				banHistoryQueryService.findActiveBanHistories(userIds, now);
@@ -79,8 +80,8 @@ public class AdminSearchFacadeService {
 				.collect(Collectors.groupingBy(LentHistory::getUserId));
 
 		List<UserCabinetDto> result = users.stream().map(user -> {
-			List<BanHistory> banHistories = banHistoriesByUserId.get(user.getUserId());
-			List<LentHistory> lentHistories = lentHistoriesByUserId.get(user.getUserId());
+			List<BanHistory> banHistories = banHistoriesByUserId.get(user.getId());
+			List<LentHistory> lentHistories = lentHistoriesByUserId.get(user.getId());
 			BanHistory banHistory = (Objects.nonNull(banHistories) && !banHistories.isEmpty())
 					? banHistories.get(0) : null;
 			Cabinet cabinet = (Objects.nonNull(lentHistories) && !lentHistories.isEmpty())
@@ -101,7 +102,7 @@ public class AdminSearchFacadeService {
 
 	public CabinetInfoPaginationDto getCabinetInfo(Integer visibleNum) {
 		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
-		List<Long> cabinetIds = cabinets.stream().map(Cabinet::getCabinetId).collect(toList());
+		List<Long> cabinetIds = cabinets.stream().map(Cabinet::getId).collect(toList());
 		List<LentHistory> lentHistories =
 				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
 		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()
@@ -109,7 +110,7 @@ public class AdminSearchFacadeService {
 
 		List<CabinetInfoResponseDto> result = cabinets.stream()
 				.map(cabinet -> {
-					Long cabinetId = cabinet.getCabinetId();
+					Long cabinetId = cabinet.getId();
 					List<LentDto> lents = null;
 					if (lentHistoriesByCabinetId.containsKey(cabinetId)) {
 						lents = lentHistoriesByCabinetId.get(cabinetId).stream()
@@ -117,7 +118,7 @@ public class AdminSearchFacadeService {
 								.collect(toList());
 					} else if (cabinet.isStatus(IN_SESSION)) {
 						List<Long> usersInCabinet =
-								lentRedisService.findUsersInCabinet(cabinet.getCabinetId());
+								lentRedisService.findUsersInCabinet(cabinet.getId());
 						List<User> users = userQueryService.getUsers(usersInCabinet);
 						lents = users.stream().map(user -> lentMapper.toLentDto(user, null))
 								.collect(toList());

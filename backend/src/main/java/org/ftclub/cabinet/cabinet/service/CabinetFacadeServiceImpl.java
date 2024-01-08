@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -150,7 +151,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
-			Integer floor) {
+	                                                                 Integer floor) {
 		log.debug("getCabinetsPerSection");
 		List<ActiveCabinetInfoEntities> currentLentCabinets = cabinetOptionalFetcher
 				.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
@@ -185,7 +186,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType, Integer page,
-			Integer size) {
+	                                                           Integer size) {
 		log.debug("getCabinetPaginationByLentType");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -206,7 +207,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status, Integer page,
-			Integer size) {
+	                                                         Integer size) {
 		log.debug("getCabinetPaginationByStatus");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -226,7 +227,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum, Integer page,
-			Integer size) {
+	                                                             Integer size) {
 		log.debug("getCabinetPaginationByVisibleNum");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -246,7 +247,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 	@Override
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getCabinetLentHistoriesPagination(Long cabinetId, Integer page,
-			Integer size) {
+	                                                                  Integer size) {
 		log.debug("getCabinetLentHistoriesPagination");
 		if (size <= 0) {
 			size = Integer.MAX_VALUE;
@@ -291,7 +292,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 		PageRequest page = PageRequest.of(0, Integer.MAX_VALUE);
 		Page<Cabinet> allCabinetsByVisibleNum = cabinetOptionalFetcher.findPaginationByVisibleNum(
 				visibleNum, page);
-		List<Long> collect = allCabinetsByVisibleNum.map(cabinet -> cabinet.getCabinetId())
+		List<Long> collect = allCabinetsByVisibleNum.map(cabinet -> cabinet.getId())
 				.stream().collect(Collectors.toList());
 		return new CabinetInfoPaginationDto(getCabinetInfoBundle(collect),
 				allCabinetsByVisibleNum.getTotalElements());
@@ -327,7 +328,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 						building, LentType.CLUB, List.of(AVAILABLE, PENDING));
 		List<Long> cabinetIds = buildingCabinets.stream()
 				.filter(cabinet -> cabinet.isStatus(PENDING))
-				.map(Cabinet::getCabinetId).collect(Collectors.toList());
+				.map(Cabinet::getId).collect(Collectors.toList());
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
 				cabinetOptionalFetcher.findAllFloorsByBuilding(building).stream()
 						.collect(toMap(key -> key, value -> new ArrayList<>()));
@@ -340,7 +341,7 @@ public class CabinetFacadeServiceImpl implements CabinetFacadeService {
 				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 			}
 			if (cabinet.isStatus(PENDING)) {
-				LocalDateTime latestEndedAt = lentHistoriesMap.get(cabinet.getCabinetId()).stream()
+				LocalDateTime latestEndedAt = lentHistoriesMap.get(cabinet.getId()).stream()
 						.map(LentHistory::getEndedAt)
 						.max(LocalDateTime::compareTo).orElse(null);
 				if (latestEndedAt != null && latestEndedAt.toLocalDate().isEqual(yesterday)) {

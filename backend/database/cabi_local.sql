@@ -19,12 +19,12 @@
 -- Table structure for table `admin_user`
 --
 
-DROP TABLE IF EXISTS `admin_user`;
+DROP TABLE IF EXISTS `admin`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `admin_user`
+CREATE TABLE `admin`
 (
-    `admin_user_id` bigint(20)   NOT NULL AUTO_INCREMENT,
+    `id` bigint(20)   NOT NULL AUTO_INCREMENT,
     `email`         varchar(128) NOT NULL,
     `role`          varchar(16)  NOT NULL,
     PRIMARY KEY (`admin_user_id`),
@@ -39,10 +39,10 @@ CREATE TABLE `admin_user`
 -- Dumping data for table `admin_user`
 --
 
-LOCK TABLES `admin_user` WRITE;
+LOCK TABLES `admin` WRITE;
 /*!40000 ALTER TABLE `admin_user`
     DISABLE KEYS */;
-INSERT INTO `admin_user`
+INSERT INTO `admin`
 VALUES (1, 'admin0@gmail.com', 'NONE'),
        (2, 'admin1@gmail.com', 'ADMIN'),
        (3, 'admin2@gmail.com', 'MASTER'),
@@ -60,12 +60,12 @@ DROP TABLE IF EXISTS `ban_history`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ban_history`
 (
-    `ban_history_id` bigint(20)  NOT NULL AUTO_INCREMENT,
+    `id` bigint(20)  NOT NULL AUTO_INCREMENT,
     `ban_type`       varchar(32) NOT NULL,
     `banned_at`      datetime(6) NOT NULL,
     `unbanned_at`    datetime(6) DEFAULT NULL,
     `user_id`        bigint(20)  NOT NULL,
-    PRIMARY KEY (`ban_history_id`),
+    PRIMARY KEY (`id`),
     KEY `ban_history_user_id` (`user_id`),
     CONSTRAINT `ban_history_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
 ) ENGINE = InnoDB
@@ -93,7 +93,7 @@ DROP TABLE IF EXISTS `cabinet`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cabinet`
 (
-    `cabinet_id`       bigint(20)  NOT NULL AUTO_INCREMENT,
+    `id`       bigint(20)  NOT NULL AUTO_INCREMENT,
     `col`              int(11)     DEFAULT NULL,
     `row`              int(11)     DEFAULT NULL,
     `lent_type`        varchar(16) NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE `cabinet`
     `title`            varchar(64) DEFAULT NULL,
     `memo`             varchar(64) DEFAULT NULL,
     `version`          bigint(20)  DEFAULT 1,
-    PRIMARY KEY (`cabinet_id`),
+    PRIMARY KEY (`id`),
     KEY `FKah76pjwfflx2q114ixtihoa3g` (`cabinet_place_id`),
     CONSTRAINT `FKah76pjwfflx2q114ixtihoa3g` FOREIGN KEY (`cabinet_place_id`) REFERENCES `cabinet_place` (`cabinet_place_id`)
 ) ENGINE = InnoDB
@@ -533,7 +533,7 @@ DROP TABLE IF EXISTS `cabinet_place`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cabinet_place`
 (
-    `cabinet_place_id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `height`           int(11)      DEFAULT NULL,
     `width`            int(11)      DEFAULT NULL,
     `building`         varchar(255) DEFAULT NULL,
@@ -543,7 +543,7 @@ CREATE TABLE `cabinet_place`
     `end_y`            int(11)      DEFAULT NULL,
     `start_x`          int(11)      DEFAULT NULL,
     `start_y`          int(11)      DEFAULT NULL,
-    PRIMARY KEY (`cabinet_place_id`)
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 22
   DEFAULT CHARSET = utf8mb4
@@ -592,14 +592,14 @@ DROP TABLE IF EXISTS `lent_history`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lent_history`
 (
-    `lent_history_id` bigint(20)  NOT NULL AUTO_INCREMENT,
+    `id` bigint(20)  NOT NULL AUTO_INCREMENT,
     `ended_at`        datetime(6)          DEFAULT NULL,
     `expired_at`      datetime(6)          DEFAULT NULL,
     `started_at`      datetime(6) NOT NULL,
     `cabinet_id`      bigint(20)  NOT NULL,
     `user_id`         bigint(20)  NOT NULL,
     `version`         bigint(20)  NOT NULL DEFAULT 1,
-    PRIMARY KEY (`lent_history_id`),
+    PRIMARY KEY (`id`),
     KEY `lent_history_cabinet_id` (`cabinet_id`),
     KEY `lent_history_user_id` (`user_id`),
     CONSTRAINT `lent_history_cabinet_id` FOREIGN KEY (`cabinet_id`) REFERENCES `cabinet` (`cabinet_id`),
@@ -629,13 +629,13 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user`
 (
-    `user_id`       bigint(20)  NOT NULL AUTO_INCREMENT,
+    `id`       bigint(20)  NOT NULL AUTO_INCREMENT,
     `blackholed_at` datetime(6)  DEFAULT NULL,
     `deleted_at`    datetime(6)  DEFAULT NULL,
     `email`         varchar(255) DEFAULT NULL,
     `name`          varchar(32) NOT NULL,
     `role`          varchar(32) NOT NULL,
-    PRIMARY KEY (`user_id`),
+    PRIMARY KEY (`id`),
     UNIQUE KEY `UK_gj2fy3dcix7ph7k8684gka40c` (`name`),
     UNIQUE KEY `UK_ob8kqyqqgmefl0aco34akdtpe` (`email`)
 ) ENGINE = InnoDB
@@ -661,14 +661,14 @@ DROP TABLE IF EXISTS `lent_extension`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `lent_extension`
 (
-    `lent_extension_id` bigint auto_increment,
+    `id` bigint auto_increment,
     `user_id`           bigint      not null,
     `name`              varchar(64) not null,
     `extension_period`  int         not null,
     `type`              varchar(32) not null,
     `expired_at`        datetime(6) not null,
     `used_at`           datetime(6) null,
-    PRIMARY KEY (lent_extension_id),
+    PRIMARY KEY (id),
     CONSTRAINT lent_extension_user_user_id_fk
         FOREIGN KEY (user_id) REFERENCES user (user_id)
 ) ENGINE = InnoDB

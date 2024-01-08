@@ -7,9 +7,7 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.exception.DomainException;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +25,7 @@ class CabinetServiceTest {
 	@Test
 	public void 사물함_가져오기() {
 		Cabinet cabinet = cabinetService.getCabinet(1L);
-		assertEquals(1L, cabinet.getCabinetId().longValue());
+		assertEquals(1L, cabinet.getId().longValue());
 	}
 
 	@Test

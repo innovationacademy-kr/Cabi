@@ -16,7 +16,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	 * @param adminUserId 관리자 고유 Id
 	 * @return {@link Admin}
 	 */
-	@Query("SELECT au FROM Admin au WHERE au.adminId = :adminUserId")
+	@Query("SELECT au FROM Admin au WHERE au.id = :adminUserId")
 	Optional<Admin> findById(@Param("adminUserId") Long adminUserId);
 
 	/**

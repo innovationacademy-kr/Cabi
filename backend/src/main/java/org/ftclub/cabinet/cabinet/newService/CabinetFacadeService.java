@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -96,7 +97,7 @@ public class CabinetFacadeService {
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 			List<User> users = userQueryService.getUsers(usersInCabinet);
 			users.forEach(user -> lentDtos.add(
-					LentDto.builder().userId(user.getUserId()).name(user.getName()).build()
+					LentDto.builder().userId(user.getId()).name(user.getName()).build()
 			));
 		}
 		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
@@ -132,7 +133,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
-			Integer floor) {
+	                                                                 Integer floor) {
 		List<ActiveCabinetInfoEntities> activeCabinetInfos = cabinetQueryService.findActiveCabinetInfoEntities(
 				building, floor);
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
@@ -178,7 +179,7 @@ public class CabinetFacadeService {
 						building, LentType.CLUB, List.of(AVAILABLE, PENDING));
 		List<Long> cabinetIds = pendingCabinets.stream()
 				.filter(cabinet -> cabinet.isStatus(PENDING))
-				.map(Cabinet::getCabinetId).collect(Collectors.toList());
+				.map(Cabinet::getId).collect(Collectors.toList());
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
 				cabinetQueryService.findAllFloorsByBuilding(building).stream()
 						.collect(toMap(key -> key, value -> new ArrayList<>()));
@@ -191,7 +192,7 @@ public class CabinetFacadeService {
 				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 			}
 			if (cabinet.isStatus(PENDING)) {
-				LocalDateTime latestEndedAt = lentHistoriesMap.get(cabinet.getCabinetId()).stream()
+				LocalDateTime latestEndedAt = lentHistoriesMap.get(cabinet.getId()).stream()
 						.map(LentHistory::getEndedAt)
 						.max(LocalDateTime::compareTo).orElse(null);
 				if (latestEndedAt != null && latestEndedAt.toLocalDate().isEqual(yesterday)) {
@@ -204,7 +205,7 @@ public class CabinetFacadeService {
 	}
 
 	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType,
-			Pageable pageable) {
+	                                                           Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByLentType(lentType, pageable);
 		List<CabinetDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
@@ -212,7 +213,7 @@ public class CabinetFacadeService {
 	}
 
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
-			Pageable pageable) {
+	                                                         Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByStatus(status, pageable);
 		List<CabinetDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
@@ -220,7 +221,7 @@ public class CabinetFacadeService {
 	}
 
 	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum,
-			Pageable pageable) {
+	                                                             Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByVisibleNum(visibleNum, pageable);
 		List<CabinetDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());

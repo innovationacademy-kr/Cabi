@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,16 +38,10 @@ import org.hibernate.annotations.BatchSize;
 @BatchSize(size = 200)
 public class LentHistory {
 
-	/**
-	 * 낙관적 락을 위한 version
-	 */
-	@Version
-	@Getter(AccessLevel.NONE)
-	private final Long version = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "LENT_HISTORY_ID")
-	private Long lentHistoryId;
+	@Column(name = "ID")
+	private Long id;
 	/**
 	 * 대여 시작일
 	 */
@@ -86,7 +81,7 @@ public class LentHistory {
 	private Cabinet cabinet;
 
 	protected LentHistory(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-			Long cabinetId) {
+	                      Long cabinetId) {
 		this.startedAt = startedAt;
 		this.expiredAt = expiredAt;
 		this.userId = userId;
@@ -101,7 +96,7 @@ public class LentHistory {
 	 * @return 인자 정보를 담고있는 {@link LentHistory}
 	 */
 	public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-			Long cabinetId) {
+	                             Long cabinetId) {
 		LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
 		if (!lentHistory.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -139,7 +134,7 @@ public class LentHistory {
 		if (!(other instanceof LentHistory)) {
 			return false;
 		}
-		return (this.lentHistoryId.equals(((LentHistory) other).lentHistoryId));
+		return (this.id.equals(((LentHistory) other).id));
 	}
 
 	/**

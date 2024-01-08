@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -85,7 +86,7 @@ public class AdminLentFacadeService {
 		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
 		lentCommandService.endLent(userLentHistory, now);
 		lentRedisService.setPreviousUserName(
-				cabinet.getCabinetId(), userLentHistory.getUser().getName());
+				cabinet.getId(), userLentHistory.getUser().getName());
 
 		LocalDateTime endedAt = userLentHistory.getEndedAt();
 		BanType banType = banPolicyService.verifyBan(endedAt, userLentHistory.getExpiredAt());
@@ -112,12 +113,12 @@ public class AdminLentFacadeService {
 				.collect(Collectors.groupingBy(LentHistory::getCabinetId));
 		cabinets.forEach(cabinet -> {
 			List<LentHistory> cabinetLentHistories =
-					lentHistoriesByCabinetId.get(cabinet.getCabinetId());
+					lentHistoriesByCabinetId.get(cabinet.getId());
 			cabinetLentHistories.forEach(lh -> lentCommandService.endLent(lh, now));
 			cabinetCommandService.changeUserCount(cabinet, 0);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 			lentRedisService.setPreviousUserName(
-					cabinet.getCabinetId(), cabinetLentHistories.get(0).getUser().getName());
+					cabinet.getId(), cabinetLentHistories.get(0).getUser().getName());
 		});
 		lentCommandService.endLent(lentHistories, now);
 		cabinetCommandService.changeUserCount(cabinets, 0);

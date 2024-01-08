@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDateTime;
+
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.junit.jupiter.api.DisplayName;
@@ -29,10 +30,10 @@ public class UserOptionalFetcherTest {
 		userRepository.save(user);
 
 		//when
-		User result = userOptionalFetcher.findUser(user.getUserId());
+		User result = userOptionalFetcher.findUser(user.getId());
 
 		//then
-		assertEquals(user.getUserId(), result.getUserId());
+		assertEquals(user.getId(), result.getId());
 		assertEquals(user.getName(), result.getName());
 		assertEquals(user.getEmail(), result.getEmail());
 	}

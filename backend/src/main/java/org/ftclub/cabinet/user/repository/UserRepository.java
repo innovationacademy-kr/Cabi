@@ -21,10 +21,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param userId 유저 고유 아이디
 	 * @return {@link User}
 	 */
-	@Query("SELECT u FROM User u WHERE u.userId = :userId AND u.deletedAt IS NULL")
+	@Query("SELECT u FROM User u WHERE u.id = :userId AND u.deletedAt IS NULL")
 	Optional<User> findById(@Param("userId") Long userId);
 
-	@Query("SELECT u FROM User u WHERE u.userId = :userId AND u.role = :role AND u.deletedAt IS NULL")
+	@Query("SELECT u FROM User u WHERE u.id = :userId AND u.role = :role AND u.deletedAt IS NULL")
 	Optional<User> findByIdAndRole(Long userId, UserRole role);
 
 	/**
@@ -62,7 +62,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return {@link User} 리스트
 	 */
 	@Query("SELECT u FROM User u "
-			+ "WHERE u.userId IN :userIds AND u.deletedAt IS NULL")
+			+ "WHERE u.id IN :userIds AND u.deletedAt IS NULL")
 	List<User> findAllByIds(List<Long> userIds);
 
 	/**
@@ -91,8 +91,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * 유저의 id로 AlarmStatus 테이블과 결합된 유저 정보를 찾습니다.
 	 */
 	@Query("SELECT u FROM User u "
-			+ "LEFT JOIN AlarmStatus o ON u.userId = o.user.userId "
-			+ "WHERE u.userId = :id")
+			+ "LEFT JOIN AlarmStatus o ON u.id = o.user.id "
+			+ "WHERE u.id = :id")
 	Optional<User> findUserByIdWithAlarmStatus(@Param("id") Long id);
 
 	/**

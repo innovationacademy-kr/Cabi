@@ -111,10 +111,10 @@ public class UserFacadeServiceImpl implements UserFacadeService {
 		List<UserCabinetDto> userCabinetDtoList = new ArrayList<>();
 		users.toList().forEach(user -> {
 			BanHistory banHistory = userOptionalFetcher.findRecentActiveBanHistory(
-					user.getUserId(), LocalDateTime.now());
+					user.getId(), LocalDateTime.now());
 			//todo : banhistory join으로 한번에 가능
 			UserBlockedInfoDto blockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
-			Cabinet cabinet = cabinetOptionalFetcher.findLentCabinetByUserId(user.getUserId());
+			Cabinet cabinet = cabinetOptionalFetcher.findLentCabinetByUserId(user.getId());
 			CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
 			userCabinetDtoList.add(cabinetMapper.toUserCabinetDto(blockedInfoDto, cabinetDto));
 		});

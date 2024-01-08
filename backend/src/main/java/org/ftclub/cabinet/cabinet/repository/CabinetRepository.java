@@ -3,6 +3,7 @@ package org.ftclub.cabinet.cabinet.repository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.LockModeType;
+
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -76,7 +77,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "JOIN FETCH c.cabinetPlace p "
-			+ "WHERE c.cabinetId = :cabinetId")
+			+ "WHERE c.id = :cabinetId")
 	Optional<Cabinet> findById(@Param("cabinetId") Long cabinetId);
 
 	/**
@@ -88,7 +89,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
-			+ "WHERE c.cabinetId = :cabinetId")
+			+ "WHERE c.id = :cabinetId")
 	Optional<Cabinet> findByIdWithLock(@Param("cabinetId") Long cabinetId);
 
 	/**
@@ -100,7 +101,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
-			+ "WHERE c.cabinetId IN (:cabinetIds)")
+			+ "WHERE c.id IN (:cabinetIds)")
 	List<Cabinet> findAllByIdsWithLock(@Param("cabinetIds") List<Long> cabinetIds);
 
 	/**
@@ -111,9 +112,9 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	 */
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
-			+ "LEFT JOIN LentHistory lh ON c.cabinetId = lh.cabinetId "
-			+ "LEFT JOIN User u ON u.userId = lh.userId "
-			+ "WHERE u.userId = :userId AND lh.endedAt IS NULL")
+			+ "LEFT JOIN LentHistory lh ON c.id = lh.cabinetId "
+			+ "LEFT JOIN User u ON u.id = lh.userId "
+			+ "WHERE u.id = :userId AND lh.endedAt IS NULL")
 	Optional<Cabinet> findByUserIdAndLentHistoryEndedAtIsNull(@Param("userId") Long userId);
 
 	/**
@@ -125,9 +126,9 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c " +
 			"FROM Cabinet c " +
-			"LEFT JOIN LentHistory lh ON c.cabinetId = lh.cabinetId " +
-			"LEFT JOIN User u ON u.userId = lh.userId " +
-			"WHERE u.userId = :userId AND lh.endedAt IS NULL")
+			"LEFT JOIN LentHistory lh ON c.id = lh.cabinetId " +
+			"LEFT JOIN User u ON u.id = lh.userId " +
+			"WHERE u.id = :userId AND lh.endedAt IS NULL")
 	Optional<Cabinet> findByUserIdAndLentHistoryEndedAtIsNullWithLock(@Param("userId") Long userId);
 
 	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType, Pageable pageable);
@@ -136,7 +137,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status, Pageable pageable);
 
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
-			Pageable pageable);
+	                                         Pageable pageable);
 
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	List<Cabinet> findAllByVisibleNum(@Param("visibleNum") Integer visibleNum);
@@ -155,19 +156,19 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			+ "AND c.lentType <> :lentType "
 			+ "AND c.status IN (:status)")
 	List<Cabinet> findAllByBuildingAndLentTypeNotAndStatusIn(@Param("building") String building,
-			@Param("lentType") LentType lentType, @Param("status") List<CabinetStatus> status);
+	                                                         @Param("lentType") LentType lentType, @Param("status") List<CabinetStatus> status);
 
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Query("UPDATE Cabinet c "
 			+ "SET c.status = :status "
-			+ "WHERE c.cabinetId IN (:cabinetIds)")
+			+ "WHERE c.id IN (:cabinetIds)")
 	void updateStatusByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
-			@Param("status") CabinetStatus status);
+	                                @Param("status") CabinetStatus status);
 
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Query("UPDATE Cabinet c "
 			+ "SET c.status = :status, c.title = '', c.memo = '' "
-			+ "WHERE c.cabinetId IN (:cabinetIds)")
+			+ "WHERE c.id IN (:cabinetIds)")
 	void updateStatusAndClearTitleAndMemoByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
-			@Param("status") CabinetStatus status);
+	                                                    @Param("status") CabinetStatus status);
 }

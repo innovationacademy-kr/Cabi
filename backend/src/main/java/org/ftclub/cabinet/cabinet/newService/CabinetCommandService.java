@@ -7,6 +7,7 @@ import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -60,7 +61,7 @@ public class CabinetCommandService {
 		cabinets.forEach(cabinet -> ExceptionUtil.throwIfFalse(!cabinet.isStatus(BROKEN),
 				new DomainException(INVALID_STATUS)));
 		List<Long> cabinetIds = cabinets.stream()
-				.map(Cabinet::getCabinetId).collect(Collectors.toList());
+				.map(Cabinet::getId).collect(Collectors.toList());
 		if (userCount == 0) {
 			cabinetRepository.updateStatusAndClearTitleAndMemoByCabinetIdsIn(cabinetIds, PENDING);
 		} else {

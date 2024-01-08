@@ -3,6 +3,7 @@ package org.ftclub.cabinet.utils.release;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -31,7 +32,7 @@ public class ReleaseManager {
 	}
 
 	private void releaseCabinet(Cabinet cabinet) {
-		cabinetService.updateStatus(cabinet.getCabinetId(), CabinetStatus.AVAILABLE);
+		cabinetService.updateStatus(cabinet.getId(), CabinetStatus.AVAILABLE);
 	}
 
 

@@ -29,7 +29,7 @@ public class AdminRepositoryTest {
 	public void setUp() {
 		Admin admin = Admin.of("adminTest@gmail.com", AdminRole.ADMIN);
 		admin = adminRepository.save(admin);
-		adminUserId = admin.getAdminId();
+		adminUserId = admin.getId();
 	}
 
 	@Test
@@ -38,7 +38,7 @@ public class AdminRepositoryTest {
 		Optional<Admin> adminUser = adminRepository.findById(adminUserId);
 
 		assertTrue(adminUser.isPresent());
-		assertEquals(adminUserId, adminUser.get().getAdminId());
+		assertEquals(adminUserId, adminUser.get().getId());
 		assertEquals("adminTest@gmail.com", adminUser.get().getEmail());
 		assertEquals(AdminRole.ADMIN, adminUser.get().getRole());
 	}
@@ -58,7 +58,7 @@ public class AdminRepositoryTest {
 				"adminTest@gmail.com");
 
 		assertTrue(adminUser.isPresent());
-		assertEquals(adminUserId, adminUser.get().getAdminId());
+		assertEquals(adminUserId, adminUser.get().getId());
 		assertEquals("adminTest@gmail.com", adminUser.get().getEmail());
 		assertEquals(AdminRole.ADMIN, adminUser.get().getRole());
 	}

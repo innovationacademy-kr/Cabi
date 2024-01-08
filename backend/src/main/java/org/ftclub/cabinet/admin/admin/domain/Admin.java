@@ -26,8 +26,8 @@ public class Admin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ADMIN_ID")
-	private Long adminId;
+	@Column(name = "ID")
+	private Long id;
 
 	/**
 	 * OAuth 방식을 사용하기 때문에 비밀번호 없이 이메일만 저장합니다.
@@ -72,7 +72,7 @@ public class Admin {
 			return false;
 		}
 		Admin admin = (Admin) other;
-		return Objects.equals(adminId, admin.adminId);
+		return Objects.equals(id, admin.id);
 	}
 
 	public void changeAdminRole(AdminRole role) {

@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
@@ -94,7 +95,7 @@ public class LentFacadeService {
 			lentDtoList = userList.stream()
 					.map(u -> lentMapper.toLentDto(u, null)).collect(Collectors.toList());
 		} else {
-			cabinetId = userActiveCabinet.getCabinetId();
+			cabinetId = userActiveCabinet.getId();
 			List<LentHistory> lentHistories =
 					lentQueryService.findCabinetActiveLentHistories(cabinetId);
 			lentDtoList = lentHistories.stream()
@@ -139,7 +140,7 @@ public class LentFacadeService {
 		lentPolicyService.verifyCabinetForLent(cabinet.getStatus(), cabinet.getLentType());
 
 		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, PRIVATE, 1);
-		lentCommandService.startLent(user.getUserId(), cabinet.getCabinetId(), now, expiredAt);
+		lentCommandService.startLent(user.getId(), cabinet.getId(), now, expiredAt);
 		cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
 		cabinetCommandService.changeUserCount(cabinet, lentCount + 1);
 	}
@@ -173,7 +174,7 @@ public class LentFacadeService {
 			List<Long> userIdsInCabinet = lentRedisService.getUsersInCabinetSession(cabinetId);
 			LocalDateTime expiredAt =
 					lentPolicyService.generateExpirationDate(now, SHARE, userIdsInCabinet.size());
-			lentCommandService.startLent(userIdsInCabinet, cabinet.getCabinetId(), now, expiredAt);
+			lentCommandService.startLent(userIdsInCabinet, cabinet.getId(), now, expiredAt);
 			lentRedisService.clearCabinetSession(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
 			cabinetCommandService.changeUserCount(cabinet, userIdsInCabinet.size());
@@ -214,7 +215,7 @@ public class LentFacadeService {
 		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
 		lentCommandService.endLent(userLentHistory, now);
 		lentRedisService.setPreviousUserName(
-				cabinet.getCabinetId(), userLentHistory.getUser().getName());
+				cabinet.getId(), userLentHistory.getUser().getName());
 		if (Objects.nonNull(memo)) {
 			cabinetCommandService.updateMemo(cabinet, memo);
 		}

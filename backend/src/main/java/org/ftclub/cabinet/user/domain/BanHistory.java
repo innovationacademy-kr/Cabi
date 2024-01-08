@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,8 +33,8 @@ public class BanHistory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "BAN_HISTORY_ID")
-	private long banHistoryId;
+	@Column(name = "ID")
+	private long id;
 
 	@NotNull
 	@Column(name = "BANNED_AT", nullable = false)
@@ -55,7 +56,7 @@ public class BanHistory {
 	private User user;
 
 	protected BanHistory(LocalDateTime bannedAt, LocalDateTime unbannedAt, BanType banType,
-			Long userId) {
+	                     Long userId) {
 		this.bannedAt = bannedAt;
 		this.unbannedAt = unbannedAt;
 		this.banType = banType;
@@ -63,7 +64,7 @@ public class BanHistory {
 	}
 
 	public static BanHistory of(LocalDateTime bannedAt, LocalDateTime unbannedAt, BanType banType,
-			Long userId) {
+	                            Long userId) {
 		BanHistory banHistory = new BanHistory(bannedAt, unbannedAt, banType, userId);
 		ExceptionUtil.throwIfFalse(banHistory.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
@@ -83,7 +84,7 @@ public class BanHistory {
 			return false;
 		}
 		BanHistory banHistory = (BanHistory) o;
-		return Objects.equals(banHistoryId, banHistory.banHistoryId);
+		return Objects.equals(id, banHistory.id);
 	}
 
 	public boolean isBanned(LocalDateTime date) {

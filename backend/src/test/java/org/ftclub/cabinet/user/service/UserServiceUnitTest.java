@@ -205,7 +205,7 @@ class UserServiceUnitTest {
 		// given
 		Long clubUserId = 1L;
 		LocalDateTime now = LocalDateTime.now();
-		given(user.getUserId()).willReturn(clubUserId);
+		given(user.getId()).willReturn(clubUserId);
 		given(userOptionalFetcher.getClubUser(clubUserId)).willReturn(user);
 		given(lentOptionalFetcher.findActiveLentCabinetByUserId(clubUserId)).willReturn(null);
 

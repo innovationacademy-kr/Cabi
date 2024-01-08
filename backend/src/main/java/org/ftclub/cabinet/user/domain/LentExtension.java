@@ -22,8 +22,8 @@ public class LentExtension {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "LENT_EXTENSION_ID")
-	private Long lentExtensionId;
+	@Column(name = "ID")
+	private Long id;
 
 	@Column(name = "name", nullable = false)
 	private String name;

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
@@ -91,7 +92,7 @@ public class UserFacadeService {
 
 		Cabinet cabinet = cabinetQueryService.findCabinets(user.getUserId());
 		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
-				cabinet.getCabinetId());
+				cabinet.getId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
 		LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(

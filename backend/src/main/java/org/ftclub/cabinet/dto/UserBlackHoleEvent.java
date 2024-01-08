@@ -26,6 +26,6 @@ public class UserBlackHoleEvent {
 	}
 
 	public static UserBlackHoleEvent of(User user) {
-		return new UserBlackHoleEvent(user.getUserId(), user.getName(), user.getEmail(), user.getBlackholedAt());
+		return new UserBlackHoleEvent(user.getId(), user.getName(), user.getEmail(), user.getBlackholedAt());
 	}
 }

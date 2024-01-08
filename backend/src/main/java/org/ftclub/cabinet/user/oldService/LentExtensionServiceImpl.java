@@ -21,7 +21,6 @@ import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.repository.LentExtensionOptionalFetcher;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -45,7 +44,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentExtensionPolicy lentExtensionPolicy;
 
-//	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
+	//	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
 	@Override
 	public void issueLentExtension() {
 		log.debug("Called issueLentExtension");
@@ -58,7 +57,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 					LocalDateTime.of(now.getYear(), now.getMonth(),
 							now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
 					LentExtensionType.ALL,
-					userOptionalFetcher.findUserByName(userMonthDataDto.getLogin()).getUserId());
+					userOptionalFetcher.findUserByName(userMonthDataDto.getLogin()).getId());
 			lentExtensionRepository.save(lentExtension);
 		});
 	}
@@ -74,7 +73,7 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 				LocalDateTime.of(now.getYear(), now.getMonth(),
 						now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0),
 				LentExtensionType.ALL,
-				userOptionalFetcher.findUserByName(username).getUserId());
+				userOptionalFetcher.findUserByName(username).getId());
 		lentExtensionRepository.save(lentExtension);
 	}
 
@@ -116,12 +115,12 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 
 		Cabinet cabinet = cabinetOptionalFetcher.getLentCabinetByUserId(userId);
 		List<LentHistory> activeLentHistories = lentOptionalFetcher.findAllActiveLentHistoriesByCabinetId(
-				cabinet.getCabinetId());
+				cabinet.getId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
 		LentExtension lentExtension = lentExtensions.findImminentActiveLentExtension().orElse(null);
 		if (lentExtension == null)
-			return ;
+			return;
 		lentExtension.use();
 		// 연장
 		activeLentHistories

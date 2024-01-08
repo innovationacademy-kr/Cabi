@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 	public void deleteClubUser(Long clubId, LocalDateTime deletedAt) {
 		log.debug("Called deleteClueUser: {}", clubId);
 		User user = userOptionalFetcher.getClubUser(clubId);
-		Cabinet lentCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getUserId());
+		Cabinet lentCabinet = lentOptionalFetcher.findActiveLentCabinetByUserId(user.getId());
 		if (lentCabinet != null) {
 			throw new ServiceException(ExceptionStatus.CLUB_HAS_LENT_CABINET);
 		}
@@ -202,7 +202,7 @@ public class UserServiceImpl implements UserService {
 		List<User> users = userRepository.findByRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
 				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
-				.map(user -> UserBlackHoleEvent.of(user.getUserId(), user.getName(),
+				.map(user -> UserBlackHoleEvent.of(user.getId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
 	}
@@ -213,7 +213,7 @@ public class UserServiceImpl implements UserService {
 		List<User> users = userRepository.findByNoRiskOfFallingIntoBlackholeUsers();
 		return users.stream()
 				.filter(user -> user.getBlackholedAt().isBefore(LocalDateTime.now().plusDays(7)))
-				.map(user -> UserBlackHoleEvent.of(user.getUserId(), user.getName(),
+				.map(user -> UserBlackHoleEvent.of(user.getId(), user.getName(),
 						user.getEmail(), user.getBlackholedAt()))
 				.collect(Collectors.toList());
 	}
