@@ -1,27 +1,21 @@
 package org.ftclub.cabinet.user.domain;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
+import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "USER")
@@ -30,91 +24,114 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Log4j2
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID")
-	private Long userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID")
+    private Long userId;
 
-	@NotNull
-	@Column(name = "NAME", length = 32, unique = true, nullable = false)
-	private String name;
+    @NotNull
+    @Column(name = "NAME", length = 32, unique = true, nullable = false)
+    private String name;
 
-	@Email
-	@Column(name = "EMAIL", unique = true)
-	private String email;
+    @Email
+    @Column(name = "EMAIL", unique = true)
+    private String email;
 
-	@Column(name = "BLACKHOLED_AT")
-	private LocalDateTime blackholedAt = null;
+    @Column(name = "BLACKHOLED_AT")
+    private LocalDateTime blackholedAt = null;
 
-	@Column(name = "DELETED_AT", length = 32)
-	private LocalDateTime deletedAt = null;
+    @Column(name = "DELETED_AT", length = 32)
+    private LocalDateTime deletedAt = null;
 
-	@Enumerated(value = EnumType.STRING)
-	@Column(name = "ROLE", length = 32, nullable = false)
-	private UserRole role;
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "ROLE", length = 32, nullable = false)
+    private UserRole role;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private AlarmStatus alarmStatus;
+    @Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
+    private boolean slackAlarm;
 
-	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
-		this.name = name;
-		this.email = email;
-		this.blackholedAt = blackholedAt;
-		this.role = userRole;
-		this.alarmStatus = AlarmStatus.of(this);
-	}
+    @Column(name = "EMAIL_ALARM", columnDefinition = "boolean default true")
+    private boolean emailAlarm;
 
-	public static User of(String name, String email, LocalDateTime blackholedAt,
-			UserRole userRole) {
-		User user = new User(name, email, blackholedAt, userRole);
-		ExceptionUtil.throwIfFalse(user.isValid(),
-				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
-		return user;
-	}
+    @Column(name = "PUSH_ALARM", columnDefinition = "boolean default false")
+    private boolean pushAlarm;
 
-	private boolean isValid() {
-		return name != null && email != null && Pattern.matches(
-				"^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*", email)
-				&& role != null && role.isValid();
-	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		User user = (User) o;
-		return Objects.equals(userId, user.userId);
-	}
+    protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
+        this.name = name;
+        this.email = email;
+        this.blackholedAt = blackholedAt;
+        this.role = userRole;
+        setDefaultAlarmStatus();
+    }
 
-	public boolean isUserRole(UserRole role) {
-		return role.equals(this.role);
-	}
+    public static User of(String name, String email, LocalDateTime blackholedAt,
+                          UserRole userRole) {
+        User user = new User(name, email, blackholedAt, userRole);
+        ExceptionUtil.throwIfFalse(user.isValid(),
+                new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+        return user;
+    }
 
-	public void changeBlackholedAt(LocalDateTime blackholedAt) {
-		log.info("Called changeBlackholedAt - form {} to {}", this.blackholedAt, blackholedAt);
-		this.blackholedAt = blackholedAt;
-	}
+    private void setDefaultAlarmStatus() {
+        this.slackAlarm = true;
+        this.emailAlarm = true;
+        this.pushAlarm = false;
+    }
 
-	public void setDeletedAt(LocalDateTime deletedAt) {
-		log.info("Called setDeletedAt - from {} to {}", this.deletedAt, deletedAt);
-		this.deletedAt = deletedAt;
-	}
+    private boolean isValid() {
+        return name != null && email != null && Pattern.matches(
+                "^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*", email)
+                && role != null && role.isValid();
+    }
 
-	public void changeName(String name) {
-		log.info("Called changeName - from {} to {}", this.name, name);
-		this.name = name;
-		ExceptionUtil.throwIfFalse(this.isValid(),
-				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
 
-	public String getBlackholedAtString() {
-		if (blackholedAt == null) {
-			return null;
-		}
-		return blackholedAt.toString();
-	}
+    public boolean isUserRole(UserRole role) {
+        return role.equals(this.role);
+    }
+
+    public void changeBlackholedAt(LocalDateTime blackholedAt) {
+        log.info("Called changeBlackholedAt - form {} to {}", this.blackholedAt, blackholedAt);
+        this.blackholedAt = blackholedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        log.info("Called setDeletedAt - from {} to {}", this.deletedAt, deletedAt);
+        this.deletedAt = deletedAt;
+    }
+
+    public void changeName(String name) {
+        log.info("Called changeName - from {} to {}", this.name, name);
+        this.name = name;
+        ExceptionUtil.throwIfFalse(this.isValid(),
+                new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+    }
+
+    public String getBlackholedAtString() {
+        if (blackholedAt == null) {
+            return null;
+        }
+        return blackholedAt.toString();
+    }
+
+    public AlarmTypeResponseDto getAlarmTypes() {
+        return new AlarmTypeResponseDto(slackAlarm, emailAlarm, pushAlarm);
+    }
+
+    public void changeAlarmStatus(UpdateAlarmRequestDto updateAlarmRequestDto) {
+        this.slackAlarm = updateAlarmRequestDto.isSlack();
+        this.emailAlarm = updateAlarmRequestDto.isEmail();
+        this.pushAlarm = updateAlarmRequestDto.isPush();
+    }
 }
