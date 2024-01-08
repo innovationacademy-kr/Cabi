@@ -61,3 +61,4 @@ ibtmp*
 *nohup.out
 /backend/src/main/resources/test/resources/
 
+redis/data/*
