@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.newService;
+package org.ftclub.cabinet.user.service;
 
 import java.util.Comparator;
 import java.util.List;
@@ -16,14 +16,15 @@ import org.springframework.stereotype.Service;
 @Logging(level = LogLevel.DEBUG)
 public class LentExtensionQueryService {
 
-	private final LentExtensionRepository lentExtensionRepository;
+    private final LentExtensionRepository lentExtensionRepository;
+    public LentExtension findActiveLentExtension(Long userId) {
 
-	public LentExtension findActiveLentExtension(Long userId) {
-		return LentExtensions.builder()
-				.lentExtensions(lentExtensionRepository.findAll(userId))
-				.build()
-				.findImminentActiveLentExtension();
-	}
+        return LentExtensions.builder()
+                .lentExtensions(lentExtensionRepository.findAll(userId))
+                .build()
+                .findImminentActiveLentExtension()
+                .orElse(null);
+    }
 
 	public LentExtensions findActiveLentExtensions(Long userId) {
 		return LentExtensions.builder()

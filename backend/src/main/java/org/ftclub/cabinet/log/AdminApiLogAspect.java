@@ -10,9 +10,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.ftclub.cabinet.alarm.discord.DiscordAlarmMessage;
 import org.ftclub.cabinet.alarm.discord.DiscordWebHookMessenger;
-import org.ftclub.cabinet.auth.domain.AuthCookieManager;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.springframework.context.annotation.Profile;
@@ -41,7 +41,7 @@ public class AdminApiLogAspect {
 
 	private final static String ADMIN_CUD_POINTCUT = "@annotation(authGuard) && !@annotation(org.springframework.web.bind.annotation.GetMapping))";
 	private final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
-	private final AuthCookieManager authCookieManager;
+	private final CookieManager cookieManager;
 	private final TokenValidator tokenValidator;
 	private final JwtProperties jwtProperties;
 	private final LogParser logParser;
@@ -99,7 +99,7 @@ public class AdminApiLogAspect {
 				.getRequest();
 
 		String name = tokenValidator.getPayloadJson(
-						authCookieManager.getCookieValue(request, jwtProperties.getAdminTokenName()))
+						cookieManager.getCookieValue(request, jwtProperties.getAdminTokenName()))
 				.get("email").asText();
 		Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
 		String className = joinPoint.getTarget().getClass().getName();

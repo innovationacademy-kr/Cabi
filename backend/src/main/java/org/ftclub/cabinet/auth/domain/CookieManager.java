@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 @RequiredArgsConstructor
-public class AuthCookieManager {
+public class CookieManager {
 
 	private final DomainProperties domainProperties;
 	private final JwtProperties jwtProperties;

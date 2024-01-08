@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.auth.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ftclub.cabinet.auth.domain.AuthCookieManager;
+import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.config.ApiProperties;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
@@ -37,7 +37,7 @@ class AuthFacadeServiceImplUnitTest {
 	@Mock
 	TokenProvider tokenProvider = mock(TokenProvider.class);
 	@Mock
-	AuthCookieManager authCookieManager = mock(AuthCookieManager.class);
+	CookieManager cookieManager = mock(CookieManager.class);
 	@Mock
 	AuthService authService = mock(AuthService.class);
 	@Mock
@@ -68,13 +68,13 @@ class AuthFacadeServiceImplUnitTest {
 		given(tokenProvider.makeClaimsByProviderProfile(apiProperties.getProviderName(), profileJsonNode)).willReturn(claims);
 		given(tokenProvider.createToken(claims, timeTokenCreated)).willReturn("accessToken");
 		given(tokenProvider.getTokenNameByProvider(apiProperties.getProviderName())).willReturn("tokenName");
-		given(authCookieManager.cookieOf("tokenName", "accessToken")).willReturn(new Cookie("tokenName", "accessToken"));
-		Cookie mustPutCookie = authCookieManager.cookieOf("tokenName", "accessToken");
+		given(cookieManager.cookieOf("tokenName", "accessToken")).willReturn(new Cookie("tokenName", "accessToken"));
+		Cookie mustPutCookie = cookieManager.cookieOf("tokenName", "accessToken");
 
 		authFacadeService.handleLogin("code", request, response, apiProperties, timeTokenCreated);
 
 		then(authService).should().addUserIfNotExistsByClaims(claims);
-		then(authCookieManager).should().setCookieToClient(response, mustPutCookie, "/", request.getServerName());
+		then(cookieManager).should().setCookieToClient(response, mustPutCookie, "/", request.getServerName());
 	}
 
 	@Test
@@ -85,12 +85,12 @@ class AuthFacadeServiceImplUnitTest {
 		given(authService.validateMasterLogin(masterLoginDto)).willReturn(true);
 		given(tokenProvider.createMasterToken(now)).willReturn("masterToken");
 		given(jwtProperties.getAdminTokenName()).willReturn("adminTokenName");
-		given(authCookieManager.cookieOf(jwtProperties.getAdminTokenName(), "masterToken")).willReturn(new Cookie("adminTokenName", "masterToken"));
-		Cookie mustPutCookie = authCookieManager.cookieOf(jwtProperties.getAdminTokenName(), "masterToken");
+		given(cookieManager.cookieOf(jwtProperties.getAdminTokenName(), "masterToken")).willReturn(new Cookie("adminTokenName", "masterToken"));
+		Cookie mustPutCookie = cookieManager.cookieOf(jwtProperties.getAdminTokenName(), "masterToken");
 
 		authFacadeService.masterLogin(masterLoginDto, request, response, now);
 
-		then(authCookieManager).should().setCookieToClient(response, mustPutCookie, "/", request.getServerName());
+		then(cookieManager).should().setCookieToClient(response, mustPutCookie, "/", request.getServerName());
 	}
 
 	@Test
@@ -113,6 +113,6 @@ class AuthFacadeServiceImplUnitTest {
 
 		authFacadeService.logout(response, apiProperties);
 
-		then(authCookieManager).should().deleteCookie(response, "tokenName");
+		then(cookieManager).should().deleteCookie(response, "tokenName");
 	}
 }

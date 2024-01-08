@@ -2,204 +2,112 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.ClubUserListDto;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
+import org.ftclub.cabinet.alarm.service.AlarmCommandService;
+import org.ftclub.cabinet.alarm.service.AlarmQueryService;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.newService.CabinetQueryService;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
+import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
-import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
-import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.admin.admin.domain.AdminRole;
-import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
+import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.mapper.UserMapper;
+import org.ftclub.cabinet.user.domain.AlarmStatus;
+import org.ftclub.cabinet.user.domain.BanHistory;
+import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
+import org.ftclub.cabinet.user.domain.LentExtensions;
+import org.springframework.stereotype.Service;
 
-public interface UserFacadeService {
+@Service
+@RequiredArgsConstructor
+@Log4j2
+public class UserFacadeService {
 
-	/**
-	 * 현재 로그인한 유저의 프로필을 반환합니다. 대여한 사물함 아이디 정보가 포합됩니다.
-	 *
-	 * @param user 로그인한 유저의 정보
-	 * @return {@link MyProfileResponseDto} 현재 로그인한 유저의 정보
-	 */
-	MyProfileResponseDto getMyProfile(UserSessionDto user);
+	private final BanHistoryQueryService banHistoryQueryService;
+	private final LentExtensionQueryService lentExtensionQueryService;
+	private final LentExtensionCommandService lentExtensionCommandService;
+	private final CabinetQueryService cabinetQueryService;
+	private final UserMapper userMapper;
+	private final AlarmQueryService alarmQueryService;
+	private final AlarmCommandService alarmCommandService;
+	private final LentQueryService lentQueryService;
+	private final LentExtensionPolicy lentExtensionPolicy;
 
-	/**
-	 * 모든 정지 유저를 반환합니다.
-	 *
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 * @param now  현재 시간
-	 * @return {@link BlockedUserPaginationDto} 모든 정지 유저
-	 */
-	/* 기존 searchByBanUser와 동일한 역할을 합니다. */
-	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, LocalDateTime now);
+	public MyProfileResponseDto getProfile(UserSessionDto user) {
+		log.debug("Called getMyProfile: {}", user.getName());
 
-	/**
-	 * 유저 이름의 일부를 입력받아 해당하는 유저들의 프로필을 받아옵니다.
-	 *
-	 * @param name 유저 이름의 일부
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 * @return {@link UserProfilePaginationDto} 해당하는 유저들의 프로필
-	 */
-	/*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
-	UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
-	                                                         Integer size);
+		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
+		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
+				LocalDateTime.now()).orElse(null);
+		LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
+				user.getUserId());
+		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
 
-	/**
-	 * 유저 이름의 일부를 입력받아 해당 유저들의 캐비넷 정보를 반환합니다.
-	 *
-	 * @param name 유저 이름의 일부
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 * @return {@link UserCabinetPaginationDto} 해당하는 유저들의 캐비넷 정보
-	 */
-	UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
-	                                                          Integer size);
+		AlarmStatus alarmStatus = alarmQueryService.findAlarmStatus(user.getUserId());
+		AlarmTypeResponseDto alarmTypeResponseDto = userMapper.toAlarmTypeResponseDto(alarmStatus);
 
-	/**
-	 * 모든 유저의 정보를 가져옵니다.
-	 *
-	 * @return 모든 유저의 정보를 가져옵니다.
-	 */
-	List<User> getAllUsers();
+		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
+				lentExtensionResponseDto, alarmTypeResponseDto);
+	}
 
-	/**
-	 * 유저가 존재하는지 확인합니다.
-	 *
-	 * @param name 유저 이름
-	 * @return 유저가 존재하면 true, 아니면 false
-	 */
-	boolean checkUserExists(String name);
+	public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
+		log.debug("Called getMyLentExtension : {}", user.getName());
 
-	/**
-	 * 유저를 생성합니다.
-	 *
-	 * @param name         유저 이름
-	 * @param email        유저 이메일
-	 * @param blackholedAt 유저 블랙홀 날짜
-	 * @param role         유저 역할
-	 */
-	void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role);
+		List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.findLentExtensionsInLatestOrder(
+						user.getUserId())
+				.stream()
+				.map(userMapper::toLentExtensionResponseDto)
+				.collect(Collectors.toList());
+		return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos,
+				(long) lentExtensionResponseDtos.size());
+	}
 
-	/**
-	 * @param clubName 동아리 유저 이름
-	 */
-	void createClubUser(String clubName);
+	public LentExtensionPaginationDto getActiveLentExtensionsPage(UserSessionDto user) {
+		log.debug("Called getMyActiveLentExtension : {}", user.getName());
 
-	/**
-	 * 관리자가 존재하는지 확인합니다.
-	 *
-	 * @param email 관리자 이메일
-	 * @return 관리자가 존재하면 true, 아니면 false
-	 */
-	boolean checkAdminUserExists(String email);
+		LentExtensions lentExtensions = lentExtensionQueryService.findActiveLentExtensions(
+				user.getUserId());
+		List<LentExtensionResponseDto> LentExtensionResponseDtos = lentExtensions.getLentExtensions()
+				.stream()
+				.map(userMapper::toLentExtensionResponseDto)
+				.collect(Collectors.toList());
 
-	/**
-	 * 관리자를 생성합니다.
-	 *
-	 * @param email 관리자 이메일
-	 */
-	void createAdminUser(String email);
+		return userMapper.toLentExtensionPaginationDto(LentExtensionResponseDtos,
+				(long) LentExtensionResponseDtos.size());
+	}
 
-	/**
-	 * 유저를 삭제합니다.
-	 *
-	 * @param userId    유저 고유 아이디
-	 * @param deletedAt 유저 삭제 날짜
-	 */
-	void deleteUser(Long userId, LocalDateTime deletedAt);
+	public void useLentExtension(UserSessionDto user) {
+		log.debug("Called useLentExtension : {}", user.getName());
 
-	/**
-	 * 관리자를 삭제합니다.
-	 *
-	 * @param adminUserId 관리자 고유 아이디
-	 */
-	void deleteAdminUser(Long adminUserId);
+		Cabinet cabinet = cabinetQueryService.findCabinets(user.getUserId());
+		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
+				cabinet.getCabinetId());
+		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-	/**
-	 * 유저의 권한을 변경합니다.
-	 *
-	 * @param adminUserId 관리자 고유 아이디
-	 * @param role        관리자 권한
-	 */
-	void updateAdminUserRole(Long adminUserId, AdminRole role);
+		LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
+				user.getUserId());
+		if (activeLentExtension == null) {
+			throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
+		}
+		lentExtensionCommandService.useLentExtension(activeLentExtension, activeLentHistories);
+	}
 
-	/**
-	 * 유저를 어드민으로 승격시킵니다.
-	 *
-	 * @param email 유저 이메일
-	 */
-	void promoteUserToAdmin(String email);
+	@Transactional
+	public void updateAlarmState(UserSessionDto user, UpdateAlarmRequestDto dto) {
+		log.debug("Called updateAlarmState");
 
-	/**
-	 * 유저의 블랙홀 시간을 변경합니다.
-	 *
-	 * @param userId          유저 고유 아이디
-	 * @param newBlackholedAt 새로운 유저 블랙홀 시간
-	 */
-	void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt);
-
-	/**
-	 * 유저를 정지시킵니다.
-	 *
-	 * @param userId    유저 고유 아이디
-	 * @param lentType  현재 대여 타입
-	 * @param startedAt 대여 시작 날짜
-	 * @param endedAt   대여 종료 날짜
-	 * @param expiredAt 대여 만료 날짜
-	 */
-	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
-	             LocalDateTime expiredAt);
-
-	/**
-	 * 유저의 정지를 해제합니다.
-	 *
-	 * @param userId 유저 고유 아이디
-	 * @param today  현재 날짜
-	 */
-	void deleteRecentBanHistory(Long userId, LocalDateTime today);
-
-	/**
-	 * 연체 중인 유저 리스트를 반환합니다.
-	 *
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 */
-	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size);
-
-	/**
-	 * 동아리 유저 리스트DTO를 반환합니다.
-	 *
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 * @return
-	 */
-	ClubUserListDto findAllClubUser(Integer page, Integer size);
-
-
-	/**
-	 * 동아리 유저를 삭제합니다.
-	 *
-	 * @param clubId 동아리 고유 아이디
-	 */
-	void deleteClubUser(Long clubId);
-
-	void updateClubUser(Long clubId, String clubName);
-
-	LentExtensionPaginationDto getAllLentExtension(Integer page, Integer size);
-
-	LentExtensionPaginationDto getAllActiveLentExtension(Integer page, Integer size);
-
-	LentExtensionPaginationDto getMyLentExtension(UserSessionDto userSessionDto);
-
-	LentExtensionPaginationDto getMyActiveLentExtensionPage(UserSessionDto userSessionDto);
-
-	void useLentExtension(UserSessionDto userSessionDto);
-
-	void updateAlarmState(UserSessionDto user, UpdateAlarmRequestDto dto);
+		alarmCommandService.updateAlarmStatusRe(dto, alarmQueryService.findAlarmStatus(
+				user.getUserId()));
+	}
 }
+

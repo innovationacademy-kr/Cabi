@@ -6,8 +6,8 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.LentExtensionType;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.newService.LentExtensionCommandService;
-import org.ftclub.cabinet.user.newService.UserQueryService;
+import org.ftclub.cabinet.user.service.LentExtensionCommandService;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 
 @Service

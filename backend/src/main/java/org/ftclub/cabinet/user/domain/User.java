@@ -3,6 +3,7 @@ package org.ftclub.cabinet.user.domain;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -51,12 +53,15 @@ public class User {
 	@Column(name = "ROLE", length = 32, nullable = false)
 	private UserRole role;
 
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private AlarmStatus alarmStatus;
 
 	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
 		this.role = userRole;
+		this.alarmStatus = AlarmStatus.of(this);
 	}
 
 	public static User of(String name, String email, LocalDateTime blackholedAt,

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.service;
+package org.ftclub.cabinet.user.oldService;
 
 import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;

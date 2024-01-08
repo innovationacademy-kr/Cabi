@@ -16,7 +16,7 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.config.JwtProperties;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.user.newService.UserQueryService;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;

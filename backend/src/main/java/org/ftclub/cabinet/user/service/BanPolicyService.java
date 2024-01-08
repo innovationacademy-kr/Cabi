@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.newService;
+package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
 import org.ftclub.cabinet.log.LogLevel;

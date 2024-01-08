@@ -27,6 +27,8 @@ lerna-debug.log*
 *.launch
 .settings/
 *.sublime-workspace
+*.imi
+.idea/*
 
 # IDE - VSCode
 .vscode/*
@@ -37,6 +39,8 @@ lerna-debug.log*
 
 # IDE - WebStrom
 **/*.idea
+**/*.iml
+misc.xml
 
 #env
 .env

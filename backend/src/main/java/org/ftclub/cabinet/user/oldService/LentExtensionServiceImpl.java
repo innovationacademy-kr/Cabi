@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.service;
+package org.ftclub.cabinet.user.oldService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -45,8 +45,8 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 	private final CabinetOptionalFetcher cabinetOptionalFetcher;
 	private final LentExtensionPolicy lentExtensionPolicy;
 
+//	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
 	@Override
-	@Scheduled(cron = "${cabinet.schedule.cron.extension-issue-time}")
 	public void issueLentExtension() {
 		log.debug("Called issueLentExtension");
 		List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
@@ -93,16 +93,12 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 
 	@Override
 	public LentExtensionResponseDto getActiveLentExtension(UserSessionDto userSessionDto) {
-		LentExtensionResponseDto lentExtensionResponseDto = null;
 		List<LentExtension> activeLentExtensionsByUserId = lentExtensionOptionalFetcher.findAllByUserId(
 				userSessionDto.getUserId());
 		LentExtensions lentExtensions = LentExtensions.builder()
 				.lentExtensions(activeLentExtensionsByUserId).build();
-		if (lentExtensions.hasActiveLentExtension()) {
-			lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
-					lentExtensions.findImminentActiveLentExtension());
-		}
-		return lentExtensionResponseDto;
+		return userMapper.toLentExtensionResponseDto(
+				lentExtensions.findImminentActiveLentExtension().orElse(null));
 	}
 
 	@Override
@@ -123,12 +119,13 @@ public class LentExtensionServiceImpl implements LentExtensionService {
 				cabinet.getCabinetId());
 		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-		LentExtension lentExtension = lentExtensions.findImminentActiveLentExtension();
+		LentExtension lentExtension = lentExtensions.findImminentActiveLentExtension().orElse(null);
+		if (lentExtension == null)
+			return ;
 		lentExtension.use();
 		// 연장
 		activeLentHistories
 				.forEach(lentHistory -> lentHistory.setExpiredAt(
 						lentHistory.getExpiredAt().plusDays(lentExtension.getExtensionPeriod())));
 	}
-
 }

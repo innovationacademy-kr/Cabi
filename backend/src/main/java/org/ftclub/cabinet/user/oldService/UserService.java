@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.service;
+package org.ftclub.cabinet.user.oldService;
 
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.cabinet.domain.LentType;
