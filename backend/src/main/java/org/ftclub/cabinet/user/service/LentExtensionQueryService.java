@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.user.newService;
+package org.ftclub.cabinet.user.service;
 
 import java.util.Comparator;
 import java.util.List;
