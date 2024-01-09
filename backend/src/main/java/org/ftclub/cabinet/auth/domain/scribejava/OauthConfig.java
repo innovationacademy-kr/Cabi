@@ -5,7 +5,6 @@ import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import org.ftclub.cabinet.config.FtApiProperties;
 import org.ftclub.cabinet.config.GoogleApiProperties;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,12 +13,12 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class OauthConfig {
+
 	public static final String FT_OAUTH_20_SERVICE = "ftOauth20Service";
 	public static final String GOOGLE_OAUTH_20_SERVICE = "googleOauth20Service";
 
 
 	@Bean
-	@Qualifier(FT_OAUTH_20_SERVICE)
 	public OAuth20Service ftOauth20Service(FtApiProperties ftApiProperties) {
 		return new ServiceBuilder(ftApiProperties.getClientId())
 				.apiSecret(ftApiProperties.getClientSecret())
@@ -28,7 +27,6 @@ public class OauthConfig {
 	}
 
 	@Bean
-	@Qualifier(GOOGLE_OAUTH_20_SERVICE)
 	public OAuth20Service googleOauth20Service(GoogleApiProperties googleApiProperties) {
 		return new ServiceBuilder(googleApiProperties.getClientId())
 				.apiSecret(googleApiProperties.getClientSecret())
