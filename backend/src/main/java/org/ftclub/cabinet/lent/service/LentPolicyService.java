@@ -29,6 +29,12 @@ public class LentPolicyService {
 	private final CabinetProperties cabinetProperties;
 
 
+	/**
+	 * 대여 정책에 따라 예외를 발생시킵니다.
+	 *
+	 * @param status     대여 정책 상태
+	 * @param unbannedAt 밴 해제 시간
+	 */
 	private void handlePolicyStatus(LentPolicyStatus status, LocalDateTime unbannedAt) {
 		String unbannedAtString = null;
 		switch (status) {
@@ -69,6 +75,11 @@ public class LentPolicyService {
 		}
 	}
 
+	/**
+	 * 해당 유저가 대여를 해도 되는 상태인지 확인합니다.
+	 *
+	 * @param requestDto 대여 요청 정보
+	 */
 	public void verifyUserForLent(UserVerifyRequestDto requestDto) {
 		LocalDateTime now = LocalDateTime.now();
 		LentPolicyStatus status = LentPolicyStatus.FINE;
@@ -101,6 +112,12 @@ public class LentPolicyService {
 		this.handlePolicyStatus(status, unbannedAt);
 	}
 
+	/**
+	 * 해당 사물함이 대여 가능한 상태인지 확인합니다.
+	 *
+	 * @param cabinetStatus 사물함 상태
+	 * @param lentType      대여 타입
+	 */
 	public void verifyCabinetForLent(CabinetStatus cabinetStatus, LentType lentType) {
 		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (lentType.equals(LentType.CLUB)) {
@@ -119,12 +136,25 @@ public class LentPolicyService {
 		handlePolicyStatus(status, null);
 	}
 
+	/**
+	 * 사물함의 상태가 대여해도 되는지 확인합니다.
+	 *
+	 * @param cabinetLentType 사물함 대여 타입
+	 * @param lentType        대여 타입
+	 */
 	public void verifyCabinetType(LentType cabinetLentType, LentType lentType) {
 		if (!cabinetLentType.equals(lentType)) {
 			throw new ServiceException(ExceptionStatus.INVALID_LENT_TYPE);
 		}
 	}
 
+	/**
+	 * 사물함의 대여 가능한 최대 유저 수와 현재 대여 중인 유저 수를 통해 대여해도 되는지 확인합니다.
+	 *
+	 * @param lentType     대여 타입
+	 * @param maxUserCount 사물함 대여 가능 최대 유저 수
+	 * @param lentCount    현재 대여 중인 유저 수
+	 */
 	public void verifyCabinetLentCount(LentType lentType, int maxUserCount, int lentCount) {
 		int maxLentCount = 1;
 		if (lentType.equals(LentType.SHARE)) {
@@ -138,6 +168,14 @@ public class LentPolicyService {
 		}
 	}
 
+	/**
+	 * 사물함 대여 시에 필요한 만료 기간을 생성합니다.
+	 *
+	 * @param now           현재 시간
+	 * @param lentType      대여 타입
+	 * @param lentUserCount 대여 중인 유저 수
+	 * @return 만료 시간
+	 */
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
 			int lentUserCount) {
 		if (!DateUtil.isSameDay(now)) {
@@ -157,6 +195,14 @@ public class LentPolicyService {
 		return expiredAt;
 	}
 
+	/**
+	 * 공유 사물함의 만료 시간을 조정합니다.
+	 *
+	 * @param userCount 조정 후 남는 대여 유저 수
+	 * @param now       현재 시간
+	 * @param expiredAt 현재 사물함의 만료 시간
+	 * @return 조정된 만료 시간
+	 */
 	public LocalDateTime adjustSharCabinetExpirationDate(int userCount, LocalDateTime now,
 			LocalDateTime expiredAt) {
 		double daysUntilExpiration = DateUtil.calculateTwoDateDiffCeil(now, expiredAt);
@@ -165,12 +211,23 @@ public class LentPolicyService {
 		return DateUtil.setLastTime(now.plusSeconds(secondsRemaining));
 	}
 
+	/**
+	 * 공유 사물함에 해당 유저 수만큼 대여해도 되는지 확인합니다.
+	 *
+	 * @param userCount 유저 수
+	 * @return 대여해도 되는지 여부
+	 */
 	public boolean verifyUserCountOnShareCabinet(int userCount) {
 		long minUserCount = cabinetProperties.getShareMinUserCount();
 		long maxUserCount = cabinetProperties.getShareMaxUserCount();
 		return minUserCount <= userCount && userCount <= maxUserCount;
 	}
 
+	/**
+	 * 공유 사물함 세션의 대여 시도 횟수를 확인합니다.
+	 *
+	 * @param attemptCount 대여 시도 횟수
+	 */
 	public void verifyAttemptCountOnShareCabinet(Long attemptCount) {
 		LentPolicyStatus status = LentPolicyStatus.FINE;
 		Long shareMaxAttemptCount = cabinetProperties.getShareMaxAttemptCount();
