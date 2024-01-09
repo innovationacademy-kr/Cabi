@@ -1,9 +1,28 @@
 package org.ftclub.cabinet.admin.search.service;
 
+import static java.util.stream.Collectors.toList;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.IN_SESSION;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.CabinetDto;
+import org.ftclub.cabinet.dto.CabinetInfoPaginationDto;
+import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetSimpleDto;
+import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
+import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.UserBlockedInfoDto;
+import org.ftclub.cabinet.dto.UserCabinetDto;
+import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserProfileDto;
+import org.ftclub.cabinet.dto.UserProfilePaginationDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
@@ -20,16 +39,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.IN_SESSION;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +72,7 @@ public class AdminSearchFacadeService {
 		List<BanHistory> activeBanHistories =
 				banHistoryQueryService.findActiveBanHistories(userIds, now);
 		List<LentHistory> activeLentHistories =
-				lentQueryService.findUsersActiveLentHistoriesAndCabinet(userIds);
+				lentQueryService.findUsersActiveLentHistoriesWithCabinet(userIds);
 		Map<Long, List<BanHistory>> banHistoriesByUserId = activeBanHistories.stream()
 				.collect(Collectors.groupingBy(BanHistory::getUserId));
 		Map<Long, List<LentHistory>> lentHistoriesByUserId = activeLentHistories.stream()

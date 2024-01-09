@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +19,8 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.ExceptionUtil;
@@ -81,7 +81,7 @@ public class LentHistory {
 	private Cabinet cabinet;
 
 	protected LentHistory(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-	                      Long cabinetId) {
+			Long cabinetId) {
 		this.startedAt = startedAt;
 		this.expiredAt = expiredAt;
 		this.userId = userId;
@@ -96,7 +96,7 @@ public class LentHistory {
 	 * @return 인자 정보를 담고있는 {@link LentHistory}
 	 */
 	public static LentHistory of(LocalDateTime startedAt, LocalDateTime expiredAt, Long userId,
-	                             Long cabinetId) {
+			Long cabinetId) {
 		LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
 		if (!lentHistory.isValid()) {
 			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
@@ -227,8 +227,8 @@ public class LentHistory {
 	 *
 	 * @param now 설정하려고 하는 반납일
 	 */
+	@Logging(level = LogLevel.DEBUG)
 	public void endLent(LocalDateTime now) {
-		log.info("setEndLent : {}", now);
 		ExceptionUtil.throwIfFalse((this.isEndLentValid(now)),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		this.endedAt = now;

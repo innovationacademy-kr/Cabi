@@ -1,5 +1,12 @@
 package org.ftclub.cabinet.admin.lent.service;
 
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -26,14 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
-
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +56,7 @@ public class AdminLentFacadeService {
 	public LentHistoryPaginationDto getUserLentHistories(Long userId, Pageable pageable) {
 		userQueryService.getUser(userId);
 		Page<LentHistory> lentHistories =
-				lentQueryService.findUserActiveLentHistories(userId, pageable);
+				lentQueryService.findUserLentHistories(userId, pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
 				.sorted(Comparator.comparing(LentHistory::getStartedAt))
 				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
@@ -69,7 +68,7 @@ public class AdminLentFacadeService {
 	public void endUserLent(Long userId) {
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories =
-				lentQueryService.findUserActiveLentHistoriesInCabinet(userId);
+				lentQueryService.findUserActiveLentHistoriesInCabinetWithLock(userId);
 		if (lentHistories.isEmpty()) {
 			Long cabinetId = lentRedisService.findCabinetJoinedUser(userId);
 			if (cabinetId != null) {
@@ -77,16 +76,15 @@ public class AdminLentFacadeService {
 			}
 			return;
 		}
-		Cabinet cabinet = cabinetQueryService.findCabinets(lentHistories.get(0).getCabinetId());
 		LentHistory userLentHistory = lentHistories.stream()
 				.filter(lh -> lh.getUserId().equals(userId)).findFirst()
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_LENT_HISTORY));
+		Cabinet cabinet = cabinetQueryService.findCabinets(userLentHistory.getCabinetId());
 
 		int userRemainCount = lentHistories.size() - 1;
 		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
 		lentCommandService.endLent(userLentHistory, now);
-		lentRedisService.setPreviousUserName(
-				cabinet.getId(), userLentHistory.getUser().getName());
+		lentRedisService.setPreviousUserName(cabinet.getId(), userLentHistory.getUser().getName());
 
 		LocalDateTime endedAt = userLentHistory.getEndedAt();
 		BanType banType = banPolicyService.verifyBan(endedAt, userLentHistory.getExpiredAt());
@@ -98,8 +96,10 @@ public class AdminLentFacadeService {
 		if (cabinet.isLentType(SHARE)) {
 			LocalDateTime expiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
 					userRemainCount, now, userLentHistory);
-			lentHistories.stream().filter(lh -> !lh.equals(userLentHistory))
-					.forEach(lh -> lentCommandService.setExpiredAt(lh, expiredAt));
+			List<Long> lentHistoryIds = lentHistories.stream()
+					.filter(lh -> !lh.equals(userLentHistory))
+					.map(LentHistory::getId).collect(Collectors.toList());
+			lentCommandService.setExpiredAt(lentHistoryIds, expiredAt);
 		}
 	}
 
