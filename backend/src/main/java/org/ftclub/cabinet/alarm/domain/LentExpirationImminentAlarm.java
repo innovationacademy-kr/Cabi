@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @ToString
 @AllArgsConstructor
-public class LentExpirationImminentAlarm implements Alarm, TransactionalAlarmEvent {
+public class LentExpirationImminentAlarm implements Alarm {
 
     private final Long daysAfterFromExpireDate;
 
