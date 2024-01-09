@@ -66,7 +66,7 @@ public class SystemScheduler {
     public void checkRiskOfBlackhole() {
         log.info("called checkRiskOfBlackhole");
 
-        List<UserBlackHoleEvent> closeWithBlackholeUsers = userQueryService.findAllRiskOfBlackholeInfo().stream()
+        List<UserBlackHoleEvent> closeWithBlackholeUsers = userQueryService.findUsersAtRiskOfBlackhole().stream()
                 .map(user -> UserBlackHoleEvent.of(user.getId(), user.getName(), user.getEmail(), user.getBlackholedAt()))
                 .collect(Collectors.toList());
         for (UserBlackHoleEvent blackholeInfo : closeWithBlackholeUsers) {
@@ -86,7 +86,7 @@ public class SystemScheduler {
     public void checkNoRiskOfBlackhole() {
         log.info("called checkNoRiskOfBlackhole");
 
-        List<UserBlackHoleEvent> safeFromBlackholeUsers = userQueryService.findAllNoRiskOfBlackholeInfo()
+        List<UserBlackHoleEvent> safeFromBlackholeUsers = userQueryService.findUsersAtNoRiskOfBlackhole()
                 .stream()
                 .map(user -> UserBlackHoleEvent.of(user.getId(), user.getName(), user.getEmail(), user.getBlackholedAt()))
                 .collect(Collectors.toList());

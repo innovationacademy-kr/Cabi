@@ -24,6 +24,14 @@ public class LentExtensionCommandService {
     private final LentExtensionPolicy policy;
     private final CabinetProperties cabinetProperties;
 
+    /**
+     * 연장권을 생성합니다.
+     *
+     * @param userId   유저 ID
+     * @param type     연장권 타입
+     * @param expiredAt 만료일
+     * @return 생성된 연장권
+     */
     public LentExtension createLentExtension(Long userId, LentExtensionType type, LocalDateTime expiredAt) {
         LentExtension lentExtension = LentExtension.of(policy.getDefaultName(),
                 policy.getDefaultExtensionTerm(),
@@ -32,6 +40,12 @@ public class LentExtensionCommandService {
         return lentExtensionRepository.save(lentExtension);
     }
 
+    /**
+     * 연장권을 사용합니다.
+     *
+     * @param lentExtension 연장권
+     * @param lentHistories 연장권을 사용할 사물함에 대한 대여 기록
+     */
     public void useLentExtension(LentExtension lentExtension, List<LentHistory> lentHistories) {
         lentExtension.use();
         lentHistories.forEach(lentHistory ->

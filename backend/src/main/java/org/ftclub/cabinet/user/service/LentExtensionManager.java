@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserMonthDataDto;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.occupiedtime.OccupiedTimeManager;
 import org.ftclub.cabinet.user.domain.LentExtensionType;
 import org.ftclub.cabinet.user.repository.LentExtensionRepository;
@@ -17,7 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 public class LentExtensionManager {
     private final CabinetProperties cabinetProperties;
     private final LentExtensionRepository lentExtensionRepository;
@@ -26,9 +28,10 @@ public class LentExtensionManager {
     private final UserOptionalFetcher userOptionalFetcher;
     private final OccupiedTimeManager occupiedTimeManager;
 
+    /**
+     * 연장권을 발급합니다.
+     */
     public void issueLentExtension() {
-        log.debug("Called issueLentExtension");
-
         List<UserMonthDataDto> userMonthDataDtos = occupiedTimeManager.filterToMetUserMonthlyTime(
                 occupiedTimeManager.getUserLastMonthOccupiedTime());
 
@@ -40,6 +43,4 @@ public class LentExtensionManager {
                             now.getMonth().length(now.toLocalDate().isLeapYear()), 23, 59, 0));
         });
     }
-
-
 }

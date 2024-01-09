@@ -28,6 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.id = :userId AND u.role = :role AND u.deletedAt IS NULL")
 	Optional<User> findByIdAndRole(Long userId, UserRole role);
 
+	/**
+	 * 소프트 딜리트 사용으로 인한 Deprecated
+	 */
+	@Override
+	@Deprecated
+	public void deleteById(Long userId);
+
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Query("UPDATE User u " +
 			"SET u.deletedAt = :deletedAt " +

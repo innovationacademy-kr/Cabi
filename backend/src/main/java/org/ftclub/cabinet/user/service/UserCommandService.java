@@ -20,6 +20,12 @@ public class UserCommandService {
 
 	private final UserRepository userRepository;
 
+	/**
+	 * 유저를 생성합니다.
+	 *
+	 * @param profile 42서울에서 가져온 유저 프로필
+	 * @return 생성된 유저 객체
+	 */
 	public User createUserByFtProfile(FtProfile profile) {
 		if (userRepository.existsByNameAndEmail(profile.getIntraName(), profile.getEmail())) {
 			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
@@ -29,6 +35,12 @@ public class UserCommandService {
 		return userRepository.save(user);
 	}
 
+	/**
+	 * 동아리 유저를 생성합니다.
+	 *
+	 * @param clubName 동아리 이름
+	 * @return 생성된 동아리 유저 객체
+	 */
 	public User createClubUser(String clubName) {
 		if (userRepository.existsByNameAndEmail(clubName, clubName + "@ftclub.org")) {
 			throw ExceptionStatus.EXISTED_CLUB_USER.asServiceException();
@@ -37,6 +49,12 @@ public class UserCommandService {
 		return userRepository.save(user);
 	}
 
+	/**
+	 * 동아리 유저의 이름을 변경합니다.
+	 *
+	 * @param user     동아리 유저 객체
+	 * @param clubName 변경할 유저 이름
+	 */
 	public void updateClubName(User user, String clubName) {
 		if (!user.isUserRole(UserRole.CLUB)) {
 			throw ExceptionStatus.NOT_CLUB_USER.asServiceException();
@@ -45,21 +63,44 @@ public class UserCommandService {
 		userRepository.save(user);
 	}
 
+	/**
+	 * 유저를 삭제합니다.
+	 *
+	 * @param userId 삭제할 유저의 ID
+	 * @param deletedAt 삭제 시각
+	 */
 	public void deleteById(Long userId, LocalDateTime deletedAt) {
-		userRepository.deleteById(userId);
+		userRepository.deleteById(userId, deletedAt);
 	}
 
+	/**
+	 * 동아리 유저를 삭제합니다.
+	 *
+	 * @param clubUser 삭제할 동아리 유저 객체
+	 */
 	public void deleteClubUser(User clubUser) {
 		if (!clubUser.isUserRole(UserRole.CLUB)) {
 			throw ExceptionStatus.NOT_CLUB_USER.asServiceException();
 		}
-		userRepository.delete(clubUser);
+		userRepository.deleteById(clubUser.getId(), LocalDateTime.now());
 	}
 
+	/**
+	 * 유저의 알람 설정을 변경합니다.
+	 *
+	 * @param user                  유저 객체
+	 * @param updateAlarmRequestDto 변경할 알람 설정
+	 */
 	public void updateAlarmStatus(User user, UpdateAlarmRequestDto updateAlarmRequestDto) {
 		user.changeAlarmStatus(updateAlarmRequestDto);
 	}
 
+	/**
+	 * 유저의 블랙홀을 변경합니다.
+	 *
+	 * @param userId     유저의 ID
+	 * @param blackholedAt 변경할 blackholedAt
+	 */
 	public void updateUserBlackholedAtById(Long userId, LocalDateTime blackholedAt) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
