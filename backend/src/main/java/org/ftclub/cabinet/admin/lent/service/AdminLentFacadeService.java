@@ -15,7 +15,6 @@ import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentCommandService;
 import org.ftclub.cabinet.lent.service.LentPolicyService;
@@ -74,7 +73,7 @@ public class AdminLentFacadeService {
 			Long cabinetId = lentRedisService.findCabinetJoinedUser(userIds.get(0));
 			if (cabinetId != null) {
 				userIds.forEach(userId ->
-						lentRedisService.deleteUserInCabinetSession(cabinetId, userId));
+						lentRedisService.deleteUserInCabinet(cabinetId, userId));
 			}
 			return;
 		}

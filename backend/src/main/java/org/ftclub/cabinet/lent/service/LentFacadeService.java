@@ -206,9 +206,9 @@ public class LentFacadeService {
 			shareCode = lentRedisService.createCabinetSession(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.IN_SESSION);
 		}
-		lentRedisService.joinCabinetSession(cabinetId, userId, shareCode);
+		lentRedisService.attemptJoinCabinet(cabinetId, userId, shareCode);
 		if (lentRedisService.isCabinetSessionFull(cabinetId)) {
-			List<Long> userIdsInCabinet = lentRedisService.getUsersInCabinetSession(cabinetId);
+			List<Long> userIdsInCabinet = lentRedisService.getUsersInCabinet(cabinetId);
 			LocalDateTime expiredAt =
 					lentPolicyService.generateExpirationDate(now, SHARE, userIdsInCabinet.size());
 			lentCommandService.startLent(userIdsInCabinet, cabinet.getId(), now, expiredAt);
@@ -316,8 +316,8 @@ public class LentFacadeService {
 	 */
 	@Transactional
 	public void cancelShareCabinetLent(Long userId, Long cabinetId) {
-		lentRedisService.deleteUserInCabinetSession(cabinetId, userId);
-		if (lentRedisService.isCabinetSessionEmpty(cabinetId)) {
+		lentRedisService.deleteUserInCabinet(cabinetId, userId);
+		if (lentRedisService.isInCabinetSession(cabinetId)) {
 			Cabinet cabinet = cabinetQueryService.findCabinetsForUpdate(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		}
@@ -331,7 +331,7 @@ public class LentFacadeService {
 	@Transactional
 	public void shareCabinetSessionExpired(Long cabinetId) {
 		Cabinet cabinet = cabinetQueryService.findCabinetsForUpdate(cabinetId);
-		List<Long> usersInCabinetSession = lentRedisService.getUsersInCabinetSession(cabinetId);
+		List<Long> usersInCabinetSession = lentRedisService.getUsersInCabinet(cabinetId);
 		if (lentPolicyService.checkUserCountOnShareCabinet(usersInCabinetSession.size())) {
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(
