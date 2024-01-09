@@ -221,7 +221,7 @@ export const axiosAdminCabinetInfoByCabinetId = async (
 };
 
 const axiosReturnByUserIdURL = "/v4/admin/return-users/";
-export const axiosReturnByUserId = async (userId: number): Promise<any> => {
+export const axiosReturnByUserId = async (userId: number[]): Promise<any> => {
   try {
     const response = await instance.patch(axiosReturnByUserIdURL + userId);
     return response;
