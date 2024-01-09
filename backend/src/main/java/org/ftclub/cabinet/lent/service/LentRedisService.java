@@ -1,5 +1,10 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -10,12 +15,6 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
@@ -24,6 +23,9 @@ public class LentRedisService {
 	private final LentRedis lentRedis;
 	private final LentRepository lentRepository;
 	private final CabinetProperties cabinetProperties;
+
+
+	/*-------------------------------------  Share Cabinet  --------------------------------------*/
 
 	public List<Long> findUsersInCabinet(Long cabinetId) {
 		List<String> userIdList = lentRedis.getAllUserInCabinet(
@@ -88,6 +90,7 @@ public class LentRedisService {
 		if (!lentRedis.isUserInCabinet(cabinetIdString, userIdString)) {
 			throw ExceptionStatus.NOT_FOUND_USER.asServiceException();
 		}
+		lentRedis.deleteUser(userIdString);
 		lentRedis.deleteUserInCabinet(cabinetIdString, userIdString);
 		if (lentRedis.countUserInCabinet(cabinetIdString) == 0) {
 			lentRedis.deleteShadowKey(cabinetIdString);
@@ -105,9 +108,14 @@ public class LentRedisService {
 		String cabinetIdString = cabinetId.toString();
 		List<String> userList = lentRedis.getAllUserInCabinet(cabinetIdString);
 		lentRedis.deleteShadowKey(cabinetIdString);
-		userList.forEach(userId -> lentRedis.deleteUserInCabinet(cabinetIdString, userId));
+		userList.forEach(userId -> {
+			lentRedis.deleteUserInCabinet(cabinetIdString, userId);
+			lentRedis.deleteUser(userId);
+		});
 		lentRedis.deleteCabinet(cabinetIdString);
 	}
+
+	/*----------------------------------------  Caching  -----------------------------------------*/
 
 	public String getPreviousUserName(Long cabinetId) {
 		String previousUserName = lentRedis.getPreviousUserName(cabinetId.toString());
