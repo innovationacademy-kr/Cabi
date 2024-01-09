@@ -1,6 +1,10 @@
 package org.ftclub.cabinet.admin.cabinet.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.dto.AdminCabinetGridUpdateRequestDto;
+import org.ftclub.cabinet.admin.dto.AdminCabinetStatusNoteUpdateRequestDto;
+import org.ftclub.cabinet.admin.dto.AdminCabinetTitleUpdateRequestDto;
+import org.ftclub.cabinet.admin.dto.AdminCabinetVisibleNumUpdateRequestDto;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -8,15 +12,12 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.exception.ControllerException;
-import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 관리자가 사물함을 관리할 때 사용하는 컨트롤러입니다.
@@ -55,29 +56,23 @@ public class AdminCabinetController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetStatusNote(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody HashMap<String, String> body) {
-		if (body == null || body.isEmpty() || !body.containsKey("statusNote")) {
-			throw ExceptionStatus.INCORRECT_ARGUMENT.asControllerException();
-		}
-		cabinetFacadeService.updateCabinetStatusNote(cabinetId, body.get("statusNote"));
+			@RequestBody AdminCabinetStatusNoteUpdateRequestDto dto) {
+		cabinetFacadeService.updateCabinetStatusNote(cabinetId, dto.getStatusNote());
 	}
 
 	/**
 	 * 사물함의 제목을 업데이트합니다.
 	 *
 	 * @param cabinetId 사물함 아이디
-	 * @param body      { title: 변경할 사물함 제목 }
+	 * @param dto       { title: 변경할 사물함 제목 }
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/title")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody HashMap<String, String> body) {
-		if (body == null || body.isEmpty() || !body.containsKey("title")) {
-			throw ExceptionStatus.INCORRECT_ARGUMENT.asControllerException();
-		}
-		cabinetFacadeService.updateCabinetTitle(cabinetId, body.get("title"));
+			@RequestBody AdminCabinetTitleUpdateRequestDto dto) {
+		cabinetFacadeService.updateCabinetTitle(cabinetId, dto.getTitle());
 	}
 
 	/**
@@ -113,37 +108,30 @@ public class AdminCabinetController {
 	 * 사물함의 행과 열을 업데이트합니다.
 	 *
 	 * @param cabinetId 사물함 아이디
-	 * @param body      { row: 변경할 사물함 행, col: 변경할 사물함 열 }
+	 * @param dto       { row: 변경할 사물함 행, col: 변경할 사물함 열 }
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/grid")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetGrid(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody Map<String, Integer> body) {
-		if (body == null || body.isEmpty() || !body.containsKey("row")
-				|| !body.containsKey("col")) {
-			throw ExceptionStatus.INCORRECT_ARGUMENT.asControllerException();
-		}
-		cabinetFacadeService.updateCabinetGrid(cabinetId, body.get("row"), body.get("col"));
+			@RequestBody AdminCabinetGridUpdateRequestDto dto) {
+		cabinetFacadeService.updateCabinetGrid(cabinetId, dto.getRow(), dto.getCol());
 	}
 
 	/**
 	 * 사물함의 표시 번호를 업데이트합니다.
 	 *
 	 * @param cabinetId 사물함 아이디
-	 * @param body      { visibleNum: 변경할 사물함 표시 번호 }
+	 * @param dto       { visibleNum: 변경할 사물함 표시 번호 }
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/visible-num")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetVisibleNum(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody HashMap<String, Integer> body) {
-		if (body == null || body.isEmpty() || !body.containsKey("visibleNum")) {
-			throw ExceptionStatus.INCORRECT_ARGUMENT.asControllerException();
-		}
-		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, body.get("visibleNum"));
+			@RequestBody AdminCabinetVisibleNumUpdateRequestDto dto) {
+		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, dto.getVisibleNum());
 	}
 
 	/**
