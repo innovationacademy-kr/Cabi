@@ -69,6 +69,7 @@ public class AdminLentFacadeService {
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories =
 				lentQueryService.findUserActiveLentHistoriesInCabinetWithLock(userIds.get(0));
+		System.out.println("lentHistories = " + lentHistories);
 		if (lentHistories.isEmpty()) {
 			Long cabinetId = lentRedisService.findCabinetJoinedUser(userIds.get(0));
 			if (cabinetId != null) {
@@ -92,15 +93,16 @@ public class AdminLentFacadeService {
 		lentHistories.forEach(lh ->
 				lentRedisService.setPreviousUserName(cabinet.getId(), lh.getUser().getName()));
 
-		LocalDateTime endedAt = userLentHistories.get(0).getEndedAt();
 		LocalDateTime expiredAt = userLentHistories.get(0).getExpiredAt();
-		BanType banType = banPolicyService.verifyBan(endedAt, expiredAt);
-		LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(endedAt, expiredAt);
-		banHistoryCommandService.banUsers(userIds, endedAt, unbannedAt, banType);
+		BanType banType = banPolicyService.verifyBan(now, expiredAt);
+		LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(now, expiredAt);
+		banHistoryCommandService.banUsers(userIds, now, unbannedAt, banType);
 		if (cabinet.isLentType(SHARE)) {
 			LocalDateTime newExpiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
 					userRemainCount, now, expiredAt);
-			lentCommandService.setExpiredAt(userIds, newExpiredAt);
+			List<Long> lentHistoryIds = lentHistories.stream()
+					.map(LentHistory::getId).collect(Collectors.toList());
+			lentCommandService.setExpiredAt(lentHistoryIds, newExpiredAt);
 		}
 	}
 

@@ -29,7 +29,7 @@ public class AdminLentController {
 		adminLentFacadeService.endCabinetLent(returnCabinetsRequestDto.getCabinetIds());
 	}
 
-	@PatchMapping("/return-users/{userId}")
+	@PatchMapping("/return-users")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void terminateLentUser(
 			@Valid @RequestBody ReturnUserRequestDto returnUserRequestDto) {

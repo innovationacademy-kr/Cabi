@@ -277,12 +277,11 @@ public class LentFacadeService {
 			cabinetCommandService.updateMemo(cabinet, memo);
 		}
 
-		LocalDateTime endedAt = userLentHistory.getEndedAt();
 		LocalDateTime expiredAt = userLentHistory.getExpiredAt();
-		BanType banType = banPolicyService.verifyBan(endedAt, expiredAt);
+		BanType banType = banPolicyService.verifyBan(now, expiredAt);
 		if (!banType.equals(BanType.NONE)) {
-			LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(endedAt, expiredAt);
-			banHistoryCommandService.banUser(userId, endedAt, unbannedAt, banType);
+			LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(now, expiredAt);
+			banHistoryCommandService.banUser(userId, now, unbannedAt, banType);
 		}
 		if (cabinet.isLentType(SHARE)) {
 			LocalDateTime newExpiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
