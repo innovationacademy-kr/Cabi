@@ -118,9 +118,9 @@ public class AuthFacadeService {
 		// TODO : 서비스로 빼기
 		if (!masterLoginDto.getId().equals(masterProperties.getId())
 				|| !masterLoginDto.getPassword().equals(masterProperties.getPassword()))
-			throw new ServiceException(ExceptionStatus.UNAUTHORIZED_ADMIN);
+			throw ExceptionStatus.UNAUTHORIZED_ADMIN.asServiceException();
 		Admin master = adminQueryService.findByEmail(masterProperties.getEmail())
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.UNAUTHORIZED_ADMIN));
+				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		String masterToken = tokenProvider.createAdminToken(master, now);
 		Cookie cookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, masterToken);
 		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());

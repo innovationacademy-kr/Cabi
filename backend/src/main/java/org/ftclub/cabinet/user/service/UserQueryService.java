@@ -2,7 +2,6 @@ package org.ftclub.cabinet.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.User;
@@ -25,17 +24,17 @@ public class UserQueryService {
 
 	public User getUser(Long userId) {
 		Optional<User> user = userRepository.findById(userId);
-		return user.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 	}
 
 	public User getClubUser(Long userId) {
 		Optional<User> user = userRepository.findByIdAndRole(userId, UserRole.CLUB);
-		return user.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 	}
 
 	public User getUserByName(String name) {
 		Optional<User> user = userRepository.findByName(name);
-		return user.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 	}
 
 	public List<User> getUsers(List<Long> userIdsInCabinet) {

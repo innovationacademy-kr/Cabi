@@ -31,7 +31,7 @@ public class SlackAlarmSender {
         String id = slackUserInfo.getId();
 
         if (id.isEmpty()) {
-            throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
+            throw ExceptionStatus.SLACK_ID_NOT_FOUND.asServiceException();
         }
 
         SlackDto slackDto = parseMessage(alarmEvent.getAlarm());
@@ -54,7 +54,7 @@ public class SlackAlarmSender {
         } else if (alarm instanceof AnnouncementAlarm) {
             return generateAnnouncementAlarm();
         } else {
-            throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
+            throw ExceptionStatus.NOT_FOUND_ALARM.asServiceException();
         }
     }
 

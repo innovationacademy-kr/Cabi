@@ -10,7 +10,6 @@ import org.ftclub.cabinet.alarm.slack.config.SlackProperties;
 import org.ftclub.cabinet.alarm.slack.dto.SlackResponse;
 import org.ftclub.cabinet.alarm.slack.dto.SlackUserInfo;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -26,6 +25,7 @@ public class SlackApiManager {
 
 	/**
 	 * email 주소로, Slack 고유 ID를 가져옵니다.
+	 *
 	 * @param email
 	 * @return
 	 */
@@ -40,7 +40,7 @@ public class SlackApiManager {
 			return slackResponse.getSlackUserInfo();
 		} catch (FeignClientException e) {
 			log.error("{}", e.getMessage());
-			throw new ServiceException(ExceptionStatus.SLACK_REQUEST_BAD_GATEWAY);
+			throw ExceptionStatus.SLACK_REQUEST_BAD_GATEWAY.asServiceException();
 		}
 	}
 
@@ -55,7 +55,7 @@ public class SlackApiManager {
 
 		} catch (SlackApiException | IOException e) {
 			log.error("{}", e.getMessage());
-			throw new ServiceException(ExceptionStatus.SLACK_MESSAGE_SEND_BAD_GATEWAY);
+			throw ExceptionStatus.SLACK_MESSAGE_SEND_BAD_GATEWAY.asServiceException();
 		}
 	}
 }

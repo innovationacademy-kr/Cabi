@@ -27,4 +27,8 @@ public class CustomExceptionStatus {
 		this.message = status.getMessage() + "\n" + message;
 		this.error = status.getError();
 	}
+
+	public CustomServiceException asCustomServiceException() {
+		return new CustomServiceException(this);
+	}
 }

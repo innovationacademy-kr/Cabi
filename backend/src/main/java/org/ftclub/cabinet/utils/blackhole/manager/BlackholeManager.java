@@ -8,7 +8,6 @@ import org.ftclub.cabinet.auth.service.UserOauthService;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.exception.UtilException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.springframework.http.HttpStatus;
@@ -68,7 +67,7 @@ public class BlackholeManager {
 				userCommandService.deleteById(dto.getUserId(), now);
 			}
 			log.info("handleBlackholedUser ServiceException {}", e.getStatus());
-			throw new UtilException(e.getStatus());
+			throw e.getStatus().asUtilException();
 
 		} catch (Exception e) {
 			log.error("handleBlackHoledUser Exception: {}", dto, e);

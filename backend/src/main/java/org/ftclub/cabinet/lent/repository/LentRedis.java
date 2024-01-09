@@ -68,7 +68,7 @@ public class LentRedis {
 			} else {
 				shareCabinetTemplate.put(cabinetId, userId, "1");
 			}
-			throw new DomainException(ExceptionStatus.WRONG_SHARE_CODE);
+			throw ExceptionStatus.WRONG_SHARE_CODE.asServiceException();
 		}
 	}
 

@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.ftclub.cabinet.auth.service.TokenValidator;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -65,26 +64,26 @@ public class AuthAspect {
 			case ADMIN_ONLY:
 				if (!tokenValidator.isValidTokenWithLevel(token, ADMIN_ONLY)) {
 					cookieManager.deleteCookie(response, adminTokenName);
-					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
+					throw ExceptionStatus.UNAUTHORIZED_ADMIN.asServiceException();
 				}
 				break;
 			case USER_ONLY:
 				if (!tokenValidator.isValidTokenWithLevel(token, USER_ONLY)) {
 					cookieManager.deleteCookie(response, mainTokenName);
-					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_USER);
+					throw ExceptionStatus.UNAUTHORIZED_USER.asServiceException();
 				}
 				break;
 			case USER_OR_ADMIN:
 				if (!tokenValidator.isValidTokenWithLevel(token, USER_OR_ADMIN)) {
 					cookieManager.deleteCookie(response, mainTokenName);
 					cookieManager.deleteCookie(response, adminTokenName);
-					throw new ControllerException(ExceptionStatus.UNAUTHORIZED);
+					throw ExceptionStatus.UNAUTHORIZED.asServiceException();
 				}
 				break;
 			case MASTER_ONLY:
 				if (!tokenValidator.isValidTokenWithLevel(token, MASTER_ONLY)) {
 					cookieManager.deleteCookie(response, adminTokenName);
-					throw new ControllerException(ExceptionStatus.UNAUTHORIZED_ADMIN);
+					throw ExceptionStatus.UNAUTHORIZED_ADMIN.asServiceException();
 				}
 		}
 	}

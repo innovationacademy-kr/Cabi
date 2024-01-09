@@ -1,13 +1,7 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.config.CabinetProperties;
-import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.repository.LentRedis;
@@ -15,6 +9,12 @@ import org.ftclub.cabinet.lent.repository.LentRepository;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +86,7 @@ public class LentRedisService {
 		String cabinetIdString = cabinetId.toString();
 		String userIdString = userId.toString();
 		if (!lentRedis.isUserInCabinet(cabinetIdString, userIdString)) {
-			throw new DomainException(ExceptionStatus.NOT_FOUND_USER);
+			throw ExceptionStatus.NOT_FOUND_USER.asServiceException();
 		}
 		lentRedis.deleteUserInCabinet(cabinetIdString, userIdString);
 		if (lentRedis.countUserInCabinet(cabinetIdString) == 0) {

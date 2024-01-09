@@ -50,7 +50,7 @@ public class TokenValidator {
 			throws JsonProcessingException {
 		String email = getPayloadJson(token).get("email").asText();
 		if (email == null) {
-			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
+			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 		}
 		if (!isTokenValid(token, jwtProperties.getSigningKey()))
 			return false;
@@ -65,7 +65,7 @@ public class TokenValidator {
 			case MASTER_ONLY:
 				return isMaster(email);
 			default:
-				throw new DomainException(ExceptionStatus.INVALID_STATUS);
+				throw ExceptionStatus.INVALID_STATUS.asServiceException();
 		}
 	}
 

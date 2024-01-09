@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.config.HaneProperties;
 import org.ftclub.cabinet.dto.UserMonthDataDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.UtilException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.repository.UserOptionalFetcher;
 import org.springframework.http.HttpEntity;
@@ -31,7 +30,7 @@ public class OccupiedTimeManager {
 	private final HaneProperties haneProperties;
 	private final UserOptionalFetcher userOptionalFetcher;
 
-	public List<UserMonthDataDto> filterCustomUserMonthlyTime(UserMonthDataDto[] userMonthDataDtoList){
+	public List<UserMonthDataDto> filterCustomUserMonthlyTime(UserMonthDataDto[] userMonthDataDtoList) {
 		List<User> allCabiUsers = userOptionalFetcher.findAllActiveUsers();
 		return Arrays.stream(userMonthDataDtoList)
 				.filter(dto -> allCabiUsers.stream()
@@ -96,7 +95,7 @@ public class OccupiedTimeManager {
 				log.info("요청에 실패했습니다. 최대 {}번 재시도합니다. 현재 시도 횟수: {}", MAX_RETRY, attempt);
 				if (attempt == MAX_RETRY) {
 					log.error("요청에 실패했습니다. 최대 재시도 횟수를 초과했습니다. {}", e.getMessage());
-					throw new UtilException(ExceptionStatus.HANEAPI_ERROR);
+					throw ExceptionStatus.HANEAPI_ERROR.asUtilException();
 				}
 			}
 		}

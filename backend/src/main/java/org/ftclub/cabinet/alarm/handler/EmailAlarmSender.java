@@ -42,7 +42,7 @@ public class EmailAlarmSender {
         try {
             sendMessage(user.getEmail(), mailDto);
         } catch (MessagingException e) {
-            throw new ServiceException(ExceptionStatus.MAIL_BAD_GATEWAY);
+            throw ExceptionStatus.MAIL_BAD_GATEWAY.asServiceException();
         }
     }
 
@@ -68,7 +68,7 @@ public class EmailAlarmSender {
         } else if (alarm instanceof AnnouncementAlarm) {
             return generateAnnouncementAlarm((AnnouncementAlarm) alarm, context);
         } else {
-            throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
+            throw ExceptionStatus.NOT_FOUND_ALARM.asServiceException();
         }
     }
 

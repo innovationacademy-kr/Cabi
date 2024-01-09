@@ -106,7 +106,7 @@ public class UserOauthService {
 			if (e instanceof ExecutionException || e instanceof InterruptedException)
 				log.error("42 API 서버에서 프로필 정보를 비동기적으로 가져오는데 실패했습니다."
 						+ "code: {}, message: {}", code, e.getMessage());
-			throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 	}
 
@@ -122,7 +122,7 @@ public class UserOauthService {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
 		if (intraName == null || email == null)
-			throw new ServiceException(ExceptionStatus.INCORRECT_ARGUMENT);
+			throw ExceptionStatus.INCORRECT_ARGUMENT.asServiceException();
 
 		LocalDateTime blackHoledAt = determineBlackHoledAt(jsonNode);
 		FtRole role = determineFtRole(jsonNode, blackHoledAt);

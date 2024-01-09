@@ -9,7 +9,6 @@ import org.ftclub.cabinet.alarm.domain.*;
 import org.ftclub.cabinet.alarm.dto.FCMDto;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.redis.service.RedisService;
 import org.ftclub.cabinet.user.domain.User;
 import org.jetbrains.annotations.NotNull;
@@ -23,107 +22,107 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PushAlarmSender {
 
-    private static final String ICON_FILE_PATH = "/src/assets/images/logo.svg";
-    private final AlarmProperties alarmProperties;
-    private final RedisService redisService;
-    private final DomainProperties domainProperties;
+	private static final String ICON_FILE_PATH = "/src/assets/images/logo.svg";
+	private final AlarmProperties alarmProperties;
+	private final RedisService redisService;
+	private final DomainProperties domainProperties;
 
-    public void send(User user, AlarmEvent alarmEvent) {
-        log.info("push alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
+	public void send(User user, AlarmEvent alarmEvent) {
+		log.info("push alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
 
-        Optional<String> token = redisService.findByKey(user.getName(), String.class);
-        if (token.isEmpty()) {
-            log.warn("\"{}\"에 해당하는 디바이스 토큰이 존재하지 않습니다.", user.getName());
-            return;
-        }
+		Optional<String> token = redisService.findByKey(user.getName(), String.class);
+		if (token.isEmpty()) {
+			log.warn("\"{}\"에 해당하는 디바이스 토큰이 존재하지 않습니다.", user.getName());
+			return;
+		}
 
-        FCMDto fcmDto = parseMessage(alarmEvent.getAlarm());
-        sendMessage(token.get(), fcmDto);
-    }
+		FCMDto fcmDto = parseMessage(alarmEvent.getAlarm());
+		sendMessage(token.get(), fcmDto);
+	}
 
-    private FCMDto parseMessage(Alarm alarm) {
-        if (alarm instanceof LentSuccessAlarm) {
-            return generateLentSuccessAlarm((LentSuccessAlarm) alarm);
-        } else if (alarm instanceof LentExpirationImminentAlarm) {
-            return generateLentExpirationImminentAlarm((LentExpirationImminentAlarm) alarm);
-        } else if (alarm instanceof LentExpirationAlarm) {
-            return generateLentExpirationAlarm((LentExpirationAlarm) alarm);
-        } else if (alarm instanceof ExtensionIssuanceAlarm) {
-            return generateExtensionIssuanceAlarm((ExtensionIssuanceAlarm) alarm);
-        } else if (alarm instanceof ExtensionExpirationImminentAlarm) {
-            return generateExtensionExpirationImminentAlarm((ExtensionExpirationImminentAlarm) alarm);
-        } else if (alarm instanceof AnnouncementAlarm) {
-            return generateAnnouncementAlarm();
-        } else {
-            throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
-        }
-    }
+	private FCMDto parseMessage(Alarm alarm) {
+		if (alarm instanceof LentSuccessAlarm) {
+			return generateLentSuccessAlarm((LentSuccessAlarm) alarm);
+		} else if (alarm instanceof LentExpirationImminentAlarm) {
+			return generateLentExpirationImminentAlarm((LentExpirationImminentAlarm) alarm);
+		} else if (alarm instanceof LentExpirationAlarm) {
+			return generateLentExpirationAlarm((LentExpirationAlarm) alarm);
+		} else if (alarm instanceof ExtensionIssuanceAlarm) {
+			return generateExtensionIssuanceAlarm((ExtensionIssuanceAlarm) alarm);
+		} else if (alarm instanceof ExtensionExpirationImminentAlarm) {
+			return generateExtensionExpirationImminentAlarm((ExtensionExpirationImminentAlarm) alarm);
+		} else if (alarm instanceof AnnouncementAlarm) {
+			return generateAnnouncementAlarm();
+		} else {
+			throw ExceptionStatus.NOT_FOUND_ALARM.asServiceException();
+		}
+	}
 
-    @NotNull
-    private FCMDto generateAnnouncementAlarm() {
-        String title = alarmProperties.getAnnouncementSubject();
-        String body = alarmProperties.getAnnouncementMailTemplateUrl();
-        return new FCMDto(title, body);
-    }
+	@NotNull
+	private FCMDto generateAnnouncementAlarm() {
+		String title = alarmProperties.getAnnouncementSubject();
+		String body = alarmProperties.getAnnouncementMailTemplateUrl();
+		return new FCMDto(title, body);
+	}
 
-    @NotNull
-    private FCMDto generateExtensionExpirationImminentAlarm(ExtensionExpirationImminentAlarm alarm) {
-        String extensionName = alarm.getExtensionName();
-        LocalDateTime extensionExpireDate = alarm.getExtensionExpirationDate();
-        String title = alarmProperties.getExtensionExpirationImminentSubject();
-        String body = String.format(alarmProperties.getExtensionExpirationImminentMailTemplateUrl(),
-                extensionName, extensionExpireDate);
-        return new FCMDto(title, body);
-    }
+	@NotNull
+	private FCMDto generateExtensionExpirationImminentAlarm(ExtensionExpirationImminentAlarm alarm) {
+		String extensionName = alarm.getExtensionName();
+		LocalDateTime extensionExpireDate = alarm.getExtensionExpirationDate();
+		String title = alarmProperties.getExtensionExpirationImminentSubject();
+		String body = String.format(alarmProperties.getExtensionExpirationImminentMailTemplateUrl(),
+				extensionName, extensionExpireDate);
+		return new FCMDto(title, body);
+	}
 
-    @NotNull
-    private FCMDto generateExtensionIssuanceAlarm(ExtensionIssuanceAlarm alarm) {
-        Integer daysToExtend = alarm.getDaysToExtend();
-        String extensionName = alarm.getExtensionName();
-        String title = alarmProperties.getExtensionIssuanceSubject();
-        String body = String.format(alarmProperties.getExtensionIssuanceMailTemplateUrl(),
-                daysToExtend, extensionName);
-        return new FCMDto(title, body);
-    }
+	@NotNull
+	private FCMDto generateExtensionIssuanceAlarm(ExtensionIssuanceAlarm alarm) {
+		Integer daysToExtend = alarm.getDaysToExtend();
+		String extensionName = alarm.getExtensionName();
+		String title = alarmProperties.getExtensionIssuanceSubject();
+		String body = String.format(alarmProperties.getExtensionIssuanceMailTemplateUrl(),
+				daysToExtend, extensionName);
+		return new FCMDto(title, body);
+	}
 
-    @NotNull
-    private FCMDto generateLentExpirationAlarm(LentExpirationAlarm alarm) {
-        Long daysLeftFromExpireDate = alarm.getDaysLeftFromExpireDate();
-        String title = alarmProperties.getOverdueSubject();
-        String body = String.format(alarmProperties.getOverdueFcmTemplate(),
-                Math.abs(daysLeftFromExpireDate));
-        return new FCMDto(title, body);
-    }
+	@NotNull
+	private FCMDto generateLentExpirationAlarm(LentExpirationAlarm alarm) {
+		Long daysLeftFromExpireDate = alarm.getDaysLeftFromExpireDate();
+		String title = alarmProperties.getOverdueSubject();
+		String body = String.format(alarmProperties.getOverdueFcmTemplate(),
+				Math.abs(daysLeftFromExpireDate));
+		return new FCMDto(title, body);
+	}
 
-    @NotNull
-    private FCMDto generateLentExpirationImminentAlarm(LentExpirationImminentAlarm alarm) {
-        Long daysAfterFromExpireDate = alarm.getDaysAfterFromExpireDate();
-        String title = alarmProperties.getSoonOverdueSubject();
-        String body = String.format(alarmProperties.getSoonOverdueFcmTemplate(),
-                Math.abs(daysAfterFromExpireDate));
-        return new FCMDto(title, body);
-    }
+	@NotNull
+	private FCMDto generateLentExpirationImminentAlarm(LentExpirationImminentAlarm alarm) {
+		Long daysAfterFromExpireDate = alarm.getDaysAfterFromExpireDate();
+		String title = alarmProperties.getSoonOverdueSubject();
+		String body = String.format(alarmProperties.getSoonOverdueFcmTemplate(),
+				Math.abs(daysAfterFromExpireDate));
+		return new FCMDto(title, body);
+	}
 
-    @NotNull
-    private FCMDto generateLentSuccessAlarm(LentSuccessAlarm alarm) {
-        String building = alarm.getLocation().getBuilding();
-        Integer floor = alarm.getLocation().getFloor();
-        Integer visibleNum = alarm.getVisibleNum();
-        String title = alarmProperties.getLentSuccessSubject();
-        String body = String.format(alarmProperties.getLentSuccessMailTemplateUrl(),
-                building + " " + floor + "층 " + visibleNum + "번");
-        return new FCMDto(title, body);
-    }
+	@NotNull
+	private FCMDto generateLentSuccessAlarm(LentSuccessAlarm alarm) {
+		String building = alarm.getLocation().getBuilding();
+		Integer floor = alarm.getLocation().getFloor();
+		Integer visibleNum = alarm.getVisibleNum();
+		String title = alarmProperties.getLentSuccessSubject();
+		String body = String.format(alarmProperties.getLentSuccessMailTemplateUrl(),
+				building + " " + floor + "층 " + visibleNum + "번");
+		return new FCMDto(title, body);
+	}
 
-    private void sendMessage(String token, FCMDto fcmDto) {
-        log.info("send Message : token = {}, fcmDto = {}", token, fcmDto);
-        Message message = Message.builder()
-                .putData("title", fcmDto.getTitle())
-                .putData("body", fcmDto.getBody())
-                .putData("icon", domainProperties.getFeHost() + ICON_FILE_PATH)
-                .putData("click_action", domainProperties.getFeHost())
-                .setToken(token)
-                .build();
-        FirebaseMessaging.getInstance().sendAsync(message);
-    }
+	private void sendMessage(String token, FCMDto fcmDto) {
+		log.info("send Message : token = {}, fcmDto = {}", token, fcmDto);
+		Message message = Message.builder()
+				.putData("title", fcmDto.getTitle())
+				.putData("body", fcmDto.getBody())
+				.putData("icon", domainProperties.getFeHost() + ICON_FILE_PATH)
+				.putData("click_action", domainProperties.getFeHost())
+				.setToken(token)
+				.build();
+		FirebaseMessaging.getInstance().sendAsync(message);
+	}
 }

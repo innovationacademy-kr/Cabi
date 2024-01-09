@@ -23,4 +23,6 @@ public class CustomServiceException extends RuntimeException {
     public String getMessage() {
     	return status.getMessage();
     }
+
+
 }

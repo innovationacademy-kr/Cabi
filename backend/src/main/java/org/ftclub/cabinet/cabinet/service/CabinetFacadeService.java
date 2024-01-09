@@ -352,7 +352,7 @@ public class CabinetFacadeService {
 		Cabinet activeCabinetByUserId = cabinetQueryService.findActiveCabinetByUserId(
 				dto.getUserId());
 		if (activeCabinetByUserId != null) {
-			throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
+			throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
 		}
 
 		String clubName = "";
@@ -372,7 +372,7 @@ public class CabinetFacadeService {
 	@Transactional
 	public void updateStatus(Long cabinetId, CabinetStatus status) {
 		if (!status.isValid()) {
-			throw new ServiceException(ExceptionStatus.INVALID_STATUS);
+			throw ExceptionStatus.INVALID_STATUS.asServiceException();
 		}
 		Cabinet cabinet = cabinetQueryService.findCabinetsWithXLock(cabinetId);
 		cabinet.specifyStatus(status);
