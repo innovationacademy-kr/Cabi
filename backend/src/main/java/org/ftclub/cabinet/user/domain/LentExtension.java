@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 
 import javax.persistence.*;
@@ -59,7 +58,7 @@ public class LentExtension {
 		LentExtension lentExtension = new LentExtension(name, extensionPeriod, expiredAt,
 				lentExtensionType, userId);
 		if (!lentExtension.isValid()) {
-			throw new DomainException(ExceptionStatus.INVALID_STATUS);
+			throw ExceptionStatus.INVALID_STATUS.asServiceException();
 		}
 		return lentExtension;
 	}

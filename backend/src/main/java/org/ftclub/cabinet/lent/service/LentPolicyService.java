@@ -1,17 +1,12 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserVerifyRequestDto;
 import org.ftclub.cabinet.exception.CustomExceptionStatus;
-import org.ftclub.cabinet.exception.CustomServiceException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -20,6 +15,10 @@ import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -41,37 +40,33 @@ public class LentPolicyService {
 			case FINE:
 				break;
 			case BROKEN_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_BROKEN);
+				throw ExceptionStatus.LENT_BROKEN.asServiceException();
 			case FULL_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_FULL);
+				throw ExceptionStatus.LENT_FULL.asServiceException();
 			case OVERDUE_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_EXPIRED);
+				throw ExceptionStatus.LENT_EXPIRED.asServiceException();
 			case LENT_CLUB:
-				throw new ServiceException(ExceptionStatus.LENT_CLUB);
+				throw ExceptionStatus.LENT_CLUB.asServiceException();
 			case IMMINENT_EXPIRATION:
-				throw new ServiceException(ExceptionStatus.LENT_EXPIRE_IMMINENT);
+				throw ExceptionStatus.LENT_EXPIRE_IMMINENT.asServiceException();
 			case ALREADY_LENT_USER:
-				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
+				throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
 			case ALL_BANNED_USER:
 				unbannedAtString = unbannedAt.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomServiceException(
-						new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER,
-								unbannedAtString));
+				throw new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER, unbannedAtString).asCustomServiceException();
 			case SHARE_BANNED_USER:
 				unbannedAtString = unbannedAt.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomServiceException(
-						new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED,
-								unbannedAtString));
+				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED, unbannedAtString).asCustomServiceException();
 			case BLACKHOLED_USER:
-				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
+				throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 			case PENDING_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_PENDING);
+				throw ExceptionStatus.LENT_PENDING.asServiceException();
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:
-				throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+				throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 	}
 
@@ -144,7 +139,7 @@ public class LentPolicyService {
 	 */
 	public void verifyCabinetType(LentType cabinetLentType, LentType lentType) {
 		if (!cabinetLentType.equals(lentType)) {
-			throw new ServiceException(ExceptionStatus.INVALID_LENT_TYPE);
+			throw ExceptionStatus.INVALID_LENT_TYPE.asServiceException();
 		}
 	}
 
@@ -161,10 +156,10 @@ public class LentPolicyService {
 			maxLentCount = cabinetProperties.getShareMaxUserCount().intValue();
 		}
 		if (maxUserCount != maxLentCount) {
-			throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 		if (lentCount >= maxLentCount) {
-			throw new ServiceException(ExceptionStatus.LENT_FULL);
+			throw ExceptionStatus.LENT_FULL.asServiceException();
 		}
 	}
 
@@ -177,9 +172,9 @@ public class LentPolicyService {
 	 * @return 만료 시간
 	 */
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
-			int lentUserCount) {
+	                                            int lentUserCount) {
 		if (!DateUtil.isSameDay(now)) {
-			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 		}
 		int lentTerm = 0;
 		if (lentType.equals(LentType.PRIVATE)) {
@@ -190,7 +185,7 @@ public class LentPolicyService {
 		}
 		LocalDateTime expiredAt = DateUtil.setLastTime(now.plusDays(lentTerm));
 		if (DateUtil.isPast(expiredAt)) {
-			throw new ServiceException(ExceptionStatus.INVALID_EXPIRED_AT);
+			throw ExceptionStatus.INVALID_EXPIRED_AT.asServiceException();
 		}
 		return expiredAt;
 	}
@@ -204,7 +199,7 @@ public class LentPolicyService {
 	 * @return 조정된 만료 시간
 	 */
 	public LocalDateTime adjustShareCabinetExpirationDate(int userCount, LocalDateTime now,
-			LocalDateTime expiredAt) {
+	                                                      LocalDateTime expiredAt) {
 		double daysUntilExpiration = DateUtil.calculateTwoDateDiffCeil(now, expiredAt);
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;
 		long secondsRemaining = Math.round(secondsUntilExpiration * userCount / (userCount + 1));

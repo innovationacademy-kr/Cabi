@@ -99,7 +99,7 @@ public class LentHistory {
 			Long cabinetId) {
 		LentHistory lentHistory = new LentHistory(startedAt, expiredAt, userId, cabinetId);
 		if (!lentHistory.isValid()) {
-			throw new DomainException(ExceptionStatus.INVALID_ARGUMENT);
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
 		return lentHistory;
 	}
@@ -167,7 +167,7 @@ public class LentHistory {
 	public boolean isSetExpiredAt() {
 		LocalDateTime expiredAt = getExpiredAt();
 		if (expiredAt == null) {
-			throw new DomainException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
 		}
 		return !expiredAt.isEqual(DateUtil.getInfinityDate());
 	}

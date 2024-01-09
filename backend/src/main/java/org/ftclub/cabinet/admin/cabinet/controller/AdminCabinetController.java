@@ -57,7 +57,7 @@ public class AdminCabinetController {
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
 		if (body == null || body.isEmpty() || !body.containsKey("statusNote")) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+			throw ExceptionStatus.INCORRECT_ARGUMENT.asControllerException();
 		}
 		cabinetFacadeService.updateCabinetStatusNote(cabinetId, body.get("statusNote"));
 	}
@@ -75,7 +75,7 @@ public class AdminCabinetController {
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, String> body) {
 		if (body == null || body.isEmpty() || !body.containsKey("title")) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+			throw ExceptionStatus.INCORRECT_ARGUMENT.asControllerException();
 		}
 		cabinetFacadeService.updateCabinetTitle(cabinetId, body.get("title"));
 	}
@@ -123,7 +123,7 @@ public class AdminCabinetController {
 			@RequestBody Map<String, Integer> body) {
 		if (body == null || body.isEmpty() || !body.containsKey("row")
 				|| !body.containsKey("col")) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+			throw ExceptionStatus.INCORRECT_ARGUMENT.asControllerException();
 		}
 		cabinetFacadeService.updateCabinetGrid(cabinetId, body.get("row"), body.get("col"));
 	}
@@ -141,7 +141,7 @@ public class AdminCabinetController {
 			@PathVariable("cabinetId") Long cabinetId,
 			@RequestBody HashMap<String, Integer> body) {
 		if (body == null || body.isEmpty() || !body.containsKey("visibleNum")) {
-			throw new ControllerException(ExceptionStatus.INCORRECT_ARGUMENT);
+			throw ExceptionStatus.INCORRECT_ARGUMENT.asControllerException();
 		}
 		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, body.get("visibleNum"));
 	}

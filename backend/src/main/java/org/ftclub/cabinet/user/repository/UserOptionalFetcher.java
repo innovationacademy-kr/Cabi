@@ -5,9 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.repository.AdminRepository;
-import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
@@ -175,7 +173,7 @@ public class UserOptionalFetcher {
 	public User getUser(Long userId) {
 		log.debug("Called getUser: {}", userId);
 		return userRepository.findById(userId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 	}
 
 
@@ -188,7 +186,7 @@ public class UserOptionalFetcher {
 	public User getUserByName(String name) {
 		log.debug("Called getUserByName: {}", name);
 		return userRepository.findByName(name)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 	}
 
 	/**
@@ -201,7 +199,7 @@ public class UserOptionalFetcher {
 		log.debug("Called getClubUser: {}", userId);
 		User user = getUser(userId);
 		if (!user.isUserRole(UserRole.CLUB)) {
-			throw new ServiceException(ExceptionStatus.NOT_FOUND_USER);
+			throw ExceptionStatus.NOT_FOUND_USER.asServiceException();
 		}
 		return user;
 	}
@@ -215,7 +213,7 @@ public class UserOptionalFetcher {
 	public Admin getAdminUser(Long adminUserId) {
 		log.debug("Called getAdminUser: {}", adminUserId);
 		return adminRepository.findById(adminUserId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN));
+				.orElseThrow(ExceptionStatus.NOT_FOUND_ADMIN::asServiceException);
 	}
 
 	/**
@@ -227,7 +225,7 @@ public class UserOptionalFetcher {
 	public Admin getAdminUserByEmail(String adminUserEmail) {
 		log.debug("Called getAdminUserByEmail: {}", adminUserEmail);
 		return adminRepository.findByEmail(adminUserEmail)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_ADMIN));
+				.orElseThrow(ExceptionStatus.NOT_FOUND_ADMIN::asServiceException);
 	}
 
 	/**
@@ -243,7 +241,7 @@ public class UserOptionalFetcher {
 				LocalDateTime.now(),
 				PageRequest.of(0, 1));
 		if (banHistory.isEmpty()) {
-			throw new DomainException(ExceptionStatus.NOT_FOUND_BAN_HISTORY);
+			throw ExceptionStatus.NOT_FOUND_BAN_HISTORY.asDomainException();
 		}
 		return banHistory.get(0);
 	}

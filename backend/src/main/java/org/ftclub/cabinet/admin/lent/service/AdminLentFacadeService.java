@@ -85,7 +85,7 @@ public class AdminLentFacadeService {
 				.filter(lh -> userIds.contains(lh.getUserId()))
 				.collect(Collectors.toList());
 		if (userLentHistories.isEmpty()) {
-			throw new ServiceException(ExceptionStatus.NOT_FOUND_LENT_HISTORY);
+			throw ExceptionStatus.NOT_FOUND_LENT_HISTORY.asServiceException();
 		}
 		int userRemainCount = lentHistories.size() - userIds.size();
 		cabinetCommandService.changeUserCount(cabinet, userRemainCount);

@@ -47,7 +47,7 @@ public class ApplicationTokenManager {
 		}
 		if (tryCount == MAX_RETRY) {
 			log.error("42 OAuth 액세스 토큰을 발급하는 데에 실패했습니다. OAuth 서버가 응답하지 않습니다.");
-			throw new ServiceException(ExceptionStatus.OAUTH_BAD_GATEWAY);
+			throw ExceptionStatus.OAUTH_BAD_GATEWAY.asServiceException();
 		}
 	}
 }

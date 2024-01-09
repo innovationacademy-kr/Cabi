@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.User;
@@ -23,7 +22,7 @@ public class UserCommandService {
 
 	public User createUserByFtProfile(FtProfile profile) {
 		if (userRepository.existsByNameAndEmail(profile.getIntraName(), profile.getEmail())) {
-			throw new ServiceException(ExceptionStatus.USER_ALREADY_EXISTED);
+			throw ExceptionStatus.USER_ALREADY_EXISTED.asServiceException();
 		}
 		User user = User.of(profile.getIntraName(), profile.getEmail(), profile.getBlackHoledAt(),
 				UserRole.USER);
@@ -32,7 +31,7 @@ public class UserCommandService {
 
 	public User createClubUser(String clubName) {
 		if (userRepository.existsByNameAndEmail(clubName, clubName + "@ftclub.org")) {
-			throw new ServiceException(ExceptionStatus.EXISTED_CLUB_USER);
+			throw ExceptionStatus.EXISTED_CLUB_USER.asServiceException();
 		}
 		User user = User.of(clubName, clubName + "@ftclub.org", null, UserRole.CLUB);
 		return userRepository.save(user);
@@ -40,7 +39,7 @@ public class UserCommandService {
 
 	public void updateClubName(User user, String clubName) {
 		if (!user.isUserRole(UserRole.CLUB)) {
-			throw new ServiceException(ExceptionStatus.NOT_CLUB_USER);
+			throw ExceptionStatus.NOT_CLUB_USER.asServiceException();
 		}
 		user.changeName(clubName);
 		userRepository.save(user);
@@ -52,7 +51,7 @@ public class UserCommandService {
 
 	public void deleteClubUser(User clubUser) {
 		if (!clubUser.isUserRole(UserRole.CLUB)) {
-			throw new ServiceException(ExceptionStatus.NOT_CLUB_USER);
+			throw ExceptionStatus.NOT_CLUB_USER.asServiceException();
 		}
 		userRepository.delete(clubUser);
 	}
@@ -63,7 +62,7 @@ public class UserCommandService {
 
 	public void updateUserBlackholedAtById(Long userId, LocalDateTime blackholedAt) {
 		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_USER));
+				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 		user.changeBlackholedAt(blackholedAt);
 		userRepository.save(user);
 	}

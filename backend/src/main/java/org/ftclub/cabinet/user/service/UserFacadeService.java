@@ -6,7 +6,6 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.mapper.UserMapper;
@@ -23,79 +22,79 @@ import java.util.stream.Collectors;
 @Log4j2
 public class UserFacadeService {
 
-    private final BanHistoryQueryService banHistoryQueryService;
-    private final CabinetQueryService cabinetQueryService;
-    private final LentExtensionQueryService lentExtensionQueryService;
-    private final LentExtensionCommandService lentExtensionCommandService;
-    private final LentQueryService lentQueryService;
-    private final LentExtensionPolicy lentExtensionPolicy;
-    private final UserQueryService userQueryService;
-    private final UserCommandService userCommandService;
-    private final UserMapper userMapper;
+	private final BanHistoryQueryService banHistoryQueryService;
+	private final CabinetQueryService cabinetQueryService;
+	private final LentExtensionQueryService lentExtensionQueryService;
+	private final LentExtensionCommandService lentExtensionCommandService;
+	private final LentQueryService lentQueryService;
+	private final LentExtensionPolicy lentExtensionPolicy;
+	private final UserQueryService userQueryService;
+	private final UserCommandService userCommandService;
+	private final UserMapper userMapper;
 
-    public MyProfileResponseDto getProfile(UserSessionDto user) {
-        log.debug("Called getMyProfile: {}", user.getName());
+	public MyProfileResponseDto getProfile(UserSessionDto user) {
+		log.debug("Called getMyProfile: {}", user.getName());
 
-        Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
-        BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
-                LocalDateTime.now()).orElse(null);
-        LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
-                user.getUserId());
+		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
+		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
+				LocalDateTime.now()).orElse(null);
+		LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
+				user.getUserId());
 
-        LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
-        User currentUser = userQueryService.getUser(user.getUserId());
-        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-                lentExtensionResponseDto, currentUser.getAlarmTypes());
-    }
+		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
+		User currentUser = userQueryService.getUser(user.getUserId());
+		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
+				lentExtensionResponseDto, currentUser.getAlarmTypes());
+	}
 
-    public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
-        log.debug("Called getMyLentExtension : {}", user.getName());
+	public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
+		log.debug("Called getMyLentExtension : {}", user.getName());
 
-        List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.findLentExtensionsInLatestOrder(
-                        user.getUserId())
-                .stream()
-                .map(userMapper::toLentExtensionResponseDto)
-                .collect(Collectors.toList());
-        return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos,
-                (long) lentExtensionResponseDtos.size());
-    }
+		List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.findLentExtensionsInLatestOrder(
+						user.getUserId())
+				.stream()
+				.map(userMapper::toLentExtensionResponseDto)
+				.collect(Collectors.toList());
+		return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos,
+				(long) lentExtensionResponseDtos.size());
+	}
 
-    public LentExtensionPaginationDto getActiveLentExtensionsPage(UserSessionDto user) {
-        log.debug("Called getMyActiveLentExtension : {}", user.getName());
+	public LentExtensionPaginationDto getActiveLentExtensionsPage(UserSessionDto user) {
+		log.debug("Called getMyActiveLentExtension : {}", user.getName());
 
-        LentExtensions lentExtensions = lentExtensionQueryService.findActiveLentExtensions(
-                user.getUserId());
-        List<LentExtensionResponseDto> LentExtensionResponseDtos = lentExtensions.getLentExtensions()
-                .stream()
-                .map(userMapper::toLentExtensionResponseDto)
-                .collect(Collectors.toList());
+		LentExtensions lentExtensions = lentExtensionQueryService.findActiveLentExtensions(
+				user.getUserId());
+		List<LentExtensionResponseDto> LentExtensionResponseDtos = lentExtensions.getLentExtensions()
+				.stream()
+				.map(userMapper::toLentExtensionResponseDto)
+				.collect(Collectors.toList());
 
-        return userMapper.toLentExtensionPaginationDto(LentExtensionResponseDtos,
-                (long) LentExtensionResponseDtos.size());
-    }
+		return userMapper.toLentExtensionPaginationDto(LentExtensionResponseDtos,
+				(long) LentExtensionResponseDtos.size());
+	}
 
-    public void useLentExtension(UserSessionDto user) {
-        log.debug("Called useLentExtension : {}", user.getName());
+	public void useLentExtension(UserSessionDto user) {
+		log.debug("Called useLentExtension : {}", user.getName());
 
-        Cabinet cabinet = cabinetQueryService.findCabinet(user.getUserId());
-        List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
-                cabinet.getId());
-        lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
+		Cabinet cabinet = cabinetQueryService.findCabinet(user.getUserId());
+		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
+				cabinet.getId());
+		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-        LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
-                user.getUserId());
-        if (activeLentExtension == null) {
-            throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
-        }
-        lentExtensionCommandService.useLentExtension(activeLentExtension, activeLentHistories);
-    }
+		LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
+				user.getUserId());
+		if (activeLentExtension == null) {
+			throw ExceptionStatus.EXTENSION_NOT_FOUND.asServiceException();
+		}
+		lentExtensionCommandService.useLentExtension(activeLentExtension, activeLentHistories);
+	}
 
-    @Transactional
-    public void updateAlarmState(UserSessionDto userSessionDto, UpdateAlarmRequestDto updateAlarmRequestDto) {
-        log.debug("Called updateAlarmState : {}", userSessionDto.getName());
+	@Transactional
+	public void updateAlarmState(UserSessionDto userSessionDto, UpdateAlarmRequestDto updateAlarmRequestDto) {
+		log.debug("Called updateAlarmState : {}", userSessionDto.getName());
 
-        User user = userQueryService.getUser(userSessionDto.getUserId());
-        userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
-    }
+		User user = userQueryService.getUser(userSessionDto.getUserId());
+		userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
+	}
 }
 

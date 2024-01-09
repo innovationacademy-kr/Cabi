@@ -5,7 +5,6 @@ import org.ftclub.cabinet.admin.admin.domain.Admin;
 import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.repository.AdminRepository;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class AdminCommandService {
 	 */
 	public Admin createAdminByEmail(String email) {
 		adminRepository.findByEmail(email).ifPresent(admin -> {
-			throw new ServiceException(ExceptionStatus.ADMIN_ALREADY_EXISTED);
+			throw ExceptionStatus.ADMIN_ALREADY_EXISTED.asServiceException();
 		});
 		return adminRepository.save(Admin.of(email, AdminRole.NONE));
 	}
