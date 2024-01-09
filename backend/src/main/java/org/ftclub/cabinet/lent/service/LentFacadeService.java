@@ -333,7 +333,7 @@ public class LentFacadeService {
 	public void shareCabinetSessionExpired(Long cabinetId) {
 		Cabinet cabinet = cabinetQueryService.findCabinetsWithLock(cabinetId);
 		List<Long> usersInCabinetSession = lentRedisService.getUsersInCabinetSession(cabinetId);
-		if (lentPolicyService.verifyUserCountOnShareCabinet(usersInCabinetSession.size())) {
+		if (lentPolicyService.checkUserCountOnShareCabinet(usersInCabinetSession.size())) {
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(
 					now, SHARE, usersInCabinetSession.size());

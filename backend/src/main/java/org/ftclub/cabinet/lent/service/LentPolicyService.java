@@ -217,7 +217,7 @@ public class LentPolicyService {
 	 * @param userCount 유저 수
 	 * @return 대여해도 되는지 여부
 	 */
-	public boolean verifyUserCountOnShareCabinet(int userCount) {
+	public boolean checkUserCountOnShareCabinet(int userCount) {
 		long minUserCount = cabinetProperties.getShareMinUserCount();
 		long maxUserCount = cabinetProperties.getShareMaxUserCount();
 		return minUserCount <= userCount && userCount <= maxUserCount;
