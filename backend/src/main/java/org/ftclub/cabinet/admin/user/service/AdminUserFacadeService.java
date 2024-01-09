@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.admin.user.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
@@ -16,6 +14,9 @@ import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class AdminUserFacadeService {
 
 	public void deleteClubUser(Long userId) {
 		User clubUser = userQueryService.getClubUser(userId);
-		userCommandService.deleteClubUserById(clubUser);
+		userCommandService.deleteClubUser(clubUser);
 	}
 
 	public ClubUserListDto findAllClubUsers(Pageable pageable) {
