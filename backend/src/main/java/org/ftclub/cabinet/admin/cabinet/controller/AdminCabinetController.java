@@ -56,7 +56,7 @@ public class AdminCabinetController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetStatusNote(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody AdminCabinetStatusNoteUpdateRequestDto dto) {
+			@Valid @RequestBody AdminCabinetStatusNoteUpdateRequestDto dto) {
 		cabinetFacadeService.updateCabinetStatusNote(cabinetId, dto.getStatusNote());
 	}
 
@@ -71,7 +71,7 @@ public class AdminCabinetController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetTitle(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody AdminCabinetTitleUpdateRequestDto dto) {
+			@Valid @RequestBody AdminCabinetTitleUpdateRequestDto dto) {
 		cabinetFacadeService.updateCabinetTitle(cabinetId, dto.getTitle());
 	}
 
@@ -115,7 +115,7 @@ public class AdminCabinetController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetGrid(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody AdminCabinetGridUpdateRequestDto dto) {
+			@Valid @RequestBody AdminCabinetGridUpdateRequestDto dto) {
 		cabinetFacadeService.updateCabinetGrid(cabinetId, dto.getRow(), dto.getCol());
 	}
 
@@ -130,7 +130,7 @@ public class AdminCabinetController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetVisibleNum(
 			@PathVariable("cabinetId") Long cabinetId,
-			@RequestBody AdminCabinetVisibleNumUpdateRequestDto dto) {
+			@Valid @RequestBody AdminCabinetVisibleNumUpdateRequestDto dto) {
 		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, dto.getVisibleNum());
 	}
 

@@ -68,7 +68,7 @@ public class AdminUserController {
 	@PatchMapping("/club/{clubId}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateClubUser(@PathVariable("clubId") Long clubId,
-	                           @RequestBody AdminClubUserRequestDto dto) {
+	                           @Valid @RequestBody AdminClubUserRequestDto dto) {
 		adminUserFacadeService.updateClubUser(clubId, dto.getClubName());
 	}
 
