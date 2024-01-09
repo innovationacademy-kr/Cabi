@@ -26,60 +26,85 @@ import java.util.stream.Collectors;
 
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.*;
 
+/**
+ * 관리자 페이지에서 사용되는 통계 서비스
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Logging(level = LogLevel.DEBUG)
 public class AdminStatisticsFacadeService {
 
-    private final CabinetQueryService cabinetQueryService;
-    private final LentQueryService lentQueryService;
-    private final BanHistoryQueryService banHistoryQueryService;
+	private final CabinetQueryService cabinetQueryService;
+	private final LentQueryService lentQueryService;
+	private final BanHistoryQueryService banHistoryQueryService;
 
-    private final CabinetMapper cabinetMapper;
-    private final UserMapper userMapper;
+	private final CabinetMapper cabinetMapper;
+	private final UserMapper userMapper;
 
-    public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
-        List<String> buildings = cabinetQueryService.getAllBuildings();
-        List<Integer> floors = cabinetQueryService.findAllFloorsByBuildings(buildings);
-        return floors.stream().map(floor -> {
-            Integer used = cabinetQueryService.countCabinets(FULL, floor);
-            Integer unused = cabinetQueryService.countCabinets(AVAILABLE, floor);
-            Integer overdue = cabinetQueryService.countCabinets(OVERDUE, floor);
-            Integer disabled = cabinetQueryService.countCabinets(BROKEN, floor);
-            Integer total = used + overdue + unused + disabled;
-            return cabinetMapper.toCabinetFloorStatisticsResponseDto(
-                    floor, total, used, overdue, unused, disabled);
-        }).collect(Collectors.toList());
-    }
+	/**
+	 * 현재 가용중인 모든 사물함의 현황을 반환합니다.
+	 *
+	 * @return 캐비넷 정보 리스트
+	 */
+	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
+		List<String> buildings = cabinetQueryService.getAllBuildings();
+		List<Integer> floors = cabinetQueryService.findAllFloorsByBuildings(buildings);
+		return floors.stream().map(floor -> {
+			Integer used = cabinetQueryService.countCabinets(FULL, floor);
+			Integer unused = cabinetQueryService.countCabinets(AVAILABLE, floor);
+			Integer overdue = cabinetQueryService.countCabinets(OVERDUE, floor);
+			Integer disabled = cabinetQueryService.countCabinets(BROKEN, floor);
+			Integer total = used + overdue + unused + disabled;
+			return cabinetMapper.toCabinetFloorStatisticsResponseDto(
+					floor, total, used, overdue, unused, disabled);
+		}).collect(Collectors.toList());
+	}
 
-    public LentsStatisticsResponseDto getLentCountStatistics(
-            LocalDateTime startDate, LocalDateTime endDate) {
-        ExceptionUtil.throwIfFalse(startDate.isBefore(endDate),
-                new ServiceException(ExceptionStatus.INVALID_ARGUMENT));
-        int lentStartCount = lentQueryService.countLentOnDuration(startDate, endDate);
-        int lentEndCount = lentQueryService.countReturnOnDuration(startDate, endDate);
-        return cabinetMapper.toLentsStatisticsResponseDto(
-                startDate, endDate, lentStartCount, lentEndCount);
-    }
+	/**
+	 * startDate부터 endDate 까지의 대여/반납 현황을 반환합니다.
+	 *
+	 * @return 대여/반납 현황
+	 */
+	public LentsStatisticsResponseDto getLentCountStatistics(
+			LocalDateTime startDate, LocalDateTime endDate) {
+		ExceptionUtil.throwIfFalse(startDate.isBefore(endDate),
+				new ServiceException(ExceptionStatus.INVALID_ARGUMENT));
+		int lentStartCount = lentQueryService.countLentOnDuration(startDate, endDate);
+		int lentEndCount = lentQueryService.countReturnOnDuration(startDate, endDate);
+		return cabinetMapper.toLentsStatisticsResponseDto(
+				startDate, endDate, lentStartCount, lentEndCount);
+	}
 
-    public BlockedUserPaginationDto getAllBanUsers(Pageable pageable) {
-        LocalDateTime now = LocalDateTime.now();
-        Page<BanHistory> banHistories =
-                banHistoryQueryService.findActiveBanHistories(now, pageable);
-        List<UserBlockedInfoDto> result = banHistories.stream()
-                .map(b -> userMapper.toUserBlockedInfoDto(b, b.getUser()))
-                .collect(Collectors.toList());
-        return userMapper.toBlockedUserPaginationDto(result, banHistories.getTotalElements());
-    }
+	/**
+	 * 현재 밴 상태인 유저들의 정보를 반환합니다.
+	 *
+	 * @param pageable 페이징 정보
+	 * @return 밴 상태인 유저들의 정보
+	 */
+	public BlockedUserPaginationDto getAllBanUsers(Pageable pageable) {
+		LocalDateTime now = LocalDateTime.now();
+		Page<BanHistory> banHistories =
+				banHistoryQueryService.findActiveBanHistories(now, pageable);
+		List<UserBlockedInfoDto> result = banHistories.stream()
+				.map(b -> userMapper.toUserBlockedInfoDto(b, b.getUser()))
+				.collect(Collectors.toList());
+		return userMapper.toBlockedUserPaginationDto(result, banHistories.getTotalElements());
+	}
 
-    public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
-        LocalDateTime now = LocalDateTime.now();
-        List<LentHistory> lentHistories = lentQueryService.findOverdueLentHistories(now, pageable);
-        List<OverdueUserCabinetDto> result = lentHistories.stream()
-                .map(lh -> cabinetMapper.toOverdueUserCabinetDto(lh, lh.getUser(), lh.getCabinet(),
-                        DateUtil.calculateTwoDateDiff(now, lh.getExpiredAt()))
-                ).collect(Collectors.toList());
-        return cabinetMapper.toOverdueUserCabinetPaginationDto(result, (long) lentHistories.size());
-    }
+	/**
+	 * 현재 연체중인 유저들의 정보를 반환합니다.
+	 *
+	 * @param pageable 페이징 정보
+	 * @return 연체중인 유저들의 정보
+	 */
+	public OverdueUserCabinetPaginationDto getOverdueUsers(Pageable pageable) {
+		LocalDateTime now = LocalDateTime.now();
+		List<LentHistory> lentHistories = lentQueryService.findOverdueLentHistories(now, pageable);
+		List<OverdueUserCabinetDto> result = lentHistories.stream()
+				.map(lh -> cabinetMapper.toOverdueUserCabinetDto(lh, lh.getUser(), lh.getCabinet(),
+						DateUtil.calculateTwoDateDiff(now, lh.getExpiredAt()))
+				).collect(Collectors.toList());
+		return cabinetMapper.toOverdueUserCabinetPaginationDto(result, (long) lentHistories.size());
+	}
 }
