@@ -20,56 +20,64 @@ import java.util.Optional;
 @Logging(level = LogLevel.DEBUG)
 public class UserQueryService {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	public User getUser(Long userId) {
-		Optional<User> user = userRepository.findById(userId);
-		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-	}
+    public User getUser(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+    }
 
-	public User getClubUser(Long userId) {
-		Optional<User> user = userRepository.findByIdAndRole(userId, UserRole.CLUB);
-		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-	}
+    public User getClubUser(Long userId) {
+        Optional<User> user = userRepository.findByIdAndRole(userId, UserRole.CLUB);
+        return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+    }
 
-	public User getUserByName(String name) {
-		Optional<User> user = userRepository.findByName(name);
-		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-	}
+    public User getUserByName(String name) {
+        Optional<User> user = userRepository.findByName(name);
+        return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+    }
 
-	public List<User> getUsers(List<Long> userIdsInCabinet) {
-		return userRepository.findAllByIds(userIdsInCabinet);
-	}
+    public List<User> getUsers(List<Long> userIdsInCabinet) {
+        return userRepository.findAllByIds(userIdsInCabinet);
+    }
 
-	public Page<User> getUsers(String partialName, Pageable pageable) {
-		return userRepository.findPaginationByPartialName(partialName, pageable);
-	}
+    public Page<User> getUsers(String partialName, Pageable pageable) {
+        return userRepository.findPaginationByPartialName(partialName, pageable);
+    }
 
-	public Optional<User> findUser(String name) {
-		return userRepository.findByName(name);
-	}
+    public Optional<User> findUser(String name) {
+        return userRepository.findByName(name);
+    }
 
-	public Optional<User> findUserByEmail(String email) {
-		return userRepository.findByEmail(email);
-	}
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
-	public Optional<User> findUserByName(String name) {
-		return userRepository.findByName(name);
-	}
+    public Optional<User> findUserByName(String name) {
+        return userRepository.findByName(name);
+    }
 
-	public Page<User> findClubUsers(Pageable pageable) {
-		return userRepository.findAllByRoleAndDeletedAtIsNull(UserRole.CLUB, pageable);
-	}
+    public Page<User> findClubUsers(Pageable pageable) {
+        return userRepository.findAllByRoleAndDeletedAtIsNull(UserRole.CLUB, pageable);
+    }
 
-	public List<User> findAllRiskOfBlackholeInfo() {
-		final LocalDateTime afterSevenDaysFromNow = LocalDateTime.now().plusDays(7);
+    public List<User> findAllRiskOfBlackholeInfo() {
+        final LocalDateTime afterSevenDaysFromNow = LocalDateTime.now().plusDays(7);
 
-		return userRepository.findByBlackholedAtLessThanOrEqual(afterSevenDaysFromNow);
-	}
+        return userRepository.findByBlackholedAtLessThanOrEqual(afterSevenDaysFromNow);
+    }
 
-	public List<User> findAllNoRiskOfBlackholeInfo() {
-		final LocalDateTime afterSevenDaysFromNow = LocalDateTime.now().plusDays(7);
+    public List<User> findAllNoRiskOfBlackholeInfo() {
+        final LocalDateTime afterSevenDaysFromNow = LocalDateTime.now().plusDays(7);
 
-		return userRepository.findByBlackholedAtAfter(afterSevenDaysFromNow);
-	}
+        return userRepository.findByBlackholedAtAfter(afterSevenDaysFromNow);
+    }
+
+    public List<User> findAllActiveUsers() {
+        return userRepository.findAllByDeletedAtIsNull();
+    }
+
+    public List<User> findAllUsersByNames(List<String> userNames) {
+        return userRepository.findAllUsersInNames(userNames);
+    }
 }
