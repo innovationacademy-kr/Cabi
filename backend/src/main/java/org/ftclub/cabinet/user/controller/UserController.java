@@ -6,6 +6,7 @@ import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
+import org.ftclub.cabinet.dto.UpdateDeviceTokenRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
@@ -83,5 +84,13 @@ public class UserController {
 			@UserSession UserSessionDto userSessionDto,
 			@RequestBody UpdateAlarmRequestDto updateAlarmRequestDto) {
 		userFacadeService.updateAlarmState(userSessionDto, updateAlarmRequestDto);
+	}
+
+	@PutMapping("/me/device-token")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void updateDeviceToken(
+			@UserSession UserSessionDto userSessionDto,
+			@RequestBody UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
+		userFacadeService.updateDeviceToken(userSessionDto, updateDeviceTokenRequestDto);
 	}
 }

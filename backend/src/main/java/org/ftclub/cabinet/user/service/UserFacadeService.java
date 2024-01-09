@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -10,6 +11,7 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.mapper.UserMapper;
+import org.ftclub.cabinet.redis.service.RedisService;
 import org.ftclub.cabinet.user.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ public class UserFacadeService {
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
 	private final UserMapper userMapper;
+	private final RedisService redisService;
 
 	public MyProfileResponseDto getProfile(UserSessionDto user) {
 		log.debug("Called getMyProfile: {}", user.getName());
@@ -96,6 +99,14 @@ public class UserFacadeService {
 
 		User user = userQueryService.getUser(userSessionDto.getUserId());
 		userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
+	}
+
+	@Transactional
+	public void updateDeviceToken(UserSessionDto userSessionDto, UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
+		log.debug("Called updateDeviceToken : {}", userSessionDto.getName());
+
+		User user = userQueryService.getUser(userSessionDto.getUserId());
+		redisService.save(user.getName(), updateDeviceTokenRequestDto.getDeviceToken(), Duration.ofDays(30));
 	}
 }
 

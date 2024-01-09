@@ -53,7 +53,7 @@ public class PushAlarmSender {
 			Integer floor = ((LentSuccessAlarm) alarm).getLocation().getFloor();
 			Integer visibleNum = ((LentSuccessAlarm) alarm).getVisibleNum();
 			String title = alarmProperties.getLentSuccessSubject();
-			String body = String.format(alarmProperties.getLentSuccessMailTemplateUrl(),
+			String body = String.format(alarmProperties.getLentSuccessFcmTemplate(),
 					building + " " + floor + "층 " + visibleNum + "번");
 			return new FCMDto(title, body);
 		} else if (alarm instanceof LentExpirationImminentAlarm) {
