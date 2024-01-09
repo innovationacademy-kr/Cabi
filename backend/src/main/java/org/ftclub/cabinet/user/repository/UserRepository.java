@@ -1,17 +1,17 @@
 package org.ftclub.cabinet.user.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -28,10 +28,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u WHERE u.id = :userId AND u.role = :role AND u.deletedAt IS NULL")
 	Optional<User> findByIdAndRole(Long userId, UserRole role);
 
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Query("UPDATE User u " +
 			"SET u.deletedAt = :deletedAt " +
 			"WHERE u.id = :userId")
-	void deleteById(@Param("userId") Long userId, @Param("deleteAt") LocalDateTime deletedAt);
+	void deleteById(@Param("userId") Long userId, @Param("deletedAt") LocalDateTime deletedAt);
 
 	/**
 	 * 유저 이름으로 유저를 찾습니다.
@@ -86,9 +87,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	/**
 	 * 블랙홀에 빠질 위험이 없는 유저들의 정보를 조회합니다. blackholedAt이 null이거나 현재 시간보다 미래인 유저들을 블랙홀에 빠질 위험이 없는 유저로
-	 * 판단합니다.
-	 * + "WHERE lh.endedAt < :endDate AND lh.endedAt >= :startDate")
-	 * int countReturnFromStartDateToEndDate(@Param("startDate") LocalDateTime startDate,
+	 * 판단합니다. + "WHERE lh.endedAt < :endDate AND lh.endedAt >= :startDate") int
+	 * countReturnFromStartDateToEndDate(@Param("startDate") LocalDateTime startDate,
 	 *
 	 * @return {@link User} 리스트
 	 * @Param("endDate") LocalDateTime endDate);
