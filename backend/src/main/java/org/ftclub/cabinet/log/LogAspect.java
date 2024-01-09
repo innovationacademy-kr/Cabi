@@ -20,26 +20,6 @@ public class LogAspect {
 
 	private final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 
-	private static void printLog(LogLevel level, String message) {
-		switch (level) {
-			case TRACE:
-				log.trace(message);
-				break;
-			case DEBUG:
-				log.debug(message);
-				break;
-			case WARN:
-				log.warn(message);
-				break;
-			case ERROR:
-				log.error(message);
-				break;
-			default:
-				log.info(message);
-				break;
-		}
-	}
-
 	@Before(value = "@within(logging)", argNames = "joinPoint,logging")
 	public void classLogAdvice(JoinPoint joinPoint, Logging logging) {
 		if (logging != null && isLogEnabled(logging.level())) {
@@ -68,6 +48,26 @@ public class LogAspect {
 				return log.isErrorEnabled();
 			default:
 				return log.isInfoEnabled();
+		}
+	}
+
+	private void printLog(LogLevel level, String message) {
+		switch (level) {
+			case TRACE:
+				log.trace(message);
+				break;
+			case DEBUG:
+				log.debug(message);
+				break;
+			case WARN:
+				log.warn(message);
+				break;
+			case ERROR:
+				log.error(message);
+				break;
+			default:
+				log.info(message);
+				break;
 		}
 	}
 
