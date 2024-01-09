@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.cabinet.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -14,241 +17,236 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
 public class CabinetQueryService {
 
-    private final CabinetRepository cabinetRepository;
+	private final CabinetRepository cabinetRepository;
 
-    /**
-     * 해당 건물의 층에 해당하는 사물함의 개수를 반환합니다.
-     *
-     * @param status 사물함 상태
-     * @param floor  층
-     * @return
-     */
-    public int countCabinets(CabinetStatus status, Integer floor) {
-        return cabinetRepository.countByStatusAndFloor(status, floor);
-    }
+	/**
+	 * 해당 건물의 층에 해당하는 사물함의 개수를 반환합니다.
+	 *
+	 * @param status 사물함 상태
+	 * @param floor  층
+	 * @return 사물함 개수
+	 */
+	public int countCabinets(CabinetStatus status, Integer floor) {
+		return cabinetRepository.countByStatusAndFloor(status, floor);
+	}
 
-    /*------------------------------------------  GET  -------------------------------------------*/
-
-
-    /**
-     * 모든 건물을 가져옵니다.(새롬관, 서초)
-     *
-     * @return 모든 건물 이름을 반환합니다.
-     */
-    public List<String> getAllBuildings() {
-        return cabinetRepository.getAllBuildings()
-                .orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BUILDING));
-    }
-
-    /*------------------------------------------  FIND  -------------------------------------------*/
-
-    /**
-     * 모든 건물을 가져옵니다.(새롬관, 서초)
-     *
-     * @return 모든 건물 이름을 반환합니다.
-     */
-    public List<String> findAllBuildings() {
-        return cabinetRepository.findAllBuildings();
-    }
-
-    /**
-     * 건물에 해당하는 모든 층을 가져옵니다.
-     *
-     * @param building 건물 이름
-     * @return
-     */
-
-    public List<Integer> findAllFloorsByBuilding(String building) {
-        return cabinetRepository.findAllFloorsByBuilding(building);
-    }
-
-    /**
-     * 건물에 해당하는 모든 층을 가져옵니다.
-     *
-     * @param buildings 건물 이름
-     * @return
-     */
-    public List<Integer> findAllFloorsByBuildings(List<String> buildings) {
-        return cabinetRepository.findAllFloorsByBuildings(buildings);
-    }
-
-    /**
-     * 사물함을 ID로 가져옵니다.
-     *
-     * @param cabinetId 가져올 사물함 ID
-     * @return
-     */
-    public Cabinet findCabinet(Long cabinetId) {
-        Optional<Cabinet> cabinet = cabinetRepository.findById(cabinetId);
-        return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-    }
-
-    /**
-     * 사물함을 ID로 가져옵니다.(조회 이후 업데이트를 위해 X Lock을 건다.)
-     *
-     * @param cabinetId 가져올 사물함 ID
-     * @return
-     */
-    public Cabinet findCabinetsWithXLock(Long cabinetId) {
-        Optional<Cabinet> cabinet = cabinetRepository.findByIdWithXLock(cabinetId);
-        return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-    }
-
-    /**
-     * 사물함 번호에 해당하는 모든 사물함을 가져옵니다.
-     *
-     * @param visibleNum 사물함 번호
-     * @return
-     */
-    public List<Cabinet> findCabinets(Integer visibleNum) {
-        return cabinetRepository.findAllByVisibleNum(visibleNum);
-    }
-
-    /**
-     * 사물함 번호에 해당하는 모든 사물함을 가져옵니다. (변경을 위해 X락을 걸고 가져옵니다.)
-     *
-     * @param cabinetIds 사물함 번호
-     * @return
-     */
-    public List<Cabinet> findCabinetsForUpdate(List<Long> cabinetIds) {
-        return cabinetRepository.findAllByIdsWithXLock(cabinetIds);
-    }
-
-    /**
-     * 사물함ID로 현재 대여중인 사물함을 가져옵니다.(변경을 위해 X 락을 걸어 가져옵니다.)
-     *
-     * @param userId
-     * @return
-     */
-    public Cabinet getUserActiveCabinetForUpdate(Long userId) {
-        Optional<Cabinet> cabinet =
-                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithXLock(userId);
-        return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
-    }
+	/*------------------------------------------  GET  -------------------------------------------*/
 
 
-    /**
-     * 사물함ID로 현재 대여중인 사물함을 가져옵니다.
-     *
-     * @param userId 사용자 ID
-     * @return
-     */
-    public Cabinet findUserActiveCabinet(Long userId) {
-        Optional<Cabinet> cabinet =
-                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId);
-        return cabinet.orElse(null);
-    }
+	/**
+	 * 모든 건물을 가져옵니다.(새롬관, 서초)
+	 *
+	 * @return 모든 건물 이름을 반환합니다.
+	 */
+	public List<String> getAllBuildings() {
+		return cabinetRepository.getAllBuildings()
+				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BUILDING));
+	}
 
-    /**
-     * 건물, 층에 해당아흔 모든 사물함을 가져옵니다.
-     *
-     * @param building 건물 이름
-     * @param floor    층
-     * @return
-     */
-    public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
-        return cabinetRepository.findAllByBuildingAndFloor(building, floor);
-    }
+	/*------------------------------------------  FIND  -------------------------------------------*/
 
-    /**
-     * 건물, 층에 해당하는 대여중인 사물함, 사물함 대여기록, 유저를 JOIN 하여 가져옵니다.
-     *
-     * @param building 건물 이름
-     * @param floor    층
-     * @return
-     */
-    public List<ActiveCabinetInfoEntities> findActiveCabinetInfoEntities(String building,
-                                                                         Integer floor) {
-        return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
-    }
+	/**
+	 * 모든 건물을 가져옵니다.(새롬관, 서초)
+	 *
+	 * @return 모든 건물 이름을 반환합니다.
+	 */
+	public List<String> findAllBuildings() {
+		return cabinetRepository.findAllBuildings();
+	}
 
-    /**
-     * 건물에 있는 모든 사물함 중, LentType에 해당하지않고, cabinetStatuses에 해당하는 모든 사물함을 가져옵니다.
-     *
-     * @param building        건물 이름
-     * @param lentType        포함하지 않을 대여 타입
-     * @param cabinetStatuses 사물함 상태
-     * @return
-     */
-    public List<Cabinet> findPendingCabinetsNotLentTypeAndStatus(
-            String building, LentType lentType, List<CabinetStatus> cabinetStatuses) {
-        return cabinetRepository.findAllByBuildingAndLentTypeNotAndStatusIn(building, lentType,
-                cabinetStatuses);
-    }
+	/**
+	 * 건물에 해당하는 모든 층을 가져옵니다.
+	 *
+	 * @param building 건물 이름
+	 * @return 건물에 해당하는 모든 층
+	 */
+	public List<Integer> findAllFloorsByBuilding(String building) {
+		return cabinetRepository.findAllFloorsByBuilding(building);
+	}
 
-    /**
-     * userId로 현재 대여중인 사물함을 가져옵니다.
-     *
-     * @param userId 사용자 ID
-     * @return
-     */
-    public Cabinet findActiveCabinetByUserId(Long userId) {
-        return cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId).orElse(null);
-    }
+	/**
+	 * 여러 건물에 해당하는 모든 층을 가져옵니다.
+	 *
+	 * @param buildings 건물 이름
+	 * @return 건물에 해당하는 모든 층
+	 */
+	public List<Integer> findAllFloorsByBuildings(List<String> buildings) {
+		return cabinetRepository.findAllFloorsByBuildings(buildings);
+	}
 
-    /**
-     * LentType에 해당하는 사물함을 page로 가져옵니다.
-     *
-     * @param lentType 대여 타입
-     * @param pageable 페이지 정보
-     * @return
-     */
-    public Page<Cabinet> findAllByLentType(LentType lentType, Pageable pageable) {
-        return cabinetRepository.findPaginationByLentType(lentType, pageable);
-    }
+	/**
+	 * 사물함을 ID로 가져옵니다.
+	 *
+	 * @param cabinetId 가져올 사물함 ID
+	 * @return 사물함
+	 */
+	public Cabinet findCabinet(Long cabinetId) {
+		Optional<Cabinet> cabinet = cabinetRepository.findById(cabinetId);
+		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+	}
 
-    /**
-     * status에 해당하는 사물함을 page로 가져옵니다.
-     *
-     * @param status   사물함 상태
-     * @param pageable 페이지 정보
-     * @return
-     */
-    public Page<Cabinet> findAllByStatus(CabinetStatus status, Pageable pageable) {
-        return cabinetRepository.findPaginationByStatus(status, pageable);
-    }
+	/**
+	 * 사물함을 ID로 가져옵니다.(조회 이후 업데이트를 위해 X Lock을 건다.)
+	 *
+	 * @param cabinetId 가져올 사물함 ID
+	 * @return 사물함
+	 */
+	public Cabinet findCabinetsForUpdate(Long cabinetId) {
+		Optional<Cabinet> cabinet = cabinetRepository.findByIdWithXLock(cabinetId);
+		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+	}
 
-    /**
-     * 사물함 번호에 해당하는 사물함을 page로 가져옵니다.
-     *
-     * @param visibleNum 사물함 번호
-     * @param pageable   페이지 정보
-     * @return
-     */
-    public Page<Cabinet> findAllByVisibleNum(Integer visibleNum, Pageable pageable) {
-        return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
-    }
+	/**
+	 * 사물함 번호에 해당하는 모든 사물함을 가져옵니다.
+	 *
+	 * @param visibleNum 사물함 번호
+	 * @return 사물함
+	 */
+	public List<Cabinet> findCabinets(Integer visibleNum) {
+		return cabinetRepository.findAllByVisibleNum(visibleNum);
+	}
 
-    /**
-     * 빌딩과 층에 해당하는 사물함을 모두 조회한다.
-     *
-     * @param building 건물 이름
-     * @param floor    층
-     * @return
-     */
-    public List<Cabinet> findAllByBuildingAndFloor(String building, Integer floor) {
-        return cabinetRepository.findAllByBuildingAndFloor(building, floor);
-    }
+	/**
+	 * 사물함 번호에 해당하는 모든 사물함을 가져옵니다. (변경을 위해 X락을 걸고 가져옵니다.)
+	 *
+	 * @param cabinetIds 사물함 번호
+	 * @return
+	 */
+	public List<Cabinet> findCabinetsForUpdate(List<Long> cabinetIds) {
+		return cabinetRepository.findAllByIdsWithXLock(cabinetIds);
+	}
 
-    /**
-     * 사물함 상태에 맞는 사물함들 중 from 이전에 대여기간이 만료되는 사물함을 가져옵니다.
-     *
-     * @param cabinetStatus 사물함 상태
-     * @param from          조회할 시간
-     * @return
-     */
-    public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
-            CabinetStatus cabinetStatus, LocalDateTime from) {
-        return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus,
-                from);
-    }
+	/**
+	 * 사물함ID로 현재 대여중인 사물함을 가져옵니다.(변경을 위해 X 락을 걸어 가져옵니다.)
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public Cabinet getUserActiveCabinetForUpdate(Long userId) {
+		Optional<Cabinet> cabinet =
+				cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithXLock(userId);
+		return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
+	}
+
+
+	/**
+	 * 사물함ID로 현재 대여중인 사물함을 가져옵니다.
+	 *
+	 * @param userId 사용자 ID
+	 * @return
+	 */
+	public Cabinet findUserActiveCabinet(Long userId) {
+		Optional<Cabinet> cabinet =
+				cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId);
+		return cabinet.orElse(null);
+	}
+
+	/**
+	 * 건물, 층에 해당아흔 모든 사물함을 가져옵니다.
+	 *
+	 * @param building 건물 이름
+	 * @param floor    층
+	 * @return
+	 */
+	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
+		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
+	}
+
+	/**
+	 * 건물, 층에 해당하는 대여중인 사물함, 사물함 대여기록, 유저를 JOIN 하여 가져옵니다.
+	 *
+	 * @param building 건물 이름
+	 * @param floor    층
+	 * @return
+	 */
+	public List<ActiveCabinetInfoEntities> findActiveCabinetInfoEntities(String building,
+			Integer floor) {
+		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
+	}
+
+	/**
+	 * 건물에 있는 모든 사물함 중, LentType에 해당하지않고, cabinetStatuses에 해당하는 모든 사물함을 가져옵니다.
+	 *
+	 * @param building        건물 이름
+	 * @param lentType        포함하지 않을 대여 타입
+	 * @param cabinetStatuses 사물함 상태
+	 * @return
+	 */
+	public List<Cabinet> findPendingCabinetsNotLentTypeAndStatus(
+			String building, LentType lentType, List<CabinetStatus> cabinetStatuses) {
+		return cabinetRepository.findAllByBuildingAndLentTypeNotAndStatusIn(building, lentType,
+				cabinetStatuses);
+	}
+
+	/**
+	 * userId로 현재 대여중인 사물함을 가져옵니다.
+	 *
+	 * @param userId 사용자 ID
+	 * @return
+	 */
+	public Cabinet findActiveCabinetByUserId(Long userId) {
+		return cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNull(userId).orElse(null);
+	}
+
+	/**
+	 * LentType에 해당하는 사물함을 page로 가져옵니다.
+	 *
+	 * @param lentType 대여 타입
+	 * @param pageable 페이지 정보
+	 * @return
+	 */
+	public Page<Cabinet> findAllByLentType(LentType lentType, Pageable pageable) {
+		return cabinetRepository.findPaginationByLentType(lentType, pageable);
+	}
+
+	/**
+	 * status에 해당하는 사물함을 page로 가져옵니다.
+	 *
+	 * @param status   사물함 상태
+	 * @param pageable 페이지 정보
+	 * @return
+	 */
+	public Page<Cabinet> findAllByStatus(CabinetStatus status, Pageable pageable) {
+		return cabinetRepository.findPaginationByStatus(status, pageable);
+	}
+
+	/**
+	 * 사물함 번호에 해당하는 사물함을 page로 가져옵니다.
+	 *
+	 * @param visibleNum 사물함 번호
+	 * @param pageable   페이지 정보
+	 * @return
+	 */
+	public Page<Cabinet> findAllByVisibleNum(Integer visibleNum, Pageable pageable) {
+		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
+	}
+
+	/**
+	 * 빌딩과 층에 해당하는 사물함을 모두 조회한다.
+	 *
+	 * @param building 건물 이름
+	 * @param floor    층
+	 * @return
+	 */
+	public List<Cabinet> findAllByBuildingAndFloor(String building, Integer floor) {
+		return cabinetRepository.findAllByBuildingAndFloor(building, floor);
+	}
+
+	/**
+	 * 사물함 상태에 맞는 사물함들 중 from 이전에 대여기간이 만료되는 사물함을 가져옵니다.
+	 *
+	 * @param cabinetStatus 사물함 상태
+	 * @param from          조회할 시간
+	 * @return
+	 */
+	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
+			CabinetStatus cabinetStatus, LocalDateTime from) {
+		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus,
+				from);
+	}
 }

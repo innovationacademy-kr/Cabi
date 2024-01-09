@@ -156,7 +156,7 @@ public class LentFacadeService {
 	public void startLentCabinet(Long userId, Long cabinetId) {
 		LocalDateTime now = LocalDateTime.now();
 		User user = userQueryService.getUser(userId);
-		Cabinet cabinet = cabinetQueryService.findCabinetsWithXLock(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinetsForUpdate(cabinetId);
 		int lentCount = lentQueryService.countUserActiveLent(userId);
 		List<BanHistory> banHistories = banHistoryQueryService.findActiveBanHistories(userId, now);
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
@@ -186,7 +186,7 @@ public class LentFacadeService {
 	@Transactional
 	public void startLentShareCabinet(Long userId, Long cabinetId, String shareCode) {
 		LocalDateTime now = LocalDateTime.now();
-		Cabinet cabinet = cabinetQueryService.findCabinetsWithXLock(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinetsForUpdate(cabinetId);
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
 		lentPolicyService.verifyCabinetLentCount(
 				cabinet.getLentType(), cabinet.getMaxUser(), userCount);
@@ -266,7 +266,7 @@ public class LentFacadeService {
 				.filter(lh -> lh.getUserId().equals(userId)).findFirst()
 				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_LENT_HISTORY));
 		Cabinet cabinet =
-				cabinetQueryService.findCabinetsWithXLock(lentHistories.get(0).getCabinetId());
+				cabinetQueryService.findCabinetsForUpdate(lentHistories.get(0).getCabinetId());
 
 		int userRemainCount = lentHistories.size() - 1;
 		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
@@ -319,7 +319,7 @@ public class LentFacadeService {
 	public void cancelShareCabinetLent(Long userId, Long cabinetId) {
 		lentRedisService.deleteUserInCabinetSession(cabinetId, userId);
 		if (lentRedisService.isCabinetSessionEmpty(cabinetId)) {
-			Cabinet cabinet = cabinetQueryService.findCabinetsWithXLock(cabinetId);
+			Cabinet cabinet = cabinetQueryService.findCabinetsForUpdate(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		}
 	}
@@ -331,7 +331,7 @@ public class LentFacadeService {
 	 */
 	@Transactional
 	public void shareCabinetSessionExpired(Long cabinetId) {
-		Cabinet cabinet = cabinetQueryService.findCabinetsWithXLock(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinetsForUpdate(cabinetId);
 		List<Long> usersInCabinetSession = lentRedisService.getUsersInCabinetSession(cabinetId);
 		if (lentPolicyService.checkUserCountOnShareCabinet(usersInCabinetSession.size())) {
 			LocalDateTime now = LocalDateTime.now();
