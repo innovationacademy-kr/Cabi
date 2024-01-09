@@ -1,12 +1,12 @@
 package org.ftclub.cabinet.cabinet.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.QActiveCabinetInfoEntities;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,10 +15,13 @@ import static org.ftclub.cabinet.cabinet.domain.QCabinetPlace.cabinetPlace;
 import static org.ftclub.cabinet.lent.domain.QLentHistory.lentHistory;
 import static org.ftclub.cabinet.user.domain.QUser.user;
 
-@RequiredArgsConstructor
 public class CabinetComplexRepositoryImpl implements CabinetComplexRepository {
 
     private final JPAQueryFactory queryFactory;
+
+    public CabinetComplexRepositoryImpl(EntityManager em) {
+        this.queryFactory = new JPAQueryFactory(em);
+    }
 
     /**
      * 해당 건물의 층에 해당하는 현재 대여중인 사물함의 정보를 반환합니다.
