@@ -20,23 +20,58 @@ public class LogAspect {
 
 	private final ParameterNameDiscoverer discoverer = new DefaultParameterNameDiscoverer();
 
+	private static void printLog(LogLevel level, String message) {
+		switch (level) {
+			case TRACE:
+				log.trace(message);
+				break;
+			case DEBUG:
+				log.debug(message);
+				break;
+			case WARN:
+				log.warn(message);
+				break;
+			case ERROR:
+				log.error(message);
+				break;
+			default:
+				log.info(message);
+				break;
+		}
+	}
 
 	@Before(value = "@within(logging)", argNames = "joinPoint,logging")
 	public void classLogAdvice(JoinPoint joinPoint, Logging logging) {
-		printLog(joinPoint, logging);
+		if (logging != null && isLogEnabled(logging.level())) {
+			String message = parseMessage(joinPoint);
+			printLog(logging.level(), message);
+		}
 	}
 
 	@Before(value = "@annotation(logging)", argNames = "joinPoint,logging")
 	public void methodLogAdvice(JoinPoint joinPoint, Logging logging) {
-		printLog(joinPoint, logging);
+		if (logging != null && isLogEnabled(logging.level())) {
+			String message = parseMessage(joinPoint);
+			printLog(logging.level(), message);
+		}
 	}
 
-	private void printLog(JoinPoint joinPoint, Logging logging) {
-		if (logging == null) {
-			return;
+	private boolean isLogEnabled(LogLevel level) {
+		switch (level) {
+			case TRACE:
+				return log.isTraceEnabled();
+			case DEBUG:
+				return log.isDebugEnabled();
+			case WARN:
+				return log.isWarnEnabled();
+			case ERROR:
+				return log.isErrorEnabled();
+			default:
+				return log.isInfoEnabled();
 		}
-		LogLevel level = logging.level();
+	}
 
+	private String parseMessage(JoinPoint joinPoint) {
 		String[] classPath = joinPoint.getSignature().getDeclaringType().getName().split("\\.");
 		String callerClass = classPath[classPath.length - 1];
 		Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
@@ -53,22 +88,6 @@ public class LogAspect {
 			}
 		}
 		sb.delete(sb.length() - 2, sb.length() - 1);
-		switch (level) {
-			case TRACE:
-				log.trace(sb.toString());
-				break;
-			case DEBUG:
-				log.debug(sb.toString());
-				break;
-			case WARN:
-				log.warn(sb.toString());
-				break;
-			case ERROR:
-				log.error(sb.toString());
-				break;
-			default:
-				log.info(sb.toString());
-				break;
-		}
+		return sb.toString();
 	}
 }
