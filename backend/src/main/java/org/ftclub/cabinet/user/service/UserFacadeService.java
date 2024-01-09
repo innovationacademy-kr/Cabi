@@ -1,7 +1,6 @@
 package org.ftclub.cabinet.user.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.*;
@@ -9,6 +8,8 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.UserMapper;
@@ -102,7 +103,7 @@ public class UserFacadeService {
         LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
                 user.getUserId());
         if (activeLentExtension == null) {
-            throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
+            throw ExceptionStatus.EXTENSION_NOT_FOUND.asServiceException();
         }
         lentExtensionCommandService.useLentExtension(activeLentExtension, activeLentHistories);
     }

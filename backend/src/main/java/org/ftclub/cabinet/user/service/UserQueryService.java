@@ -28,10 +28,10 @@ public class UserQueryService {
      * @param userId 유저의 ID
      * @return 유저 객체를 반환합니다.
      */
-	public User getUser(Long userId) {
-		Optional<User> user = userRepository.findById(userId);
-		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-	}
+    public User getUser(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+    }
 
     /**
      * 동아리 유저를 가져옵니다.

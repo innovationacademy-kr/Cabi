@@ -7,7 +7,6 @@ import org.ftclub.cabinet.alarm.config.GmailProperties;
 import org.ftclub.cabinet.alarm.domain.*;
 import org.ftclub.cabinet.alarm.dto.MailDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -49,15 +48,9 @@ public class EmailAlarmSender {
     private MailDto parseMessageToMailDto(String name, Alarm alarm) {
         Context context = new Context();
         context.setVariable("name", name);
-        // private으로 각 알람별 메서드를 만들어서 호출하는 것이 좋을 것 같습니다.
-        // 지금 보니 기본적인 컨텐츠들 - 제목, 내용은 다른 sender에서도 동일하게 사용하는 경우가 많은 것 같은데,
-        // 이 부분을 Alarm 자체에서 toString과 같은 역할을 하는 템플리팅 메서드가 있으면 좋을 것 같습니다.
-        // 혹 각 sender별로 커스텀한 방식이 필요하다면 Alarm 자체에 각 알람에 맞게 구현되도록 하는 메서드를 갖게할 수도 있을 것 같습니다.
         if (alarm instanceof LentSuccessAlarm) {
             return generateLentSuccessAlarm((LentSuccessAlarm) alarm, context);
-        }
-        // 상속되는 것이 아닌 한 instanceof로 else는 필요 없지 않나요?
-        else if (alarm instanceof LentExpirationAlarm) {
+        } else if (alarm instanceof LentExpirationAlarm) {
             return generateLentExpirationAlarm((LentExpirationAlarm) alarm, context);
         } else if (alarm instanceof LentExpirationImminentAlarm) {
             return generateLentExpirationImminentAlarm((LentExpirationImminentAlarm) alarm, context);
@@ -114,12 +107,11 @@ public class EmailAlarmSender {
 
     @NotNull
     private MailDto generateLentSuccessAlarm(LentSuccessAlarm alarm, Context context) {
-        LentSuccessAlarm lentSuccessAlarm = alarm;
-        String building = lentSuccessAlarm.getLocation().getBuilding();
-        Integer floor = lentSuccessAlarm.getLocation().getFloor();
-        Integer visibleNum = lentSuccessAlarm.getVisibleNum();
+        String building = alarm.getLocation().getBuilding();
+        Integer floor = alarm.getLocation().getFloor();
+        Integer visibleNum = alarm.getVisibleNum();
         context.setVariable("location", building + " " + floor + "층 " + visibleNum + "번");
-        context.setVariable("expireDate", lentSuccessAlarm.getLentExpirationDate());
+        context.setVariable("expireDate", alarm.getLentExpirationDate());
         return new MailDto(alarmProperties.getLentSuccessSubject(),
                 alarmProperties.getLentSuccessMailTemplateUrl(), context);
     }
