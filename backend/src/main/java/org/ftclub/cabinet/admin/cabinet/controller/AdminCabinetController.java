@@ -49,7 +49,7 @@ public class AdminCabinetController {
 	 * 사물함의 고장 사유를 업데이트합니다.
 	 *
 	 * @param cabinetId 사물함 아이디
-	 * @param body      { statusNote: 변경할 사물함 상태 메모 }
+	 * @param dto       { statusNote: 변경할 사물함 고장 사유 }
 	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
 	 */
 	@PatchMapping("/{cabinetId}/status-note")

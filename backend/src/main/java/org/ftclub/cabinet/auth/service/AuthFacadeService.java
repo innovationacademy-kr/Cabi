@@ -7,11 +7,8 @@ import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.CookieManager;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
-import org.ftclub.cabinet.config.DomainProperties;
-import org.ftclub.cabinet.config.MasterProperties;
 import org.ftclub.cabinet.dto.MasterLoginDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
@@ -37,11 +34,10 @@ public class AuthFacadeService {
 	private final AdminCommandService adminCommandService;
 	private final UserOauthService userOauthService;
 	private final AdminOauthService adminOauthService;
+	private final AuthPolicyService authPolicyService;
 
 	private final TokenProvider tokenProvider;
 	private final CookieManager cookieManager;
-	private final DomainProperties domainProperties;
-	private final MasterProperties masterProperties;
 
 	/**
 	 * 유저 로그인 페이지로 리다이렉트합니다.
@@ -80,7 +76,7 @@ public class AuthFacadeService {
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
 		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
 		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-		res.sendRedirect(domainProperties.getFeHost() + "/home");
+		res.sendRedirect(authPolicyService.getMainHomeUrl());
 	}
 
 	/**
@@ -100,7 +96,7 @@ public class AuthFacadeService {
 		String token = tokenProvider.createAdminToken(admin, LocalDateTime.now());
 		Cookie cookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, token);
 		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
-		res.sendRedirect(domainProperties.getFeHost() + "/admin/home");
+		res.sendRedirect(authPolicyService.getAdminHomeUrl());
 	}
 
 	/**
@@ -116,10 +112,9 @@ public class AuthFacadeService {
 	public void masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
 	                        HttpServletResponse res, LocalDateTime now) {
 		// TODO : 서비스로 빼기
-		if (!masterLoginDto.getId().equals(masterProperties.getId())
-				|| !masterLoginDto.getPassword().equals(masterProperties.getPassword()))
+		if (!authPolicyService.isMatchWithMasterAuthInfo(masterLoginDto.getId(), masterLoginDto.getPassword()))
 			throw ExceptionStatus.UNAUTHORIZED_ADMIN.asServiceException();
-		Admin master = adminQueryService.findByEmail(masterProperties.getEmail())
+		Admin master = adminQueryService.findByEmail(authPolicyService.getMasterEmail())
 				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		String masterToken = tokenProvider.createAdminToken(master, now);
 		Cookie cookie = cookieManager.cookieOf(TokenProvider.ADMIN_TOKEN_NAME, masterToken);
