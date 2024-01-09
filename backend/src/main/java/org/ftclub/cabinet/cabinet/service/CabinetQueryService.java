@@ -26,6 +26,13 @@ public class CabinetQueryService {
 
     private final CabinetRepository cabinetRepository;
 
+    /**
+     * 해당 건물의 층에 해당하는 사물함의 개수를 반환합니다.
+     *
+     * @param status 사물함 상태
+     * @param floor  층
+     * @return
+     */
     public int countCabinets(CabinetStatus status, Integer floor) {
         return cabinetRepository.countByStatusAndFloor(status, floor);
     }
@@ -33,6 +40,11 @@ public class CabinetQueryService {
     /*------------------------------------------  GET  -------------------------------------------*/
 
 
+    /**
+     * 모든 건물을 가져옵니다.(새롬관, 서초)
+     *
+     * @return 모든 건물 이름을 반환합니다.
+     */
     public List<String> getAllBuildings() {
         return cabinetRepository.getAllBuildings()
                 .orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_BUILDING));
@@ -40,9 +52,21 @@ public class CabinetQueryService {
 
     /*------------------------------------------  FIND  -------------------------------------------*/
 
+    /**
+     * 모든 건물을 가져옵니다.(새롬관, 서초)
+     *
+     * @return 모든 건물 이름을 반환합니다.
+     */
     public List<String> findAllBuildings() {
         return cabinetRepository.findAllBuildings();
     }
+
+    /**
+     * 건물에 해당하는 모든 층을 가져옵니다.
+     *
+     * @param building 건물 이름
+     * @return
+     */
 
     public List<Integer> findAllFloorsByBuilding(String building) {
         return cabinetRepository.findAllFloorsByBuilding(building);
@@ -52,13 +76,13 @@ public class CabinetQueryService {
         return cabinetRepository.findAllFloorsByBuildings(buildings);
     }
 
-    public Cabinet findCabinets(Long cabinetId) {
+    public Cabinet findCabinet(Long cabinetId) {
         Optional<Cabinet> cabinet = cabinetRepository.findById(cabinetId);
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
-    public Cabinet findCabinetsWithLock(Long cabinetId) {
-        Optional<Cabinet> cabinet = cabinetRepository.findByIdWithLock(cabinetId);
+    public Cabinet findCabinetsWithXLock(Long cabinetId) {
+        Optional<Cabinet> cabinet = cabinetRepository.findByIdWithXLock(cabinetId);
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
@@ -70,19 +94,19 @@ public class CabinetQueryService {
         return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
     }
 
-    public List<Cabinet> findCabinetsWithLock(List<Long> cabinetIds) {
-        return cabinetRepository.findAllByIdsWithLock(cabinetIds);
+    public List<Cabinet> findCabinetsWithXLock(List<Long> cabinetIds) {
+        return cabinetRepository.findAllByIdsWithXLock(cabinetIds);
     }
 
-    public Cabinet getUserActiveCabinetWithLock(Long userId) {
+    public Cabinet getUserActiveCabinetWithXLock(Long userId) {
         Optional<Cabinet> cabinet =
-                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithLock(userId);
+                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithXLock(userId);
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
     public Cabinet getUserActiveCabinet(Long userId) {
         Optional<Cabinet> cabinet =
-                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithLock(userId);
+                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithXLock(userId);
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
