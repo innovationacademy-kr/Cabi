@@ -12,7 +12,6 @@ import org.ftclub.cabinet.exception.CustomExceptionStatus;
 import org.ftclub.cabinet.exception.CustomServiceException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -159,8 +158,8 @@ public class LentPolicyService {
 	}
 
 	public LocalDateTime adjustSharCabinetExpirationDate(int userCount, LocalDateTime now,
-			LentHistory lentHistory) {
-		double daysUntilExpiration = lentHistory.getDaysUntilExpiration(now) * -1;
+			LocalDateTime expiredAt) {
+		double daysUntilExpiration = DateUtil.calculateTwoDateDiffCeil(now, expiredAt);
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;
 		long secondsRemaining = Math.round(secondsUntilExpiration * userCount / (userCount + 1));
 		return DateUtil.setLastTime(now.plusSeconds(secondsRemaining));

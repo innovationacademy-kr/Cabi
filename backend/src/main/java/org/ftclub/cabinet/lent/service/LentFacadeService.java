@@ -278,19 +278,19 @@ public class LentFacadeService {
 		}
 
 		LocalDateTime endedAt = userLentHistory.getEndedAt();
-		BanType banType = banPolicyService.verifyBan(endedAt, userLentHistory.getExpiredAt());
+		LocalDateTime expiredAt = userLentHistory.getExpiredAt();
+		BanType banType = banPolicyService.verifyBan(endedAt, expiredAt);
 		if (!banType.equals(BanType.NONE)) {
-			LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(
-					endedAt, userLentHistory.getExpiredAt());
+			LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(endedAt, expiredAt);
 			banHistoryCommandService.banUser(userId, endedAt, unbannedAt, banType);
 		}
 		if (cabinet.isLentType(SHARE)) {
-			LocalDateTime expiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
-					userRemainCount, now, userLentHistory);
+			LocalDateTime newExpiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
+					userRemainCount, now, expiredAt);
 			List<Long> lentHistoryIds = lentHistories.stream()
 					.filter(lh -> !lh.equals(userLentHistory))
 					.map(LentHistory::getId).collect(Collectors.toList());
-			lentCommandService.setExpiredAt(lentHistoryIds, expiredAt);
+			lentCommandService.setExpiredAt(lentHistoryIds, newExpiredAt);
 		}
 	}
 

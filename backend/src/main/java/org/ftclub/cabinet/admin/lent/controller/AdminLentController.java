@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.lent.service.AdminLentFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.dto.ReturnCabinetsRequestDto;
+import org.ftclub.cabinet.dto.ReturnUserRequestDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +31,8 @@ public class AdminLentController {
 
 	@PatchMapping("/return-users/{userId}")
 	@AuthGuard(level = ADMIN_ONLY)
-	public void terminateLentUser(@PathVariable("userId") Long userId) {
-		adminLentFacadeService.endUserLent(userId);
+	public void terminateLentUser(
+			@Valid @RequestBody ReturnUserRequestDto returnUserRequestDto) {
+		adminLentFacadeService.endUserLent(returnUserRequestDto.getUserIds());
 	}
 }
