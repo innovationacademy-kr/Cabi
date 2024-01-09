@@ -154,7 +154,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "AND lh.cabinetId = ("
 			+ "     SELECT lh2.cabinetId FROM LentHistory lh2 "
 			+ "     WHERE lh2.userId = :userId AND lh2.endedAt IS NULL)")
-	List<LentHistory> findAllByCabinetIdWithSubQueryForUpdate(@Param("userId") Long userId);
+	List<LentHistory> findAllByCabinetIdWithSubQueryWithXLock(@Param("userId") Long userId);
 
 	/**
 	 * 특정 사물함의 대여기록들을 모두 가져옵니다.

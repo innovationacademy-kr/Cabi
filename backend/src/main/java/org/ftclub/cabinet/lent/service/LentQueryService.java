@@ -133,8 +133,8 @@ public class LentQueryService {
 	 * @param userId 찾으려는 user id
 	 * @return 유저가 대여 중인 사물함의 현재 대여 중인 대여 기록 {@link List}
 	 */
-	public List<LentHistory> findUserActiveLentHistoriesInCabinetWithLock(Long userId) {
-		return lentRepository.findAllByCabinetIdWithSubQueryForUpdate(userId);
+	public List<LentHistory> findUserActiveLentHistoriesInCabinetForUpdate(Long userId) {
+		return lentRepository.findAllByCabinetIdWithSubQueryWithXLock(userId);
 	}
 
 	/**

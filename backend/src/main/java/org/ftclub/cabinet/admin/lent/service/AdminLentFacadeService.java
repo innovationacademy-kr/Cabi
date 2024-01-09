@@ -68,7 +68,7 @@ public class AdminLentFacadeService {
 	public void endUserLent(List<Long> userIds) {
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories =
-				lentQueryService.findUserActiveLentHistoriesInCabinetWithLock(userIds.get(0));
+				lentQueryService.findUserActiveLentHistoriesInCabinetForUpdate(userIds.get(0));
 		System.out.println("lentHistories = " + lentHistories);
 		if (lentHistories.isEmpty()) {
 			Long cabinetId = lentRedisService.findCabinetJoinedUser(userIds.get(0));
@@ -79,7 +79,7 @@ public class AdminLentFacadeService {
 			return;
 		}
 
-		Cabinet cabinet = cabinetQueryService.findCabinets(lentHistories.get(0).getCabinetId());
+		Cabinet cabinet = cabinetQueryService.findCabinet(lentHistories.get(0).getCabinetId());
 		// 반납 유저 최대 4명으로 worst 16개 검색 -> set으로 변환하는 것보다 빠르고 메모리 절약
 		List<LentHistory> userLentHistories = lentHistories.stream()
 				.filter(lh -> userIds.contains(lh.getUserId()))
@@ -98,7 +98,7 @@ public class AdminLentFacadeService {
 		LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(now, expiredAt);
 		banHistoryCommandService.banUsers(userIds, now, unbannedAt, banType);
 		if (cabinet.isLentType(SHARE)) {
-			LocalDateTime newExpiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
+			LocalDateTime newExpiredAt = lentPolicyService.adjustShareCabinetExpirationDate(
 					userRemainCount, now, expiredAt);
 			List<Long> lentHistoryIds = lentHistories.stream()
 					.map(LentHistory::getId).collect(Collectors.toList());
@@ -109,7 +109,7 @@ public class AdminLentFacadeService {
 	@Transactional
 	public void endCabinetLent(List<Long> cabinetIds) {
 		LocalDateTime now = LocalDateTime.now();
-		List<Cabinet> cabinets = cabinetQueryService.findCabinetsWithLock(cabinetIds);
+		List<Cabinet> cabinets = cabinetQueryService.findCabinetsForUpdate(cabinetIds);
 		List<LentHistory> lentHistories =
 				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
 		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()

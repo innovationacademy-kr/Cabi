@@ -203,7 +203,7 @@ public class LentPolicyService {
 	 * @param expiredAt 현재 사물함의 만료 시간
 	 * @return 조정된 만료 시간
 	 */
-	public LocalDateTime adjustSharCabinetExpirationDate(int userCount, LocalDateTime now,
+	public LocalDateTime adjustShareCabinetExpirationDate(int userCount, LocalDateTime now,
 			LocalDateTime expiredAt) {
 		double daysUntilExpiration = DateUtil.calculateTwoDateDiffCeil(now, expiredAt);
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;

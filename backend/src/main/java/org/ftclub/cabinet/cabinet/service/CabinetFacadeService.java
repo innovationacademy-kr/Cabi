@@ -85,7 +85,7 @@ public class CabinetFacadeService {
 	 * {@inheritDoc} 사물함 id로 사물함 정보를 가져옵니다. active 대여기록이 없는경우, IN_SESSION 상태의 사물함인지 확인합니다.
 	 */
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
-		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinet(cabinetId);
 		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
 				cabinetId);
 		List<LentDto> lentDtos = cabinetActiveLentHistories.stream()
@@ -247,7 +247,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetStatusNote(Long cabinetId, String statusNote) {
-		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinet(cabinetId);
 		cabinetCommandService.changeCabinetStatusNote(cabinet, statusNote);
 	}
 
@@ -260,13 +260,13 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetTitle(Long cabinetId, String title) {
-		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinet(cabinetId);
 		cabinetCommandService.updateTitle(cabinet, title);
 	}
 
 	@Transactional
 	public void updateCabinetGrid(Long cabinetId, Integer row, Integer col) {
-		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinet(cabinetId);
 		cabinetCommandService.updateGrid(cabinet, Grid.of(row, col));
 	}
 
@@ -278,7 +278,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateCabinetVisibleNum(Long cabinetId, Integer visibleNum) {
-		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinet(cabinetId);
 		cabinetCommandService.updateVisibleNum(cabinet, visibleNum);
 	}
 
@@ -290,7 +290,7 @@ public class CabinetFacadeService {
 		CabinetStatus status = cabinetStatusRequestDto.getStatus();
 		LentType lentType = cabinetStatusRequestDto.getLentType();
 
-		List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsWithLock(
+		List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsForUpdate(
 				cabinetStatusRequestDto.getCabinetIds());
 
 		for (Cabinet cabinet : cabinetsWithLock) {
@@ -311,7 +311,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public void updateClub(CabinetClubStatusRequestDto dto) {
-		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetWithLock(dto.getCabinetId());
+		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(dto.getCabinetId());
 
 		Cabinet activeCabinetByUserId = cabinetQueryService.findActiveCabinetByUserId(
 				dto.getUserId());
@@ -332,7 +332,7 @@ public class CabinetFacadeService {
 		if (!status.isValid()) {
 			throw new ServiceException(ExceptionStatus.INVALID_STATUS);
 		}
-		Cabinet cabinet = cabinetQueryService.findCabinetsWithLock(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinetsWithXLock(cabinetId);
 		cabinet.specifyStatus(status);
 	}
 
