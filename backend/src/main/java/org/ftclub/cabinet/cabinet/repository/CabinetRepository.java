@@ -167,4 +167,13 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
             + "WHERE c.id IN (:cabinetIds)")
     void updateStatusAndClearTitleAndMemoByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
                                                         @Param("status") CabinetStatus status);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Cabinet c "
+            + "SET c.status = :status, c.title = :title, c.memo = :memo "
+            + "WHERE c.id IN (:cabinetIds)")
+    void updateStatusAndTitleAndMemoByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
+                                                   @Param("status") CabinetStatus status,
+                                                   @Param("title") String title,
+                                                   @Param("memo") String memo);
 }
