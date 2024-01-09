@@ -69,7 +69,7 @@ public class AdminLentFacadeService {
     public void endUserLent(Long userId) {
         LocalDateTime now = LocalDateTime.now();
         List<LentHistory> lentHistories =
-                lentQueryService.findUserActiveLentHistoriesInCabinetWithLock(userId);
+                lentQueryService.findUserActiveLentHistoriesInCabinetWithXLock(userId);
         if (lentHistories.isEmpty()) {
             Long cabinetId = lentRedisService.findCabinetJoinedUser(userId);
             if (cabinetId != null) {
@@ -107,7 +107,7 @@ public class AdminLentFacadeService {
     @Transactional
     public void endCabinetLent(List<Long> cabinetIds) {
         LocalDateTime now = LocalDateTime.now();
-        List<Cabinet> cabinets = cabinetQueryService.findCabinetsWithLock(cabinetIds);
+        List<Cabinet> cabinets = cabinetQueryService.findCabinetsWithXLock(cabinetIds);
         List<LentHistory> lentHistories =
                 lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
         Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()

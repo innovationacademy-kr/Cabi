@@ -270,7 +270,7 @@ public class CabinetFacadeService {
         CabinetStatus status = cabinetStatusRequestDto.getStatus();
         LentType lentType = cabinetStatusRequestDto.getLentType();
 
-        List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsWithLock(
+        List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsWithXLock(
                 cabinetStatusRequestDto.getCabinetIds());
 
         for (Cabinet cabinet : cabinetsWithLock) {
@@ -291,7 +291,7 @@ public class CabinetFacadeService {
      */
     @Transactional
     public void updateClub(CabinetClubStatusRequestDto dto) {
-        Cabinet cabinet = cabinetQueryService.getUserActiveCabinetWithLock(dto.getCabinetId());
+        Cabinet cabinet = cabinetQueryService.getUserActiveCabinetWithXLock(dto.getCabinetId());
 
         Cabinet activeCabinetByUserId = cabinetQueryService.findActiveCabinetByUserId(
                 dto.getUserId());
@@ -312,7 +312,7 @@ public class CabinetFacadeService {
         if (!status.isValid()) {
             throw new ServiceException(ExceptionStatus.INVALID_STATUS);
         }
-        Cabinet cabinet = cabinetQueryService.findCabinetsWithLock(cabinetId);
+        Cabinet cabinet = cabinetQueryService.findCabinetsWithXLock(cabinetId);
         cabinet.specifyStatus(status);
     }
 

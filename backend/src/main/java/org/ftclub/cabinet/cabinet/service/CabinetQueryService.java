@@ -81,8 +81,8 @@ public class CabinetQueryService {
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
-    public Cabinet findCabinetsWithLock(Long cabinetId) {
-        Optional<Cabinet> cabinet = cabinetRepository.findByIdWithLock(cabinetId);
+    public Cabinet findCabinetsWithXLock(Long cabinetId) {
+        Optional<Cabinet> cabinet = cabinetRepository.findByIdWithXLock(cabinetId);
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
@@ -94,19 +94,19 @@ public class CabinetQueryService {
         return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
     }
 
-    public List<Cabinet> findCabinetsWithLock(List<Long> cabinetIds) {
-        return cabinetRepository.findAllByIdsWithLock(cabinetIds);
+    public List<Cabinet> findCabinetsWithXLock(List<Long> cabinetIds) {
+        return cabinetRepository.findAllByIdsWithXLock(cabinetIds);
     }
 
-    public Cabinet getUserActiveCabinetWithLock(Long userId) {
+    public Cabinet getUserActiveCabinetWithXLock(Long userId) {
         Optional<Cabinet> cabinet =
-                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithLock(userId);
+                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithXLock(userId);
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
     public Cabinet getUserActiveCabinet(Long userId) {
         Optional<Cabinet> cabinet =
-                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithLock(userId);
+                cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithXLock(userId);
         return cabinet.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_CABINET));
     }
 
