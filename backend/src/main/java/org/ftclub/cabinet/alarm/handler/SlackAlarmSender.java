@@ -20,64 +20,88 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class SlackAlarmSender {
 
-	private final SlackApiManager slackApiManager;
-	private final AlarmProperties alarmProperties;
+    private final SlackApiManager slackApiManager;
+    private final AlarmProperties alarmProperties;
+
+    @Async
+    public void send(User user, AlarmEvent alarmEvent) {
+        log.info("slack alarm Event : user = {}, alarmEvent = {}", user.getName(), alarmEvent);
+
+        SlackUserInfo slackUserInfo = slackApiManager.requestSlackUserInfo(user.getEmail());
+        String id = slackUserInfo.getId();
+
+        if (id.isEmpty()) {
+            throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
+        }
+
+        SlackDto slackDto = parseMessage(alarmEvent.getAlarm());
+        slackApiManager.sendMessage(id, slackDto.getContent());
+    }
 
 
-	@Async
-	public void send(User user, AlarmEvent alarmEvent) {
-		log.info("slack alarm Event : user = {}, alarmEvent = {}", user.getName(), alarmEvent);
+    private SlackDto parseMessage(Alarm alarm) {
+        log.debug("alarm = {}", alarm);
+        if (alarm instanceof LentSuccessAlarm) {
+            return generateLentSuccessAlarm((LentSuccessAlarm) alarm);
+        } else if (alarm instanceof LentExpirationImminentAlarm) {
+            return generateLentExpirationImminentAlarm((LentExpirationImminentAlarm) alarm);
+        } else if (alarm instanceof LentExpirationAlarm) {
+            return generateLentExpirationAlarm((LentExpirationAlarm) alarm);
+        } else if (alarm instanceof ExtensionIssuanceAlarm) {
+            return generateExtensionIssuanceAlarm((ExtensionIssuanceAlarm) alarm);
+        } else if (alarm instanceof ExtensionExpirationImminentAlarm) {
+            return generateExtensionExpirationImminent((ExtensionExpirationImminentAlarm) alarm);
+        } else if (alarm instanceof AnnouncementAlarm) {
+            return generateAnnouncementAlarm();
+        } else {
+            throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
+        }
+    }
 
-		SlackUserInfo slackUserInfo = slackApiManager.requestSlackUserInfo(user.getEmail());
-		String id = slackUserInfo.getId();
+    private SlackDto generateLentSuccessAlarm(LentSuccessAlarm alarm) {
+        String building = alarm.getLocation().getBuilding();
+        Integer floor = alarm.getLocation().getFloor();
+        Integer visibleNum = alarm.getVisibleNum();
+        String body = String.format(alarmProperties.getLentSuccessSlackTemplate(),
+                building + " " + floor + "층 " + visibleNum + "번");
+        return new SlackDto(body);
+    }
 
-		if (id.isEmpty()) {
-			throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
-		}
+    private SlackDto generateLentExpirationImminentAlarm(LentExpirationImminentAlarm alarm) {
+        Long daysAfterFromExpireDate = alarm.getDaysAfterFromExpireDate();
+        String body = String.format(alarmProperties.getSoonOverdueSlackTemplate(),
+                Math.abs(daysAfterFromExpireDate));
+        return new SlackDto(body);
+    }
 
-		SlackDto slackDto = parseMessage(alarmEvent.getAlarm());
-		slackApiManager.sendMessage(id, slackDto.getContent());
-	}
+    private SlackDto generateLentExpirationAlarm(LentExpirationAlarm alarm) {
+        Long daysLeftFromExpireDate = alarm.getDaysLeftFromExpireDate();
+        String body = String.format(alarmProperties.getOverdueSlackTemplate(),
+                Math.abs(daysLeftFromExpireDate));
+        return new SlackDto(body);
+    }
 
-	private SlackDto parseMessage(Alarm alarm) {
-		log.debug("alarm = {}", alarm);
-		if (alarm instanceof LentSuccessAlarm) {
-			String building = ((LentSuccessAlarm) alarm).getLocation().getBuilding();
-			Integer floor = ((LentSuccessAlarm) alarm).getLocation().getFloor();
-			Integer visibleNum = ((LentSuccessAlarm) alarm).getVisibleNum();
-			String body = String.format(alarmProperties.getLentSuccessSlackTemplate(),
-					building + " " + floor + "층 " + visibleNum + "번");
-			return new SlackDto(body);
-		} else if (alarm instanceof LentExpirationImminentAlarm) {
-			Long daysAfterFromExpireDate = ((LentExpirationImminentAlarm) alarm).getDaysAfterFromExpireDate();
-			String body = String.format(alarmProperties.getSoonOverdueSlackTemplate(),
-					Math.abs(daysAfterFromExpireDate));
-			return new SlackDto(body);
-		} else if (alarm instanceof LentExpirationAlarm) {
-			Long daysLeftFromExpireDate = ((LentExpirationAlarm) alarm).getDaysLeftFromExpireDate();
-			String body = String.format(alarmProperties.getOverdueSlackTemplate(),
-					Math.abs(daysLeftFromExpireDate));
-			return new SlackDto(body);
-		} else if (alarm instanceof ExtensionIssuanceAlarm) {
-			Integer daysToExtend = ((ExtensionIssuanceAlarm) alarm).getDaysToExtend();
-			String extensionName = ((ExtensionIssuanceAlarm) alarm).getExtensionName();
-			String body = String.format(alarmProperties.getExtensionIssuanceSlackTemplate(),
-					daysToExtend, extensionName);
-			return new SlackDto(body);
-		} else if (alarm instanceof ExtensionExpirationImminentAlarm) {
-			String extensionName = ((ExtensionExpirationImminentAlarm) alarm).getExtensionName();
-			LocalDateTime extensionExpireDate = ((ExtensionExpirationImminentAlarm) alarm).getExtensionExpirationDate();
-			String body = String.format(
-					alarmProperties.getExtensionExpirationImminentSlackTemplate(),
-					extensionName, extensionExpireDate);
-			return new SlackDto(body);
-		} else if (alarm instanceof AnnouncementAlarm) {
-			String body = alarmProperties.getAnnouncementSlackTemplate();
-			return new SlackDto(body);
-		} else {
-			throw new ServiceException(ExceptionStatus.NOT_FOUND_ALARM);
-		}
-	}
+    private SlackDto generateExtensionIssuanceAlarm(ExtensionIssuanceAlarm alarm) {
+        Integer daysToExtend = alarm.getDaysToExtend();
+        String extensionName = alarm.getExtensionName();
+        String body = String.format(alarmProperties.getExtensionIssuanceSlackTemplate(),
+                daysToExtend, extensionName);
+        return new SlackDto(body);
+    }
+
+    private SlackDto generateExtensionExpirationImminent(ExtensionExpirationImminentAlarm alarm) {
+        String extensionName = alarm.getExtensionName();
+        LocalDateTime extensionExpireDate = alarm.getExtensionExpirationDate();
+        String body = String.format(
+                alarmProperties.getExtensionExpirationImminentSlackTemplate(),
+                extensionName, extensionExpireDate);
+        return new SlackDto(body);
+    }
+
+    private SlackDto generateAnnouncementAlarm() {
+        String body = alarmProperties.getAnnouncementSlackTemplate();
+        return new SlackDto(body);
+    }
 
 
 }
