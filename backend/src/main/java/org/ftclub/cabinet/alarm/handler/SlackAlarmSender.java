@@ -1,22 +1,9 @@
 package org.ftclub.cabinet.alarm.handler;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
-import com.slack.api.Slack;
-import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.config.AlarmProperties;
-import org.ftclub.cabinet.alarm.domain.Alarm;
-import org.ftclub.cabinet.alarm.domain.AlarmEvent;
-import org.ftclub.cabinet.alarm.domain.AnnouncementAlarm;
-import org.ftclub.cabinet.alarm.domain.ExtensionExpirationImminentAlarm;
-import org.ftclub.cabinet.alarm.domain.ExtensionIssuanceAlarm;
-import org.ftclub.cabinet.alarm.domain.LentExpirationAlarm;
-import org.ftclub.cabinet.alarm.domain.LentExpirationImminentAlarm;
-import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
-import org.ftclub.cabinet.alarm.dto.FCMDto;
+import org.ftclub.cabinet.alarm.domain.*;
 import org.ftclub.cabinet.alarm.dto.SlackDto;
 import org.ftclub.cabinet.alarm.slack.SlackApiManager;
 import org.ftclub.cabinet.alarm.slack.dto.SlackUserInfo;
@@ -25,7 +12,8 @@ import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.util.StringUtils;
+
+import java.time.LocalDateTime;
 
 @Log4j2
 @Component
@@ -43,15 +31,15 @@ public class SlackAlarmSender {
 		SlackUserInfo slackUserInfo = slackApiManager.requestSlackUserInfo(user.getEmail());
 		String id = slackUserInfo.getId();
 
-		if (StringUtils.isEmpty(id)) {
+		if (id.isEmpty()) {
 			throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
 		}
 
-		SlackDto slackDto = messageParse(alarmEvent.getAlarm());
+		SlackDto slackDto = parseMessage(alarmEvent.getAlarm());
 		slackApiManager.sendMessage(id, slackDto.getContent());
 	}
 
-	private SlackDto messageParse(Alarm alarm) {
+	private SlackDto parseMessage(Alarm alarm) {
 		log.debug("alarm = {}", alarm);
 		if (alarm instanceof LentSuccessAlarm) {
 			String building = ((LentSuccessAlarm) alarm).getLocation().getBuilding();

@@ -1,12 +1,5 @@
 package org.ftclub.cabinet.admin.lent.service;
 
-import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -32,6 +25,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 
 
 @Service
@@ -94,7 +95,7 @@ public class AdminLentFacadeService {
 			banHistoryCommandService.banUser(userId, endedAt, unbannedAt, banType);
 		}
 		if (cabinet.isLentType(SHARE)) {
-			LocalDateTime expiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
+			LocalDateTime expiredAt = lentPolicyService.adjustShareCabinetExpirationDate(
 					userRemainCount, now, userLentHistory);
 			List<Long> lentHistoryIds = lentHistories.stream()
 					.filter(lh -> !lh.equals(userLentHistory))

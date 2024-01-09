@@ -1,8 +1,5 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -21,6 +18,10 @@ import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -140,7 +141,7 @@ public class LentPolicyService {
 	}
 
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
-			int lentUserCount) {
+	                                            int lentUserCount) {
 		if (!DateUtil.isSameDay(now)) {
 			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
 		}
@@ -158,8 +159,8 @@ public class LentPolicyService {
 		return expiredAt;
 	}
 
-	public LocalDateTime adjustSharCabinetExpirationDate(int userCount, LocalDateTime now,
-			LentHistory lentHistory) {
+	public LocalDateTime adjustShareCabinetExpirationDate(int userCount, LocalDateTime now,
+	                                                      LentHistory lentHistory) {
 		double daysUntilExpiration = lentHistory.getDaysUntilExpiration(now) * -1;
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;
 		long secondsRemaining = Math.round(secondsUntilExpiration * userCount / (userCount + 1));

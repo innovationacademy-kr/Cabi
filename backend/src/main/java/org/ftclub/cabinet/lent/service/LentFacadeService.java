@@ -1,13 +1,5 @@
 package org.ftclub.cabinet.lent.service;
 
-import static org.ftclub.cabinet.cabinet.domain.LentType.PRIVATE;
-import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
@@ -16,13 +8,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
-import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentHistoryDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
-import org.ftclub.cabinet.dto.MyCabinetResponseDto;
-import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.dto.UserVerifyRequestDto;
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -43,6 +29,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static org.ftclub.cabinet.cabinet.domain.LentType.PRIVATE;
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 
 @Service
 @RequiredArgsConstructor
@@ -285,7 +280,7 @@ public class LentFacadeService {
 			banHistoryCommandService.banUser(userId, endedAt, unbannedAt, banType);
 		}
 		if (cabinet.isLentType(SHARE)) {
-			LocalDateTime expiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
+			LocalDateTime expiredAt = lentPolicyService.adjustShareCabinetExpirationDate(
 					userRemainCount, now, userLentHistory);
 			List<Long> lentHistoryIds = lentHistories.stream()
 					.filter(lh -> !lh.equals(userLentHistory))

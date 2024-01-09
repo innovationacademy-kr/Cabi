@@ -1,40 +1,11 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toMap;
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
-import org.ftclub.cabinet.dto.CabinetDto;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetPaginationDto;
-import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
-import org.ftclub.cabinet.dto.CabinetPreviewDto;
-import org.ftclub.cabinet.dto.CabinetSimpleDto;
-import org.ftclub.cabinet.dto.CabinetSimplePaginationDto;
-import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
-import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentHistoryDto;
-import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -50,6 +21,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
 @Service
 @RequiredArgsConstructor
@@ -84,6 +64,7 @@ public class CabinetFacadeService {
 	/**
 	 * {@inheritDoc} 사물함 id로 사물함 정보를 가져옵니다. active 대여기록이 없는경우, IN_SESSION 상태의 사물함인지 확인합니다.
 	 */
+	@Transactional(readOnly = true)
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
 		Cabinet cabinet = cabinetQueryService.findCabinets(cabinetId);
 		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
@@ -104,24 +85,6 @@ public class CabinetFacadeService {
 		return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
 	}
 
-	/**
-	 * @param visibleNum
-	 * @return
-	 */
-
-	public CabinetSimplePaginationDto getCabinetsSimpleInfoByVisibleNum(Integer visibleNum) {
-		List<Cabinet> cabinets = cabinetQueryService.findCabinets(visibleNum);
-
-		List<CabinetSimpleDto> cabinetSimpleDtos = cabinets.stream()
-				.map(cabinetMapper::toCabinetSimpleDto)
-				.collect(Collectors.toList());
-
-		return CabinetSimplePaginationDto.builder()
-				.totalLength((long) cabinets.size())
-				.result(cabinetSimpleDtos)
-				.build();
-	}
-
 
 	/**
 	 * 빌딩명과 층으로 섹션별 사물함 정보를 가져옵니다.
@@ -132,7 +95,7 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
-			Integer floor) {
+	                                                                 Integer floor) {
 		List<ActiveCabinetInfoEntities> activeCabinetInfos = cabinetQueryService.findActiveCabinetInfoEntities(
 				building, floor);
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
@@ -203,30 +166,34 @@ public class CabinetFacadeService {
 		return cabinetMapper.toCabinetPendingResponseDto(cabinetFloorMap);
 	}
 
+	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType,
-			Pageable pageable) {
+	                                                           Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByLentType(lentType, pageable);
 		List<CabinetDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
 	}
 
+	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
-			Pageable pageable) {
+	                                                         Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByStatus(status, pageable);
 		List<CabinetDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
 	}
 
+	@Transactional(readOnly = true)
 	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum,
-			Pageable pageable) {
+	                                                             Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByVisibleNum(visibleNum, pageable);
 		List<CabinetDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
 	}
 
+	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getLentHistoryPagination(Long cabinetId, Pageable pageable) {
 		Page<LentHistory> lentHistories = lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(
 				cabinetId, pageable);
