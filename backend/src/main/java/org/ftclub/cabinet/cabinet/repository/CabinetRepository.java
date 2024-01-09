@@ -127,17 +127,51 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
             "WHERE u.id = :userId AND lh.endedAt IS NULL")
     Optional<Cabinet> findByUserIdAndLentHistoryEndedAtIsNullWithXLock(@Param("userId") Long userId);
 
+    /**
+     * lentType 으로 사물함을 조회한다.
+     *
+     * @param lentType 사물함 대여 타입(LentType)
+     * @param pageable 페이지 정보
+     * @return
+     */
     Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType, Pageable pageable);
 
+    /**
+     * status로 사물함을 조회한다.
+     *
+     * @param status   사물함 상태(CabinetStatus)
+     * @param pageable 페이지 정보
+     * @return
+     */
     @EntityGraph(attributePaths = {"cabinetPlace"})
     Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status, Pageable pageable);
 
+    /**
+     * visibleNum으로 사물함을 조회한다.
+     *
+     * @param visibleNum 사물함 번호
+     * @param pageable   페이지 정보
+     * @return
+     */
     Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
                                              Pageable pageable);
 
+    /**
+     * 사물함 번호에 해당하는 모든 사물함을 조회한다.
+     *
+     * @param visibleNum 사물함 번호
+     * @return 사물함 {@link List<Cabinet>}
+     */
     @EntityGraph(attributePaths = {"cabinetPlace"})
     List<Cabinet> findAllByVisibleNum(@Param("visibleNum") Integer visibleNum);
 
+    /**
+     * 빌딩과 층에 해당하는 사물함을 모두 조회한다.
+     *
+     * @param building 빌딩명
+     * @param floor    층
+     * @return 사물함 {@link List<Cabinet>}
+     */
     @Query("SELECT c "
             + "FROM Cabinet c "
             + "JOIN FETCH c.cabinetPlace p "
@@ -145,6 +179,14 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
     List<Cabinet> findAllByBuildingAndFloor(
             @Param("building") String building, @Param("floor") Integer floor);
 
+    /**
+     * 빌딩에, 지정한 LentType 이 아니면서 CabinetStatus 에 해당하는 사물함을 모두 조회한다.
+     *
+     * @param building 빌딩명
+     * @param lentType 대여 타입
+     * @param status   사물함 상태 CabinetStatus
+     * @return
+     */
     @Query("SELECT c "
             + "FROM Cabinet c "
             + "JOIN FETCH c.cabinetPlace p "
@@ -152,8 +194,15 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
             + "AND c.lentType <> :lentType "
             + "AND c.status IN (:status)")
     List<Cabinet> findAllByBuildingAndLentTypeNotAndStatusIn(@Param("building") String building,
-                                                             @Param("lentType") LentType lentType, @Param("status") List<CabinetStatus> status);
+                                                             @Param("lentType") LentType lentType,
+                                                             @Param("status") List<CabinetStatus> status);
 
+    /**
+     * 사물함 ID 리스트에 해당하는 사물함의 상태를 모두 변경한다.
+     *
+     * @param cabinetIds
+     * @param status
+     */
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE Cabinet c "
             + "SET c.status = :status "
@@ -161,13 +210,14 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
     void updateStatusByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
                                     @Param("status") CabinetStatus status);
 
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("UPDATE Cabinet c "
-            + "SET c.status = :status, c.title = '', c.memo = '' "
-            + "WHERE c.id IN (:cabinetIds)")
-    void updateStatusAndClearTitleAndMemoByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
-                                                        @Param("status") CabinetStatus status);
-
+    /**
+     * 사물함 ID 리스트에 해당하는 사물함의 상태, 제목, 메모를 모두 변경한다.
+     *
+     * @param cabinetIds
+     * @param status
+     * @param title
+     * @param memo
+     */
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE Cabinet c "
             + "SET c.status = :status, c.title = :title, c.memo = :memo "
