@@ -9,7 +9,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.ftclub.cabinet.config.CabinetProperties;
-import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -176,7 +175,7 @@ public class LentRedis {
 	 *
 	 * @param userId 삭제할 user id
 	 */
-	public void deleteUser(Long userId) {
+	public void deleteUser(String userId) {
 		userCabinetTemplate.getOperations().delete(userId + VALUE_KEY_SUFFIX);
 	}
 
