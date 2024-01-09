@@ -29,7 +29,7 @@ public class CabinetQueryService {
 	 *
 	 * @param status 사물함 상태
 	 * @param floor  층
-	 * @return
+	 * @return 사물함 개수
 	 */
 	public int countCabinets(CabinetStatus status, Integer floor) {
 		return cabinetRepository.countByStatusAndFloor(status, floor);
@@ -63,18 +63,17 @@ public class CabinetQueryService {
 	 * 건물에 해당하는 모든 층을 가져옵니다.
 	 *
 	 * @param building 건물 이름
-	 * @return
+	 * @return 건물에 해당하는 모든 층
 	 */
-
 	public List<Integer> findAllFloorsByBuilding(String building) {
 		return cabinetRepository.findAllFloorsByBuilding(building);
 	}
 
 	/**
-	 * 건물에 해당하는 모든 층을 가져옵니다.
+	 * 여러 건물에 해당하는 모든 층을 가져옵니다.
 	 *
 	 * @param buildings 건물 이름
-	 * @return
+	 * @return 건물에 해당하는 모든 층
 	 */
 	public List<Integer> findAllFloorsByBuildings(List<String> buildings) {
 		return cabinetRepository.findAllFloorsByBuildings(buildings);
@@ -84,7 +83,7 @@ public class CabinetQueryService {
 	 * 사물함을 ID로 가져옵니다.
 	 *
 	 * @param cabinetId 가져올 사물함 ID
-	 * @return
+	 * @return 사물함
 	 */
 	public Cabinet findCabinet(Long cabinetId) {
 		Optional<Cabinet> cabinet = cabinetRepository.findById(cabinetId);
@@ -95,9 +94,9 @@ public class CabinetQueryService {
 	 * 사물함을 ID로 가져옵니다.(조회 이후 업데이트를 위해 X Lock을 건다.)
 	 *
 	 * @param cabinetId 가져올 사물함 ID
-	 * @return
+	 * @return 사물함
 	 */
-	public Cabinet findCabinetsWithXLock(Long cabinetId) {
+	public Cabinet findCabinetsForUpdate(Long cabinetId) {
 		Optional<Cabinet> cabinet = cabinetRepository.findByIdWithXLock(cabinetId);
 		return cabinet.orElseThrow(ExceptionStatus.NOT_FOUND_CABINET::asServiceException);
 	}
@@ -106,7 +105,7 @@ public class CabinetQueryService {
 	 * 사물함 번호에 해당하는 모든 사물함을 가져옵니다.
 	 *
 	 * @param visibleNum 사물함 번호
-	 * @return
+	 * @return 사물함
 	 */
 	public List<Cabinet> findCabinets(Integer visibleNum) {
 		return cabinetRepository.findAllByVisibleNum(visibleNum);
@@ -134,6 +133,11 @@ public class CabinetQueryService {
 		return cabinet.orElseThrow(ExceptionStatus.NOT_FOUND_CABINET::asServiceException);
 	}
 
+	public Cabinet getUserActiveCabinet(Long userId) {
+		Optional<Cabinet> cabinet =
+				cabinetRepository.findByUserIdAndLentHistoryEndedAtIsNullWithXLock(userId);
+		return cabinet.orElseThrow(ExceptionStatus.NOT_FOUND_CABINET::asServiceException);
+	}
 
 	/**
 	 * 사물함ID로 현재 대여중인 사물함을 가져옵니다.

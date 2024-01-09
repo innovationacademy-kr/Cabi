@@ -374,7 +374,7 @@ public class CabinetFacadeService {
 		if (!status.isValid()) {
 			throw ExceptionStatus.INVALID_STATUS.asServiceException();
 		}
-		Cabinet cabinet = cabinetQueryService.findCabinetsWithXLock(cabinetId);
+		Cabinet cabinet = cabinetQueryService.findCabinetsForUpdate(cabinetId);
 		cabinet.specifyStatus(status);
 	}
 
