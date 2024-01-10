@@ -43,6 +43,11 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+
     // spring-boot
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -68,7 +73,6 @@ dependencies {
 
     // querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 
     // Monitoring
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -78,18 +82,16 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-admin:9.2.0'
 
-    // jwt
+    // authorization
+    implementation 'com.github.scribejava:scribejava-apis:8.3.3'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.9'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
 
     // test
     testCompileOnly 'org.projectlombok:lombok'

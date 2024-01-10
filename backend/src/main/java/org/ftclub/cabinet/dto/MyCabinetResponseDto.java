@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
@@ -14,6 +15,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
  */
 @AllArgsConstructor
 @Getter
+@ToString
 public class MyCabinetResponseDto {
 
 	private final Long cabinetId;

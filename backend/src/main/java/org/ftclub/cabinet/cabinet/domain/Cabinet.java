@@ -1,24 +1,5 @@
 package org.ftclub.cabinet.cabinet.domain;
 
-import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
-import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
-
-import java.util.List;
-import java.util.Objects;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +8,13 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+
+import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
+
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 
 /**
  * 사물함 엔티티
@@ -41,8 +29,8 @@ public class Cabinet {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CABINET_ID")
-	private Long cabinetId;
+	@Column(name = "ID")
+	private Long id;
 
 	/**
 	 * 실물로 표시되는 번호입니다.
@@ -105,7 +93,7 @@ public class Cabinet {
 	private List<LentHistory> lentHistories;
 
 	protected Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
-			Grid grid, CabinetPlace cabinetPlace) {
+	                  Grid grid, CabinetPlace cabinetPlace) {
 		this.visibleNum = visibleNum;
 		this.status = status;
 		this.lentType = lentType;
@@ -117,8 +105,8 @@ public class Cabinet {
 	}
 
 	public static Cabinet of(Integer visibleNum, CabinetStatus status, LentType lentType,
-			Integer maxUser,
-			Grid grid, CabinetPlace cabinetPlace) {
+	                         Integer maxUser,
+	                         Grid grid, CabinetPlace cabinetPlace) {
 		Cabinet cabinet = new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
 		ExceptionUtil.throwIfFalse(cabinet.isValid(), new DomainException(INVALID_ARGUMENT));
 		return cabinet;
@@ -205,32 +193,11 @@ public class Cabinet {
 		if (!(other instanceof Cabinet)) {
 			return false;
 		}
-		return this.cabinetId.equals(((Cabinet) other).cabinetId);
+		return this.id.equals(((Cabinet) other).id);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.cabinetId);
-	}
-
-	/**
-	 * 대여 시작/종료에 따른 사용자의 수와 현재 상태에 따라 상태를 변경합니다.
-	 *
-	 * @param userCount 현재 사용자 수
-	 */
-	public void specifyStatusByUserCount(Integer userCount) {
-		log.info("specifyStatusByUserCount : {}", userCount);
-		if (this.status.equals(CabinetStatus.BROKEN)) {
-			throw new DomainException(INVALID_STATUS);
-		}
-		if (userCount.equals(0)) {
-			this.status = CabinetStatus.PENDING;
-//			this.status = CabinetStatus.AVAILABLE;
-			return;
-		}
-		if (userCount.equals(this.maxUser)) {
-			this.status = CabinetStatus.FULL;
-			return;
-		}
+		return Objects.hash(this.id);
 	}
 }

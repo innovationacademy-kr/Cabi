@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+
 import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.user.domain.BanHistory;
@@ -25,11 +26,11 @@ class UserSessionMapperTest {
 	void toUserBlockedInfoDto() throws Exception {
 		LocalDateTime now = LocalDateTime.now();
 		User user = mock(User.class);
-		when(user.getUserId()).thenReturn(3L);
+		when(user.getId()).thenReturn(3L);
 		when(user.getName()).thenReturn("intraId");
 		when(user.getEmail()).thenReturn("email@test.com");
 		when(user.getBlackholedAt()).thenReturn(now);
- 		when(user.getRole()).thenReturn(UserRole.USER);
+		when(user.getRole()).thenReturn(UserRole.USER);
 		BanHistory banHistory = BanHistory.of(now, now, BanType.PRIVATE, 3L);
 		UserBlockedInfoDto userBlockedInfoDto = userMapper.toUserBlockedInfoDto(banHistory, user);
 		assertEquals(banHistory.getUserId(), userBlockedInfoDto.getUserId());
@@ -42,7 +43,7 @@ class UserSessionMapperTest {
 	void toUserProfileDto() {
 		User user = User.of("intraId", "user@email.com", LocalDateTime.now(), UserRole.USER);
 		UserProfileDto userProfileDto = userMapper.toUserProfileDto(user);
-		assertEquals(user.getUserId(), userProfileDto.getUserId());
+		assertEquals(user.getId(), userProfileDto.getUserId());
 		assertEquals(user.getName(), userProfileDto.getName());
 	}
 }

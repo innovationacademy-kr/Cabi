@@ -29,7 +29,7 @@ class CabinetMapperTest {
 				CabinetPlace.of(location, SectionFormation.of(1, 1),
 						MapArea.of(1, 1, 1, 1)));
 		CabinetDto cabinetDto = cabinetMapper.toCabinetDto(cabinet);
-		assertEquals(cabinet.getCabinetId(), cabinetDto.getCabinetId());
+		assertEquals(cabinet.getId(), cabinetDto.getCabinetId());
 		assertEquals(cabinet.getVisibleNum(), cabinetDto.getVisibleNum());
 		assertEquals(cabinet.getLentType(), cabinetDto.getLentType());
 		assertEquals(cabinet.getMaxUser(), cabinetDto.getMaxUser());
@@ -62,7 +62,7 @@ class CabinetMapperTest {
 		List<LentDto> lentDtos = List.of(lentDto1, lentDto2);
 		CabinetInfoResponseDto cabinetInfoResponseDto = cabinetMapper.toCabinetInfoResponseDto(
 				cabinet, lentDtos, LocalDateTime.now());
-		assertEquals(cabinet.getCabinetId(), cabinetInfoResponseDto.getCabinetId());
+		assertEquals(cabinet.getId(), cabinetInfoResponseDto.getCabinetId());
 		assertEquals(cabinet.getStatus(), cabinetInfoResponseDto.getStatus());
 		assertEquals(cabinet.getMaxUser(), cabinetInfoResponseDto.getMaxUser());
 		assertEquals(cabinet.getCabinetPlace().getLocation(), cabinetInfoResponseDto.getLocation());

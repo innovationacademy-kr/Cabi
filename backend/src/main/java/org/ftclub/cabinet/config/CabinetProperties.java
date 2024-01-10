@@ -26,4 +26,6 @@ public class CabinetProperties {
 	private Long shareMaxUserCount;
 	@Value("${cabinet.policy.in-session.term}")
 	private Integer inSessionTerm;
+	@Value("${cabinet.policy.lent.limit.share.max-attempt-count}")
+	private Long shareMaxAttemptCount;
 }

@@ -1,11 +1,11 @@
 package org.ftclub.cabinet.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -38,11 +38,11 @@ class LentMapperTest {
 
 	@Test
 	void toLentDto() {
-		when(user.getUserId()).thenReturn(3L);
+		when(user.getId()).thenReturn(3L);
 		when(user.getName()).thenReturn("someName");
 		LentHistory lentHistory = LentHistory.of(LocalDateTime.now(), LocalDateTime.now(), 3L, 5L);
 		LentDto lentDto = lentMapper.toLentDto(user, lentHistory);
-		assertEquals(lentHistory.getLentHistoryId(), lentDto.getLentHistoryId());
+		assertEquals(lentHistory.getId(), lentDto.getLentHistoryId());
 		assertEquals(lentHistory.getUserId(), lentDto.getUserId());
 		assertEquals(user.getName(), lentDto.getName());
 		assertEquals(lentHistory.getExpiredAt(), lentDto.getExpiredAt());
@@ -63,7 +63,7 @@ class LentMapperTest {
 		System.out.println(cabinet);
 
 		LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet);
-		assertEquals(cabinet.getCabinetId(), lentHistoryDto.getCabinetId());
+		assertEquals(cabinet.getId(), lentHistoryDto.getCabinetId());
 		assertEquals(lentHistory.getUserId(), lentHistoryDto.getUserId());
 		assertEquals(cabinet.getVisibleNum(), lentHistoryDto.getVisibleNum());
 		assertEquals(user.getName(), lentHistoryDto.getName());
@@ -97,7 +97,7 @@ class LentMapperTest {
 		assertEquals(activeLentHistoryDto.getUserId(), lentHistory.getUserId());
 		assertEquals(activeLentHistoryDto.getName(), user.getName());
 		assertEquals(activeLentHistoryDto.getEmail(), user.getEmail());
-		assertEquals(activeLentHistoryDto.getCabinetId(), cabinet.getCabinetId());
+		assertEquals(activeLentHistoryDto.getCabinetId(), cabinet.getId());
 		assertEquals(activeLentHistoryDto.getIsExpired(), lentHistory.isExpired(now));
 		assertEquals(activeLentHistoryDto.getDaysLeftFromExpireDate(),
 				lentHistory.getDaysUntilExpiration(now));

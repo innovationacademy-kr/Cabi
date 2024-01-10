@@ -1,7 +1,7 @@
 package org.ftclub.cabinet.redis;
 
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.lent.service.LentServiceImpl;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -14,20 +14,20 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class ExpirationListener extends KeyExpirationEventMessageListener {
 
-	private final LentServiceImpl lentServiceImpl;
+	private final LentFacadeService lentFacadeService;
 
 	/**
 	 * Creates new {@link MessageListener} for {@code __keyevent@*__:expired} messages.
 	 *
 	 * @param listenerContainer must not be {@literal null}.
-	 * @param lentServiceImpl   must not be {@literal null}.
+	 * @param lentFacadeService must not be {@literal null}.
 	 */
 	public ExpirationListener(
 			@Qualifier("redisMessageListenerContainer")
 			RedisMessageListenerContainer listenerContainer,
-			LentServiceImpl lentServiceImpl) {
+			LentFacadeService lentFacadeService) {
 		super(listenerContainer);
-		this.lentServiceImpl = lentServiceImpl;
+		this.lentFacadeService = lentFacadeService;
 	}
 
 	/**
@@ -38,7 +38,6 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	public void onMessage(Message message, byte[] pattern) {
 		log.debug("Called onMessage: {}, {}", message.toString(), pattern);
 		String cabinetIdString = message.toString().split(":")[0];
-		log.debug("cabinetIdWithSuffix: {}", cabinetIdString);
-		lentServiceImpl.handleLentFromRedisExpired(cabinetIdString);
+		lentFacadeService.shareCabinetSessionExpired(Long.valueOf(cabinetIdString));
 	}
 }
