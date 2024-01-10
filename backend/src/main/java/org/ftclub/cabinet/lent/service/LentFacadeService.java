@@ -6,7 +6,6 @@ import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
@@ -101,7 +100,7 @@ public class LentFacadeService {
 		List<LentDto> lentDtoList;
 		if (userLentHistory == null) {
 			cabinetId = lentRedisService.findCabinetJoinedUser(user.getUserId());
-			if (Objects.isNull(cabinetId)) {
+			if (cabinetId == null) {
 				return null;
 			}
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
