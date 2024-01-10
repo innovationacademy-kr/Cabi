@@ -9,14 +9,12 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UserMonthDataDto {
 
-    private int id;
-    private String login;
-    private int monthAccumationTime;
+	private int id;
+	private String login;
+	private int monthAccumationTime;
 
-    public int getMonthAccumationTime() {
-       log.info("called getMonthAccumationTime = {}", monthAccumationTime);
-        return monthAccumationTime;
-    }
-// Getters and setters
+	public int getMonthAccumationTime() {
+		return monthAccumationTime;
+	}
 }
 

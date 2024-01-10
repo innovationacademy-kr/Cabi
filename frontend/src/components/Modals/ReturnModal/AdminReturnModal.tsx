@@ -132,17 +132,25 @@ const AdminReturnModal: React.FC<{
   };
 
   const tryShareReturnRequest = async (e: React.MouseEvent) => {
-    const requests = selectedUserIds.map((id) => axiosReturnByUserId(id));
-    if (requests.length === 0) {
-      try {
+    // const requests = selectedUserIds.map((id) => axiosReturnByUserId(id));
+    // const requests = axiosReturnByUserId(selectedUserIds);
+    // if (requests.length === 0) {
+    //   try {
+    //     setHasErrorOnResponse(true);
+    //     setModalTitle("반납할 유저를 선택해야 합니다.");
+    //   } finally {
+    //     setShowResponseModal(true);
+    //   }
+    //   return;
+    // }
+    try {
+      if (selectedUserIds.length === 0) {
         setHasErrorOnResponse(true);
         setModalTitle("반납할 유저를 선택해야 합니다.");
-      } finally {
         setShowResponseModal(true);
+        return;
       }
-      return;
-    }
-    await Promise.all(requests)
+      await axiosReturnByUserId(selectedUserIds)
       .then(async (res) => {
         setIsCurrentSectionRender(true);
         setNumberOfAdminWork((prev) => prev + 1);
@@ -164,7 +172,10 @@ const AdminReturnModal: React.FC<{
       .finally(() => {
         setShowResponseModal(true);
       });
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const tryBundleReturnRequest = async (e: React.MouseEvent) => {
     const returnableCabinetIdList = targetCabinetInfoList

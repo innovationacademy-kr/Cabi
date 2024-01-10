@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * 유저 로그인을 위한 서비스입니다.
+ */
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -38,15 +41,36 @@ public class UserOauthService {
 	private final FtApiProperties ftApiProperties;
 	private final ObjectMapper objectMapper;
 
+	/**
+	 * 42 API 로그인 페이지로 리다이렉트합니다.
+	 *
+	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
+	 * @throws IOException 입출력 예외
+	 */
 	public void requestLogin(HttpServletResponse res) throws IOException {
 		String url = ftOAuth20Service.getAuthorizationUrl();
 		res.sendRedirect(url);
 	}
 
+	/**
+	 * ScribeJava를 이용해 42 API에 authorization_code를 전달하여 access_token을 발급받습니다.
+	 *
+	 * @return 발급받은 access_token
+	 * @throws IOException
+	 * @throws ExecutionException
+	 * @throws InterruptedException
+	 */
 	public OAuth2AccessToken issueAccessTokenByCredentialsGrant() throws IOException, ExecutionException, InterruptedException {
 		return ftOAuth20Service.getAccessTokenClientCredentialsGrant();
 	}
 
+	/**
+	 * 42 API에 access_token을 전달하여 유저 프로필 정보를 가져오고, {@link FtProfile}로 반환합니다.
+	 *
+	 * @param accessToken 42 API에 전달할 access_token
+	 * @return 유저 프로필 정보 {@link FtProfile}
+	 * @throws JsonProcessingException JSON 파싱 예외
+	 */
 	public FtProfile getProfileByIntraName(String accessToken, String intraName) throws JsonProcessingException {
 		log.info("Called getProfileByIntraName {}", intraName);
 		JsonNode result = WebClient.create().get()
@@ -82,7 +106,7 @@ public class UserOauthService {
 			if (e instanceof ExecutionException || e instanceof InterruptedException)
 				log.error("42 API 서버에서 프로필 정보를 비동기적으로 가져오는데 실패했습니다."
 						+ "code: {}, message: {}", code, e.getMessage());
-			throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 	}
 
@@ -98,7 +122,7 @@ public class UserOauthService {
 		String intraName = jsonNode.get("login").asText();
 		String email = jsonNode.get("email").asText();
 		if (intraName == null || email == null)
-			throw new ServiceException(ExceptionStatus.INCORRECT_ARGUMENT);
+			throw ExceptionStatus.INCORRECT_ARGUMENT.asServiceException();
 
 		LocalDateTime blackHoledAt = determineBlackHoledAt(jsonNode);
 		FtRole role = determineFtRole(jsonNode, blackHoledAt);
@@ -111,6 +135,15 @@ public class UserOauthService {
 				.build();
 	}
 
+	/**
+	 * AccessToken을 이용해 받은 JSON 형식의 유저 profile 정보를 통해 유저의 role을 반환합니다.
+	 * <br>
+	 * 유저가 staff인지, active인지, pisciner인지, cadet인지, blackholed인지에 따라 role을 결정합니다.
+	 *
+	 * @param rootNode     유저 프로필 정보 JSON 데이터
+	 * @param blackHoledAt 유저가 blackholed된 시각
+	 * @return 유저의 role
+	 */
 	private FtRole determineFtRole(JsonNode rootNode, LocalDateTime blackHoledAt) {
 		boolean isUserStaff = rootNode.get("staff?").asBoolean();
 		boolean isActive = rootNode.get("active?").asBoolean();
@@ -128,6 +161,14 @@ public class UserOauthService {
 		return (blackHoledAt == null) ? FtRole.MEMBER : FtRole.CADET;
 	}
 
+	/**
+	 * AccessToken을 이용해 받은 JSON 형식의 유저 profile 정보를 통해 유저의 blackholedAt을 반환합니다.
+	 * <br>
+	 * 유저가 blackhole에 빠지는 시각을 반환합니다.
+	 *
+	 * @param rootNode 유저 프로필 정보 JSON 데이터
+	 * @return 유저의 blackholedAt
+	 */
 	private LocalDateTime determineBlackHoledAt(JsonNode rootNode) {
 		JsonNode blackHoledAtNode = rootNode.get("cursus_users").get(CURSUS_INDEX).get("blackholed_at");
 		if (blackHoledAtNode.isNull() || blackHoledAtNode.isEmpty())

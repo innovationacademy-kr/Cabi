@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.user.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -23,6 +25,14 @@ public class BanHistoryCommandService {
 			LocalDateTime unBannedAt, BanType banType) {
 		BanHistory banHistory = BanHistory.of(endedAt, unBannedAt, banType, userId);
 		banHistoryRepository.save(banHistory);
+	}
+
+	public void banUsers(List<Long> userIds, LocalDateTime endedAt,
+			LocalDateTime unBannedAt, BanType banType) {
+		List<BanHistory> banHistories = userIds.stream()
+				.map(userId -> BanHistory.of(endedAt, unBannedAt, banType, userId))
+				.collect(Collectors.toList());
+		banHistoryRepository.saveAll(banHistories);
 	}
 
 	public void deleteRecentBanHistory(BanHistory banHistory, LocalDateTime now) {

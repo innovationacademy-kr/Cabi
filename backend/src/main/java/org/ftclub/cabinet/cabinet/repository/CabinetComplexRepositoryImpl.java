@@ -1,6 +1,5 @@
 package org.ftclub.cabinet.cabinet.repository;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -16,62 +15,58 @@ import static org.ftclub.cabinet.cabinet.domain.QCabinetPlace.cabinetPlace;
 import static org.ftclub.cabinet.lent.domain.QLentHistory.lentHistory;
 import static org.ftclub.cabinet.user.domain.QUser.user;
 
-//@CacheConfig(cacheNames = "cabinets")
 public class CabinetComplexRepositoryImpl implements CabinetComplexRepository {
 
-	private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
-	public CabinetComplexRepositoryImpl(EntityManager em) {
-		this.queryFactory = new JPAQueryFactory(em);
-	}
+    public CabinetComplexRepositoryImpl(EntityManager em) {
+        this.queryFactory = new JPAQueryFactory(em);
+    }
 
-	// CACHE
-//	@Cacheable(key = "#building + #floor")
-	public List<Cabinet> findAllCabinetsByBuildingAndFloor(String building, Integer floor) {
-		JPAQuery<Cabinet> query = queryFactory.selectFrom(cabinet)
-				.join(cabinetPlace)
-				.on(cabinet.cabinetPlace.id.eq(cabinetPlace.id))
-				.where(cabinetPlace.location.building
-						.eq(building)
-						.and(cabinetPlace.location.floor.eq(floor))
-				);
-		return query.fetch();
-	}
+    /**
+     * 해당 건물의 층에 해당하는 현재 대여중인 사물함의 정보를 반환합니다.
+     *
+     * @param building 건물 이름
+     * @param floor    층
+     * @return
+     */
+    @Override
+    public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(
+            String building, Integer floor) {
+        return queryFactory.selectDistinct(
+                        new QActiveCabinetInfoEntities(cabinet, lentHistory, user))
+                .from(cabinet)
+                .join(cabinetPlace)
+                .on(cabinet.cabinetPlace.id.eq(cabinetPlace.id))
+                .join(lentHistory)
+                .on(cabinet.id.eq(lentHistory.cabinet.id))
+                .join(user)
+                .on(lentHistory.user.id.eq(user.id))
+                .where(cabinetPlace.location.building
+                        .eq(building)
+                        .and(cabinetPlace.location.floor.eq(floor))
+                        .and(lentHistory.endedAt.isNull())
+                )
+                .fetch();
+    }
 
-
-	@Override
-	public List<ActiveCabinetInfoEntities> findCabinetsActiveLentHistoriesByBuildingAndFloor(
-			String building, Integer floor) {
-		return queryFactory.selectDistinct(
-						new QActiveCabinetInfoEntities(cabinet, lentHistory, user))
-				.from(cabinet)
-				.join(cabinetPlace)
-				.on(cabinet.cabinetPlace.id.eq(cabinetPlace.id))
-				.join(lentHistory)
-				.on(cabinet.id.eq(lentHistory.cabinet.id))
-				.join(user)
-				.on(lentHistory.user.id.eq(user.id))
-				.where(cabinetPlace.location.building
-						.eq(building)
-						.and(cabinetPlace.location.floor.eq(floor))
-						.and(lentHistory.endedAt.isNull())
-				)
-				.fetch();
-	}
-
-	@Override
-	public List<Cabinet> findAllCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus,
-	                                                                    LocalDateTime currentDate) {
-		//LentHistory 에서, 오늘날짜 이전의 endedAt이면서, 중복되지 않는 레코드와 cabinet 을 join 해서 가져온다.
-		//cabinetStatus 는 PENDING 이어야한다.
-		return queryFactory.selectFrom(cabinet)
-				.join(lentHistory)
-				.on(cabinet.id.eq(lentHistory.cabinet.id))
-				.where(cabinet.status.eq(cabinetStatus)
-								.and(lentHistory.endedAt
-												.before(currentDate)
-//								.before(LocalDateTime.from(LocalDate.now().atStartOfDay()))
-								)
-				).fetch();
-	}
+    /**
+     * 사물함 상태의 사물함 중 currentDate 이전에 대여기간이 만료되는 사물함을 가져온다.
+     *
+     * @param cabinetStatus
+     * @param currentDate
+     * @return
+     */
+    @Override
+    public List<Cabinet> findAllCabinetsByCabinetStatusAndBeforeEndedAt(CabinetStatus cabinetStatus,
+                                                                        LocalDateTime currentDate) {
+        return queryFactory.selectFrom(cabinet)
+                .join(lentHistory)
+                .on(cabinet.id.eq(lentHistory.cabinet.id))
+                .where(cabinet.status.eq(cabinetStatus)
+                        .and(lentHistory.endedAt
+                                .before(currentDate)
+                        )
+                ).fetch();
+    }
 }

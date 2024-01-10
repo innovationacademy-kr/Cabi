@@ -12,7 +12,6 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.GoogleProfile;
 import org.ftclub.cabinet.auth.domain.scribejava.OauthConfig;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +61,7 @@ public class AdminOauthService {
 				log.error("42 API 서버에서 프로필 정보를 비동기적으로 가져오는데 실패했습니다."
 						+ "code: {}, message: {}", code, e.getMessage());
 			e.printStackTrace();
-			throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 	}
 

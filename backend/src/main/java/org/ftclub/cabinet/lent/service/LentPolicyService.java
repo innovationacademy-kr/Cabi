@@ -1,18 +1,12 @@
 package org.ftclub.cabinet.lent.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserVerifyRequestDto;
 import org.ftclub.cabinet.exception.CustomExceptionStatus;
-import org.ftclub.cabinet.exception.CustomServiceException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -22,6 +16,10 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
@@ -30,46 +28,53 @@ public class LentPolicyService {
 	private final CabinetProperties cabinetProperties;
 
 
+	/**
+	 * 대여 정책에 따라 예외를 발생시킵니다.
+	 *
+	 * @param status     대여 정책 상태
+	 * @param unbannedAt 밴 해제 시간
+	 */
 	private void handlePolicyStatus(LentPolicyStatus status, LocalDateTime unbannedAt) {
 		String unbannedAtString = null;
 		switch (status) {
 			case FINE:
 				break;
 			case BROKEN_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_BROKEN);
+				throw ExceptionStatus.LENT_BROKEN.asServiceException();
 			case FULL_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_FULL);
+				throw ExceptionStatus.LENT_FULL.asServiceException();
 			case OVERDUE_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_EXPIRED);
+				throw ExceptionStatus.LENT_EXPIRED.asServiceException();
 			case LENT_CLUB:
-				throw new ServiceException(ExceptionStatus.LENT_CLUB);
+				throw ExceptionStatus.LENT_CLUB.asServiceException();
 			case IMMINENT_EXPIRATION:
-				throw new ServiceException(ExceptionStatus.LENT_EXPIRE_IMMINENT);
+				throw ExceptionStatus.LENT_EXPIRE_IMMINENT.asServiceException();
 			case ALREADY_LENT_USER:
-				throw new ServiceException(ExceptionStatus.LENT_ALREADY_EXISTED);
+				throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
 			case ALL_BANNED_USER:
 				unbannedAtString = unbannedAt.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomServiceException(
-						new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER,
-								unbannedAtString));
+				throw new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER, unbannedAtString).asCustomServiceException();
 			case SHARE_BANNED_USER:
 				unbannedAtString = unbannedAt.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomServiceException(
-						new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED,
-								unbannedAtString));
+				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED, unbannedAtString).asCustomServiceException();
 			case BLACKHOLED_USER:
-				throw new ServiceException(ExceptionStatus.BLACKHOLED_USER);
+				throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 			case PENDING_CABINET:
-				throw new ServiceException(ExceptionStatus.LENT_PENDING);
+				throw ExceptionStatus.LENT_PENDING.asServiceException();
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:
-				throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+				throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 	}
 
+	/**
+	 * 해당 유저가 대여를 해도 되는 상태인지 확인합니다.
+	 *
+	 * @param requestDto 대여 요청 정보
+	 */
 	public void verifyUserForLent(UserVerifyRequestDto requestDto) {
 		LocalDateTime now = LocalDateTime.now();
 		LentPolicyStatus status = LentPolicyStatus.FINE;
@@ -102,6 +107,12 @@ public class LentPolicyService {
 		this.handlePolicyStatus(status, unbannedAt);
 	}
 
+	/**
+	 * 해당 사물함이 대여 가능한 상태인지 확인합니다.
+	 *
+	 * @param cabinetStatus 사물함 상태
+	 * @param lentType      대여 타입
+	 */
 	public void verifyCabinetForLent(CabinetStatus cabinetStatus, LentType lentType) {
 		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (lentType.equals(LentType.CLUB)) {
@@ -120,29 +131,50 @@ public class LentPolicyService {
 		handlePolicyStatus(status, null);
 	}
 
+	/**
+	 * 사물함의 상태가 대여해도 되는지 확인합니다.
+	 *
+	 * @param cabinetLentType 사물함 대여 타입
+	 * @param lentType        대여 타입
+	 */
 	public void verifyCabinetType(LentType cabinetLentType, LentType lentType) {
 		if (!cabinetLentType.equals(lentType)) {
-			throw new ServiceException(ExceptionStatus.INVALID_LENT_TYPE);
+			throw ExceptionStatus.INVALID_LENT_TYPE.asServiceException();
 		}
 	}
 
+	/**
+	 * 사물함의 대여 가능한 최대 유저 수와 현재 대여 중인 유저 수를 통해 대여해도 되는지 확인합니다.
+	 *
+	 * @param lentType     대여 타입
+	 * @param maxUserCount 사물함 대여 가능 최대 유저 수
+	 * @param lentCount    현재 대여 중인 유저 수
+	 */
 	public void verifyCabinetLentCount(LentType lentType, int maxUserCount, int lentCount) {
 		int maxLentCount = 1;
 		if (lentType.equals(LentType.SHARE)) {
 			maxLentCount = cabinetProperties.getShareMaxUserCount().intValue();
 		}
 		if (maxUserCount != maxLentCount) {
-			throw new ServiceException(ExceptionStatus.INTERNAL_SERVER_ERROR);
+			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
 		}
 		if (lentCount >= maxLentCount) {
-			throw new ServiceException(ExceptionStatus.LENT_FULL);
+			throw ExceptionStatus.LENT_FULL.asServiceException();
 		}
 	}
 
+	/**
+	 * 사물함 대여 시에 필요한 만료 기간을 생성합니다.
+	 *
+	 * @param now           현재 시간
+	 * @param lentType      대여 타입
+	 * @param lentUserCount 대여 중인 유저 수
+	 * @return 만료 시간
+	 */
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
-			int lentUserCount) {
+	                                            int lentUserCount) {
 		if (!DateUtil.isSameDay(now)) {
-			throw new ServiceException(ExceptionStatus.INVALID_ARGUMENT);
+			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 		}
 		int lentTerm = 0;
 		if (lentType.equals(LentType.PRIVATE)) {
@@ -153,25 +185,44 @@ public class LentPolicyService {
 		}
 		LocalDateTime expiredAt = DateUtil.setLastTime(now.plusDays(lentTerm));
 		if (DateUtil.isPast(expiredAt)) {
-			throw new ServiceException(ExceptionStatus.INVALID_EXPIRED_AT);
+			throw ExceptionStatus.INVALID_EXPIRED_AT.asServiceException();
 		}
 		return expiredAt;
 	}
 
-	public LocalDateTime adjustSharCabinetExpirationDate(int userCount, LocalDateTime now,
-			LentHistory lentHistory) {
-		double daysUntilExpiration = lentHistory.getDaysUntilExpiration(now) * -1;
+	/**
+	 * 공유 사물함의 만료 시간을 조정합니다.
+	 *
+	 * @param userCount 조정 후 남는 대여 유저 수
+	 * @param now       현재 시간
+	 * @param expiredAt 현재 사물함의 만료 시간
+	 * @return 조정된 만료 시간
+	 */
+	public LocalDateTime adjustShareCabinetExpirationDate(int userCount, LocalDateTime now,
+	                                                      LocalDateTime expiredAt) {
+		double daysUntilExpiration = DateUtil.calculateTwoDateDiffCeil(now, expiredAt);
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;
 		long secondsRemaining = Math.round(secondsUntilExpiration * userCount / (userCount + 1));
 		return DateUtil.setLastTime(now.plusSeconds(secondsRemaining));
 	}
 
-	public boolean verifyUserCountOnShareCabinet(int userCount) {
+	/**
+	 * 공유 사물함에 해당 유저 수만큼 대여해도 되는지 확인합니다.
+	 *
+	 * @param userCount 유저 수
+	 * @return 대여해도 되는지 여부
+	 */
+	public boolean checkUserCountOnShareCabinet(int userCount) {
 		long minUserCount = cabinetProperties.getShareMinUserCount();
 		long maxUserCount = cabinetProperties.getShareMaxUserCount();
 		return minUserCount <= userCount && userCount <= maxUserCount;
 	}
 
+	/**
+	 * 공유 사물함 세션의 대여 시도 횟수를 확인합니다.
+	 *
+	 * @param attemptCount 대여 시도 횟수
+	 */
 	public void verifyAttemptCountOnShareCabinet(Long attemptCount) {
 		LentPolicyStatus status = LentPolicyStatus.FINE;
 		Long shareMaxAttemptCount = cabinetProperties.getShareMaxAttemptCount();

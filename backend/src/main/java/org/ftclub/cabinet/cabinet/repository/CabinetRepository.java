@@ -3,7 +3,6 @@ package org.ftclub.cabinet.cabinet.repository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.LockModeType;
-
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -28,10 +27,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Query("SELECT DISTINCT p.location.building "
 			+ "FROM CabinetPlace p ")
 	List<String> findAllBuildings();
-
-	@Query("SELECT DISTINCT p.location.building "
-			+ "FROM CabinetPlace p ")
-	Optional<List<String>> getAllBuildings();
 
 	/**
 	 * 빌딩의 모든 층을 조회한다.
@@ -90,7 +85,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "WHERE c.id = :cabinetId")
-	Optional<Cabinet> findByIdWithLock(@Param("cabinetId") Long cabinetId);
+	Optional<Cabinet> findByIdWithXLock(@Param("cabinetId") Long cabinetId);
 
 	/**
 	 * cabinetId 리스트로 사물함을 조회한다.(조회 이후 업데이트를 위해 X Lock을 건다.)
@@ -102,7 +97,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "WHERE c.id IN (:cabinetIds)")
-	List<Cabinet> findAllByIdsWithLock(@Param("cabinetIds") List<Long> cabinetIds);
+	List<Cabinet> findAllByIdsWithXLock(@Param("cabinetIds") List<Long> cabinetIds);
 
 	/**
 	 * userId로 현재 대여 중인 사물함을 조회한다.
@@ -129,19 +124,54 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			"LEFT JOIN LentHistory lh ON c.id = lh.cabinetId " +
 			"LEFT JOIN User u ON u.id = lh.userId " +
 			"WHERE u.id = :userId AND lh.endedAt IS NULL")
-	Optional<Cabinet> findByUserIdAndLentHistoryEndedAtIsNullWithLock(@Param("userId") Long userId);
+	Optional<Cabinet> findByUserIdAndLentHistoryEndedAtIsNullWithXLock(
+			@Param("userId") Long userId);
 
+	/**
+	 * lentType 으로 사물함을 조회한다.
+	 *
+	 * @param lentType 사물함 대여 타입(LentType)
+	 * @param pageable 페이지 정보
+	 * @return
+	 */
 	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType, Pageable pageable);
 
+	/**
+	 * status로 사물함을 조회한다.
+	 *
+	 * @param status   사물함 상태(CabinetStatus)
+	 * @param pageable 페이지 정보
+	 * @return
+	 */
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status, Pageable pageable);
 
+	/**
+	 * visibleNum으로 사물함을 조회한다.
+	 *
+	 * @param visibleNum 사물함 번호
+	 * @param pageable   페이지 정보
+	 * @return
+	 */
 	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
-	                                         Pageable pageable);
+			Pageable pageable);
 
+	/**
+	 * 사물함 번호에 해당하는 모든 사물함을 조회한다.
+	 *
+	 * @param visibleNum 사물함 번호
+	 * @return 사물함 {@link List<Cabinet>}
+	 */
 	@EntityGraph(attributePaths = {"cabinetPlace"})
 	List<Cabinet> findAllByVisibleNum(@Param("visibleNum") Integer visibleNum);
 
+	/**
+	 * 빌딩과 층에 해당하는 사물함을 모두 조회한다.
+	 *
+	 * @param building 빌딩명
+	 * @param floor    층
+	 * @return 사물함 {@link List<Cabinet>}
+	 */
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "JOIN FETCH c.cabinetPlace p "
@@ -149,6 +179,14 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	List<Cabinet> findAllByBuildingAndFloor(
 			@Param("building") String building, @Param("floor") Integer floor);
 
+	/**
+	 * 빌딩에, 지정한 LentType 이 아니면서 CabinetStatus 에 해당하는 사물함을 모두 조회한다.
+	 *
+	 * @param building 빌딩명
+	 * @param lentType 대여 타입
+	 * @param status   사물함 상태 CabinetStatus
+	 * @return
+	 */
 	@Query("SELECT c "
 			+ "FROM Cabinet c "
 			+ "JOIN FETCH c.cabinetPlace p "
@@ -156,19 +194,36 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			+ "AND c.lentType <> :lentType "
 			+ "AND c.status IN (:status)")
 	List<Cabinet> findAllByBuildingAndLentTypeNotAndStatusIn(@Param("building") String building,
-	                                                         @Param("lentType") LentType lentType, @Param("status") List<CabinetStatus> status);
+			@Param("lentType") LentType lentType,
+			@Param("status") List<CabinetStatus> status);
 
+	/**
+	 * 사물함 ID 리스트에 해당하는 사물함의 상태를 모두 변경한다.
+	 *
+	 * @param cabinetIds
+	 * @param status
+	 */
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Query("UPDATE Cabinet c "
 			+ "SET c.status = :status "
 			+ "WHERE c.id IN (:cabinetIds)")
 	void updateStatusByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
-	                                @Param("status") CabinetStatus status);
+			@Param("status") CabinetStatus status);
 
+	/**
+	 * 사물함 ID 리스트에 해당하는 사물함의 상태, 제목, 메모를 모두 변경한다.
+	 *
+	 * @param cabinetIds
+	 * @param status
+	 * @param title
+	 * @param memo
+	 */
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Query("UPDATE Cabinet c "
-			+ "SET c.status = :status, c.title = '', c.memo = '' "
+			+ "SET c.status = :status, c.title = :title, c.memo = :memo "
 			+ "WHERE c.id IN (:cabinetIds)")
-	void updateStatusAndClearTitleAndMemoByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
-	                                                    @Param("status") CabinetStatus status);
+	void updateStatusAndTitleAndMemoByCabinetIdsIn(@Param("cabinetIds") List<Long> cabinetIds,
+			@Param("status") CabinetStatus status,
+			@Param("title") String title,
+			@Param("memo") String memo);
 }

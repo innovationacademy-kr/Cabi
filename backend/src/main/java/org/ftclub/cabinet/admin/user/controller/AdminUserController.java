@@ -1,9 +1,7 @@
 package org.ftclub.cabinet.admin.user.controller;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.admin.dto.AdminClubUserRequestDto;
 import org.ftclub.cabinet.admin.lent.service.AdminLentFacadeService;
 import org.ftclub.cabinet.admin.user.service.AdminLentExtensionFacadeService;
 import org.ftclub.cabinet.admin.user.service.AdminUserFacadeService;
@@ -13,14 +11,10 @@ import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,13 +40,12 @@ public class AdminUserController {
 	/**
 	 * 동아리 유저를 생성합니다.
 	 *
-	 * @param body 동아리 이름
+	 * @param dto 동아리 이름
 	 */
 	@PostMapping("/club")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void createClubUser(@RequestBody HashMap<String, String> body) {
-		String clubName = body.get("clubName");
-		adminUserFacadeService.createClubUser(clubName);
+	public void createClubUser(@RequestBody AdminClubUserRequestDto dto) {
+		adminUserFacadeService.createClubUser(dto.getClubName());
 	}
 
 	/**
@@ -75,9 +68,8 @@ public class AdminUserController {
 	@PatchMapping("/club/{clubId}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateClubUser(@PathVariable("clubId") Long clubId,
-			@RequestBody HashMap<String, String> body) {
-		String clubName = body.get("clubName");
-		adminUserFacadeService.updateClubUser(clubId, clubName);
+	                           @Valid @RequestBody AdminClubUserRequestDto dto) {
+		adminUserFacadeService.updateClubUser(clubId, dto.getClubName());
 	}
 
 	// TODO : 안 쓰는 부분인 것 확정 되면 삭제

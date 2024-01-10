@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend.cabinet.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend.cabinet.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/cabi.iml" filepath="$PROJECT_DIR$/.idea/cabi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/42cabi_main.iml" filepath="$PROJECT_DIR$/.idea/42cabi_main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cabinet.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cabinet.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/cabinet.test.iml" filepath="$PROJECT_DIR$/.idea/modules/cabinet.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/config/config.iml" filepath="$PROJECT_DIR$/config/config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/deploy-dev/deploy-dev.iml" filepath="$PROJECT_DIR$/deploy-dev/deploy-dev.iml" />
+      <module fileurl="file://$PROJECT_DIR$/deploy-main/deploy-main.iml" filepath="$PROJECT_DIR$/deploy-main/deploy-main.iml" />
     </modules>
   </component>
 </project>

@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class LentExpirationAlarm implements Alarm, TransactionalAlarmEvent {
+public class LentExpirationAlarm implements Alarm {
 
-	private final Long daysLeftFromExpireDate;
+    private final Long daysLeftFromExpireDate;
 }

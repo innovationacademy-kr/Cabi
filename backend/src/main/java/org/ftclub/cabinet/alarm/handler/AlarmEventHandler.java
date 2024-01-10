@@ -24,11 +24,9 @@ public class AlarmEventHandler {
 
     @TransactionalEventListener
     public void handleAlarmEventWithTransactional(TransactionalAlarmEvent transactionalAlarmEvent) {
-        if (!alarmProperties.getIsProduction()) {
-            return;
-        }
         log.info("handleAlarmEventWithTransactional = {}", transactionalAlarmEvent);
-        if (!(transactionalAlarmEvent instanceof TransactionalAlarmEvent)) {
+        if (!alarmProperties.getIsProduction()) {
+            log.info("handleAlarmEventWithTransactional is not production");
             return;
         }
         AlarmEvent alarmEvent = (AlarmEvent) transactionalAlarmEvent;

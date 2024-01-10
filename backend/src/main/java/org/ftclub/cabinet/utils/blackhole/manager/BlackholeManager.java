@@ -8,9 +8,8 @@ import org.ftclub.cabinet.auth.service.UserOauthService;
 import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
-import org.ftclub.cabinet.exception.UtilException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
-import org.ftclub.cabinet.user.oldService.UserService;
+import org.ftclub.cabinet.user.service.UserCommandService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -25,7 +24,7 @@ public class BlackholeManager {
 	private final UserOauthService userOauthService;
 	private final ApplicationTokenManager tokenManager;
 	private final LentFacadeService lentFacadeService;
-	private final UserService userService;
+	private final UserCommandService userCommandService;
 
 	/**
 	 * 블랙홀에 빠진 유저를 강제 반납 및 삭제 처리한다.
@@ -35,7 +34,7 @@ public class BlackholeManager {
 	private void terminateInvalidUser(UserBlackHoleEvent userBlackHoleEvent, LocalDateTime now) {
 		log.info("{}는 유효하지 않은 사용자입니다.", userBlackHoleEvent);
 		lentFacadeService.endUserLent(userBlackHoleEvent.getUserId(), null);
-		userService.deleteUser(userBlackHoleEvent.getUserId(), now);
+		userCommandService.deleteById(userBlackHoleEvent.getUserId(), now);
 	}
 
 	/**
@@ -52,7 +51,7 @@ public class BlackholeManager {
 			if (!recentProfile.getRole().isInCursus()) {
 				terminateInvalidUser(dto, now);
 			}
-			userService.updateUserBlackholedAt(dto.getUserId(), recentProfile.getBlackHoledAt());
+			userCommandService.updateUserBlackholedAtById(dto.getUserId(), recentProfile.getBlackHoledAt());
 
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
@@ -65,10 +64,10 @@ public class BlackholeManager {
 		} catch (ServiceException e) {
 			ExceptionStatus status = e.getStatus();
 			if (status.equals(ExceptionStatus.NO_LENT_CABINET)) {
-				userService.deleteUser(dto.getUserId(), now);
+				userCommandService.deleteById(dto.getUserId(), now);
 			}
 			log.info("handleBlackholedUser ServiceException {}", e.getStatus());
-			throw new UtilException(e.getStatus());
+			throw e.getStatus().asUtilException();
 
 		} catch (Exception e) {
 			log.error("handleBlackHoledUser Exception: {}", dto, e);

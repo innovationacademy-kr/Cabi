@@ -1,5 +1,12 @@
 package org.ftclub.cabinet.admin.lent.service;
 
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
+
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -8,7 +15,6 @@ import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentCommandService;
 import org.ftclub.cabinet.lent.service.LentPolicyService;
@@ -25,14 +31,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 
 
 @Service
@@ -57,7 +55,7 @@ public class AdminLentFacadeService {
 	public LentHistoryPaginationDto getUserLentHistories(Long userId, Pageable pageable) {
 		userQueryService.getUser(userId);
 		Page<LentHistory> lentHistories =
-				lentQueryService.findUserActiveLentHistories(userId, pageable);
+				lentQueryService.findUserLentHistories(userId, pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
 				.sorted(Comparator.comparing(LentHistory::getStartedAt))
 				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
@@ -66,47 +64,51 @@ public class AdminLentFacadeService {
 	}
 
 	@Transactional
-	public void endUserLent(Long userId) {
+	public void endUserLent(List<Long> userIds) {
 		LocalDateTime now = LocalDateTime.now();
 		List<LentHistory> lentHistories =
-				lentQueryService.findUserActiveLentHistoriesInCabinet(userId);
+				lentQueryService.findUserActiveLentHistoriesInCabinetForUpdate(userIds.get(0));
+		System.out.println("lentHistories = " + lentHistories);
 		if (lentHistories.isEmpty()) {
-			Long cabinetId = lentRedisService.findCabinetJoinedUser(userId);
+			Long cabinetId = lentRedisService.findCabinetJoinedUser(userIds.get(0));
 			if (cabinetId != null) {
-				lentRedisService.deleteUserInCabinetSession(cabinetId, userId);
+				userIds.forEach(userId ->
+						lentRedisService.deleteUserInCabinet(cabinetId, userId));
 			}
 			return;
 		}
-		Cabinet cabinet = cabinetQueryService.findCabinets(lentHistories.get(0).getCabinetId());
-		LentHistory userLentHistory = lentHistories.stream()
-				.filter(lh -> lh.getUserId().equals(userId)).findFirst()
-				.orElseThrow(() -> new ServiceException(ExceptionStatus.NOT_FOUND_LENT_HISTORY));
 
-		int userRemainCount = lentHistories.size() - 1;
-		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
-		lentCommandService.endLent(userLentHistory, now);
-		lentRedisService.setPreviousUserName(
-				cabinet.getId(), userLentHistory.getUser().getName());
-
-		LocalDateTime endedAt = userLentHistory.getEndedAt();
-		BanType banType = banPolicyService.verifyBan(endedAt, userLentHistory.getExpiredAt());
-		if (!banType.equals(BanType.NONE)) {
-			LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(
-					endedAt, userLentHistory.getExpiredAt());
-			banHistoryCommandService.banUser(userId, endedAt, unbannedAt, banType);
+		Cabinet cabinet = cabinetQueryService.findCabinet(lentHistories.get(0).getCabinetId());
+		// 반납 유저 최대 4명으로 worst 16개 검색 -> set으로 변환하는 것보다 빠르고 메모리 절약
+		List<LentHistory> userLentHistories = lentHistories.stream()
+				.filter(lh -> userIds.contains(lh.getUserId()))
+				.collect(Collectors.toList());
+		if (userLentHistories.isEmpty()) {
+			throw ExceptionStatus.NOT_FOUND_LENT_HISTORY.asServiceException();
 		}
+		int userRemainCount = lentHistories.size() - userIds.size();
+		cabinetCommandService.changeUserCount(cabinet, userRemainCount);
+		lentCommandService.endLent(userLentHistories, now);
+		lentHistories.forEach(lh ->
+				lentRedisService.setPreviousUserName(cabinet.getId(), lh.getUser().getName()));
+
+		LocalDateTime expiredAt = userLentHistories.get(0).getExpiredAt();
+		BanType banType = banPolicyService.verifyBan(now, expiredAt);
+		LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(now, expiredAt);
+		banHistoryCommandService.banUsers(userIds, now, unbannedAt, banType);
 		if (cabinet.isLentType(SHARE)) {
-			LocalDateTime expiredAt = lentPolicyService.adjustSharCabinetExpirationDate(
-					userRemainCount, now, userLentHistory);
-			lentHistories.stream().filter(lh -> !lh.equals(userLentHistory))
-					.forEach(lh -> lentCommandService.setExpiredAt(lh, expiredAt));
+			LocalDateTime newExpiredAt = lentPolicyService.adjustShareCabinetExpirationDate(
+					userRemainCount, now, expiredAt);
+			List<Long> lentHistoryIds = lentHistories.stream()
+					.map(LentHistory::getId).collect(Collectors.toList());
+			lentCommandService.setExpiredAt(lentHistoryIds, newExpiredAt);
 		}
 	}
 
 	@Transactional
 	public void endCabinetLent(List<Long> cabinetIds) {
 		LocalDateTime now = LocalDateTime.now();
-		List<Cabinet> cabinets = cabinetQueryService.findCabinetsWithLock(cabinetIds);
+		List<Cabinet> cabinets = cabinetQueryService.findCabinetsForUpdate(cabinetIds);
 		List<LentHistory> lentHistories =
 				lentQueryService.findCabinetsActiveLentHistories(cabinetIds);
 		Map<Long, List<LentHistory>> lentHistoriesByCabinetId = lentHistories.stream()

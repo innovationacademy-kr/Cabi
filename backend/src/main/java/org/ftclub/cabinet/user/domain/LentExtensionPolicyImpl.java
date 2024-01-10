@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.config.CabinetProperties;
-import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.springframework.stereotype.Component;
@@ -27,17 +26,17 @@ public class LentExtensionPolicyImpl implements LentExtensionPolicy {
 	public void verifyLentExtension(Cabinet cabinet, List<LentHistory> lentHistories) {
 		log.debug("Called verifyLentExtension ");
 		if (lentHistories.isEmpty()) {
-			throw new DomainException(ExceptionStatus.NOT_FOUND_LENT_HISTORY);
+			throw ExceptionStatus.NOT_FOUND_LENT_HISTORY.asServiceException();
 		}
 
 		if (cabinet.getLentType().equals(LentType.SHARE) && lentHistories.size() == 1) {
-			throw new DomainException(ExceptionStatus.EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED);
+			throw ExceptionStatus.EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED.asServiceException();
 		}
 
 		LentHistory lentHistory = lentHistories.get(0);
 		LocalDateTime expiredAt = lentHistory.getExpiredAt();
 		if (expiredAt.isBefore(LocalDateTime.now())) {
-			throw new DomainException(ExceptionStatus.EXTENSION_LENT_DELAYED);
+			throw ExceptionStatus.EXTENSION_LENT_DELAYED.asServiceException();
 		}
 	}
 

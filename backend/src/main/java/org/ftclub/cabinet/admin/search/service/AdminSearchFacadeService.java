@@ -63,7 +63,7 @@ public class AdminSearchFacadeService {
 		List<BanHistory> activeBanHistories =
 				banHistoryQueryService.findActiveBanHistories(userIds, now);
 		List<LentHistory> activeLentHistories =
-				lentQueryService.findUsersActiveLentHistoriesAndCabinet(userIds);
+				lentQueryService.findUsersActiveLentHistoriesWithCabinet(userIds);
 		Map<Long, List<BanHistory>> banHistoriesByUserId = activeBanHistories.stream()
 				.collect(Collectors.groupingBy(BanHistory::getUserId));
 		Map<Long, List<LentHistory>> lentHistoriesByUserId = activeLentHistories.stream()

@@ -2,14 +2,14 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.*;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.UserMapper;
 import org.ftclub.cabinet.redis.service.RedisService;
 import org.ftclub.cabinet.user.domain.*;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
+@Logging(level = LogLevel.DEBUG)
 public class UserFacadeService {
 
 	private final BanHistoryQueryService banHistoryQueryService;
@@ -36,75 +36,97 @@ public class UserFacadeService {
 	private final UserMapper userMapper;
 	private final RedisService redisService;
 
-	public MyProfileResponseDto getProfile(UserSessionDto user) {
-		log.debug("Called getMyProfile: {}", user.getName());
+    /**
+     * 유저의 프로필을 가져옵니다.
+     *
+     * @param user 유저의 세션 정보
+     * @return 유저의 프로필 정보를 반환합니다.
+     */
+    public MyProfileResponseDto getProfile(UserSessionDto user) {
+        Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
+        BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
+                LocalDateTime.now()).orElse(null);
+        LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
+                user.getUserId());
 
-		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
-		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
-				LocalDateTime.now()).orElse(null);
-		LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
-				user.getUserId());
+        LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
+        User currentUser = userQueryService.getUser(user.getUserId());
+        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
+                lentExtensionResponseDto, currentUser.getAlarmTypes());
+    }
 
-		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
-		User currentUser = userQueryService.getUser(user.getUserId());
-		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				lentExtensionResponseDto, currentUser.getAlarmTypes());
-	}
+    /**
+     * 유저의 모든 연장권 정보를 가져옵니다.
+     *
+     * @param user 유저의 세션 정보
+     * @return 유저의 모든 연장권 정보를 반환합니다.
+     */
+    public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
+        List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.findLentExtensionsInLatestOrder(
+                        user.getUserId())
+                .stream()
+                .map(userMapper::toLentExtensionResponseDto)
+                .collect(Collectors.toList());
+        return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos,
+                (long) lentExtensionResponseDtos.size());
+    }
 
-	public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
-		log.debug("Called getMyLentExtension : {}", user.getName());
+    /**
+     * 유저의 사용 가능한 연장권을 가져옵니다.
+     *
+     * @param user 유저의 세션 정보
+     * @return 유저의 사용 가능한 연장권 정보를 반환합니다.
+     */
+    public LentExtensionPaginationDto getActiveLentExtensionsPage(UserSessionDto user) {
+        LentExtensions lentExtensions = lentExtensionQueryService.findActiveLentExtensions(
+                user.getUserId());
+        List<LentExtensionResponseDto> LentExtensionResponseDtos = lentExtensions.getLentExtensions()
+                .stream()
+                .map(userMapper::toLentExtensionResponseDto)
+                .collect(Collectors.toList());
 
-		List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.findLentExtensionsInLatestOrder(
-						user.getUserId())
-				.stream()
-				.map(userMapper::toLentExtensionResponseDto)
-				.collect(Collectors.toList());
-		return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos,
-				(long) lentExtensionResponseDtos.size());
-	}
+        return userMapper.toLentExtensionPaginationDto(LentExtensionResponseDtos,
+                (long) LentExtensionResponseDtos.size());
+    }
 
-	public LentExtensionPaginationDto getActiveLentExtensionsPage(UserSessionDto user) {
-		log.debug("Called getMyActiveLentExtension : {}", user.getName());
+    /**
+     * 연장권을 사용합니다.
+     *
+     * @param user 유저의 세션 정보
+     */
+    public void useLentExtension(UserSessionDto user) {
+        Cabinet cabinet = cabinetQueryService.findCabinet(user.getUserId());
+        List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
+                cabinet.getId());
+        lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
 
-		LentExtensions lentExtensions = lentExtensionQueryService.findActiveLentExtensions(
-				user.getUserId());
-		List<LentExtensionResponseDto> LentExtensionResponseDtos = lentExtensions.getLentExtensions()
-				.stream()
-				.map(userMapper::toLentExtensionResponseDto)
-				.collect(Collectors.toList());
+        LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
+                user.getUserId());
+        if (activeLentExtension == null) {
+            throw ExceptionStatus.EXTENSION_NOT_FOUND.asServiceException();
+        }
+        lentExtensionCommandService.useLentExtension(activeLentExtension, activeLentHistories);
+    }
 
-		return userMapper.toLentExtensionPaginationDto(LentExtensionResponseDtos,
-				(long) LentExtensionResponseDtos.size());
-	}
+    /**
+     * 유저의 알람 설정을 변경합니다.
+     *
+     * @param userSessionDto        유저의 세션 정보
+     * @param updateAlarmRequestDto 변경할 알람 설정 정보
+     */
+    @Transactional
+    public void updateAlarmState(UserSessionDto userSessionDto, UpdateAlarmRequestDto updateAlarmRequestDto) {
+        User user = userQueryService.getUser(userSessionDto.getUserId());
+        userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
+    }
 
-	public void useLentExtension(UserSessionDto user) {
-		log.debug("Called useLentExtension : {}", user.getName());
-
-		Cabinet cabinet = cabinetQueryService.findCabinets(user.getUserId());
-		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
-				cabinet.getId());
-		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
-
-		LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
-				user.getUserId());
-		if (activeLentExtension == null) {
-			throw new ServiceException(ExceptionStatus.EXTENSION_NOT_FOUND);
-		}
-		lentExtensionCommandService.useLentExtension(activeLentExtension, activeLentHistories);
-	}
-
-	@Transactional
-	public void updateAlarmState(UserSessionDto userSessionDto, UpdateAlarmRequestDto updateAlarmRequestDto) {
-		log.debug("Called updateAlarmState : {}", userSessionDto.getName());
-
-		User user = userQueryService.getUser(userSessionDto.getUserId());
-		userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
-	}
-
+	/**
+	 * 유저의 디바이스 토큰 정보를 업데이트합니다.
+	 * @param userSessionDto 유저의 세션 정보
+	 * @param updateDeviceTokenRequestDto 디바이스 토큰 정보
+	 */
 	@Transactional
 	public void updateDeviceToken(UserSessionDto userSessionDto, UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
-		log.debug("Called updateDeviceToken : {}", userSessionDto.getName());
-
 		User user = userQueryService.getUser(userSessionDto.getUserId());
 		redisService.save(user.getName(), updateDeviceTokenRequestDto.getDeviceToken(), Duration.ofDays(30));
 	}
