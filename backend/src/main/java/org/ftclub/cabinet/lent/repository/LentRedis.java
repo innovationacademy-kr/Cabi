@@ -27,10 +27,14 @@ public class LentRedis {
 	private static final String VALUE_KEY_SUFFIX = ":user";
 	private static final String PREVIOUS_USER_SUFFIX = ":previousUser";
 
+	private static final String SWAP_KEY_SUFFIX = ":swap";
+
 	private final HashOperations<String, String, String> shareCabinetTemplate;
 	private final ValueOperations<String, String> userCabinetTemplate;
-	private final RedisTemplate<String, String> shadowKeyTemplate;
-	private final ValueOperations<String, String> previousUserTemplate;
+	private final RedisTemplate<String, String> shadowKeyTemplate; //조금 더 많은 기능을 지원
+	private final ValueOperations<String, String> previousUserTemplate; // 조회랑 생성 한정 기능
+
+	private final RedisTemplate<String, String> swapTemplate;
 	private final CabinetProperties cabinetProperties;
 
 	@Autowired
@@ -38,11 +42,13 @@ public class LentRedis {
 			RedisTemplate<String, String> valueRedisTemplate,
 			RedisTemplate<String, String> shadowKeyTemplate,
 			RedisTemplate<String, String> previousUserTemplate,
+			RedisTemplate<String, String> swapTemplate,
 			CabinetProperties cabinetProperties) {
 		this.userCabinetTemplate = valueRedisTemplate.opsForValue();
 		this.shareCabinetTemplate = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyTemplate = shadowKeyTemplate;
 		this.previousUserTemplate = previousUserTemplate.opsForValue();
+		this.swapTemplate = swapTemplate;
 		this.cabinetProperties = cabinetProperties;
 	}
 
@@ -237,5 +243,46 @@ public class LentRedis {
 	 */
 	public String getPreviousUserName(String cabinetId) {
 		return previousUserTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
+	}
+
+	/*----------------------------------------  Swap  -----------------------------------------*/
+
+	/**
+	 * swap 하려는 유저가 이전에 swap 한 이력의 여부를 조회합니다.
+	 *
+	 * @param userName 유저 name
+	 * @return true or false
+	 */
+	public boolean isExistPreviousSwap(String userName) {
+		Boolean isExist = swapTemplate.hasKey(userName + SWAP_KEY_SUFFIX);
+		return Objects.nonNull(isExist) && isExist;
+	}
+
+	/**
+	 * 유저가 swap 가능한 시각을 조회합니다.
+	 *
+	 * @param userName 유저 name
+	 * @return swqp 가능한 시각
+	 */
+	public LocalDateTime getSwapExpiredTime(String userName) {
+		if (!isExistPreviousSwap(userName)) {
+			return null;
+		}
+		long expire = swapTemplate.getExpire(userName + SWAP_KEY_SUFFIX, TimeUnit.SECONDS)
+				.longValue();
+		return LocalDateTime.now().plusSeconds(expire);
+	}
+
+	/**
+	 * swap 하는 유저의 swap 이력을 저장합니다. 기한을 설정합니다
+	 *
+	 * @param userName 유저 name
+	 * @return 유저 name
+	 */
+	public String setSwap(String userName) {
+		final String swapKey = userName + SWAP_KEY_SUFFIX;
+		swapTemplate.opsForValue().set(swapKey, userName);
+		swapTemplate.expire(swapKey, cabinetProperties.getSwapTermPrivateDays(), TimeUnit.DAYS);
+		return swapKey;
 	}
 }
