@@ -53,6 +53,6 @@ LentPolicyStatus {
 	 * shareCode를 3회 이상 틀린 유저
 	 */
 	SHARE_BANNED_USER,
-	BLACKHOLED_USER,
+	BLACKHOLED_USER, SWAP_EXPIREDAT_IMMINENT,
 
 }
