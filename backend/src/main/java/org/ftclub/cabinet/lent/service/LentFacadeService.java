@@ -166,7 +166,8 @@ public class LentFacadeService {
 				user.getBlackholedAt(), lentCount, cabinetId, cabinet.getStatus(), banHistories));
 		lentPolicyService.verifyCabinetForLent(cabinet.getStatus(), cabinet.getLentType());
 
-		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.PRIVATE, 1);
+		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.PRIVATE,
+				1);
 		lentCommandService.startLent(user.getId(), cabinet.getId(), now, expiredAt);
 		cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
 		cabinetCommandService.changeUserCount(cabinet, lentCount + 1);
@@ -209,7 +210,8 @@ public class LentFacadeService {
 		if (lentRedisService.isCabinetSessionFull(cabinetId)) {
 			List<Long> userIdsInCabinet = lentRedisService.getUsersInCabinet(cabinetId);
 			LocalDateTime expiredAt =
-					lentPolicyService.generateExpirationDate(now, LentType.SHARE, userIdsInCabinet.size());
+					lentPolicyService.generateExpirationDate(now, LentType.SHARE,
+							userIdsInCabinet.size());
 			lentCommandService.startLent(userIdsInCabinet, cabinet.getId(), now, expiredAt);
 			lentRedisService.clearCabinetSession(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
@@ -357,14 +359,17 @@ public class LentFacadeService {
 		LocalDateTime now = LocalDateTime.now();
 		LentHistory oldLentHistory = lentQueryService.findUserActiveLentHistoryAndCabinet(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_LENT_HISTORY::asServiceException);
+
 		Cabinet oldCabinet = cabinetQueryService.findCabinet(oldLentHistory.getCabinetId());
 		Cabinet newCabinet = cabinetQueryService.findCabinet(newCabinetId);
+
 		lentPolicyService.verifyCabinetType(oldCabinet.getLentType(), LentType.PRIVATE);
 		lentPolicyService.verifyCabinetType(newCabinet.getLentType(), LentType.PRIVATE);
 		lentPolicyService.verifyCabinetForLent(newCabinet.getStatus(), newCabinet.getLentType());
 
 		int newCabinetLentUserCount = lentQueryService.countCabinetUser(newCabinetId);
-		lentPolicyService.verifySwapPrivateCabinet(oldLentHistory.getExpiredAt(), now, newCabinetLentUserCount);
+		lentPolicyService.verifySwapPrivateCabinet(oldLentHistory.getExpiredAt(), now,
+				newCabinetLentUserCount);
 		lentCommandService.startLent(userId, newCabinetId, now, oldLentHistory.getExpiredAt());
 		cabinetCommandService.changeStatus(newCabinet, CabinetStatus.FULL);
 
