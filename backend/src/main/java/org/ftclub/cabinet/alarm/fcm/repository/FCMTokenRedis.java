@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class FCMTokenRedis {
 
-	private static final String KEY_PREFIX = ":cabinet-fcm-token";
+	private static final String KEY_PREFIX = ":cabinetFcmToken";
 
 	private final StringRedisTemplate redisTemplate;
 	private final ObjectMapper objectMapper;
