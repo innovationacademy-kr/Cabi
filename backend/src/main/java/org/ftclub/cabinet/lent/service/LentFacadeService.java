@@ -358,7 +358,7 @@ public class LentFacadeService {
 		LentHistory oldLentHistory = lentQueryService.findUserActiveLentHistoryAndCabinet(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_LENT_HISTORY::asServiceException);
 		Cabinet oldCabinet = cabinetQueryService.findCabinet(oldLentHistory.getCabinetId());
-		Cabinet newCabinet = cabinetQueryService.getUserActiveCabinetForUpdate(newCabinetId);
+		Cabinet newCabinet = cabinetQueryService.findCabinet(newCabinetId);
 		lentPolicyService.verifyCabinetType(oldCabinet.getLentType(), LentType.PRIVATE);
 		lentPolicyService.verifyCabinetType(newCabinet.getLentType(), LentType.PRIVATE);
 		lentPolicyService.verifyCabinetForLent(newCabinet.getStatus(), newCabinet.getLentType());
