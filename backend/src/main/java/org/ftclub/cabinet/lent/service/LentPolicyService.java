@@ -72,6 +72,8 @@ public class LentPolicyService {
 				throw ExceptionStatus.INVALID_LENT_TYPE.asServiceException();
 			case INVALID_ARGUMENT:
 				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			case SWAP_SAME_CABINET:
+				throw ExceptionStatus.SWAP_SAME_CABINET.asServiceException();
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:
@@ -267,8 +269,10 @@ public class LentPolicyService {
 	}
 
 	public void verifySelfSwap(Long oldCabinetId, Long newCabinetId) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (oldCabinetId.equals(newCabinetId)) {
-			throw ExceptionStatus.SWAP_SAME_CABINET.asServiceException();
+			status = LentPolicyStatus.SWAP_SAME_CABINET;
 		}
+		handlePolicyStatus(status, null);
 	}
 }
