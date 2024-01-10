@@ -5,7 +5,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -24,8 +24,7 @@ import java.nio.file.Paths;
 public class FCMInitializer {
 
 	private final ResourceLoader resourceLoader;
-	@Value("${firebase.messaging.credentials.path}")
-	private String credentialsPath;
+	private final FirebaseConfig firebaseConfig;
 
 	@PostConstruct
 	public void initialize() throws IOException {
@@ -33,7 +32,7 @@ public class FCMInitializer {
 		if (currentPath.endsWith("backend")) {
 			currentPath = currentPath.getParent();
 		}
-		Resource resource = resourceLoader.getResource("file:" + currentPath + credentialsPath);
+		Resource resource = resourceLoader.getResource("file:" + currentPath + firebaseConfig.getCredentialsPath());
 		try (InputStream inputStream = resource.getInputStream()) {
 			FirebaseOptions options = FirebaseOptions.builder()
 					.setCredentials(GoogleCredentials.fromStream(inputStream))
