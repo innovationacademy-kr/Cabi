@@ -1,8 +1,21 @@
 package org.ftclub.cabinet.admin.statistics.service;
 
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.BROKEN;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.OVERDUE;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
+import org.ftclub.cabinet.dto.CabinetFloorStatisticsResponseDto;
+import org.ftclub.cabinet.dto.LentsStatisticsResponseDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetDto;
+import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
+import org.ftclub.cabinet.dto.UserBlockedInfoDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -19,12 +32,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.*;
 
 /**
  * 관리자 페이지에서 사용되는 통계 서비스
@@ -48,7 +55,7 @@ public class AdminStatisticsFacadeService {
 	 * @return 캐비넷 정보 리스트
 	 */
 	public List<CabinetFloorStatisticsResponseDto> getAllCabinetsInfo() {
-		List<String> buildings = cabinetQueryService.getAllBuildings();
+		List<String> buildings = cabinetQueryService.findAllBuildings();
 		List<Integer> floors = cabinetQueryService.findAllFloorsByBuildings(buildings);
 		return floors.stream().map(floor -> {
 			Integer used = cabinetQueryService.countCabinets(FULL, floor);

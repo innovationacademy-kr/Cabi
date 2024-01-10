@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.cabinet.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
@@ -12,10 +15,6 @@ import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,19 +32,6 @@ public class CabinetQueryService {
 	 */
 	public int countCabinets(CabinetStatus status, Integer floor) {
 		return cabinetRepository.countByStatusAndFloor(status, floor);
-	}
-
-	/*------------------------------------------  GET  -------------------------------------------*/
-
-
-	/**
-	 * 모든 건물을 가져옵니다.(새롬관, 서초)
-	 *
-	 * @return 모든 건물 이름을 반환합니다.
-	 */
-	public List<String> getAllBuildings() {
-		return cabinetRepository.getAllBuildings()
-				.orElseThrow(ExceptionStatus.NOT_FOUND_BUILDING::asServiceException);
 	}
 
 	/*------------------------------------------  FIND  -------------------------------------------*/
@@ -170,7 +156,7 @@ public class CabinetQueryService {
 	 * @return 사물함
 	 */
 	public List<ActiveCabinetInfoEntities> findActiveCabinetInfoEntities(String building,
-	                                                                     Integer floor) {
+			Integer floor) {
 		return cabinetRepository.findCabinetsActiveLentHistoriesByBuildingAndFloor(building, floor);
 	}
 
