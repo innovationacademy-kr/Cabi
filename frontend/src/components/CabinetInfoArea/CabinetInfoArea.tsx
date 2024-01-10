@@ -26,6 +26,7 @@ import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import SwapModal from "../Modals/SwapModal/SwapModal";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -140,6 +141,8 @@ const CabinetInfoArea: React.FC<{
                     openModal(
                       selectedCabinetInfo.status == "IN_SESSION"
                         ? "invitationCodeModal"
+                        : isSwappable
+                        ? "swapModal"
                         : "lentModal"
                     )
                   }
@@ -254,6 +257,12 @@ const CabinetInfoArea: React.FC<{
         <ExtendModal
           onClose={() => closeModal("extendModal")}
           cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
+      {userModal.swapModal && (
+        <SwapModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={() => closeModal("lentModal")}
         />
       )}
     </CabinetDetailAreaStyled>

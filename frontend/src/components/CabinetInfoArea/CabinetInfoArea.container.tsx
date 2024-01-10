@@ -56,6 +56,7 @@ export interface ICurrentModalStateInfo {
   invitationCodeModal: boolean;
   extendModal: boolean;
   cancelModal: boolean;
+  swapModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -81,7 +82,8 @@ export type TModalState =
   | "passwordCheckModal"
   | "invitationCodeModal"
   | "extendModal"
-  | "cancelModal";
+  | "cancelModal"
+  | "swapModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -178,6 +180,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     invitationCodeModal: false,
     extendModal: false,
     cancelModal: false,
+    swapModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -253,6 +256,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       cabinetViewData.lentsLength >= 1
     ) {
       modalName = "extendModal";
+    } else if (modalName === "swapModal") {
+      modalName = "swapModal";
     }
     setUserModal({
       ...userModal,
