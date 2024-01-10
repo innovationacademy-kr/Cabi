@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -7,7 +10,6 @@ import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserVerifyRequestDto;
 import org.ftclub.cabinet.exception.CustomExceptionStatus;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -16,10 +18,6 @@ import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -259,12 +257,18 @@ public class LentPolicyService {
 	public void verifySwapPrivateCabinet(LocalDateTime expiredAt, LocalDateTime now,
 			int userCount) {
 		LentPolicyStatus status = LentPolicyStatus.FINE;
-		if (!expiredAt.isBefore(now.plusDays(1))) {
+		if (expiredAt.isBefore(now.plusDays(1))) {
 			status = LentPolicyStatus.SWAP_EXPIREDAT_IMMINENT;
 		}
 		if (userCount != 0) {
 			status = LentPolicyStatus.FULL_CABINET;
 		}
 		handlePolicyStatus(status, null);
+	}
+
+	public void verifySelfSwap(Long oldCabinetId, Long newCabinetId) {
+		if (oldCabinetId.equals(newCabinetId)) {
+			throw ExceptionStatus.SWAP_SAME_CABINET.asServiceException();
+		}
 	}
 }

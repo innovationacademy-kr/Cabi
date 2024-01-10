@@ -104,7 +104,7 @@ public class LentFacadeService {
 			}
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 			List<User> userList = userQueryService.getUsers(usersInCabinet);
-			userActiveCabinet = cabinetQueryService.findCabinet(cabinetId);
+			userActiveCabinet = cabinetQueryService.getCabinet(cabinetId);
 			lentDtoList = userList.stream()
 					.map(u -> lentMapper.toLentDto(u, null)).collect(Collectors.toList());
 		} else {
@@ -232,7 +232,7 @@ public class LentFacadeService {
 	public void startLentClubCabinet(Long userId, Long cabinetId) {
 		LocalDateTime now = LocalDateTime.now();
 		// TODO : userId로 ClubUser 검증 로직 필요(Policy)
-		Cabinet cabinet = cabinetQueryService.findCabinet(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
 
 		lentPolicyService.verifyCabinetLentCount(
@@ -366,8 +366,9 @@ public class LentFacadeService {
 		LocalDateTime now = LocalDateTime.now();
 		LentHistory oldLentHistory = lentQueryService.getUserActiveLentHistoryWithCabinet(userId);
 
-		Cabinet oldCabinet = cabinetQueryService.findCabinet(oldLentHistory.getCabinetId());
-		Cabinet newCabinet = cabinetQueryService.findCabinet(newCabinetId);
+		Cabinet oldCabinet = cabinetQueryService.getCabinet(oldLentHistory.getCabinetId());
+		lentPolicyService.verifySelfSwap(oldCabinet.getId(), oldCabinet.getId());
+		Cabinet newCabinet = cabinetQueryService.getCabinet(newCabinetId);
 
 		lentPolicyService.verifyCabinetType(oldCabinet.getLentType(), LentType.PRIVATE);
 		lentPolicyService.verifyCabinetType(newCabinet.getLentType(), LentType.PRIVATE);
@@ -380,7 +381,7 @@ public class LentFacadeService {
 		cabinetCommandService.changeStatus(newCabinet, CabinetStatus.FULL);
 
 		lentCommandService.endLent(oldLentHistory, now);
-		cabinetCommandService.changeStatus(oldCabinet, CabinetStatus.AVAILABLE);
+		cabinetCommandService.changeStatus(oldCabinet, CabinetStatus.PENDING);
 
 		lentRedisService.setSwapRecord(userId);
 	}
