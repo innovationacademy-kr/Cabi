@@ -53,12 +53,14 @@ public enum ExceptionStatus {
 	EXTENSION_SOLO_IN_SHARE_NOT_ALLOWED(HttpStatus.UNAUTHORIZED, "연장권은 1명일 때 사용할 수 없습니다."),
 	EXTENSION_LENT_DELAYED(HttpStatus.UNAUTHORIZED, "연장권은 연체된 사물함에 사용할 수 없습니다."),
 	MAIL_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "메일 전송 중 에러가 발생했습니다"),
-	SLACK_REQUEST_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 인증 중 에러가 발생했습니다"),
-	SLACK_MESSAGE_SEND_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 메세지 전송 중 에러가 발생했습니다"),
+	SLACK_REQUEST_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 인증 중 에러가 발생했습니다."),
+	SLACK_MESSAGE_SEND_BAD_GATEWAY(HttpStatus.BAD_GATEWAY, "슬랙 메세지 전송 중 에러가 발생했습니다."),
 	SLACK_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "슬랙 아이디를 찾을 수 없습니다."),
 	NOT_FOUND_ALARM(HttpStatus.BAD_REQUEST, "알람이 존재하지 않습니다"),
 	INVALID_LENT_TYPE(HttpStatus.BAD_REQUEST, "사물함의 대여 타입이 유효하지 않습니다."),
-	NOT_FOUND_BUILDING(HttpStatus.NOT_FOUND, "빌딩이 존재하지 않습니다.");
+	NOT_FOUND_BUILDING(HttpStatus.NOT_FOUND, "빌딩이 존재하지 않습니다."),
+	SWAP_EXPIRE_IMMINENT(HttpStatus.I_AM_A_TEAPOT, "현재 사물함의 대여 기간의 만료가 임박해 사물함을 이동 할 수 없습니다."),
+	;
 
 	final private int statusCode;
 	final private String message;

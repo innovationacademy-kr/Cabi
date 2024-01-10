@@ -7,6 +7,7 @@ import org.ftclub.cabinet.config.CabinetProperties;
 import org.ftclub.cabinet.dto.UserVerifyRequestDto;
 import org.ftclub.cabinet.exception.CustomExceptionStatus;
 import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.exception.ServiceException;
 import org.ftclub.cabinet.lent.domain.LentPolicyStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -54,15 +55,19 @@ public class LentPolicyService {
 			case ALL_BANNED_USER:
 				unbannedAtString = unbannedAt.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER, unbannedAtString).asCustomServiceException();
+				throw new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER,
+						unbannedAtString).asCustomServiceException();
 			case SHARE_BANNED_USER:
 				unbannedAtString = unbannedAt.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED, unbannedAtString).asCustomServiceException();
+				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED,
+						unbannedAtString).asCustomServiceException();
 			case BLACKHOLED_USER:
 				throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 			case PENDING_CABINET:
 				throw ExceptionStatus.LENT_PENDING.asServiceException();
+			case SWAP_EXPIREDAT_IMMINENT:
+				throw ExceptionStatus.SWAP_EXPIRE_IMMINENT.asServiceException();
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:
@@ -172,7 +177,7 @@ public class LentPolicyService {
 	 * @return 만료 시간
 	 */
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
-	                                            int lentUserCount) {
+			int lentUserCount) {
 		if (!DateUtil.isSameDay(now)) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 		}
@@ -199,7 +204,7 @@ public class LentPolicyService {
 	 * @return 조정된 만료 시간
 	 */
 	public LocalDateTime adjustShareCabinetExpirationDate(int userCount, LocalDateTime now,
-	                                                      LocalDateTime expiredAt) {
+			LocalDateTime expiredAt) {
 		double daysUntilExpiration = DateUtil.calculateTwoDateDiffCeil(now, expiredAt);
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;
 		long secondsRemaining = Math.round(secondsUntilExpiration * userCount / (userCount + 1));
@@ -228,6 +233,25 @@ public class LentPolicyService {
 		Long shareMaxAttemptCount = cabinetProperties.getShareMaxAttemptCount();
 		if (Objects.nonNull(attemptCount) && attemptCount >= shareMaxAttemptCount) {
 			status = LentPolicyStatus.SHARE_BANNED_USER;
+		}
+		handlePolicyStatus(status, null);
+	}
+
+	/**
+	 * 개인 사물함에 SWAP이 가능한지 확인합니다.
+	 *
+	 * @param expiredAt 현재 대여 중인 사물함의 만료 기한
+	 * @param now       현재 시간
+	 * @param userCount 대여하려는 사물함의 대여 중인 유저 수
+	 */
+	public void verifySwapPrivateCabinet(LocalDateTime expiredAt, LocalDateTime now,
+			int userCount) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
+		if (!expiredAt.isBefore(now.plusDays(1))) {
+			status = LentPolicyStatus.SWAP_EXPIREDAT_IMMINENT;
+		}
+		if (userCount != 0) {
+			status = LentPolicyStatus.FULL_CABINET;
 		}
 		handlePolicyStatus(status, null);
 	}
