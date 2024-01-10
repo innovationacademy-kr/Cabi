@@ -37,6 +37,7 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
+  isSwappable: boolean;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -47,6 +48,7 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
+  isSwappable,
 }) => {
   const isExtensionVisible =
     isMine &&
@@ -141,10 +143,11 @@ const CabinetInfoArea: React.FC<{
                         : "lentModal"
                     )
                   }
-                  text="대여"
+                  text={isSwappable ? "이사하기" : "대여"}
                   theme="fill"
                   disabled={
-                    !isAvailable || selectedCabinetInfo.lentType === "CLUB"
+                    selectedCabinetInfo.lentType === "CLUB" ||
+                    (!isAvailable && !isSwappable)
                   }
                 />
                 <ButtonContainer

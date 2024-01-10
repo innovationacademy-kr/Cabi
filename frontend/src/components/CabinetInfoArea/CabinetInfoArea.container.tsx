@@ -335,6 +335,13 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
+      isSwappable={
+        myCabinetInfo.lentType === CabinetType.PRIVATE &&
+        !!myCabinetInfo.cabinetId &&
+        cabinetViewData?.lentType === CabinetType.PRIVATE &&
+        cabinetViewData?.cabinetId !== myCabinetInfo.cabinetId &&
+        cabinetViewData?.status === CabinetStatus.AVAILABLE
+      }
     />
   );
 };
