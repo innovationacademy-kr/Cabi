@@ -1,60 +1,48 @@
 package org.ftclub.cabinet.alarm.fcm.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.ftclub.cabinet.alarm.fcm.repository.FCMTokenRedis;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Logging(level = LogLevel.DEBUG)
 public class FCMTokenRedisService {
 
-	private static final String KEY_PREFIX = "cabinet-fcm-token:";
-
-	private final StringRedisTemplate redisTemplate;
-	private final ObjectMapper objectMapper;
+	private final FCMTokenRedis fcmTokenRedis;
 
 
 	/**
-	 * @param key  조회할 키
-	 * @param type 조회할 값의 타입
-	 * @return 조회된 값
+	 * 유저의 이름으로 토큰을 조회합니다.
+	 *
+	 * @param userName 유저 이름 (조회할 키)
+	 * @return Optional<String> 조회된 값
 	 */
-	public <T> Optional<T> findByKey(String key, Class<T> type) {
-		String serializedValue = redisTemplate.opsForValue().get(KEY_PREFIX + key);
-		if (serializedValue == null) {
-			return Optional.empty();
-		}
-		try {
-			return Optional.of(objectMapper.readValue(serializedValue, type));
-		} catch (Exception e) {
-			log.error("Redis findByKey error", e);
-		}
-		return Optional.empty();
+	public Optional<String> findByUserName(String userName) {
+		return fcmTokenRedis.findByKey(userName, String.class);
 	}
 
 	/**
-	 * @param key      저장할 키
-	 * @param data     저장할 값
-	 * @param duration 저장할 기간
+	 * 유저의 이름으로 디바이스 토큰을 저장합니다.
+	 *
+	 * @param userName    유저 이름
+	 * @param deviceToken 디바이스 토큰
+	 * @param duration    저장할 기간
 	 */
-	public <T> void save(String key, T data, Duration duration) {
-		try {
-			String serializedValue = objectMapper.writeValueAsString(data);
-			redisTemplate.opsForValue().set(KEY_PREFIX + key, serializedValue, duration);
-		} catch (Exception e) {
-			log.error("Redis save error", e);
-		}
+	public void saveToken(String userName, String deviceToken, Duration duration) {
+		fcmTokenRedis.save(userName, deviceToken, duration);
 	}
 
 	/**
-	 * @param key 삭제할 키
+	 * 유저의 이름으로 디바이스 토큰을 삭제합니다.
+	 *
+	 * @param userName 유저 이름 (삭제할 키)
 	 */
-	public boolean delete(String key) {
-		return Boolean.TRUE.equals(redisTemplate.delete(KEY_PREFIX + key));
+	public boolean deleteByUserName(String userName) {
+		return fcmTokenRedis.delete(userName);
 	}
 }

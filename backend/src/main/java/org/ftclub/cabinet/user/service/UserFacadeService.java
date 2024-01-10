@@ -54,7 +54,7 @@ public class UserFacadeService {
         LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
         User currentUser = userQueryService.getUser(user.getUserId());
 		boolean isDeviceTokenExpired = currentUser.getAlarmTypes().isPush()
-				&& fcmTokenRedisService.findByKey(user.getName(), String.class).isEmpty();
+				&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
         return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
                 lentExtensionResponseDto, currentUser.getAlarmTypes(), isDeviceTokenExpired);
     }
@@ -132,7 +132,7 @@ public class UserFacadeService {
 	@Transactional
 	public void updateDeviceToken(UserSessionDto userSessionDto, UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
 		User user = userQueryService.getUser(userSessionDto.getUserId());
-		fcmTokenRedisService.save(
+		fcmTokenRedisService.saveToken(
 				user.getName(),
 				updateDeviceTokenRequestDto.getDeviceToken(),
 				Duration.ofDays(firebaseConfig.getDeviceTokenExpiryDays())

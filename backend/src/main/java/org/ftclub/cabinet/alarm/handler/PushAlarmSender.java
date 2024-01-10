@@ -30,7 +30,7 @@ public class PushAlarmSender {
 	public void send(User user, AlarmEvent alarmEvent) {
 		log.info("push alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
 
-		Optional<String> token = fcmTokenRedisService.findByKey(user.getName(), String.class);
+		Optional<String> token = fcmTokenRedisService.findByUserName(user.getName());
 		if (token.isEmpty()) {
 			log.warn("\"{}\"에 해당하는 디바이스 토큰이 존재하지 않습니다.", user.getName());
 			return;
