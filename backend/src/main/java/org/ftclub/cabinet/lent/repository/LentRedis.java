@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 public class LentRedis {
 
 	private static final String USER_ENTERED = "entered";
+	private static final String USER_SWAPPED = "swapped";
 	private static final String SHADOW_KEY_SUFFIX = ":shadow";
 	private static final String VALUE_KEY_SUFFIX = ":user";
 	private static final String PREVIOUS_USER_SUFFIX = ":previousUser";
@@ -217,7 +218,8 @@ public class LentRedis {
 	public LocalDateTime getCabinetExpiredAt(String cabinetId) {
 		if (this.isExistShadowKey(cabinetId)) {
 			String shadowKey = cabinetId + SHADOW_KEY_SUFFIX;
-			long expire = shadowKeyTemplate.getExpire(shadowKey, TimeUnit.SECONDS).longValue();
+			@SuppressWarnings("ConstantConditions")
+			long expire = shadowKeyTemplate.getExpire(shadowKey, TimeUnit.SECONDS);
 			return LocalDateTime.now().plusSeconds(expire);
 		}
 		return null;
@@ -261,15 +263,16 @@ public class LentRedis {
 	/**
 	 * 유저가 swap 가능한 시각을 조회합니다.
 	 *
-	 * @param userId 유저ID
-	 * @return swqp 가능한 시각
+	 * @param userId 유저 ID
+	 * @return swap 가능한 시각
 	 */
 	public LocalDateTime getSwapExpiredTime(String userId) {
-		if (!isExistPreviousSwap(userId)) {
+		if (!this.isExistPreviousSwap(userId)) {
 			return null;
 		}
-		long expire = swapTemplate.getExpire(userId + SWAP_KEY_SUFFIX, TimeUnit.SECONDS)
-				.longValue();
+		String swapKey = userId + SWAP_KEY_SUFFIX;
+		@SuppressWarnings("ConstantConditions")
+		long expire = swapTemplate.getExpire(swapKey, TimeUnit.SECONDS);
 		return LocalDateTime.now().plusSeconds(expire);
 	}
 
@@ -277,12 +280,10 @@ public class LentRedis {
 	 * swap 하는 유저의 swap 이력을 저장합니다. 기한을 설정합니다
 	 *
 	 * @param userId 유저 ID
-	 * @return 유저ID+suffix (Redis key)
 	 */
-	public String setSwap(String userId) {
+	public void setSwap(String userId) {
 		final String swapKey = userId + SWAP_KEY_SUFFIX;
-		swapTemplate.opsForValue().set(swapKey, userId);
+		swapTemplate.opsForValue().set(swapKey, USER_SWAPPED);
 		swapTemplate.expire(swapKey, cabinetProperties.getSwapTermPrivateDays(), TimeUnit.DAYS);
-		return swapKey;
 	}
 }
