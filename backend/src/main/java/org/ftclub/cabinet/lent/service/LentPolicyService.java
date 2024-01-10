@@ -50,6 +50,8 @@ public class LentPolicyService {
 				throw ExceptionStatus.LENT_CLUB.asServiceException();
 			case IMMINENT_EXPIRATION:
 				throw ExceptionStatus.LENT_EXPIRE_IMMINENT.asServiceException();
+			case INVALID_EXPIREDAT:
+				throw ExceptionStatus.INVALID_EXPIRED_AT.asServiceException();
 			case ALREADY_LENT_USER:
 				throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
 			case ALL_BANNED_USER:
@@ -68,6 +70,10 @@ public class LentPolicyService {
 				throw ExceptionStatus.LENT_PENDING.asServiceException();
 			case SWAP_EXPIREDAT_IMMINENT:
 				throw ExceptionStatus.SWAP_EXPIRE_IMMINENT.asServiceException();
+			case INVALID_LENT_TYPE:
+				throw ExceptionStatus.INVALID_LENT_TYPE.asServiceException();
+			case INVALID_ARGUMENT:
+				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:
@@ -143,9 +149,11 @@ public class LentPolicyService {
 	 * @param lentType        대여 타입
 	 */
 	public void verifyCabinetType(LentType cabinetLentType, LentType lentType) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (!cabinetLentType.equals(lentType)) {
-			throw ExceptionStatus.INVALID_LENT_TYPE.asServiceException();
+			status = LentPolicyStatus.INVALID_LENT_TYPE;
 		}
+		handlePolicyStatus(status, null);
 	}
 
 	/**
@@ -156,16 +164,18 @@ public class LentPolicyService {
 	 * @param lentCount    현재 대여 중인 유저 수
 	 */
 	public void verifyCabinetLentCount(LentType lentType, int maxUserCount, int lentCount) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
 		int maxLentCount = 1;
 		if (lentType.equals(LentType.SHARE)) {
 			maxLentCount = cabinetProperties.getShareMaxUserCount().intValue();
 		}
 		if (maxUserCount != maxLentCount) {
-			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
+			status = LentPolicyStatus.INTERNAL_ERROR;
 		}
 		if (lentCount >= maxLentCount) {
-			throw ExceptionStatus.LENT_FULL.asServiceException();
+			status = LentPolicyStatus.FULL_CABINET;
 		}
+		handlePolicyStatus(status, null);
 	}
 
 	/**
@@ -178,8 +188,9 @@ public class LentPolicyService {
 	 */
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
 			int lentUserCount) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (!DateUtil.isSameDay(now)) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			status = LentPolicyStatus.INVALID_ARGUMENT;
 		}
 		int lentTerm = 0;
 		if (lentType.equals(LentType.PRIVATE)) {
@@ -190,8 +201,9 @@ public class LentPolicyService {
 		}
 		LocalDateTime expiredAt = DateUtil.setLastTime(now.plusDays(lentTerm));
 		if (DateUtil.isPast(expiredAt)) {
-			throw ExceptionStatus.INVALID_EXPIRED_AT.asServiceException();
+			status = LentPolicyStatus.INVALID_EXPIREDAT;
 		}
+		handlePolicyStatus(status, null);
 		return expiredAt;
 	}
 
