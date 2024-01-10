@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.lent.service;
 
-import static org.ftclub.cabinet.cabinet.domain.LentType.PRIVATE;
-import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -92,9 +90,11 @@ public class LentFacadeService {
 	 * @return 대여 정보
 	 */
 	@Transactional(readOnly = true)
-	public MyCabinetResponseDto getMyLentInfo(@UserSession UserSessionDto user) {
+	public MyCabinetResponseDto getMyLentInfo(
+			@UserSession UserSessionDto user) { // TODO : UserSession은 컨트롤러에서 받아오도록 수정 필요
 		LentHistory userLentHistory =
-				lentQueryService.findUserActiveLentHistoryAndCabinet(user.getUserId());
+				lentQueryService.findUserActiveLentHistoryAndCabinet(user.getUserId())
+						.get(); // TODO : find의 Optional을 고려한 로직으로 리팩터링
 		Long cabinetId;
 		Cabinet userActiveCabinet;
 		List<LentDto> lentDtoList;
@@ -161,12 +161,12 @@ public class LentFacadeService {
 
 		lentPolicyService.verifyCabinetLentCount(
 				cabinet.getLentType(), cabinet.getMaxUser(), userCount);
-		lentPolicyService.verifyCabinetType(cabinet.getLentType(), PRIVATE);
+		lentPolicyService.verifyCabinetType(cabinet.getLentType(), LentType.PRIVATE);
 		lentPolicyService.verifyUserForLent(new UserVerifyRequestDto(user.getRole(),
 				user.getBlackholedAt(), lentCount, cabinetId, cabinet.getStatus(), banHistories));
 		lentPolicyService.verifyCabinetForLent(cabinet.getStatus(), cabinet.getLentType());
 
-		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, PRIVATE, 1);
+		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.PRIVATE, 1);
 		lentCommandService.startLent(user.getId(), cabinet.getId(), now, expiredAt);
 		cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
 		cabinetCommandService.changeUserCount(cabinet, lentCount + 1);
@@ -188,7 +188,7 @@ public class LentFacadeService {
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
 		lentPolicyService.verifyCabinetLentCount(
 				cabinet.getLentType(), cabinet.getMaxUser(), userCount);
-		lentPolicyService.verifyCabinetType(cabinet.getLentType(), SHARE);
+		lentPolicyService.verifyCabinetType(cabinet.getLentType(), LentType.SHARE);
 
 		List<BanHistory> banHistories = banHistoryQueryService.findActiveBanHistories(userId, now);
 		int lentCount = lentQueryService.countUserActiveLent(userId);
@@ -209,7 +209,7 @@ public class LentFacadeService {
 		if (lentRedisService.isCabinetSessionFull(cabinetId)) {
 			List<Long> userIdsInCabinet = lentRedisService.getUsersInCabinet(cabinetId);
 			LocalDateTime expiredAt =
-					lentPolicyService.generateExpirationDate(now, SHARE, userIdsInCabinet.size());
+					lentPolicyService.generateExpirationDate(now, LentType.SHARE, userIdsInCabinet.size());
 			lentCommandService.startLent(userIdsInCabinet, cabinet.getId(), now, expiredAt);
 			lentRedisService.clearCabinetSession(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
@@ -281,7 +281,7 @@ public class LentFacadeService {
 			LocalDateTime unbannedAt = banPolicyService.getUnBannedAt(now, expiredAt);
 			banHistoryCommandService.banUser(userId, now, unbannedAt, banType);
 		}
-		if (cabinet.isLentType(SHARE)) {
+		if (cabinet.isLentType(LentType.SHARE)) {
 			LocalDateTime newExpiredAt = lentPolicyService.adjustShareCabinetExpirationDate(
 					userRemainCount, now, expiredAt);
 			List<Long> lentHistoryIds = lentHistories.stream()
@@ -334,7 +334,7 @@ public class LentFacadeService {
 		if (lentPolicyService.checkUserCountOnShareCabinet(usersInCabinetSession.size())) {
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(
-					now, SHARE, usersInCabinetSession.size());
+					now, LentType.SHARE, usersInCabinetSession.size());
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
 			lentCommandService.startLent(usersInCabinetSession, cabinetId, now, expiredAt);
 		} else {
@@ -342,5 +342,33 @@ public class LentFacadeService {
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		}
 		lentRedisService.confirmCabinetSession(cabinetId, usersInCabinetSession);
+	}
+
+	/**
+	 * 개인 사물함을 스왑합니다.
+	 * <p>
+	 * 만료까지 1일 이상이 남은 개인 사물함을 대여 중인 사용자가 다른 사용가능한 개인 사물함을 대여할 수 있습니다.
+	 *
+	 * @param userId       스왑하려는 사용자 ID
+	 * @param newCabinetId 스왑하고자 하는 사물함 ID
+	 */
+	@Transactional
+	public void swapPrivateCabinet(Long userId, Long newCabinetId) {
+		LocalDateTime now = LocalDateTime.now();
+		LentHistory oldLentHistory = lentQueryService.findUserActiveLentHistoryAndCabinet(userId)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_LENT_HISTORY::asServiceException);
+		Cabinet oldCabinet = cabinetQueryService.findCabinet(oldLentHistory.getCabinetId());
+		Cabinet newCabinet = cabinetQueryService.getUserActiveCabinetForUpdate(newCabinetId);
+		lentPolicyService.verifyCabinetType(oldCabinet.getLentType(), LentType.PRIVATE);
+		lentPolicyService.verifyCabinetType(newCabinet.getLentType(), LentType.PRIVATE);
+		lentPolicyService.verifyCabinetForLent(newCabinet.getStatus(), newCabinet.getLentType());
+
+		int newCabinetLentUserCount = lentQueryService.countCabinetUser(newCabinetId);
+		lentPolicyService.verifySwapPrivateCabinet(oldLentHistory.getExpiredAt(), now, newCabinetLentUserCount);
+		lentCommandService.startLent(userId, newCabinetId, now, oldLentHistory.getExpiredAt());
+		cabinetCommandService.changeStatus(newCabinet, CabinetStatus.FULL);
+
+		lentCommandService.endLent(oldLentHistory, now);
+		cabinetCommandService.changeStatus(oldCabinet, CabinetStatus.AVAILABLE);
 	}
 }
