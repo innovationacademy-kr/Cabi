@@ -11,7 +11,7 @@ import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.UserMapper;
-import org.ftclub.cabinet.redis.service.RedisService;
+import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
 import org.ftclub.cabinet.user.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,7 @@ public class UserFacadeService {
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
 	private final UserMapper userMapper;
-	private final RedisService redisService;
+	private final FCMTokenRedisService fcmTokenRedisService;
 
     /**
      * 유저의 프로필을 가져옵니다.
@@ -128,7 +128,7 @@ public class UserFacadeService {
 	@Transactional
 	public void updateDeviceToken(UserSessionDto userSessionDto, UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
 		User user = userQueryService.getUser(userSessionDto.getUserId());
-		redisService.save(user.getName(), updateDeviceTokenRequestDto.getDeviceToken(), Duration.ofDays(30));
+		fcmTokenRedisService.save(user.getName(), updateDeviceTokenRequestDto.getDeviceToken(), Duration.ofDays(30));
 	}
 }
 

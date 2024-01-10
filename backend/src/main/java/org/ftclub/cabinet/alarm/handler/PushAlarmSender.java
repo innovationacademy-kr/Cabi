@@ -9,7 +9,7 @@ import org.ftclub.cabinet.alarm.domain.*;
 import org.ftclub.cabinet.alarm.dto.FCMDto;
 import org.ftclub.cabinet.config.DomainProperties;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.redis.service.RedisService;
+import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
 import org.ftclub.cabinet.user.domain.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -24,13 +24,13 @@ public class PushAlarmSender {
 
 	private static final String ICON_FILE_PATH = "/src/assets/images/logo.svg";
 	private final AlarmProperties alarmProperties;
-	private final RedisService redisService;
+	private final FCMTokenRedisService fcmTokenRedisService;
 	private final DomainProperties domainProperties;
 
 	public void send(User user, AlarmEvent alarmEvent) {
 		log.info("push alarm Event : user = {}, alarmEvent = {}", user, alarmEvent);
 
-		Optional<String> token = redisService.findByKey(user.getName(), String.class);
+		Optional<String> token = fcmTokenRedisService.findByKey(user.getName(), String.class);
 		if (token.isEmpty()) {
 			log.warn("\"{}\"에 해당하는 디바이스 토큰이 존재하지 않습니다.", user.getName());
 			return;
