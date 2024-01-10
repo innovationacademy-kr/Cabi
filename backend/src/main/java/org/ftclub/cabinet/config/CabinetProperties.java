@@ -28,4 +28,7 @@ public class CabinetProperties {
 	private Integer inSessionTerm;
 	@Value("${cabinet.policy.lent.limit.share.max-attempt-count}")
 	private Long shareMaxAttemptCount;
+	@Value("${cabinet.policy.swap.term.private}")
+	private Integer swapTermPrivateDays;
+
 }
