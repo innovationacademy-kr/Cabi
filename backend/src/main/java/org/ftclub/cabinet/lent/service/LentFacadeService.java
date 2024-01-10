@@ -31,7 +31,6 @@ import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanType;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.service.BanHistoryCommandService;
 import org.ftclub.cabinet.user.service.BanHistoryQueryService;
 import org.ftclub.cabinet.user.service.BanPolicyService;
@@ -92,11 +91,9 @@ public class LentFacadeService {
 	 * @return 대여 정보
 	 */
 	@Transactional(readOnly = true)
-	public MyCabinetResponseDto getMyLentInfo(
-			@UserSession UserSessionDto user) { // TODO : UserSession은 컨트롤러에서 받아오도록 수정 필요
+	public MyCabinetResponseDto getMyLentInfo(UserSessionDto user) {
 		LentHistory userLentHistory =
-				lentQueryService.findUserActiveLentHistoryAndCabinet(user.getUserId())
-						.get(); // TODO : find의 Optional을 고려한 로직으로 리팩터링
+				lentQueryService.findUserActiveLentHistoryWithCabinet(user.getUserId());
 		Long cabinetId;
 		Cabinet userActiveCabinet;
 		List<LentDto> lentDtoList;
@@ -367,8 +364,7 @@ public class LentFacadeService {
 		}
 
 		LocalDateTime now = LocalDateTime.now();
-		LentHistory oldLentHistory = lentQueryService.findUserActiveLentHistoryAndCabinet(userId)
-				.orElseThrow(ExceptionStatus.NOT_FOUND_LENT_HISTORY::asServiceException);
+		LentHistory oldLentHistory = lentQueryService.getUserActiveLentHistoryWithCabinet(userId);
 
 		Cabinet oldCabinet = cabinetQueryService.findCabinet(oldLentHistory.getCabinetId());
 		Cabinet newCabinet = cabinetQueryService.findCabinet(newCabinetId);
