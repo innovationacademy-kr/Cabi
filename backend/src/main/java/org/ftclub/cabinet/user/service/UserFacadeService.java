@@ -2,6 +2,7 @@ package org.ftclub.cabinet.user.service;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.*;
@@ -35,6 +36,7 @@ public class UserFacadeService {
 	private final UserCommandService userCommandService;
 	private final UserMapper userMapper;
 	private final FCMTokenRedisService fcmTokenRedisService;
+	private final FirebaseConfig firebaseConfig;
 
     /**
      * 유저의 프로필을 가져옵니다.
@@ -51,8 +53,10 @@ public class UserFacadeService {
 
         LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
         User currentUser = userQueryService.getUser(user.getUserId());
+		boolean isDeviceTokenExpired = currentUser.getAlarmTypes().isPush()
+				&& fcmTokenRedisService.findByKey(user.getName(), String.class).isEmpty();
         return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-                lentExtensionResponseDto, currentUser.getAlarmTypes());
+                lentExtensionResponseDto, currentUser.getAlarmTypes(), isDeviceTokenExpired);
     }
 
     /**
@@ -128,7 +132,11 @@ public class UserFacadeService {
 	@Transactional
 	public void updateDeviceToken(UserSessionDto userSessionDto, UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
 		User user = userQueryService.getUser(userSessionDto.getUserId());
-		fcmTokenRedisService.save(user.getName(), updateDeviceTokenRequestDto.getDeviceToken(), Duration.ofDays(30));
+		fcmTokenRedisService.save(
+				user.getName(),
+				updateDeviceTokenRequestDto.getDeviceToken(),
+				Duration.ofDays(firebaseConfig.getDeviceTokenExpiryDays())
+		);
 	}
 }
 

@@ -17,12 +17,11 @@ export const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
+
 // FCM APP을 등록 후 브라우저 알림 권한을 요청하고, 토큰을 반환
 export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
-  const app = initializeApp(firebaseConfig);
-
-  const messaging = getMessaging(app);
-
   console.log("권한 요청 중...");
 
   const permission = await Notification.requestPermission();
@@ -48,11 +47,8 @@ export const requestFcmAndGetDeviceToken = async (): Promise<string | null> => {
   return token;
 };
 
-// FCM APP 제거 및 브라우저 알람 권한 해제
+// FCM 토큰 제거 및 브라우저 알람 권한 해제
 export const deleteFcmToken = async (): Promise<void> => {
-  const app = initializeApp(firebaseConfig);
-
-  const messaging = getMessaging(app);
   await deleteToken(messaging);
   console.log("Token deleted.");
 };
