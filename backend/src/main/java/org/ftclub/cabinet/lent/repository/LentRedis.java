@@ -216,13 +216,13 @@ public class LentRedis {
 	 * @return 공유 사물함의 만료 시간
 	 */
 	public LocalDateTime getCabinetExpiredAt(String cabinetId) {
-		if (this.isExistShadowKey(cabinetId)) {
-			String shadowKey = cabinetId + SHADOW_KEY_SUFFIX;
-			@SuppressWarnings("ConstantConditions")
-			long expire = shadowKeyTemplate.getExpire(shadowKey, TimeUnit.SECONDS);
-			return LocalDateTime.now().plusSeconds(expire);
+		if (!this.isExistShadowKey(cabinetId)) {
+			return null;
 		}
-		return null;
+		String shadowKey = cabinetId + SHADOW_KEY_SUFFIX;
+		@SuppressWarnings("ConstantConditions")
+		long expire = shadowKeyTemplate.getExpire(shadowKey, TimeUnit.SECONDS);
+		return LocalDateTime.now().plusSeconds(expire);
 	}
 
 	/*----------------------------------------  Caching  -----------------------------------------*/
