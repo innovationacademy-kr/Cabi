@@ -78,7 +78,7 @@ public class AdminLentFacadeService {
 			return;
 		}
 
-		Cabinet cabinet = cabinetQueryService.findCabinet(lentHistories.get(0).getCabinetId());
+		Cabinet cabinet = cabinetQueryService.getCabinet(lentHistories.get(0).getCabinetId());
 		// 반납 유저 최대 4명으로 worst 16개 검색 -> set으로 변환하는 것보다 빠르고 메모리 절약
 		List<LentHistory> userLentHistories = lentHistories.stream()
 				.filter(lh -> userIds.contains(lh.getUserId()))

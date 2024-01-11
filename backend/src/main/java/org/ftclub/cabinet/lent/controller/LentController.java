@@ -1,18 +1,28 @@
 package org.ftclub.cabinet.lent.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.CabinetInfoRequestDto;
+import org.ftclub.cabinet.dto.LentEndMemoDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
+import org.ftclub.cabinet.dto.MyCabinetResponseDto;
+import org.ftclub.cabinet.dto.ShareCodeDto;
+import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -142,5 +152,19 @@ public class LentController {
 			@UserSession UserSessionDto user,
 			@Valid Pageable pageable) {
 		return lentFacadeService.getMyLentLog(user, pageable);
+	}
+
+	/**
+	 * 대여중인 사물함에서 새로운 사물함으로 이동
+	 *
+	 * @param user      사용자 세션
+	 * @param cabinetId 이동할 사물함의 ID
+	 */
+	@PostMapping("/swap/{cabinetId}")
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	public void swap(
+			@UserSession UserSessionDto user,
+			@PathVariable Long cabinetId) {
+		lentFacadeService.swapPrivateCabinet(user.getUserId(), cabinetId);
 	}
 }

@@ -223,4 +223,37 @@ public class LentRedisService {
 	public void setPreviousUserName(Long cabinetId, String userName) {
 		lentRedis.setPreviousUserName(cabinetId.toString(), userName);
 	}
+
+	/**
+	 * 정책 기한 이내에 swap 기록이 있는지 확인합니다.
+	 *
+	 * @param userId 유저 이름
+	 * @return
+	 */
+	public boolean isExistSwapRecord(Long userId) {
+		return lentRedis.isExistPreviousSwap(String.valueOf(userId));
+	}
+
+	/**
+	 * swap에 성공한 유저를 등록합니다.
+	 *
+	 * @param userId swap 기능을 사용한 유저 이름
+	 */
+	public void setSwapRecord(Long userId) {
+		lentRedis.setSwap(String.valueOf(userId));
+	}
+
+	/**
+	 * swap 기능이 사용가능한 시간을 리턴합니다.
+	 *
+	 * @param userId 유저 이름
+	 * @return 사용 가능한 시간
+	 */
+	public LocalDateTime getSwapExpiredAt(Long userId) {
+		LocalDateTime swapExpiredTime = lentRedis.getSwapExpiredTime(String.valueOf(userId));
+		if (Objects.isNull(swapExpiredTime)) {
+			throw ExceptionStatus.SWAP_RECORD_NOT_FOUND.asServiceException();
+		}
+		return swapExpiredTime;
+	}
 }
