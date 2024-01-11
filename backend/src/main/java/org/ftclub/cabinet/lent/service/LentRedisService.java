@@ -250,10 +250,6 @@ public class LentRedisService {
 	 * @return 사용 가능한 시간
 	 */
 	public LocalDateTime getSwapExpiredAt(Long userId) {
-		LocalDateTime swapExpiredTime = lentRedis.getSwapExpiredTime(String.valueOf(userId));
-		if (Objects.isNull(swapExpiredTime)) {
-			throw ExceptionStatus.SWAP_RECORD_NOT_FOUND.asServiceException();
-		}
-		return swapExpiredTime;
+		return lentRedis.getSwapExpiredTime(String.valueOf(userId));
 	}
 }

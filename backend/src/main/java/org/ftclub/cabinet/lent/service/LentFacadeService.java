@@ -2,7 +2,6 @@ package org.ftclub.cabinet.lent.service;
 
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +20,6 @@ import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.dto.UserVerifyRequestDto;
-import org.ftclub.cabinet.exception.CustomExceptionStatus;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.log.LogLevel;
@@ -356,16 +354,12 @@ public class LentFacadeService {
 	@Transactional
 	public void swapPrivateCabinet(Long userId, Long newCabinetId) {
 
-		if (lentRedisService.isExistSwapRecord(userId)) {
-			LocalDateTime swapExpiredAt = lentRedisService.getSwapExpiredAt(userId);
-			swapExpiredAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-			throw new CustomExceptionStatus(ExceptionStatus.SWAP_LIMIT_EXCEEDED,
-					swapExpiredAt.toString()).asCustomServiceException();
-		}
+		boolean existSwapRecord = lentRedisService.isExistSwapRecord(userId);
+		LocalDateTime swapExpiredAt = lentRedisService.getSwapExpiredAt(userId);
+		lentPolicyService.verifySwapable(existSwapRecord, swapExpiredAt);
 
 		LocalDateTime now = LocalDateTime.now();
 		LentHistory oldLentHistory = lentQueryService.getUserActiveLentHistoryWithCabinet(userId);
-
 		Cabinet oldCabinet = cabinetQueryService.getCabinet(oldLentHistory.getCabinetId());
 		lentPolicyService.verifySelfSwap(oldCabinet.getId(), newCabinetId);
 		Cabinet newCabinet = cabinetQueryService.getCabinet(newCabinetId);
