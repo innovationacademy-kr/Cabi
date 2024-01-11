@@ -262,7 +262,7 @@ const CabinetInfoArea: React.FC<{
       {userModal.swapModal && (
         <SwapModal
           lentType={selectedCabinetInfo!.lentType}
-          closeModal={() => closeModal("lentModal")}
+          closeModal={() => closeModal("swapModal")}
         />
       )}
     </CabinetDetailAreaStyled>
