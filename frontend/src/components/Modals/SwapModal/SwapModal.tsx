@@ -12,8 +12,8 @@ import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
-  axiosLentId,
   axiosMyLentInfo,
+  axiosSwapId,
 } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
@@ -49,8 +49,7 @@ const SwapModal: React.FC<{
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
-      await axiosLentId(currentCabinetId);
-      //TODO : swap api 만들고 나서 대체
+      await axiosSwapId(currentCabinetId);
       //userCabinetId 세팅
       setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
       setIsCurrentSectionRender(true);
@@ -58,6 +57,7 @@ const SwapModal: React.FC<{
       // 캐비닛 상세정보 바꾸는 곳
       try {
         const { data } = await axiosCabinetById(currentCabinetId);
+        // view 데이터 받아온다
         setTargetCabinetInfo(data);
       } catch (error) {
         throw error;
@@ -65,7 +65,7 @@ const SwapModal: React.FC<{
       // 내 대여정보 바꾸는 곳
       try {
         const { data: myLentInfo } = await axiosMyLentInfo();
-        //TODO
+        //내가 빌리고 있는 사물함 정보를 받아온다
         setMyLentInfo(myLentInfo);
       } catch (error) {
         throw error;

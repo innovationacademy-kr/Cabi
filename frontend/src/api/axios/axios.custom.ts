@@ -129,6 +129,17 @@ export const axiosMyLentInfo = async (): Promise<any> => {
   }
 };
 
+const axiosSwapIdURL = "/v4/lent/swap/";
+export const axiosSwapId = async (cabinetId: number | null): Promise<any> => {
+  if (cabinetId === null) return;
+  try {
+    const response = await instance.post(`${axiosSwapIdURL}${cabinetId}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosUpdateMyCabinetInfoURL = "/v4/lent/me/cabinet";
 export const axiosUpdateMyCabinetInfo = async (
   title: string | null,
