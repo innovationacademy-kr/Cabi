@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 @Getter
 public class CustomExceptionStatus {
+
 	private final int statusCode;
 	private final String message;
 	private final String error;
@@ -24,7 +25,7 @@ public class CustomExceptionStatus {
 
 	public CustomExceptionStatus(ExceptionStatus status, String message) {
 		this.statusCode = status.getStatusCode();
-		this.message = status.getMessage() + "\n" + message;
+		this.message = status.getMessage() + "\n해제 날짜 : " + message;
 		this.error = status.getError();
 	}
 

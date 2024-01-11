@@ -31,9 +31,9 @@ public class LentPolicyService {
 	 * 대여 정책에 따라 예외를 발생시킵니다.
 	 *
 	 * @param status     대여 정책 상태
-	 * @param unbannedAt 밴 해제 시간
+	 * @param policyDate 밴 해제 시간
 	 */
-	private void handlePolicyStatus(LentPolicyStatus status, LocalDateTime unbannedAt) {
+	private void handlePolicyStatus(LentPolicyStatus status, LocalDateTime policyDate) {
 		String unbannedAtString = null;
 		switch (status) {
 			case FINE:
@@ -53,14 +53,19 @@ public class LentPolicyService {
 			case ALREADY_LENT_USER:
 				throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
 			case ALL_BANNED_USER:
-				unbannedAtString = unbannedAt.format(
+				unbannedAtString = policyDate.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 				throw new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER,
 						unbannedAtString).asCustomServiceException();
 			case SHARE_BANNED_USER:
-				unbannedAtString = unbannedAt.format(
+				unbannedAtString = policyDate.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED,
+						unbannedAtString).asCustomServiceException();
+			case SWAP_LIMIT_EXCEEDED:
+				unbannedAtString = policyDate.format(
+						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+				throw new CustomExceptionStatus(ExceptionStatus.SWAP_LIMIT_EXCEEDED,
 						unbannedAtString).asCustomServiceException();
 			case BLACKHOLED_USER:
 				throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
@@ -72,6 +77,8 @@ public class LentPolicyService {
 				throw ExceptionStatus.INVALID_LENT_TYPE.asServiceException();
 			case INVALID_ARGUMENT:
 				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			case SWAP_SAME_CABINET:
+				throw ExceptionStatus.SWAP_SAME_CABINET.asServiceException();
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:
@@ -267,8 +274,16 @@ public class LentPolicyService {
 	}
 
 	public void verifySelfSwap(Long oldCabinetId, Long newCabinetId) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (oldCabinetId.equals(newCabinetId)) {
-			throw ExceptionStatus.SWAP_SAME_CABINET.asServiceException();
+			status = LentPolicyStatus.SWAP_SAME_CABINET;
+		}
+		handlePolicyStatus(status, null);
+	}
+
+	public void verifySwapable(boolean existSwapRecord, LocalDateTime swapExpiredAt) {
+		if (existSwapRecord) {
+			handlePolicyStatus(LentPolicyStatus.SWAP_LIMIT_EXCEEDED, swapExpiredAt);
 		}
 	}
 }
