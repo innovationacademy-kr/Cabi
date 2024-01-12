@@ -24,6 +24,7 @@ export const userState = atom<UserDto>({
     lentExtensionResponseDto: null,
     unbannedAt: null,
     alarmTypes: null,
+    isDeviceTokenExpired: null,
   },
 });
 

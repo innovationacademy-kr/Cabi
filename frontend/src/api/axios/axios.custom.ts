@@ -69,6 +69,20 @@ export const axiosUpdateAlarm = async (alarm: AlarmInfo): Promise<any> => {
   }
 };
 
+const axiosUpdateDeviceTokenURL = "/v4/users/me/device-token";
+export const axiosUpdateDeviceToken = async (
+  deviceToken: string | null
+): Promise<any> => {
+  try {
+    const response = await instance.put(axiosUpdateDeviceTokenURL, {
+      deviceToken,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
 export const axiosBuildingFloor = async (): Promise<any> => {

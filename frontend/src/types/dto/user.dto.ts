@@ -21,6 +21,7 @@ export interface UserDto {
   lentExtensionResponseDto: LentExtensionDto | null;
   unbannedAt?: Date | null;
   alarmTypes: AlarmInfo | null;
+  isDeviceTokenExpired: boolean | null;
 }
 
 export interface UserInfo {

@@ -24,4 +24,5 @@ public class MyProfileResponseDto {
 	);
 	private final LentExtensionResponseDto lentExtensionResponseDto;
 	private final AlarmTypeResponseDto alarmTypes;
+	private final Boolean isDeviceTokenExpired;
 }

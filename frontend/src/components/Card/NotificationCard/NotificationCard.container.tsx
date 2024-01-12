@@ -1,3 +1,7 @@
+import {
+  deleteFcmToken,
+  requestFcmAndGetDeviceToken,
+} from "@/firebase/firebase-messaging-sw";
 import { useEffect, useMemo, useState } from "react";
 import { set } from "react-ga";
 import NotificationCard from "@/components/Card/NotificationCard/NotificationCard";
@@ -7,7 +11,10 @@ import {
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { AlarmInfo } from "@/types/dto/alarm.dto";
-import { axiosUpdateAlarm } from "@/api/axios/axios.custom";
+import {
+  axiosUpdateAlarm,
+  axiosUpdateDeviceToken,
+} from "@/api/axios/axios.custom";
 
 const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
   const [showResponseModal, setShowResponseModal] = useState(false);
@@ -39,6 +46,14 @@ const NotificationCardContainer = ({ alarm }: { alarm: AlarmInfo | null }) => {
     if (!alarms.current) return;
     try {
       await axiosUpdateAlarm(alarms.current);
+      // 푸쉬 알림 설정이 변경되었을 경우, 토큰을 요청하거나 삭제합니다.
+      if (alarms.current.push) {
+        const deviceToken = await requestFcmAndGetDeviceToken();
+        await axiosUpdateDeviceToken(deviceToken);
+      } else {
+        await deleteFcmToken();
+        await axiosUpdateDeviceToken(null);
+      }
       setAlarms({ current: alarms.current, original: alarms.current });
       setModalTitle("설정이 저장되었습니다");
     } catch (error: any) {
