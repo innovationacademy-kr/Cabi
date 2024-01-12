@@ -26,7 +26,6 @@ const PasswordContainer = ({
   }, [password]);
 
   const handleEnterPress = () => {
-    console.log(password.length);
     if (tryLentRequest && password.length == 4) tryLentRequest();
   };
 
