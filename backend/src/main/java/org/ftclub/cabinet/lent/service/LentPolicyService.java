@@ -264,7 +264,9 @@ public class LentPolicyService {
 	public void verifySwapPrivateCabinet(LocalDateTime expiredAt, LocalDateTime now,
 			int userCount) {
 		LentPolicyStatus status = LentPolicyStatus.FINE;
-		if (expiredAt.isBefore(now.plusDays(1))) {
+		LocalDateTime minimumLentExpireDate = now.plusDays(
+				cabinetProperties.getRequireSwapMinimumDays());
+		if (expiredAt.isBefore(minimumLentExpireDate)) {
 			status = LentPolicyStatus.SWAP_EXPIREDAT_IMMINENT;
 		}
 		if (userCount != 0) {
