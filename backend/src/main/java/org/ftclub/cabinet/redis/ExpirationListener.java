@@ -37,7 +37,10 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
 		log.debug("Called onMessage: {}, {}", message.toString(), pattern);
-		String cabinetIdString = message.toString().split(":")[0];
-		lentFacadeService.shareCabinetSessionExpired(Long.valueOf(cabinetIdString));
+		String[] messageParseArray = message.toString().split(":");
+		if (messageParseArray[1] != null && messageParseArray[1].equals("shadow")) {
+			String cabinetIdString = messageParseArray[0];
+			lentFacadeService.shareCabinetSessionExpired(Long.valueOf(cabinetIdString));
+		}
 	}
 }
