@@ -71,6 +71,16 @@ public class LentQueryService {
 	}
 
 	/**
+	 * 여러 사물함의 대여 기록을 가져옵니다.
+	 *
+	 * @param cabinetIds 찾으려는 cabinet id {@link List}
+	 * @return 사물함의 대여 기록 {@link List}
+	 */
+	public List<LentHistory> findCabinetLentHistories(List<Long> cabinetIds) {
+		return lentRepository.findAllByCabinetIdIn(cabinetIds);
+	}
+
+	/**
 	 * 유저가 지금 빌리고 있는 사물함의 개수를 가져옵니다.
 	 *
 	 * @param userId 찾으려는 user id
@@ -179,8 +189,8 @@ public class LentQueryService {
 	 * @param cabinetIds 찾으려는 cabinet id {@link List}
 	 * @return 기준 날짜보다 반납 기한이 나중인 대여 기록 {@link List}
 	 */
-	public List<LentHistory> findAllByCabinetIdsAfterDate(LocalDate date, List<Long> cabinetIds) {
-		return lentRepository.findAllByCabinetIdsEndedAtAfterDate(date, cabinetIds);
+	public List<LentHistory> findPendingLentHistoriesOnDate(LocalDate date, List<Long> cabinetIds) {
+		return lentRepository.findAllByCabinetIdsEndedAtEqualDate(date, cabinetIds);
 	}
 
 	/**
@@ -197,6 +207,14 @@ public class LentQueryService {
 		return lentRepository.findPaginationByCabinetIdJoinCabinetAndUser(cabinetId, pageable);
 	}
 
+	/**
+	 * 유저가 지금 빌리고 있는 사물함의 대여 기록을 가져옵니다.
+	 * <p>
+	 * 사물함 정보를 Join하여 가져옵니다.
+	 *
+	 * @param userId 찾으려는 user id
+	 * @return 유저가 빌리고 있는 사물함의 대여 기록
+	 */
 	public LentHistory getUserActiveLentHistoryWithCabinet(Long userId) {
 		return lentRepository.findByUserIdAndEndedAtIsNullJoinCabinet(userId)
 				.orElseThrow(ExceptionStatus.NOT_FOUND_LENT_HISTORY::asServiceException);

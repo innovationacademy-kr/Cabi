@@ -243,8 +243,8 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	@Query("SELECT lh "
 			+ "FROM LentHistory lh "
 			+ "WHERE lh.cabinetId IN :cabinetIds "
-			+ "AND DATE(lh.endedAt) >= DATE(:date)")
-	List<LentHistory> findAllByCabinetIdsEndedAtAfterDate(@Param("date") LocalDate date,
+			+ "AND DATE(lh.endedAt) = DATE(:date)")
+	List<LentHistory> findAllByCabinetIdsEndedAtEqualDate(@Param("date") LocalDate date,
 			@Param("cabinetIds") List<Long> cabinetIds);
 
 	/**
@@ -279,6 +279,14 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "WHERE lh.userId IN (:userIds) AND lh.endedAt IS NULL")
 	List<LentHistory> findByUserIdsAndEndedAtIsNullJoinCabinet(
 			@Param("userIds") List<Long> userIds);
+
+	/**
+	 * 특정 사물함들의 대여 기록을 가져옵니다.
+	 *
+	 * @param cabinetIds 찾으려는 cabinet id {@link List}
+	 * @return {@link LentHistory}의 {@link List}
+	 */
+	List<LentHistory> findAllByCabinetIdIn(List<Long> cabinetIds);
 
 	/**
 	 * 연체되어 있는 사물함을 모두 가져옵니다.

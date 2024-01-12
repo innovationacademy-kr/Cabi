@@ -6,7 +6,6 @@ import static java.util.stream.Collectors.toMap;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +42,7 @@ import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
+import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -168,19 +168,26 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public CabinetPendingResponseDto getPendingCabinets(String building) {
-		final LocalDate yesterday = LocalDateTime.now().minusDays(1).toLocalDate();
+		final LocalDateTime now = LocalDateTime.now();
+		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
 		List<Cabinet> pendingCabinets =
 				cabinetQueryService.findPendingCabinetsNotLentTypeAndStatus(
 						building, LentType.CLUB, List.of(AVAILABLE, PENDING));
 		List<Long> cabinetIds = pendingCabinets.stream()
 				.filter(cabinet -> cabinet.isStatus(PENDING))
 				.map(Cabinet::getId).collect(Collectors.toList());
+		Map<Long, List<LentHistory>> lentHistoriesMap;
+		if (now.getHour() < 13) {
+			lentHistoriesMap = lentQueryService.findPendingLentHistoriesOnDate(
+							yesterday.toLocalDate(), cabinetIds)
+					.stream().collect(groupingBy(LentHistory::getCabinetId));
+		} else {
+			lentHistoriesMap = lentQueryService.findCabinetLentHistories(cabinetIds)
+					.stream().collect(groupingBy(LentHistory::getCabinetId));
+		}
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
 				cabinetQueryService.findAllFloorsByBuilding(building).stream()
 						.collect(toMap(key -> key, value -> new ArrayList<>()));
-		Map<Long, List<LentHistory>> lentHistoriesMap =
-				lentQueryService.findAllByCabinetIdsAfterDate(yesterday, cabinetIds)
-						.stream().collect(groupingBy(LentHistory::getCabinetId));
 		pendingCabinets.forEach(cabinet -> {
 			Integer floor = cabinet.getCabinetPlace().getLocation().getFloor();
 			if (cabinet.isStatus(AVAILABLE)) {
@@ -190,7 +197,7 @@ public class CabinetFacadeService {
 				LocalDateTime latestEndedAt = lentHistoriesMap.get(cabinet.getId()).stream()
 						.map(LentHistory::getEndedAt)
 						.max(LocalDateTime::compareTo).orElse(null);
-				if (latestEndedAt != null && latestEndedAt.toLocalDate().isEqual(yesterday)) {
+				if (latestEndedAt != null && DateUtil.isSameDay(latestEndedAt, yesterday)) {
 					cabinetFloorMap.get(floor)
 							.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 				}
@@ -373,7 +380,7 @@ public class CabinetFacadeService {
 		if (!status.isValid()) {
 			throw ExceptionStatus.INVALID_STATUS.asServiceException();
 		}
-		Cabinet cabinet = cabinetQueryService.findCabinetsForUpdate(cabinetId);
+		Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 		cabinet.specifyStatus(status);
 	}
 

@@ -82,7 +82,7 @@ public class CabinetQueryService {
 	 * @param cabinetId 가져올 사물함 ID
 	 * @return 사물함
 	 */
-	public Cabinet findCabinetsForUpdate(Long cabinetId) {
+	public Cabinet getCabinetForUpdate(Long cabinetId) {
 		Optional<Cabinet> cabinet = cabinetRepository.findByIdWithXLock(cabinetId);
 		return cabinet.orElseThrow(ExceptionStatus.NOT_FOUND_CABINET::asServiceException);
 	}
