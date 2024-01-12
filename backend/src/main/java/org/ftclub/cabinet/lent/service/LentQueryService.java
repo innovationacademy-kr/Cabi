@@ -1,5 +1,11 @@
 package org.ftclub.cabinet.lent.service;
 
+import static java.util.stream.Collectors.toList;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.exception.ServiceException;
@@ -10,13 +16,6 @@ import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -45,9 +44,8 @@ public class LentQueryService {
 	 * @param userId 찾으려는 user id
 	 * @return 유저가 대여하고 있는 사물함의 대여 기록
 	 */
-	public LentHistory findUserActiveLentHistoryAndCabinet(Long userId) {
-		return lentRepository.findByUserIdAndEndedAtIsNullJoinCabinet(userId)
-				.orElse(null);
+	public LentHistory findUserActiveLentHistoryWithCabinet(Long userId) {
+		return lentRepository.findByUserIdAndEndedAtIsNullJoinCabinet(userId).orElse(null);
 	}
 
 	/**
@@ -195,7 +193,12 @@ public class LentQueryService {
 	 * @return 사물함의 현재 대여 중인 대여 기록 {@link Page}
 	 */
 	public Page<LentHistory> findCabinetLentHistoriesWithUserAndCabinet(Long cabinetId,
-	                                                                    Pageable pageable) {
+			Pageable pageable) {
 		return lentRepository.findPaginationByCabinetIdJoinCabinetAndUser(cabinetId, pageable);
+	}
+
+	public LentHistory getUserActiveLentHistoryWithCabinet(Long userId) {
+		return lentRepository.findByUserIdAndEndedAtIsNullJoinCabinet(userId)
+				.orElseThrow(ExceptionStatus.NOT_FOUND_LENT_HISTORY::asServiceException);
 	}
 }

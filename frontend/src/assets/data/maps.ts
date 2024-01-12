@@ -158,6 +158,11 @@ export const modalPropsMap = {
     title: "대기열 취소하기",
     confirmMessage: "확인",
   },
+  MODAL_SWAP: {
+    type: "confirm",
+    title: "이사하기",
+    confirmMessage: "네, 이사할게요",
+  },
 };
 
 export const cabinetFilterMap = {
