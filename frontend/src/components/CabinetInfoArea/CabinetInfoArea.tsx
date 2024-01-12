@@ -26,6 +26,7 @@ import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
+import SwapModal from "../Modals/SwapModal/SwapModal";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
@@ -37,6 +38,7 @@ const CabinetInfoArea: React.FC<{
   userModal: ICurrentModalStateInfo;
   openModal: (modalName: TModalState) => void;
   closeModal: (modalName: TModalState) => void;
+  isSwappable: boolean;
 }> = ({
   selectedCabinetInfo,
   closeCabinet,
@@ -47,6 +49,7 @@ const CabinetInfoArea: React.FC<{
   userModal,
   openModal,
   closeModal,
+  isSwappable,
 }) => {
   const isExtensionVisible =
     isMine &&
@@ -138,13 +141,16 @@ const CabinetInfoArea: React.FC<{
                     openModal(
                       selectedCabinetInfo.status == "IN_SESSION"
                         ? "invitationCodeModal"
+                        : isSwappable
+                        ? "swapModal"
                         : "lentModal"
                     )
                   }
-                  text="대여"
+                  text={isSwappable ? "이사하기" : "대여"}
                   theme="fill"
                   disabled={
-                    !isAvailable || selectedCabinetInfo.lentType === "CLUB"
+                    selectedCabinetInfo.lentType === "CLUB" ||
+                    (!isAvailable && !isSwappable)
                   }
                 />
                 <ButtonContainer
@@ -251,6 +257,12 @@ const CabinetInfoArea: React.FC<{
         <ExtendModal
           onClose={() => closeModal("extendModal")}
           cabinetId={selectedCabinetInfo?.cabinetId}
+        />
+      )}
+      {userModal.swapModal && (
+        <SwapModal
+          lentType={selectedCabinetInfo!.lentType}
+          closeModal={() => closeModal("swapModal")}
         />
       )}
     </CabinetDetailAreaStyled>

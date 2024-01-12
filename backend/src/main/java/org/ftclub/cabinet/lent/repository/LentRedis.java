@@ -23,14 +23,19 @@ import org.springframework.stereotype.Component;
 public class LentRedis {
 
 	private static final String USER_ENTERED = "entered";
+	private static final String USER_SWAPPED = "swapped";
 	private static final String SHADOW_KEY_SUFFIX = ":shadow";
 	private static final String VALUE_KEY_SUFFIX = ":user";
 	private static final String PREVIOUS_USER_SUFFIX = ":previousUser";
 
+	private static final String SWAP_KEY_SUFFIX = ":swap";
+
 	private final HashOperations<String, String, String> shareCabinetTemplate;
 	private final ValueOperations<String, String> userCabinetTemplate;
-	private final RedisTemplate<String, String> shadowKeyTemplate;
-	private final ValueOperations<String, String> previousUserTemplate;
+	private final RedisTemplate<String, String> shadowKeyTemplate; //조금 더 많은 기능을 지원
+	private final ValueOperations<String, String> previousUserTemplate; // 조회랑 생성 한정 기능
+
+	private final RedisTemplate<String, String> swapTemplate;
 	private final CabinetProperties cabinetProperties;
 
 	@Autowired
@@ -38,11 +43,13 @@ public class LentRedis {
 			RedisTemplate<String, String> valueRedisTemplate,
 			RedisTemplate<String, String> shadowKeyTemplate,
 			RedisTemplate<String, String> previousUserTemplate,
+			RedisTemplate<String, String> swapTemplate,
 			CabinetProperties cabinetProperties) {
 		this.userCabinetTemplate = valueRedisTemplate.opsForValue();
 		this.shareCabinetTemplate = valueHashRedisTemplate.opsForHash();
 		this.shadowKeyTemplate = shadowKeyTemplate;
 		this.previousUserTemplate = previousUserTemplate.opsForValue();
+		this.swapTemplate = swapTemplate;
 		this.cabinetProperties = cabinetProperties;
 	}
 
@@ -209,12 +216,13 @@ public class LentRedis {
 	 * @return 공유 사물함의 만료 시간
 	 */
 	public LocalDateTime getCabinetExpiredAt(String cabinetId) {
-		if (this.isExistShadowKey(cabinetId)) {
-			String shadowKey = cabinetId + SHADOW_KEY_SUFFIX;
-			long expire = shadowKeyTemplate.getExpire(shadowKey, TimeUnit.SECONDS).longValue();
-			return LocalDateTime.now().plusSeconds(expire);
+		if (!this.isExistShadowKey(cabinetId)) {
+			return null;
 		}
-		return null;
+		String shadowKey = cabinetId + SHADOW_KEY_SUFFIX;
+		@SuppressWarnings("ConstantConditions")
+		long expire = shadowKeyTemplate.getExpire(shadowKey, TimeUnit.SECONDS);
+		return LocalDateTime.now().plusSeconds(expire);
 	}
 
 	/*----------------------------------------  Caching  -----------------------------------------*/
@@ -237,5 +245,45 @@ public class LentRedis {
 	 */
 	public String getPreviousUserName(String cabinetId) {
 		return previousUserTemplate.get(cabinetId + PREVIOUS_USER_SUFFIX);
+	}
+
+	/*----------------------------------------  Swap  -----------------------------------------*/
+
+	/**
+	 * swap 하려는 유저가 이전에 swap 한 이력의 여부를 조회합니다.
+	 *
+	 * @param userId 유저 ID
+	 * @return true or false
+	 */
+	public boolean isExistPreviousSwap(String userId) {
+		Boolean isExist = swapTemplate.hasKey(userId + SWAP_KEY_SUFFIX);
+		return Objects.nonNull(isExist) && isExist;
+	}
+
+	/**
+	 * 유저가 swap 가능한 시각을 조회합니다.
+	 *
+	 * @param userId 유저 ID
+	 * @return swap 가능한 시각
+	 */
+	public LocalDateTime getSwapExpiredTime(String userId) {
+		if (!this.isExistPreviousSwap(userId)) {
+			return null;
+		}
+		String swapKey = userId + SWAP_KEY_SUFFIX;
+		@SuppressWarnings("ConstantConditions")
+		long expire = swapTemplate.getExpire(swapKey, TimeUnit.SECONDS);
+		return LocalDateTime.now().plusSeconds(expire);
+	}
+
+	/**
+	 * swap 하는 유저의 swap 이력을 저장합니다. 기한을 설정합니다
+	 *
+	 * @param userId 유저 ID
+	 */
+	public void setSwap(String userId) {
+		final String swapKey = userId + SWAP_KEY_SUFFIX;
+		swapTemplate.opsForValue().set(swapKey, USER_SWAPPED);
+		swapTemplate.expire(swapKey, cabinetProperties.getSwapTermPrivateDays(), TimeUnit.DAYS);
 	}
 }

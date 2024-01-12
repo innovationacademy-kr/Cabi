@@ -1,5 +1,8 @@
 package org.ftclub.cabinet.lent.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -16,10 +19,6 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
@@ -32,9 +31,9 @@ public class LentPolicyService {
 	 * 대여 정책에 따라 예외를 발생시킵니다.
 	 *
 	 * @param status     대여 정책 상태
-	 * @param unbannedAt 밴 해제 시간
+	 * @param policyDate 밴 해제 시간
 	 */
-	private void handlePolicyStatus(LentPolicyStatus status, LocalDateTime unbannedAt) {
+	private void handlePolicyStatus(LentPolicyStatus status, LocalDateTime policyDate) {
 		String unbannedAtString = null;
 		switch (status) {
 			case FINE:
@@ -49,20 +48,37 @@ public class LentPolicyService {
 				throw ExceptionStatus.LENT_CLUB.asServiceException();
 			case IMMINENT_EXPIRATION:
 				throw ExceptionStatus.LENT_EXPIRE_IMMINENT.asServiceException();
+			case INVALID_EXPIREDAT:
+				throw ExceptionStatus.INVALID_EXPIRED_AT.asServiceException();
 			case ALREADY_LENT_USER:
 				throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
 			case ALL_BANNED_USER:
-				unbannedAtString = unbannedAt.format(
+				unbannedAtString = policyDate.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER, unbannedAtString).asCustomServiceException();
+				throw new CustomExceptionStatus(ExceptionStatus.ALL_BANNED_USER,
+						unbannedAtString).asCustomServiceException();
 			case SHARE_BANNED_USER:
-				unbannedAtString = unbannedAt.format(
+				unbannedAtString = policyDate.format(
 						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED, unbannedAtString).asCustomServiceException();
+				throw new CustomExceptionStatus(ExceptionStatus.SHARE_CODE_TRIAL_EXCEEDED,
+						unbannedAtString).asCustomServiceException();
+			case SWAP_LIMIT_EXCEEDED:
+				unbannedAtString = policyDate.format(
+						DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+				throw new CustomExceptionStatus(ExceptionStatus.SWAP_LIMIT_EXCEEDED,
+						unbannedAtString).asCustomServiceException();
 			case BLACKHOLED_USER:
 				throw ExceptionStatus.BLACKHOLED_USER.asServiceException();
 			case PENDING_CABINET:
 				throw ExceptionStatus.LENT_PENDING.asServiceException();
+			case SWAP_EXPIREDAT_IMMINENT:
+				throw ExceptionStatus.SWAP_EXPIRE_IMMINENT.asServiceException();
+			case INVALID_LENT_TYPE:
+				throw ExceptionStatus.INVALID_LENT_TYPE.asServiceException();
+			case INVALID_ARGUMENT:
+				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			case SWAP_SAME_CABINET:
+				throw ExceptionStatus.SWAP_SAME_CABINET.asServiceException();
 			case NOT_USER:
 			case INTERNAL_ERROR:
 			default:
@@ -138,9 +154,11 @@ public class LentPolicyService {
 	 * @param lentType        대여 타입
 	 */
 	public void verifyCabinetType(LentType cabinetLentType, LentType lentType) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (!cabinetLentType.equals(lentType)) {
-			throw ExceptionStatus.INVALID_LENT_TYPE.asServiceException();
+			status = LentPolicyStatus.INVALID_LENT_TYPE;
 		}
+		handlePolicyStatus(status, null);
 	}
 
 	/**
@@ -151,16 +169,18 @@ public class LentPolicyService {
 	 * @param lentCount    현재 대여 중인 유저 수
 	 */
 	public void verifyCabinetLentCount(LentType lentType, int maxUserCount, int lentCount) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
 		int maxLentCount = 1;
 		if (lentType.equals(LentType.SHARE)) {
 			maxLentCount = cabinetProperties.getShareMaxUserCount().intValue();
 		}
 		if (maxUserCount != maxLentCount) {
-			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asServiceException();
+			status = LentPolicyStatus.INTERNAL_ERROR;
 		}
 		if (lentCount >= maxLentCount) {
-			throw ExceptionStatus.LENT_FULL.asServiceException();
+			status = LentPolicyStatus.FULL_CABINET;
 		}
+		handlePolicyStatus(status, null);
 	}
 
 	/**
@@ -172,9 +192,10 @@ public class LentPolicyService {
 	 * @return 만료 시간
 	 */
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
-	                                            int lentUserCount) {
+			int lentUserCount) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
 		if (!DateUtil.isSameDay(now)) {
-			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			status = LentPolicyStatus.INVALID_ARGUMENT;
 		}
 		int lentTerm = 0;
 		if (lentType.equals(LentType.PRIVATE)) {
@@ -185,8 +206,9 @@ public class LentPolicyService {
 		}
 		LocalDateTime expiredAt = DateUtil.setLastTime(now.plusDays(lentTerm));
 		if (DateUtil.isPast(expiredAt)) {
-			throw ExceptionStatus.INVALID_EXPIRED_AT.asServiceException();
+			status = LentPolicyStatus.INVALID_EXPIREDAT;
 		}
+		handlePolicyStatus(status, null);
 		return expiredAt;
 	}
 
@@ -199,7 +221,7 @@ public class LentPolicyService {
 	 * @return 조정된 만료 시간
 	 */
 	public LocalDateTime adjustShareCabinetExpirationDate(int userCount, LocalDateTime now,
-	                                                      LocalDateTime expiredAt) {
+			LocalDateTime expiredAt) {
 		double daysUntilExpiration = DateUtil.calculateTwoDateDiffCeil(now, expiredAt);
 		double secondsUntilExpiration = daysUntilExpiration * 24 * 60 * 60;
 		long secondsRemaining = Math.round(secondsUntilExpiration * userCount / (userCount + 1));
@@ -230,5 +252,40 @@ public class LentPolicyService {
 			status = LentPolicyStatus.SHARE_BANNED_USER;
 		}
 		handlePolicyStatus(status, null);
+	}
+
+	/**
+	 * 개인 사물함에 SWAP이 가능한지 확인합니다.
+	 *
+	 * @param expiredAt 현재 대여 중인 사물함의 만료 기한
+	 * @param now       현재 시간
+	 * @param userCount 대여하려는 사물함의 대여 중인 유저 수
+	 */
+	public void verifySwapPrivateCabinet(LocalDateTime expiredAt, LocalDateTime now,
+			int userCount) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
+		LocalDateTime minimumLentExpireDate = now.plusDays(
+				cabinetProperties.getRequireSwapMinimumDays());
+		if (expiredAt.isBefore(minimumLentExpireDate)) {
+			status = LentPolicyStatus.SWAP_EXPIREDAT_IMMINENT;
+		}
+		if (userCount != 0) {
+			status = LentPolicyStatus.FULL_CABINET;
+		}
+		handlePolicyStatus(status, null);
+	}
+
+	public void verifySelfSwap(Long oldCabinetId, Long newCabinetId) {
+		LentPolicyStatus status = LentPolicyStatus.FINE;
+		if (oldCabinetId.equals(newCabinetId)) {
+			status = LentPolicyStatus.SWAP_SAME_CABINET;
+		}
+		handlePolicyStatus(status, null);
+	}
+
+	public void verifySwapable(boolean existSwapRecord, LocalDateTime swapExpiredAt) {
+		if (existSwapRecord) {
+			handlePolicyStatus(LentPolicyStatus.SWAP_LIMIT_EXCEEDED, swapExpiredAt);
+		}
 	}
 }
