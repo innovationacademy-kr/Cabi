@@ -194,7 +194,7 @@ public class LentPolicyService {
 	public LocalDateTime generateExpirationDate(LocalDateTime now, LentType lentType,
 			int lentUserCount) {
 		LentPolicyStatus status = LentPolicyStatus.FINE;
-		if (!DateUtil.isSameDay(now)) {
+		if (!DateUtil.isToday(now)) {
 			status = LentPolicyStatus.INVALID_ARGUMENT;
 		}
 		int lentTerm = 0;

@@ -116,9 +116,13 @@ public class DateUtil {
 	 * @param now
 	 * @return
 	 */
-	public static boolean isSameDay(LocalDateTime now) {
+	public static boolean isToday(LocalDateTime now) {
 		LocalDate currentServerDate = LocalDate.now();
 		return currentServerDate.equals(now.toLocalDate());
+	}
+
+	public static boolean isSameDay(LocalDateTime day1, LocalDateTime day2) {
+		return day1.toLocalDate().equals(day2.toLocalDate());
 	}
 
 	/**
