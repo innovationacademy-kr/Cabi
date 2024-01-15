@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.auth.service;
 
+import static org.ftclub.cabinet.admin.admin.domain.AdminRole.MASTER;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +9,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.security.Key;
+import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.admin.admin.domain.Admin;
@@ -14,15 +18,9 @@ import org.ftclub.cabinet.admin.admin.domain.AdminRole;
 import org.ftclub.cabinet.admin.admin.service.AdminQueryService;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.config.JwtProperties;
-import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Component;
-
-import java.security.Key;
-import java.util.Base64;
-
-import static org.ftclub.cabinet.admin.admin.domain.AdminRole.MASTER;
 
 /**
  * 토큰의 유효성을 검사하는 클래스입니다.
@@ -48,12 +46,16 @@ public class TokenValidator {
 	 */
 	public boolean isValidTokenWithLevel(String token, AuthLevel authLevel)
 			throws JsonProcessingException {
+		if (token == null || token.isEmpty()) {
+			throw ExceptionStatus.UNAUTHORIZED.asServiceException();
+		}
 		String email = getPayloadJson(token).get("email").asText();
 		if (email == null) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 		}
-		if (!isTokenValid(token, jwtProperties.getSigningKey()))
+		if (!isTokenValid(token, jwtProperties.getSigningKey())) {
 			return false;
+		}
 
 		switch (authLevel) {
 			case USER_OR_ADMIN:
