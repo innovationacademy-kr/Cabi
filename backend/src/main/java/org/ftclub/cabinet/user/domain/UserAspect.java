@@ -1,7 +1,10 @@
 package org.ftclub.cabinet.user.domain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,12 +18,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-
 @Component
 @Aspect
 @RequiredArgsConstructor
+@Log4j2
 public class UserAspect {
 
 	//private final UserMapper ...
@@ -39,7 +40,8 @@ public class UserAspect {
 		//@User를 쓰려면 반드시 첫 매개변수에 UserSessionDto로 설정해주어야 함.
 		Object[] args = joinPoint.getArgs();
 		if (!args[0].getClass().equals(UserSessionDto.class)) {
-			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asControllerException();
+			log.error("User not found");
+			throw ExceptionStatus.UNAUTHORIZED.asControllerException();
 		}
 		args[0] = getUserSessionDtoByRequest(request);
 		return joinPoint.proceed(args);
@@ -55,6 +57,7 @@ public class UserAspect {
 				.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
 		//ToDo: name을 기준으로 service에게 정보를 받고, 매핑한다.
 		// name과 email은 우선 구현했으나 수정이 필요함.
-		return new UserSessionDto(user.getId(), name, user.getEmail(), 1, 1, LocalDateTime.now(), true);
+		return new UserSessionDto(user.getId(), name, user.getEmail(), 1, 1, LocalDateTime.now(),
+				true);
 	}
 }
