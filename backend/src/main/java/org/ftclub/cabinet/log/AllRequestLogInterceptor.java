@@ -1,6 +1,13 @@
 package org.ftclub.cabinet.log;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.auth.domain.CookieManager;
@@ -10,13 +17,6 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-	                         Object handler) {
+			Object handler) {
 		MDC.put(USER_ID, getUserId(request));
 		return true;
 	}
@@ -40,7 +40,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-	                       ModelAndView modelAndView) {
+			ModelAndView modelAndView) {
 		String ip = getClientIpAddr(request);
 		String action = request.getRequestURI();
 		int status = response.getStatus();
@@ -49,7 +49,7 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
-	                            Object handler, Exception ex) throws Exception {
+			Object handler, Exception ex) throws Exception {
 		MDC.remove(USER_ID);
 		MDC.clear();
 	}
@@ -70,7 +70,8 @@ public class AllRequestLogInterceptor implements HandlerInterceptor {
 							cookieManager.getCookieValue(request, jwtProperties.getMainTokenName()))
 					.get("name")
 					.asText();
-		} catch (Exception ignore) {
+		} catch (JsonProcessingException ignore) {
+			log.info("{}", ignore);
 		}
 
 		if (ret != null) {

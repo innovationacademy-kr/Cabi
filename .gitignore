@@ -62,3 +62,4 @@ ibtmp*
 /backend/src/main/resources/test/resources/
 
 redis/data/*
+/idea workspace.xml misc.xml

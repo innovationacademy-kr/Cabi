@@ -46,9 +46,7 @@ public class TokenValidator {
 	 */
 	public boolean isValidTokenWithLevel(String token, AuthLevel authLevel)
 			throws JsonProcessingException {
-		if (token == null || token.isEmpty()) {
-			throw ExceptionStatus.UNAUTHORIZED.asServiceException();
-		}
+
 		String email = getPayloadJson(token).get("email").asText();
 		if (email == null) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
@@ -108,6 +106,10 @@ public class TokenValidator {
 	 * @throws JsonProcessingException
 	 */
 	public JsonNode getPayloadJson(final String token) throws JsonProcessingException {
+		if (token == null || token.isEmpty()) {
+			log.error("토큰이 없습니다.");
+			throw ExceptionStatus.UNAUTHORIZED.asControllerException();
+		}
 		ObjectMapper objectMapper = new ObjectMapper();
 		final String payloadJWT = token.split("\\.")[1];
 		Base64.Decoder decoder = Base64.getUrlDecoder();
