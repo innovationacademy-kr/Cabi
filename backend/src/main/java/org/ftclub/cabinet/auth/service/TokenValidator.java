@@ -32,8 +32,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TokenValidator {
 
+	private static final String UNDEFINED = "undefined";
 	private final JwtProperties jwtProperties;
-
 	private final UserQueryService userQueryService;
 	private final AdminQueryService adminQueryService;
 
@@ -46,7 +46,9 @@ public class TokenValidator {
 	 */
 	public boolean isValidTokenWithLevel(String token, AuthLevel authLevel)
 			throws JsonProcessingException {
-
+		if (token == null || token.isEmpty() || token.equals(UNDEFINED)) {
+			throw ExceptionStatus.UNAUTHORIZED.asControllerException();
+		}
 		String email = getPayloadJson(token).get("email").asText();
 		if (email == null) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
@@ -106,9 +108,9 @@ public class TokenValidator {
 	 * @throws JsonProcessingException
 	 */
 	public JsonNode getPayloadJson(final String token) throws JsonProcessingException {
-		if (token == null || token.isEmpty()) {
+		if (token == null || token.isEmpty() || token.equals(UNDEFINED)) {
 			log.error("토큰이 없습니다.");
-			throw ExceptionStatus.UNAUTHORIZED.asControllerException();
+			return null;
 		}
 		ObjectMapper objectMapper = new ObjectMapper();
 		final String payloadJWT = token.split("\\.")[1];

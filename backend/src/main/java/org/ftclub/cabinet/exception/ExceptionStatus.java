@@ -33,6 +33,7 @@ public enum ExceptionStatus {
 	NOT_CLUB_USER(HttpStatus.BAD_REQUEST, "동아리 유저가 아닙니다"),
 	INVALID_ARGUMENT(HttpStatus.BAD_REQUEST, "유효하지 않은 입력입니다"),
 	INVALID_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 상태변경입니다"),
+	JSON_PROCESSING_EXCEPTION(HttpStatus.BAD_REQUEST, "JSON 파싱 중 에러가 발생했습니다"),
 	SHARE_CODE_TRIAL_EXCEEDED(HttpStatus.BAD_REQUEST, "초대 코드 입력 오류 초과로 입장이 제한된 상태입니다."),
 	INVALID_EXPIRED_AT(HttpStatus.BAD_REQUEST, "잘못된 만료일 입니다"),
 	INCORRECT_ARGUMENT(HttpStatus.BAD_REQUEST, "잘못된 입력입니다"),
