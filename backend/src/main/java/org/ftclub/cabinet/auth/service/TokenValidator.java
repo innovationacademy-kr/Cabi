@@ -36,6 +36,7 @@ public class TokenValidator {
 	private final JwtProperties jwtProperties;
 	private final UserQueryService userQueryService;
 	private final AdminQueryService adminQueryService;
+	private final ObjectMapper objectMapper;
 
 	/**
 	 * 토큰의 유효성을 검사합니다.
@@ -109,10 +110,8 @@ public class TokenValidator {
 	 */
 	public JsonNode getPayloadJson(final String token) throws JsonProcessingException {
 		if (token == null || token.isEmpty() || token.equals(UNDEFINED)) {
-			log.error("토큰이 없습니다.");
 			return null;
 		}
-		ObjectMapper objectMapper = new ObjectMapper();
 		final String payloadJWT = token.split("\\.")[1];
 		Base64.Decoder decoder = Base64.getUrlDecoder();
 
