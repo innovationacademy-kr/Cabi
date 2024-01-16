@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { userState } from "@/recoil/atoms";
+import AnnounceTemplate from "@/components/Announce/AnnounceTemplate";
 import { UserDto } from "@/types/dto/user.dto";
 import { axiosMyInfo, axiosUpdateDeviceToken } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
@@ -17,7 +18,6 @@ const PostLogin = (): JSX.Element => {
 
   const setUser = useSetRecoilState<UserDto>(userState);
   const navigate = useNavigate();
-  const location = useLocation();
   const token = getCookie("access_token");
 
   const getMyInfo = async () => {
@@ -32,7 +32,6 @@ const PostLogin = (): JSX.Element => {
         await axiosUpdateDeviceToken(deviceToken);
       }
       setMyInfo(myInfo);
-      navigate("/home");
     } catch (error) {
       navigate("/login");
     }
@@ -42,13 +41,22 @@ const PostLogin = (): JSX.Element => {
     if (!token) navigate("/login");
     else if (token) {
       getMyInfo();
+      let time = setTimeout(() => {
+        navigate("/home");
+      }, 600);
+      return () => {
+        clearTimeout(time);
+      };
     }
   }, []);
 
   return (
-    <div className="App">
-      <h1>Auth</h1>
-    </div>
+    <AnnounceTemplate
+      title="로그인 중"
+      subTitle="로그인 중입니다. "
+      content="잠시만 기다려주세요 :)"
+      type="LOADING"
+    />
   );
 };
 
