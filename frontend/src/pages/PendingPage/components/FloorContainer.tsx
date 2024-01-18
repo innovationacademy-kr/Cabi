@@ -60,9 +60,9 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-left: 5px;
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
+  cursor: pointer;
   button {
     all: initial;
-    cursor: pointer;
     z-index: 2;
     height: 30px;
     width: 20px;
