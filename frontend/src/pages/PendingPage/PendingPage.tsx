@@ -132,13 +132,7 @@ const PendingPage = () => {
 
   return (
     <WrapperStyled>
-      <UtilsSectionStyled>
-        <MultiToggleSwitch
-          initialState={toggleType}
-          setState={setToggleType}
-          toggleList={toggleList}
-        />
-      </UtilsSectionStyled>
+      <UtilsSectionStyled></UtilsSectionStyled>
       <HeaderStyled>사용 가능 사물함</HeaderStyled>
       <SubHeaderStyled>
         <h2>
@@ -156,8 +150,14 @@ const PendingPage = () => {
         </RefreshButtonStyled>
         {/*  */}
       </SubHeaderStyled>
-      {/* <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} /> */}
-      {/*  */}
+      <MultiToggleSwitchStyled>
+        <MultiToggleSwitch
+          initialState={toggleType}
+          setState={setToggleType}
+          toggleList={toggleList}
+        />
+      </MultiToggleSwitchStyled>
+
       {isLoaded && cabinets ? (
         Object.entries(cabinets).map(([key, value]) => (
           <FloorContainer
@@ -232,6 +232,11 @@ const RefreshButtonStyled = styled.button`
     transform: scale(0.8);
   }
   transition: all 0.3s ease;
+`;
+
+const MultiToggleSwitchStyled = styled.div`
+  width: 70%;
+  margin-top: 58px;
 `;
 
 const FooterStyled = styled.footer`
