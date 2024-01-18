@@ -63,6 +63,7 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   cursor: pointer;
   button {
     all: initial;
+    cursor: inherit;
     z-index: 2;
     height: 30px;
     width: 20px;
