@@ -148,11 +148,16 @@ const PendingPage = () => {
           {isRefreshing ? (
             <LoadingAnimation />
           ) : (
-            <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+            <>
+              <img src="/src/assets/images/rotateRight.svg" alt="새로고침" />
+              <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} />
+            </>
           )}
         </RefreshButtonStyled>
+        {/*  */}
       </SubHeaderStyled>
-      <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} />
+      {/* <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} /> */}
+      {/*  */}
       {isLoaded && cabinets ? (
         Object.entries(cabinets).map(([key, value]) => (
           <FloorContainer
@@ -207,14 +212,18 @@ const SubHeaderStyled = styled.div`
 `;
 
 const RefreshButtonStyled = styled.button`
-  margin-top: 40px;
-  background-color: initial;
-  width: 35px;
-  height: 35px;
+  margin-top: 60px;
+  width: 280px;
+  height: 47px;
+  background-color: var(--main-color);
   padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   img {
-    width: 35px;
-    height: 35px;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
   }
   &:hover {
     opacity: 0.7;
