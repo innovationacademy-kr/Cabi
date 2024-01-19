@@ -60,6 +60,8 @@ ibdata*
 ibtmp*
 *nohup.out
 /backend/src/main/resources/test/resources/
+.idea/modules.xml
+.idea/workspace.xml
 
 redis/data/*
 /idea workspace.xml misc.xml
