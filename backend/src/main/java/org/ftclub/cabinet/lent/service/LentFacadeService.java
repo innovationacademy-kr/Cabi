@@ -18,6 +18,7 @@ import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
+import org.ftclub.cabinet.dto.UserBlackHoleEvent;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.dto.UserVerifyRequestDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -155,6 +156,10 @@ public class LentFacadeService {
 		int lentCount = lentQueryService.countUserActiveLent(userId);
 		List<BanHistory> banHistories = banHistoryQueryService.findActiveBanHistories(userId, now);
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
+
+		if (user.isBlackholed()) {
+			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
+		}
 
 		lentPolicyService.verifyCabinetLentCount(
 				cabinet.getLentType(), cabinet.getMaxUser(), userCount);
