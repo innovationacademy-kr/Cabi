@@ -26,4 +26,11 @@ public class CabinetProperties {
 	private Long shareMaxUserCount;
 	@Value("${cabinet.policy.in-session.term}")
 	private Integer inSessionTerm;
+	@Value("${cabinet.policy.lent.limit.share.max-attempt-count}")
+	private Long shareMaxAttemptCount;
+	@Value("${cabinet.policy.swap.term.private}")
+	private Integer swapTermPrivateDays;
+	@Value(("${cabinet.policy.swap.minimum-require-days}"))
+	private Integer requireSwapMinimumDays;
+
 }

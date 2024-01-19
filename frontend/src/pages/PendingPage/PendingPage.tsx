@@ -5,7 +5,9 @@ import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import FloorContainer from "@/pages/PendingPage/components/FloorContainer";
 import PendingCountdown from "@/pages/PendingPage/components/PendingCountdown";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import MultiToggleSwitch from "@/components/Common/MultiToggleSwitch";
+import MultiToggleSwitch, {
+  toggleItem,
+} from "@/components/Common/MultiToggleSwitch";
 import {
   CabinetPreviewInfo,
   PendingCabinetsInfo,
@@ -19,7 +21,7 @@ enum PendingCabinetsType {
   SHARE = "SHARE",
 }
 
-const toggleList = [
+const toggleList: toggleItem[] = [
   { name: "전체", key: PendingCabinetsType.ALL },
   { name: "개인", key: PendingCabinetsType.PRIVATE },
   { name: "공유", key: PendingCabinetsType.SHARE },
@@ -89,11 +91,22 @@ const PendingPage = () => {
     );
   };
 
+  const updateLocalStorage = () => {
+    const recoilPersist = localStorage.getItem("recoil-persist");
+    if (recoilPersist) {
+      let recoilPersistObj = JSON.parse(recoilPersist);
+      delete recoilPersistObj.CurrentFloor;
+      delete recoilPersistObj.CurrentSection;
+      localStorage.setItem("recoil-persist", JSON.stringify(recoilPersistObj));
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => {
       // 새로고침 광클 방지를 위한 초기 로딩 딜레이
       setIsLoaded(true);
     }, 500);
+    updateLocalStorage();
   }, []);
 
   useEffect(() => {

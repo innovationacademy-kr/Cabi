@@ -69,6 +69,20 @@ export const axiosUpdateAlarm = async (alarm: AlarmInfo): Promise<any> => {
   }
 };
 
+const axiosUpdateDeviceTokenURL = "/v4/users/me/device-token";
+export const axiosUpdateDeviceToken = async (
+  deviceToken: string | null
+): Promise<any> => {
+  try {
+    const response = await instance.put(axiosUpdateDeviceTokenURL, {
+      deviceToken,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
 export const axiosBuildingFloor = async (): Promise<any> => {
@@ -123,6 +137,17 @@ const axiosMyLentInfoURL = "/v4/lent/me";
 export const axiosMyLentInfo = async (): Promise<any> => {
   try {
     const response = await instance.get(axiosMyLentInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosSwapIdURL = "/v4/lent/swap/";
+export const axiosSwapId = async (cabinetId: number | null): Promise<any> => {
+  if (cabinetId === null) return;
+  try {
+    const response = await instance.post(`${axiosSwapIdURL}${cabinetId}`);
     return response;
   } catch (error) {
     throw error;
@@ -221,9 +246,11 @@ export const axiosAdminCabinetInfoByCabinetId = async (
 };
 
 const axiosReturnByUserIdURL = "/v4/admin/return-users/";
-export const axiosReturnByUserId = async (userId: number): Promise<any> => {
+export const axiosReturnByUserId = async (userIds: number[]): Promise<any> => {
   try {
-    const response = await instance.patch(axiosReturnByUserIdURL + userId);
+    const response = await instance.patch(axiosReturnByUserIdURL, {
+      userIds: userIds,
+    });
     return response;
   } catch (error) {
     throw error;

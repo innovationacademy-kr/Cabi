@@ -1,3 +1,7 @@
+import {
+  deleteFcmToken,
+  requestFcmAndGetDeviceToken,
+} from "@/firebase/firebase-messaging-sw";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -8,7 +12,7 @@ import NotificationCardContainer from "@/components/Card/NotificationCard/Notifi
 import ProfileCardContainer from "@/components/Card/ProfileCard/ProfileCard.container";
 import ThemeColorCardContainer from "@/components/Card/ThemeColorCard/ThemeColorCard.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { axiosMyInfo } from "@/api/axios/axios.custom";
+import { axiosMyInfo, axiosUpdateDeviceToken } from "@/api/axios/axios.custom";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +31,11 @@ const ProfilePage = () => {
   const getMyInfo = async () => {
     try {
       const { data: myInfo } = await axiosMyInfo();
+      if (myInfo.alarmTypes?.push && myInfo.isDeviceTokenExpired) {
+        await deleteFcmToken();
+        const deviceToken = await requestFcmAndGetDeviceToken();
+        await axiosUpdateDeviceToken(deviceToken);
+      }
       setMyInfo(myInfo);
     } catch (error) {
       throw error;

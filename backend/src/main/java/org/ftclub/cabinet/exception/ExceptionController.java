@@ -12,6 +12,7 @@ public class ExceptionController {
 	@ExceptionHandler(ControllerException.class)
 	public ResponseEntity<?> controllerExceptionHandler(ControllerException e) {
 		log.info("[ControllerException] {} : {}", e.status.getError(), e.status.getMessage());
+		e.printStackTrace();
 		return ResponseEntity
 				.status(e.status.getStatusCode())
 				.body(e.status);
@@ -20,6 +21,7 @@ public class ExceptionController {
 	@ExceptionHandler(ServiceException.class)
 	public ResponseEntity<?> serviceExceptionHandler(ServiceException e) {
 		log.info("[ServiceException] {} : {}", e.status.getError(), e.status.getMessage());
+		e.printStackTrace();
 		return ResponseEntity
 				.status(e.status.getStatusCode())
 				.body(e.status);

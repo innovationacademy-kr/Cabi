@@ -104,20 +104,21 @@ class DateUtilTest {
 	@DisplayName("성공: 같은 날짜")
 	public void 성공_isSameDay() {
 		LocalDateTime time = LocalDateTime.now();
-		assertTrue(DateUtil.isSameDay(time));
+		assertTrue(DateUtil.isToday(time));
 	}
+
 	@Test
 	@DisplayName("실패: 하루 전 날짜")
 	public void 실패_하루전_isSameDay() {
 		LocalDateTime time = LocalDateTime.now().minusDays(1);
-		assertFalse(DateUtil.isSameDay(time));
+		assertFalse(DateUtil.isToday(time));
 	}
 
 	@Test
 	@DisplayName("실패: 하루 뒤 날짜")
 	public void 실패_하루뒤_isSameDay() {
 		LocalDateTime time = LocalDateTime.now().plusDays(1);
-		assertFalse(DateUtil.isSameDay(time));
+		assertFalse(DateUtil.isToday(time));
 	}
 
 	@Test

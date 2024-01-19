@@ -31,10 +31,10 @@ public class SlackResponse {
 		switch (ok) {
 			case CONFIG_ERROR:
 				log.error("Slack Response ERROR Error {} ", this.toString());
-				throw new ServiceException(ExceptionStatus.SLACK_REQUEST_BAD_GATEWAY);
+				throw ExceptionStatus.SLACK_REQUEST_BAD_GATEWAY.asServiceException();
 			case AUTH_ERROR:
 				log.error("Slack Response ERROR Error {} ", this.toString());
-				throw new ServiceException(ExceptionStatus.SLACK_ID_NOT_FOUND);
+				throw ExceptionStatus.SLACK_ID_NOT_FOUND.asServiceException();
 		}
 	}
 

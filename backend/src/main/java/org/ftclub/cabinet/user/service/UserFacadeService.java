@@ -1,204 +1,149 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.ftclub.cabinet.cabinet.domain.LentType;
-import org.ftclub.cabinet.dto.BlockedUserPaginationDto;
-import org.ftclub.cabinet.dto.ClubUserListDto;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
+import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.dto.LentExtensionPaginationDto;
+import org.ftclub.cabinet.dto.LentExtensionResponseDto;
 import org.ftclub.cabinet.dto.MyProfileResponseDto;
-import org.ftclub.cabinet.dto.OverdueUserCabinetPaginationDto;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
-import org.ftclub.cabinet.dto.UserCabinetPaginationDto;
-import org.ftclub.cabinet.dto.UserProfilePaginationDto;
+import org.ftclub.cabinet.dto.UpdateDeviceTokenRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
-import org.ftclub.cabinet.user.domain.AdminRole;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.mapper.UserMapper;
+import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
+import org.ftclub.cabinet.user.domain.BanHistory;
+import org.ftclub.cabinet.user.domain.LentExtension;
+import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
+import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
+import org.springframework.stereotype.Service;
 
-public interface UserFacadeService {
+@Service
+@RequiredArgsConstructor
+@Logging(level = LogLevel.DEBUG)
+public class UserFacadeService {
+
+	private final BanHistoryQueryService banHistoryQueryService;
+	private final CabinetQueryService cabinetQueryService;
+	private final LentExtensionQueryService lentExtensionQueryService;
+	private final LentExtensionCommandService lentExtensionCommandService;
+	private final LentQueryService lentQueryService;
+	private final LentExtensionPolicy lentExtensionPolicy;
+	private final UserQueryService userQueryService;
+	private final UserCommandService userCommandService;
+	private final UserMapper userMapper;
+	private final FCMTokenRedisService fcmTokenRedisService;
+	private final FirebaseConfig firebaseConfig;
 
 	/**
-	 * 현재 로그인한 유저의 프로필을 반환합니다. 대여한 사물함 아이디 정보가 포합됩니다.
+	 * 유저의 프로필을 가져옵니다.
 	 *
-	 * @param user 로그인한 유저의 정보
-	 * @return {@link MyProfileResponseDto} 현재 로그인한 유저의 정보
+	 * @param user 유저의 세션 정보
+	 * @return 유저의 프로필 정보를 반환합니다.
 	 */
-	MyProfileResponseDto getMyProfile(UserSessionDto user);
+	public MyProfileResponseDto getProfile(UserSessionDto user) {
+		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
+		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
+				LocalDateTime.now()).orElse(null);
+		LentExtension lentExtension = lentExtensionQueryService.findActiveLentExtension(
+				user.getUserId());
+        LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(lentExtension);
+        User currentUser = userQueryService.getUser(user.getUserId());
+		boolean isDeviceTokenExpired = currentUser.getAlarmTypes().isPush()
+				&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
+        return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
+                lentExtensionResponseDto, currentUser.getAlarmTypes(), isDeviceTokenExpired);
+    }
 
 	/**
-	 * 모든 정지 유저를 반환합니다.
+	 * 유저의 모든 연장권 정보를 가져옵니다.
 	 *
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 * @param now  현재 시간
-	 * @return {@link BlockedUserPaginationDto} 모든 정지 유저
+	 * @param user 유저의 세션 정보
+	 * @return 유저의 모든 연장권 정보를 반환합니다.
 	 */
-	/* 기존 searchByBanUser와 동일한 역할을 합니다. */
-	BlockedUserPaginationDto getAllBanUsers(Integer page, Integer size, LocalDateTime now);
+	public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
+		List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.findLentExtensionsInLatestOrder(
+						user.getUserId())
+				.stream()
+				.map(userMapper::toLentExtensionResponseDto)
+				.collect(Collectors.toList());
+		return userMapper.toLentExtensionPaginationDto(lentExtensionResponseDtos,
+				(long) lentExtensionResponseDtos.size());
+	}
 
 	/**
-	 * 유저 이름의 일부를 입력받아 해당하는 유저들의 프로필을 받아옵니다.
+	 * 유저의 사용 가능한 연장권을 가져옵니다.
 	 *
-	 * @param name 유저 이름의 일부
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 * @return {@link UserProfilePaginationDto} 해당하는 유저들의 프로필
+	 * @param user 유저의 세션 정보
+	 * @return 유저의 사용 가능한 연장권 정보를 반환합니다.
 	 */
-	/*기존 searchByIntraId 메서드와 동일한 역할을 합니다.*/
-	UserProfilePaginationDto getUserProfileListByPartialName(String name, Integer page,
-			Integer size);
+	public LentExtensionPaginationDto getActiveLentExtensionsPage(UserSessionDto user) {
+		LentExtensions lentExtensions = lentExtensionQueryService.findActiveLentExtensions(
+				user.getUserId());
+		List<LentExtensionResponseDto> LentExtensionResponseDtos = lentExtensions.getLentExtensions()
+				.stream()
+				.map(userMapper::toLentExtensionResponseDto)
+				.collect(Collectors.toList());
+
+		return userMapper.toLentExtensionPaginationDto(LentExtensionResponseDtos,
+				(long) LentExtensionResponseDtos.size());
+	}
 
 	/**
-	 * 유저 이름의 일부를 입력받아 해당 유저들의 캐비넷 정보를 반환합니다.
+	 * 연장권을 사용합니다.
 	 *
-	 * @param name 유저 이름의 일부
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 * @return {@link UserCabinetPaginationDto} 해당하는 유저들의 캐비넷 정보
+	 * @param user 유저의 세션 정보
 	 */
-	UserCabinetPaginationDto findUserCabinetListByPartialName(String name, Integer page,
-			Integer size);
+	public void useLentExtension(UserSessionDto user) {
+		Cabinet cabinet = cabinetQueryService.getCabinet(user.getUserId());
+		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
+				cabinet.getId());
+		lentExtensionPolicy.verifyLentExtension(cabinet, activeLentHistories);
+
+		LentExtension activeLentExtension = lentExtensionQueryService.findActiveLentExtension(
+				user.getUserId());
+		if (activeLentExtension == null) {
+			throw ExceptionStatus.EXTENSION_NOT_FOUND.asServiceException();
+		}
+		lentExtensionCommandService.useLentExtension(activeLentExtension, activeLentHistories);
+	}
 
 	/**
-	 * 모든 유저의 정보를 가져옵니다.
+	 * 유저의 알람 설정을 변경합니다.
 	 *
-	 * @return 모든 유저의 정보를 가져옵니다.
+	 * @param userSessionDto        유저의 세션 정보
+	 * @param updateAlarmRequestDto 변경할 알람 설정 정보
 	 */
-	List<User> getAllUsers();
+	@Transactional
+	public void updateAlarmState(UserSessionDto userSessionDto, UpdateAlarmRequestDto updateAlarmRequestDto) {
+		User user = userQueryService.getUser(userSessionDto.getUserId());
+		userCommandService.updateAlarmStatus(user, updateAlarmRequestDto);
+	}
 
 	/**
-	 * 유저가 존재하는지 확인합니다.
-	 *
-	 * @param name 유저 이름
-	 * @return 유저가 존재하면 true, 아니면 false
+	 * 유저의 디바이스 토큰 정보를 업데이트합니다.
+	 * @param userSessionDto 유저의 세션 정보
+	 * @param updateDeviceTokenRequestDto 디바이스 토큰 정보
 	 */
-	boolean checkUserExists(String name);
-
-	/**
-	 * 유저를 생성합니다.
-	 *
-	 * @param name         유저 이름
-	 * @param email        유저 이메일
-	 * @param blackholedAt 유저 블랙홀 날짜
-	 * @param role         유저 역할
-	 */
-	void createUser(String name, String email, LocalDateTime blackholedAt, UserRole role);
-
-	/**
-	 * @param clubName 동아리 유저 이름
-	 */
-	void createClubUser(String clubName);
-
-	/**
-	 * 관리자가 존재하는지 확인합니다.
-	 *
-	 * @param email 관리자 이메일
-	 * @return 관리자가 존재하면 true, 아니면 false
-	 */
-	boolean checkAdminUserExists(String email);
-
-	/**
-	 * 관리자를 생성합니다.
-	 *
-	 * @param email 관리자 이메일
-	 */
-	void createAdminUser(String email);
-
-	/**
-	 * 유저를 삭제합니다.
-	 *
-	 * @param userId    유저 고유 아이디
-	 * @param deletedAt 유저 삭제 날짜
-	 */
-	void deleteUser(Long userId, LocalDateTime deletedAt);
-
-	/**
-	 * 관리자를 삭제합니다.
-	 *
-	 * @param adminUserId 관리자 고유 아이디
-	 */
-	void deleteAdminUser(Long adminUserId);
-
-	/**
-	 * 유저의 권한을 변경합니다.
-	 *
-	 * @param adminUserId 관리자 고유 아이디
-	 * @param role        관리자 권한
-	 */
-	void updateAdminUserRole(Long adminUserId, AdminRole role);
-
-	/**
-	 * 유저를 어드민으로 승격시킵니다.
-	 *
-	 * @param email 유저 이메일
-	 */
-	void promoteUserToAdmin(String email);
-
-	/**
-	 * 유저의 블랙홀 시간을 변경합니다.
-	 *
-	 * @param userId          유저 고유 아이디
-	 * @param newBlackholedAt 새로운 유저 블랙홀 시간
-	 */
-	void updateUserBlackholedAt(Long userId, LocalDateTime newBlackholedAt);
-
-	/**
-	 * 유저를 정지시킵니다.
-	 *
-	 * @param userId    유저 고유 아이디
-	 * @param lentType  현재 대여 타입
-	 * @param startedAt 대여 시작 날짜
-	 * @param endedAt   대여 종료 날짜
-	 * @param expiredAt 대여 만료 날짜
-	 */
-	void banUser(Long userId, LentType lentType, LocalDateTime startedAt, LocalDateTime endedAt,
-			LocalDateTime expiredAt);
-
-	/**
-	 * 유저의 정지를 해제합니다.
-	 *
-	 * @param userId 유저 고유 아이디
-	 * @param today  현재 날짜
-	 */
-	void deleteRecentBanHistory(Long userId, LocalDateTime today);
-
-	/**
-	 * 연체 중인 유저 리스트를 반환합니다.
-	 *
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 */
-	OverdueUserCabinetPaginationDto getOverdueUserList(Integer page, Integer size);
-
-	/**
-	 * 동아리 유저 리스트DTO를 반환합니다.
-	 *
-	 * @param page 페이지 번호
-	 * @param size 페이지 당 길이
-	 * @return
-	 */
-	ClubUserListDto findAllClubUser(Integer page, Integer size);
-
-
-	/**
-	 * 동아리 유저를 삭제합니다.
-	 *
-	 * @param clubId 동아리 고유 아이디
-	 */
-	void deleteClubUser(Long clubId);
-
-	void updateClubUser(Long clubId, String clubName);
-
-	LentExtensionPaginationDto getAllLentExtension(Integer page, Integer size);
-
-	LentExtensionPaginationDto getAllActiveLentExtension(Integer page, Integer size);
-
-	LentExtensionPaginationDto getMyLentExtension(UserSessionDto userSessionDto);
-
-	LentExtensionPaginationDto getMyActiveLentExtensionPage(UserSessionDto userSessionDto);
-
-	void useLentExtension(UserSessionDto userSessionDto);
-
-	void updateAlarmState(UserSessionDto user, UpdateAlarmRequestDto dto);
+	@Transactional
+	public void updateDeviceToken(UserSessionDto userSessionDto, UpdateDeviceTokenRequestDto updateDeviceTokenRequestDto) {
+		User user = userQueryService.getUser(userSessionDto.getUserId());
+		fcmTokenRedisService.saveToken(
+				user.getName(),
+				updateDeviceTokenRequestDto.getDeviceToken(),
+				Duration.ofDays(firebaseConfig.getDeviceTokenExpiryDays())
+		);
+	}
 }
+

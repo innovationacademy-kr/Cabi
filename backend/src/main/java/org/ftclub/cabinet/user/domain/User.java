@@ -1,41 +1,33 @@
 package org.ftclub.cabinet.user.domain;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
+import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"alarmStatus"})
 @Log4j2
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "USER_ID")
-	private Long userId;
+	@Column(name = "ID")
+	private Long id;
 
 	@NotNull
 	@Column(name = "NAME", length = 32, unique = true, nullable = false)
@@ -55,23 +47,36 @@ public class User {
 	@Column(name = "ROLE", length = 32, nullable = false)
 	private UserRole role;
 
-	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private AlarmStatus alarmStatus;
+	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
+	private boolean slackAlarm;
+
+	@Column(name = "EMAIL_ALARM", columnDefinition = "boolean default true")
+	private boolean emailAlarm;
+
+	@Column(name = "PUSH_ALARM", columnDefinition = "boolean default false")
+	private boolean pushAlarm;
+
 
 	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
 		this.role = userRole;
-		this.alarmStatus = AlarmStatus.of(this);
+		setDefaultAlarmStatus();
 	}
 
 	public static User of(String name, String email, LocalDateTime blackholedAt,
-			UserRole userRole) {
+	                      UserRole userRole) {
 		User user = new User(name, email, blackholedAt, userRole);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return user;
+	}
+
+	private void setDefaultAlarmStatus() {
+		this.slackAlarm = true;
+		this.emailAlarm = true;
+		this.pushAlarm = false;
 	}
 
 	private boolean isValid() {
@@ -89,7 +94,7 @@ public class User {
 			return false;
 		}
 		User user = (User) o;
-		return Objects.equals(userId, user.userId);
+		return Objects.equals(id, user.id);
 	}
 
 	public boolean isUserRole(UserRole role) {
@@ -111,5 +116,22 @@ public class User {
 		this.name = name;
 		ExceptionUtil.throwIfFalse(this.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+	}
+
+	public String getBlackholedAtString() {
+		if (blackholedAt == null) {
+			return null;
+		}
+		return blackholedAt.toString();
+	}
+
+	public AlarmTypeResponseDto getAlarmTypes() {
+		return new AlarmTypeResponseDto(slackAlarm, emailAlarm, pushAlarm);
+	}
+
+	public void changeAlarmStatus(UpdateAlarmRequestDto updateAlarmRequestDto) {
+		this.slackAlarm = updateAlarmRequestDto.isSlack();
+		this.emailAlarm = updateAlarmRequestDto.isEmail();
+		this.pushAlarm = updateAlarmRequestDto.isPush();
 	}
 }

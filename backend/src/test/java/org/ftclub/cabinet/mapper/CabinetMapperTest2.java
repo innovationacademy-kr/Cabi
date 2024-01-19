@@ -44,7 +44,7 @@ class CabinetMapperTest2 {
 	@DisplayName("CabinetDto 매핑 성공")
 	void toCabinetDto_성공() {
 		CabinetDto dto = mapper.toCabinetDto(cabinet);
-		assertEquals(cabinet.getCabinetId(), dto.getCabinetId());
+		assertEquals(cabinet.getId(), dto.getCabinetId());
 		assertEquals(cabinet.getVisibleNum(), dto.getVisibleNum());
 		assertEquals(cabinet.getCabinetPlace().getLocation(), dto.getLocation());
 		assertEquals(cabinet.getLentType(), dto.getLentType());

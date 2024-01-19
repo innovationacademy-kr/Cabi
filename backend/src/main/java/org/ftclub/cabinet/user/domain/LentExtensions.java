@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j2;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @ToString
@@ -36,10 +37,11 @@ public class LentExtensions {
 		return lentExtensions == null || lentExtensions.isEmpty();
 	}
 
-	public LentExtension findImminentActiveLentExtension() {
+	public Optional<LentExtension> findImminentActiveLentExtension() {
 		filterActiveLentExtensions();
 		sortImminentASC();
-		return lentExtensions.get(0);
+		return Optional.ofNullable(!lentExtensions.isEmpty() ?
+				lentExtensions.get(0) : null);
 	}
 
 	public List<LentExtension> getActiveLentExtensions() {

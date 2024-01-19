@@ -1,9 +1,9 @@
 package org.ftclub.cabinet.dto;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 /**
  * 사용 정지된 유저에 대한 정보입니다.

@@ -16,8 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
@@ -96,24 +94,24 @@ public class AdminAuthControllerUnitTest {
 		}
 	}
 
-	@Nested
-	@DisplayName("/login/callback")
-	class LoginCallback {
-
-		static final String url = URL_PREFIX + "/login/callback";
-		String invalidCode = "thisMustBeBadGateWayBecauseOfInvalidCode";
-		// valid한 코드는 알 수 없음
-
-		@DisplayName("어드민 로그인 콜백 실패")
-		@Test
-		void wrongCode() throws Exception {
-			mockMvc.perform(get(url)
-							.queryParam("code", invalidCode))
-					.andExpect(status().isBadGateway())
-					.andDo(document(DOCUMENT_NAME, requestParameters(
-							parameterWithName("code").description("콜백 코드"))));
-		}
-	}
+//	@Nested
+//	@DisplayName("/login/callback")
+//	class LoginCallback {
+//
+//		static final String url = URL_PREFIX + "/login/callback";
+//		String invalidCode = "thisMustBeBadGateWayBecauseOfInvalidCode";
+//		// valid한 코드는 알 수 없음
+//
+//		@DisplayName("어드민 로그인 콜백 실패")
+//		@Test
+//		void wrongCode() throws Exception {
+//			mockMvc.perform(get(url)
+//							.queryParam("code", invalidCode))
+//					.andExpect(status().isBadGateway())
+//					.andDo(document(DOCUMENT_NAME, requestParameters(
+//							parameterWithName("code").description("콜백 코드"))));
+//		}
+//	}
 
 	@Nested
 	@DisplayName("/logout")

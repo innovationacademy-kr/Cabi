@@ -56,6 +56,7 @@ export interface ICurrentModalStateInfo {
   invitationCodeModal: boolean;
   extendModal: boolean;
   cancelModal: boolean;
+  swapModal: boolean;
 }
 
 export interface IAdminCurrentModalStateInfo {
@@ -81,7 +82,8 @@ export type TModalState =
   | "passwordCheckModal"
   | "invitationCodeModal"
   | "extendModal"
-  | "cancelModal";
+  | "cancelModal"
+  | "swapModal";
 
 export type TAdminModalState = "returnModal" | "statusModal" | "clubLentModal";
 
@@ -130,7 +132,6 @@ export const getDetailMessage = (
   else if (lentType === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
   else if (
-    status === CabinetStatus.LIMITED_AVAILABLE ||
     status === CabinetStatus.FULL ||
     status === CabinetStatus.OVERDUE
   )
@@ -178,6 +179,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     invitationCodeModal: false,
     extendModal: false,
     cancelModal: false,
+    swapModal: false,
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,
@@ -209,9 +211,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const countTypes = (cabinetList: CabinetPreviewInfo[]) =>
     cabinetList.reduce(
       (result, cabinet): ICount => {
-        if (cabinet.status === CabinetStatus.LIMITED_AVAILABLE)
-          result["AVAILABLE"]++;
-        else if (cabinet.status === CabinetStatus.BANNED) result["BROKEN"]++;
+        if (cabinet.status === CabinetStatus.BANNED) result["BROKEN"]++;
         else result[cabinet.status]++;
         return result;
       },
@@ -253,6 +253,8 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       cabinetViewData.lentsLength >= 1
     ) {
       modalName = "extendModal";
+    } else if (modalName === "swapModal") {
+      modalName = "swapModal";
     }
     setUserModal({
       ...userModal,
@@ -327,7 +329,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
       isAvailable={
         (cabinetViewData?.status === "AVAILABLE" ||
-          cabinetViewData?.status === "LIMITED_AVAILABLE" ||
           cabinetViewData?.status === "IN_SESSION") &&
         !myCabinetInfo.cabinetId
       }
@@ -335,6 +336,13 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
+      isSwappable={
+        myCabinetInfo.lentType === CabinetType.PRIVATE &&
+        !!myCabinetInfo.cabinetId &&
+        cabinetViewData?.lentType === CabinetType.PRIVATE &&
+        cabinetViewData?.cabinetId !== myCabinetInfo.cabinetId &&
+        cabinetViewData?.status === CabinetStatus.AVAILABLE
+      }
     />
   );
 };
