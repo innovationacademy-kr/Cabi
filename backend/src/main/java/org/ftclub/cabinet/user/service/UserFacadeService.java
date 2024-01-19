@@ -106,6 +106,7 @@ public class UserFacadeService {
 	 *
 	 * @param user 유저의 세션 정보
 	 */
+	@Transactional
 	public void useLentExtension(UserSessionDto user) {
 		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(user.getUserId());
 		List<LentHistory> activeLentHistories = lentQueryService.findCabinetActiveLentHistories(
