@@ -38,6 +38,7 @@ public class Club {
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt;
 
+
 	@OneToMany(mappedBy = "club")
 	private List<ClubRegistration> clubRegistrations;
 
