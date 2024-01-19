@@ -51,13 +51,7 @@ public class OverdueManager {
 		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermSoonOverdue())) {
 			return OverdueType.SOON_OVERDUE;
 		}
-		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermOverdue())) {
-			return OverdueType.OVERDUE;
-		}
-		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermThreeDaysOverdue())) {
-			return OverdueType.OVERDUE;
-		}
-		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermWeekOverdue())) {
+		if (daysLeftFromExpireDate >= alarmProperties.getOverdueTermOverdue()) {
 			return OverdueType.OVERDUE;
 		}
 		return OverdueType.NONE;

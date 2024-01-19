@@ -104,10 +104,4 @@ public class AlarmProperties {
 
 	@Value("${cabinet.alarm.overdue-term.overdue}")
 	private Long overdueTermOverdue;
-
-	@Value("${cabinet.alarm.overdue-term.three-days-overdue}")
-	private Long overdueTermThreeDaysOverdue;
-
-	@Value("${cabinet.alarm.overdue-term.week-overdue}")
-	private Long overdueTermWeekOverdue;
 }
