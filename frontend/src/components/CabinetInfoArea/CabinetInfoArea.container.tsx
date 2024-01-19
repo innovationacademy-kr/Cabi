@@ -132,7 +132,6 @@ export const getDetailMessage = (
   else if (lentType === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
   else if (
-    status === CabinetStatus.LIMITED_AVAILABLE ||
     status === CabinetStatus.FULL ||
     status === CabinetStatus.OVERDUE
   )
@@ -212,9 +211,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
   const countTypes = (cabinetList: CabinetPreviewInfo[]) =>
     cabinetList.reduce(
       (result, cabinet): ICount => {
-        if (cabinet.status === CabinetStatus.LIMITED_AVAILABLE)
-          result["AVAILABLE"]++;
-        else if (cabinet.status === CabinetStatus.BANNED) result["BROKEN"]++;
+        if (cabinet.status === CabinetStatus.BANNED) result["BROKEN"]++;
         else result[cabinet.status]++;
         return result;
       },
@@ -332,7 +329,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       }
       isAvailable={
         (cabinetViewData?.status === "AVAILABLE" ||
-          cabinetViewData?.status === "LIMITED_AVAILABLE" ||
           cabinetViewData?.status === "IN_SESSION") &&
         !myCabinetInfo.cabinetId
       }
