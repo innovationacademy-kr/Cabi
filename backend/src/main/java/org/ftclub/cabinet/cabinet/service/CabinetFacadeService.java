@@ -42,7 +42,6 @@ import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
-import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -194,13 +193,11 @@ public class CabinetFacadeService {
 				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 			}
 			if (cabinet.isStatus(PENDING)) {
-				LocalDateTime latestEndedAt = lentHistoriesMap.get(cabinet.getId()).stream()
+				lentHistoriesMap.get(cabinet.getId()).stream()
 						.map(LentHistory::getEndedAt)
-						.max(LocalDateTime::compareTo).orElse(null);
-				if (latestEndedAt != null && DateUtil.isSameDay(latestEndedAt, yesterday)) {
-					cabinetFloorMap.get(floor)
-							.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
-				}
+						.max(LocalDateTime::compareTo)
+						.ifPresent(latestEndedAt -> cabinetFloorMap.get(floor)
+								.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null)));
 			}
 		});
 		return cabinetMapper.toCabinetPendingResponseDto(cabinetFloorMap);
