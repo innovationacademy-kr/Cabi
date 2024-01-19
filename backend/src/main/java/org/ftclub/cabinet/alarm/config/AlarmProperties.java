@@ -93,11 +93,11 @@ public class AlarmProperties {
 	private String announcementSlackTemplate;
 
 	/*======================== term =============================*/
-	@Value("${cabinet.alarm.overdue-term.week-ago}")
-	private Long overdueTermWeekAge;
+	@Value("${cabinet.alarm.overdue-term.week-before}")
+	private Long overdueTermWeekBefore;
 
-	@Value("${cabinet.alarm.overdue-term.three-days-ago}")
-	private Long overdueTermThreeDaysAgo;
+	@Value("${cabinet.alarm.overdue-term.three-days-before}")
+	private Long overdueTermThreeDaysBefore;
 
 	@Value("${cabinet.alarm.overdue-term.soon-overdue}")
 	private Long overdueTermSoonOverdue;

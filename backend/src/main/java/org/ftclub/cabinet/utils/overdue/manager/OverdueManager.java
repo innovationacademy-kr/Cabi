@@ -42,10 +42,10 @@ public class OverdueManager {
 			return OverdueType.OVERDUE;
 		}
 
-		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermWeekAge())) {
+		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermWeekBefore())) {
 			return OverdueType.SOON_OVERDUE;
 		}
-		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermThreeDaysAgo())) {
+		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermThreeDaysBefore())) {
 			return OverdueType.SOON_OVERDUE;
 		}
 		if (daysLeftFromExpireDate.equals(alarmProperties.getOverdueTermSoonOverdue())) {
@@ -64,10 +64,9 @@ public class OverdueManager {
 	}
 
 	public void handleOverdue(ActiveLentHistoryDto activeLent) {
-		log.info("called handleOverdue with {}", activeLent);
 		OverdueType overdueType = getOverdueType(activeLent.getIsExpired(),
 				activeLent.getDaysLeftFromExpireDate());
-		log.info("overdueType = {}", overdueType);
+		log.info("called handleOverdue: activeLent={}, overdueType={}", activeLent, overdueType);
 		switch (overdueType) {
 			case NONE:
 				return;
