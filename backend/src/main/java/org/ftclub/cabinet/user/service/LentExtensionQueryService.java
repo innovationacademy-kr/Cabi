@@ -3,6 +3,7 @@ package org.ftclub.cabinet.user.service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -12,6 +13,7 @@ import org.ftclub.cabinet.user.repository.LentExtensionRepository;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
 public class LentExtensionQueryService {
