@@ -3,7 +3,6 @@ package org.ftclub.cabinet.user.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
-@Transactional
 public class UserQueryService {
 
 	private final UserRepository userRepository;

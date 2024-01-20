@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
@@ -28,6 +27,7 @@ import org.ftclub.cabinet.user.domain.LentExtensionPolicy;
 import org.ftclub.cabinet.user.domain.LentExtensions;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +52,7 @@ public class UserFacadeService {
 	 * @param user 유저의 세션 정보
 	 * @return 유저의 프로필 정보를 반환합니다.
 	 */
+	@Transactional(readOnly = true)
 	public MyProfileResponseDto getProfile(UserSessionDto user) {
 		Cabinet cabinet = cabinetQueryService.findUserActiveCabinet(user.getUserId());
 		BanHistory banHistory = banHistoryQueryService.findRecentActiveBanHistory(user.getUserId(),
@@ -73,6 +74,7 @@ public class UserFacadeService {
 	 * @param user 유저의 세션 정보
 	 * @return 유저의 모든 연장권 정보를 반환합니다.
 	 */
+	@Transactional(readOnly = true)
 	public LentExtensionPaginationDto getLentExtensions(UserSessionDto user) {
 		List<LentExtensionResponseDto> lentExtensionResponseDtos = lentExtensionQueryService.findLentExtensionsInLatestOrder(
 						user.getUserId())
@@ -89,6 +91,7 @@ public class UserFacadeService {
 	 * @param user 유저의 세션 정보
 	 * @return 유저의 사용 가능한 연장권 정보를 반환합니다.
 	 */
+	@Transactional(readOnly = true)
 	public LentExtensionPaginationDto getActiveLentExtensionsPage(UserSessionDto user) {
 		LentExtensions lentExtensions = lentExtensionQueryService.findActiveLentExtensions(
 				user.getUserId());
