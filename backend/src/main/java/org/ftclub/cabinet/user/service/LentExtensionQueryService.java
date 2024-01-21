@@ -28,8 +28,9 @@ public class LentExtensionQueryService {
 	 */
 	public LentExtension findActiveLentExtension(Long userId) {
 
+		List<LentExtension> lentExtensions = lentExtensionRepository.findAllByUserId(userId);
 		return LentExtensions.builder()
-				.lentExtensions(lentExtensionRepository.findAll(userId))
+				.lentExtensions(lentExtensions)
 				.build()
 				.findImminentActiveLentExtension()
 				.orElse(null);
@@ -54,7 +55,7 @@ public class LentExtensionQueryService {
 	 * @return 사용 기한을 기준으로 최신 순서로 정렬된 모든 연장권을 반환합니다.
 	 */
 	public List<LentExtension> findLentExtensionsInLatestOrder(Long userId) {
-		return lentExtensionRepository.findAll(userId)
+		return lentExtensionRepository.findAllByUserId(userId)
 				.stream()
 				.sorted(Comparator.comparing(LentExtension::getExpiredAt,
 						Comparator.reverseOrder()))
