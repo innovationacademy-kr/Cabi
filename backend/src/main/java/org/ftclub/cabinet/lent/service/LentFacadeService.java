@@ -199,6 +199,10 @@ public class LentFacadeService {
 		lentPolicyService.verifyUserForLent(new UserVerifyRequestDto(user.getRole(),
 				user.getBlackholedAt(), lentCount, cabinetId, cabinet.getStatus(), banHistories));
 
+		if (user.isBlackholed()) {
+			eventPublisher.publishEvent(UserBlackHoleEvent.of(user));
+		}
+
 		Long attemptCount = lentRedisService.getAttemptCountOnShareCabinet(cabinetId, userId);
 		lentPolicyService.verifyAttemptCountOnShareCabinet(attemptCount);
 
