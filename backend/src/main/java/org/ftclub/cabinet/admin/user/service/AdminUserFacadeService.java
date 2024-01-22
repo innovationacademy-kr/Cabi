@@ -1,8 +1,7 @@
 package org.ftclub.cabinet.admin.user.service;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.dto.ClubUserListDto;
-import org.ftclub.cabinet.dto.UserProfileDto;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.UserMapper;
@@ -11,12 +10,7 @@ import org.ftclub.cabinet.user.service.BanHistoryCommandService;
 import org.ftclub.cabinet.user.service.BanHistoryQueryService;
 import org.ftclub.cabinet.user.service.UserCommandService;
 import org.ftclub.cabinet.user.service.UserQueryService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 관리자 페이지에서 사용되는 유저 서비스
@@ -58,21 +52,21 @@ public class AdminUserFacadeService {
 	 *
 	 * @param userId 동아리 사용자 id
 	 */
-	public void deleteClubUser(Long userId) {
-		User clubUser = userQueryService.getClubUser(userId);
-		userCommandService.deleteClubUser(clubUser);
-	}
+//	public void deleteClubUser(Long userId) {
+//		User clubUser = userQueryService.getClubUser(userId);
+//		userCommandService.deleteClubUser(clubUser);
+//	}
 
 	/**
 	 * 동아리 사용자를 조회합니다.
 	 *
 	 * @return 동아리 사용자
 	 */
-	public ClubUserListDto findAllClubUsers(Pageable pageable) {
-		Page<User> clubUsers = userQueryService.findClubUsers(pageable);
-		List<UserProfileDto> result = clubUsers.map(userMapper::toUserProfileDto).toList();
-		return userMapper.toClubUserListDto(result, clubUsers.getTotalElements());
-	}
+//	public ClubUserListDto findAllClubUsers(Pageable pageable) {
+//		Page<User> clubUsers = userQueryService.findClubUsers(pageable);
+//		List<UserProfileDto> result = clubUsers.map(userMapper::toUserProfileDto).toList();
+//		return userMapper.toClubUserListDto(result, clubUsers.getTotalElements());
+//	}
 
 	/**
 	 * 동아리 사용자의 동아리 이름을 변경합니다.

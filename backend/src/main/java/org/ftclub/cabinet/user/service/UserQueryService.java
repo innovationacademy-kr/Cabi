@@ -8,7 +8,6 @@ import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,10 +37,10 @@ public class UserQueryService {
 	 * @param userId 동아리 유저의 ID
 	 * @return 동아리 유저 객체를 반환합니다.
 	 */
-	public User getClubUser(Long userId) {
-		Optional<User> user = userRepository.findByIdAndRole(userId, UserRole.CLUB);
-		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
-	}
+//	public User getClubUser(Long userId) {
+//		Optional<User> user = userRepository.findByIdAndRole(userId, UserRole.CLUB);
+//		return user.orElseThrow(ExceptionStatus.NOT_FOUND_USER::asServiceException);
+//	}
 
 	/**
 	 * 유저를 가져옵니다.
@@ -111,9 +110,9 @@ public class UserQueryService {
 	 * @param pageable 페이징 정보
 	 * @return 동아리 유저 객체들을 페이지 형식으로 반환합니다.
 	 */
-	public Page<User> findClubUsers(Pageable pageable) {
-		return userRepository.findAllByRoleAndDeletedAtIsNull(UserRole.CLUB, pageable);
-	}
+//	public Page<User> findClubUsers(Pageable pageable) {
+//		return userRepository.findAllByRoleAndDeletedAtIsNull(UserRole.CLUB, pageable);
+//	}
 
 	/**
 	 * 블랙홀에 빠질 위험이 있는 유저들을 가져옵니다. blackholedAt이 일주일 이하인 유저들을 블랙홀에 빠질 위험이 있는 유저로 판단합니다.
