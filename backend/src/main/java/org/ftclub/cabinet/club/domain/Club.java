@@ -23,7 +23,7 @@ import org.springframework.data.annotation.CreatedDate;
 @Table(name = "CLUB")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"clubRegistrations", "clubLentHistories"})
 public class Club {
 
 	@Id

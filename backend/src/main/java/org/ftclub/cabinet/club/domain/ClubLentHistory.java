@@ -47,10 +47,10 @@ public class ClubLentHistory {
 	@Column(name = "STARTED_AT", nullable = false)
 	private LocalDateTime startedAt;
 
-	@Column(name = "ENDED_AT", nullable = false)
+	@Column(name = "ENDED_AT")
 	private LocalDateTime endedAt;
 
-	@Column(name = "EXPIRED_AT")
+	@Column(name = "EXPIRED_AT", nullable = false)
 	private LocalDateTime expiredAt;
 
 	protected ClubLentHistory(Club club, Cabinet cabinet, LocalDateTime startedAt,
