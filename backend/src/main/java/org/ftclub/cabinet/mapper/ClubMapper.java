@@ -1,8 +1,6 @@
 package org.ftclub.cabinet.mapper;
 
 import java.util.List;
-import org.ftclub.cabinet.club.domain.Club;
-import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

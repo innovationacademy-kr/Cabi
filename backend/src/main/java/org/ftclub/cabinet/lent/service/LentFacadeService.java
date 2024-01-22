@@ -158,8 +158,10 @@ public class LentFacadeService {
 				userCount);
 		lentPolicyService.verifyCabinetType(cabinet.getLentType(), LentType.PRIVATE);
 		lentPolicyService.verifyUserForLent(
-				new UserVerifyRequestDto(user.getRole(), user.getBlackholedAt(), lentCount,
+				new UserVerifyRequestDto(user.getBlackholedAt(), lentCount,
 						cabinetId, cabinet.getStatus(), banHistories));
+//				new UserVerifyRequestDto(user.getRole(), user.getBlackholedAt(), lentCount,
+//						cabinetId, cabinet.getStatus(), banHistories));
 		lentPolicyService.verifyCabinetForLent(cabinet.getStatus(), cabinet.getLentType());
 
 		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.PRIVATE,
@@ -196,7 +198,7 @@ public class LentFacadeService {
 		}
 
 		lentPolicyService.verifyUserForLent(
-				new UserVerifyRequestDto(user.getRole(), user.getBlackholedAt(), lentCount,
+				new UserVerifyRequestDto(user.getBlackholedAt(), lentCount,
 						cabinetId, cabinet.getStatus(), banHistories));
 
 		Long attemptCount = lentRedisService.getAttemptCountOnShareCabinet(cabinetId, userId);

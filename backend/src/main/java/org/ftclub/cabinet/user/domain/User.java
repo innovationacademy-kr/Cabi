@@ -1,19 +1,6 @@
 package org.ftclub.cabinet.user.domain;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -65,8 +52,8 @@ public class User {
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt = null;
 	@Enumerated(value = EnumType.STRING)
-	@Column(name = "ROLE", length = 32, nullable = false)
-	private UserRole role;
+//	@Column(name = "ROLE", length = 32, nullable = false)
+//	private UserRole role;
 	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
 	private boolean slackAlarm;
 	@Column(name = "EMAIL_ALARM", columnDefinition = "boolean default true")
@@ -75,21 +62,21 @@ public class User {
 	private boolean pushAlarm;
 
 
-	protected User(String name, String email, LocalDateTime blackholedAt, UserRole userRole) {
+	protected User(String name, String email, LocalDateTime blackholedAt) {
 		this.name = name;
 		this.email = email;
 		this.blackholedAt = blackholedAt;
-		this.role = userRole;
+//		this.role = userRole;
 		setDefaultAlarmStatus();
 	}
 
-	public static User of(String name, String email, LocalDateTime blackholedAt,
-			UserRole userRole) {
-		User user = new User(name, email, blackholedAt, userRole);
+	public static User of(String name, String email, LocalDateTime blackholedAt) {
+		User user = new User(name, email, blackholedAt);
 		ExceptionUtil.throwIfFalse(user.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return user;
 	}
+
 
 	private void setDefaultAlarmStatus() {
 		this.slackAlarm = true;
@@ -99,8 +86,8 @@ public class User {
 
 	private boolean isValid() {
 		return name != null && email != null && Pattern.matches(
-				"^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*", email)
-				&& role != null && role.isValid();
+				"^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+\\.*[A-Za-z0-9\\-]*", email);
+//				&& role != null && role.isValid();
 	}
 
 	@Override
@@ -115,9 +102,9 @@ public class User {
 		return Objects.equals(id, user.id);
 	}
 
-	public boolean isUserRole(UserRole role) {
-		return role.equals(this.role);
-	}
+//	public boolean isUserRole(UserRole role) {
+//		return role.equals(this.role);
+//	}
 
 	public void changeBlackholedAt(LocalDateTime blackholedAt) {
 		log.info("Called changeBlackholedAt - form {} to {}", this.blackholedAt, blackholedAt);
