@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.user.service;
 
+import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.FtProfile;
 import org.ftclub.cabinet.dto.UpdateAlarmRequestDto;
@@ -11,11 +13,10 @@ import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
+@Transactional
 public class UserCommandService {
 
 	private final UserRepository userRepository;
@@ -66,7 +67,7 @@ public class UserCommandService {
 	/**
 	 * 유저를 삭제합니다.
 	 *
-	 * @param userId 삭제할 유저의 ID
+	 * @param userId    삭제할 유저의 ID
 	 * @param deletedAt 삭제 시각
 	 */
 	public void deleteById(Long userId, LocalDateTime deletedAt) {
@@ -98,7 +99,7 @@ public class UserCommandService {
 	/**
 	 * 유저의 블랙홀을 변경합니다.
 	 *
-	 * @param userId     유저의 ID
+	 * @param userId       유저의 ID
 	 * @param blackholedAt 변경할 blackholedAt
 	 */
 	public void updateUserBlackholedAtById(Long userId, LocalDateTime blackholedAt) {

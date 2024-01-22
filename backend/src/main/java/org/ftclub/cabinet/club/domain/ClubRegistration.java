@@ -3,6 +3,8 @@ package org.ftclub.cabinet.club.domain;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
@@ -34,6 +37,10 @@ public class ClubRegistration {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")
 	private User user;
+
+	@Enumerated(value = EnumType.STRING)
+	@Column(name = "USER_ROLE", length = 32, nullable = false)
+	private UserRole userRole;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CLUB_ID")

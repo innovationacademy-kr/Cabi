@@ -29,6 +29,7 @@ const SwapModal: React.FC<{
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
+  const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const [myInfo, setMyInfo] = useRecoilState(userState);
@@ -44,7 +45,8 @@ const SwapModal: React.FC<{
   const swapDetail = `사물함 위치가  <strong>${myLentInfo.floor}층 ${myLentInfo.section} ${myLentInfo.visibleNum}번</strong>에서
   <strong>${targetCabinetInfo.floor}층 ${targetCabinetInfo.section} ${targetCabinetInfo.visibleNum}번</strong>로 변경됩니다.
   대여 기간은 그대로 유지되며,
-  이사는 취소할 수 없습니다.`;
+  이사는 취소할 수 없습니다.
+  <strong>주 1회만 이사할 수 있습니다.</strong>`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);
@@ -71,7 +73,8 @@ const SwapModal: React.FC<{
         throw error;
       }
     } catch (error: any) {
-      setModalTitle(error.response.data.message);
+      // setModalTitle(error.response.data.message);
+      setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
       setIsLoading(false);
@@ -96,7 +99,8 @@ const SwapModal: React.FC<{
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle={modalTitle}
+            modalTitle="이사 횟수 초과"
+            modalContents={modalContent}
             closeModal={props.closeModal}
           />
         ) : (

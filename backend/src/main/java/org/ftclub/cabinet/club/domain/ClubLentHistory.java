@@ -17,12 +17,12 @@ import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 
-@Entity
-@Table(name = "CLUB_LENT_HISTORY")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-@ToString(exclude = {"club", "cabinet"})
 @Log4j2
+@ToString(exclude = {"club", "cabinet"})
+@Getter
+@Table(name = "CLUB_LENT_HISTORY")
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClubLentHistory {
 
 	@Id
@@ -42,8 +42,8 @@ public class ClubLentHistory {
 	private LocalDateTime startedAt;
 
 	@Column(name = "ENDED_AT", nullable = false)
-
 	private LocalDateTime endedAt;
+
 	@Column(name = "EXPIRED_AT")
 	private LocalDateTime expiredAt;
 
