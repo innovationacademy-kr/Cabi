@@ -18,13 +18,21 @@ public class ClubRegistrationQueryService {
 
 	private final ClubRegistrationRepoitory clubRegistrationRepoitory;
 
-	public List<ClubRegistration> findClubUsersWithClub(Long clubId) {
+	public List<ClubRegistration> findClubUsersByClub(Long clubId) {
 		return clubRegistrationRepoitory.findAllByClubId(clubId);
 	}
 
-	public ClubRegistration getClubUser(Long userId) {
-		Optional<ClubRegistration> clubRegistration = clubRegistrationRepoitory.findByUserId(
-				userId);
+	public ClubRegistration getClubUserByUser(Long userId) {
+		Optional<ClubRegistration> clubRegistration =
+				clubRegistrationRepoitory.findByUserId(userId);
 		return clubRegistration.orElseThrow(ExceptionStatus.NOT_CLUB_USER::asServiceException);
+	}
+
+	public List<ClubRegistration> findClubUsersWithClub(Long userId) {
+		return clubRegistrationRepoitory.findAllByUserIdJoinClub(userId);
+	}
+
+	public List<ClubRegistration> findClubUsersByClubIn(List<Long> clubIds) {
+		return clubRegistrationRepoitory.findAllByClubIdInJoinUser(clubIds);
 	}
 }

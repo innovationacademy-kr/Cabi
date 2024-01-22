@@ -4,6 +4,8 @@ import java.util.List;
 import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
+import org.ftclub.cabinet.dto.ClubPaginationResponseDto;
+import org.ftclub.cabinet.dto.ClubResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueMappingStrategy;
@@ -22,6 +24,11 @@ public interface ClubMapper {
 	@Mapping(target = "clubId", source = "club.id")
 	@Mapping(target = "name", source = "club.name")
 	ClubInfoDto toClubInfoDto(Club club);
+
+	ClubResponseDto toClubResponseDto(Long clubId, String clubName, String clubMasterName);
+
+	ClubPaginationResponseDto toClubPaginationResponseDto(List<ClubResponseDto> result,
+			Long totalElements);
 
 	ClubInfoPaginationDto toClubInfoPaginationDto(List<ClubInfoDto> result, Long totalElements);
 }
