@@ -30,6 +30,12 @@ public class ClubLentHistory {
 	@Column(name = "ID")
 	private long id;
 
+	@Column(name = "CLUB_ID", nullable = false)
+	private Long clubId;
+
+	@Column(name = "CABINET_ID", nullable = false)
+	private Long cabinetId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CLUB_ID")
 	private Club club;
