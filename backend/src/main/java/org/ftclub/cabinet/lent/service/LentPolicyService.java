@@ -15,7 +15,6 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.BanHistory;
 import org.ftclub.cabinet.user.domain.BanType;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
@@ -94,9 +93,9 @@ public class LentPolicyService {
 	public void verifyUserForLent(UserVerifyRequestDto requestDto) {
 		LocalDateTime now = LocalDateTime.now();
 		LentPolicyStatus status = LentPolicyStatus.FINE;
-		if (!requestDto.getUserRole().equals(UserRole.USER)) {
-			status = LentPolicyStatus.NOT_USER;
-		}
+//		if (requestDto.getUserRole().equals(UserRole.CLUB)) {
+//			status = LentPolicyStatus.NOT_USER;
+//		}
 		if (requestDto.getLentCount() != 0) {
 			status = LentPolicyStatus.ALREADY_LENT_USER;
 		}
