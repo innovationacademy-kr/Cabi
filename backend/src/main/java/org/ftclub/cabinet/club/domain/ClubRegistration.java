@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -29,6 +28,7 @@ import org.springframework.data.annotation.CreatedDate;
 @Getter
 @ToString(exclude = {"user", "club"})
 @Log4j2
+@NoArgsConstructor
 public class ClubRegistration {
 
 	@Id
@@ -47,11 +47,11 @@ public class ClubRegistration {
 	private UserRole userRole;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "USER_ID")
+	@JoinColumn(name = "USER_ID", insertable = false, updatable = false)
 	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CLUB_ID")
+	@JoinColumn(name = "CLUB_ID", insertable = false, updatable = false)
 	private Club club;
 
 	@CreatedDate

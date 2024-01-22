@@ -1,5 +1,7 @@
 package org.ftclub.cabinet.admin.user.controller;
 
+import java.time.LocalDateTime;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminClubUserRequestDto;
 import org.ftclub.cabinet.admin.lent.service.AdminLentFacadeService;
@@ -7,14 +9,17 @@ import org.ftclub.cabinet.admin.user.service.AdminLentExtensionFacadeService;
 import org.ftclub.cabinet.admin.user.service.AdminUserFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
-import org.ftclub.cabinet.dto.ClubUserListDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.time.LocalDateTime;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,19 +61,19 @@ public class AdminUserController {
 	@DeleteMapping("/club/{clubId}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteClubUser(@PathVariable("clubId") Long clubId) {
-		adminUserFacadeService.deleteClubUser(clubId);
+//		adminUserFacadeService.deleteClubUser(clubId);
 	}
 
-	@GetMapping("/clubs")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public ClubUserListDto findClubs(@Valid Pageable pageable) {
-		return adminUserFacadeService.findAllClubUsers(pageable);
-	}
+//	@GetMapping("/clubs")
+//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+//	public ClubUserListDto findClubs(@Valid Pageable pageable) {
+//		return adminUserFacadeService.findAllClubUsers(pageable);
+//	}
 
 	@PatchMapping("/club/{clubId}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateClubUser(@PathVariable("clubId") Long clubId,
-	                           @Valid @RequestBody AdminClubUserRequestDto dto) {
+			@Valid @RequestBody AdminClubUserRequestDto dto) {
 		adminUserFacadeService.updateClubUser(clubId, dto.getClubName());
 	}
 
