@@ -25,10 +25,10 @@ public interface ClubMapper {
 	@Mapping(target = "name", source = "club.name")
 	ClubInfoDto toClubInfoDto(Club club);
 
-	ClubResponseDto toClubResponseDto(Long clubId, String clubName, String clubMasterName);
+	ClubResponseDto toClubResponseDto(Long clubId, String clubName, String clubMaster);
 
 	ClubPaginationResponseDto toClubPaginationResponseDto(List<ClubResponseDto> result,
-			Long totalElements);
+			Long totalLength);
 
-	ClubInfoPaginationDto toClubInfoPaginationDto(List<ClubInfoDto> result, Long totalElements);
+	ClubInfoPaginationDto toClubInfoPaginationDto(List<ClubInfoDto> result, Long totalLength);
 }

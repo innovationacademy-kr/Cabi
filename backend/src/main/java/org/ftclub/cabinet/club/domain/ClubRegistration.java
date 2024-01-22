@@ -3,6 +3,7 @@ package org.ftclub.cabinet.club.domain;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -22,12 +23,14 @@ import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.domain.UserRole;
 import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "CLUB_REGISTRATION")
 @Getter
 @ToString(exclude = {"user", "club"})
 @Log4j2
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 public class ClubRegistration {
 
@@ -57,20 +60,21 @@ public class ClubRegistration {
 	@CreatedDate
 	private LocalDateTime registeredAt;
 
-	protected ClubRegistration(Long userId, Long clubId) {
+	protected ClubRegistration(Long userId, Long clubId, UserRole userRole) {
 		this.userId = userId;
 		this.clubId = clubId;
+		this.userRole = userRole;
 	}
 
-	public static ClubRegistration of(Long userId, Long clubId) {
-		ClubRegistration clubRegistration = new ClubRegistration(userId, clubId);
+	public static ClubRegistration of(Long userId, Long clubId, UserRole userRole) {
+		ClubRegistration clubRegistration = new ClubRegistration(userId, clubId, userRole);
 		ExceptionUtil.throwIfFalse(clubRegistration.isValid(),
 				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
 		return clubRegistration;
 	}
 
 	private boolean isValid() {
-		return this.userId != null && this.clubId != null && this.registeredAt != null
+		return this.userId != null && this.clubId != null
 				&& userRole.isValid();
 	}
 

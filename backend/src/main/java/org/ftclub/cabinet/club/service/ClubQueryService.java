@@ -26,4 +26,8 @@ public class ClubQueryService {
 	public Page<Club> findAll(Pageable pageable) {
 		return clubRepository.findAll(pageable);
 	}
+
+	public Page<Club> findAllActiveClubs(Pageable pageable) {
+		return clubRepository.findAllActiveClubs(pageable);
+	}
 }

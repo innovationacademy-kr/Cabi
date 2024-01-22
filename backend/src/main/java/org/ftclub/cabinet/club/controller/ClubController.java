@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.club.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
@@ -34,10 +35,10 @@ public class ClubController {
 
 
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-	@PostMapping("/{clubId}/new-user")
+	@PostMapping("/{clubId}/users")
 	public void addClubUser(@UserSession UserSessionDto user,
 			@PathVariable Long clubId,
-			@RequestBody AddClubUserRequestDto addClubUserRequestDto) {
+			@Valid @RequestBody AddClubUserRequestDto addClubUserRequestDto) {
 		clubFacadeService.addClubUser(user.getUserId(), clubId, addClubUserRequestDto.getName());
 	}
 
@@ -53,7 +54,7 @@ public class ClubController {
 	@PostMapping("/{clubId}/mandate")
 	public void mandateClubUser(@UserSession UserSessionDto user,
 			@PathVariable Long clubId,
-			@RequestBody MandateClubMasterRequestDto mandateClubMasterRequestDto) {
+			@Valid @RequestBody MandateClubMasterRequestDto mandateClubMasterRequestDto) {
 		clubFacadeService.mandateClubUser(user.getUserId(), clubId,
 				mandateClubMasterRequestDto.getClubMaster());
 	}
