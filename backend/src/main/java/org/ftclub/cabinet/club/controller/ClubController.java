@@ -3,7 +3,6 @@ package org.ftclub.cabinet.club.controller;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
-import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.service.ClubFacadeService;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
