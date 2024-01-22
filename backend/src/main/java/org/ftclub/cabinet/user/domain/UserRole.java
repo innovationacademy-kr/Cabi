@@ -5,6 +5,6 @@ public enum UserRole {
 	USER, CLUB, CLUB_ADMIN;
 
 	public boolean isValid() {
-		return this.equals(USER) || this.equals(CLUB);
+		return this.equals(USER) || this.equals(CLUB) || this.equals(CLUB_ADMIN);
 	}
 }
