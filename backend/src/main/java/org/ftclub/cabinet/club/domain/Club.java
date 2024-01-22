@@ -25,8 +25,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "CLUB")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
 @EntityListeners(AuditingEntityListener.class)
+@ToString(exclude = {"clubRegistrations", "clubLentHistories"})
 public class Club {
 
 	@Id

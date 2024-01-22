@@ -19,6 +19,7 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
@@ -34,6 +35,7 @@ import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.service.ClubLentQueryService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.lent.service.LentRedisService;
 import org.ftclub.cabinet.log.LogLevel;
@@ -58,6 +60,7 @@ public class CabinetFacadeService {
 	private final LentQueryService lentQueryService;
 	private final LentRedisService lentRedisService;
 	private final UserQueryService userQueryService;
+	private final ClubLentQueryService clubLentQueryService;
 
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
@@ -86,6 +89,16 @@ public class CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
 		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		if (cabinet.getLentType().equals(LentType.CLUB)) {
+			ClubLentHistory activeClubLentHistory =
+					clubLentQueryService.findActiveLentHistoryWithClub(cabinetId);
+			List<LentDto> lentDtos = new ArrayList<>();
+			if (activeClubLentHistory != null) {
+				lentDtos.add(lentMapper.toLentDto(activeClubLentHistory));
+			}
+			LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
+			return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
+		}
 		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
 				cabinetId);
 		List<LentDto> lentDtos = cabinetActiveLentHistories.stream()
@@ -123,12 +136,29 @@ public class CabinetFacadeService {
 								Collectors.toList())));
 		List<Cabinet> allCabinetsOnSection =
 				cabinetQueryService.findAllCabinetsByBuildingAndFloor(building, floor);
+		Map<Long, List<ClubLentHistory>> clubLentMap =
+				clubLentQueryService.findAllActiveLentHistories().stream()
+						.collect(groupingBy(ClubLentHistory::getCabinetId));
 
 		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
 		allCabinetsOnSection.stream()
 				.sorted(Comparator.comparing(Cabinet::getVisibleNum))
 				.forEach(cabinet -> {
 					String section = cabinet.getCabinetPlace().getLocation().getSection();
+					if (cabinet.getLentType().equals(LentType.CLUB)) {
+						if (!clubLentMap.containsKey(cabinet.getId())) {
+							cabinetPreviewsBySection.computeIfAbsent(section,
+											k -> new ArrayList<>())
+									.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
+						} else {
+							clubLentMap.get(cabinet.getId()).stream()
+									.map(c -> c.getClub().getName())
+									.findFirst().ifPresent(clubName -> cabinetPreviewsBySection
+											.computeIfAbsent(section, k -> new ArrayList<>())
+											.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, clubName)));
+						}
+						return;
+					}
 					List<LentHistory> lentHistories =
 							cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
 					String title = getCabinetTitle(cabinet, lentHistories);
