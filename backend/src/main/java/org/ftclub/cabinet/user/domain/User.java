@@ -7,8 +7,6 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +49,7 @@ public class User {
 	private LocalDateTime blackholedAt = null;
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt = null;
-	@Enumerated(value = EnumType.STRING)
+	//	@Enumerated(value = EnumType.STRING)
 //	@Column(name = "ROLE", length = 32, nullable = false)
 //	private UserRole role;
 	@Column(name = "SLACK_ALARM", columnDefinition = "boolean default true")
