@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.repository.ClubRepository;
 import org.ftclub.cabinet.dto.ClubCreateDto;
+import org.ftclub.cabinet.dto.ClubUpdateRequestDto;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.stereotype.Service;
@@ -18,5 +19,13 @@ public class ClubCommandService {
 	public void createClub(ClubCreateDto clubCreateDto) {
 		Club club = Club.of(clubCreateDto.getName());
 		clubRepository.save(club);
+	}
+
+	public void deleteClub(Club club) {
+		club.disable();
+	}
+
+	public void updateName(Club club, ClubUpdateRequestDto dto) {
+		club.changeClubName(dto.getClubName());
 	}
 }

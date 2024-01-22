@@ -62,4 +62,15 @@ public class Club {
 	private boolean isValid() {
 		return name != null;
 	}
+
+	public void disable() {
+		this.deletedAt = LocalDateTime.now();
+	}
+
+	public void changeClubName(String clubName) {
+		if (clubName == null || clubName.isEmpty()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		this.name = clubName;
+	}
 }
