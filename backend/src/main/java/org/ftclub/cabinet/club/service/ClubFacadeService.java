@@ -45,8 +45,8 @@ public class ClubFacadeService {
 			Long clubId = cr.getClubId();
 			String clubName = cr.getClub().getName();
 			String clubMasterName = clubMasterMap.get(clubId).stream()
-					.filter(c -> c.getUserRole() == UserRole.CLUB_ADMIN)
-					.findFirst().map(c -> c.getUser().getName()).orElse(null);
+					.filter(c -> c.getUserRole().equals(UserRole.CLUB_ADMIN))
+					.map(c -> c.getUser().getName()).findFirst().orElse(null);
 			return clubMapper.toClubResponseDto(clubId, clubName, clubMasterName);
 		}).collect(Collectors.toList());
 		return clubMapper.toClubPaginationResponseDto(result, (long) result.size());
