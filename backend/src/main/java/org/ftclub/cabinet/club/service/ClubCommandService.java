@@ -30,4 +30,5 @@ public class ClubCommandService {
 		club.changeClubName(dto.getClubName());
 		clubRepository.save(club);
 	}
+
 }

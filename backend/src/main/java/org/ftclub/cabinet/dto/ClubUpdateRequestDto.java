@@ -3,7 +3,6 @@ package org.ftclub.cabinet.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 
 @Getter
@@ -12,8 +11,14 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ClubUpdateRequestDto {
 
-	@NonNull
 	private String clubName;
-	@NonNull
 	private String clubMasterName;
+
+	public boolean isClubNameChanged() {
+		return clubName != null && !clubName.isEmpty();
+	}
+
+	public boolean isClubMasterNameChanged() {
+		return clubMasterName != null && !clubMasterName.isEmpty();
+	}
 }

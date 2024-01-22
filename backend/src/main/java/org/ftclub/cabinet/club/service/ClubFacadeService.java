@@ -91,8 +91,8 @@ public class ClubFacadeService {
 	}
 
 	public void mandateClubUser(Long clubMasterId, Long clubId, String newClubMasterName) {
-		userQueryService.getUser(clubMasterId);
 		User newClubMaster = userQueryService.getUserByName(newClubMasterName);
+
 		ClubRegistration oldClubMasterRegistration =
 				clubRegistrationQueryService.getClubUserByUser(clubMasterId);
 		ClubRegistration newClubMasterRegistration =

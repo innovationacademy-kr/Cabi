@@ -9,6 +9,7 @@ import org.ftclub.cabinet.club.repository.ClubRegistrationRepoitory;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,5 +35,20 @@ public class ClubRegistrationQueryService {
 
 	public List<ClubRegistration> findClubUsersByClubIn(List<Long> clubIds) {
 		return clubRegistrationRepoitory.findAllByClubIdInJoinUser(clubIds);
+	}
+
+	public ClubRegistration getClubUserByUserAndClub(Long userId, Long clubId) {
+		return clubRegistrationRepoitory.findByClubIdAndUserId(userId,
+				clubId).orElseThrow(ExceptionStatus.NOT_CLUB_USER::asServiceException);
+	}
+
+	public ClubRegistration findClubUserByUserAndClub(Long userId, Long clubId) {
+		return clubRegistrationRepoitory.findByClubIdAndUserId(userId,
+				clubId).orElse(null);
+	}
+
+	public ClubRegistration getClubMasterByClubId(Long clubId) {
+		return clubRegistrationRepoitory.findByClubIdAndUserRole(clubId, UserRole.CLUB_ADMIN)
+				.orElseThrow(ExceptionStatus.INVALID_CLUB_MASTER::asServiceException);
 	}
 }

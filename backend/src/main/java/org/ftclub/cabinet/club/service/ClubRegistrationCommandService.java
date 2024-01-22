@@ -15,8 +15,8 @@ public class ClubRegistrationCommandService {
 
 	private final ClubRegistrationRepoitory clubRegistrationRepoitory;
 
-	public void addNewClubUser(ClubRegistration clubRegistration) {
-		clubRegistrationRepoitory.save(clubRegistration);
+	public ClubRegistration addNewClubUser(ClubRegistration clubRegistration) {
+		return clubRegistrationRepoitory.save(clubRegistration);
 	}
 
 	public void deleteClubUser(ClubRegistration clubRegistration) {
@@ -27,5 +27,10 @@ public class ClubRegistrationCommandService {
 			ClubRegistration newClubRegistration) {
 		oldClubRegistration.changeUserRole(UserRole.CLUB);
 		newClubRegistration.changeUserRole(UserRole.CLUB_ADMIN);
+	}
+
+	public void updateClubUserRole(ClubRegistration clubRegistration, UserRole userRole) {
+		clubRegistration.changeUserRole(userRole);
+		clubRegistrationRepoitory.save(clubRegistration);
 	}
 }

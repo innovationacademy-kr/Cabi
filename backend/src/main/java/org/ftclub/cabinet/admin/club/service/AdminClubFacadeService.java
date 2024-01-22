@@ -9,6 +9,7 @@ import org.ftclub.cabinet.club.domain.ClubRegistration;
 import org.ftclub.cabinet.club.service.ClubCommandService;
 import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.club.service.ClubRegistrationCommandService;
+import org.ftclub.cabinet.club.service.ClubRegistrationQueryService;
 import org.ftclub.cabinet.dto.ClubCreateDto;
 import org.ftclub.cabinet.dto.ClubDeleteDto;
 import org.ftclub.cabinet.dto.ClubInfoDto;
@@ -30,10 +31,12 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class AdminClubFacadeService {
 
+	private final ClubMapper clubMapper;
 	private final ClubQueryService clubQueryService;
 	private final ClubCommandService clubCommandService;
 	private final ClubRegistrationCommandService clubRegistrationCommandService;
-	private final ClubMapper clubMapper;
+	private final ClubRegistrationQueryService clubRegistrationQueryService;
+
 
 	private final UserQueryService userQueryService;
 
@@ -57,7 +60,29 @@ public class AdminClubFacadeService {
 
 	public void updateClub(Long clubId, ClubUpdateRequestDto clubUpdateRequestDto) {
 		Club club = clubQueryService.getClub(clubId);
-		clubCommandService.updateName(club, clubUpdateRequestDto);
-	}
+		if (clubUpdateRequestDto.isClubMasterNameChanged()) {
 
+			ClubRegistration oldClubMasterRegistration = clubRegistrationQueryService.getClubMasterByClubId(
+					clubId);
+
+			User newClubMasterUser = userQueryService.getUserByName(
+					clubUpdateRequestDto.getClubName());
+			ClubRegistration newClubMasterClubRegistration = clubRegistrationQueryService.getClubUserByUserAndClub(
+					newClubMasterUser.getId(), clubId);
+
+			if (newClubMasterClubRegistration == null) {
+				newClubMasterClubRegistration = clubRegistrationCommandService.addNewClubUser(
+						ClubRegistration.of(clubId, newClubMasterUser.getId(),
+								UserRole.CLUB_ADMIN));
+			}
+			clubRegistrationCommandService.mandateClubMaster(oldClubMasterRegistration,
+					newClubMasterClubRegistration);
+		}
+
+		if (clubUpdateRequestDto.isClubNameChanged()) {
+			User user = userQueryService.getUserByName(clubUpdateRequestDto.getClubMasterName());
+			clubRegistrationCommandService.addNewClubUser(
+					ClubRegistration.of(club.getId(), user.getId(), UserRole.CLUB_ADMIN));
+		}
+	}
 }
