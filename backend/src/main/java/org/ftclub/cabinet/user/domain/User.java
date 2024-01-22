@@ -1,6 +1,19 @@
 package org.ftclub.cabinet.user.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.regex.Pattern;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -138,5 +151,9 @@ public class User {
 		this.slackAlarm = updateAlarmRequestDto.isSlack();
 		this.emailAlarm = updateAlarmRequestDto.isEmail();
 		this.pushAlarm = updateAlarmRequestDto.isPush();
+	}
+
+	public boolean isBlackholed() {
+		return blackholedAt != null && blackholedAt.isBefore(LocalDateTime.now());
 	}
 }
