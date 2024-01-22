@@ -42,7 +42,7 @@ public class AdminClubController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public ClubInfoPaginationDto getAllClubsInfoDto(@Valid Pageable pageable
 	) {
-		return adminClubFacadeService.findAllClubsInfo(pageable);
+		return adminClubFacadeService.findAllActiveClubsInfo(pageable);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class AdminClubController {
 
 	@PostMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
-	public void createNewClub(@RequestBody ClubCreateDto clubCreateDto) {
+	public void createNewClub(@Valid @RequestBody ClubCreateDto clubCreateDto) {
 		adminClubFacadeService.createNewClub(clubCreateDto);
 	}
 
@@ -65,7 +65,7 @@ public class AdminClubController {
 	 */
 	@DeleteMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
-	public void deleteClub(@RequestBody ClubDeleteDto clubDeleteDto) {
+	public void deleteClub(@Valid @RequestBody ClubDeleteDto clubDeleteDto) {
 		adminClubFacadeService.deleteClub(clubDeleteDto);
 	}
 
@@ -78,7 +78,7 @@ public class AdminClubController {
 	@PatchMapping("/{clubId}")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void updateClubUser(@PathVariable("clubId") Long clubId,
-			@RequestBody ClubUpdateRequestDto clubUpdateRequestDto) {
+			@Valid @RequestBody ClubUpdateRequestDto clubUpdateRequestDto) {
 		adminClubFacadeService.updateClub(clubId, clubUpdateRequestDto);
 	}
 
