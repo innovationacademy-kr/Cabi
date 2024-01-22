@@ -17,4 +17,6 @@ public class ClubCreateDto {
 	@NonNull
 	@Length(min = 1, max = 30)
 	private String clubName;
+	@NonNull
+	private String clubMasterName;
 }

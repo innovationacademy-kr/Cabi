@@ -16,9 +16,9 @@ public class ClubCommandService {
 
 	private final ClubRepository clubRepository;
 
-	public void createClub(ClubCreateDto clubCreateDto) {
+	public Club createClub(ClubCreateDto clubCreateDto) {
 		Club club = Club.of(clubCreateDto.getClubName());
-		clubRepository.save(club);
+		return clubRepository.save(club);
 	}
 
 	public void deleteClub(Club club) {

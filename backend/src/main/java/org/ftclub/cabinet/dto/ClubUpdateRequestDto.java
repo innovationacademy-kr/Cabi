@@ -14,4 +14,6 @@ public class ClubUpdateRequestDto {
 
 	@NonNull
 	private String clubName;
+	@NonNull
+	private String clubMasterName;
 }
