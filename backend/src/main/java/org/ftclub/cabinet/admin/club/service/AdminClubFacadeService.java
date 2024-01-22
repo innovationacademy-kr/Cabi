@@ -8,8 +8,10 @@ import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.service.ClubCommandService;
 import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.dto.ClubCreateDto;
+import org.ftclub.cabinet.dto.ClubDeleteDto;
 import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
+import org.ftclub.cabinet.dto.ClubUpdateRequestDto;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ClubMapper;
@@ -35,8 +37,18 @@ public class AdminClubFacadeService {
 	}
 
 	public void createNewClub(ClubCreateDto clubCreateDto) {
-
 		clubCommandService.createClub(clubCreateDto);
+	}
+
+	public void deleteClub(ClubDeleteDto clubDeleteDto) {
+		// dto 에서 clubEntity 를  가져오기
+		Club club = clubQueryService.getClub(clubDeleteDto.getClubId());
+		clubCommandService.deleteClub(club);
+	}
+
+	public void updateClub(Long clubId, ClubUpdateRequestDto clubUpdateRequestDto) {
+		Club club = clubQueryService.getClub(clubId);
+		clubCommandService.updateName(club, clubUpdateRequestDto);
 	}
 
 	// 전체 동아리
