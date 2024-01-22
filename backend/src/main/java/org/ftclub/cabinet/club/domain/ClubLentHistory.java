@@ -36,12 +36,12 @@ public class ClubLentHistory {
 	@Column(name = "CABINET_ID", nullable = false)
 	private Long cabinetId;
 
+	@JoinColumn(name = "CLUB_ID", insertable = false, updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CLUB_ID")
 	private Club club;
 
+	@JoinColumn(name = "CABINET_ID", insertable = false, updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CABINET_ID")
 	private Cabinet cabinet;
 
 	@Column(name = "STARTED_AT", nullable = false)
