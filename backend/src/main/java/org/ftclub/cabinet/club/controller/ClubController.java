@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.club.service.ClubFacadeService;
+import org.ftclub.cabinet.dto.AddClubUserRequestDto;
 import org.ftclub.cabinet.dto.ClubPaginationResponseDto;
+import org.ftclub.cabinet.dto.MandateClubMasterRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
@@ -35,8 +37,8 @@ public class ClubController {
 	@PostMapping("/{clubId}/new-user")
 	public void addClubUser(@UserSession UserSessionDto user,
 			@PathVariable Long clubId,
-			@RequestBody String name) {
-		clubFacadeService.addClubUser(user.getUserId(), clubId, name);
+			@RequestBody AddClubUserRequestDto addClubUserRequestDto) {
+		clubFacadeService.addClubUser(user.getUserId(), clubId, addClubUserRequestDto.getName());
 	}
 
 	@AuthGuard(level = AuthLevel.USER_ONLY)
@@ -51,7 +53,8 @@ public class ClubController {
 	@PostMapping("/{clubId}/mandate")
 	public void mandateClubUser(@UserSession UserSessionDto user,
 			@PathVariable Long clubId,
-			@RequestBody String clubMaster) {
-		clubFacadeService.mandateClubUser(user.getUserId(), clubId, clubMaster);
+			@RequestBody MandateClubMasterRequestDto mandateClubMasterRequestDto) {
+		clubFacadeService.mandateClubUser(user.getUserId(), clubId,
+				mandateClubMasterRequestDto.getClubMaster());
 	}
 }
