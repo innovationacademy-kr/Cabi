@@ -29,8 +29,8 @@ public class AdminClubFacadeService {
 	private final ClubCommandService clubCommandService;
 	private final ClubMapper clubMapper;
 
-	public ClubInfoPaginationDto findAllClubsInfo(Pageable pageable) {
-		Page<Club> clubs = clubQueryService.findAll(pageable);
+	public ClubInfoPaginationDto findAllActiveClubsInfo(Pageable pageable) {
+		Page<Club> clubs = clubQueryService.findAllActiveClubs(pageable);
 		List<ClubInfoDto> result = clubs.stream().map(clubMapper::toClubInfoDto)
 				.collect(Collectors.toList());
 		return clubMapper.toClubInfoPaginationDto(result, clubs.getTotalElements());
@@ -41,7 +41,6 @@ public class AdminClubFacadeService {
 	}
 
 	public void deleteClub(ClubDeleteDto clubDeleteDto) {
-		// dto 에서 clubEntity 를  가져오기
 		Club club = clubQueryService.getClub(clubDeleteDto.getClubId());
 		clubCommandService.deleteClub(club);
 	}
@@ -51,5 +50,4 @@ public class AdminClubFacadeService {
 		clubCommandService.updateName(club, clubUpdateRequestDto);
 	}
 
-	// 전체 동아리
 }
