@@ -28,11 +28,12 @@ public class ClubFacadeService {
 	@Transactional
 	public void addClubUser(Long userId, Long clubId, String name) {
 		User clubMaster = userQueryService.getUser(userId);
+		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUser(userId);
 		User newClubUser = userQueryService.getUserByName(name);
 		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersWithClub(clubId)
 				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
 
-		clubPolicyService.verifyClubMaster(clubMaster.getRole());
+		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole());
 		clubPolicyService.verifyClubUserIn(clubUserIds, clubMaster.getId());
 		clubPolicyService.verifyClubUserNotIn(clubUserIds, newClubUser.getId());
 
