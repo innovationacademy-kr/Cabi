@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,7 +54,7 @@ public class AdminClubController {
 
 	@PostMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
-	public void createNewClub(ClubCreateDto clubCreateDto) {
+	public void createNewClub(@RequestBody ClubCreateDto clubCreateDto) {
 		adminClubFacadeService.createNewClub(clubCreateDto);
 	}
 
@@ -64,7 +65,7 @@ public class AdminClubController {
 	 */
 	@DeleteMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
-	public void deleteClub(ClubDeleteDto clubDeleteDto) {
+	public void deleteClub(@RequestBody ClubDeleteDto clubDeleteDto) {
 		adminClubFacadeService.deleteClub(clubDeleteDto);
 	}
 
@@ -77,7 +78,7 @@ public class AdminClubController {
 	@PatchMapping("/{clubId}")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void updateClubUser(@PathVariable("clubId") Long clubId,
-			ClubUpdateRequestDto clubUpdateRequestDto) {
+			@RequestBody ClubUpdateRequestDto clubUpdateRequestDto) {
 		adminClubFacadeService.updateClub(clubId, clubUpdateRequestDto);
 	}
 

@@ -66,7 +66,8 @@ public class ClubFacadeService {
 		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
 				clubMasterRegistration.getClubId(), clubId);
 
-		ClubRegistration clubRegistration = ClubRegistration.of(newClubUser.getId(), clubId);
+		ClubRegistration clubRegistration = ClubRegistration.of(newClubUser.getId(), clubId,
+				UserRole.CLUB);
 		clubRegistrationCommandService.addNewClubUser(clubRegistration);
 	}
 

@@ -30,5 +30,5 @@ public interface ClubMapper {
 	ClubPaginationResponseDto toClubPaginationResponseDto(List<ClubResponseDto> result,
 			Long totalElements);
 
-	ClubInfoPaginationDto toClubInfoPaginationDto(List<ClubInfoDto> result, Long totalElements);
+	ClubInfoPaginationDto toClubInfoPaginationDto(List<ClubInfoDto> result, Long totalLength);
 }
