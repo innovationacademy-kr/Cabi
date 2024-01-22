@@ -14,6 +14,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.ftclub.cabinet.exception.DomainException;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
@@ -44,4 +47,19 @@ public class Club {
 
 	@OneToMany(mappedBy = "club")
 	private List<ClubLentHistory> clubLentHistories;
+
+	protected Club(String name) {
+		this.name = name;
+	}
+
+	public static Club of(String name) {
+		Club club = new Club(name);
+		ExceptionUtil.throwIfFalse(club.isValid(),
+				new DomainException(ExceptionStatus.INVALID_ARGUMENT));
+		return club;
+	}
+
+	private boolean isValid() {
+		return name != null;
+	}
 }

@@ -5,7 +5,9 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.club.domain.Club;
+import org.ftclub.cabinet.club.service.ClubCommandService;
 import org.ftclub.cabinet.club.service.ClubQueryService;
+import org.ftclub.cabinet.dto.ClubCreateDto;
 import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.log.LogLevel;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class AdminClubFacadeService {
 
 	private final ClubQueryService clubQueryService;
+	private final ClubCommandService clubCommandService;
 	private final ClubMapper clubMapper;
 
 	public ClubInfoPaginationDto findAllClubsInfo(Pageable pageable) {
@@ -29,6 +32,11 @@ public class AdminClubFacadeService {
 		List<ClubInfoDto> result = clubs.stream().map(clubMapper::toClubInfoDto)
 				.collect(Collectors.toList());
 		return clubMapper.toClubInfoPaginationDto(result, clubs.getTotalElements());
+	}
+
+	public void createNewClub(ClubCreateDto clubCreateDto) {
+
+		clubCommandService.createClub(clubCreateDto);
 	}
 
 	// 전체 동아리

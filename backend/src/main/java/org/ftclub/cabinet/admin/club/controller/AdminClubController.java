@@ -7,10 +7,12 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.club.service.AdminClubFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
+import org.ftclub.cabinet.dto.ClubCreateDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,11 +40,16 @@ public class AdminClubController {
 	}
 
 	/**
-	 *동아리 추가
+	 * 동아리 추가
 	 *
-	 * @Param 동아
-	 * @return 동아리의 PK와 이름 정보만을 반환합니다.
+	 * @return void
+	 * @Param 새 동아리 name
 	 */
+
+	@PostMapping("")
+	public void createNewClub(ClubCreateDto clubCreateDto) {
+		adminClubFacadeService.createNewClub(clubCreateDto);
+	}
 
 	/**
 	 *동아리 추가
