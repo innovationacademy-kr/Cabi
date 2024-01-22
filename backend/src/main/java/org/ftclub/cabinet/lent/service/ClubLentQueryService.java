@@ -18,4 +18,9 @@ public class ClubLentQueryService {
 	public List<ClubLentHistory> findAllActiveLentHistories() {
 		return clubLentRepository.findAllByEndedAtIsNullWithClub();
 	}
+
+	public ClubLentHistory findActiveLentHistoryWithClub(Long cabinetId) {
+		return clubLentRepository.findByCabinetIdAndEndedAtIsNullWithClub(cabinetId)
+				.orElse(null);
+	}
 }

@@ -89,6 +89,16 @@ public class CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
 		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		if (cabinet.getLentType().equals(LentType.CLUB)) {
+			ClubLentHistory activeClubLentHistory =
+					clubLentQueryService.findActiveLentHistoryWithClub(cabinetId);
+			List<LentDto> lentDtos = new ArrayList<>();
+			if (activeClubLentHistory != null) {
+				lentDtos.add(lentMapper.toLentDto(activeClubLentHistory));
+			}
+			LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
+			return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
+		}
 		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
 				cabinetId);
 		List<LentDto> lentDtos = cabinetActiveLentHistories.stream()
@@ -129,7 +139,6 @@ public class CabinetFacadeService {
 		Map<Long, List<ClubLentHistory>> clubLentMap =
 				clubLentQueryService.findAllActiveLentHistories().stream()
 						.collect(groupingBy(ClubLentHistory::getCabinetId));
-		System.out.println("clubLentMap = " + clubLentMap);
 
 		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
 		allCabinetsOnSection.stream()
