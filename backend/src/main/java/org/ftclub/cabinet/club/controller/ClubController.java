@@ -7,6 +7,7 @@ import org.ftclub.cabinet.club.service.ClubFacadeService;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,10 +23,26 @@ public class ClubController {
 	private final ClubFacadeService clubFacadeService;
 
 	@AuthGuard(level = AuthLevel.USER_ONLY)
-	@PostMapping("{clubId}/new-user")
+	@PostMapping("/{clubId}/new-user")
 	public void addClubUser(@UserSession UserSessionDto user,
 			@PathVariable Long clubId,
 			@RequestBody String name) {
 		clubFacadeService.addClubUser(user.getUserId(), clubId, name);
+	}
+
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	@DeleteMapping("/{clubId}/users/{userId}")
+	public void deleteClubUser(@UserSession UserSessionDto user,
+			@PathVariable Long clubId,
+			@PathVariable Long userId) {
+		clubFacadeService.deleteClubUser(user.getUserId(), clubId, userId);
+	}
+
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	@PostMapping("/{clubId}/mandate")
+	public void mandateClubUser(@UserSession UserSessionDto user,
+			@PathVariable Long clubId,
+			@RequestBody String clubMaster) {
+		clubFacadeService.mandateClubUser(user.getUserId(), clubId, clubMaster);
 	}
 }

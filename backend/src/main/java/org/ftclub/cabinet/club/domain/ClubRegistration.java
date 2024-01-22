@@ -73,4 +73,9 @@ public class ClubRegistration {
 		return this.userId != null && this.clubId != null && this.registeredAt != null
 				&& userRole.isValid();
 	}
+
+	public ClubRegistration changeUserRole(UserRole userRole) {
+		this.userRole = userRole;
+		return this;
+	}
 }

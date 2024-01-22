@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 @Logging(level = LogLevel.DEBUG)
 public class ClubPolicyService {
 
-	public void verifyClubMaster(UserRole masterRole) {
+	public void verifyClubMaster(UserRole masterRole, Long clubId, Long inputClubId) {
 		if (!masterRole.equals(UserRole.CLUB_ADMIN)) {
 			throw ExceptionStatus.INVALID_CLUB_MASTER.asServiceException();
+		}
+		if (!clubId.equals(inputClubId)) {
+			throw ExceptionStatus.INVALID_CLUB.asServiceException();
 		}
 	}
 

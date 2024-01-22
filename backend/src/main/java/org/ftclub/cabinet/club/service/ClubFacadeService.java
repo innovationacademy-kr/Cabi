@@ -26,18 +26,58 @@ public class ClubFacadeService {
 
 
 	@Transactional
-	public void addClubUser(Long userId, Long clubId, String name) {
-		User clubMaster = userQueryService.getUser(userId);
-		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUser(userId);
+	public void addClubUser(Long masterId, Long clubId, String name) {
+		User clubMaster = userQueryService.getUser(masterId);
+		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUser(
+				masterId);
 		User newClubUser = userQueryService.getUserByName(name);
 		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersWithClub(clubId)
 				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
 
-		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole());
 		clubPolicyService.verifyClubUserIn(clubUserIds, clubMaster.getId());
 		clubPolicyService.verifyClubUserNotIn(clubUserIds, newClubUser.getId());
+		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
+				clubMasterRegistration.getClubId(), clubId);
 
 		ClubRegistration clubRegistration = ClubRegistration.of(newClubUser.getId(), clubId);
 		clubRegistrationCommandService.addNewClubUser(clubRegistration);
+	}
+
+
+	public void deleteClubUser(Long masterId, Long clubId, Long deletedUserId) {
+		User clubMaster = userQueryService.getUser(masterId);
+		userQueryService.getUser(deletedUserId);
+		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUser(
+				masterId);
+		ClubRegistration deletedUserRegistration =
+				clubRegistrationQueryService.getClubUser(deletedUserId);
+		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersWithClub(clubId)
+				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
+
+		clubPolicyService.verifyClubUserIn(clubUserIds, clubMaster.getId());
+		clubPolicyService.verifyClubUserIn(clubUserIds, deletedUserId);
+		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
+				clubMasterRegistration.getClubId(), clubId);
+
+		clubRegistrationCommandService.deleteClubUser(deletedUserRegistration);
+	}
+
+	public void mandateClubUser(Long clubMasterId, Long clubId, String newClubMasterName) {
+		userQueryService.getUser(clubMasterId);
+		User newClubMaster = userQueryService.getUserByName(newClubMasterName);
+		ClubRegistration oldClubMasterRegistration =
+				clubRegistrationQueryService.getClubUser(clubMasterId);
+		ClubRegistration newClubMasterRegistration =
+				clubRegistrationQueryService.getClubUser(newClubMaster.getId());
+		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersWithClub(clubId)
+				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
+
+		clubPolicyService.verifyClubUserIn(clubUserIds, newClubMaster.getId());
+		clubPolicyService.verifyClubUserIn(clubUserIds, clubMasterId);
+		clubPolicyService.verifyClubMaster(oldClubMasterRegistration.getUserRole(),
+				oldClubMasterRegistration.getClubId(), clubId);
+
+		clubRegistrationCommandService.mandateClubMaster(oldClubMasterRegistration,
+				newClubMasterRegistration);
 	}
 }

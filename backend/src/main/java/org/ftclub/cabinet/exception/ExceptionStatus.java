@@ -65,7 +65,9 @@ public enum ExceptionStatus {
 	SWAP_LIMIT_EXCEEDED(HttpStatus.I_AM_A_TEAPOT, "사물함 이사 횟수 제한을 초과했습니다.\n 일주일에 1회만 이사할 수 있습니다."),
 	SWAP_RECORD_NOT_FOUND(HttpStatus.NOT_FOUND, "이사하기 기능을 사용한 기록이 없습니다."),
 	SWAP_SAME_CABINET(HttpStatus.BAD_REQUEST, "같은 사물함으로 이사할 수 없습니다."),
-	INVALID_CLUB_MASTER(HttpStatus.BAD_REQUEST, "동아리의 장이 아닙니다.");
+	INVALID_CLUB(HttpStatus.BAD_REQUEST, "동아리가 맞지 않습니다."),
+	INVALID_CLUB_MASTER(HttpStatus.BAD_REQUEST, "동아리의 장이 아닙니다."),
+	;
 
 	final private int statusCode;
 	final private String message;
