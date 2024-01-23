@@ -12,10 +12,25 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClubRepository extends JpaRepository<Club, Long> {
 
+	/**
+	 * 삭제되지 않은 모든 동아리 목록을 조회한다.
+	 *
+	 * @param pageable 페이징 정보
+	 * @return 모든 동아리 목록
+	 */
 	@Query(value = "SELECT c FROM Club c WHERE c.deletedAt IS NULL",
 			countQuery = "SELECT count(c) FROM Club c WHERE c.deletedAt IS NULL")
 	Page<Club> findAllActiveClubs(Pageable pageable);
 
+	/**
+	 * 특정 동아리 정보를 조회한다.
+	 * <p>
+	 * ClubLentHistory도 Join 연산으로 함께 조회한다.
+	 * </p>
+	 *
+	 * @param clubId 동아리 ID
+	 * @return 동아리 정보
+	 */
 	@Query("SELECT c "
 			+ "FROM Club c "
 			+ "LEFT JOIN FETCH c.clubLentHistories "

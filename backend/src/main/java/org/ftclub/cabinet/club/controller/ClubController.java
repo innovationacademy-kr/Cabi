@@ -29,12 +29,26 @@ public class ClubController {
 
 	private final ClubFacadeService clubFacadeService;
 
+	/**
+	 * 내가 속한 동아리 목록을 조회한다.
+	 *
+	 * @param user 사용자 세션
+	 * @return 내가 속한 동아리 목록
+	 */
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	@GetMapping("")
 	public ClubPaginationResponseDto getMyClubs(@UserSession UserSessionDto user) {
 		return clubFacadeService.getMyClubs(user.getUserId());
 	}
 
+	/**
+	 * 동아리 정보를 조회한다.
+	 *
+	 * @param user     사용자 세션
+	 * @param clubId   동아리 ID
+	 * @param pageable 페이징 정보
+	 * @return 동아리 정보
+	 */
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	@GetMapping("/{clubId}")
 	public ClubInfoResponseDto getClubInfo(@UserSession UserSessionDto user,
@@ -43,6 +57,13 @@ public class ClubController {
 		return clubFacadeService.getClubInfo(user.getUserId(), clubId, pageable);
 	}
 
+	/**
+	 * 동아리에 사용자를 추가한다.
+	 *
+	 * @param user                  사용자 세션
+	 * @param clubId                동아리 ID
+	 * @param addClubUserRequestDto 사용자 추가 요청 정보
+	 */
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	@PostMapping("/{clubId}/users")
 	public void addClubUser(@UserSession UserSessionDto user,
@@ -51,6 +72,13 @@ public class ClubController {
 		clubFacadeService.addClubUser(user.getUserId(), clubId, addClubUserRequestDto.getName());
 	}
 
+	/**
+	 * 동아리에서 사용자를 제거한다.
+	 *
+	 * @param user   사용자 세션
+	 * @param clubId 동아리 ID
+	 * @param userId 사용자 ID
+	 */
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	@DeleteMapping("/{clubId}/users/{userId}")
 	public void deleteClubUser(@UserSession UserSessionDto user,
@@ -59,6 +87,13 @@ public class ClubController {
 		clubFacadeService.deleteClubUser(user.getUserId(), clubId, userId);
 	}
 
+	/**
+	 * 동아리장을 위임한다.
+	 *
+	 * @param user                        사용자 세션
+	 * @param clubId                      동아리 ID
+	 * @param mandateClubMasterRequestDto 동아리장 위임 요청 정보
+	 */
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	@PostMapping("/{clubId}/mandate")
 	public void mandateClubUser(@UserSession UserSessionDto user,

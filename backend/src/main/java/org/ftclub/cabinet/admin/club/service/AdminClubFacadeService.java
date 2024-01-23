@@ -63,7 +63,7 @@ public class AdminClubFacadeService {
 		}
 
 		ClubRegistration clubMasterRegistration =
-				clubRegistrationQueryService.getClubMasterByClub(clubId);
+				clubRegistrationQueryService.getClubMasterByClubWithUser(clubId);
 		if (!clubMasterName.equals(clubMasterRegistration.getUser().getName())) {
 			User newClubMaster = userQueryService.getUserByName(clubName);
 			ClubRegistration newClubMasterRegistration =

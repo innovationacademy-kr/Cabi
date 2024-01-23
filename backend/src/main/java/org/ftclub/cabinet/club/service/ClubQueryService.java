@@ -18,15 +18,36 @@ public class ClubQueryService {
 
 	private final ClubRepository clubRepository;
 
+	/**
+	 * 모든 동아리 목록을 조회한다.
+	 *
+	 * @param pageable 페이징 정보
+	 * @return 모든 동아리 목록
+	 */
 	public Page<Club> findAllActiveClubs(Pageable pageable) {
 		return clubRepository.findAllActiveClubs(pageable);
 	}
 
+	/**
+	 * 특정 동아리 정보를 조회한다.
+	 *
+	 * @param clubId 동아리 ID
+	 * @return 동아리 정보
+	 */
 	public Club getClub(Long clubId) {
 		Optional<Club> club = clubRepository.findById(clubId);
 		return club.orElseThrow(ExceptionStatus.NOT_FOUND_CLUB::asServiceException);
 	}
 
+	/**
+	 * 특정 동아리 정보를 조회한다.
+	 * <p>
+	 * ClubRegistration도 Join 연산으로 함께 조회한다.
+	 * </p>
+	 *
+	 * @param clubId
+	 * @return
+	 */
 	public Club getClubWithClubRegistration(Long clubId) {
 		Optional<Club> club = clubRepository.findByIdAndDeletedAtIsNull(clubId);
 		return club.orElseThrow(ExceptionStatus.NOT_FOUND_CLUB::asServiceException);

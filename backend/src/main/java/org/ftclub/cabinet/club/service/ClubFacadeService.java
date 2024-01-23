@@ -42,83 +42,14 @@ public class ClubFacadeService {
 	private final ClubMapper clubMapper;
 
 
-	public ClubPaginationResponseDto getMyClubs(Long userId) {
-		List<ClubRegistration> usersWithClub =
-				clubRegistrationQueryService.findClubUsersWithClubByUser(userId);
-		List<Long> clubIds = usersWithClub.stream().map(ClubRegistration::getClubId)
-				.collect(Collectors.toList());
-		Map<Long, List<ClubRegistration>> clubMasterMap =
-				clubRegistrationQueryService.findClubUsersByClubs(clubIds)
-						.stream().collect(Collectors.groupingBy(ClubRegistration::getClubId));
-
-		List<ClubResponseDto> result = usersWithClub.stream().map(cr -> {
-			Long clubId = cr.getClubId();
-			String clubName = cr.getClub().getName();
-			String clubMasterName = clubMasterMap.get(clubId).stream()
-					.filter(c -> c.getUserRole().equals(CLUB_ADMIN))
-					.map(c -> c.getUser().getName()).findFirst().orElse(null);
-			return clubMapper.toClubResponseDto(clubId, clubName, clubMasterName);
-		}).collect(Collectors.toList());
-		return clubMapper.toClubPaginationResponseDto(result, (long) result.size());
-	}
-
-	@Transactional
-	public void addClubUser(Long masterId, Long clubId, String name) {
-		User clubMaster = userQueryService.getUser(masterId);
-		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUserByUser(
-				masterId);
-		User newClubUser = userQueryService.getUserByName(name);
-		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
-				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
-
-		clubPolicyService.verifyClubUserIn(clubUserIds, clubMaster.getId());
-		clubPolicyService.verifyClubUserNotIn(clubUserIds, newClubUser.getId());
-		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
-				clubMasterRegistration.getClubId(), clubId);
-
-		ClubRegistration clubRegistration = ClubRegistration.of(newClubUser.getId(), clubId,
-				UserRole.CLUB);
-		clubRegistrationCommandService.addNewClubUser(clubRegistration);
-	}
-
-
-	public void deleteClubUser(Long masterId, Long clubId, Long deletedUserId) {
-		User clubMaster = userQueryService.getUser(masterId);
-		userQueryService.getUser(deletedUserId);
-		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUserByUser(
-				masterId);
-		ClubRegistration deletedUserRegistration =
-				clubRegistrationQueryService.getClubUserByUser(deletedUserId);
-		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
-				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
-
-		clubPolicyService.verifyClubUserIn(clubUserIds, clubMaster.getId());
-		clubPolicyService.verifyClubUserIn(clubUserIds, deletedUserId);
-		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
-				clubMasterRegistration.getClubId(), clubId);
-
-		clubRegistrationCommandService.deleteClubUser(deletedUserRegistration);
-	}
-
-	public void mandateClubUser(Long clubMasterId, Long clubId, String newClubMasterName) {
-		User newClubMaster = userQueryService.getUserByName(newClubMasterName);
-
-		ClubRegistration oldClubMasterRegistration =
-				clubRegistrationQueryService.getClubUserByUser(clubMasterId);
-		ClubRegistration newClubMasterRegistration =
-				clubRegistrationQueryService.getClubUserByUser(newClubMaster.getId());
-		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
-				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
-
-		clubPolicyService.verifyClubUserIn(clubUserIds, newClubMaster.getId());
-		clubPolicyService.verifyClubUserIn(clubUserIds, clubMasterId);
-		clubPolicyService.verifyClubMaster(oldClubMasterRegistration.getUserRole(),
-				oldClubMasterRegistration.getClubId(), clubId);
-
-		clubRegistrationCommandService.mandateClubMaster(oldClubMasterRegistration,
-				newClubMasterRegistration);
-	}
-
+	/**
+	 * 동아리 정보를 조회한다.
+	 *
+	 * @param userId   사용자 ID
+	 * @param clubId   동아리 ID
+	 * @param pageable 페이징 정보
+	 * @return 동아리 정보
+	 */
 	public ClubInfoResponseDto getClubInfo(Long userId, Long clubId, Pageable pageable) {
 		Club club = clubQueryService.getClubWithClubRegistration(clubId);
 		List<Long> clubUserIds = club.getClubRegistrations().stream()
@@ -142,5 +73,108 @@ public class ClubFacadeService {
 				.collect(Collectors.toList());
 		return clubMapper.toClubInfoResponseDto(club.getName(), clubMaster.getName(), clubCabinet,
 				clubUsers, userMap.getTotalElements());
+	}
+
+	/**
+	 * 내가 속한 동아리 목록을 조회한다.
+	 *
+	 * @param userId 사용자 ID
+	 * @return 내가 속한 동아리 목록
+	 */
+	public ClubPaginationResponseDto getMyClubs(Long userId) {
+		List<ClubRegistration> usersWithClub =
+				clubRegistrationQueryService.findClubUsersWithClubByUser(userId);
+		List<Long> clubIds = usersWithClub.stream().map(ClubRegistration::getClubId)
+				.collect(Collectors.toList());
+		Map<Long, List<ClubRegistration>> clubMasterMap =
+				clubRegistrationQueryService.findClubUsersByClubs(clubIds)
+						.stream().collect(Collectors.groupingBy(ClubRegistration::getClubId));
+
+		List<ClubResponseDto> result = usersWithClub.stream().map(cr -> {
+			Long clubId = cr.getClubId();
+			String clubName = cr.getClub().getName();
+			String clubMasterName = clubMasterMap.get(clubId).stream()
+					.filter(c -> c.getUserRole().equals(CLUB_ADMIN))
+					.map(c -> c.getUser().getName()).findFirst().orElse(null);
+			return clubMapper.toClubResponseDto(clubId, clubName, clubMasterName);
+		}).collect(Collectors.toList());
+		return clubMapper.toClubPaginationResponseDto(result, (long) result.size());
+	}
+
+	/**
+	 * 동아리에 사용자를 추가한다.
+	 *
+	 * @param masterId 동아리 마스터 ID
+	 * @param clubId   동아리 ID
+	 * @param name     추가할 사용자 이름
+	 */
+	@Transactional
+	public void addClubUser(Long masterId, Long clubId, String name) {
+		User clubMaster = userQueryService.getUser(masterId);
+		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUserByUser(
+				masterId);
+		User newClubUser = userQueryService.getUserByName(name);
+		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
+				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
+
+		clubPolicyService.verifyClubUserIn(clubUserIds, clubMaster.getId());
+		clubPolicyService.verifyClubUserNotIn(clubUserIds, newClubUser.getId());
+		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
+				clubMasterRegistration.getClubId(), clubId);
+
+		ClubRegistration clubRegistration = ClubRegistration.of(newClubUser.getId(), clubId,
+				UserRole.CLUB);
+		clubRegistrationCommandService.addNewClubUser(clubRegistration);
+	}
+
+	/**
+	 * 동아리에서 사용자를 제거한다.
+	 *
+	 * @param masterId      동아리 마스터 ID
+	 * @param clubId        동아리 ID
+	 * @param deletedUserId 제거할 사용자 ID
+	 */
+	public void deleteClubUser(Long masterId, Long clubId, Long deletedUserId) {
+		User clubMaster = userQueryService.getUser(masterId);
+		userQueryService.getUser(deletedUserId);
+		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUserByUser(
+				masterId);
+		ClubRegistration deletedUserRegistration =
+				clubRegistrationQueryService.getClubUserByUser(deletedUserId);
+		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
+				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
+
+		clubPolicyService.verifyClubUserIn(clubUserIds, clubMaster.getId());
+		clubPolicyService.verifyClubUserIn(clubUserIds, deletedUserId);
+		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
+				clubMasterRegistration.getClubId(), clubId);
+
+		clubRegistrationCommandService.deleteClubUser(deletedUserRegistration);
+	}
+
+	/**
+	 * 동아리 마스터를 위임한다.
+	 *
+	 * @param clubMasterId      동아리 마스터 ID
+	 * @param clubId            동아리 ID
+	 * @param newClubMasterName 새로운 동아리 마스터 이름
+	 */
+	public void mandateClubUser(Long clubMasterId, Long clubId, String newClubMasterName) {
+		User newClubMaster = userQueryService.getUserByName(newClubMasterName);
+
+		ClubRegistration oldClubMasterRegistration =
+				clubRegistrationQueryService.getClubUserByUser(clubMasterId);
+		ClubRegistration newClubMasterRegistration =
+				clubRegistrationQueryService.getClubUserByUser(newClubMaster.getId());
+		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
+				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
+
+		clubPolicyService.verifyClubUserIn(clubUserIds, newClubMaster.getId());
+		clubPolicyService.verifyClubUserIn(clubUserIds, clubMasterId);
+		clubPolicyService.verifyClubMaster(oldClubMasterRegistration.getUserRole(),
+				oldClubMasterRegistration.getClubId(), clubId);
+
+		clubRegistrationCommandService.mandateClubMaster(oldClubMasterRegistration,
+				newClubMasterRegistration);
 	}
 }
