@@ -122,4 +122,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Query("SELECT u FROM User u WHERE u.name IN :userNames AND u.deletedAt IS NULL")
 	List<User> findAllUsersInNames(List<String> userNames);
+
+	/**
+	 * 유저의 ID 리스트로 유저들을 가져옵니다.
+	 * <p>
+	 * 페이지 정보를 포함합니다.
+	 *
+	 * @param userIds  유저 ID 리스트
+	 * @param pageable 페이지 정보
+	 * @return {@link User} 리스트
+	 */
+	@Query(value = "SELECT u FROM User u WHERE u.id IN :userIds AND u.deletedAt IS NULL",
+			countQuery = "SELECT COUNT(u) FROM User u WHERE u.id IN :userIds AND u.deletedAt IS NULL")
+	Page<User> findPaginationByIds(@Param("userIds") List<Long> userIds, Pageable pageable);
 }

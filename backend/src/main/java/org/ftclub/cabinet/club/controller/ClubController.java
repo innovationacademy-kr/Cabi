@@ -6,11 +6,13 @@ import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.club.service.ClubFacadeService;
 import org.ftclub.cabinet.dto.AddClubUserRequestDto;
+import org.ftclub.cabinet.dto.ClubInfoResponseDto;
 import org.ftclub.cabinet.dto.ClubPaginationResponseDto;
 import org.ftclub.cabinet.dto.MandateClubMasterRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +35,13 @@ public class ClubController {
 		return clubFacadeService.getMyClubs(user.getUserId());
 	}
 
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	@GetMapping("/{clubId}")
+	public ClubInfoResponseDto getClubInfo(@UserSession UserSessionDto user,
+			@PathVariable Long clubId,
+			@Valid Pageable pageable) {
+		return clubFacadeService.getClubInfo(user.getUserId(), clubId, pageable);
+	}
 
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	@PostMapping("/{clubId}/users")

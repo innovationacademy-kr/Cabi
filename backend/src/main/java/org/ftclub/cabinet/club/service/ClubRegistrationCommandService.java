@@ -28,9 +28,4 @@ public class ClubRegistrationCommandService {
 		oldClubRegistration.changeUserRole(UserRole.CLUB);
 		newClubRegistration.changeUserRole(UserRole.CLUB_ADMIN);
 	}
-
-	public void updateClubUserRole(ClubRegistration clubRegistration, UserRole userRole) {
-		clubRegistration.changeUserRole(userRole);
-		clubRegistrationRepoitory.save(clubRegistration);
-	}
 }

@@ -55,13 +55,12 @@ public class AdminClubController {
 	@PostMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void createNewClub(@Valid @RequestBody ClubCreateDto clubCreateDto) {
-		adminClubFacadeService.createNewClub(clubCreateDto);
+		adminClubFacadeService.createNewClub(clubCreateDto.getClubName(),
+				clubCreateDto.getClubMaster());
 	}
 
 	/**
 	 * 동아리 삭제
-	 *
-	 * @return
 	 */
 	@DeleteMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
@@ -79,7 +78,8 @@ public class AdminClubController {
 	@AuthGuard(level = ADMIN_ONLY)
 	public void updateClubUser(@PathVariable("clubId") Long clubId,
 			@Valid @RequestBody ClubUpdateRequestDto clubUpdateRequestDto) {
-		adminClubFacadeService.updateClub(clubId, clubUpdateRequestDto);
+		adminClubFacadeService.updateClub(clubId, clubUpdateRequestDto.getClubName(),
+				clubUpdateRequestDto.getClubMaster());
 	}
 
 }

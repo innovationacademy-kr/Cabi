@@ -137,7 +137,7 @@ public class CabinetFacadeService {
 		List<Cabinet> allCabinetsOnSection =
 				cabinetQueryService.findAllCabinetsByBuildingAndFloor(building, floor);
 		Map<Long, List<ClubLentHistory>> clubLentMap =
-				clubLentQueryService.findAllActiveLentHistories().stream()
+				clubLentQueryService.findAllActiveLentHistoriesWithClub().stream()
 						.collect(groupingBy(ClubLentHistory::getCabinetId));
 
 		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();

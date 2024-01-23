@@ -1,7 +1,8 @@
 package org.ftclub.cabinet.admin.club.service;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.club.domain.Club;
@@ -10,11 +11,9 @@ import org.ftclub.cabinet.club.service.ClubCommandService;
 import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.club.service.ClubRegistrationCommandService;
 import org.ftclub.cabinet.club.service.ClubRegistrationQueryService;
-import org.ftclub.cabinet.dto.ClubCreateDto;
 import org.ftclub.cabinet.dto.ClubDeleteDto;
 import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
-import org.ftclub.cabinet.dto.ClubUpdateRequestDto;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.ClubMapper;
@@ -36,21 +35,20 @@ public class AdminClubFacadeService {
 	private final ClubCommandService clubCommandService;
 	private final ClubRegistrationCommandService clubRegistrationCommandService;
 	private final ClubRegistrationQueryService clubRegistrationQueryService;
-
-
 	private final UserQueryService userQueryService;
+
 
 	public ClubInfoPaginationDto findAllActiveClubsInfo(Pageable pageable) {
 		Page<Club> clubs = clubQueryService.findAllActiveClubs(pageable);
-		List<ClubInfoDto> result = clubs.stream().map(clubMapper::toClubInfoDto)
-				.collect(Collectors.toList());
+		List<ClubInfoDto> result = clubs.stream().map(clubMapper::toClubInfoDto).collect(toList());
 		return clubMapper.toClubInfoPaginationDto(result, clubs.getTotalElements());
 	}
 
-	public void createNewClub(ClubCreateDto clubCreateDto) {
-		User clubMaster = userQueryService.getUserByName(clubCreateDto.getClubMasterName());
-		Club club = clubCommandService.createClub(clubCreateDto);
-		ClubRegistration.of(clubMaster.getId(), club.getId(), UserRole.CLUB_ADMIN);
+	public void createNewClub(String clubName, String clubMasterName) {
+		User clubMaster = userQueryService.getUserByName(clubMasterName);
+		Club club = clubCommandService.createClub(clubName);
+		clubRegistrationCommandService.addNewClubUser(
+				ClubRegistration.of(clubMaster.getId(), club.getId(), UserRole.CLUB_ADMIN));
 	}
 
 	public void deleteClub(ClubDeleteDto clubDeleteDto) {
@@ -58,31 +56,25 @@ public class AdminClubFacadeService {
 		clubCommandService.deleteClub(club);
 	}
 
-	public void updateClub(Long clubId, ClubUpdateRequestDto clubUpdateRequestDto) {
+	public void updateClub(Long clubId, String clubName, String clubMasterName) {
 		Club club = clubQueryService.getClub(clubId);
-		if (clubUpdateRequestDto.isClubMasterNameChanged()) {
-
-			ClubRegistration oldClubMasterRegistration = clubRegistrationQueryService.getClubMasterByClubId(
-					clubId);
-
-			User newClubMasterUser = userQueryService.getUserByName(
-					clubUpdateRequestDto.getClubName());
-			ClubRegistration newClubMasterClubRegistration = clubRegistrationQueryService.getClubUserByUserAndClub(
-					newClubMasterUser.getId(), clubId);
-
-			if (newClubMasterClubRegistration == null) {
-				newClubMasterClubRegistration = clubRegistrationCommandService.addNewClubUser(
-						ClubRegistration.of(clubId, newClubMasterUser.getId(),
-								UserRole.CLUB_ADMIN));
-			}
-			clubRegistrationCommandService.mandateClubMaster(oldClubMasterRegistration,
-					newClubMasterClubRegistration);
+		if (!clubName.equals(club.getName())) {
+			clubCommandService.updateName(club, clubName);
 		}
 
-		if (clubUpdateRequestDto.isClubNameChanged()) {
-			User user = userQueryService.getUserByName(clubUpdateRequestDto.getClubMasterName());
-			clubRegistrationCommandService.addNewClubUser(
-					ClubRegistration.of(club.getId(), user.getId(), UserRole.CLUB_ADMIN));
+		ClubRegistration clubMasterRegistration =
+				clubRegistrationQueryService.getClubMasterByClub(clubId);
+		if (!clubMasterName.equals(clubMasterRegistration.getUser().getName())) {
+			User newClubMaster = userQueryService.getUserByName(clubName);
+			ClubRegistration newClubMasterRegistration =
+					clubRegistrationQueryService.getClubUser(newClubMaster.getId(), clubId);
+
+			if (newClubMasterRegistration == null) {
+				newClubMasterRegistration = clubRegistrationCommandService.addNewClubUser(
+						ClubRegistration.of(clubId, newClubMaster.getId(), UserRole.CLUB_ADMIN));
+			}
+			clubRegistrationCommandService.mandateClubMaster(clubMasterRegistration,
+					newClubMasterRegistration);
 		}
 	}
 }

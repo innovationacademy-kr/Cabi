@@ -3,7 +3,9 @@ package org.ftclub.cabinet.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @ToString
@@ -11,14 +13,9 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ClubUpdateRequestDto {
 
+	@NonNull
+	@Length(min = 1, max = 30)
 	private String clubName;
-	private String clubMasterName;
-
-	public boolean isClubNameChanged() {
-		return clubName != null && !clubName.isEmpty();
-	}
-
-	public boolean isClubMasterNameChanged() {
-		return clubMasterName != null && !clubMasterName.isEmpty();
-	}
+	@NonNull
+	private String clubMaster;
 }

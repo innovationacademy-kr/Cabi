@@ -1,6 +1,8 @@
 package org.ftclub.cabinet.club.service;
 
 
+import static org.ftclub.cabinet.user.domain.UserRole.CLUB_ADMIN;
+
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +11,6 @@ import org.ftclub.cabinet.club.repository.ClubRegistrationRepoitory;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
-import org.ftclub.cabinet.user.domain.UserRole;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,26 +30,21 @@ public class ClubRegistrationQueryService {
 		return clubRegistration.orElseThrow(ExceptionStatus.NOT_CLUB_USER::asServiceException);
 	}
 
-	public List<ClubRegistration> findClubUsersWithClub(Long userId) {
+	public List<ClubRegistration> findClubUsersWithClubByUser(Long userId) {
 		return clubRegistrationRepoitory.findAllByUserIdJoinClub(userId);
 	}
 
-	public List<ClubRegistration> findClubUsersByClubIn(List<Long> clubIds) {
+	public List<ClubRegistration> findClubUsersByClubs(List<Long> clubIds) {
 		return clubRegistrationRepoitory.findAllByClubIdInJoinUser(clubIds);
 	}
 
-	public ClubRegistration getClubUserByUserAndClub(Long userId, Long clubId) {
+	public ClubRegistration getClubUser(Long userId, Long clubId) {
 		return clubRegistrationRepoitory.findByClubIdAndUserId(userId,
 				clubId).orElseThrow(ExceptionStatus.NOT_CLUB_USER::asServiceException);
 	}
 
-	public ClubRegistration findClubUserByUserAndClub(Long userId, Long clubId) {
-		return clubRegistrationRepoitory.findByClubIdAndUserId(userId,
-				clubId).orElse(null);
-	}
-
-	public ClubRegistration getClubMasterByClubId(Long clubId) {
-		return clubRegistrationRepoitory.findByClubIdAndUserRole(clubId, UserRole.CLUB_ADMIN)
-				.orElseThrow(ExceptionStatus.INVALID_CLUB_MASTER::asServiceException);
+	public ClubRegistration getClubMasterByClub(Long clubId) {
+		return clubRegistrationRepoitory.findByClubIdAndUserRoleJoinClubAndUser(clubId, CLUB_ADMIN)
+				.orElseThrow(ExceptionStatus.NOT_CLUB_MASTER::asServiceException);
 	}
 }

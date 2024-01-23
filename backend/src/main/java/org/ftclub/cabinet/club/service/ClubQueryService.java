@@ -18,16 +18,17 @@ public class ClubQueryService {
 
 	private final ClubRepository clubRepository;
 
+	public Page<Club> findAllActiveClubs(Pageable pageable) {
+		return clubRepository.findAllActiveClubs(pageable);
+	}
+
 	public Club getClub(Long clubId) {
 		Optional<Club> club = clubRepository.findById(clubId);
 		return club.orElseThrow(ExceptionStatus.NOT_FOUND_CLUB::asServiceException);
 	}
 
-	public Page<Club> findAll(Pageable pageable) {
-		return clubRepository.findAll(pageable);
-	}
-
-	public Page<Club> findAllActiveClubs(Pageable pageable) {
-		return clubRepository.findAllActiveClubs(pageable);
+	public Club getClubWithClubRegistration(Long clubId) {
+		Optional<Club> club = clubRepository.findByIdAndDeletedAtIsNull(clubId);
+		return club.orElseThrow(ExceptionStatus.NOT_FOUND_CLUB::asServiceException);
 	}
 }

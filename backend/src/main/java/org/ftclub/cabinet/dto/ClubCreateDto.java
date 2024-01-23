@@ -13,10 +13,9 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class ClubCreateDto {
 
-	@Length
 	@NonNull
 	@Length(min = 1, max = 30)
 	private String clubName;
 	@NonNull
-	private String clubMasterName;
+	private String clubMaster;
 }

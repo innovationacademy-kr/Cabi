@@ -56,11 +56,22 @@ public class UserQueryService {
 	/**
 	 * 유저들을 가져옵니다.
 	 *
-	 * @param userIdsInCabinet 유저들의 ID
+	 * @param userIds 유저들의 ID
 	 * @return 유저 객체들을 반환합니다.
 	 */
-	public List<User> getUsers(List<Long> userIdsInCabinet) {
-		return userRepository.findAllByIds(userIdsInCabinet);
+	public List<User> getUsers(List<Long> userIds) {
+		return userRepository.findAllByIds(userIds);
+	}
+
+	/**
+	 * 유저들을 가져옵니다.
+	 *
+	 * @param userIds  유저들의 ID
+	 * @param pageable 페이징 정보
+	 * @return 유저 객체들을 페이지 형식으로 반환합니다.
+	 */
+	public Page<User> getUsers(List<Long> userIds, Pageable pageable) {
+		return userRepository.findPaginationByIds(userIds, pageable);
 	}
 
 	/**

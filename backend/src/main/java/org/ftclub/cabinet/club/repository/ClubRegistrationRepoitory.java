@@ -41,5 +41,6 @@ public interface ClubRegistrationRepoitory extends JpaRepository<ClubRegistratio
 			+ "LEFT JOIN FETCH cr.club "
 			+ "LEFT JOIN FETCH cr.user "
 			+ "WHERE cr.clubId = :clubId AND cr.userRole = :userRole")
-	Optional<ClubRegistration> findByClubIdAndUserRole(Long clubId, UserRole userRole);
+	Optional<ClubRegistration> findByClubIdAndUserRoleJoinClubAndUser(
+			@Param("clubId") Long clubId, @Param("userRole") UserRole userRole);
 }
