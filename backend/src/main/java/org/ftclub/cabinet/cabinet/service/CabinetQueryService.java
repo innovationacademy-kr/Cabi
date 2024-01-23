@@ -198,17 +198,6 @@ public class CabinetQueryService {
 	}
 
 	/**
-	 * 사물함 번호에 해당하는 사물함을 page로 가져옵니다.
-	 *
-	 * @param visibleNum 사물함 번호
-	 * @param pageable   페이지 정보
-	 * @return 사물함
-	 */
-	public Page<Cabinet> findAllByVisibleNum(Integer visibleNum, Pageable pageable) {
-		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
-	}
-
-	/**
 	 * 사물함 상태에 맞는 사물함들 중 from 이전에 대여기간이 만료되는 사물함을 가져옵니다.
 	 *
 	 * @param cabinetStatus 사물함 상태

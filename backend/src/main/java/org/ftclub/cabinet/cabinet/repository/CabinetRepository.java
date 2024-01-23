@@ -138,16 +138,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	Page<Cabinet> findPaginationByStatus(@Param("status") CabinetStatus status, Pageable pageable);
 
 	/**
-	 * visibleNum으로 사물함을 조회한다.
-	 *
-	 * @param visibleNum 사물함 번호
-	 * @param pageable   페이지 정보
-	 * @return
-	 */
-	Page<Cabinet> findPaginationByVisibleNum(@Param("visibleNum") Integer visibleNum,
-			Pageable pageable);
-
-	/**
 	 * 사물함 번호에 해당하는 모든 사물함을 조회한다.
 	 *
 	 * @param visibleNum 사물함 번호

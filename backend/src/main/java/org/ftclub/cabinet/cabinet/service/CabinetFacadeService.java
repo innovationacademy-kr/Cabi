@@ -248,21 +248,6 @@ public class CabinetFacadeService {
 	}
 
 	/**
-	 * visibleNum에 해당하는 캐비넷 정보를 모두 가져옵니다.
-	 *
-	 * @param visibleNum 사물함 번호
-	 * @param pageable   페이징 정보
-	 * @return
-	 */
-	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum,
-			Pageable pageable) {
-		Page<Cabinet> cabinets = cabinetQueryService.findAllByVisibleNum(visibleNum, pageable);
-		List<CabinetDto> result = cabinets.stream()
-				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
-		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
-	}
-
-	/**
 	 * cabinetId로 해당 사물함의 대여기록을 모두 가져옵니다. ( 대여시작 날짜 내림차순 정렬)
 	 *
 	 * @param cabinetId 대여기록을 가져올 사물함 ID

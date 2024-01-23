@@ -157,21 +157,6 @@ public class AdminCabinetController {
 	}
 
 	/**
-	 * 사물함 표시 번호에 따른 사물함의 정보를 페이지네이션으로 가져옵니다.
-	 *
-	 * @param visibleNum 사물함 표시 번호
-	 * @param pageable   페이지네이션 정보
-	 * @return 사물함 정보 페이지네이션
-	 */
-	@GetMapping("/visible-num/{visibleNum}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public CabinetPaginationDto getCabinetsByVisibleNum(
-			@PathVariable("visibleNum") Integer visibleNum,
-			@Valid Pageable pageable) {
-		return cabinetFacadeService.getCabinetPaginationByVisibleNum(visibleNum, pageable);
-	}
-
-	/**
 	 * 사물함의 대여 기록을 페이지네이션으로 가져옵니다.
 	 *
 	 * @param cabinetId 사물함 아이디
