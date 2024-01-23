@@ -128,12 +128,11 @@ public class CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor) {
-		List<ActiveCabinetInfoEntities> activeCabinetInfos = cabinetQueryService.findActiveCabinetInfoEntities(
-				building, floor);
+		List<ActiveCabinetInfoEntities> activeCabinetInfos =
+				cabinetQueryService.findActiveCabinetInfoEntities(building, floor);
 		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
 				collect(groupingBy(ActiveCabinetInfoEntities::getCabinet,
-						mapping(ActiveCabinetInfoEntities::getLentHistory,
-								Collectors.toList())));
+						mapping(ActiveCabinetInfoEntities::getLentHistory, Collectors.toList())));
 		List<Cabinet> allCabinetsOnSection =
 				cabinetQueryService.findAllCabinetsByBuildingAndFloor(building, floor);
 		Map<Long, List<ClubLentHistory>> clubLentMap =
