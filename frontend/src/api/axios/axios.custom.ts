@@ -83,6 +83,35 @@ export const axiosUpdateDeviceToken = async (
   }
 };
 
+const axiosMyClubInfoURL = "/v4/clubs";
+export const axiosMyClubInfo = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyClubInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetClubInfoURL = "/v4/clubs/";
+export const axiosGetClubInfo = async (
+  clubId: number,
+  page: number,
+  size: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosGetClubInfoURL + clubId.toString(),
+      {
+        params: { page: page, size: size },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
 export const axiosBuildingFloor = async (): Promise<any> => {
