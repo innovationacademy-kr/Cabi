@@ -114,7 +114,7 @@ const ClubPage = () => {
         </SectionBarStyled>
       </SectionPaginationStyled>
       {/* <ClubInfoContainer clubId={clubList?.result[page].clubId} /> */}
-      <ClubMembers members={members} master={master} />
+      <ClubMembers members={members} master={master}/>
     </WrapperStyled>
   );
 };

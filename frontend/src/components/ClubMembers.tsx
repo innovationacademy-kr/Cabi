@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/recoil/atoms";
+import crown from "@/assets/images/crown.svg";
+import maru from "@/assets/images/maru.svg";
+import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 
 // props : 누른 clubId, 동아리 멤버들, 내 정보(id), clubmaster
@@ -20,7 +23,9 @@ const ClubMembers: React.FC<{
     userId: 2,
     userName: "jusohn",
   });
-  const [sortedMems, setSortedMems] = useState<ClubUserResponseDto[]>();
+  const [sortedMems, setSortedMems] = useState<ClubUserResponseDto[] | null>(
+    null
+  );
   const [tmp, setTmp] = useState<ClubUserResponseDto[]>();
   // // mems 중 나랑 동아리장 뺀 배열
   useEffect(() => {
@@ -50,9 +55,6 @@ const ClubMembers: React.FC<{
     }
   }, [tmp]);
 
-  useEffect(() => {
-    console.log("sortedMems : ", sortedMems);
-  }, [sortedMems]);
   // 동아리장
   // 내가 동아리 장일때
   // subcolor bg color && 왕관
@@ -65,77 +67,59 @@ const ClubMembers: React.FC<{
       {/* TitleBar */}
       <div>
         <p>동아리 멤버</p>
+        <div>
+          <img src={shareIcon} />
+          {/* TODO : icon 24px */}
+          <p>{props.members.length}</p>
+        </div>
         {/* 아이콘 & 동아리 멤버 수 */}
       </div>
       {/* MemCard */}
+      {myInfo.name === props.master ? <AddMemCard>+</AddMemCard> : null}
       <div id="memCard">
-        {/* 동아리장 ? <AddMemCard/> : null */}
-        <AddMemCard>+</AddMemCard>
-        {/* {mems.map((mem) => {
-          return <MemCard>{mem.userName}</MemCard>;
-          // 나도 아니고 동아리 장도 아니면 ?
-          // return
-        })} */}
+        {sortedMems?.map((mem) => {
+          return (
+            <>
+              <MemCard
+                bgColor={mem.userName === myInfo.name ? "var(--sub-color)" : ""}
+              >
+                <div>
+                  <img id="profileImg" src={maru}></img>
+                  {mem.userName === props.master ? (
+                    <img id="crown" src={crown} />
+                  ) : null}
+                </div>
+                <div>{mem.userName}</div>
+              </MemCard>
+            </>
+          );
+        })}
       </div>
       <div></div>
     </div>
   );
 };
 
-{
-  /* // 추가
-// 			<div style={borderline 회색 & 점선 & 굵기}>+</div>
-// 			// 나
-// 			//
-// 			//
-// 			<div bg : subcolor>
-// 				<div>
-// 					<img></img>
-// 					 <div>
-// 					{/* icon */
-}
-{
-  /* // 					동아리 장? <svg></svg> : null */
-}
-{
-  /* // 					</div> */
-}
-{
-  /* // 				</div> */
-}
-{
-  /* // 				<div> */
-}
-{
-  /* // 					memid */
-}
-{
-  /* // 				</div> */
-}
-{
-  /* // 			</div> */
-}
-{
-  /* // 			// 그 외 */
-}
-{
-  /* // 			return <div></div>; */
-}
-{
-  /* // 		}) */
-}
-{
-  /* pagenation */
-}
-{
-  /* <div></div>  */
-}
-
 const AddMemCard = styled.div`
   border: 1px dashed grey;
+  width: 150px;
+  height: 150px;
 `;
-let MemCard = styled.div`
+let MemCard = styled.div<{ bgColor: string }>`
   border: 1px solid grey;
+  width: 150px;
+  height: 150px;
+  background-color: ${(props) => props.bgColor};
+
+  & #profileImg {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  & #crown {
+    width: 1rem;
+    height: 1rem;
+  }
 `;
-// {/* /* TODO : px 맞추기 */ */}
+// TODO : px 맞추기
 export default ClubMembers;
