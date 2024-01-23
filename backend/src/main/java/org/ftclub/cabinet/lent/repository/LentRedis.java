@@ -67,15 +67,15 @@ public class LentRedis {
 	 */
 	public void attemptJoinCabinet(String cabinetId, String userId, String shareCode) {
 		String savedCode = shadowKeyTemplate.opsForValue().get(cabinetId + SHADOW_KEY_SUFFIX);
-		String cabinetIdString = cabinetId + CABINET_KEY_SUFFIX;
+		String cabinetKey = cabinetId + CABINET_KEY_SUFFIX;
 		if (Objects.equals(savedCode, shareCode)) {
-			shareCabinetTemplate.put(cabinetIdString, userId, USER_ENTERED);
+			shareCabinetTemplate.put(cabinetKey, userId, USER_ENTERED);
 			userCabinetTemplate.set(userId + VALUE_KEY_SUFFIX, cabinetId);
 		} else {
-			if (shareCabinetTemplate.hasKey(cabinetIdString, userId)) {
-				shareCabinetTemplate.increment(cabinetIdString, userId, 1L);
+			if (shareCabinetTemplate.hasKey(cabinetKey, userId)) {
+				shareCabinetTemplate.increment(cabinetKey, userId, 1L);
 			} else {
-				shareCabinetTemplate.put(cabinetIdString, userId, "1");
+				shareCabinetTemplate.put(cabinetKey, userId, "1");
 			}
 			throw ExceptionStatus.WRONG_SHARE_CODE.asServiceException();
 		}
@@ -99,8 +99,8 @@ public class LentRedis {
 	 * @return 공유 사물함 세션에 참여 중인 유저 수
 	 */
 	public Long countUserInCabinet(String cabinetId) {
-		String cabinetIdString = cabinetId + CABINET_KEY_SUFFIX;
-		Collection<String> joinUsers = shareCabinetTemplate.entries(cabinetIdString).values();
+		String cabinetKey = cabinetId + CABINET_KEY_SUFFIX;
+		Collection<String> joinUsers = shareCabinetTemplate.entries(cabinetKey).values();
 		return joinUsers.stream()
 				.filter(value -> Objects.nonNull(value) && value.equals(USER_ENTERED)).count();
 	}
