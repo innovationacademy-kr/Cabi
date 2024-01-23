@@ -63,20 +63,20 @@ const ClubMembers: React.FC<{
   // 2차원 배열 - 맨 앞엔 추가 버튼
 
   return (
-    <div>
+    <Container>
       {/* TitleBar */}
-      <div>
+      <TitleBar>
         <p>동아리 멤버</p>
         <div>
           <img src={shareIcon} />
-          {/* TODO : icon 24px */}
-          <p>{props.members.length}</p>
+          <p>333</p>
+          {/* <p>{props.members.length}</p> */}
         </div>
         {/* 아이콘 & 동아리 멤버 수 */}
-      </div>
+      </TitleBar>
       {/* MemCard */}
       {myInfo.name === props.master ? <AddMemCard>+</AddMemCard> : null}
-      <div id="memCard">
+      <div id="memCard" style={{ backgroundColor: "green" }}>
         {sortedMems?.map((mem) => {
           return (
             <>
@@ -95,21 +95,52 @@ const ClubMembers: React.FC<{
           );
         })}
       </div>
-      <div></div>
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  margin-top: 75px;
+  background-color: blue;
+  width: 810px;
+`;
+
+const TitleBar = styled.div`
+  background-color: yellow;
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 30px;
+
+  & img {
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
+  }
+
+  & > div {
+    background-color: pink;
+    width: 56px;
+    height: 24px;
+    font-size: 1rem;
+    font-weight: normal;
+    display: flex;
+  }
+`;
 
 const AddMemCard = styled.div`
   border: 1px dashed grey;
   width: 150px;
   height: 150px;
+  border-radius: 1rem;
 `;
 let MemCard = styled.div<{ bgColor: string }>`
-  border: 1px solid grey;
-  width: 150px;
-  height: 150px;
-  background-color: ${(props) => props.bgColor};
+  width: 145px;
+  height: 170px;
+  background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
+  border-radius: 1rem;
 
   & #profileImg {
     width: 3rem;
