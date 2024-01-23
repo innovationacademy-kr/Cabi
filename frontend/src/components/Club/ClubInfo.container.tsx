@@ -23,6 +23,14 @@ const ClubInfoContainer = ({ clubId }: { clubId: number | undefined }) => {
           userId: 2,
           userName: "jusohn",
         },
+        {
+          userId: 3,
+          userName: "jeekim",
+        },
+        {
+          userId: 4,
+          userName: "miyu",
+        },
       ],
       clubUserCount: 1,
     });

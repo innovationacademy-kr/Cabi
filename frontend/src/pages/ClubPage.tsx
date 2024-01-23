@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ClubInfoContainer from "@/components/Club/ClubInfo.container";
+import ClubMembers from "@/components/ClubMembers";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import {
   ClubListReponseType,
   ClubPaginationResponseDto,
   ClubResponseDto,
+  ClubUserResponseDto,
 } from "@/types/dto/club.dto";
 import { axiosMyClubInfo } from "@/api/axios/axios.custom";
 
@@ -13,6 +15,21 @@ const ClubPage = () => {
   const [clubList, setClubList] = useState<ClubPaginationResponseDto>();
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(1);
+  const [members, setMembers] = useState<ClubUserResponseDto[]>([
+    {
+      userId: 2, // TODO : 사람마다의 id인지 아님 멤버의 id인지?
+      userName: "jusohn",
+    },
+    {
+      userId: 3,
+      userName: "jeekim",
+    },
+    {
+      userId: 4,
+      userName: "miyu",
+    },
+  ]);
+  const [master, setMaster] = useState<string>("jusohn");
 
   useEffect(() => {
     getMyClubInfo();
@@ -21,7 +38,6 @@ const ClubPage = () => {
   const getMyClubInfo = async () => {
     try {
       const { result, totalLength } = await axiosMyClubInfo();
-      // setClubList({ result, totalLength });
       setClubList({
         result: [
           { clubId: 3, clubName: "동아리", clubMaster: "jusohn" },
@@ -97,7 +113,8 @@ const ClubPage = () => {
           />
         </SectionBarStyled>
       </SectionPaginationStyled>
-      <ClubInfoContainer clubId={clubList?.result[page].clubId} />
+      {/* <ClubInfoContainer clubId={clubList?.result[page].clubId} /> */}
+      <ClubMembers members={members} master={master} />
     </WrapperStyled>
   );
 };
