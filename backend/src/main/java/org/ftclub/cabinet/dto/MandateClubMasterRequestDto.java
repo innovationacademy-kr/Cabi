@@ -1,9 +1,9 @@
 package org.ftclub.cabinet.dto;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 
 @Getter
@@ -12,6 +12,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class MandateClubMasterRequestDto {
 
-	@NonNull
+	@NotBlank
 	private String clubMaster;
 }

@@ -1,9 +1,9 @@
 package org.ftclub.cabinet.dto;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,9 +13,9 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class ClubCreateDto {
 
-	@NonNull
+	@NotBlank
 	@Length(min = 1, max = 30)
 	private String clubName;
-	@NonNull
+	@NotBlank
 	private String clubMaster;
 }

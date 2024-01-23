@@ -1,10 +1,10 @@
 package org.ftclub.cabinet.dto;
 
 
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 
 @Getter
@@ -13,6 +13,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ClubDeleteDto {
 
-	@NonNull
+	@NotNull
 	private Long clubId;
 }
