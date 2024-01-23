@@ -7,9 +7,25 @@ const ClubInfoContainer = ({ clubId }: { clubId: number | undefined }) => {
   const [clubInfo, setClubInfo] = useState<ClubInfoResponseDto>();
 
   useEffect(() => {
-    if (clubId) {
-      getClubInfo(clubId);
-    }
+    // if (clubId) {
+    //   getClubInfo(clubId);
+    // }
+    setClubInfo({
+      clubName: "동아리",
+      clubMaster: "jusohn",
+      clubMemo: "1234",
+      building: "새롬관",
+      floor: 3,
+      section: "Cluster X - 1",
+      visibleNum: 23,
+      clubUsers: [
+        {
+          userId: 2,
+          userName: "jusohn",
+        },
+      ],
+      clubUserCount: 1,
+    });
   }, [clubId]);
 
   const getClubInfo = async (clubId: number) => {
