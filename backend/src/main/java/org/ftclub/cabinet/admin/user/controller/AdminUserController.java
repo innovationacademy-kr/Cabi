@@ -1,9 +1,7 @@
 package org.ftclub.cabinet.admin.user.controller;
 
 import java.time.LocalDateTime;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ftclub.cabinet.admin.dto.AdminClubUserRequestDto;
 import org.ftclub.cabinet.admin.lent.service.AdminLentFacadeService;
 import org.ftclub.cabinet.admin.user.service.AdminLentExtensionFacadeService;
 import org.ftclub.cabinet.admin.user.service.AdminUserFacadeService;
@@ -14,10 +12,8 @@ import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,41 +36,6 @@ public class AdminUserController {
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void deleteBanHistoryByUserId(@PathVariable("userId") Long userId) {
 		adminUserFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
-	}
-
-	/**
-	 * 동아리 유저를 생성합니다.
-	 *
-	 * @param dto 동아리 이름
-	 */
-	@PostMapping("/club")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void createClubUser(@RequestBody AdminClubUserRequestDto dto) {
-		adminUserFacadeService.createClubUser(dto.getClubName());
-	}
-
-	/**
-	 * 동아리 유저를 삭제합니다.
-	 *
-	 * @param clubId 동아리 고유 아이디
-	 */
-	@DeleteMapping("/club/{clubId}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void deleteClubUser(@PathVariable("clubId") Long clubId) {
-//		adminUserFacadeService.deleteClubUser(clubId);
-	}
-
-//	@GetMapping("/clubs")
-//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-//	public ClubUserListDto findClubs(@Valid Pageable pageable) {
-//		return adminUserFacadeService.findAllClubUsers(pageable);
-//	}
-
-	@PatchMapping("/club/{clubId}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void updateClubUser(@PathVariable("clubId") Long clubId,
-			@Valid @RequestBody AdminClubUserRequestDto dto) {
-		adminUserFacadeService.updateClubUser(clubId, dto.getClubName());
 	}
 
 	// TODO : 안 쓰는 부분인 것 확정 되면 삭제
@@ -108,6 +69,11 @@ public class AdminUserController {
 		return adminLentFacadeService.getUserLentHistories(userId, pageable);
 	}
 
+	/**
+	 * 유저의 연장권 발급 기록을 반환합니다.
+	 *
+	 * @param username 유저 이름
+	 */
 	@PostMapping("/lent-extensions/{user}")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void issueLentExtension(@PathVariable("user") String username) {

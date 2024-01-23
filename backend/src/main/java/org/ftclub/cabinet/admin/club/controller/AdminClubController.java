@@ -34,24 +34,22 @@ public class AdminClubController {
 	private final AdminClubFacadeService adminClubFacadeService;
 
 	/**
-	 * 전체 동아리 조회
+	 * 모든 동아리 정보를 가져옵니다.
 	 *
-	 * @return 동아리의 PK와 이름 정보만을 반환합니다.
+	 * @param pageable 페이징 정보
+	 * @return 모든 동아리 정보
 	 */
 	@GetMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
-	public ClubInfoPaginationDto getAllClubsInfoDto(@Valid Pageable pageable
-	) {
+	public ClubInfoPaginationDto getAllClubsInfoDto(@Valid Pageable pageable) {
 		return adminClubFacadeService.findAllActiveClubsInfo(pageable);
 	}
 
 	/**
-	 * 동아리 추가
+	 * 동아리 생성
 	 *
-	 * @return void
-	 * @Param 새 동아리 name
+	 * @param clubCreateDto 동아리 생성 정보
 	 */
-
 	@PostMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void createNewClub(@Valid @RequestBody ClubCreateDto clubCreateDto) {
@@ -61,18 +59,20 @@ public class AdminClubController {
 
 	/**
 	 * 동아리 삭제
+	 *
+	 * @param clubDeleteDto 동아리 삭제 정보
 	 */
 	@DeleteMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
 	public void deleteClub(@Valid @RequestBody ClubDeleteDto clubDeleteDto) {
-		adminClubFacadeService.deleteClub(clubDeleteDto);
+		adminClubFacadeService.deleteClub(clubDeleteDto.getClubId());
 	}
 
 	/**
-	 * 동아리 수정
+	 * 동아리 정보 수정
 	 *
-	 * @return
-	 * @Param 새 이름
+	 * @param clubId               동아리 아이디
+	 * @param clubUpdateRequestDto 동아리 수정 정보
 	 */
 	@PatchMapping("/{clubId}")
 	@AuthGuard(level = ADMIN_ONLY)

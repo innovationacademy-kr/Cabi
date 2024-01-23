@@ -11,7 +11,6 @@ import org.ftclub.cabinet.club.service.ClubCommandService;
 import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.club.service.ClubRegistrationCommandService;
 import org.ftclub.cabinet.club.service.ClubRegistrationQueryService;
-import org.ftclub.cabinet.dto.ClubDeleteDto;
 import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.log.LogLevel;
@@ -38,12 +37,24 @@ public class AdminClubFacadeService {
 	private final UserQueryService userQueryService;
 
 
+	/**
+	 * 현재 사물함을 대여 중인 모든 동아리 정보를 가져옵니다.
+	 *
+	 * @param pageable 페이징 정보
+	 * @return 현재 사물함을 대여 중인 모든 동아리 정보
+	 */
 	public ClubInfoPaginationDto findAllActiveClubsInfo(Pageable pageable) {
 		Page<Club> clubs = clubQueryService.findAllActiveClubs(pageable);
 		List<ClubInfoDto> result = clubs.stream().map(clubMapper::toClubInfoDto).collect(toList());
 		return clubMapper.toClubInfoPaginationDto(result, clubs.getTotalElements());
 	}
 
+	/**
+	 * 동아리를 생성합니다.
+	 *
+	 * @param clubName       동아리 이름
+	 * @param clubMasterName 동아리장 이름
+	 */
 	public void createNewClub(String clubName, String clubMasterName) {
 		User clubMaster = userQueryService.getUserByName(clubMasterName);
 		Club club = clubCommandService.createClub(clubName);
@@ -51,11 +62,23 @@ public class AdminClubFacadeService {
 				ClubRegistration.of(clubMaster.getId(), club.getId(), UserRole.CLUB_ADMIN));
 	}
 
-	public void deleteClub(ClubDeleteDto clubDeleteDto) {
-		Club club = clubQueryService.getClub(clubDeleteDto.getClubId());
+	/**
+	 * 동아리를 삭제합니다.
+	 *
+	 * @param clubId 동아리 ID
+	 */
+	public void deleteClub(Long clubId) {
+		Club club = clubQueryService.getClub(clubId);
 		clubCommandService.deleteClub(club);
 	}
 
+	/**
+	 * 동아리 정보를 수정합니다.
+	 *
+	 * @param clubId         동아리 ID
+	 * @param clubName       변경할 동아리 이름
+	 * @param clubMasterName 변경할 동아리장 이름
+	 */
 	public void updateClub(Long clubId, String clubName, String clubMasterName) {
 		Club club = clubQueryService.getClub(clubId);
 		if (!clubName.equals(club.getName())) {
