@@ -131,10 +131,7 @@ export const getDetailMessage = (
   // 동아리 사물함
   else if (lentType === "CLUB") return "동아리 사물함";
   // 사용 중 사물함
-  else if (
-    status === CabinetStatus.FULL ||
-    status === CabinetStatus.OVERDUE
-  )
+  else if (status === CabinetStatus.FULL || status === CabinetStatus.OVERDUE)
     return getCalcualtedTimeString(new Date(lents[0].expiredAt));
   // 빈 사물함
   else return null;
@@ -180,6 +177,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     extendModal: false,
     cancelModal: false,
     swapModal: false,
+    
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,

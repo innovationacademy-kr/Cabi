@@ -28,8 +28,20 @@ const ClubPage = () => {
       userId: 4,
       userName: "miyu",
     },
+    {
+      userId: 4, // TODO : 사람마다의 id인지 아님 멤버의 id인지?
+      userName: "miyu",
+    },
+    {
+      userId: 6,
+      userName: "jeekim2",
+    },
+    {
+      userId: 7,
+      userName: "miyu3",
+    },
   ]);
-  const [master, setMaster] = useState<string>("jusohn");
+  const [master, setMaster] = useState<string>("jeekim");
 
   useEffect(() => {
     getMyClubInfo();
@@ -114,7 +126,7 @@ const ClubPage = () => {
         </SectionBarStyled>
       </SectionPaginationStyled>
       {/* <ClubInfoContainer clubId={clubList?.result[page].clubId} /> */}
-      <ClubMembers members={members} master={master}/>
+      <ClubMembers members={members} master={master} />
     </WrapperStyled>
   );
 };

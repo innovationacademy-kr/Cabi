@@ -112,6 +112,19 @@ export const axiosGetClubInfo = async (
   }
 };
 
+const axiosAddClubMemURL = "/v4/clubs";
+export const axiosAddClubMem = async (clubId: number): Promise<any> => {
+  // TODO : 예외처리?
+  try {
+    const response = await instance.get(
+      `${axiosMyClubInfoURL}/${clubId}/usersclub`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
 export const axiosBuildingFloor = async (): Promise<any> => {
