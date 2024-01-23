@@ -11,7 +11,12 @@ import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.user.domain.UserSession;
 import org.ftclub.cabinet.user.service.UserFacadeService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 유저가 자신의 정보를 확인할 때 사용하는 컨트롤러입니다.
@@ -67,7 +72,7 @@ public class UserController {
 	 *
 	 * @param userSessionDto 현재 로그인한 유저의 세션 정보
 	 */
-	@GetMapping("/me/lent-extensions/use")
+	@PostMapping("/me/lent-extensions")
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	public void useLentExtension(
 			@UserSession UserSessionDto userSessionDto) {
