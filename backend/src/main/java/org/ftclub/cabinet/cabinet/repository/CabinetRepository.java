@@ -128,15 +128,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			@Param("userId") Long userId);
 
 	/**
-	 * lentType 으로 사물함을 조회한다.
-	 *
-	 * @param lentType 사물함 대여 타입(LentType)
-	 * @param pageable 페이지 정보
-	 * @return
-	 */
-	Page<Cabinet> findPaginationByLentType(@Param("lentType") LentType lentType, Pageable pageable);
-
-	/**
 	 * status로 사물함을 조회한다.
 	 *
 	 * @param status   사물함 상태(CabinetStatus)

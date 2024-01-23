@@ -66,7 +66,7 @@ public class Club {
 		return name != null;
 	}
 
-	public void disable() {
+	public void delete() {
 		this.deletedAt = LocalDateTime.now();
 	}
 

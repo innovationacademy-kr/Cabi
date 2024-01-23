@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.admin.cabinet.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminCabinetGridUpdateRequestDto;
 import org.ftclub.cabinet.admin.dto.AdminCabinetStatusNoteUpdateRequestDto;
@@ -8,16 +9,22 @@ import org.ftclub.cabinet.admin.dto.AdminCabinetVisibleNumUpdateRequestDto;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
+import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 관리자가 사물함을 관리할 때 사용하는 컨트롤러입니다.
@@ -132,21 +139,6 @@ public class AdminCabinetController {
 			@PathVariable("cabinetId") Long cabinetId,
 			@Valid @RequestBody AdminCabinetVisibleNumUpdateRequestDto dto) {
 		cabinetFacadeService.updateCabinetVisibleNum(cabinetId, dto.getVisibleNum());
-	}
-
-	/**
-	 * 사물함 대여 타입에 따른 사물함의 정보를 페이지네이션으로 가져옵니다.
-	 *
-	 * @param lentType 사물함 대여 타입
-	 * @param pageable 페이지네이션 정보
-	 * @return 사물함 정보 페이지네이션
-	 */
-	@GetMapping("/lent-types/{lentType}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public CabinetPaginationDto getCabinetsByLentType(
-			@PathVariable("lentType") LentType lentType,
-			@Valid Pageable pageable) {
-		return cabinetFacadeService.getCabinetPaginationByLentType(lentType, pageable);
 	}
 
 	/**

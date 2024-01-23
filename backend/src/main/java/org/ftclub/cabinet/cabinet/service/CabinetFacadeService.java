@@ -233,22 +233,6 @@ public class CabinetFacadeService {
 	}
 
 	/**
-	 * LentType에 해당하는 캐비넷 정보를 모두 가져옵니다.
-	 *
-	 * @param lentType 대여 타입
-	 * @param pageable 페이징 정보
-	 * @return 캐비넷 정보
-	 */
-	@Transactional(readOnly = true)
-	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType,
-			Pageable pageable) {
-		Page<Cabinet> cabinets = cabinetQueryService.findAllByLentType(lentType, pageable);
-		List<CabinetDto> result = cabinets.stream()
-				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
-		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
-	}
-
-	/**
 	 * CabinetStatus에 해당하는 캐비넷 정보를 모두 가져옵니다.
 	 *
 	 * @param status   캐비넷 상태

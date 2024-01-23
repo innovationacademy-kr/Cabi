@@ -31,7 +31,7 @@ public class ClubCommandService {
 	 * @param club 동아리
 	 */
 	public void deleteClub(Club club) {
-		club.disable();
+		club.delete();
 		clubRepository.save(club);
 	}
 
