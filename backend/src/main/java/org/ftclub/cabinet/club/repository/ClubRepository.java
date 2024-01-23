@@ -20,7 +20,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 	 */
 	@Query(value = "SELECT c FROM Club c WHERE c.deletedAt IS NULL",
 			countQuery = "SELECT count(c) FROM Club c WHERE c.deletedAt IS NULL")
-	Page<Club> findAllActiveClubs(Pageable pageable);
+	Page<Club> findPaginationByDeletedAtIsNull(Pageable pageable);
 
 	/**
 	 * 특정 동아리 정보를 조회한다.

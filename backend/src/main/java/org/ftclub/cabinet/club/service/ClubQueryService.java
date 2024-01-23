@@ -25,7 +25,7 @@ public class ClubQueryService {
 	 * @return 모든 동아리 목록
 	 */
 	public Page<Club> findAllActiveClubs(Pageable pageable) {
-		return clubRepository.findAllActiveClubs(pageable);
+		return clubRepository.findPaginationByDeletedAtIsNull(pageable);
 	}
 
 	/**
