@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.alarm.fcm.config.FirebaseConfig;
 import org.ftclub.cabinet.alarm.fcm.service.FCMTokenRedisService;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -62,10 +63,11 @@ public class UserFacadeService {
 		LentExtensionResponseDto lentExtensionResponseDto = userMapper.toLentExtensionResponseDto(
 				lentExtension);
 		User currentUser = userQueryService.getUser(user.getUserId());
-		boolean isDeviceTokenExpired = currentUser.getAlarmTypes().isPush()
+		AlarmTypeResponseDto userAlarmTypes = currentUser.getAlarmTypes();
+		boolean isDeviceTokenExpired = userAlarmTypes.isPush()
 				&& fcmTokenRedisService.findByUserName(user.getName()).isEmpty();
 		return userMapper.toMyProfileResponseDto(user, cabinet, banHistory,
-				lentExtensionResponseDto, currentUser.getAlarmTypes(), isDeviceTokenExpired);
+				lentExtensionResponseDto, userAlarmTypes, isDeviceTokenExpired);
 	}
 
 	/**
