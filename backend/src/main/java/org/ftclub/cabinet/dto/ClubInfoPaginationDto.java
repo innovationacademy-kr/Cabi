@@ -9,5 +9,5 @@ import lombok.Getter;
 public class ClubInfoPaginationDto {
 
 	private final List<ClubInfoDto> result; //클럽 정보
-	private final long totalLength; //총 개수
+	private final Long totalLength; //총 개수
 }
