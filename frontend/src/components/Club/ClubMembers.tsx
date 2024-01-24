@@ -7,7 +7,7 @@ import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 import { axiosAddClubMem } from "@/api/axios/axios.custom";
-import AddClubMemModal from "./Modals/ClubModal/AddClubMemModal";
+import AddClubMemModal from "../Modals/ClubModal/AddClubMemModal";
 
 // TODO : 동아리 멤버들 아님 전체 api 정보
 const ClubMembers: React.FC<{

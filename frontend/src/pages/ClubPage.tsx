@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ClubInfoContainer from "@/components/Club/ClubInfo.container";
-import ClubMembers from "@/components/ClubMembers";
+import ClubMembers from "@/components/Club/ClubMembers";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import {
   ClubListReponseType,
