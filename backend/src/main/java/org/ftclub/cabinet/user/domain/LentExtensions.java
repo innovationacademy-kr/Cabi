@@ -46,7 +46,7 @@ public class LentExtensions {
 	}
 
 	public LentExtension getOne() {
-		if (lentExtensions == null || lentExtensions.get(0) == null) {
+		if (lentExtensions == null || lentExtensions.isEmpty() || lentExtensions.get(0) == null) {
 			return null;
 		}
 		return lentExtensions.get(0);
