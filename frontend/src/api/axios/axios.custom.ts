@@ -113,11 +113,17 @@ export const axiosGetClubInfo = async (
 };
 
 const axiosAddClubMemURL = "/v4/clubs";
-export const axiosAddClubMem = async (clubId: number): Promise<any> => {
+export const axiosAddClubMem = async (
+  clubId: number,
+  name: String
+): Promise<any> => {
   // TODO : 예외처리?
   try {
     const response = await instance.post(
-      `${axiosMyClubInfoURL}/${clubId}/usersclub`
+      `${axiosMyClubInfoURL}/${clubId}/usersclub`,
+      {
+        params: { name },
+      }
     );
     return response;
   } catch (error) {

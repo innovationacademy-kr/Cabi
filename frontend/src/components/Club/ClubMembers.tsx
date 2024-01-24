@@ -60,7 +60,6 @@ const ClubMembers: React.FC<{
   };
 
   const closeModal = () => {
-    console.log("hey");
     setIsModalOpen(false);
   };
   // TODO : modal 관련 상위에 있으면 재사용하기
@@ -70,7 +69,7 @@ const ClubMembers: React.FC<{
     // TODO : axios로 동아리정보 조회해서 data 받으면 여기서 지우고 prop으로 가져오기
   }, []);
 
-  useEffect(() => {
+  const SortMemAry = () => {
     if (props.master) {
       let tmpAry = members.filter((mem) => {
         if (mem.userName !== myInfo.name && mem.userName !== props.master) {
@@ -83,6 +82,10 @@ const ClubMembers: React.FC<{
       });
       setTmp(tmpAry);
     }
+  };
+
+  useEffect(() => {
+    SortMemAry();
   }, [members, props.master]);
   // 나 -> 동아리장 -> 맨 위 배열 함침
 
@@ -137,9 +140,10 @@ const ClubMembers: React.FC<{
       {isModalOpen && (
         <AddClubMemModalContainer
           closeModal={() => {
-            console.log("hihihi");
             closeModal();
           }}
+          setMembers={setMembers}
+          clubId={props.clubId}
         />
       )}
     </Container>
@@ -147,6 +151,7 @@ const ClubMembers: React.FC<{
 };
 
 // wrapperstyled로 해야하는지? ㄴㄴ. 맨 앞에 잘 설명하는 키워드 붙이면 됨
+// TODO : styled component는 뒤에 styled 붙이기
 const Container = styled.div`
   margin-top: 75px;
   width: 795px;
