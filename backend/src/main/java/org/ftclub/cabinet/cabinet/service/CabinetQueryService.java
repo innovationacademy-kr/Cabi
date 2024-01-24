@@ -187,17 +187,6 @@ public class CabinetQueryService {
 	}
 
 	/**
-	 * LentType에 해당하는 사물함을 page로 가져옵니다.
-	 *
-	 * @param lentType 대여 타입
-	 * @param pageable 페이지 정보
-	 * @return 사물함
-	 */
-	public Page<Cabinet> findAllByLentType(LentType lentType, Pageable pageable) {
-		return cabinetRepository.findPaginationByLentType(lentType, pageable);
-	}
-
-	/**
 	 * status에 해당하는 사물함을 page로 가져옵니다.
 	 *
 	 * @param status   사물함 상태
@@ -206,17 +195,6 @@ public class CabinetQueryService {
 	 */
 	public Page<Cabinet> findAllByStatus(CabinetStatus status, Pageable pageable) {
 		return cabinetRepository.findPaginationByStatus(status, pageable);
-	}
-
-	/**
-	 * 사물함 번호에 해당하는 사물함을 page로 가져옵니다.
-	 *
-	 * @param visibleNum 사물함 번호
-	 * @param pageable   페이지 정보
-	 * @return 사물함
-	 */
-	public Page<Cabinet> findAllByVisibleNum(Integer visibleNum, Pageable pageable) {
-		return cabinetRepository.findPaginationByVisibleNum(visibleNum, pageable);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.admin.cabinet.controller;
 
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.dto.AdminCabinetGridUpdateRequestDto;
 import org.ftclub.cabinet.admin.dto.AdminCabinetStatusNoteUpdateRequestDto;
@@ -8,16 +9,21 @@ import org.ftclub.cabinet.admin.dto.AdminCabinetVisibleNumUpdateRequestDto;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
-import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
-import org.ftclub.cabinet.dto.*;
+import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
+import org.ftclub.cabinet.dto.CabinetPaginationDto;
+import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
+import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 관리자가 사물함을 관리할 때 사용하는 컨트롤러입니다.
@@ -81,28 +87,13 @@ public class AdminCabinetController {
 	 * @param cabinetStatusRequestDto 사물함 상태 변경 요청 DTO
 	 * @throws ControllerException cabinetIds가 null인 경우.
 	 */
-	@PatchMapping("/")
+	@PatchMapping("")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetBundleStatus(
 			@Valid @RequestBody CabinetStatusRequestDto cabinetStatusRequestDto) {
-		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto);
+		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto.getCabinetIds(),
+				cabinetStatusRequestDto.getStatus(), cabinetStatusRequestDto.getLentType());
 	}
-
-	/**
-	 * 사물함의 대여 타입을 업데이트합니다.
-	 *
-	 * @param cabinetClubStatusRequestDto 사물함 상태 변경 요청 DTO
-	 * @throws ControllerException cabinetIds가 null인 경우.
-	 */
-	@PatchMapping("/club")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void updateCabinetClubStatus(
-			@Valid @RequestBody CabinetClubStatusRequestDto cabinetClubStatusRequestDto) {
-		cabinetFacadeService.updateClub(cabinetClubStatusRequestDto);
-		lentFacadeService.startLentClubCabinet(cabinetClubStatusRequestDto.getUserId(),
-				cabinetClubStatusRequestDto.getCabinetId());
-	}
-
 
 	/**
 	 * 사물함의 행과 열을 업데이트합니다.
@@ -135,21 +126,6 @@ public class AdminCabinetController {
 	}
 
 	/**
-	 * 사물함 대여 타입에 따른 사물함의 정보를 페이지네이션으로 가져옵니다.
-	 *
-	 * @param lentType 사물함 대여 타입
-	 * @param pageable 페이지네이션 정보
-	 * @return 사물함 정보 페이지네이션
-	 */
-	@GetMapping("/lent-types/{lentType}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public CabinetPaginationDto getCabinetsByLentType(
-			@PathVariable("lentType") LentType lentType,
-			@Valid Pageable pageable) {
-		return cabinetFacadeService.getCabinetPaginationByLentType(lentType, pageable);
-	}
-
-	/**
 	 * 사물함 상태에 따른 사물함의 정보를 페이지네이션으로 가져옵니다.
 	 *
 	 * @param status   사물함 상태
@@ -162,21 +138,6 @@ public class AdminCabinetController {
 			@PathVariable("status") CabinetStatus status,
 			@Valid Pageable pageable) {
 		return cabinetFacadeService.getCabinetPaginationByStatus(status, pageable);
-	}
-
-	/**
-	 * 사물함 표시 번호에 따른 사물함의 정보를 페이지네이션으로 가져옵니다.
-	 *
-	 * @param visibleNum 사물함 표시 번호
-	 * @param pageable   페이지네이션 정보
-	 * @return 사물함 정보 페이지네이션
-	 */
-	@GetMapping("/visible-num/{visibleNum}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public CabinetPaginationDto getCabinetsByVisibleNum(
-			@PathVariable("visibleNum") Integer visibleNum,
-			@Valid Pageable pageable) {
-		return cabinetFacadeService.getCabinetPaginationByVisibleNum(visibleNum, pageable);
 	}
 
 	/**

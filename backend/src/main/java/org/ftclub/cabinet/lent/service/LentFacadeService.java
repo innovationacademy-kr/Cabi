@@ -13,6 +13,7 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
+import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -48,6 +49,8 @@ public class LentFacadeService {
 	private final LentRedisService lentRedisService;
 	private final LentQueryService lentQueryService;
 	private final LentCommandService lentCommandService;
+	private final ClubLentCommandService clubLentCommandService;
+	private final ClubLentQueryService clubLentQueryService;
 	private final UserQueryService userQueryService;
 	private final CabinetQueryService cabinetQueryService;
 	private final CabinetCommandService cabinetCommandService;
@@ -229,13 +232,12 @@ public class LentFacadeService {
 	/**
 	 * 동아리 사물함 대여 시작
 	 *
-	 * @param userId    사용자 ID
+	 * @param clubId    사용자 ID
 	 * @param cabinetId 사물함 ID
 	 */
 	@Transactional
-	public void startLentClubCabinet(Long userId, Long cabinetId) {
+	public void startLentClubCabinet(Long clubId, Long cabinetId) {
 		LocalDateTime now = LocalDateTime.now();
-		// TODO : userId로 ClubUser 검증 로직 필요(Policy)
 		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
 		int userCount = lentQueryService.countCabinetUser(cabinetId);
 
@@ -243,9 +245,10 @@ public class LentFacadeService {
 				userCount);
 		lentPolicyService.verifyCabinetType(cabinet.getLentType(), LentType.CLUB);
 		lentPolicyService.verifyCabinetForLent(cabinet.getStatus(), cabinet.getLentType());
+
 		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now,
 				cabinet.getLentType(), 1);
-		lentCommandService.startLent(userId, cabinetId, now, expiredAt);
+		clubLentCommandService.startLent(clubId, cabinetId, now, expiredAt);
 		cabinetCommandService.changeUserCount(cabinet, userCount + 1);
 	}
 
@@ -260,8 +263,8 @@ public class LentFacadeService {
 	@Transactional
 	public void endUserLent(Long userId, String memo) {
 		LocalDateTime now = LocalDateTime.now();
-		List<LentHistory> lentHistories = lentQueryService.findUserActiveLentHistoriesInCabinetForUpdate(
-				userId);
+		List<LentHistory> lentHistories =
+				lentQueryService.findUserActiveLentHistoriesInCabinetForUpdate(userId);
 		if (lentHistories.isEmpty()) {
 			throw ExceptionStatus.NOT_FOUND_LENT_HISTORY.asServiceException();
 		}
@@ -295,18 +298,22 @@ public class LentFacadeService {
 	}
 
 	/**
-	 * 사물함 정보 수정
-	 * <p>
-	 * 사물함 제목과 메모를 수정할 수 있습니다.
+	 * 동아리 사물함 대여 종료
 	 *
-	 * @param userId 사용자 ID
-	 * @param title  사물함 제목
-	 * @param memo   사물함 메모
+	 * @param clubId    사용자 ID
+	 * @param cabinetId 사물함 ID
 	 */
 	@Transactional
-	public void updateLentCabinetInfo(Long userId, String title, String memo) {
-		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(userId);
-		cabinetCommandService.updateTitle(cabinet, title);
+	public void endLentClub(Long clubId, Long cabinetId, String memo) {
+		LocalDateTime now = LocalDateTime.now();
+		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		ClubLentHistory clubLentHistory =
+				clubLentQueryService.getClubActiveLentHistory(clubId, cabinetId);
+		lentPolicyService.verifyCabinetType(cabinet.getLentType(), LentType.CLUB);
+
+		clubLentCommandService.endLent(clubLentHistory, now);
+		cabinetCommandService.changeUserCount(cabinet, 0);
+		cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		cabinetCommandService.updateMemo(cabinet, memo);
 	}
 
@@ -345,6 +352,22 @@ public class LentFacadeService {
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		}
 		lentRedisService.confirmCabinetSession(cabinetId, usersInCabinetSession);
+	}
+
+	/**
+	 * 사물함 정보 수정
+	 * <p>
+	 * 사물함 제목과 메모를 수정할 수 있습니다.
+	 *
+	 * @param userId 사용자 ID
+	 * @param title  사물함 제목
+	 * @param memo   사물함 메모
+	 */
+	@Transactional
+	public void updateLentCabinetInfo(Long userId, String title, String memo) {
+		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(userId);
+		cabinetCommandService.updateTitle(cabinet, title);
+		cabinetCommandService.updateMemo(cabinet, memo);
 	}
 
 	/**

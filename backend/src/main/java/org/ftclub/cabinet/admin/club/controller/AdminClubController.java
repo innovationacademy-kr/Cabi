@@ -7,10 +7,13 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.club.service.AdminClubFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
+import org.ftclub.cabinet.auth.domain.AuthLevel;
+import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.ClubCreateDto;
-import org.ftclub.cabinet.dto.ClubDeleteDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubUpdateRequestDto;
+import org.ftclub.cabinet.dto.LentEndMemoDto;
+import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 관리자가 클럽을 관리할 때 사용하는 컨트롤러입니다.
+ * 관리자가 동아리를 관리할 때 사용하는 컨트롤러입니다.
  */
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminClubController {
 
 	private final AdminClubFacadeService adminClubFacadeService;
+	private final CabinetFacadeService cabinetFacadeService;
+	private final LentFacadeService lentFacadeService;
 
 	/**
 	 * 모든 동아리 정보를 가져옵니다.
@@ -48,7 +53,7 @@ public class AdminClubController {
 	/**
 	 * 동아리 생성
 	 *
-	 * @param clubCreateDto 동아리 생성 정보
+	 * @param clubCreateDto 생성할 동아리 정보
 	 */
 	@PostMapping("")
 	@AuthGuard(level = ADMIN_ONLY)
@@ -60,19 +65,19 @@ public class AdminClubController {
 	/**
 	 * 동아리 삭제
 	 *
-	 * @param clubDeleteDto 동아리 삭제 정보
+	 * @param cabinetId 삭제할 동아리 아이디
 	 */
-	@DeleteMapping("")
+	@DeleteMapping("/{cabinetId}")
 	@AuthGuard(level = ADMIN_ONLY)
-	public void deleteClub(@Valid @RequestBody ClubDeleteDto clubDeleteDto) {
-		adminClubFacadeService.deleteClub(clubDeleteDto.getClubId());
+	public void deleteClub(@PathVariable Long cabinetId) {
+		adminClubFacadeService.deleteClub(cabinetId);
 	}
 
 	/**
 	 * 동아리 정보 수정
 	 *
 	 * @param clubId               동아리 아이디
-	 * @param clubUpdateRequestDto 동아리 수정 정보
+	 * @param clubUpdateRequestDto 수정할 동아리 정보
 	 */
 	@PatchMapping("/{clubId}")
 	@AuthGuard(level = ADMIN_ONLY)
@@ -82,4 +87,28 @@ public class AdminClubController {
 				clubUpdateRequestDto.getClubMaster());
 	}
 
+	/**
+	 * 동아리의 사물함에 동아리 대여를 설정합니다.
+	 *
+	 * @param clubId    대여시킬 동아리 ID
+	 * @param cabinetId 대여시킬 사물함 ID
+	 */
+	@PostMapping("/{clubId}/cabinets/{cabinetId}")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void startClubLent(@PathVariable Long clubId, @PathVariable Long cabinetId) {
+		lentFacadeService.startLentClubCabinet(clubId, cabinetId);
+	}
+
+	/**
+	 * 동아리의 사물함에 대여 중인 동아리를 반납 시킵니다.
+	 *
+	 * @param clubId    반납할 동아리 ID
+	 * @param cabinetId 반납할 사물함 ID
+	 */
+	@DeleteMapping("/{clubId}/cabinets/{cabinetId}")
+	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
+	public void endClubLent(@PathVariable Long clubId, @PathVariable Long cabinetId,
+			@Valid @RequestBody LentEndMemoDto lentEndMemoDto) {
+		lentFacadeService.endLentClub(clubId, cabinetId, lentEndMemoDto.getCabinetMemo());
+	}
 }

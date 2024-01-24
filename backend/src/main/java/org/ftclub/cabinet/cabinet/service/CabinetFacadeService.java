@@ -19,16 +19,16 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
+import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
-import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -56,10 +56,10 @@ public class CabinetFacadeService {
 
 	private final CabinetCommandService cabinetCommandService;
 	private final CabinetQueryService cabinetQueryService;
-
 	private final LentQueryService lentQueryService;
 	private final LentRedisService lentRedisService;
 	private final UserQueryService userQueryService;
+	private final ClubQueryService clubQueryService;
 	private final ClubLentQueryService clubLentQueryService;
 
 	private final CabinetMapper cabinetMapper;
@@ -233,22 +233,6 @@ public class CabinetFacadeService {
 	}
 
 	/**
-	 * LentType에 해당하는 캐비넷 정보를 모두 가져옵니다.
-	 *
-	 * @param lentType 대여 타입
-	 * @param pageable 페이징 정보
-	 * @return 캐비넷 정보
-	 */
-	@Transactional(readOnly = true)
-	public CabinetPaginationDto getCabinetPaginationByLentType(LentType lentType,
-			Pageable pageable) {
-		Page<Cabinet> cabinets = cabinetQueryService.findAllByLentType(lentType, pageable);
-		List<CabinetDto> result = cabinets.stream()
-				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
-		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
-	}
-
-	/**
 	 * CabinetStatus에 해당하는 캐비넷 정보를 모두 가져옵니다.
 	 *
 	 * @param status   캐비넷 상태
@@ -258,21 +242,6 @@ public class CabinetFacadeService {
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
 			Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByStatus(status, pageable);
-		List<CabinetDto> result = cabinets.stream()
-				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
-		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
-	}
-
-	/**
-	 * visibleNum에 해당하는 캐비넷 정보를 모두 가져옵니다.
-	 *
-	 * @param visibleNum 사물함 번호
-	 * @param pageable   페이징 정보
-	 * @return
-	 */
-	public CabinetPaginationDto getCabinetPaginationByVisibleNum(Integer visibleNum,
-			Pageable pageable) {
-		Page<Cabinet> cabinets = cabinetQueryService.findAllByVisibleNum(visibleNum, pageable);
 		List<CabinetDto> result = cabinets.stream()
 				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
@@ -351,23 +320,22 @@ public class CabinetFacadeService {
 	/**
 	 * [ADMIN] 사물함의 상태를 변경합니다.
 	 *
-	 * @param cabinetStatusRequestDto 변경할 사물함 ID 리스트, 변경할 상태
+	 * @param cabinetIds 변경할 사물함 ID 리스트
+	 * @param status     변경할 상태
+	 * @param lentType   변경할 대여 타입
 	 */
 	@Transactional
-	public void updateCabinetBundleStatus(CabinetStatusRequestDto cabinetStatusRequestDto) {
-		CabinetStatus status = cabinetStatusRequestDto.getStatus();
-		LentType lentType = cabinetStatusRequestDto.getLentType();
+	public void updateCabinetBundleStatus(List<Long> cabinetIds, CabinetStatus status,
+			LentType lentType) {
 
-		List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsForUpdate(
-				cabinetStatusRequestDto.getCabinetIds());
+		List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsForUpdate(cabinetIds);
 
 		for (Cabinet cabinet : cabinetsWithLock) {
 			if (status != null) {
-				cabinetCommandService.updateStatus(cabinet, cabinetStatusRequestDto.getStatus());
+				cabinetCommandService.updateStatus(cabinet, status);
 			}
 			if (lentType != null) {
-				cabinetCommandService.updateLentType(cabinet,
-						cabinetStatusRequestDto.getLentType());
+				cabinetCommandService.updateLentType(cabinet, lentType);
 			}
 		}
 	}
@@ -375,24 +343,14 @@ public class CabinetFacadeService {
 	/**
 	 * [ADMIN] 사물함에 동아리 유저를 대여 시킵니다. {inheritDoc}
 	 *
-	 * @param dto 변경하려는 동아리 정보 dto
+	 * @param clubId     대여할 유저 ID
+	 * @param cabinetId  대여할 사물함 ID
+	 * @param statusNote 상태 메모
 	 */
 	@Transactional
-	public void updateClub(CabinetClubStatusRequestDto dto) {
-		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(dto.getCabinetId());
-
-		Cabinet activeCabinetByUserId = cabinetQueryService.findActiveCabinetByUserId(
-				dto.getUserId());
-		if (activeCabinetByUserId != null) {
-			throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
-		}
-
-		String clubName = "";
-		if (dto.getUserId() != null) {
-			clubName = userQueryService.getUser(dto.getUserId()).getName();
-		}
-
-		cabinetCommandService.updateClubStatus(cabinet, clubName, dto.getStatusNote());
+	public void updateClub(Long clubId, Long cabinetId, String statusNote) {
+		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(cabinetId);
+		Club club = clubQueryService.getClub(clubId);
 	}
 
 	/**
