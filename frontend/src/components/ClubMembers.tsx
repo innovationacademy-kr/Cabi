@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/recoil/atoms";
@@ -6,12 +6,13 @@ import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
+import { axiosAddClubMem } from "@/api/axios/axios.custom";
 import AddClubMemModal from "./Modals/ClubModal/AddClubMemModal";
 
 // TODO : 동아리 멤버들 아님 전체 api 정보
 const ClubMembers: React.FC<{
-  members: ClubUserResponseDto[];
   master: string;
+  clubId: number;
 }> = (props) => {
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [me, setMe] = useState<ClubUserResponseDto>({
@@ -19,17 +20,41 @@ const ClubMembers: React.FC<{
     userName: "",
   });
   const [master, setMaster] = useState<ClubUserResponseDto>({
-    userId: 2,
-    userName: "jusohn",
+    userId: 0,
+    userName: "",
   });
-  // TODO : ClubPage에서 data 받으면 여기서 지우고 prop으로 가져오기
   const [sortedMems, setSortedMems] = useState<ClubUserResponseDto[] | null>(
     null
   );
   const [tmp, setTmp] = useState<ClubUserResponseDto[]>([]);
   // memsbers 중 나랑 동아리장 뺀 배열
-  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [members, setMembers] = useState<ClubUserResponseDto[]>([
+    {
+      userId: 2,
+      userName: "jusohn",
+    },
+    {
+      userId: 3,
+      userName: "jeekim",
+    },
+    {
+      userId: 4,
+      userName: "miyu",
+    },
+    {
+      userId: 5,
+      userName: "jusohn2",
+    },
+    {
+      userId: 6,
+      userName: "jeekim2",
+    },
+    {
+      userId: 7,
+      userName: "miyu3",
+    },
+  ]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -41,35 +66,33 @@ const ClubMembers: React.FC<{
   // TODO : modal 관련 상위에 있으면 재사용하기
 
   useEffect(() => {
-    let tmpAry = props.members.filter((mem) => {
-      if (mem.userName !== myInfo.name && mem.userName !== props.master) {
-        return true;
-      } else {
-        if (mem.userName === myInfo.name)
-          // TODO : userName이 intra id인지?
-          setMe(mem);
-        if (mem.userName === props.master) setMaster(mem);
-        return false;
-      }
-    });
-    setTmp(tmpAry);
+    // setMembers
+    // TODO : axios로 동아리정보 조회해서 data 받으면 여기서 지우고 prop으로 가져오기
   }, []);
+
+  useEffect(() => {
+    if (props.master) {
+      let tmpAry = members.filter((mem) => {
+        if (mem.userName !== myInfo.name && mem.userName !== props.master) {
+          return true;
+        } else {
+          if (mem.userName === myInfo.name) setMe(mem);
+          if (mem.userName === props.master) setMaster(mem);
+          return false;
+        }
+      });
+      setTmp(tmpAry);
+    }
+  }, [members, props.master]);
   // 나 -> 동아리장 -> 맨 위 배열 함침
 
   useEffect(() => {
     const masterAry = [master];
     const meAry = [me];
-    const concatteAry = meAry.concat(masterAry);
-    let tmpSet = new Set([...concatteAry, ...tmp]);
-    setSortedMems([...tmpSet]);
-  }, [tmp]);
-
-  // 동아리장
-  // 내가 동아리 장일때
-  // subcolor bg color && 왕관
-  // 아닐때
-  // 나, 동아리장, 맨 위 배열 함침
-  // 2차원 배열 - 맨 앞엔 추가 버튼
+    const concatteAry =
+      master.userName === me.userName ? meAry : meAry.concat(masterAry);
+    setSortedMems([...concatteAry, ...tmp]);
+  }, [tmp, master]);
 
   const AddMem = () => {
     openModal();
@@ -81,10 +104,10 @@ const ClubMembers: React.FC<{
       <TitleBar>
         <p>동아리 멤버</p>
         <div>
+          {/* 아이콘 & 동아리 멤버 수 */}
           <img src={shareIcon} />
-          <p id="membersLength">{props.members.length}</p>
+          <p id="membersLength">{members.length}</p>
         </div>
-        {/* 아이콘 & 동아리 멤버 수 */}
       </TitleBar>
       <div id="memCard">
         <MemSection>
@@ -93,24 +116,20 @@ const ClubMembers: React.FC<{
               <p>+</p>
             </AddMemCard>
           ) : null}
-          {sortedMems?.map((mem) => {
+          {sortedMems?.map((mem, idx) => {
             return (
-              <>
-                <MemCard
-                  bgColor={
-                    mem.userName === myInfo.name ? "var(--sub-color)" : ""
-                  }
-                  // TODO : key 추가
-                >
-                  <div id="top">
-                    <img id="profileImg" src={maru}></img>
-                    {mem.userName === props.master ? (
-                      <img id="crown" src={crown} />
-                    ) : null}
-                  </div>
-                  <div>{mem.userName}</div>
-                </MemCard>
-              </>
+              <MemCard
+                key={idx}
+                bgColor={mem.userName === myInfo.name ? "var(--sub-color)" : ""}
+              >
+                <div id="top">
+                  <img id="profileImg" src={maru}></img>
+                  {mem.userName === props.master ? (
+                    <img id="crown" src={crown} />
+                  ) : null}
+                </div>
+                <div>{mem.userName}</div>
+              </MemCard>
             );
           })}
         </MemSection>
@@ -120,7 +139,7 @@ const ClubMembers: React.FC<{
   );
 };
 
-// TODO : wrapperstyled로 해야하는지?
+// wrapperstyled로 해야하는지? ㄴㄴ. 맨 앞에 잘 설명하는 키워드 붙이면 됨
 
 const Container = styled.div`
   margin-top: 75px;
@@ -134,9 +153,7 @@ const TitleBar = styled.div`
   justify-content: space-between;
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 30px;
   padding-left: 7px;
-  white-space: pre-wrap;
 
   & img {
     width: 24px;

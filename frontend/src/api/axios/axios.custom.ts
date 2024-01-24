@@ -116,7 +116,7 @@ const axiosAddClubMemURL = "/v4/clubs";
 export const axiosAddClubMem = async (clubId: number): Promise<any> => {
   // TODO : 예외처리?
   try {
-    const response = await instance.get(
+    const response = await instance.post(
       `${axiosMyClubInfoURL}/${clubId}/usersclub`
     );
     return response;

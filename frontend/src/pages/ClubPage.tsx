@@ -12,36 +12,20 @@ import {
 import { axiosMyClubInfo } from "@/api/axios/axios.custom";
 
 const ClubPage = () => {
-  const [clubList, setClubList] = useState<ClubPaginationResponseDto>();
+  const [clubList, setClubList] = useState<ClubPaginationResponseDto>({
+    result: [
+      {
+        clubId: 0,
+        clubName: "",
+        clubMaster: "",
+      },
+    ],
+    totalLength: 0, // totalLength : (지금은) 동아리 총 개수. 추후 바뀔수 있음
+  });
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(1);
-  const [members, setMembers] = useState<ClubUserResponseDto[]>([
-    {
-      userId: 2, // TODO : 사람마다의 id인지 아님 멤버의 id인지?
-      userName: "jusohn",
-    },
-    {
-      userId: 3,
-      userName: "jeekim",
-    },
-    {
-      userId: 4,
-      userName: "miyu",
-    },
-    {
-      userId: 4, // TODO : 사람마다의 id인지 아님 멤버의 id인지?
-      userName: "miyu",
-    },
-    {
-      userId: 6,
-      userName: "jeekim2",
-    },
-    {
-      userId: 7,
-      userName: "miyu3",
-    },
-  ]);
-  const [master, setMaster] = useState<string>("jeekim");
+
+  const [master, setMaster] = useState<string>("jusohn");
 
   useEffect(() => {
     getMyClubInfo();
@@ -52,14 +36,14 @@ const ClubPage = () => {
       const response = await axiosMyClubInfo();
       const result = response.data.result;
       const totalLength = response.data.result;
-      setClubList({ result, totalLength });
-      // setClubList({
-      //   result: [
-      //     { clubId: 3, clubName: "동아리", clubMaster: "jusohn" },
-      //     { clubId: 4, clubName: "동아리2", clubMaster: "jusohn" },
-      //   ] as ClubResponseDto[],
-      //   totalLength: 1,
-      // });
+      // setClubList({ result, totalLength });
+      setClubList({
+        result: [
+          { clubId: 3, clubName: "동아리", clubMaster: "jeekim" },
+          { clubId: 4, clubName: "동아리2", clubMaster: "jusohn" },
+        ] as ClubResponseDto[],
+        totalLength: 1,
+      });
       setTotalPage(2);
     } catch (error) {
       throw error;
@@ -129,7 +113,10 @@ const ClubPage = () => {
         </SectionBarStyled>
       </SectionPaginationStyled>
       {/* <ClubInfoContainer clubId={clubList?.result[page].clubId} /> */}
-      <ClubMembers members={members} master={master} />
+      <ClubMembers
+        master={clubList?.result[0].clubMaster.toString()}
+        clubId={clubList?.result[0].clubId}
+      />
     </WrapperStyled>
   );
 };

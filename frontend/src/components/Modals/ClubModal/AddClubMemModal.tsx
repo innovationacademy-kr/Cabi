@@ -29,7 +29,7 @@ const AddClubMemModal: React.FC<{
     setIsLoading(true);
     try {
       // await axiosAddClubMem(clubId); // TODO : clubId 받아야됨
-      // TODO : 뭐가 들어오지...?
+      // 성공하면 200 아니면 에러 코드 반환됨
       setIsCurrentSectionRender(true);
       setModalTitle("동아리 멤버 추가");
     } catch (error: any) {
