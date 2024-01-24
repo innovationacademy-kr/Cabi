@@ -61,8 +61,6 @@ const ClubMembers: React.FC<{
     const meAry = [me];
     const concatteAry = meAry.concat(masterAry);
     let tmpSet = new Set([...concatteAry, ...tmp]);
-    console.log("[...concatteAry, ...tmp] : ", [...concatteAry, ...tmp]);
-    console.log("tmpSet : ", tmpSet);
     setSortedMems([...tmpSet]);
   }, [tmp]);
 
@@ -84,7 +82,7 @@ const ClubMembers: React.FC<{
         <p>동아리 멤버</p>
         <div>
           <img src={shareIcon} />
-          <p>{props.members.length}</p>
+          <p id="membersLength">{props.members.length}</p>
         </div>
         {/* 아이콘 & 동아리 멤버 수 */}
       </TitleBar>
@@ -126,7 +124,7 @@ const ClubMembers: React.FC<{
 
 const Container = styled.div`
   margin-top: 75px;
-  width: 810px;
+  width: 795px;
   margin-bottom: 180px;
 `;
 
@@ -137,19 +135,25 @@ const TitleBar = styled.div`
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 30px;
+  padding-left: 7px;
+  white-space: pre-wrap;
 
   & img {
     width: 24px;
     height: 24px;
-    margin-right: 5px;
+    margin-right: 6px;
   }
 
   & > div {
-    width: 56px;
+    line-height: 24px;
     height: 24px;
     font-size: 1rem;
     font-weight: normal;
     display: flex;
+  }
+
+  & #membersLength {
+    width: 34px;
   }
 `;
 
@@ -196,7 +200,7 @@ let MemCard = styled.div<{ bgColor: string }>`
 
 let MemSection = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, 162px);
+  grid-template-columns: repeat(auto-fill, 159px);
   grid-template-rows: repeat(auto-fill, 184px);
   justify-content: center;
   width: 100%;
