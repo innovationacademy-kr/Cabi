@@ -49,14 +49,17 @@ const ClubPage = () => {
 
   const getMyClubInfo = async () => {
     try {
-      const { result, totalLength } = await axiosMyClubInfo();
-      setClubList({
-        result: [
-          { clubId: 3, clubName: "동아리", clubMaster: "jusohn" },
-          { clubId: 4, clubName: "동아리2", clubMaster: "jusohn" },
-        ] as ClubResponseDto[],
-        totalLength: 1,
-      });
+      const response = await axiosMyClubInfo();
+      const result = response.data.result;
+      const totalLength = response.data.result;
+      setClubList({ result, totalLength });
+      // setClubList({
+      //   result: [
+      //     { clubId: 3, clubName: "동아리", clubMaster: "jusohn" },
+      //     { clubId: 4, clubName: "동아리2", clubMaster: "jusohn" },
+      //   ] as ClubResponseDto[],
+      //   totalLength: 1,
+      // });
       setTotalPage(2);
     } catch (error) {
       throw error;
