@@ -10,7 +10,6 @@ import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
-import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
@@ -95,20 +94,6 @@ public class AdminCabinetController {
 		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto.getCabinetIds(),
 				cabinetStatusRequestDto.getStatus(), cabinetStatusRequestDto.getLentType());
 	}
-
-	/**
-	 * 사물함의 대여 타입을 업데이트합니다.
-	 *
-	 * @param dto 사물함 상태 변경 요청 DTO
-	 * @throws ControllerException cabinetIds가 null인 경우.
-	 */
-	@PatchMapping("/club")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void updateCabinetClubStatus(@Valid @RequestBody CabinetClubStatusRequestDto dto) {
-		cabinetFacadeService.updateClub(dto.getUserId(), dto.getCabinetId(), dto.getStatusNote());
-		lentFacadeService.startLentClubCabinet(dto.getUserId(), dto.getCabinetId());
-	}
-
 
 	/**
 	 * 사물함의 행과 열을 업데이트합니다.

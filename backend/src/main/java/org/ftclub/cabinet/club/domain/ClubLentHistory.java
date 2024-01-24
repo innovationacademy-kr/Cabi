@@ -16,6 +16,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.exception.ExceptionStatus;
+import org.ftclub.cabinet.log.LogLevel;
+import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.utils.DateUtil;
+import org.ftclub.cabinet.utils.ExceptionUtil;
 
 @Log4j2
 @ToString(exclude = {"club", "cabinet"})
@@ -53,17 +58,38 @@ public class ClubLentHistory {
 	@Column(name = "EXPIRED_AT", nullable = false)
 	private LocalDateTime expiredAt;
 
-	protected ClubLentHistory(Club club, Cabinet cabinet, LocalDateTime startedAt,
+	protected ClubLentHistory(Long clubId, Long cabinetId, LocalDateTime startedAt,
 			LocalDateTime endedAt) {
-		this.club = club;
-		this.cabinet = cabinet;
+		this.clubId = clubId;
+		this.cabinetId = cabinetId;
 		this.startedAt = startedAt;
 		this.endedAt = endedAt;
 	}
 
-	public static ClubLentHistory of(Club club, Cabinet cabinet, LocalDateTime startedAt,
+	public static ClubLentHistory of(Long clubId, Long cabinetId, LocalDateTime startedAt,
 			LocalDateTime endedAt) {
-		return new ClubLentHistory(club, cabinet, startedAt, endedAt);
+		ClubLentHistory clubLentHistory =
+				new ClubLentHistory(clubId, cabinetId, startedAt, endedAt);
+		if (!clubLentHistory.isValid()) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		return clubLentHistory;
 	}
 
+	private boolean isValid() {
+		return clubId != null && cabinetId != null && startedAt != null && endedAt != null;
+	}
+
+	@Logging(level = LogLevel.DEBUG)
+	public void endLent(LocalDateTime now) {
+		ExceptionUtil.throwIfFalse((this.isEndLentValid(now)),
+				ExceptionStatus.INVALID_ARGUMENT.asDomainException());
+		this.endedAt = now;
+		ExceptionUtil.throwIfFalse((this.isValid()),
+				ExceptionStatus.INVALID_ARGUMENT.asDomainException());
+	}
+
+	private boolean isEndLentValid(LocalDateTime endedAt) {
+		return endedAt != null && DateUtil.calculateTwoDateDiff(endedAt, this.startedAt) >= 0;
+	}
 }

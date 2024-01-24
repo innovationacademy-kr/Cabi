@@ -196,14 +196,23 @@ public class LentPolicyService {
 		if (!DateUtil.isToday(now)) {
 			status = LentPolicyStatus.INVALID_ARGUMENT;
 		}
-		int lentTerm = 0;
-		if (lentType.equals(LentType.PRIVATE)) {
-			lentTerm = cabinetProperties.getLentTermPrivate();
-		} else if (lentType.equals(LentType.SHARE)) {
-			lentTerm = cabinetProperties.getLentTermShareBasic()
-					+ cabinetProperties.getLentTermShare() * lentUserCount;
+		LocalDateTime expiredAt = now;
+		switch (lentType) {
+			case PRIVATE:
+				expiredAt = DateUtil.setLastTime(
+						now.plusDays(cabinetProperties.getLentTermPrivate()));
+				break;
+			case SHARE:
+				expiredAt = DateUtil.setLastTime(
+						now.plusDays(cabinetProperties.getLentTermShareBasic()
+								+ (long) cabinetProperties.getLentTermShare() * lentUserCount));
+				break;
+			case CLUB:
+				expiredAt = DateUtil.getInfinityDate();
+				break;
+			default:
+				status = LentPolicyStatus.INVALID_ARGUMENT;
 		}
-		LocalDateTime expiredAt = DateUtil.setLastTime(now.plusDays(lentTerm));
 		if (DateUtil.isPast(expiredAt)) {
 			status = LentPolicyStatus.INVALID_EXPIREDAT;
 		}
