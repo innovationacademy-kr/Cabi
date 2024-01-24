@@ -99,16 +99,14 @@ public class AdminCabinetController {
 	/**
 	 * 사물함의 대여 타입을 업데이트합니다.
 	 *
-	 * @param cabinetClubStatusRequestDto 사물함 상태 변경 요청 DTO
+	 * @param dto 사물함 상태 변경 요청 DTO
 	 * @throws ControllerException cabinetIds가 null인 경우.
 	 */
 	@PatchMapping("/club")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void updateCabinetClubStatus(
-			@Valid @RequestBody CabinetClubStatusRequestDto cabinetClubStatusRequestDto) {
-		cabinetFacadeService.updateClub(cabinetClubStatusRequestDto);
-		lentFacadeService.startLentClubCabinet(cabinetClubStatusRequestDto.getUserId(),
-				cabinetClubStatusRequestDto.getCabinetId());
+	public void updateCabinetClubStatus(@Valid @RequestBody CabinetClubStatusRequestDto dto) {
+		cabinetFacadeService.updateClub(dto.getUserId(), dto.getCabinetId(), dto.getStatusNote());
+		lentFacadeService.startLentClubCabinet(dto.getUserId(), dto.getCabinetId());
 	}
 
 

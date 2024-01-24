@@ -22,7 +22,6 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetClubStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
@@ -342,24 +341,24 @@ public class CabinetFacadeService {
 	/**
 	 * [ADMIN] 사물함에 동아리 유저를 대여 시킵니다. {inheritDoc}
 	 *
-	 * @param dto 변경하려는 동아리 정보 dto
+	 * @param userId     대여할 유저 ID
+	 * @param cabinetId  대여할 사물함 ID
+	 * @param statusNote 상태 메모
 	 */
 	@Transactional
-	public void updateClub(CabinetClubStatusRequestDto dto) {
-		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(dto.getCabinetId());
+	public void updateClub(Long userId, Long cabinetId, String statusNote) {
+		Cabinet cabinet = cabinetQueryService.getUserActiveCabinetForUpdate(cabinetId);
 
-		Cabinet activeCabinetByUserId = cabinetQueryService.findActiveCabinetByUserId(
-				dto.getUserId());
+		Cabinet activeCabinetByUserId = cabinetQueryService.findActiveCabinetByUserId(userId);
 		if (activeCabinetByUserId != null) {
 			throw ExceptionStatus.LENT_ALREADY_EXISTED.asServiceException();
 		}
 
 		String clubName = "";
-		if (dto.getUserId() != null) {
-			clubName = userQueryService.getUser(dto.getUserId()).getName();
+		if (userId != null) {
+			clubName = userQueryService.getUser(userId).getName();
 		}
-
-		cabinetCommandService.updateClubStatus(cabinet, clubName, dto.getStatusNote());
+		cabinetCommandService.updateClubStatus(cabinet, clubName, statusNote);
 	}
 
 	/**
