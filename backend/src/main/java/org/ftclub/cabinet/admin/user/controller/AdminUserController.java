@@ -38,23 +38,6 @@ public class AdminUserController {
 		adminUserFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
 	}
 
-	// TODO : 안 쓰는 부분인 것 확정 되면 삭제
-//	@GetMapping("/lent-extensions")
-//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-//	public LentExtensionPaginationDto getAllLentExtension(@RequestParam("page") Integer page,
-//	                                                      @RequestParam("size") Integer size) {
-//		log.info("Called getAllLentExtension");
-//		return adminUserFacadeService.getAllLentExtension(page, size);
-//	}
-//
-//	@GetMapping("/lent-extensions/active")
-//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-//	public LentExtensionPaginationDto getAllActiveLentExtension(@RequestParam("page") Integer page,
-//	                                                            @RequestParam("size") Integer size) {
-//		log.info("Called getAllActiveLentExtension");
-//		return adminUserFacadeService.getAllActiveLentExtension(page, size);
-//	}
-
 	/**
 	 * 유저의 대여 기록을 반환합니다.
 	 *
