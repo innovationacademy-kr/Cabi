@@ -6,8 +6,7 @@ import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
-import { axiosAddClubMem } from "@/api/axios/axios.custom";
-import AddClubMemModal from "../Modals/ClubModal/AddClubMemModal";
+import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
 
 // TODO : 동아리 멤버들 아님 전체 api 정보
 const ClubMembers: React.FC<{
@@ -61,6 +60,7 @@ const ClubMembers: React.FC<{
   };
 
   const closeModal = () => {
+    console.log("hey");
     setIsModalOpen(false);
   };
   // TODO : modal 관련 상위에 있으면 재사용하기
@@ -134,13 +134,19 @@ const ClubMembers: React.FC<{
           })}
         </MemSection>
       </div>
-      {isModalOpen && <AddClubMemModal closeModal={() => closeModal()} />}
+      {isModalOpen && (
+        <AddClubMemModalContainer
+          closeModal={() => {
+            console.log("hihihi");
+            closeModal();
+          }}
+        />
+      )}
     </Container>
   );
 };
 
 // wrapperstyled로 해야하는지? ㄴㄴ. 맨 앞에 잘 설명하는 키워드 붙이면 됨
-
 const Container = styled.div`
   margin-top: 75px;
   width: 795px;
@@ -189,7 +195,7 @@ const AddMemCard = styled.div`
   }
 `;
 
-let MemCard = styled.div<{ bgColor: string }>`
+const MemCard = styled.div<{ bgColor: string }>`
   width: 145px;
   height: 170px;
   background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
@@ -215,7 +221,7 @@ let MemCard = styled.div<{ bgColor: string }>`
   }
 `;
 
-let MemSection = styled.div`
+const MemSection = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 159px);
   grid-template-rows: repeat(auto-fill, 184px);
