@@ -88,11 +88,12 @@ public class AdminCabinetController {
 	 * @param cabinetStatusRequestDto 사물함 상태 변경 요청 DTO
 	 * @throws ControllerException cabinetIds가 null인 경우.
 	 */
-	@PatchMapping("/")
+	@PatchMapping("")
 	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
 	public void updateCabinetBundleStatus(
 			@Valid @RequestBody CabinetStatusRequestDto cabinetStatusRequestDto) {
-		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto);
+		cabinetFacadeService.updateCabinetBundleStatus(cabinetStatusRequestDto.getCabinetIds(),
+				cabinetStatusRequestDto.getStatus(), cabinetStatusRequestDto.getLentType());
 	}
 
 	/**

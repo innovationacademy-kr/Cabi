@@ -28,7 +28,6 @@ import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
-import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -320,23 +319,22 @@ public class CabinetFacadeService {
 	/**
 	 * [ADMIN] 사물함의 상태를 변경합니다.
 	 *
-	 * @param cabinetStatusRequestDto 변경할 사물함 ID 리스트, 변경할 상태
+	 * @param cabinetIds 변경할 사물함 ID 리스트
+	 * @param status     변경할 상태
+	 * @param lentType   변경할 대여 타입
 	 */
 	@Transactional
-	public void updateCabinetBundleStatus(CabinetStatusRequestDto cabinetStatusRequestDto) {
-		CabinetStatus status = cabinetStatusRequestDto.getStatus();
-		LentType lentType = cabinetStatusRequestDto.getLentType();
+	public void updateCabinetBundleStatus(List<Long> cabinetIds, CabinetStatus status,
+			LentType lentType) {
 
-		List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsForUpdate(
-				cabinetStatusRequestDto.getCabinetIds());
+		List<Cabinet> cabinetsWithLock = cabinetQueryService.findCabinetsForUpdate(cabinetIds);
 
 		for (Cabinet cabinet : cabinetsWithLock) {
 			if (status != null) {
-				cabinetCommandService.updateStatus(cabinet, cabinetStatusRequestDto.getStatus());
+				cabinetCommandService.updateStatus(cabinet, status);
 			}
 			if (lentType != null) {
-				cabinetCommandService.updateLentType(cabinet,
-						cabinetStatusRequestDto.getLentType());
+				cabinetCommandService.updateLentType(cabinet, lentType);
 			}
 		}
 	}
