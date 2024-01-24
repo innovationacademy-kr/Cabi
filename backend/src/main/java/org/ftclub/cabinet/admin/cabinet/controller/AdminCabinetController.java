@@ -10,12 +10,10 @@ import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
-import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetStatusRequestDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ControllerException;
-import org.ftclub.cabinet.lent.service.LentFacadeService;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,21 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminCabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
-	private final LentFacadeService lentFacadeService;
 
-	/**
-	 * 사물함의 정보와 그 사물함의 대여 정보들을 가져옵니다.
-	 *
-	 * @param cabinetId 사물함 아이디
-	 * @return 사물함 정보와 그 사물함의 대여 정보를 반환합니다.
-	 * @throws ControllerException 인자가 null이거나 빈 값일 경우 발생시킵니다.
-	 */
-	@GetMapping("/{cabinetId}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public CabinetInfoResponseDto getCabinetInfo(
-			@PathVariable("cabinetId") Long cabinetId) {
-		return cabinetFacadeService.getCabinetInfo(cabinetId);
-	}
 
 	/**
 	 * 사물함의 고장 사유를 업데이트합니다.
