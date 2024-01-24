@@ -177,7 +177,6 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     extendModal: false,
     cancelModal: false,
     swapModal: false,
-    
   });
   const [adminModal, setAdminModal] = useState<IAdminCurrentModalStateInfo>({
     returnModal: false,

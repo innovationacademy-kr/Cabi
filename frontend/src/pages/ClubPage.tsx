@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ClubInfoContainer from "@/components/Club/ClubInfo.container";
 import ClubMembers from "@/components/Club/ClubMembers";
+import MultiToggleSwitch, {
+  toggleItem,
+} from "@/components/Common/MultiToggleSwitch";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import {
   ClubListReponseType,
@@ -24,8 +27,10 @@ const ClubPage = () => {
   });
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(1);
-
-  const [master, setMaster] = useState<string>("jusohn");
+  const [toggleType, setToggleType] = useState<string>("");
+  const [toggleList, setToggleList] = useState<toggleItem[]>([
+    { name: "", key: "" },
+  ]);
 
   useEffect(() => {
     getMyClubInfo();
@@ -91,9 +96,24 @@ const ClubPage = () => {
     return indexButtons;
   };
 
+  useEffect(() => {
+    setToggleType(clubList?.result[0].clubName.toString());
+    const clubToToggle = clubList.result.map((club) => {
+      return {
+        name: club.clubName.toString(),
+        key: club.clubId.toString(),
+      };
+    });
+    setToggleList(clubToToggle);
+  }, [clubList]);
+
   return (
     <WrapperStyled>
-      <TitleStyled>동아리 정보</TitleStyled>
+      <MultiToggleSwitch
+        initialState={toggleType}
+        setState={setToggleType}
+        toggleList={toggleList}
+      />
       <SectionPaginationStyled>
         <SectionBarStyled>
           <MoveSectionButtonStyled
@@ -112,6 +132,7 @@ const ClubPage = () => {
           />
         </SectionBarStyled>
       </SectionPaginationStyled>
+      <TitleStyled>동아리 정보</TitleStyled>
       {/* <ClubInfoContainer clubId={clubList?.result[page].clubId} /> */}
       <ClubMembers
         master={clubList?.result[0].clubMaster.toString()}
@@ -147,6 +168,7 @@ const SectionPaginationStyled = styled.div`
   position: sticky;
   top: 0;
   background: rgba(255, 255, 255, 0.95);
+  background-color: blue;
   z-index: 1;
 `;
 
