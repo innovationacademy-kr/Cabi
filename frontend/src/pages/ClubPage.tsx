@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import ClubCabinetInfo from "@/components/Club/ClubCabinetInfo";
 import ClubInfoContainer from "@/components/Club/ClubInfo.container";
 import ClubMembers from "@/components/Club/ClubMembers";
 import MultiToggleSwitch2, {
@@ -11,7 +12,6 @@ import {
   ClubResponseDto,
 } from "@/types/dto/club.dto";
 import { axiosMyClubInfo } from "@/api/axios/axios.custom";
-import ClubCabinetInfo from "@/components/Club/ClubCabinetInfo";
 
 const ClubPage = () => {
   const [clubList, setClubList] = useState<ClubPaginationResponseDto>({
@@ -56,14 +56,14 @@ const ClubPage = () => {
       const response = await axiosMyClubInfo();
       const result = response.data.result;
       const totalLength = response.data.result;
-      // setClubList({ result, totalLength });
-      setClubList({
-        result: [
-          { clubId: 3, clubName: "동아리", clubMaster: "jeekim" },
-          { clubId: 4, clubName: "동아리2", clubMaster: "jusohn" },
-        ] as ClubResponseDto[],
-        totalLength: 1,
-      });
+      setClubList({ result, totalLength });
+      // setClubList({
+      //   result: [
+      //     { clubId: 3, clubName: "동아리", clubMaster: "jeekim" },
+      //     { clubId: 4, clubName: "동아리2", clubMaster: "jusohn" },
+      //   ] as ClubResponseDto[],
+      //   totalLength: 1,
+      // });
       setTotalPage(totalLength);
     } catch (error) {
       throw error;
@@ -98,7 +98,7 @@ const ClubPage = () => {
           setClubInfo={setClubInfo}
         />
         <ClubCabinetStyled>
-          <ClubCabinetInfo/>
+          <ClubCabinetInfo />
         </ClubCabinetStyled>
         <ClubMembers
           master={clubList?.result[0].clubMaster.toString()}

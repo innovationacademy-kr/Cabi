@@ -580,18 +580,39 @@ export const axiosDeleteClubUser = async (
   }
 };
 
-const axiosLentClubUserURL = "/v4/admin/cabinets/club";
-export const axiosLentClubUser = async (
-  userId: number,
-  cabinetId: number,
-  statusNote: string | null
+// const axiosLentClubUserURL = "/v4/admin/cabinets/club";
+// export const axiosLentClubUser = async (
+//   userId: number,
+//   cabinetId: number,
+//   statusNote: string | null
+// ): Promise<any> => {
+//   try {
+//     const response = await instance.patch(axiosLentClubUserURL, {
+//       userId,
+//       cabinetId,
+//       statusNote,
+//     });
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// Lent Cabinet to Club {cabinetId} to {clubId}
+// /v4/admin/clubs/{clubId}/cabinets/{cabinetId}
+
+const axiosLentClubCabinetURL = "/v4/admin/clubs/";
+export const axiosLentClubCabinet = async (
+  clubId: number,
+  cabinetId: number
 ): Promise<any> => {
   try {
-    const response = await instance.patch(axiosLentClubUserURL, {
-      userId,
-      cabinetId,
-      statusNote,
-    });
+    const response = await instance.post(
+      axiosLentClubCabinetURL +
+        clubId.toString() +
+        "/cabinets/" +
+        cabinetId.toString()
+    );
     return response;
   } catch (error) {
     throw error;
