@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ClubCabinetInfo from "@/components/Club/ClubCabinetInfo";
-import ClubInfoContainer from "@/components/Club/ClubInfo.container";
 import ClubMembers from "@/components/Club/ClubMembers";
 import MultiToggleSwitch2, {
   toggleItem,
@@ -9,9 +8,8 @@ import MultiToggleSwitch2, {
 import {
   ClubInfoResponseDto,
   ClubPaginationResponseDto,
-  ClubResponseDto,
 } from "@/types/dto/club.dto";
-import { axiosMyClubInfo } from "@/api/axios/axios.custom";
+import { axiosGetClubInfo, axiosMyClubInfo } from "@/api/axios/axios.custom";
 
 const ClubPage = () => {
   const [clubList, setClubList] = useState<ClubPaginationResponseDto>({
@@ -74,6 +72,20 @@ const ClubPage = () => {
     setToggleList(clubToToggle);
   }, [clubList]);
 
+  useEffect(() => {
+    if (clubList?.result[0].clubId) {
+      getClubInfo(clubList?.result[0].clubId);
+    }
+  }, [clubList?.result[0].clubId]);
+
+  const getClubInfo = async (clubId: number) => {
+    try {
+      const result = await axiosGetClubInfo(clubId, page, 100);
+      setClubInfo(result.data);
+    } catch (error) {
+      throw error;
+    }
+  };
   return (
     <WrapperStyled>
       <ContainerStyled>
@@ -83,12 +95,6 @@ const ClubPage = () => {
           setState={setToggleType}
           toggleList={toggleList}
           setPage={setPage}
-        />
-        <ClubInfoContainer
-          clubId={clubList?.result[page].clubId}
-          page={page}
-          clubInfo={clubInfo}
-          setClubInfo={setClubInfo}
         />
         <ClubCabinetStyled>
           <ClubCabinetInfo />
