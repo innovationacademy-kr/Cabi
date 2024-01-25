@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.domain.ClubRegistration;
+import org.ftclub.cabinet.dto.ClubInfoDto;
+import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubInfoResponseDto;
-import org.ftclub.cabinet.dto.ClubPaginationResponseDto;
-import org.ftclub.cabinet.dto.ClubResponseDto;
 import org.ftclub.cabinet.dto.ClubUserResponseDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.service.ClubLentQueryService;
@@ -83,7 +83,7 @@ public class ClubFacadeService {
 	 * @return 내가 속한 동아리 목록
 	 */
 	@Transactional(readOnly = true)
-	public ClubPaginationResponseDto getMyClubs(Long userId) {
+	public ClubInfoPaginationDto getMyClubs(Long userId) {
 		List<ClubRegistration> usersWithClub =
 				clubRegistrationQueryService.findClubUsersWithClubByUser(userId);
 		List<Long> clubIds = usersWithClub.stream().map(ClubRegistration::getClubId)
@@ -92,15 +92,15 @@ public class ClubFacadeService {
 				clubRegistrationQueryService.findClubUsersByClubs(clubIds)
 						.stream().collect(Collectors.groupingBy(ClubRegistration::getClubId));
 
-		List<ClubResponseDto> result = usersWithClub.stream().map(cr -> {
+		List<ClubInfoDto> result = usersWithClub.stream().map(cr -> {
 			Long clubId = cr.getClubId();
 			String clubName = cr.getClub().getName();
 			String clubMasterName = clubMasterMap.get(clubId).stream()
 					.filter(c -> c.getUserRole().equals(CLUB_ADMIN))
 					.map(c -> c.getUser().getName()).findFirst().orElse(null);
-			return clubMapper.toClubResponseDto(clubId, clubName, clubMasterName);
+			return clubMapper.toClubInfoDto(clubId, clubName, clubMasterName);
 		}).collect(Collectors.toList());
-		return clubMapper.toClubPaginationResponseDto(result, (long) result.size());
+		return clubMapper.toClubInfoPaginationDto(result, (long) result.size());
 	}
 
 	/**

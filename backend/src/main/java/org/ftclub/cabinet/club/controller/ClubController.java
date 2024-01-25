@@ -6,8 +6,8 @@ import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.club.service.ClubFacadeService;
 import org.ftclub.cabinet.dto.AddClubUserRequestDto;
+import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubInfoResponseDto;
-import org.ftclub.cabinet.dto.ClubPaginationResponseDto;
 import org.ftclub.cabinet.dto.MandateClubMasterRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
@@ -37,7 +37,7 @@ public class ClubController {
 	 */
 	@AuthGuard(level = AuthLevel.USER_ONLY)
 	@GetMapping("")
-	public ClubPaginationResponseDto getMyClubs(@UserSession UserSessionDto user) {
+	public ClubInfoPaginationDto getMyClubs(@UserSession UserSessionDto user) {
 		return clubFacadeService.getMyClubs(user.getUserId());
 	}
 

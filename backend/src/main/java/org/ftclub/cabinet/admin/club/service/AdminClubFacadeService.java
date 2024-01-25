@@ -1,8 +1,10 @@
 package org.ftclub.cabinet.admin.club.service;
 
-import static java.util.stream.Collectors.toList;
+import static org.ftclub.cabinet.user.domain.UserRole.CLUB_ADMIN;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.club.domain.Club;
@@ -45,8 +47,21 @@ public class AdminClubFacadeService {
 	 */
 	public ClubInfoPaginationDto findAllActiveClubsInfo(Pageable pageable) {
 		Page<Club> clubs = clubQueryService.findAllActiveClubs(pageable);
-		List<ClubInfoDto> result = clubs.stream().map(clubMapper::toClubInfoDto).collect(toList());
-		return clubMapper.toClubInfoPaginationDto(result, clubs.getTotalElements());
+		List<Long> clubIds = clubs.stream().map(Club::getId)
+				.collect(Collectors.toList());
+		Map<Long, List<ClubRegistration>> clubMasterMap =
+				clubRegistrationQueryService.findClubUsersByClubs(clubIds)
+						.stream().collect(Collectors.groupingBy(ClubRegistration::getClubId));
+
+		List<ClubInfoDto> result = clubs.stream().map(club -> {
+			Long clubId = club.getId();
+			String clubName = club.getName();
+			String clubMasterName = clubMasterMap.get(clubId).stream()
+					.filter(c -> c.getUserRole().equals(CLUB_ADMIN))
+					.map(c -> c.getUser().getName()).findFirst().orElse(null);
+			return clubMapper.toClubInfoDto(clubId, clubName, clubMasterName);
+		}).collect(Collectors.toList());
+		return clubMapper.toClubInfoPaginationDto(result, (long) result.size());
 	}
 
 	/**

@@ -8,6 +8,7 @@ import lombok.Getter;
 public class ClubInfoDto {
 
 	private final Long clubId;
-	private final String name;
+	private final String clubName;
+	private final String clubMaster;
 }
 

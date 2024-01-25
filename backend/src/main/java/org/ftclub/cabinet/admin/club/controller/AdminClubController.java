@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.admin.club.service.AdminClubFacadeService;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
-import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
 import org.ftclub.cabinet.dto.ClubCreateDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubUpdateRequestDto;
@@ -35,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminClubController {
 
 	private final AdminClubFacadeService adminClubFacadeService;
-	private final CabinetFacadeService cabinetFacadeService;
 	private final LentFacadeService lentFacadeService;
 
 	/**

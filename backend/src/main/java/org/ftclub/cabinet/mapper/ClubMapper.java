@@ -2,12 +2,9 @@ package org.ftclub.cabinet.mapper;
 
 import java.util.List;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
-import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubInfoResponseDto;
-import org.ftclub.cabinet.dto.ClubPaginationResponseDto;
-import org.ftclub.cabinet.dto.ClubResponseDto;
 import org.ftclub.cabinet.dto.ClubUserResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,14 +21,7 @@ public interface ClubMapper {
 
 	ClubMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(ClubMapper.class);
 
-	@Mapping(target = "clubId", source = "club.id")
-	@Mapping(target = "name", source = "club.name")
-	ClubInfoDto toClubInfoDto(Club club);
-
-	ClubResponseDto toClubResponseDto(Long clubId, String clubName, String clubMaster);
-
-	ClubPaginationResponseDto toClubPaginationResponseDto(List<ClubResponseDto> result,
-			Long totalLength);
+	ClubInfoDto toClubInfoDto(Long clubId, String clubName, String clubMaster);
 
 	ClubInfoPaginationDto toClubInfoPaginationDto(List<ClubInfoDto> result, Long totalLength);
 
