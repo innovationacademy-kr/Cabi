@@ -31,9 +31,9 @@ function App(): React.ReactElement {
             <Route path="login" element={<LoginPage />} />
             <Route path="home" element={<HomePage />} />
             <Route path="main" element={<MainPage />} />
-            <Route path="profile/log" element={<LogPage />} />
-            <Route path="profile" element={<ProfilePage />} />
             <Route path="pending" element={<PendingPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="profile/log" element={<LogPage />} />
             <Route path="profile/clubs" element={<ClubPage />} />
           </Route>
           {/* admin용 라우터 */}

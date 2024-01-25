@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
-import { axiosAddClubMem } from "@/api/axios/axios.custom";
+import { axiosAddClubMember } from "@/api/axios/axios.custom";
 import ModalPortal from "../ModalPortal";
 import {
   FailResponseModal,
@@ -29,7 +29,7 @@ const AddClubMemModalContainer: React.FC<{
   const tryAddClubMemRequest = async (name: string) => {
     setIsLoading(true);
     try {
-      await axiosAddClubMem(props.clubId, name);
+      await axiosAddClubMember(props.clubId, name);
       // 성공하면 200 아니면 에러 코드 반환됨
       setIsCurrentSectionRender(true);
       setModalTitle("동아리에 멤버가 추가됐습니다");
