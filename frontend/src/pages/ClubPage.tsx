@@ -5,13 +5,10 @@ import ClubMembers from "@/components/Club/ClubMembers";
 import MultiToggleSwitch2, {
   toggleItem,
 } from "@/components/Common/MultiToggleSwitch2";
-import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import {
   ClubInfoResponseDto,
-  ClubListReponseType,
   ClubPaginationResponseDto,
   ClubResponseDto,
-  ClubUserResponseDto,
 } from "@/types/dto/club.dto";
 import { axiosMyClubInfo } from "@/api/axios/axios.custom";
 import ClubCabinetInfo from "@/components/Club/ClubCabinetInfo";

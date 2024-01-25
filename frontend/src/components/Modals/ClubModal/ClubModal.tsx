@@ -36,6 +36,7 @@ const ClubModal = ({
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [newClubName, setNewClubName] = useState("");
+  const [newClubMaster, setNewClubMaster] = useState<string>("");
 
   const modalData =
     modalPropsMap[
@@ -51,19 +52,22 @@ const ClubModal = ({
   const handleClickSave = async () => {
     if (type === "CREATE") {
       document.getElementById("unselect-input")?.focus();
-      if (newClubName) await createClubRequest(newClubName);
+      if (newClubName) await createClubRequest(newClubName, newClubMaster);
     } else if (type === "EDIT" && selectedClubInfo) {
       if (selectedClubInfo.name !== newClubName) {
         const updatedClubInfo = { ...selectedClubInfo, name: newClubName };
-        await editClubRequest(updatedClubInfo);
+        await editClubRequest(updatedClubInfo, newClubMaster);
       }
     } else if (type === "DELETE" && selectedClubInfo !== null)
-      await deleteClubRequest(selectedClubInfo.userId);
+      await deleteClubRequest(selectedClubInfo.clubId);
   };
 
-  const createClubRequest = async (clubName: string | null) => {
+  const createClubRequest = async (
+    clubName: string | null,
+    clubMaster: string | null
+  ) => {
     try {
-      await axiosCreateClubUser(clubName);
+      await axiosCreateClubUser(clubName, clubMaster);
       setModalTitle("추가되었습니다");
       onReload();
     } catch (error: any) {
@@ -74,9 +78,12 @@ const ClubModal = ({
     }
   };
 
-  const editClubRequest = async (clubInfo: ClubUserDto | null) => {
+  const editClubRequest = async (
+    clubInfo: ClubUserDto | null,
+    clubMaster: string
+  ) => {
     try {
-      await axiosEditClubUser(clubInfo);
+      await axiosEditClubUser(clubInfo, clubMaster);
       setModalTitle("수정되었습니다");
       onReload();
     } catch (error: any) {
@@ -110,34 +117,64 @@ const ClubModal = ({
           <ContentSectionStyled>
             <ContentItemSectionStyled>
               {type === "CREATE" && (
-                <ContentItemWrapperStyled isVisible={true}>
-                  <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
-                  <ContentItemInputStyled
-                    onKeyUp={(e: any) => {
-                      if (e.key === "Enter") {
-                        handleClickSave();
-                      }
-                    }}
-                    value={newClubName}
-                    onChange={(e) => setNewClubName(e.target.value)}
-                    maxLength={MAX_INPUT_LENGTH}
-                  />
-                </ContentItemWrapperStyled>
+                <>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
+                    <ContentItemInputStyled
+                      onKeyUp={(e: any) => {
+                        if (e.key === "Enter") {
+                          handleClickSave();
+                        }
+                      }}
+                      value={newClubName}
+                      onChange={(e) => setNewClubName(e.target.value)}
+                      maxLength={MAX_INPUT_LENGTH}
+                    />
+                  </ContentItemWrapperStyled>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>동아리장</ContentItemTitleStyled>
+                    <ContentItemInputStyled
+                      onKeyUp={(e: any) => {
+                        if (e.key === "Enter") {
+                          handleClickSave();
+                        }
+                      }}
+                      value={newClubMaster}
+                      onChange={(e) => setNewClubMaster(e.target.value)}
+                      maxLength={MAX_INPUT_LENGTH}
+                    />
+                  </ContentItemWrapperStyled>
+                </>
               )}
               {type === "EDIT" && (
-                <ContentItemWrapperStyled isVisible={true}>
-                  <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
-                  <ContentItemInputStyled
-                    onKeyUp={(e: any) => {
-                      if (e.key === "Enter") {
-                        handleClickSave();
-                      }
-                    }}
-                    value={newClubName}
-                    onChange={(e) => setNewClubName(e.target.value)}
-                    maxLength={MAX_INPUT_LENGTH}
-                  />
-                </ContentItemWrapperStyled>
+                <>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
+                    <ContentItemInputStyled
+                      onKeyUp={(e: any) => {
+                        if (e.key === "Enter") {
+                          handleClickSave();
+                        }
+                      }}
+                      value={newClubName}
+                      onChange={(e) => setNewClubName(e.target.value)}
+                      maxLength={MAX_INPUT_LENGTH}
+                    />
+                  </ContentItemWrapperStyled>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>동아리장</ContentItemTitleStyled>
+                    <ContentItemInputStyled
+                      onKeyUp={(e: any) => {
+                        if (e.key === "Enter") {
+                          handleClickSave();
+                        }
+                      }}
+                      value={newClubMaster}
+                      onChange={(e) => setNewClubMaster(e.target.value)}
+                      maxLength={MAX_INPUT_LENGTH}
+                    />
+                  </ContentItemWrapperStyled>
+                </>
               )}
               {type === "DELETE" && (
                 <ContentItemTitleStyled>

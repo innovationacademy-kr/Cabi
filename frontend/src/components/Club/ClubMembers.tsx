@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "@/recoil/atoms";
+import closeIcon from "@/assets/images/close-circle.svg";
 import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
@@ -129,7 +130,9 @@ const ClubMembers: React.FC<{
                   <img id="profileImg" src={maru}></img>
                   {mem.userName === props.master ? (
                     <img id="crown" src={crown} />
-                  ) : null}
+                  ) : mem.userName === myInfo.name ? null : (
+                    <img id="closeIcon" src={closeIcon} />
+                  )}
                 </div>
                 <div>{mem.userName}</div>
               </MemCard>
@@ -216,6 +219,11 @@ const MemCard = styled.div<{ bgColor: string }>`
   }
 
   & #crown {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  & #closeIcon {
     width: 1rem;
     height: 1rem;
   }
