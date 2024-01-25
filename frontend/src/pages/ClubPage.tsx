@@ -101,7 +101,7 @@ const ClubPage = () => {
     const clubToToggle = clubList.result.map((club) => {
       return {
         name: club.clubName.toString(),
-        key: club.clubId.toString(),
+        key: club.clubName.toString(),
       };
     });
     setToggleList(clubToToggle);
@@ -150,6 +150,10 @@ const WrapperStyled = styled.div`
   margin: 2rem 0;
   width: 100%;
   height: 100%;
+
+  & button {
+    margin-right: 8px;
+  }
 `;
 
 const TitleStyled = styled.div`
