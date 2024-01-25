@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,23 +37,6 @@ public class AdminUserController {
 		adminUserFacadeService.deleteRecentBanHistory(userId, LocalDateTime.now());
 	}
 
-	// TODO : 안 쓰는 부분인 것 확정 되면 삭제
-//	@GetMapping("/lent-extensions")
-//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-//	public LentExtensionPaginationDto getAllLentExtension(@RequestParam("page") Integer page,
-//	                                                      @RequestParam("size") Integer size) {
-//		log.info("Called getAllLentExtension");
-//		return adminUserFacadeService.getAllLentExtension(page, size);
-//	}
-//
-//	@GetMapping("/lent-extensions/active")
-//	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-//	public LentExtensionPaginationDto getAllActiveLentExtension(@RequestParam("page") Integer page,
-//	                                                            @RequestParam("size") Integer size) {
-//		log.info("Called getAllActiveLentExtension");
-//		return adminUserFacadeService.getAllActiveLentExtension(page, size);
-//	}
-
 	/**
 	 * 유저의 대여 기록을 반환합니다.
 	 *
@@ -67,16 +49,5 @@ public class AdminUserController {
 	public LentHistoryPaginationDto getLentHistoriesByUserId(
 			@PathVariable("userId") Long userId, Pageable pageable) {
 		return adminLentFacadeService.getUserLentHistories(userId, pageable);
-	}
-
-	/**
-	 * 유저의 연장권 발급 기록을 반환합니다.
-	 *
-	 * @param username 유저 이름
-	 */
-	@PostMapping("/lent-extensions/{user}")
-	@AuthGuard(level = AuthLevel.ADMIN_ONLY)
-	public void issueLentExtension(@PathVariable("user") String username) {
-		adminLentExtensionFacadeService.assignLentExtension(username);
 	}
 }
