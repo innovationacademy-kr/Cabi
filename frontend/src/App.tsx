@@ -34,7 +34,7 @@ function App(): React.ReactElement {
             <Route path="profile/log" element={<LogPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="pending" element={<PendingPage />} />
-            <Route path="clubs" element={<ClubPage />} />
+            <Route path="profile/clubs" element={<ClubPage />} />
           </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>

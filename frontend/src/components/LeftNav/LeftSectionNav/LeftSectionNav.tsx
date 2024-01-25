@@ -11,6 +11,7 @@ interface ILeftSectionNav {
   onClickProfile: Function;
   pathname: string;
   onClickLentLogButton: Function;
+  onClickClub: Function;
   onClickSlack: Function;
   onClickClubForm: Function;
 }
@@ -24,6 +25,7 @@ const LeftSectionNav = ({
   onClickProfile,
   pathname,
   onClickLentLogButton,
+  onClickClub,
   onClickSlack,
   onClickClubForm,
 }: ILeftSectionNav) => {
@@ -66,6 +68,16 @@ const LeftSectionNav = ({
           onClick={() => onClickLentLogButton()}
         >
           대여 기록
+        </FloorSectionStyled>
+        <FloorSectionStyled
+          className={
+            pathname.includes("profile/clubs")
+              ? "leftNavButtonActive cabiButton"
+              : " cabiButton"
+          }
+          onClick={() => onClickClub()}
+        >
+          동아리 정보
         </FloorSectionStyled>
         <hr />
         <SectionLinkStyled

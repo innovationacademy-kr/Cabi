@@ -30,6 +30,11 @@ const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
     navigator("profile/log");
   };
 
+  const onClickClub = () => {
+    closeLeftNav();
+    navigator("profile/clubs");
+  };
+
   const onClickSlack = () => {
     window.open(
       "https://42born2code.slack.com/archives/C02V6GE8LD7",
@@ -56,6 +61,7 @@ const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
       onClickSection={onClickSection}
       onClickProfile={onClickProfile}
       onClickLentLogButton={onClickLentLogButton}
+      onClickClub={onClickClub}
       onClickSlack={onClickSlack}
       onClickClubForm={onClickClubForm}
     />
