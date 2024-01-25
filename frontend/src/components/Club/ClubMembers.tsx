@@ -11,7 +11,6 @@ import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.contai
 import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
 
-// TODO : 동아리 멤버들 아님 전체 api 정보
 const ClubMembers: React.FC<{
   master: string;
   clubId: number;
@@ -119,8 +118,6 @@ const ClubMembers: React.FC<{
   // TODO : modal 관련 상위에 있으면 재사용하기
 
   useEffect(() => {
-    // setMembers
-    // TODO : axios로 동아리정보 조회해서 data 받으면 여기서 지우고 prop으로 가져오기
     if (props.clubInfo) setMembers(props.clubInfo.clubUsers);
   }, [props.clubInfo]);
 
@@ -141,7 +138,7 @@ const ClubMembers: React.FC<{
 
   useEffect(() => {
     SortMemAry();
-  }, [members, props.master]);
+  }, [members, master.userName]);
   // 나 -> 동아리장 -> 맨 위 배열 함침
 
   useEffect(() => {
@@ -165,7 +162,7 @@ const ClubMembers: React.FC<{
       </TitleBar>
       <div id="memCard">
         <MemSection>
-          {myInfo.name === props.master ? (
+          {myInfo.name === master.userName ? (
             <AddMemCard onClick={() => openModal("addModal")}>
               <p>+</p>
             </AddMemCard>
@@ -182,7 +179,7 @@ const ClubMembers: React.FC<{
               >
                 <div id="top">
                   <img id="profileImg" src={maru}></img>
-                  {mem.userName === props.master ? (
+                  {mem.userName === master.userName ? (
                     <img id="crown" src={crown} />
                   ) : mem.userName === myInfo.name ? null : (
                     <img
@@ -207,7 +204,6 @@ const ClubMembers: React.FC<{
             closeModal={() => {
               closeModal();
             }}
-            setMembers={setMembers}
             clubId={props.clubId}
           />
         ) : userModal.mandateModal ? (

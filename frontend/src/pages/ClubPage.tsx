@@ -73,10 +73,10 @@ const ClubPage = () => {
   }, [clubList]);
 
   useEffect(() => {
-    if (clubList?.result[0].clubId) {
-      getClubInfo(clubList?.result[0].clubId);
+    if (clubList?.result[page].clubId) {
+      getClubInfo(clubList?.result[page].clubId);
     }
-  }, [clubList?.result[0].clubId]);
+  }, [clubList?.result[page].clubId, clubInfo]);
 
   const getClubInfo = async (clubId: number) => {
     try {
@@ -86,6 +86,7 @@ const ClubPage = () => {
       throw error;
     }
   };
+
   return (
     <WrapperStyled>
       <ContainerStyled>
@@ -100,9 +101,8 @@ const ClubPage = () => {
           <ClubCabinetInfo />
         </ClubCabinetStyled>
         <ClubMembers
-          // master={clubList?.result[0].clubMaster.toString()}
-          master="miyu"
-          clubId={clubList?.result[0].clubId}
+          master={clubInfo.clubMaster.toString()}
+          clubId={clubList.result[page].clubId}
           clubInfo={clubInfo}
         />
       </ContainerStyled>
