@@ -14,6 +14,7 @@ import {
   ClubUserResponseDto,
 } from "@/types/dto/club.dto";
 import { axiosMyClubInfo } from "@/api/axios/axios.custom";
+import ClubCabinetInfo from "@/components/Club/ClubCabinetInfo";
 
 const ClubPage = () => {
   const [clubList, setClubList] = useState<ClubPaginationResponseDto>({
@@ -99,7 +100,9 @@ const ClubPage = () => {
           clubInfo={clubInfo}
           setClubInfo={setClubInfo}
         />
-        <ClubCabinetStyled></ClubCabinetStyled>
+        <ClubCabinetStyled>
+          <ClubCabinetInfo/>
+        </ClubCabinetStyled>
         <ClubMembers
           master={clubList?.result[0].clubMaster.toString()}
           clubId={clubList?.result[0].clubId}
