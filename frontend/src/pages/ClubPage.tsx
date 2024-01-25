@@ -7,6 +7,7 @@ import MultiToggleSwitch2, {
 } from "@/components/Common/MultiToggleSwitch2";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import {
+  ClubInfoResponseDto,
   ClubListReponseType,
   ClubPaginationResponseDto,
   ClubResponseDto,
@@ -31,6 +32,22 @@ const ClubPage = () => {
   const [toggleList, setToggleList] = useState<toggleItem[]>([
     { name: "", key: "" },
   ]);
+  const [clubInfo, setClubInfo] = useState<ClubInfoResponseDto>({
+    clubName: "",
+    clubMaster: "",
+    clubMemo: "",
+    building: "새롬관",
+    floor: 3,
+    section: "",
+    visibleNum: 0,
+    clubUsers: [
+      {
+        userId: 0,
+        userName: "",
+      },
+    ],
+    clubUserCount: 0,
+  });
 
   useEffect(() => {
     getMyClubInfo();
@@ -49,51 +66,10 @@ const ClubPage = () => {
         ] as ClubResponseDto[],
         totalLength: 1,
       });
-      setTotalPage(2);
+      setTotalPage(totalLength);
     } catch (error) {
       throw error;
     }
-  };
-
-  const onClickPrev = () => {
-    if (totalPage === 0) return;
-    if (page === 0) {
-      setPage(totalPage - 1);
-    } else {
-      setPage((prev) => prev - 1);
-    }
-  };
-
-  const onClickNext = () => {
-    if (totalPage === 0) return;
-    if (page == totalPage - 1) {
-      setPage(0);
-    } else {
-      setPage((prev) => prev + 1);
-    }
-  };
-
-  const changePageOnClickIndexButton = (pageIndex: number) => {
-    if (totalPage === 0) return;
-    setPage(pageIndex);
-  };
-
-  const paginationIndexBar = (
-    currentPage: number,
-    totalPages: number
-  ): JSX.Element[] => {
-    const indexButtons: JSX.Element[] = [];
-    for (let i = 0; i < totalPages; i++) {
-      indexButtons.push(
-        <IndexRectangleStyled
-          key={i}
-          filledColor={currentPage === i ? "var(--main-color)" : "#D9D9D9"}
-          onClick={() => changePageOnClickIndexButton(i)}
-          className="cabiButton"
-        />
-      );
-    }
-    return indexButtons;
   };
 
   useEffect(() => {
@@ -113,27 +89,15 @@ const ClubPage = () => {
         initialState={toggleType}
         setState={setToggleType}
         toggleList={toggleList}
+        setPage={setPage}
       />
-      <SectionPaginationStyled>
-        <SectionBarStyled>
-          <MoveSectionButtonStyled
-            src={LeftSectionButton}
-            onClick={onClickPrev}
-            className="cabiButton"
-          />
-          <SectionIndexStyled>
-            {paginationIndexBar(page, totalPage)}
-          </SectionIndexStyled>
-          <MoveSectionButtonStyled
-            src={LeftSectionButton}
-            arrowReversed={true}
-            onClick={onClickNext}
-            className="cabiButton"
-          />
-        </SectionBarStyled>
-      </SectionPaginationStyled>
       <TitleStyled>동아리 정보</TitleStyled>
-      {/* <ClubInfoContainer clubId={clubList?.result[page].clubId} /> */}
+      <ClubInfoContainer
+        clubId={clubList?.result[page].clubId}
+        page={page}
+        clubInfo={clubInfo}
+        setClubInfo={setClubInfo}
+      />
       <ClubMembers
         master={clubList?.result[0].clubMaster.toString()}
         clubId={clubList?.result[0].clubId}
@@ -212,7 +176,8 @@ const IndexRectangleStyled = styled.div<{ filledColor: string }>`
   height: 8px;
   border-radius: 2px;
   margin: 0px 3px;
-  background: ${(props) => props.filledColor};
+  background: black;
+  /* background: ${(props) => props.filledColor}; */
   cursor: pointer;
   transition: all 0.2s;
   @media (hover: hover) and (pointer: fine) {

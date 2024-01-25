@@ -10,12 +10,14 @@ interface MultiToggleSwitchProps<T> {
   initialState: T;
   setState: React.Dispatch<React.SetStateAction<T>>;
   toggleList: toggleItem[];
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const MultiToggleSwitch2 = <T,>({
   initialState,
   setState,
   toggleList,
+  setPage,
 }: MultiToggleSwitchProps<T>) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -23,7 +25,6 @@ const MultiToggleSwitch2 = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      console.log(button.className, initialState);
       if (button.className === initialState) {
         button.style.color = "white";
         button.style.backgroundColor = "var(--main-color)";
@@ -51,8 +52,12 @@ const MultiToggleSwitch2 = <T,>({
 
   return (
     <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
-      {toggleList.map((item) => (
-        <button key={item.key} className={item.key}>
+      {toggleList.map((item, idx) => (
+        <button
+          key={item.key}
+          className={item.key}
+          onClick={() => setPage(idx)}
+        >
           {item.name}
         </button>
       ))}
