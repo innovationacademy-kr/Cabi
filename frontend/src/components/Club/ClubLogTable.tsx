@@ -28,15 +28,15 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
         </TheadStyled>
         {ClubList !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
-            {ClubList.map(({ clubId, name }) => (
+            {ClubList.map(({ clubId, clubName, clubMaster }) => (
               <tr
                 key={clubId}
-                onClick={() => handleRowClick({ clubId, name })}
+                onClick={() => handleRowClick({ clubId, clubName, clubMaster })}
                 className={
                   selectedClubInfo?.clubId === clubId ? "selected" : ""
                 }
               >
-                <td title={`${name}`}>{`${name}`}</td>
+                <td title={`${clubName}`}>{`${clubName}`}</td>
               </tr>
             ))}
           </TbodyStyled>

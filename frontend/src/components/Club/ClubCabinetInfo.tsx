@@ -1,11 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
+import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
 
 const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
   const [text, setText] = useState<string>("");
 
   const openModal = () => {
@@ -64,6 +63,7 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
     </ClubCabinetInfoStyled>
   );
 };
+
 const ClubCabinetInfoStyled = styled.div`
   width: 100%;
   height: 350px;
@@ -72,6 +72,7 @@ const ClubCabinetInfoStyled = styled.div`
   align-items: center;
   flex-direction: column;
 `;
+
 const ClubHeader = styled.div`
   width: 800px;
   display: flex;
@@ -81,6 +82,7 @@ const ClubHeader = styled.div`
   font-size: 20px;
   font-weight: bold;
 `;
+
 const ClubInfoBox = styled.div`
   width: 800px;
   height: 285px;
@@ -88,6 +90,7 @@ const ClubInfoBox = styled.div`
   justify-content: space-around;
   margin: 20px;
 `;
+
 const ClubBasicInfoBox = styled.div`
   width: 350px;
   height: 285px;
@@ -99,6 +102,7 @@ const ClubBasicInfoBox = styled.div`
   justify-content: space-around;
   align-items: center;
 `;
+
 const ClubSubInfoBox = styled.div`
   width: 350px;
   height: 285px;
@@ -108,6 +112,7 @@ const ClubSubInfoBox = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 const ClubMemoHeader = styled.div`
   font-size: 20px;
   font-weight: bold;
@@ -116,6 +121,7 @@ const ClubMemoHeader = styled.div`
   flex-direction: row;
   justify-content: space-between;
 `;
+
 const ClubMemo = styled.div`
   width: 290px;
   height: 180px;
@@ -136,6 +142,7 @@ const JustLine = styled.div`
   background-color: #d9d9d9;
   margin: 30px 0px 30px 0px;
 `;
+
 const ClubPw = styled.div`
   width: 280px;
   height: 65px;
@@ -153,6 +160,7 @@ const PsSpan = styled.span`
   display: flex;
   align-items: center;
 `;
+
 const Pw = styled.span`
   /* width: 60%; */
   height: 100%;
@@ -186,6 +194,7 @@ const CabinetNumInfo = styled.div`
   flex-wrap: wrap;
   align-items: center;
 `;
+
 const CabinetNum = styled.div`
   width: 90px;
   height: 90px;
@@ -196,6 +205,7 @@ const CabinetNum = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
 const CabinetSideInfo = styled.div`
   width: 150px;
   height: 90px;
@@ -205,19 +215,23 @@ const CabinetSideInfo = styled.div`
   flex-direction: column;
   align-content: space-around;
 `;
+
 const SideInfoClubName = styled.div`
   font-weight: bold;
   font-size: 18px;
 `;
+
 const SideInfoFloor = styled.div`
   font-size: 16px;
   color: gray;
 `;
+
 const SideInfoMember = styled.div`
   font-size: 16px;
   display: flex;
   justify-content: start;
 `;
+
 const UserId = styled.div`
   margin-left: 10px;
 `;
@@ -228,11 +242,13 @@ const LeaderIcon = styled.div`
     height: 18px;
   }
 `;
+
 const MemoIcon = styled.div`
   width: 30px;
   height: 20px;
   margin-bottom: 10px;
 `;
+
 const TextCount = styled.div`
   font-size: 16px;
   display: flex;

@@ -46,17 +46,28 @@ const ClubModal = ({
     ];
 
   useEffect(() => {
-    if (type === "EDIT") setNewClubName(selectedClubInfo?.name || "");
+    if (type === "EDIT") {
+      setNewClubName(selectedClubInfo?.clubName || "");
+      setNewClubMaster(selectedClubInfo?.clubMaster || "");
+    }
   }, [selectedClubInfo, type]);
 
   const handleClickSave = async () => {
+    if (newClubName === "" || newClubMaster === "") return;
     if (type === "CREATE") {
       document.getElementById("unselect-input")?.focus();
       if (newClubName) await createClubRequest(newClubName, newClubMaster);
     } else if (type === "EDIT" && selectedClubInfo) {
-      if (selectedClubInfo.name !== newClubName) {
-        const updatedClubInfo = { ...selectedClubInfo, name: newClubName };
-        await editClubRequest(updatedClubInfo, newClubMaster);
+      if (
+        selectedClubInfo.clubName !== newClubName ||
+        selectedClubInfo.clubMaster !== newClubMaster
+      ) {
+        const updatedClubInfo = {
+          ...selectedClubInfo,
+          clubName: newClubName,
+          clubMaster: newClubMaster,
+        };
+        await editClubRequest(updatedClubInfo);
       }
     } else if (type === "DELETE" && selectedClubInfo !== null)
       await deleteClubRequest(selectedClubInfo.clubId);
@@ -78,12 +89,9 @@ const ClubModal = ({
     }
   };
 
-  const editClubRequest = async (
-    clubInfo: ClubUserDto | null,
-    clubMaster: string
-  ) => {
+  const editClubRequest = async (clubInfo: ClubUserDto) => {
     try {
-      await axiosEditClubUser(clubInfo, clubMaster);
+      await axiosEditClubUser(clubInfo);
       setModalTitle("수정되었습니다");
       onReload();
     } catch (error: any) {
@@ -178,7 +186,7 @@ const ClubModal = ({
               )}
               {type === "DELETE" && (
                 <ContentItemTitleStyled>
-                  {selectedClubInfo?.name} 동아리를 <strong>삭제</strong>{" "}
+                  {selectedClubInfo?.clubName} 동아리를 <strong>삭제</strong>{" "}
                   하시겠습니까?
                 </ContentItemTitleStyled>
               )}
