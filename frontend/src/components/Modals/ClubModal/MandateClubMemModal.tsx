@@ -12,7 +12,6 @@ import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
-  axiosMandateClubMem,
   axiosMyLentInfo,
   axiosSwapId,
 } from "@/api/axios/axios.custom";

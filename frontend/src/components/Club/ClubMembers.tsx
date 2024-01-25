@@ -8,6 +8,7 @@ import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
+import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
 
 // TODO : 동아리 멤버들 아님 전체 api 정보
@@ -40,8 +41,9 @@ const ClubMembers: React.FC<{
 
   const [mandateMember, setMandateMember] = useState("");
 
+  const [modalName, setModalName] = useState("");
+
   const getMandateMaster = (mandateMaster: string) => {
-    // console.log(mandateMaster);
     setMandateMember(mandateMaster);
   };
 
@@ -59,7 +61,7 @@ const ClubMembers: React.FC<{
     passwordCheckModal: false,
   });
 
-  const [modalName, setModalName] = useState("");
+  const [targetMember, setTargetMember] = useState("");
 
   type TModalState =
     | "addModal"
@@ -73,8 +75,18 @@ const ClubMembers: React.FC<{
     mandateMaster: string
   ) => {
     e.preventDefault();
-    setMandateMember(mandateMaster);
-    openModal("mandateModal");
+    if (mandateMaster !== props.master) {
+      setMandateMember(mandateMaster);
+      openModal("mandateModal");
+    }
+  };
+
+  const deleteClubMemberModal = (
+    e: MouseEvent<HTMLDivElement>,
+    targetMember: string
+  ) => {
+    setTargetMember(targetMember);
+    openModal("deleteModal");
   };
 
   const openModal = (modalName: TModalState) => {
@@ -83,7 +95,6 @@ const ClubMembers: React.FC<{
     } else if (modalName === "deleteModal") {
       setModalName("deleteModal");
     } else if (modalName === "mandateModal") {
-      // e.preventDefault();
       setModalName("mandateModal");
     } else if (modalName === "passwordCheckModal") {
       setModalName("passwordCheckModal");
@@ -163,9 +174,9 @@ const ClubMembers: React.FC<{
             return (
               <MemCard
                 onContextMenu={(e: MouseEvent<HTMLDivElement>) =>
+                  me.userName === props.master &&
                   mandateClubMasterModal(e, `${mem.userName}`)
                 }
-                // onClick={() => getMandateMaster(`${mem.userName}`)}
                 key={idx}
                 bgColor={mem.userName === myInfo.name ? "var(--sub-color)" : ""}
               >
@@ -174,7 +185,13 @@ const ClubMembers: React.FC<{
                   {mem.userName === props.master ? (
                     <img id="crown" src={crown} />
                   ) : mem.userName === myInfo.name ? null : (
-                    <img id="closeIcon" src={closeIcon} />
+                    <img
+                      id="closeIcon"
+                      src={closeIcon}
+                      onClick={(e: MouseEvent<HTMLDivElement>) =>
+                        deleteClubMemberModal(e, `${mem.userName}`)
+                      }
+                    />
                   )}
                 </div>
                 <div>{mem.userName}</div>
@@ -200,7 +217,13 @@ const ClubMembers: React.FC<{
             }}
             clubId={props.clubId}
             mandateMember={mandateMember}
-            // clubId={props.clubId}
+          />
+        ) : userModal.deleteModal ? (
+          <DeleteClubMemModal
+            closeModal={() => {
+              closeModal();
+            }}
+            targetMember={targetMember}
           />
         ) : null)}
     </Container>

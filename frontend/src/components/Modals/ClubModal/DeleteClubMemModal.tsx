@@ -12,7 +12,6 @@ import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
-  axiosMandateClubMem,
   axiosMyLentInfo,
   axiosSwapId,
 } from "@/api/axios/axios.custom";
@@ -25,6 +24,7 @@ import {
 
 const DeleteClubMemModal: React.FC<{
   closeModal: React.MouseEventHandler;
+  targetMember: string;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -35,7 +35,7 @@ const DeleteClubMemModal: React.FC<{
     isCurrentSectionRenderState
   );
 
-  const mandateDetail = `동아리 사물함 멤버에서 <USER>을 내보내시겠습니까?`;
+  const mandateDetail = `동아리 사물함 멤버에서 ${props.targetMember}을 내보내시겠습니까?`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);
@@ -45,7 +45,9 @@ const DeleteClubMemModal: React.FC<{
       // recoil Master 권한 바꾸기
 
       setIsCurrentSectionRender(true);
-      setModalTitle("동아리 사물함 멤버를 내보냈습니다");
+      setModalTitle(
+        `동아리 사물함 멤버에서 ${props.targetMember}를 내보냈습니다`
+      );
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
