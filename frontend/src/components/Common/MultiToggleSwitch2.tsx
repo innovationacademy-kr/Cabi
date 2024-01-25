@@ -7,12 +7,12 @@ export interface toggleItem {
 }
 
 interface MultiToggleSwitchProps<T> {
-  initialState: T; // 초기값
-  setState: React.Dispatch<React.SetStateAction<T>>; // 상태를 변경하는 dispatcher
-  toggleList: toggleItem[]; // 토글 리스트
+  initialState: T;
+  setState: React.Dispatch<React.SetStateAction<T>>;
+  toggleList: toggleItem[];
 }
 
-const MultiToggleSwitch = <T,>({
+const MultiToggleSwitch2 = <T,>({
   initialState,
   setState,
   toggleList,
@@ -40,7 +40,7 @@ const MultiToggleSwitch = <T,>({
 
     buttons?.forEach((button) => {
       button.style.color = "black";
-      button.style.backgroundColor = "transparent";
+      button.style.backgroundColor = "var(--lightgray-color)";
     });
 
     target.style.color = "white";
@@ -64,9 +64,8 @@ const WrapperStyled = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
-  background-color: var(--lightgray-color);
-
   border-radius: 10px;
+
   button {
     display: flex;
     justify-content: center;
@@ -77,10 +76,10 @@ const WrapperStyled = styled.div`
     font-size: 0.9rem;
     height: 30px;
     font-weight: 500;
-    background-color: transparent;
+    background-color: var(--lightgray-color);
     color: black;
     padding: 4px 12px;
   }
 `;
 
-export default MultiToggleSwitch;
+export default MultiToggleSwitch2;

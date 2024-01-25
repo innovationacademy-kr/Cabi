@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ClubInfoContainer from "@/components/Club/ClubInfo.container";
 import ClubMembers from "@/components/Club/ClubMembers";
-import MultiToggleSwitch, {
+import MultiToggleSwitch2, {
   toggleItem,
-} from "@/components/Common/MultiToggleSwitch";
+} from "@/components/Common/MultiToggleSwitch2";
 import LeftSectionButton from "@/assets/images/LeftSectionButton.svg";
 import {
   ClubListReponseType,
@@ -97,11 +97,11 @@ const ClubPage = () => {
   };
 
   useEffect(() => {
-    setToggleType(clubList?.result[0].clubName.toString());
+    setToggleType(clubList?.result[0].clubId.toString());
     const clubToToggle = clubList.result.map((club) => {
       return {
         name: club.clubName.toString(),
-        key: club.clubName.toString(),
+        key: club.clubId.toString(),
       };
     });
     setToggleList(clubToToggle);
@@ -109,7 +109,7 @@ const ClubPage = () => {
 
   return (
     <WrapperStyled>
-      <MultiToggleSwitch
+      <MultiToggleSwitch2
         initialState={toggleType}
         setState={setToggleType}
         toggleList={toggleList}
