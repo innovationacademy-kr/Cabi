@@ -53,11 +53,7 @@ const MultiToggleSwitch2 = <T,>({
   return (
     <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
       {toggleList.map((item, idx) => (
-        <button
-          key={item.key}
-          className={item.key}
-          onClick={() => setPage(idx)}
-        >
+        <button key={item.key} className={item.key}>
           {item.name}
         </button>
       ))}

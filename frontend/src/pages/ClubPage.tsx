@@ -73,10 +73,10 @@ const ClubPage = () => {
   }, [clubList]);
 
   useEffect(() => {
-    if (clubList?.result[0].clubId) {
-      getClubInfo(clubList?.result[0].clubId);
+    if (parseInt(toggleType) > 0) {
+      getClubInfo(parseInt(toggleType));
     }
-  }, [clubList?.result[0].clubId]);
+  }, [toggleType]);
 
   const getClubInfo = async (clubId: number) => {
     try {
@@ -86,6 +86,7 @@ const ClubPage = () => {
       throw error;
     }
   };
+
   return (
     <WrapperStyled>
       <ContainerStyled>
