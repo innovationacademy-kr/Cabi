@@ -131,6 +131,21 @@ export const axiosAddClubMember = async (
   }
 };
 
+const axiosDeleteClubMemberURL = "/v4/clubs/";
+export const axiosDeleteClubMember = async (
+  clubId: number,
+  userId: number
+): Promise<any> => {
+  try {
+    const response = await instance.delete(
+      `${axiosDeleteClubMemberURL}${clubId}/users/${userId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
 export const axiosBuildingFloor = async (): Promise<any> => {
