@@ -93,6 +93,8 @@ const ClubBasicInfoBox = styled.div`
   padding: 30px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
 `;
 const ClubSubInfoBox = styled.div`
   width: 350px;
@@ -126,6 +128,7 @@ const JustLine = styled.div`
   width: 280px;
   height: 2px;
   background-color: #d9d9d9;
+  margin: 30px 0px 30px 0px;
 `;
 const ClubPw = styled.div`
   width: 280px;
@@ -137,10 +140,25 @@ const ClubPw = styled.div`
   align-items: center;
   padding: 20px;
 `;
-const Pw = styled.div`
+const Pw = styled.span`
   width: 60%;
+  position: relative;
   margin-left: 10px;
+  font-size: 20px;
+  padding-top: 10px;
+  &:hover::after {
+    padding-top: 5px;
+    content: "1234";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    background-color: #fff;
+    font-size: 16px;
+  }
 `;
+
 const SettingLogo = styled.div`
   width: 20px;
   height: 20px;
