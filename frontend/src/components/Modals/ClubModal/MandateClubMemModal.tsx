@@ -12,6 +12,7 @@ import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
+  axiosMandateClubMember,
   axiosMyLentInfo,
   axiosSwapId,
 } from "@/api/axios/axios.custom";
@@ -57,11 +58,7 @@ const MandateClubMemModal: React.FC<{
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
-      await axiosMandateClubMem(props.clubId, props.mandateMember);
-
-      // recoil Master 권한 바꾸기
-      // setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
-
+      await axiosMandateClubMember(props.clubId, props.mandateMember);
       setIsCurrentSectionRender(true);
       setModalTitle("동아리장 권한을 위임하였습니다.");
     } catch (error: any) {
