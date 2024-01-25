@@ -1,11 +1,11 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
 
-const ClubCabinetInfo = () => {
+const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  let CabinetNumData = 0;
   const [text, setText] = useState<string>("");
 
   const openModal = () => {
@@ -20,21 +20,25 @@ const ClubCabinetInfo = () => {
       <ClubHeader>동아리 사물함</ClubHeader>
       <ClubInfoBox>
         <ClubBasicInfoBox>
-          <CabinetNum>{CabinetNumData}</CabinetNum>
+          <CabinetNum>{clubInfo.visibleNum}</CabinetNum>
           <CabinetSideInfo>
-            <SideInfoClubName>cabi</SideInfoClubName>
-            <SideInfoFloor>floor</SideInfoFloor>
+            <SideInfoClubName>{clubInfo.clubName}</SideInfoClubName>
+            <SideInfoFloor>
+              {clubInfo.floor}층 {clubInfo.section}
+            </SideInfoFloor>
             <SideInfoMember>
               <LeaderIcon>
                 <img src="/src/assets/images/leader.svg"></img>
               </LeaderIcon>
-              <UserId>jimchoi</UserId>
+              <UserId>{clubInfo.clubMaster}</UserId>
             </SideInfoMember>
           </CabinetSideInfo>
           <JustLine></JustLine>
           <ClubPw>
             비밀번호
-            <Pw>****</Pw>
+            <PsSpan>
+              <Pw>****</Pw>
+            </PsSpan>
             <SettingLogo>
               {" "}
               <img src="/src/assets/images/setting.svg"></img>
@@ -49,7 +53,6 @@ const ClubCabinetInfo = () => {
             </MemoIcon>
           </ClubMemoHeader>
           <ClubMemo>{text}</ClubMemo>
-          <TextCount>6/300</TextCount>
         </ClubSubInfoBox>
       </ClubInfoBox>
       <MemoModalTestContainer
@@ -106,21 +109,24 @@ const ClubSubInfoBox = styled.div`
   flex-direction: column;
 `;
 const ClubMemoHeader = styled.div`
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: bold;
   margin-bottom: 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 `;
-const ClubMemo = styled.p`
+const ClubMemo = styled.div`
   width: 290px;
   height: 180px;
   background-color: #ffffff;
   border-radius: 16px;
   padding: 20px;
   text-align: start;
-  font-size: 1.125rem;
+  font-size: 16px;
+  line-height: 22px;
   overflow-y: auto;
+  word-break: break-all;
   white-space: pre-wrap;
 `;
 
@@ -140,14 +146,23 @@ const ClubPw = styled.div`
   align-items: center;
   padding: 20px;
 `;
-const Pw = styled.span`
+
+const PsSpan = styled.span`
   width: 60%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`;
+const Pw = styled.span`
+  /* width: 60%; */
+  height: 100%;
   position: relative;
   margin-left: 10px;
   font-size: 20px;
-  padding-top: 10px;
+  line-height: 25px;
+  padding-top: 5px;
   &:hover::after {
-    padding-top: 5px;
+    /* padding-top: 5px; */
     content: "1234";
     width: 100%;
     height: 100%;
@@ -184,7 +199,7 @@ const CabinetNum = styled.div`
 const CabinetSideInfo = styled.div`
   width: 150px;
   height: 90px;
-  margin-left: 30px;
+  margin-left: 20px;
   display: flex;
   justify-content: space-around;
   flex-direction: column;
@@ -214,8 +229,9 @@ const LeaderIcon = styled.div`
   }
 `;
 const MemoIcon = styled.div`
-  width: 20px;
+  width: 30px;
   height: 20px;
+  margin-bottom: 10px;
 `;
 const TextCount = styled.div`
   font-size: 16px;

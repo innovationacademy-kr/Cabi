@@ -98,7 +98,7 @@ const ClubPage = () => {
           setPage={setPage}
         />
         <ClubCabinetStyled>
-          <ClubCabinetInfo />
+          <ClubCabinetInfo clubInfo={clubInfo} />
         </ClubCabinetStyled>
         <ClubMembers
           master={clubInfo.clubMaster.toString()}
@@ -141,7 +141,6 @@ const ClubCabinetStyled = styled.div`
   width: 100%;
   height: 340px;
   margin-top: 60px;
-  background-color: blue;
 `;
 
 export default ClubPage;

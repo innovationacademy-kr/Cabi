@@ -24,6 +24,7 @@ const MemoModalTest = ({
 }: MemoModalTestContainerInterface) => {
   const [mode, setMode] = useState<string>("read");
   const newMemo = useRef<HTMLTextAreaElement>(null);
+  const previousTextRef = useRef<string>(text);
   const handleClickWriteMode = (e: any) => {
     setMode("write");
     if (newMemo.current) {
@@ -50,7 +51,7 @@ const MemoModalTest = ({
   const handleChange = () => {
     if (newMemo.current) {
       setCharCount(newMemo.current.value.length);
-      if (charCount > 10) setCharCount(10);
+      if (charCount > MAX_INPUT_LENGTH) setCharCount(MAX_INPUT_LENGTH);
       setText(newMemo.current.value);
     }
   };
@@ -77,14 +78,14 @@ const MemoModalTest = ({
               ></ContentItemInputStyled>
             </ContentItemWrapperStyled>
             <ContentItemWrapperStyledBottom>
-              {charCount <= 10 && (
+              {charCount <= MAX_INPUT_LENGTH && (
                 <LengthCount>
                   {charCount} / {MAX_INPUT_LENGTH}
                 </LengthCount>
               )}
-              {charCount > 10 && (
+              {charCount > MAX_INPUT_LENGTH && (
                 <LengthCount>
-                  {10} / {MAX_INPUT_LENGTH}
+                  {MAX_INPUT_LENGTH} / {MAX_INPUT_LENGTH}
                 </LengthCount>
               )}
             </ContentItemWrapperStyledBottom>
@@ -102,14 +103,14 @@ const MemoModalTest = ({
             />
           )}
           <Button
-            onClick={
-              mode === "read"
-                ? onClose
-                : () => {
-                    setMode("read");
-                    if (text) newMemo.current!.value = text;
-                  }
-            }
+            onClick={(e) => {
+              setMode("read");
+              if (text) {
+                setText(previousTextRef.current);
+                newMemo.current!.value = previousTextRef.current;
+              }
+              onClose(e);
+            }}
             text={mode === "read" ? "닫기" : "취소"}
             theme={mode === "read" ? "lightGrayLine" : "line"}
           />
