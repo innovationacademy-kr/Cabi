@@ -23,10 +23,15 @@ import {
   SuccessResponseModal,
 } from "../ResponseModal/ResponseModal";
 
+// 필요한 Param
+// 현재 소속된 clubId
+// 권한을 위임하려고 하는 동아리원 이름
+
 const MandateClubMemModal: React.FC<{
-  //
-  lentType: string; // 현재 클릭한 사람 정보
   closeModal: React.MouseEventHandler;
+  clubId: number;
+  mandateMember: string;
+  // lentType: string;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -48,13 +53,12 @@ const MandateClubMemModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-
-  const mandateDetail = `<해당 동아리명>의  동아리장 권한을  <선택한 사람>에게 위임하겠습니까?`;
+  const mandateDetail = `<해당 동아리명>의  동아리장 권한을  ${props.mandateMember}에게 위임하겠습니까?`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
-      await axiosMandateClubMem(clubid, userid);
+      await axiosMandateClubMem(props.clubId, props.mandateMember);
 
       // recoil Master 권한 바꾸기
       // setMyInfo({ ...myInfo, cabinetId: currentCabinetId });
