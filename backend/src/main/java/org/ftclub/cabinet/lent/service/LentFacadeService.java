@@ -244,7 +244,7 @@ public class LentFacadeService {
 		lentPolicyService.verifyCabinetLentCount(cabinet.getLentType(), cabinet.getMaxUser(),
 				userCount);
 		lentPolicyService.verifyCabinetType(cabinet.getLentType(), LentType.CLUB);
-		lentPolicyService.verifyCabinetForLent(cabinet.getStatus(), cabinet.getLentType());
+		lentPolicyService.verifyCabinetForClubLent(cabinet.getStatus(), cabinet.getLentType());
 
 		LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now,
 				cabinet.getLentType(), 1);
@@ -383,7 +383,7 @@ public class LentFacadeService {
 
 		boolean existSwapRecord = lentRedisService.isExistSwapRecord(userId);
 		LocalDateTime swapExpiredAt = lentRedisService.getSwapExpiredAt(userId);
-		lentPolicyService.verifySwapable(existSwapRecord, swapExpiredAt);
+		lentPolicyService.verifySwappable(existSwapRecord, swapExpiredAt);
 
 		LocalDateTime now = LocalDateTime.now();
 		LentHistory oldLentHistory = lentQueryService.getUserActiveLentHistoryWithCabinet(userId);

@@ -45,6 +45,8 @@ public class LentPolicyService {
 				throw ExceptionStatus.LENT_EXPIRED.asServiceException();
 			case LENT_CLUB:
 				throw ExceptionStatus.LENT_CLUB.asServiceException();
+			case LENT_NOT_CLUB:
+				throw ExceptionStatus.LENT_NOT_CLUB.asServiceException();
 			case IMMINENT_EXPIRATION:
 				throw ExceptionStatus.LENT_EXPIRE_IMMINENT.asServiceException();
 			case INVALID_EXPIREDAT:
@@ -129,21 +131,33 @@ public class LentPolicyService {
 	 * @param lentType      대여 타입
 	 */
 	public void verifyCabinetForLent(CabinetStatus cabinetStatus, LentType lentType) {
-		LentPolicyStatus status = LentPolicyStatus.FINE;
+		LentPolicyStatus status = checkCabinetStatus(cabinetStatus);
 		if (lentType.equals(LentType.CLUB)) {
 			status = LentPolicyStatus.LENT_CLUB;
 		}
-		switch (cabinetStatus) {
-			case FULL:
-				status = LentPolicyStatus.FULL_CABINET;
-			case BROKEN:
-				status = LentPolicyStatus.BROKEN_CABINET;
-			case OVERDUE:
-				status = LentPolicyStatus.OVERDUE_CABINET;
-			case PENDING:
-				status = LentPolicyStatus.PENDING_CABINET;
+		handlePolicyStatus(status, null);
+	}
+
+	public void verifyCabinetForClubLent(CabinetStatus cabinetStatus, LentType lentType) {
+		LentPolicyStatus status = checkCabinetStatus(cabinetStatus);
+		if (!lentType.equals(LentType.CLUB)) {
+			status = LentPolicyStatus.LENT_CLUB;
 		}
 		handlePolicyStatus(status, null);
+	}
+
+	private LentPolicyStatus checkCabinetStatus(CabinetStatus cabinetStatus) {
+		switch (cabinetStatus) {
+			case FULL:
+				return LentPolicyStatus.FULL_CABINET;
+			case BROKEN:
+				return LentPolicyStatus.BROKEN_CABINET;
+			case OVERDUE:
+				return LentPolicyStatus.OVERDUE_CABINET;
+			case PENDING:
+				return LentPolicyStatus.PENDING_CABINET;
+		}
+		return LentPolicyStatus.FINE;
 	}
 
 	/**
@@ -291,7 +305,7 @@ public class LentPolicyService {
 		handlePolicyStatus(status, null);
 	}
 
-	public void verifySwapable(boolean existSwapRecord, LocalDateTime swapExpiredAt) {
+	public void verifySwappable(boolean existSwapRecord, LocalDateTime swapExpiredAt) {
 		if (existSwapRecord) {
 			handlePolicyStatus(LentPolicyStatus.SWAP_LIMIT_EXCEEDED, swapExpiredAt);
 		}
