@@ -11,8 +11,21 @@ import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.contai
 import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
 
+type TModalState =
+  | "addModal"
+  | "deleteModal"
+  | "mandateModal"
+  | "passwordCheckModal";
+
+interface ICurrentModalStateInfo {
+  addModal: boolean;
+  deleteModal: boolean;
+  mandateModal: boolean;
+  passwordCheckModal: boolean;
+}
+
 const ClubMembers: React.FC<{
-  master: string;
+  master: String;
   clubId: number;
   clubInfo: ClubInfoResponseDto;
 }> = (props) => {
@@ -37,37 +50,20 @@ const ClubMembers: React.FC<{
       userName: "",
     },
   ]);
-
-  const [mandateMember, setMandateMember] = useState("");
-
-  const [modalName, setModalName] = useState("");
-
-  const getMandateMaster = (mandateMaster: string) => {
-    setMandateMember(mandateMaster);
-  };
-
-  interface ICurrentModalStateInfo {
-    addModal: boolean;
-    deleteModal: boolean;
-    mandateModal: boolean;
-    passwordCheckModal: boolean;
-  }
-
   const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
     addModal: false,
     deleteModal: false,
     mandateModal: false,
     passwordCheckModal: false,
   });
-
   const [targetMember, setTargetMember] = useState("");
   const [targetId, setTargetId] = useState(0);
+  const [mandateMember, setMandateMember] = useState("");
+  const [modalName, setModalName] = useState("");
 
-  type TModalState =
-    | "addModal"
-    | "deleteModal"
-    | "mandateModal"
-    | "passwordCheckModal";
+  const getMandateMaster = (mandateMaster: string) => {
+    setMandateMember(mandateMaster);
+  };
 
   // 나중에 container로 분리할때 다시 고려
   const mandateClubMasterModal = (
@@ -119,6 +115,10 @@ const ClubMembers: React.FC<{
     setIsModalOpen(false);
   };
   // TODO : modal 관련 상위에 있으면 재사용하기
+
+  const clickMoreButton = () => {
+    // TODO : 더보기 버튼 누를 시 다음 Page 불러오기
+  };
 
   useEffect(() => {
     if (props.clubInfo) setMembers(props.clubInfo.clubUsers);
@@ -199,8 +199,10 @@ const ClubMembers: React.FC<{
             );
           })}
         </MemSection>
+        <ButtonContainerStyled>
+          <MoreButtonStyled onClick={clickMoreButton}>더보기</MoreButtonStyled>
+        </ButtonContainerStyled>
       </div>
-
       {isModalOpen &&
         (userModal.addModal ? (
           <AddClubMemModalContainer
@@ -318,6 +320,37 @@ const MemSection = styled.div`
   grid-template-rows: repeat(auto-fill, 184px);
   justify-content: center;
   width: 100%;
+`;
+
+const ButtonContainerStyled = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const MoreButtonStyled = styled.button`
+  width: 200px;
+  height: 50px;
+  margin: 20px auto;
+  border: 1px solid var(--main-color);
+  border-radius: 30px;
+  text-indent: -20px;
+  background-color: var(--white);
+  color: var(--main-color);
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 55%;
+    top: 50%;
+    transform: translateY(-40%);
+    width: 20px;
+    height: 20px;
+    background: url(/src/assets/images/selectPurple.svg) no-repeat 100%;
+  }
 `;
 
 export default ClubMembers;
