@@ -101,8 +101,8 @@ const ClubPage = () => {
           <ClubCabinetInfo />
         </ClubCabinetStyled>
         <ClubMembers
-          master={clubList?.result[0].clubMaster.toString()}
-          clubId={clubList?.result[0].clubId}
+          master={clubInfo.clubMaster.toString()}
+          clubId={clubList.result[page].clubId}
           clubInfo={clubInfo}
         />
       </ContainerStyled>

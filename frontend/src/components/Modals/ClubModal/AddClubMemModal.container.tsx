@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
-import { ClubUserResponseDto } from "@/types/dto/club.dto";
 import { axiosAddClubMember } from "@/api/axios/axios.custom";
 import ModalPortal from "../ModalPortal";
 import {
@@ -12,7 +11,6 @@ import AddClubMemModal from "./AddClubMemModal";
 
 const AddClubMemModalContainer: React.FC<{
   closeModal: React.MouseEventHandler;
-  setMembers: React.Dispatch<React.SetStateAction<ClubUserResponseDto[]>>;
   clubId: number;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
@@ -30,8 +28,8 @@ const AddClubMemModalContainer: React.FC<{
     setIsLoading(true);
     try {
       await axiosAddClubMember(props.clubId, name);
-      // 성공하면 200 아니면 에러 코드 반환됨
       setIsCurrentSectionRender(true);
+      // 성공하면 200 아니면 에러 코드 반환됨
       setModalTitle("동아리에 멤버가 추가됐습니다");
     } catch (error: any) {
       setModalContent(error.response.data.message);
