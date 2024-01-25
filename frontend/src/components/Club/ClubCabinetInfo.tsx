@@ -1,15 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
-import MemoModalTestContainer from "../Modals/ClubModal/MemoModalTest.container";
-import MemoModalTest from "../Modals/ClubModal/MemoModalTest";
-import SwapModal from "../Modals/SwapModal/SwapModal";
-
-// import Modal from "/src/components/Modals/MemoModal/";
+import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
 
 const ClubCabinetInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   let CabinetNumData = 0;
+  const [text, setText] = useState<string>("");
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -23,7 +20,6 @@ const ClubCabinetInfo = () => {
       <ClubHeader>동아리 사물함</ClubHeader>
       <ClubInfoBox>
         <ClubBasicInfoBox>
-          {/* <CabinetNumInfo> */}
           <CabinetNum>{CabinetNumData}</CabinetNum>
           <CabinetSideInfo>
             <SideInfoClubName>cabi</SideInfoClubName>
@@ -44,7 +40,6 @@ const ClubCabinetInfo = () => {
               <img src="/src/assets/images/setting.svg"></img>
             </SettingLogo>
           </ClubPw>
-          {/* </CabinetNumInfo> */}
         </ClubBasicInfoBox>
         <ClubSubInfoBox>
           <ClubMemoHeader>
@@ -53,13 +48,15 @@ const ClubCabinetInfo = () => {
               <img src="/src/assets/images/more.svg" onClick={openModal}></img>
             </MemoIcon>
           </ClubMemoHeader>
-          <ClubMemo>바보</ClubMemo>
+          <ClubMemo>{text}</ClubMemo>
           <TextCount>6/300</TextCount>
         </ClubSubInfoBox>
       </ClubInfoBox>
       <MemoModalTestContainer
         onClose={() => closeModal()}
         isModalOpen={isModalOpen}
+        text={text}
+        setText={setText}
       />
     </ClubCabinetInfoStyled>
   );
@@ -95,21 +92,16 @@ const ClubBasicInfoBox = styled.div`
   border-radius: 16px;
   padding: 30px;
   display: flex;
-  /* justify-content: start; */
   flex-wrap: wrap;
-  /* align-items: center; */
 `;
 const ClubSubInfoBox = styled.div`
   width: 350px;
   height: 285px;
-  /* flex-direction: column; */
   background-color: #f5f5f5;
   border-radius: 16px;
   padding: 30px;
   display: flex;
-  /* justify-content: end; */
   flex-direction: column;
-  /* flex-wrap: wrap; */
 `;
 const ClubMemoHeader = styled.div`
   font-size: 16px;
@@ -118,13 +110,16 @@ const ClubMemoHeader = styled.div`
   flex-direction: row;
   justify-content: space-between;
 `;
-const ClubMemo = styled.div`
+const ClubMemo = styled.p`
   width: 290px;
   height: 180px;
   background-color: #ffffff;
   border-radius: 16px;
   padding: 20px;
-  /* margin-bottom: 20px; */
+  text-align: start;
+  font-size: 1.125rem;
+  overflow-y: auto;
+  white-space: pre-wrap;
 `;
 
 const JustLine = styled.div`
@@ -141,8 +136,6 @@ const ClubPw = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 20px;
-
-  /* justify-content: space-between; */
 `;
 const Pw = styled.div`
   width: 60%;
@@ -157,13 +150,8 @@ const CabinetNumInfo = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  /* justify-content: start; */
   flex-wrap: wrap;
   align-items: center;
-  /* margin-bottom: 20px; */
-  /* padding-bottom: 20px; */
-  /* margin-left: 30px; */
-  /* padding-top: 30px; */
 `;
 const CabinetNum = styled.div`
   width: 90px;
@@ -180,9 +168,7 @@ const CabinetSideInfo = styled.div`
   height: 90px;
   margin-left: 30px;
   display: flex;
-  /* justify-content: space-evenly; */
   justify-content: space-around;
-  /* justify-content: center; */
   flex-direction: column;
   align-content: space-around;
 `;
@@ -218,8 +204,6 @@ const TextCount = styled.div`
   display: flex;
   justify-content: end;
   margin-top: 10px;
-  /* justify-content: end; */
-  /* justify-content: initial; */
 `;
 
 export default ClubCabinetInfo;
