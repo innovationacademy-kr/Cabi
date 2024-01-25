@@ -13,20 +13,11 @@ import ProfileCardContainer from "@/components/Card/ProfileCard/ProfileCard.cont
 import ThemeColorCardContainer from "@/components/Card/ThemeColorCard/ThemeColorCard.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { axiosMyInfo, axiosUpdateDeviceToken } from "@/api/axios/axios.custom";
+import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [myInfo, setMyInfo] = useRecoilState(userState);
-
-  const updateLocalStorage = () => {
-    const recoilPersist = localStorage.getItem("recoil-persist");
-    if (recoilPersist) {
-      let recoilPersistObj = JSON.parse(recoilPersist);
-      delete recoilPersistObj.CurrentFloor;
-      delete recoilPersistObj.CurrentSection;
-      localStorage.setItem("recoil-persist", JSON.stringify(recoilPersistObj));
-    }
-  };
 
   const getMyInfo = async () => {
     try {
@@ -44,7 +35,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    updateLocalStorage();
+    deleteRecoilPersistFloorSection();
     getMyInfo();
     setTimeout(() => {
       setIsLoading(false);

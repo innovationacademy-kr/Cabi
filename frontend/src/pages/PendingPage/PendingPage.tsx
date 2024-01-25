@@ -14,6 +14,7 @@ import {
 } from "@/types/dto/cabinet.dto";
 import { axiosGetPendingCabinets } from "@/api/axios/axios.custom";
 import useDebounce from "@/hooks/useDebounce";
+import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
 enum PendingCabinetsType {
   ALL = "ALL",
@@ -91,22 +92,12 @@ const PendingPage = () => {
     );
   };
 
-  const updateLocalStorage = () => {
-    const recoilPersist = localStorage.getItem("recoil-persist");
-    if (recoilPersist) {
-      let recoilPersistObj = JSON.parse(recoilPersist);
-      delete recoilPersistObj.CurrentFloor;
-      delete recoilPersistObj.CurrentSection;
-      localStorage.setItem("recoil-persist", JSON.stringify(recoilPersistObj));
-    }
-  };
-
   useEffect(() => {
+    deleteRecoilPersistFloorSection();
     setTimeout(() => {
       // 새로고침 광클 방지를 위한 초기 로딩 딜레이
       setIsLoaded(true);
     }, 500);
-    updateLocalStorage();
   }, []);
 
   useEffect(() => {
