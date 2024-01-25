@@ -11,8 +11,6 @@ import {
 } from "@/types/dto/club.dto";
 import { axiosGetClubInfo, axiosMyClubInfo } from "@/api/axios/axios.custom";
 
-s;
-
 const ClubPage = () => {
   const [clubList, setClubList] = useState<ClubPaginationResponseDto>({
     result: [
