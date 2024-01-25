@@ -6,13 +6,15 @@ import closeIcon from "@/assets/images/close-circle.svg";
 import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
-import { ClubUserResponseDto } from "@/types/dto/club.dto";
+import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
+import ClubInfo from "./ClubInfo";
 
 // TODO : 동아리 멤버들 아님 전체 api 정보
 const ClubMembers: React.FC<{
   master: string;
   clubId: number;
+  clubInfo: ClubInfoResponseDto;
 }> = (props) => {
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [me, setMe] = useState<ClubUserResponseDto>({
@@ -31,28 +33,8 @@ const ClubMembers: React.FC<{
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([
     {
-      userId: 2,
-      userName: "jusohn",
-    },
-    {
-      userId: 3,
-      userName: "jeekim",
-    },
-    {
-      userId: 4,
-      userName: "miyu",
-    },
-    {
-      userId: 5,
-      userName: "jusohn2",
-    },
-    {
-      userId: 6,
-      userName: "jeekim2",
-    },
-    {
-      userId: 7,
-      userName: "miyu3",
+      userId: 0,
+      userName: "",
     },
   ]);
 
@@ -68,7 +50,8 @@ const ClubMembers: React.FC<{
   useEffect(() => {
     // setMembers
     // TODO : axios로 동아리정보 조회해서 data 받으면 여기서 지우고 prop으로 가져오기
-  }, []);
+    if (props.clubInfo) setMembers(props.clubInfo.clubUsers);
+  }, [props.clubInfo]);
 
   const SortMemAry = () => {
     if (props.master) {

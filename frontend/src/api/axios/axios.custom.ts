@@ -131,6 +131,23 @@ export const axiosAddClubMember = async (
   }
 };
 
+const axiosMandateClubMemURL = "/v4/clubs";
+export const axiosMandateClubMember = async (
+  clubId: number,
+  clubMaster: string
+): Promise<any> => {
+  // TODO : 예외처리?
+  try {
+    const response = await instance.post(
+      `${axiosMandateClubMemURL}/${clubId}/mandate`,
+      { clubMaster }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const axiosDeleteClubMemberURL = "/v4/clubs/";
 export const axiosDeleteClubMember = async (
   clubId: number,

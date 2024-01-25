@@ -55,15 +55,8 @@ const ClubPage = () => {
     try {
       const response = await axiosMyClubInfo();
       const result = response.data.result;
-      const totalLength = response.data.result;
+      const totalLength = response.data.totalLength;
       setClubList({ result, totalLength });
-      // setClubList({
-      //   result: [
-      //     { clubId: 3, clubName: "동아리", clubMaster: "jeekim" },
-      //     { clubId: 4, clubName: "동아리2", clubMaster: "jusohn" },
-      //   ] as ClubResponseDto[],
-      //   totalLength: 1,
-      // });
       setTotalPage(totalLength);
     } catch (error) {
       throw error;
@@ -103,6 +96,7 @@ const ClubPage = () => {
         <ClubMembers
           master={clubList?.result[0].clubMaster.toString()}
           clubId={clubList?.result[0].clubId}
+          clubInfo={clubInfo}
         />
       </ContainerStyled>
     </WrapperStyled>
