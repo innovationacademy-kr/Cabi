@@ -161,6 +161,21 @@ export const modalPropsMap = {
     title: "동아리 멤버 추가",
     confirmMessage: "저장",
   },
+  MODAL_CLUB_DEL_MEM: {
+    type: "confirm",
+    title: "멤버 내보내기",
+    confirmMessage: "확인",
+  },
+  MODAL_CLUB_MANDATE_MEM: {
+    type: "confirm",
+    title: "동아리장 위임",
+    confirmMessage: "네, 위임할게요",
+  },
+  MODAL_CLUB_MODIFY_PW: {
+    type: "confirm",
+    title: "비밀번호 수적",
+    confirmMessage: "입력",
+  },
 };
 
 export const cabinetFilterMap = {
