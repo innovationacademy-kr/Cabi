@@ -498,7 +498,7 @@ export const axiosGetUserLentLog = async (
   }
 };
 
-const axiosGetClubUserLogURL = "/v4/admin/users/clubs";
+const axiosGetClubUserLogURL = "/v4/admin/clubs";
 export const axiosGetClubUserLog = async (
   page: number,
   size: number
@@ -513,20 +513,24 @@ export const axiosGetClubUserLog = async (
   }
 };
 
-const axiosCreateClubUserURL = "/v4/admin/users/club";
+const axiosCreateClubUserURL = "/v4/admin/clubs";
 export const axiosCreateClubUser = async (
-  clubName: string | null
+  clubName: string | null,
+  clubMaster: string | null
 ): Promise<any> => {
-  if (clubName === null) return;
+  if (clubName === null || clubMaster === null) return;
   try {
-    const response = await instance.post(axiosCreateClubUserURL, { clubName });
+    const response = await instance.post(axiosCreateClubUserURL, {
+      clubName,
+      clubMaster,
+    });
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-const axiosEditClubUserURL = "/v4/admin/users/club/";
+const axiosEditClubUserURL = "/v4/admin/clubs/";
 export const axiosEditClubUser = async (
   clubInfo: ClubUserDto | null
 ): Promise<any> => {
@@ -544,7 +548,7 @@ export const axiosEditClubUser = async (
   }
 };
 
-const axiosDeleteClubUserURL = "/v4/admin/users/club/";
+const axiosDeleteClubUserURL = "/v4/admin/clubs/";
 export const axiosDeleteClubUser = async (
   clubId: number | null
 ): Promise<any> => {
