@@ -29,23 +29,27 @@ const Card = ({
 }: CardProps) => {
   return (
     <CardStyled gridArea={gridArea} width={width} height={height}>
-      <CardHeaderStyled>
-        <CardTitleStyled>{title}</CardTitleStyled>
-        <CardButtonWrapper>
-          {buttons?.map((button, index) => (
-            <CardButtonStyled
-              key={index}
-              onClick={button.onClick}
-              color={button.color}
-              backgroundColor={button.backgroundColor}
-              isClickable={button.isClickable}
-              isExtensible={button.isExtensible}
-            >
-              {button.label}
-            </CardButtonStyled>
-          ))}
-        </CardButtonWrapper>
-      </CardHeaderStyled>
+      {(title || buttons) && (
+        <CardHeaderStyled>
+          {title && <CardTitleStyled>{title}</CardTitleStyled>}
+          {buttons && (
+            <CardButtonWrapper>
+              {buttons?.map((button, index) => (
+                <CardButtonStyled
+                  key={index}
+                  onClick={button.onClick}
+                  color={button.color}
+                  backgroundColor={button.backgroundColor}
+                  isClickable={button.isClickable}
+                  isExtensible={button.isExtensible}
+                >
+                  {button.label}
+                </CardButtonStyled>
+              ))}
+            </CardButtonWrapper>
+          )}
+        </CardHeaderStyled>
+      )}
       {children}
     </CardStyled>
   );
