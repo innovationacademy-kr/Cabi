@@ -12,6 +12,7 @@ import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import IconType from "@/types/enum/icon.type.enum";
 import {
   axiosCabinetById,
+  axiosDeleteClubMember,
   axiosMyLentInfo,
   axiosSwapId,
 } from "@/api/axios/axios.custom";
@@ -25,6 +26,8 @@ import {
 const DeleteClubMemModal: React.FC<{
   closeModal: React.MouseEventHandler;
   targetMember: string;
+  clubId: number;
+  userId: number;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -41,7 +44,7 @@ const DeleteClubMemModal: React.FC<{
     setIsLoading(true);
     try {
       //  axios할게 있나..?
-      //   await axiosMandateClubMem(clubid, userid);
+      await axiosDeleteClubMember(props.clubId, props.userId);
       // recoil Master 권한 바꾸기
 
       setIsCurrentSectionRender(true);

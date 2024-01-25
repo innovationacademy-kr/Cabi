@@ -61,6 +61,7 @@ const ClubMembers: React.FC<{
   });
 
   const [targetMember, setTargetMember] = useState("");
+  const [targetId, setTargetId] = useState(0);
 
   type TModalState =
     | "addModal"
@@ -82,9 +83,11 @@ const ClubMembers: React.FC<{
 
   const deleteClubMemberModal = (
     e: MouseEvent<HTMLDivElement>,
-    targetMember: string
+    targetMember: string,
+    userId: number
   ) => {
     setTargetMember(targetMember);
+    setTargetId(userId);
     openModal("deleteModal");
   };
 
@@ -186,7 +189,7 @@ const ClubMembers: React.FC<{
                       id="closeIcon"
                       src={closeIcon}
                       onClick={(e: MouseEvent<HTMLDivElement>) =>
-                        deleteClubMemberModal(e, `${mem.userName}`)
+                        deleteClubMemberModal(e, `${mem.userName}`, mem.userId)
                       }
                     />
                   )}
@@ -220,6 +223,8 @@ const ClubMembers: React.FC<{
               closeModal();
             }}
             targetMember={targetMember}
+            clubId={props.clubId}
+            userId={targetId}
           />
         ) : null)}
     </Container>
