@@ -66,7 +66,7 @@ const MultiToggleSwitch2 = <T,>({
 };
 
 const WrapperStyled = styled.div`
-  width: fit-content;
+  width: 100%;
   display: flex;
   align-items: center;
   border-radius: 10px;
@@ -84,6 +84,7 @@ const WrapperStyled = styled.div`
     background-color: var(--lightgray-color);
     color: black;
     padding: 4px 12px;
+    margin: 0px 4px;
   }
 `;
 

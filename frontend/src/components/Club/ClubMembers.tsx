@@ -154,8 +154,8 @@ const ClubMembers: React.FC<{
 // TODO : styled component는 뒤에 styled 붙이기
 const Container = styled.div`
   margin-top: 75px;
-  width: 795px;
-  margin-bottom: 180px;
+  width: 100%;
+  /* margin-bottom: 180px; */
 `;
 
 const TitleBar = styled.div`

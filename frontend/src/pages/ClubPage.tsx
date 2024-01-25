@@ -85,39 +85,47 @@ const ClubPage = () => {
 
   return (
     <WrapperStyled>
-      <MultiToggleSwitch2
-        initialState={toggleType}
-        setState={setToggleType}
-        toggleList={toggleList}
-        setPage={setPage}
-      />
-      <TitleStyled>동아리 정보</TitleStyled>
-      <ClubInfoContainer
-        clubId={clubList?.result[page].clubId}
-        page={page}
-        clubInfo={clubInfo}
-        setClubInfo={setClubInfo}
-      />
-      <ClubMembers
-        master={clubList?.result[0].clubMaster.toString()}
-        clubId={clubList?.result[0].clubId}
-      />
+      <ContainerStyled>
+        <TitleStyled>동아리 정보</TitleStyled>
+        <MultiToggleSwitch2
+          initialState={toggleType}
+          setState={setToggleType}
+          toggleList={toggleList}
+          setPage={setPage}
+        />
+        <ClubInfoContainer
+          clubId={clubList?.result[page].clubId}
+          page={page}
+          clubInfo={clubInfo}
+          setClubInfo={setClubInfo}
+        />
+        <ClubCabinetStyled></ClubCabinetStyled>
+        <ClubMembers
+          master={clubList?.result[0].clubMaster.toString()}
+          clubId={clubList?.result[0].clubId}
+        />
+      </ContainerStyled>
     </WrapperStyled>
   );
 };
 
 const WrapperStyled = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
+const ContainerStyled = styled.div`
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 2rem 0;
-  width: 100%;
+  margin: 112px 0 0 0;
+  padding-bottom: 112px;
+  width: 795px;
   height: 100%;
-
-  & button {
-    margin-right: 8px;
-  }
 `;
 
 const TitleStyled = styled.div`
@@ -128,64 +136,11 @@ const TitleStyled = styled.div`
   margin-bottom: 30px;
 `;
 
-const SectionPaginationStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px 0;
-  position: sticky;
-  top: 0;
-  background: rgba(255, 255, 255, 0.95);
-  background-color: blue;
-  z-index: 1;
-`;
-
-const SectionBarStyled = styled.div`
-  margin: 10px 5%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const MoveSectionButtonStyled = styled.img<{ arrowReversed?: boolean }>`
-  width: 24px;
-  height: 24px;
-  margin: 0px 15px;
-  opacity: 70%;
-  cursor: pointer;
-  transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")});
-  transition: all 0.2s;
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      opacity: 100%;
-      transform: rotate(${(props) => (props.arrowReversed ? "180deg" : "0")})
-        scale(1.3);
-    }
-  }
-`;
-
-const SectionIndexStyled = styled.div`
+const ClubCabinetStyled = styled.div`
   width: 100%;
-  display: flex;
-  justify-content: center;
-`;
-
-const IndexRectangleStyled = styled.div<{ filledColor: string }>`
-  width: 15px;
-  height: 8px;
-  border-radius: 2px;
-  margin: 0px 3px;
-  background: black;
-  /* background: ${(props) => props.filledColor}; */
-  cursor: pointer;
-  transition: all 0.2s;
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      transform: scale(1.3);
-      background-color: var(--sub-color);
-    }
-  }
+  height: 340px;
+  margin-top: 60px;
+  background-color: blue;
 `;
 
 export default ClubPage;
