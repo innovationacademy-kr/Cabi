@@ -8,6 +8,8 @@ import useMultiSelect from "@/hooks/useMultiSelect";
 const ModifyClubPwModal: React.FC<{
   modalContents: IModalContents;
   password: string;
+  // isModalOpen: boolean;
+  // onClose: React.MouseEventHandler<Element>;
 }> = ({ modalContents, password }) => {
   const {
     type,

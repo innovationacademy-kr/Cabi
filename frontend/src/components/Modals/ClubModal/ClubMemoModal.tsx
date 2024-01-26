@@ -14,7 +14,7 @@ interface MemoModalTestContainerInterface {
   setText: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const MAX_INPUT_LENGTH = 200;
+const MAX_INPUT_LENGTH = 100;
 
 const MemoModalTest = ({
   text,
@@ -39,6 +39,8 @@ const MemoModalTest = ({
     } else {
       onSave(null);
     }
+    setText(newMemo.current!.value); //새 메모 저장
+    previousTextRef.current = newMemo.current!.value; //이전 메모 업데이트
     setMode("read");
   };
 
@@ -57,16 +59,25 @@ const MemoModalTest = ({
   };
   return (
     <ModalPortal>
-      <BackgroundStyled onClick={onClose} />
+      <BackgroundStyled
+        onClick={(e) => {
+          setMode("read");
+          if (text) {
+            if (text) newMemo.current!.value = text;
+            setText(previousTextRef.current);
+            newMemo.current!.value = previousTextRef.current;
+          }
+          onClose(e);
+        }}
+      />
       <ModalContainerStyled type={"confirm"}>
         <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
           수정하기
         </WriteModeButtonStyled>
-        <H2Styled>메모 관리</H2Styled>
+        <H2Styled>동아리 메모</H2Styled>
         <ContentSectionStyled>
           <ContentItemSectionStyled>
             <ContentItemWrapperStyled>
-              <ContentItemTitleStyled>동아리 메모</ContentItemTitleStyled>
               <ContentItemInputStyled
                 onChange={handleChange}
                 placeholder={text ? text : ""}
@@ -76,19 +87,19 @@ const MemoModalTest = ({
                 ref={newMemo}
                 maxLength={MAX_INPUT_LENGTH}
               ></ContentItemInputStyled>
+              <ContentItemWrapperStyledBottom>
+                {charCount <= MAX_INPUT_LENGTH && (
+                  <LengthCount>
+                    {charCount} / {MAX_INPUT_LENGTH}
+                  </LengthCount>
+                )}
+                {charCount > MAX_INPUT_LENGTH && (
+                  <LengthCount>
+                    {MAX_INPUT_LENGTH} / {MAX_INPUT_LENGTH}
+                  </LengthCount>
+                )}
+              </ContentItemWrapperStyledBottom>
             </ContentItemWrapperStyled>
-            <ContentItemWrapperStyledBottom>
-              {charCount <= MAX_INPUT_LENGTH && (
-                <LengthCount>
-                  {charCount} / {MAX_INPUT_LENGTH}
-                </LengthCount>
-              )}
-              {charCount > MAX_INPUT_LENGTH && (
-                <LengthCount>
-                  {MAX_INPUT_LENGTH} / {MAX_INPUT_LENGTH}
-                </LengthCount>
-              )}
-            </ContentItemWrapperStyledBottom>
           </ContentItemSectionStyled>
         </ContentSectionStyled>
         <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
@@ -106,6 +117,7 @@ const MemoModalTest = ({
             onClick={(e) => {
               setMode("read");
               if (text) {
+                if (text) newMemo.current!.value = text;
                 setText(previousTextRef.current);
                 newMemo.current!.value = previousTextRef.current;
               }
@@ -182,12 +194,13 @@ const ContentItemInputStyled = styled.textarea<{
 }>`
   padding: 15px;
   border: 1px solid var(--line-color);
-  height: 240px;
+  height: 160px;
   border-radius: 10px;
   text-align: start;
   font-size: 1.125rem;
   color: black;
   overflow-y: auto;
+  word-break: break-all;
   white-space: pre-wrap;
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
@@ -240,6 +253,7 @@ const ContentItemWrapperStyledBottom = styled.div`
   width: 100%;
   display: flex;
   justify-content: end;
+  margin-top: 2px;
 `;
 const LengthCount = styled.span`
   width: 80px;

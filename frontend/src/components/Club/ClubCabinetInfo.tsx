@@ -1,12 +1,22 @@
 import { useState } from "react";
 import styled from "styled-components";
+import Modal, { IModalContents } from "@/components/Modals/Modal";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
+import ModifyClubPwModal from "../Modals/PasswordCheckModal/ModifiyClubPwModal";
 
 const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // const [isModalOpenTest, setIsModalOpenTest] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [newText, setNewText] = useState<string>("");
+  // const [testModal, setTestModal] = useState<IModalContents>({
+  //   type: "hasProceedBtn",
+  //   title: "비밀번호 설정",
+  //   closeModal: () => {
+  //     closeModal();
+  //   },
+  // });
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -15,10 +25,14 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const handleSaveMemo = (newMemo: string | null) => {
-    // 모달에서 저장된 내용을 텍스트로 업데이트
     setNewText(newMemo ?? "");
   };
+
+  // const handleSettingLogoClick = () => {
+  //   setIsModalOpenTest(true);
+  // };
   return (
     <ClubCabinetInfoStyled>
       <ClubHeader>동아리 사물함</ClubHeader>
@@ -43,6 +57,7 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
             <PsSpan>
               <Pw>****</Pw>
             </PsSpan>
+            {/* <SettingLogo onClick={handleSettingLogoClick}> */}
             <SettingLogo>
               {" "}
               <img src="/src/assets/images/setting.svg"></img>
@@ -59,6 +74,15 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
           <ClubMemo>{isModalOpen ? newText : text}</ClubMemo>
         </ClubSubInfoBox>
       </ClubInfoBox>
+      {/* {isModalOpenTest && <ModifyClubPwModal
+        // password="1234"
+        // isModalOpen={isModalOpen}
+        // onClose={() => closeModal()}
+        modalContents={testModal}
+        password="1234"
+        // isModalOpen={isModalOpen}
+        // onClose={() => closeModal()}
+      />} */}
       <MemoModalTestContainer
         onClose={() => closeModal()}
         isModalOpen={isModalOpen}
@@ -139,7 +163,6 @@ const ClubMemo = styled.div`
   font-size: 16px;
   line-height: 22px;
   overflow-y: auto;
-  word-break: break-all;
   word-break: break-all;
   white-space: pre-wrap;
 `;

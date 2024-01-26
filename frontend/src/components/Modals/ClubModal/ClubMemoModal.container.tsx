@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useRecoilState } from "recoil";
 import { currentFloorCabinetState, myCabinetInfoState } from "@/recoil/atoms";
 import MemoModalTest from "./ClubMemoModal";
@@ -8,18 +8,23 @@ const MemoModalTestContainer = (props: {
   isModalOpen: boolean;
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
+  onSave: (newMemo: string | null) => void;
 }) => {
   const [] = useRecoilState(currentFloorCabinetState);
 
   const onSaveEditMemo = (newMemo: string | null) => {
-    if (newMemo === props.text) newMemo = null;
+    if (newMemo !== props.text) {
+      props.setText(newMemo ?? "");
+    }
   };
+
+  
   return (
     <>
       {props.isModalOpen && (
         <MemoModalTest
           onClose={props.onClose}
-          onSave={onSaveEditMemo}
+          onSave={props.onSave}
           text={props.text}
           setText={props.setText}
         />
