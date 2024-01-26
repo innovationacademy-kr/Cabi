@@ -10,12 +10,7 @@ import {
 import { modalPropsMap } from "@/assets/data/maps";
 import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import IconType from "@/types/enum/icon.type.enum";
-import {
-  axiosCabinetById,
-  axiosMandateClubMember,
-  axiosMyLentInfo,
-  axiosSwapId,
-} from "@/api/axios/axios.custom";
+import { axiosMandateClubMember } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
 import {
@@ -23,33 +18,17 @@ import {
   SuccessResponseModal,
 } from "../ResponseModal/ResponseModal";
 
-// 필요한 Param
-// 현재 소속된 clubId
-// 권한을 위임하려고 하는 동아리원 이름
-
 const MandateClubMemModal: React.FC<{
   closeModal: React.MouseEventHandler;
   clubId: number;
   mandateMember: string;
-  // lentType: string;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const currentCabinetId = useRecoilValue(currentCabinetIdState);
   const currentClubId = useRecoilValue(currentCabinetIdState);
-
-  // 클럽 마스터 Id정보
-  // const [myInfo, setMyInfo] = useRecoilState(userState);
-  const [targetClubMember, setTargetClubMember] = useRecoilState(userState);
-
-  const [myLentInfo, setMyLentInfo] =
-    useRecoilState<MyCabinetInfoResponseDto>(myCabinetInfoState);
-  const [targetCabinetInfo, setTargetCabinetInfo] = useRecoilState(
-    targetCabinetInfoState
-  );
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
@@ -62,7 +41,6 @@ const MandateClubMemModal: React.FC<{
       setIsCurrentSectionRender(true);
       setModalTitle("동아리장 권한을 위임하였습니다.");
     } catch (error: any) {
-      // setModalTitle(error.response.data.message);
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
