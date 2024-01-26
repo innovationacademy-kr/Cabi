@@ -6,6 +6,7 @@ import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container"
 const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
+  const [newText, setNewText] = useState<string>("");
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -13,6 +14,10 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+  const handleSaveMemo = (newMemo: string | null) => {
+    // 모달에서 저장된 내용을 텍스트로 업데이트
+    setNewText(newMemo ?? "");
   };
   return (
     <ClubCabinetInfoStyled>
@@ -51,7 +56,7 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
               <img src="/src/assets/images/more.svg" onClick={openModal}></img>
             </MemoIcon>
           </ClubMemoHeader>
-          <ClubMemo>{text}</ClubMemo>
+          <ClubMemo>{isModalOpen ? newText : text}</ClubMemo>
         </ClubSubInfoBox>
       </ClubInfoBox>
       <MemoModalTestContainer
@@ -59,6 +64,7 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
         isModalOpen={isModalOpen}
         text={text}
         setText={setText}
+        onSave={handleSaveMemo}
       />
     </ClubCabinetInfoStyled>
   );
