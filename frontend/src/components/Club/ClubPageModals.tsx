@@ -23,13 +23,6 @@ export interface ICurrentClubModalStateInfo {
   passwordCheckModal: boolean;
 }
 
-export interface IClubModalInf {
-  addModal: boolean;
-  deleteModal: boolean;
-  mandateModal: boolean;
-  passwordCheckModal: boolean;
-}
-
 const ClubPageModals: React.FC<{
   clubInfo: ClubInfoResponseDto;
   clubList: ClubPaginationResponseDto;
