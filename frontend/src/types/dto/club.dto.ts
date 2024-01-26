@@ -16,6 +16,11 @@ export interface ClubResponseDto {
   clubMaster: String;
 }
 
+export type ClubInfoResponseType =
+  | ClubInfoResponseDto
+  | typeof STATUS_400_BAD_REQUEST
+  | undefined;
+
 export interface ClubInfoResponseDto {
   clubName: String;
   clubMaster: String;
