@@ -10,24 +10,18 @@ import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
 import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
-
-type TModalState =
-  | "addModal"
-  | "deleteModal"
-  | "mandateModal"
-  | "passwordCheckModal";
-
-interface ICurrentModalStateInfo {
-  addModal: boolean;
-  deleteModal: boolean;
-  mandateModal: boolean;
-  passwordCheckModal: boolean;
-}
+import { TClubModalState } from "./ClubPageModals";
 
 const ClubMembers: React.FC<{
   master: String;
   clubId: number;
   clubInfo: ClubInfoResponseDto;
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openModal: (modalName: TClubModalState) => void;
+  setTargetMember: React.Dispatch<React.SetStateAction<string>>;
+  setTargetId: React.Dispatch<React.SetStateAction<number>>;
+  setMandateMember: React.Dispatch<React.SetStateAction<string>>;
 }> = (props) => {
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [me, setMe] = useState<ClubUserResponseDto>({
@@ -43,78 +37,19 @@ const ClubMembers: React.FC<{
   );
   const [tmp, setTmp] = useState<ClubUserResponseDto[]>([]);
   // memsbers 중 나랑 동아리장 뺀 배열
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([
     {
       userId: 0,
       userName: "",
     },
   ]);
-  const [userModal, setUserModal] = useState<ICurrentModalStateInfo>({
-    addModal: false,
-    deleteModal: false,
-    mandateModal: false,
-    passwordCheckModal: false,
-  });
-  const [targetMember, setTargetMember] = useState("");
-  const [targetId, setTargetId] = useState(0);
-  const [mandateMember, setMandateMember] = useState("");
-  const [modalName, setModalName] = useState("");
 
-  const getMandateMaster = (mandateMaster: string) => {
-    setMandateMember(mandateMaster);
-  };
-
-  // 나중에 container로 분리할때 다시 고려
-  const mandateClubMasterModal = (
-    e: MouseEvent<HTMLDivElement>,
-    mandateMaster: string
-  ) => {
-    e.preventDefault();
-    if (mandateMaster !== props.master) {
-      setMandateMember(mandateMaster);
-      openModal("mandateModal");
-    }
-  };
-
-  const deleteClubMemberModal = (
-    e: MouseEvent<HTMLDivElement>,
-    targetMember: string,
-    userId: number
-  ) => {
-    setTargetMember(targetMember);
-    setTargetId(userId);
-    openModal("deleteModal");
-  };
-
-  const openModal = (modalName: TModalState) => {
-    if (modalName === "addModal") {
-      setModalName("addModal");
-    } else if (modalName === "deleteModal") {
-      setModalName("deleteModal");
-    } else if (modalName === "mandateModal") {
-      setModalName("mandateModal");
-    } else if (modalName === "passwordCheckModal") {
-      setModalName("passwordCheckModal");
-    }
-    setIsModalOpen(true);
-    setUserModal({
-      ...userModal,
-      [modalName]: true,
-    });
-  };
-
-  const closeModal = () => {
-    setUserModal({
-      ...userModal,
-      addModal: false,
-      deleteModal: false,
-      mandateModal: false,
-      passwordCheckModal: false,
-    });
-    setIsModalOpen(false);
-  };
-  // TODO : modal 관련 상위에 있으면 재사용하기
+  // const [targetMember, setTargetMember] = useState("");
+  // const [targetId, setTargetId] = useState(0);
+  // const [mandateMember, setMandateMember] = useState("");
+  // const getMandateMaster = (mandateMaster: string) => {
+  //   setMandateMember(mandateMaster);
+  // };
 
   const clickMoreButton = () => {
     // TODO : 더보기 버튼 누를 시 다음 Page 불러오기
@@ -136,6 +71,30 @@ const ClubMembers: React.FC<{
         }
       });
       setTmp(tmpAry);
+    }
+  };
+  // const getMandateMaster = (mandateMaster: string) => {
+  //   setMandateMember(mandateMaster);
+  // };
+
+  const deleteClubMemberModal = (
+    e: MouseEvent<HTMLDivElement>,
+    targetMember: string,
+    userId: number
+  ) => {
+    props.setTargetMember(targetMember);
+    props.setTargetId(userId);
+    props.openModal("deleteModal");
+  };
+
+  const mandateClubMasterModal = (
+    e: MouseEvent<HTMLDivElement>,
+    mandateMaster: string
+  ) => {
+    e.preventDefault();
+    if (mandateMaster !== props.master) {
+      props.setMandateMember(mandateMaster);
+      props.openModal("mandateModal");
     }
   };
 
@@ -166,17 +125,17 @@ const ClubMembers: React.FC<{
       <div id="memCard">
         <MemSection>
           {myInfo.name === master.userName ? (
-            <AddMemCard onClick={() => openModal("addModal")}>
+            <AddMemCard onClick={() => props.openModal("addModal")}>
               <p>+</p>
             </AddMemCard>
           ) : null}
           {sortedMems?.map((mem, idx) => {
             return (
               <MemCard
-                onContextMenu={(e: MouseEvent<HTMLDivElement>) =>
+                onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
                   me.userName === props.master &&
-                  mandateClubMasterModal(e, `${mem.userName}`)
-                }
+                    mandateClubMasterModal(e, `${mem.userName}`);
+                }}
                 key={idx}
                 bgColor={mem.userName === myInfo.name ? "var(--sub-color)" : ""}
               >
@@ -203,32 +162,6 @@ const ClubMembers: React.FC<{
           <MoreButtonStyled onClick={clickMoreButton}>더보기</MoreButtonStyled>
         </ButtonContainerStyled>
       </div>
-      {isModalOpen &&
-        (userModal.addModal ? (
-          <AddClubMemModalContainer
-            closeModal={() => {
-              closeModal();
-            }}
-            clubId={props.clubId}
-          />
-        ) : userModal.mandateModal ? (
-          <MandateClubMemModal
-            closeModal={() => {
-              closeModal();
-            }}
-            clubId={props.clubId}
-            mandateMember={mandateMember}
-          />
-        ) : userModal.deleteModal ? (
-          <DeleteClubMemModal
-            closeModal={() => {
-              closeModal();
-            }}
-            targetMember={targetMember}
-            clubId={props.clubId}
-            userId={targetId}
-          />
-        ) : null)}
     </Container>
   );
 };
