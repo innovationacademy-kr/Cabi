@@ -74,25 +74,24 @@ const ClubCabinetInfoStyled = styled.div`
 `;
 
 const ClubHeader = styled.div`
-  width: 800px;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   margin-left: 40px;
-  margin-bottom: 30px;
   font-size: 20px;
   font-weight: bold;
 `;
 
 const ClubInfoBox = styled.div`
-  width: 800px;
+  width: 795px;
   height: 285px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin: 20px;
 `;
 
 const ClubBasicInfoBox = styled.div`
-  width: 350px;
+  width: 380px;
   height: 285px;
   background-color: #f5f5f5;
   border-radius: 16px;
@@ -104,7 +103,7 @@ const ClubBasicInfoBox = styled.div`
 `;
 
 const ClubSubInfoBox = styled.div`
-  width: 350px;
+  width: 380px;
   height: 285px;
   background-color: #f5f5f5;
   border-radius: 16px;
@@ -115,7 +114,7 @@ const ClubSubInfoBox = styled.div`
 
 const ClubMemoHeader = styled.div`
   font-size: 20px;
-  font-weight: bold;
+  font-size: 20px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: row;
@@ -123,7 +122,7 @@ const ClubMemoHeader = styled.div`
 `;
 
 const ClubMemo = styled.div`
-  width: 290px;
+  width: 100%;
   height: 180px;
   background-color: #ffffff;
   border-radius: 16px;
@@ -131,7 +130,10 @@ const ClubMemo = styled.div`
   text-align: start;
   font-size: 16px;
   line-height: 22px;
+  font-size: 16px;
+  line-height: 22px;
   overflow-y: auto;
+  word-break: break-all;
   word-break: break-all;
   white-space: pre-wrap;
 `;
@@ -150,6 +152,7 @@ const ClubPw = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   padding: 20px;
 `;
@@ -162,7 +165,7 @@ const PsSpan = styled.span`
 `;
 
 const Pw = styled.span`
-  /* width: 60%; */
+  height: 100%;
   height: 100%;
   position: relative;
   margin-left: 10px;
@@ -170,7 +173,6 @@ const Pw = styled.span`
   line-height: 25px;
   padding-top: 5px;
   &:hover::after {
-    /* padding-top: 5px; */
     content: "1234";
     width: 100%;
     height: 100%;
@@ -185,6 +187,7 @@ const Pw = styled.span`
 const SettingLogo = styled.div`
   width: 20px;
   height: 20px;
+  cursor: pointer;
 `;
 
 const CabinetNumInfo = styled.div`
@@ -209,6 +212,7 @@ const CabinetNum = styled.div`
 const CabinetSideInfo = styled.div`
   width: 150px;
   height: 90px;
+  margin-left: 20px;
   margin-left: 20px;
   display: flex;
   justify-content: space-around;
@@ -245,8 +249,11 @@ const LeaderIcon = styled.div`
 
 const MemoIcon = styled.div`
   width: 30px;
+  width: 30px;
   height: 20px;
   margin-bottom: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
 `;
 
 const TextCount = styled.div`
