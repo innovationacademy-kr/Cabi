@@ -29,6 +29,6 @@ public interface ClubMapper {
 
 	@Mapping(target = "clubMemo", source = "cabinet.memo")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")
-	ClubInfoResponseDto toClubInfoResponseDto(String clubName, String clubMaster,
+	ClubInfoResponseDto toClubInfoResponseDto(String clubName, String clubMaster, String clubNotice,
 			Cabinet cabinet, List<ClubUserResponseDto> clubUsers, Long clubUserCount);
 }

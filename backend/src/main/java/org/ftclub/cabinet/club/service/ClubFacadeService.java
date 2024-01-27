@@ -71,8 +71,8 @@ public class ClubFacadeService {
 		List<ClubUserResponseDto> clubUsers = userMap.stream()
 				.map(user -> clubMapper.toClubUserResponseDto(user.getId(), user.getName()))
 				.collect(Collectors.toList());
-		return clubMapper.toClubInfoResponseDto(club.getName(), clubMaster.getName(), clubCabinet,
-				clubUsers, userMap.getTotalElements());
+		return clubMapper.toClubInfoResponseDto(club.getName(), clubMaster.getName(),
+				club.getNotice(), clubCabinet, clubUsers, userMap.getTotalElements());
 	}
 
 	/**

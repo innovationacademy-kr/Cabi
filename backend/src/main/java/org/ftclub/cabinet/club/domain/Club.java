@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,6 +41,7 @@ public class Club {
 	private String name;
 
 	@CreatedDate
+	@Column(name = "CREATED_AT", nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 
 	@Column(name = "DELETED_AT", length = 32)
@@ -47,13 +49,13 @@ public class Club {
 
 	@Lob
 	@Column(name = "NOTICE", nullable = false)
-	private String notice;
+	private String notice = "";
 
 
-	@OneToMany(mappedBy = "club")
+	@OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
 	private List<ClubRegistration> clubRegistrations;
 
-	@OneToMany(mappedBy = "club")
+	@OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
 	private List<ClubLentHistory> clubLentHistories;
 
 	protected Club(String name) {
