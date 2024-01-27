@@ -7,9 +7,6 @@ import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
-import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
-import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
-import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
 import { TClubModalState } from "./ClubPageModals";
 
 const ClubMembers: React.FC<{
@@ -44,13 +41,6 @@ const ClubMembers: React.FC<{
     },
   ]);
 
-  // const [targetMember, setTargetMember] = useState("");
-  // const [targetId, setTargetId] = useState(0);
-  // const [mandateMember, setMandateMember] = useState("");
-  // const getMandateMaster = (mandateMaster: string) => {
-  //   setMandateMember(mandateMaster);
-  // };
-
   const clickMoreButton = () => {
     // TODO : 더보기 버튼 누를 시 다음 Page 불러오기
   };
@@ -73,9 +63,6 @@ const ClubMembers: React.FC<{
       setTmp(tmpAry);
     }
   };
-  // const getMandateMaster = (mandateMaster: string) => {
-  //   setMandateMember(mandateMaster);
-  // };
 
   const deleteClubMemberModal = (
     e: MouseEvent<HTMLDivElement>,

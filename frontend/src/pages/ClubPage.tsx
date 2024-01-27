@@ -1,23 +1,12 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import ClubCabinetInfo from "@/components/Club/ClubCabinetInfo";
-import ClubMembers from "@/components/Club/ClubMembers";
-import { ClubPageInfo } from "@/components/Club/clubPageInfo";
-import MultiToggleSwitch2, {
-  toggleItem,
-} from "@/components/Common/MultiToggleSwitch2";
-import {
-  ClubInfoResponseDto,
-  ClubPaginationResponseDto,
-} from "@/types/dto/club.dto";
-import { axiosGetClubInfo, axiosMyClubInfo } from "@/api/axios/axios.custom";
+import { ClubPageInfo } from "@/components/Club/ClubPageInfo";
 
 const ClubPage = () => {
   return (
     <WrapperStyled>
       <ContainerStyled>
         <TitleStyled>동아리 정보</TitleStyled>
-        <ClubPageInfo></ClubPageInfo>
+        <ClubPageInfo />
       </ContainerStyled>
     </WrapperStyled>
   );

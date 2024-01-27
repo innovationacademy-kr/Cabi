@@ -28,6 +28,7 @@ const DeleteClubMemModal: React.FC<{
   targetMember: string;
   clubId: number;
   userId: number;
+  getClubInfo: (clubId: number) => Promise<void>;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -51,6 +52,7 @@ const DeleteClubMemModal: React.FC<{
       setModalTitle(
         `동아리 사물함 멤버에서 ${props.targetMember}를 내보냈습니다`
       );
+      props.getClubInfo(props.clubId);
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);

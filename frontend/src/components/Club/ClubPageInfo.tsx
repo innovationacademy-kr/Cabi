@@ -1,15 +1,11 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import {
   ClubInfoResponseDto,
   ClubPaginationResponseDto,
 } from "@/types/dto/club.dto";
 import { axiosGetClubInfo, axiosMyClubInfo } from "@/api/axios/axios.custom";
 import MultiToggleSwitch2, { toggleItem } from "../Common/MultiToggleSwitch2";
-import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
-import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
-import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
-import ClubCabinetInfo from "./ClubCabinetInfo";
-import ClubMembers from "./ClubMembers";
 import ClubPageModals from "./ClubPageModals";
 
 export function ClubPageInfo() {
@@ -46,7 +42,6 @@ export function ClubPageInfo() {
     { name: "", key: "" },
   ]);
   const [page, setPage] = useState<number>(0);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setToggleType(clubList?.result[0].clubId.toString());
@@ -98,7 +93,12 @@ export function ClubPageInfo() {
         toggleList={toggleList}
         setPage={setPage}
       />
-      <ClubPageModals clubInfo={clubInfo} clubList={clubList} page={page} />
+      <ClubPageModals
+        clubInfo={clubInfo}
+        clubList={clubList}
+        page={page}
+        getClubInfo={getClubInfo}
+      />
     </>
   );
 }

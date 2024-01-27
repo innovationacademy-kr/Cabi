@@ -27,6 +27,7 @@ const ClubPageModals: React.FC<{
   clubInfo: ClubInfoResponseDto;
   clubList: ClubPaginationResponseDto;
   page: number;
+  getClubInfo: (clubId: number) => Promise<void>;
 }> = (props) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalName, setModalName] = useState("");
@@ -91,6 +92,7 @@ const ClubPageModals: React.FC<{
             closeModal();
           }}
           clubId={clubId}
+          getClubInfo={props.getClubInfo}
         />
       ) : userModal.mandateModal ? (
         <MandateClubMemModal
@@ -99,6 +101,7 @@ const ClubPageModals: React.FC<{
           }}
           clubId={clubId}
           mandateMember={mandateMember}
+          getClubInfo={props.getClubInfo}
         />
       ) : userModal.deleteModal ? (
         <DeleteClubMemModal
@@ -108,6 +111,7 @@ const ClubPageModals: React.FC<{
           clubId={clubId}
           targetMember={targetMember}
           userId={targetId}
+          getClubInfo={props.getClubInfo}
         />
       ) : null}
       <ClubCabinetStyled>
