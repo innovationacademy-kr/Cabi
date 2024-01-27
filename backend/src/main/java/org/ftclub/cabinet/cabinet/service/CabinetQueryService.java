@@ -170,7 +170,7 @@ public class CabinetQueryService {
 	 * @param cabinetStatuses 사물함 상태
 	 * @return 사물함
 	 */
-	public List<Cabinet> findPendingCabinetsNotLentTypeAndStatus(
+	public List<Cabinet> findCabinetsNotLentTypeAndStatus(
 			String building, LentType lentType, List<CabinetStatus> cabinetStatuses) {
 		return cabinetRepository.findAllByBuildingAndLentTypeNotAndStatusIn(building, lentType,
 				cabinetStatuses);

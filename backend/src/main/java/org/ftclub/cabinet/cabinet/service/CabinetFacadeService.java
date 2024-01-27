@@ -195,13 +195,12 @@ public class CabinetFacadeService {
 	 * @return 빌딩에 있는 모든 PENDING 상태의 사물함
 	 */
 	@Transactional
-	public CabinetPendingResponseDto getPendingCabinets(String building) {
+	public CabinetPendingResponseDto getAvailableCabinets(String building) {
 		final LocalDateTime now = LocalDateTime.now();
 		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
-		List<Cabinet> pendingCabinets =
-				cabinetQueryService.findPendingCabinetsNotLentTypeAndStatus(
-						building, LentType.CLUB, List.of(AVAILABLE, PENDING));
-		List<Long> cabinetIds = pendingCabinets.stream()
+		List<Cabinet> availableCabinets = cabinetQueryService.findCabinetsNotLentTypeAndStatus(
+				building, LentType.CLUB, List.of(AVAILABLE, PENDING));
+		List<Long> cabinetIds = availableCabinets.stream()
 				.filter(cabinet -> cabinet.isStatus(PENDING))
 				.map(Cabinet::getId).collect(Collectors.toList());
 		Map<Long, List<LentHistory>> lentHistoriesMap;
@@ -216,7 +215,7 @@ public class CabinetFacadeService {
 		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
 				cabinetQueryService.findAllFloorsByBuilding(building).stream()
 						.collect(toMap(key -> key, value -> new ArrayList<>()));
-		pendingCabinets.forEach(cabinet -> {
+		availableCabinets.forEach(cabinet -> {
 			Integer floor = cabinet.getCabinetPlace().getLocation().getFloor();
 			if (cabinet.isStatus(AVAILABLE)) {
 				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
