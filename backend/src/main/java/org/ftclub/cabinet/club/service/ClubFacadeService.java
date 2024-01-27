@@ -62,7 +62,7 @@ public class ClubFacadeService {
 
 		clubPolicyService.verifyClubUserIn(clubUserIds, userId);
 
-		Page<User> userMap = userQueryService.getUsers(clubUserIds, pageable);
+		Page<User> userMap = userQueryService.findUsers(clubUserIds, pageable);
 		User clubMaster =
 				clubRegistrationQueryService.getClubUserByUser(clubMasterId, clubId).getUser();
 		Cabinet clubCabinet =

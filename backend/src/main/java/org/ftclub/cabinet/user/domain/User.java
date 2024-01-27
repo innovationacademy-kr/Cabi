@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.alarm.dto.AlarmTypeResponseDto;
 import org.ftclub.cabinet.club.domain.ClubRegistration;
@@ -29,6 +30,7 @@ import org.ftclub.cabinet.utils.ExceptionUtil;
 @Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString(exclude = {"joinedClubs"})
 @Log4j2
 public class User {
 

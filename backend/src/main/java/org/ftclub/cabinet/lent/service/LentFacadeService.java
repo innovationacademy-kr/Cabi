@@ -102,7 +102,7 @@ public class LentFacadeService {
 				return null;
 			}
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
-			List<User> userList = userQueryService.getUsers(usersInCabinet);
+			List<User> userList = userQueryService.findUsers(usersInCabinet);
 			userActiveCabinet = cabinetQueryService.getCabinet(cabinetId);
 			lentDtoList = userList.stream().map(u -> lentMapper.toLentDto(u, null))
 					.collect(Collectors.toList());

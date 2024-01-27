@@ -59,7 +59,7 @@ public class UserQueryService {
 	 * @param userIds 유저들의 ID
 	 * @return 유저 객체들을 반환합니다.
 	 */
-	public List<User> getUsers(List<Long> userIds) {
+	public List<User> findUsers(List<Long> userIds) {
 		return userRepository.findAllByIds(userIds);
 	}
 
@@ -70,7 +70,7 @@ public class UserQueryService {
 	 * @param pageable 페이징 정보
 	 * @return 유저 객체들을 페이지 형식으로 반환합니다.
 	 */
-	public Page<User> getUsers(List<Long> userIds, Pageable pageable) {
+	public Page<User> findUsers(List<Long> userIds, Pageable pageable) {
 		return userRepository.findPaginationByIds(userIds, pageable);
 	}
 
@@ -81,7 +81,7 @@ public class UserQueryService {
 	 * @param pageable    페이징 정보
 	 * @return 유저 객체들을 페이지 형식으로 반환합니다.
 	 */
-	public Page<User> getUsers(String partialName, Pageable pageable) {
+	public Page<User> findUsers(String partialName, Pageable pageable) {
 		return userRepository.findPaginationByPartialName(partialName, pageable);
 	}
 

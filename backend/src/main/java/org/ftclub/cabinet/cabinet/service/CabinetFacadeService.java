@@ -107,7 +107,7 @@ public class CabinetFacadeService {
 
 		if (lentDtos.isEmpty()) {
 			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
-			List<User> users = userQueryService.getUsers(usersInCabinet);
+			List<User> users = userQueryService.findUsers(usersInCabinet);
 			users.forEach(user -> lentDtos.add(
 					LentDto.builder().userId(user.getId()).name(user.getName()).build()
 			));
