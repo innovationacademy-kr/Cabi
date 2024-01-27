@@ -15,8 +15,8 @@ public class ClubLentCommandService {
 
 	private final ClubLentRepository clubLentRepository;
 
-	public void startLent(Long clubId, Long cabinetId, LocalDateTime now, LocalDateTime expiredAt) {
-		ClubLentHistory clubLent = ClubLentHistory.of(clubId, cabinetId, now, expiredAt);
+	public void startLent(Long clubId, Long cabinetId, LocalDateTime expiredAt) {
+		ClubLentHistory clubLent = ClubLentHistory.of(clubId, cabinetId, expiredAt);
 		clubLentRepository.save(clubLent);
 	}
 

@@ -49,6 +49,10 @@ public class ClubRegistration {
 	@Column(name = "USER_ROLE", length = 32, nullable = false)
 	private UserRole userRole;
 
+	@CreatedDate
+	@Column(name = "REGISTERED_AT", nullable = false, updatable = false)
+	private LocalDateTime registeredAt;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID", insertable = false, updatable = false)
 	private User user;
@@ -57,8 +61,6 @@ public class ClubRegistration {
 	@JoinColumn(name = "CLUB_ID", insertable = false, updatable = false)
 	private Club club;
 
-	@CreatedDate
-	private LocalDateTime registeredAt;
 
 	protected ClubRegistration(Long userId, Long clubId, UserRole userRole) {
 		this.userId = userId;

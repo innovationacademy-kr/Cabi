@@ -3,6 +3,7 @@ package org.ftclub.cabinet.club.domain;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,13 +22,16 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.utils.DateUtil;
 import org.ftclub.cabinet.utils.ExceptionUtil;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Log4j2
 @ToString(exclude = {"club", "cabinet"})
 @Getter
 @Table(name = "CLUB_LENT_HISTORY")
-@Entity
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class ClubLentHistory {
 
 	@Id
@@ -35,21 +39,22 @@ public class ClubLentHistory {
 	@Column(name = "ID")
 	private long id;
 
-	@Column(name = "CLUB_ID", nullable = false)
+	@Column(name = "CLUB_ID", nullable = false, updatable = false)
 	private Long clubId;
 
-	@Column(name = "CABINET_ID", nullable = false)
+	@Column(name = "CABINET_ID", nullable = false, updatable = false)
 	private Long cabinetId;
 
-	@JoinColumn(name = "CLUB_ID", insertable = false, updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CLUB_ID", insertable = false, updatable = false)
 	private Club club;
 
-	@JoinColumn(name = "CABINET_ID", insertable = false, updatable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "CABINET_ID", insertable = false, updatable = false)
 	private Cabinet cabinet;
 
-	@Column(name = "STARTED_AT", nullable = false)
+	@CreatedDate
+	@Column(name = "STARTED_AT", nullable = false, updatable = false)
 	private LocalDateTime startedAt;
 
 	@Column(name = "ENDED_AT")
@@ -58,18 +63,14 @@ public class ClubLentHistory {
 	@Column(name = "EXPIRED_AT", nullable = false)
 	private LocalDateTime expiredAt;
 
-	protected ClubLentHistory(Long clubId, Long cabinetId, LocalDateTime startedAt,
-			LocalDateTime endedAt) {
+	protected ClubLentHistory(Long clubId, Long cabinetId, LocalDateTime endedAt) {
 		this.clubId = clubId;
 		this.cabinetId = cabinetId;
-		this.startedAt = startedAt;
 		this.endedAt = endedAt;
 	}
 
-	public static ClubLentHistory of(Long clubId, Long cabinetId, LocalDateTime startedAt,
-			LocalDateTime endedAt) {
-		ClubLentHistory clubLentHistory =
-				new ClubLentHistory(clubId, cabinetId, startedAt, endedAt);
+	public static ClubLentHistory of(Long clubId, Long cabinetId, LocalDateTime endedAt) {
+		ClubLentHistory clubLentHistory = new ClubLentHistory(clubId, cabinetId, endedAt);
 		if (!clubLentHistory.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}

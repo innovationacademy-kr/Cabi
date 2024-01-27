@@ -15,6 +15,7 @@ public class ClubInfoResponseDto {
 	private final String clubName;
 	private final String clubMaster;
 	private final String clubMemo; // cabinet password
+	private final String clubNotice;
 	@JsonUnwrapped
 	private final Location location;
 	private final Long visibleNum;
