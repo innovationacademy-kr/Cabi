@@ -12,6 +12,7 @@ import AddClubMemModal from "./AddClubMemModal";
 const AddClubMemModalContainer: React.FC<{
   closeModal: React.MouseEventHandler;
   clubId: number;
+  getClubInfo: (clubId: number) => Promise<void>;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -31,6 +32,7 @@ const AddClubMemModalContainer: React.FC<{
       setIsCurrentSectionRender(true);
       // 성공하면 200 아니면 에러 코드 반환됨
       setModalTitle("동아리에 멤버가 추가됐습니다");
+      props.getClubInfo(props.clubId);
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);

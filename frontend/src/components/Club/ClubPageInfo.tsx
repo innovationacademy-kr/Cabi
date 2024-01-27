@@ -1,15 +1,10 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ClubInfoResponseDto,
   ClubPaginationResponseDto,
 } from "@/types/dto/club.dto";
 import { axiosGetClubInfo, axiosMyClubInfo } from "@/api/axios/axios.custom";
 import MultiToggleSwitch2, { toggleItem } from "../Common/MultiToggleSwitch2";
-import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
-import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
-import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
-import ClubCabinetInfo from "./ClubCabinetInfo";
-import ClubMembers from "./ClubMembers";
 import ClubPageModals from "./ClubPageModals";
 
 export function ClubPageInfo() {

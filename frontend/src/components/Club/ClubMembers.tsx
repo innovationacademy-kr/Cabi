@@ -7,9 +7,6 @@ import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
-import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
-import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
-import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
 import { TClubModalState } from "./ClubPageModals";
 
 // TODO : 더보기 버튼 멤버 다 불러왔으면 안보이게
@@ -53,9 +50,6 @@ const ClubMembers: React.FC<{
   );
   // TODO : setIsCurrentSectionRender props로 넘겨주기
 
-  // const [targetMember, setTargetMember] = useState("");
-  // const [targetId, setTargetId] = useState(0);
-  // const [mandateMember, setMandateMember] = useState("");
   // const getMandateMaster = (mandateMaster: string) => {
   //   setMandateMember(mandateMaster);
   // };
@@ -92,9 +86,6 @@ const ClubMembers: React.FC<{
       setTmp(tmpAry);
     }
   };
-  // const getMandateMaster = (mandateMaster: string) => {
-  //   setMandateMember(mandateMaster);
-  // };
 
   const deleteClubMemberModal = (
     e: MouseEvent<HTMLDivElement>,

@@ -1,14 +1,7 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  currentCabinetIdState,
-  isCurrentSectionRenderState,
-  myCabinetInfoState,
-  targetCabinetInfoState,
-  userState,
-} from "@/recoil/atoms";
+import { useSetRecoilState } from "recoil";
+import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import { modalPropsMap } from "@/assets/data/maps";
-import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import IconType from "@/types/enum/icon.type.enum";
 import { axiosMandateClubMember } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "../Modal";
@@ -22,13 +15,14 @@ const MandateClubMemModal: React.FC<{
   closeModal: React.MouseEventHandler;
   clubId: number;
   mandateMember: string;
+  getClubInfo: (clubId: number) => Promise<void>;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const currentClubId = useRecoilValue(currentCabinetIdState);
+  // const currentClubId = useRecoilValue(currentCabinetIdState);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
@@ -40,6 +34,7 @@ const MandateClubMemModal: React.FC<{
       await axiosMandateClubMember(props.clubId, props.mandateMember);
       setIsCurrentSectionRender(true);
       setModalTitle("동아리장 권한을 위임하였습니다.");
+      props.getClubInfo(props.clubId);
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
