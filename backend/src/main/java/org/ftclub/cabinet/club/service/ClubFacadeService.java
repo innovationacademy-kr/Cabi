@@ -113,8 +113,8 @@ public class ClubFacadeService {
 	@Transactional
 	public void addClubUser(Long masterId, Long clubId, String name) {
 		User clubMaster = userQueryService.getUser(masterId);
-		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUserByUser(
-				masterId);
+		ClubRegistration clubMasterRegistration =
+				clubRegistrationQueryService.getClubUserByUser(masterId, clubId);
 		User newClubUser = userQueryService.getUserByName(name);
 		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
 				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
@@ -140,10 +140,10 @@ public class ClubFacadeService {
 	public void deleteClubUser(Long masterId, Long clubId, Long deletedUserId) {
 		User clubMaster = userQueryService.getUser(masterId);
 		userQueryService.getUser(deletedUserId);
-		ClubRegistration clubMasterRegistration = clubRegistrationQueryService.getClubUserByUser(
-				masterId);
+		ClubRegistration clubMasterRegistration =
+				clubRegistrationQueryService.getClubUserByUser(masterId, clubId);
 		ClubRegistration deletedUserRegistration =
-				clubRegistrationQueryService.getClubUserByUser(deletedUserId);
+				clubRegistrationQueryService.getClubUserByUser(deletedUserId, clubId);
 		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
 				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
 
@@ -167,9 +167,9 @@ public class ClubFacadeService {
 		User newClubMaster = userQueryService.getUserByName(newClubMasterName);
 
 		ClubRegistration oldClubMasterRegistration =
-				clubRegistrationQueryService.getClubUserByUser(clubMasterId);
+				clubRegistrationQueryService.getClubUserByUser(clubMasterId, clubId);
 		ClubRegistration newClubMasterRegistration =
-				clubRegistrationQueryService.getClubUserByUser(newClubMaster.getId());
+				clubRegistrationQueryService.getClubUserByUser(newClubMaster.getId(), clubId);
 		List<Long> clubUserIds = clubRegistrationQueryService.findClubUsersByClub(clubId)
 				.stream().map(ClubRegistration::getUserId).collect(Collectors.toList());
 

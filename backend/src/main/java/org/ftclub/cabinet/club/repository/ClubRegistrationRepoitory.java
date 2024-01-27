@@ -14,7 +14,8 @@ public interface ClubRegistrationRepoitory extends JpaRepository<ClubRegistratio
 
 	List<ClubRegistration> findAllByClubId(@Param("clubId") Long clubId);
 
-	Optional<ClubRegistration> findByUserId(@Param("userId") Long userId);
+	Optional<ClubRegistration> findByUserIdAndClubId(@Param("userId") Long userId,
+			@Param("clubId") Long clubId);
 
 	/**
 	 * 특정 유저가 속한 동아리 목록을 조회한다.

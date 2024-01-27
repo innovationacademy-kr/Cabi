@@ -103,7 +103,7 @@ public class AdminClubFacadeService {
 		ClubRegistration clubMasterRegistration =
 				clubRegistrationQueryService.getClubMasterByClubWithUser(clubId);
 		if (!clubMasterName.equals(clubMasterRegistration.getUser().getName())) {
-			User newClubMaster = userQueryService.getUserByName(clubName);
+			User newClubMaster = userQueryService.getUserByName(clubMasterName);
 			ClubRegistration newClubMasterRegistration =
 					clubRegistrationQueryService.getClubUser(newClubMaster.getId(), clubId);
 
