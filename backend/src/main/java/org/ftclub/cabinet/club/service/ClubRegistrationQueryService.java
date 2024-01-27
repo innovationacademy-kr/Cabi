@@ -36,9 +36,9 @@ public class ClubRegistrationQueryService {
 	 * @param userId 유저 ID
 	 * @return 동아리 회원 목록
 	 */
-	public ClubRegistration getClubUserByUser(Long userId) {
+	public ClubRegistration getClubUserByUser(Long userId, Long clubId) {
 		Optional<ClubRegistration> clubRegistration =
-				clubRegistrationRepoitory.findByUserId(userId);
+				clubRegistrationRepoitory.findByUserIdAndClubId(userId, clubId);
 		return clubRegistration.orElseThrow(ExceptionStatus.NOT_CLUB_USER::asServiceException);
 	}
 
@@ -76,8 +76,8 @@ public class ClubRegistrationQueryService {
 	 * @return 동아리 회원 목록
 	 */
 	public ClubRegistration getClubUser(Long userId, Long clubId) {
-		return clubRegistrationRepoitory.findByClubIdAndUserId(userId,
-				clubId).orElseThrow(ExceptionStatus.NOT_CLUB_USER::asServiceException);
+		return clubRegistrationRepoitory.findByClubIdAndUserId(clubId, userId)
+				.orElseThrow(ExceptionStatus.NOT_CLUB_USER::asServiceException);
 	}
 
 	/**
