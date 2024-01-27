@@ -63,9 +63,8 @@ public class ClubFacadeService {
 		clubPolicyService.verifyClubUserIn(clubUserIds, userId);
 
 		Page<User> userMap = userQueryService.getUsers(clubUserIds, pageable);
-		User clubMaster = userMap.stream()
-				.filter(u -> u.getId().equals(clubMasterId)).findFirst()
-				.orElseThrow(ExceptionStatus.INVALID_CLUB_MASTER::asServiceException);
+		User clubMaster =
+				clubRegistrationQueryService.getClubUserByUser(clubMasterId, clubId).getUser();
 		Cabinet clubCabinet =
 				clubLentQueryService.getActiveLentHistoryWithCabinet(clubId).getCabinet();
 
