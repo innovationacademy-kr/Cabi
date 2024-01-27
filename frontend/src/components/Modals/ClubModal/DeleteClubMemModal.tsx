@@ -1,21 +1,9 @@
 import { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  currentCabinetIdState,
-  isCurrentSectionRenderState,
-  myCabinetInfoState,
-  targetCabinetInfoState,
-  userState,
-} from "@/recoil/atoms";
+import { useSetRecoilState } from "recoil";
+import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import { modalPropsMap } from "@/assets/data/maps";
-import { MyCabinetInfoResponseDto } from "@/types/dto/cabinet.dto";
 import IconType from "@/types/enum/icon.type.enum";
-import {
-  axiosCabinetById,
-  axiosDeleteClubMember,
-  axiosMyLentInfo,
-  axiosSwapId,
-} from "@/api/axios/axios.custom";
+import { axiosDeleteClubMember } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
 import {

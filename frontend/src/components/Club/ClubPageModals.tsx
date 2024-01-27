@@ -27,6 +27,8 @@ const ClubPageModals: React.FC<{
   clubInfo: ClubInfoResponseDto;
   clubList: ClubPaginationResponseDto;
   page: number;
+  getClubInfo: (clubId: number) => Promise<void>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }> = (props) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalName, setModalName] = useState("");
@@ -123,6 +125,9 @@ const ClubPageModals: React.FC<{
         setTargetMember={setTargetMember}
         setTargetId={setTargetId}
         setMandateMember={setMandateMember}
+        getClubInfo={props.getClubInfo}
+        setPage={props.setPage}
+        page={props.page}
       />
     </>
   );

@@ -1,7 +1,7 @@
 import React, { MouseEvent, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { userState } from "@/recoil/atoms";
+import { isCurrentSectionRenderState, userState } from "@/recoil/atoms";
 import closeIcon from "@/assets/images/close-circle.svg";
 import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
@@ -11,6 +11,8 @@ import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.contai
 import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
 import { TClubModalState } from "./ClubPageModals";
+
+// TODO : 더보기 버튼 멤버 다 불러왔으면 안보이게
 
 const ClubMembers: React.FC<{
   master: String;
@@ -22,6 +24,9 @@ const ClubMembers: React.FC<{
   setTargetMember: React.Dispatch<React.SetStateAction<string>>;
   setTargetId: React.Dispatch<React.SetStateAction<number>>;
   setMandateMember: React.Dispatch<React.SetStateAction<string>>;
+  getClubInfo: (clubId: number) => Promise<void>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  page: number;
 }> = (props) => {
   const [myInfo, setMyInfo] = useRecoilState(userState);
   const [me, setMe] = useState<ClubUserResponseDto>({
@@ -43,6 +48,10 @@ const ClubMembers: React.FC<{
       userName: "",
     },
   ]);
+  const setIsCurrentSectionRender = useSetRecoilState(
+    isCurrentSectionRenderState
+  );
+  // TODO : setIsCurrentSectionRender props로 넘겨주기
 
   // const [targetMember, setTargetMember] = useState("");
   // const [targetId, setTargetId] = useState(0);
@@ -53,7 +62,17 @@ const ClubMembers: React.FC<{
 
   const clickMoreButton = () => {
     // TODO : 더보기 버튼 누를 시 다음 Page 불러오기
+    props.setPage((prev) => prev + 1);
+    // props.getClubInfo(props.clubId);
+    // setIsCurrentSectionRender(true);
   };
+
+  useEffect(() => {
+    if (props.clubId) {
+      props.getClubInfo(props.clubId);
+      setIsCurrentSectionRender(true);
+    }
+  }, [props.page]);
 
   useEffect(() => {
     if (props.clubInfo) setMembers(props.clubInfo.clubUsers);
@@ -237,11 +256,13 @@ const MemCard = styled.div<{ bgColor: string }>`
   }
 
   & #closeIcon {
-    width: 1rem;
-    height: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   & #top {
+    /* background-color: blue; */
+    width: 100%;
     display: flex;
     border: 1rem;
   }

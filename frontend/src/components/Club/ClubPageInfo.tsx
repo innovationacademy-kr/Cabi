@@ -67,7 +67,9 @@ export function ClubPageInfo() {
 
   const getClubInfo = async (clubId: number) => {
     try {
-      const result = await axiosGetClubInfo(clubId, page, 100);
+      const result = await axiosGetClubInfo(clubId, page, 2);
+      // console.log(result.data);
+      // TODO : page > 0 이면 
       setClubInfo(result.data);
     } catch (error) {
       throw error;
@@ -98,7 +100,13 @@ export function ClubPageInfo() {
         toggleList={toggleList}
         setPage={setPage}
       />
-      <ClubPageModals clubInfo={clubInfo} clubList={clubList} page={page} />
+      <ClubPageModals
+        clubInfo={clubInfo}
+        clubList={clubList}
+        page={page}
+        getClubInfo={getClubInfo}
+        setPage={setPage}
+      />
     </>
   );
 }
