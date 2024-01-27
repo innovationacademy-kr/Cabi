@@ -8,6 +8,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -44,6 +45,10 @@ public class Club {
 	@Column(name = "DELETED_AT", length = 32)
 	private LocalDateTime deletedAt;
 
+	@Lob
+	@Column(name = "NOTICE", nullable = false)
+	private String notice;
+
 
 	@OneToMany(mappedBy = "club")
 	private List<ClubRegistration> clubRegistrations;
@@ -75,5 +80,12 @@ public class Club {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
 		this.name = clubName;
+	}
+
+	public void changeClubNotice(String notice) {
+		if (notice == null) {
+			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
+		}
+		this.notice = notice;
 	}
 }

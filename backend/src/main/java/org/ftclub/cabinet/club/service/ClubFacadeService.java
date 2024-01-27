@@ -180,4 +180,15 @@ public class ClubFacadeService {
 		clubRegistrationCommandService.mandateClubMaster(oldClubMasterRegistration,
 				newClubMasterRegistration);
 	}
+
+	public void updateClubNotice(Long userId, Long clubId, String notice) {
+		ClubRegistration clubMasterRegistration
+				= clubRegistrationQueryService.getClubUserByUser(userId, clubId);
+		Club club = clubQueryService.getClub(clubId);
+
+		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
+				clubMasterRegistration.getClubId(), clubId);
+
+		club.changeClubNotice(notice);
+	}
 }

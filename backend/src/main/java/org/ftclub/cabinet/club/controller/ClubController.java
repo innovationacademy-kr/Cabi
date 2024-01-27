@@ -8,6 +8,7 @@ import org.ftclub.cabinet.club.service.ClubFacadeService;
 import org.ftclub.cabinet.dto.AddClubUserRequestDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubInfoResponseDto;
+import org.ftclub.cabinet.dto.ClubNoticeUpdateDto;
 import org.ftclub.cabinet.dto.MandateClubMasterRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
 import org.ftclub.cabinet.log.Logging;
@@ -101,5 +102,13 @@ public class ClubController {
 			@Valid @RequestBody MandateClubMasterRequestDto mandateClubMasterRequestDto) {
 		clubFacadeService.mandateClubUser(user.getUserId(), clubId,
 				mandateClubMasterRequestDto.getClubMaster());
+	}
+
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	@PostMapping("/{clubId}/notice")
+	public void updateClubNotice(@UserSession UserSessionDto user, @PathVariable Long clubId,
+			@Valid @RequestBody ClubNoticeUpdateDto clubNoticeUpdateDto) {
+		clubFacadeService.updateClubNotice(user.getUserId(), clubId,
+				clubNoticeUpdateDto.getNotice());
 	}
 }
