@@ -1,128 +1,31 @@
-import React, { MouseEvent, useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { MouseEvent } from "react";
 import styled from "styled-components";
-import { isCurrentSectionRenderState, userState } from "@/recoil/atoms";
 import closeIcon from "@/assets/images/close-circle.svg";
 import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
-import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
+import { ClubUserResponseDto } from "@/types/dto/club.dto";
 import { TClubModalState } from "./ClubPageModals";
 
 const ClubMembers: React.FC<{
-  master: String;
-  clubId: number;
-  clubInfo: ClubInfoResponseDto;
-  isModalOpen: boolean;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  clubUserCount: number;
+  imMaster: boolean;
   openModal: (modalName: TClubModalState) => void;
-  setTargetMember: React.Dispatch<React.SetStateAction<string>>;
-  setTargetId: React.Dispatch<React.SetStateAction<number>>;
-  setMandateMember: React.Dispatch<React.SetStateAction<string>>;
-  getClubInfo: (clubId: number) => Promise<void>;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  page: number;
-}> = (props) => {
-  const [myInfo, setMyInfo] = useRecoilState(userState);
-  const [me, setMe] = useState<ClubUserResponseDto>({
-    userId: 0,
-    userName: "",
-  });
-  const [master, setMaster] = useState<ClubUserResponseDto>({
-    userId: 0,
-    userName: "",
-  });
-  const [sortedMems, setSortedMems] = useState<ClubUserResponseDto[] | null>(
-    null
-  );
-  const [tmp, setTmp] = useState<ClubUserResponseDto[]>([]);
-  // memsbers 중 나랑 동아리장 뺀 배열
-  const [members, setMembers] = useState<ClubUserResponseDto[]>([
-    {
-      userId: 0,
-      userName: "",
-    },
-  ]);
-  const setIsCurrentSectionRender = useSetRecoilState(
-    isCurrentSectionRenderState
-  );
-  // TODO : setIsCurrentSectionRender props로 넘겨주기
-  const [moreBtn, setMoreBtn] = useState<boolean>(true);
-
-  const clickMoreButton = () => {
-    props.setPage((prev) => prev + 1);
-  };
-
-  useEffect(() => {
-    if (props.clubId) {
-      props.getClubInfo(props.clubId);
-      setIsCurrentSectionRender(true);
-    }
-  }, [props.page]);
-
-  useEffect(() => {
-    if (props.clubInfo) setMembers(props.clubInfo.clubUsers);
-  }, [props.clubInfo]);
-
-  const SortMemAry = () => {
-    if (props.master) {
-      let tmpAry = members.filter((mem) => {
-        if (mem.userName !== myInfo.name && mem.userName !== props.master) {
-          return true;
-        } else {
-          if (mem.userName === myInfo.name) setMe(mem);
-          if (mem.userName === props.master) setMaster(mem);
-          return false;
-        }
-      });
-      setTmp(tmpAry);
-    }
-  };
-
-  const deleteClubMemberModal = (
+  sortedMems: ClubUserResponseDto[];
+  me: ClubUserResponseDto;
+  master: ClubUserResponseDto;
+  moreBtn: boolean;
+  clickMoreButton: () => void;
+  mandateClubMasterModal: (
+    e: MouseEvent<HTMLDivElement>,
+    mandateMaster: string
+  ) => void;
+  deleteClubMemberModal: (
     e: MouseEvent<HTMLDivElement>,
     targetMember: string,
     userId: number
-  ) => {
-    props.setTargetMember(targetMember);
-    props.setTargetId(userId);
-    props.openModal("deleteModal");
-  };
-
-  const mandateClubMasterModal = (
-    e: MouseEvent<HTMLDivElement>,
-    mandateMaster: string
-  ) => {
-    e.preventDefault();
-    if (mandateMaster !== props.master) {
-      props.setMandateMember(mandateMaster);
-      props.openModal("mandateModal");
-    }
-  };
-
-  useEffect(() => {
-    SortMemAry();
-  }, [members, master.userName]);
-  // 나 -> 동아리장 -> 맨 위 배열 함침
-
-  useEffect(() => {
-    const masterAry = [master];
-    const meAry = [me];
-    const concatteAry =
-      master.userName === me.userName ? meAry : meAry.concat(masterAry);
-    setSortedMems([...concatteAry, ...tmp]);
-  }, [tmp, master]);
-
-  useEffect(() => {
-    if (props.clubInfo.clubUserCount) {
-      if (sortedMems!.length >= props.clubInfo.clubUserCount) {
-        setMoreBtn(false);
-        setIsCurrentSectionRender(true);
-      } else setMoreBtn(true);
-    }
-  }, [props.clubInfo.clubUserCount, sortedMems]);
-
-  // TODO : props. 떼기
+  ) => void;
+}> = (props) => {
   return (
     <ClubMembersContainerStyled>
       {/* TitleBar */}
@@ -131,36 +34,42 @@ const ClubMembers: React.FC<{
         <div>
           {/* 아이콘 & 동아리 멤버 수 */}
           <img src={shareIcon} />
-          <p id="membersLength">{props.clubInfo.clubUserCount}</p>
+          <p id="membersLength">{props.clubUserCount}</p>
         </div>
       </TitleBarStyled>
       <div id="memCard">
         <MemSectionStyled>
-          {myInfo.name === master.userName ? (
+          {props.imMaster ? (
             <AddMemCardStyled onClick={() => props.openModal("addModal")}>
               <p>+</p>
             </AddMemCardStyled>
           ) : null}
-          {sortedMems?.map((mem, idx) => {
+          {props.sortedMems?.map((mem, idx) => {
             return (
               <MemCardStyled
                 onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
-                  me.userName === props.master &&
-                    mandateClubMasterModal(e, `${mem.userName}`);
+                  props.imMaster &&
+                    props.mandateClubMasterModal(e, `${mem.userName}`);
                 }}
                 key={idx}
-                bgColor={mem.userName === myInfo.name ? "var(--sub-color)" : ""}
+                bgColor={
+                  mem.userName === props.me.userName ? "var(--sub-color)" : ""
+                }
               >
                 <div id="top">
                   <img id="profileImg" src={maru}></img>
-                  {mem.userName === master.userName ? (
+                  {mem.userName === props.master.userName ? (
                     <img id="crown" src={crown} />
-                  ) : mem.userName === myInfo.name ? null : (
+                  ) : mem.userName === props.me.userName ? null : (
                     <img
                       id="closeIcon"
                       src={closeIcon}
                       onClick={(e: MouseEvent<HTMLDivElement>) =>
-                        deleteClubMemberModal(e, `${mem.userName}`, mem.userId)
+                        props.deleteClubMemberModal(
+                          e,
+                          `${mem.userName}`,
+                          mem.userId
+                        )
                       }
                     />
                   )}
@@ -170,9 +79,9 @@ const ClubMembers: React.FC<{
             );
           })}
         </MemSectionStyled>
-        {moreBtn ? (
+        {props.moreBtn ? (
           <ButtonContainerStyled>
-            <MoreButtonStyled onClick={clickMoreButton}>
+            <MoreButtonStyled onClick={props.clickMoreButton}>
               더보기
             </MoreButtonStyled>
           </ButtonContainerStyled>
