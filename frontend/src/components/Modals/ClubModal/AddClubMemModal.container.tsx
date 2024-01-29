@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import { axiosAddClubMember } from "@/api/axios/axios.custom";
@@ -19,6 +19,7 @@ const AddClubMemModalContainer: React.FC<{
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const newMemo = useRef<HTMLInputElement>(null);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
@@ -42,12 +43,20 @@ const AddClubMemModalContainer: React.FC<{
     }
   };
 
+  const handleClickSave = () => {
+    tryAddClubMemRequest(newMemo.current!.value);
+  };
+
   return (
     <ModalPortal>
-      <AddClubMemModal
-        closeModal={props.closeModal}
-        onAddMem={tryAddClubMemRequest}
-      />
+      {!showResponseModal ? (
+        <AddClubMemModal
+          closeModal={props.closeModal}
+          handleClickSave={handleClickSave}
+          newMemo={newMemo}
+          isLoading={isLoading}
+        />
+      ) : null}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal

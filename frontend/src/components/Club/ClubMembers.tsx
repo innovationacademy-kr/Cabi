@@ -61,7 +61,7 @@ const ClubMembers: React.FC<{
                   {mem.userName === props.master.userName ? (
                     <img id="crown" src={crown} />
                   ) : mem.userName === props.me.userName ? null : (
-                    <img
+                    <CloseIconStyled
                       id="closeIcon"
                       src={closeIcon}
                       onClick={(e: MouseEvent<HTMLDivElement>) =>
@@ -151,24 +151,27 @@ const MemCardStyled = styled.div<{ bgColor: string }>`
     width: 3rem;
     height: 3rem;
     margin-bottom: 54px;
-    margin-right: 42px;
   }
 
   & #crown {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  & #closeIcon {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
 
   & #top {
-    /* background-color: blue; */
     width: 100%;
     display: flex;
+    justify-content: space-between;
     border: 1rem;
+  }
+`;
+
+const CloseIconStyled = styled.img`
+  width: 12px;
+  height: 12px;
+
+  &:hover {
+    cursor: pointer;
   }
 `;
 
