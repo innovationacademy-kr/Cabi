@@ -9,10 +9,6 @@ import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import { TClubModalState } from "./ClubPageModals";
 
-// TODO : 더보기 버튼 멤버 다 불러왔으면 안보이게
-// 현재 멤버수 < clubInfo에 있는 clubUserCount 보이게
-// 아님 안보이게
-
 const ClubMembers: React.FC<{
   master: String;
   clubId: number;
@@ -51,7 +47,7 @@ const ClubMembers: React.FC<{
     isCurrentSectionRenderState
   );
   // TODO : setIsCurrentSectionRender props로 넘겨주기
-  // const [moreBtn, setMoreBtn] = useState<boolean>(true);
+  const [moreBtn, setMoreBtn] = useState<boolean>(true);
 
   const clickMoreButton = () => {
     props.setPage((prev) => prev + 1);
@@ -117,27 +113,37 @@ const ClubMembers: React.FC<{
     setSortedMems([...concatteAry, ...tmp]);
   }, [tmp, master]);
 
+  useEffect(() => {
+    if (props.clubInfo.clubUserCount) {
+      if (sortedMems!.length >= props.clubInfo.clubUserCount) {
+        setMoreBtn(false);
+        setIsCurrentSectionRender(true);
+      } else setMoreBtn(true);
+    }
+  }, [props.clubInfo.clubUserCount, sortedMems]);
+
+  // TODO : props. 떼기
   return (
-    <Container>
+    <ClubMembersContainerStyled>
       {/* TitleBar */}
-      <TitleBar>
+      <TitleBarStyled>
         <p>동아리 멤버</p>
         <div>
           {/* 아이콘 & 동아리 멤버 수 */}
           <img src={shareIcon} />
           <p id="membersLength">{props.clubInfo.clubUserCount}</p>
         </div>
-      </TitleBar>
+      </TitleBarStyled>
       <div id="memCard">
-        <MemSection>
+        <MemSectionStyled>
           {myInfo.name === master.userName ? (
-            <AddMemCard onClick={() => props.openModal("addModal")}>
+            <AddMemCardStyled onClick={() => props.openModal("addModal")}>
               <p>+</p>
-            </AddMemCard>
+            </AddMemCardStyled>
           ) : null}
           {sortedMems?.map((mem, idx) => {
             return (
-              <MemCard
+              <MemCardStyled
                 onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
                   me.userName === props.master &&
                     mandateClubMasterModal(e, `${mem.userName}`);
@@ -160,29 +166,29 @@ const ClubMembers: React.FC<{
                   )}
                 </div>
                 <div>{mem.userName}</div>
-              </MemCard>
+              </MemCardStyled>
             );
           })}
-        </MemSection>
-        {/* {moreBtn ? ( */}
-        <ButtonContainerStyled>
-          <MoreButtonStyled onClick={clickMoreButton}>더보기</MoreButtonStyled>
-        </ButtonContainerStyled>
-        {/* // ) : null} */}
+        </MemSectionStyled>
+        {moreBtn ? (
+          <ButtonContainerStyled>
+            <MoreButtonStyled onClick={clickMoreButton}>
+              더보기
+            </MoreButtonStyled>
+          </ButtonContainerStyled>
+        ) : null}
       </div>
-    </Container>
+    </ClubMembersContainerStyled>
   );
 };
 
-// wrapperstyled로 해야하는지? ㄴㄴ. 맨 앞에 잘 설명하는 키워드 붙이면 됨
-// TODO : styled component는 뒤에 styled 붙이기
-const Container = styled.div`
+const ClubMembersContainerStyled = styled.div`
   margin-top: 75px;
   width: 100%;
   /* margin-bottom: 180px; */
 `;
 
-const TitleBar = styled.div`
+const TitleBarStyled = styled.div`
   height: 3rem;
   display: flex;
   justify-content: space-between;
@@ -209,7 +215,7 @@ const TitleBar = styled.div`
   }
 `;
 
-const AddMemCard = styled.div`
+const AddMemCardStyled = styled.div`
   width: 145px;
   height: 170px;
   border-radius: 1rem;
@@ -224,7 +230,7 @@ const AddMemCard = styled.div`
   }
 `;
 
-const MemCard = styled.div<{ bgColor: string }>`
+const MemCardStyled = styled.div<{ bgColor: string }>`
   width: 145px;
   height: 170px;
   background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
@@ -257,7 +263,7 @@ const MemCard = styled.div<{ bgColor: string }>`
   }
 `;
 
-const MemSection = styled.div`
+const MemSectionStyled = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 159px);
   grid-template-rows: repeat(auto-fill, 184px);
