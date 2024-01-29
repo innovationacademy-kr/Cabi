@@ -1,50 +1,66 @@
+import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 
 interface Itext {
-  id?: string;
   title: string;
   subTitle: string;
   content: string;
   subContent?: string;
-  buttonText: string;
-  buttonHandler: React.MouseEventHandler<HTMLButtonElement>;
+  buttonText?: string;
+  buttonHandler?: React.MouseEventHandler<HTMLButtonElement>;
+  type: string;
 }
 
-const ErrorTemplate = (props: Itext) => {
+const AnnounceTemplate = (props: Itext) => {
   const {
-    id,
     title,
     subTitle,
     content,
     subContent,
     buttonText,
     buttonHandler,
+    type,
   } = props;
+  const [backgroundColor, setBackgroundColor] = useState<string>("");
+
+  useEffect(() => {
+    if (type === "LOADING") {
+      setBackgroundColor("var(--sub-color)");
+    } else if (type === "ERROR") {
+      setBackgroundColor("var(--main-color)");
+    }
+  }, []);
 
   return (
-    <ErrorTemplateStyled id={id}>
+    <AnnounceTemplateStyled backgroundColor={backgroundColor}>
       <TitleStyled>{title}</TitleStyled>
       <CabiImgStyled>
-        <img src="/src/assets/images/sadCcabiWhite.png" alt="sad_cabi" />
+        {type === "ERROR" ? (
+          <img src="/src/assets/images/sadCcabiWhite.png"></img>
+        ) : (
+          <img src="/src/assets/images/happyCcabiWhite.png"></img>
+        )}
       </CabiImgStyled>
       <SubTitleStyled>{subTitle}</SubTitleStyled>
       <ContentStyled>
         {content}
         {!!subContent && <span>{subContent}</span>}
       </ContentStyled>
-      <ButtonStyled onClick={buttonHandler}>{buttonText}</ButtonStyled>
-    </ErrorTemplateStyled>
+      {buttonHandler && (
+        <ButtonStyled onClick={buttonHandler}>{buttonText}</ButtonStyled>
+      )}
+    </AnnounceTemplateStyled>
   );
 };
 
-const ErrorTemplateStyled = styled.div`
+const AnnounceTemplateStyled = styled.div<{ backgroundColor: string }>`
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: var(--main-color);
+  background-color: ${(props) => props.backgroundColor};
   color: var(--white);
 `;
 
@@ -109,4 +125,4 @@ const ButtonStyled = styled.button`
   box-shadow: 10px 10px 40px 0px rgba(0, 0, 0, 0.25);
 `;
 
-export default ErrorTemplate;
+export default AnnounceTemplate;

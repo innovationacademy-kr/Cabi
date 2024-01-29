@@ -38,9 +38,6 @@ public class AlarmProperties {
 	private String overdueSlackTemplate;
 
 	/*===================== soonOverdue =========================*/
-	@Value("${cabinet.alarm.mail.soonOverdue.term}")
-	private Long soonOverdueTerm;
-
 	@Value("${cabinet.alarm.mail.soonOverdue.subject}")
 	private String soonOverdueSubject;
 
@@ -94,4 +91,17 @@ public class AlarmProperties {
 
 	@Value("${cabinet.alarm.slack.announcement.template}")
 	private String announcementSlackTemplate;
+
+	/*======================== term =============================*/
+	@Value("${cabinet.alarm.overdue-term.week-before}")
+	private Long overdueTermWeekBefore;
+
+	@Value("${cabinet.alarm.overdue-term.three-days-before}")
+	private Long overdueTermThreeDaysBefore;
+
+	@Value("${cabinet.alarm.overdue-term.soon-overdue}")
+	private Long overdueTermSoonOverdue;
+
+	@Value("${cabinet.alarm.overdue-term.overdue}")
+	private Long overdueTermOverdue;
 }

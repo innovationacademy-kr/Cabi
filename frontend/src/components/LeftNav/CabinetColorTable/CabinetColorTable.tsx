@@ -54,7 +54,8 @@ const ColorTableItemStyled = styled.div<{ color: string }>`
     ${({ color }) =>
       color === "var(--pending)" &&
       css`
-        border: 3px double var(--white);
+        border: 1px double var(--main-color);
+        box-shadow: inset 0px 0px 0px 1px var(--white);
       `}
   }
 `;

@@ -23,9 +23,9 @@ const FloorContainer = ({
 
   return (
     <FloorContainerStyled>
-      <FloorTitleStyled isToggled={isToggled}>
+      <FloorTitleStyled isToggled={isToggled} onClick={toggle}>
         <h2>{floorNumber}층</h2>
-        <button onClick={toggle}></button>
+        <button></button>
       </FloorTitleStyled>
       {pendingCabinetsList.length !== 0 ? (
         <FlootCabinetsContainerStyled isToggled={isToggled}>
@@ -49,7 +49,7 @@ const FloorContainer = ({
 
 const FloorContainerStyled = styled.div`
   width: 70%;
-  margin-top: 50px;
+  margin-top: 30px;
 `;
 
 const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
@@ -60,9 +60,10 @@ const FloorTitleStyled = styled.div<{ isToggled: boolean }>`
   padding-left: 5px;
   padding-right: 5px;
   border-bottom: 1.5px solid #d9d9d9;
+  cursor: pointer;
   button {
     all: initial;
-    cursor: pointer;
+    cursor: inherit;
     z-index: 2;
     height: 30px;
     width: 20px;

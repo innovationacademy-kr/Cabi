@@ -38,21 +38,30 @@ public class AuthFacadeService {
 
 	private final TokenProvider tokenProvider;
 	private final CookieManager cookieManager;
+	private static final String REDIRECT_COOKIE_NAME = "redirect";
 
 	/**
 	 * 유저 로그인 페이지로 리다이렉트합니다.
 	 *
-	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
+	 * @param req 요청 시의 서블렛 {@link HttpServletRequest}
+	 * @param res 응답 시의 서블렛 {@link HttpServletResponse}
 	 * @throws IOException 입출력 예외
 	 */
-	public void requestUserLogin(HttpServletResponse res) throws IOException {
+	public void requestUserLogin(HttpServletRequest req, HttpServletResponse res)
+			throws IOException {
+		String redirect = req.getParameter(REDIRECT_COOKIE_NAME);
+		if (redirect != null) {
+			cookieManager.setCookieToClient(
+					res, cookieManager.cookieOf(REDIRECT_COOKIE_NAME, redirect),
+					"/", req.getServerName());
+		}
 		userOauthService.requestLogin(res);
 	}
 
 	/**
 	 * 관리자 로그인 페이지로 리다이렉트합니다.
 	 *
-	 * @param res 요청 시의 서블렛 {@link HttpServletResponse}
+	 * @param res 응답 시의 서블렛 {@link HttpServletResponse}
 	 * @throws IOException 입출력 예외
 	 */
 	public void requestAdminLogin(HttpServletResponse res) throws IOException {
@@ -69,13 +78,20 @@ public class AuthFacadeService {
 	 * @throws ExecutionException   비동기 처리시 스레드에서 발생한 오류 처리 예외
 	 * @throws InterruptedException 비동기 처리시 스레드 종료를 위한 예외
 	 */
-	public void handleUserLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
+	public void handleUserLogin(HttpServletRequest req, HttpServletResponse res, String code)
+			throws IOException, ExecutionException, InterruptedException {
 		FtProfile profile = userOauthService.getProfileByCode(code);
 		User user = userQueryService.findUser(profile.getIntraName())
 				.orElseGet(() -> userCommandService.createUserByFtProfile(profile));
 		String token = tokenProvider.createUserToken(user, LocalDateTime.now());
 		Cookie cookie = cookieManager.cookieOf(TokenProvider.USER_TOKEN_NAME, token);
 		cookieManager.setCookieToClient(res, cookie, "/", req.getServerName());
+		if (cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME) != null) {
+			String redirect = cookieManager.getCookieValue(req, REDIRECT_COOKIE_NAME);
+			cookieManager.deleteCookie(res, REDIRECT_COOKIE_NAME);
+			res.sendRedirect(redirect);
+			return;
+		}
 		res.sendRedirect(authPolicyService.getMainHomeUrl());
 	}
 
@@ -89,7 +105,8 @@ public class AuthFacadeService {
 	 * @throws ExecutionException   비동기 처리시 스레드에서 발생한 오류 처리 예외
 	 * @throws InterruptedException 비동기 처리시 스레드 종료를 위한 예외
 	 */
-	public void handleAdminLogin(HttpServletRequest req, HttpServletResponse res, String code) throws IOException, ExecutionException, InterruptedException {
+	public void handleAdminLogin(HttpServletRequest req, HttpServletResponse res, String code)
+			throws IOException, ExecutionException, InterruptedException {
 		GoogleProfile profile = adminOauthService.getProfileByCode(code);
 		Admin admin = adminQueryService.findByEmail(profile.getEmail())
 				.orElseGet(() -> adminCommandService.createAdminByEmail(profile.getEmail()));
@@ -110,10 +127,12 @@ public class AuthFacadeService {
 	 * @param now            현재 시각
 	 */
 	public void masterLogin(MasterLoginDto masterLoginDto, HttpServletRequest req,
-	                        HttpServletResponse res, LocalDateTime now) {
+			HttpServletResponse res, LocalDateTime now) {
 		// TODO : 서비스로 빼기
-		if (!authPolicyService.isMatchWithMasterAuthInfo(masterLoginDto.getId(), masterLoginDto.getPassword()))
+		if (!authPolicyService.isMatchWithMasterAuthInfo(masterLoginDto.getId(),
+				masterLoginDto.getPassword())) {
 			throw ExceptionStatus.UNAUTHORIZED_ADMIN.asServiceException();
+		}
 		Admin master = adminQueryService.findByEmail(authPolicyService.getMasterEmail())
 				.orElseThrow(ExceptionStatus.UNAUTHORIZED_ADMIN::asServiceException);
 		String masterToken = tokenProvider.createAdminToken(master, now);

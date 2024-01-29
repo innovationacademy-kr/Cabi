@@ -10,6 +10,8 @@ import PendingPage from "@/pages/PendingPage/PendingPage";
 import ProfilePage from "@/pages/ProfilePage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
+import PostLogin from "./pages/PostLogin";
+import ProfilePage from "./pages/ProfilePage";
 
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const LoginFailurePage = lazy(() => import("@/pages/LoginFailurePage"));
@@ -27,6 +29,7 @@ function App(): React.ReactElement {
     <BrowserRouter>
       <Suspense fallback={<LoadingAnimation />}>
         <Routes>
+          <Route path="/post-login" element={<PostLogin />} />
           <Route path="/" element={<Layout />}>
             <Route path="login" element={<LoginPage />} />
             <Route path="home" element={<HomePage />} />

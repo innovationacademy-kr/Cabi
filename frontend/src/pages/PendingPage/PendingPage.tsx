@@ -123,13 +123,7 @@ const PendingPage = () => {
 
   return (
     <WrapperStyled>
-      <UtilsSectionStyled>
-        <MultiToggleSwitch
-          initialState={toggleType}
-          setState={setToggleType}
-          toggleList={toggleList}
-        />
-      </UtilsSectionStyled>
+      <UtilsSectionStyled></UtilsSectionStyled>
       <HeaderStyled>사용 가능 사물함</HeaderStyled>
       <SubHeaderStyled>
         <h2>
@@ -139,11 +133,22 @@ const PendingPage = () => {
           {isRefreshing ? (
             <LoadingAnimation />
           ) : (
-            <img src="/src/assets/images/refresh.svg" alt="새로고침" />
+            <>
+              <img src="/src/assets/images/rotateRight.svg" alt="새로고침" />
+              <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} />
+            </>
           )}
         </RefreshButtonStyled>
+        {/*  */}
       </SubHeaderStyled>
-      <PendingCountdown observeOpenTime={() => setIsOpenTime(true)} />
+      <MultiToggleSwitchStyled>
+        <MultiToggleSwitch
+          initialState={toggleType}
+          setState={setToggleType}
+          toggleList={toggleList}
+        />
+      </MultiToggleSwitchStyled>
+
       {isLoaded && cabinets ? (
         Object.entries(cabinets).map(([key, value]) => (
           <FloorContainer
@@ -198,14 +203,18 @@ const SubHeaderStyled = styled.div`
 `;
 
 const RefreshButtonStyled = styled.button`
-  margin-top: 40px;
-  background-color: initial;
-  width: 35px;
-  height: 35px;
+  margin-top: 60px;
+  width: 280px;
+  height: 47px;
+  background-color: var(--main-color);
   padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   img {
-    width: 35px;
-    height: 35px;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
   }
   &:hover {
     opacity: 0.7;
@@ -214,6 +223,11 @@ const RefreshButtonStyled = styled.button`
     transform: scale(0.8);
   }
   transition: all 0.3s ease;
+`;
+
+const MultiToggleSwitchStyled = styled.div`
+  width: 70%;
+  margin-top: 58px;
 `;
 
 const FooterStyled = styled.footer`

@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.redis;
+package org.ftclub.cabinet.event;
 
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.lent.service.LentFacadeService;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Log4j2
-public class ExpirationListener extends KeyExpirationEventMessageListener {
+public class RedisExpirationEventListener extends KeyExpirationEventMessageListener {
 
 	private final LentFacadeService lentFacadeService;
 
@@ -22,7 +22,7 @@ public class ExpirationListener extends KeyExpirationEventMessageListener {
 	 * @param listenerContainer must not be {@literal null}.
 	 * @param lentFacadeService must not be {@literal null}.
 	 */
-	public ExpirationListener(
+	public RedisExpirationEventListener(
 			@Qualifier("redisMessageListenerContainer")
 			RedisMessageListenerContainer listenerContainer,
 			LentFacadeService lentFacadeService) {
