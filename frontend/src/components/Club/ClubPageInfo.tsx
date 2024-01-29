@@ -20,6 +20,7 @@ export function ClubPageInfo() {
     ],
     totalLength: 0, // totalLength : (지금은) 동아리 총 개수. 추후 바뀔수 있음
   });
+
   const [clubInfo, setClubInfo] = useState<ClubInfoResponseDto>({
     clubName: "",
     clubMaster: "",
@@ -41,7 +42,6 @@ export function ClubPageInfo() {
     { name: "", key: "" },
   ]);
   const [page, setPage] = useState<number>(0);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setToggleType(clubList?.result[0].clubId.toString());
@@ -63,8 +63,14 @@ export function ClubPageInfo() {
   const getClubInfo = async (clubId: number) => {
     try {
       const result = await axiosGetClubInfo(clubId, page, 2);
-      // console.log(result.data);
-      // TODO : page > 0 이면 
+      // if (page > 0) {
+      //   setClubInfo((prev) => {
+      //     return {
+      //       ...prev,
+      //       clubUsers: [...prev.clubUsers, ...result.data.clubUsers],
+      //     };
+      //   });
+      // } else 
       setClubInfo(result.data);
     } catch (error) {
       throw error;

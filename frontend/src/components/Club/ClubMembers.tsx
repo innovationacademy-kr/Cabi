@@ -10,6 +10,8 @@ import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import { TClubModalState } from "./ClubPageModals";
 
 // TODO : 더보기 버튼 멤버 다 불러왔으면 안보이게
+// 현재 멤버수 < clubInfo에 있는 clubUserCount 보이게
+// 아님 안보이게
 
 const ClubMembers: React.FC<{
   master: String;
@@ -49,16 +51,10 @@ const ClubMembers: React.FC<{
     isCurrentSectionRenderState
   );
   // TODO : setIsCurrentSectionRender props로 넘겨주기
-
-  // const getMandateMaster = (mandateMaster: string) => {
-  //   setMandateMember(mandateMaster);
-  // };
+  // const [moreBtn, setMoreBtn] = useState<boolean>(true);
 
   const clickMoreButton = () => {
-    // TODO : 더보기 버튼 누를 시 다음 Page 불러오기
     props.setPage((prev) => prev + 1);
-    // props.getClubInfo(props.clubId);
-    // setIsCurrentSectionRender(true);
   };
 
   useEffect(() => {
@@ -129,7 +125,7 @@ const ClubMembers: React.FC<{
         <div>
           {/* 아이콘 & 동아리 멤버 수 */}
           <img src={shareIcon} />
-          <p id="membersLength">{members.length}</p>
+          <p id="membersLength">{props.clubInfo.clubUserCount}</p>
         </div>
       </TitleBar>
       <div id="memCard">
@@ -168,9 +164,11 @@ const ClubMembers: React.FC<{
             );
           })}
         </MemSection>
+        {/* {moreBtn ? ( */}
         <ButtonContainerStyled>
           <MoreButtonStyled onClick={clickMoreButton}>더보기</MoreButtonStyled>
         </ButtonContainerStyled>
+        {/* // ) : null} */}
       </div>
     </Container>
   );
