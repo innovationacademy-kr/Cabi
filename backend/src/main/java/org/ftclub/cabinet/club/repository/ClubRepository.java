@@ -18,8 +18,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 	 * @param pageable 페이징 정보
 	 * @return 모든 동아리 목록
 	 */
-	@Query(value = "SELECT c FROM Club c WHERE c.deletedAt IS NULL",
-			countQuery = "SELECT count(c) FROM Club c WHERE c.deletedAt IS NULL")
+	@Query("SELECT c FROM Club c WHERE c.deletedAt IS NULL")
 	Page<Club> findPaginationByDeletedAtIsNull(Pageable pageable);
 
 	/**
