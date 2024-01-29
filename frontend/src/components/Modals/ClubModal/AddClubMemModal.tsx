@@ -1,4 +1,3 @@
-import { useRef, useState } from "react";
 import styled from "styled-components";
 import Button from "@/components/Common/Button";
 
@@ -6,16 +5,10 @@ const MAX_INPUT_LENGTH = 27;
 
 const AddClubMemModal: React.FC<{
   closeModal: React.MouseEventHandler;
-  onAddMem: (newMemo: string) => void;
+  handleClickSave: () => void;
+  newMemo: React.RefObject<HTMLInputElement>;
+  isLoading: boolean;
 }> = (props) => {
-  const newMemo = useRef<HTMLInputElement>(null);
-
-  const handleClickSave = () => {
-    //사물함 제목, 사물함 비밀메모 update api 호출
-    document.getElementById("input")?.focus();
-    props.onAddMem(newMemo.current!.value);
-  };
-
   return (
     <>
       <BackgroundStyled onClick={props.closeModal} />
@@ -28,21 +21,27 @@ const AddClubMemModal: React.FC<{
               <ContentItemInputStyled
                 onKeyUp={(e: any) => {
                   if (e.key === "Enter") {
-                    handleClickSave();
+                    props.handleClickSave();
                   }
                 }}
-                ref={newMemo}
+                ref={props.newMemo}
                 maxLength={MAX_INPUT_LENGTH}
                 id="input"
+                autoFocus
               />
             </ContentItemWrapperStyled>
           </ContentItemSectionStyled>
         </ContentSectionStyled>
         <ButtonWrapperStyled>
-          <Button onClick={handleClickSave} text="저장" theme="fill" />
+          <Button
+            onClick={props.handleClickSave}
+            text="저장"
+            theme="fill"
+            disabled={props.isLoading}
+          />
           <Button
             onClick={(e) => {
-              newMemo.current!.value = "";
+              props.newMemo.current!.value = "";
               props.closeModal(e);
             }}
             text="취소"

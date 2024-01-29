@@ -8,7 +8,7 @@ import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.contai
 import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
 import ClubCabinetInfo from "./ClubCabinetInfo";
-import ClubMembers from "./ClubMembers";
+import ClubMembersContainer from "./ClubMembers.container";
 
 export type TClubModalState =
   | "addModal"
@@ -118,7 +118,7 @@ const ClubPageModals: React.FC<{
       <ClubCabinetStyled>
         <ClubCabinetInfo clubInfo={props.clubInfo} />
       </ClubCabinetStyled>
-      <ClubMembers
+      <ClubMembersContainer
         master={props.clubInfo.clubMaster}
         clubId={clubId}
         clubInfo={props.clubInfo}

@@ -37,6 +37,7 @@ const MultiToggleSwitch2 = <T,>({
 
     if (target === e.currentTarget) return;
 
+    setPage(0);
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
@@ -52,7 +53,7 @@ const MultiToggleSwitch2 = <T,>({
 
   return (
     <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
-      {toggleList.map((item, idx) => (
+      {toggleList.map((item) => (
         <button key={item.key} className={item.key}>
           {item.name}
         </button>
