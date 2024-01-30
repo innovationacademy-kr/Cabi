@@ -70,7 +70,7 @@ export function ClubPageInfo() {
       //       clubUsers: [...prev.clubUsers, ...result.data.clubUsers],
       //     };
       //   });
-      // } else 
+      // } else
       setClubInfo(result.data);
     } catch (error) {
       throw error;

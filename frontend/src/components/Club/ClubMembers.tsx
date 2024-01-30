@@ -137,6 +137,10 @@ const AddMemCardStyled = styled.div`
   & > p {
     font-size: 26px;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const MemCardStyled = styled.div<{ bgColor: string }>`
