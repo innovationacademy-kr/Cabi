@@ -59,7 +59,6 @@ const ClubPageModals: React.FC<{
       mandateModal: false,
       passwordCheckModal: false,
     });
-    // setIsModalOpen(false);
   };
 
   useEffect(() => {
