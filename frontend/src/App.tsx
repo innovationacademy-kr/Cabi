@@ -33,7 +33,7 @@ function App(): React.ReactElement {
             <Route path="login" element={<LoginPage />} />
             <Route path="home" element={<HomePage />} />
             <Route path="main" element={<MainPage />} />
-            <Route path="pending" element={<PendingPage />} />
+            <Route path="available" element={<PendingPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="profile/log" element={<LogPage />} />
             <Route path="profile/clubs" element={<ClubPage />} />
@@ -45,7 +45,7 @@ function App(): React.ReactElement {
             <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="club" element={<AdminClubPage />} />
-            <Route path="pending" element={<PendingPage />} />
+            <Route path="available" element={<PendingPage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

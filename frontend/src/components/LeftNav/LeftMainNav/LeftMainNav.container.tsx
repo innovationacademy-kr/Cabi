@@ -125,7 +125,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
   };
 
   const onClickPendingButton = () => {
-    navigator("pending");
+    navigator("available");
     closeAll();
   };
 

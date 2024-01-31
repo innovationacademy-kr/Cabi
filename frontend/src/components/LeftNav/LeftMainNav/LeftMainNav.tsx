@@ -64,7 +64,7 @@ const LeftMainNav = ({
             ))}
           <TopBtnStyled
             className={
-              pathname.includes("pending")
+              pathname.includes("available")
                 ? "leftNavButtonActive cabiButton"
                 : "cabiButton"
             }
