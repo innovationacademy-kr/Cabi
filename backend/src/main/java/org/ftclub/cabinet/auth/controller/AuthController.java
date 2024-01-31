@@ -28,8 +28,8 @@ public class AuthController {
 	 * @throws IOException 입출력 예외
 	 */
 	@GetMapping("/login")
-	public void login(HttpServletResponse response) throws IOException {
-		authFacadeService.requestUserLogin(response);
+	public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		authFacadeService.requestUserLogin(request, response);
 	}
 
 	/**
