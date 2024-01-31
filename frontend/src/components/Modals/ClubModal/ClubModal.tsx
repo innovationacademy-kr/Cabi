@@ -36,6 +36,7 @@ const ClubModal = ({
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [newClubName, setNewClubName] = useState("");
+  const [newClubMaster, setNewClubMaster] = useState<string>("");
 
   const modalData =
     modalPropsMap[
@@ -45,25 +46,39 @@ const ClubModal = ({
     ];
 
   useEffect(() => {
-    if (type === "EDIT") setNewClubName(selectedClubInfo?.name || "");
+    if (type === "EDIT") {
+      setNewClubName(selectedClubInfo?.clubName || "");
+      setNewClubMaster(selectedClubInfo?.clubMaster || "");
+    }
   }, [selectedClubInfo, type]);
 
   const handleClickSave = async () => {
+    if (newClubName === "" || newClubMaster === "") return;
     if (type === "CREATE") {
       document.getElementById("unselect-input")?.focus();
-      if (newClubName) await createClubRequest(newClubName);
+      if (newClubName) await createClubRequest(newClubName, newClubMaster);
     } else if (type === "EDIT" && selectedClubInfo) {
-      if (selectedClubInfo.name !== newClubName) {
-        const updatedClubInfo = { ...selectedClubInfo, name: newClubName };
+      if (
+        selectedClubInfo.clubName !== newClubName ||
+        selectedClubInfo.clubMaster !== newClubMaster
+      ) {
+        const updatedClubInfo = {
+          ...selectedClubInfo,
+          clubName: newClubName,
+          clubMaster: newClubMaster,
+        };
         await editClubRequest(updatedClubInfo);
       }
     } else if (type === "DELETE" && selectedClubInfo !== null)
-      await deleteClubRequest(selectedClubInfo.userId);
+      await deleteClubRequest(selectedClubInfo.clubId);
   };
 
-  const createClubRequest = async (clubName: string | null) => {
+  const createClubRequest = async (
+    clubName: string | null,
+    clubMaster: string | null
+  ) => {
     try {
-      await axiosCreateClubUser(clubName);
+      await axiosCreateClubUser(clubName, clubMaster);
       setModalTitle("추가되었습니다");
       onReload();
     } catch (error: any) {
@@ -74,7 +89,7 @@ const ClubModal = ({
     }
   };
 
-  const editClubRequest = async (clubInfo: ClubUserDto | null) => {
+  const editClubRequest = async (clubInfo: ClubUserDto) => {
     try {
       await axiosEditClubUser(clubInfo);
       setModalTitle("수정되었습니다");
@@ -110,38 +125,68 @@ const ClubModal = ({
           <ContentSectionStyled>
             <ContentItemSectionStyled>
               {type === "CREATE" && (
-                <ContentItemWrapperStyled isVisible={true}>
-                  <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
-                  <ContentItemInputStyled
-                    onKeyUp={(e: any) => {
-                      if (e.key === "Enter") {
-                        handleClickSave();
-                      }
-                    }}
-                    value={newClubName}
-                    onChange={(e) => setNewClubName(e.target.value)}
-                    maxLength={MAX_INPUT_LENGTH}
-                  />
-                </ContentItemWrapperStyled>
+                <>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
+                    <ContentItemInputStyled
+                      onKeyUp={(e: any) => {
+                        if (e.key === "Enter") {
+                          handleClickSave();
+                        }
+                      }}
+                      value={newClubName}
+                      onChange={(e) => setNewClubName(e.target.value)}
+                      maxLength={MAX_INPUT_LENGTH}
+                    />
+                  </ContentItemWrapperStyled>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>동아리장</ContentItemTitleStyled>
+                    <ContentItemInputStyled
+                      onKeyUp={(e: any) => {
+                        if (e.key === "Enter") {
+                          handleClickSave();
+                        }
+                      }}
+                      value={newClubMaster}
+                      onChange={(e) => setNewClubMaster(e.target.value)}
+                      maxLength={MAX_INPUT_LENGTH}
+                    />
+                  </ContentItemWrapperStyled>
+                </>
               )}
               {type === "EDIT" && (
-                <ContentItemWrapperStyled isVisible={true}>
-                  <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
-                  <ContentItemInputStyled
-                    onKeyUp={(e: any) => {
-                      if (e.key === "Enter") {
-                        handleClickSave();
-                      }
-                    }}
-                    value={newClubName}
-                    onChange={(e) => setNewClubName(e.target.value)}
-                    maxLength={MAX_INPUT_LENGTH}
-                  />
-                </ContentItemWrapperStyled>
+                <>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>동아리명</ContentItemTitleStyled>
+                    <ContentItemInputStyled
+                      onKeyUp={(e: any) => {
+                        if (e.key === "Enter") {
+                          handleClickSave();
+                        }
+                      }}
+                      value={newClubName}
+                      onChange={(e) => setNewClubName(e.target.value)}
+                      maxLength={MAX_INPUT_LENGTH}
+                    />
+                  </ContentItemWrapperStyled>
+                  <ContentItemWrapperStyled isVisible={true}>
+                    <ContentItemTitleStyled>동아리장</ContentItemTitleStyled>
+                    <ContentItemInputStyled
+                      onKeyUp={(e: any) => {
+                        if (e.key === "Enter") {
+                          handleClickSave();
+                        }
+                      }}
+                      value={newClubMaster}
+                      onChange={(e) => setNewClubMaster(e.target.value)}
+                      maxLength={MAX_INPUT_LENGTH}
+                    />
+                  </ContentItemWrapperStyled>
+                </>
               )}
               {type === "DELETE" && (
                 <ContentItemTitleStyled>
-                  {selectedClubInfo?.name} 동아리를 <strong>삭제</strong>{" "}
+                  {selectedClubInfo?.clubName} 동아리를 <strong>삭제</strong>{" "}
                   하시겠습니까?
                 </ContentItemTitleStyled>
               )}

@@ -23,12 +23,13 @@ const MultiToggleSwitch = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
+      console.log(button.className, initialState);
       if (button.className === initialState) {
         button.style.color = "white";
         button.style.backgroundColor = "var(--main-color)";
       }
     });
-  }, []);
+  }, [initialState]);
 
   function switchToggle(e: any) {
     const target = e.target as HTMLButtonElement;
@@ -78,6 +79,7 @@ const WrapperStyled = styled.div`
     font-weight: 500;
     background-color: transparent;
     color: black;
+    padding: 4px 12px;
   }
 `;
 

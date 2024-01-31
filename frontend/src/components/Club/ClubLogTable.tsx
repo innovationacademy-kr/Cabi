@@ -12,7 +12,7 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
 
   const handleRowClick = (clubInfo: ClubUserDto) => {
     setSelectedClubInfo(
-      selectedClubInfo?.userId === clubInfo.userId ? null : clubInfo
+      selectedClubInfo?.clubId === clubInfo.clubId ? null : clubInfo
     );
   };
 
@@ -28,15 +28,15 @@ const ClubLogTable = ({ ClubList }: { ClubList: ClubLogResponseType }) => {
         </TheadStyled>
         {ClubList !== STATUS_400_BAD_REQUEST && (
           <TbodyStyled>
-            {ClubList.map(({ userId, name }) => (
+            {ClubList.map(({ clubId, clubName, clubMaster }) => (
               <tr
-                key={userId}
-                onClick={() => handleRowClick({ userId, name })}
+                key={clubId}
+                onClick={() => handleRowClick({ clubId, clubName, clubMaster })}
                 className={
-                  selectedClubInfo?.userId === userId ? "selected" : ""
+                  selectedClubInfo?.clubId === clubId ? "selected" : ""
                 }
               >
-                <td title={`${name}`}>{`${name}`}</td>
+                <td title={`${clubName}`}>{`${clubName}`}</td>
               </tr>
             ))}
           </TbodyStyled>

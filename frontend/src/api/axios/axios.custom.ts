@@ -83,6 +83,86 @@ export const axiosUpdateDeviceToken = async (
   }
 };
 
+const axiosMyClubInfoURL = "/v4/clubs";
+export const axiosMyClubInfo = async (): Promise<any> => {
+  try {
+    const response = await instance.get(axiosMyClubInfoURL);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosGetClubInfoURL = "/v4/clubs/";
+export const axiosGetClubInfo = async (
+  clubId: number,
+  page: number,
+  size: number
+): Promise<any> => {
+  try {
+    const response = await instance.get(
+      axiosGetClubInfoURL + clubId.toString(),
+      {
+        params: { page: page, size: size },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosAddClubMemberURL = "/v4/clubs";
+export const axiosAddClubMember = async (
+  clubId: number,
+  name: String
+): Promise<any> => {
+  // TODO : 예외처리?
+  try {
+    const response = await instance.post(
+      `${axiosAddClubMemberURL}/${clubId}/users`,
+      {
+        name,
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosMandateClubMemURL = "/v4/clubs";
+export const axiosMandateClubMember = async (
+  clubId: number,
+  clubMaster: string
+): Promise<any> => {
+  // TODO : 예외처리?
+  try {
+    const response = await instance.post(
+      `${axiosMandateClubMemURL}/${clubId}/mandate`,
+      { clubMaster }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosDeleteClubMemberURL = "/v4/clubs/";
+export const axiosDeleteClubMember = async (
+  clubId: number,
+  userId: number
+): Promise<any> => {
+  try {
+    const response = await instance.delete(
+      `${axiosDeleteClubMemberURL}${clubId}/users/${userId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
 export const axiosBuildingFloor = async (): Promise<any> => {
@@ -450,7 +530,7 @@ export const axiosGetUserLentLog = async (
   }
 };
 
-const axiosGetClubUserLogURL = "/v4/admin/users/clubs";
+const axiosGetClubUserLogURL = "/v4/admin/clubs";
 export const axiosGetClubUserLog = async (
   page: number,
   size: number
@@ -465,29 +545,33 @@ export const axiosGetClubUserLog = async (
   }
 };
 
-const axiosCreateClubUserURL = "/v4/admin/users/club";
+const axiosCreateClubUserURL = "/v4/admin/clubs";
 export const axiosCreateClubUser = async (
-  clubName: string | null
+  clubName: string | null,
+  clubMaster: string | null
 ): Promise<any> => {
-  if (clubName === null) return;
+  if (clubName === null || clubMaster === null) return;
   try {
-    const response = await instance.post(axiosCreateClubUserURL, { clubName });
+    const response = await instance.post(axiosCreateClubUserURL, {
+      clubName,
+      clubMaster,
+    });
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-const axiosEditClubUserURL = "/v4/admin/users/club/";
+const axiosEditClubUserURL = "/v4/admin/clubs/";
 export const axiosEditClubUser = async (
-  clubInfo: ClubUserDto | null
+  clubInfo: ClubUserDto
 ): Promise<any> => {
-  if (clubInfo === null || clubInfo.name === null) return;
   try {
     const response = await instance.patch(
-      axiosEditClubUserURL + clubInfo.userId.toString(),
+      axiosEditClubUserURL + clubInfo.clubId.toString(),
       {
-        clubName: clubInfo.name,
+        clubName: clubInfo.clubName,
+        clubMaster: clubInfo.clubMaster,
       }
     );
     return response;
@@ -496,7 +580,7 @@ export const axiosEditClubUser = async (
   }
 };
 
-const axiosDeleteClubUserURL = "/v4/admin/users/club/";
+const axiosDeleteClubUserURL = "/v4/admin/clubs/";
 export const axiosDeleteClubUser = async (
   clubId: number | null
 ): Promise<any> => {
@@ -511,18 +595,39 @@ export const axiosDeleteClubUser = async (
   }
 };
 
-const axiosLentClubUserURL = "/v4/admin/cabinets/club";
-export const axiosLentClubUser = async (
-  userId: number,
-  cabinetId: number,
-  statusNote: string | null
+// const axiosLentClubUserURL = "/v4/admin/cabinets/club";
+// export const axiosLentClubUser = async (
+//   userId: number,
+//   cabinetId: number,
+//   statusNote: string | null
+// ): Promise<any> => {
+//   try {
+//     const response = await instance.patch(axiosLentClubUserURL, {
+//       userId,
+//       cabinetId,
+//       statusNote,
+//     });
+//     return response;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+// Lent Cabinet to Club {cabinetId} to {clubId}
+// /v4/admin/clubs/{clubId}/cabinets/{cabinetId}
+
+const axiosLentClubCabinetURL = "/v4/admin/clubs/";
+export const axiosLentClubCabinet = async (
+  clubId: number,
+  cabinetId: number
 ): Promise<any> => {
   try {
-    const response = await instance.patch(axiosLentClubUserURL, {
-      userId,
-      cabinetId,
-      statusNote,
-    });
+    const response = await instance.post(
+      axiosLentClubCabinetURL +
+        clubId.toString() +
+        "/cabinets/" +
+        cabinetId.toString()
+    );
     return response;
   } catch (error) {
     throw error;

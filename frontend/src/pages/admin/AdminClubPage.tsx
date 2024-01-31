@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { selectedClubInfoState } from "@/recoil/atoms";
@@ -6,6 +6,7 @@ import AdminClubLogContainer from "@/components/Club/AdminClubLog.container";
 import Button from "@/components/Common/Button";
 import ClubModal from "@/components/Modals/ClubModal/ClubModal";
 import { ClubUserDto } from "@/types/dto/lent.dto";
+import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
 const AdminClubPage = () => {
   const [shouldFetchData, setShouldFetchData] = useState(false);
@@ -13,6 +14,10 @@ const AdminClubPage = () => {
   const [selectedClubInfo, setSelectedClubInfo] = useRecoilState(
     selectedClubInfoState
   );
+
+  useEffect(() => {
+    deleteRecoilPersistFloorSection();
+  }, []);
 
   const handleDataChanged = () => {
     setShouldFetchData(true);
