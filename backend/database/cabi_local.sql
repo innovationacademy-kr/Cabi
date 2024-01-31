@@ -693,6 +693,7 @@ CREATE TABLE `club_registration`
     `id`            bigint(20)  NOT NULL AUTO_INCREMENT,
     `club_id`       bigint(20)  NOT NULL,
     `registered_at` datetime(6) NOT NULL,
+    `deleted_at`    datetime(6) NOT NULL,
     `user_id`       bigint(20)  NOT NULL,
     `user_role`     varchar(32) NOT NULL,
     PRIMARY KEY (`id`),
