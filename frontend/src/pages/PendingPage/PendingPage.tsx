@@ -12,7 +12,7 @@ import {
   CabinetPreviewInfo,
   PendingCabinetsInfo,
 } from "@/types/dto/cabinet.dto";
-import { axiosGetPendingCabinets } from "@/api/axios/axios.custom";
+import { axiosGetAvailableCabinets } from "@/api/axios/axios.custom";
 import useDebounce from "@/hooks/useDebounce";
 import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
@@ -50,7 +50,7 @@ const PendingPage = () => {
 
   const getPendingCabinets = async () => {
     try {
-      const response = await axiosGetPendingCabinets();
+      const response = await axiosGetAvailableCabinets();
       const pendingCabinets = response.data.cabinetInfoResponseDtos;
 
       const filterCabinetsByType = (type: string) =>
