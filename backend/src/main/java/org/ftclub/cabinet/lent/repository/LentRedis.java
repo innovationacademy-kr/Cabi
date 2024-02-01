@@ -20,7 +20,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Logging(level = LogLevel.DEBUG)
-public class LentRedis {
+public class
+LentRedis {
 
 	private static final String USER_ENTERED = "entered";
 	private static final String USER_SWAPPED = "swapped";

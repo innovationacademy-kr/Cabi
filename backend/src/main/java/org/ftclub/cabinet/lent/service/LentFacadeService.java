@@ -426,13 +426,14 @@ public class LentFacadeService {
 		cabinetIds.forEach(cabinetId -> {
 			List<LentHistory> lentHistories =
 					lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(cabinetId);
-			Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId); // TODO: 1차 캐시 사용하는지 확인
+			// TODO: 1차 캐시 사용하는지 확인 -> 사용안하면 if-else 구조로 변경
+			Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
 			CabinetPlace cabinetPlace = cabinet.getCabinetPlace();
 			lentHistories.forEach(lentHistory -> {
 				User user = lentHistory.getUser();
 			});
 		});
-		// BORKEN -> broken:cabinetStatus 추가 / CabinetPaginationDto -> CabinetDto
+		// BROKEN -> broken:cabinetStatus 추가 / CabinetPaginationDto -> CabinetDto
 		// {cabinetId}:cabinetLentHistories 추가  / LentHistoryPaginationDto -> LentHistoryDto
 		// {visibleNum}:cabinetVisibleNum 추가 / CabinetInfoPaginationDto -> CabinetInfoResponseDto
 		// cabinet:statistics 추가 / status와 lent에 따라 floor, used, overdue, unused, disabled count
