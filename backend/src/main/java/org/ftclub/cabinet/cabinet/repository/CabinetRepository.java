@@ -40,6 +40,13 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	List<Integer> findAllFloorsByBuilding(@Param("building") String building);
 
 	/**
+	 * 모든 사물함 ID를 조회한다.
+	 *
+	 * @return 사물함 ID {@link List}
+	 */
+	List<Long> findAllCabinetIds();
+
+	/**
 	 * 여러 층에 걸쳐 CabinetStatus에 맞는 사물함의 개수를 조회한다.
 	 *
 	 * @param status 사물함 상태

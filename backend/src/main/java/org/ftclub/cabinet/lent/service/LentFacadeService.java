@@ -3,18 +3,22 @@ package org.ftclub.cabinet.lent.service;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.alarm.domain.AlarmEvent;
 import org.ftclub.cabinet.alarm.domain.LentSuccessAlarm;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetPlace;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
+import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
@@ -413,5 +417,29 @@ public class LentFacadeService {
 		cabinetCommandService.updateMemo(oldCabinet, "");
 
 		lentRedisService.setSwapRecord(userId);
+	}
+
+	@Transactional(readOnly = true)
+	public void asyncCabinetLentHistories() {
+		List<Long> cabinetIds = cabinetQueryService.findAllCabinetIds();
+		Map<Integer, Map<String, CabinetsPerSectionResponseDto>> cabinetPerSection = new HashMap<>();
+		cabinetIds.forEach(cabinetId -> {
+			List<LentHistory> lentHistories =
+					lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(cabinetId);
+			Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId); // TODO: 1차 캐시 사용하는지 확인
+			CabinetPlace cabinetPlace = cabinet.getCabinetPlace();
+			lentHistories.forEach(lentHistory -> {
+				User user = lentHistory.getUser();
+			});
+		});
+		// BORKEN -> broken:cabinetStatus 추가 / CabinetPaginationDto -> CabinetDto
+		// {cabinetId}:cabinetLentHistories 추가  / LentHistoryPaginationDto -> LentHistoryDto
+		// {visibleNum}:cabinetVisibleNum 추가 / CabinetInfoPaginationDto -> CabinetInfoResponseDto
+		// cabinet:statistics 추가 / status와 lent에 따라 floor, used, overdue, unused, disabled count
+		// 30일 이내 -> {startedAt}:lentCount 추가 / lentStartCount 계산
+		// 30일 이내 -> {endedAt}:lentCount 추가 / lentEndCount 계산
+		// {building}{floor}:cabinetPerSection - {section} 추가 / CabinetsPerSectionDto -> cabinetsPreviewDto
+		// {cabinetId}:cabinetInfo 추가 / CabinetInfoDto -> CabinetInfoResponseDto
+		// {floor}:pendingCabinet 추가 / CabinetPendingDto -> CabinetPreviewDto
 	}
 }

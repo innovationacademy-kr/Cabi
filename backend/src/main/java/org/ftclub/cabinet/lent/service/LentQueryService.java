@@ -193,6 +193,10 @@ public class LentQueryService {
 		return lentRepository.findAllByCabinetIdsEndedAtEqualDate(date, cabinetIds);
 	}
 
+	public List<LentHistory> findCabinetLentHistoriesWithUserAndCabinet(Long cabinetId) {
+		return lentRepository.findAllByCabinetIdJoinCabinetAndUser(cabinetId);
+	}
+
 	/**
 	 * 사물함의 현재 대여 중인 대여 기록을 가져옵니다.
 	 * <p>

@@ -209,4 +209,8 @@ public class CabinetQueryService {
 		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus,
 				from);
 	}
+
+	public List<Long> findAllCabinetIds() {
+		return cabinetRepository.findAllCabinetIds();
+	}
 }
