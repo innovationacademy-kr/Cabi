@@ -16,17 +16,14 @@ public class CqrsRedis {
 	private final RedisTemplate<String, String> redisTemplate; //조금 더 많은 기능을 지원
 	private final HashOperations<String, String, String> hashTemplate;
 	private final ValueOperations<String, String> valueTemplate;
-	private final CqrsProperties cqrsProperties;
 
 	@Autowired
 	public CqrsRedis(RedisTemplate<String, String> redisTemplate,
 			HashOperations<String, String, String> hashTemplate,
-			ValueOperations<String, String> valueTemplate,
-			CqrsProperties cqrsProperties) {
+			ValueOperations<String, String> valueTemplate) {
 		this.redisTemplate = redisTemplate;
 		this.hashTemplate = hashTemplate;
 		this.valueTemplate = valueTemplate;
-		this.cqrsProperties = cqrsProperties;
 	}
 
 }
