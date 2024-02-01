@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { manualContentData } from "@/assets/data/ManualContent";
 import { ReactComponent as MoveBtnImg } from "@/assets/images/moveButton.svg";
 import ContentStatus from "@/types/enum/content.status.enum";
@@ -141,10 +141,13 @@ const ModalWrapper = styled.div<{
   border-radius: 40px 40px 0 0;
   border: ${(props) =>
     props.contentStatus === ContentStatus.PENDING
-      ? "10px double var(--white)"
+      ? "5px double var(--main-color)"
       : props.contentStatus === ContentStatus.IN_SESSION
       ? "5px solid var(--main-color)"
       : "none"};
+  box-shadow: ${(props) =>
+    props.contentStatus === ContentStatus.PENDING &&
+    "inset 0px 0px 0px 5px var(--white);"};
   border-bottom: none;
   @media screen and (max-width: 700px) {
     width: 100%;

@@ -22,10 +22,10 @@
         ]
       },
       {
-        "name": "assets/ErrorTemplate-d9af0d10.js",
+        "name": "assets/AnnounceTemplate-d9af0d10.js",
         "children": [
           {
-            "name": "src/components/Error/ErrorTemplate.tsx",
+            "name": "src/components/Error/AnnounceTemplate.tsx",
             "uid": "a9f3-5"
           }
         ]
@@ -6639,9 +6639,9 @@
       ]
     },
     "a9f3-4": {
-      "id": "/src/components/Error/ErrorTemplate.tsx",
+      "id": "/src/components/Error/AnnounceTemplate.tsx",
       "moduleParts": {
-        "assets/ErrorTemplate-d9af0d10.js": "a9f3-5"
+        "assets/AnnounceTemplate-d9af0d10.js": "a9f3-5"
       },
       "imported": [
         {
