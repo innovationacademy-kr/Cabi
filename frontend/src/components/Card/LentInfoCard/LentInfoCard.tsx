@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Card from "@/components/Card/Card";
 import {
   CardContentStyled,
-  CardContentWrapper,
+  CardContentWrapperStyled,
   ContentDeatilStyled,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
@@ -39,7 +39,7 @@ const LentInfoCard = ({
       height={"366px"}
     >
       <>
-        <CabinetInfoWrapper>
+        <CabinetInfoWrapperStyled>
           <CabinetRectangleStyled
             isLented={cabinetInfo.isLented}
             status={cabinetInfo.status as CabinetStatus}
@@ -61,7 +61,7 @@ const LentInfoCard = ({
                 : "대여 중이 아닌 사용자"}
             </CabinetInfoTextStyled>
 
-            <CabinetUserListWrapper>
+            <CabinetUserListWrapperStyled>
               <CabinetIconStyled
                 title={cabinetInfo.lentType}
                 cabinetType={cabinetInfo.lentType}
@@ -72,10 +72,10 @@ const LentInfoCard = ({
               >
                 {cabinetInfo.userNameList}
               </CabinetInfoTextStyled>
-            </CabinetUserListWrapper>
+            </CabinetUserListWrapperStyled>
           </CabinetInfoDetailStyled>
-        </CabinetInfoWrapper>
-        <CardContentWrapper>
+        </CabinetInfoWrapperStyled>
+        <CardContentWrapperStyled>
           <CardContentStyled>
             <ContentInfoStyled>사용 기간</ContentInfoStyled>
             <ContentDeatilStyled>
@@ -104,21 +104,21 @@ const LentInfoCard = ({
                 : "-"}
             </ContentDeatilStyled>
           </CardContentStyled>
-        </CardContentWrapper>
-        <CardContentWrapper>
+        </CardContentWrapperStyled>
+        <CardContentWrapperStyled>
           <CardContentStyled>
             <ContentInfoStyled>이전 대여자</ContentInfoStyled>
             <ContentDeatilStyled>
               {cabinetInfo?.previousUserName || "-"}
             </ContentDeatilStyled>
           </CardContentStyled>
-        </CardContentWrapper>
+        </CardContentWrapperStyled>
       </>
     </Card>
   );
 };
 
-const CabinetInfoWrapper = styled.div`
+const CabinetInfoWrapperStyled = styled.div`
   display: flex;
   width: 85%;
   margin: 9px 0 9px 0;
@@ -171,7 +171,7 @@ const CabinetInfoTextStyled = styled.div<{
   white-space: pre-line;
 `;
 
-const CabinetUserListWrapper = styled.div`
+const CabinetUserListWrapperStyled = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;

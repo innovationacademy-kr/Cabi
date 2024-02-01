@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 
-export const CardContentWrapper = styled.div`
+export const CardContentWrapperStyled = styled.div`
   background-color: var(--white);
   border-radius: 10px;
   padding: 10px 0;

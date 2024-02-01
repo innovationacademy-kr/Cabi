@@ -25,6 +25,7 @@ export function ClubPageInfo() {
     clubName: "",
     clubMaster: "",
     clubMemo: "",
+    clubNotice: "",
     building: "새롬관",
     floor: 3,
     section: "",

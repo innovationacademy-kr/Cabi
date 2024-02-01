@@ -14,14 +14,14 @@ interface CardProps {
   title: string;
   children: React.ReactElement;
   buttons?: IButtonProps[];
-  gridArea: string;
+  gridArea?: string;
   width?: string;
   height?: string;
 }
 
 const Card = ({
   title,
-  gridArea,
+  gridArea = "card",
   width = "350px",
   height = "163px",
   buttons,

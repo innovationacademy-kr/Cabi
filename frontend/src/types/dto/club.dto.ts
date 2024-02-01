@@ -12,8 +12,8 @@ export interface ClubPaginationResponseDto {
 
 export interface ClubResponseDto {
   clubId: number;
-  clubName: String;
-  clubMaster: String;
+  clubName: string;
+  clubMaster: string;
 }
 
 export type ClubInfoResponseType =
@@ -22,12 +22,13 @@ export type ClubInfoResponseType =
   | undefined;
 
 export interface ClubInfoResponseDto {
-  clubName: String;
-  clubMaster: String;
-  clubMemo: String;
-  building: String;
+  clubName: string;
+  clubMaster: string;
+  clubMemo: string;
+  clubNotice: string;
+  building: string;
   floor: number;
-  section: String;
+  section: string;
   visibleNum: number;
   clubUsers: ClubUserResponseDto[];
   clubUserCount: number;
@@ -35,5 +36,5 @@ export interface ClubInfoResponseDto {
 
 export interface ClubUserResponseDto {
   userId: number;
-  userName: String;
+  userName: string;
 }

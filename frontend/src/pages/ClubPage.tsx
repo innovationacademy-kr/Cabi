@@ -1,11 +1,10 @@
-import { ClubPageInfo } from "@/components/Club/ClubPageInfo";
 import styled from "styled-components";
+import { ClubPageInfo } from "@/components/Club/ClubPageInfo";
 
 const ClubPage = () => {
   return (
     <WrapperStyled>
       <ContainerStyled>
-        <TitleStyled>동아리 정보</TitleStyled>
         <ClubPageInfo></ClubPageInfo>
       </ContainerStyled>
     </WrapperStyled>
@@ -26,7 +25,7 @@ const ContainerStyled = styled.div`
   justify-content: center;
   align-items: center;
   margin: 112px 0 0 0;
-  padding-bottom: 112px;
+  /* padding-bottom: 112px; */
   width: 795px;
   height: 100%;
 `;

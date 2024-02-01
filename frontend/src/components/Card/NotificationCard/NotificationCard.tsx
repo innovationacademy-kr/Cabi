@@ -1,7 +1,7 @@
 import Card, { IButtonProps } from "@/components/Card/Card";
 import {
   CardContentStyled,
-  CardContentWrapper,
+  CardContentWrapperStyled,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import ToggleSwitch from "@/components/Common/ToggleSwitch";
@@ -41,11 +41,11 @@ const NotificationCard = ({
       height={"230px"}
       buttons={buttons}
     >
-      <CardContentWrapper>
+      <CardContentWrapperStyled>
         {renderToggle("email", "메일")}
         {renderToggle("slack", "슬랙")}
         {renderToggle("push", "브라우저")}
-      </CardContentWrapper>
+      </CardContentWrapperStyled>
     </Card>
   );
 };

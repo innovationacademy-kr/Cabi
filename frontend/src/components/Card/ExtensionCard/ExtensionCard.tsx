@@ -1,7 +1,7 @@
 import Card, { IButtonProps } from "@/components/Card/Card";
 import {
   CardContentStyled,
-  CardContentWrapper,
+  CardContentWrapperStyled,
   ContentDeatilStyled,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
@@ -22,7 +22,7 @@ const ExtensionCard = ({ extensionInfo, button }: ExtensionProps) => {
       height={"183px"}
       buttons={[button]}
     >
-      <CardContentWrapper>
+      <CardContentWrapperStyled>
         <CardContentStyled>
           <ContentInfoStyled>사용 기한</ContentInfoStyled>
           <ContentDeatilStyled>
@@ -37,7 +37,7 @@ const ExtensionCard = ({ extensionInfo, button }: ExtensionProps) => {
             {!!extensionInfo ? extensionInfo.extensionPeriod + "일" : "-"}
           </ContentDeatilStyled>
         </CardContentStyled>
-      </CardContentWrapper>
+      </CardContentWrapperStyled>
     </Card>
   );
 };

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
+import ClubCabinetInfoCard from "../Card/ClubCabinetInfoCard";
+import ClubMemoCard from "../Card/ClubMemoCard";
 import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
 
 const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
@@ -48,9 +50,11 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   // };
   return (
     <ClubCabinetInfoStyled>
-      <ClubHeader>동아리 사물함</ClubHeader>
+      <ClubHeader>동아리 정보</ClubHeader>
       <ClubInfoBox>
-        <ClubBasicInfoBox>
+        <ClubCabinetInfoCard clubInfo={clubInfo} />
+        <ClubMemoCard clubInfo={clubInfo} />
+        {/* <ClubBasicInfoBox>
           <CabinetNum>{clubInfo.visibleNum}</CabinetNum>
           <CabinetSideInfo>
             <SideInfoClubName>{clubInfo.clubName}</SideInfoClubName>
@@ -71,15 +75,15 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
               <Pw pw={pw} pwCover={pwCover}>
                 {pwCover}
               </Pw>
-            </PsSpan>
-            {/* <SettingLogo onClick={handleSettingLogoClick}> */}
-            <SettingLogo>
+            </PsSpan> */}
+        {/* <SettingLogo onClick={handleSettingLogoClick}> */}
+        {/* <SettingLogo>
               {" "}
               <img src="/src/assets/images/setting.svg"></img>
             </SettingLogo>
           </ClubPw>
-        </ClubBasicInfoBox>
-        <ClubSubInfoBox>
+        </ClubBasicInfoBox> */}
+        {/* <ClubSubInfoBox>
           <ClubMemoHeader>
             동아리 메모
             <MemoIcon>
@@ -87,17 +91,8 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
             </MemoIcon>
           </ClubMemoHeader>
           <ClubMemo>{isModalOpen ? newText : text}</ClubMemo>
-        </ClubSubInfoBox>
+        </ClubSubInfoBox> */}
       </ClubInfoBox>
-      {/* {isModalOpenTest && <ModifyClubPwModal
-        // password="1234"
-        // isModalOpen={isModalOpen}
-        // onClose={() => closeModal()}
-        modalContents={testModal}
-        password="1234"
-        // isModalOpen={isModalOpen}
-        // onClose={() => closeModal()}
-      />} */}
       <MemoModalTestContainer
         onClose={() => closeModal()}
         isModalOpen={isModalOpen}

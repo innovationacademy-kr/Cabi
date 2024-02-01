@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import Card from "@/components/Card/Card";
 import {
   CardContentStyled,
-  CardContentWrapper,
+  CardContentWrapperStyled,
   ContentInfoStyled,
 } from "@/components/Card/CardStyles";
 import ColorPicker from "@/components/Card/ThemeColorCard/ColorPicker";
@@ -71,7 +71,7 @@ const ThemeColorCard = ({
           }
         >
           <>
-            <CardContentWrapper>
+            <CardContentWrapperStyled>
               {themeColorData.map(({ title, type, getColor }) => (
                 <CardContentStyled key={type}>
                   <ContentInfoStyled
@@ -96,7 +96,7 @@ const ThemeColorCard = ({
                   customColors={customColors}
                 />
               )}
-            </CardContentWrapper>
+            </CardContentWrapperStyled>
           </>
         </Card>
       </ThemeColorCardWrapper>
