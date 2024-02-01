@@ -45,8 +45,8 @@ public class ClubQueryService {
 	 * ClubRegistration도 Join 연산으로 함께 조회한다.
 	 * </p>
 	 *
-	 * @param clubId
-	 * @return
+	 * @param clubId 동아리 ID
+	 * @return 동아리 정보
 	 */
 	public Club getClubWithClubRegistration(Long clubId) {
 		Optional<Club> club = clubRepository.findByIdAndDeletedAtIsNull(clubId);

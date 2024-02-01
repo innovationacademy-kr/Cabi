@@ -53,6 +53,9 @@ public class ClubRegistration {
 	@Column(name = "REGISTERED_AT", nullable = false, updatable = false)
 	private LocalDateTime registeredAt;
 
+	@Column(name = "DELETED_AT")
+	private LocalDateTime deletedAt;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID", insertable = false, updatable = false)
 	private User user;
@@ -83,5 +86,9 @@ public class ClubRegistration {
 	public ClubRegistration changeUserRole(UserRole userRole) {
 		this.userRole = userRole;
 		return this;
+	}
+
+	public void delete() {
+		this.deletedAt = LocalDateTime.now();
 	}
 }

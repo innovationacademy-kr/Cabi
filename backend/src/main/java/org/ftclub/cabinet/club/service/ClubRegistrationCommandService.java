@@ -31,7 +31,7 @@ public class ClubRegistrationCommandService {
 	 * @param clubRegistration 동아리 회원 정보
 	 */
 	public void deleteClubUser(ClubRegistration clubRegistration) {
-		clubRegistrationRepoitory.delete(clubRegistration);
+		clubRegistration.delete();
 	}
 
 	/**

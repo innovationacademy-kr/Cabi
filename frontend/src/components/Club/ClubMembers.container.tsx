@@ -1,5 +1,5 @@
 import React, { MouseEvent, useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isCurrentSectionRenderState, userState } from "@/recoil/atoms";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import ClubMembers from "./ClubMembers";
@@ -19,64 +19,16 @@ const ClubMembersContainer: React.FC<{
   setPage: React.Dispatch<React.SetStateAction<number>>;
   page: number;
 }> = (props) => {
-  const [myInfo, setMyInfo] = useRecoilState(userState);
-  const [me, setMe] = useState<ClubUserResponseDto>({
-    userId: 0,
-    userName: "",
-  });
-  const [master, setMaster] = useState<ClubUserResponseDto>({
-    userId: 0,
-    userName: "",
-  });
-  const [sortedMems, setSortedMems] = useState<ClubUserResponseDto[]>([
-    {
-      userId: 0,
-      userName: "",
-    },
-  ]);
-  const [tmp, setTmp] = useState<ClubUserResponseDto[]>([]);
-  // memsbers 중 나랑 동아리장 뺀 배열
-  const [members, setMembers] = useState<ClubUserResponseDto[]>([
-    {
-      userId: 0,
-      userName: "",
-    },
-  ]);
+  const myInfo = useRecoilValue(userState);
+  const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
   // TODO : setIsCurrentSectionRender props로 넘겨주기
   const [moreBtn, setMoreBtn] = useState<boolean>(true);
-  const [imMaster, setImMaster] = useState<boolean>(false);
 
   const clickMoreButton = () => {
     props.setPage((prev) => prev + 1);
-  };
-
-  useEffect(() => {
-    if (props.clubId) {
-      props.getClubInfo(props.clubId);
-      setIsCurrentSectionRender(true);
-    }
-  }, [props.page]);
-
-  useEffect(() => {
-    if (props.clubInfo) setMembers(props.clubInfo.clubUsers);
-  }, [props.clubInfo]);
-
-  const SortMemAry = () => {
-    if (props.master) {
-      let tmpAry = members.filter((mem) => {
-        if (mem.userName !== myInfo.name && mem.userName !== props.master) {
-          return true;
-        } else {
-          if (mem.userName === myInfo.name) setMe(mem);
-          if (mem.userName === props.master) setMaster(mem);
-          return false;
-        }
-      });
-      setTmp(tmpAry);
-    }
   };
 
   const deleteClubMemberModal = (
@@ -101,41 +53,47 @@ const ClubMembersContainer: React.FC<{
   };
 
   useEffect(() => {
-    SortMemAry();
-    if (myInfo.name === master.userName) setImMaster(true);
-  }, [members, master.userName]);
+    if (props.page === 0) {
+      setMembers(props.clubInfo.clubUsers);
+    } else {
+      setMembers((prev) => {
+        return [...prev, ...props.clubInfo.clubUsers];
+      });
+      setIsCurrentSectionRender(true);
+    }
+  }, [props.clubInfo]);
   // 나 -> 동아리장 -> 맨 위 배열 함침
 
   useEffect(() => {
-    const masterAry = [master];
-    const meAry = [me];
-    const concatteAry =
-      master.userName === me.userName ? meAry : meAry.concat(masterAry);
-    setSortedMems([...concatteAry, ...tmp]);
-  }, [tmp, master]);
-
-  useEffect(() => {
     if (props.clubInfo.clubUserCount) {
-      if (sortedMems!.length >= props.clubInfo.clubUserCount) {
+      if (members!.length >= props.clubInfo.clubUserCount) {
         setMoreBtn(false);
         setIsCurrentSectionRender(true);
       } else setMoreBtn(true);
     }
-  }, [props.clubInfo.clubUserCount, sortedMems]);
+  }, [members]);
+
+  useEffect(() => {
+    if (props.clubId) {
+      props.getClubInfo(props.clubId);
+
+      setIsCurrentSectionRender(true);
+    }
+  }, [props.page]);
 
   // TODO : props. 떼기
   return (
     <ClubMembers
       clubUserCount={props.clubInfo.clubUserCount}
-      imMaster={imMaster}
+      imMaster={myInfo.name === props.master}
       openModal={props.openModal}
-      sortedMems={sortedMems}
-      me={me}
-      master={master}
+      master={props.master}
       moreBtn={moreBtn}
       clickMoreButton={clickMoreButton}
       mandateClubMasterModal={mandateClubMasterModal}
       deleteClubMemberModal={deleteClubMemberModal}
+      members={members}
+      myInfo={myInfo}
     />
   );
 };

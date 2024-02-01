@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import Modal, { IModalContents } from "@/components/Modals/Modal";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
-import ModifyClubPwModal from "../Modals/PasswordCheckModal/ModifiyClubPwModal";
 
 const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   // const [isModalOpenTest, setIsModalOpenTest] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [newText, setNewText] = useState<string>("");
+  const [pwCover, setPwCover] = useState<string>("비밀번호를 설정해주세요");
+  const [pw, setPw] = useState<string>("");
   // const [testModal, setTestModal] = useState<IModalContents>({
   //   type: "hasProceedBtn",
   //   title: "비밀번호 설정",
@@ -17,6 +17,19 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   //     closeModal();
   //   },
   // });
+
+  // TODO : 동아리 비번 설정안하면 빈 문자열로 할건지 / 기본 문자열 있으면 좋을지 / 없으면 좋을지?
+  // TODO : 비번 설정 안했으면 **** ? 아무것도 안보여줄건지?
+  useEffect(() => {
+    if (clubInfo.clubMemo) {
+      setPwCover("****");
+      setPw(clubInfo.clubMemo.toString());
+    }
+  }, [clubInfo]);
+
+  useEffect(() => {
+    if (pw) setPwCover("****");
+  }, [pw]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -55,7 +68,9 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
           <ClubPw>
             비밀번호
             <PsSpan>
-              <Pw>****</Pw>
+              <Pw pw={pw} pwCover={pwCover}>
+                {pwCover}
+              </Pw>
             </PsSpan>
             {/* <SettingLogo onClick={handleSettingLogoClick}> */}
             <SettingLogo>
@@ -193,23 +208,23 @@ const PsSpan = styled.span`
   align-items: center;
 `;
 
-const Pw = styled.span`
-  height: 100%;
+const Pw = styled.span<{ pw: string; pwCover: string }>`
   height: 100%;
   position: relative;
   margin-left: 10px;
-  font-size: 20px;
   line-height: 25px;
-  padding-top: 5px;
+  padding-top: ${(props) => (props.pw ? "5px" : "")};
+  font-size: ${(props) => (props.pw ? "20px" : "12px")};
+
   &:hover::after {
-    content: "1234";
+    content: "${(props) => (props.pw ? props.pw : props.pwCover)}";
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0%;
     left: 0%;
     background-color: #fff;
-    font-size: 16px;
+    font-size: ${(props) => (props.pw ? "16px" : "12px")};
   }
 `;
 

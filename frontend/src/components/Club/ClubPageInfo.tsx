@@ -29,12 +29,7 @@ export function ClubPageInfo() {
     floor: 3,
     section: "",
     visibleNum: 0,
-    clubUsers: [
-      {
-        userId: 0,
-        userName: "",
-      },
-    ],
+    clubUsers: [],
     clubUserCount: 0,
   });
   const [toggleType, setToggleType] = useState<string>("");
@@ -70,7 +65,7 @@ export function ClubPageInfo() {
       //       clubUsers: [...prev.clubUsers, ...result.data.clubUsers],
       //     };
       //   });
-      // } else 
+      // } else
       setClubInfo(result.data);
     } catch (error) {
       throw error;

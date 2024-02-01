@@ -27,7 +27,7 @@ public class ClubRegistrationQueryService {
 	 * @return 동아리 회원 목록
 	 */
 	public List<ClubRegistration> findClubUsersByClub(Long clubId) {
-		return clubRegistrationRepoitory.findAllByClubId(clubId);
+		return clubRegistrationRepoitory.findAllByClubIdAndDeletedAtIsNull(clubId);
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class ClubRegistrationQueryService {
 	 */
 	public ClubRegistration getClubUserByUser(Long userId, Long clubId) {
 		Optional<ClubRegistration> clubRegistration =
-				clubRegistrationRepoitory.findByUserIdAndClubId(userId, clubId);
+				clubRegistrationRepoitory.findByUserIdAndClubIdAndDeletedAtIsNull(userId, clubId);
 		return clubRegistration.orElseThrow(ExceptionStatus.NOT_CLUB_USER::asServiceException);
 	}
 

@@ -30,7 +30,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 	 * @param clubId 동아리 ID
 	 * @return 동아리 정보
 	 */
-	@Query("SELECT c "
+	@Query("SELECT DISTINCT c "
 			+ "FROM Club c "
 			+ "LEFT JOIN FETCH c.clubLentHistories "
 			+ "WHERE c.id = :clubId "

@@ -27,7 +27,7 @@ const DeleteClubMemModal: React.FC<{
     isCurrentSectionRenderState
   );
 
-  const mandateDetail = `동아리 사물함 멤버에서 ${props.targetMember}을 내보내시겠습니까?`;
+  const deleteDetail = `동아리 사물함 멤버에서 <strong>${props.targetMember}</strong>을 내보내시겠습니까?`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);
@@ -50,10 +50,10 @@ const DeleteClubMemModal: React.FC<{
     }
   };
 
-  const swapModalContents: IModalContents = {
+  const DeleteModalContents: IModalContents = {
     type: "hasProceedBtn",
     title: modalPropsMap.MODAL_CLUB_DEL_MEM.title,
-    detail: mandateDetail,
+    detail: deleteDetail,
     proceedBtnText: modalPropsMap.MODAL_CLUB_DEL_MEM.confirmMessage,
     onClickProceed: trySwapRequest,
     closeModal: props.closeModal,
@@ -63,7 +63,7 @@ const DeleteClubMemModal: React.FC<{
 
   return (
     <ModalPortal>
-      {!showResponseModal && <Modal modalContents={swapModalContents} />}
+      {!showResponseModal && <Modal modalContents={DeleteModalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal

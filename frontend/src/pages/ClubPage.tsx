@@ -1,14 +1,14 @@
+import { ClubPageInfo } from "@/components/Club/ClubPageInfo";
 import styled from "styled-components";
-import {ClubPageInfo} from "@/components/Club/ClubPageInfo";
 
 const ClubPage = () => {
   return (
-      <WrapperStyled>
-        <ContainerStyled>
-          <TitleStyled>동아리 정보</TitleStyled>
-          <ClubPageInfo></ClubPageInfo>
-        </ContainerStyled>
-      </WrapperStyled>
+    <WrapperStyled>
+      <ContainerStyled>
+        <TitleStyled>동아리 정보</TitleStyled>
+        <ClubPageInfo></ClubPageInfo>
+      </ContainerStyled>
+    </WrapperStyled>
   );
 };
 

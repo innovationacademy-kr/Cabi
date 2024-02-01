@@ -22,11 +22,10 @@ const MandateClubMemModal: React.FC<{
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const currentClubId = useRecoilValue(currentCabinetIdState);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  const mandateDetail = `<해당 동아리명>의  동아리장 권한을  ${props.mandateMember}에게 위임하겠습니까?`;
+  const mandateDetail = `<해당 동아리명>의  동아리장 권한을  <strong>${props.mandateMember}</strong>에게 위임하겠습니까?`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);
@@ -44,7 +43,7 @@ const MandateClubMemModal: React.FC<{
     }
   };
 
-  const swapModalContents: IModalContents = {
+  const mandateModalContents: IModalContents = {
     type: "hasProceedBtn",
     title: modalPropsMap.MODAL_CLUB_MANDATE_MEM.title,
     detail: mandateDetail,
@@ -57,7 +56,7 @@ const MandateClubMemModal: React.FC<{
 
   return (
     <ModalPortal>
-      {!showResponseModal && <Modal modalContents={swapModalContents} />}
+      {!showResponseModal && <Modal modalContents={mandateModalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
