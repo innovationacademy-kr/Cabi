@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClubRegistrationRepoitory extends JpaRepository<ClubRegistration, Long> {
 
-	List<ClubRegistration> findAllByClubId(@Param("clubId") Long clubId);
+	List<ClubRegistration> findAllByClubIdAndDeletedAtIsNull(@Param("clubId") Long clubId);
 
-	Optional<ClubRegistration> findByUserIdAndClubId(@Param("userId") Long userId,
+	Optional<ClubRegistration> findByUserIdAndClubIdAndDeletedAtIsNull(@Param("userId") Long userId,
 			@Param("clubId") Long clubId);
 
 	/**
@@ -29,7 +29,8 @@ public interface ClubRegistrationRepoitory extends JpaRepository<ClubRegistratio
 	@Query("SELECT cr "
 			+ "FROM ClubRegistration cr "
 			+ "LEFT JOIN FETCH cr.club "
-			+ "WHERE cr.userId = :userId")
+			+ "WHERE cr.userId = :userId "
+			+ "AND cr.deletedAt IS NULL")
 	List<ClubRegistration> findAllByUserIdJoinClub(@Param("userId") Long userId);
 
 	/**
@@ -44,7 +45,8 @@ public interface ClubRegistrationRepoitory extends JpaRepository<ClubRegistratio
 	@Query("SELECT cr "
 			+ "FROM ClubRegistration cr "
 			+ "LEFT JOIN FETCH cr.user "
-			+ "WHERE cr.clubId IN :clubIds")
+			+ "WHERE cr.clubId IN :clubIds "
+			+ "AND cr.deletedAt IS NULL")
 	List<ClubRegistration> findAllByClubIdInJoinUser(List<Long> clubIds);
 
 	/**
