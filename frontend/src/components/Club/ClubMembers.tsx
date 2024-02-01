@@ -5,15 +5,14 @@ import crown from "@/assets/images/crown.svg";
 import maru from "@/assets/images/maru.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
+import { UserDto } from "@/types/dto/user.dto";
 import { TClubModalState } from "./ClubPageModals";
 
 const ClubMembers: React.FC<{
   clubUserCount: number;
   imMaster: boolean;
   openModal: (modalName: TClubModalState) => void;
-  sortedMems: ClubUserResponseDto[];
-  me: ClubUserResponseDto;
-  master: ClubUserResponseDto;
+  master: String;
   moreBtn: boolean;
   clickMoreButton: () => void;
   mandateClubMasterModal: (
@@ -25,6 +24,8 @@ const ClubMembers: React.FC<{
     targetMember: string,
     userId: number
   ) => void;
+  members: ClubUserResponseDto[];
+  myInfo: UserDto;
 }> = (props) => {
   return (
     <ClubMembersContainerStyled>
@@ -44,7 +45,7 @@ const ClubMembers: React.FC<{
               <p>+</p>
             </AddMemCardStyled>
           ) : null}
-          {props.sortedMems?.map((mem, idx) => {
+          {props.members?.map((mem, idx) => {
             return (
               <MemCardStyled
                 onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
@@ -53,14 +54,14 @@ const ClubMembers: React.FC<{
                 }}
                 key={idx}
                 bgColor={
-                  mem.userName === props.me.userName ? "var(--sub-color)" : ""
+                  mem.userName === props.myInfo.name ? "var(--sub-color)" : ""
                 }
               >
                 <div id="top">
                   <img id="profileImg" src={maru}></img>
-                  {mem.userName === props.master.userName ? (
+                  {mem.userName === props.master ? (
                     <img id="crown" src={crown} />
-                  ) : mem.userName === props.me.userName ? null : (
+                  ) : mem.userName === props.myInfo.name ? null : (
                     <CloseIconStyled
                       id="closeIcon"
                       src={closeIcon}

@@ -93,6 +93,7 @@ const ClubPageModals: React.FC<{
           }}
           clubId={clubId}
           getClubInfo={props.getClubInfo}
+          setPage={props.setPage}
         />
       ) : userModal.mandateModal ? (
         <MandateClubMemModal
