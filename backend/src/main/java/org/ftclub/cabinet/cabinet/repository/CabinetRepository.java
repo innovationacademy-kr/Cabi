@@ -44,7 +44,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 	 *
 	 * @return 사물함 ID {@link List}
 	 */
-	List<Long> findAllCabinetIds();
+//	List<Long> findAllCabinetIds();
 
 	/**
 	 * 여러 층에 걸쳐 CabinetStatus에 맞는 사물함의 개수를 조회한다.

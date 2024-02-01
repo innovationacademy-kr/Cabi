@@ -5,6 +5,7 @@ import static javax.persistence.FetchType.LAZY;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.event.CqrsEventListener;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
@@ -36,6 +38,7 @@ import org.hibernate.annotations.BatchSize;
 @ToString(exclude = {"user", "cabinet"})
 @Log4j2
 @BatchSize(size = 200)
+@EntityListeners(value = CqrsEventListener.class)
 public class LentHistory {
 
 	@Id
