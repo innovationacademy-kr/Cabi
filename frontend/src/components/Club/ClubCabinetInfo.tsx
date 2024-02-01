@@ -50,8 +50,7 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   // };
   return (
     <ClubCabinetInfoStyled>
-      <ClubHeader>동아리 정보</ClubHeader>
-      <ClubInfoBox>
+      <ClubInfoCardGridWrapperStyled>
         <ClubCabinetInfoCard clubInfo={clubInfo} />
         <ClubMemoCard clubInfo={clubInfo} />
         {/* <ClubBasicInfoBox>
@@ -92,7 +91,7 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
           </ClubMemoHeader>
           <ClubMemo>{isModalOpen ? newText : text}</ClubMemo>
         </ClubSubInfoBox> */}
-      </ClubInfoBox>
+      </ClubInfoCardGridWrapperStyled>
       <MemoModalTestContainer
         onClose={() => closeModal()}
         isModalOpen={isModalOpen}
@@ -106,7 +105,8 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
 
 const ClubCabinetInfoStyled = styled.div`
   width: 100%;
-  height: 350px;
+  /* height: 350px; */
+  /* height: 100%; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -122,12 +122,27 @@ const ClubHeader = styled.div`
   font-weight: bold;
 `;
 
-const ClubInfoBox = styled.div`
-  width: 795px;
-  height: 285px;
-  display: flex;
-  justify-content: space-between;
+const ClubInfoCardGridWrapperStyled = styled.div`
+  /* width: 795px; */
+  /* height: 285px; */
+  width: 100%;
+  height: 100%;
+  display: grid;
+  /* justify-content: space-between; */
+  justify-content: center;
   margin: 20px;
+  grid-gap: 20px;
+  grid-template-columns: 350px 350px;
+  grid-template-rows: 250px;
+  grid-template-areas: "clubCabinetInfo clubMemo";
+
+  @media (max-width: 768px) {
+    grid-template-columns: 350px;
+    grid-template-rows: 250px 250px;
+    grid-template-areas:
+      "clubCabinetInfo"
+      "clubMemo";
+  }
 `;
 
 const ClubBasicInfoBox = styled.div`

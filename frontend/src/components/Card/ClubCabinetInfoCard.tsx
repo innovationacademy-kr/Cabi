@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { cabinetIconSrcMap } from "@/assets/data/maps";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
+import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import Card from "./Card";
 
 const ClubCabinetInfoCard = ({
@@ -13,8 +15,9 @@ const ClubCabinetInfoCard = ({
   return (
     <Card
       title="동아리 사물함"
-      width="380px"
-      height="285px"
+      width="350px"
+      height="250px"
+      gridArea="clubCabinetInfo"
       buttons={[
         {
           label: "설정",
@@ -24,20 +27,25 @@ const ClubCabinetInfoCard = ({
       ]}
     >
       <ClubCabinetInfoContainerStyled>
-        <CabinetNum>{clubInfo.visibleNum}</CabinetNum>
-        <CabinetSideInfo>
-          <SideInfoClubName>{clubInfo.clubName}</SideInfoClubName>
-          <SideInfoFloor>
-            {clubInfo.floor}층 {clubInfo.section}
-          </SideInfoFloor>
-          <SideInfoMember>
-            <LeaderIcon>
-              <img src="/src/assets/images/leader.svg"></img>
-            </LeaderIcon>
-            <UserId>{clubInfo.clubMaster}</UserId>
-          </SideInfoMember>
-        </CabinetSideInfo>
-        <JustLine></JustLine>
+        <CabinetInfoWrapperStyled>
+          <CabinetRectangleStyled isLented={true}>
+            {clubInfo.visibleNum}
+          </CabinetRectangleStyled>
+          <CabinetInfoDetailStyled>
+            <CabinetInfoTextStyled
+              fontSize={clubInfo.floor !== 0 ? "1rem" : "0.9rem"}
+              fontColor="var(--gray-color)"
+            >
+              {clubInfo.floor + "층 - " + clubInfo.section}
+            </CabinetInfoTextStyled>
+            <CabinetUserListWrapperStyled>
+              <CabinetIconStyled />
+              <CabinetInfoTextStyled fontSize={"1rem"} fontColor="black">
+                {clubInfo.clubMaster}
+              </CabinetInfoTextStyled>
+            </CabinetUserListWrapperStyled>
+          </CabinetInfoDetailStyled>
+        </CabinetInfoWrapperStyled>
         <ClubPw>
           비밀번호
           <PsSpan>
@@ -55,6 +63,60 @@ const ClubCabinetInfoCard = ({
   );
 };
 
+const CabinetInfoWrapperStyled = styled.div`
+  display: flex;
+  width: 85%;
+  margin: 9px 0 9px 0;
+  align-items: center;
+`;
+
+const CabinetRectangleStyled = styled.div<{
+  isLented: boolean;
+}>`
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 10px;
+  margin-right: 20px;
+  background-color: ${(props) =>
+    props.isLented ? "var(--mine)" : "var(--full)"};
+  color: var(--black);
+  font-size: 2rem;
+  text-align: center;
+`;
+
+const CabinetInfoDetailStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const CabinetInfoTextStyled = styled.div<{
+  fontSize: string;
+  fontColor: string;
+}>`
+  font-size: ${(props) => props.fontSize};
+  font-weight: 400;
+  line-height: 28px;
+  color: ${(props) => props.fontColor};
+  text-align: center;
+  white-space: pre-line;
+`;
+
+const CabinetUserListWrapperStyled = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const CabinetIconStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  background-image: url("/src/assets/images/leader.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+`;
 const ClubCabinetInfoContainerStyled = styled.div`
   display: flex;
   flex-wrap: wrap;

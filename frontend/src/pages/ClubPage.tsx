@@ -17,6 +17,7 @@ const WrapperStyled = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  margin-top: 2rem;
 `;
 
 const ContainerStyled = styled.div`
@@ -24,9 +25,10 @@ const ContainerStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 112px 0 0 0;
+  /* margin: 112px 0 0 0; */
   /* padding-bottom: 112px; */
-  width: 795px;
+  /* width: 795px; */
+  width: 100%;
   height: 100%;
 `;
 

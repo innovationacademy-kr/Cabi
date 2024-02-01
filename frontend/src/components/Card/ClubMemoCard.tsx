@@ -23,8 +23,9 @@ const ClubMemoCard = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   return (
     <Card
       title="동아리 메모"
-      width="380px"
-      height="285px"
+      width="350px"
+      height="250px"
+      gridArea="clubMemo"
       buttons={[
         {
           label: "수정",
@@ -50,8 +51,8 @@ const ClubMemoHeader = styled.div`
 `;
 
 const ClubMemo = styled.div`
-  width: 320px;
-  height: 180px;
+  width: 300px;
+  height: 150px;
   background-color: #ffffff;
   border-radius: 16px;
   padding: 20px;

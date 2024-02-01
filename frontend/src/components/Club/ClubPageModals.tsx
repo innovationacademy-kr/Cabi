@@ -137,8 +137,9 @@ const ClubPageModals: React.FC<{
 
 const ClubCabinetStyled = styled.div`
   width: 100%;
-  height: 340px;
-  margin-top: 60px;
+  /* height: 340px; */
+  height: 100%;
+  /* margin-top: 60px; */
 `;
 
 export default ClubPageModals;
