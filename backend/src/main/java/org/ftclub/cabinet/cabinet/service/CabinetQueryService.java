@@ -36,6 +36,10 @@ public class CabinetQueryService {
 		return cabinetRepository.countByStatusAndFloor(status, floor);
 	}
 
+	public long countCabinets() {
+		return cabinetRepository.count();
+	}
+
 	/*------------------------------------------  FIND  -------------------------------------------*/
 
 	/**
