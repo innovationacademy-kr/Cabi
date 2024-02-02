@@ -19,6 +19,7 @@ public enum CqrsSuffix {
 	LENT_COUNT(":lentCount"),
 	LENT_INFO(":lentInfo"),
 	BUILDINGS(":buildings"),
+	FLOORS(":floors"),
 	AVAILABLE_CABINET(":availableCabinet"),
 
 	CLUBS(":clubs"),

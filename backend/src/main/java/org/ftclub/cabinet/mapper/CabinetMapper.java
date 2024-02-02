@@ -114,7 +114,7 @@ public interface CabinetMapper {
 			List<CabinetInfoResponseDto> result, Long totalLength);
 
 	@Mapping(target = "cabinetInfoResponseDtos", source = "cabinetInfoResponseDtos")
-	CabinetAvailableResponseDto toCabinetPendingResponseDto(
+	CabinetAvailableResponseDto toAvailableCabinetDto(
 			Map<Integer, List<CabinetPreviewDto>> cabinetInfoResponseDtos);
 
 	CabinetFloorStatisticsResponseDto toCabinetFloorStatisticsResponseDto(Integer floor,

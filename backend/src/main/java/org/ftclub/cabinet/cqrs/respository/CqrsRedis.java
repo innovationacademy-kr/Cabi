@@ -3,6 +3,7 @@ package org.ftclub.cabinet.cqrs.respository;
 
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.AVAILABLE_CABINET;
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.BUILDINGS;
+import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.FLOORS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -72,7 +73,7 @@ public class CqrsRedis {
 		}
 		try {
 			//@formatter:off
-			return objectMapper.readValue(value, new TypeReference<T>() {});
+			return objectMapper.readValue(value, new TypeReference<>() {});
 			//@formatter:on
 		} catch (JsonProcessingException e) {
 			log.error("String to JSON Parse Error : {}, {}", value, e.toString());
@@ -128,20 +129,36 @@ public class CqrsRedis {
 		this.setValue(BUILDINGS.getValue(), buildingFloorsDtos);
 	}
 
+	public void clearFloors() {
+		this.clearBySuffix(FLOORS);
+	}
+
+	public void setFloors(String building, List<Integer> floors) {
+		this.setValue(building + FLOORS.getValue(), floors);
+	}
+
+	public List<Integer> getFloors(String building) {
+		List<Integer> floors = this.getValue(building + FLOORS.getValue());
+		if (floors == null) {
+			return new ArrayList<>();
+		}
+		return floors;
+	}
+
 	public void clearAvailableCabinet() {
 		this.clearBySuffix(AVAILABLE_CABINET);
 	}
 
-	public List<CabinetPreviewDto> getAvailableCabinet(String floor) {
-		List<CabinetPreviewDto> availableCabinets = this.getValue(
-				floor + AVAILABLE_CABINET.getValue());
+	public List<CabinetPreviewDto> getAvailableCabinet(String building, Integer floor) {
+		String key = building + floor.toString() + AVAILABLE_CABINET.getValue();
+		List<CabinetPreviewDto> availableCabinets = this.getValue(key);
 		if (availableCabinets == null) {
 			return new ArrayList<>();
 		}
 		return availableCabinets;
 	}
 
-	public void setAvailableCabinet(String floor, List<CabinetPreviewDto> pendingCabinets) {
+	public void setAvailableCabinet(Integer floor, List<CabinetPreviewDto> pendingCabinets) {
 		this.setValue(floor + AVAILABLE_CABINET.getValue(), pendingCabinets);
 	}
 

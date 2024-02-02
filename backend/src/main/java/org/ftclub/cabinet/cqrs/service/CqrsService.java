@@ -1,8 +1,6 @@
 package org.ftclub.cabinet.cqrs.service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.Location;
@@ -28,14 +26,6 @@ public class CqrsService {
 		cqrsRedis.clearBuildingFloors();
 	}
 
-	public void clearAvailableCabinet() {
-		cqrsRedis.clearAvailableCabinet();
-	}
-
-	public void clearCabinetPerSection() {
-		cqrsRedis.clearCabinetPerSection();
-	}
-
 	public void addBuildingFloors(String building, List<Integer> floors) {
 		List<BuildingFloorsDto> buildingFloorsDtos = cqrsRedis.getBuildingFloors();
 		buildingFloorsDtos.add(cabinetMapper.toBuildingFloorsDto(building, floors));
@@ -46,27 +36,45 @@ public class CqrsService {
 		return cqrsRedis.getBuildingFloors();
 	}
 
+	public void clearFloors() {
+		cqrsRedis.clearFloors();
+	}
+
+	public void addFloors(String building, List<Integer> floors) {
+		cqrsRedis.setFloors(building, floors);
+	}
+
+	public List<Integer> getFloors(String building) {
+		return cqrsRedis.getFloors(building);
+	}
+
+	public void clearAvailableCabinet() {
+		cqrsRedis.clearAvailableCabinet();
+	}
+
 	public void addAvailableCabinet(Cabinet cabinet) {
 		Location location = cabinet.getCabinetPlace().getLocation();
-		String floor = location.getFloor().toString();
-		List<CabinetPreviewDto> availableCabinets = cqrsRedis.getAvailableCabinet(floor);
+		String building = location.getBuilding();
+		Integer floor = location.getFloor();
+		List<CabinetPreviewDto> availableCabinets = cqrsRedis.getAvailableCabinet(building, floor);
 		availableCabinets.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 		cqrsRedis.setAvailableCabinet(floor, availableCabinets);
 	}
 
 	public void removeAvailableCabinet(Cabinet cabinet) {
 		Location location = cabinet.getCabinetPlace().getLocation();
-		String floor = location.getFloor().toString();
-		List<CabinetPreviewDto> availableCabinets = cqrsRedis.getAvailableCabinet(floor);
+		String building = location.getBuilding();
+		Integer floor = location.getFloor();
+		List<CabinetPreviewDto> availableCabinets = cqrsRedis.getAvailableCabinet(building, floor);
 		availableCabinets.removeIf(c -> c.getCabinetId().equals(cabinet.getId()));
 		cqrsRedis.setAvailableCabinet(floor, availableCabinets);
 	}
 
 	public List<CabinetPreviewDto> getAvailableCabinets(String building, Integer floor) {
-		String key = building + floor.toString();
-		List<CabinetPreviewDto> availableCabinet = cqrsRedis.getAvailableCabinet(key);
-		return availableCabinet.stream()
-				.sorted(Comparator.comparing(CabinetPreviewDto::getVisibleNum))
-				.collect(Collectors.toList());
+		return cqrsRedis.getAvailableCabinet(building, floor);
+	}
+
+	public void clearCabinetPerSection() {
+		cqrsRedis.clearCabinetPerSection();
 	}
 }

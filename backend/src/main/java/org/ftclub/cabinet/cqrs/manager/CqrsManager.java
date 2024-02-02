@@ -60,6 +60,7 @@ public class CqrsManager {
 
 	private void clearAll() {
 		cqrsService.clearBuildingFloors();
+		cqrsService.clearFloors();
 		cqrsService.clearAvailableCabinet();
 		cqrsService.clearCabinetPerSection();
 	}
@@ -73,6 +74,7 @@ public class CqrsManager {
 		cabinetQueryService.findAllBuildings().forEach(building -> {
 			List<Integer> floors = cabinetQueryService.findAllFloorsByBuilding(building);
 			cqrsService.addBuildingFloors(building, floors);
+			cqrsService.addFloors(building, floors);
 		});
 
 	}

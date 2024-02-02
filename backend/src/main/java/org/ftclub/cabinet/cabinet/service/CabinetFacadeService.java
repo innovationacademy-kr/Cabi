@@ -2,9 +2,6 @@ package org.ftclub.cabinet.cabinet.service;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toMap;
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
-import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -199,39 +196,44 @@ public class CabinetFacadeService {
 	 */
 	@Transactional
 	public CabinetAvailableResponseDto getAvailableCabinets(String building) {
-		final LocalDateTime now = LocalDateTime.now();
-		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
-		List<Cabinet> availableCabinets = cabinetQueryService.findCabinetsNotLentTypeAndStatus(
-				building, LentType.CLUB, List.of(AVAILABLE, PENDING));
-		List<Long> cabinetIds = availableCabinets.stream()
-				.filter(cabinet -> cabinet.isStatus(PENDING))
-				.map(Cabinet::getId).collect(Collectors.toList());
-		Map<Long, List<LentHistory>> lentHistoriesMap;
-		if (now.getHour() < 13) {
-			lentHistoriesMap = lentQueryService.findPendingLentHistoriesOnDate(
-							yesterday.toLocalDate(), cabinetIds)
-					.stream().collect(groupingBy(LentHistory::getCabinetId));
-		} else {
-			lentHistoriesMap = lentQueryService.findCabinetLentHistories(cabinetIds)
-					.stream().collect(groupingBy(LentHistory::getCabinetId));
-		}
-		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
-				cabinetQueryService.findAllFloorsByBuilding(building).stream()
-						.collect(toMap(key -> key, value -> new ArrayList<>()));
-		availableCabinets.forEach(cabinet -> {
-			Integer floor = cabinet.getCabinetPlace().getLocation().getFloor();
-			if (cabinet.isStatus(AVAILABLE)) {
-				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
-			}
-			if (cabinet.isStatus(PENDING)) {
-				lentHistoriesMap.get(cabinet.getId()).stream()
-						.map(LentHistory::getEndedAt)
-						.max(LocalDateTime::compareTo)
-						.ifPresent(latestEndedAt -> cabinetFloorMap.get(floor)
-								.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null)));
-			}
-		});
-		return cabinetMapper.toCabinetPendingResponseDto(cabinetFloorMap);
+//		final LocalDateTime now = LocalDateTime.now();
+//		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
+//		List<Cabinet> availableCabinets = cabinetQueryService.findCabinetsNotLentTypeAndStatus(
+//				building, LentType.CLUB, List.of(AVAILABLE, PENDING));
+//		List<Long> cabinetIds = availableCabinets.stream()
+//				.filter(cabinet -> cabinet.isStatus(PENDING))
+//				.map(Cabinet::getId).collect(Collectors.toList());
+//		Map<Long, List<LentHistory>> lentHistoriesMap;
+//		if (now.getHour() < 13) {
+//			lentHistoriesMap = lentQueryService.findPendingLentHistoriesOnDate(
+//							yesterday.toLocalDate(), cabinetIds)
+//					.stream().collect(groupingBy(LentHistory::getCabinetId));
+//		} else {
+//			lentHistoriesMap = lentQueryService.findCabinetLentHistories(cabinetIds)
+//					.stream().collect(groupingBy(LentHistory::getCabinetId));
+//		}
+//		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap =
+//				cabinetQueryService.findAllFloorsByBuilding(building).stream()
+//						.collect(toMap(key -> key, value -> new ArrayList<>()));
+//		availableCabinets.forEach(cabinet -> {
+//			Integer floor = cabinet.getCabinetPlace().getLocation().getFloor();
+//			if (cabinet.isStatus(AVAILABLE)) {
+//				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
+//			}
+//			if (cabinet.isStatus(PENDING)) {
+//				lentHistoriesMap.get(cabinet.getId()).stream()
+//						.map(LentHistory::getEndedAt)
+//						.max(LocalDateTime::compareTo)
+//						.ifPresent(latestEndedAt -> cabinetFloorMap.get(floor)
+//								.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null)));
+//			}
+//		});
+//		return cabinetMapper.toAvailableCabinetDto(cabinetFloorMap);
+		List<Integer> floors = cqrsService.getFloors(building);
+		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap = new LinkedHashMap<>();
+		floors.forEach(floor ->
+				cabinetFloorMap.put(floor, cqrsService.getAvailableCabinets(building, floor)));
+		return cabinetMapper.toAvailableCabinetDto(cabinetFloorMap);
 	}
 
 	/**
