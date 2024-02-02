@@ -32,6 +32,9 @@ public class CqrsManager {
 	public void synchronizeDatabase() {
 		this.clearAll();
 
+		// 전체에서 1번씩만 초기화 해주면 되는 부분
+		this.syncBuildingsAndFloors();
+
 		// User - LentHistory - Cabinet 데이터 동기화
 		List<Long> allCabinetIds = cabinetQueryService.findAllCabinetIds();
 		for (Long cabinetId : allCabinetIds) {
@@ -56,13 +59,22 @@ public class CqrsManager {
 	}
 
 	private void clearAll() {
-		cqrsService.clearPendingCabinet();
+		cqrsService.clearBuildingFloors();
+		cqrsService.clearAvailableCabinet();
 		cqrsService.clearCabinetPerSection();
 	}
 
 	private void syncAll(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
-		this.syncPendingCabinet(cabinet, cabinetLentHistories);
+		this.syncAvailableCabinet(cabinet, cabinetLentHistories);
 		this.syncCabinetPerSection(cabinet, cabinetLentHistories);
+	}
+
+	private void syncBuildingsAndFloors() {
+		cabinetQueryService.findAllBuildings().forEach(building -> {
+			List<Integer> floors = cabinetQueryService.findAllFloorsByBuilding(building);
+			cqrsService.addBuildingFloors(building, floors);
+		});
+
 	}
 
 	/**
@@ -71,16 +83,16 @@ public class CqrsManager {
 	 * @param cabinet              사물함
 	 * @param cabinetLentHistories 사물함의 대여 이력
 	 */
-	private void syncPendingCabinet(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
+	private void syncAvailableCabinet(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
 		if (cabinet.isStatus(AVAILABLE)) {
-			cqrsService.addPendingCabinet(cabinet);
+			cqrsService.addAvailableCabinet(cabinet);
 		} else if (cabinet.isStatus(PENDING)) {
 			LocalDate yesterday = LocalDateTime.now().minusDays(1).toLocalDate();
 
 			LentHistory recentLentHistory = cabinetLentHistories.stream()
 					.max(Comparator.comparing(LentHistory::getEndedAt)).orElse(null);
 			if (recentLentHistory != null && recentLentHistory.isSameEndedAtDate(yesterday)) {
-				cqrsService.addPendingCabinet(cabinet);
+				cqrsService.addAvailableCabinet(cabinet);
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.event;
 
 import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -30,8 +31,20 @@ public class CqrsEventListener {
 
 		} else if (object instanceof Cabinet) {
 			Cabinet cabinet = (Cabinet) object;
-			cqrsManager.synchronizeCabinet(cabinet);
+			// Cabinet Entity -> Redis 저장
 		}
 	}
 
+	@PostUpdate
+	public void onPostUpdate(Object object) {
+		log.info("onPostUpdate {}", object.toString());
+		if (object instanceof LentHistory) {
+			LentHistory lentHistory = (LentHistory) object;
+			// LentHistory Entity -> Redis에 수정사항 반영
+
+		} else if (object instanceof Cabinet) {
+			Cabinet cabinet = (Cabinet) object;
+			cqrsManager.synchronizeCabinet(cabinet);
+		}
+	}
 }

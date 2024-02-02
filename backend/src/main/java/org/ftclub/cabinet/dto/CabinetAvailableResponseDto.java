@@ -9,7 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class CabinetPendingResponseDto {
+public class CabinetAvailableResponseDto {
 
 	private final Map<Integer, List<CabinetPreviewDto>> cabinetInfoResponseDtos;
 }

@@ -1,13 +1,16 @@
 package org.ftclub.cabinet.cqrs.respository;
 
 
-import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.PENDING_CABINET;
+import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.AVAILABLE_CABINET;
+import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.BUILDINGS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
@@ -22,6 +25,7 @@ import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @Logging(level = LogLevel.DEBUG)
 public class CqrsRedis {
@@ -61,7 +65,7 @@ public class CqrsRedis {
 		}
 	}
 
-	public <T> T getValue(String key) {
+	private <T> T getValue(String key) {
 		String value = valueTemplate.get(key);
 		if (value == null) {
 			return null;
@@ -71,6 +75,7 @@ public class CqrsRedis {
 			return objectMapper.readValue(value, new TypeReference<T>() {});
 			//@formatter:on
 		} catch (JsonProcessingException e) {
+			log.error("String to JSON Parse Error : {}, {}", value, e.toString());
 			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
 		}
 	}
@@ -83,6 +88,7 @@ public class CqrsRedis {
 			String json = objectMapper.writeValueAsString(value);
 			valueTemplate.set(key, json);
 		} catch (JsonProcessingException e) {
+			log.error("JSON to String Parse Error : {}, {}", value, e.toString());
 			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
 		}
 	}
@@ -95,7 +101,7 @@ public class CqrsRedis {
 		hashTemplate.delete(key, subKey);
 	}
 
-	public void clearBySuffix(CqrsSuffix suffix) {
+	private void clearBySuffix(CqrsSuffix suffix) {
 		ScanOptions options =
 				ScanOptions.scanOptions().match("*:" + suffix).count(200).build();
 		Cursor<byte[]> keys = connection.scan(options);
@@ -105,15 +111,41 @@ public class CqrsRedis {
 		}
 	}
 
-	public List<CabinetPreviewDto> getPendingCabinets(String floor) {
-		List<CabinetPreviewDto> pendingCabinets = this.getValue(floor + PENDING_CABINET.getValue());
-		if (pendingCabinets == null) {
-			return new ArrayList<>();
-		}
-		return pendingCabinets;
+
+	public void clearBuildingFloors() {
+		this.clear(BUILDINGS.getValue());
 	}
 
-	public void setPendingCabinet(String floor, List<CabinetPreviewDto> pendingCabinets) {
-		this.setValue(floor + PENDING_CABINET.getValue(), pendingCabinets);
+	public List<BuildingFloorsDto> getBuildingFloors() {
+		List<BuildingFloorsDto> buildingFloors = this.getValue(BUILDINGS.getValue());
+		if (buildingFloors == null) {
+			return new ArrayList<>();
+		}
+		return buildingFloors;
+	}
+
+	public void setBuildingFloors(List<BuildingFloorsDto> buildingFloorsDtos) {
+		this.setValue(BUILDINGS.getValue(), buildingFloorsDtos);
+	}
+
+	public void clearAvailableCabinet() {
+		this.clearBySuffix(AVAILABLE_CABINET);
+	}
+
+	public List<CabinetPreviewDto> getAvailableCabinet(String floor) {
+		List<CabinetPreviewDto> availableCabinets = this.getValue(
+				floor + AVAILABLE_CABINET.getValue());
+		if (availableCabinets == null) {
+			return new ArrayList<>();
+		}
+		return availableCabinets;
+	}
+
+	public void setAvailableCabinet(String floor, List<CabinetPreviewDto> pendingCabinets) {
+		this.setValue(floor + AVAILABLE_CABINET.getValue(), pendingCabinets);
+	}
+
+	public void clearCabinetPerSection() {
+		this.clearBySuffix(CqrsSuffix.CABINET_PER_SECTION);
 	}
 }

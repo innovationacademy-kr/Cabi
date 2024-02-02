@@ -22,12 +22,13 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.club.service.ClubQueryService;
+import org.ftclub.cabinet.cqrs.service.CqrsService;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.CabinetAvailableResponseDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
-import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
@@ -61,6 +62,8 @@ public class CabinetFacadeService {
 	private final UserQueryService userQueryService;
 	private final ClubQueryService clubQueryService;
 	private final ClubLentQueryService clubLentQueryService;
+
+	private final CqrsService cqrsService;
 
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
@@ -195,7 +198,7 @@ public class CabinetFacadeService {
 	 * @return 빌딩에 있는 모든 PENDING 상태의 사물함
 	 */
 	@Transactional
-	public CabinetPendingResponseDto getAvailableCabinets(String building) {
+	public CabinetAvailableResponseDto getAvailableCabinets(String building) {
 		final LocalDateTime now = LocalDateTime.now();
 		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
 		List<Cabinet> availableCabinets = cabinetQueryService.findCabinetsNotLentTypeAndStatus(

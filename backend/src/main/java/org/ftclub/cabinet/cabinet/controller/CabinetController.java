@@ -5,14 +5,16 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.auth.domain.AuthGuard;
 import org.ftclub.cabinet.auth.domain.AuthLevel;
 import org.ftclub.cabinet.cabinet.service.CabinetFacadeService;
+import org.ftclub.cabinet.cqrs.manager.CqrsManager;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
+import org.ftclub.cabinet.dto.CabinetAvailableResponseDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
-import org.ftclub.cabinet.dto.CabinetPendingResponseDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CabinetController {
 
 	private final CabinetFacadeService cabinetFacadeService;
+	private final CqrsManager cqrsManager;
 
 	/**
 	 * 모든 건물과 층에 대한 정보를 가져옵니다.
@@ -75,8 +78,13 @@ public class CabinetController {
 	 */
 	@GetMapping("/buildings/{building}/available")
 	@AuthGuard(level = AuthLevel.USER_OR_ADMIN)
-	public CabinetPendingResponseDto getAvailableCabinets(
+	public CabinetAvailableResponseDto getAvailableCabinets(
 			@PathVariable("building") String building) {
 		return cabinetFacadeService.getAvailableCabinets(building);
+	}
+
+	@PostMapping("/test")
+	public void CqrsTest() {
+		cqrsManager.synchronizeDatabase();
 	}
 }
