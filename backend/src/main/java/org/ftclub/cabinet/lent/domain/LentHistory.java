@@ -2,6 +2,7 @@ package org.ftclub.cabinet.lent.domain;
 
 import static javax.persistence.FetchType.LAZY;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -222,6 +223,13 @@ public class LentHistory {
 			return DateUtil.calculateTwoDateDiffCeil(expiredAt, now);
 		}
 		return null;
+	}
+
+	public boolean isSameEndedAtDate(LocalDate day) {
+		if (!isSetEndedAt()) {
+			return false;
+		}
+		return this.endedAt.toLocalDate().isEqual(day);
 	}
 
 

@@ -3,7 +3,7 @@ package org.ftclub.cabinet.cqrs.respository;
 import lombok.Getter;
 
 @Getter
-public enum CqrsProperties {
+public enum CqrsSuffix {
 	CABINET_PER_SECTION(":cabinetPerSection"),
 	CABINET_STATUS(":cabinetStatus"),
 	CABINET_LENT_HISTORIES(":cabinetLentHistories"),
@@ -28,9 +28,12 @@ public enum CqrsProperties {
 
 	private final String value;
 
-	CqrsProperties(String value) {
+	CqrsSuffix(String value) {
 		this.value = value;
 	}
 
+	public String getValue() {
+		return value;
+	}
 }
 

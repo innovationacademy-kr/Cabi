@@ -211,7 +211,6 @@ public class CabinetQueryService {
 	}
 
 	public List<Long> findAllCabinetIds() {
-//		return cabinetRepository.findAllCabinetIds();
-		return null;
+		return cabinetRepository.findAllCabinetIds();
 	}
 }
