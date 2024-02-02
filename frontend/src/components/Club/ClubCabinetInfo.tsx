@@ -48,7 +48,7 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   // };
   return (
     <ClubCabinetInfoStyled>
-      <ClubHeader>동아리 사물함</ClubHeader>
+      <ClubHeader>동아리 정보</ClubHeader>
       <ClubInfoBox>
         <ClubBasicInfoBox>
           <CabinetNum>{clubInfo.visibleNum}</CabinetNum>

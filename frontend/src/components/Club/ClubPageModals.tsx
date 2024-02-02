@@ -103,6 +103,7 @@ const ClubPageModals: React.FC<{
           clubId={clubId}
           mandateMember={mandateMember}
           getClubInfo={props.getClubInfo}
+          setPage={props.setPage}
         />
       ) : userModal.deleteModal ? (
         <DeleteClubMemModal
@@ -113,6 +114,7 @@ const ClubPageModals: React.FC<{
           targetMember={targetMember}
           userId={targetId}
           getClubInfo={props.getClubInfo}
+          setPage={props.setPage}
         />
       ) : null}
       <ClubCabinetStyled>
