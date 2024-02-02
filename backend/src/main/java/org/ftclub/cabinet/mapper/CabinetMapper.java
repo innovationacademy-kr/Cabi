@@ -122,4 +122,7 @@ public interface CabinetMapper {
 
 	LentsStatisticsResponseDto toLentsStatisticsResponseDto(LocalDateTime startDate,
 			LocalDateTime endDate, int lentStartCount, int lentEndCount);
+
+	CabinetAvailableResponseDto toCabinetAvailableResponseDto(
+			Map<Integer, List<CabinetPreviewDto>> cabinetInfoResponseDtos);
 }

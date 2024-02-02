@@ -229,11 +229,7 @@ public class CabinetFacadeService {
 //			}
 //		});
 //		return cabinetMapper.toAvailableCabinetDto(cabinetFloorMap);
-		List<Integer> floors = cqrsService.getFloors(building);
-		Map<Integer, List<CabinetPreviewDto>> cabinetFloorMap = new LinkedHashMap<>();
-		floors.forEach(floor ->
-				cabinetFloorMap.put(floor, cqrsService.getAvailableCabinets(building, floor)));
-		return cabinetMapper.toAvailableCabinetDto(cabinetFloorMap);
+		return cqrsService.getAvailableCabinet(building);
 	}
 
 	/**
