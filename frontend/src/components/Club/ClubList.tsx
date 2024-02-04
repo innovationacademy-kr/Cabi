@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import MultiToggleSwitch2, {
+  toggleItem,
+} from "@/components/Common/MultiToggleSwitch2";
 import { ClubListReponseType } from "@/types/dto/club.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
-import MultiToggleSwitch2, { toggleItem } from "../Common/MultiToggleSwitch2";
 
 interface ClubListProps<T> {
   clubList: ClubListReponseType;
@@ -47,8 +49,9 @@ const ClubListWrapperStyled = styled.div`
   justify-content: flex-start;
   align-items: center;
   width: 80%;
+  max-width: 720px;
   /* height: 100%; */
-  height: 30px;
+  /* height: 30px; */
   margin: 2rem 0;
 `;
 

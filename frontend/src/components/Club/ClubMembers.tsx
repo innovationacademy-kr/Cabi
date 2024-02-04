@@ -38,7 +38,6 @@ const ClubMembers: React.FC<{
           <p id="membersLength">{props.clubUserCount}</p>
         </div>
       </TitleBarStyled>
-
       <MemSectionStyled>
         {props.imMaster ? (
           <AddMemCardStyled onClick={() => props.openModal("addModal")}>
@@ -59,8 +58,8 @@ const ClubMembers: React.FC<{
                 <div id="clubMaster">
                   <CrownImg
                     stroke="#f5f5f5"
-                    width={30}
-                    height={30}
+                    width={18}
+                    height={18}
                     viewBox="0 0 24 24"
                   />
 
@@ -79,29 +78,34 @@ const ClubMembers: React.FC<{
           );
         })}
       </MemSectionStyled>
-      {props.moreBtn ? (
+      {props.moreBtn && (
         <ButtonContainerStyled>
           <MoreButtonStyled onClick={props.clickMoreButton}>
             더보기
           </MoreButtonStyled>
         </ButtonContainerStyled>
-      ) : null}
+      )}
     </ClubMembersContainerStyled>
   );
 };
 
 const ClubMembersContainerStyled = styled.div`
-  margin-left: 2rem;
-  margin-top: 75px;
   width: 100%;
-  /* margin-bottom: 180px; */
+  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const TitleBarStyled = styled.div`
-  height: 3rem;
+  /* height: 3rem; */
+  width: 90%;
+  max-width: 720px;
   display: flex;
   font-size: 20px;
   font-weight: 700;
+  margin-bottom: 1rem;
 
   & > div {
     margin-left: 18px;
@@ -158,7 +162,7 @@ const MemCardStyled = styled.div<{ bgColor: string }>`
   justify-content: space-between;
 
   & > div {
-    witth: 100%;
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -186,10 +190,12 @@ const CloseIconStyled = styled.img`
 
 const MemSectionStyled = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, 100px);
-  grid-template-rows: repeat(auto-fill, 100px);
-  justify-content: flex-start;
+  grid-template-columns: repeat(auto-fill, 90px);
+  grid-template-rows: repeat(auto-fill, 90px);
+  justify-content: center;
   width: 100%;
+  max-width: 720px;
+  margin: 1rem 0 2rem;
 `;
 
 const ButtonContainerStyled = styled.div`

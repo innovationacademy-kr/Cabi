@@ -1,31 +1,30 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import ClubInfo from "@/components/Club/ClubInfo";
 import ClubList from "@/components/Club/ClubList";
-import ClubPageInfo from "@/components/Club/ClubPageInfo";
 import {
   ClubListReponseType,
   ClubPaginationResponseDto,
 } from "@/types/dto/club.dto";
-import { axiosMyClubInfo } from "@/api/axios/axios.custom";
+import { axiosMyClubList } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubPage = () => {
+  const [clubId, setClubId] = useState<number>(0);
   const [clubList, setClubList] = useState<ClubListReponseType>(undefined);
-  const [toggleType, setToggleType] = useState<number>(0);
 
   useEffect(() => {
-    getMyClubInfo();
+    getMyClubList();
   }, []);
 
-  const getMyClubInfo = async () => {
+  const getMyClubList = async () => {
     try {
-      const response = await axiosMyClubInfo();
+      const response = await axiosMyClubList();
       const result = response.data.result;
       const totalLength = response.data.totalLength;
       setClubList({ result, totalLength } as ClubPaginationResponseDto);
-    } catch (error) {
+    } catch {
       setClubList(STATUS_400_BAD_REQUEST);
-      throw error;
     }
   };
 
@@ -38,11 +37,11 @@ const ClubPage = () => {
       ) : (
         <ClubList
           clubList={clubList}
-          toggleType={toggleType}
-          setToggleType={setToggleType}
+          toggleType={clubId}
+          setToggleType={setClubId}
         />
       )}
-      <ClubPageInfo clubId={toggleType} />
+      <ClubInfo clubId={clubId} />
     </WrapperStyled>
   );
 };
@@ -57,6 +56,10 @@ const WrapperStyled = styled.div`
 `;
 
 const EmptyClubListTextStyled = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   font-size: 1.5rem;
   font-weight: bold;
 `;

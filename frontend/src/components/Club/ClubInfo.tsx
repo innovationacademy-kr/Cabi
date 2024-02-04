@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
-import ClubCabinetInfo from "@/components/Club/ClubCabinetInfo";
+import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
 import ClubPageModals from "@/components/Club/ClubPageModals";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import { ClubInfoResponseType } from "@/types/dto/club.dto";
 import { axiosGetClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
-import ClubNoticeCard from "../Card/ClubNoticeCard/ClubNoticeCard";
 
-const ClubPageInfo = ({ clubId }: { clubId: number }) => {
+const ClubInfo = ({ clubId }: { clubId: number }) => {
   const [clubInfo, setClubInfo] = useState<ClubInfoResponseType>(undefined);
   const [page, setPage] = useState<number>(0);
 
@@ -33,8 +32,10 @@ const ClubPageInfo = ({ clubId }: { clubId: number }) => {
       setTimeout(() => {
         setClubInfo(result.data);
       }, 500);
-    } catch (error) {
-      throw error;
+    } catch {
+      setTimeout(() => {
+        setClubInfo(STATUS_400_BAD_REQUEST);
+      }, 500);
     }
   };
 
@@ -48,7 +49,7 @@ const ClubPageInfo = ({ clubId }: { clubId: number }) => {
         </EmptyClubCabinetTextStyled>
       ) : (
         <>
-          <ClubHeaderStyled>동아리 정보</ClubHeaderStyled>
+          <TitleStyled>동아리 정보</TitleStyled>
           <CardGridWrapper>
             <ClubCabinetInfoCard clubInfo={clubInfo} />
             <ClubNoticeCard clubId={clubId} notice={clubInfo.clubNotice} />
@@ -72,11 +73,20 @@ const EmptyClubCabinetTextStyled = styled.div`
   /* margin-top: 20px; */
 `;
 
-const ClubHeaderStyled = styled.div`
+const ClubInfoWrapperStyled = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+
+const TitleStyled = styled.div`
   width: 80%;
+  max-width: 720px;
   display: flex;
   justify-content: flex-start;
-  /* margin-left: 12rem; */
   margin-bottom: 1rem;
   font-size: 20px;
   font-weight: bold;
@@ -84,7 +94,7 @@ const ClubHeaderStyled = styled.div`
 
 const CardGridWrapper = styled.div`
   display: grid;
-  padding: 1rem 0;
+  margin: 1rem 0 2rem;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -102,4 +112,4 @@ const CardGridWrapper = styled.div`
   }
 `;
 
-export default ClubPageInfo;
+export default ClubInfo;

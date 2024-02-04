@@ -83,10 +83,10 @@ export const axiosUpdateDeviceToken = async (
   }
 };
 
-const axiosMyClubInfoURL = "/v4/clubs";
-export const axiosMyClubInfo = async (): Promise<any> => {
+const axiosMyClubListURL = "/v4/clubs";
+export const axiosMyClubList = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosMyClubInfoURL);
+    const response = await instance.get(axiosMyClubListURL);
     return response;
   } catch (error) {
     throw error;

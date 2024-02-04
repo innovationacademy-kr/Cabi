@@ -14,9 +14,9 @@ const ClubCabinetInfoCard = ({
 }: {
   clubInfo: ClubInfoResponseDto;
 }) => {
-  const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
   const [password, setPassword] = useState<string>(clubInfo.clubMemo || "1111");
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
 
   const handleSettingLogoClick = () => {
     setShowPasswordModal(true);

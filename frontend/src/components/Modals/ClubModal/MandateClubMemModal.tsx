@@ -26,7 +26,7 @@ const MandateClubMemModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  const mandateDetail = `<해당 동아리명>의  동아리장 권한을  <strong>${props.mandateMember}</strong>에게 위임하겠습니까?`;
+  const mandateDetail = `<해당 동아리명> 의  동아리장 권한을  <strong>${props.mandateMember}</strong> 에게 위임하겠습니까?`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);

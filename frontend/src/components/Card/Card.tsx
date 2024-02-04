@@ -119,12 +119,12 @@ export const CardButtonStyled = styled.div<{
           border: none;
           border-radius: 5px;
           font-weight: 350;
-          cursor: ${props.isClickable ? "pointer" : "default"};
           margin-left: 10px;
           &:hover {
             font-weight: ${props.isClickable && 400};
           }
         `}
+  cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
 `;
 
 export default Card;
