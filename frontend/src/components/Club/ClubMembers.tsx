@@ -1,8 +1,8 @@
 import { MouseEvent } from "react";
 import styled from "styled-components";
 import closeIcon from "@/assets/images/close-circle.svg";
-import crown from "@/assets/images/crown.svg";
-import user from "@/assets/images/privateIcon.svg";
+import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
+import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 import { UserDto } from "@/types/dto/user.dto";
@@ -53,29 +53,32 @@ const ClubMembers: React.FC<{
                   props.mandateClubMasterModal(e, `${mem.userName}`);
               }}
               key={idx}
-              bgColor={
-                mem.userName === props.myInfo.name ? "var(--sub-color)" : ""
-              }
+              bgColor={mem.userName === props.master ? "var(--sub-color)" : ""}
             >
-              <div id="top">
-                {mem.userName === props.master ? (
-                  <img id="crown" src={crown} />
-                ) : mem.userName === props.myInfo.name ? null : (
-                  <img id="user" src={user} />
-                  // <CloseIconStyled
-                  //   id="closeIcon"
-                  //   src={user}
-                  // onClick={(e: MouseEvent<HTMLDivElement>) =>
-                  //   props.deleteClubMemberModal(
-                  //     e,
-                  //     `${mem.userName}`,
-                  //     mem.userId
-                  //   )
-                  // }
-                  // />
-                )}
-              </div>
-              <div id="userName">{mem.userName}</div>
+              {/* <div id="top"> */}
+              {mem.userName === props.master ? (
+                <div id="clubMaster">
+                  {/* <IconContainer> */}
+                  <CrownImg
+                    stroke="#f5f5f5"
+                    width={30}
+                    height={30}
+                    viewBox="0 0 24 24"
+                  />
+                  {/* </IconContainer> */}
+                  <p>{mem.userName}</p>
+                </div>
+              ) : (
+                //  mem.userName === props.myInfo.name ? null :
+                <div id="clubUser">
+                  {/* <IconContainer> */}
+                  <UserImg width={30} height={30} viewBox="0 0 24 24" />
+                  {/* </IconContainer> */}
+                  <p>{mem.userName}</p>
+                </div>
+              )}
+              {/* </div> */}
+              {/* <div id="userName">{mem.userName}</div> */}
             </MemCardStyled>
           );
         })}
@@ -103,12 +106,6 @@ const TitleBarStyled = styled.div`
   display: flex;
   font-size: 20px;
   font-weight: 700;
-
-  & img {
-    width: 24px;
-    height: 24px;
-    margin-right: 6px;
-  }
 
   & > div {
     margin-left: 18px;
@@ -143,6 +140,11 @@ const AddMemCardStyled = styled.div`
   }
 `;
 
+const IconContainer = styled.div`
+  width: 1rem;
+  height: 1rem;
+`;
+
 const MemCardStyled = styled.div<{ bgColor: string }>`
   width: 80px;
   height: 80px;
@@ -154,27 +156,15 @@ const MemCardStyled = styled.div<{ bgColor: string }>`
   flex-direction: column;
   justify-content: space-between;
 
-  & #crown {
-    width: 1rem;
-    height: 1rem;
+  & > div {
+    & > p {
+      line-height: 28px;
+      height: 28px;
+      font-size: 14px;
+    }
   }
-
-  & #user {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  & #top {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    border: 1rem;
-  }
-
-  & #userName {
-    line-height: 28px;
-    height: 28px;
-    font-size: 14px;
+  & #clubMaster {
+    color: #f5f5f5;
   }
 `;
 
