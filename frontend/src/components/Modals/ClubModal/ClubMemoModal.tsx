@@ -12,27 +12,13 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "../ResponseModal/ResponseModal";
-
-export interface MemoModalTestInterface {
-  cabinetMemo: string | null;
-}
-
-interface MemoModalTestContainerInterface {
-  text: string;
-  onClose: React.MouseEventHandler;
-  onSave: (newMemo: string | null) => void;
-  setText: React.Dispatch<React.SetStateAction<string>>;
-  clubId: number;
-  clubNotice: string;
-  page: number;
-}
+import { MemoModalTestContainerInterface } from "./ClubMemoModal.container";
 
 const MAX_INPUT_LENGTH = 100;
 
 const ClubMemoModal = ({
   text,
   onClose,
-  onSave,
   setText,
   clubId,
   clubNotice,
@@ -74,7 +60,6 @@ const ClubMemoModal = ({
       setShowResponseModal(true);
     }
   };
-  // console.log(clubNotice);
   // const handleClickSave = (e: React.MouseEvent) => {
 
   //   document.getElementById("unselect-input")?.focus();
@@ -156,8 +141,7 @@ const ClubMemoModal = ({
             <ButtonWrapperStyled mode={mode}>
               {mode === "write" && (
                 <Button
-                  onClick={(e) => {
-                    // handleClickSave(e);
+                  onClick={() => {
                     tryMemoRequest();
                   }}
                   text="저장"

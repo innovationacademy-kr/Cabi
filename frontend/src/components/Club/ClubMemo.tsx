@@ -13,7 +13,6 @@ const ClubMemo = ({
   page: number;
 }) => {
   const [text, setText] = useState<string>("");
-  const [newText, setNewText] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const openModal = () => {
@@ -22,9 +21,6 @@ const ClubMemo = ({
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-  const handleSaveMemo = (newMemo: string | null) => {
-    setNewText(newMemo ?? "");
   };
 
   return (
@@ -36,16 +32,16 @@ const ClubMemo = ({
         </MemoIconStyled>
       </ClubMemoHeaderStyled>
       <ClubMemoStyled>{clubNotice}</ClubMemoStyled>
-      <ClubMemoModalContainer
-        onClose={() => closeModal()}
-        isModalOpen={isModalOpen}
-        text={text}
-        setText={setText}
-        onSave={handleSaveMemo}
-        clubId={clubId}
-        clubNotice={clubNotice}
-        page={page}
-      />
+      {isModalOpen && (
+        <ClubMemoModalContainer
+          onClose={() => closeModal()}
+          text={text}
+          setText={setText}
+          clubId={clubId}
+          clubNotice={clubNotice}
+          page={page}
+        />
+      )}
     </ClubSubInfoBoxStyled>
   );
 };
