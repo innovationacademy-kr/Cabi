@@ -86,8 +86,8 @@ public class LogAspect {
 			for (int i = 0; i < args.length; i++) {
 				sb.append(parameterNames[i]).append(": ").append(args[i]).append(", ");
 			}
+			sb.delete(sb.length() - 2, sb.length() - 1);
 		}
-		sb.delete(sb.length() - 2, sb.length() - 1);
 		return sb.toString();
 	}
 }
