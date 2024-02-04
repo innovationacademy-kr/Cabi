@@ -8,9 +8,10 @@ import useMultiSelect from "@/hooks/useMultiSelect";
 const ModifyClubPwModal: React.FC<{
   modalContents: IModalContents;
   password: string;
+  tmpPw: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSendPassword: () => void;
-}> = ({ modalContents, password, onChange, onSendPassword }) => {
+}> = ({ modalContents, password, tmpPw, onChange, onSendPassword }) => {
   const {
     type,
     iconScaleEffect,
@@ -31,14 +32,25 @@ const ModifyClubPwModal: React.FC<{
     if (inputRef.current) inputRef.current.focus();
   };
 
-  useEffect(() => {
-    const temp = [...password.split("")];
-    for (let i = 0; i < 4 - password.length; i++) {
+  const makeList = (inputString: string) => {
+    const temp = [...inputString.split("")];
+    for (let i = 0; i < 4 - inputString.length; i++) {
       temp.push("");
     }
     setList([...temp]);
     if (inputRef.current) inputRef.current.focus();
-  }, [password]);
+  };
+
+  useEffect(() => {
+    // const temp = [...password.split("")];
+    // for (let i = 0; i < 4 - password.length; i++) {
+    //   temp.push("");
+    // }
+    // setList([...temp]);
+    // if (inputRef.current) inputRef.current.focus();
+    let inputString = tmpPw === password ? password : tmpPw;
+    makeList(inputString);
+  }, [password, tmpPw]);
 
   const handleEnterPress = () => {
     // if (tryLentRequest && password.length == 4) tryLentRequest();
@@ -88,12 +100,12 @@ const ModifyClubPwModal: React.FC<{
         />
         <ButtonWrapperStyled>
           <Button
-            onClick={closeModal}
+            onClick={(e) => closeModal(e)}
             text={cancelBtnText || "취소"}
             theme="line"
           />
           <Button
-            onClick={(e) => {
+            onClick={() => {
               // onClickProceed!(e);
               onSendPassword();
             }}

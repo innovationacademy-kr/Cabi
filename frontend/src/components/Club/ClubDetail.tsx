@@ -4,13 +4,14 @@ import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import ClubPasswordModal from "./ClubPasswordModal";
 
 const ClubDetail = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
-  const [pw, setPw] = useState<string>("1111");
+  const [password, setPassword] = useState<string>("1111");
   const [pwCover, setPwCover] = useState<string>("****");
   const [isModalOpenTest, setIsModalOpenTest] = useState<boolean>(false);
 
   useEffect(() => {
     if (clubInfo.clubMemo) {
-      setPw(clubInfo.clubMemo.toString());
+      // console.log("hi");
+      setPassword(clubInfo.clubMemo.toString());
     }
   }, [clubInfo]);
 
@@ -37,7 +38,7 @@ const ClubDetail = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
       <ClubPwStyled>
         비밀번호
         <PsSpanStyled>
-          <PwStyled pw={pw}>{pwCover}</PwStyled>
+          <PwStyled password={password}>{pwCover}</PwStyled>
         </PsSpanStyled>
         <SettingLogoStyled>
           {" "}
@@ -47,7 +48,12 @@ const ClubDetail = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
           ></img>
         </SettingLogoStyled>
       </ClubPwStyled>
-      <ClubPasswordModal pw={pw} setPw={setPw} isModalOpenTest={isModalOpenTest} setIsModalOpenTest={setIsModalOpenTest}/>
+      <ClubPasswordModal
+        password={password}
+        setPassword={setPassword}
+        isModalOpenTest={isModalOpenTest}
+        setIsModalOpenTest={setIsModalOpenTest}
+      />
     </ClubBasicInfoBoxStyled>
   );
 };
@@ -90,7 +96,7 @@ const PsSpanStyled = styled.span`
   align-items: center;
 `;
 
-const PwStyled = styled.span<{ pw: string }>`
+const PwStyled = styled.span<{ password: string }>`
   height: 100%;
   position: relative;
   margin-left: 10px;
@@ -99,7 +105,7 @@ const PwStyled = styled.span<{ pw: string }>`
   font-size: 20px;
 
   &:hover::after {
-    content: "${(props) => props.pw}";
+    content: "${(props) => props.password}";
     width: 100%;
     height: 100%;
     position: absolute;

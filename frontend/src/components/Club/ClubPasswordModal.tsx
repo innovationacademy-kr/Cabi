@@ -9,13 +9,13 @@ import {
 } from "../Modals/ResponseModal/ResponseModal";
 
 const ClubPasswordModal = ({
-  pw,
-  setPw,
+  password,
+  setPassword,
   isModalOpenTest,
   setIsModalOpenTest,
 }: {
-  pw: string;
-  setPw: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
   isModalOpenTest: boolean;
   setIsModalOpenTest: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -26,15 +26,28 @@ const ClubPasswordModal = ({
   const [tmpPw, setTmpPw] = useState<string>("");
 
   useEffect(() => {
-    setTmpPw(pw);
-  }, []);
+    // console.log("useEffect pw : ", password);
+    setTmpPw(password);
+  }, [password]);
+
+  //   useEffect(() => {
+  //     console.log("tmpPw : ", tmpPw);
+  //   }, [tmpPw]);
 
   const closeModal = () => {
+    // console.log("closeModal pw : ", password);
+    setTmpPw(password);
     setIsModalOpenTest(false);
   };
 
+  //   useEffect(() => {
+  //     console.log("password : ", password);
+  //   }, [password]);
+
   const onSendPassword = () => {
-    setPw(tmpPw);
+    // console.log("hi2");
+    setPassword(tmpPw);
+    // console.log("onSendPassword tmppw: ", tmpPw)
     closeModal();
   };
 
@@ -83,11 +96,11 @@ const ClubPasswordModal = ({
     console.log("onChange : ", e.target.value);
     const regex = /^[0-9]{0,4}$/;
     if (!regex.test(e.target.value)) {
-      //   e.target.value = pw;
+      //   e.target.value = password;
       e.target.value = tmpPw;
       return;
     }
-    // setPw(e.target.value);
+    // setPassword(e.target.value);
     setTmpPw(e.target.value);
   };
 
@@ -98,8 +111,8 @@ const ClubPasswordModal = ({
           {!showResponseModal && (
             <ModifyClubPwModal
               modalContents={testModal}
-              //   password={pw}
-              password={tmpPw}
+              password={password}
+              tmpPw={tmpPw}
               onChange={onChange}
               onSendPassword={onSendPassword}
             />
