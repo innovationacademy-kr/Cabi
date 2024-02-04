@@ -29,6 +29,8 @@ const ClubMembersContainer: React.FC<{
 
   const clickMoreButton = () => {
     props.setPage((prev) => prev + 1);
+    // props.getClubInfo(props.clubId);
+    setIsCurrentSectionRender(true);
   };
 
   const deleteClubMemberModal = (
@@ -73,13 +75,12 @@ const ClubMembersContainer: React.FC<{
     }
   }, [members]);
 
-  useEffect(() => {
-    if (props.clubId) {
-      props.getClubInfo(props.clubId);
-
-      setIsCurrentSectionRender(true);
-    }
-  }, [props.page]);
+  // useEffect(() => {
+  //   if (props.clubId) {
+  //     props.getClubInfo(props.clubId);
+  //     setIsCurrentSectionRender(true);
+  //   }
+  // }, [props.page]);
 
   // TODO : props. 떼기
   return (

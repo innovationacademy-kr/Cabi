@@ -1,42 +1,54 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import ClubList from "@/components/Club/ClubList";
 import { ClubPageInfo } from "@/components/Club/ClubPageInfo";
+import { ClubListReponseType } from "@/types/dto/club.dto";
+import { axiosMyClubInfo } from "@/api/axios/axios.custom";
+import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubPage = () => {
+  const [clubList, setClubList] = useState<ClubListReponseType>(undefined);
+  const [toggleType, setToggleType] = useState<number>(0);
+
+  useEffect(() => {
+    getMyClubInfo();
+  }, []);
+
+  const getMyClubInfo = async () => {
+    try {
+      const response = await axiosMyClubInfo();
+      const result = response.data.result;
+      const totalLength = response.data.totalLength;
+      setClubList({ result, totalLength });
+    } catch (error) {
+      setClubList(STATUS_400_BAD_REQUEST);
+      throw error;
+    }
+  };
+
   return (
     <WrapperStyled>
-      <ContainerStyled>
-        <TitleStyled>동아리 정보</TitleStyled>
-        <ClubPageInfo></ClubPageInfo>
-      </ContainerStyled>
+      {clubList === STATUS_400_BAD_REQUEST ? (
+        <div>가입한 동아리가 없어요!</div>
+      ) : (
+        <ClubList
+          clubList={clubList}
+          toggleType={toggleType}
+          setToggleType={setToggleType}
+        />
+      )}
+      <ClubPageInfo clubId={toggleType} />
     </WrapperStyled>
   );
 };
 
 const WrapperStyled = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 100%;
-`;
-
-const ContainerStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 112px 0 0 0;
-  padding-bottom: 112px;
-  width: 795px;
-  height: 100%;
-`;
-
-const TitleStyled = styled.div`
-  text-align: center;
-  font-size: 2rem;
-  letter-spacing: -0.02rem;
-  font-weight: 700;
-  margin-bottom: 30px;
 `;
 
 export default ClubPage;
