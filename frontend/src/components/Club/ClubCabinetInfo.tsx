@@ -29,8 +29,6 @@ const ClubCabinetInfo = ({
 
 const ClubCabinetInfoStyled = styled.div`
   width: 100%;
-  /* height: 350px; */
-  /* height: 100%; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,9 +45,7 @@ const ClubHeaderStyled = styled.div`
 `;
 
 const ClubInfoBoxStyled = styled.div`
-  /* width: 795px; */
   width: 100%;
-  /* height: 285px; */
   height: 100%;
   display: flex;
   justify-content: center;

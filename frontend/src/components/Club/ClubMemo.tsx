@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import edit from "@/assets/images/edit.svg";
-import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
+import ClubMemoModalContainer from "../Modals/ClubModal/ClubMemoModal.container";
 
 const ClubMemo = ({
   clubId,
@@ -26,10 +26,7 @@ const ClubMemo = ({
   const handleSaveMemo = (newMemo: string | null) => {
     setNewText(newMemo ?? "");
   };
-  // useEffect(() => {
-  //   console.log("text : ", text);
-  //   console.log("newText : ", newText);
-  // }, [text, newText]);
+
   return (
     <ClubSubInfoBoxStyled>
       <ClubMemoHeaderStyled>
@@ -39,7 +36,7 @@ const ClubMemo = ({
         </MemoIconStyled>
       </ClubMemoHeaderStyled>
       <ClubMemoStyled>{clubNotice}</ClubMemoStyled>
-      <MemoModalTestContainer
+      <ClubMemoModalContainer
         onClose={() => closeModal()}
         isModalOpen={isModalOpen}
         text={text}
@@ -94,13 +91,6 @@ const MemoIconStyled = styled.div`
   margin-bottom: 10px;
   margin-bottom: 10px;
   cursor: pointer;
-`;
-
-const TextCountStyled = styled.div`
-  font-size: 16px;
-  display: flex;
-  justify-content: end;
-  margin-top: 10px;
 `;
 
 export default ClubMemo;

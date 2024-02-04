@@ -1,9 +1,7 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { currentFloorCabinetState, myCabinetInfoState } from "@/recoil/atoms";
-import MemoModalTest from "./ClubMemoModal";
+import ClubMemoModal from "./ClubMemoModal";
 
-const MemoModalTestContainer = (props: {
+const ClubMemoModalContainer = (props: {
   onClose: React.MouseEventHandler<Element>;
   isModalOpen: boolean;
   text: string;
@@ -13,18 +11,10 @@ const MemoModalTestContainer = (props: {
   clubNotice: string;
   page: number;
 }) => {
-  const [] = useRecoilState(currentFloorCabinetState);
-
-  const onSaveEditMemo = (newMemo: string | null) => {
-    if (newMemo !== props.text) {
-      props.setText(newMemo ?? "");
-    }
-  };
-
   return (
     <>
       {props.isModalOpen && (
-        <MemoModalTest
+        <ClubMemoModal
           onClose={props.onClose}
           onSave={props.onSave}
           text={props.text}
@@ -38,4 +28,4 @@ const MemoModalTestContainer = (props: {
   );
 };
 
-export default MemoModalTestContainer;
+export default ClubMemoModalContainer;

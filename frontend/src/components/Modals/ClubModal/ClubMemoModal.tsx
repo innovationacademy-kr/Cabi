@@ -29,7 +29,7 @@ interface MemoModalTestContainerInterface {
 
 const MAX_INPUT_LENGTH = 100;
 
-const MemoModalTest = ({
+const ClubMemoModal = ({
   text,
   onClose,
   onSave,
@@ -126,25 +126,25 @@ const MemoModalTest = ({
                 <ContentItemWrapperStyled>
                   <ContentItemInputStyled
                     onChange={handleChange}
-                    placeholder={text ? text : ""}
+                    placeholder={clubNotice}
                     mode={mode}
-                    defaultValue={text ? text : ""}
+                    defaultValue={clubNotice}
                     readOnly={mode === "read" ? true : false}
                     ref={newMemo}
                     maxLength={MAX_INPUT_LENGTH}
                   ></ContentItemInputStyled>
-                  <ContentItemWrapperStyledBottom>
+                  <ContentItemWrapperStyledBottomStyled>
                     {charCount <= MAX_INPUT_LENGTH && (
-                      <LengthCount>
+                      <LengthCountStyled>
                         {charCount} / {MAX_INPUT_LENGTH}
-                      </LengthCount>
+                      </LengthCountStyled>
                     )}
                     {charCount > MAX_INPUT_LENGTH && (
-                      <LengthCount>
+                      <LengthCountStyled>
                         {MAX_INPUT_LENGTH} / {MAX_INPUT_LENGTH}
-                      </LengthCount>
+                      </LengthCountStyled>
                     )}
-                  </ContentItemWrapperStyledBottom>
+                  </ContentItemWrapperStyledBottomStyled>
                 </ContentItemWrapperStyled>
               </ContentItemSectionStyled>
             </ContentSectionStyled>
@@ -247,11 +247,6 @@ const ContentItemWrapperStyled = styled.div`
   margin-bottom: 5px;
 `;
 
-const ContentItemTitleStyled = styled.h3`
-  font-size: 1.125rem;
-  margin-bottom: 8px;
-`;
-
 const ContentItemInputStyled = styled.textarea<{
   mode: string;
 }>`
@@ -312,13 +307,14 @@ const ButtonWrapperStyled = styled.div<{ mode: string }>`
   align-items: center;
 `;
 
-const ContentItemWrapperStyledBottom = styled.div`
+const ContentItemWrapperStyledBottomStyled = styled.div`
   width: 100%;
   display: flex;
   justify-content: end;
   margin-top: 2px;
 `;
-const LengthCount = styled.span`
+
+const LengthCountStyled = styled.span`
   width: 80px;
   display: flex;
   flex-direction: column;
@@ -327,4 +323,4 @@ const LengthCount = styled.span`
   font-size: 16px;
 `;
 
-export default MemoModalTest;
+export default ClubMemoModal;

@@ -93,7 +93,7 @@ const ClubPasswordModal = ({
   //   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("onChange : ", e.target.value);
+    // console.log("onChange : ", e.target.value);
     const regex = /^[0-9]{0,4}$/;
     if (!regex.test(e.target.value)) {
       //   e.target.value = password;

@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  ClubInfoResponseDto,
-  ClubInfoResponseType,
-  ClubPaginationResponseDto,
-} from "@/types/dto/club.dto";
-import { axiosGetClubInfo, axiosMyClubInfo } from "@/api/axios/axios.custom";
+import { ClubInfoResponseType } from "@/types/dto/club.dto";
+import { axiosGetClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 import LoadingAnimation from "../Common/LoadingAnimation";
-import MultiToggleSwitch2, { toggleItem } from "../Common/MultiToggleSwitch2";
 import ClubCabinetInfo from "./ClubCabinetInfo";
 import ClubPageModals from "./ClubPageModals";
 
@@ -32,14 +27,6 @@ export function ClubPageInfo({ clubId }: { clubId: number }) {
   const getClubInfo = async () => {
     try {
       const result = await axiosGetClubInfo(clubId, page, 2);
-      // if (page > 0) {
-      //   setClubInfo((prev) => {
-      //     return {
-      //       ...prev,
-      //       clubUsers: [...prev.clubUsers, ...result.data.clubUsers],
-      //     };
-      //   });
-      // } else
       setClubInfo(result.data);
     } catch (error) {
       throw error;
@@ -67,6 +54,3 @@ export function ClubPageInfo({ clubId }: { clubId: number }) {
     </>
   );
 }
-// info
-// detail
-// memo
