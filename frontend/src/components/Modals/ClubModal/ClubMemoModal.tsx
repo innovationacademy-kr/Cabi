@@ -22,8 +22,8 @@ const ClubMemoModal = ({
   setText,
   clubId,
   clubNotice,
-  page,
-}: MemoModalTestContainerInterface) => {
+}: // page,
+MemoModalTestContainerInterface) => {
   const [mode, setMode] = useState<string>("read");
   const newMemo = useRef<HTMLTextAreaElement>(null);
   const previousTextRef = useRef<string>(text);
@@ -49,7 +49,7 @@ const ClubMemoModal = ({
       await axiosUpdateClubNotice(clubId, text);
       setIsCurrentSectionRender(true);
       setModalTitle("이사가 완료되었습니다");
-      const result = await axiosGetClubInfo(clubId, page, 2);
+      // const result = await axiosGetClubInfo(clubId, page, 2);
       // console.log("hey!!", result.data);
     } catch (error: any) {
       // setModalTitle(error.response.data.message);

@@ -11,7 +11,7 @@ export interface MemoModalTestContainerInterface {
   setText: React.Dispatch<React.SetStateAction<string>>;
   clubId: number;
   clubNotice: string;
-  page: number;
+  // page: number;
 }
 
 const ClubMemoModalContainer = ({
@@ -20,8 +20,8 @@ const ClubMemoModalContainer = ({
   setText,
   clubId,
   clubNotice,
-  page,
-}: MemoModalTestContainerInterface) => {
+}: // page,
+MemoModalTestContainerInterface) => {
   return (
     <ClubMemoModal
       onClose={onClose}
@@ -29,7 +29,7 @@ const ClubMemoModalContainer = ({
       setText={setText}
       clubId={clubId}
       clubNotice={clubNotice}
-      page={page}
+      // page={page}
     />
   );
 };

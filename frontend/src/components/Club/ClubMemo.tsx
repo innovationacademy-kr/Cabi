@@ -6,7 +6,6 @@ import ClubMemoModalContainer from "../Modals/ClubModal/ClubMemoModal.container"
 const ClubMemo = ({
   clubId,
   clubNotice,
-  page,
 }: {
   clubId: number;
   clubNotice: string;
@@ -39,7 +38,6 @@ const ClubMemo = ({
           setText={setText}
           clubId={clubId}
           clubNotice={clubNotice}
-          page={page}
         />
       )}
     </ClubSubInfoBoxStyled>

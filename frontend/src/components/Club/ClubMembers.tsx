@@ -69,7 +69,7 @@ const ClubMembers: React.FC<{
               ) : (
                 //  mem.userName === props.myInfo.name ? null :
                 <div id="clubUser">
-                  <UserImg width={24} height={24} viewBox="0 0 24 24" />
+                  <UserImg width={16} height={16} viewBox="0 0 24 24" />
                   <p>{mem.userName}</p>
                 </div>
               )}

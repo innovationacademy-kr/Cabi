@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ClubList from "@/components/Club/ClubList";
-import { ClubPageInfo } from "@/components/Club/ClubPageInfo";
-import { ClubListReponseType } from "@/types/dto/club.dto";
+import ClubPageInfo from "@/components/Club/ClubPageInfo";
+import {
+  ClubListReponseType,
+  ClubPaginationResponseDto,
+} from "@/types/dto/club.dto";
 import { axiosMyClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
@@ -19,7 +22,7 @@ const ClubPage = () => {
       const response = await axiosMyClubInfo();
       const result = response.data.result;
       const totalLength = response.data.totalLength;
-      setClubList({ result, totalLength });
+      setClubList({ result, totalLength } as ClubPaginationResponseDto);
     } catch (error) {
       setClubList(STATUS_400_BAD_REQUEST);
       throw error;
@@ -29,7 +32,9 @@ const ClubPage = () => {
   return (
     <WrapperStyled>
       {clubList === STATUS_400_BAD_REQUEST ? (
-        <div>가입한 동아리가 없어요!</div>
+        <EmptyClubListTextStyled>
+          가입한 동아리가 없어요!
+        </EmptyClubListTextStyled>
       ) : (
         <ClubList
           clubList={clubList}
@@ -49,6 +54,11 @@ const WrapperStyled = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+`;
+
+const EmptyClubListTextStyled = styled.div`
+  font-size: 1.5rem;
+  font-weight: bold;
 `;
 
 export default ClubPage;

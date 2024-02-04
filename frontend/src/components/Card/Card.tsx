@@ -1,8 +1,8 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export interface IButtonProps {
-  label: string;
+  label?: string;
   onClick?: () => void;
   backgroundColor?: string;
   color?: string;
@@ -25,30 +25,33 @@ const Card = ({
   gridArea,
   width = "350px",
   height = "163px",
-  buttons,
+  buttons = [],
   children,
 }: CardProps) => {
   return (
     <CardStyled gridArea={gridArea} width={width} height={height}>
-      <CardHeaderStyled>
-        {title && <CardTitleStyled>{title}</CardTitleStyled>}
-        {buttons && (
-          <CardButtonWrapper>
-            {buttons?.map((button, index) => (
-              <CardButtonStyled
-                key={index}
-                onClick={button.onClick}
-                color={button.color}
-                backgroundColor={button.backgroundColor}
-                isClickable={button.isClickable}
-                isExtensible={button.isExtensible}
-              >
-                {button.label}
-              </CardButtonStyled>
-            ))}
-          </CardButtonWrapper>
-        )}
-      </CardHeaderStyled>
+      {(title || buttons.length > 0) && (
+        <CardHeaderStyled>
+          {title && <CardTitleStyled>{title}</CardTitleStyled>}
+          {buttons.length > 0 && (
+            <CardButtonWrapper>
+              {buttons?.map((button, index) => (
+                <CardButtonStyled
+                  key={index}
+                  onClick={button.onClick}
+                  color={button.color}
+                  backgroundColor={button.backgroundColor}
+                  icon={button.icon}
+                  isClickable={button.isClickable}
+                  isExtensible={button.isExtensible}
+                >
+                  {button.label}
+                </CardButtonStyled>
+              ))}
+            </CardButtonWrapper>
+          )}
+        </CardHeaderStyled>
+      )}
       {children}
     </CardStyled>
   );
@@ -90,26 +93,38 @@ export const CardButtonWrapper = styled.div`
 export const CardButtonStyled = styled.div<{
   backgroundColor?: string;
   color?: string;
+  icon?: string;
   isClickable?: boolean;
   isExtensible?: boolean;
 }>`
-  background-color: ${(props) =>
-    props.backgroundColor ? props.backgroundColor : "var(--white)"};
-  color: ${(props) =>
-    props.color
-      ? props.color
-      : props.isExtensible
-      ? "var(--main-color)"
-      : "var(--gray-color)"};
-  padding: 5px 15px;
-  border: none;
-  border-radius: 5px;
-  font-weight: 350;
-  cursor: ${(props) => (props.isClickable ? "pointer" : "default")};
-  margin-left: 10px;
-  &:hover {
-    font-weight: ${(props) => props.isClickable && 400};
-  }
+  ${(props) =>
+    props.icon
+      ? css`
+          background-image: url(${props.icon});
+          height: 20px;
+          width: 20px;
+          background-size: contain;
+          background-repeat: no-repeat;
+        `
+      : css`
+          background-color: ${props.backgroundColor
+            ? props.backgroundColor
+            : "var(--white)"};
+          color: ${props.color
+            ? props.color
+            : props.isExtensible
+            ? "var(--main-color)"
+            : "var(--gray-color)"};
+          padding: 5px 15px;
+          border: none;
+          border-radius: 5px;
+          font-weight: 350;
+          cursor: ${props.isClickable ? "pointer" : "default"};
+          margin-left: 10px;
+          &:hover {
+            font-weight: ${props.isClickable && 400};
+          }
+        `}
 `;
 
 export default Card;
