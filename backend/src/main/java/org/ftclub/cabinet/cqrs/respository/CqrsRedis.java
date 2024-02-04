@@ -1,10 +1,6 @@
 package org.ftclub.cabinet.cqrs.respository;
 
 
-import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.AVAILABLE_CABINET;
-import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.BUILDINGS;
-import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.FLOORS;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,9 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.ftclub.cabinet.dto.BuildingFloorsDto;
-import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
@@ -56,6 +51,20 @@ public class CqrsRedis {
 		this.objectMapper = objectMapper;
 	}
 
+	//@formatter:off
+	private <T> T stringToDto(String value) {
+
+		if (value == null) {
+			return null;
+		}
+		try {
+			return objectMapper.readValue(value, new TypeReference<>() {});
+		} catch (JsonProcessingException e) {
+			log.error("String to JSON Parse Error : {}, {}", value, e.toString());
+			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
+		}
+	}
+
 	private <T> String dtoToString(T dto) {
 		if (dto == null) {
 			return null;
@@ -63,23 +72,17 @@ public class CqrsRedis {
 		try {
 			return objectMapper.writeValueAsString(dto);
 		} catch (JsonProcessingException e) {
-			log.error("DTO to JSON Parse Error : {}, {}", dto, e.toString());
+			log.error("DTO to String Parse Error : {}, {}", dto, e.toString());
 			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
 		}
 	}
 
-	private <T> T stringToDto(String value) {
-		if (value == null) {
-			return null;
+	public <T> List<T> transList(List<Map<String, String>> transList, Class<T> clazz) {
+		if (transList == null) {
+			return new ArrayList<>();
 		}
-		try {
-			//@formatter:off
-			return objectMapper.readValue(value, new TypeReference<>() {});
-			//@formatter:on
-		} catch (JsonProcessingException e) {
-			log.error("String to JSON Parse Error : {}, {}", value, e.toString());
-			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
-		}
+		return transList.stream().map(c -> objectMapper.convertValue(c, clazz))
+				.collect(Collectors.toList());
 	}
 
 	public void clear(String key) {
@@ -90,9 +93,9 @@ public class CqrsRedis {
 		hashTemplate.delete(key, subKey);
 	}
 
-	private void clearBySuffix(CqrsSuffix suffix) {
+	public void clearBySuffix(String suffix) {
 		ScanOptions options =
-				ScanOptions.scanOptions().match("*" + suffix.getValue()).count(200).build();
+				ScanOptions.scanOptions().match("*" + suffix).count(200).build();
 		Cursor<byte[]> keys = connection.scan(options);
 		while (keys.hasNext()) {
 			String key = new String(keys.next());
@@ -100,75 +103,39 @@ public class CqrsRedis {
 		}
 	}
 
-
-	public void clearBuildingFloors() {
-		this.clear(BUILDINGS.getValue());
+	public <T> T getAsDto(String key) {
+		String value = valueTemplate.get(key);return stringToDto(value);
 	}
 
-	public List<BuildingFloorsDto> getBuildingFloors() {
-		String value = valueTemplate.get(BUILDINGS.getValue());
-		List<BuildingFloorsDto> buildingFloors = this.stringToDto(value);
-		if (buildingFloors == null) {
-			return new ArrayList<>();
+	public <T> List<T> getAsList(String key, Class<T> clazz) {
+		List<Map<String, String>> transMap = stringToDto(valueTemplate.get(key));
+		return this.transList(transMap, clazz);
+	}
+
+	public <T> T getHashAsDto(String key, String subKey) {
+		return stringToDto(hashTemplate.get(key, subKey));
+	}
+
+	public <T> List<T> getHashAsList(String key, String subKey, Class<T> clazz) {
+		List<Map<String, String>> transMap = stringToDto(hashTemplate.get(key, subKey));
+		return this.transList(transMap, clazz);
+	}
+
+	public <T> Map<String, T> getHashEntries(String key) {
+		Map<String, String> entries = hashTemplate.entries(key);
+		Map<String, T> result = new HashMap<>();
+		for (Map.Entry<String, String> entry : entries.entrySet()) {
+			result.put(entry.getKey(), stringToDto(entry.getValue()));
 		}
-		return buildingFloors;
+		return result;
 	}
 
-	public void setBuildingFloors(List<BuildingFloorsDto> buildingFloorsDtos) {
-		String value = this.dtoToString(buildingFloorsDtos);
-		valueTemplate.set(BUILDINGS.getValue(), value);
+	public <T> void set(String key, T value) {
+		redisTemplate.opsForValue().set(key, dtoToString(value));
 	}
 
-	public void clearFloors() {
-		this.clearBySuffix(FLOORS);
+	public void setHash(String key, String subKey, Object value) {
+		hashTemplate.put(key, subKey, dtoToString(value));
 	}
-
-	public void setFloors(String building, List<Integer> floors) {
-		String value = this.dtoToString(floors);
-		valueTemplate.set(building + FLOORS.getValue(), value);
-	}
-
-	public List<Integer> getFloors(String building) {
-		String value = valueTemplate.get(building + FLOORS.getValue());
-		List<Integer> floors = this.stringToDto(value);
-		if (floors == null) {
-			return new ArrayList<>();
-		}
-		return floors;
-	}
-
-	public void clearAvailableCabinet() {
-		this.clearBySuffix(AVAILABLE_CABINET);
-	}
-
-	public Map<Integer, List<CabinetPreviewDto>> getAvailableCabinet(String building) {
-		Map<Integer, List<CabinetPreviewDto>> availableCabinets = new HashMap<>();
-		hashTemplate.entries(building + AVAILABLE_CABINET.getValue())
-				.forEach((key, value) -> {
-					Integer floor = Integer.parseInt(key);
-					List<CabinetPreviewDto> cabinets = this.stringToDto(value);
-					availableCabinets.put(floor, cabinets);
-				});
-		return availableCabinets;
-	}
-
-	public List<CabinetPreviewDto> getAvailableCabinet(String building, Integer floor) {
-		String value =
-				hashTemplate.get(building + AVAILABLE_CABINET.getValue(), floor.toString());
-		List<CabinetPreviewDto> availableCabinets = this.stringToDto(value);
-		if (availableCabinets == null) {
-			return new ArrayList<>();
-		}
-		return availableCabinets;
-	}
-
-	public void setAvailableCabinet(String building, Integer floor,
-			List<CabinetPreviewDto> availableCabinets) {
-		String value = this.dtoToString(availableCabinets);
-		hashTemplate.put(building + AVAILABLE_CABINET.getValue(), floor.toString(), value);
-	}
-
-	public void clearCabinetPerSection() {
-		this.clearBySuffix(CqrsSuffix.CABINET_PER_SECTION);
-	}
+	//@formatter:on
 }

@@ -1,11 +1,9 @@
 package org.ftclub.cabinet.cqrs.manager;
 
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -15,10 +13,10 @@ import org.ftclub.cabinet.cqrs.service.CqrsService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.Logging;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Logging
 public class CqrsManager {
@@ -52,14 +50,11 @@ public class CqrsManager {
 		}
 	}
 
-	@Transactional(readOnly = true)
 	public void synchronizeCabinet(Cabinet cabinet) {
-		List<LentHistory> cabinetLentHistories =
-				lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(cabinet.getId());
-		this.syncAll(cabinet, cabinetLentHistories);
+		System.out.println("CqrsManager.synchronizeCabinet : " + cabinet);
+		this.changeAvailableCabinet(cabinet);
 	}
 
-	@Transactional(readOnly = true)
 	public void clearAll() {
 		cqrsService.clearBuildingFloors();
 		cqrsService.clearFloors();
@@ -94,13 +89,20 @@ public class CqrsManager {
 		if (cabinet.isStatus(AVAILABLE)) {
 			cqrsService.addAvailableCabinet(cabinet);
 		} else if (cabinet.isStatus(PENDING)) {
-			LocalDate yesterday = LocalDateTime.now().minusDays(1).toLocalDate();
+			cqrsService.addAvailableCabinet(cabinet);
+		}
+	}
 
-			LentHistory recentLentHistory = cabinetLentHistories.stream()
-					.max(Comparator.comparing(LentHistory::getEndedAt)).orElse(null);
-			if (recentLentHistory != null && recentLentHistory.isSameEndedAtDate(yesterday)) {
-				cqrsService.addAvailableCabinet(cabinet);
-			}
+	private void changeAvailableCabinet(Cabinet cabinet) {
+		if (cabinet.isLentType(LentType.CLUB)) {
+			return;
+		}
+		if (cabinet.isStatus(AVAILABLE)) {
+			cqrsService.addAvailableCabinet(cabinet);
+		} else if (cabinet.isStatus(PENDING)) {
+			cqrsService.addAvailableCabinet(cabinet);
+		} else if (cabinet.isStatus(FULL)) {
+			cqrsService.removeAvailableCabinet(cabinet);
 		}
 	}
 

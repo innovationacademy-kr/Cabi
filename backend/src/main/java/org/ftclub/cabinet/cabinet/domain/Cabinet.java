@@ -1,20 +1,34 @@
 package org.ftclub.cabinet.cabinet.domain;
 
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
+import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
+
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import org.ftclub.cabinet.event.CqrsEventListener;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.utils.ExceptionUtil;
-
-import javax.persistence.*;
-import java.util.List;
-import java.util.Objects;
-
-import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_ARGUMENT;
-import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 
 /**
  * 사물함 엔티티
@@ -24,6 +38,7 @@ import static org.ftclub.cabinet.exception.ExceptionStatus.INVALID_STATUS;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(exclude = {"cabinetPlace", "lentHistories"})
+@EntityListeners(CqrsEventListener.class)
 @Log4j2
 public class Cabinet {
 
@@ -93,7 +108,7 @@ public class Cabinet {
 	private List<LentHistory> lentHistories;
 
 	protected Cabinet(Integer visibleNum, CabinetStatus status, LentType lentType, Integer maxUser,
-	                  Grid grid, CabinetPlace cabinetPlace) {
+			Grid grid, CabinetPlace cabinetPlace) {
 		this.visibleNum = visibleNum;
 		this.status = status;
 		this.lentType = lentType;
@@ -105,8 +120,8 @@ public class Cabinet {
 	}
 
 	public static Cabinet of(Integer visibleNum, CabinetStatus status, LentType lentType,
-	                         Integer maxUser,
-	                         Grid grid, CabinetPlace cabinetPlace) {
+			Integer maxUser,
+			Grid grid, CabinetPlace cabinetPlace) {
 		Cabinet cabinet = new Cabinet(visibleNum, status, lentType, maxUser, grid, cabinetPlace);
 		ExceptionUtil.throwIfFalse(cabinet.isValid(), new DomainException(INVALID_ARGUMENT));
 		return cabinet;
