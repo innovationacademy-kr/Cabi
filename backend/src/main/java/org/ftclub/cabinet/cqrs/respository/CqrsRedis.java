@@ -92,11 +92,11 @@ public class CqrsRedis {
 
 	private void clearBySuffix(CqrsSuffix suffix) {
 		ScanOptions options =
-				ScanOptions.scanOptions().match("*:" + suffix).count(200).build();
+				ScanOptions.scanOptions().match("*" + suffix.getValue()).count(200).build();
 		Cursor<byte[]> keys = connection.scan(options);
 		while (keys.hasNext()) {
-			byte[] key = keys.next();
-			redisTemplate.delete(new String(key));
+			String key = new String(keys.next());
+			redisTemplate.delete(key);
 		}
 	}
 
@@ -144,10 +144,10 @@ public class CqrsRedis {
 	public Map<Integer, List<CabinetPreviewDto>> getAvailableCabinet(String building) {
 		Map<Integer, List<CabinetPreviewDto>> availableCabinets = new HashMap<>();
 		hashTemplate.entries(building + AVAILABLE_CABINET.getValue())
-				.forEach((key1, value1) -> {
-					Integer key = Integer.parseInt(key1);
-					List<CabinetPreviewDto> value = this.stringToDto(value1);
-					availableCabinets.put(key, value);
+				.forEach((key, value) -> {
+					Integer floor = Integer.parseInt(key);
+					List<CabinetPreviewDto> cabinets = this.stringToDto(value);
+					availableCabinets.put(floor, cabinets);
 				});
 		return availableCabinets;
 	}

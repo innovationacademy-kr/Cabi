@@ -64,8 +64,11 @@ public class CqrsService {
 		Location location = cabinet.getCabinetPlace().getLocation();
 		String building = location.getBuilding();
 		Integer floor = location.getFloor();
+		System.out.println("cabinet = " + cabinet);
 		List<CabinetPreviewDto> availableCabinets = cqrsRedis.getAvailableCabinet(building, floor);
 		availableCabinets.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
+		System.out.println("availableCabinets.size() = " + availableCabinets.size());
+		System.out.println("availableCabinets = " + availableCabinets);
 		cqrsRedis.setAvailableCabinet(building, floor, availableCabinets);
 	}
 

@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.cqrs.service.CqrsService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
@@ -58,7 +59,8 @@ public class CqrsManager {
 		this.syncAll(cabinet, cabinetLentHistories);
 	}
 
-	private void clearAll() {
+	@Transactional(readOnly = true)
+	public void clearAll() {
 		cqrsService.clearBuildingFloors();
 		cqrsService.clearFloors();
 		cqrsService.clearAvailableCabinet();
@@ -80,12 +82,15 @@ public class CqrsManager {
 	}
 
 	/**
-	 * 사물함의 상태가 AVAILABLE, PENDING일 때, pendingCabinet에 추가
+	 * 사물함의 상태가 AVAILABLE, PENDING일 때, availableCabinet에 추가
 	 *
 	 * @param cabinet              사물함
 	 * @param cabinetLentHistories 사물함의 대여 이력
 	 */
 	private void syncAvailableCabinet(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
+		if (cabinet.isLentType(LentType.CLUB)) {
+			return;
+		}
 		if (cabinet.isStatus(AVAILABLE)) {
 			cqrsService.addAvailableCabinet(cabinet);
 		} else if (cabinet.isStatus(PENDING)) {

@@ -14,7 +14,6 @@ import org.ftclub.cabinet.exception.ControllerException;
 import org.ftclub.cabinet.log.Logging;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -83,7 +82,12 @@ public class CabinetController {
 		return cabinetFacadeService.getAvailableCabinets(building);
 	}
 
-	@PostMapping("/test")
+	@GetMapping("/test-del")
+	public void CqrsTestDel() {
+		cqrsManager.clearAll();
+	}
+
+	@GetMapping("/test")
 	public void CqrsTest() {
 		cqrsManager.synchronizeDatabase();
 	}
