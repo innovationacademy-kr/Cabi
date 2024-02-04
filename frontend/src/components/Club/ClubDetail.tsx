@@ -34,7 +34,7 @@ const ClubDetail = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
           <UserIdStyled>{clubInfo.clubMaster}</UserIdStyled>
         </SideInfoMemberStyled>
       </CabinetSideInfoStyled>
-      <JustLineStyled></JustLineStyled>
+      {/* <JustLineStyled></JustLineStyled> */}
       <ClubPwStyled>
         비밀번호
         <PsSpanStyled>

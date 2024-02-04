@@ -6,12 +6,13 @@ export interface IButtonProps {
   onClick?: () => void;
   backgroundColor?: string;
   color?: string;
+  icon?: string;
   isClickable: boolean;
   isExtensible?: boolean;
 }
 
 interface CardProps {
-  title: string;
+  title?: string;
   children: React.ReactElement;
   buttons?: IButtonProps[];
   gridArea: string;
@@ -29,27 +30,25 @@ const Card = ({
 }: CardProps) => {
   return (
     <CardStyled gridArea={gridArea} width={width} height={height}>
-      {(title || buttons) && (
-        <CardHeaderStyled>
-          {title && <CardTitleStyled>{title}</CardTitleStyled>}
-          {buttons && (
-            <CardButtonWrapper>
-              {buttons?.map((button, index) => (
-                <CardButtonStyled
-                  key={index}
-                  onClick={button.onClick}
-                  color={button.color}
-                  backgroundColor={button.backgroundColor}
-                  isClickable={button.isClickable}
-                  isExtensible={button.isExtensible}
-                >
-                  {button.label}
-                </CardButtonStyled>
-              ))}
-            </CardButtonWrapper>
-          )}
-        </CardHeaderStyled>
-      )}
+      <CardHeaderStyled>
+        {title && <CardTitleStyled>{title}</CardTitleStyled>}
+        {buttons && (
+          <CardButtonWrapper>
+            {buttons?.map((button, index) => (
+              <CardButtonStyled
+                key={index}
+                onClick={button.onClick}
+                color={button.color}
+                backgroundColor={button.backgroundColor}
+                isClickable={button.isClickable}
+                isExtensible={button.isExtensible}
+              >
+                {button.label}
+              </CardButtonStyled>
+            ))}
+          </CardButtonWrapper>
+        )}
+      </CardHeaderStyled>
       {children}
     </CardStyled>
   );
