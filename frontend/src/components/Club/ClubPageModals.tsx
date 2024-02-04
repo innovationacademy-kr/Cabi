@@ -23,14 +23,13 @@ export interface ICurrentClubModalStateInfo {
 
 const ClubPageModals: React.FC<{
   clubInfo: ClubInfoResponseDto;
-  clubList: ClubPaginationResponseDto;
+  clubId: number;
   page: number;
   getClubInfo: (clubId: number) => Promise<void>;
   setPage: React.Dispatch<React.SetStateAction<number>>;
 }> = (props) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalName, setModalName] = useState("");
-  const [clubId, setClubId] = useState<number>(0);
   const [targetMember, setTargetMember] = useState("");
   const [targetId, setTargetId] = useState(0);
   const [mandateMember, setMandateMember] = useState("");
@@ -59,11 +58,6 @@ const ClubPageModals: React.FC<{
     });
   };
 
-  useEffect(() => {
-    if (props.clubList.result[0])
-      setClubId(props.clubList.result[props.page].clubId);
-  }, [props.clubList]);
-
   const openModal = (modalName: TClubModalState) => {
     if (modalName === "addModal") {
       setModalName("addModal");
@@ -89,7 +83,7 @@ const ClubPageModals: React.FC<{
           closeModal={() => {
             closeModal();
           }}
-          clubId={clubId}
+          clubId={props.clubId}
           getClubInfo={props.getClubInfo}
           setPage={props.setPage}
         />
@@ -98,7 +92,7 @@ const ClubPageModals: React.FC<{
           closeModal={() => {
             closeModal();
           }}
-          clubId={clubId}
+          clubId={props.clubId}
           mandateMember={mandateMember}
           getClubInfo={props.getClubInfo}
           setPage={props.setPage}
@@ -108,7 +102,7 @@ const ClubPageModals: React.FC<{
           closeModal={() => {
             closeModal();
           }}
-          clubId={clubId}
+          clubId={props.clubId}
           targetMember={targetMember}
           userId={targetId}
           getClubInfo={props.getClubInfo}
@@ -117,7 +111,7 @@ const ClubPageModals: React.FC<{
       ) : null}
       <ClubMembersContainer
         master={props.clubInfo.clubMaster}
-        clubId={clubId}
+        clubId={props.clubId}
         clubInfo={props.clubInfo}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
