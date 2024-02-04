@@ -23,6 +23,12 @@ export function ClubPageInfo({ clubId }: { clubId: number }) {
     }
   }, [clubId]);
 
+  useEffect(() => {
+    if (clubId) {
+      getClubInfo();
+    }
+  }, [page]);
+
   const getClubInfo = async () => {
     try {
       const result = await axiosGetClubInfo(clubId, page, 2);
