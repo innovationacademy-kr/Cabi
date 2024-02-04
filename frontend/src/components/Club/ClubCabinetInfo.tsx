@@ -29,7 +29,7 @@ const ClubHeaderStyled = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  margin-left: 40px;
+  margin-left: 2rem;
   font-size: 20px;
   font-weight: bold;
 `;
