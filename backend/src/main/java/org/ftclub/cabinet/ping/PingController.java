@@ -10,21 +10,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Log4j2
 public class PingController {
-    //	private final LentExtensionService lentExtensionService;
-//    private final OverdueManager overdueManager;
 
-    @RequestMapping
-    public String ping() {
-        return "pong";
-    }
+	//	private final LentExtensionService lentExtensionService;
+//	private final LentFacadeService lentFacadeService;
+//	private final OverdueManager overdueManager;
 
-//    @RequestMapping("/pong")
-//    public String ok() {
-//        log.debug("called ok");
-//        ActiveLentHistoryDto wchae = new ActiveLentHistoryDto(94L, "wchae", "wchae@student.42seoul.kr", 1L, false, -1L);
-//        overdueManager.handleOverdue(wchae);
-//        return "ok";
-//    }
+	@RequestMapping
+	public String ping() {
+		return "pong";
+	}
+
+//	@RequestMapping("/pong")
+//	public String ok() {
+//		log.debug("called ok");
+//		List<ActiveLentHistoryDto> activeLents = lentFacadeService.getAllActiveLentHistories();
+//		List<ActiveLentHistoryDto> collect = activeLents.stream()
+//				.filter(activeLent -> activeLent.getUserId().equals(94L))
+//				.collect(Collectors.toList());
+//		ActiveLentHistoryDto wchae = collect.get(0);
+//		log.info("{}", wchae);
+//		overdueManager.handleOverdue(collect.get(0));
+//		return "ok";
+//	}
 
 //	@RequestMapping("/pong")
 //	public String ok(){
