@@ -55,25 +55,21 @@ const ClubMembers: React.FC<{
               key={idx}
               bgColor={mem.userName === props.master ? "var(--sub-color)" : ""}
             >
-              {/* <div id="top"> */}
               {mem.userName === props.master ? (
                 <div id="clubMaster">
-                  {/* <IconContainer> */}
                   <CrownImg
                     stroke="#f5f5f5"
                     width={30}
                     height={30}
                     viewBox="0 0 24 24"
                   />
-                  {/* </IconContainer> */}
+
                   <p>{mem.userName}</p>
                 </div>
               ) : (
                 //  mem.userName === props.myInfo.name ? null :
                 <div id="clubUser">
-                  {/* <IconContainer> */}
-                  <UserImg width={30} height={30} viewBox="0 0 24 24" />
-                  {/* </IconContainer> */}
+                  <UserImg width={24} height={24} viewBox="0 0 24 24" />
                   <p>{mem.userName}</p>
                 </div>
               )}
@@ -114,6 +110,11 @@ const TitleBarStyled = styled.div`
     font-size: 1rem;
     font-weight: normal;
     display: flex;
+  }
+
+  & img {
+    width: 24px;
+    height: 24px;
   }
 
   & #membersLength {
@@ -157,6 +158,12 @@ const MemCardStyled = styled.div<{ bgColor: string }>`
   justify-content: space-between;
 
   & > div {
+    witth: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     & > p {
       line-height: 28px;
       height: 28px;
