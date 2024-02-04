@@ -30,7 +30,7 @@ services:
       - "6379:6379"
     volumes:
       - $HOME/redis/data/:/data/
-      - $HOME/redis/redis.conf:/user/local/etc/redis/redis.conf
+      - $HOME/redis/config:/user/local/etc/redis
     command: redis-server /user/local/etc/redis/redis.conf
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
