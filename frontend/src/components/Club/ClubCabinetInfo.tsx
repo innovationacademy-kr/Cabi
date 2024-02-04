@@ -1,43 +1,15 @@
-import { useState } from "react";
 import styled from "styled-components";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import ClubDetail from "./ClubDetail";
 import ClubMemo from "./ClubMemo";
 
 const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // const [isModalOpenTest, setIsModalOpenTest] = useState<boolean>(false);
-
-  // const [testModal, setTestModal] = useState<IModalContents>({
-  //   type: "hasProceedBtn",
-  //   title: "비밀번호 설정",
-  //   closeModal: () => {
-  //     closeModal();
-  //   },
-  // });
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // const handleSettingLogoClick = () => {
-  //   setIsModalOpenTest(true);
-  // };
-
   return (
     <ClubCabinetInfoStyled>
       <ClubHeaderStyled>동아리 정보</ClubHeaderStyled>
       <ClubInfoBoxStyled>
         <ClubDetail clubInfo={clubInfo} />
-        <ClubMemo
-          openModal={openModal}
-          closeModal={closeModal}
-          isModalOpen={isModalOpen}
-        />
+        <ClubMemo />
       </ClubInfoBoxStyled>
     </ClubCabinetInfoStyled>
   );

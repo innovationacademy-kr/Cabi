@@ -1,19 +1,20 @@
 import { useState } from "react";
 import styled from "styled-components";
+import edit from "@/assets/images/edit.svg";
 import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
 
-const ClubMemo = ({
-  openModal,
-  closeModal,
-  isModalOpen,
-}: {
-  openModal: () => void;
-  closeModal: () => void;
-  isModalOpen: boolean;
-}) => {
+const ClubMemo = () => {
   const [text, setText] = useState<string>("");
   const [newText, setNewText] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   const handleSaveMemo = (newMemo: string | null) => {
     setNewText(newMemo ?? "");
   };
@@ -23,7 +24,7 @@ const ClubMemo = ({
       <ClubMemoHeaderStyled>
         동아리 메모
         <MemoIconStyled>
-          <img src="/src/assets/images/more.svg" onClick={openModal}></img>
+          <img src={edit} onClick={openModal} />
         </MemoIconStyled>
       </ClubMemoHeaderStyled>
       <ClubMemoStyled>{isModalOpen ? newText : text}</ClubMemoStyled>
@@ -34,15 +35,6 @@ const ClubMemo = ({
         setText={setText}
         onSave={handleSaveMemo}
       />
-	  {/* {isModalOpenTest && <ModifyClubPwModal
-        // password="1234"
-        // isModalOpen={isModalOpen}
-        // onClose={() => closeModal()}
-        modalContents={testModal}
-        password="1234"
-        // isModalOpen={isModalOpen}
-        // onClose={() => closeModal()}
-      />} */}
     </ClubSubInfoBoxStyled>
   );
 };
@@ -83,9 +75,8 @@ const ClubMemoHeaderStyled = styled.div`
 `;
 
 const MemoIconStyled = styled.div`
-  width: 30px;
-  width: 30px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   margin-bottom: 10px;
   margin-bottom: 10px;
   cursor: pointer;
