@@ -34,7 +34,6 @@ const ClubDetail = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
           <UserIdStyled>{clubInfo.clubMaster}</UserIdStyled>
         </SideInfoMemberStyled>
       </CabinetSideInfoStyled>
-      {/* <JustLineStyled></JustLineStyled> */}
       <ClubPwStyled>
         비밀번호
         <PsSpanStyled>
@@ -68,13 +67,6 @@ const ClubBasicInfoBoxStyled = styled.div`
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-`;
-
-const JustLineStyled = styled.div`
-  width: 280px;
-  height: 2px;
-  background-color: #d9d9d9;
-  margin: 30px 0px 30px 0px;
 `;
 
 const ClubPwStyled = styled.div`
@@ -120,14 +112,6 @@ const SettingLogoStyled = styled.div`
   width: 20px;
   height: 20px;
   cursor: pointer;
-`;
-
-const CabinetNumInfoStyled = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
 `;
 
 const CabinetNumStyled = styled.div`

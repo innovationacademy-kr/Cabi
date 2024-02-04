@@ -25,29 +25,16 @@ const ClubPasswordModal = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tmpPw, setTmpPw] = useState<string>("");
 
-  useEffect(() => {
-    // console.log("useEffect pw : ", password);
-    setTmpPw(password);
-  }, [password]);
-
-  //   useEffect(() => {
-  //     console.log("tmpPw : ", tmpPw);
-  //   }, [tmpPw]);
-
   const closeModal = () => {
-    // console.log("closeModal pw : ", password);
-    setTmpPw(password);
     setIsModalOpenTest(false);
   };
 
-  //   useEffect(() => {
-  //     console.log("password : ", password);
-  //   }, [password]);
+  useEffect(() => {
+    setTmpPw(password);
+  }, [isModalOpenTest]);
 
   const onSendPassword = () => {
-    // console.log("hi2");
     setPassword(tmpPw);
-    // console.log("onSendPassword tmppw: ", tmpPw)
     closeModal();
   };
 
@@ -93,14 +80,11 @@ const ClubPasswordModal = ({
   //   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log("onChange : ", e.target.value);
     const regex = /^[0-9]{0,4}$/;
     if (!regex.test(e.target.value)) {
-      //   e.target.value = password;
       e.target.value = tmpPw;
       return;
     }
-    // setPassword(e.target.value);
     setTmpPw(e.target.value);
   };
 

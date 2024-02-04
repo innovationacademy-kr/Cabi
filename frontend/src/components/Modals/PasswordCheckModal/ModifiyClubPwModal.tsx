@@ -17,7 +17,6 @@ const ModifyClubPwModal: React.FC<{
     iconScaleEffect,
     title,
     detail,
-    renderAdditionalComponent,
     proceedBtnText,
     onClickProceed,
     cancelBtnText,
@@ -38,17 +37,12 @@ const ModifyClubPwModal: React.FC<{
       temp.push("");
     }
     setList([...temp]);
+    console.log([...temp]);
     if (inputRef.current) inputRef.current.focus();
   };
 
   useEffect(() => {
-    // const temp = [...password.split("")];
-    // for (let i = 0; i < 4 - password.length; i++) {
-    //   temp.push("");
-    // }
-    // setList([...temp]);
-    // if (inputRef.current) inputRef.current.focus();
-    let inputString = tmpPw === password ? password : tmpPw;
+    let inputString = tmpPw === password || !tmpPw ? password : tmpPw;
     makeList(inputString);
   }, [password, tmpPw]);
 
@@ -107,6 +101,7 @@ const ModifyClubPwModal: React.FC<{
           <Button
             onClick={() => {
               // onClickProceed!(e);
+              console.log("tmpPw : ", tmpPw);
               onSendPassword();
             }}
             text={proceedBtnText || "확인"}
