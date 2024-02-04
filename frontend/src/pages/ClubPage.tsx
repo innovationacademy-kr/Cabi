@@ -22,9 +22,13 @@ const ClubPage = () => {
       const response = await axiosMyClubList();
       const result = response.data.result;
       const totalLength = response.data.totalLength;
-      setClubList({ result, totalLength } as ClubPaginationResponseDto);
-    } catch {
-      setClubList(STATUS_400_BAD_REQUEST);
+      if (totalLength === 0) {
+        setClubList(STATUS_400_BAD_REQUEST);
+      } else {
+        setClubList({ result, totalLength } as ClubPaginationResponseDto);
+      }
+    } catch (error) {
+      throw error;
     }
   };
 
@@ -35,13 +39,15 @@ const ClubPage = () => {
           가입한 동아리가 없어요!
         </EmptyClubListTextStyled>
       ) : (
-        <ClubList
-          clubList={clubList}
-          toggleType={clubId}
-          setToggleType={setClubId}
-        />
+        <>
+          <ClubList
+            clubList={clubList}
+            toggleType={clubId}
+            setToggleType={setClubId}
+          />
+          <ClubInfo clubId={clubId} />
+        </>
       )}
-      <ClubInfo clubId={clubId} />
     </WrapperStyled>
   );
 };
@@ -61,7 +67,7 @@ const EmptyClubListTextStyled = styled.div`
   align-items: center;
   height: 100%;
   font-size: 1.5rem;
-  font-weight: bold;
+  /* font-weight: bold; */
 `;
 
 export default ClubPage;

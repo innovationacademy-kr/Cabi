@@ -68,6 +68,11 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
 };
 
 const EmptyClubCabinetTextStyled = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 1.5rem;
   /* color: var(--gray-color); */
   /* margin-top: 20px; */
