@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import {
   ClubInfoResponseDto,
   ClubPaginationResponseDto,
 } from "@/types/dto/club.dto";
 import { axiosGetClubInfo, axiosMyClubInfo } from "@/api/axios/axios.custom";
 import MultiToggleSwitch2, { toggleItem } from "../Common/MultiToggleSwitch2";
+import ClubCabinetInfo from "./ClubCabinetInfo";
 import ClubPageModals from "./ClubPageModals";
 
 export function ClubPageInfo() {
@@ -96,6 +98,7 @@ export function ClubPageInfo() {
         toggleList={toggleList}
         setPage={setPage}
       />
+      <ClubCabinetInfo clubInfo={clubInfo} />
       <ClubPageModals
         clubInfo={clubInfo}
         clubList={clubList}
@@ -106,3 +109,6 @@ export function ClubPageInfo() {
     </>
   );
 }
+// info
+  // detail
+  // memo

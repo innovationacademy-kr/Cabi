@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import {
   ClubInfoResponseDto,
   ClubPaginationResponseDto,
@@ -7,7 +6,6 @@ import {
 import AddClubMemModalContainer from "../Modals/ClubModal/AddClubMemModal.container";
 import DeleteClubMemModal from "../Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "../Modals/ClubModal/MandateClubMemModal";
-import ClubCabinetInfo from "./ClubCabinetInfo";
 import ClubMembersContainer from "./ClubMembers.container";
 
 export type TClubModalState =
@@ -117,9 +115,6 @@ const ClubPageModals: React.FC<{
           setPage={props.setPage}
         />
       ) : null}
-      <ClubCabinetStyled>
-        <ClubCabinetInfo clubInfo={props.clubInfo} />
-      </ClubCabinetStyled>
       <ClubMembersContainer
         master={props.clubInfo.clubMaster}
         clubId={clubId}
@@ -138,10 +133,5 @@ const ClubPageModals: React.FC<{
   );
 };
 
-const ClubCabinetStyled = styled.div`
-  width: 100%;
-  height: 340px;
-  margin-top: 60px;
-`;
 
 export default ClubPageModals;
