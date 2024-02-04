@@ -100,7 +100,7 @@ const ClubMembersContainerStyled = styled.div`
 
 const TitleBarStyled = styled.div`
   /* height: 3rem; */
-  width: 90%;
+  width: 80%;
   max-width: 720px;
   display: flex;
   font-size: 20px;
