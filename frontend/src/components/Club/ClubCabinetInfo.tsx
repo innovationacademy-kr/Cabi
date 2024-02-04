@@ -43,9 +43,6 @@ const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
     setNewText(newMemo ?? "");
   };
 
-  // const handleSettingLogoClick = () => {
-  //   setIsModalOpenTest(true);
-  // };
   return (
     <ClubCabinetInfoStyled>
       <ClubHeader>동아리 정보</ClubHeader>
@@ -122,7 +119,7 @@ const ClubHeader = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-start;
-  margin-left: 40px;
+  margin-left: 2rem;
   font-size: 20px;
   font-weight: bold;
 `;
