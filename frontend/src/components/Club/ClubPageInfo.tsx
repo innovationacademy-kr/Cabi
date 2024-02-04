@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import {
   ClubInfoResponseDto,
   ClubPaginationResponseDto,
@@ -109,6 +108,3 @@ export function ClubPageInfo() {
     </>
   );
 }
-// info
-  // detail
-  // memo

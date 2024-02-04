@@ -1,90 +1,22 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
-import IconType from "@/types/enum/icon.type.enum";
-import { IModalContents } from "../Modals/Modal";
-import ModifyClubPwModal from "../Modals/PasswordCheckModal/ModifiyClubPwModal";
-import PasswordContainer from "../Modals/PasswordCheckModal/PasswordContainer";
+import ClubPasswordModal from "./ClubPasswordModal";
 
 const ClubDetail = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
   const [pw, setPw] = useState<string>("1111");
-  const [pwCover, setPwCover] = useState<string>("비밀번호를 설정해주세요");
+  const [pwCover, setPwCover] = useState<string>("****");
   const [isModalOpenTest, setIsModalOpenTest] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const closeModal = () => {
-    setIsModalOpenTest(false);
-  };
 
   useEffect(() => {
     if (clubInfo.clubMemo) {
-      setPwCover("****");
       setPw(clubInfo.clubMemo.toString());
     }
   }, [clubInfo]);
 
-  useEffect(() => {
-    if (pw) setPwCover("****");
-  }, [pw]);
-
   const handleSettingLogoClick = () => {
     setIsModalOpenTest(true);
   };
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const regex = /^[0-9]{0,4}$/;
-    if (!regex.test(e.target.value)) {
-      //   e.target.value = password;
-      e.target.value = pw;
-      return;
-    }
-    // setPassword(e.target.value);
-    setPw(e.target.value);
-  };
-
-  //   const onSendPassword = async () => {
-  //     setIsLoading(true);
-  //     try {
-  //       await axiosSendCabinetPassword(password);
-  //       //userCabinetId 세팅
-  //       setMyInfo({ ...myInfo, cabinetId: null });
-  //       setIsCurrentSectionRender(true);
-  //       setModalTitle("반납되었습니다");
-  //       // 캐비닛 상세정보 바꾸는 곳
-  //       try {
-  //         const { data } = await axiosCabinetById(currentCabinetId);
-  //         setTargetCabinetInfo(data);
-  //       } catch (error) {
-  //         throw error;
-  //       }
-  //       try {
-  //         const { data: myLentInfo } = await axiosMyLentInfo();
-  //         setMyLentInfo(myLentInfo);
-  //       } catch (error) {
-  //         throw error;
-  //       }
-  //     } catch (error: any) {
-  //       setModalTitle(error.response.data.message);
-  //       throw error;
-  //     } finally {
-  //       setIsLoading(false);
-  //       setShowResponseModal(true);
-  //     }
-  //   };
-
-  const [testModal, setTestModal] = useState<IModalContents>({
-    type: "hasProceedBtn",
-    title: "비밀번호 설정",
-    detail: `동아리 사물함 비밀번호를 설정해주세요`,
-    proceedBtnText: `설정`,
-    // onClickProceed: onSendPassword,
-    renderAdditionalComponent: () => (
-      <PasswordContainer onChange={onChange} password={pw} />
-    ),
-    closeModal: () => closeModal(),
-    isLoading: isLoading,
-    iconType: IconType.CHECKICON,
-  });
 
   return (
     <ClubBasicInfoBoxStyled>
@@ -107,7 +39,6 @@ const ClubDetail = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
         <PsSpanStyled>
           <PwStyled pw={pw}>{pwCover}</PwStyled>
         </PsSpanStyled>
-        {/* <SettingLogo onClick={handleSettingLogoClick}> */}
         <SettingLogoStyled>
           {" "}
           <img
@@ -116,17 +47,7 @@ const ClubDetail = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
           ></img>
         </SettingLogoStyled>
       </ClubPwStyled>
-      {isModalOpenTest && (
-        <ModifyClubPwModal
-          // password="1234"
-          // isModalOpen={isModalOpen}
-          //   closeModal={closeModal}
-          modalContents={testModal}
-          password="1234"
-          // isModalOpen={isModalOpen}
-          // onClose={() => closeModal()}
-        />
-      )}
+      <ClubPasswordModal pw={pw} setPw={setPw} isModalOpenTest={isModalOpenTest} setIsModalOpenTest={setIsModalOpenTest}/>
     </ClubBasicInfoBoxStyled>
   );
 };

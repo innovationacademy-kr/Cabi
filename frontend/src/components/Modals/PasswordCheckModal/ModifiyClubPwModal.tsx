@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 import Button from "@/components/Common/Button";
 import { IModalContents } from "@/components/Modals/Modal";
@@ -8,7 +8,9 @@ import useMultiSelect from "@/hooks/useMultiSelect";
 const ModifyClubPwModal: React.FC<{
   modalContents: IModalContents;
   password: string;
-}> = ({ modalContents, password }) => {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSendPassword: () => void;
+}> = ({ modalContents, password, onChange, onSendPassword }) => {
   const {
     type,
     iconScaleEffect,
@@ -23,6 +25,24 @@ const ModifyClubPwModal: React.FC<{
     iconType,
   } = modalContents;
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
+  const [list, setList] = useState(["", "", "", ""]);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const onClick = () => {
+    if (inputRef.current) inputRef.current.focus();
+  };
+
+  useEffect(() => {
+    const temp = [...password.split("")];
+    for (let i = 0; i < 4 - password.length; i++) {
+      temp.push("");
+    }
+    setList([...temp]);
+    if (inputRef.current) inputRef.current.focus();
+  }, [password]);
+
+  const handleEnterPress = () => {
+    // if (tryLentRequest && password.length == 4) tryLentRequest();
+  };
 
   return (
     <>
@@ -44,7 +64,28 @@ const ModifyClubPwModal: React.FC<{
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}
-        {renderAdditionalComponent && renderAdditionalComponent()}
+        <PasswordStyled>
+          {list.map((val, idx) => (
+            <PasswordNumberStyled
+              className={idx === 0 && val === "" ? "active" : ""}
+              onClick={onClick}
+              key={idx}
+              val={val}
+            >
+              {val}
+            </PasswordNumberStyled>
+          ))}
+        </PasswordStyled>
+        <InputStyled
+          ref={inputRef}
+          onChange={onChange}
+          maxLength={4}
+          onKeyUp={(e: any) => {
+            if (e.key === "Enter") {
+              handleEnterPress();
+            }
+          }}
+        />
         <ButtonWrapperStyled>
           <Button
             onClick={closeModal}
@@ -53,7 +94,8 @@ const ModifyClubPwModal: React.FC<{
           />
           <Button
             onClick={(e) => {
-              onClickProceed!(e);
+              // onClickProceed!(e);
+              onSendPassword();
             }}
             text={proceedBtnText || "확인"}
             theme="fill"
@@ -65,21 +107,33 @@ const ModifyClubPwModal: React.FC<{
   );
 };
 
-const Input = styled.input<{ isEmpty: number | null }>`
+const InputStyled = styled.input`
+  height: 0;
+  color: transparent;
+  caret-color: transparent;
+`;
+
+const PasswordNumberStyled = styled.div<{ val: string }>`
   width: 20%;
   height: 100%;
   border-radius: 10px;
-  outline: none;
-  border: ${({ isEmpty }) =>
-    isEmpty ? "1px solid var(--main-color)" : "1px solid #dfd0fe"};
+  border: ${({ val }) =>
+    val ? "2px solid var(--main-color)" : "1px solid var(--sub-color)"};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: var(--main-color);
+  &.active {
+    border: 2px solid var(--main-color);
+  }
 `;
 
-const PasswordContainer = styled.div`
-  max-width: 240px;
-  width: 100%;
+const PasswordStyled = styled.div`
+  width: 240px;
   height: 60px;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
