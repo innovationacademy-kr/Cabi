@@ -24,12 +24,12 @@ const MaunalContentBox = ({ contentStatus }: MaunalContentBoxProps) => {
         contentStatus !== ContentStatus.IN_SESSION && (
           <img className="contentImg" src={contentData.imagePath} alt="" />
         )}
-      <ContentTextStyeld>
+      <ContentTextStyled>
         {contentStatus === ContentStatus.IN_SESSION && (
           <ClockImg stroke="var(--main-color)" className="clockImg" />
         )}
         <p>{contentData.contentTitle}</p>
-      </ContentTextStyeld>
+      </ContentTextStyled>
       <MoveBtnImg className="moveButton" />
     </MaunalContentBoxStyled>
   );
@@ -154,7 +154,7 @@ const MaunalContentBoxStyled = styled.div<{
   }
 `;
 
-const ContentTextStyeld = styled.div`
+const ContentTextStyled = styled.div`
   display: flex;
   align-items: center;
 `;
