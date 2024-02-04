@@ -3,13 +3,25 @@ import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import ClubDetail from "./ClubDetail";
 import ClubMemo from "./ClubMemo";
 
-const ClubCabinetInfo = ({ clubInfo }: { clubInfo: ClubInfoResponseDto }) => {
+const ClubCabinetInfo = ({
+  clubInfo,
+  clubId,
+  page,
+}: {
+  clubInfo: ClubInfoResponseDto;
+  clubId: number;
+  page: number;
+}) => {
   return (
     <ClubCabinetInfoStyled>
       <ClubHeaderStyled>동아리 정보</ClubHeaderStyled>
       <ClubInfoBoxStyled>
         <ClubDetail clubInfo={clubInfo} />
-        <ClubMemo />
+        <ClubMemo
+          clubId={clubId}
+          clubNotice={clubInfo.clubNotice.toString()}
+          page={page}
+        />
       </ClubInfoBoxStyled>
     </ClubCabinetInfoStyled>
   );

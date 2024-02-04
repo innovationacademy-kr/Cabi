@@ -9,6 +9,9 @@ const MemoModalTestContainer = (props: {
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   onSave: (newMemo: string | null) => void;
+  clubId: number;
+  clubNotice: string;
+  page: number;
 }) => {
   const [] = useRecoilState(currentFloorCabinetState);
 
@@ -18,7 +21,6 @@ const MemoModalTestContainer = (props: {
     }
   };
 
-  
   return (
     <>
       {props.isModalOpen && (
@@ -27,6 +29,9 @@ const MemoModalTestContainer = (props: {
           onSave={props.onSave}
           text={props.text}
           setText={props.setText}
+          clubId={props.clubId}
+          clubNotice={props.clubNotice}
+          page={props.page}
         />
       )}
     </>

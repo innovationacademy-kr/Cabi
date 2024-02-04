@@ -163,6 +163,24 @@ export const axiosDeleteClubMember = async (
   }
 };
 
+const axiosUpdateClubNoticeURL = "/v4/clubs/";
+export const axiosUpdateClubNotice = async (
+  clubId: number,
+  notice: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(
+      `${axiosUpdateClubNoticeURL}${clubId}/notice`,
+      {
+        notice,
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // V3 API
 const axiosBuildingFloorURL = "/v4/cabinets/buildings/floors";
 export const axiosBuildingFloor = async (): Promise<any> => {

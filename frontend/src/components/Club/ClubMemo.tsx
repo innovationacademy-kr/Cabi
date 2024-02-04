@@ -3,7 +3,15 @@ import styled from "styled-components";
 import edit from "@/assets/images/edit.svg";
 import MemoModalTestContainer from "../Modals/ClubModal/ClubMemoModal.container";
 
-const ClubMemo = () => {
+const ClubMemo = ({
+  clubId,
+  clubNotice,
+  page,
+}: {
+  clubId: number;
+  clubNotice: string;
+  page: number;
+}) => {
   const [text, setText] = useState<string>("");
   const [newText, setNewText] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -18,7 +26,10 @@ const ClubMemo = () => {
   const handleSaveMemo = (newMemo: string | null) => {
     setNewText(newMemo ?? "");
   };
-
+  // useEffect(() => {
+  //   console.log("text : ", text);
+  //   console.log("newText : ", newText);
+  // }, [text, newText]);
   return (
     <ClubSubInfoBoxStyled>
       <ClubMemoHeaderStyled>
@@ -27,13 +38,16 @@ const ClubMemo = () => {
           <img src={edit} onClick={openModal} />
         </MemoIconStyled>
       </ClubMemoHeaderStyled>
-      <ClubMemoStyled>{isModalOpen ? newText : text}</ClubMemoStyled>
+      <ClubMemoStyled>{clubNotice}</ClubMemoStyled>
       <MemoModalTestContainer
         onClose={() => closeModal()}
         isModalOpen={isModalOpen}
         text={text}
         setText={setText}
         onSave={handleSaveMemo}
+        clubId={clubId}
+        clubNotice={clubNotice}
+        page={page}
       />
     </ClubSubInfoBoxStyled>
   );

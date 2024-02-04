@@ -25,6 +25,7 @@ export function ClubPageInfo() {
   const [clubInfo, setClubInfo] = useState<ClubInfoResponseDto>({
     clubName: "",
     clubMaster: "",
+    clubNotice: "",
     clubMemo: "",
     building: "새롬관",
     floor: 3,
@@ -38,6 +39,11 @@ export function ClubPageInfo() {
     { name: "", key: "" },
   ]);
   const [page, setPage] = useState<number>(0);
+  const [clubId, setClubId] = useState<number>(0);
+
+  useEffect(() => {
+    if (clubList.result[0]) setClubId(clubList.result[page].clubId);
+  }, [clubList]);
 
   useEffect(() => {
     setToggleType(clubList?.result[0].clubId.toString());
@@ -97,7 +103,7 @@ export function ClubPageInfo() {
         toggleList={toggleList}
         setPage={setPage}
       />
-      <ClubCabinetInfo clubInfo={clubInfo} />
+      <ClubCabinetInfo clubInfo={clubInfo} clubId={clubId} page={page} />
       <ClubPageModals
         clubInfo={clubInfo}
         clubList={clubList}

@@ -25,6 +25,7 @@ export interface ClubInfoResponseDto {
   clubName: String;
   clubMaster: String;
   clubMemo: String;
+  clubNotice: String;
   building: String;
   floor: number;
   section: String;
