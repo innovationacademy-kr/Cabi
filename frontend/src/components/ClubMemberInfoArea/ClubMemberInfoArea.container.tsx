@@ -48,7 +48,7 @@ const ClubMemberInfoAreaContainer = () => {
       selectedClubMemberInfo={targetClubUserInfo}
       selectedClubCabinetInfo={targetClubCabinetInfo}
       closeClubMemberInfoArea={closeClubMember}
-      isMaster={targetClubInfo.clubMaster === myInfo.name}
+      isMaster={targetClubInfo.clubMaster === targetClubUserInfo.userName}
       clubModal={clubModal}
       openModal={openModal}
       closeModal={closeModal}

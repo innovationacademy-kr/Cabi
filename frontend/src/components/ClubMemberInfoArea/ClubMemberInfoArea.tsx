@@ -7,6 +7,7 @@ import Button from "@/components/Common/Button";
 import DeleteClubMemModal from "@/components/Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "@/components/Modals/ClubModal/MandateClubMemModal";
 import {
+  cabinetIconSrcMap,
   cabinetLabelColorMap,
   cabinetStatusColorMap,
 } from "@/assets/data/maps";
@@ -68,12 +69,16 @@ const ClubMemberInfoArea = ({
                 : "-"}
             </CabinetRectangleStyled>
             <ClubInfoWrapperStyled>
-              <CabinetTypeIconStyled />
-              <TextStyled fontSize="1rem" fontColor="black">
+              <CabinetTypeIconStyled cabinetType={CabinetType.CLUB} />
+              <TextStyled fontSize="1rem" fontColor="black" fontWeight={700}>
                 {selectedClubInfo!.clubName}
               </TextStyled>
             </ClubInfoWrapperStyled>
-            <CabinetTypeIconStyled />
+            {isMaster ? (
+              <ClubIconStyled />
+            ) : (
+              <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
+            )}
             <TextStyled fontSize="1rem" fontColor="black">
               {selectedClubMemberInfo!.userName}
             </TextStyled>
@@ -96,7 +101,7 @@ const ClubMemberInfoArea = ({
                 theme="grayLine"
               />
             </CabinetInfoButtonsContainerStyled>
-            {/* <CabinetLentDateInfoStyled>동아리 사물함</CabinetLentDateInfoStyled> */}
+            <CabinetLentDateInfoStyled>동아리 사물함</CabinetLentDateInfoStyled>
           </>
         )}
       </ClubMemberInfoAreaStyled>
@@ -153,9 +158,13 @@ const ClubMemberInfoAreaStyled = styled.div`
   background: var(--white);
 `;
 
-const TextStyled = styled.p<{ fontSize: string; fontColor: string }>`
+const TextStyled = styled.p<{
+  fontSize: string;
+  fontColor: string;
+  fontWeight?: number;
+}>`
   font-size: ${(props) => props.fontSize};
-  font-weight: 400;
+  font-weight: ${(props) => props.fontWeight || 400};
   line-height: 28px;
   color: ${(props) => props.fontColor};
   text-align: center;
@@ -184,20 +193,29 @@ const ClubInfoWrapperStyled = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin: 1rem 0;
   /* height: 100%; */
 `;
 
-const CabinetTypeIconStyled = styled.div`
+const ClubIconStyled = styled.div`
+  width: 24px;
+  height: 24px;
+  margin-bottom: 10px;
+  background-image: url("/src/assets/images/leader.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+`;
+
+const CabinetTypeIconStyled = styled.div<{ cabinetType: CabinetType }>`
   width: 24px;
   height: 24px;
   min-width: 24px;
   min-height: 24px;
   margin-bottom: 10px;
-  background-image: url("/src/assets/images/privateIcon.svg");
+  background-image: url(${(props) => cabinetIconSrcMap[props.cabinetType]});
   background-size: contain;
   background-repeat: no-repeat;
 `;
-
 const CabinetInfoButtonsContainerStyled = styled.div`
   display: flex;
   flex-direction: column;
