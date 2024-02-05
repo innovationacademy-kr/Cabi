@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { targetClubInfoState } from "@/recoil/atoms";
 import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
 import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
 import ClubPageModals from "@/components/Club/ClubPageModals";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
-import { ClubInfoResponseType } from "@/types/dto/club.dto";
+import {
+  ClubInfoResponseDto,
+  ClubInfoResponseType,
+} from "@/types/dto/club.dto";
 import { axiosGetClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubInfo = ({ clubId }: { clubId: number }) => {
-  const [clubInfo, setClubInfo] = useState<ClubInfoResponseType>(undefined);
   const [page, setPage] = useState<number>(0);
+  const [clubInfo, setClubInfo] = useState<ClubInfoResponseType>(undefined);
+  const setTargetClubInfo = useSetRecoilState(targetClubInfoState);
 
   useEffect(() => {
     if (clubId) {
@@ -28,9 +34,17 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
 
   const getClubInfo = async () => {
     try {
-      const result = await axiosGetClubInfo(clubId, page, 2);
+      const { data }: { data: ClubInfoResponseDto } = await axiosGetClubInfo(
+        clubId,
+        page,
+        2
+      );
+      setTargetClubInfo({
+        ...data,
+        clubId,
+      });
       setTimeout(() => {
-        setClubInfo(result.data);
+        setClubInfo(data);
       }, 500);
     } catch {
       setTimeout(() => {
@@ -45,7 +59,7 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
         <LoadingAnimation />
       ) : clubInfo === STATUS_400_BAD_REQUEST ? (
         <EmptyClubCabinetTextStyled>
-          동아리 사물함이 없습니다
+          동아리 사물함이 없어요
         </EmptyClubCabinetTextStyled>
       ) : (
         <>

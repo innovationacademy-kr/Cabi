@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import { modalPropsMap } from "@/assets/data/maps";
+import { ClubUserResponseDto } from "@/types/dto/club.dto";
 import IconType from "@/types/enum/icon.type.enum";
 import { axiosDeleteClubMember } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "../Modal";
@@ -13,11 +14,8 @@ import {
 
 const DeleteClubMemModal: React.FC<{
   closeModal: React.MouseEventHandler;
-  targetMember: string;
   clubId: number;
-  userId: number;
-  getClubInfo: (clubId: number) => Promise<void>;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  targetMember: ClubUserResponseDto;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -28,21 +26,19 @@ const DeleteClubMemModal: React.FC<{
     isCurrentSectionRenderState
   );
 
-  const deleteDetail = `동아리 사물함 멤버에서 <strong>${props.targetMember}</strong>을 내보내시겠습니까?`;
+  const deleteDetail = `동아리 사물함 멤버에서 <strong>${props.targetMember.userName}</strong> 님을 내보내시겠습니까?`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
       //  axios할게 있나..?
-      await axiosDeleteClubMember(props.clubId, props.userId);
+      await axiosDeleteClubMember(props.clubId, props.targetMember.userId);
       // recoil Master 권한 바꾸기
 
       setIsCurrentSectionRender(true);
       setModalTitle(
-        `동아리 사물함 멤버에서 ${props.targetMember}를 내보냈습니다`
+        `동아리에서 ${props.targetMember.userName} 님을 내보냈습니다`
       );
-      props.setPage(0);
-      props.getClubInfo(props.clubId);
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);

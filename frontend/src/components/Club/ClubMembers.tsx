@@ -1,5 +1,5 @@
 import { MouseEvent } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import closeIcon from "@/assets/images/close-circle.svg";
 import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
 import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
@@ -15,17 +15,9 @@ const ClubMembers: React.FC<{
   master: String;
   moreBtn: boolean;
   clickMoreButton: () => void;
-  mandateClubMasterModal: (
-    e: MouseEvent<HTMLDivElement>,
-    mandateMaster: string
-  ) => void;
-  deleteClubMemberModal: (
-    e: MouseEvent<HTMLDivElement>,
-    targetMember: string,
-    userId: number
-  ) => void;
   members: ClubUserResponseDto[];
   myInfo: UserDto;
+  selectClubMemberOnClick: (member: ClubUserResponseDto) => void;
 }> = (props) => {
   return (
     <ClubMembersContainerStyled>
@@ -47,12 +39,12 @@ const ClubMembers: React.FC<{
         {props.members?.map((mem, idx) => {
           return (
             <MemCardStyled
-              onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
-                props.imMaster &&
-                  props.mandateClubMasterModal(e, `${mem.userName}`);
-              }}
               key={idx}
               bgColor={mem.userName === props.master ? "var(--sub-color)" : ""}
+              onClick={() => {
+                props.selectClubMemberOnClick(mem);
+              }}
+              // isSelected={mem.userId === props.myInfo.name}
             >
               {mem.userName === props.master ? (
                 <div id="clubMaster">
@@ -150,7 +142,7 @@ const IconContainer = styled.div`
   height: 1rem;
 `;
 
-const MemCardStyled = styled.div<{ bgColor: string }>`
+const MemCardStyled = styled.div<{ bgColor: string; isSelected?: boolean }>`
   width: 80px;
   height: 80px;
   background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
@@ -160,6 +152,15 @@ const MemCardStyled = styled.div<{ bgColor: string }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      opacity: 0.9;
+      transform: scale(1.05);
+      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
+        0px 4px 4px rgba(0, 0, 0, 0.25);
+    `}
 
   & > div {
     width: 100%;

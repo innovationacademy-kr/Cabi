@@ -6,6 +6,7 @@ import { useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
 import { serverTimeState, userState } from "@/recoil/atoms";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
+import ClubMemberInfoAreaContainer from "@/components/ClubMemberInfoArea/ClubMemberInfoArea.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LeftNav from "@/components/LeftNav/LeftNav";
 import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
@@ -115,12 +116,7 @@ const Layout = (): JSX.Element => {
           >
             <CabinetInfoAreaContainer />
           </DetailInfoContainerStyled>
-
-          {/* <DetailInfoContainerStyled
-            id="clubDetailArea"
-            isHomePage={!isClubProfilePage}
-          ></DetailInfoContainerStyled> */}
-
+          <ClubMemberInfoAreaContainer />
           <MapInfoContainer />
           {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
             <OverduePenaltyModal
