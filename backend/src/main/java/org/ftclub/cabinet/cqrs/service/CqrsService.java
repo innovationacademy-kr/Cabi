@@ -6,10 +6,8 @@ import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.CABINET_PER_SECTION
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.FLOORS;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.Location;
@@ -29,7 +27,6 @@ public class CqrsService {
 
 	private final CqrsRedis cqrsRedis;
 
-	private final ObjectMapper objectMapper;
 	private final CabinetMapper cabinetMapper;
 
 
@@ -68,16 +65,10 @@ public class CqrsService {
 
 	public CabinetAvailableResponseDto getAvailableCabinet(String building) {
 		// DTO로 바로 변환하여 받으면, 이후 정렬이나 리스트 값 변경 시 LinkedHashMap ClassCastException 발생
-		Map<String, List<Map<String, String>>> stringListMap =
-				cqrsRedis.getHashEntries(building + AVAILABLE_CABINET.getValue(),
-						new TypeReference<String>() {},
-						new TypeReference<List<Map<String,String>>>() {});
 		Map<Integer, List<CabinetPreviewDto>> availableCabinets =
-				stringListMap.entrySet().stream()
-						.collect(Collectors.toMap(
-								entry -> Integer.parseInt(entry.getKey()),
-								entry -> cqrsRedis.transList(entry.getValue(),
-										CabinetPreviewDto.class)));
+				cqrsRedis.getHashEntries(building + AVAILABLE_CABINET.getValue(),
+						new TypeReference<Integer>() {},
+						new TypeReference<List<CabinetPreviewDto>>() {});
 		return cabinetMapper.toCabinetAvailableResponseDto(availableCabinets);
 	}
 
@@ -87,7 +78,6 @@ public class CqrsService {
 		String floor = location.getFloor().toString();
 		List<CabinetPreviewDto> availableCabinets =
 				cqrsRedis.getHash(key, floor, new TypeReference<List<CabinetPreviewDto>>() {});
-		availableCabinets.removeIf(c -> c.getCabinetId().equals(cabinet.getId()));
 		availableCabinets.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 		cqrsRedis.setHash(key, floor, availableCabinets);
 	}
