@@ -6,16 +6,18 @@ import {
   targetClubUserInfoState,
   userState,
 } from "@/recoil/atoms";
+import ClubMembers from "@/components/Club/ClubMembers";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import useMenu from "@/hooks/useMenu";
-import ClubMembers from "./ClubMembers";
-import { TClubModalState } from "./ClubPageModals";
 
+export type TClubModalState = "addModal";
+
+export interface ICurrentClubModalStateInfo {
+  addModal: boolean;
+}
 const ClubMembersContainer: React.FC<{
-  master: String;
   clubId: number;
   clubInfo: ClubInfoResponseDto;
-  openModal: (modalName: TClubModalState) => void;
   getClubInfo: (clubId: number) => Promise<void>;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   page: number;
@@ -30,6 +32,9 @@ const ClubMembersContainer: React.FC<{
   const [moreBtn, setMoreBtn] = useState<boolean>(true);
   const setTargetClubUser = useSetRecoilState(targetClubUserInfoState);
   const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
+  const [clubModal, setClubModal] = useState<ICurrentClubModalStateInfo>({
+    addModal: false,
+  });
 
   const clickMoreButton = () => {
     props.setPage((prev) => prev + 1);
@@ -46,6 +51,20 @@ const ClubMembersContainer: React.FC<{
     });
     setTargetClubUser(member);
     toggleClubMember();
+  };
+
+  const closeModal = () => {
+    setClubModal({
+      ...clubModal,
+      addModal: false,
+    });
+  };
+
+  const openModal = (modalName: TClubModalState) => {
+    setClubModal({
+      ...clubModal,
+      [modalName]: true,
+    });
   };
 
   useEffect(() => {
@@ -79,10 +98,13 @@ const ClubMembersContainer: React.FC<{
   // TODO : props. 떼기
   return (
     <ClubMembers
+      clubId={props.clubId}
       clubUserCount={props.clubInfo.clubUserCount}
-      imMaster={myInfo.name === props.master}
-      openModal={props.openModal}
-      master={props.master}
+      imMaster={myInfo.name === props.clubInfo.clubMaster}
+      clubModal={clubModal}
+      openModal={openModal}
+      closeModal={closeModal}
+      master={props.clubInfo.clubMaster}
       moreBtn={moreBtn}
       clickMoreButton={clickMoreButton}
       members={members}

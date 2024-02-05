@@ -1,83 +1,112 @@
-import { MouseEvent } from "react";
 import styled, { css } from "styled-components";
-import closeIcon from "@/assets/images/close-circle.svg";
+import {
+  ICurrentClubModalStateInfo,
+  TClubModalState,
+} from "@/components/Club/ClubMembers.container";
+import AddClubMemModalContainer from "@/components/Modals/ClubModal/AddClubMemModal.container";
 import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
 import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 import { UserDto } from "@/types/dto/user.dto";
-import { TClubModalState } from "./ClubPageModals";
 
 const ClubMembers: React.FC<{
+  clubId: number;
   clubUserCount: number;
   imMaster: boolean;
+  clubModal: ICurrentClubModalStateInfo;
   openModal: (modalName: TClubModalState) => void;
+  closeModal: () => void;
   master: String;
   moreBtn: boolean;
   clickMoreButton: () => void;
   members: ClubUserResponseDto[];
   myInfo: UserDto;
   selectClubMemberOnClick: (member: ClubUserResponseDto) => void;
-}> = (props) => {
-  return (
-    <ClubMembersContainerStyled>
-      {/* TitleBar */}
-      <TitleBarStyled>
-        <p>동아리 멤버</p>
-        <div>
-          {/* 아이콘 & 동아리 멤버 수 */}
-          <img src={shareIcon} />
-          <p id="membersLength">{props.clubUserCount}</p>
-        </div>
-      </TitleBarStyled>
-      <MemSectionStyled>
-        {props.imMaster ? (
-          <AddMemCardStyled onClick={() => props.openModal("addModal")}>
-            <p>+</p>
-          </AddMemCardStyled>
-        ) : null}
-        {props.members?.map((mem, idx) => {
-          return (
-            <MemCardStyled
-              key={idx}
-              bgColor={mem.userName === props.master ? "var(--sub-color)" : ""}
-              onClick={() => {
-                props.selectClubMemberOnClick(mem);
-              }}
-              // isSelected={mem.userId === props.myInfo.name}
-            >
-              {mem.userName === props.master ? (
-                <div id="clubMaster">
-                  <CrownImg
-                    stroke="#f5f5f5"
-                    width={18}
-                    height={18}
-                    viewBox="0 0 24 24"
-                  />
+}> = ({
+  clubId,
+  clubUserCount,
+  imMaster,
+  clubModal,
+  openModal,
+  closeModal,
+  master,
+  moreBtn,
+  clickMoreButton,
+  members,
+  myInfo,
 
-                  <p>{mem.userName}</p>
-                </div>
-              ) : (
-                //  mem.userName === props.myInfo.name ? null :
-                <div id="clubUser">
-                  <UserImg width={16} height={16} viewBox="0 0 24 24" />
-                  <p>{mem.userName}</p>
-                </div>
-              )}
-              {/* </div> */}
-              {/* <div id="userName">{mem.userName}</div> */}
-            </MemCardStyled>
-          );
-        })}
-      </MemSectionStyled>
-      {props.moreBtn && (
-        <ButtonContainerStyled>
-          <MoreButtonStyled onClick={props.clickMoreButton}>
-            더보기
-          </MoreButtonStyled>
-        </ButtonContainerStyled>
-      )}
-    </ClubMembersContainerStyled>
+  selectClubMemberOnClick,
+}) => {
+  return (
+    <>
+      <ClubMembersContainerStyled>
+        {/* TitleBar */}
+        <TitleBarStyled>
+          <p>동아리 멤버</p>
+          <div>
+            {/* 아이콘 & 동아리 멤버 수 */}
+            <img src={shareIcon} />
+            <p id="membersLength">{clubUserCount}</p>
+          </div>
+        </TitleBarStyled>
+        <MemSectionStyled>
+          {imMaster ? (
+            <AddMemCardStyled onClick={() => openModal("addModal")}>
+              <p>+</p>
+            </AddMemCardStyled>
+          ) : null}
+          {members?.map((mem, idx) => {
+            return (
+              <MemCardStyled
+                key={idx}
+                bgColor={mem.userName === master ? "var(--sub-color)" : ""}
+                onClick={() => {
+                  selectClubMemberOnClick(mem);
+                }}
+                // isSelected={mem.userId === myInfo.name}
+              >
+                {mem.userName === master ? (
+                  <div id="clubMaster">
+                    <CrownImg
+                      stroke="#f5f5f5"
+                      width={18}
+                      height={18}
+                      viewBox="0 0 24 24"
+                    />
+
+                    <p>{mem.userName}</p>
+                  </div>
+                ) : (
+                  //  mem.userName === myInfo.name ? null :
+                  <div id="clubUser">
+                    <UserImg width={16} height={16} viewBox="0 0 24 24" />
+                    <p>{mem.userName}</p>
+                  </div>
+                )}
+                {/* </div> */}
+                {/* <div id="userName">{mem.userName}</div> */}
+              </MemCardStyled>
+            );
+          })}
+        </MemSectionStyled>
+        {moreBtn && (
+          <ButtonContainerStyled>
+            <MoreButtonStyled onClick={clickMoreButton}>
+              더보기
+            </MoreButtonStyled>
+          </ButtonContainerStyled>
+        )}
+      </ClubMembersContainerStyled>
+      {clubModal.addModal ? (
+        <AddClubMemModalContainer
+          closeModal={() => {
+            closeModal();
+          }}
+          clubId={clubId}
+        />
+      ) : null}
+    </>
   );
 };
 

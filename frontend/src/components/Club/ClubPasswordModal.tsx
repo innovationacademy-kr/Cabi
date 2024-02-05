@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import IconType from "@/types/enum/icon.type.enum";
-import { IModalContents } from "../Modals/Modal";
-import ModalPortal from "../Modals/ModalPortal";
-import ModifyClubPwModal from "../Modals/PasswordCheckModal/ModifiyClubPwModal";
+import { IModalContents } from "@/components//Modals/Modal";
+import ModalPortal from "@/components//Modals/ModalPortal";
+import ModifyClubPwModal from "@/components//Modals/PasswordCheckModal/ModifiyClubPwModal";
 import {
   FailResponseModal,
   SuccessResponseModal,
-} from "../Modals/ResponseModal/ResponseModal";
+} from "@/components//Modals/ResponseModal/ResponseModal";
+import IconType from "@/types/enum/icon.type.enum";
 
 const ClubPasswordModal = ({
   password,
