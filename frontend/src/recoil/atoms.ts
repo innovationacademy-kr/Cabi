@@ -10,6 +10,11 @@ import {
   CabinetPreviewInfo,
   MyCabinetInfoResponseDto,
 } from "@/types/dto/cabinet.dto";
+import {
+  ClubCabinetInfo,
+  ClubResponseDto,
+  ClubUserResponseDto,
+} from "@/types/dto/club.dto";
 import { ClubUserDto } from "@/types/dto/lent.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
 
@@ -168,4 +173,26 @@ export const selectedClubInfoState = atom<ClubUserDto | null>({
 export const serverTimeState = atom<Date>({
   key: "serverTime",
   default: new Date(),
+});
+
+export const targetClubInfoState = atom<ClubResponseDto>({
+  key: "targetClub",
+  default: {
+    clubId: 0,
+    clubName: "",
+    clubMaster: "",
+  },
+});
+
+export const targetClubCabinetInfoState = atom<ClubCabinetInfo | null>({
+  key: "targetClubCabinet",
+  default: null,
+});
+
+export const targetClubUserInfoState = atom<ClubUserResponseDto>({
+  key: "targetClubUser",
+  default: {
+    userId: 0,
+    userName: "",
+  },
 });

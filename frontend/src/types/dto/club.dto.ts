@@ -21,15 +21,18 @@ export type ClubInfoResponseType =
   | typeof STATUS_400_BAD_REQUEST
   | undefined;
 
-export interface ClubInfoResponseDto {
-  clubName: string;
-  clubMaster: string;
-  clubMemo: string;
-  clubNotice: string;
+export interface ClubCabinetInfo {
   building: string;
   floor: number;
   section: string;
   visibleNum: number;
+}
+
+export interface ClubInfoResponseDto extends ClubCabinetInfo {
+  clubName: string;
+  clubMaster: string;
+  clubMemo: string;
+  clubNotice: string;
   clubUsers: ClubUserResponseDto[];
   clubUserCount: number;
 }
