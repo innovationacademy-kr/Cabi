@@ -2,7 +2,6 @@ package org.ftclub.cabinet.event;
 
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
-import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cqrs.manager.CqrsManager;
@@ -13,12 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Log4j2
 @Component
-@NoArgsConstructor
 public class CqrsEventListener {
 
 	private static CqrsManager cqrsManager;
 
-	// CqrsManager를 주입받는다.(Spring 주입 시점 차이로 인해 @Autowired 사용 불가)
+	// CqrsManager를 수정자 주입 방식으로 주입받는다.(리플렉션으로 생성되기 때문에 생성자 주입이 불가능하다.)
 	public void setCqrsManager(CqrsManager cqrsManager) {
 		CqrsEventListener.cqrsManager = cqrsManager;
 	}

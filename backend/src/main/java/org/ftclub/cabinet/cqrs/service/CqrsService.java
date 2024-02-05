@@ -83,6 +83,7 @@ public class CqrsService {
 		String floor = location.getFloor().toString();
 		List<CabinetPreviewDto> availableCabinets =
 				cqrsRedis.getHashAsList(key, floor, CabinetPreviewDto.class);
+		availableCabinets.removeIf(c -> c.getCabinetId().equals(cabinet.getId()));
 		availableCabinets.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 		cqrsRedis.setHash(key, floor, availableCabinets);
 	}
