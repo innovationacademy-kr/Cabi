@@ -5,6 +5,7 @@ import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.BUILDINGS;
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.CABINET_PER_SECTION;
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.FLOORS;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
@@ -32,18 +33,19 @@ public class CqrsService {
 	private final CabinetMapper cabinetMapper;
 
 
+	//@formatter:off
 	public void clearBuildingFloors() {
 		cqrsRedis.clearBySuffix(BUILDINGS.getValue());
 	}
 
 	public List<BuildingFloorsDto> getBuildingFloors() {
-		return cqrsRedis.getAsList(BUILDINGS.getValue(), BuildingFloorsDto.class);
+		return cqrsRedis.get(BUILDINGS.getValue(), new TypeReference<List<BuildingFloorsDto>>() {});
 	}
 
 	public void addBuildingFloors(String building, List<Integer> floors) {
 		String key = building + BUILDINGS.getValue();
 		List<BuildingFloorsDto> buildingFloorsDtos =
-				cqrsRedis.getAsList(key, BuildingFloorsDto.class);
+				cqrsRedis.get(key, new TypeReference<List<BuildingFloorsDto>>() {});
 		buildingFloorsDtos.add(cabinetMapper.toBuildingFloorsDto(building, floors));
 		cqrsRedis.set(key, buildingFloorsDtos);
 	}
@@ -53,7 +55,7 @@ public class CqrsService {
 	}
 
 	public List<Integer> getFloors(String building) {
-		return cqrsRedis.getAsList(building + FLOORS.getValue(), Integer.class);
+		return cqrsRedis.get(building + FLOORS.getValue(), new TypeReference<List<Integer>>() {});
 	}
 
 	public void addFloors(String building, List<Integer> floors) {
@@ -67,7 +69,9 @@ public class CqrsService {
 	public CabinetAvailableResponseDto getAvailableCabinet(String building) {
 		// DTO로 바로 변환하여 받으면, 이후 정렬이나 리스트 값 변경 시 LinkedHashMap ClassCastException 발생
 		Map<String, List<Map<String, String>>> stringListMap =
-				cqrsRedis.getHashEntries(building + AVAILABLE_CABINET.getValue());
+				cqrsRedis.getHashEntries(building + AVAILABLE_CABINET.getValue(),
+						new TypeReference<String>() {},
+						new TypeReference<List<Map<String,String>>>() {});
 		Map<Integer, List<CabinetPreviewDto>> availableCabinets =
 				stringListMap.entrySet().stream()
 						.collect(Collectors.toMap(
@@ -82,7 +86,7 @@ public class CqrsService {
 		String key = location.getBuilding() + AVAILABLE_CABINET.getValue();
 		String floor = location.getFloor().toString();
 		List<CabinetPreviewDto> availableCabinets =
-				cqrsRedis.getHashAsList(key, floor, CabinetPreviewDto.class);
+				cqrsRedis.getHash(key, floor, new TypeReference<List<CabinetPreviewDto>>() {});
 		availableCabinets.removeIf(c -> c.getCabinetId().equals(cabinet.getId()));
 		availableCabinets.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 		cqrsRedis.setHash(key, floor, availableCabinets);
@@ -93,7 +97,7 @@ public class CqrsService {
 		String key = location.getBuilding() + AVAILABLE_CABINET.getValue();
 		String floor = location.getFloor().toString();
 		List<CabinetPreviewDto> availableCabinets =
-				cqrsRedis.getHashAsList(key, floor, CabinetPreviewDto.class);
+				cqrsRedis.getHash(key, floor, new TypeReference<List<CabinetPreviewDto>>() {});
 		availableCabinets.removeIf(c -> c.getCabinetId().equals(cabinet.getId()));
 		cqrsRedis.setHash(key, floor, availableCabinets);
 	}
@@ -101,4 +105,5 @@ public class CqrsService {
 	public void clearCabinetPerSection() {
 		cqrsRedis.clearBySuffix(CABINET_PER_SECTION.getValue());
 	}
+	//@formatter:on
 }

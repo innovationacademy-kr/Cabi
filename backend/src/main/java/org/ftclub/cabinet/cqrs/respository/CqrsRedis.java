@@ -51,14 +51,13 @@ public class CqrsRedis {
 		this.objectMapper = objectMapper;
 	}
 
-	//@formatter:off
-	private <T> T stringToDto(String value) {
+	private <T> T stringToDto(String value, TypeReference<T> typeReference) {
 
 		if (value == null) {
 			return null;
 		}
 		try {
-			return objectMapper.readValue(value, new TypeReference<>() {});
+			return objectMapper.readValue(value, typeReference);
 		} catch (JsonProcessingException e) {
 			log.error("String to JSON Parse Error : {}, {}", value, e.toString());
 			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
@@ -103,29 +102,22 @@ public class CqrsRedis {
 		}
 	}
 
-	public <T> T getAsDto(String key) {
-		String value = valueTemplate.get(key);return stringToDto(value);
+	public <T> T get(String key, TypeReference<T> typeReference) {
+		String value = valueTemplate.get(key);
+		return stringToDto(value, typeReference);
 	}
 
-	public <T> List<T> getAsList(String key, Class<T> clazz) {
-		List<Map<String, String>> transMap = stringToDto(valueTemplate.get(key));
-		return this.transList(transMap, clazz);
+	public <T> T getHash(String key, String subKey, TypeReference<T> typeReference) {
+		return stringToDto(hashTemplate.get(key, subKey), typeReference);
 	}
 
-	public <T> T getHashAsDto(String key, String subKey) {
-		return stringToDto(hashTemplate.get(key, subKey));
-	}
-
-	public <T> List<T> getHashAsList(String key, String subKey, Class<T> clazz) {
-		List<Map<String, String>> transMap = stringToDto(hashTemplate.get(key, subKey));
-		return this.transList(transMap, clazz);
-	}
-
-	public <T> Map<String, T> getHashEntries(String key) {
+	public <K, V> Map<K, V> getHashEntries(String key, TypeReference<K> keyTypeReference,
+			TypeReference<V> valueTypeReference) {
 		Map<String, String> entries = hashTemplate.entries(key);
-		Map<String, T> result = new HashMap<>();
+		Map<K, V> result = new HashMap<>();
 		for (Map.Entry<String, String> entry : entries.entrySet()) {
-			result.put(entry.getKey(), stringToDto(entry.getValue()));
+			result.put(this.stringToDto(entry.getKey(), keyTypeReference),
+					this.stringToDto(entry.getValue(), valueTypeReference));
 		}
 		return result;
 	}
@@ -137,5 +129,4 @@ public class CqrsRedis {
 	public void setHash(String key, String subKey, Object value) {
 		hashTemplate.put(key, subKey, dtoToString(value));
 	}
-	//@formatter:on
 }
