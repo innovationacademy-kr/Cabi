@@ -21,14 +21,16 @@ const ClubMembersContainer: React.FC<{
 }> = (props) => {
   const myInfo = useRecoilValue(userState);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
-  const setIsCurrentSectionRender = useSetRecoilState(
-    isCurrentSectionRenderState
-  );
+  // const setIsCurrentSectionRender = useSetRecoilState(
+  //   isCurrentSectionRenderState
+  // );
   // TODO : setIsCurrentSectionRender props로 넘겨주기
   const [moreBtn, setMoreBtn] = useState<boolean>(true);
 
   const clickMoreButton = () => {
     props.setPage((prev) => prev + 1);
+    // props.getClubInfo(props.clubId);
+    // setIsCurrentSectionRender(true);
   };
 
   const deleteClubMemberModal = (
@@ -59,7 +61,7 @@ const ClubMembersContainer: React.FC<{
       setMembers((prev) => {
         return [...prev, ...props.clubInfo.clubUsers];
       });
-      setIsCurrentSectionRender(true);
+      // setIsCurrentSectionRender(true);
     }
   }, [props.clubInfo]);
   // 나 -> 동아리장 -> 맨 위 배열 함침
@@ -68,18 +70,17 @@ const ClubMembersContainer: React.FC<{
     if (props.clubInfo.clubUserCount) {
       if (members!.length >= props.clubInfo.clubUserCount) {
         setMoreBtn(false);
-        setIsCurrentSectionRender(true);
+        // setIsCurrentSectionRender(true);
       } else setMoreBtn(true);
     }
   }, [members]);
 
-  useEffect(() => {
-    if (props.clubId) {
-      props.getClubInfo(props.clubId);
-
-      setIsCurrentSectionRender(true);
-    }
-  }, [props.page]);
+  // useEffect(() => {
+  //   if (props.clubId) {
+  //     props.getClubInfo(props.clubId);
+  //     setIsCurrentSectionRender(true);
+  //   }
+  // }, [props.page]);
 
   // TODO : props. 떼기
   return (

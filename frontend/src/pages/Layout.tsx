@@ -32,6 +32,7 @@ const Layout = (): JSX.Element => {
   const isRootPath: boolean = location.pathname === "/";
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
+  const isClubProfilePage: boolean = location.pathname === "/profile/clubs";
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -114,6 +115,12 @@ const Layout = (): JSX.Element => {
           >
             <CabinetInfoAreaContainer />
           </DetailInfoContainerStyled>
+
+          {/* <DetailInfoContainerStyled
+            id="clubDetailArea"
+            isHomePage={!isClubProfilePage}
+          ></DetailInfoContainerStyled> */}
+
           <MapInfoContainer />
           {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
             <OverduePenaltyModal

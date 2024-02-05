@@ -16,6 +16,7 @@ const MandateClubMemModal: React.FC<{
   clubId: number;
   mandateMember: string;
   getClubInfo: (clubId: number) => Promise<void>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -25,7 +26,7 @@ const MandateClubMemModal: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  const mandateDetail = `<해당 동아리명>의  동아리장 권한을  <strong>${props.mandateMember}</strong>에게 위임하겠습니까?`;
+  const mandateDetail = `<해당 동아리명> 의  동아리장 권한을  <strong>${props.mandateMember}</strong> 에게 위임하겠습니까?`;
 
   const trySwapRequest = async () => {
     setIsLoading(true);
@@ -33,6 +34,7 @@ const MandateClubMemModal: React.FC<{
       await axiosMandateClubMember(props.clubId, props.mandateMember);
       setIsCurrentSectionRender(true);
       setModalTitle("동아리장 권한을 위임하였습니다.");
+      props.setPage(0);
       props.getClubInfo(props.clubId);
     } catch (error: any) {
       setModalContent(error.response.data.message);

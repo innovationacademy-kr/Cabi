@@ -1,36 +1,37 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { currentFloorCabinetState, myCabinetInfoState } from "@/recoil/atoms";
-import MemoModalTest from "./ClubMemoModal";
+import ClubMemoModal from "./ClubMemoModal";
 
-const MemoModalTestContainer = (props: {
-  onClose: React.MouseEventHandler<Element>;
-  isModalOpen: boolean;
+export interface MemoModalTestInterface {
+  cabinetMemo: string | null;
+}
+
+export interface MemoModalTestContainerInterface {
+  onClose: React.MouseEventHandler;
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
-  onSave: (newMemo: string | null) => void;
-}) => {
-  const [] = useRecoilState(currentFloorCabinetState);
+  clubId: number;
+  clubNotice: string;
+  // page: number;
+}
 
-  const onSaveEditMemo = (newMemo: string | null) => {
-    if (newMemo !== props.text) {
-      props.setText(newMemo ?? "");
-    }
-  };
-
-  
+const ClubMemoModalContainer = ({
+  onClose,
+  text,
+  setText,
+  clubId,
+  clubNotice,
+}: // page,
+MemoModalTestContainerInterface) => {
   return (
-    <>
-      {props.isModalOpen && (
-        <MemoModalTest
-          onClose={props.onClose}
-          onSave={props.onSave}
-          text={props.text}
-          setText={props.setText}
-        />
-      )}
-    </>
+    <ClubMemoModal
+      onClose={onClose}
+      text={text}
+      setText={setText}
+      clubId={clubId}
+      clubNotice={clubNotice}
+      // page={page}
+    />
   );
 };
 
-export default MemoModalTestContainer;
+export default ClubMemoModalContainer;

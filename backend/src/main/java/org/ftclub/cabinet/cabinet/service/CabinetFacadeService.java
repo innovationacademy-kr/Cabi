@@ -367,4 +367,9 @@ public class CabinetFacadeService {
 		Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 		cabinet.specifyStatus(status);
 	}
+
+	@Transactional
+	public void updateStatus(List<Long> cabinetId, CabinetStatus status) {
+		cabinetCommandService.updateStatusBulk(cabinetId, status);
+	}
 }

@@ -83,10 +83,10 @@ export const axiosUpdateDeviceToken = async (
   }
 };
 
-const axiosMyClubInfoURL = "/v4/clubs";
-export const axiosMyClubInfo = async (): Promise<any> => {
+const axiosMyClubListURL = "/v4/clubs";
+export const axiosMyClubList = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosMyClubInfoURL);
+    const response = await instance.get(axiosMyClubListURL);
     return response;
   } catch (error) {
     throw error;
@@ -156,6 +156,24 @@ export const axiosDeleteClubMember = async (
   try {
     const response = await instance.delete(
         `${axiosDeleteClubMemberURL}${clubId}/users/${userId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUpdateClubNoticeURL = "/v4/clubs/";
+export const axiosUpdateClubNotice = async (
+    clubId: number,
+    notice: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(
+        `${axiosUpdateClubNoticeURL}${clubId}/notice`,
+        {
+          notice,
+        }
     );
     return response;
   } catch (error) {

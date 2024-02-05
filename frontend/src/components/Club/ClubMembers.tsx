@@ -1,8 +1,8 @@
 import { MouseEvent } from "react";
 import styled from "styled-components";
 import closeIcon from "@/assets/images/close-circle.svg";
-import crown from "@/assets/images/crown.svg";
-import maru from "@/assets/images/maru.svg";
+import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
+import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 import { UserDto } from "@/types/dto/user.dto";
@@ -38,86 +38,87 @@ const ClubMembers: React.FC<{
           <p id="membersLength">{props.clubUserCount}</p>
         </div>
       </TitleBarStyled>
-      <div id="memCard">
-        <MemSectionStyled>
-          {props.imMaster ? (
-            <AddMemCardStyled onClick={() => props.openModal("addModal")}>
-              <p>+</p>
-            </AddMemCardStyled>
-          ) : null}
-          {props.members?.map((mem, idx) => {
-            return (
-              <MemCardStyled
-                onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
-                  props.imMaster &&
-                    props.mandateClubMasterModal(e, `${mem.userName}`);
-                }}
-                key={idx}
-                bgColor={
-                  mem.userName === props.myInfo.name ? "var(--sub-color)" : ""
-                }
-              >
-                <div id="top">
-                  <img id="profileImg" src={maru}></img>
-                  {mem.userName === props.master ? (
-                    <img id="crown" src={crown} />
-                  ) : mem.userName === props.myInfo.name ? null : (
-                    <CloseIconStyled
-                      id="closeIcon"
-                      src={closeIcon}
-                      onClick={(e: MouseEvent<HTMLDivElement>) =>
-                        props.deleteClubMemberModal(
-                          e,
-                          `${mem.userName}`,
-                          mem.userId
-                        )
-                      }
-                    />
-                  )}
-                </div>
-                <div>{mem.userName}</div>
-              </MemCardStyled>
-            );
-          })}
-        </MemSectionStyled>
-        {props.moreBtn ? (
-          <ButtonContainerStyled>
-            <MoreButtonStyled onClick={props.clickMoreButton}>
-              더보기
-            </MoreButtonStyled>
-          </ButtonContainerStyled>
+      <MemSectionStyled>
+        {props.imMaster ? (
+          <AddMemCardStyled onClick={() => props.openModal("addModal")}>
+            <p>+</p>
+          </AddMemCardStyled>
         ) : null}
-      </div>
+        {props.members?.map((mem, idx) => {
+          return (
+            <MemCardStyled
+              onContextMenu={(e: MouseEvent<HTMLDivElement>) => {
+                props.imMaster &&
+                  props.mandateClubMasterModal(e, `${mem.userName}`);
+              }}
+              key={idx}
+              bgColor={mem.userName === props.master ? "var(--sub-color)" : ""}
+            >
+              {mem.userName === props.master ? (
+                <div id="clubMaster">
+                  <CrownImg
+                    stroke="#f5f5f5"
+                    width={18}
+                    height={18}
+                    viewBox="0 0 24 24"
+                  />
+
+                  <p>{mem.userName}</p>
+                </div>
+              ) : (
+                //  mem.userName === props.myInfo.name ? null :
+                <div id="clubUser">
+                  <UserImg width={16} height={16} viewBox="0 0 24 24" />
+                  <p>{mem.userName}</p>
+                </div>
+              )}
+              {/* </div> */}
+              {/* <div id="userName">{mem.userName}</div> */}
+            </MemCardStyled>
+          );
+        })}
+      </MemSectionStyled>
+      {props.moreBtn && (
+        <ButtonContainerStyled>
+          <MoreButtonStyled onClick={props.clickMoreButton}>
+            더보기
+          </MoreButtonStyled>
+        </ButtonContainerStyled>
+      )}
     </ClubMembersContainerStyled>
   );
 };
 
 const ClubMembersContainerStyled = styled.div`
-  margin-top: 75px;
   width: 100%;
-  /* margin-bottom: 180px; */
+  /* height: 100%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const TitleBarStyled = styled.div`
-  height: 3rem;
+  /* height: 3rem; */
+  width: 80%;
+  max-width: 720px;
   display: flex;
-  justify-content: space-between;
   font-size: 20px;
   font-weight: 700;
-  padding-left: 7px;
-
-  & img {
-    width: 24px;
-    height: 24px;
-    margin-right: 6px;
-  }
+  margin-bottom: 1rem;
 
   & > div {
+    margin-left: 18px;
     line-height: 24px;
     height: 24px;
     font-size: 1rem;
     font-weight: normal;
     display: flex;
+  }
+
+  & img {
+    width: 24px;
+    height: 24px;
   }
 
   & #membersLength {
@@ -126,8 +127,8 @@ const TitleBarStyled = styled.div`
 `;
 
 const AddMemCardStyled = styled.div`
-  width: 145px;
-  height: 170px;
+  width: 80px;
+  height: 80px;
   border-radius: 1rem;
   margin: 7px;
   display: flex;
@@ -144,30 +145,37 @@ const AddMemCardStyled = styled.div`
   }
 `;
 
+const IconContainer = styled.div`
+  width: 1rem;
+  height: 1rem;
+`;
+
 const MemCardStyled = styled.div<{ bgColor: string }>`
-  width: 145px;
-  height: 170px;
+  width: 80px;
+  height: 80px;
   background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
   border-radius: 1rem;
   margin: 7px;
-  padding: 20px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  & #profileImg {
-    width: 3rem;
-    height: 3rem;
-    margin-bottom: 54px;
-  }
-
-  & #crown {
-    width: 1.2rem;
-    height: 1.2rem;
-  }
-
-  & #top {
+  & > div {
     width: 100%;
+    height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    border: 1rem;
+
+    & > p {
+      line-height: 28px;
+      height: 28px;
+      font-size: 14px;
+    }
+  }
+  & #clubMaster {
+    color: #f5f5f5;
   }
 `;
 
@@ -182,10 +190,12 @@ const CloseIconStyled = styled.img`
 
 const MemSectionStyled = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, 159px);
-  grid-template-rows: repeat(auto-fill, 184px);
+  grid-template-columns: repeat(auto-fill, 90px);
+  grid-template-rows: repeat(auto-fill, 90px);
   justify-content: center;
   width: 100%;
+  max-width: 720px;
+  margin: 1rem 0 2rem;
 `;
 
 const ButtonContainerStyled = styled.div`
