@@ -367,25 +367,8 @@ public class CabinetFacadeService {
 		cabinet.specifyStatus(status);
 	}
 
-	@Transactional(readOnly = true)
-	public void asyncCabinetLentHistories() {
-		long totalCabinetCount = cabinetQueryService.countCabinets();
-		for (long cabinetId = 1L; cabinetId <= totalCabinetCount; cabinetId++) {
-			List<LentHistory> cabinetLentHistories =
-					lentQueryService.findCabinetLentHistoriesWithCabinet(cabinetId);
-			// BORKEN -> broken:cabinetStatus 추가 / CabinetPaginationDto -> CabinetDto
-			// {cabinetId}:cabinetLentHistories 추가  / LentHistoryPaginationDto -> LentHistoryDto
-			// {visibleNum}:cabinetVisibleNum 추가 / CabinetInfoPaginationDto -> CabinetInfoResponseDto
-			// cabinet:statistics 추가 / status와 lent에 따라 floor, used, overdue, unused, disabled count
-			// 30일 이내 -> {startedAt}:lentCount 추가 / lentStartCount 계산
-			// 30일 이내 -> {endedAt}:lentCount 추가 / lentEndCount 계산
-			// {building}{floor}:cabinetPerSection - {section} 추가 / CabinetsPerSectionDto -> cabinetsPreviewDto
-			// {cabinetId}:cabinetInfo 추가 / CabinetInfoDto -> CabinetInfoResponseDto
-			// {floor}:pendingCabinet 추가 / CabinetPendingDto -> CabinetPreviewDto
-		}
-	}
-
-	@Transactional(readOnly = true)
-	public void asyncUserLentHistories() {
+	@Transactional
+	public void updateStatus(List<Long> cabinetId, CabinetStatus status) {
+		cabinetCommandService.updateStatusBulk(cabinetId, status);
 	}
 }

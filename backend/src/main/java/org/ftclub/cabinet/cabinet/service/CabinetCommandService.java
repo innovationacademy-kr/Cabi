@@ -141,6 +141,10 @@ public class CabinetCommandService {
 		cabinet.specifyStatus(status);
 	}
 
+	public void updateStatusBulk(List<Long> cabinetIds, CabinetStatus status) {
+		cabinetRepository.updateStatusByCabinetIdsIn(cabinetIds, status);
+	}
+
 	/**
 	 * 사물함의 대여타입을 변경합니다.
 	 *
