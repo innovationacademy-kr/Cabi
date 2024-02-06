@@ -76,7 +76,8 @@ const ClubMemberInfoArea = ({
                 {selectedClubInfo!.clubName}
               </TextStyled>
             </ClubInfoWrapperStyled>
-            {isMaster ? (
+            {selectedClubMemberInfo!.userName ===
+            selectedClubInfo.clubMaster ? (
               <ClubIconStyled />
             ) : (
               <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
