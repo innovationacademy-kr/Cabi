@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import {
-  ICurrentClubModalStateInfo,
-  TClubModalState,
+  ICurrentClubMemberModalStateInfo,
+  TClubMemberModalState,
 } from "@/components/Club/ClubMembers.container";
 import AddClubMemModalContainer from "@/components/Modals/ClubModal/AddClubMemModal.container";
 import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
@@ -14,8 +14,8 @@ const ClubMembers: React.FC<{
   clubId: number;
   clubUserCount: number;
   imMaster: boolean;
-  clubModal: ICurrentClubModalStateInfo;
-  openModal: (modalName: TClubModalState) => void;
+  clubModal: ICurrentClubMemberModalStateInfo;
+  openModal: (modalName: TClubMemberModalState) => void;
   closeModal: () => void;
   master: String;
   moreBtn: boolean;

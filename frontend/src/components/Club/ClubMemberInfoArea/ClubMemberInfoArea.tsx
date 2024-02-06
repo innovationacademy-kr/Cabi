@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {
   ICurrentClubModalStateInfo,
   TClubModalState,
-} from "@/components/ClubMemberInfoArea/ClubMemberInfoArea.container";
+} from "@/components/Club/ClubMemberInfoArea/ClubMemberInfoArea.container";
 import Button from "@/components/Common/Button";
 import DeleteClubMemModal from "@/components/Modals/ClubModal/DeleteClubMemModal";
 import MandateClubMemModal from "@/components/Modals/ClubModal/MandateClubMemModal";
@@ -26,6 +26,7 @@ interface ClubMemberInfoAreaProps {
   selectedClubCabinetInfo: ClubCabinetInfo | null;
   closeClubMemberInfoArea: () => void;
   isMaster: boolean;
+  isMine: boolean;
   clubModal: ICurrentClubModalStateInfo;
   openModal: (modalName: TClubModalState) => void;
   closeModal: (modalName: TClubModalState) => void;
@@ -37,6 +38,7 @@ const ClubMemberInfoArea = ({
   selectedClubCabinetInfo,
   closeClubMemberInfoArea,
   isMaster,
+  isMine,
   clubModal,
   openModal,
   closeModal,
@@ -87,13 +89,13 @@ const ClubMemberInfoArea = ({
                 onClick={() => openModal("mandateModal")}
                 text="동아리장 위임"
                 theme="fill"
-                disabled={!isMaster}
+                disabled={!isMaster || isMine}
               />
               <Button
                 onClick={() => openModal("deleteModal")}
                 text="내보내기"
                 theme="line"
-                disabled={!isMaster}
+                disabled={!isMaster || isMine}
               />
               <Button
                 onClick={closeClubMemberInfoArea}
@@ -101,7 +103,6 @@ const ClubMemberInfoArea = ({
                 theme="grayLine"
               />
             </CabinetInfoButtonsContainerStyled>
-            <CabinetLentDateInfoStyled>동아리 사물함</CabinetLentDateInfoStyled>
           </>
         )}
       </ClubMemberInfoAreaStyled>
@@ -225,15 +226,6 @@ const CabinetInfoButtonsContainerStyled = styled.div`
   max-height: 320px;
   margin: 3vh 0;
   width: 100%;
-`;
-
-const CabinetLentDateInfoStyled = styled.div`
-  color: var(--black);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 28px;
-  white-space: pre-line;
-  text-align: center;
 `;
 
 export default ClubMemberInfoArea;

@@ -10,9 +10,9 @@ import ClubMembers from "@/components/Club/ClubMembers";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import useMenu from "@/hooks/useMenu";
 
-export type TClubModalState = "addModal";
+export type TClubMemberModalState = "addModal";
 
-export interface ICurrentClubModalStateInfo {
+export interface ICurrentClubMemberModalStateInfo {
   addModal: boolean;
 }
 const ClubMembersContainer: React.FC<{
@@ -32,7 +32,7 @@ const ClubMembersContainer: React.FC<{
   const [moreBtn, setMoreBtn] = useState<boolean>(true);
   const setTargetClubUser = useSetRecoilState(targetClubUserInfoState);
   const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
-  const [clubModal, setClubModal] = useState<ICurrentClubModalStateInfo>({
+  const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
     addModal: false,
   });
 
@@ -60,7 +60,7 @@ const ClubMembersContainer: React.FC<{
     });
   };
 
-  const openModal = (modalName: TClubModalState) => {
+  const openModal = (modalName: TClubMemberModalState) => {
     setClubModal({
       ...clubModal,
       [modalName]: true,

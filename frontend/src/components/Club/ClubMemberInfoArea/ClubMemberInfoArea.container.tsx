@@ -6,7 +6,7 @@ import {
   targetClubUserInfoState,
   userState,
 } from "@/recoil/atoms";
-import ClubMemberInfoArea from "@/components/ClubMemberInfoArea/ClubMemberInfoArea";
+import ClubMemberInfoArea from "@/components/Club/ClubMemberInfoArea/ClubMemberInfoArea";
 import useMenu from "@/hooks/useMenu";
 
 export type TClubModalState = "deleteModal" | "mandateModal";
@@ -49,6 +49,7 @@ const ClubMemberInfoAreaContainer = () => {
       selectedClubCabinetInfo={targetClubCabinetInfo}
       closeClubMemberInfoArea={closeClubMember}
       isMaster={targetClubInfo.clubMaster === myInfo.name}
+      isMine={targetClubUserInfo.userName === myInfo.name}
       clubModal={clubModal}
       openModal={openModal}
       closeModal={closeModal}
