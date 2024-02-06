@@ -77,7 +77,7 @@ const ClubMemberContainer = ({
 
   useEffect(() => {
     if (clubInfo.clubUserCount) {
-      if (members!.length >= clubInfo.clubUserCount) {
+      if (members!.length + 1 >= clubInfo.clubUserCount) {
         setMoreButton(false);
       } else {
         setMoreButton(true);
