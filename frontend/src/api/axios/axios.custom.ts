@@ -1,5 +1,5 @@
-import {AlarmInfo} from "@/types/dto/alarm.dto";
-import {ClubUserDto} from "@/types/dto/lent.dto";
+import { AlarmInfo } from "@/types/dto/alarm.dto";
+import { ClubUserDto } from "@/types/dto/lent.dto";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
 import instance from "@/api/axios/axios.instance";
@@ -71,7 +71,7 @@ export const axiosUpdateAlarm = async (alarm: AlarmInfo): Promise<any> => {
 
 const axiosUpdateDeviceTokenURL = "/v4/users/me/device-token";
 export const axiosUpdateDeviceToken = async (
-    deviceToken: string | null
+  deviceToken: string | null
 ): Promise<any> => {
   try {
     const response = await instance.put(axiosUpdateDeviceTokenURL, {
@@ -95,16 +95,16 @@ export const axiosMyClubList = async (): Promise<any> => {
 
 const axiosGetClubInfoURL = "/v4/clubs/";
 export const axiosGetClubInfo = async (
-    clubId: number,
-    page: number,
-    size: number
+  clubId: number,
+  page: number,
+  size: number
 ): Promise<any> => {
   try {
     const response = await instance.get(
-        axiosGetClubInfoURL + clubId.toString(),
-        {
-          params: {page: page, size: size},
-        }
+      axiosGetClubInfoURL + clubId.toString(),
+      {
+        params: { page: page, size: size },
+      }
     );
     return response;
   } catch (error) {
@@ -114,16 +114,16 @@ export const axiosGetClubInfo = async (
 
 const axiosAddClubMemberURL = "/v4/clubs";
 export const axiosAddClubMember = async (
-    clubId: number,
-    name: String
+  clubId: number,
+  name: String
 ): Promise<any> => {
   // TODO : 예외처리?
   try {
     const response = await instance.post(
-        `${axiosAddClubMemberURL}/${clubId}/users`,
-        {
-          name,
-        }
+      `${axiosAddClubMemberURL}/${clubId}/users`,
+      {
+        name,
+      }
     );
     return response;
   } catch (error) {
@@ -133,14 +133,14 @@ export const axiosAddClubMember = async (
 
 const axiosMandateClubMemURL = "/v4/clubs";
 export const axiosMandateClubMember = async (
-    clubId: number,
-    clubMaster: string
+  clubId: number,
+  clubMaster: string
 ): Promise<any> => {
   // TODO : 예외처리?
   try {
     const response = await instance.post(
-        `${axiosMandateClubMemURL}/${clubId}/mandate`,
-        {clubMaster}
+      `${axiosMandateClubMemURL}/${clubId}/mandate`,
+      { clubMaster }
     );
     return response;
   } catch (error) {
@@ -150,12 +150,30 @@ export const axiosMandateClubMember = async (
 
 const axiosDeleteClubMemberURL = "/v4/clubs/";
 export const axiosDeleteClubMember = async (
-    clubId: number,
-    userId: number
+  clubId: number,
+  userId: number
 ): Promise<any> => {
   try {
     const response = await instance.delete(
-        `${axiosDeleteClubMemberURL}${clubId}/users/${userId}`
+      `${axiosDeleteClubMemberURL}${clubId}/users/${userId}`
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const axiosUpdateClubMemoURL = "/v4/clubs/";
+export const axiosUpdateClubMemo = async (
+  clubId: number,
+  clubMemo: string
+): Promise<any> => {
+  try {
+    const response = await instance.post(
+      `${axiosUpdateClubMemoURL}${clubId}/memo`,
+      {
+        clubMemo,
+      }
     );
     return response;
   } catch (error) {
@@ -165,15 +183,15 @@ export const axiosDeleteClubMember = async (
 
 const axiosUpdateClubNoticeURL = "/v4/clubs/";
 export const axiosUpdateClubNotice = async (
-    clubId: number,
-    notice: string
+  clubId: number,
+  notice: string
 ): Promise<any> => {
   try {
     const response = await instance.post(
-        `${axiosUpdateClubNoticeURL}${clubId}/notice`,
-        {
-          notice,
-        }
+      `${axiosUpdateClubNoticeURL}${clubId}/notice`,
+      {
+        notice,
+      }
     );
     return response;
   } catch (error) {
@@ -194,12 +212,12 @@ export const axiosBuildingFloor = async (): Promise<any> => {
 
 const axiosCabinetByBuildingFloorURL = "/v4/cabinets/buildings/";
 export const axiosCabinetByBuildingFloor = async (
-    Building: string,
-    floor: number
+  Building: string,
+  floor: number
 ): Promise<any> => {
   try {
     const response = await instance.get(
-        `${axiosCabinetByBuildingFloorURL}${Building}/floors/${floor}`
+      `${axiosCabinetByBuildingFloorURL}${Building}/floors/${floor}`
     );
     return response;
   } catch (error) {
@@ -209,7 +227,7 @@ export const axiosCabinetByBuildingFloor = async (
 
 const axiosCabinetByIdURL = "/v4/cabinets/";
 export const axiosCabinetById = async (
-    cabinetId: number | null
+  cabinetId: number | null
 ): Promise<any> => {
   if (cabinetId === null) return;
   try {
@@ -254,8 +272,8 @@ export const axiosSwapId = async (cabinetId: number | null): Promise<any> => {
 
 const axiosUpdateMyCabinetInfoURL = "/v4/lent/me/cabinet";
 export const axiosUpdateMyCabinetInfo = async (
-    title: string | null,
-    memo: string | null
+  title: string | null,
+  memo: string | null
 ): Promise<any> => {
   try {
     const response = await instance.patch(axiosUpdateMyCabinetInfoURL, {
@@ -293,7 +311,7 @@ const axiosMyLentLogURL = "/v4/lent/me/histories";
 export const axiosMyLentLog = async (page: number): Promise<any> => {
   try {
     const response = await instance.get(axiosMyLentLogURL, {
-      params: {page: page, size: 10},
+      params: { page: page, size: 10 },
     });
     return response;
   } catch (error) {
@@ -314,8 +332,8 @@ export const axiosExtendLentPeriod = async (): Promise<any> => {
 // Admin API
 const axiosAdminAuthLoginURL = "/v4/admin/auth/login";
 export const axiosAdminAuthLogin = async (
-    id: string,
-    password: string
+  id: string,
+  password: string
 ): Promise<any> => {
   try {
     const response = await instance.post(axiosAdminAuthLoginURL, {
@@ -330,12 +348,12 @@ export const axiosAdminAuthLogin = async (
 
 const axiosAdminCabinetInfoByIdURL = "/v4/admin/cabinets/";
 export const axiosAdminCabinetInfoByCabinetId = async (
-    cabinetId: number | null
+  cabinetId: number | null
 ): Promise<any> => {
   if (cabinetId === null) return;
   try {
     const response = await instance.get(
-        axiosAdminCabinetInfoByIdURL + cabinetId
+      axiosAdminCabinetInfoByIdURL + cabinetId
     );
     return response;
   } catch (error) {
@@ -357,7 +375,7 @@ export const axiosReturnByUserId = async (userIds: number[]): Promise<any> => {
 
 const axiosBundleReturnURL = "/v4/admin/return-cabinets";
 export const axiosBundleReturn = async (
-    cabinetIdList: number[]
+  cabinetIdList: number[]
 ): Promise<any> => {
   try {
     const response = await instance.patch(axiosBundleReturnURL, {
@@ -371,9 +389,9 @@ export const axiosBundleReturn = async (
 
 const axiosUpdateCabinetsURL = "/v4/admin/cabinets/";
 export const axiosUpdateCabinets = async (
-    cabinetIds: number[],
-    lentType: CabinetType | null,
-    status: CabinetStatus | null
+  cabinetIds: number[],
+  lentType: CabinetType | null,
+  status: CabinetStatus | null
 ): Promise<any> => {
   try {
     const response = await instance.patch(axiosUpdateCabinetsURL, {
@@ -391,7 +409,7 @@ const axiosSearchByIntraIdURL = "/v4/admin/search/users-simple";
 export const axiosSearchByIntraId = async (intraId: string) => {
   try {
     const response = await instance.get(axiosSearchByIntraIdURL, {
-      params: {name: intraId, page: 0, size: 10},
+      params: { name: intraId, page: 0, size: 10 },
     });
     return response;
   } catch (error) {
@@ -403,7 +421,7 @@ const axiosSearchByCabinetNumURL = "/v4/admin/search/cabinets";
 export const axiosSearchByCabinetNum = async (number: number) => {
   try {
     const response = await instance.get(axiosSearchByCabinetNumURL, {
-      params: {visibleNum: number},
+      params: { visibleNum: number },
     });
     return response;
   } catch (error) {
@@ -415,7 +433,7 @@ const axiosSearchByCabinetNumSimpleURL = "/v4/admin/search/cabinets-simple";
 export const axiosSearchByCabinetNumSimple = async (number: number) => {
   try {
     const response = await instance.get(axiosSearchByCabinetNumSimpleURL, {
-      params: {visibleNum: number},
+      params: { visibleNum: number },
     });
     return response;
   } catch (error) {
@@ -425,12 +443,12 @@ export const axiosSearchByCabinetNumSimple = async (number: number) => {
 
 const axiosSearchDetailByIntraIdURL = "/v4/admin/search/users";
 export const axiosSearchDetailByIntraId = async (
-    intraId: string,
-    page: number
+  intraId: string,
+  page: number
 ) => {
   try {
     const response = await instance.get(axiosSearchDetailByIntraIdURL, {
-      params: {name: intraId, page: page, size: 10},
+      params: { name: intraId, page: page, size: 10 },
     });
     return response;
   } catch (error) {
@@ -443,7 +461,7 @@ export const axiosDeleteCurrentBanLog = async (userId: number | null) => {
   if (userId === null) return;
   try {
     const response = await instance.delete(
-        axiosDeleteCurrentBanLogURL + userId?.toString() + "/ban-history"
+      axiosDeleteCurrentBanLogURL + userId?.toString() + "/ban-history"
     );
     return response;
   } catch (error) {
@@ -455,7 +473,7 @@ const axiosGetBrokenCabinetListURL = "/v4/admin/cabinets/status/BROKEN";
 export const axiosGetBrokenCabinetList = async () => {
   try {
     const response = await instance.get(axiosGetBrokenCabinetListURL, {
-      params: {page: 0, size: 0},
+      params: { page: 0, size: 0 },
     });
     return response.data.result;
   } catch (error) {
@@ -467,7 +485,7 @@ const axiosGetBannedUserListURL = "v4/admin/statistics/users/banned";
 export const axiosGetBannedUserList = async () => {
   try {
     const response = await instance.get(axiosGetBannedUserListURL, {
-      params: {page: 0, size: 0},
+      params: { page: 0, size: 0 },
     });
     return response.data.result;
   } catch (error) {
@@ -479,7 +497,7 @@ const axiosGetStatisticsURL = "/v4/admin/statistics/lent-histories";
 export const axiosGetStatistics = async (start: Date, end: Date) => {
   try {
     const response = await instance.get(axiosGetStatisticsURL, {
-      params: {startDate: start, endDate: end},
+      params: { startDate: start, endDate: end },
     });
     return response.data;
   } catch (error) {
@@ -488,7 +506,7 @@ export const axiosGetStatistics = async (start: Date, end: Date) => {
 };
 
 const axiosGetCabinetNumbersPerFloorURL =
-    "/v4/admin/statistics/buildings/floors/cabinets";
+  "/v4/admin/statistics/buildings/floors/cabinets";
 export const axiosGetCabinetNumbersPerFloor = async () => {
   try {
     const response = await instance.get(axiosGetCabinetNumbersPerFloorURL);
@@ -502,7 +520,7 @@ const axiosGetOverdueUserListURL = "/v4/admin/statistics/users/overdue";
 export const axiosGetOverdueUserList = async () => {
   try {
     const response = await instance.get(axiosGetOverdueUserListURL, {
-      params: {page: 0, size: 0},
+      params: { page: 0, size: 0 },
     });
     return response.data.result;
   } catch (error) {
@@ -512,16 +530,16 @@ export const axiosGetOverdueUserList = async () => {
 
 const axiosGetCabinetLentLogURL = "/v4/admin/cabinets/";
 export const axiosGetCabinetLentLog = async (
-    cabinetId: number | null,
-    page: number
+  cabinetId: number | null,
+  page: number
 ): Promise<any> => {
   if (cabinetId == null) return;
   try {
     const response = await instance.get(
-        axiosGetCabinetLentLogURL + cabinetId.toString() + "/lent-histories",
-        {
-          params: {page: page, size: 8},
-        }
+      axiosGetCabinetLentLogURL + cabinetId.toString() + "/lent-histories",
+      {
+        params: { page: page, size: 8 },
+      }
     );
     return response;
   } catch (error) {
@@ -531,16 +549,16 @@ export const axiosGetCabinetLentLog = async (
 
 const axiosGetUserLentLogURL = "/v4/admin/users/";
 export const axiosGetUserLentLog = async (
-    userId: number | null,
-    page: number
+  userId: number | null,
+  page: number
 ): Promise<any> => {
   if (userId == null) return;
   try {
     const response = await instance.get(
-        axiosGetUserLentLogURL + userId.toString() + "/lent-histories",
-        {
-          params: {page: page, size: 8},
-        }
+      axiosGetUserLentLogURL + userId.toString() + "/lent-histories",
+      {
+        params: { page: page, size: 8 },
+      }
     );
     return response;
   } catch (error) {
@@ -550,12 +568,12 @@ export const axiosGetUserLentLog = async (
 
 const axiosGetClubUserLogURL = "/v4/admin/clubs";
 export const axiosGetClubUserLog = async (
-    page: number,
-    size: number
+  page: number,
+  size: number
 ): Promise<any> => {
   try {
     const response = await instance.get(axiosGetClubUserLogURL, {
-      params: {page: page, size: size},
+      params: { page: page, size: size },
     });
     return response;
   } catch (error) {
@@ -565,8 +583,8 @@ export const axiosGetClubUserLog = async (
 
 const axiosCreateClubUserURL = "/v4/admin/clubs";
 export const axiosCreateClubUser = async (
-    clubName: string | null,
-    clubMaster: string | null
+  clubName: string | null,
+  clubMaster: string | null
 ): Promise<any> => {
   if (clubName === null || clubMaster === null) return;
   try {
@@ -582,15 +600,15 @@ export const axiosCreateClubUser = async (
 
 const axiosEditClubUserURL = "/v4/admin/clubs/";
 export const axiosEditClubUser = async (
-    clubInfo: ClubUserDto
+  clubInfo: ClubUserDto
 ): Promise<any> => {
   try {
     const response = await instance.patch(
-        axiosEditClubUserURL + clubInfo.clubId.toString(),
-        {
-          clubName: clubInfo.clubName,
-          clubMaster: clubInfo.clubMaster,
-        }
+      axiosEditClubUserURL + clubInfo.clubId.toString(),
+      {
+        clubName: clubInfo.clubName,
+        clubMaster: clubInfo.clubMaster,
+      }
     );
     return response;
   } catch (error) {
@@ -600,12 +618,12 @@ export const axiosEditClubUser = async (
 
 const axiosDeleteClubUserURL = "/v4/admin/clubs/";
 export const axiosDeleteClubUser = async (
-    clubId: number | null
+  clubId: number | null
 ): Promise<any> => {
   if (clubId === null) return;
   try {
     const response = await instance.delete(
-        axiosDeleteClubUserURL + clubId?.toString()
+      axiosDeleteClubUserURL + clubId?.toString()
     );
     return response;
   } catch (error) {
@@ -636,12 +654,12 @@ export const axiosDeleteClubUser = async (
 
 const axiosLentClubCabinetURL = "/v4/admin/clubs/";
 export const axiosLentClubCabinet = async (
-    clubId: number,
-    cabinetId: number
+  clubId: number,
+  cabinetId: number
 ): Promise<any> => {
   try {
     const response = await instance.post(
-        axiosLentClubCabinetURL +
+      axiosLentClubCabinetURL +
         clubId.toString() +
         "/cabinets/" +
         cabinetId.toString()
@@ -654,8 +672,8 @@ export const axiosLentClubCabinet = async (
 
 const axiosLentShareIdURL = "/v4/lent/cabinets/share/";
 export const axiosLentShareId = async (
-    cabinetId: number | null,
-    shareCode: string
+  cabinetId: number | null,
+  shareCode: string
 ): Promise<any> => {
   if (cabinetId === null) return;
   try {
