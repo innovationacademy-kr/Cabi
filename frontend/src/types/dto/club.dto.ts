@@ -30,7 +30,7 @@ export interface ClubCabinetInfo {
 
 export interface ClubInfoResponseDto extends ClubCabinetInfo {
   clubName: string;
-  clubMaster: string;
+  clubMaster: ClubUserResponseDto;
   clubMemo: string;
   clubNotice: string;
   clubUsers: ClubUserResponseDto[];

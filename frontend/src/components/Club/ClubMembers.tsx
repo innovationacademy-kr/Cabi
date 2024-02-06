@@ -1,4 +1,6 @@
+import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
+import { targetClubUserInfoState } from "@/recoil/atoms";
 import {
   ICurrentClubMemberModalStateInfo,
   TClubMemberModalState,
@@ -38,6 +40,7 @@ const ClubMembers: React.FC<{
 
   selectClubMemberOnClick,
 }) => {
+  const targetClubUser = useRecoilValue(targetClubUserInfoState);
   return (
     <>
       <ClubMembersContainerStyled>
@@ -64,7 +67,7 @@ const ClubMembers: React.FC<{
                 onClick={() => {
                   selectClubMemberOnClick(mem);
                 }}
-                // isSelected={mem.userId === myInfo.name}
+                isSelected={mem.userId === targetClubUser.userId}
               >
                 {mem.userName === master ? (
                   <div id="clubMaster">

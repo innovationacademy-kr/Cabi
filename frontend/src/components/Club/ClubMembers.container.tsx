@@ -100,11 +100,11 @@ const ClubMembersContainer: React.FC<{
     <ClubMembers
       clubId={props.clubId}
       clubUserCount={props.clubInfo.clubUserCount}
-      imMaster={myInfo.name === props.clubInfo.clubMaster}
+      imMaster={myInfo.name === props.clubInfo.clubMaster.userName}
       clubModal={clubModal}
       openModal={openModal}
       closeModal={closeModal}
-      master={props.clubInfo.clubMaster}
+      master={props.clubInfo.clubMaster.userName}
       moreBtn={moreBtn}
       clickMoreButton={clickMoreButton}
       members={members}

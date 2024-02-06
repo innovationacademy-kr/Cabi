@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { targetClubInfoState } from "@/recoil/atoms";
 import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
 import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
+import ClubMembersContainer from "@/components/Club/ClubMembers.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import {
   ClubInfoResponseDto,
@@ -11,7 +12,6 @@ import {
 } from "@/types/dto/club.dto";
 import { axiosGetClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
-import ClubMembersContainer from "./ClubMembers.container";
 
 const ClubInfo = ({ clubId }: { clubId: number }) => {
   const [page, setPage] = useState<number>(0);
@@ -40,8 +40,9 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
         2
       );
       setTargetClubInfo({
-        ...data,
         clubId,
+        clubName: data.clubName,
+        clubMaster: data.clubMaster.userName,
       });
       setTimeout(() => {
         setClubInfo(data);
@@ -69,11 +70,11 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
             <ClubNoticeCard clubId={clubId} notice={clubInfo.clubNotice} />
           </CardGridWrapper>
           <ClubMembersContainer
-            clubInfo={clubInfo}
             clubId={clubId}
+            clubInfo={clubInfo}
             page={page}
-            getClubInfo={getClubInfo}
             setPage={setPage}
+            getClubInfo={getClubInfo}
           />
         </>
       )}
