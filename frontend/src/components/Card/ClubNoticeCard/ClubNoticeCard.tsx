@@ -4,13 +4,7 @@ import Card from "@/components/Card/Card";
 import { CardContentWrapper } from "@/components/Card/CardStyles";
 import ClubMemoModalContainer from "@/components/Modals/ClubModal/ClubMemoModal.container";
 
-const ClubNoticeCard = ({
-  clubId,
-  notice,
-}: {
-  clubId: number;
-  notice: string;
-}) => {
+const ClubNoticeCard = ({ notice }: { notice: string }) => {
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
   const [text, setText] = useState<string>(notice);
 
@@ -48,7 +42,6 @@ const ClubNoticeCard = ({
           onClose={() => closeModal()}
           text={text}
           setText={setText}
-          clubId={clubId}
           clubNotice={notice}
         />
       )}

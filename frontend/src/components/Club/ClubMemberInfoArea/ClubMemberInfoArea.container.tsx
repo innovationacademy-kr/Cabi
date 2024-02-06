@@ -19,8 +19,8 @@ export interface ICurrentClubModalStateInfo {
 const ClubMemberInfoAreaContainer = () => {
   const myInfo = useRecoilValue(userState);
   const targetClubInfo = useRecoilValue(targetClubInfoState);
-  const targetClubCabinetInfo = useRecoilValue(targetClubCabinetInfoState);
   const targetClubUserInfo = useRecoilValue(targetClubUserInfoState);
+  const targetClubCabinetInfo = useRecoilValue(targetClubCabinetInfoState);
   const [clubModal, setClubModal] = useState<ICurrentClubModalStateInfo>({
     deleteModal: false,
     mandateModal: false,

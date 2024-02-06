@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useEffect, useRef, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { isCurrentSectionRenderState } from "@/recoil/atoms";
-import Button from "@/components/Common/Button";
-import ModalPortal from "@/components/Modals/ModalPortal";
 import {
-  axiosGetClubInfo,
-  axiosUpdateClubNotice,
-} from "@/api/axios/axios.custom";
+  isCurrentSectionRenderState,
+  targetClubInfoState,
+} from "@/recoil/atoms";
+import Button from "@/components/Common/Button";
+import { MemoModalTestContainerInterface } from "@/components/Modals/ClubModal/ClubMemoModal.container";
+import ModalPortal from "@/components/Modals/ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
-} from "../ResponseModal/ResponseModal";
-import { MemoModalTestContainerInterface } from "./ClubMemoModal.container";
+} from "@/components/Modals/ResponseModal/ResponseModal";
+import { axiosUpdateClubNotice } from "@/api/axios/axios.custom";
 
 const MAX_INPUT_LENGTH = 100;
 
@@ -20,10 +20,8 @@ const ClubMemoModal = ({
   text,
   onClose,
   setText,
-  clubId,
   clubNotice,
-}: // page,
-MemoModalTestContainerInterface) => {
+}: MemoModalTestContainerInterface) => {
   const [mode, setMode] = useState<string>("read");
   const newMemo = useRef<HTMLTextAreaElement>(null);
   const previousTextRef = useRef<string>(text);
@@ -35,6 +33,7 @@ MemoModalTestContainerInterface) => {
   const [modalContent, setModalContent] = useState<string>("");
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
+  const { clubId } = useRecoilValue(targetClubInfoState);
 
   const handleClickWriteMode = (e: any) => {
     setMode("write");
@@ -50,7 +49,6 @@ MemoModalTestContainerInterface) => {
       setIsCurrentSectionRender(true);
       setModalTitle("이사가 완료되었습니다");
       // const result = await axiosGetClubInfo(clubId, page, 2);
-      // console.log("hey!!", result.data);
     } catch (error: any) {
       // setModalTitle(error.response.data.message);
       setModalContent(error.response.data.message);

@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   isCurrentSectionRenderState,
@@ -16,7 +16,6 @@ export interface ICurrentClubMemberModalStateInfo {
   addModal: boolean;
 }
 const ClubMemberContainer: React.FC<{
-  clubId: number;
   clubInfo: ClubInfoResponseDto;
   getClubInfo: (clubId: number) => Promise<void>;
   setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -53,17 +52,17 @@ const ClubMemberContainer: React.FC<{
     toggleClubMember();
   };
 
-  const closeModal = () => {
-    setClubModal({
-      ...clubModal,
-      addModal: false,
-    });
-  };
-
   const openModal = (modalName: TClubMemberModalState) => {
     setClubModal({
       ...clubModal,
       [modalName]: true,
+    });
+  };
+
+  const closeModal = () => {
+    setClubModal({
+      ...clubModal,
+      addModal: false,
     });
   };
 
@@ -77,7 +76,6 @@ const ClubMemberContainer: React.FC<{
       // setIsCurrentSectionRender(true);
     }
   }, [props.clubInfo]);
-  // 나 -> 동아리장 -> 맨 위 배열 함침
 
   useEffect(() => {
     if (props.clubInfo.clubUserCount) {
@@ -98,7 +96,6 @@ const ClubMemberContainer: React.FC<{
   // TODO : props. 떼기
   return (
     <ClubMember
-      clubId={props.clubId}
       clubUserCount={props.clubInfo.clubUserCount}
       imMaster={myInfo.name === props.clubInfo.clubMaster.userName}
       clubModal={clubModal}
@@ -108,7 +105,6 @@ const ClubMemberContainer: React.FC<{
       moreBtn={moreBtn}
       clickMoreButton={clickMoreButton}
       members={members}
-      myInfo={myInfo}
       selectClubMemberOnClick={selectClubMemberOnClick}
     />
   );

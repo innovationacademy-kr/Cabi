@@ -50,8 +50,6 @@ const ClubListWrapperStyled = styled.div`
   align-items: center;
   width: 80%;
   max-width: 720px;
-  /* height: 100%; */
-  /* height: 30px; */
   margin: 2rem 0;
 `;
 

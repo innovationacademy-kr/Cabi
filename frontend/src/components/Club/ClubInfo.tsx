@@ -67,10 +67,9 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
           <TitleStyled>동아리 정보</TitleStyled>
           <CardGridWrapper>
             <ClubCabinetInfoCard clubInfo={clubInfo} />
-            <ClubNoticeCard clubId={clubId} notice={clubInfo.clubNotice} />
+            <ClubNoticeCard notice={clubInfo.clubNotice} />
           </CardGridWrapper>
           <ClubMemberContainer
-            clubId={clubId}
             clubInfo={clubInfo}
             page={page}
             setPage={setPage}

@@ -10,10 +10,8 @@ import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
 import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
-import { UserDto } from "@/types/dto/user.dto";
 
 const ClubMember: React.FC<{
-  clubId: number;
   clubUserCount: number;
   imMaster: boolean;
   clubModal: ICurrentClubMemberModalStateInfo;
@@ -23,10 +21,8 @@ const ClubMember: React.FC<{
   moreBtn: boolean;
   clickMoreButton: () => void;
   members: ClubUserResponseDto[];
-  myInfo: UserDto;
   selectClubMemberOnClick: (member: ClubUserResponseDto) => void;
 }> = ({
-  clubId,
   clubUserCount,
   imMaster,
   clubModal,
@@ -36,19 +32,15 @@ const ClubMember: React.FC<{
   moreBtn,
   clickMoreButton,
   members,
-  myInfo,
-
   selectClubMemberOnClick,
 }) => {
   const targetClubUser = useRecoilValue(targetClubUserInfoState);
   return (
     <>
       <ClubMemberContainerStyled>
-        {/* TitleBar */}
         <TitleBarStyled>
           <p>동아리 멤버</p>
           <div>
-            {/* 아이콘 & 동아리 멤버 수 */}
             <img src={shareIcon} />
             <p id="membersLength">{clubUserCount}</p>
           </div>
@@ -59,36 +51,27 @@ const ClubMember: React.FC<{
               <p>+</p>
             </AddMemCardStyled>
           ) : null}
-          {members?.map((mem, idx) => {
+          {members?.map((member, idx) => {
             return (
               <MemCardStyled
                 key={idx}
-                bgColor={mem.userName === master ? "var(--sub-color)" : ""}
+                bgColor={member.userName === master ? "var(--sub-color)" : ""}
                 onClick={() => {
-                  selectClubMemberOnClick(mem);
+                  selectClubMemberOnClick(member);
                 }}
-                isSelected={mem.userId === targetClubUser.userId}
+                isSelected={member.userId === targetClubUser.userId}
               >
-                {mem.userName === master ? (
+                {member.userName === master ? (
                   <div id="clubMaster">
-                    <CrownImg
-                      stroke="#f5f5f5"
-                      width={18}
-                      height={18}
-                      viewBox="0 0 24 24"
-                    />
-
-                    <p>{mem.userName}</p>
+                    <CrownImg stroke="#f5f5f5" width={18} height={18} />
+                    <p>{member.userName}</p>
                   </div>
                 ) : (
-                  //  mem.userName === myInfo.name ? null :
                   <div id="clubUser">
                     <UserImg width={16} height={16} viewBox="0 0 24 24" />
-                    <p>{mem.userName}</p>
+                    <p>{member.userName}</p>
                   </div>
                 )}
-                {/* </div> */}
-                {/* <div id="userName">{mem.userName}</div> */}
               </MemCardStyled>
             );
           })}
@@ -106,7 +89,6 @@ const ClubMember: React.FC<{
           closeModal={() => {
             closeModal();
           }}
-          clubId={clubId}
         />
       ) : null}
     </>
