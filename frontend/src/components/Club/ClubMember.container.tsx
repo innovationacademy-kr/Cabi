@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  isCurrentSectionRenderState,
   targetClubCabinetInfoState,
   targetClubUserInfoState,
   userState,
@@ -17,28 +16,22 @@ export interface ICurrentClubMemberModalStateInfo {
 }
 const ClubMemberContainer: React.FC<{
   clubInfo: ClubInfoResponseDto;
-  getClubInfo: (clubId: number) => Promise<void>;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  getClubInfo: (clubId: number, page: number) => void;
+  setPage: (page: number) => void;
   page: number;
 }> = (props) => {
-  const myInfo = useRecoilValue(userState);
+  const [moreButton, setMoreButton] = useState<boolean>(true);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
-  const { toggleClubMember, openClubMember } = useMenu();
-  // const setIsCurrentSectionRender = useSetRecoilState(
-  //   isCurrentSectionRenderState
-  // );
-  // TODO : setIsCurrentSectionRender props로 넘겨주기
-  const [moreBtn, setMoreBtn] = useState<boolean>(true);
-  const setTargetClubUser = useSetRecoilState(targetClubUserInfoState);
-  const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
   const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
     addModal: false,
   });
+  const { toggleClubMember } = useMenu();
+  const myInfo = useRecoilValue(userState);
+  const setTargetClubUser = useSetRecoilState(targetClubUserInfoState);
+  const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
 
   const clickMoreButton = () => {
-    props.setPage((prev) => prev + 1);
-    // props.getClubInfo(props.clubId);
-    // setIsCurrentSectionRender(true);
+    props.setPage(props.page + 1);
   };
 
   const selectClubMemberOnClick = (member: ClubUserResponseDto) => {
@@ -73,27 +66,19 @@ const ClubMemberContainer: React.FC<{
       setMembers((prev) => {
         return [...prev, ...props.clubInfo.clubUsers];
       });
-      // setIsCurrentSectionRender(true);
     }
   }, [props.clubInfo]);
 
   useEffect(() => {
     if (props.clubInfo.clubUserCount) {
       if (members!.length >= props.clubInfo.clubUserCount) {
-        setMoreBtn(false);
-        // setIsCurrentSectionRender(true);
-      } else setMoreBtn(true);
+        setMoreButton(false);
+      } else {
+        setMoreButton(true);
+      }
     }
   }, [members]);
 
-  // useEffect(() => {
-  //   if (props.clubId) {
-  //     props.getClubInfo(props.clubId);
-  //     setIsCurrentSectionRender(true);
-  //   }
-  // }, [props.page]);
-
-  // TODO : props. 떼기
   return (
     <ClubMember
       clubUserCount={props.clubInfo.clubUserCount}
@@ -102,7 +87,7 @@ const ClubMemberContainer: React.FC<{
       openModal={openModal}
       closeModal={closeModal}
       master={props.clubInfo.clubMaster.userName}
-      moreBtn={moreBtn}
+      moreButton={moreButton}
       clickMoreButton={clickMoreButton}
       members={members}
       selectClubMemberOnClick={selectClubMemberOnClick}

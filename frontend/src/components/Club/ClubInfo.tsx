@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { targetClubInfoState } from "@/recoil/atoms";
@@ -14,25 +14,32 @@ import { axiosGetClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
 const ClubInfo = ({ clubId }: { clubId: number }) => {
-  const [page, setPage] = useState<number>(0);
+  const prevClubIdRef = useRef(clubId);
+  const [clubState, setClubState] = useState({ clubId: 0, page: 0 });
   const [clubInfo, setClubInfo] = useState<ClubInfoResponseType>(undefined);
   const setTargetClubInfo = useSetRecoilState(targetClubInfoState);
 
+  // NOTE: 컴포넌트가 마운트 될 때마다, 그리고 clubId가 변경될 때마다 실행됩니다.
   useEffect(() => {
-    if (clubId) {
-      setPage(0);
-      setClubInfo(undefined);
-      getClubInfo();
+    if (clubId !== clubState.clubId) {
+      setClubState({ clubId, page: 0 });
+      getClubInfo(clubId, 0);
     }
+    prevClubIdRef.current = clubId;
   }, [clubId]);
 
+  // NOTE: page가 변경되고 clubId는 변경되지 않았을 때 실행됩니다.
   useEffect(() => {
-    if (clubId) {
-      getClubInfo();
+    if (clubState.page !== 0 && clubState.clubId === prevClubIdRef.current) {
+      getClubInfo(clubState.clubId, clubState.page);
     }
-  }, [page]);
+  }, [clubState.page]);
 
-  const getClubInfo = async () => {
+  const setPage = (newPage: number) => {
+    setClubState((prevState) => ({ ...prevState, page: newPage }));
+  };
+
+  const getClubInfo = async (clubId: number, page: number) => {
     try {
       const { data }: { data: ClubInfoResponseDto } = await axiosGetClubInfo(
         clubId,
@@ -53,7 +60,7 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
       }, 500);
     }
   };
-  
+
   return (
     <>
       {clubInfo === undefined ? (
@@ -71,7 +78,7 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
           </CardGridWrapper>
           <ClubMemberContainer
             clubInfo={clubInfo}
-            page={page}
+            page={clubState.page}
             setPage={setPage}
             getClubInfo={getClubInfo}
           />

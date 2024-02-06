@@ -18,7 +18,7 @@ const ClubMember: React.FC<{
   openModal: (modalName: TClubMemberModalState) => void;
   closeModal: () => void;
   master: String;
-  moreBtn: boolean;
+  moreButton: boolean;
   clickMoreButton: () => void;
   members: ClubUserResponseDto[];
   selectClubMemberOnClick: (member: ClubUserResponseDto) => void;
@@ -29,7 +29,7 @@ const ClubMember: React.FC<{
   openModal,
   closeModal,
   master,
-  moreBtn,
+  moreButton,
   clickMoreButton,
   members,
   selectClubMemberOnClick,
@@ -76,7 +76,7 @@ const ClubMember: React.FC<{
             );
           })}
         </MemSectionStyled>
-        {moreBtn && (
+        {moreButton && (
           <ButtonContainerStyled>
             <MoreButtonStyled onClick={clickMoreButton}>
               더보기
