@@ -27,6 +27,7 @@ const DeleteClubMemModal: React.FC<{
   );
 
   const deleteDetail = `동아리 사물함 멤버에서 <strong>${props.targetMember.userName}</strong> 님을 내보내시겠습니까?`;
+  // TODO : 동아리 사물함 멤버? 동아리 멤버?
 
   const trySwapRequest = async () => {
     setIsLoading(true);

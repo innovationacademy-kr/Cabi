@@ -53,7 +53,7 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
       }, 500);
     }
   };
-
+// TODO : undefined 설정
   return (
     <>
       {clubInfo === undefined ? (

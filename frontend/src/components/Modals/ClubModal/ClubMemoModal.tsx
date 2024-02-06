@@ -47,10 +47,9 @@ const ClubMemoModal = ({
     try {
       await axiosUpdateClubNotice(clubId, text);
       setIsCurrentSectionRender(true);
-      setModalTitle("이사가 완료되었습니다");
+      setModalTitle("메모 수정 완료");
       // const result = await axiosGetClubInfo(clubId, page, 2);
     } catch (error: any) {
-      // setModalTitle(error.response.data.message);
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
@@ -166,7 +165,7 @@ const ClubMemoModal = ({
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="이사 횟수 초과"
+            modalTitle="메모 수정 실패"
             modalContents={modalContent}
             closeModal={onClose}
           />

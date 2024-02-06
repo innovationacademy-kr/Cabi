@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import { modalPropsMap } from "@/assets/data/maps";
-import { ClubUserResponseDto } from "@/types/dto/club.dto";
+import { ClubResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import IconType from "@/types/enum/icon.type.enum";
 import { axiosMandateClubMember } from "@/api/axios/axios.custom";
 import Modal, { IModalContents } from "../Modal";
@@ -16,16 +16,23 @@ const MandateClubMemModal: React.FC<{
   closeModal: React.MouseEventHandler;
   clubId: number;
   targetMember: ClubUserResponseDto;
+  clubName: string;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [clubName, setClubName] = useState<string>(props.clubName || "");
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  const mandateDetail = `<해당 동아리명> 의  동아리장 권한을  <strong>${props.targetMember.userName}</strong> 에게 위임하겠습니까?`;
+  const mandateDetail = `<strong>${clubName}</strong>의  동아리장 권한을
+  <strong>${props.targetMember.userName}</strong>님에게 위임하겠습니까?`;
+
+  useEffect(() => {
+    if (props.clubName) setClubName(props.clubName);
+  }, [props.clubName]);
 
   const trySwapRequest = async () => {
     setIsLoading(true);

@@ -65,7 +65,7 @@ const ClubCabinetInfoCard = ({
                 onMouseEnter={() => setShowPassword(true)}
                 onMouseLeave={() => setShowPassword(false)}
               >
-                {showPassword ? clubInfo.clubMemo || "1111" : "****"}
+                {showPassword ? password : "****"}
               </ContentDeatilStyled>
             </CardContentStyled>
           </CardContentWrapper>
