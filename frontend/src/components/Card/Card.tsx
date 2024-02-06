@@ -2,11 +2,11 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 export interface IButtonProps {
-  label?: string;
+  label?: string; // NOTE: icon 이 없을 경우, label 을 표시
   onClick?: () => void;
   backgroundColor?: string;
   color?: string;
-  icon?: string;
+  icon?: string; // NOTE: icon 이 있을 경우, icon 을 표시
   isClickable: boolean;
   isExtensible?: boolean;
 }
