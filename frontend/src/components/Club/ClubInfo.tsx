@@ -25,7 +25,7 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
     isCurrentSectionRenderState
   );
 
-  // NOTE: 컴포넌트가 마운트 될 때마다, 그리고 clubId가 변경될 때마다 실행됩니다.
+  // NOTE: 컴포넌트가 마운트 될 때, clubId 혹은 isCurrentSectionRender 변경 시마다 실행됩니다.
   useEffect(() => {
     if (clubId !== clubState.clubId || isCurrentSectionRender) {
       setIsCurrentSectionRender(false);

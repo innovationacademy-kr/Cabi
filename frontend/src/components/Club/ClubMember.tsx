@@ -17,7 +17,7 @@ const ClubMember: React.FC<{
   clubModal: ICurrentClubMemberModalStateInfo;
   openModal: (modalName: TClubMemberModalState) => void;
   closeModal: () => void;
-  master: String;
+  master: ClubUserResponseDto;
   moreButton: boolean;
   clickMoreButton: () => void;
   members: ClubUserResponseDto[];
@@ -51,28 +51,49 @@ const ClubMember: React.FC<{
               <p>+</p>
             </AddMemCardStyled>
           ) : null}
+          <MemCardStyled
+            key={-1}
+            bgColor={"var(--sub-color)"}
+            onClick={() => {
+              selectClubMemberOnClick(master);
+            }}
+            isSelected={master.userId === targetClubUser.userId}
+          >
+            <div id="clubMaster">
+              <CrownImg stroke="#f5f5f5" width={18} height={18} />
+              <p>{master.userName}</p>
+            </div>
+          </MemCardStyled>
           {members?.map((member, idx) => {
             return (
-              <MemCardStyled
-                key={idx}
-                bgColor={member.userName === master ? "var(--sub-color)" : ""}
-                onClick={() => {
-                  selectClubMemberOnClick(member);
-                }}
-                isSelected={member.userId === targetClubUser.userId}
-              >
-                {member.userName === master ? (
-                  <div id="clubMaster">
-                    <CrownImg stroke="#f5f5f5" width={18} height={18} />
-                    <p>{member.userName}</p>
-                  </div>
-                ) : (
-                  <div id="clubUser">
-                    <UserImg width={16} height={16} viewBox="0 0 24 24" />
-                    <p>{member.userName}</p>
-                  </div>
+              <>
+                {member.userName !== master.userName && (
+                  <MemCardStyled
+                    key={idx}
+                    bgColor={
+                      member.userName === master.userName
+                        ? "var(--sub-color)"
+                        : ""
+                    }
+                    onClick={() => {
+                      selectClubMemberOnClick(member);
+                    }}
+                    isSelected={member.userId === targetClubUser.userId}
+                  >
+                    {member.userName === master.userName ? (
+                      <div id="clubMaster">
+                        <CrownImg stroke="#f5f5f5" width={18} height={18} />
+                        <p>{member.userName}</p>
+                      </div>
+                    ) : (
+                      <div id="clubUser">
+                        <UserImg width={16} height={16} viewBox="0 0 24 24" />
+                        <p>{member.userName}</p>
+                      </div>
+                    )}
+                  </MemCardStyled>
                 )}
-              </MemCardStyled>
+              </>
             );
           })}
         </MemSectionStyled>
