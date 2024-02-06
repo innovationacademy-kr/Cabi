@@ -186,6 +186,7 @@ public class ClubFacadeService {
 				newClubMasterRegistration);
 	}
 
+	@Transactional
 	public void updateClubNotice(Long userId, Long clubId, String notice) {
 		ClubRegistration clubMasterRegistration
 				= clubRegistrationQueryService.getClubUserByUser(userId, clubId);
@@ -197,6 +198,7 @@ public class ClubFacadeService {
 		clubCommandService.changeClubNotice(club, notice);
 	}
 
+	@Transactional
 	public void updateClubMemo(Long userId, Long clubId, String memo) {
 		ClubRegistration clubMasterRegistration
 				= clubRegistrationQueryService.getClubUserByUser(userId, clubId);
