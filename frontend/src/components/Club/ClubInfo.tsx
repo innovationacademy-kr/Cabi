@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { targetClubInfoState } from "@/recoil/atoms";
+import {
+  isCurrentSectionRenderState,
+  targetClubInfoState,
+} from "@/recoil/atoms";
 import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
 import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
 import ClubMemberContainer from "@/components/Club/ClubMember.container";
@@ -18,15 +21,19 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
   const [clubState, setClubState] = useState({ clubId: 0, page: 0 });
   const [clubInfo, setClubInfo] = useState<ClubInfoResponseType>(undefined);
   const setTargetClubInfo = useSetRecoilState(targetClubInfoState);
+  const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
+    isCurrentSectionRenderState
+  );
 
   // NOTE: 컴포넌트가 마운트 될 때마다, 그리고 clubId가 변경될 때마다 실행됩니다.
   useEffect(() => {
-    if (clubId !== clubState.clubId) {
+    if (clubId !== clubState.clubId || isCurrentSectionRender) {
+      setIsCurrentSectionRender(false);
       setClubState({ clubId, page: 0 });
       getClubInfo(clubId, 0);
     }
     prevClubIdRef.current = clubId;
-  }, [clubId]);
+  }, [clubId, isCurrentSectionRender]);
 
   // NOTE: page가 변경되고 clubId는 변경되지 않았을 때 실행됩니다.
   useEffect(() => {
@@ -80,7 +87,6 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
             clubInfo={clubInfo}
             page={clubState.page}
             setPage={setPage}
-            getClubInfo={getClubInfo}
           />
         </>
       )}

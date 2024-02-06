@@ -26,17 +26,12 @@ const AddClubMemModalContainer: React.FC<{
   );
   const { clubId } = useRecoilValue(targetClubInfoState);
 
-  const AddclubMemDetail = `멤버 인트라 아이디`;
-
   const tryAddClubMemRequest = async (name: string) => {
     setIsLoading(true);
     try {
       await axiosAddClubMember(clubId, name);
       setIsCurrentSectionRender(true);
-      // 성공하면 200 아니면 에러 코드 반환됨
-      setModalTitle("동아리에 멤버가 추가됐습니다");
-      // props.setPage(0);
-      // props.getClubInfo(props.clubId);
+      setModalTitle(`동아리에 ${name} 님을 추가했습니다`);
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);

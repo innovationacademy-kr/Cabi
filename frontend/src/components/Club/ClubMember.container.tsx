@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   targetClubCabinetInfoState,
@@ -14,12 +14,18 @@ export type TClubMemberModalState = "addModal";
 export interface ICurrentClubMemberModalStateInfo {
   addModal: boolean;
 }
-const ClubMemberContainer: React.FC<{
+
+interface ClubMemberContainerProps {
   clubInfo: ClubInfoResponseDto;
-  getClubInfo: (clubId: number, page: number) => void;
-  setPage: (page: number) => void;
   page: number;
-}> = (props) => {
+  setPage: (page: number) => void;
+}
+
+const ClubMemberContainer = ({
+  clubInfo,
+  page,
+  setPage,
+}: ClubMemberContainerProps) => {
   const [moreButton, setMoreButton] = useState<boolean>(true);
   const [members, setMembers] = useState<ClubUserResponseDto[]>([]);
   const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
@@ -31,15 +37,15 @@ const ClubMemberContainer: React.FC<{
   const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
 
   const clickMoreButton = () => {
-    props.setPage(props.page + 1);
+    setPage(page + 1);
   };
 
   const selectClubMemberOnClick = (member: ClubUserResponseDto) => {
     setTargetClubCabinet({
-      building: props.clubInfo.building,
-      floor: props.clubInfo.floor,
-      section: props.clubInfo.section,
-      visibleNum: props.clubInfo.visibleNum,
+      building: clubInfo.building,
+      floor: clubInfo.floor,
+      section: clubInfo.section,
+      visibleNum: clubInfo.visibleNum,
     });
     setTargetClubUser(member);
     toggleClubMember();
@@ -60,18 +66,18 @@ const ClubMemberContainer: React.FC<{
   };
 
   useEffect(() => {
-    if (props.page === 0) {
-      setMembers(props.clubInfo.clubUsers);
+    if (page === 0) {
+      setMembers(clubInfo.clubUsers);
     } else {
       setMembers((prev) => {
-        return [...prev, ...props.clubInfo.clubUsers];
+        return [...prev, ...clubInfo.clubUsers];
       });
     }
-  }, [props.clubInfo]);
+  }, [clubInfo]);
 
   useEffect(() => {
-    if (props.clubInfo.clubUserCount) {
-      if (members!.length >= props.clubInfo.clubUserCount) {
+    if (clubInfo.clubUserCount) {
+      if (members!.length >= clubInfo.clubUserCount) {
         setMoreButton(false);
       } else {
         setMoreButton(true);
@@ -81,12 +87,12 @@ const ClubMemberContainer: React.FC<{
 
   return (
     <ClubMember
-      clubUserCount={props.clubInfo.clubUserCount}
-      imMaster={myInfo.name === props.clubInfo.clubMaster.userName}
+      clubUserCount={clubInfo.clubUserCount}
+      imMaster={myInfo.name === clubInfo.clubMaster.userName}
       clubModal={clubModal}
       openModal={openModal}
       closeModal={closeModal}
-      master={props.clubInfo.clubMaster.userName}
+      master={clubInfo.clubMaster.userName}
       moreButton={moreButton}
       clickMoreButton={clickMoreButton}
       members={members}
