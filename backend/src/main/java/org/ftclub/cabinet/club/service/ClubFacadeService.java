@@ -65,13 +65,15 @@ public class ClubFacadeService {
 		Page<User> userMap = userQueryService.findUsers(clubUserIds, pageable);
 		User clubMaster =
 				clubRegistrationQueryService.getClubUserByUser(clubMasterId, clubId).getUser();
+		ClubUserResponseDto clubMasterDto =
+				clubMapper.toClubUserResponseDto(clubMaster.getId(), clubMaster.getName());
 		Cabinet clubCabinet =
 				clubLentQueryService.getActiveLentHistoryWithCabinet(clubId).getCabinet();
 
 		List<ClubUserResponseDto> clubUsers = userMap.stream()
 				.map(user -> clubMapper.toClubUserResponseDto(user.getId(), user.getName()))
 				.collect(Collectors.toList());
-		return clubMapper.toClubInfoResponseDto(club.getName(), clubMaster.getName(),
+		return clubMapper.toClubInfoResponseDto(club.getName(), clubMasterDto,
 				club.getNotice(), clubCabinet, clubUsers, userMap.getTotalElements());
 	}
 
