@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { targetClubInfoState } from "@/recoil/atoms";
 import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
 import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
-import ClubMembersContainer from "@/components/Club/ClubMembers.container";
+import ClubMemberContainer from "@/components/Club/ClubMember.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import {
   ClubInfoResponseDto,
@@ -69,7 +69,7 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
             <ClubCabinetInfoCard clubInfo={clubInfo} />
             <ClubNoticeCard clubId={clubId} notice={clubInfo.clubNotice} />
           </CardGridWrapper>
-          <ClubMembersContainer
+          <ClubMemberContainer
             clubId={clubId}
             clubInfo={clubInfo}
             page={page}

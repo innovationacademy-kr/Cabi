@@ -6,7 +6,7 @@ import {
   targetClubUserInfoState,
   userState,
 } from "@/recoil/atoms";
-import ClubMembers from "@/components/Club/ClubMembers";
+import ClubMember from "@/components/Club/ClubMember";
 import { ClubInfoResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import useMenu from "@/hooks/useMenu";
 
@@ -15,7 +15,7 @@ export type TClubMemberModalState = "addModal";
 export interface ICurrentClubMemberModalStateInfo {
   addModal: boolean;
 }
-const ClubMembersContainer: React.FC<{
+const ClubMemberContainer: React.FC<{
   clubId: number;
   clubInfo: ClubInfoResponseDto;
   getClubInfo: (clubId: number) => Promise<void>;
@@ -97,7 +97,7 @@ const ClubMembersContainer: React.FC<{
 
   // TODO : props. 떼기
   return (
-    <ClubMembers
+    <ClubMember
       clubId={props.clubId}
       clubUserCount={props.clubInfo.clubUserCount}
       imMaster={myInfo.name === props.clubInfo.clubMaster.userName}
@@ -114,4 +114,4 @@ const ClubMembersContainer: React.FC<{
   );
 };
 
-export default ClubMembersContainer;
+export default ClubMemberContainer;

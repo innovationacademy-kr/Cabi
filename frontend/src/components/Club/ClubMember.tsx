@@ -4,7 +4,7 @@ import { targetClubUserInfoState } from "@/recoil/atoms";
 import {
   ICurrentClubMemberModalStateInfo,
   TClubMemberModalState,
-} from "@/components/Club/ClubMembers.container";
+} from "@/components/Club/ClubMember.container";
 import AddClubMemModalContainer from "@/components/Modals/ClubModal/AddClubMemModal.container";
 import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
 import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
@@ -12,7 +12,7 @@ import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 import { UserDto } from "@/types/dto/user.dto";
 
-const ClubMembers: React.FC<{
+const ClubMember: React.FC<{
   clubId: number;
   clubUserCount: number;
   imMaster: boolean;
@@ -43,7 +43,7 @@ const ClubMembers: React.FC<{
   const targetClubUser = useRecoilValue(targetClubUserInfoState);
   return (
     <>
-      <ClubMembersContainerStyled>
+      <ClubMemberContainerStyled>
         {/* TitleBar */}
         <TitleBarStyled>
           <p>동아리 멤버</p>
@@ -100,7 +100,7 @@ const ClubMembers: React.FC<{
             </MoreButtonStyled>
           </ButtonContainerStyled>
         )}
-      </ClubMembersContainerStyled>
+      </ClubMemberContainerStyled>
       {clubModal.addModal ? (
         <AddClubMemModalContainer
           closeModal={() => {
@@ -113,7 +113,7 @@ const ClubMembers: React.FC<{
   );
 };
 
-const ClubMembersContainerStyled = styled.div`
+const ClubMemberContainerStyled = styled.div`
   width: 100%;
   /* height: 100%; */
   display: flex;
@@ -262,4 +262,4 @@ const MoreButtonStyled = styled.button`
   }
 `;
 
-export default ClubMembers;
+export default ClubMember;

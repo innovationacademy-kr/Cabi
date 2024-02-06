@@ -148,7 +148,7 @@ const useMenu = () => {
       document.getElementById("clubMemberInfoArea")?.classList.contains("on") ==
       true
     ) {
-      // resetTargetClubUserInfo();
+      resetTargetClubUserInfo();
       document.getElementById("clubMemberInfoArea")?.classList.remove("on");
       document.getElementById("menuBg")?.classList.remove("on");
     }

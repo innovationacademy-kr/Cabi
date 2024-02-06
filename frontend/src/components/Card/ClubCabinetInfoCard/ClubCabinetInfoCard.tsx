@@ -53,7 +53,7 @@ const ClubCabinetInfoCard = ({
               <CabinetUserListWrapper>
                 <CabinetIconStyled />
                 <CabinetInfoTextStyled fontSize={"1rem"} fontColor="black">
-                  {clubInfo.clubMaster}
+                  {clubInfo.clubMaster.userName}
                 </CabinetInfoTextStyled>
               </CabinetUserListWrapper>
             </CabinetInfoDetailStyled>
