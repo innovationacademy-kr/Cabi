@@ -14,7 +14,13 @@ public class CqrsEventListener {
 
 	private static CqrsManager cqrsManager;
 
-	// CqrsManager를 수정자 주입 방식으로 주입받는다.(리플렉션으로 생성되기 때문에 생성자 주입이 불가능하다.)
+	/**
+	 * CqrsManager를 수정자 주입 방식으로 주입받는다.(리플렉션으로 생성되기 때문에 생성자 주입이 불가능하다.)
+	 * <p>
+	 * 사용 금지!!!!
+	 * </p>
+	 */
+	@Deprecated
 	public void setCqrsManager(CqrsManager cqrsManager) {
 		CqrsEventListener.cqrsManager = cqrsManager;
 	}
