@@ -53,11 +53,12 @@ const ClubModal = ({
   }, [selectedClubInfo, type]);
 
   const handleClickSave = async () => {
-    if (newClubName === "" || newClubMaster === "") return;
     if (type === "CREATE") {
+      if (newClubName === "" || newClubMaster === "") return;
       document.getElementById("unselect-input")?.focus();
       if (newClubName) await createClubRequest(newClubName, newClubMaster);
     } else if (type === "EDIT" && selectedClubInfo) {
+      if (newClubName === "" || newClubMaster === "") return;
       if (
         selectedClubInfo.clubName !== newClubName ||
         selectedClubInfo.clubMaster !== newClubMaster
@@ -69,8 +70,9 @@ const ClubModal = ({
         };
         await editClubRequest(updatedClubInfo);
       }
-    } else if (type === "DELETE" && selectedClubInfo !== null)
+    } else if (type === "DELETE" && selectedClubInfo !== null) {
       await deleteClubRequest(selectedClubInfo.clubId);
+    }
   };
 
   const createClubRequest = async (
