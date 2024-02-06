@@ -37,7 +37,6 @@ const ModifyClubPwModal: React.FC<{
       temp.push("");
     }
     setList([...temp]);
-    console.log([...temp]);
     if (inputRef.current) inputRef.current.focus();
   };
 
@@ -101,7 +100,6 @@ const ModifyClubPwModal: React.FC<{
           <Button
             onClick={() => {
               // onClickProceed!(e);
-              console.log("tmpPw : ", tmpPw);
               onSendPassword();
             }}
             text={proceedBtnText || "확인"}

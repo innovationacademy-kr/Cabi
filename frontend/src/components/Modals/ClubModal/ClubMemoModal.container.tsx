@@ -4,18 +4,23 @@ import {
   isCurrentSectionRenderState,
   targetClubInfoState,
 } from "@/recoil/atoms";
+import ClubMemoModal from "@/components/Modals/ClubModal/ClubMemoModal";
 import { axiosUpdateClubNotice } from "@/api/axios/axios.custom";
-import ClubMemoModal from "./ClubMemoModal";
 
-export interface MemoModalTestInterface {
+export const CLUB_MEMO_MAX_LENGTH = 100;
+// TODO : 메모, 멤버 리렌더링 바로 되게
+export interface MemoModalContainerInterface {
   onClose: React.MouseEventHandler;
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   clubNotice: string;
+}
+
+export interface MemoModalInterface {
+  onClose: React.MouseEventHandler;
+  clubNotice: string;
   showResponseModal: boolean;
-  setMode: React.Dispatch<React.SetStateAction<string>>;
   newMemo: React.RefObject<HTMLTextAreaElement>;
-  previousTextRef: React.MutableRefObject<string>;
   mode: string;
   handleClickWriteMode: (e: any) => void;
   handleChange: () => void;
@@ -24,27 +29,20 @@ export interface MemoModalTestInterface {
   hasErrorOnResponse: boolean;
   modalContent: string;
   modalTitle: string;
+  onClick: (
+    e: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>
+  ) => void;
 }
-
-export interface MemoModalTestContainerInterface {
-  onClose: React.MouseEventHandler;
-  text: string;
-  setText: React.Dispatch<React.SetStateAction<string>>;
-  clubNotice: string;
-}
-
-export const CLUB_MEMO_MAX_LENGTH = 100;
 
 const ClubMemoModalContainer = ({
   onClose,
   text,
   setText,
   clubNotice,
-}: MemoModalTestContainerInterface) => {
+}: MemoModalContainerInterface) => {
   const [mode, setMode] = useState<string>("read");
   const newMemo = useRef<HTMLTextAreaElement>(null);
   const previousTextRef = useRef<string>(text);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
@@ -53,6 +51,7 @@ const ClubMemoModalContainer = ({
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const { clubId } = useRecoilValue(targetClubInfoState);
+  const [charCount, setCharCount] = useState<number>(0);
 
   const handleClickWriteMode = (e: any) => {
     setMode("write");
@@ -62,34 +61,19 @@ const ClubMemoModalContainer = ({
   };
 
   const tryMemoRequest = async () => {
-    setIsLoading(true);
     try {
       await axiosUpdateClubNotice(clubId, text);
       setIsCurrentSectionRender(true);
       setModalTitle("메모 수정 완료");
       // const result = await axiosGetClubInfo(clubId, page, 2);
     } catch (error: any) {
+      setModalTitle("메모 수정 실패");
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
     } finally {
-      setIsLoading(false);
       setShowResponseModal(true);
     }
   };
-  // const handleClickSave = (e: React.MouseEvent) => {
-
-  //   document.getElementById("unselect-input")?.focus();
-  //   if (newMemo.current!.value) {
-  //     onSave(newMemo.current!.value);
-  //   } else {
-  //     onSave(null);
-  //   }
-  //   setText(newMemo.current!.value); //새 메모 저장
-  //   previousTextRef.current = newMemo.current!.value; //이전 메모 업데이트
-  //   setMode("read");
-  // };
-
-  const [charCount, setCharCount] = useState<number>(0);
 
   useEffect(() => {
     text ? setCharCount(text.length) : setCharCount(0);
@@ -103,16 +87,24 @@ const ClubMemoModalContainer = ({
     }
   };
 
+  const onClick = (
+    e: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>
+  ) => {
+    setMode("read");
+    if (text) {
+      if (text) newMemo.current!.value = text;
+      setText(previousTextRef.current);
+      newMemo.current!.value = previousTextRef.current;
+    }
+    onClose(e);
+  };
+
   return (
     <ClubMemoModal
       onClose={onClose}
-      text={text}
-      setText={setText}
       clubNotice={clubNotice}
       showResponseModal={showResponseModal}
-      setMode={setMode}
       newMemo={newMemo}
-      previousTextRef={previousTextRef}
       mode={mode}
       handleClickWriteMode={handleClickWriteMode}
       handleChange={handleChange}
@@ -121,6 +113,7 @@ const ClubMemoModalContainer = ({
       hasErrorOnResponse={hasErrorOnResponse}
       modalContent={modalContent}
       modalTitle={modalTitle}
+      onClick={onClick}
     />
   );
 };

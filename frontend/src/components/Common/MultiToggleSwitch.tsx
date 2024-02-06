@@ -23,7 +23,6 @@ const MultiToggleSwitch = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      console.log(button.className, initialState);
       if (button.className === initialState) {
         button.style.color = "white";
         button.style.backgroundColor = "var(--main-color)";

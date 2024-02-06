@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Button from "@/components/Common/Button";
 import {
   CLUB_MEMO_MAX_LENGTH,
-  MemoModalTestInterface,
+  MemoModalInterface,
 } from "@/components/Modals/ClubModal/ClubMemoModal.container";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import {
@@ -11,14 +11,10 @@ import {
 } from "@/components/Modals/ResponseModal/ResponseModal";
 
 const ClubMemoModal = ({
-  text,
   onClose,
-  setText,
   clubNotice,
   showResponseModal,
-  setMode,
   newMemo,
-  previousTextRef,
   mode,
   handleClickWriteMode,
   handleChange,
@@ -27,22 +23,13 @@ const ClubMemoModal = ({
   hasErrorOnResponse,
   modalContent,
   modalTitle,
-}: MemoModalTestInterface) => {
+  onClick,
+}: MemoModalInterface) => {
   return (
     <ModalPortal>
       {!showResponseModal && (
         <>
-          <BackgroundStyled
-            onClick={(e) => {
-              setMode("read");
-              if (text) {
-                if (text) newMemo.current!.value = text;
-                setText(previousTextRef.current);
-                newMemo.current!.value = previousTextRef.current;
-              }
-              onClose(e);
-            }}
-          />
+          <BackgroundStyled onClick={(e) => onClick(e)} />
           <ModalContainerStyled type={"confirm"}>
             <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
               수정하기
@@ -82,24 +69,10 @@ const ClubMemoModal = ({
             />
             <ButtonWrapperStyled mode={mode}>
               {mode === "write" && (
-                <Button
-                  onClick={() => {
-                    tryMemoRequest();
-                  }}
-                  text="저장"
-                  theme="fill"
-                />
+                <Button onClick={tryMemoRequest} text="저장" theme="fill" />
               )}
               <Button
-                onClick={(e) => {
-                  setMode("read");
-                  if (text) {
-                    if (text) newMemo.current!.value = text;
-                    setText(previousTextRef.current);
-                    newMemo.current!.value = previousTextRef.current;
-                  }
-                  onClose(e);
-                }}
+                onClick={(e) => onClick(e)}
                 text={mode === "read" ? "닫기" : "취소"}
                 theme={mode === "read" ? "lightGrayLine" : "line"}
               />
@@ -110,7 +83,7 @@ const ClubMemoModal = ({
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="메모 수정 실패"
+            modalTitle={modalTitle}
             modalContents={modalContent}
             closeModal={onClose}
           />
