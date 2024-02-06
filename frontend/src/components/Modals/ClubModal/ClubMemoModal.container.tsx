@@ -9,14 +9,14 @@ import { axiosUpdateClubNotice } from "@/api/axios/axios.custom";
 
 export const CLUB_MEMO_MAX_LENGTH = 100;
 // TODO : 메모, 멤버 리렌더링 바로 되게
-export interface MemoModalContainerInterface {
+interface ClubMemoModalContainerInterface {
   onClose: React.MouseEventHandler;
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   clubNotice: string;
 }
 
-export interface MemoModalInterface {
+export interface ClubMemoModalInterface {
   onClose: React.MouseEventHandler;
   clubNotice: string;
   showResponseModal: boolean;
@@ -39,7 +39,7 @@ const ClubMemoModalContainer = ({
   text,
   setText,
   clubNotice,
-}: MemoModalContainerInterface) => {
+}: ClubMemoModalContainerInterface) => {
   const [mode, setMode] = useState<string>("read");
   const newMemo = useRef<HTMLTextAreaElement>(null);
   const previousTextRef = useRef<string>(text);

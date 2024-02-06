@@ -1,67 +1,37 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled, { css } from "styled-components";
+import React from "react";
+import styled from "styled-components";
+import { ClubPasswordModalInterface } from "@/components/Club/ClubPasswordModal.container";
 import Button from "@/components/Common/Button";
-import { IModalContents } from "@/components/Modals/Modal";
 import { ReactComponent as CheckIcon } from "@/assets/images/checkIcon.svg";
-import useMultiSelect from "@/hooks/useMultiSelect";
 
-const ModifyClubPwModal: React.FC<{
-  modalContents: IModalContents;
-  password: string;
-  tmpPw: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSendPassword: () => void;
-}> = ({ modalContents, password, tmpPw, onChange, onSendPassword }) => {
+const ClubPasswordModal: React.FC<ClubPasswordModalInterface> = ({
+  ClubPwModalContents,
+  password,
+  onChange,
+  list,
+  onClick,
+  inputRef,
+  onClickBackground,
+  onSendPassword,
+  handleEnterPress,
+}) => {
   const {
     type,
-    iconScaleEffect,
     title,
     detail,
     proceedBtnText,
-    onClickProceed,
     cancelBtnText,
     closeModal,
     isLoading,
     iconType,
-  } = modalContents;
-  const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
-  const [list, setList] = useState(["", "", "", ""]);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const onClick = () => {
-    if (inputRef.current) inputRef.current.focus();
-  };
-
-  const makeList = (inputString: string) => {
-    const temp = [...inputString.split("")];
-    for (let i = 0; i < 4 - inputString.length; i++) {
-      temp.push("");
-    }
-    setList([...temp]);
-    if (inputRef.current) inputRef.current.focus();
-  };
-
-  useEffect(() => {
-    let inputString = tmpPw === password || !tmpPw ? password : tmpPw;
-    makeList(inputString);
-  }, [password, tmpPw]);
-
-  const handleEnterPress = () => {
-    // if (tryLentRequest && password.length == 4) tryLentRequest();
-  };
+  } = ClubPwModalContents;
 
   return (
     <>
-      <BackgroundStyled
-        onClick={(e) => {
-          closeModal(e);
-          if (isMultiSelect) {
-            closeMultiSelectMode();
-          }
-        }}
-      />
+      <BackgroundStyled onClick={onClickBackground} />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
         {iconType === "CHECK" && (
-          <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
+          <ModalIconImgStyled>
             <CheckIcon stroke="var(--main-color)" />
           </ModalIconImgStyled>
         )}
@@ -85,24 +55,13 @@ const ModifyClubPwModal: React.FC<{
           ref={inputRef}
           onChange={onChange}
           maxLength={4}
-          onKeyUp={(e: any) => {
-            if (e.key === "Enter") {
-              handleEnterPress();
-            }
-          }}
+          onKeyUp={(e) => handleEnterPress(e)}
         />
         <ButtonWrapperStyled>
+          <Button onClick={closeModal} text={cancelBtnText!} theme="line" />
           <Button
-            onClick={(e) => closeModal(e)}
-            text={cancelBtnText || "취소"}
-            theme="line"
-          />
-          <Button
-            onClick={() => {
-              // onClickProceed!(e);
-              onSendPassword();
-            }}
-            text={proceedBtnText || "확인"}
+            onClick={onSendPassword}
+            text={proceedBtnText!}
             theme="fill"
             disabled={password.length < 4 || isLoading}
           />
@@ -169,15 +128,10 @@ const ModalStyled = styled.div`
   padding: 40px 20px;
 `;
 
-const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
+const ModalIconImgStyled = styled.div`
   svg {
     width: 70px;
     margin-bottom: 20px;
-    animation: ${(props) =>
-      props.iconScaleEffect &&
-      css`
-        scaleUpModalIcon 1s;
-      `};
   }
   @keyframes scaleUpModalIcon {
     0% {
@@ -232,4 +186,4 @@ const ButtonWrapperStyled = styled.div`
   margin-top: 20px;
 `;
 
-export default ModifyClubPwModal;
+export default ClubPasswordModal;

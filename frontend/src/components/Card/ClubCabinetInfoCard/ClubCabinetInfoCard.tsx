@@ -6,9 +6,9 @@ import {
   CardContentWrapper,
   ContentDeatilStyled,
 } from "@/components/Card/CardStyles";
-import ClubPasswordModal from "@/components/Club/ClubPasswordModal";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
-
+import ClubPasswordModalContainer from "@/components/Club/ClubPasswordModal.container";
+// TODO : 메모 모달이랑 구조 같게
 const ClubCabinetInfoCard = ({
   clubInfo,
 }: {
@@ -72,11 +72,10 @@ const ClubCabinetInfoCard = ({
         </>
       </Card>
       {showPasswordModal && (
-        <ClubPasswordModal
+        <ClubPasswordModalContainer
           password={password}
           setPassword={setPassword}
-          isModalOpenTest={showPasswordModal}
-          setIsModalOpenTest={setShowPasswordModal}
+          setShowPasswordModal={setShowPasswordModal}
         />
       )}
     </>

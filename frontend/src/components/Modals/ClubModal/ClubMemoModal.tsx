@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Button from "@/components/Common/Button";
 import {
   CLUB_MEMO_MAX_LENGTH,
-  MemoModalInterface,
+  ClubMemoModalInterface,
 } from "@/components/Modals/ClubModal/ClubMemoModal.container";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import {
@@ -24,7 +24,7 @@ const ClubMemoModal = ({
   modalContent,
   modalTitle,
   onClick,
-}: MemoModalInterface) => {
+}: ClubMemoModalInterface) => {
   return (
     <ModalPortal>
       {!showResponseModal && (

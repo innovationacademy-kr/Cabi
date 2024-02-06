@@ -171,6 +171,11 @@ export const modalPropsMap = {
     title: "동아리장 위임",
     confirmMessage: "네, 위임할게요",
   },
+  MODAL_CLUB_PAGE_SET_PW: {
+    type: "confirm",
+    title: "비밀번호 설정",
+    confirmMessage: "설정",
+  },
   MODAL_CLUB_MODIFY_PW: {
     type: "confirm",
     title: "비밀번호 수적",
