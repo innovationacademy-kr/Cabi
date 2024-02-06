@@ -124,36 +124,34 @@ const ClubPasswordModalContainer: React.FC<
   };
 
   return (
-    <>
-      <ModalPortal>
-        {!showResponseModal && (
-          <ClubPasswordModal
-            ClubPwModalContents={ClubPwModalContents}
-            password={password}
-            onChange={onChange}
-            list={list}
-            onClick={onClick}
-            inputRef={inputRef}
-            onClickBackground={onClickBackground}
-            onSendPassword={onSendPassword}
-            handleEnterPress={handleEnterPress}
+    <ModalPortal>
+      {!showResponseModal && (
+        <ClubPasswordModal
+          ClubPwModalContents={ClubPwModalContents}
+          password={password}
+          onChange={onChange}
+          list={list}
+          onClick={onClick}
+          inputRef={inputRef}
+          onClickBackground={onClickBackground}
+          onSendPassword={onSendPassword}
+          handleEnterPress={handleEnterPress}
+        />
+      )}
+      {showResponseModal &&
+        (hasErrorOnResponse ? (
+          <FailResponseModal
+            modalTitle={modalTitle}
+            modalContents={modalContent}
+            closeModal={closeModal}
           />
-        )}
-        {showResponseModal &&
-          (hasErrorOnResponse ? (
-            <FailResponseModal
-              modalTitle={modalTitle}
-              modalContents={modalContent}
-              closeModal={closeModal}
-            />
-          ) : (
-            <SuccessResponseModal
-              modalTitle={modalTitle}
-              closeModal={closeModal}
-            />
-          ))}
-      </ModalPortal>
-    </>
+        ) : (
+          <SuccessResponseModal
+            modalTitle={modalTitle}
+            closeModal={closeModal}
+          />
+        ))}
+    </ModalPortal>
   );
 };
 

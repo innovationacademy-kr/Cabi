@@ -12,10 +12,6 @@ const ClubNoticeCard = ({ notice }: { notice: string }) => {
     setShowMemoModal(true);
   };
 
-  const closeModal = () => {
-    setShowMemoModal(false);
-  };
-
   return (
     <>
       <Card
@@ -39,10 +35,10 @@ const ClubNoticeCard = ({ notice }: { notice: string }) => {
       </Card>
       {showMemoModal && (
         <ClubMemoModalContainer
-          onClose={() => closeModal()}
           text={text}
           setText={setText}
           clubNotice={notice}
+          setShowMemoModal={setShowMemoModal}
         />
       )}
     </>

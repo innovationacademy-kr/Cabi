@@ -4,93 +4,65 @@ import {
   CLUB_MEMO_MAX_LENGTH,
   ClubMemoModalInterface,
 } from "@/components/Modals/ClubModal/ClubMemoModal.container";
-import ModalPortal from "@/components/Modals/ModalPortal";
-import {
-  FailResponseModal,
-  SuccessResponseModal,
-} from "@/components/Modals/ResponseModal/ResponseModal";
 
 const ClubMemoModal = ({
-  onClose,
   clubNotice,
-  showResponseModal,
   newMemo,
   mode,
   handleClickWriteMode,
   handleChange,
   charCount,
   tryMemoRequest,
-  hasErrorOnResponse,
-  modalContent,
-  modalTitle,
   onClick,
 }: ClubMemoModalInterface) => {
   return (
-    <ModalPortal>
-      {!showResponseModal && (
-        <>
-          <BackgroundStyled onClick={(e) => onClick(e)} />
-          <ModalContainerStyled type={"confirm"}>
-            <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
-              수정하기
-            </WriteModeButtonStyled>
-            <H2Styled>동아리 메모</H2Styled>
-            <ContentSectionStyled>
-              <ContentItemSectionStyled>
-                <ContentItemWrapperStyled>
-                  <ContentItemInputStyled
-                    onChange={handleChange}
-                    placeholder={clubNotice}
-                    mode={mode}
-                    defaultValue={clubNotice}
-                    readOnly={mode === "read" ? true : false}
-                    ref={newMemo}
-                    maxLength={CLUB_MEMO_MAX_LENGTH}
-                  ></ContentItemInputStyled>
-                  <ContentItemWrapperStyledBottomStyled>
-                    {charCount <= CLUB_MEMO_MAX_LENGTH && (
-                      <LengthCountStyled>
-                        {charCount} / {CLUB_MEMO_MAX_LENGTH}
-                      </LengthCountStyled>
-                    )}
-                    {charCount > CLUB_MEMO_MAX_LENGTH && (
-                      <LengthCountStyled>
-                        {CLUB_MEMO_MAX_LENGTH} / {CLUB_MEMO_MAX_LENGTH}
-                      </LengthCountStyled>
-                    )}
-                  </ContentItemWrapperStyledBottomStyled>
-                </ContentItemWrapperStyled>
-              </ContentItemSectionStyled>
-            </ContentSectionStyled>
-            <input
-              id="unselect-input"
-              readOnly
-              style={{ height: 0, width: 0 }}
-            />
-            <ButtonWrapperStyled mode={mode}>
-              {mode === "write" && (
-                <Button onClick={tryMemoRequest} text="저장" theme="fill" />
-              )}
-              <Button
-                onClick={(e) => onClick(e)}
-                text={mode === "read" ? "닫기" : "취소"}
-                theme={mode === "read" ? "lightGrayLine" : "line"}
-              />
-            </ButtonWrapperStyled>
-          </ModalContainerStyled>
-        </>
-      )}
-      {showResponseModal &&
-        (hasErrorOnResponse ? (
-          <FailResponseModal
-            modalTitle={modalTitle}
-            modalContents={modalContent}
-            closeModal={onClose}
+    <>
+      <BackgroundStyled onClick={onClick} />
+      <ModalContainerStyled type={"confirm"}>
+        <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
+          수정하기
+        </WriteModeButtonStyled>
+        <H2Styled>동아리 메모</H2Styled>
+        <ContentSectionStyled>
+          <ContentItemSectionStyled>
+            <ContentItemWrapperStyled>
+              <ContentItemInputStyled
+                onChange={handleChange}
+                placeholder={clubNotice}
+                mode={mode}
+                defaultValue={clubNotice}
+                readOnly={mode === "read" ? true : false}
+                ref={newMemo}
+                maxLength={CLUB_MEMO_MAX_LENGTH}
+              ></ContentItemInputStyled>
+              <ContentItemWrapperStyledBottomStyled>
+                {charCount <= CLUB_MEMO_MAX_LENGTH && (
+                  <LengthCountStyled>
+                    {charCount} / {CLUB_MEMO_MAX_LENGTH}
+                  </LengthCountStyled>
+                )}
+                {charCount > CLUB_MEMO_MAX_LENGTH && (
+                  <LengthCountStyled>
+                    {CLUB_MEMO_MAX_LENGTH} / {CLUB_MEMO_MAX_LENGTH}
+                  </LengthCountStyled>
+                )}
+              </ContentItemWrapperStyledBottomStyled>
+            </ContentItemWrapperStyled>
+          </ContentItemSectionStyled>
+        </ContentSectionStyled>
+        <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
+        <ButtonWrapperStyled mode={mode}>
+          {mode === "write" && (
+            <Button onClick={tryMemoRequest} text="저장" theme="fill" />
+          )}
+          <Button
+            onClick={onClick}
+            text={mode === "read" ? "닫기" : "취소"}
+            theme={mode === "read" ? "lightGrayLine" : "line"}
           />
-        ) : (
-          <SuccessResponseModal modalTitle={modalTitle} closeModal={onClose} />
-        ))}
-    </ModalPortal>
+        </ButtonWrapperStyled>
+      </ModalContainerStyled>
+    </>
   );
 };
 

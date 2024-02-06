@@ -4,41 +4,39 @@ import {
   isCurrentSectionRenderState,
   targetClubInfoState,
 } from "@/recoil/atoms";
+import ModalPortal from "@/components//Modals/ModalPortal";
 import ClubMemoModal from "@/components/Modals/ClubModal/ClubMemoModal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
 import { axiosUpdateClubNotice } from "@/api/axios/axios.custom";
 
 export const CLUB_MEMO_MAX_LENGTH = 100;
 // TODO : 메모, 멤버 리렌더링 바로 되게
 interface ClubMemoModalContainerInterface {
-  onClose: React.MouseEventHandler;
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   clubNotice: string;
+  setShowMemoModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface ClubMemoModalInterface {
-  onClose: React.MouseEventHandler;
   clubNotice: string;
-  showResponseModal: boolean;
   newMemo: React.RefObject<HTMLTextAreaElement>;
   mode: string;
   handleClickWriteMode: (e: any) => void;
   handleChange: () => void;
   charCount: number;
   tryMemoRequest: () => Promise<void>;
-  hasErrorOnResponse: boolean;
-  modalContent: string;
-  modalTitle: string;
-  onClick: (
-    e: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>
-  ) => void;
+  onClick: () => void;
 }
 
 const ClubMemoModalContainer = ({
-  onClose,
   text,
   setText,
   clubNotice,
+  setShowMemoModal,
 }: ClubMemoModalContainerInterface) => {
   const [mode, setMode] = useState<string>("read");
   const newMemo = useRef<HTMLTextAreaElement>(null);
@@ -52,6 +50,10 @@ const ClubMemoModalContainer = ({
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const { clubId } = useRecoilValue(targetClubInfoState);
   const [charCount, setCharCount] = useState<number>(0);
+
+  const closeModal = () => {
+    setShowMemoModal(false);
+  };
 
   const handleClickWriteMode = (e: any) => {
     setMode("write");
@@ -87,34 +89,44 @@ const ClubMemoModalContainer = ({
     }
   };
 
-  const onClick = (
-    e: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>
-  ) => {
+  const onClick = () => {
     setMode("read");
     if (text) {
       if (text) newMemo.current!.value = text;
       setText(previousTextRef.current);
       newMemo.current!.value = previousTextRef.current;
     }
-    onClose(e);
+    closeModal();
   };
 
   return (
-    <ClubMemoModal
-      onClose={onClose}
-      clubNotice={clubNotice}
-      showResponseModal={showResponseModal}
-      newMemo={newMemo}
-      mode={mode}
-      handleClickWriteMode={handleClickWriteMode}
-      handleChange={handleChange}
-      charCount={charCount}
-      tryMemoRequest={tryMemoRequest}
-      hasErrorOnResponse={hasErrorOnResponse}
-      modalContent={modalContent}
-      modalTitle={modalTitle}
-      onClick={onClick}
-    />
+    <ModalPortal>
+      {!showResponseModal && (
+        <ClubMemoModal
+          clubNotice={clubNotice}
+          newMemo={newMemo}
+          mode={mode}
+          handleClickWriteMode={handleClickWriteMode}
+          handleChange={handleChange}
+          charCount={charCount}
+          tryMemoRequest={tryMemoRequest}
+          onClick={onClick}
+        />
+      )}
+      {showResponseModal &&
+        (hasErrorOnResponse ? (
+          <FailResponseModal
+            modalTitle={modalTitle}
+            modalContents={modalContent}
+            closeModal={closeModal}
+          />
+        ) : (
+          <SuccessResponseModal
+            modalTitle={modalTitle}
+            closeModal={closeModal}
+          />
+        ))}
+    </ModalPortal>
   );
 };
 
