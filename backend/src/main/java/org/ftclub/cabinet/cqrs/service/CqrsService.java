@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.Location;
@@ -16,6 +17,8 @@ import org.ftclub.cabinet.cqrs.respository.CqrsRedis;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetAvailableResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
+import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
+import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -76,6 +79,34 @@ public class CqrsService {
 		return cabinetMapper.toCabinetAvailableResponseDto(availableCabinets);
 	}
 
+	private String getCabinetTitle(Cabinet cabinet, List<LentHistory> lentHistories) {
+		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
+			return cabinet.getTitle();
+		} else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
+			return lentHistories.get(0).getUser().getName();
+		}
+		return null;
+	}
+
+	public void addCabinetPerSection(Cabinet cabinet, List<LentHistory> lentHistories) {
+		Location location = cabinet.getCabinetPlace().getLocation();
+		String building = location.getBuilding();
+		String section = location.getSection();
+		String floor = location.getFloor().toString();
+
+		List<CabinetPreviewDto> cabinetPreviewDtos =
+				cqrsRedis.getHash(building + floor + CABINET_PER_SECTION.getValue(),
+						section,
+						new TypeReference<List<CabinetPreviewDto>>() {});
+		if (cabinetPreviewDtos == null) {
+			cabinetPreviewDtos = new ArrayList<>();
+		}
+		List<LentHistory> activeLentHistories = lentHistories.stream().filter(l -> l.getEndedAt() == null).collect(Collectors.toList());
+		String cabinetTitle = getCabinetTitle(cabinet, activeLentHistories);
+		cabinetPreviewDtos.add(cabinetMapper.toCabinetPreviewDto(cabinet, activeLentHistories.size(),cabinetTitle));
+
+		cqrsRedis.setHash(building + floor + CABINET_PER_SECTION.getValue(), section, cabinetPreviewDtos);
+	}
 	public void addAvailableCabinet(Cabinet cabinet) {
 		Location location = cabinet.getCabinetPlace().getLocation();
 		String key = location.getBuilding() + AVAILABLE_CABINET.getValue();
@@ -102,5 +133,10 @@ public class CqrsService {
 	public void clearCabinetPerSection() {
 		cqrsRedis.clearBySuffix(CABINET_PER_SECTION.getValue());
 	}
+	public List<CabinetsPerSectionResponseDto> getCabinetPerSection(String building, Integer floor) {
+		Map<String,List<CabinetPreviewDto>> hashEntries = cqrsRedis.getHashEntries(building + floor + CABINET_PER_SECTION.getValue(), new TypeReference<List<CabinetPreviewDto>>() {});
+		List<CabinetsPerSectionResponseDto> result = hashEntries.entrySet().stream().map(e -> cabinetMapper.toCabinetsPerSectionResponseDto(e.getKey(), e.getValue())).collect(Collectors.toList());
+		return result;
+    }
 	//@formatter:on
 }

@@ -111,6 +111,15 @@ public class CqrsRedis {
 		return result;
 	}
 
+	public <R> Map<String, R> getHashEntries(String key, TypeReference<R> typeReference) {
+		Map<String, String> entries = hashTemplate.entries(key);
+		Map<String, R> result = new HashMap<>();
+		for (Map.Entry<String, String> entry : entries.entrySet()) {
+			result.put(entry.getKey(), this.stringToDto(entry.getValue(), typeReference));
+		}
+		return result;
+	}
+
 	public <T> void set(String key, T value) {
 		redisTemplate.opsForValue().set(key, dtoToString(value));
 	}

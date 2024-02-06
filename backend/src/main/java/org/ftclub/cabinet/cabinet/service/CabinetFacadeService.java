@@ -1,15 +1,9 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
@@ -20,13 +14,11 @@ import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.cqrs.service.CqrsService;
-import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetAvailableResponseDto;
 import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
-import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
@@ -128,48 +120,50 @@ public class CabinetFacadeService {
 	@Transactional(readOnly = true)
 	public List<CabinetsPerSectionResponseDto> getCabinetsPerSection(String building,
 			Integer floor) {
-		List<ActiveCabinetInfoEntities> activeCabinetInfos =
-				cabinetQueryService.findActiveCabinetInfoEntities(building, floor);
-		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
-				collect(groupingBy(ActiveCabinetInfoEntities::getCabinet,
-						mapping(ActiveCabinetInfoEntities::getLentHistory, Collectors.toList())));
-		List<Cabinet> allCabinetsOnSection =
-				cabinetQueryService.findAllCabinetsByBuildingAndFloor(building, floor);
-		Map<Long, List<ClubLentHistory>> clubLentMap =
-				clubLentQueryService.findAllActiveLentHistoriesWithClub().stream()
-						.collect(groupingBy(ClubLentHistory::getCabinetId));
+//		List<ActiveCabinetInfoEntities> activeCabinetInfos =
+//				cabinetQueryService.findActiveCabinetInfoEntities(building, floor);
+//		Map<Cabinet, List<LentHistory>> cabinetLentHistories = activeCabinetInfos.stream().
+//				collect(groupingBy(ActiveCabinetInfoEntities::getCabinet,
+//						mapping(ActiveCabinetInfoEntities::getLentHistory, Collectors.toList())));
+//		List<Cabinet> allCabinetsOnSection =
+//				cabinetQueryService.findAllCabinetsByBuildingAndFloor(building, floor);
+//		Map<Long, List<ClubLentHistory>> clubLentMap =
+//				clubLentQueryService.findAllActiveLentHistoriesWithClub().stream()
+//						.collect(groupingBy(ClubLentHistory::getCabinetId));
+//
+//		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
+//		allCabinetsOnSection.stream()
+//				.sorted(Comparator.comparing(Cabinet::getVisibleNum))
+//				.forEach(cabinet -> {
+//					String section = cabinet.getCabinetPlace().getLocation().getSection();
+//					if (cabinet.getLentType().equals(LentType.CLUB)) {
+//						if (!clubLentMap.containsKey(cabinet.getId())) {
+//							cabinetPreviewsBySection.computeIfAbsent(section,
+//											k -> new ArrayList<>())
+//									.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
+//						} else {
+//							clubLentMap.get(cabinet.getId()).stream()
+//									.map(c -> c.getClub().getName())
+//									.findFirst().ifPresent(clubName -> cabinetPreviewsBySection
+//											.computeIfAbsent(section, k -> new ArrayList<>())
+//											.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, clubName)));
+//						}
+//						return;
+//					}
+//					List<LentHistory> lentHistories =
+//							cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
+//					String title = getCabinetTitle(cabinet, lentHistories);
+//					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>())
+//							.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
+//									title));
+//				});
+//
+//		return cabinetPreviewsBySection.entrySet().stream()
+//				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
+//						entry.getValue()))
+//				.collect(Collectors.toList());
 
-		Map<String, List<CabinetPreviewDto>> cabinetPreviewsBySection = new LinkedHashMap<>();
-		allCabinetsOnSection.stream()
-				.sorted(Comparator.comparing(Cabinet::getVisibleNum))
-				.forEach(cabinet -> {
-					String section = cabinet.getCabinetPlace().getLocation().getSection();
-					if (cabinet.getLentType().equals(LentType.CLUB)) {
-						if (!clubLentMap.containsKey(cabinet.getId())) {
-							cabinetPreviewsBySection.computeIfAbsent(section,
-											k -> new ArrayList<>())
-									.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
-						} else {
-							clubLentMap.get(cabinet.getId()).stream()
-									.map(c -> c.getClub().getName())
-									.findFirst().ifPresent(clubName -> cabinetPreviewsBySection
-											.computeIfAbsent(section, k -> new ArrayList<>())
-											.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, clubName)));
-						}
-						return;
-					}
-					List<LentHistory> lentHistories =
-							cabinetLentHistories.getOrDefault(cabinet, Collections.emptyList());
-					String title = getCabinetTitle(cabinet, lentHistories);
-					cabinetPreviewsBySection.computeIfAbsent(section, k -> new ArrayList<>())
-							.add(cabinetMapper.toCabinetPreviewDto(cabinet, lentHistories.size(),
-									title));
-				});
-
-		return cabinetPreviewsBySection.entrySet().stream()
-				.map(entry -> cabinetMapper.toCabinetsPerSectionResponseDto(entry.getKey(),
-						entry.getValue()))
-				.collect(Collectors.toList());
+		return cqrsService.getCabinetPerSection(building, floor);
 	}
 
 	/**
