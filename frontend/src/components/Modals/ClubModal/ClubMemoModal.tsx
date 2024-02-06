@@ -1,88 +1,33 @@
-import { useEffect, useRef, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import {
-  isCurrentSectionRenderState,
-  targetClubInfoState,
-} from "@/recoil/atoms";
 import Button from "@/components/Common/Button";
-import { MemoModalTestContainerInterface } from "@/components/Modals/ClubModal/ClubMemoModal.container";
+import {
+  CLUB_MEMO_MAX_LENGTH,
+  MemoModalTestInterface,
+} from "@/components/Modals/ClubModal/ClubMemoModal.container";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/components/Modals/ResponseModal/ResponseModal";
-import { axiosUpdateClubNotice } from "@/api/axios/axios.custom";
-
-const MAX_INPUT_LENGTH = 100;
 
 const ClubMemoModal = ({
   text,
   onClose,
   setText,
   clubNotice,
-}: MemoModalTestContainerInterface) => {
-  const [mode, setMode] = useState<string>("read");
-  const newMemo = useRef<HTMLTextAreaElement>(null);
-  const previousTextRef = useRef<string>(text);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const setIsCurrentSectionRender = useSetRecoilState(
-    isCurrentSectionRenderState
-  );
-  const [modalTitle, setModalTitle] = useState<string>("");
-  const [modalContent, setModalContent] = useState<string>("");
-  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
-  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
-  const { clubId } = useRecoilValue(targetClubInfoState);
-
-  const handleClickWriteMode = (e: any) => {
-    setMode("write");
-    if (newMemo.current) {
-      newMemo.current.select();
-    }
-  };
-
-  const tryMemoRequest = async () => {
-    setIsLoading(true);
-    try {
-      await axiosUpdateClubNotice(clubId, text);
-      setIsCurrentSectionRender(true);
-      setModalTitle("메모 수정 완료");
-      // const result = await axiosGetClubInfo(clubId, page, 2);
-    } catch (error: any) {
-      setModalContent(error.response.data.message);
-      setHasErrorOnResponse(true);
-    } finally {
-      setIsLoading(false);
-      setShowResponseModal(true);
-    }
-  };
-  // const handleClickSave = (e: React.MouseEvent) => {
-
-  //   document.getElementById("unselect-input")?.focus();
-  //   if (newMemo.current!.value) {
-  //     onSave(newMemo.current!.value);
-  //   } else {
-  //     onSave(null);
-  //   }
-  //   setText(newMemo.current!.value); //새 메모 저장
-  //   previousTextRef.current = newMemo.current!.value; //이전 메모 업데이트
-  //   setMode("read");
-  // };
-
-  const [charCount, setCharCount] = useState<number>(0);
-
-  useEffect(() => {
-    text ? setCharCount(text.length) : setCharCount(0);
-  }, [text]);
-
-  const handleChange = () => {
-    if (newMemo.current) {
-      setCharCount(newMemo.current.value.length);
-      if (charCount > MAX_INPUT_LENGTH) setCharCount(MAX_INPUT_LENGTH);
-      setText(newMemo.current.value);
-    }
-  };
+  showResponseModal,
+  setMode,
+  newMemo,
+  previousTextRef,
+  mode,
+  handleClickWriteMode,
+  handleChange,
+  charCount,
+  tryMemoRequest,
+  hasErrorOnResponse,
+  modalContent,
+  modalTitle,
+}: MemoModalTestInterface) => {
   return (
     <ModalPortal>
       {!showResponseModal && (
@@ -113,17 +58,17 @@ const ClubMemoModal = ({
                     defaultValue={clubNotice}
                     readOnly={mode === "read" ? true : false}
                     ref={newMemo}
-                    maxLength={MAX_INPUT_LENGTH}
+                    maxLength={CLUB_MEMO_MAX_LENGTH}
                   ></ContentItemInputStyled>
                   <ContentItemWrapperStyledBottomStyled>
-                    {charCount <= MAX_INPUT_LENGTH && (
+                    {charCount <= CLUB_MEMO_MAX_LENGTH && (
                       <LengthCountStyled>
-                        {charCount} / {MAX_INPUT_LENGTH}
+                        {charCount} / {CLUB_MEMO_MAX_LENGTH}
                       </LengthCountStyled>
                     )}
-                    {charCount > MAX_INPUT_LENGTH && (
+                    {charCount > CLUB_MEMO_MAX_LENGTH && (
                       <LengthCountStyled>
-                        {MAX_INPUT_LENGTH} / {MAX_INPUT_LENGTH}
+                        {CLUB_MEMO_MAX_LENGTH} / {CLUB_MEMO_MAX_LENGTH}
                       </LengthCountStyled>
                     )}
                   </ContentItemWrapperStyledBottomStyled>
