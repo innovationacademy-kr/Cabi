@@ -4,11 +4,8 @@ package org.ftclub.cabinet.cqrs.respository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.log.LogLevel;
@@ -74,14 +71,6 @@ public class CqrsRedis {
 			log.error("DTO to String Parse Error : {}, {}", dto, e.toString());
 			throw ExceptionStatus.INTERNAL_SERVER_ERROR.asDomainException();
 		}
-	}
-
-	public <T> List<T> transList(List<Map<String, String>> transList, Class<T> clazz) {
-		if (transList == null) {
-			return new ArrayList<>();
-		}
-		return transList.stream().map(c -> objectMapper.convertValue(c, clazz))
-				.collect(Collectors.toList());
 	}
 
 	public void clear(String key) {
