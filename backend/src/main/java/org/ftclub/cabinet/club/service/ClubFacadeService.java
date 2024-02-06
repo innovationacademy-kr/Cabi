@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.club.domain.Club;
+import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.club.domain.ClubRegistration;
 import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
@@ -32,10 +34,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClubFacadeService {
 
 	private final ClubQueryService clubQueryService;
+	private final ClubCommandService clubCommandService;
 	private final ClubRegistrationQueryService clubRegistrationQueryService;
 	private final ClubRegistrationCommandService clubRegistrationCommandService;
 	private final ClubLentQueryService clubLentQueryService;
 	private final UserQueryService userQueryService;
+	private final CabinetCommandService cabinetCommandService;
 
 	private final ClubPolicyService clubPolicyService;
 
@@ -54,6 +58,7 @@ public class ClubFacadeService {
 	public ClubInfoResponseDto getClubInfo(Long userId, Long clubId, Pageable pageable) {
 		Club club = clubQueryService.getClubWithClubRegistration(clubId);
 		List<Long> clubUserIds = club.getClubRegistrations().stream()
+				.filter(cr -> cr.getDeletedAt() == null)
 				.map(ClubRegistration::getUserId).collect(Collectors.toList());
 		Long clubMasterId = club.getClubRegistrations().stream()
 				.filter(cr -> cr.getUserRole().equals(CLUB_ADMIN))
@@ -191,6 +196,19 @@ public class ClubFacadeService {
 		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
 				clubMasterRegistration.getClubId(), clubId);
 
-		club.changeClubNotice(notice);
+		clubCommandService.changeClubNotice(club, notice);
+	}
+
+	public void updateClubMemo(Long userId, Long clubId, String memo) {
+		ClubRegistration clubMasterRegistration
+				= clubRegistrationQueryService.getClubUserByUser(userId, clubId);
+		Club club = clubQueryService.getClub(clubId);
+
+		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
+				clubMasterRegistration.getClubId(), club.getId());
+
+		ClubLentHistory clubLentHistory =
+				clubLentQueryService.getActiveLentHistoryWithCabinet(clubId);
+		cabinetCommandService.updateMemo(clubLentHistory.getCabinet(), memo);
 	}
 }
