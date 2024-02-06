@@ -2,15 +2,13 @@ package org.ftclub.cabinet.event;
 
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
-import lombok.extern.log4j.Log4j2;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cqrs.manager.CqrsManager;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.log.Logging;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-@Log4j2
+@Logging
 @Component
 public class CqrsEventListener {
 
@@ -23,7 +21,6 @@ public class CqrsEventListener {
 
 	@PostPersist
 	public void onPostPersist(Object object) {
-		log.info("onPostPersist {}", object.toString());
 		if (object instanceof LentHistory) {
 			LentHistory lentHistory = (LentHistory) object;
 			// LentHistory Entity -> Redis 저장
@@ -35,14 +32,12 @@ public class CqrsEventListener {
 	}
 
 	@PostUpdate
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void onPostUpdate(Object object) {
-		log.info("onPostUpdate {}", object.toString());
 		if (object instanceof LentHistory) {
 			LentHistory lentHistory = (LentHistory) object;
 			// LentHistory Entity -> Redis에 수정사항 반영
 		} else if (object instanceof Cabinet) {
-			cqrsManager.synchronizeCabinet((Cabinet) object);
+			cqrsManager.changeCabinet((Cabinet) object);
 		}
 	}
 }

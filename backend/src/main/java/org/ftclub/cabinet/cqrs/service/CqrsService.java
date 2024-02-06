@@ -6,6 +6,7 @@ import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.CABINET_PER_SECTION
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.FLOORS;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,9 @@ public class CqrsService {
 		String key = building + BUILDINGS.getValue();
 		List<BuildingFloorsDto> buildingFloorsDtos =
 				cqrsRedis.get(key, new TypeReference<List<BuildingFloorsDto>>() {});
+		if (buildingFloorsDtos == null) {
+			buildingFloorsDtos = new ArrayList<>();
+		}
 		buildingFloorsDtos.add(cabinetMapper.toBuildingFloorsDto(building, floors));
 		cqrsRedis.set(key, buildingFloorsDtos);
 	}
@@ -78,6 +82,9 @@ public class CqrsService {
 		String floor = location.getFloor().toString();
 		List<CabinetPreviewDto> availableCabinets =
 				cqrsRedis.getHash(key, floor, new TypeReference<List<CabinetPreviewDto>>() {});
+		if (availableCabinets == null) {
+			availableCabinets = new ArrayList<>();
+		}
 		availableCabinets.add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 		cqrsRedis.setHash(key, floor, availableCabinets);
 	}

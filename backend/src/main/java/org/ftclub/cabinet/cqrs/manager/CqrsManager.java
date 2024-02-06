@@ -13,12 +13,14 @@ import org.ftclub.cabinet.cqrs.service.CqrsService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.LentQueryService;
 import org.ftclub.cabinet.log.Logging;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 @Logging
+@Transactional(readOnly = true)
 public class CqrsManager {
 
 	private final LentQueryService lentQueryService;
@@ -27,7 +29,7 @@ public class CqrsManager {
 	private final CqrsService cqrsService;
 
 
-	@Transactional(readOnly = true)
+	@Async
 	public void synchronizeDatabase() {
 		this.clearAll();
 
@@ -50,8 +52,8 @@ public class CqrsManager {
 		}
 	}
 
-	public void synchronizeCabinet(Cabinet cabinet) {
-		System.out.println("CqrsManager.synchronizeCabinet : " + cabinet);
+	@Async
+	public void changeCabinet(Cabinet cabinet) {
 		this.changeAvailableCabinet(cabinet);
 	}
 
@@ -63,7 +65,7 @@ public class CqrsManager {
 	}
 
 	private void syncAll(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
-		this.syncAvailableCabinet(cabinet, cabinetLentHistories);
+		this.syncAvailableCabinet(cabinet);
 		this.syncCabinetPerSection(cabinet, cabinetLentHistories);
 	}
 
@@ -79,10 +81,9 @@ public class CqrsManager {
 	/**
 	 * 사물함의 상태가 AVAILABLE, PENDING일 때, availableCabinet에 추가
 	 *
-	 * @param cabinet              사물함
-	 * @param cabinetLentHistories 사물함의 대여 이력
+	 * @param cabinet 사물함
 	 */
-	private void syncAvailableCabinet(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
+	private void syncAvailableCabinet(Cabinet cabinet) {
 		if (cabinet.isLentType(LentType.CLUB)) {
 			return;
 		}
