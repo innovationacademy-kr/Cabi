@@ -78,12 +78,12 @@ const ClubMemberInfoArea = ({
             </ClubInfoWrapperStyled>
             {selectedClubMemberInfo!.userName ===
             selectedClubInfo.clubMaster ? (
-              <ClubIconStyled />
+              <ClubMasterIconStyled />
             ) : (
               <CabinetTypeIconStyled cabinetType={CabinetType.PRIVATE} />
             )}
             <TextStyled fontSize="1rem" fontColor="black">
-              {selectedClubMemberInfo!.userName}
+              {selectedClubMemberInfo!.userName || "-"}
             </TextStyled>
             <CabinetInfoButtonsContainerStyled>
               <Button
@@ -200,9 +200,11 @@ const ClubInfoWrapperStyled = styled.div`
   /* height: 100%; */
 `;
 
-const ClubIconStyled = styled.div`
+const ClubMasterIconStyled = styled.div`
   width: 24px;
   height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   margin-bottom: 10px;
   background-image: url("/src/assets/images/leader.svg");
   background-size: contain;
