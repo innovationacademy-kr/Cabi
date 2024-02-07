@@ -150,6 +150,15 @@ const AddMemCardStyled = styled.div`
   justify-content: center;
   align-items: center;
   background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23333' stroke-width='1' stroke-dasharray='6' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  transition: transform 0.2s, opacity 0.2s;
+  cursor: pointer;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+  }
 
   & > p {
     font-size: 26px;
@@ -175,6 +184,8 @@ const MemCardStyled = styled.div<{ bgColor: string; isSelected?: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: transform 0.2s, opacity 0.2s;
+  cursor: pointer;
 
   ${({ isSelected }) =>
     isSelected &&
@@ -184,6 +195,13 @@ const MemCardStyled = styled.div<{ bgColor: string; isSelected?: boolean }>`
       box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
         0px 4px 4px rgba(0, 0, 0, 0.25);
     `}
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+  }
 
   & > div {
     width: 100%;
