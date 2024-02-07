@@ -58,20 +58,8 @@ const ClubMemberInfoArea = ({
           </NotSelectedStyled>
         ) : (
           <>
-            <TextStyled fontSize="1rem" fontColor="var(--gray-color)">
-              {selectedClubCabinetInfo!.floor !== 0
-                ? selectedClubCabinetInfo!.floor +
-                  "F - " +
-                  selectedClubCabinetInfo!.section
-                : "-"}
-            </TextStyled>
-            <CabinetRectangleStyled cabinetStatus={CabinetStatus.FULL}>
-              {selectedClubCabinetInfo!.visibleNum !== 0
-                ? selectedClubCabinetInfo!.visibleNum
-                : "-"}
-            </CabinetRectangleStyled>
             <ClubInfoWrapperStyled>
-              <CabinetTypeIconStyled cabinetType={CabinetType.CLUB} />
+              {/* <CabinetTypeIconStyled cabinetType={CabinetType.CLUB} /> */}
               <TextStyled fontSize="1rem" fontColor="black" fontWeight={700}>
                 {selectedClubInfo!.clubName}
               </TextStyled>
