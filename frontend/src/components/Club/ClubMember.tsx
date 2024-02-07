@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 import styled, { css } from "styled-components";
-import { targetClubUserInfoState } from "@/recoil/atoms";
+import { targetClubUserInfoState, userState } from "@/recoil/atoms";
 import {
   ICurrentClubMemberModalStateInfo,
   TClubMemberModalState,
@@ -13,7 +13,6 @@ import { ClubUserResponseDto } from "@/types/dto/club.dto";
 
 const ClubMember: React.FC<{
   clubUserCount: number;
-  imMaster: boolean;
   clubModal: ICurrentClubMemberModalStateInfo;
   openModal: (modalName: TClubMemberModalState) => void;
   closeModal: () => void;
@@ -24,7 +23,6 @@ const ClubMember: React.FC<{
   selectClubMemberOnClick: (member: ClubUserResponseDto) => void;
 }> = ({
   clubUserCount,
-  imMaster,
   clubModal,
   openModal,
   closeModal,
@@ -34,6 +32,7 @@ const ClubMember: React.FC<{
   members,
   selectClubMemberOnClick,
 }) => {
+  const myInfo = useRecoilValue(userState);
   const targetClubUser = useRecoilValue(targetClubUserInfoState);
   return (
     <>
@@ -46,7 +45,7 @@ const ClubMember: React.FC<{
           </div>
         </TitleBarStyled>
         <MemSectionStyled>
-          {imMaster ? (
+          {myInfo.name === master.userName ? (
             <AddMemCardStyled onClick={() => openModal("addModal")}>
               <p>+</p>
             </AddMemCardStyled>
@@ -70,11 +69,7 @@ const ClubMember: React.FC<{
                 {member.userName !== master.userName && (
                   <MemCardStyled
                     key={idx}
-                    bgColor={
-                      member.userName === master.userName
-                        ? "var(--sub-color)"
-                        : ""
-                    }
+                    bgColor={""}
                     onClick={() => {
                       selectClubMemberOnClick(member);
                     }}
