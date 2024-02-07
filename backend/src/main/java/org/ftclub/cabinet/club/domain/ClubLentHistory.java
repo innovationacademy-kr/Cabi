@@ -78,7 +78,7 @@ public class ClubLentHistory {
 	}
 
 	private boolean isValid() {
-		return clubId != null && cabinetId != null && startedAt != null;
+		return clubId != null && cabinetId != null;
 	}
 
 	@Logging(level = LogLevel.DEBUG)
