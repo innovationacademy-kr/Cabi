@@ -51,8 +51,8 @@ const ClubMember: React.FC<{
               <p>+</p>
             </AddMemCardStyled>
           ) : null}
+          {/* NOTE:  동아리장이 맨 앞에 오도록 배치 */}
           <MemCardStyled
-            key={-1}
             bgColor={"var(--sub-color)"}
             onClick={() => {
               selectClubMemberOnClick(master);
@@ -80,17 +80,10 @@ const ClubMember: React.FC<{
                     }}
                     isSelected={member.userId === targetClubUser.userId}
                   >
-                    {member.userName === master.userName ? (
-                      <div id="clubMaster">
-                        <CrownImg stroke="#f5f5f5" width={18} height={18} />
-                        <p>{member.userName}</p>
-                      </div>
-                    ) : (
-                      <div id="clubUser">
-                        <UserImg width={16} height={16} viewBox="0 0 24 24" />
-                        <p>{member.userName}</p>
-                      </div>
-                    )}
+                    <div id="clubUser">
+                      <UserImg width={16} height={16} viewBox="0 0 24 24" />
+                      <p>{member.userName}</p>
+                    </div>
                   </MemCardStyled>
                 )}
               </>
