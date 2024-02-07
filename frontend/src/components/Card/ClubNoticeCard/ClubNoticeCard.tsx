@@ -52,6 +52,8 @@ const ClubNoticeTextStyled = styled.div`
   padding: 0.5rem 1rem;
   word-break: break-all;
   white-space: pre-wrap;
+  line-height: 1.2rem;
+  letter-spacing: 1px;
 `;
 
 export default ClubNoticeCard;

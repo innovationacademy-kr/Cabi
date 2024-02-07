@@ -131,6 +131,8 @@ const ContentItemInputStyled = styled.textarea<{
   overflow-y: auto;
   word-break: break-all;
   white-space: pre-wrap;
+  line-height: 1.2rem;
+  letter-spacing: 1px;
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
