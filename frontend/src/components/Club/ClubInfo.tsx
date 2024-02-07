@@ -30,6 +30,7 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
     if (clubId !== clubState.clubId || isCurrentSectionRender) {
       setIsCurrentSectionRender(false);
       setClubState({ clubId, page: 0 });
+      setClubInfo(undefined);
       getClubInfo(clubId, 0);
     }
     prevClubIdRef.current = clubId;
