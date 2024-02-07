@@ -50,6 +50,8 @@ const ClubNoticeTextStyled = styled.div`
   min-height: 150px;
   font-size: 1rem;
   padding: 0.5rem 1rem;
+  word-break: break-all;
+  white-space: pre-wrap;
 `;
 
 export default ClubNoticeCard;

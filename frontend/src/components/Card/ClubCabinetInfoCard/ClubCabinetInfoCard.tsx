@@ -6,9 +6,9 @@ import {
   CardContentWrapper,
   ContentDeatilStyled,
 } from "@/components/Card/CardStyles";
-import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 import ClubPasswordModalContainer from "@/components/Club/ClubPasswordModal.container";
-// TODO : 메모 모달이랑 구조 같게
+import { ClubInfoResponseDto } from "@/types/dto/club.dto";
+
 const ClubCabinetInfoCard = ({
   clubInfo,
 }: {
