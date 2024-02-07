@@ -85,6 +85,9 @@ public class AdminClubFacadeService {
 	public void deleteClub(Long clubId) {
 		Club club = clubQueryService.getClub(clubId);
 		clubCommandService.deleteClub(club);
+		List<ClubRegistration> clubUsersByClub = clubRegistrationQueryService.findClubUsersByClub(
+				clubId);
+		clubUsersByClub.forEach(clubRegistrationCommandService::deleteClubUser);
 	}
 
 	/**
