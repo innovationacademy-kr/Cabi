@@ -30,8 +30,10 @@ const AddClubMemModalContainer: React.FC<{
     setIsLoading(true);
     try {
       await axiosAddClubMember(clubId, name);
-      setIsCurrentSectionRender(true);
       setModalTitle(`동아리에 ${name} 님을 추가했습니다`);
+      setTimeout(() => {
+        setIsCurrentSectionRender(true);
+      }, 1000);
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
