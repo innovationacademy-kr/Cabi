@@ -13,7 +13,7 @@ import {
   SuccessResponseModal,
 } from "../ResponseModal/ResponseModal";
 
-const MandateClubMemModal: React.FC<{
+const MandateClubMemberModal: React.FC<{
   closeModal: React.MouseEventHandler;
   clubId: number;
   targetMember: ClubUserResponseDto;
@@ -84,4 +84,4 @@ const MandateClubMemModal: React.FC<{
   );
 };
 
-export default MandateClubMemModal;
+export default MandateClubMemberModal;

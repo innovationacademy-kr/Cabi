@@ -5,7 +5,7 @@ import {
   ICurrentClubMemberModalStateInfo,
   TClubMemberModalState,
 } from "@/components/Club/ClubMember.container";
-import AddClubMemModalContainer from "@/components/Modals/ClubModal/AddClubMemModal.container";
+import AddClubMemberModalContainer from "@/components/Modals/ClubModal/AddClubMemberModal.container";
 import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
 import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
@@ -94,7 +94,7 @@ const ClubMember: React.FC<{
         )}
       </ClubMemberContainerStyled>
       {clubModal.addModal ? (
-        <AddClubMemModalContainer
+        <AddClubMemberModalContainer
           closeModal={() => {
             closeModal();
           }}

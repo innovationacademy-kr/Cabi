@@ -4,7 +4,7 @@ import {
   isCurrentSectionRenderState,
   targetClubInfoState,
 } from "@/recoil/atoms";
-import AddClubMemModal from "@/components/Modals/ClubModal/AddClubMemModal";
+import AddClubMemberModal from "@/components/Modals/ClubModal/AddClubMemberModal";
 import ModalPortal from "@/components/Modals/ModalPortal";
 import {
   FailResponseModal,
@@ -12,7 +12,7 @@ import {
 } from "@/components/Modals/ResponseModal/ResponseModal";
 import { axiosAddClubMember } from "@/api/axios/axios.custom";
 
-const AddClubMemModalContainer: React.FC<{
+const AddClubMemberModalContainer: React.FC<{
   closeModal: React.MouseEventHandler;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
@@ -50,7 +50,7 @@ const AddClubMemModalContainer: React.FC<{
   return (
     <ModalPortal>
       {!showResponseModal ? (
-        <AddClubMemModal
+        <AddClubMemberModal
           closeModal={props.closeModal}
           handleClickSave={handleClickSave}
           newMemo={newMemo}
@@ -74,4 +74,4 @@ const AddClubMemModalContainer: React.FC<{
   );
 };
 
-export default AddClubMemModalContainer;
+export default AddClubMemberModalContainer;

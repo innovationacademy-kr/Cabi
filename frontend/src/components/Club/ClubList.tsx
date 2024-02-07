@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import MultiToggleSwitch2, {
+import MultiToggleSwitchSeparated, {
   toggleItem,
-} from "@/components/Common/MultiToggleSwitch2";
+} from "@/components/Common/MultiToggleSwitchSeparated";
 import { ClubListReponseType } from "@/types/dto/club.dto";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
@@ -34,7 +34,7 @@ const ClubList = <T,>({
 
   return (
     <ClubListWrapperStyled>
-      <MultiToggleSwitch2
+      <MultiToggleSwitchSeparated
         initialState={toggleType}
         setState={setToggleType}
         toggleList={toggleList}

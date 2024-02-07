@@ -13,7 +13,7 @@ interface MultiToggleSwitchProps<T> {
   // setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const MultiToggleSwitch2 = <T,>({
+const MultiToggleSwitchSeparated = <T,>({
   initialState,
   setState,
   toggleList,
@@ -85,4 +85,4 @@ const WrapperStyled = styled.div`
   }
 `;
 
-export default MultiToggleSwitch2;
+export default MultiToggleSwitchSeparated;

@@ -13,7 +13,7 @@ import IconType from "@/types/enum/icon.type.enum";
 import { axiosDeleteClubMember } from "@/api/axios/axios.custom";
 import useMenu from "@/hooks/useMenu";
 
-const DeleteClubMemModal: React.FC<{
+const DeleteClubMemberModal: React.FC<{
   closeModal: React.MouseEventHandler;
   clubId: number;
   targetMember: ClubUserResponseDto;
@@ -80,4 +80,4 @@ const DeleteClubMemModal: React.FC<{
   );
 };
 
-export default DeleteClubMemModal;
+export default DeleteClubMemberModal;

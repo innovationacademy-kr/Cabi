@@ -4,8 +4,8 @@ import {
   TClubModalState,
 } from "@/components/Club/ClubMemberInfoArea/ClubMemberInfoArea.container";
 import Button from "@/components/Common/Button";
-import DeleteClubMemModal from "@/components/Modals/ClubModal/DeleteClubMemModal";
-import MandateClubMemModal from "@/components/Modals/ClubModal/MandateClubMemModal";
+import DeleteClubMemberModal from "@/components/Modals/ClubModal/DeleteClubMemberModal";
+import MandateClubMemberModal from "@/components/Modals/ClubModal/MandateClubMemberModal";
 import {
   cabinetIconSrcMap,
   cabinetLabelColorMap,
@@ -96,14 +96,14 @@ const ClubMemberInfoArea = ({
         )}
       </ClubMemberInfoAreaStyled>
       {clubModal.mandateModal ? (
-        <MandateClubMemModal
+        <MandateClubMemberModal
           closeModal={() => closeModal("mandateModal")}
           clubId={selectedClubInfo.clubId}
           targetMember={selectedClubMemberInfo}
           clubName={selectedClubInfo.clubName}
         />
       ) : clubModal.deleteModal ? (
-        <DeleteClubMemModal
+        <DeleteClubMemberModal
           closeModal={() => closeModal("deleteModal")}
           clubId={selectedClubInfo.clubId}
           targetMember={selectedClubMemberInfo}
