@@ -1,6 +1,7 @@
 package org.ftclub.cabinet.club.domain;
 
 import java.time.LocalDateTime;
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -57,20 +58,21 @@ public class ClubLentHistory {
 	@Column(name = "STARTED_AT", nullable = false, updatable = false)
 	private LocalDateTime startedAt;
 
+	@Nullable
 	@Column(name = "ENDED_AT")
 	private LocalDateTime endedAt;
 
 	@Column(name = "EXPIRED_AT")
 	private LocalDateTime expiredAt;
 
-	protected ClubLentHistory(Long clubId, Long cabinetId, LocalDateTime endedAt) {
+	protected ClubLentHistory(Long clubId, Long cabinetId, LocalDateTime expiredAt) {
 		this.clubId = clubId;
 		this.cabinetId = cabinetId;
-		this.endedAt = endedAt;
+		this.expiredAt = expiredAt;
 	}
 
-	public static ClubLentHistory of(Long clubId, Long cabinetId, LocalDateTime endedAt) {
-		ClubLentHistory clubLentHistory = new ClubLentHistory(clubId, cabinetId, endedAt);
+	public static ClubLentHistory of(Long clubId, Long cabinetId, LocalDateTime expiredAt) {
+		ClubLentHistory clubLentHistory = new ClubLentHistory(clubId, cabinetId, expiredAt);
 		if (!clubLentHistory.isValid()) {
 			throw ExceptionStatus.INVALID_ARGUMENT.asDomainException();
 		}
@@ -78,7 +80,7 @@ public class ClubLentHistory {
 	}
 
 	private boolean isValid() {
-		return clubId != null && cabinetId != null;
+		return clubId != null && cabinetId != null && expiredAt != null;
 	}
 
 	@Logging(level = LogLevel.DEBUG)
