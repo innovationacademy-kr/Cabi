@@ -24,33 +24,23 @@ const ClubMemoModal = ({
         </WriteModeButtonStyled>
         <H2Styled>동아리 메모</H2Styled>
         <ContentSectionStyled>
-          <ContentItemSectionStyled>
-            <ContentItemWrapperStyled>
-              <ContentItemInputStyled
-                onChange={handleChange}
-                placeholder={clubNotice}
-                mode={mode}
-                defaultValue={clubNotice}
-                readOnly={mode === "read" ? true : false}
-                ref={newMemo}
-                maxLength={CLUB_MEMO_MAX_LENGTH}
-              ></ContentItemInputStyled>
-              <ContentItemWrapperStyledBottomStyled>
-                {charCount <= CLUB_MEMO_MAX_LENGTH && (
-                  <LengthCountStyled>
-                    {charCount} / {CLUB_MEMO_MAX_LENGTH}
-                  </LengthCountStyled>
-                )}
-                {charCount > CLUB_MEMO_MAX_LENGTH && (
-                  <LengthCountStyled>
-                    {CLUB_MEMO_MAX_LENGTH} / {CLUB_MEMO_MAX_LENGTH}
-                  </LengthCountStyled>
-                )}
-              </ContentItemWrapperStyledBottomStyled>
-            </ContentItemWrapperStyled>
-          </ContentItemSectionStyled>
+          <ContentItemTextAreaStyled
+            onChange={handleChange}
+            placeholder={clubNotice}
+            mode={mode}
+            defaultValue={clubNotice}
+            readOnly={mode === "read" ? true : false}
+            ref={newMemo}
+            maxLength={CLUB_MEMO_MAX_LENGTH}
+          />
+          <ContentItemWrapperStyledBottomStyled>
+            {charCount <= CLUB_MEMO_MAX_LENGTH && (
+              <LengthCountStyled>
+                {charCount} / {CLUB_MEMO_MAX_LENGTH}
+              </LengthCountStyled>
+            )}
+          </ContentItemWrapperStyledBottomStyled>
         </ContentSectionStyled>
-        <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
         <ButtonWrapperStyled mode={mode}>
           {mode === "write" && (
             <Button onClick={tryMemoRequest} text="저장" theme="fill" />
@@ -99,40 +89,29 @@ const H2Styled = styled.h2`
 const ContentSectionStyled = styled.section`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-`;
-
-const ContentItemSectionStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
   width: 100%;
+  height: 200px;
+  margin-bottom: 20px;
 `;
 
-const ContentItemWrapperStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 5px;
-`;
-
-const ContentItemInputStyled = styled.textarea<{
+const ContentItemTextAreaStyled = styled.textarea<{
   mode: string;
 }>`
+  box-sizing: border-box;
   padding: 15px;
+  width: 100%;
   border: 1px solid var(--line-color);
-  height: 160px;
+  height: 100%;
   border-radius: 10px;
-  text-align: start;
   font-size: 1.125rem;
   color: black;
   overflow-y: auto;
   word-break: break-all;
   white-space: pre-wrap;
   line-height: 1.2rem;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
+  resize: none;
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
@@ -184,6 +163,8 @@ const ContentItemWrapperStyledBottomStyled = styled.div`
   width: 100%;
   display: flex;
   justify-content: end;
+  height: 18px;
+  line-height: 18px;
   margin-top: 2px;
 `;
 
@@ -192,8 +173,8 @@ const LengthCountStyled = styled.span`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  margin-top: 0px;
   font-size: 16px;
+  text-align: end;
 `;
 
 export default ClubMemoModal;
