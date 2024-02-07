@@ -76,7 +76,6 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
 
   useEffect(() => {
     if (targetClubInfo) {
-      console.log(targetClubInfo.clubMaster, "!", myInfo.name);
       setImMaster(targetClubInfo.clubMaster === myInfo.name);
     }
   }, [targetClubInfo]);
