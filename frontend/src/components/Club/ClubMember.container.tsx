@@ -32,6 +32,7 @@ const ClubMemberContainer = ({
     addModal: false,
   });
   const { toggleClubMember } = useMenu();
+  const myInfo = useRecoilValue(userState);
   const setTargetClubUser = useSetRecoilState(targetClubUserInfoState);
   const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
 
@@ -76,7 +77,11 @@ const ClubMemberContainer = ({
 
   useEffect(() => {
     if (clubInfo.clubUserCount) {
-      if (members!.length >= clubInfo.clubUserCount) {
+      if (
+        members!.length +
+          (clubInfo.clubMaster.userName !== myInfo.name ? 1 : 0) >=
+        clubInfo.clubUserCount
+      ) {
         setMoreButton(false);
       } else {
         setMoreButton(true);
