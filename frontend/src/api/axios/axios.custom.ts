@@ -172,7 +172,7 @@ export const axiosUpdateClubMemo = async (
     const response = await instance.post(
       `${axiosUpdateClubMemoURL}${clubId}/memo`,
       {
-        clubMemo,
+        memo: clubMemo,
       }
     );
     return response;
