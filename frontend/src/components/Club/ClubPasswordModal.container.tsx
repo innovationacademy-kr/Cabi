@@ -59,9 +59,11 @@ const ClubPasswordModalContainer: React.FC<
     setIsLoading(true);
     try {
       await axiosUpdateClubMemo(clubId, tmpPw);
-      setIsCurrentSectionRender(true);
       setModalTitle("비밀번호 변경 완료");
       setPassword(tmpPw);
+      setTimeout(() => {
+        setIsCurrentSectionRender(true);
+      }, 1000);
     } catch (error: any) {
       setModalTitle("비밀번호 변경 실패");
       setModalContent(error.response.data.message);
