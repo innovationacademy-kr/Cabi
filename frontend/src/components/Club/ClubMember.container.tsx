@@ -32,7 +32,6 @@ const ClubMemberContainer = ({
     addModal: false,
   });
   const { toggleClubMember } = useMenu();
-  const myInfo = useRecoilValue(userState);
   const setTargetClubUser = useSetRecoilState(targetClubUserInfoState);
   const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
 
@@ -88,7 +87,6 @@ const ClubMemberContainer = ({
   return (
     <ClubMember
       clubUserCount={clubInfo.clubUserCount}
-      imMaster={myInfo.name === clubInfo.clubMaster.userName}
       clubModal={clubModal}
       openModal={openModal}
       closeModal={closeModal}
