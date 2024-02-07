@@ -92,7 +92,7 @@ const ContentSectionStyled = styled.section`
   justify-content: space-between;
   width: 100%;
   height: 200px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 `;
 
 const ContentItemTextAreaStyled = styled.textarea<{
@@ -165,7 +165,7 @@ const ContentItemWrapperStyledBottomStyled = styled.div`
   justify-content: end;
   height: 18px;
   line-height: 18px;
-  margin-top: 2px;
+  margin-top: 4px;
 `;
 
 const LengthCountStyled = styled.span`
@@ -173,7 +173,7 @@ const LengthCountStyled = styled.span`
   display: flex;
   flex-direction: column;
   justify-content: end;
-  font-size: 16px;
+  font-size: 14px;
   text-align: end;
 `;
 

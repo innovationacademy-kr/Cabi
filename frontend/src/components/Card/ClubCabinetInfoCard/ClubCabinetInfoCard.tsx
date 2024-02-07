@@ -11,8 +11,10 @@ import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 
 const ClubCabinetInfoCard = ({
   clubInfo,
+  imMaster,
 }: {
   clubInfo: ClubInfoResponseDto;
+  imMaster: boolean;
 }) => {
   const [password, setPassword] = useState<string>(clubInfo.clubMemo || "1111");
   const [showPassword, setShowPassword] = useState(false);
@@ -29,13 +31,17 @@ const ClubCabinetInfoCard = ({
         gridArea={"clubCabinetInfo"}
         width={"350px"}
         height={"240px"}
-        buttons={[
-          {
-            onClick: handleSettingLogoClick,
-            icon: "/src/assets/images/setting.svg",
-            isClickable: true,
-          },
-        ]}
+        buttons={
+          imMaster
+            ? [
+                {
+                  onClick: handleSettingLogoClick,
+                  icon: "/src/assets/images/setting.svg",
+                  isClickable: true,
+                },
+              ]
+            : undefined
+        }
       >
         <>
           <CabinetInfoWrapper>

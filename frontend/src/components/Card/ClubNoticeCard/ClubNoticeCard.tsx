@@ -4,7 +4,13 @@ import Card from "@/components/Card/Card";
 import { CardContentWrapper } from "@/components/Card/CardStyles";
 import ClubMemoModalContainer from "@/components/Modals/ClubModal/ClubMemoModal.container";
 
-const ClubNoticeCard = ({ notice }: { notice: string }) => {
+const ClubNoticeCard = ({
+  notice,
+  imMaster,
+}: {
+  notice: string;
+  imMaster: boolean;
+}) => {
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
   const [text, setText] = useState<string>(notice);
 
@@ -19,13 +25,17 @@ const ClubNoticeCard = ({ notice }: { notice: string }) => {
         gridArea={"clubNotice"}
         width={"350px"}
         height={"240px"}
-        buttons={[
-          {
-            onClick: openModal,
-            icon: "/src/assets/images/edit.svg",
-            isClickable: true,
-          },
-        ]}
+        buttons={
+          imMaster
+            ? [
+                {
+                  onClick: openModal,
+                  icon: "/src/assets/images/edit.svg",
+                  isClickable: true,
+                },
+              ]
+            : undefined
+        }
       >
         <>
           <CardContentWrapper>

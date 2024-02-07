@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import {
   isCurrentSectionRenderState,
   targetClubInfoState,
+  userState,
 } from "@/recoil/atoms";
 import ClubCabinetInfoCard from "@/components/Card/ClubCabinetInfoCard/ClubCabinetInfoCard";
 import ClubNoticeCard from "@/components/Card/ClubNoticeCard/ClubNoticeCard";
@@ -13,6 +14,7 @@ import {
   ClubInfoResponseDto,
   ClubInfoResponseType,
 } from "@/types/dto/club.dto";
+import { UserDto } from "@/types/dto/user.dto";
 import { axiosGetClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
@@ -20,10 +22,13 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
   const prevClubIdRef = useRef(clubId);
   const [clubState, setClubState] = useState({ clubId: 0, page: 0 });
   const [clubInfo, setClubInfo] = useState<ClubInfoResponseType>(undefined);
-  const setTargetClubInfo = useSetRecoilState(targetClubInfoState);
+  const [targetClubInfo, setTargetClubInfo] =
+    useRecoilState(targetClubInfoState);
   const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
     isCurrentSectionRenderState
   );
+  const [myInfo] = useRecoilState<UserDto>(userState);
+  const [imMaster, setImMaster] = useState<boolean>(false);
 
   // NOTE: 컴포넌트가 마운트 될 때, clubId 혹은 isCurrentSectionRender 변경 시마다 실행됩니다.
   useEffect(() => {
@@ -69,6 +74,13 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
     }
   };
 
+  useEffect(() => {
+    if (targetClubInfo) {
+      console.log(targetClubInfo.clubMaster, "!", myInfo.name);
+      setImMaster(targetClubInfo.clubMaster === myInfo.name);
+    }
+  }, [targetClubInfo]);
+
   return (
     <>
       {clubInfo === undefined ? (
@@ -81,8 +93,8 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
         <>
           <TitleStyled>동아리 정보</TitleStyled>
           <CardGridWrapper>
-            <ClubCabinetInfoCard clubInfo={clubInfo} />
-            <ClubNoticeCard notice={clubInfo.clubNotice} />
+            <ClubCabinetInfoCard clubInfo={clubInfo} imMaster={imMaster} />
+            <ClubNoticeCard notice={clubInfo.clubNotice} imMaster={imMaster} />
           </CardGridWrapper>
           <ClubMemberContainer
             clubInfo={clubInfo}
