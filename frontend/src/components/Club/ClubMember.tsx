@@ -53,7 +53,7 @@ const ClubMember: React.FC<{
           ) : null}
           {/* NOTE:  동아리장이 맨 앞에 오도록 배치 */}
           <MemCardStyled
-            bgColor={"var(--sub-color)"}
+            bgColor={"var(--main-color)"}
             onClick={() => {
               selectClubMemberOnClick(master);
             }}
