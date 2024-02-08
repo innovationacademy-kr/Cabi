@@ -39,13 +39,13 @@ public class CqrsService {
 		cqrsRedis.clearBySuffix(BUILDINGS.getValue());
 	}
 
-	public List<BuildingFloorsDto> getBuildingFloors(String building) {
-		return cqrsRedis.get(building + BUILDINGS.getValue(),
+	public List<BuildingFloorsDto> getBuildingFloors() {
+		return cqrsRedis.get(BUILDINGS.getValue(),
 				new TypeReference<List<BuildingFloorsDto>>() {});
 	}
 
 	public void addBuildingFloors(String building, List<Integer> floors) {
-		String key = building + BUILDINGS.getValue();
+		String key = BUILDINGS.getValue();
 		List<BuildingFloorsDto> buildingFloorsDtos =
 				cqrsRedis.get(key, new TypeReference<List<BuildingFloorsDto>>() {});
 		if (buildingFloorsDtos == null) {
