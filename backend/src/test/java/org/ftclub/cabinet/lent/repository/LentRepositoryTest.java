@@ -62,13 +62,14 @@ class LentRepositoryTest {
 	void findByUserId() {
 		// 빌린 기록이 없는 user id
 		long userId = 18L;
-		List<LentHistory> lentHistories = lentRepository.findPaginationByUserId(userId,
+		List<LentHistory> lentHistories = lentRepository.findPaginationByUserIdOrderByStartedAtDesc(
+				userId,
 				PageRequest.of(0, 1)).toList();
 		assertTrue(lentHistories.isEmpty());
 
 		// 빌린 기록이 12개 있는 user id
 		userId = 5L;
-		lentHistories = lentRepository.findPaginationByUserId(userId,
+		lentHistories = lentRepository.findPaginationByUserIdOrderByStartedAtDesc(userId,
 				PageRequest.of(0, 20)).toList();
 		assertEquals(12, lentHistories.size());
 	}

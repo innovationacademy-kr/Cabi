@@ -16,43 +16,44 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Log4j2
 public class AlarmEventHandler {
 
-    private final UserQueryService userQueryService;
-    private final SlackAlarmSender slackAlarmSender;
-    private final EmailAlarmSender emailAlarmSender;
-    private final PushAlarmSender pushAlarmSender;
-    private final AlarmProperties alarmProperties;
+	private final UserQueryService userQueryService;
+	private final SlackAlarmSender slackAlarmSender;
+	private final EmailAlarmSender emailAlarmSender;
+	private final PushAlarmSender pushAlarmSender;
+	private final AlarmProperties alarmProperties;
 
-    @TransactionalEventListener
-    public void handleAlarmEventWithTransactional(TransactionalAlarmEvent transactionalAlarmEvent) {
-        log.info("handleAlarmEventWithTransactional = {}", transactionalAlarmEvent);
-        if (!alarmProperties.getIsProduction()) {
-            log.info("handleAlarmEventWithTransactional is not production");
-            return;
-        }
-        AlarmEvent alarmEvent = (AlarmEvent) transactionalAlarmEvent;
-        eventProceed(alarmEvent);
-    }
+	@TransactionalEventListener
+	public void handleAlarmEventWithTransactional(TransactionalAlarmEvent transactionalAlarmEvent) {
+		log.info("handleAlarmEventWithTransactional = {}", transactionalAlarmEvent);
+		if (!alarmProperties.getIsProduction()) {
+			log.info("handleAlarmEventWithTransactional is not production");
+			return;
+		}
+		AlarmEvent alarmEvent = (AlarmEvent) transactionalAlarmEvent;
+		eventProceed(alarmEvent);
+	}
 
-    @EventListener
-    public void handleAlarmEvent(AlarmEvent alarmEvent) {
-        log.info("handleAlarmEvent = {}", alarmEvent);
-        if (!alarmProperties.getIsProduction()) {
-            return;
-        }
-        eventProceed(alarmEvent);
-    }
+	@EventListener
+	public void handleAlarmEvent(AlarmEvent alarmEvent) {
+		log.info("handleAlarmEvent = {}", alarmEvent);
+		if (!alarmProperties.getIsProduction()) {
+			log.info("handleAlarmEvent is not production");
+			return;
+		}
+		eventProceed(alarmEvent);
+	}
 
-    private void eventProceed(AlarmEvent alarmEvent) {
-        User receiver = userQueryService.getUser(alarmEvent.getReceiverId());
+	private void eventProceed(AlarmEvent alarmEvent) {
+		User receiver = userQueryService.getUser(alarmEvent.getReceiverId());
 
-        if (receiver.isSlackAlarm()) {
-            slackAlarmSender.send(receiver, alarmEvent);
-        }
-        if (receiver.isEmailAlarm()) {
-            emailAlarmSender.send(receiver, alarmEvent);
-        }
-        if (receiver.isPushAlarm()) {
-            pushAlarmSender.send(receiver, alarmEvent);
-        }
-    }
+		if (receiver.isSlackAlarm()) {
+			slackAlarmSender.send(receiver, alarmEvent);
+		}
+		if (receiver.isEmailAlarm()) {
+			emailAlarmSender.send(receiver, alarmEvent);
+		}
+		if (receiver.isPushAlarm()) {
+			pushAlarmSender.send(receiver, alarmEvent);
+		}
+	}
 }
