@@ -44,7 +44,7 @@ public class CqrsService {
 	}
 
 	public void addBuildingFloors(String building, List<Integer> floors) {
-		String key = building + BUILDINGS.getValue();
+		String key = BUILDINGS.getValue();
 		List<BuildingFloorsDto> buildingFloorsDtos =
 				cqrsRedis.get(key, new TypeReference<List<BuildingFloorsDto>>() {});
 		if (buildingFloorsDtos == null) {
