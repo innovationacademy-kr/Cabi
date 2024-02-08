@@ -4,7 +4,12 @@ import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
-import { serverTimeState, userState } from "@/recoil/atoms";
+import {
+  myClubListState,
+  serverTimeState,
+  targetClubInfoState,
+  userState,
+} from "@/recoil/atoms";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import ClubMemberInfoAreaContainer from "@/components/Club/ClubMemberInfoArea/ClubMemberInfoArea.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
@@ -13,9 +18,13 @@ import MapInfoContainer from "@/components/MapInfo/MapInfo.container";
 import OverduePenaltyModal from "@/components/Modals/OverduePenaltyModal/OverduePenaltyModal";
 import TopNav from "@/components/TopNav/TopNav.container";
 import { additionalModalType } from "@/assets/data/maps";
+import {
+  ClubPaginationResponseDto,
+  ClubResponseDto,
+} from "@/types/dto/club.dto";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
 import ColorType from "@/types/enum/color.type.enum";
-import { axiosMyInfo } from "@/api/axios/axios.custom";
+import { axiosMyClubList, axiosMyInfo } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
 
@@ -26,6 +35,10 @@ const Layout = (): JSX.Element => {
   const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
   const setServerTime = useSetRecoilState<Date>(serverTimeState);
   const setUser = useSetRecoilState<UserDto>(userState);
+  const setClubList =
+    useSetRecoilState<ClubPaginationResponseDto>(myClubListState);
+  const setTargetClubInfo =
+    useSetRecoilState<ClubResponseDto>(targetClubInfoState);
   const navigate = useNavigate();
   const location = useLocation();
   const token = getCookie("access_token");
@@ -33,7 +46,6 @@ const Layout = (): JSX.Element => {
   const isRootPath: boolean = location.pathname === "/";
   const isLoginPage: boolean = location.pathname === "/login";
   const isMainPage: boolean = location.pathname === "/main";
-  const isClubProfilePage: boolean = location.pathname === "/profile/clubs";
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -66,6 +78,20 @@ const Layout = (): JSX.Element => {
     }
   };
 
+  const getMyClubList = async () => {
+    try {
+      const response = await axiosMyClubList();
+      const result = response.data.result;
+      const totalLength = response.data.totalLength;
+      if (totalLength !== 0) {
+        setClubList({ result, totalLength } as ClubPaginationResponseDto);
+        setTargetClubInfo(result[0]);
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const savedMainColor = localStorage.getItem("main-color");
   const savedSubColor = localStorage.getItem("sub-color");
   const savedMineColor = localStorage.getItem("mine-color");
@@ -75,6 +101,7 @@ const Layout = (): JSX.Element => {
     if (!token && !isLoginPage) navigate("/login");
     else if (token) {
       getMyInfo();
+      getMyClubList();
       // 서버 시간
       const serverTimer = setInterval(() => {
         setServerTime((prevTime) => new Date(prevTime.getTime() + 1000));

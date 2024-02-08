@@ -14,7 +14,8 @@ interface ILeftMainNav {
   onClickLogoutButton: React.MouseEventHandler;
   onClickLentLogButton: React.MouseEventHandler;
   onClickSearchButton: React.MouseEventHandler;
-  onClickClubButton: React.MouseEventHandler;
+  onClickAdminClubButton: React.MouseEventHandler;
+  onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
   onClickPendingButton: React.MouseEventHandler;
   isAdmin?: boolean;
@@ -29,7 +30,8 @@ const LeftMainNav = ({
   onClickLogoutButton,
   onClickLentLogButton,
   onClickSearchButton,
-  onClickClubButton,
+  onClickAdminClubButton,
+  onClickMainClubButton,
   onClickProfileButton,
   onClickPendingButton,
   isAdmin,
@@ -105,7 +107,7 @@ const LeftMainNav = ({
                     ? "active cabiButton"
                     : " cabiButton"
                 }
-                onClick={onClickClubButton}
+                onClick={onClickAdminClubButton}
               >
                 <CulbImg stroke="var(--gray-color)" />
                 Club
@@ -120,17 +122,30 @@ const LeftMainNav = ({
             </>
           )}
           {!isAdmin && (
-            <BottomBtnStyled
-              className={
-                pathname.includes("profile")
-                  ? "active cabiButton"
-                  : " cabiButton"
-              }
-              onClick={onClickProfileButton}
-            >
-              <ProfileImg stroke="var(--gray-color)" width={32} height={32} />
-              Profile
-            </BottomBtnStyled>
+            <>
+              <BottomBtnStyled
+                className={
+                  pathname.includes("clubs")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickMainClubButton}
+              >
+                <CulbImg stroke="var(--gray-color)" />
+                Clubs
+              </BottomBtnStyled>
+              <BottomBtnStyled
+                className={
+                  pathname.includes("profile")
+                    ? "active cabiButton"
+                    : " cabiButton"
+                }
+                onClick={onClickProfileButton}
+              >
+                <ProfileImg stroke="var(--gray-color)" width={32} height={32} />
+                Profile
+              </BottomBtnStyled>
+            </>
           )}
         </BottomBtnsStyled>
       </BottomSectionStyled>

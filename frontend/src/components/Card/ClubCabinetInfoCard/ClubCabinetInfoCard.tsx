@@ -11,10 +11,10 @@ import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 
 const ClubCabinetInfoCard = ({
   clubInfo,
-  imMaster,
+  isMaster,
 }: {
   clubInfo: ClubInfoResponseDto;
-  imMaster: boolean;
+  isMaster: boolean;
 }) => {
   const [password, setPassword] = useState<string>(clubInfo.clubMemo || "1111");
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +32,7 @@ const ClubCabinetInfoCard = ({
         width={"350px"}
         height={"240px"}
         buttons={
-          imMaster
+          isMaster
             ? [
                 {
                   onClick: handleSettingLogoClick,

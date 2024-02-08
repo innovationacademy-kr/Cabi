@@ -6,10 +6,10 @@ import ClubMemoModalContainer from "@/components/Modals/ClubModal/ClubMemoModal.
 
 const ClubNoticeCard = ({
   notice,
-  imMaster,
+  isMaster,
 }: {
   notice: string;
-  imMaster: boolean;
+  isMaster: boolean;
 }) => {
   const [showMemoModal, setShowMemoModal] = useState<boolean>(false);
   const [text, setText] = useState<string>(notice);
@@ -26,7 +26,7 @@ const ClubNoticeCard = ({
         width={"350px"}
         height={"240px"}
         buttons={
-          imMaster
+          isMaster
             ? [
                 {
                   onClick: openModal,

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import CabinetColorTable from "@/components/LeftNav/CabinetColorTable/CabinetColorTable";
-import { ReactComponent as LinkImg } from "@/assets/images/link.svg";
+import LeftSectionNavClubs from "@/components/LeftNav/LeftSectionNav/LeftSectionNavClubs";
 
 interface ILeftSectionNav {
   isVisible: boolean;
@@ -11,9 +11,9 @@ interface ILeftSectionNav {
   onClickProfile: Function;
   pathname: string;
   onClickLentLogButton: Function;
-  onClickClub: Function;
   onClickSlack: Function;
   onClickClubForm: Function;
+  isClub: boolean;
 }
 
 const LeftSectionNav = ({
@@ -25,9 +25,9 @@ const LeftSectionNav = ({
   onClickProfile,
   pathname,
   onClickLentLogButton,
-  onClickClub,
   onClickSlack,
   onClickClubForm,
+  isClub,
 }: ILeftSectionNav) => {
   return (
     <>
@@ -69,16 +69,6 @@ const LeftSectionNav = ({
         >
           대여 기록
         </FloorSectionStyled>
-        <FloorSectionStyled
-          className={
-            pathname.includes("profile/clubs")
-              ? "leftNavButtonActive cabiButton"
-              : " cabiButton"
-          }
-          onClick={() => onClickClub()}
-        >
-          동아리 정보
-        </FloorSectionStyled>
         <hr />
         <SectionLinkStyled
           onClick={() => onClickSlack()}
@@ -95,6 +85,7 @@ const LeftSectionNav = ({
           <img src="/src/assets/images/link.svg" alt="" />
         </SectionLinkStyled>
       </ProfileLeftNavOptionStyled>
+      {isClub && <LeftSectionNavClubs />}
     </>
   );
 };
@@ -131,7 +122,7 @@ const ProfileLeftNavOptionStyled = styled.div<{
   }
 `;
 
-const FloorSectionStyled = styled.div`
+export const FloorSectionStyled = styled.div`
   width: 100%;
   height: 40px;
   line-height: 40px;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import {
   isCurrentSectionRenderState,
@@ -18,8 +18,7 @@ import { UserDto } from "@/types/dto/user.dto";
 import { axiosGetClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
 
-const ClubInfo = ({ clubId }: { clubId: number }) => {
-  const prevClubIdRef = useRef(clubId);
+const ClubInfo = () => {
   const [clubState, setClubState] = useState({ clubId: 0, page: 0 });
   const [clubInfo, setClubInfo] = useState<ClubInfoResponseType>(undefined);
   const [targetClubInfo, setTargetClubInfo] =
@@ -27,26 +26,8 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
   const [isCurrentSectionRender, setIsCurrentSectionRender] = useRecoilState(
     isCurrentSectionRenderState
   );
-  const [myInfo] = useRecoilState<UserDto>(userState);
-  const [imMaster, setImMaster] = useState<boolean>(false);
-
-  // NOTE: 컴포넌트가 마운트 될 때, clubId 혹은 isCurrentSectionRender 변경 시마다 실행됩니다.
-  useEffect(() => {
-    if (clubId !== clubState.clubId || isCurrentSectionRender) {
-      setIsCurrentSectionRender(false);
-      setClubState({ clubId, page: 0 });
-      setClubInfo(undefined);
-      getClubInfo(clubId, 0);
-    }
-    prevClubIdRef.current = clubId;
-  }, [clubId, isCurrentSectionRender]);
-
-  // NOTE: page가 변경되고 clubId는 변경되지 않았을 때 실행됩니다.
-  useEffect(() => {
-    if (clubState.page !== 0 && clubState.clubId === prevClubIdRef.current) {
-      getClubInfo(clubState.clubId, clubState.page);
-    }
-  }, [clubState.page]);
+  const myInfo = useRecoilValue<UserDto>(userState);
+  const prevClubIdRef = useRef(targetClubInfo.clubId);
 
   const setPage = (newPage: number) => {
     setClubState((prevState) => ({ ...prevState, page: newPage }));
@@ -66,19 +47,34 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
       });
       setTimeout(() => {
         setClubInfo(data);
-      }, 500);
+      }, 0);
     } catch {
       setTimeout(() => {
         setClubInfo(STATUS_400_BAD_REQUEST);
-      }, 500);
+      }, 0);
     }
   };
 
+  // NOTE: 컴포넌트가 마운트 될 때, targetClubInfo.clubId 혹은 isCurrentSectionRender 변경 시마다 실행됩니다.
   useEffect(() => {
-    if (targetClubInfo) {
-      setImMaster(targetClubInfo.clubMaster === myInfo.name);
+    if (targetClubInfo.clubId !== clubState.clubId || isCurrentSectionRender) {
+      setIsCurrentSectionRender(false);
+      setClubState({
+        clubId: targetClubInfo.clubId,
+        page: 0,
+      });
+      setClubInfo(undefined);
+      getClubInfo(targetClubInfo.clubId, 0);
     }
-  }, [targetClubInfo]);
+    prevClubIdRef.current = targetClubInfo.clubId;
+  }, [targetClubInfo.clubId, isCurrentSectionRender]);
+
+  // NOTE: page가 변경되고 clubId는 변경되지 않았을 때 실행됩니다.
+  useEffect(() => {
+    if (clubState.page !== 0 && clubState.clubId === prevClubIdRef.current) {
+      getClubInfo(clubState.clubId, clubState.page);
+    }
+  }, [clubState.page]);
 
   return (
     <>
@@ -89,18 +85,24 @@ const ClubInfo = ({ clubId }: { clubId: number }) => {
           동아리 사물함이 없어요
         </EmptyClubCabinetTextStyled>
       ) : (
-        <>
+        <ClubInfoWrapperStyled>
           <TitleStyled>동아리 정보</TitleStyled>
           <CardGridWrapper>
-            <ClubCabinetInfoCard clubInfo={clubInfo} imMaster={imMaster} />
-            <ClubNoticeCard notice={clubInfo.clubNotice} imMaster={imMaster} />
+            <ClubCabinetInfoCard
+              clubInfo={clubInfo}
+              isMaster={targetClubInfo.clubMaster === myInfo.name}
+            />
+            <ClubNoticeCard
+              notice={clubInfo.clubNotice}
+              isMaster={targetClubInfo.clubMaster === myInfo.name}
+            />
           </CardGridWrapper>
           <ClubMemberContainer
             clubInfo={clubInfo}
             page={clubState.page}
             setPage={setPage}
           />
-        </>
+        </ClubInfoWrapperStyled>
       )}
     </>
   );
@@ -120,10 +122,11 @@ const EmptyClubCabinetTextStyled = styled.div`
 const ClubInfoWrapperStyled = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 100%;
+  margin-top: 2rem;
 `;
 
 const TitleStyled = styled.div`

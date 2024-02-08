@@ -12,6 +12,7 @@ import {
 } from "@/types/dto/cabinet.dto";
 import {
   ClubCabinetInfo,
+  ClubPaginationResponseDto,
   ClubResponseDto,
   ClubUserResponseDto,
 } from "@/types/dto/club.dto";
@@ -173,6 +174,15 @@ export const selectedClubInfoState = atom<ClubUserDto | null>({
 export const serverTimeState = atom<Date>({
   key: "serverTime",
   default: new Date(),
+});
+
+/* Club */
+export const myClubListState = atom<ClubPaginationResponseDto>({
+  key: "myClubList",
+  default: {
+    result: [],
+    totalLength: 0,
+  },
 });
 
 export const targetClubInfoState = atom<ClubResponseDto>({
