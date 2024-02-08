@@ -17,7 +17,7 @@ interface ILeftMainNav {
   onClickAdminClubButton: React.MouseEventHandler;
   onClickMainClubButton: React.MouseEventHandler;
   onClickProfileButton: React.MouseEventHandler;
-  onClickPendingButton: React.MouseEventHandler;
+  onClickAvailableButton: React.MouseEventHandler;
   isAdmin?: boolean;
 }
 
@@ -33,7 +33,7 @@ const LeftMainNav = ({
   onClickAdminClubButton,
   onClickMainClubButton,
   onClickProfileButton,
-  onClickPendingButton,
+  onClickAvailableButton,
   isAdmin,
 }: ILeftMainNav) => {
   return (
@@ -66,11 +66,11 @@ const LeftMainNav = ({
             ))}
           <TopBtnStyled
             className={
-              pathname.includes("pending")
+              pathname.includes("available")
                 ? "leftNavButtonActive cabiButton"
                 : "cabiButton"
             }
-            onClick={onClickPendingButton}
+            onClick={onClickAvailableButton}
           >
             사용가능
           </TopBtnStyled>

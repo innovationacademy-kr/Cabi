@@ -699,10 +699,10 @@ export const axiosCancel = async (cabinetId: number | null): Promise<any> => {
   }
 };
 
-const axiosGetPendingCabinetsURL = "/v4/cabinets/buildings/새롬관/available";
-export const axiosGetPendingCabinets = async (): Promise<any> => {
+const axiosGetAvailableCabinetsURL = "/v4/cabinets/buildings/새롬관/available";
+export const axiosGetAvailableCabinets = async (): Promise<any> => {
   try {
-    const response = await instance.get(axiosGetPendingCabinetsURL);
+    const response = await instance.get(axiosGetAvailableCabinetsURL);
     return response;
   } catch (error) {
     throw error;

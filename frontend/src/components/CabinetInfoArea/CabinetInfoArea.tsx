@@ -164,7 +164,9 @@ const CabinetInfoArea: React.FC<{
               <CountTimeContainer isMine={false} />
             )}
             {selectedCabinetInfo.status == "PENDING" && (
-              <PendingMessageStyled>매일 13:00 오픈됩니다</PendingMessageStyled>
+              <AvailableMessageStyled>
+                매일 13:00 오픈됩니다
+              </AvailableMessageStyled>
             )}
           </>
         )}
@@ -423,7 +425,7 @@ const CabinetLentDateInfoStyled = styled.div<{ textColor: string }>`
   text-align: center;
 `;
 
-const PendingMessageStyled = styled.p`
+const AvailableMessageStyled = styled.p`
   font-size: 1rem;
   margin-top: 8px;
   text-align: center;

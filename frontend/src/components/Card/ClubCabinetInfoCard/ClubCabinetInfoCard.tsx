@@ -6,7 +6,7 @@ import {
   CardContentWrapper,
   ContentDeatilStyled,
 } from "@/components/Card/CardStyles";
-import ClubPasswordModalContainer from "@/components/Club/ClubPasswordModal.container";
+import ClubPasswordModalContainer from "@/components/Modals/ClubModal/ClubPasswordModal.container";
 import { ClubInfoResponseDto } from "@/types/dto/club.dto";
 
 const ClubCabinetInfoCard = ({

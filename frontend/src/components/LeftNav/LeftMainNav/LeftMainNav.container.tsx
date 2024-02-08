@@ -129,8 +129,8 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
     closeAll();
   };
 
-  const onClickPendingButton = () => {
-    navigator("pending");
+  const onClickAvailableButton = () => {
+    navigator("available");
     closeAll();
   };
 
@@ -165,7 +165,7 @@ const LeftMainNavContainer = ({ isAdmin }: { isAdmin?: boolean }) => {
       onClickAdminClubButton={onClickAdminClubButton}
       onClickMainClubButton={onClickMainClubButton}
       onClickProfileButton={onClickProfileButton}
-      onClickPendingButton={onClickPendingButton}
+      onClickAvailableButton={onClickAvailableButton}
       isAdmin={isAdmin}
     />
   );
