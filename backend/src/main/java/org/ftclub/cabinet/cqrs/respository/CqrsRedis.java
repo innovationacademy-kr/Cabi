@@ -48,6 +48,14 @@ public class CqrsRedis {
 		this.objectMapper = objectMapper;
 	}
 
+	/**
+	 * JSON 문자열을 DTO로 변환한다.
+	 *
+	 * @param value         변환할 JSON 문자열
+	 * @param typeReference DTO 변환을 위한 제네릭 타입 레퍼런스
+	 * @param <T>           반환하는 제네릭 타입
+	 * @return 변환된 DTO
+	 */
 	private <T> T stringToDto(String value, TypeReference<T> typeReference) {
 
 		if (value == null) {
@@ -61,6 +69,13 @@ public class CqrsRedis {
 		}
 	}
 
+	/**
+	 * DTO를 JSON 문자열로 변환한다.
+	 *
+	 * @param dto 변환할 DTO
+	 * @param <T> DTO의 제네릭 타입
+	 * @return 변환된 JSON 문자열
+	 */
 	private <T> String dtoToString(T dto) {
 		if (dto == null) {
 			return null;
@@ -73,14 +88,33 @@ public class CqrsRedis {
 		}
 	}
 
+	/**
+	 * key에 해당하는 데이터를 삭제한다.
+	 *
+	 * @param key Redis key
+	 */
 	public void clear(String key) {
 		redisTemplate.delete(key);
 	}
 
+	/**
+	 * key에 해당하는 hash의 subKey에 해당하는 데이터를 삭제한다.
+	 *
+	 * @param key    Redis key
+	 * @param subKey Redis subKey
+	 */
 	public void clearHash(String key, String subKey) {
 		hashTemplate.delete(key, subKey);
 	}
 
+	/**
+	 * suffix로 끝나는 key에 해당하는 데이터를 삭제한다.
+	 * <p>
+	 * Redis Scan을 통해 조회하여 삭제한다.
+	 * </p>
+	 *
+	 * @param suffix 삭제할 key의 suffix
+	 */
 	public void clearBySuffix(String suffix) {
 		ScanOptions options =
 				ScanOptions.scanOptions().match("*" + suffix).count(200).build();
@@ -91,15 +125,45 @@ public class CqrsRedis {
 		}
 	}
 
+	/**
+	 * key에 해당하는 데이터를 조회하여 제네릭 타입으로 반환한다.
+	 *
+	 * @param key           Redis key
+	 * @param typeReference DTO 변환을 위한 제네릭 타입 레퍼런스
+	 * @param <T>           반환하는 제네릭 타입
+	 * @return 조회 후 변환된 DTO 객체
+	 */
 	public <T> T get(String key, TypeReference<T> typeReference) {
 		String value = valueTemplate.get(key);
 		return stringToDto(value, typeReference);
 	}
 
+	/**
+	 * key에 해당하는 hash의 subKey에 해당하는 데이터를 조회하여 제네릭 타입으로 반환한다.
+	 *
+	 * @param key           Redis key
+	 * @param subKey        Redis subKey
+	 * @param typeReference DTO 변환을 위한 제네릭 타입 레퍼런스
+	 * @param <T>           반환하는 제네릭 타입
+	 * @return 조회 후 변환된 DTO 객체
+	 */
 	public <T> T getHash(String key, String subKey, TypeReference<T> typeReference) {
 		return stringToDto(hashTemplate.get(key, subKey), typeReference);
 	}
 
+	/**
+	 * key에 해당하는 hash의 모든 entry를 조회하여 제네릭 타입 Map으로 반환한다.
+	 * <p>
+	 * 반환하는 Map의 key와 value 모두 제네릭 타입으로 반환한다.
+	 * </p>
+	 *
+	 * @param key                Redis key
+	 * @param keyTypeReference   DTO 변환을 위한 key의 제네릭 타입 레퍼런스
+	 * @param valueTypeReference DTO 변환을 위한 value의 제네릭 타입 레퍼런스
+	 * @param <K>                key의 제네릭 타입
+	 * @param <V>                value의 제네릭 타입
+	 * @return Map<K, V>
+	 */
 	public <K, V> Map<K, V> getHashEntries(String key, TypeReference<K> keyTypeReference,
 			TypeReference<V> valueTypeReference) {
 		Map<String, String> entries = hashTemplate.entries(key);
@@ -111,19 +175,44 @@ public class CqrsRedis {
 		return result;
 	}
 
-	public <R> Map<String, R> getHashEntries(String key, TypeReference<R> typeReference) {
+	/**
+	 * key에 해당하는 hash의 모든 entry를 조회하여 제네릭 타입 Map으로 반환한다.
+	 * <p>
+	 * 반환하는 Map의 value만 제네릭 타입으로 반환하고 key 타입은 조회한 String 그대로 반환한다.
+	 * </p>
+	 *
+	 * @param key           Redis key
+	 * @param typeReference DTO 변환을 위한 key의 제네릭 타입 레퍼런스
+	 * @param <T>           value의 제네릭 타입
+	 * @return Map<K, V>
+	 */
+	public <T> Map<String, T> getHashEntries(String key, TypeReference<T> typeReference) {
 		Map<String, String> entries = hashTemplate.entries(key);
-		Map<String, R> result = new HashMap<>();
+		Map<String, T> result = new HashMap<>();
 		for (Map.Entry<String, String> entry : entries.entrySet()) {
 			result.put(entry.getKey(), this.stringToDto(entry.getValue(), typeReference));
 		}
 		return result;
 	}
 
+	/**
+	 * key에 해당하는 데이터를 저장한다.
+	 *
+	 * @param key   Redis key
+	 * @param value 저장할 DTO 객체
+	 * @param <T>   DTO의 제네릭 타입
+	 */
 	public <T> void set(String key, T value) {
 		redisTemplate.opsForValue().set(key, dtoToString(value));
 	}
 
+	/**
+	 * key에 해당하는 hash의 subKey에 해당하는 데이터를 저장한다.
+	 *
+	 * @param key    Redis key
+	 * @param subKey Redis subKey
+	 * @param value  저장할 DTO 객체
+	 */
 	public void setHash(String key, String subKey, Object value) {
 		hashTemplate.put(key, subKey, dtoToString(value));
 	}
