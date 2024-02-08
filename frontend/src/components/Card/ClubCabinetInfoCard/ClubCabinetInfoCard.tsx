@@ -40,7 +40,15 @@ const ClubCabinetInfoCard = ({
                   isClickable: true,
                 },
               ]
-            : undefined
+            : [
+                // NOTE: 이 부분은 레이아웃을 유지하기 위한 placeholder 버튼입니다.
+                {
+                  backgroundColor: "var(--lightgray-color)",
+                  onClick: () => {},
+                  icon: "",
+                  isClickable: false,
+                },
+              ]
         }
       >
         <>
