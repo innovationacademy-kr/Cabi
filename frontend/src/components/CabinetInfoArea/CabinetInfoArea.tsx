@@ -14,6 +14,7 @@ import LentModal from "@/components/Modals/LentModal/LentModal";
 import MemoModalContainer from "@/components/Modals/MemoModal/MemoModal.container";
 import PasswordCheckModalContainer from "@/components/Modals/PasswordCheckModal/PasswordCheckModal.container";
 import ReturnModal from "@/components/Modals/ReturnModal/ReturnModal";
+import SwapModal from "@/components/Modals/SwapModal/SwapModal";
 import UnavailableModal from "@/components/Modals/UnavailableModal/UnavailableModal";
 import {
   additionalModalType,
@@ -26,7 +27,6 @@ import { ReactComponent as ExtensionImg } from "@/assets/images/extensionTicket.
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import CabinetStatus from "@/types/enum/cabinet.status.enum";
 import CabinetType from "@/types/enum/cabinet.type.enum";
-import SwapModal from "../Modals/SwapModal/SwapModal";
 
 const CabinetInfoArea: React.FC<{
   selectedCabinetInfo: ISelectedCabinetInfo | null;
