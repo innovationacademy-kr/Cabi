@@ -67,6 +67,11 @@ public class CqrsManager {
 	private void syncAll(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
 		this.syncAvailableCabinet(cabinet);
 		this.syncCabinetPerSection(cabinet, cabinetLentHistories);
+		this.syncCabinetInfo(cabinet, cabinetLentHistories);
+	}
+
+	private void syncCabinetInfo(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
+		cqrsService.addCabinetInfo(cabinet, cabinetLentHistories);
 	}
 
 	private void syncBuildingsAndFloors() {
@@ -108,8 +113,7 @@ public class CqrsManager {
 	}
 
 	private void syncCabinetPerSection(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
-		// TODO: 구현 필요
-		cqrsService.addCabinetPerSection(cabinet, cabinetLentHistories);
 		// User도 Join으로 영속화 해둔 상태이기 때문에, LentHistory.getUser()를 사용하여 User 정보를 가져올 수 있음
+		cqrsService.addCabinetPerSection(cabinet, cabinetLentHistories);
 	}
 }

@@ -2,26 +2,37 @@ package org.ftclub.cabinet.cqrs.service;
 
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.AVAILABLE_CABINET;
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.BUILDINGS;
+import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.CABINET_INFO;
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.CABINET_PER_SECTION;
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.FLOORS;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.domain.Location;
+import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.cqrs.respository.CqrsRedis;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetAvailableResponseDto;
+import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPreviewDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
+import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.service.ClubLentQueryService;
+import org.ftclub.cabinet.lent.service.LentRedisService;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
+import org.ftclub.cabinet.mapper.LentMapper;
+import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,8 +41,13 @@ import org.springframework.stereotype.Service;
 public class CqrsService {
 
 	private final CqrsRedis cqrsRedis;
+	private final LentRedisService lentRedisService;
 
 	private final CabinetMapper cabinetMapper;
+	private final LentMapper lentMapper;
+
+	private final UserQueryService userQueryService;
+	private final ClubLentQueryService clubLentQueryService;
 
 
 	//@formatter:off
@@ -142,5 +158,45 @@ public class CqrsService {
 
 		cqrsRedis.setHash(building + floor + CABINET_PER_SECTION.getValue(), section, cabinetPreviewDtos);
 	}
+	public void addCabinetInfo(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
+
+		Long cabinetId = cabinet.getId();
+			String key = cabinetId + CABINET_INFO.getValue();
+			List<LentDto> lents;
+
+		if (cabinet.getLentType().equals(LentType.CLUB)) {
+			lents=new ArrayList<>();
+			ClubLentHistory activeClubLentHistory = clubLentQueryService.findActiveLentHistoryWithClub(
+					cabinetId);
+			if (activeClubLentHistory != null) {
+				lents.add(lentMapper.toLentDto(activeClubLentHistory));
+			}
+		}
+		else {
+		lents = cabinetLentHistories.stream()
+				.map(lentHistory -> lentMapper.toLentDto(lentHistory.getUser(),lentHistory))
+				.collect(Collectors.toList());
+
+			// 공유사물함 (세션중) 인 경우
+			if (lents.isEmpty()) {
+				List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
+				List<User> users = userQueryService.findUsers(usersInCabinet);
+				users.forEach(user -> lents.add(
+						LentDto.builder().userId(user.getId()).name(user.getName()).build()));
+			}
+		}
+
+		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
+		CabinetInfoResponseDto cabinetInfoResponseDto = cabinetMapper.toCabinetInfoResponseDto(cabinet, lents, sessionExpiredAt);
+
+		cqrsRedis.set(key, cabinetInfoResponseDto);
+    }
 	//@formatter:on
+
+	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
+		CabinetInfoResponseDto cabinetInfoResponseDto = cqrsRedis.get(
+				cabinetId + CABINET_INFO.getValue(), new TypeReference<CabinetInfoResponseDto>() {
+				});
+		return cabinetInfoResponseDto;
+	}
 }

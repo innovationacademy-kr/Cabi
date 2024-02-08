@@ -1,7 +1,5 @@
 package org.ftclub.cabinet.cabinet.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +9,6 @@ import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.club.domain.Club;
-import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.club.service.ClubQueryService;
 import org.ftclub.cabinet.cqrs.service.CqrsService;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
@@ -20,7 +17,6 @@ import org.ftclub.cabinet.dto.CabinetDto;
 import org.ftclub.cabinet.dto.CabinetInfoResponseDto;
 import org.ftclub.cabinet.dto.CabinetPaginationDto;
 import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
-import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -32,7 +28,6 @@ import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
-import org.ftclub.cabinet.user.domain.User;
 import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,12 +59,14 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public List<BuildingFloorsDto> getBuildingFloorsResponse() {
-		List<String> allBuildings = cabinetQueryService.findAllBuildings();
-		return allBuildings.stream()
-				.map(building -> cabinetMapper.toBuildingFloorsDto(building,
-						cabinetQueryService.findAllFloorsByBuilding(building))
-				)
-				.collect(Collectors.toList());
+//		List<String> allBuildings = cabinetQueryService.findAllBuildings();
+//		return allBuildings.stream()
+//				.map(building -> cabinetMapper.toBuildingFloorsDto(building,
+//						cabinetQueryService.findAllFloorsByBuilding(building))
+//				)
+//				.collect(Collectors.toList());
+		List<BuildingFloorsDto> buildingFloors = cqrsService.getBuildingFloors();
+		return buildingFloors;
 	}
 
 	/**
@@ -80,33 +77,35 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public CabinetInfoResponseDto getCabinetInfo(Long cabinetId) {
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
-		if (cabinet.getLentType().equals(LentType.CLUB)) {
-			ClubLentHistory activeClubLentHistory =
-					clubLentQueryService.findActiveLentHistoryWithClub(cabinetId);
-			List<LentDto> lentDtos = new ArrayList<>();
-			if (activeClubLentHistory != null) {
-				lentDtos.add(lentMapper.toLentDto(activeClubLentHistory));
-			}
-			LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
-			return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
-		}
-		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
-				cabinetId);
-		List<LentDto> lentDtos = cabinetActiveLentHistories.stream()
-				.map(lentHistory -> lentMapper.toLentDto(lentHistory.getUser(), lentHistory))
-				.collect(Collectors.toList());
 
-		if (lentDtos.isEmpty()) {
-			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
-			List<User> users = userQueryService.findUsers(usersInCabinet);
-			users.forEach(user -> lentDtos.add(
-					LentDto.builder().userId(user.getId()).name(user.getName()).build()
-			));
-		}
-		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
+//		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+//		if (cabinet.getLentType().equals(LentType.CLUB)) {
+//			ClubLentHistory activeClubLentHistory = clubLentQueryService.findActiveLentHistoryWithClub(
+//					cabinetId);
+//			List<LentDto> lentDtos = new ArrayList<>();
+//			if (activeClubLentHistory != null) {
+//				lentDtos.add(lentMapper.toLentDto(activeClubLentHistory));
+//			}
+//			LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
+//			return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
+//		}
+//		List<LentHistory> cabinetActiveLentHistories = lentQueryService.findCabinetActiveLentHistories(
+//				cabinetId);
+//		List<LentDto> lentDtos = cabinetActiveLentHistories.stream()
+//				.map(lentHistory -> lentMapper.toLentDto(lentHistory.getUser(), lentHistory))
+//				.collect(Collectors.toList());
+//
+//		if (lentDtos.isEmpty()) {
+//			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
+//			List<User> users = userQueryService.findUsers(usersInCabinet);
+//			users.forEach(user -> lentDtos.add(
+//					LentDto.builder().userId(user.getId()).name(user.getName()).build()));
+//		}
+//		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
+//
+//		return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
 
-		return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
+		return cqrsService.getCabinetInfo(cabinetId);
 	}
 
 
@@ -168,19 +167,20 @@ public class CabinetFacadeService {
 
 	/**
 	 * 사물함의 제목을 가져오고, 기존 제목이 없다면 대여한 유저의 이름을 반환합니다
+	 * REDIS 로 이동
 	 *
 	 * @param cabinet       제목을 가져올 사물함
 	 * @param lentHistories 사물함의 대여기록
 	 * @return 사물함 제목
 	 */
-	private String getCabinetTitle(Cabinet cabinet, List<LentHistory> lentHistories) {
-		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
-			return cabinet.getTitle();
-		} else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
-			return lentHistories.get(0).getUser().getName();
-		}
-		return null;
-	}
+//	private String getCabinetTitle(Cabinet cabinet, List<LentHistory> lentHistories) {
+//		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
+//			return cabinet.getTitle();
+//		} else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
+//			return lentHistories.get(0).getUser().getName();
+//		}
+//		return null;
+//	}
 
 	/**
 	 * 빌딩에 있는 모든 PENDING 상태의 사물함을 가져옵니다.
@@ -236,8 +236,8 @@ public class CabinetFacadeService {
 	public CabinetPaginationDto getCabinetPaginationByStatus(CabinetStatus status,
 			Pageable pageable) {
 		Page<Cabinet> cabinets = cabinetQueryService.findAllByStatus(status, pageable);
-		List<CabinetDto> result = cabinets.stream()
-				.map(cabinetMapper::toCabinetDto).collect(Collectors.toList());
+		List<CabinetDto> result = cabinets.stream().map(cabinetMapper::toCabinetDto)
+				.collect(Collectors.toList());
 		return cabinetMapper.toCabinetPaginationDtoList(result, cabinets.getTotalElements());
 	}
 
