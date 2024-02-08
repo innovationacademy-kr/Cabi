@@ -10,7 +10,7 @@ import {
   FailResponseModal,
   SuccessResponseModal,
 } from "@/components//Modals/ResponseModal/ResponseModal";
-import ClubPasswordModal from "@/components/Modals/PasswordCheckModal/ClubPasswordModal";
+import ClubPasswordModal from "@/components/Modals/ClubModal/ClubPasswordModal";
 import { modalPropsMap } from "@/assets/data/maps";
 import IconType from "@/types/enum/icon.type.enum";
 import { axiosUpdateClubMemo } from "@/api/axios/axios.custom";

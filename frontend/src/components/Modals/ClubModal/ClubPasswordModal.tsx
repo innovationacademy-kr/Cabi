@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { ClubPasswordModalInterface } from "@/components/Club/ClubPasswordModal.container";
 import Button from "@/components/Common/Button";
+import { ClubPasswordModalInterface } from "@/components/Modals/ClubModal/ClubPasswordModal.container";
 import { ReactComponent as CheckIcon } from "@/assets/images/checkIcon.svg";
 
 const ClubPasswordModal: React.FC<ClubPasswordModalInterface> = ({
