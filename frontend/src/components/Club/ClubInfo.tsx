@@ -47,11 +47,11 @@ const ClubInfo = () => {
       });
       setTimeout(() => {
         setClubInfo(data);
-      }, 0);
+      }, 500);
     } catch {
       setTimeout(() => {
         setClubInfo(STATUS_400_BAD_REQUEST);
-      }, 0);
+      }, 500);
     }
   };
 
@@ -83,6 +83,9 @@ const ClubInfo = () => {
       ) : clubInfo === STATUS_400_BAD_REQUEST ? (
         <EmptyClubCabinetTextStyled>
           동아리 사물함이 없어요
+          <SadCcabiStyled>
+            <img src="/src/assets/images/sadCcabi.png" />
+          </SadCcabiStyled>
         </EmptyClubCabinetTextStyled>
       ) : (
         <ClubInfoWrapperStyled>
@@ -114,9 +117,21 @@ const EmptyClubCabinetTextStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
-  /* color: var(--gray-color); */
+  font-size: 1.125rem;
+  color: var(--gray-color);
   /* margin-top: 20px; */
+`;
+
+const SadCcabiStyled = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+
+  img {
+    width: 30px;
+    aspect-ratio: 1 / 1;
+    margin-left: 8px;
+  }
 `;
 
 const ClubInfoWrapperStyled = styled.div`
