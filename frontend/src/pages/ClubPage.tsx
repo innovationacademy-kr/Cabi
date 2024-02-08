@@ -1,12 +1,18 @@
+import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { myClubListState } from "@/recoil/atoms";
 import ClubInfo from "@/components/Club/ClubInfo";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
 import { ClubPaginationResponseDto } from "@/types/dto/club.dto";
+import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
 const ClubPage = () => {
   const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
+
+  useEffect(() => {
+    deleteRecoilPersistFloorSection();
+  }, []);
 
   return (
     <WrapperStyled>
