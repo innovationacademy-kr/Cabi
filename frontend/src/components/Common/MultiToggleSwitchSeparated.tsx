@@ -10,15 +10,13 @@ interface MultiToggleSwitchProps<T> {
   initialState: T;
   setState: React.Dispatch<React.SetStateAction<T>>;
   toggleList: toggleItem[];
-  // setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const MultiToggleSwitchSeparated = <T,>({
   initialState,
   setState,
   toggleList,
-}: // setPage,
-MultiToggleSwitchProps<T>) => {
+}: MultiToggleSwitchProps<T>) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
