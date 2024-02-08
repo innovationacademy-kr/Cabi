@@ -6,16 +6,19 @@ import {
   ClubPaginationResponseDto,
   ClubResponseDto,
 } from "@/types/dto/club.dto";
+import useMenu from "@/hooks/useMenu";
 
 const LeftSectionNavClubs = () => {
   const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
   const [targetClubInfo, setTargetClubInfo] =
     useRecoilState<ClubResponseDto>(targetClubInfoState);
+  const { closeLeftNav } = useMenu();
 
   return (
     <>
       {clubList.totalLength > 0 && (
         <ClubLeftNavOptionStyled>
+          <ListTitleStyled>내 동아리</ListTitleStyled>
           {clubList.result.map((club: ClubResponseDto, index: number) => (
             <FloorSectionStyled
               key={index}
@@ -24,7 +27,10 @@ const LeftSectionNavClubs = () => {
                   ? "leftNavButtonActive cabiButton"
                   : " cabiButton"
               }
-              onClick={() => setTargetClubInfo(club)}
+              onClick={() => {
+                closeLeftNav();
+                setTargetClubInfo(club);
+              }}
             >
               {club.clubName}
             </FloorSectionStyled>
@@ -39,7 +45,7 @@ const ClubLeftNavOptionStyled = styled.div`
   display: block;
   min-width: 240px;
   height: 100%;
-  padding: 32px 10px;
+  padding: 20px 10px 32px;
   border-right: 1px solid var(--line-color);
   font-weight: 300;
   position: relative;
@@ -53,12 +59,12 @@ const ClubLeftNavOptionStyled = styled.div`
   }
 `;
 
-const EmptyClubListTextStyled = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  font-size: 1.5rem;
+const ListTitleStyled = styled.div`
+  color: var(--gray-color);
+  font-size: 0.9rem;
+  margin: 0.5rem 0.75rem;
+  /* font-weight: 500; */
+  /* margin-bottom: 20px; */
 `;
 
 export default LeftSectionNavClubs;
