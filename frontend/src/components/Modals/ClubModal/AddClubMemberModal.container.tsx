@@ -1,18 +1,19 @@
 import { useRef, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { isCurrentSectionRenderState } from "@/recoil/atoms";
-import { axiosAddClubMember } from "@/api/axios/axios.custom";
-import ModalPortal from "../ModalPortal";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  isCurrentSectionRenderState,
+  targetClubInfoState,
+} from "@/recoil/atoms";
+import AddClubMemberModal from "@/components/Modals/ClubModal/AddClubMemberModal";
+import ModalPortal from "@/components/Modals/ModalPortal";
 import {
   FailResponseModal,
   SuccessResponseModal,
-} from "../ResponseModal/ResponseModal";
-import AddClubMemModal from "./AddClubMemModal";
+} from "@/components/Modals/ResponseModal/ResponseModal";
+import { axiosAddClubMember } from "@/api/axios/axios.custom";
 
-const AddClubMemModalContainer: React.FC<{
+const AddClubMemberModalContainer: React.FC<{
   closeModal: React.MouseEventHandler;
-  clubId: number;
-  getClubInfo: (clubId: number) => Promise<void>;
 }> = (props) => {
   const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
   const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
@@ -23,17 +24,16 @@ const AddClubMemModalContainer: React.FC<{
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-
-  const AddclubMemDetail = `멤버 인트라 아이디`;
+  const { clubId } = useRecoilValue(targetClubInfoState);
 
   const tryAddClubMemRequest = async (name: string) => {
     setIsLoading(true);
     try {
-      await axiosAddClubMember(props.clubId, name);
-      setIsCurrentSectionRender(true);
-      // 성공하면 200 아니면 에러 코드 반환됨
-      setModalTitle("동아리에 멤버가 추가됐습니다");
-      props.getClubInfo(props.clubId);
+      await axiosAddClubMember(clubId, name);
+      setModalTitle(`동아리에 ${name} 님을 추가했습니다`);
+      setTimeout(() => {
+        setIsCurrentSectionRender(true);
+      }, 1000);
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
@@ -50,7 +50,7 @@ const AddClubMemModalContainer: React.FC<{
   return (
     <ModalPortal>
       {!showResponseModal ? (
-        <AddClubMemModal
+        <AddClubMemberModal
           closeModal={props.closeModal}
           handleClickSave={handleClickSave}
           newMemo={newMemo}
@@ -74,4 +74,4 @@ const AddClubMemModalContainer: React.FC<{
   );
 };
 
-export default AddClubMemModalContainer;
+export default AddClubMemberModalContainer;

@@ -36,7 +36,6 @@ public class CabinetCommandService {
 	 */
 	public void changeStatus(Cabinet cabinet, CabinetStatus cabinetStatus) {
 		cabinet.specifyStatus(cabinetStatus);
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -57,7 +56,6 @@ public class CabinetCommandService {
 		if (userCount == cabinet.getMaxUser()) {
 			cabinet.specifyStatus(FULL);
 		}
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -68,7 +66,6 @@ public class CabinetCommandService {
 	 */
 	public void updateTitle(Cabinet cabinet, String title) {
 		cabinet.writeTitle(title);
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -79,7 +76,6 @@ public class CabinetCommandService {
 	 */
 	public void updateMemo(Cabinet cabinet, String memo) {
 		cabinet.writeMemo(memo);
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -139,6 +135,10 @@ public class CabinetCommandService {
 	 */
 	public void updateStatus(Cabinet cabinet, CabinetStatus status) {
 		cabinet.specifyStatus(status);
+	}
+
+	public void updateStatusBulk(List<Long> cabinetIds, CabinetStatus status) {
+		cabinetRepository.updateStatusByCabinetIdsIn(cabinetIds, status);
 	}
 
 	/**

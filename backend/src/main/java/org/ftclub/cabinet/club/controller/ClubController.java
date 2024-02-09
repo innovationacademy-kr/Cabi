@@ -8,6 +8,7 @@ import org.ftclub.cabinet.club.service.ClubFacadeService;
 import org.ftclub.cabinet.dto.AddClubUserRequestDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
 import org.ftclub.cabinet.dto.ClubInfoResponseDto;
+import org.ftclub.cabinet.dto.ClubMemoUpdateDto;
 import org.ftclub.cabinet.dto.ClubNoticeUpdateDto;
 import org.ftclub.cabinet.dto.MandateClubMasterRequestDto;
 import org.ftclub.cabinet.dto.UserSessionDto;
@@ -110,5 +111,12 @@ public class ClubController {
 			@Valid @RequestBody ClubNoticeUpdateDto clubNoticeUpdateDto) {
 		clubFacadeService.updateClubNotice(user.getUserId(), clubId,
 				clubNoticeUpdateDto.getNotice());
+	}
+
+	@AuthGuard(level = AuthLevel.USER_ONLY)
+	@PostMapping("/{clubId}/memo")
+	public void updateClubMemo(@UserSession UserSessionDto user, @PathVariable Long clubId,
+			@Valid @RequestBody ClubMemoUpdateDto clubMemoUpdateDto) {
+		clubFacadeService.updateClubMemo(user.getUserId(), clubId, clubMemoUpdateDto.getMemo());
 	}
 }

@@ -13,7 +13,7 @@ import org.ftclub.cabinet.cabinet.domain.Location;
 public class ClubInfoResponseDto {
 
 	private final String clubName;
-	private final String clubMaster;
+	private final ClubUserResponseDto clubMaster;
 	private final String clubMemo; // cabinet password
 	private final String clubNotice;
 	@JsonUnwrapped

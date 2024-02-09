@@ -1,36 +1,133 @@
-import React from "react";
-import { useRecoilState } from "recoil";
-import { currentFloorCabinetState, myCabinetInfoState } from "@/recoil/atoms";
-import MemoModalTest from "./ClubMemoModal";
+import React, { useEffect, useRef, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  isCurrentSectionRenderState,
+  targetClubInfoState,
+} from "@/recoil/atoms";
+import ModalPortal from "@/components//Modals/ModalPortal";
+import ClubMemoModal from "@/components/Modals/ClubModal/ClubMemoModal";
+import {
+  FailResponseModal,
+  SuccessResponseModal,
+} from "@/components/Modals/ResponseModal/ResponseModal";
+import { axiosUpdateClubNotice } from "@/api/axios/axios.custom";
 
-const MemoModalTestContainer = (props: {
-  onClose: React.MouseEventHandler<Element>;
-  isModalOpen: boolean;
+export const CLUB_MEMO_MAX_LENGTH = 100;
+// TODO : 메모, 멤버 리렌더링 바로 되게
+interface ClubMemoModalContainerInterface {
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
-  onSave: (newMemo: string | null) => void;
-}) => {
-  const [] = useRecoilState(currentFloorCabinetState);
+  clubNotice: string;
+  setShowMemoModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  const onSaveEditMemo = (newMemo: string | null) => {
-    if (newMemo !== props.text) {
-      props.setText(newMemo ?? "");
+export interface ClubMemoModalInterface {
+  clubNotice: string;
+  newMemo: React.RefObject<HTMLTextAreaElement>;
+  mode: string;
+  handleClickWriteMode: (e: any) => void;
+  handleChange: () => void;
+  charCount: number;
+  tryMemoRequest: () => Promise<void>;
+  onClick: () => void;
+}
+
+const ClubMemoModalContainer = ({
+  text,
+  setText,
+  clubNotice,
+  setShowMemoModal,
+}: ClubMemoModalContainerInterface) => {
+  const [mode, setMode] = useState<string>("read");
+  const newMemo = useRef<HTMLTextAreaElement>(null);
+  const previousTextRef = useRef<string>(text);
+  const setIsCurrentSectionRender = useSetRecoilState(
+    isCurrentSectionRenderState
+  );
+  const [modalTitle, setModalTitle] = useState<string>("");
+  const [modalContent, setModalContent] = useState<string>("");
+  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
+  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
+  const { clubId } = useRecoilValue(targetClubInfoState);
+  const [charCount, setCharCount] = useState<number>(0);
+
+  const closeModal = () => {
+    setShowMemoModal(false);
+  };
+
+  const handleClickWriteMode = (e: any) => {
+    setMode("write");
+    if (newMemo.current) {
+      newMemo.current.select();
     }
   };
 
-  
+  const tryMemoRequest = async () => {
+    try {
+      await axiosUpdateClubNotice(clubId, text);
+      setIsCurrentSectionRender(true);
+      setModalTitle("메모 수정 완료");
+      // const result = await axiosGetClubInfo(clubId, page, 2);
+    } catch (error: any) {
+      setModalTitle("메모 수정 실패");
+      setModalContent(error.response.data.message);
+      setHasErrorOnResponse(true);
+    } finally {
+      setShowResponseModal(true);
+    }
+  };
+
+  useEffect(() => {
+    text ? setCharCount(text.length) : setCharCount(0);
+  }, [text]);
+
+  const handleChange = () => {
+    if (newMemo.current) {
+      setCharCount(newMemo.current.value.length);
+      if (charCount > CLUB_MEMO_MAX_LENGTH) setCharCount(CLUB_MEMO_MAX_LENGTH);
+      setText(newMemo.current.value);
+    }
+  };
+
+  const onClick = () => {
+    setMode("read");
+    if (text) {
+      if (text) newMemo.current!.value = text;
+      setText(previousTextRef.current);
+      newMemo.current!.value = previousTextRef.current;
+    }
+    closeModal();
+  };
+
   return (
-    <>
-      {props.isModalOpen && (
-        <MemoModalTest
-          onClose={props.onClose}
-          onSave={props.onSave}
-          text={props.text}
-          setText={props.setText}
+    <ModalPortal>
+      {!showResponseModal && (
+        <ClubMemoModal
+          clubNotice={clubNotice}
+          newMemo={newMemo}
+          mode={mode}
+          handleClickWriteMode={handleClickWriteMode}
+          handleChange={handleChange}
+          charCount={charCount}
+          tryMemoRequest={tryMemoRequest}
+          onClick={onClick}
         />
       )}
-    </>
+      {showResponseModal &&
+        (hasErrorOnResponse ? (
+          <FailResponseModal
+            modalTitle={modalTitle}
+            modalContents={modalContent}
+            closeModal={closeModal}
+          />
+        ) : (
+          <SuccessResponseModal
+            modalTitle={modalTitle}
+            closeModal={closeModal}
+          />
+        ))}
+    </ModalPortal>
   );
 };
 
-export default MemoModalTestContainer;
+export default ClubMemoModalContainer;

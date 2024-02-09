@@ -1,12 +1,12 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AvailablePage from "@/pages/AvailablePage";
 import ClubPage from "@/pages/ClubPage";
 import HomePage from "@/pages/HomePage";
 import Layout from "@/pages/Layout";
 import LogPage from "@/pages/LogPage";
 import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
-import PendingPage from "@/pages/PendingPage/PendingPage";
 import PostLogin from "@/pages/PostLogin";
 import ProfilePage from "@/pages/ProfilePage";
 import AdminMainPage from "@/pages/admin/AdminMainPage";
@@ -33,10 +33,10 @@ function App(): React.ReactElement {
             <Route path="login" element={<LoginPage />} />
             <Route path="home" element={<HomePage />} />
             <Route path="main" element={<MainPage />} />
-            <Route path="available" element={<PendingPage />} />
+            <Route path="available" element={<AvailablePage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="profile/log" element={<LogPage />} />
-            <Route path="profile/clubs" element={<ClubPage />} />
+            <Route path="clubs" element={<ClubPage />} />
           </Route>
           {/* admin용 라우터 */}
           <Route path="/admin/" element={<AdminLayout />}>
@@ -45,7 +45,7 @@ function App(): React.ReactElement {
             <Route path="main" element={<AdminMainPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="club" element={<AdminClubPage />} />
-            <Route path="available" element={<PendingPage />} />
+            <Route path="available" element={<AvailablePage />} />
           </Route>
           <Route path="/login/failure" element={<LoginFailurePage />} />
           <Route

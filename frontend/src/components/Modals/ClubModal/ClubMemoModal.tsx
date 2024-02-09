@@ -1,134 +1,58 @@
-import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Button from "@/components/Common/Button";
-import ModalPortal from "@/components/Modals/ModalPortal";
+import {
+  CLUB_MEMO_MAX_LENGTH,
+  ClubMemoModalInterface,
+} from "@/components/Modals/ClubModal/ClubMemoModal.container";
 
-export interface MemoModalTestInterface {
-  cabinetMemo: string | null;
-}
-
-interface MemoModalTestContainerInterface {
-  text: string;
-  onClose: React.MouseEventHandler;
-  onSave: (newMemo: string | null) => void;
-  setText: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const MAX_INPUT_LENGTH = 100;
-
-const MemoModalTest = ({
-  text,
-  onClose,
-  onSave,
-  setText,
-}: MemoModalTestContainerInterface) => {
-  const [mode, setMode] = useState<string>("read");
-  const newMemo = useRef<HTMLTextAreaElement>(null);
-  const previousTextRef = useRef<string>(text);
-  const handleClickWriteMode = (e: any) => {
-    setMode("write");
-    if (newMemo.current) {
-      newMemo.current.select();
-    }
-  };
-
-  const handleClickSave = (e: React.MouseEvent) => {
-    document.getElementById("unselect-input")?.focus();
-    if (newMemo.current!.value) {
-      onSave(newMemo.current!.value);
-    } else {
-      onSave(null);
-    }
-    setText(newMemo.current!.value); //새 메모 저장
-    previousTextRef.current = newMemo.current!.value; //이전 메모 업데이트
-    setMode("read");
-  };
-
-  const [charCount, setCharCount] = useState<number>(0);
-
-  useEffect(() => {
-    text ? setCharCount(text.length) : setCharCount(0);
-  }, [text]);
-
-  const handleChange = () => {
-    if (newMemo.current) {
-      setCharCount(newMemo.current.value.length);
-      if (charCount > MAX_INPUT_LENGTH) setCharCount(MAX_INPUT_LENGTH);
-      setText(newMemo.current.value);
-    }
-  };
+const ClubMemoModal = ({
+  clubNotice,
+  newMemo,
+  mode,
+  handleClickWriteMode,
+  handleChange,
+  charCount,
+  tryMemoRequest,
+  onClick,
+}: ClubMemoModalInterface) => {
   return (
-    <ModalPortal>
-      <BackgroundStyled
-        onClick={(e) => {
-          setMode("read");
-          if (text) {
-            if (text) newMemo.current!.value = text;
-            setText(previousTextRef.current);
-            newMemo.current!.value = previousTextRef.current;
-          }
-          onClose(e);
-        }}
-      />
+    <>
+      <BackgroundStyled onClick={onClick} />
       <ModalContainerStyled type={"confirm"}>
         <WriteModeButtonStyled mode={mode} onClick={handleClickWriteMode}>
           수정하기
         </WriteModeButtonStyled>
         <H2Styled>동아리 메모</H2Styled>
         <ContentSectionStyled>
-          <ContentItemSectionStyled>
-            <ContentItemWrapperStyled>
-              <ContentItemInputStyled
-                onChange={handleChange}
-                placeholder={text ? text : ""}
-                mode={mode}
-                defaultValue={text ? text : ""}
-                readOnly={mode === "read" ? true : false}
-                ref={newMemo}
-                maxLength={MAX_INPUT_LENGTH}
-              ></ContentItemInputStyled>
-              <ContentItemWrapperStyledBottom>
-                {charCount <= MAX_INPUT_LENGTH && (
-                  <LengthCount>
-                    {charCount} / {MAX_INPUT_LENGTH}
-                  </LengthCount>
-                )}
-                {charCount > MAX_INPUT_LENGTH && (
-                  <LengthCount>
-                    {MAX_INPUT_LENGTH} / {MAX_INPUT_LENGTH}
-                  </LengthCount>
-                )}
-              </ContentItemWrapperStyledBottom>
-            </ContentItemWrapperStyled>
-          </ContentItemSectionStyled>
+          <ContentItemTextAreaStyled
+            onChange={handleChange}
+            placeholder={clubNotice}
+            mode={mode}
+            defaultValue={clubNotice}
+            readOnly={mode === "read" ? true : false}
+            ref={newMemo}
+            maxLength={CLUB_MEMO_MAX_LENGTH}
+          />
+          <ContentItemWrapperStyledBottomStyled>
+            {charCount <= CLUB_MEMO_MAX_LENGTH && (
+              <LengthCountStyled>
+                {charCount} / {CLUB_MEMO_MAX_LENGTH}
+              </LengthCountStyled>
+            )}
+          </ContentItemWrapperStyledBottomStyled>
         </ContentSectionStyled>
-        <input id="unselect-input" readOnly style={{ height: 0, width: 0 }} />
         <ButtonWrapperStyled mode={mode}>
           {mode === "write" && (
-            <Button
-              onClick={(e) => {
-                handleClickSave(e);
-              }}
-              text="저장"
-              theme="fill"
-            />
+            <Button onClick={tryMemoRequest} text="저장" theme="fill" />
           )}
           <Button
-            onClick={(e) => {
-              setMode("read");
-              if (text) {
-                if (text) newMemo.current!.value = text;
-                setText(previousTextRef.current);
-                newMemo.current!.value = previousTextRef.current;
-              }
-              onClose(e);
-            }}
+            onClick={onClick}
             text={mode === "read" ? "닫기" : "취소"}
             theme={mode === "read" ? "lightGrayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
-    </ModalPortal>
+    </>
   );
 };
 
@@ -165,43 +89,29 @@ const H2Styled = styled.h2`
 const ContentSectionStyled = styled.section`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-`;
-
-const ContentItemSectionStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
   width: 100%;
+  height: 200px;
+  margin-bottom: 24px;
 `;
 
-const ContentItemWrapperStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 5px;
-`;
-
-const ContentItemTitleStyled = styled.h3`
-  font-size: 1.125rem;
-  margin-bottom: 8px;
-`;
-
-const ContentItemInputStyled = styled.textarea<{
+const ContentItemTextAreaStyled = styled.textarea<{
   mode: string;
 }>`
+  box-sizing: border-box;
   padding: 15px;
+  width: 100%;
   border: 1px solid var(--line-color);
-  height: 160px;
+  height: 100%;
   border-radius: 10px;
-  text-align: start;
   font-size: 1.125rem;
   color: black;
   overflow-y: auto;
   word-break: break-all;
   white-space: pre-wrap;
+  line-height: 1.2rem;
+  letter-spacing: 0.8px;
+  resize: none;
 
   cursor: ${({ mode }) => (mode === "read" ? "default" : "input")};
   color: ${({ mode }) => (mode === "read" ? "var(--main-color)" : "black")};
@@ -249,19 +159,22 @@ const ButtonWrapperStyled = styled.div<{ mode: string }>`
   align-items: center;
 `;
 
-const ContentItemWrapperStyledBottom = styled.div`
+const ContentItemWrapperStyledBottomStyled = styled.div`
   width: 100%;
   display: flex;
   justify-content: end;
-  margin-top: 2px;
+  height: 18px;
+  line-height: 18px;
+  margin-top: 4px;
 `;
-const LengthCount = styled.span`
+
+const LengthCountStyled = styled.span`
   width: 80px;
   display: flex;
   flex-direction: column;
   justify-content: end;
-  margin-top: 0px;
-  font-size: 16px;
+  font-size: 14px;
+  text-align: end;
 `;
 
-export default MemoModalTest;
+export default ClubMemoModal;

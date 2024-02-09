@@ -14,6 +14,7 @@ const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
   const { pathname } = useLocation();
   const { closeLeftNav } = useMenu();
   const isProfilePage: boolean = location.pathname.includes("profile");
+  const isMainClubPage: boolean = location.pathname === "/clubs";
 
   const onClickSection = (section: string) => {
     closeLeftNav();
@@ -28,11 +29,6 @@ const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
   const onClickLentLogButton = () => {
     closeLeftNav();
     navigator("profile/log");
-  };
-
-  const onClickClub = () => {
-    closeLeftNav();
-    navigator("profile/clubs");
   };
 
   const onClickSlack = () => {
@@ -61,9 +57,9 @@ const LeftSectionNavContainer = ({ isVisible }: { isVisible: boolean }) => {
       onClickSection={onClickSection}
       onClickProfile={onClickProfile}
       onClickLentLogButton={onClickLentLogButton}
-      onClickClub={onClickClub}
       onClickSlack={onClickSlack}
       onClickClubForm={onClickClubForm}
+      isClub={isMainClubPage}
     />
   );
 };

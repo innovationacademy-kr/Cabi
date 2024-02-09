@@ -14,12 +14,12 @@ services:
     ports:
       - "3307:3306"
     tty: true
-#  redis:
-#    container_name: redis
-#    image: redis:latest
-#    ports:
-#      - '6379:6379'
-#    tty: true
+  #  redis:
+  #    container_name: redis
+  #    image: redis:latest
+  #    ports:
+  #      - '6379:6379'
+  #    tty: true
   gateway:
     container_name: nginx_gateway
     image: nginx:latest
@@ -34,7 +34,7 @@ services:
       - "6379:6379"
     volumes:
       - ../redis/data/:/data/
-      - ../redis/redis.conf:/user/local/etc/redis/redis.conf
+      - ../redis/config/:/user/local/etc/redis/
     command: redis-server /user/local/etc/redis/redis.conf
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]

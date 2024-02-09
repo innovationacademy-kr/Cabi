@@ -1,44 +1,37 @@
-import React, { ReactElement } from "react";
-import styled, { css } from "styled-components";
+import React from "react";
+import styled from "styled-components";
 import Button from "@/components/Common/Button";
-import { IModalContents } from "@/components/Modals/Modal";
+import { ClubPasswordModalInterface } from "@/components/Modals/ClubModal/ClubPasswordModal.container";
 import { ReactComponent as CheckIcon } from "@/assets/images/checkIcon.svg";
-import useMultiSelect from "@/hooks/useMultiSelect";
 
-const ModifyClubPwModal: React.FC<{
-  modalContents: IModalContents;
-  password: string;
-  // isModalOpen: boolean;
-  // onClose: React.MouseEventHandler<Element>;
-}> = ({ modalContents, password }) => {
+const ClubPasswordModal: React.FC<ClubPasswordModalInterface> = ({
+  ClubPwModalContents,
+  password,
+  onChange,
+  list,
+  onClick,
+  inputRef,
+  onClickBackground,
+  onSendPassword,
+  handleEnterPress,
+}) => {
   const {
     type,
-    iconScaleEffect,
     title,
     detail,
-    renderAdditionalComponent,
     proceedBtnText,
-    onClickProceed,
     cancelBtnText,
     closeModal,
     isLoading,
     iconType,
-  } = modalContents;
-  const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
+  } = ClubPwModalContents;
 
   return (
     <>
-      <BackgroundStyled
-        onClick={(e) => {
-          closeModal(e);
-          if (isMultiSelect) {
-            closeMultiSelectMode();
-          }
-        }}
-      />
+      <BackgroundStyled onClick={onClickBackground} />
       <ModalStyled onClick={type === "noBtn" ? closeModal : undefined}>
         {iconType === "CHECK" && (
-          <ModalIconImgStyled iconScaleEffect={iconScaleEffect}>
+          <ModalIconImgStyled>
             <CheckIcon stroke="var(--main-color)" />
           </ModalIconImgStyled>
         )}
@@ -46,18 +39,29 @@ const ModifyClubPwModal: React.FC<{
         {detail && (
           <DetailStyled dangerouslySetInnerHTML={{ __html: detail }} />
         )}
-        {renderAdditionalComponent && renderAdditionalComponent()}
+        <PasswordStyled>
+          {list.map((val, idx) => (
+            <PasswordNumberStyled
+              className={idx === 0 && val === "" ? "active" : ""}
+              onClick={onClick}
+              key={idx}
+              val={val}
+            >
+              {val}
+            </PasswordNumberStyled>
+          ))}
+        </PasswordStyled>
+        <InputStyled
+          ref={inputRef}
+          onChange={onChange}
+          maxLength={4}
+          onKeyUp={(e) => handleEnterPress(e)}
+        />
         <ButtonWrapperStyled>
+          <Button onClick={closeModal} text={cancelBtnText!} theme="line" />
           <Button
-            onClick={closeModal}
-            text={cancelBtnText || "취소"}
-            theme="line"
-          />
-          <Button
-            onClick={(e) => {
-              onClickProceed!(e);
-            }}
-            text={proceedBtnText || "확인"}
+            onClick={onSendPassword}
+            text={proceedBtnText!}
             theme="fill"
             disabled={password.length < 4 || isLoading}
           />
@@ -67,21 +71,33 @@ const ModifyClubPwModal: React.FC<{
   );
 };
 
-const Input = styled.input<{ isEmpty: number | null }>`
+const InputStyled = styled.input`
+  height: 0;
+  color: transparent;
+  caret-color: transparent;
+`;
+
+const PasswordNumberStyled = styled.div<{ val: string }>`
   width: 20%;
   height: 100%;
   border-radius: 10px;
-  outline: none;
-  border: ${({ isEmpty }) =>
-    isEmpty ? "1px solid var(--main-color)" : "1px solid #dfd0fe"};
+  border: ${({ val }) =>
+    val ? "2px solid var(--main-color)" : "1px solid var(--sub-color)"};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: var(--main-color);
+  &.active {
+    border: 2px solid var(--main-color);
+  }
 `;
 
-const PasswordContainer = styled.div`
-  max-width: 240px;
-  width: 100%;
+const PasswordStyled = styled.div`
+  width: 240px;
   height: 60px;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -112,15 +128,10 @@ const ModalStyled = styled.div`
   padding: 40px 20px;
 `;
 
-const ModalIconImgStyled = styled.div<{ iconScaleEffect: boolean | undefined }>`
+const ModalIconImgStyled = styled.div`
   svg {
     width: 70px;
     margin-bottom: 20px;
-    animation: ${(props) =>
-      props.iconScaleEffect &&
-      css`
-        scaleUpModalIcon 1s;
-      `};
   }
   @keyframes scaleUpModalIcon {
     0% {
@@ -175,4 +186,4 @@ const ButtonWrapperStyled = styled.div`
   margin-top: 20px;
 `;
 
-export default ModifyClubPwModal;
+export default ClubPasswordModal;

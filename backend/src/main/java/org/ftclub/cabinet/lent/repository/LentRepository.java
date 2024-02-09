@@ -173,6 +173,7 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "FROM LentHistory lh "
 			+ "LEFT JOIN FETCH lh.user u "
 			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
 			+ "WHERE lh.cabinetId = :cabinetId ",
 			countQuery = "SELECT count(lh) "
 					+ "FROM LentHistory lh "
@@ -287,6 +288,22 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 	 * @return {@link LentHistory}의 {@link List}
 	 */
 	List<LentHistory> findAllByCabinetIdIn(List<Long> cabinetIds);
+
+	/**
+	 * 특정 사물함들의 대여 기록을 가져옵니다.
+	 * <p>
+	 * cabinet 정보를 Join하여 가져옵니다.
+	 * </p>
+	 *
+	 * @param cabinetId 찾으려는 cabinet id
+	 * @return {@link LentHistory}의 {@link List}
+	 */
+	@Query("SELECT lh "
+			+ "FROM LentHistory lh "
+			+ "LEFT JOIN FETCH lh.cabinet c "
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.cabinetId = :cabinetId")
+	List<LentHistory> findAllByCabinetIdJoinCabinet(Long cabinetId);
 
 	/**
 	 * 연체되어 있는 사물함을 모두 가져옵니다.

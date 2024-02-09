@@ -12,8 +12,8 @@ export interface ClubPaginationResponseDto {
 
 export interface ClubResponseDto {
   clubId: number;
-  clubName: String;
-  clubMaster: String;
+  clubName: string;
+  clubMaster: string;
 }
 
 export type ClubInfoResponseType =
@@ -21,19 +21,23 @@ export type ClubInfoResponseType =
   | typeof STATUS_400_BAD_REQUEST
   | undefined;
 
-export interface ClubInfoResponseDto {
-  clubName: String;
-  clubMaster: String;
-  clubMemo: String;
-  building: String;
+export interface ClubCabinetInfo {
+  building: string;
   floor: number;
-  section: String;
+  section: string;
   visibleNum: number;
+}
+
+export interface ClubInfoResponseDto extends ClubCabinetInfo {
+  clubName: string;
+  clubMaster: ClubUserResponseDto;
+  clubMemo: string;
+  clubNotice: string;
   clubUsers: ClubUserResponseDto[];
   clubUserCount: number;
 }
 
 export interface ClubUserResponseDto {
   userId: number;
-  userName: String;
+  userName: string;
 }

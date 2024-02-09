@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.club.domain.Club;
+import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.club.domain.ClubRegistration;
 import org.ftclub.cabinet.dto.ClubInfoDto;
 import org.ftclub.cabinet.dto.ClubInfoPaginationDto;
@@ -29,13 +31,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Logging(level = LogLevel.DEBUG)
+@Transactional
 public class ClubFacadeService {
 
 	private final ClubQueryService clubQueryService;
+	private final ClubCommandService clubCommandService;
 	private final ClubRegistrationQueryService clubRegistrationQueryService;
 	private final ClubRegistrationCommandService clubRegistrationCommandService;
 	private final ClubLentQueryService clubLentQueryService;
 	private final UserQueryService userQueryService;
+	private final CabinetCommandService cabinetCommandService;
 
 	private final ClubPolicyService clubPolicyService;
 
@@ -54,6 +59,7 @@ public class ClubFacadeService {
 	public ClubInfoResponseDto getClubInfo(Long userId, Long clubId, Pageable pageable) {
 		Club club = clubQueryService.getClubWithClubRegistration(clubId);
 		List<Long> clubUserIds = club.getClubRegistrations().stream()
+				.filter(cr -> cr.getDeletedAt() == null)
 				.map(ClubRegistration::getUserId).collect(Collectors.toList());
 		Long clubMasterId = club.getClubRegistrations().stream()
 				.filter(cr -> cr.getUserRole().equals(CLUB_ADMIN))
@@ -65,13 +71,15 @@ public class ClubFacadeService {
 		Page<User> userMap = userQueryService.findUsers(clubUserIds, pageable);
 		User clubMaster =
 				clubRegistrationQueryService.getClubUserByUser(clubMasterId, clubId).getUser();
+		ClubUserResponseDto clubMasterDto =
+				clubMapper.toClubUserResponseDto(clubMaster.getId(), clubMaster.getName());
 		Cabinet clubCabinet =
 				clubLentQueryService.getActiveLentHistoryWithCabinet(clubId).getCabinet();
 
 		List<ClubUserResponseDto> clubUsers = userMap.stream()
 				.map(user -> clubMapper.toClubUserResponseDto(user.getId(), user.getName()))
 				.collect(Collectors.toList());
-		return clubMapper.toClubInfoResponseDto(club.getName(), clubMaster.getName(),
+		return clubMapper.toClubInfoResponseDto(club.getName(), clubMasterDto,
 				club.getNotice(), clubCabinet, clubUsers, userMap.getTotalElements());
 	}
 
@@ -109,7 +117,6 @@ public class ClubFacadeService {
 	 * @param clubId   동아리 ID
 	 * @param name     추가할 사용자 이름
 	 */
-	@Transactional
 	public void addClubUser(Long masterId, Long clubId, String name) {
 		User clubMaster = userQueryService.getUser(masterId);
 		ClubRegistration clubMasterRegistration =
@@ -135,7 +142,6 @@ public class ClubFacadeService {
 	 * @param clubId        동아리 ID
 	 * @param deletedUserId 제거할 사용자 ID
 	 */
-	@Transactional
 	public void deleteClubUser(Long masterId, Long clubId, Long deletedUserId) {
 		User clubMaster = userQueryService.getUser(masterId);
 		userQueryService.getUser(deletedUserId);
@@ -161,7 +167,6 @@ public class ClubFacadeService {
 	 * @param clubId            동아리 ID
 	 * @param newClubMasterName 새로운 동아리 마스터 이름
 	 */
-	@Transactional
 	public void mandateClubUser(Long clubMasterId, Long clubId, String newClubMasterName) {
 		User newClubMaster = userQueryService.getUserByName(newClubMasterName);
 
@@ -181,6 +186,7 @@ public class ClubFacadeService {
 				newClubMasterRegistration);
 	}
 
+	@Transactional
 	public void updateClubNotice(Long userId, Long clubId, String notice) {
 		ClubRegistration clubMasterRegistration
 				= clubRegistrationQueryService.getClubUserByUser(userId, clubId);
@@ -189,6 +195,20 @@ public class ClubFacadeService {
 		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
 				clubMasterRegistration.getClubId(), clubId);
 
-		club.changeClubNotice(notice);
+		clubCommandService.changeClubNotice(club, notice);
+	}
+
+	@Transactional
+	public void updateClubMemo(Long userId, Long clubId, String memo) {
+		ClubRegistration clubMasterRegistration
+				= clubRegistrationQueryService.getClubUserByUser(userId, clubId);
+		Club club = clubQueryService.getClub(clubId);
+
+		clubPolicyService.verifyClubMaster(clubMasterRegistration.getUserRole(),
+				clubMasterRegistration.getClubId(), club.getId());
+
+		ClubLentHistory clubLentHistory =
+				clubLentQueryService.getActiveLentHistoryWithCabinet(clubId);
+		cabinetCommandService.updateMemo(clubLentHistory.getCabinet(), memo);
 	}
 }

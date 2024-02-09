@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { isCurrentSectionRenderState } from "@/recoil/atoms";
 import { modalPropsMap } from "@/assets/data/maps";
+import { ClubResponseDto, ClubUserResponseDto } from "@/types/dto/club.dto";
 import IconType from "@/types/enum/icon.type.enum";
-import { axiosDeleteClubMember } from "@/api/axios/axios.custom";
+import { axiosMandateClubMember } from "@/api/axios/axios.custom";
+import useMenu from "@/hooks/useMenu";
 import Modal, { IModalContents } from "../Modal";
 import ModalPortal from "../ModalPortal";
 import {
@@ -11,36 +13,37 @@ import {
   SuccessResponseModal,
 } from "../ResponseModal/ResponseModal";
 
-const DeleteClubMemModal: React.FC<{
+const MandateClubMemberModal: React.FC<{
   closeModal: React.MouseEventHandler;
-  targetMember: string;
   clubId: number;
-  userId: number;
-  getClubInfo: (clubId: number) => Promise<void>;
+  targetMember: ClubUserResponseDto;
+  clubName: string;
 }> = (props) => {
-  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
-  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<string>("");
+  const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
+  const [hasErrorOnResponse, setHasErrorOnResponse] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [clubName, setClubName] = useState<string>(props.clubName || "");
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
+  const { closeClubMember } = useMenu();
 
-  const deleteDetail = `동아리 사물함 멤버에서 <strong>${props.targetMember}</strong>을 내보내시겠습니까?`;
+  const mandateDetail = `<strong>${clubName}</strong>의  동아리장 권한을
+  <strong>${props.targetMember.userName}</strong> 님에게 위임하겠습니까?`;
+
+  useEffect(() => {
+    if (props.clubName) setClubName(props.clubName);
+  }, [props.clubName]);
 
   const trySwapRequest = async () => {
     setIsLoading(true);
     try {
-      //  axios할게 있나..?
-      await axiosDeleteClubMember(props.clubId, props.userId);
-      // recoil Master 권한 바꾸기
-
+      await axiosMandateClubMember(props.clubId, props.targetMember.userName);
       setIsCurrentSectionRender(true);
-      setModalTitle(
-        `동아리 사물함 멤버에서 ${props.targetMember}를 내보냈습니다`
-      );
-      props.getClubInfo(props.clubId);
+      setModalTitle("동아리장 권한을 위임하였습니다.");
+      closeClubMember();
     } catch (error: any) {
       setModalContent(error.response.data.message);
       setHasErrorOnResponse(true);
@@ -50,11 +53,11 @@ const DeleteClubMemModal: React.FC<{
     }
   };
 
-  const DeleteModalContents: IModalContents = {
+  const mandateModalContents: IModalContents = {
     type: "hasProceedBtn",
-    title: modalPropsMap.MODAL_CLUB_DEL_MEM.title,
-    detail: deleteDetail,
-    proceedBtnText: modalPropsMap.MODAL_CLUB_DEL_MEM.confirmMessage,
+    title: modalPropsMap.MODAL_CLUB_MANDATE_MEM.title,
+    detail: mandateDetail,
+    proceedBtnText: modalPropsMap.MODAL_CLUB_MANDATE_MEM.confirmMessage,
     onClickProceed: trySwapRequest,
     closeModal: props.closeModal,
     isLoading: isLoading,
@@ -63,11 +66,11 @@ const DeleteClubMemModal: React.FC<{
 
   return (
     <ModalPortal>
-      {!showResponseModal && <Modal modalContents={DeleteModalContents} />}
+      {!showResponseModal && <Modal modalContents={mandateModalContents} />}
       {showResponseModal &&
         (hasErrorOnResponse ? (
           <FailResponseModal
-            modalTitle="동아리원 내보내기 실패"
+            modalTitle="동아리장 권한 위임 실패"
             modalContents={modalContent}
             closeModal={props.closeModal}
           />
@@ -81,4 +84,4 @@ const DeleteClubMemModal: React.FC<{
   );
 };
 
-export default DeleteClubMemModal;
+export default MandateClubMemberModal;

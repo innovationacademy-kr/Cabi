@@ -46,4 +46,8 @@ public class ClubCommandService {
 		clubRepository.save(club);
 	}
 
+	public void changeClubNotice(Club club, String notice) {
+		club.changeClubNotice(notice);
+		clubRepository.save(club);
+	}
 }

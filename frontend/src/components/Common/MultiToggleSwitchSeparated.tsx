@@ -3,21 +3,19 @@ import styled from "styled-components";
 
 export interface toggleItem {
   name: string;
-  key: string;
+  key: number;
 }
 
 interface MultiToggleSwitchProps<T> {
   initialState: T;
   setState: React.Dispatch<React.SetStateAction<T>>;
   toggleList: toggleItem[];
-  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const MultiToggleSwitch2 = <T,>({
+const MultiToggleSwitchSeparated = <T,>({
   initialState,
   setState,
   toggleList,
-  setPage,
 }: MultiToggleSwitchProps<T>) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +23,7 @@ const MultiToggleSwitch2 = <T,>({
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
-      if (button.className === initialState) {
+      if (button.className === `${initialState}`) {
         button.style.color = "white";
         button.style.backgroundColor = "var(--main-color)";
       }
@@ -37,7 +35,7 @@ const MultiToggleSwitch2 = <T,>({
 
     if (target === e.currentTarget) return;
 
-    setPage(0);
+    // setPage(0);
     const buttons = wrapperRef.current?.querySelectorAll("button");
 
     buttons?.forEach((button) => {
@@ -54,7 +52,7 @@ const MultiToggleSwitch2 = <T,>({
   return (
     <WrapperStyled ref={wrapperRef} onClick={switchToggle}>
       {toggleList.map((item) => (
-        <button key={item.key} className={item.key}>
+        <button key={item.key} className={`${item.key}`}>
           {item.name}
         </button>
       ))}
@@ -85,4 +83,4 @@ const WrapperStyled = styled.div`
   }
 `;
 
-export default MultiToggleSwitch2;
+export default MultiToggleSwitchSeparated;

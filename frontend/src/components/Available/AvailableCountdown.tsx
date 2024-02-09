@@ -9,7 +9,7 @@ openTime.setHours(13, 0, 0, 0); // 오픈 시간인 13:00:00(오후 1시)로 설
 
 const hours24 = 86400000; // 24시간을 밀리초로 표현
 
-const PendingCountdown = ({
+const AvailableCountdown = ({
   observeOpenTime,
 }: {
   observeOpenTime: () => void;
@@ -43,19 +43,27 @@ const PendingCountdown = ({
 
   return (
     <>
-      <PendingCountdownStyled>
+      <AvailableCountdownIconStyled src="/src/assets/images/alarm.svg" />
+      <AvailableCountdownStyled>
         {remainingTime === 0
           ? "OPEN"
-          : `${twoDigitsHours}:${twoDigitsMinutes}:${twoDigitsSeconds} 남았습니다`}
-      </PendingCountdownStyled>
+          : `${hours}시간 ${minutes}분 ${seconds}초`}
+      </AvailableCountdownStyled>
     </>
   );
 };
 
-const PendingCountdownStyled = styled.div`
-  color: white;
-  font-size: 1.1rem;
+const AvailableCountdownIconStyled = styled.img`
+  height: 25px;
+  width: 25px;
+  margin-top: 50px;
+`;
+
+const AvailableCountdownStyled = styled.div`
+  margin-top: 5px;
+  color: var(--main-color);
+  font-size: 1.8rem;
   font-weight: 600;
 `;
 
-export default PendingCountdown;
+export default AvailableCountdown;

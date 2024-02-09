@@ -3,7 +3,7 @@ import Button from "@/components/Common/Button";
 
 const MAX_INPUT_LENGTH = 27;
 
-const AddClubMemModal: React.FC<{
+const AddClubMemberModal: React.FC<{
   closeModal: React.MouseEventHandler;
   handleClickSave: () => void;
   newMemo: React.RefObject<HTMLInputElement>;
@@ -137,4 +137,4 @@ const ButtonWrapperStyled = styled.div`
   }
 `;
 
-export default AddClubMemModal;
+export default AddClubMemberModal;

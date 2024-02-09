@@ -1,42 +1,69 @@
-import { ClubPageInfo } from "@/components/Club/ClubPageInfo";
+import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { myClubListState } from "@/recoil/atoms";
+import ClubInfo from "@/components/Club/ClubInfo";
+import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
+import { ClubPaginationResponseDto } from "@/types/dto/club.dto";
+import { deleteRecoilPersistFloorSection } from "@/utils/recoilPersistUtils";
 
 const ClubPage = () => {
+  const clubList = useRecoilValue<ClubPaginationResponseDto>(myClubListState);
+
+  useEffect(() => {
+    deleteRecoilPersistFloorSection();
+  }, []);
+
   return (
     <WrapperStyled>
-      <ContainerStyled>
-        <TitleStyled>동아리 정보</TitleStyled>
-        <ClubPageInfo></ClubPageInfo>
-      </ContainerStyled>
+      {clubList.result.length === 0 ? (
+        <EmptyClubListTextStyled>
+          <CabiLogoStyled>
+            <LogoImg />
+          </CabiLogoStyled>
+          가입한 동아리가 없습니다.
+          <br />
+          가입한 동아리가 있다면,
+          <br />
+          동아리장에게 문의하세요.
+        </EmptyClubListTextStyled>
+      ) : (
+        <ClubInfo />
+      )}
     </WrapperStyled>
   );
 };
 
 const WrapperStyled = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 100%;
 `;
 
-const ContainerStyled = styled.div`
+const EmptyClubListTextStyled = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 112px 0 0 0;
-  padding-bottom: 112px;
-  width: 795px;
+  text-align: center;
   height: 100%;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: var(--gray-color);
 `;
 
-const TitleStyled = styled.div`
-  text-align: center;
-  font-size: 2rem;
-  letter-spacing: -0.02rem;
-  font-weight: 700;
-  margin-bottom: 30px;
+const CabiLogoStyled = styled.div`
+  width: 35px;
+  height: 35px;
+  margin-bottom: 2rem;
+  svg {
+    .logo_svg__currentPath {
+      fill: var(--main-color);
+    }
+  }
 `;
 
 export default ClubPage;
