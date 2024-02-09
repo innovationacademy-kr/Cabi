@@ -99,7 +99,8 @@ const ToolTipIcon = styled.div`
   background-size: contain;
   width: 16px;
   height: 16px;
-  margin-left: 4px;
+  margin-top: 0.1rem;
+  margin-left: 0.25rem;
   opacity: 0.6;
   cursor: pointer;
   &:hover {
