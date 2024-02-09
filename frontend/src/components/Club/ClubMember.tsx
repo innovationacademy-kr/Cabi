@@ -5,6 +5,7 @@ import {
   ICurrentClubMemberModalStateInfo,
   TClubMemberModalState,
 } from "@/components/Club/ClubMember.container";
+import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import AddClubMemberModalContainer from "@/components/Modals/ClubModal/AddClubMemberModal.container";
 import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
 import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
@@ -12,6 +13,7 @@ import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 
 const ClubMember: React.FC<{
+  isLoading: boolean;
   clubUserCount: number;
   clubModal: ICurrentClubMemberModalStateInfo;
   openModal: (modalName: TClubMemberModalState) => void;
@@ -22,6 +24,7 @@ const ClubMember: React.FC<{
   members: ClubUserResponseDto[];
   selectClubMemberOnClick: (member: ClubUserResponseDto) => void;
 }> = ({
+  isLoading,
   clubUserCount,
   clubModal,
   openModal,
@@ -87,8 +90,8 @@ const ClubMember: React.FC<{
         </MemSectionStyled>
         {moreButton && (
           <ButtonContainerStyled>
-            <MoreButtonStyled onClick={clickMoreButton}>
-              더보기
+            <MoreButtonStyled onClick={clickMoreButton} isLoading={isLoading}>
+              {isLoading ? <LoadingAnimation /> : "더보기"}
             </MoreButtonStyled>
           </ButtonContainerStyled>
         )}
@@ -221,15 +224,6 @@ const MemCardStyled = styled.div<{ bgColor: string; isSelected?: boolean }>`
   }
 `;
 
-const CloseIconStyled = styled.img`
-  width: 12px;
-  height: 12px;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 const MemSectionStyled = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 90px);
@@ -248,7 +242,9 @@ const ButtonContainerStyled = styled.div`
   justify-content: center;
 `;
 
-const MoreButtonStyled = styled.button`
+const MoreButtonStyled = styled.button<{
+  isLoading: boolean;
+}>`
   width: 200px;
   height: 50px;
   margin: 20px auto;
@@ -259,16 +255,20 @@ const MoreButtonStyled = styled.button`
   color: var(--main-color);
   position: relative;
 
-  &::after {
-    content: "";
-    position: absolute;
-    left: 55%;
-    top: 50%;
-    transform: translateY(-40%);
-    width: 20px;
-    height: 20px;
-    background: url(/src/assets/images/selectPurple.svg) no-repeat 100%;
-  }
+  ${({ isLoading }) =>
+    !isLoading &&
+    css`
+      &::after {
+        content: "";
+        position: absolute;
+        left: 55%;
+        top: 50%;
+        transform: translateY(-40%);
+        width: 20px;
+        height: 20px;
+        background: url(/src/assets/images/selectPurple.svg) no-repeat 100%;
+      }
+    `}
 `;
 
 export default ClubMember;

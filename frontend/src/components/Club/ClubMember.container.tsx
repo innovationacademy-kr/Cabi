@@ -31,13 +31,17 @@ const ClubMemberContainer = ({
   const [clubModal, setClubModal] = useState<ICurrentClubMemberModalStateInfo>({
     addModal: false,
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toggleClubMember } = useMenu();
   const myInfo = useRecoilValue(userState);
   const setTargetClubUser = useSetRecoilState(targetClubUserInfoState);
   const setTargetClubCabinet = useSetRecoilState(targetClubCabinetInfoState);
 
   const clickMoreButton = () => {
-    setPage(page + 1);
+    setIsLoading(true);
+    setTimeout(() => {
+      setPage(page + 1);
+    }, 100);
   };
 
   const selectClubMemberOnClick = (member: ClubUserResponseDto) => {
@@ -72,6 +76,7 @@ const ClubMemberContainer = ({
       setMembers((prev) => {
         return [...prev, ...clubInfo.clubUsers];
       });
+      setIsLoading(false);
     }
   }, [clubInfo]);
 
@@ -91,6 +96,7 @@ const ClubMemberContainer = ({
 
   return (
     <ClubMember
+      isLoading={isLoading}
       clubUserCount={clubInfo.clubUserCount}
       clubModal={clubModal}
       openModal={openModal}
