@@ -2,7 +2,6 @@ package org.ftclub.cabinet.lent.service;
 
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -74,10 +73,9 @@ public class LentFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getMyLentLog(UserSessionDto user, Pageable pageable) {
-		Page<LentHistory> lentHistories = lentQueryService.findUserLentHistories(user.getUserId(),
-				pageable);
+		Page<LentHistory> lentHistories =
+				lentQueryService.findUserLentHistories(user.getUserId(), pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
-				.sorted(Comparator.comparing(LentHistory::getStartedAt).reversed())
 				.map(lentHistory -> lentMapper.toLentHistoryDto(lentHistory, lentHistory.getUser(),
 						lentHistory.getCabinet())).collect(Collectors.toList());
 		return lentMapper.toLentHistoryPaginationDto(result, lentHistories.getTotalElements());

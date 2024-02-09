@@ -50,6 +50,9 @@ public class AlarmProperties {
 	@Value("${cabinet.alarm.slack.soonOverdue.template}")
 	private String soonOverdueSlackTemplate;
 
+	@Value("${cabinet.alarm.slack.soonOverdue.template-today}")
+	private String soonOverdueByTodayTemplate;
+
 	/*================== extensionIssuance ======================*/
 	@Value("${cabinet.alarm.mail.extensionIssuance.subject}")
 	private String extensionIssuanceSubject;

@@ -197,16 +197,16 @@ public class CabinetFacadeService {
 	@Transactional
 	public CabinetPendingResponseDto getAvailableCabinets(String building) {
 		final LocalDateTime now = LocalDateTime.now();
-		final LocalDateTime yesterday = now.minusDays(1).withHour(13).withMinute(0).withSecond(0);
-		List<Cabinet> availableCabinets = cabinetQueryService.findCabinetsNotLentTypeAndStatus(
-				building, LentType.CLUB, List.of(AVAILABLE, PENDING));
-		List<Long> cabinetIds = availableCabinets.stream()
+		List<Cabinet> pendingCabinets =
+				cabinetQueryService.findPendingCabinetsNotLentTypeAndStatus(
+						building, LentType.CLUB, List.of(AVAILABLE, PENDING));
+		List<Long> cabinetIds = pendingCabinets.stream()
 				.filter(cabinet -> cabinet.isStatus(PENDING))
 				.map(Cabinet::getId).collect(Collectors.toList());
 		Map<Long, List<LentHistory>> lentHistoriesMap;
 		if (now.getHour() < 13) {
 			lentHistoriesMap = lentQueryService.findPendingLentHistoriesOnDate(
-							yesterday.toLocalDate(), cabinetIds)
+							now.minusDays(1).toLocalDate(), cabinetIds)
 					.stream().collect(groupingBy(LentHistory::getCabinetId));
 		} else {
 			lentHistoriesMap = lentQueryService.findCabinetLentHistories(cabinetIds)
@@ -221,7 +221,11 @@ public class CabinetFacadeService {
 				cabinetFloorMap.get(floor).add(cabinetMapper.toCabinetPreviewDto(cabinet, 0, null));
 			}
 			if (cabinet.isStatus(PENDING)) {
-				lentHistoriesMap.get(cabinet.getId()).stream()
+				List<LentHistory> lentHistories = lentHistoriesMap.get(cabinet.getId());
+				if (lentHistories == null || lentHistories.isEmpty()) {
+					return;
+				}
+				lentHistories.stream()
 						.map(LentHistory::getEndedAt)
 						.max(LocalDateTime::compareTo)
 						.ifPresent(latestEndedAt -> cabinetFloorMap.get(floor)
