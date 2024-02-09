@@ -36,7 +36,7 @@ const Card = ({
         <CardHeaderStyled>
           <CardTitleWrapperStyled>
             {title && <CardTitleStyled>{title}</CardTitleStyled>}
-            {onClickToolTip && <ToolTipIcon></ToolTipIcon>}
+            {onClickToolTip && <ToolTipIcon onClick={onClickToolTip} />}
           </CardTitleWrapperStyled>
           {buttons.length > 0 && (
             <CardButtonWrapper>
