@@ -233,7 +233,7 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
     : null;
 
   const openModal = (modalName: TModalState) => {
-    if (modalName === "lentModal" && myCabinetInfo.cabinetId) {
+    if (modalName === "lentModal" && myCabinetInfo?.cabinetId) {
       modalName = "unavailableModal";
     } else if (
       modalName === "returnModal" &&
@@ -330,17 +330,17 @@ const CabinetInfoAreaContainer = (): JSX.Element => {
       isAvailable={
         (cabinetViewData?.status === "AVAILABLE" ||
           cabinetViewData?.status === "IN_SESSION") &&
-        !myCabinetInfo.cabinetId
+        !myCabinetInfo?.cabinetId
       }
       isExtensible={!!myInfo.lentExtensionResponseDto && !myInfo.unbannedAt}
       userModal={userModal}
       openModal={openModal}
       closeModal={closeModal}
       isSwappable={
-        myCabinetInfo.lentType === CabinetType.PRIVATE &&
-        !!myCabinetInfo.cabinetId &&
+        myCabinetInfo?.lentType === CabinetType.PRIVATE &&
+        !!myCabinetInfo?.cabinetId &&
         cabinetViewData?.lentType === CabinetType.PRIVATE &&
-        cabinetViewData?.cabinetId !== myCabinetInfo.cabinetId &&
+        cabinetViewData?.cabinetId !== myCabinetInfo?.cabinetId &&
         cabinetViewData?.status === CabinetStatus.AVAILABLE
       }
     />
