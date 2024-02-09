@@ -13,6 +13,7 @@ export interface IButtonProps {
 
 interface CardProps {
   title?: string;
+  onClickToolTip?: () => void;
   children: React.ReactElement;
   buttons?: IButtonProps[];
   gridArea: string;
@@ -22,6 +23,7 @@ interface CardProps {
 
 const Card = ({
   title,
+  onClickToolTip,
   gridArea,
   width = "350px",
   height = "163px",
@@ -34,7 +36,7 @@ const Card = ({
         <CardHeaderStyled>
           <CardTitleWrapperStyled>
             {title && <CardTitleStyled>{title}</CardTitleStyled>}
-            {<ToolTipIcon></ToolTipIcon>}
+            {onClickToolTip && <ToolTipIcon></ToolTipIcon>}
           </CardTitleWrapperStyled>
           {buttons.length > 0 && (
             <CardButtonWrapper>

@@ -17,6 +17,7 @@ const ExtensionCard = ({ extensionInfo, button }: ExtensionProps) => {
   return (
     <Card
       title={"연장권"}
+      onClickToolTip={() => {}}
       gridArea={"extension"}
       width={"350px"}
       height={"183px"}
