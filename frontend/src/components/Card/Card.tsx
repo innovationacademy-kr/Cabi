@@ -32,7 +32,10 @@ const Card = ({
     <CardStyled gridArea={gridArea} width={width} height={height}>
       {(title || buttons.length > 0) && (
         <CardHeaderStyled>
-          {title && <CardTitleStyled>{title}</CardTitleStyled>}
+          <CardTitleWrapperStyled>
+            {title && <CardTitleStyled>{title}</CardTitleStyled>}
+            {<ToolTipIcon></ToolTipIcon>}
+          </CardTitleWrapperStyled>
           {buttons.length > 0 && (
             <CardButtonWrapper>
               {buttons?.map((button, index) => (
@@ -80,10 +83,28 @@ export const CardHeaderStyled = styled.div`
   padding: 20px 20px 10px 30px;
 `;
 
+const CardTitleWrapperStyled = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export const CardTitleStyled = styled.div`
   font-size: 1.2em;
   font-weight: bold;
   margin-right: auto;
+`;
+
+const ToolTipIcon = styled.div`
+  background-image: url("/src/assets/images/cautionSign.svg");
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  opacity: 0.6;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 export const CardButtonWrapper = styled.div`
