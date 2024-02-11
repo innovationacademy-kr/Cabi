@@ -26,13 +26,6 @@ public class CqrsEventListener {
 	}
 
 	@PostPersist
-	public void onPostPersist(Object object) {
-		if (object instanceof LentHistory) {
-			LentHistory lentHistory = (LentHistory) object;
-			cqrsManager.changeCabinetLentHistory(lentHistory);
-		}
-	}
-
 	@PostUpdate
 	public void onPostUpdate(Object object) {
 		if (object instanceof LentHistory) {

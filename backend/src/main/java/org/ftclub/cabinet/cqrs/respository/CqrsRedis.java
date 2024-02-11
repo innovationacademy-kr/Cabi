@@ -213,7 +213,7 @@ public class CqrsRedis {
 	 * @param subKey Redis subKey
 	 * @param value  저장할 DTO 객체
 	 */
-	public void setHash(String key, String subKey, Object value) {
+	public <T> void setHash(String key, String subKey, T value) {
 		hashTemplate.put(key, subKey, dtoToString(value));
 	}
 }

@@ -66,15 +66,23 @@ public class CqrsManager {
 	@Async
 	@Transactional(readOnly = true)
 	public void changeCabinet(Cabinet cabinet) {
+		// 영속화(연관관계를 가지는 엔티티 포함)
 		Cabinet findCabinet = cabinetQueryService.getCabinet(cabinet.getId());
+
 		this.changeAvailableCabinet(findCabinet);
+		this.changeCabinetPerSection(findCabinet);
 		this.changeCabinetInfo(findCabinet);
 	}
 
 	@Async
 	@Transactional(readOnly = true)
 	public void changeCabinetLentHistory(LentHistory lentHistory) {
-		this.changeCabinetInfo(lentHistory);
+		// LentHistory PostPersist 경우 DB에서 찾으면 없기 때문에 비영속 상태 유지 + 연관관계를 가지는 엔티티 영속화
+		Cabinet cabinet = cabinetQueryService.getCabinet(lentHistory.getCabinetId());
+		User user = userQueryService.getUser(lentHistory.getUserId());
+
+		this.changeCabinetPerSection(lentHistory, cabinet, user);
+		this.changeCabinetInfo(lentHistory, cabinet, user);
 	}
 
 	public void clearAll() {
@@ -82,6 +90,7 @@ public class CqrsManager {
 		cqrsService.clearFloors();
 		cqrsService.clearAvailableCabinet();
 		cqrsService.clearCabinetPerSection();
+		cqrsService.clearCabinetInfo();
 	}
 
 	private void syncAll(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
@@ -128,10 +137,10 @@ public class CqrsManager {
 	}
 
 	private void changeCabinetInfo(Cabinet cabinet) {
-		cqrsService.changeCabinetInfo(cabinet);
+		cqrsService.addCabinetInfo(cabinet);
 	}
 
-	private void changeCabinetInfo(LentHistory lentHistory) {
+	private void changeCabinetInfo(LentHistory lentHistory, Cabinet cabinet, User user) {
 		if (lentHistory.getEndedAt() == null) {
 			cqrsService.addLentHistoryOnCabinetInfo(lentHistory);
 		} else {
@@ -173,7 +182,22 @@ public class CqrsManager {
 	/************************************* CabinetPerSection **************************************/
 
 	private void syncCabinetPerSection(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
-		// User도 Join으로 영속화 해둔 상태이기 때문에, LentHistory.getUser()를 사용하여 User 정보를 가져올 수 있음
-		cqrsService.addCabinetPerSection(cabinet, cabinetLentHistories);
+		cqrsService.addCabinetPerSection(cabinet);
+		List<LentHistory> activeCabinetLentHistories = cabinetLentHistories.stream()
+				.filter(l -> l.getEndedAt() == null).collect(Collectors.toList());
+		activeCabinetLentHistories.forEach(lentHistory ->
+				cqrsService.addLentHistoryOnCabinetPerSection(cabinet, lentHistory.getUser()));
+	}
+
+	private void changeCabinetPerSection(Cabinet cabinet) {
+		cqrsService.addCabinetPerSection(cabinet);
+	}
+
+	private void changeCabinetPerSection(LentHistory lentHistory, Cabinet cabinet, User user) {
+		if (lentHistory.getEndedAt() == null) {
+			cqrsService.addLentHistoryOnCabinetPerSection(cabinet, user);
+		} else {
+			cqrsService.removeLentHistoryOnCabinetPerSection(cabinet, user);
+		}
 	}
 }

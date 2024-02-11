@@ -7,6 +7,7 @@ import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.CABINET_PER_SECTION
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.FLOORS;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -147,38 +148,87 @@ public class CqrsService {
 				.collect(Collectors.toList());
 	}
 
-	private String getCabinetTitle(Cabinet cabinet, List<LentHistory> lentHistories) {
-		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
-			return cabinet.getTitle();
-		} else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
-			return lentHistories.get(0).getUser().getName();
-		}
-		return null;
-	}
-
-	public void addCabinetPerSection(Cabinet cabinet, List<LentHistory> lentHistories) {
+	public void addCabinetPerSection(Cabinet cabinet) {
 		Location location = cabinet.getCabinetPlace().getLocation();
-		String building = location.getBuilding();
+		String key = location.getBuilding() + location.getFloor().toString() +
+				CABINET_PER_SECTION.getValue();
 		String section = location.getSection();
-		String floor = location.getFloor().toString();
 
 		synchronized (cqrsLockCollection.getLock(CABINET_PER_SECTION)) {
-			List<CabinetPreviewDto> cabinetPreviewDtos =
-					cqrsRedis.getHash(building + floor + CABINET_PER_SECTION.getValue(), section,
-							new TypeReference<List<CabinetPreviewDto>>() {});
+			List<CabinetPreviewDto> cabinetPreviewDtos = cqrsRedis.getHash(key, section,
+					new TypeReference<List<CabinetPreviewDto>>() {});
 			if (cabinetPreviewDtos == null) {
 				cabinetPreviewDtos = new ArrayList<>();
 			}
-			List<LentHistory> activeLentHistories = lentHistories.stream()
-					.filter(l -> l.getEndedAt() == null).collect(Collectors.toList());
-			String title = this.getCabinetTitle(cabinet, activeLentHistories);
-			CabinetPreviewDto newCabinet =
-					cabinetMapper.toCabinetPreviewDto(cabinet, activeLentHistories.size(), title);
 
+			CabinetPreviewDto cabinetPreviewDto = cabinetPreviewDtos.stream()
+					.filter(c -> c.getCabinetId().equals(cabinet.getId()))
+					.findFirst().orElse(null);
+			CabinetPreviewDto newCabinet = cabinetMapper.toCabinetPreviewDto(cabinet,
+					cabinetPreviewDto == null ? 0 : cabinetPreviewDto.getUserCount(),
+					cabinetPreviewDto == null ? null : cabinetPreviewDto.getTitle());
+			cabinetPreviewDtos.removeIf(c -> c.getCabinetId().equals(cabinet.getId()));
 			cabinetPreviewDtos.add(newCabinet);
 			cabinetPreviewDtos.sort(Comparator.comparing(CabinetPreviewDto::getVisibleNum));
 
-			cqrsRedis.setHash(building + floor + CABINET_PER_SECTION.getValue(), section, cabinetPreviewDtos);
+			cqrsRedis.setHash(key, section, cabinetPreviewDtos);
+		}
+	}
+
+	public void addLentHistoryOnCabinetPerSection(Cabinet cabinet, User user) {
+		Location location = cabinet.getCabinetPlace().getLocation();
+		String key = location.getBuilding() + location.getFloor().toString() +
+				CABINET_PER_SECTION.getValue();
+		String section = location.getSection();
+
+		synchronized (cqrsLockCollection.getLock(CABINET_PER_SECTION)) {
+			List<CabinetPreviewDto> cabinetPreviewDtos = cqrsRedis.getHash(key, section,
+							new TypeReference<List<CabinetPreviewDto>>() {});
+			if (cabinetPreviewDtos == null) {
+				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			}
+
+			CabinetPreviewDto cabinetPreviewDto = cabinetPreviewDtos.stream()
+					.filter(c -> c.getCabinetId().equals(cabinet.getId()))
+					.findFirst().orElseThrow(ExceptionStatus.INVALID_ARGUMENT::asServiceException);
+			cabinetPreviewDto.setUserCount(cabinetPreviewDto.getUserCount() + 1);
+			if (StringUtil.isNullOrEmpty(cabinetPreviewDto.getTitle())) {
+				cabinetPreviewDto.setTitle(user.getName());
+			}
+
+			cqrsRedis.setHash(key, section, cabinetPreviewDtos);
+		}
+	}
+
+	public void removeLentHistoryOnCabinetPerSection(Cabinet cabinet, User user) {
+		Location location = cabinet.getCabinetPlace().getLocation();
+		String key = location.getBuilding() + location.getFloor().toString() +
+				CABINET_PER_SECTION.getValue();
+		String section = location.getSection();
+
+		synchronized (cqrsLockCollection.getLock(CABINET_PER_SECTION)) {
+			List<CabinetPreviewDto> cabinetPreviewDtos = cqrsRedis.getHash(key, section,
+					new TypeReference<List<CabinetPreviewDto>>() {});
+			if (cabinetPreviewDtos == null) {
+				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			}
+
+			CabinetPreviewDto cabinetPreviewDto = cabinetPreviewDtos.stream()
+					.filter(c -> c.getCabinetId().equals(cabinet.getId()))
+					.findFirst().orElseThrow(ExceptionStatus.INVALID_ARGUMENT::asServiceException);
+			cabinetPreviewDto.setUserCount(cabinetPreviewDto.getUserCount() -1);
+			if (cabinetPreviewDto.getUserCount() == 0 ||
+					cabinetPreviewDto.getTitle().equals(user.getName())) {
+				cabinetPreviewDto.setTitle(null);
+			}
+
+			cqrsRedis.setHash(key, section, cabinetPreviewDtos);
+		}
+	}
+
+	public void clearCabinetInfo() {
+		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
+			cqrsRedis.clearBySuffix(CABINET_INFO.getValue());
 		}
 	}
 
@@ -190,33 +240,26 @@ public class CqrsService {
 	public void addCabinetInfo(Cabinet cabinet) {
 		String key = cabinet.getId() + CABINET_INFO.getValue();
 
-		CabinetInfoResponseDto cabinetInfoResponseDto =
-				cabinetMapper.toCabinetInfoResponseDto(cabinet, new ArrayList<>(), null);
-
-		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
-			cqrsRedis.set(key, cabinetInfoResponseDto);
-		}
-	}
-
-	public void changeCabinetInfo(Cabinet cabinet) {
-		String key = cabinet.getId() + CABINET_INFO.getValue();
-
 		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
 			CabinetInfoResponseDto cabinetInfo =
 					cqrsRedis.get(key, new TypeReference<CabinetInfoResponseDto>() {});
 			if (cabinetInfo == null) {
-				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+				cabinetInfo = cabinetMapper.toCabinetInfoResponseDto(cabinet, new ArrayList<>(), null);
+			} else {
+				cabinetInfo.setLentType(cabinet.getLentType());
+				cabinetInfo.setTitle(cabinet.getTitle());
+				cabinetInfo.setStatus(cabinet.getStatus());
+				cabinetInfo.setStatusNote(cabinet.getStatusNote());
 			}
 
-			cabinetInfo.setLentType(cabinet.getLentType());
-			cabinetInfo.setTitle(cabinet.getTitle());
-			cabinetInfo.setStatus(cabinet.getStatus());
-			cabinetInfo.setStatusNote(cabinet.getStatusNote());
 			cqrsRedis.set(key, cabinetInfo);
 		}
 	}
 
 	public void addSessionCabinetInfo(Long cabinetId, List<User> users, LocalDateTime expiredAt) {
+		if (users.isEmpty()) {
+			return;
+		}
 		String key = cabinetId + CABINET_INFO.getValue();
 		List<LentDto> lentDtos = users.stream()
 				.map(lentMapper::toLentDto).collect(Collectors.toList());
@@ -234,26 +277,7 @@ public class CqrsService {
 		}
 	}
 
-	public void addClubLentHistoryOnCabinetInfo(ClubLentHistory clubLentHistory) {
-		String key = clubLentHistory.getCabinetId() + CABINET_INFO.getValue();
-		LentDto lentDto = lentMapper.toLentDto(clubLentHistory);
-
-		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
-			CabinetInfoResponseDto cabinetInfo =
-					cqrsRedis.get(key, new TypeReference<CabinetInfoResponseDto>() {});
-			if (cabinetInfo == null) {
-				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
-			}
-
-			cabinetInfo.getLents().add(lentDto);
-			cqrsRedis.set(key, cabinetInfo);
-		}
-	}
-
-	public void addLentHistoryOnCabinetInfo(LentHistory lentHistory) {
-		String key = lentHistory.getCabinetId() + CABINET_INFO.getValue();
-		LentDto lentDto = lentMapper.toLentDto(lentHistory.getUser(), lentHistory);
-
+	private void addLentHistoryOnCabinetInfo(String key, LentDto lentDto) {
 		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
 			CabinetInfoResponseDto cabinetInfo =
 					cqrsRedis.get(key, new TypeReference<CabinetInfoResponseDto>() {});
@@ -262,15 +286,26 @@ public class CqrsService {
 			}
 
 			List<LentDto> lents = cabinetInfo.getLents();
-			lents.removeIf(l -> l.getLentHistoryId().equals(lentHistory.getId()));
+			lents.removeIf(l -> l.getLentHistoryId().equals(lentDto.getLentHistoryId()));
 			lents.add(lentDto);
+
 			cqrsRedis.set(key, cabinetInfo);
 		}
 	}
 
-	public void removeLentHistoryOnCabinetInfo(LentHistory lentHistory) {
-		String key = lentHistory.getCabinetId() + CABINET_INFO.getValue();
+	public void addClubLentHistoryOnCabinetInfo(ClubLentHistory clubLentHistory) {
+		String key = clubLentHistory.getCabinetId() + CABINET_INFO.getValue();
+		LentDto lentDto = lentMapper.toLentDto(clubLentHistory);
+		this.addLentHistoryOnCabinetInfo(key, lentDto);
+	}
 
+	public void addLentHistoryOnCabinetInfo(LentHistory lentHistory) {
+		String key = lentHistory.getCabinetId() + CABINET_INFO.getValue();
+		LentDto lentDto = lentMapper.toLentDto(lentHistory.getUser(), lentHistory);
+		this.addLentHistoryOnCabinetInfo(key, lentDto);
+	}
+
+	private void removeLentHistoryOnCabinetInfo(String key, Long lentHistoryId) {
 		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
 			CabinetInfoResponseDto cabinetInfo =
 					cqrsRedis.get(key, new TypeReference<CabinetInfoResponseDto>() {});
@@ -278,9 +313,23 @@ public class CqrsService {
 				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 			}
 
-			cabinetInfo.getLents().removeIf(l -> l.getLentHistoryId().equals(lentHistory.getId()));
+			List<LentDto> lents = cabinetInfo.getLents();
+			lents.removeIf(l -> l.getLentHistoryId().equals(lentHistoryId));
+
 			cqrsRedis.set(key, cabinetInfo);
 		}
+	}
+
+	public void removeClubLentHistoryOnCabinetInfo(ClubLentHistory clubLentHistory) {
+		String key = clubLentHistory.getCabinetId() + CABINET_INFO.getValue();
+		LentDto lentDto = lentMapper.toLentDto(clubLentHistory);
+		this.removeLentHistoryOnCabinetInfo(key, lentDto.getLentHistoryId());
+	}
+
+	public void removeLentHistoryOnCabinetInfo(LentHistory lentHistory) {
+		String key = lentHistory.getCabinetId() + CABINET_INFO.getValue();
+		LentDto lentDto = lentMapper.toLentDto(lentHistory.getUser(), lentHistory);
+		this.removeLentHistoryOnCabinetInfo(key, lentDto.getLentHistoryId());
 	}
 
 	//@formatter:on
