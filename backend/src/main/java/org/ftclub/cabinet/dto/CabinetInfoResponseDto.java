@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -15,20 +16,21 @@ import org.ftclub.cabinet.cabinet.domain.Location;
  */
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 public class CabinetInfoResponseDto {
 
-	private final Long cabinetId;
-	private final Integer visibleNum;
-	private final LentType lentType;
-	private final Integer maxUser;
-	private final String title;
-	private final CabinetStatus status;
-	private final String statusNote;
+	private Long cabinetId;
+	private Integer visibleNum;
+	private LentType lentType;
+	private Integer maxUser;
+	private String title;
+	private CabinetStatus status;
+	private String statusNote;
 	@JsonUnwrapped
-	private final Location location;
-	private final List<LentDto> lents;
-	private final LocalDateTime sessionExpiredAt;
+	private Location location;
+	private List<LentDto> lents;
+	private LocalDateTime sessionExpiredAt;
 
 	public static boolean isValid(CabinetInfoResponseDto dto) {
 		return (dto != null && dto.cabinetId != null && dto.visibleNum != null

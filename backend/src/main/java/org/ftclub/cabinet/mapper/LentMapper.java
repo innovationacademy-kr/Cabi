@@ -37,6 +37,9 @@ public interface LentMapper {
 	@Mapping(target = "name", source = "clubLentHistory.club.name")
 	LentDto toLentDto(ClubLentHistory clubLentHistory);
 
+	@Mapping(target = "userId", source = "user.id")
+	LentDto toLentDto(User user);
+
 	@Mapping(target = "userId", source = "lentHistory.userId")
 	@Mapping(target = "cabinetId", source = "cabinet.id")
 	@Mapping(target = "location", source = "cabinet.cabinetPlace.location")

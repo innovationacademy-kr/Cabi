@@ -32,9 +32,5 @@ public enum CqrsSuffix {
 	CqrsSuffix(String value) {
 		this.value = value;
 	}
-
-	public String getValue() {
-		return value;
-	}
 }
 

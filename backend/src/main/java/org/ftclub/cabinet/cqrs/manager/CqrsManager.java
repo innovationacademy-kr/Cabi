@@ -4,15 +4,22 @@ import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
+import org.ftclub.cabinet.club.domain.ClubLentHistory;
 import org.ftclub.cabinet.cqrs.service.CqrsService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
+import org.ftclub.cabinet.lent.service.ClubLentQueryService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
+import org.ftclub.cabinet.lent.service.LentRedisService;
 import org.ftclub.cabinet.log.Logging;
+import org.ftclub.cabinet.user.domain.User;
+import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +32,9 @@ public class CqrsManager {
 
 	private final LentQueryService lentQueryService;
 	private final CabinetQueryService cabinetQueryService;
+	private final ClubLentQueryService clubLentQueryService;
+	private final UserQueryService userQueryService;
+	private final LentRedisService lentRedisService;
 
 	private final CqrsService cqrsService;
 
@@ -55,6 +65,12 @@ public class CqrsManager {
 	@Async
 	public void changeCabinet(Cabinet cabinet) {
 		this.changeAvailableCabinet(cabinet);
+		this.changeCabinetInfo(cabinet);
+	}
+
+	@Async
+	public void changeCabinetLentHistory(LentHistory lentHistory) {
+		this.changeCabinetInfo(lentHistory);
 	}
 
 	public void clearAll() {
@@ -70,9 +86,7 @@ public class CqrsManager {
 		this.syncCabinetInfo(cabinet, cabinetLentHistories);
 	}
 
-	private void syncCabinetInfo(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
-		cqrsService.addCabinetInfo(cabinet, cabinetLentHistories);
-	}
+	/************************************* BuildingsAndFloors *************************************/
 
 	private void syncBuildingsAndFloors() {
 		cabinetQueryService.findAllBuildings().forEach(building -> {
@@ -80,8 +94,41 @@ public class CqrsManager {
 			cqrsService.addBuildingFloors(building, floors);
 			cqrsService.addFloors(building, floors);
 		});
-
 	}
+
+	/**************************************** CabinetInfo *****************************************/
+
+	private void syncCabinetInfo(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
+		cqrsService.addCabinetInfo(cabinet);
+		Long cabinetId = cabinet.getId();
+
+		if (cabinet.isLentType(LentType.CLUB)) {
+			ClubLentHistory activeClubLentHistory =
+					clubLentQueryService.findActiveLentHistoryWithClub(cabinetId);
+			cqrsService.addClubLentHistoryOnCabinetInfo(activeClubLentHistory);
+		} else {
+			List<LentHistory> activeCabinetLentHistories = cabinetLentHistories.stream()
+					.filter(l -> l.getEndedAt() == null)
+					.collect(Collectors.toList());
+			if (activeCabinetLentHistories.isEmpty()) {
+				List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
+				List<User> users = userQueryService.findUsers(usersInCabinet);
+				LocalDateTime sessionExpired = lentRedisService.getSessionExpired(cabinetId);
+				cqrsService.addSessionCabinetInfo(cabinetId, users, sessionExpired);
+			} else {
+				cqrsService.addLentHistoryOnCabinetInfo(cabinetId, activeCabinetLentHistories);
+			}
+		}
+	}
+
+	private void changeCabinetInfo(Cabinet cabinet) {
+		cqrsService.changeCabinetInfo(cabinet);
+	}
+
+	private void changeCabinetInfo(LentHistory lentHistory) {
+	}
+
+	/************************************** AvailableCabinet **************************************/
 
 	/**
 	 * 사물함의 상태가 AVAILABLE, PENDING일 때, availableCabinet에 추가
@@ -111,6 +158,8 @@ public class CqrsManager {
 			cqrsService.removeAvailableCabinet(cabinet);
 		}
 	}
+
+	/************************************* CabinetPerSection **************************************/
 
 	private void syncCabinetPerSection(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
 		// User도 Join으로 영속화 해둔 상태이기 때문에, LentHistory.getUser()를 사용하여 User 정보를 가져올 수 있음
