@@ -1,5 +1,6 @@
 package org.ftclub.cabinet.cabinet.service;
 
+<<<<<<< Updated upstream
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toMap;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+=======
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -264,7 +267,6 @@ public class CabinetFacadeService {
 		Page<LentHistory> lentHistories = lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(
 				cabinetId, pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
-				.sorted(Comparator.comparing(LentHistory::getStartedAt).reversed())
 				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
 				.collect(Collectors.toList());
 		return lentMapper.toLentHistoryPaginationDto(result, lentHistories.getTotalElements());

@@ -173,7 +173,13 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "FROM LentHistory lh "
 			+ "LEFT JOIN FETCH lh.user u "
 			+ "LEFT JOIN FETCH lh.cabinet c "
+<<<<<<< Updated upstream
 			+ "WHERE lh.cabinetId = :cabinetId ",
+=======
+			+ "LEFT JOIN FETCH c.cabinetPlace cp "
+			+ "WHERE lh.cabinetId = :cabinetId "
+			+ "ORDER BY lh.startedAt DESC",
+>>>>>>> Stashed changes
 			countQuery = "SELECT count(lh) "
 					+ "FROM LentHistory lh "
 					+ "WHERE lh.cabinetId = :cabinetId ")
