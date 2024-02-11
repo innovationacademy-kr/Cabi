@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.ftclub.cabinet.exception.ExceptionStatus;
-import org.ftclub.cabinet.log.LogLevel;
-import org.ftclub.cabinet.log.Logging;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -22,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Logging(level = LogLevel.DEBUG)
+//@Logging(level = LogLevel.DEBUG)
 public class CqrsRedis {
 
 	private final RedisTemplate<String, String> redisTemplate; // expire 같은 조금 더 많은 기능을 지원

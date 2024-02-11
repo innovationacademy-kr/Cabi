@@ -202,14 +202,12 @@ public class CabinetQueryService {
 	/**
 	 * 사물함 상태에 맞는 사물함들 중 from 이전에 대여기간이 만료되는 사물함을 가져옵니다.
 	 *
-	 * @param cabinetStatus 사물함 상태
-	 * @param from          조회할 시간
+	 * @param from 조회할 시간
 	 * @return 사물함
 	 */
-	public List<Cabinet> findAllPendingCabinetsByCabinetStatusAndBeforeEndedAt(
-			CabinetStatus cabinetStatus, LocalDateTime from) {
-		return cabinetRepository.findAllCabinetsByCabinetStatusAndBeforeEndedAt(cabinetStatus,
-				from);
+	public List<Cabinet> findAllPendingCabinets(LocalDateTime from) {
+		CabinetStatus cabinetStatus = CabinetStatus.PENDING;
+		return cabinetRepository.findAllByCabinetStatusAndBeforeEndedAt(cabinetStatus, from);
 	}
 
 	public List<Long> findAllCabinetIds() {
