@@ -105,7 +105,9 @@ public class CqrsManager {
 		if (cabinet.isLentType(LentType.CLUB)) {
 			ClubLentHistory activeClubLentHistory =
 					clubLentQueryService.findActiveLentHistoryWithClub(cabinetId);
-			cqrsService.addClubLentHistoryOnCabinetInfo(activeClubLentHistory);
+			if (activeClubLentHistory != null) {
+				cqrsService.addClubLentHistoryOnCabinetInfo(activeClubLentHistory);
+			}
 		} else {
 			List<LentHistory> activeCabinetLentHistories = cabinetLentHistories.stream()
 					.filter(l -> l.getEndedAt() == null)

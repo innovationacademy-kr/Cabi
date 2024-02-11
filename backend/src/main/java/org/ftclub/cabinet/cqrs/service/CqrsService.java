@@ -9,6 +9,7 @@ import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.FLOORS;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -147,6 +148,7 @@ public class CqrsService {
 				cqrsRedis.getHashEntries(building + floor + CABINET_PER_SECTION.getValue(),
 						new TypeReference<List<CabinetPreviewDto>>() {});
 		return hashEntries.entrySet().stream()
+				.sorted(Comparator.comparing(e -> e.getValue().get(0).getVisibleNum()))
 				.map(e -> cabinetMapper.toCabinetsPerSectionResponseDto(e.getKey(), e.getValue()))
 				.collect(Collectors.toList());
 	}
