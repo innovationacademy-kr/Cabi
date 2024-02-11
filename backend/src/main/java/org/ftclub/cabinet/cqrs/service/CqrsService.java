@@ -27,14 +27,11 @@ import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.lent.service.ClubLentQueryService;
-import org.ftclub.cabinet.lent.service.LentRedisService;
 import org.ftclub.cabinet.log.LogLevel;
 import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
-import org.ftclub.cabinet.user.service.UserQueryService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,20 +40,18 @@ import org.springframework.stereotype.Service;
 public class CqrsService {
 
 	private final CqrsRedis cqrsRedis;
-	private final LentRedisService lentRedisService;
 
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
-
-	private final UserQueryService userQueryService;
-	private final ClubLentQueryService clubLentQueryService;
 
 	private final CqrsLockCollection cqrsLockCollection;
 
 
 	//@formatter:off
 	public void clearBuildingFloors() {
-		cqrsRedis.clearBySuffix(BUILDINGS.getValue());
+		synchronized (cqrsLockCollection.getLock(BUILDINGS)) {
+			cqrsRedis.clearBySuffix(BUILDINGS.getValue());
+		}
 	}
 
 	public List<BuildingFloorsDto> getBuildingFloors() {
@@ -71,12 +66,17 @@ public class CqrsService {
 		if (buildingFloorsDtos == null) {
 			buildingFloorsDtos = new ArrayList<>();
 		}
+
 		buildingFloorsDtos.add(cabinetMapper.toBuildingFloorsDto(building, floors));
-		cqrsRedis.set(key, buildingFloorsDtos);
+		synchronized (cqrsLockCollection.getLock(BUILDINGS)) {
+			cqrsRedis.set(key, buildingFloorsDtos);
+		}
 	}
 
 	public void clearFloors() {
-		cqrsRedis.clearBySuffix(FLOORS.getValue());
+		synchronized (cqrsLockCollection.getLock(FLOORS)) {
+			cqrsRedis.clearBySuffix(FLOORS.getValue());
+		}
 	}
 
 	public List<Integer> getFloors(String building) {
@@ -84,7 +84,9 @@ public class CqrsService {
 	}
 
 	public void addFloors(String building, List<Integer> floors) {
-		cqrsRedis.set(building + FLOORS.getValue(), floors);
+		synchronized (cqrsLockCollection.getLock(FLOORS)) {
+			cqrsRedis.set(building + FLOORS.getValue(), floors);
+		}
 	}
 
 	public void clearAvailableCabinet() {
@@ -129,14 +131,6 @@ public class CqrsService {
 		}
 	}
 
-	private String getCabinetTitle(Cabinet cabinet, List<LentHistory> lentHistories) {
-		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
-			return cabinet.getTitle();
-		} else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
-			return lentHistories.get(0).getUser().getName();
-		}
-		return null;
-	}
 	public void clearCabinetPerSection() {
 		synchronized (cqrsLockCollection.getLock(CABINET_PER_SECTION)) {
 			cqrsRedis.clearBySuffix(CABINET_PER_SECTION.getValue());
@@ -151,6 +145,15 @@ public class CqrsService {
 				.sorted(Comparator.comparing(e -> e.getValue().get(0).getVisibleNum()))
 				.map(e -> cabinetMapper.toCabinetsPerSectionResponseDto(e.getKey(), e.getValue()))
 				.collect(Collectors.toList());
+	}
+
+	private String getCabinetTitle(Cabinet cabinet, List<LentHistory> lentHistories) {
+		if (cabinet.getTitle() != null && !cabinet.getTitle().isEmpty()) {
+			return cabinet.getTitle();
+		} else if (!lentHistories.isEmpty() && lentHistories.get(0).getUser() != null) {
+			return lentHistories.get(0).getUser().getName();
+		}
+		return null;
 	}
 
 	public void addCabinetPerSection(Cabinet cabinet, List<LentHistory> lentHistories) {
@@ -168,7 +171,7 @@ public class CqrsService {
 			}
 			List<LentHistory> activeLentHistories = lentHistories.stream()
 					.filter(l -> l.getEndedAt() == null).collect(Collectors.toList());
-			String title = getCabinetTitle(cabinet, activeLentHistories);
+			String title = this.getCabinetTitle(cabinet, activeLentHistories);
 			CabinetPreviewDto newCabinet =
 					cabinetMapper.toCabinetPreviewDto(cabinet, activeLentHistories.size(), title);
 
