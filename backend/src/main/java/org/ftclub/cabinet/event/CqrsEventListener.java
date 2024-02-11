@@ -29,11 +29,7 @@ public class CqrsEventListener {
 	public void onPostPersist(Object object) {
 		if (object instanceof LentHistory) {
 			LentHistory lentHistory = (LentHistory) object;
-			// LentHistory Entity -> Redis 저장
-
-		} else if (object instanceof Cabinet) {
-			Cabinet cabinet = (Cabinet) object;
-			// Cabinet Entity -> Redis 저장
+			cqrsManager.changeCabinetLentHistory(lentHistory);
 		}
 	}
 
@@ -41,8 +37,9 @@ public class CqrsEventListener {
 	public void onPostUpdate(Object object) {
 		if (object instanceof LentHistory) {
 			LentHistory lentHistory = (LentHistory) object;
-			// LentHistory Entity -> Redis에 수정사항 반영
-		} else if (object instanceof Cabinet) {
+			cqrsManager.changeCabinetLentHistory(lentHistory);
+		}
+		if (object instanceof Cabinet) {
 			cqrsManager.changeCabinet((Cabinet) object);
 		}
 	}

@@ -68,7 +68,6 @@ public class CabinetCommandService {
 	 */
 	public void updateTitle(Cabinet cabinet, String title) {
 		cabinet.writeTitle(title);
-		cabinetRepository.save(cabinet);
 	}
 
 	/**
@@ -79,7 +78,6 @@ public class CabinetCommandService {
 	 */
 	public void updateMemo(Cabinet cabinet, String memo) {
 		cabinet.writeMemo(memo);
-		cabinetRepository.save(cabinet);
 	}
 
 	/**

@@ -40,6 +40,7 @@ public class CqrsManager {
 
 
 	@Async
+	@Transactional(readOnly = true)
 	public void synchronizeDatabase() {
 		this.clearAll();
 
@@ -63,12 +64,15 @@ public class CqrsManager {
 	}
 
 	@Async
+	@Transactional(readOnly = true)
 	public void changeCabinet(Cabinet cabinet) {
-		this.changeAvailableCabinet(cabinet);
-		this.changeCabinetInfo(cabinet);
+		Cabinet findCabinet = cabinetQueryService.getCabinet(cabinet.getId());
+		this.changeAvailableCabinet(findCabinet);
+		this.changeCabinetInfo(findCabinet);
 	}
 
 	@Async
+	@Transactional(readOnly = true)
 	public void changeCabinetLentHistory(LentHistory lentHistory) {
 		this.changeCabinetInfo(lentHistory);
 	}
@@ -118,7 +122,7 @@ public class CqrsManager {
 				LocalDateTime sessionExpired = lentRedisService.getSessionExpired(cabinetId);
 				cqrsService.addSessionCabinetInfo(cabinetId, users, sessionExpired);
 			} else {
-				cqrsService.addLentHistoryOnCabinetInfo(cabinetId, activeCabinetLentHistories);
+				activeCabinetLentHistories.forEach(cqrsService::addLentHistoryOnCabinetInfo);
 			}
 		}
 	}
@@ -128,6 +132,11 @@ public class CqrsManager {
 	}
 
 	private void changeCabinetInfo(LentHistory lentHistory) {
+		if (lentHistory.getEndedAt() == null) {
+			cqrsService.addLentHistoryOnCabinetInfo(lentHistory);
+		} else {
+			cqrsService.removeLentHistoryOnCabinetInfo(lentHistory);
+		}
 	}
 
 	/************************************** AvailableCabinet **************************************/

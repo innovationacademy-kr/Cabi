@@ -236,8 +236,7 @@ public class CqrsService {
 
 	public void addClubLentHistoryOnCabinetInfo(ClubLentHistory clubLentHistory) {
 		String key = clubLentHistory.getCabinetId() + CABINET_INFO.getValue();
-		List<LentDto> lentDtos = new ArrayList<>();
-		lentDtos.add(lentMapper.toLentDto(clubLentHistory));
+		LentDto lentDto = lentMapper.toLentDto(clubLentHistory);
 
 		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
 			CabinetInfoResponseDto cabinetInfo =
@@ -246,16 +245,14 @@ public class CqrsService {
 				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 			}
 
-			cabinetInfo.setLents(lentDtos);
+			cabinetInfo.getLents().add(lentDto);
 			cqrsRedis.set(key, cabinetInfo);
 		}
 	}
 
-	public void addLentHistoryOnCabinetInfo(Long cabinetId, List<LentHistory> activeLentHistories) {
-		String key = cabinetId + CABINET_INFO.getValue();
-		List<LentDto> lentDtos = activeLentHistories.stream()
-				.map(lentHistory -> lentMapper.toLentDto(lentHistory.getUser(), lentHistory))
-				.collect(Collectors.toList());
+	public void addLentHistoryOnCabinetInfo(LentHistory lentHistory) {
+		String key = lentHistory.getCabinetId() + CABINET_INFO.getValue();
+		LentDto lentDto = lentMapper.toLentDto(lentHistory.getUser(), lentHistory);
 
 		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
 			CabinetInfoResponseDto cabinetInfo =
@@ -264,7 +261,24 @@ public class CqrsService {
 				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
 			}
 
-			cabinetInfo.setLents(lentDtos);
+			List<LentDto> lents = cabinetInfo.getLents();
+			lents.removeIf(l -> l.getLentHistoryId().equals(lentHistory.getId()));
+			lents.add(lentDto);
+			cqrsRedis.set(key, cabinetInfo);
+		}
+	}
+
+	public void removeLentHistoryOnCabinetInfo(LentHistory lentHistory) {
+		String key = lentHistory.getCabinetId() + CABINET_INFO.getValue();
+
+		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
+			CabinetInfoResponseDto cabinetInfo =
+					cqrsRedis.get(key, new TypeReference<CabinetInfoResponseDto>() {});
+			if (cabinetInfo == null) {
+				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			}
+
+			cabinetInfo.getLents().removeIf(l -> l.getLentHistoryId().equals(lentHistory.getId()));
 			cqrsRedis.set(key, cabinetInfo);
 		}
 	}

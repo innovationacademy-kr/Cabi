@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
+import org.ftclub.cabinet.cabinet.repository.CabinetPlaceRepository;
 import org.ftclub.cabinet.cabinet.repository.CabinetRepository;
 import org.ftclub.cabinet.dto.ActiveCabinetInfoEntities;
 import org.ftclub.cabinet.exception.ExceptionStatus;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 @Logging(level = LogLevel.DEBUG)
 public class CabinetQueryService {
 
+	private final CabinetPlaceRepository cabinetPlaceRepository;
 	private final CabinetRepository cabinetRepository;
 
 	/**
@@ -44,7 +46,7 @@ public class CabinetQueryService {
 	 * @return 모든 건물 이름을 반환합니다.
 	 */
 	public List<String> findAllBuildings() {
-		return cabinetRepository.findAllBuildings();
+		return cabinetPlaceRepository.findAllBuildings();
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class CabinetQueryService {
 	 * @return 건물에 해당하는 모든 층
 	 */
 	public List<Integer> findAllFloorsByBuilding(String building) {
-		return cabinetRepository.findAllFloorsByBuilding(building);
+		return cabinetPlaceRepository.findAllFloorsByBuilding(building);
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class CabinetQueryService {
 	 * @return 건물에 해당하는 모든 층
 	 */
 	public List<Integer> findAllFloorsByBuildings(List<String> buildings) {
-		return cabinetRepository.findAllFloorsByBuildings(buildings);
+		return cabinetPlaceRepository.findAllFloorsByBuildings(buildings);
 	}
 
 	/**

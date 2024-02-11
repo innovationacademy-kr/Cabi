@@ -20,26 +20,6 @@ import org.springframework.stereotype.Repository;
 public interface CabinetRepository extends JpaRepository<Cabinet, Long>, CabinetComplexRepository {
 
 	/**
-	 * 모든 빌딩을 조회한다.
-	 *
-	 * @return 빌딩 {@link List}
-	 */
-	@Query("SELECT DISTINCT p.location.building "
-			+ "FROM CabinetPlace p ")
-	List<String> findAllBuildings();
-
-	/**
-	 * 빌딩의 모든 층을 조회한다.
-	 *
-	 * @param building 빌딩
-	 * @return 층 {@link List}
-	 */
-	@Query("SELECT DISTINCT p.location.floor "
-			+ "FROM CabinetPlace p "
-			+ "WHERE p.location.building = :building")
-	List<Integer> findAllFloorsByBuilding(@Param("building") String building);
-
-	/**
 	 * 모든 사물함 ID를 조회한다.
 	 *
 	 * @return 사물함 ID {@link List}
@@ -59,17 +39,6 @@ public interface CabinetRepository extends JpaRepository<Cabinet, Long>, Cabinet
 			+ "JOIN c.cabinetPlace p "
 			+ "WHERE c.status = :status AND p.location.floor = :floor")
 	int countByStatusAndFloor(@Param("status") CabinetStatus status, @Param("floor") Integer floor);
-
-	/**
-	 * 빌딩 리스트의 모든 층을 조회한다.
-	 *
-	 * @param buildings 빌딩 {@link List}
-	 * @return 층 {@link List}
-	 */
-	@Query("SELECT DISTINCT p.location.floor "
-			+ "FROM CabinetPlace p "
-			+ "WHERE p.location.building IN (:buildings)")
-	List<Integer> findAllFloorsByBuildings(@Param("buildings") List<String> buildings);
 
 	/**
 	 * cabinetId로 사물함을 조회한다.(조회 이후 업데이트를 위해 X Lock을 건다.)
