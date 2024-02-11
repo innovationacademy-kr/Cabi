@@ -166,9 +166,14 @@ public class CqrsService {
 			if (cabinetPreviewDtos == null) {
 				cabinetPreviewDtos = new ArrayList<>();
 			}
-			List<LentHistory> activeLentHistories = lentHistories.stream().filter(l -> l.getEndedAt() == null).collect(Collectors.toList());
-			String cabinetTitle = getCabinetTitle(cabinet, activeLentHistories);
-			cabinetPreviewDtos.add(cabinetMapper.toCabinetPreviewDto(cabinet, activeLentHistories.size(),cabinetTitle));
+			List<LentHistory> activeLentHistories = lentHistories.stream()
+					.filter(l -> l.getEndedAt() == null).collect(Collectors.toList());
+			String title = getCabinetTitle(cabinet, activeLentHistories);
+			CabinetPreviewDto newCabinet =
+					cabinetMapper.toCabinetPreviewDto(cabinet, activeLentHistories.size(), title);
+
+			cabinetPreviewDtos.add(newCabinet);
+			cabinetPreviewDtos.sort(Comparator.comparing(CabinetPreviewDto::getVisibleNum));
 
 			cqrsRedis.setHash(building + floor + CABINET_PER_SECTION.getValue(), section, cabinetPreviewDtos);
 		}
