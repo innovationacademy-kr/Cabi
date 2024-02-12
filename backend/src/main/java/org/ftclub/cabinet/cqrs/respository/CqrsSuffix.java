@@ -15,9 +15,9 @@ public enum CqrsSuffix {
 	USER_NAME(":userName"),
 	USER_LENT_HISTORIES(":userLentHistories"),
 	USER_INFO(":userInfo"),
+	USER_LENT_INFO(":userLentInfo"),
 
 	LENT_COUNT(":lentCount"),
-	LENT_INFO(":lentInfo"),
 	BUILDINGS(":buildings"),
 	FLOORS(":floors"),
 	AVAILABLE_CABINET(":availableCabinet"),

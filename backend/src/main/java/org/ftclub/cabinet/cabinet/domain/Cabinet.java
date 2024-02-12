@@ -25,7 +25,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
-import org.ftclub.cabinet.event.CqrsEventListener;
+import org.ftclub.cabinet.cqrs.event.CqrsEventListener;
 import org.ftclub.cabinet.exception.DomainException;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.utils.ExceptionUtil;

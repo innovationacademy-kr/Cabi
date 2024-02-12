@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
@@ -15,22 +16,23 @@ import org.ftclub.cabinet.cabinet.domain.Location;
  */
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 public class MyCabinetResponseDto {
 
-	private final Long cabinetId;
-	private final Integer visibleNum;
-	private final LentType lentType;
-	private final Integer maxUser;
-	private final String title;
-	private final String memo;
-	private final CabinetStatus status;
-	private final String statusNote;
+	private Long cabinetId;
+	private Integer visibleNum;
+	private LentType lentType;
+	private Integer maxUser;
+	private String title;
+	private String memo;
+	private CabinetStatus status;
+	private String statusNote;
 	@JsonUnwrapped
-	private final Location location;
-	private final List<LentDto> lents;
+	private Location location;
+	private List<LentDto> lents;
 	// 공유사물함에 필요한 정보
-	private final String shareCode;
-	private final LocalDateTime sessionExpiredAt;
-	private final String previousUserName;
+	private String shareCode;
+	private LocalDateTime sessionExpiredAt;
+	private String previousUserName;
 }

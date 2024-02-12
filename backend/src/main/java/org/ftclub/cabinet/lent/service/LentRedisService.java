@@ -28,14 +28,13 @@ public class LentRedisService {
 	/*-------------------------------------  Share Cabinet  --------------------------------------*/
 
 	/**
-	 * 공유 사물함에 참여 중인 user id를 가져옵니다.
+	 * 공유 사물함에 참여 중인 모든 유저들을 가져옵니다.
 	 *
 	 * @param cabinetId 공유 사물함 cabinet id
-	 * @return 공유 사물함에 참여 중인 user id
+	 * @return 공유 사물함에 참여 중인 모든 유저들 id {@link List}
 	 */
 	public List<Long> findUsersInCabinet(Long cabinetId) {
-		List<String> userIdList = lentRedis.getAllUserInCabinet(
-				cabinetId.toString());
+		List<String> userIdList = lentRedis.getAllUserInCabinet(cabinetId.toString());
 		return userIdList.stream().map(Long::valueOf).collect(Collectors.toList());
 	}
 
@@ -129,17 +128,6 @@ public class LentRedisService {
 	public boolean isCabinetSessionFull(Long cabinetId) {
 		Long userCount = lentRedis.countUserInCabinet(cabinetId.toString());
 		return Objects.equals(userCount, cabinetProperties.getShareMaxUserCount());
-	}
-
-	/**
-	 * 공유 사물함에 참여 중인 모든 유저들을 가져옵니다.
-	 *
-	 * @param cabinetId 공유 사물함 cabinet id
-	 * @return 공유 사물함에 참여 중인 모든 유저들 id {@link List}
-	 */
-	public List<Long> getUsersInCabinet(Long cabinetId) {
-		List<String> userIdList = lentRedis.getAllUserInCabinet(cabinetId.toString());
-		return userIdList.stream().map(Long::valueOf).collect(Collectors.toList());
 	}
 
 	/**

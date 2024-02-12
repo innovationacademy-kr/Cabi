@@ -1,18 +1,25 @@
 package org.ftclub.cabinet.cqrs.manager;
 
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.AVAILABLE;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.BROKEN;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.FULL;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.IN_SESSION;
+import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.OVERDUE;
 import static org.ftclub.cabinet.cabinet.domain.CabinetStatus.PENDING;
+import static org.ftclub.cabinet.cabinet.domain.LentType.PRIVATE;
+import static org.ftclub.cabinet.cabinet.domain.LentType.SHARE;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.ftclub.cabinet.cabinet.domain.Cabinet;
+import org.ftclub.cabinet.cabinet.domain.CabinetStatus;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
-import org.ftclub.cabinet.cqrs.service.CqrsService;
+import org.ftclub.cabinet.cqrs.service.CqrsCabinetService;
+import org.ftclub.cabinet.cqrs.service.CqrsUserService;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.lent.service.ClubLentQueryService;
 import org.ftclub.cabinet.lent.service.LentQueryService;
@@ -36,7 +43,8 @@ public class CqrsManager {
 	private final UserQueryService userQueryService;
 	private final LentRedisService lentRedisService;
 
-	private final CqrsService cqrsService;
+	private final CqrsCabinetService cqrsCabinetService;
+	private final CqrsUserService cqrsUserService;
 
 
 	@Async
@@ -47,7 +55,7 @@ public class CqrsManager {
 		// 전체에서 1번씩만 초기화 해주면 되는 부분
 		this.syncBuildingsAndFloors();
 
-		// User - LentHistory - Cabinet 데이터 동기화
+		// 데이터 동기화
 		List<Long> allCabinetIds = cabinetQueryService.findAllCabinetIds();
 		for (Long cabinetId : allCabinetIds) {
 			List<LentHistory> cabinetLentHistories =
@@ -72,6 +80,7 @@ public class CqrsManager {
 		this.changeAvailableCabinet(findCabinet);
 		this.changeCabinetPerSection(findCabinet);
 		this.changeCabinetInfo(findCabinet);
+		this.changeUserLentInfo(cabinet);
 	}
 
 	@Async
@@ -82,21 +91,35 @@ public class CqrsManager {
 		User user = userQueryService.getUser(lentHistory.getUserId());
 
 		this.changeCabinetPerSection(lentHistory, cabinet, user);
-		this.changeCabinetInfo(lentHistory, cabinet, user);
+		this.changeCabinetInfo(lentHistory);
+		this.changeUserLentInfo(cabinet, lentHistory);
+	}
+
+	@Async
+	@Transactional(readOnly = true)
+	public void changeSessionLent(Long cabinetId, List<Long> userIds) {
+		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+		List<User> users = userQueryService.findUsers(userIds);
+		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
+
+		this.changeCabinetInfo(cabinet, users, sessionExpiredAt);
+		this.changeCabinetPerSection(cabinet, users);
 	}
 
 	public void clearAll() {
-		cqrsService.clearBuildingFloors();
-		cqrsService.clearFloors();
-		cqrsService.clearAvailableCabinet();
-		cqrsService.clearCabinetPerSection();
-		cqrsService.clearCabinetInfo();
+		cqrsCabinetService.clearBuildingFloors();
+		cqrsCabinetService.clearFloors();
+		cqrsCabinetService.clearAvailableCabinet();
+		cqrsCabinetService.clearCabinetPerSection();
+		cqrsCabinetService.clearCabinetInfo();
+		cqrsUserService.clearUserLentInfo();
 	}
 
 	private void syncAll(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
 		this.syncAvailableCabinet(cabinet);
 		this.syncCabinetPerSection(cabinet, cabinetLentHistories);
 		this.syncCabinetInfo(cabinet, cabinetLentHistories);
+		this.syncUserLentInfo(cabinet, cabinetLentHistories);
 	}
 
 	/************************************* BuildingsAndFloors *************************************/
@@ -104,22 +127,23 @@ public class CqrsManager {
 	private void syncBuildingsAndFloors() {
 		cabinetQueryService.findAllBuildings().forEach(building -> {
 			List<Integer> floors = cabinetQueryService.findAllFloorsByBuilding(building);
-			cqrsService.addBuildingFloors(building, floors);
-			cqrsService.addFloors(building, floors);
+			cqrsCabinetService.addBuildingFloors(building, floors);
+			cqrsCabinetService.addFloors(building, floors);
 		});
 	}
 
 	/**************************************** CabinetInfo *****************************************/
 
 	private void syncCabinetInfo(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
-		cqrsService.addCabinetInfo(cabinet);
 		Long cabinetId = cabinet.getId();
+		LocalDateTime sessionExpired = lentRedisService.getSessionExpired(cabinetId);
+		cqrsCabinetService.addCabinetInfo(cabinet, sessionExpired);
 
 		if (cabinet.isLentType(LentType.CLUB)) {
 			ClubLentHistory activeClubLentHistory =
 					clubLentQueryService.findActiveLentHistoryWithClub(cabinetId);
 			if (activeClubLentHistory != null) {
-				cqrsService.addClubLentHistoryOnCabinetInfo(activeClubLentHistory);
+				cqrsCabinetService.addClubLentHistoryOnCabinetInfo(activeClubLentHistory);
 			}
 		} else {
 			List<LentHistory> activeCabinetLentHistories = cabinetLentHistories.stream()
@@ -128,41 +152,41 @@ public class CqrsManager {
 			if (activeCabinetLentHistories.isEmpty()) {
 				List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 				List<User> users = userQueryService.findUsers(usersInCabinet);
-				LocalDateTime sessionExpired = lentRedisService.getSessionExpired(cabinetId);
-				cqrsService.addSessionCabinetInfo(cabinetId, users, sessionExpired);
+				cqrsCabinetService.setSessionCabinetInfo(cabinetId, users, sessionExpired);
 			} else {
-				activeCabinetLentHistories.forEach(cqrsService::addLentHistoryOnCabinetInfo);
+				activeCabinetLentHistories.forEach(cqrsCabinetService::addLentHistoryOnCabinetInfo);
 			}
 		}
 	}
 
 	private void changeCabinetInfo(Cabinet cabinet) {
-		cqrsService.addCabinetInfo(cabinet);
+		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinet.getId());
+		cqrsCabinetService.addCabinetInfo(cabinet, sessionExpiredAt);
 	}
 
-	private void changeCabinetInfo(LentHistory lentHistory, Cabinet cabinet, User user) {
+	private void changeCabinetInfo(LentHistory lentHistory) {
 		if (lentHistory.getEndedAt() == null) {
-			cqrsService.addLentHistoryOnCabinetInfo(lentHistory);
+			cqrsCabinetService.addLentHistoryOnCabinetInfo(lentHistory);
 		} else {
-			cqrsService.removeLentHistoryOnCabinetInfo(lentHistory);
+			cqrsCabinetService.removeLentHistoryOnCabinetInfo(lentHistory);
 		}
+	}
+
+	private void changeCabinetInfo(Cabinet cabinet, List<User> users,
+			LocalDateTime sessionExpiredAt) {
+		cqrsCabinetService.setSessionCabinetInfo(cabinet.getId(), users, sessionExpiredAt);
 	}
 
 	/************************************** AvailableCabinet **************************************/
 
-	/**
-	 * 사물함의 상태가 AVAILABLE, PENDING일 때, availableCabinet에 추가
-	 *
-	 * @param cabinet 사물함
-	 */
 	private void syncAvailableCabinet(Cabinet cabinet) {
 		if (cabinet.isLentType(LentType.CLUB)) {
 			return;
 		}
 		if (cabinet.isStatus(AVAILABLE)) {
-			cqrsService.addAvailableCabinet(cabinet);
+			cqrsCabinetService.addAvailableCabinet(cabinet);
 		} else if (cabinet.isStatus(PENDING)) {
-			cqrsService.addAvailableCabinet(cabinet);
+			cqrsCabinetService.addAvailableCabinet(cabinet);
 		}
 	}
 
@@ -170,34 +194,85 @@ public class CqrsManager {
 		if (cabinet.isLentType(LentType.CLUB)) {
 			return;
 		}
-		if (cabinet.isStatus(AVAILABLE)) {
-			cqrsService.addAvailableCabinet(cabinet);
-		} else if (cabinet.isStatus(PENDING)) {
-			cqrsService.addAvailableCabinet(cabinet);
-		} else if (cabinet.isStatus(FULL)) {
-			cqrsService.removeAvailableCabinet(cabinet);
+		CabinetStatus status = cabinet.getStatus();
+		if (status.equals(AVAILABLE) || status.equals(PENDING)) {
+			cqrsCabinetService.addAvailableCabinet(cabinet);
+		} else if (status.equals(FULL) || status.equals(IN_SESSION) || status.equals(BROKEN)) {
+			cqrsCabinetService.removeAvailableCabinet(cabinet);
 		}
 	}
 
 	/************************************* CabinetPerSection **************************************/
 
 	private void syncCabinetPerSection(Cabinet cabinet, List<LentHistory> cabinetLentHistories) {
-		cqrsService.addCabinetPerSection(cabinet);
+		cqrsCabinetService.addCabinetPerSection(cabinet);
 		List<LentHistory> activeCabinetLentHistories = cabinetLentHistories.stream()
 				.filter(l -> l.getEndedAt() == null).collect(Collectors.toList());
 		activeCabinetLentHistories.forEach(lentHistory ->
-				cqrsService.addLentHistoryOnCabinetPerSection(cabinet, lentHistory.getUser()));
+				cqrsCabinetService.addLentHistoryOnCabinetPerSection(cabinet,
+						lentHistory.getUser()));
 	}
 
 	private void changeCabinetPerSection(Cabinet cabinet) {
-		cqrsService.addCabinetPerSection(cabinet);
+		cqrsCabinetService.addCabinetPerSection(cabinet);
 	}
 
 	private void changeCabinetPerSection(LentHistory lentHistory, Cabinet cabinet, User user) {
 		if (lentHistory.getEndedAt() == null) {
-			cqrsService.addLentHistoryOnCabinetPerSection(cabinet, user);
+			cqrsCabinetService.addLentHistoryOnCabinetPerSection(cabinet, user);
 		} else {
-			cqrsService.removeLentHistoryOnCabinetPerSection(cabinet, user);
+			cqrsCabinetService.removeLentHistoryOnCabinetPerSection(cabinet, user);
 		}
+	}
+
+	private void changeCabinetPerSection(Cabinet cabinet, List<User> users) {
+		cqrsCabinetService.setSessionCabinetPerSection(cabinet, users);
+	}
+
+	/***************************************** lentInfo *******************************************/
+
+	private void syncUserLentInfo(Cabinet cabinet, List<LentHistory> lentHistories) {
+		List<LentHistory> activeLentHistories = lentHistories.stream()
+				.filter(lh -> lh.getEndedAt() == null).collect(Collectors.toList());
+
+		if (activeLentHistories.isEmpty() && cabinet.isLentType(SHARE)) {
+			this.findUserAndSetUserLentInfo(cabinet);
+		} else {
+			String previousUserName = lentRedisService.getPreviousUserName(cabinet.getId());
+			cqrsUserService.addUserLentInfo(cabinet, activeLentHistories, previousUserName);
+		}
+	}
+
+	private void changeUserLentInfo(Cabinet cabinet) {
+		if (cabinet.isStatus(IN_SESSION)) {
+			this.findUserAndSetUserLentInfo(cabinet);
+		} else if (cabinet.isStatus(OVERDUE) || cabinet.isStatus(FULL)) {
+			List<LentHistory> activeLentHistories =
+					lentQueryService.findCabinetActiveLentHistories(cabinet.getId());
+			String previousUserName = lentRedisService.getPreviousUserName(cabinet.getId());
+			cqrsUserService.addUserLentInfo(cabinet, activeLentHistories, previousUserName);
+		}
+	}
+
+	private void changeUserLentInfo(Cabinet cabinet, LentHistory lentHistory) {
+		if (lentHistory.getEndedAt() != null) {
+			List<Long> users = lentQueryService.findCabinetActiveLentHistories(cabinet.getId())
+					.stream().map(LentHistory::getUserId).collect(Collectors.toList());
+			cqrsUserService.removeUserLentInfo(cabinet, lentHistory, users);
+		} else if (cabinet.isLentType(PRIVATE)) {
+			String previousUserName = lentRedisService.getPreviousUserName(cabinet.getId());
+			cqrsUserService.addUserLentInfo(cabinet, List.of(lentHistory), previousUserName);
+		}
+	}
+
+	private void findUserAndSetUserLentInfo(Cabinet cabinet) {
+		Long cabinetId = cabinet.getId();
+		List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
+		List<User> users = userQueryService.findUsers(usersInCabinet);
+		String shareCode = lentRedisService.getShareCode(cabinetId);
+		LocalDateTime expiredAt = lentRedisService.getSessionExpired(cabinetId);
+		String prevUserName = lentRedisService.getPreviousUserName(cabinetId);
+
+		cqrsUserService.setSessionUserLentInfo(cabinet, users, shareCode, expiredAt, prevUserName);
 	}
 }

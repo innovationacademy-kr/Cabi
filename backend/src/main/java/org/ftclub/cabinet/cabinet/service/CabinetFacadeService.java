@@ -10,7 +10,7 @@ import org.ftclub.cabinet.cabinet.domain.Grid;
 import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.club.domain.Club;
 import org.ftclub.cabinet.club.service.ClubQueryService;
-import org.ftclub.cabinet.cqrs.service.CqrsService;
+import org.ftclub.cabinet.cqrs.service.CqrsCabinetService;
 import org.ftclub.cabinet.dto.BuildingFloorsDto;
 import org.ftclub.cabinet.dto.CabinetAvailableResponseDto;
 import org.ftclub.cabinet.dto.CabinetDto;
@@ -47,7 +47,7 @@ public class CabinetFacadeService {
 	private final ClubQueryService clubQueryService;
 	private final ClubLentQueryService clubLentQueryService;
 
-	private final CqrsService cqrsService;
+	private final CqrsCabinetService cqrsCabinetService;
 
 	private final CabinetMapper cabinetMapper;
 	private final LentMapper lentMapper;
@@ -65,7 +65,7 @@ public class CabinetFacadeService {
 //						cabinetQueryService.findAllFloorsByBuilding(building))
 //				)
 //				.collect(Collectors.toList());
-		List<BuildingFloorsDto> buildingFloors = cqrsService.getBuildingFloors();
+		List<BuildingFloorsDto> buildingFloors = cqrsCabinetService.getBuildingFloors();
 		return buildingFloors;
 	}
 
@@ -105,7 +105,7 @@ public class CabinetFacadeService {
 //
 //		return cabinetMapper.toCabinetInfoResponseDto(cabinet, lentDtos, sessionExpiredAt);
 
-		return cqrsService.getCabinetInfo(cabinetId);
+		return cqrsCabinetService.getCabinetInfo(cabinetId);
 	}
 
 
@@ -162,7 +162,7 @@ public class CabinetFacadeService {
 //						entry.getValue()))
 //				.collect(Collectors.toList());
 
-		return cqrsService.getCabinetPerSection(building, floor);
+		return cqrsCabinetService.getCabinetPerSection(building, floor);
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class CabinetFacadeService {
 //			}
 //		});
 //		return cabinetMapper.toAvailableCabinetDto(cabinetFloorMap);
-		return cqrsService.getAvailableCabinet(building);
+		return cqrsCabinetService.getAvailableCabinet(building);
 	}
 
 	/**

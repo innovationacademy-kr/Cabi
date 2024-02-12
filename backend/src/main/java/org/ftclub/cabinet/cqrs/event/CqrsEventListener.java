@@ -1,4 +1,4 @@
-package org.ftclub.cabinet.event;
+package org.ftclub.cabinet.cqrs.event;
 
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
@@ -31,8 +31,7 @@ public class CqrsEventListener {
 		if (object instanceof LentHistory) {
 			LentHistory lentHistory = (LentHistory) object;
 			cqrsManager.changeCabinetLentHistory(lentHistory);
-		}
-		if (object instanceof Cabinet) {
+		} else if (object instanceof Cabinet) {
 			cqrsManager.changeCabinet((Cabinet) object);
 		}
 	}

@@ -14,8 +14,10 @@ import org.ftclub.cabinet.cabinet.domain.LentType;
 import org.ftclub.cabinet.cabinet.service.CabinetCommandService;
 import org.ftclub.cabinet.cabinet.service.CabinetQueryService;
 import org.ftclub.cabinet.club.domain.ClubLentHistory;
+import org.ftclub.cabinet.cqrs.domain.SessionLentEvent;
+import org.ftclub.cabinet.cqrs.service.CqrsCabinetService;
+import org.ftclub.cabinet.cqrs.service.CqrsUserService;
 import org.ftclub.cabinet.dto.ActiveLentHistoryDto;
-import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.LentHistoryPaginationDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
@@ -56,6 +58,8 @@ public class LentFacadeService {
 	private final CabinetCommandService cabinetCommandService;
 	private final BanHistoryQueryService banHistoryQueryService;
 	private final BanHistoryCommandService banHistoryCommandService;
+	private final CqrsCabinetService cqrsCabinetService;
+	private final CqrsUserService cqrsUserService;
 
 	private final LentPolicyService lentPolicyService;
 	private final BanPolicyService banPolicyService;
@@ -91,34 +95,35 @@ public class LentFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public MyCabinetResponseDto getMyLentInfo(UserSessionDto user) {
-		LentHistory userLentHistory = lentQueryService.findUserActiveLentHistoryWithCabinet(
-				user.getUserId());
-		Long cabinetId;
-		Cabinet userActiveCabinet;
-		List<LentDto> lentDtoList;
-		if (userLentHistory == null) {
-			cabinetId = lentRedisService.findCabinetJoinedUser(user.getUserId());
-			if (cabinetId == null) {
-				return null;
-			}
-			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
-			List<User> userList = userQueryService.findUsers(usersInCabinet);
-			userActiveCabinet = cabinetQueryService.getCabinet(cabinetId);
-			lentDtoList = userList.stream().map(u -> lentMapper.toLentDto(u, null))
-					.collect(Collectors.toList());
-		} else {
-			userActiveCabinet = userLentHistory.getCabinet();
-			cabinetId = userActiveCabinet.getId();
-			List<LentHistory> lentHistories = lentQueryService.findCabinetActiveLentHistories(
-					cabinetId);
-			lentDtoList = lentHistories.stream().map(lh -> lentMapper.toLentDto(lh.getUser(), lh))
-					.collect(Collectors.toList());
-		}
-		String shareCode = lentRedisService.getShareCode(cabinetId);
-		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
-		String previousUserName = lentRedisService.getPreviousUserName(cabinetId);
-		return cabinetMapper.toMyCabinetResponseDto(userActiveCabinet, lentDtoList, shareCode,
-				sessionExpiredAt, previousUserName);
+//		LentHistory userLentHistory = lentQueryService.findUserActiveLentHistoryWithCabinet(
+//				user.getUserId());
+//		Long cabinetId;
+//		Cabinet userActiveCabinet;
+//		List<LentDto> lentDtoList;
+//		if (userLentHistory == null) {
+//			cabinetId = lentRedisService.findCabinetJoinedUser(user.getUserId());
+//			if (cabinetId == null) {
+//				return null;
+//			}
+//			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
+//			List<User> userList = userQueryService.findUsers(usersInCabinet);
+//			userActiveCabinet = cabinetQueryService.getCabinet(cabinetId);
+//			lentDtoList = userList.stream().map(lentMapper::toLentDto)
+//					.collect(Collectors.toList());
+//		} else {
+//			userActiveCabinet = userLentHistory.getCabinet();
+//			cabinetId = userActiveCabinet.getId();
+//			List<LentHistory> lentHistories = lentQueryService.findCabinetActiveLentHistories(
+//					cabinetId);
+//			lentDtoList = lentHistories.stream().map(lh -> lentMapper.toLentDto(lh.getUser(), lh))
+//					.collect(Collectors.toList());
+//		}
+//		String shareCode = lentRedisService.getShareCode(cabinetId);
+//		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
+//		String previousUserName = lentRedisService.getPreviousUserName(cabinetId);
+//		return cabinetMapper.toMyCabinetResponseDto(userActiveCabinet, lentDtoList, shareCode,
+//				sessionExpiredAt, previousUserName);
+		return cqrsUserService.getUserLentInfo(user.getUserId());
 	}
 
 	/**
@@ -214,8 +219,9 @@ public class LentFacadeService {
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.IN_SESSION);
 		}
 		lentRedisService.attemptJoinCabinet(cabinetId, userId, shareCode);
+		List<Long> userIdsInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
+		eventPublisher.publishEvent(new SessionLentEvent(cabinetId, userIdsInCabinet));
 		if (lentRedisService.isCabinetSessionFull(cabinetId)) {
-			List<Long> userIdsInCabinet = lentRedisService.getUsersInCabinet(cabinetId);
 			LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.SHARE,
 					userIdsInCabinet.size());
 			lentCommandService.startLent(userIdsInCabinet, cabinet.getId(), now, expiredAt);
@@ -326,6 +332,8 @@ public class LentFacadeService {
 	@Transactional
 	public void cancelShareCabinetLent(Long userId, Long cabinetId) {
 		lentRedisService.deleteUserInCabinet(cabinetId, userId);
+		List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
+		eventPublisher.publishEvent(new SessionLentEvent(cabinetId, usersInCabinet));
 		if (lentRedisService.isInCabinetSession(cabinetId)) {
 			Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
@@ -340,7 +348,7 @@ public class LentFacadeService {
 	@Transactional
 	public void shareCabinetSessionExpired(Long cabinetId) {
 		Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
-		List<Long> usersInCabinetSession = lentRedisService.getUsersInCabinet(cabinetId);
+		List<Long> usersInCabinetSession = lentRedisService.findUsersInCabinet(cabinetId);
 		if (lentPolicyService.checkUserCountOnShareCabinet(usersInCabinetSession.size())) {
 			LocalDateTime now = LocalDateTime.now();
 			LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.SHARE,
