@@ -28,8 +28,7 @@ const DeleteClubMemberModal: React.FC<{
   );
   const { closeClubMember } = useMenu();
 
-  const deleteDetail = `동아리 사물함 멤버에서 <strong>${props.targetMember.userName}</strong> 님을 내보내시겠습니까?`;
-  // TODO : 동아리 사물함 멤버? 동아리 멤버?
+  const deleteDetail = `동아리에서 <strong>${props.targetMember.userName}</strong> 님을 내보내시겠습니까?`;
 
   const tryDeleteRequest = async () => {
     setIsLoading(true);
@@ -37,7 +36,7 @@ const DeleteClubMemberModal: React.FC<{
       await axiosDeleteClubMember(props.clubId, props.targetMember.userId);
       setIsCurrentSectionRender(true);
       setModalTitle(
-        `동아리에서 ${props.targetMember.userName} 님을 내보냈습니다`
+        `동아리에서 ${props.targetMember.userName}님을 내보냈습니다`
       );
       closeClubMember();
     } catch (error: any) {

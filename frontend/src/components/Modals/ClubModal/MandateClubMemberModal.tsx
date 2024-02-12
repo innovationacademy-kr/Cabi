@@ -30,8 +30,8 @@ const MandateClubMemberModal: React.FC<{
   );
   const { closeClubMember } = useMenu();
 
-  const mandateDetail = `<strong>${clubName}</strong>의  동아리장 권한을
-  <strong>${props.targetMember.userName}</strong> 님에게 위임하겠습니까?`;
+  const mandateDetail = `동아리장 권한을 <strong>${props.targetMember.userName}</strong> 님에게
+  위임하겠습니까?`;
 
   useEffect(() => {
     if (props.clubName) setClubName(props.clubName);
@@ -42,7 +42,8 @@ const MandateClubMemberModal: React.FC<{
     try {
       await axiosMandateClubMember(props.clubId, props.targetMember.userName);
       setIsCurrentSectionRender(true);
-      setModalTitle("동아리장 권한을 위임하였습니다.");
+      setModalTitle(`동아리장 권한을 ${props.targetMember.userName}님에게
+      위임했습니다`);
       closeClubMember();
     } catch (error: any) {
       setModalContent(error.response.data.message);

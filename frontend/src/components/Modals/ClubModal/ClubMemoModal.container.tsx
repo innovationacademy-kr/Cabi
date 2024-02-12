@@ -13,7 +13,6 @@ import {
 import { axiosUpdateClubNotice } from "@/api/axios/axios.custom";
 
 export const CLUB_MEMO_MAX_LENGTH = 100;
-// TODO : 메모, 멤버 리렌더링 바로 되게
 interface ClubMemoModalContainerInterface {
   text: string;
   setText: React.Dispatch<React.SetStateAction<string>>;

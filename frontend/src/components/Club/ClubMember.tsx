@@ -37,6 +37,7 @@ const ClubMember: React.FC<{
 }) => {
   const myInfo = useRecoilValue(userState);
   const targetClubUser = useRecoilValue(targetClubUserInfoState);
+
   return (
     <>
       <ClubMemberContainerStyled>
@@ -47,14 +48,14 @@ const ClubMember: React.FC<{
             <p id="membersLength">{clubUserCount}</p>
           </div>
         </TitleBarStyled>
-        <MemSectionStyled>
+        <MemberSectionStyled>
           {myInfo.name === master.userName ? (
-            <AddMemCardStyled onClick={() => openModal("addModal")}>
+            <AddMemberCardStyled onClick={() => openModal("addModal")}>
               <p>+</p>
-            </AddMemCardStyled>
+            </AddMemberCardStyled>
           ) : null}
           {/* NOTE:  동아리장이 맨 앞에 오도록 배치 */}
-          <MemCardStyled
+          <MemberCardStyled
             bgColor={"var(--main-color)"}
             onClick={() => {
               selectClubMemberOnClick(master);
@@ -65,12 +66,12 @@ const ClubMember: React.FC<{
               <CrownImg stroke="#f5f5f5" width={18} height={18} />
               <p>{master.userName}</p>
             </div>
-          </MemCardStyled>
+          </MemberCardStyled>
           {members?.map((member, idx) => {
             return (
               <>
                 {member.userName !== master.userName && (
-                  <MemCardStyled
+                  <MemberCardStyled
                     key={idx}
                     bgColor={""}
                     onClick={() => {
@@ -82,12 +83,12 @@ const ClubMember: React.FC<{
                       <UserImg width={16} height={16} viewBox="0 0 24 24" />
                       <p>{member.userName}</p>
                     </div>
-                  </MemCardStyled>
+                  </MemberCardStyled>
                 )}
               </>
             );
           })}
-        </MemSectionStyled>
+        </MemberSectionStyled>
         {moreButton && (
           <ButtonContainerStyled>
             <MoreButtonStyled onClick={clickMoreButton} isLoading={isLoading}>
@@ -109,7 +110,6 @@ const ClubMember: React.FC<{
 
 const ClubMemberContainerStyled = styled.div`
   width: 100%;
-  /* height: 100%; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -117,7 +117,6 @@ const ClubMemberContainerStyled = styled.div`
 `;
 
 const TitleBarStyled = styled.div`
-  /* height: 3rem; */
   width: 80%;
   max-width: 720px;
   display: flex;
@@ -144,7 +143,7 @@ const TitleBarStyled = styled.div`
   }
 `;
 
-const AddMemCardStyled = styled.div`
+const AddMemberCardStyled = styled.div`
   width: 80px;
   height: 80px;
   border-radius: 1rem;
@@ -177,7 +176,7 @@ const IconContainer = styled.div`
   height: 1rem;
 `;
 
-const MemCardStyled = styled.div<{ bgColor: string; isSelected?: boolean }>`
+const MemberCardStyled = styled.div<{ bgColor: string; isSelected?: boolean }>`
   width: 80px;
   height: 80px;
   background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
@@ -224,7 +223,7 @@ const MemCardStyled = styled.div<{ bgColor: string; isSelected?: boolean }>`
   }
 `;
 
-const MemSectionStyled = styled.div`
+const MemberSectionStyled = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 90px);
   grid-template-rows: repeat(auto-fill, 90px);
