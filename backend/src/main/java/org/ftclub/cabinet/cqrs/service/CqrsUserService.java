@@ -44,8 +44,20 @@ public class CqrsUserService {
 				new TypeReference<MyCabinetResponseDto>() {});
 	}
 
-	public void addUserLentInfo(Cabinet cabinet, List<LentHistory> lentHistories,
+	public void addUserLentInfo(Cabinet cabinet, LentHistory lentHistory, User user,
 			String previousUserName) {
+		LentDto lentDto = lentMapper.toLentDto(user, lentHistory);
+		String key = user.getId() + USER_LENT_INFO.getValue();
+		synchronized (cqrsLockCollection.getLock(USER_LENT_INFO)) {
+			MyCabinetResponseDto myCabinetResponseDto =
+					cabinetMapper.toMyCabinetResponseDto(cabinet, List.of(lentDto),
+							null, null, previousUserName);
+			cqrsRedis.set(key, myCabinetResponseDto);
+		}
+	}
+
+	public void addUsersLentInfo(Cabinet cabinet, List<LentHistory> lentHistories,
+			 String previousUserName) {
 		List<LentDto> lentDtos = lentHistories.stream()
 				.map(lh -> lentMapper.toLentDto(lh.getUser(), lh))
 				.collect(Collectors.toList());

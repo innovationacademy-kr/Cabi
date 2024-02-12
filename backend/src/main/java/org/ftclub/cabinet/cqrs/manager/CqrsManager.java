@@ -97,7 +97,7 @@ public class CqrsManager {
 
 		this.changeCabinetPerSection(lentHistory, cabinet, user);
 		this.changeCabinetInfo(lentHistory);
-		this.changeUserLentInfo(cabinet, lentHistory);
+		this.changeUserLentInfo(cabinet, lentHistory, user);
 	}
 
 	// userId만 남기도록 덮어쓰기
@@ -261,7 +261,7 @@ public class CqrsManager {
 			this.setUserLentInfo(cabinet, usersInCabinet);
 		} else {
 			String previousUserName = lentRedisService.getPreviousUserName(cabinet.getId());
-			cqrsUserService.addUserLentInfo(cabinet, lentHistories, previousUserName);
+			cqrsUserService.addUsersLentInfo(cabinet, lentHistories, previousUserName);
 		}
 	}
 
@@ -270,18 +270,18 @@ public class CqrsManager {
 			List<LentHistory> activeLentHistories =
 					lentQueryService.findCabinetActiveLentHistories(cabinet.getId());
 			String previousUserName = lentRedisService.getPreviousUserName(cabinet.getId());
-			cqrsUserService.addUserLentInfo(cabinet, activeLentHistories, previousUserName);
+			cqrsUserService.addUsersLentInfo(cabinet, activeLentHistories, previousUserName);
 		}
 	}
 
-	private void changeUserLentInfo(Cabinet cabinet, LentHistory lentHistory) {
+	private void changeUserLentInfo(Cabinet cabinet, LentHistory lentHistory, User user) {
 		if (lentHistory.getEndedAt() != null) {
 			List<Long> users = lentQueryService.findCabinetActiveLentHistories(cabinet.getId())
 					.stream().map(LentHistory::getUserId).collect(Collectors.toList());
 			cqrsUserService.removeUserLentInfo(lentHistory, users);
 		} else if (cabinet.isLentType(PRIVATE)) {
 			String previousUserName = lentRedisService.getPreviousUserName(cabinet.getId());
-			cqrsUserService.addUserLentInfo(cabinet, List.of(lentHistory), previousUserName);
+			cqrsUserService.addUserLentInfo(cabinet, lentHistory, user, previousUserName);
 		}
 	}
 
