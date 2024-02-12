@@ -11,5 +11,6 @@ import lombok.ToString;
 public class SessionLentEvent {
 
 	private Long cabinetId;
-	private List<Long> usersInSession;
+	private List<Long> userIds;
+	private Boolean isReturn;
 }

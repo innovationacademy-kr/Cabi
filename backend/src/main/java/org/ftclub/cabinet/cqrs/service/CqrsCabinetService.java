@@ -122,9 +122,6 @@ public class CqrsCabinetService {
 	}
 
 	public void setSessionCabinetInfo(Long cabinetId, List<User> users, LocalDateTime expiredAt) {
-		if (users.isEmpty()) {
-			return;
-		}
 		String key = cabinetId + CABINET_INFO.getValue();
 		List<LentDto> lentDtos = users.stream()
 				.map(lentMapper::toLentDto).collect(Collectors.toList());
@@ -138,6 +135,7 @@ public class CqrsCabinetService {
 
 			cabinetInfo.setLents(lentDtos);
 			cabinetInfo.setSessionExpiredAt(expiredAt);
+
 			cqrsRedis.set(key, cabinetInfo);
 		}
 	}
@@ -193,6 +191,27 @@ public class CqrsCabinetService {
 	public void removeLentHistoryOnCabinetInfo(LentHistory lentHistory) {
 		String key = lentHistory.getCabinetId() + CABINET_INFO.getValue();
 		this.removeLentHistoryOnCabinetInfo(key, lentHistory.getId());
+	}
+
+	public void removeSessionCabinetInfo(Long cabinetId, List<Long> userIds) {
+		if (userIds.isEmpty()) {
+			return;
+		}
+		String key = cabinetId + CABINET_INFO.getValue();
+
+		synchronized (cqrsLockCollection.getLock(CABINET_INFO)) {
+			CabinetInfoResponseDto cabinetInfo =
+					cqrsRedis.get(key, new TypeReference<CabinetInfoResponseDto>() {});
+			if (cabinetInfo == null) {
+				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			}
+
+			userIds.forEach(userId ->
+					cabinetInfo.getLents().removeIf(c -> c.getUserId().equals(userId)));
+			cabinetInfo.setSessionExpiredAt(null);
+
+			cqrsRedis.set(key, cabinetInfo);
+		}
 	}
 
 	public void clearAvailableCabinet() {
@@ -304,11 +323,8 @@ public class CqrsCabinetService {
 	}
 
 	public void setSessionCabinetPerSection(Cabinet cabinet, List<User> users) {
-		if (users.isEmpty()) {
-			return;
-		}
 		Location location = cabinet.getCabinetPlace().getLocation();
-		String key = location.getBuilding() + location.getFloor().toString();
+		String key = location.getBuilding() + location.getFloor().toString() + CABINET_PER_SECTION.getValue();
 		String section = location.getSection();
 
 		synchronized (cqrsLockCollection.getLock(CABINET_PER_SECTION)) {
@@ -323,7 +339,8 @@ public class CqrsCabinetService {
 					.findFirst().orElse(null);
 			if (cabinetPreviewDto == null) {
 				cabinetPreviewDtos.add(
-						cabinetMapper.toCabinetPreviewDto(cabinet, users.size(), users.get(0).getName()));
+						cabinetMapper.toCabinetPreviewDto(cabinet, users.size(),
+								(users.isEmpty() ? null : users.get(0).getName())));
 			} else {
 				cabinetPreviewDto.setUserCount(users.size());
 				if (StringUtil.isNullOrEmpty(cabinetPreviewDto.getName())) {
@@ -337,8 +354,7 @@ public class CqrsCabinetService {
 
 	public void removeLentHistoryOnCabinetPerSection(Cabinet cabinet, User user) {
 		Location location = cabinet.getCabinetPlace().getLocation();
-		String key = location.getBuilding() + location.getFloor().toString() +
-				CABINET_PER_SECTION.getValue();
+		String key = location.getBuilding() + location.getFloor().toString() + CABINET_PER_SECTION.getValue();
 		String section = location.getSection();
 
 		synchronized (cqrsLockCollection.getLock(CABINET_PER_SECTION)) {
@@ -356,6 +372,27 @@ public class CqrsCabinetService {
 					cabinetPreviewDto.getTitle().equals(user.getName())) {
 				cabinetPreviewDto.setTitle(null);
 			}
+
+			cqrsRedis.setHash(key, section, cabinetPreviewDtos);
+		}
+	}
+
+	public void removeSessionCabinetPerSection(Cabinet cabinet, List<Long> userIds) {
+		Location location = cabinet.getCabinetPlace().getLocation();
+		String key = location.getBuilding() + location.getFloor().toString() + CABINET_PER_SECTION.getValue();
+		String section = location.getSection();
+
+		synchronized (cqrsLockCollection.getLock(CABINET_PER_SECTION)) {
+			List<CabinetPreviewDto> cabinetPreviewDtos = cqrsRedis.getHash(key, section,
+					new TypeReference<List<CabinetPreviewDto>>() {});
+			if (cabinetPreviewDtos == null) {
+				throw ExceptionStatus.INVALID_ARGUMENT.asServiceException();
+			}
+
+			CabinetPreviewDto cabinetPreviewDto = cabinetPreviewDtos.stream()
+					.filter(c -> c.getCabinetId().equals(cabinet.getId()))
+					.findFirst().orElseThrow(ExceptionStatus.INVALID_ARGUMENT::asServiceException);
+			cabinetPreviewDto.setUserCount(cabinetPreviewDto.getUserCount() - userIds.size());
 
 			cqrsRedis.setHash(key, section, cabinetPreviewDtos);
 		}

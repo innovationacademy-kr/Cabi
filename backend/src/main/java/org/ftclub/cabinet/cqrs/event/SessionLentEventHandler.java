@@ -14,7 +14,12 @@ public class SessionLentEventHandler {
 
 	@EventListener
 	public void handleSessionLentEvent(SessionLentEvent sessionLentEvent) {
-		cqrsManager.changeSessionLent(sessionLentEvent.getCabinetId(),
-				sessionLentEvent.getUsersInSession());
+		if (!sessionLentEvent.getIsReturn()) {
+			cqrsManager.setSessionLent(sessionLentEvent.getCabinetId(),
+					sessionLentEvent.getUserIds());
+		} else {
+			cqrsManager.removeSessionLent(sessionLentEvent.getCabinetId(),
+					sessionLentEvent.getUserIds());
+		}
 	}
 }

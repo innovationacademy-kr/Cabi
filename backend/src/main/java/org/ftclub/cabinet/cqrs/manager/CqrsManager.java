@@ -98,15 +98,30 @@ public class CqrsManager {
 		this.changeUserLentHistories(cabinet, lentHistory, user);
 	}
 
+	// userId만 남기도록 덮어쓰기
 	@Async
 	@Transactional(readOnly = true)
-	public void changeSessionLent(Long cabinetId, List<Long> userIds) {
-		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+	public void setSessionLent(Long cabinetId, List<Long> userIds) {
 		List<User> users = userQueryService.findUsers(userIds);
+		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
 		LocalDateTime sessionExpiredAt = lentRedisService.getSessionExpired(cabinetId);
 
-		this.changeCabinetInfo(cabinet, users, sessionExpiredAt);
-		this.changeCabinetPerSection(cabinet, users);
+		this.setSessionCabinetInfo(cabinet, users, sessionExpiredAt);
+		this.setSessionCabinetPerSection(cabinet, users);
+		this.setUserLentInfo(cabinet, userIds);
+	}
+
+	// userIds에 포함된다면 모든 정보를 삭제
+	@Async
+	@Transactional(readOnly = true)
+	public void removeSessionLent(Long cabinetId, List<Long> userIds) {
+		Cabinet cabinet = cabinetQueryService.getCabinet(cabinetId);
+
+		System.out.println("cabinet = " + cabinet);
+		System.out.println("userIds = " + userIds);
+		this.removeSessionCabinetInfo(cabinetId, userIds);
+		this.removeSessionCabinetPerSection(cabinet, userIds);
+		this.removeUserLentInfo(userIds);
 	}
 
 	public void clearAll() {
@@ -179,9 +194,14 @@ public class CqrsManager {
 		}
 	}
 
-	private void changeCabinetInfo(Cabinet cabinet, List<User> users,
+	private void setSessionCabinetInfo(Cabinet cabinet, List<User> users,
 			LocalDateTime sessionExpiredAt) {
 		cqrsCabinetService.setSessionCabinetInfo(cabinet.getId(), users, sessionExpiredAt);
+	}
+
+	private void removeSessionCabinetInfo(Long cabinetId, List<Long> users) {
+		System.out.println("11111111111111");
+		cqrsCabinetService.removeSessionCabinetInfo(cabinetId, users);
 	}
 
 	/************************************** AvailableCabinet **************************************/
@@ -232,8 +252,12 @@ public class CqrsManager {
 		}
 	}
 
-	private void changeCabinetPerSection(Cabinet cabinet, List<User> users) {
+	private void setSessionCabinetPerSection(Cabinet cabinet, List<User> users) {
 		cqrsCabinetService.setSessionCabinetPerSection(cabinet, users);
+	}
+
+	private void removeSessionCabinetPerSection(Cabinet cabinet, List<Long> userIds) {
+		cqrsCabinetService.removeSessionCabinetPerSection(cabinet, userIds);
 	}
 
 	/*************************************** userLentInfo *****************************************/
@@ -243,7 +267,8 @@ public class CqrsManager {
 				.filter(lh -> lh.getEndedAt() == null).collect(Collectors.toList());
 
 		if (activeLentHistories.isEmpty() && cabinet.isLentType(SHARE)) {
-			this.findUserAndSetUserLentInfo(cabinet);
+			List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinet.getId());
+			this.setUserLentInfo(cabinet, usersInCabinet);
 		} else {
 			String previousUserName = lentRedisService.getPreviousUserName(cabinet.getId());
 			cqrsUserService.addUserLentInfo(cabinet, activeLentHistories, previousUserName);
@@ -251,9 +276,7 @@ public class CqrsManager {
 	}
 
 	private void changeUserLentInfo(Cabinet cabinet) {
-		if (cabinet.isStatus(IN_SESSION)) {
-			this.findUserAndSetUserLentInfo(cabinet);
-		} else if (cabinet.isStatus(OVERDUE) || cabinet.isStatus(FULL)) {
+		if (cabinet.isStatus(OVERDUE) || cabinet.isStatus(FULL)) {
 			List<LentHistory> activeLentHistories =
 					lentQueryService.findCabinetActiveLentHistories(cabinet.getId());
 			String previousUserName = lentRedisService.getPreviousUserName(cabinet.getId());
@@ -272,15 +295,18 @@ public class CqrsManager {
 		}
 	}
 
-	private void findUserAndSetUserLentInfo(Cabinet cabinet) {
+	private void setUserLentInfo(Cabinet cabinet, List<Long> usersInCabinet) {
 		Long cabinetId = cabinet.getId();
-		List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
 		List<User> users = userQueryService.findUsers(usersInCabinet);
 		String shareCode = lentRedisService.getShareCode(cabinetId);
 		LocalDateTime expiredAt = lentRedisService.getSessionExpired(cabinetId);
 		String prevUserName = lentRedisService.getPreviousUserName(cabinetId);
 
 		cqrsUserService.setSessionUserLentInfo(cabinet, users, shareCode, expiredAt, prevUserName);
+	}
+
+	private void removeUserLentInfo(List<Long> usersInCabinet) {
+		cqrsUserService.removeSessionUserLentInfo(usersInCabinet);
 	}
 
 	/************************************ userLentHistories ***************************************/

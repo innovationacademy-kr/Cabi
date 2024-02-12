@@ -73,9 +73,12 @@ public class CqrsUserService {
 		List<LentDto> lentDtos = users.stream()
 				.map(lentMapper::toLentDto).collect(Collectors.toList());
 		users.forEach(user -> {
+			System.out.println("CqrsUserService.setSessionUserLentInfo");
 			MyCabinetResponseDto myCabinetResponseDto =
 					cabinetMapper.toMyCabinetResponseDto(cabinet, lentDtos, shareCode,
 							sessionExpired, previousUserName);
+			System.out.println("myCabinetResponseDto = " + myCabinetResponseDto);
+
 			synchronized (cqrsLockCollection.getLock(USER_LENT_INFO)) {
 				cqrsRedis.set(user.getId() + USER_LENT_INFO.getValue(), myCabinetResponseDto);
 			}
@@ -99,6 +102,15 @@ public class CqrsUserService {
 				cqrsRedis.set(userKey, myCabinetResponseDto);
 			});
 		}
+	}
+
+	public void removeSessionUserLentInfo(List<Long> usersInCabinet) {
+		usersInCabinet.forEach(userId -> {
+			String key = userId + USER_LENT_INFO.getValue();
+			synchronized (cqrsLockCollection.getLock(USER_LENT_INFO)) {
+				cqrsRedis.clear(key);
+			}
+		});
 	}
 
 	public void clearUserLentHistories() {

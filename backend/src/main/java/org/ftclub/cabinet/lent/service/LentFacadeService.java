@@ -224,7 +224,7 @@ public class LentFacadeService {
 		}
 		lentRedisService.attemptJoinCabinet(cabinetId, userId, shareCode);
 		List<Long> userIdsInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
-		eventPublisher.publishEvent(new SessionLentEvent(cabinetId, userIdsInCabinet));
+		eventPublisher.publishEvent(new SessionLentEvent(cabinetId, userIdsInCabinet, false));
 		if (lentRedisService.isCabinetSessionFull(cabinetId)) {
 			LocalDateTime expiredAt = lentPolicyService.generateExpirationDate(now, LentType.SHARE,
 					userIdsInCabinet.size());
@@ -336,9 +336,8 @@ public class LentFacadeService {
 	@Transactional
 	public void cancelShareCabinetLent(Long userId, Long cabinetId) {
 		lentRedisService.deleteUserInCabinet(cabinetId, userId);
-		List<Long> usersInCabinet = lentRedisService.findUsersInCabinet(cabinetId);
-		eventPublisher.publishEvent(new SessionLentEvent(cabinetId, usersInCabinet));
-		if (lentRedisService.isInCabinetSession(cabinetId)) {
+		eventPublisher.publishEvent(new SessionLentEvent(cabinetId, List.of(userId), true));
+		if (!lentRedisService.isInCabinetSession(cabinetId)) {
 			Cabinet cabinet = cabinetQueryService.getCabinetForUpdate(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		}
@@ -360,6 +359,8 @@ public class LentFacadeService {
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.FULL);
 			lentCommandService.startLent(usersInCabinetSession, cabinetId, now, expiredAt);
 		} else {
+			eventPublisher.publishEvent(
+					new SessionLentEvent(cabinetId, usersInCabinetSession, true));
 			lentRedisService.clearCabinetSession(cabinetId);
 			cabinetCommandService.changeStatus(cabinet, CabinetStatus.AVAILABLE);
 		}
