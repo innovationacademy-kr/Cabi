@@ -1,13 +1,10 @@
 package org.ftclub.cabinet.cqrs.service;
 
-import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.USER_LENT_HISTORIES;
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.USER_LENT_INFO;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +12,6 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cqrs.domain.CqrsLockCollection;
 import org.ftclub.cabinet.cqrs.respository.CqrsRedis;
 import org.ftclub.cabinet.dto.LentDto;
-import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
 import org.ftclub.cabinet.mapper.CabinetMapper;
@@ -111,35 +107,6 @@ public class CqrsUserService {
 				cqrsRedis.clear(key);
 			}
 		});
-	}
-
-	public void clearUserLentHistories() {
-		synchronized (cqrsLockCollection.getLock(USER_LENT_HISTORIES)) {
-			cqrsRedis.clearBySuffix(USER_LENT_HISTORIES.getValue());
-		}
-	}
-
-	public List<LentHistoryDto> getUserLentHistories(Long userId) {
-		return cqrsRedis.get(userId + USER_LENT_HISTORIES.getValue(),
-				new TypeReference<List<LentHistoryDto>>() {});
-	}
-
-	public void addUserLentHistory(Cabinet cabinet, LentHistory lentHistory, User user) {
-		String key = user.getId() + USER_LENT_HISTORIES.getValue();
-		synchronized (cqrsLockCollection.getLock(USER_LENT_HISTORIES)) {
-			List<LentHistoryDto> lentHistoryDtos = cqrsRedis.get(key,
-					new TypeReference<List<LentHistoryDto>>() {});
-			if (lentHistoryDtos == null) {
-				lentHistoryDtos = new ArrayList<>();
-			}
-
-			LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet);
-			lentHistoryDtos.removeIf(lh -> lh.getStartedAt().equals(lentHistory.getStartedAt()));
-			lentHistoryDtos.add(lentHistoryDto);
-			lentHistoryDtos.sort(Comparator.comparing(LentHistoryDto::getStartedAt).reversed());
-
-			cqrsRedis.set(key, lentHistoryDtos);
-		}
 	}
 
 	//@formatter:on

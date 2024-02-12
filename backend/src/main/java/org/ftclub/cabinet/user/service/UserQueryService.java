@@ -20,6 +20,10 @@ public class UserQueryService {
 
 	private final UserRepository userRepository;
 
+	public List<Long> findAllUsersId() {
+		return userRepository.findAllUsersIdByDeletedAtIsNull();
+	}
+
 	/**
 	 * 유저를 가져옵니다.
 	 *

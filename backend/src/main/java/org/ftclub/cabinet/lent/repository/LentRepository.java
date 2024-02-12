@@ -170,8 +170,10 @@ public interface LentRepository extends JpaRepository<LentHistory, Long> {
 			+ "LEFT JOIN FETCH lh.user u "
 			+ "LEFT JOIN FETCH lh.cabinet c "
 			+ "LEFT JOIN FETCH c.cabinetPlace cp "
-			+ "WHERE lh.cabinetId = :cabinetId ")
-	List<LentHistory> findAllByCabinetIdJoinCabinetAndUser(@Param("cabinetId") Long cabinetId);
+			+ "WHERE lh.cabinetId = :cabinetId "
+			+ "AND lh.endedAt IS NULL")
+	List<LentHistory> findAllByCabinetIdAndEndedAtIsNullJoinCabinetAndUser(
+			@Param("cabinetId") Long cabinetId);
 
 	/**
 	 * 특정 사물함의 대여기록들을 모두 가져옵니다.

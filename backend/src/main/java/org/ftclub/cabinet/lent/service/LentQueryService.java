@@ -193,8 +193,8 @@ public class LentQueryService {
 		return lentRepository.findAllByCabinetIdsEndedAtEqualDate(date, cabinetIds);
 	}
 
-	public List<LentHistory> findCabinetLentHistoriesWithUserAndCabinet(Long cabinetId) {
-		return lentRepository.findAllByCabinetIdJoinCabinetAndUser(cabinetId);
+	public List<LentHistory> findActiveCabinetLentHistoriesWithUserAndCabinet(Long cabinetId) {
+		return lentRepository.findAllByCabinetIdAndEndedAtIsNullJoinCabinetAndUser(cabinetId);
 	}
 
 	/**
