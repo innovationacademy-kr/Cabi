@@ -28,15 +28,13 @@ import org.ftclub.cabinet.dto.CabinetsPerSectionResponseDto;
 import org.ftclub.cabinet.dto.LentDto;
 import org.ftclub.cabinet.exception.ExceptionStatus;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.log.LogLevel;
-import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
 
 @Service
-@Logging(level = LogLevel.DEBUG)
+//@Logging(level = LogLevel.DEBUG)
 @RequiredArgsConstructor
 public class CqrsCabinetService {
 

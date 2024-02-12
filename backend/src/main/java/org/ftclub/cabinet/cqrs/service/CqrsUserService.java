@@ -1,10 +1,13 @@
 package org.ftclub.cabinet.cqrs.service;
 
+import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.USER_LENT_HISTORIES;
 import static org.ftclub.cabinet.cqrs.respository.CqrsSuffix.USER_LENT_INFO;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.netty.util.internal.StringUtil;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -12,17 +15,16 @@ import org.ftclub.cabinet.cabinet.domain.Cabinet;
 import org.ftclub.cabinet.cqrs.domain.CqrsLockCollection;
 import org.ftclub.cabinet.cqrs.respository.CqrsRedis;
 import org.ftclub.cabinet.dto.LentDto;
+import org.ftclub.cabinet.dto.LentHistoryDto;
 import org.ftclub.cabinet.dto.MyCabinetResponseDto;
 import org.ftclub.cabinet.lent.domain.LentHistory;
-import org.ftclub.cabinet.log.LogLevel;
-import org.ftclub.cabinet.log.Logging;
 import org.ftclub.cabinet.mapper.CabinetMapper;
 import org.ftclub.cabinet.mapper.LentMapper;
 import org.ftclub.cabinet.user.domain.User;
 import org.springframework.stereotype.Service;
 
 @Service
-@Logging(level = LogLevel.DEBUG)
+//@Logging(level = LogLevel.DEBUG)
 @RequiredArgsConstructor
 public class CqrsUserService {
 
@@ -36,7 +38,9 @@ public class CqrsUserService {
 	//@formatter:off
 
 	public void clearUserLentInfo() {
-		cqrsRedis.clearBySuffix(USER_LENT_INFO.getValue());
+		synchronized (cqrsLockCollection.getLock(USER_LENT_INFO)) {
+			cqrsRedis.clearBySuffix(USER_LENT_INFO.getValue());
+		}
 	}
 
 	public MyCabinetResponseDto getUserLentInfo(Long userId) {
@@ -78,7 +82,7 @@ public class CqrsUserService {
 		});
 	}
 
-	public void removeUserLentInfo(Cabinet cabinet, LentHistory lentHistory, List<Long> usersInCabinet) {
+	public void removeUserLentInfo(LentHistory lentHistory, List<Long> usersInCabinet) {
 		synchronized (cqrsLockCollection.getLock(USER_LENT_INFO)) {
 			cqrsRedis.clear(lentHistory.getUserId() + USER_LENT_INFO.getValue());
 			usersInCabinet.forEach(userInCabinet -> {
@@ -94,6 +98,35 @@ public class CqrsUserService {
 
 				cqrsRedis.set(userKey, myCabinetResponseDto);
 			});
+		}
+	}
+
+	public void clearUserLentHistories() {
+		synchronized (cqrsLockCollection.getLock(USER_LENT_HISTORIES)) {
+			cqrsRedis.clearBySuffix(USER_LENT_HISTORIES.getValue());
+		}
+	}
+
+	public List<LentHistoryDto> getUserLentHistories(Long userId) {
+		return cqrsRedis.get(userId + USER_LENT_HISTORIES.getValue(),
+				new TypeReference<List<LentHistoryDto>>() {});
+	}
+
+	public void addUserLentHistory(Cabinet cabinet, LentHistory lentHistory, User user) {
+		String key = user.getId() + USER_LENT_HISTORIES.getValue();
+		synchronized (cqrsLockCollection.getLock(USER_LENT_HISTORIES)) {
+			List<LentHistoryDto> lentHistoryDtos = cqrsRedis.get(key,
+					new TypeReference<List<LentHistoryDto>>() {});
+			if (lentHistoryDtos == null) {
+				lentHistoryDtos = new ArrayList<>();
+			}
+
+			LentHistoryDto lentHistoryDto = lentMapper.toLentHistoryDto(lentHistory, user, cabinet);
+			lentHistoryDtos.removeIf(lh -> lh.getStartedAt().equals(lentHistory.getStartedAt()));
+			lentHistoryDtos.add(lentHistoryDto);
+			lentHistoryDtos.sort(Comparator.comparing(LentHistoryDto::getStartedAt).reversed());
+
+			cqrsRedis.set(key, lentHistoryDtos);
 		}
 	}
 
