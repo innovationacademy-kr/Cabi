@@ -126,7 +126,6 @@ const ClubNameTextStyled = styled.div`
   font-weight: bold;
   height: 30px;
   line-height: 30px;
-  /* margin-bottom: 10px; */
 `;
 
 const CabinetInfoTextStyled = styled.div<{

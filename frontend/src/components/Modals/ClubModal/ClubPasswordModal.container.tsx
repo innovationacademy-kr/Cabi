@@ -32,6 +32,7 @@ export interface ClubPasswordModalInterface {
   onClickBackground: () => void;
   onSendPassword: () => Promise<void>;
   handleEnterPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  tmpPw: string;
 }
 
 const ClubPasswordModalContainer: React.FC<
@@ -42,13 +43,13 @@ const ClubPasswordModalContainer: React.FC<
   const [modalTitle, setModalTitle] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tmpPw, setTmpPw] = useState<string>("");
+  const [modalContent, setModalContent] = useState<string>("");
+  const [list, setList] = useState(["", "", "", ""]);
   const { clubId } = useRecoilValue(targetClubInfoState);
   const setIsCurrentSectionRender = useSetRecoilState(
     isCurrentSectionRenderState
   );
-  const [modalContent, setModalContent] = useState<string>("");
   const { isMultiSelect, closeMultiSelectMode } = useMultiSelect();
-  const [list, setList] = useState(["", "", "", ""]);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const closeModal = () => {
@@ -56,6 +57,7 @@ const ClubPasswordModalContainer: React.FC<
   };
 
   const onSendPassword = async () => {
+    if (tmpPw.length < 4) return;
     setIsLoading(true);
     try {
       await axiosUpdateClubMemo(clubId, tmpPw);
@@ -109,12 +111,12 @@ const ClubPasswordModalContainer: React.FC<
   };
 
   useEffect(() => {
-    let inputString = tmpPw === password || !tmpPw ? password : tmpPw;
+    let inputString = tmpPw === password ? password : tmpPw;
     makeList(inputString);
   }, [password, tmpPw]);
 
   const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter" || tmpPw.length < 4 || isLoading) return;
+    if (e.key !== "Enter" || isLoading) return;
     onSendPassword();
   };
 
@@ -138,6 +140,7 @@ const ClubPasswordModalContainer: React.FC<
           onClickBackground={onClickBackground}
           onSendPassword={onSendPassword}
           handleEnterPress={handleEnterPress}
+          tmpPw={tmpPw}
         />
       )}
       {showResponseModal &&
