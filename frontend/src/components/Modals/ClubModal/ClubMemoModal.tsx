@@ -33,18 +33,20 @@ const ClubMemoModal = ({
             ref={newMemo}
             maxLength={CLUB_MEMO_MAX_LENGTH}
           />
-          <ContentItemWrapperStyledBottomStyled>
-            {charCount <= CLUB_MEMO_MAX_LENGTH && (
-              <LengthCountStyled>
-                {charCount} / {CLUB_MEMO_MAX_LENGTH}
-              </LengthCountStyled>
-            )}
-            {charCount > CLUB_MEMO_MAX_LENGTH && (
-              <LengthCountStyled>
-                {CLUB_MEMO_MAX_LENGTH} / {CLUB_MEMO_MAX_LENGTH}
-              </LengthCountStyled>
-            )}
-          </ContentItemWrapperStyledBottomStyled>
+          {mode === "write" ? (
+            <ContentItemWrapperStyledBottomStyled>
+              {charCount <= CLUB_MEMO_MAX_LENGTH && (
+                <LengthCountStyled>
+                  {charCount} / {CLUB_MEMO_MAX_LENGTH}
+                </LengthCountStyled>
+              )}
+              {charCount > CLUB_MEMO_MAX_LENGTH && (
+                <LengthCountStyled>
+                  {CLUB_MEMO_MAX_LENGTH} / {CLUB_MEMO_MAX_LENGTH}
+                </LengthCountStyled>
+              )}
+            </ContentItemWrapperStyledBottomStyled>
+          ) : null}
         </ContentSectionStyled>
         <ButtonWrapperStyled mode={mode}>
           {mode === "write" && (

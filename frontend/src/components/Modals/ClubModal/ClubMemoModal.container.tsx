@@ -25,7 +25,7 @@ export interface ClubMemoModalInterface {
   clubNotice: string;
   newMemo: React.RefObject<HTMLTextAreaElement>;
   mode: string;
-  handleClickWriteMode: (e: any) => void;
+  handleClickWriteMode: () => void;
   handleChange: () => void;
   charCount: number;
   tryMemoRequest: () => Promise<void>;
@@ -55,7 +55,7 @@ const ClubMemoModalContainer = ({
     setShowMemoModal(false);
   };
 
-  const handleClickWriteMode = (e: any) => {
+  const handleClickWriteMode = () => {
     setMode("write");
     if (newMemo.current) {
       newMemo.current.select();
@@ -65,8 +65,10 @@ const ClubMemoModalContainer = ({
   const tryMemoRequest = async () => {
     try {
       await axiosUpdateClubNotice(clubId, text);
-      setIsCurrentSectionRender(true);
       setModalTitle("메모 수정 완료");
+      setTimeout(() => {
+        setIsCurrentSectionRender(true);
+      }, 1000);
     } catch (error: any) {
       setModalTitle("메모 수정 실패");
       setModalContent(error.response.data.message);
