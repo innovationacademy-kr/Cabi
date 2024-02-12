@@ -39,6 +39,11 @@ const ClubMemoModal = ({
                 {charCount} / {CLUB_MEMO_MAX_LENGTH}
               </LengthCountStyled>
             )}
+            {charCount > CLUB_MEMO_MAX_LENGTH && (
+              <LengthCountStyled>
+                {CLUB_MEMO_MAX_LENGTH} / {CLUB_MEMO_MAX_LENGTH}
+              </LengthCountStyled>
+            )}
           </ContentItemWrapperStyledBottomStyled>
         </ContentSectionStyled>
         <ButtonWrapperStyled mode={mode}>

@@ -67,7 +67,6 @@ const ClubMemoModalContainer = ({
       await axiosUpdateClubNotice(clubId, text);
       setIsCurrentSectionRender(true);
       setModalTitle("메모 수정 완료");
-      // const result = await axiosGetClubInfo(clubId, page, 2);
     } catch (error: any) {
       setModalTitle("메모 수정 실패");
       setModalContent(error.response.data.message);
