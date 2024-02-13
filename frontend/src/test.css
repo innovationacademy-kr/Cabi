@@ -6,28 +6,29 @@
   --sub-color: #b18cff;
   --line-color: #bcbcbc;
   --bg-shadow: rgba(0, 0, 0, 0.4);
+  --red-color: #ff4e4e;
 
   /* white, gray, black color variable */
   --white: #ffffff;
   --soft-white-color: #eeeeee;
   --light-gray-color: #f5f5f5;
   --gray-color: #7b7b7b;
-  --dark-gray-color: #434343;
+  --dark-gray-color: #3c3c3c;
   --black: #181818;
 
   /* cabinet color variable */
   --mine: #47ffa7;
-  --expired: #ff4e4e;
+  --expired: var(--red-color);
   --available: var(--main-color);
   --full: var(--soft-white-color);
-  --broken: #3c3c3c;
-  --banned: #3c3c3c;
+  --broken: var(--dark-gray-color);
+  --banned: var(--dark-gray-color);
   --session: var(--soft-white-color);
   --pending: var(--main-color);
 
-  --default-main-color: #9747ff;
-  --default-sub-color: #b18cff;
-  --default-mine-color: #47ffa7;
+  --default-main-color: var(--main-color);
+  --default-sub-color: var(--sub-color);
+  --default-mine: var(--mine);
 
   /* font variable */
   --main-font: "Noto Sans KR", sans-serif;

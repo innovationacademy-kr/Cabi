@@ -153,7 +153,7 @@ const StatusModal = ({
                   }
             }
             text={mode === "read" ? "닫기" : "취소"}
-            theme={mode === "read" ? "lightGrayLine" : "line"}
+            theme={mode === "read" ? "light-grayLine" : "line"}
           />
         </ButtonWrapperStyled>
       </ModalContainerStyled>
