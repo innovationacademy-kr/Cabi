@@ -18,8 +18,8 @@ public class LentExpirationImminentAlarm implements Alarm {
 
 	public String getExpirationDateAsString() {
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime expireDate = now.minusDays(daysFromExpireDate);
-		return expireDate.format(DateTimeFormatter.ofPattern("YYYY년 MM월 DD일"));
+		LocalDateTime expireDate = now.plusDays(Math.abs(daysFromExpireDate));
+		return expireDate.format(DateTimeFormatter.ofPattern("YYYY년 MM월 dd일"));
 	}
 
 	public boolean isExpirationToday() {
