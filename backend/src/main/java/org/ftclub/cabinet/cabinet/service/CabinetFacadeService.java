@@ -261,10 +261,9 @@ public class CabinetFacadeService {
 	 */
 	@Transactional(readOnly = true)
 	public LentHistoryPaginationDto getLentHistoryPagination(Long cabinetId, Pageable pageable) {
-		Page<LentHistory> lentHistories = lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(
-				cabinetId, pageable);
+		Page<LentHistory> lentHistories =
+				lentQueryService.findCabinetLentHistoriesWithUserAndCabinet(cabinetId, pageable);
 		List<LentHistoryDto> result = lentHistories.stream()
-				.sorted(Comparator.comparing(LentHistory::getStartedAt).reversed())
 				.map(lh -> lentMapper.toLentHistoryDto(lh, lh.getUser(), lh.getCabinet()))
 				.collect(Collectors.toList());
 		return lentMapper.toLentHistoryPaginationDto(result, lentHistories.getTotalElements());
