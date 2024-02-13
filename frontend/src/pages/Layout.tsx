@@ -97,36 +97,34 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      <ContainerStyled darkMode={darkMode}>
-        {isValidToken && <TopNav setIsLoading={setIsLoading} />}
-        {isLoading ? (
-          <LoadingAnimation />
-        ) : (
-          <WrapperStyled>
-            <LeftNav isVisible={isMainPage} />
-            <MainStyled>
-              <MenuBgStyled onClick={handleClickBg} id="menuBg" />
-              <Outlet />
-            </MainStyled>
-            <DetailInfoContainerStyled
-              id="cabinetDetailArea"
-              isHomePage={!isMainPage}
-            >
-              <CabinetInfoAreaContainer />
-            </DetailInfoContainerStyled>
-            <MapInfoContainer />
-            {isModalOpen &&
-              myInfoData &&
-              myInfoData.unbannedAt !== undefined && (
-                <OverduePenaltyModal
-                  status={additionalModalType.MODAL_OVERDUE_PENALTY}
-                  closeModal={closeModal}
-                  unbannedAt={myInfoData.unbannedAt}
-                />
-              )}
-          </WrapperStyled>
-        )}
-      </ContainerStyled>
+      {/* <ContainerStyled darkMode={darkMode}> */}
+      {isValidToken && <TopNav setIsLoading={setIsLoading} />}
+      {isLoading ? (
+        <LoadingAnimation />
+      ) : (
+        <WrapperStyled>
+          <LeftNav isVisible={isMainPage} />
+          <MainStyled>
+            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
+            <Outlet />
+          </MainStyled>
+          <DetailInfoContainerStyled
+            id="cabinetDetailArea"
+            isHomePage={!isMainPage}
+          >
+            <CabinetInfoAreaContainer />
+          </DetailInfoContainerStyled>
+          <MapInfoContainer />
+          {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
+            <OverduePenaltyModal
+              status={additionalModalType.MODAL_OVERDUE_PENALTY}
+              closeModal={closeModal}
+              unbannedAt={myInfoData.unbannedAt}
+            />
+          )}
+        </WrapperStyled>
+      )}
+      {/* </ContainerStyled> */}
     </React.Fragment>
   );
 };

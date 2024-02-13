@@ -3,7 +3,7 @@ import { darkModeState } from "@/recoil/atoms";
 
 const DarkMode: React.FC<{}> = () => {
   const [test, setTest] = useRecoilState(darkModeState);
-  console.log(test);
+  //   console.log(test);
 
   return (
     <>
