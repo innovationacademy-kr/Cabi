@@ -59,7 +59,7 @@ const SectionPaginationStyled = styled.div`
   padding: 10px 0;
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.95);
+  /* background: rgba(255, 255, 255, 0.95); */
   z-index: 1;
 `;
 

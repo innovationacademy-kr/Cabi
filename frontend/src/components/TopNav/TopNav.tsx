@@ -1,6 +1,7 @@
 import React from "react";
 import { SetterOrUpdater } from "recoil";
 import styled from "styled-components";
+import DarkMode from "@/components/TopNav/DarkMode/DarkMode";
 import SearchBar from "@/components/TopNav/SearchBar/SearchBar";
 import TopNavButtonGroup from "@/components/TopNav/TopNavButtonGroup/TopNavButtonGroup";
 import { ReactComponent as LogoImg } from "@/assets/images/logo.svg";
@@ -79,6 +80,8 @@ const TopNav: React.FC<{
           </BuildingListStyled>
         </BuildingSelectBoxStyled>
       </LogoStyled>
+      <DarkMode />
+      {/* TODO : 임시 위치 */}
       {isAdmin && <SearchBar />}
       <TopNavButtonGroup isAdmin={isAdmin} />
     </TopNavContainerStyled>
@@ -92,7 +95,7 @@ const TopNavContainerStyled = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: white;
+  /* background-color: white; */
   border-bottom: 1px solid #bcbcbc;
   padding: 0 28px;
   color: var(--gray-color);

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { set } from "react-ga";
 import { Outlet } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled, { css } from "styled-components";
-import { serverTimeState, userState } from "@/recoil/atoms";
+import { darkModeState, serverTimeState, userState } from "@/recoil/atoms";
 import CabinetInfoAreaContainer from "@/components/CabinetInfoArea/CabinetInfoArea.container";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import LeftNav from "@/components/LeftNav/LeftNav";
@@ -13,7 +12,6 @@ import OverduePenaltyModal from "@/components/Modals/OverduePenaltyModal/Overdue
 import TopNav from "@/components/TopNav/TopNav.container";
 import { additionalModalType } from "@/assets/data/maps";
 import { UserDto, UserInfo } from "@/types/dto/user.dto";
-import ColorType from "@/types/enum/color.type.enum";
 import { axiosMyInfo } from "@/api/axios/axios.custom";
 import { getCookie } from "@/api/react_cookie/cookies";
 import useMenu from "@/hooks/useMenu";
@@ -25,6 +23,7 @@ const Layout = (): JSX.Element => {
   const [myInfoData, setMyInfoData] = useState<UserInfo | null>(null);
   const setServerTime = useSetRecoilState<Date>(serverTimeState);
   const setUser = useSetRecoilState<UserDto>(userState);
+  const darkMode = useRecoilValue<string>(darkModeState);
   const navigate = useNavigate();
   const location = useLocation();
   const token = getCookie("access_token");
@@ -98,37 +97,50 @@ const Layout = (): JSX.Element => {
     <Outlet />
   ) : (
     <React.Fragment>
-      {isValidToken && <TopNav setIsLoading={setIsLoading} />}
-      {isLoading ? (
-        <LoadingAnimation />
-      ) : (
-        <WrapperStyled>
-          <LeftNav isVisible={isMainPage} />
-          <MainStyled>
-            <MenuBgStyled onClick={handleClickBg} id="menuBg" />
-            <Outlet />
-          </MainStyled>
-          <DetailInfoContainerStyled
-            id="cabinetDetailArea"
-            isHomePage={!isMainPage}
-          >
-            <CabinetInfoAreaContainer />
-          </DetailInfoContainerStyled>
-          <MapInfoContainer />
-          {isModalOpen && myInfoData && myInfoData.unbannedAt !== undefined && (
-            <OverduePenaltyModal
-              status={additionalModalType.MODAL_OVERDUE_PENALTY}
-              closeModal={closeModal}
-              unbannedAt={myInfoData.unbannedAt}
-            />
-          )}
-        </WrapperStyled>
-      )}
+      <ContainerStyled darkMode={darkMode}>
+        {isValidToken && <TopNav setIsLoading={setIsLoading} />}
+        {isLoading ? (
+          <LoadingAnimation />
+        ) : (
+          <WrapperStyled>
+            <LeftNav isVisible={isMainPage} />
+            <MainStyled>
+              <MenuBgStyled onClick={handleClickBg} id="menuBg" />
+              <Outlet />
+            </MainStyled>
+            <DetailInfoContainerStyled
+              id="cabinetDetailArea"
+              isHomePage={!isMainPage}
+            >
+              <CabinetInfoAreaContainer />
+            </DetailInfoContainerStyled>
+            <MapInfoContainer />
+            {isModalOpen &&
+              myInfoData &&
+              myInfoData.unbannedAt !== undefined && (
+                <OverduePenaltyModal
+                  status={additionalModalType.MODAL_OVERDUE_PENALTY}
+                  closeModal={closeModal}
+                  unbannedAt={myInfoData.unbannedAt}
+                />
+              )}
+          </WrapperStyled>
+        )}
+      </ContainerStyled>
     </React.Fragment>
   );
 };
 
 export default Layout;
+
+const ContainerStyled = styled.div<{ darkMode: string }>`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: ${(props) => props.darkMode};
+`;
 
 const WrapperStyled = styled.div`
   width: 100%;
@@ -149,7 +161,7 @@ const DetailInfoContainerStyled = styled.div<{ isHomePage: boolean }>`
   padding: 45px 40px 20px;
   position: relative;
   border-left: 1px solid var(--line-color);
-  background-color: var(--white);
+  /* background-color: var(--white); */
   overflow-y: auto;
   ${(props) =>
     props.isHomePage &&
