@@ -30,7 +30,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연체 페널티는 누적됩니다.
     </div>
   `,
-    pointColor: "white",
+    pointColor: "var(--white)",
   },
   [ContentStatus.SHARE]: {
     contentTitle: "공유 사물함",
@@ -59,7 +59,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     연체 페널티는 누적됩니다.
     </div>
   `,
-    pointColor: "#white",
+    pointColor: "var(--white)",
   },
   [ContentStatus.CLUB]: {
     contentTitle: "동아리 사물함",
@@ -86,7 +86,7 @@ export const manualContentData: Record<ContentStatus, ContentStatusData> = {
     상세 페이지가 제공되지 않습니다.
     <br />
     비밀번호는 동아리 내에서 공유하여 이용하세요.</div>`,
-    pointColor: "white",
+    pointColor: "var(--white)",
   },
   [ContentStatus.PENDING]: {
     contentTitle: "오픈예정",

@@ -58,7 +58,7 @@ const WarningWrapper = styled.div<{ isVisible: boolean }>`
   justify-content: center;
   & ${WarningIcon}:hover + ${WarningBox} {
     visibility: visible;
-    color: #fff;
+    color: var(--white);
     background-color: rgba(0, 0, 0, 0.8);
     &:before {
       border-color: transparent transparent rgba(0, 0, 0, 0.8)

@@ -61,7 +61,12 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
           labels: { text: { fontSize: "15px" } },
         }}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-        colors={["#d9d9d9", "#ff4e4e", "var(--main-color)", "#3c3c3c "]}
+        colors={[
+          "#d9d9d9",
+          "var(--expired)",
+          "var(--main-color)",
+          "var(--dark-gray-color)",
+        ]}
         innerRadius={0.5}
         padAngle={0.7}
         cornerRadius={3}
@@ -99,7 +104,7 @@ const PieChart = ({ data }: { data: IRentInfo[] }) => {
               {
                 on: "hover",
                 style: {
-                  itemTextColor: "#000",
+                  itemTextColor: "var(--black)",
                 },
               },
             ],

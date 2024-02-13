@@ -184,7 +184,7 @@ const BackgroundStyled = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgb(0, 0, 0);
+  background: var(--black);
   opacity: 0.4;
   animation: fadeInBg 0.5s;
   @keyframes fadeInBg {
