@@ -4,15 +4,14 @@ import { targetClubUserInfoState, userState } from "@/recoil/atoms";
 import {
   ICurrentClubMemberModalStateInfo,
   TClubMemberModalState,
-} from "@/components/Club/ClubMember.container";
+} from "@/components/Club/ClubMemberList/ClubMemberList.container";
+import ClubMemberListItem from "@/components/Club/ClubMemberList/ClubMemberListItem/ClubMemberListItem";
 import LoadingAnimation from "@/components/Common/LoadingAnimation";
 import AddClubMemberModalContainer from "@/components/Modals/ClubModal/AddClubMemberModal.container";
-import { ReactComponent as CrownImg } from "@/assets/images/crown.svg";
-import { ReactComponent as UserImg } from "@/assets/images/privateIcon.svg";
 import shareIcon from "@/assets/images/shareIcon.svg";
 import { ClubUserResponseDto } from "@/types/dto/club.dto";
 
-const ClubMember: React.FC<{
+interface ClubMemberListProps {
   isLoading: boolean;
   clubUserCount: number;
   clubModal: ICurrentClubMemberModalStateInfo;
@@ -23,7 +22,9 @@ const ClubMember: React.FC<{
   clickMoreButton: () => void;
   members: ClubUserResponseDto[];
   selectClubMemberOnClick: (member: ClubUserResponseDto) => void;
-}> = ({
+}
+
+const ClubMemberList = ({
   isLoading,
   clubUserCount,
   clubModal,
@@ -34,60 +35,44 @@ const ClubMember: React.FC<{
   clickMoreButton,
   members,
   selectClubMemberOnClick,
-}) => {
+}: ClubMemberListProps) => {
   const myInfo = useRecoilValue(userState);
   const targetClubUser = useRecoilValue(targetClubUserInfoState);
 
   return (
     <>
-      <ClubMemberContainerStyled>
-        <TitleBarStyled>
+      <ClubMemberListContainerStyled>
+        <TitleContainerStyled>
           <p>동아리 멤버</p>
-          <div>
-            <img src={shareIcon} />
-            <p id="membersLength">{clubUserCount}</p>
-          </div>
-        </TitleBarStyled>
+          <UserCountContainerStyled>
+            <UserCountImgStyled src={shareIcon} />
+            <UserCountTextStyled id="membersLength">
+              {clubUserCount}
+            </UserCountTextStyled>
+          </UserCountContainerStyled>
+        </TitleContainerStyled>
         <MemberSectionStyled>
-          {myInfo.name === master.userName ? (
+          {myInfo.name === master.userName && (
             <AddMemberCardStyled onClick={() => openModal("addModal")}>
               <p>+</p>
             </AddMemberCardStyled>
-          ) : null}
+          )}
           {/* NOTE:  동아리장이 맨 앞에 오도록 배치 */}
-          <MemberCardStyled
+          <ClubMemberListItem
+            isMaster={true}
             bgColor={"var(--main-color)"}
-            onClick={() => {
-              selectClubMemberOnClick(master);
-            }}
-            isSelected={master.userId === targetClubUser.userId}
-          >
-            <div id="clubMaster">
-              <CrownImg stroke="#f5f5f5" width={18} height={18} />
-              <p>{master.userName}</p>
-            </div>
-          </MemberCardStyled>
-          {members?.map((member, idx) => {
-            return (
-              <>
-                {member.userName !== master.userName && (
-                  <MemberCardStyled
-                    key={idx}
-                    bgColor={""}
-                    onClick={() => {
-                      selectClubMemberOnClick(member);
-                    }}
-                    isSelected={member.userId === targetClubUser.userId}
-                  >
-                    <div id="clubUser">
-                      <UserImg width={16} height={16} viewBox="0 0 24 24" />
-                      <p>{member.userName}</p>
-                    </div>
-                  </MemberCardStyled>
-                )}
-              </>
-            );
-          })}
+            member={master}
+            selectClubMemberOnClick={selectClubMemberOnClick}
+            targetClubUser={targetClubUser}
+          />
+          {members?.map((member, idx) => (
+            <ClubMemberListItem
+              key={`clubMember-${idx}`}
+              member={member}
+              selectClubMemberOnClick={selectClubMemberOnClick}
+              targetClubUser={targetClubUser}
+            />
+          ))}
         </MemberSectionStyled>
         {moreButton && (
           <ButtonContainerStyled>
@@ -96,19 +81,15 @@ const ClubMember: React.FC<{
             </MoreButtonStyled>
           </ButtonContainerStyled>
         )}
-      </ClubMemberContainerStyled>
-      {clubModal.addModal ? (
-        <AddClubMemberModalContainer
-          closeModal={() => {
-            closeModal();
-          }}
-        />
-      ) : null}
+      </ClubMemberListContainerStyled>
+      {clubModal.addModal && (
+        <AddClubMemberModalContainer closeModal={() => closeModal()} />
+      )}
     </>
   );
 };
 
-const ClubMemberContainerStyled = styled.div`
+const ClubMemberListContainerStyled = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -116,31 +97,41 @@ const ClubMemberContainerStyled = styled.div`
   align-items: center;
 `;
 
-const TitleBarStyled = styled.div`
+const TitleContainerStyled = styled.div`
   width: 80%;
   max-width: 720px;
   display: flex;
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 1rem;
+`;
 
-  & > div {
-    margin-left: 18px;
-    line-height: 24px;
-    height: 24px;
-    font-size: 1rem;
-    font-weight: normal;
-    display: flex;
-  }
+const UserCountContainerStyled = styled.div`
+  margin-left: 18px;
+  line-height: 24px;
+  height: 24px;
+  font-size: 1rem;
+  font-weight: normal;
+  display: flex;
+`;
 
-  & img {
-    width: 24px;
-    height: 24px;
-  }
+const UserCountTextStyled = styled.p`
+  width: 34px;
+`;
 
-  & #membersLength {
-    width: 34px;
-  }
+const MemberSectionStyled = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 90px);
+  grid-template-rows: repeat(auto-fill, 90px);
+  justify-content: center;
+  width: 100%;
+  max-width: 720px;
+  margin: 1rem 0 1rem;
+`;
+
+const UserCountImgStyled = styled.img`
+  width: 24px;
+  height: 24px;
 `;
 
 const AddMemberCardStyled = styled.div`
@@ -169,68 +160,6 @@ const AddMemberCardStyled = styled.div`
   &:hover {
     cursor: pointer;
   }
-`;
-
-const IconContainer = styled.div`
-  width: 1rem;
-  height: 1rem;
-`;
-
-const MemberCardStyled = styled.div<{ bgColor: string; isSelected?: boolean }>`
-  width: 80px;
-  height: 80px;
-  background-color: ${(props) => (props.bgColor ? props.bgColor : "#F5F5F5")};
-  border-radius: 1rem;
-  margin: 7px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.2s, opacity 0.2s;
-  cursor: pointer;
-
-  ${({ isSelected }) =>
-    isSelected &&
-    css`
-      opacity: 0.9;
-      transform: scale(1.05);
-      box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.25),
-        0px 4px 4px rgba(0, 0, 0, 0.25);
-    `}
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      opacity: 0.9;
-      transform: scale(1.05);
-    }
-  }
-
-  & > div {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    & > p {
-      line-height: 28px;
-      height: 28px;
-      font-size: 14px;
-    }
-  }
-  & #clubMaster {
-    color: #f5f5f5;
-  }
-`;
-
-const MemberSectionStyled = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 90px);
-  grid-template-rows: repeat(auto-fill, 90px);
-  justify-content: center;
-  width: 100%;
-  max-width: 720px;
-  margin: 1rem 0 2rem;
 `;
 
 const ButtonContainerStyled = styled.div`
@@ -270,4 +199,4 @@ const MoreButtonStyled = styled.button<{
     `}
 `;
 
-export default ClubMember;
+export default ClubMemberList;
