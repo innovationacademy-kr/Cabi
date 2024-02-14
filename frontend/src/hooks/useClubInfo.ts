@@ -11,6 +11,7 @@ import {
 } from "@/types/dto/club.dto";
 import { axiosGetClubInfo } from "@/api/axios/axios.custom";
 import { STATUS_400_BAD_REQUEST } from "@/constants/StatusCode";
+import useMenu from "./useMenu";
 
 const useClubInfo = () => {
   const [clubState, setClubState] = useState({ clubId: 0, page: 0 });
@@ -24,6 +25,7 @@ const useClubInfo = () => {
     isCurrentSectionRenderState
   );
   const prevClubIdRef = useRef(targetClubInfo.clubId);
+  const { closeClubMember } = useMenu();
 
   const setPage = (newPage: number) => {
     setClubState((prevState) => ({ ...prevState, page: newPage }));
@@ -60,6 +62,7 @@ const useClubInfo = () => {
   // NOTE: 컴포넌트가 마운트 될 때, targetClubInfo.clubId 혹은 isCurrentSectionRender 변경 시마다 실행됩니다.
   useEffect(() => {
     if (targetClubInfo.clubId !== clubState.clubId || isCurrentSectionRender) {
+      closeClubMember();
       setIsCurrentSectionRender(false);
       setClubState({
         clubId: targetClubInfo.clubId,
